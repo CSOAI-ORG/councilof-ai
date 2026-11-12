@@ -26,6 +26,12 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { vscodeInstallAction } from "./vscode-install.mjs";
 import { cursorInstallAction } from "./cursor-install.mjs";
+import {
+  CAPTURE_PATH,
+  cardNote,
+  npmReleaseState,
+  stdioAdvertisement,
+} from "./npm-release-state.mjs";
 import { workingGroupKit } from "../working-groups/render-kit.mjs";
 import { charterKit } from "../charter-federation/render-kit.mjs";
 
@@ -66,18 +72,41 @@ const free = tools.filter((t) => t.payment === "free");
 const paid = tools.filter((t) => t.payment !== "free");
 const toolNames = tools.map((t) => t.id);
 
+// The fleet the door SERVES, read from the two definition files the door itself serves from. It is
+// read here (not at the point of use) because the npm stdio decision below compares the published
+// package's tool names against the fleet this render publishes — and every surface must compare
+// against the fleet IT serves, never against a number typed in prose.
+const SERVED_FREE_DEFS = readJson("functions/mcp/gspc-tools.json").tools;
+const SERVED_PAID_DEFS = readJson("functions/mcp/paid-tools.json").tools;
+const SERVED_FREE = SERVED_FREE_DEFS.map((t) => t.name);
+const SERVED_PAID = SERVED_PAID_DEFS.map((t) => t.name);
+const SERVED = [...SERVED_FREE, ...SERVED_PAID];
+
 const mcpServer = readJson("mcp/gspc-server/server.json");
 const REMOTE_VERSION = mcpServer.version;
 const npmPkg = (mcpServer.packages || []).find((p) => p.registryType === "npm");
 const NPM_ID = npmPkg.identifier;
 const NPM_VERSION = npmPkg.version;
-// T14 (6 Oct 2026): every published csoai-gspc-mcp release (0.1.1-0.2.2) is marked deprecated on npm
-// and carries fewer tools than the HTTP door, so the one-command stdio install led a developer to a
-// deprecated package with a different tool set. Until a non-deprecated release carries the SERVED tool
-// set, no discovery document advertises the stdio pin; each names the free door instead. Flip this to
-// true only after `npm view csoai-gspc-mcp@latest deprecated` prints nothing AND that release's
-// tools/list equals SERVED (scripts/harness-x/parity_live.py checks the second).
-const NPM_STDIO_ADVERTISED = false;
+// The stdio pin is WITHHELD or ADVERTISED by measurement, not by a typed constant.
+//
+// T14 (6 Oct 2026) withheld it by hand because every published csoai-gspc-mcp release then was
+// marked deprecated on npm. That observation aged: npm deprecates 0.1.0, 0.1.1, 0.2.0, 0.2.1 and
+// 0.2.2, and the estate's own later releases are not deprecated. So the typed reason became FALSE
+// while the decision stayed right for a different reason — the repository PREPARES 0.2.6 while npm's
+// latest published release is 0.2.5, so a pin at the prepared version would name a version nobody
+// can install, and the published tarball carries 53 tool names against the 54 the door serves.
+//
+// So the decision is now derived from the dated capture (distribution/npm/npm-publish-check.json,
+// written by scripts/harness-x/npm-publish-live.mjs) against the fleet THIS render serves:
+// advertised only when the prepared version IS the published one, npm does not mark that release
+// deprecated, and the release's tool names equal SERVED. When the estate publishes a release that
+// carries the served tool set, the pin appears by itself — no human has to notice a stale sentence.
+const NPM_STATE = npmReleaseState(readJson(CAPTURE_PATH));
+const NPM_ADVERTISEMENT = stdioAdvertisement(NPM_STATE, {
+  preparedVersion: NPM_VERSION,
+  doorTools: SERVED.length,
+});
+const NPM_STDIO_ADVERTISED = NPM_ADVERTISEMENT.advertise;
 const pyClientVersion = /^version\s*=\s*"([^"]+)"/m.exec(read("scripts/spray/pypi/csoai-gspc/pyproject.toml"))[1];
 const APACHE = read("scripts/spray/pypi/csoai-gspc/LICENSE");
 const layer0Version = readJson("packages/layer0-js/package.json").version;
@@ -1107,11 +1136,6 @@ if __name__ == "__main__":
 // compares exactly these fields with a live tools/list. The registry must name the same fleet; if it
 // does not, this render refuses rather than publish either version. The digest is the instrument's
 // own: sha256 of the sorted tool names joined by "\n".
-const SERVED_FREE_DEFS = readJson("functions/mcp/gspc-tools.json").tools;
-const SERVED_PAID_DEFS = readJson("functions/mcp/paid-tools.json").tools;
-const SERVED_FREE = SERVED_FREE_DEFS.map((t) => t.name);
-const SERVED_PAID = SERVED_PAID_DEFS.map((t) => t.name);
-const SERVED = [...SERVED_FREE, ...SERVED_PAID];
 const namesSha = (names) => sha256([...names].sort().join("\n"));
 const NAMES_SHA_RULE = 'sha256 of the tool names from tools/list, sorted, joined by "\\n" (UTF-8)';
 if (SERVED.join(",") !== toolNames.join(",") || SERVED_FREE.join(",") !== free.map((t) => t.id).join(",")) {
@@ -1131,7 +1155,12 @@ if (HTTP_VERSION !== REMOTE_VERSION) {
 }
 const SERVER_NAME = "csoai-gspc-mcp"; // serverInfo.name, as initialize answers it
 const stdio = NPM_STDIO_ADVERTISED ? `npx -y ${NPM_ID}@${NPM_VERSION}` : null;
-const STDIO_NOTE = `npm ${NPM_ID}: published releases are deprecated on npm and carry fewer tools; use the free door ${FREE_DOOR}`;
+const STDIO_NOTE = cardNote(NPM_STATE, {
+  npmId: NPM_ID,
+  freeDoor: FREE_DOOR,
+  doorTools: SERVED.length,
+  preparedVersion: NPM_VERSION,
+});
 const stdioFields = NPM_STDIO_ADVERTISED ? { stdio } : { stdio, stdio_note: STDIO_NOTE };
 const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} x402-metered evidence tools`;
 // The one tool-count sentence the site, /mcp and these documents share (fix #19). Array lengths.
@@ -1192,10 +1221,10 @@ emit("public/.well-known/mcp/server-card.json", j({
   authentication: { required: false, note: "Public MCP — initialize and tools/list require no Authorization header." },
   license: "CC-BY-4.0",
   doi: "10.5281/zenodo.21991104",
-  // 29 Sep 2026: the Zenodo record answers HTTP 410 (account blocked by Zenodo; appeal pending).
+  // 29 Sep 2026: the Zenodo record answers HTTP 410 (account blocked by Zenodo; no appeal on record).
   // The identifier stays; this says it does not resolve. Same block GET /api/gspc serves.
   doi_status: "UNAVAILABLE",
-  doi_status_note: "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.",
+  doi_status_note: "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json).",
   doi_status_since: "2026-09-29T15:47Z",
   doi_status_url: "https://councilof.ai/interop/zenodo-status.json",
   doi_alternative: { url: "https://councilof.ai/methodology/", relation: "the live methodology page; not the deposit's bytes" },

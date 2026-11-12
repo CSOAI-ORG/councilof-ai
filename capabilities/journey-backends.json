@@ -1,0 +1,63 @@
+{
+  "schema": "csoai.ai/journey-backends/1",
+  "what_this_is": "A dated record of what the case-model journey's backends answered when they were read, and what that means for the journey's reach. The journey is: ask, scope, inspect, explain, propose, approve, fix, retest, receipt, monitor.",
+  "what_this_is_not": "Not a claim that the journey works. Not a roadmap. A reading: the journey is reachable as far as the last backend that answered, and no further. Every row carries the endpoint it was read from, so a reader can re-run it.",
+  "how_to_read_it": "Every availability is a fact about a response code, not a judgement. UNAVAILABLE means the endpoint answered 404 (it is absent). OWNER_GATED means it answered 402 or 503 (it exists and needs a payment or a key). VERIFIED means it answered 200. Re-probe with `LIVE_JOURNEY=1 node --test capabilities/journey-backends.test.mjs`.",
+  "measured_at": "2026-11-02T06:46:14Z",
+  "measured_by": "curl -s -o /dev/null -w '%{http_code}' https://councilof.ai<endpoint>, read from the Mac on 2026-11-02",
+  "backends": {
+    "findings": {
+      "availability": "VERIFIED",
+      "endpoint": "/api/findings",
+      "reason": "answered 200 with the regulation-findings corpus, its schema and its honesty block; it is the input the journey reads"
+    },
+    "receipts": {
+      "availability": "VERIFIED",
+      "endpoint": "/api/receipts/latest",
+      "reason": "answered 200 with status PUBLISHED and count 26 aggregate items; the receipt ending of the journey EXISTS and is served"
+    },
+    "receipts_verify": {
+      "availability": "VERIFIED",
+      "endpoint": "/api/receipts/verify",
+      "reason": "answered 200; a stranger can submit a receipt to the verifier without a session"
+    },
+    "ras": {
+      "availability": "UNAVAILABLE",
+      "endpoint": "/api/ras",
+      "reason": "answered 404 not_found; the case-model RAS endpoint is absent. NOTE: the RAS LANE is live under other paths - /api/ras/mcp-probe, /api/ras/x402-check and /api/ras/supply each answer 402 - so this row is about THIS endpoint only"
+    },
+    "ras_status": {
+      "availability": "UNAVAILABLE",
+      "endpoint": "/api/ras/status",
+      "reason": "answered 404 not_found; the case-model status endpoint is absent alongside /api/ras itself"
+    },
+    "remediation": {
+      "availability": "UNAVAILABLE",
+      "endpoint": "/api/remediation",
+      "reason": "answered 404 not_found; there is no remediation runtime, so the fix half of the journey cannot be taken"
+    },
+    "jobs": {
+      "availability": "UNAVAILABLE",
+      "endpoint": "/api/jobs",
+      "reason": "answered 404 not_found; there is no job runtime, so the retest half of the journey cannot be taken"
+    },
+    "ras_mcp_probe": {
+      "availability": "OWNER_GATED",
+      "endpoint": "/api/ras/mcp-probe",
+      "reason": "answered 402 Payment Required; the endpoint exists and is x402-metered, so it needs a payment rather than a key or a build"
+    },
+    "ras_x402_check": {
+      "availability": "OWNER_GATED",
+      "endpoint": "/api/ras/x402-check",
+      "reason": "answered 402 Payment Required; the endpoint exists and is x402-metered, so it needs a payment rather than a key or a build"
+    },
+    "ras_supply": {
+      "availability": "OWNER_GATED",
+      "endpoint": "/api/ras/supply",
+      "reason": "answered 402 Payment Required; the endpoint exists and is x402-metered, so it needs a payment rather than a key or a build"
+    }
+  },
+  "client_reference_count": 0,
+  "client_reference_note": "No file under client/src references one of the UNAVAILABLE endpoints (/api/ras, /api/ras/status, /api/remediation, /api/jobs) by path. The catalogue does name /api/ras/supply, /api/ras/mcp-probe and /api/ras/x402-check, and those answer 402 - they are live, metered endpoints, not a 404 being offered as a working one.",
+  "consequence_for_wp3_and_wp6": "The journey now reaches its receipt ending: ask and scope through /api/findings, and it can propose onward to a receipt that /api/receipts/latest publishes and /api/receipts/verify checks. It stops there. The approve/fix/retest middle has no runtime: /api/remediation and /api/jobs answer 404, so no surface may offer approve, fix or retest. When those land this record goes red on its own - that is the handoff signal, not a regression."
+}

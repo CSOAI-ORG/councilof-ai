@@ -38,6 +38,6 @@ describe("domination playbook audit", () => {
     // Operator modules are not mounted on public product or reference pages.
     expect(internal).not.toContain("<PlaybookAudit ");
     expect(products).not.toContain("<PlaybookAudit");
-    expect(products).toContain("EmptySlots");
+    expect(products).not.toContain("<EmptySlots");
   });
 });

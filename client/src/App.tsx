@@ -3,7 +3,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation, Redirect } from "wouter";
 import RequireAuth from "./components/RequireAuth";
 import { useEffect, useLayoutEffect, lazy, Suspense } from "react";
-import { applyHead, resolveHead } from "./lib/seoHead";
+import { maintainHead, resolveHead } from "./lib/seoHead";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
 // Keeps the prerendered page on screen while the first route chunk loads (CLS 0.33 -> ~0; see file).
@@ -60,6 +60,7 @@ const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
 const GspcConsole = lazy(() => import("./pages/GspcConsole"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
+const GpaiMatrix = lazy(() => import("./pages/GpaiMatrix"));
 const Penalties = lazy(() => import("./pages/Penalties"));
 const NistVsEuAct = lazy(() => import("./pages/NistVsEuAct"));
 const Iso42001VsEuAct = lazy(() => import("./pages/Iso42001VsEuAct"));
@@ -87,6 +88,9 @@ const Settings = lazy(() => import("./pages/Settings"));
 const WatchdogSignup = lazy(() => import("./pages/WatchdogSignup"));
 const Admin = lazy(() => import("./pages/Admin"));
 const ApiDocs = lazy(() => import("./pages/ApiDocs"));
+const DocsHub = lazy(() => import("./pages/DocsHub"));
+const Brand = lazy(() => import("./pages/Brand"));
+const X402Catalog = lazy(() => import("./pages/X402Catalog"));
 const ApiKeys = lazy(() => import("./pages/ApiKeys"));
 const PDCACycles = lazy(() => import("./pages/PDCACycles"));
 const Billing = lazy(() => import("./pages/Billing"));
@@ -110,6 +114,7 @@ const MarketingHome = lazy(() => import("./pages/MarketingHome"));
 const Standards = lazy(() => import("./pages/Standards"));
 const Resources = lazy(() => import("./pages/Resources"));
 const About = lazy(() => import("./pages/About"));
+const Him = lazy(() => import("./pages/Him"));
 const Team = lazy(() => import("./pages/Team"));
 const FirstFineWatch = lazy(() => import("./pages/FirstFineWatch"));
 const EunomiaData = lazy(() => import("./pages/EunomiaData"));
@@ -122,6 +127,7 @@ const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
 const MotionLab = lazy(() => import("./pages/MotionLab"));
 const RemediationPartners = lazy(() => import("./pages/RemediationPartners"));
 const Login = lazy(() => import("./pages/Login"));
+const AccountSignup = lazy(() => import("./pages/AccountSignup"));
 const FrameworkHive = lazy(() => import("./pages/FrameworkHive"));
 const CouncilModelCard = lazy(() => import("./pages/CouncilModelCard"));
 const CouncilSystemCard = lazy(() => import("./pages/CouncilSystemCard"));
@@ -157,7 +163,6 @@ const ConformityRoute = lazy(() => import("./pages/ConformityRoute"));
 const Contact = lazy(() => import("./pages/Contact"));
 const CouncilDetail = lazy(() => import("./pages/CouncilDetail"));
 const CouncilLicensingLanding = lazy(() => import("./pages/CouncilLicensingLanding"));
-const CourseDetail = lazy(() => import("./pages/CourseDetail"));
 const EarlyAccessLanding = lazy(() => import("./pages/EarlyAccessLanding"));
 const EI3 = lazy(() => import("./pages/EI3"));
 const EUAIActClassifier = lazy(() => import("./pages/EUAIActClassifier"));
@@ -311,6 +316,7 @@ const LicensingAgreement = lazy(() => import("./pages/legal/LicensingAgreement")
 const LicenceManifest = lazy(() => import("./pages/LicenceManifest"));
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
 const PublicPrivacy = lazy(() => import("./pages/legal/PublicPrivacy"));
+const RefundPolicy = lazy(() => import("./pages/legal/RefundPolicy"));
 const Disclaimers = lazy(() => import("./pages/legal/Disclaimers"));
 const CookiePolicy = lazy(() => import("./pages/legal/CookiePolicy"));
 const Council = lazy(() => import("./pages/Council"));
@@ -328,7 +334,8 @@ const ModelRegistry = lazy(() => import("./pages/ModelRegistry"));
 const FrameworkCatalog = lazy(() => import("./pages/FrameworkCatalog"));
 const FrameworkPresence = lazy(() => import("./pages/FrameworkPresence"));
 const PolicyGenerator = lazy(() => import("./pages/PolicyGenerator"));
-const RiskHeatmap = lazy(() => import("./pages/RiskHeatmap"));
+const WorldGlobe = lazy(() => import("./pages/WorldGlobe"));
+const WorldMap = lazy(() => import("./pages/WorldMap"));
 const OsEnter = lazy(() => import("./pages/OsEnter"));
 const CouncilTour = lazy(() => import("./pages/CouncilTour"));
 const CouncilAcademy = lazy(() => import("./pages/CouncilAcademy"));
@@ -339,7 +346,6 @@ const SocialOS = lazy(() => import("./pages/SocialOS"));
 const CouncilMinds = lazy(() => import("./pages/CouncilMinds"));
 const TryCouncil = lazy(() => import("./pages/TryCouncil"));
 const Lineage = lazy(() => import("./pages/Lineage"));
-const RelevanceMap = lazy(() => import("./pages/RelevanceMap"));
 const Temples = lazy(() => import("./pages/Temples"));
 const Playbooks = lazy(() => import("./pages/Playbooks"));
 const Dragonfly = lazy(() => import("./pages/Dragonfly"));
@@ -350,7 +356,6 @@ const HowItWorks = lazy(() => import("./pages/HowItWorks"));
 const SectorsAtlas = lazy(() => import("./pages/SectorsAtlas"));
 const Signals = lazy(() => import("./pages/Signals"));
 const SignedMillBatch20260924 = lazy(() => import("./pages/SignedMillBatch20260924"));
-const RegionsMap = lazy(() => import("./pages/RegionsMap"));
 const ConnectGSPC = lazy(() => import("./pages/ConnectGSPC"));
 // /connect/claude: connector documentation for the free MCP door /mcp/free (Claude connector directory, 2026-09-27).
 const ConnectClaude = lazy(() => import("./pages/ConnectClaude"));
@@ -385,7 +390,6 @@ const CouncilSpace = lazy(() => import("./pages/CouncilSpace"));
 const EmbedPage = lazy(() => import("./pages/EmbedPage"));
 const BadgeKit = lazy(() => import("./pages/BadgeKit"));
 const GetListed = lazy(() => import("./pages/GetListed"));
-const RealWorldMap = lazy(() => import("./pages/RealWorldMap"));
 const OnboardOS = lazy(() => import("./pages/OnboardOS"));
 const GovGraph = lazy(() => import("./pages/GovGraph"));
 const NetworkPage = lazy(() => import("./pages/NetworkPage"));
@@ -395,7 +399,6 @@ const X402Leaderboard = lazy(() => import("./pages/X402Leaderboard"));
 const GspcVsAiluminate = lazy(() => import("./pages/GspcVsAiluminate"));
 const RegulatorAtlas = lazy(() => import("./pages/RegulatorAtlas"));
 const Competitors = lazy(() => import("./pages/Competitors"));
-const ToolCommons = lazy(() => import("./pages/ToolCommons"));
 const OpenMedia = lazy(() => import("./pages/OpenMedia"));
 const DistributionIntegrity = lazy(() => import("./pages/DistributionIntegrity"));
 const Gone = lazy(() => import("./pages/Gone"));
@@ -451,13 +454,14 @@ function ScrollToTop() {
  * client/src/lib/seoHead.ts resolves it synchronously from client/src/data/seo-head.json, the
  * route manifest and the publication manifest, so the prerender snapshot never carries the
  * shell title, a shared withdrawal title or the string "undefined". A page that knows better
- * (a note's own headline, the board's live count) still overwrites it after it mounts.
+ * (a note's own headline) can refine parametrised routes after it mounts. Reviewed
+ * static-route metadata stays consistent across search and social tags.
  * The canonical is the URL the edge serves ("<route>/"), matching the prerender's rewrite.
  */
 function RouteHead() {
   const [location] = useLocation();
   useLayoutEffect(() => {
-    applyHead(resolveHead(location));
+    return maintainHead(resolveHead(location));
   }, [location]);
   return null;
 }
@@ -637,7 +641,7 @@ function AppShell() {
                   <Route path="/motion-lab" component={MotionLab} />
                   <Route path="/remediation-partners" component={RemediationPartners} />
                   <Route path="/login" component={Login} />
-                  <Route path="/signup" component={ContentReviewNotice} />
+                  <Route path="/signup" component={AccountSignup} />
                   <Route path="/welcome" component={ContentReviewNotice} />
                   <Route path="/hive/:slug" component={FrameworkHive} />
                   <Route path="/hive" component={FrameworkHive} />
@@ -672,8 +676,10 @@ function AppShell() {
                   <Route path="/contact" component={Contact} />
                   <Route path="/council-detail" component={CouncilDetail} />
                   <Route path="/council-licensing" component={CouncilLicensingLanding} />
-                  <Route path="/courses/:id" component={CourseDetail} />
-                  <Route path="/docs" component={ContentReviewNotice} />
+                  <Route path="/courses/:id" component={ContentReviewNotice} />
+                  <Route path="/docs" component={DocsHub} />
+                  <Route path="/brand" component={Brand} />
+                  <Route path="/metered" component={X402Catalog} />
                   <Route path="/early-access" component={EarlyAccessLanding} />
                   <Route path="/ei3" component={EI3} />
                   <Route path="/enterprise-plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>
@@ -697,8 +703,7 @@ function AppShell() {
                   <Route path="/how-it-works/enterprise" component={EnterpriseHowItWorks} />
                   <Route path="/how-it-works/training" component={ContentReviewNotice} />
                   <Route path="/landscape" component={Landscape} />
-                  <Route path="/mcp" component={MCPRegistry} />
-                  <Route path="/mcp/:slug" component={MCPDetail} />
+                  <Route path="/mcps/:slug" component={MCPDetail} />
                   <Route path="/mcps" component={MCPRegistry} />
                   <Route path="/old-home" component={ContentReviewNotice} />
                   <Route path="/opengridworks" component={OpenGridWorks} />
@@ -851,6 +856,7 @@ function AppShell() {
                   <Route path="/resources" component={Resources} />
                   <Route path="/payg" component={Payg} />
                   <Route path="/about" component={About} />
+                  <Route path="/him" component={Him} />
                   <Route path="/team" component={Team} />
                   <Route path="/first-fine-watch" component={FirstFineWatch} />
                   <Route path="/eunomia-data" component={EunomiaData} />
@@ -890,6 +896,10 @@ function AppShell() {
                   <Route path="/blog/how-to-verify-an-ai-measurement">{() => <BlogPost slug="how-to-verify-an-ai-measurement" />}</Route>
                   <Route path="/blog/keeping-ai-claims-current">{() => <BlogPost slug="keeping-ai-claims-current" />}</Route>
                   <Route path="/blog/gspc-g2-comparison-group-2026-10-14">{() => <BlogPost slug="gspc-g2-comparison-group-2026-10-14" />}</Route>
+                  {/* Three 2026-11-01 series posts restored 2026-11-02 (client/src/data/blog-published.json). */}
+                  <Route path="/blog/we-attack-ourselves-every-night">{() => <BlogPost slug="we-attack-ourselves-every-night" />}</Route>
+                  <Route path="/blog/owasp-asi-ten-of-ten">{() => <BlogPost slug="owasp-asi-ten-of-ten" />}</Route>
+                  <Route path="/blog/the-leaderboard-illusion-is-real">{() => <BlogPost slug="the-leaderboard-illusion-is-real" />}</Route>
                   <Route path="/blog/:slug" component={ContentReviewNotice} />
                   <Route path="/models" component={ModelRegistry} />
                   <Route path="/framework-catalog" component={FrameworkCatalog} />
@@ -920,7 +930,9 @@ function AppShell() {
                   <Route path="/minds" component={CouncilMinds} />
                   <Route path="/try" component={TryCouncil} />
                   <Route path="/lineage" component={Lineage} />
-                  <Route path="/map" component={RelevanceMap} />
+                  {/* 2026-11-02 consolidation: the map pages become tabs of one World maps page. */}
+                  <Route path="/map" component={WorldMap} />
+                  <Route path="/regions">{() => <Redirect to="/map?tab=regions" />}</Route>
                   <Route path="/temples" component={Temples} />
                   <Route path="/playbooks" component={Playbooks} />
                   <Route path="/dragonfly" component={Dragonfly} />
@@ -935,13 +947,16 @@ function AppShell() {
                   <Route path="/registers" component={Registers} />
                   <Route path="/signals/2026-09-24" component={SignedMillBatch20260924} />
                   <Route path="/signals" component={Signals} />
-                  <Route path="/regions" component={RegionsMap} />
-                  {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
-                  <Route path="/globe">{() => <Redirect to="/globe3d.html" />}</Route>
+                  {/* The earlier /regions route is the /map?tab=regions redirect near /map above. */}
+                  {/* 2026-11-02 consolidation: /globe serves WorldGlobe again. It had drifted to a
+                      bare redirect into globe3d.html, leaving the registered ai_system surface
+                      (ai-surfaces.ts, route "/globe") and its mounted Art 50 notice unserved. The
+                      page embeds globe3d.html itself in 3D mode, so the static globe stays served. */}
+                  <Route path="/globe" component={WorldGlobe} />
                   <Route path="/registry" component={ContentReviewNotice} />
                   <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
                   <Route path="/checklist" component={EUActChecklist} />
-                  <Route path="/gpai" component={GpaiObligations} />
+                  <Route path="/gpai" component={GpaiMatrix} />
                   <Route path="/foundation-models" component={GpaiObligations} />
                   <Route path="/penalties" component={Penalties} />
                   <Route path="/uk-ai-regulation">{() => <JurisdictionAct jx="uk" />}</Route>
@@ -997,7 +1012,7 @@ function AppShell() {
                   <Route path="/bft">{() => <Redirect to="/council" />}</Route>
                   <Route path="/consensus">{() => <Redirect to="/council" />}</Route>
                   <Route path="/world">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
-                  <Route path="/map-regions" component={RegionsMap} />
+                  <Route path="/map-regions">{() => <Redirect to="/map?tab=regions" />}</Route>
                   <Route path="/compare">{() => <Compare />}</Route>
                   <Route path="/vs">{() => <Compare />}</Route>
                   <Route path="/vs/:slug">{(p: any) => <Compare focus={p.slug} />}</Route>
@@ -1018,7 +1033,7 @@ function AppShell() {
                   <Route path="/four-wings" component={Dragonfly} />
                   <Route path="/industry-playbooks" component={Playbooks} />
                   <Route path="/framework-temples" component={Temples} />
-                  <Route path="/relevance-map" component={RelevanceMap} />
+                  <Route path="/relevance-map">{() => <Redirect to="/map?tab=bridges" />}</Route>
                   <Route path="/rediscovered" component={Lineage} />
                   <Route path="/voice" component={CouncilMinds} />
                   <Route path="/sov-towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
@@ -1026,7 +1041,7 @@ function AppShell() {
                   <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>
                   <Route path="/cobol" component={CobolBridge} />
                   <Route path="/cobolbridge" component={CobolBridge} />
-                  <Route path="/risk-heatmap" component={RiskHeatmap} />
+                  <Route path="/risk-heatmap">{() => <Redirect to="/map?tab=risk" />}</Route>
                   <Route path="/webhooks" component={ContentReviewNotice} />
                   <Route path="/evidence" component={ContentReviewNotice} />
                   <Route path="/oscal" component={ContentReviewNotice} />
@@ -1120,6 +1135,8 @@ function AppShell() {
                   <Route path="/terms-of-service" component={TermsOfService} />
                   <Route path="/terms" component={TermsOfService} />
                   <Route path="/legal/terms" component={TermsOfService} />
+                  <Route path="/refund-policy" component={RefundPolicy} />
+                  <Route path="/refunds" component={RefundPolicy} />
                   <Route path="/disclaimers" component={Disclaimers} />
                   <Route path="/legal/disclaimers" component={Disclaimers} />
                   <Route path="/dpa" component={ContentReviewNotice} />
@@ -1182,8 +1199,10 @@ function AppShell() {
                       (an internal sales-target board) and /brief (its per-account sales brief)
                       were withdrawn on 6 Oct 2026: all three 308 from
                       scripts/generate-redirects.mjs EXISTING. Do not re-add any of these routes. */}
-                  <Route path="/world-3d" component={RealWorldMap} />
-                  <Route path="/real-world" component={RealWorldMap} />
+                  {/* 2026-11-02 consolidation: the photoreal Google-3D experiment folds into the
+                      globe (WorldGlobe at /globe); without a Maps key it never rendered anyway. */}
+                  <Route path="/world-3d">{() => <Redirect to="/globe" />}</Route>
+                  <Route path="/real-world">{() => <Redirect to="/globe" />}</Route>
                   <Route path="/plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>
                   <Route path="/sovereign-pricing">{() => <Redirect to="/pricing" />}</Route>
                   <Route path="/start" component={OnboardOS} />
@@ -1213,8 +1232,10 @@ function AppShell() {
                   <Route path="/world-data" component={GovGraph} />
                   <Route path="/tools" component={ToolsPage} />
                   <Route path="/plugin">{() => <Redirect to="/tools" />}</Route>
-                  <Route path="/tool-commons" component={ToolCommons} />
-                  <Route path="/mcp-tools" component={ToolCommons} />
+                  {/* 2026-11-02 consolidation: the runner lives in the workspace tools pane and on
+                      /tools; the orphan ToolCommons page folds into the pane. */}
+                  <Route path="/tool-commons">{() => <Redirect to="/dashboard?tab=tools" />}</Route>
+                  <Route path="/mcp-tools">{() => <Redirect to="/dashboard?tab=tools" />}</Route>
                   <Route path="/sovereign-twin">{() => <Redirect to="/me" />}</Route>
                   <Route component={NotFound} />
                   </Switch></Suspense>

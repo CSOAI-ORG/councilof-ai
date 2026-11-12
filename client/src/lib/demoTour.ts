@@ -59,11 +59,11 @@ export const TOUR: TourStep[] = [
     tip: "Ask about any country - the globe flies to it.",
   },
   {
-    path: "/watchdog-map",
-    title: "The Global AI Watchdog",
-    usp: "Public, cryptographic accountability",
-    say: "This route demonstrates public incident intake and a map view. It does not claim that every signal is verified, cryptographically logged, or available as a live regional feed.",
-    tip: "Treat submitted signals as reports awaiting evidence and review.",
+    path: "/watchdog/",
+    title: "Public Watchdog",
+    usp: "Dated public claims and source history",
+    say: "Inspect the read-only register of public claims, sources and dates. This route does not accept or triage incident reports; no public incident service is operating.",
+    tip: "Use /corrections/ to challenge a published record. Do not send personal or incident details through Council OS.",
   },
   {
     path: "/status",
@@ -119,11 +119,11 @@ const A = "sov_tour_active", S = "sov_tour_step", SEEN = "sov_tour_seen";
 
 // Topic lenses — a surface (e.g. CesiumPortalCard) can start the tour at the
 // step its visitor actually cares about instead of always at the beginning.
-// Values are indexes into TOUR: 1=/os, 3=/try, 7=/watchdog-map.
+// Values are indexes into TOUR: 1=/os, 3=/try, 7=/watchdog/.
 export const TOUR_TOPICS: Record<string, number> = {
   os: 1,          // the Council OS tool floor
   measurement: 3, // the designed council rules on a real scenario
-  regulator: 7,   // public, cryptographic accountability
+  regulator: 7,   // public Watchdog claim register
 };
 
 export function tourStartStep(topic?: string): number {

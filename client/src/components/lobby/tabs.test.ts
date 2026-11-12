@@ -309,10 +309,17 @@ describe("Council OS tabs", () => {
       "swift",
       "evidence-index",
       "learn",
-      "research",
-      "space",
+      "evidence-learning",
+      // Menu extension (PR 3730, 2 Nov): Academy, The Ruler (games) and H.I.M. review
+      // join the canonical destination space — Academy beside Learning, Ruler beside
+      // Games, H.I.M. beside the human-review console.
+      "academy",
       "play",
+      "ruler",
+      "space",
+      "research",
       "staff",
+      "him",
       "sovx",
       "corrections",
       "claims",
@@ -557,3 +564,4 @@ describe("menuTrail names a pane in the menu's own words", () => {
     expect(sidebarLabel("board")).toBe("Leaderboard");
   });
 });
+

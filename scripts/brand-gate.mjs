@@ -270,9 +270,34 @@ const RULES = [
     id: "false_art50_nov",
     // EUR-Lex: Art 50 applied 2 Aug 2026; some marking 2 Dec 2026; Annex III 2 Dec 2027.
     // "2 Nov 2026" / "November 2026 cliff" is a dead Digital-Omnibus rumour.
-    pattern: /2\s+Nov(?:ember)?\s+2026|November 2026 cliff/i,
-    nearAllow: /not 2 Nov|wrong date|EUR-Lex|2 August 2026|2 Aug 2026/i,
-    why: "EUR-Lex only: Art 50 applied 2 Aug 2026; marking grace 2 Dec 2026; Annex III 2 Dec 2027. There is no 2 Nov 2026 cliff.",
+    //
+    // 2026-11-02: this rule stopped the whole deploy. Every rendered page carries a read
+    // timestamp — "read 2 Nov 2026, 22:49 UTC", "as of 2 Nov 2026" — and on the day the
+    // clock reached 2 Nov 2026 all 745 pages matched the rumour. A timestamp is not a
+    // claim about Article 50, so the pattern now ignores a date followed by a clock time,
+    // and nearAllow carries the stamp shapes. The rumour itself is still caught: it is a
+    // sentence about what applies, and none of those shapes put "as of" in front of it.
+    //
+    // 2026-11-02 (lane/brand-gate-art50-stamp-gap-20261102): the stamp exemption is now
+    // COMPLETE and PINNED, and the two gaps PR #3712 left open are closed.
+    //   (a) The day may be ZERO-PADDED. The ledger renders "as of Mon, 02 Nov 2026", so
+    //       the pattern accepts "02 Nov 2026" — and with the lookbehind it no longer
+    //       matches the "2 Nov 2026" hiding inside an unrelated "12 Nov 2026".
+    //   (b) The stamp prefix tolerates ONE weekday token between it and the date, so
+    //       "as of Mon, 02 Nov 2026" is allowed even when NO clock time follows. That was
+    //       the shape #3712 left open, and it would have re-blocked the deploy.
+    //   (c) The exemption is now ASSERTED in this file's selftest. #3712 added only
+    //       must-CATCH cases, so a regression that re-blocked all 745 rendered pages
+    //       would have passed CI. A gate that cannot fail is not a control.
+    //   (d) The shape the build log named next is ALSO allowed: "Each checked live on
+    //       2 Nov 2026" (client/src/components/momentum/HomeProof.tsx). That stamp carries
+    //       no clock time and no prefix from the older list, so it tripped the rule twice
+    //       more - on about/index.html and about.html - and stopped the deploy again. The
+    //       renderer is correct: it prints an honest provenance line, so the RULE learns
+    //       the shape rather than the copy being bent to dodge a string match.
+    pattern: /(?:(?<![\d])0?2\s+Nov(?:ember)?\s+2026(?!\s*,?\s*\d{1,2}:\d{2})|November 2026 cliff)/i,
+    nearAllow: /not\s+0?2\s+Nov|wrong date|EUR-Lex|2 August 2026|2 Aug 2026|\b(?:as of|read|updated|refreshed|live on|checked live on|checked on)\b(?:\s+[A-Za-z]{3,9},?)?\s+0?2\s+Nov(?:ember)?\s+2026/i,
+    why: "EUR-Lex only: Art 50 applied 2 Aug 2026; marking grace 2 Dec 2026; Annex III 2 Dec 2027. There is no 2 Nov 2026 cliff. A read timestamp carrying the date is not a claim.",
   },
   {
     id: "hub_queue_stickers",
@@ -302,7 +327,7 @@ const RULES = [
     // "Do not …" is an IMPERATIVE only when no subject precedes it: "We do not invent scores" is
     // doctrine stated to the reader and must ship, so a first-person/second-person subject right
     // before it is excluded (the scanner always matches case-insensitively).
-    pattern: /(?<!\b(?:we|i|you|they)\s)\b(?:Do not (?:invent|restore|paint|mint|put|ship|build from)|public door|This VM\b|planted key|per-site agent|in-lane only|Apex 5\d\d|SPEC only, not a live|war brief|domination playbook)\b/i,
+    pattern: /(?<!\b(?:we|i|you|they)\s)\b(?:Do not (?:invent|restore|paint|mint|put|ship|build from)|public door|This VM\b|planted key|per-site agent|in-lane only|Apex 5\d\d|SPEC only, not a live|war brief|domination playbook|the gap is the product|certification theatre|certification theater|unsolicited and permissionless|honesty gate)\b/i,
     why: "Agent/operator instruction or internal strategy note on a public surface. Say what the reader can do, or move the note to /status/internal (noindex).",
     // Exempt, by exact built path: the corrections ledger (quotes withdrawn copy verbatim), the two
     // files WRITTEN FOR AGENTS (instructions to agents are their purpose), and the noindex operator
@@ -469,6 +494,8 @@ if (SELFTEST) {
     ["agent_instruction_leak", "In build — COBOL lineage. Apex 522. SPEC only, not a live mill", "/corrections/index.html"],
     ["agent_instruction_leak", "Slot 15 / human-vs-ai stay in-lane only.", "/corrections/index.html"],
     ["agent_instruction_leak", "This VM holds the planted key behind the public door", "/corrections/index.html"],
+    ["false_art50_nov", "Article 50 applies 2 Nov 2026", null],
+    ["false_art50_nov", "the November 2026 cliff", null],
   ];
   let bad = 0;
   // The corrections-ledger exemption is one built path, never a prefix or a lookalike.
@@ -487,6 +514,73 @@ if (SELFTEST) {
     }
     if (mustAllow && rule.allowOn && !rule.allowOn.test(mustAllow)) {
       console.error(`\u2716 selftest: rule "${id}" no longer allows its documented exemption`); bad++;
+    }
+  }
+  // A rule that blocks the right thing AND the wrong thing alike is not a control.
+  //
+  // The Article 50 rule must CATCH the dead Digital-Omnibus cliff and ALLOW the estate's
+  // own read stamp — which carries the very same date. PR #3712 fixed the rule that
+  // blocked every master deploy on 2 Nov 2026 and added only must-CATCH cases, so a
+  // regression that re-blocked all 745 rendered pages would still have passed CI. These
+  // are the exact shapes the real failure carried (deploy run 41373821736: 745 hits, of
+  // which 707 were "updated 2 Nov 2026, 01:57 UTC", 27 were "read 2 Nov 2026, 01:57
+  // UTC" and 11 were "as of Mon, 02 Nov 2026 <clock> UTC"), plus the no-clock variant
+  // that a shape-based exemption leaves open.
+  const MUST_ALLOW_TEXT = {
+    false_art50_nov: [
+      "read 2 Nov 2026, 01:57 UTC",
+      "as of Mon, 02 Nov 2026 02:00:05 UTC",
+      "not unique users updated 2 Nov 2026, 01:57 UTC",
+      "source state visible current as of Mon, 02 Nov 2026 Open the full ledger",
+      // "12 Nov 2026" is not the rumour's date. A pattern that matches "2 Nov 2026"
+      // without a lookbehind would block it — the same false-positive shape again.
+      // No clock time and no stamp prefix here on purpose: with either one, the clock-time
+      // exclusion would mask the lookbehind and the case would stop testing what it claims.
+      "published 12 Nov 2026",
+      // A date followed by a CLOCK TIME is a timestamp whatever precedes it, and no stamp
+      // prefix is needed. This pins the clock-time exclusion as its own layer, so
+      // removing it is caught here rather than hidden behind the nearAllow prefixes.
+      "corpus generated 2 Nov 2026, 01:57 UTC",
+      // The shape the build log named after #3712 landed: "Each checked live on 2 Nov 2026"
+      // (client/src/components/momentum/HomeProof.tsx). A provenance stamp with no clock
+      // time and no prefix from the older list, so it tripped the rule twice - on
+      // about/index.html and about.html - and stopped the deploy again.
+      "Each checked live on 2 Nov 2026 ; an index that stops naming us drops off.",
+      "EUR-Lex only: Art 50 applied 2 Aug 2026; marking grace 2 Dec 2026; Annex III 2 Dec 2027. There is no 2 Nov 2026 cliff.",
+    ],
+  };
+  // And the shapes the rule EXISTS to catch, asserted in the same place so the two halves
+  // of the rule are proved together rather than one at a time.
+  const MUST_CATCH_TEXT = {
+    false_art50_nov: [
+      "Article 50 applies 2 Nov 2026",
+      "Article 50 obligations begin 02 Nov 2026",
+      "the November 2026 cliff",
+      "2 Nov 2026",
+    ],
+  };
+  const trips = (rule, text) => {
+    const re = new RegExp(rule.pattern.source, "gi");
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      const w = text.slice(Math.max(0, m.index - 90), m.index + m[0].length + 90);
+      if (rule.nearAllow && rule.nearAllow.test(w)) { if (m.index === re.lastIndex) re.lastIndex++; continue; }
+      return true;
+    }
+    return false;
+  };
+  for (const [id, texts] of Object.entries(MUST_ALLOW_TEXT)) {
+    const rule = RULES.find((r) => r.id === id);
+    if (!rule) { console.error(`✖ selftest: rule "${id}" no longer exists`); bad++; continue; }
+    for (const t of texts) {
+      if (trips(rule, t)) { console.error(`✖ selftest: rule "${id}" blocks a read stamp: ${JSON.stringify(t)}`); bad++; }
+    }
+  }
+  for (const [id, texts] of Object.entries(MUST_CATCH_TEXT)) {
+    const rule = RULES.find((r) => r.id === id);
+    if (!rule) { console.error(`✖ selftest: rule "${id}" no longer exists`); bad++; continue; }
+    for (const t of texts) {
+      if (!trips(rule, t)) { console.error(`✖ selftest: rule "${id}" no longer catches ${JSON.stringify(t)}`); bad++; }
     }
   }
   // Public names the gate must never catch. "SovX" is the owner-approved public product name for the
@@ -698,7 +792,9 @@ if (SELFTEST) {
     if (!caught("/corrections/index.html", "<li>&#83;OVOS</li>", "internal_codenames")) { console.error("✖ selftest: corrections ledger escaped codename now passes"); bad++; }
   }
   if (bad) { console.error(`\u2716 brand-gate selftest FAILED (${bad})`); process.exit(1); }
-  console.log(`\u2713 brand-gate selftest: ${CASES.length}/${CASES.length} rules still catch what they exist to catch`);
+  const mustAllowCount = Object.values(MUST_ALLOW_TEXT).reduce((n, a) => n + a.length, 0);
+  const mustCatchTextCount = Object.values(MUST_CATCH_TEXT).reduce((n, a) => n + a.length, 0);
+  console.log(`\u2713 brand-gate selftest: ${CASES.length}/${CASES.length} rules still catch what they exist to catch; ${mustAllowCount} read-stamp shape(s) and ${mustCatchTextCount} rumour shape(s) asserted in both directions`);
   process.exit(0);
 }
 

@@ -21,6 +21,7 @@
  *   {{DISTRIBUTION_SECTION}}                                          public/interop/distribution-latest.json
  *   {{OTS_SECTION}}                                                   public/interop/ots/manifest.json
  *   {{EVIDENCE_RECORDS_SECTION}}                                      public/evidence/published-records.json (scripts/pubbus)
+ *   {{FILE_INDEX_SECTION}}                                          public/interop/file-index.json -> the published interop tree
  *   {{DATED_MILL_ROOT_LINE}}                                          public/interop/card-root-latest.json -> immutable root bytes
  *
  * The separation fields were the exception that mattered most. Both files said "N axes measured"
@@ -64,6 +65,12 @@ import { createHash } from "node:crypto";
 import path from "path";
 import { fileURLToPath } from "url";
 import { isPlaceholderLink } from "./internal-links-check.mjs";
+import {
+  CAPTURE_PATH,
+  llmsStdioSentence,
+  llmsStdioShort,
+  npmReleaseState,
+} from "./harness-x/npm-release-state.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CHECK = process.argv.includes("--check");
@@ -431,6 +438,77 @@ function datedMillRootLine() {
   return `- Dated immutable mill-card root (as of ${root.as_of}, ${root.n_leaves} leaves): ${SITE}${rootUrl} (SHA-256 ${digest}). ${proofState}`;
 }
 
+// The interop file index: every file the estate publishes under /interop/, with its size, its
+// SHA-256 and how it is served. It was published on 2026-11-03 so a reader can NAME any published
+// file and CHECK its bytes — but a published artefact nobody can name is the same defect as a
+// missing one, so the index needs a door of its own here, not only a page that links to it.
+//
+// Every figure below is substituted at build time from the index's own counts. None is typed:
+// a typed count is a count nothing retires, which is the failure this whole file exists to stop.
+// If the artifact does not carry a count, this THROWS — absence is a state, never a zero.
+//
+// WHAT THE INDEX IS NOT. It is a measurement of the published tree: it says a file is present and
+// that its bytes are the ones served. It says nothing about whether a file is measured, signed,
+// certified, or true, and a row in it is never an endorsement of anything.
+function fileIndexSection() {
+  const ix = readJSON("public/interop/file-index.json");
+  const c = ix.counts || {};
+  for (const k of ["files", "bytes"]) {
+    if (c[k] === undefined || c[k] === null) {
+      throw new Error(`interop file index carries no counts.${k} — absent is not zero`);
+    }
+  }
+  const by = c.by_served || {};
+  const kinds = Object.keys(by).sort();
+  if (!kinds.length) throw new Error("interop file index carries no counts.by_served — absent is not zero");
+  const legend = ix.served_legend || {};
+  const served = kinds.map((k) => `${fmtN(by[k])} ${k}`).join("; ");
+  const legendLines = kinds.map((k) => `- ${k}: ${legend[k] || "see the index's own served_legend"}`);
+
+  // SERVED BYTES vs PUBLISHED BYTES. The index carries a per-row served_bytes field that says
+  // whether the bytes the site serves are the bytes the estate published. The EDGE rewrites some
+  // HTML in transit — an http:// link becomes https://, and a mailto: link becomes an obfuscated
+  // address randomised PER REQUEST — so on some rows a reader's fetch cannot match the published
+  // digest, and on those rows no digest of the served bytes can be reproduced by anyone.
+  //
+  // This paragraph is emitted ONLY when the artefact carries the field. It is not thrown for: an
+  // index written before the field existed is a real artefact, and the honest thing to say about
+  // it is nothing rather than a count of edge-transformed rows the index does not have. The
+  // promise below is the index's own, so the two cannot drift apart silently.
+  const byBytes = c.by_served_bytes || null;
+  const bytesLegend = ix.served_bytes_legend || {};
+  const bytesKinds = byBytes ? Object.keys(byBytes).sort() : [];
+  const bytesLines = bytesKinds.map((k) => `- ${k}: ${bytesLegend[k] || "see the index's own served_bytes_legend"}`);
+  const bytesBreakdown = bytesKinds.map((k) => `${fmtN(byBytes[k])} ${k}`).join("; ");
+  const bytesParagraph = byBytes
+    ? `
+- By how the served bytes compare with the published bytes: ${bytesBreakdown}.
+${bytesLines.join("\n")}
+- To check one file: fetch its path and hash it. On a row whose served_bytes reads "as-published", a
+  match means you hold the bytes the estate published. On a row the edge rewrites, the bytes the
+  site serves are NOT the bytes published, and on a row the edge rewrites PER REQUEST the served
+  bytes differ on every fetch, so no digest of them can be reproduced. The index says a file is
+  PRESENT and, where it says so, IDENTICAL to what is served — not that it is measured, signed,
+  certified or true.`
+    : `
+- To check one file: fetch its path and hash it. A match means you hold the bytes the estate
+  published. The index says a file is PRESENT and IDENTICAL to what is served — not that it is
+  measured, signed, certified or true.`;
+
+  return `Derived at generation from ${SITE}/interop/file-index.json (same bytes on disk at
+public/interop/file-index.json, schema ${ix.schema}, artifact as_of ${ix.as_of}). It is a
+MEASUREMENT of the published tree, not a list of intentions: each row carries the path, the size,
+the SHA-256 of the bytes and how the file is served.
+
+The index does not list itself. A file cannot carry its own digest — hashing the published index
+gives a digest that depends on the digest — so a row claiming one would be wrong the moment it was
+written. Every OTHER file under /interop/ is listed.
+
+- Files indexed: ${fmtN(c.files)}. Bytes indexed: ${fmtN(c.bytes)}.
+- By how they are served: ${served}.
+${legendLines.join("\n")}${bytesParagraph}`;
+}
+
 function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
   const map = {
     LID: t.lid,                                  // verbatim, never re-phrased
@@ -446,7 +524,22 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
     UNTESTED_SEPARATIONS: t.untested_separations, COMPARISON_AXES: t.comparison_axes,
     DISTRIBUTION_SECTION: distributionSection(), OTS_SECTION: otsSection(),
     EVIDENCE_RECORDS_SECTION: evidenceRecordsSection(),
+    FILE_INDEX_SECTION: fileIndexSection(),
     DATED_MILL_ROOT_LINE: datedMillRootLine(),
+    // The npm package's release state, DERIVED from the dated capture. It was typed prose here
+    // once ("the published npm release is marked deprecated on npm"), and it was false: npm
+    // deprecates 0.1.0-0.2.2, and the estate's later releases (0.2.5) are not deprecated. The
+    // capture measures the flag; the module owns the sentence; this file only places it.
+    ...(() => {
+      const state = npmReleaseState(readJSON(CAPTURE_PATH));
+      const doorTools = mcpCounts().total;
+      const freeDoor = `${SITE}/mcp/free`;
+      const preparedVersion = readJSON("mcp/gspc-server/package.json").version;
+      return {
+        NPM_STDIO_SENTENCE: llmsStdioSentence(state, { doorTools, freeDoor, preparedVersion }),
+        NPM_STDIO_SHORT: llmsStdioShort(state, { doorTools, freeDoor }),
+      };
+    })(),
     ...(() => {
       const m = mcpCounts();
       return { MCP_TOOLS: m.total, MCP_FREE: m.free, MCP_PAID: m.paid,
@@ -461,6 +554,30 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
   const left = out.match(/\{\{[A-Z_]+\}\}/);
   if (left) throw new Error(`unsubstituted placeholder ${left[0]} — it has no named source`);
   return out;
+}
+
+// A proof upgrade changes only the on-disk timestamp manifest. Refresh that
+// section without fetching a new board or changing unrelated dated snapshots.
+if (process.argv.includes("--timestamps-only")) {
+  const plans = ["public/llms.txt", "public/llms-full.txt"].map((file) => {
+    const have = fs.readFileSync(p(file), "utf8");
+    const marker = "Derived at generation from https://councilof.ai/interop/ots/manifest.json";
+    const start = have.indexOf(marker);
+    if (start < 0 || have.indexOf(marker, start + marker.length) >= 0) {
+      throw new Error(`${file}: expected exactly one timestamp section`);
+    }
+    const end = have.indexOf("\n## ", start);
+    if (end < 0) throw new Error(`${file}: timestamp section boundary missing`);
+    return { file, have, want: have.slice(0, start) + otsSection().trimEnd() + "\n" + have.slice(end) };
+  });
+  // Validate both section boundaries before writing either output.
+  let drift = 0;
+  for (const { file, have, want } of plans) {
+    if (have !== want) drift++;
+    if (!CHECK) fs.writeFileSync(p(file), want);
+    console.log(`${file}: timestamp section ${have === want ? "unchanged" : CHECK ? "drift" : "refreshed"}`);
+  }
+  process.exit(CHECK && drift ? 1 : 0);
 }
 
 let b;

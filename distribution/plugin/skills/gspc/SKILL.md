@@ -5,7 +5,7 @@ description: Read the Council of AI GSPC board and verify signed measurement car
 
 # GSPC (Council of AI, Layer 0)
 
-The `gspc` MCP server exposes 53 tools (48 free, 5 x402-metered) at https://councilof.ai/mcp; https://councilof.ai/mcp/free serves the 48 free tools only.
+The `gspc` MCP server exposes 54 tools (49 free, 5 x402-metered) at https://councilof.ai/mcp; https://councilof.ai/mcp/free serves the 49 free tools only.
 
 Free:
 - `board_totals` — Read the live GSPC board overview.
@@ -56,6 +56,7 @@ Free:
 - `axis_claim-maintenance` — The claim-maintenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
 - `axis_serving-fidelity` — The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
 - `axis_watchdog-ingest` — The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
+- `framework_readiness` — A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra.
 
 x402-metered (call without `x_payment` to see the challenge; a challenge is not a payment):
 - `commission_card` — Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation.

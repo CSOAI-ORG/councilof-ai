@@ -33,11 +33,12 @@ describe("owner-gated axes never render publicly", () => {
 describe("declared-slot method_status", () => {
   it("every new axis carries method_status", () => {
     for (const a of AXES_D) {
-      if (a.axis === "serving-fidelity") {
-        expect(a.method_status).toBe("reviewed, not run");
-        expect(a.method).toBe("serving-fidelity v0.2");
-        expect(a.method_sha).toBe("18206f71");
-      } else expect(a.method_status, a.axis).toBe("no-method: declared slot");
+      // All 11 subject axes are promoted to MEASURED (claim-maintenance on 2026-10-29;
+      // the remaining 10 subject axes on 2026-11-02) with frozen, sha-pinned banks and n_valid >= 30.
+      expect(a.method_status, a.axis).toBe("meets-rule");
+      expect(a.kind, a.axis).toBe("measured-subject");
+      expect(a.status, a.axis).toBe("MEASURED");
+      expect(a.n, a.axis).toBeGreaterThanOrEqual(30);
     }
     // DERIVED, not typed: the estate adds subject axes (slot 34 = watchdog-ingest,
     // 2026-10-30) and a typed 10 here would fail on a correct board.

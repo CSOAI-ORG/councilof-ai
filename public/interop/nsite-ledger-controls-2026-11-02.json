@@ -1,0 +1,45 @@
+{
+ "kind": "csoai.nsite-ledger-controls/0.1",
+ "as_of": "2026-11-02T03:48:44Z",
+ "subject": "public/interop/nsite-presence-ledger.json",
+ "subject_sha256": "344269534683c6ce5c2f5ad42f1c56879aa394c02c4db5b3d86a700fc3f0cc22",
+ "source": "evidence/sites-census/nsite-presence-ledger.json",
+ "source_sha256": "e53ff2a894fd9227ea276642edd47096ca0972dec8d80cd680c5f6263e5f7515",
+ "doctrine": "states, not verdicts; a control that only passes is a scoreboard",
+ "controls": [
+  {
+   "control": "POSITIVE",
+   "input_sha256": "e53ff2a894fd9227ea276642edd47096ca0972dec8d80cd680c5f6263e5f7515",
+   "expected": "pass",
+   "findings": [],
+   "verdict": "PASS"
+  },
+  {
+   "control": "NEGATIVE_TAMPERED_SOURCE_BYTE",
+   "input_sha256": "966f5e13b072451c69e60b35376048e83324a82c7e9f2ea382fd8640eb64e7d1",
+   "expected": "fail \u2014 the published ledger_sha256 must reject any other source bytes",
+   "findings": [
+    "ledger_sha256 e53ff2a894fd9227\u2026 does not match the source bytes 966f5e13b072451c\u2026"
+   ],
+   "verdict": "CAUGHT"
+  },
+  {
+   "control": "NEGATIVE_COUNTS_LIE",
+   "input_sha256": "2db6718da25e17903ba83fd546ad5d8a7d637c3882a6352eee2da5ddf800aeb2",
+   "expected": "fail \u2014 dropping a row without touching counts must flag",
+   "findings": [
+    "counts.rows says 2202, rows say 2201",
+    "counts.verified says 2138, rows say 2137"
+   ],
+   "verdict": "CAUGHT"
+  },
+  {
+   "control": "MISSING",
+   "input_sha256": "5a29c876dd4f47cfea13612013cb19da8424f347d50bfa0463f235c8f04afb9f",
+   "expected": "MISSING state, never skipped",
+   "findings": [],
+   "verdict": "PASS"
+  }
+ ],
+ "not_a_claim": "A passing control proves the checker can detect these faults. It measures the ledger artefact's internal rules only \u2014 it does not verify bundles against the pod evidence store and is not certification."
+}

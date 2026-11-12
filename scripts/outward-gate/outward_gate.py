@@ -543,9 +543,21 @@ PRICE_CTX = re.compile(r"pric|cost|per\s+(?:call|request|card|query|month|year|s
 PRICE_OK = re.compile(r"penalt|\bfines?\b|turnover|market cap|supply|TVL|AUM|outstanding|reserve|raised|grant|settled|revenue|payers?\b|received", re.I)
 
 
-def _hits(text, rx, neg=NEG, before=80, after=40, allow=None, n=3):
+def _hits(text, rx, neg=NEG, before=80, after=40, allow=None, n=3, exempt=None):
+    """exempt(text, match) -> True means the match is not a claim at all.
+
+    This is NOT the negation escape. The negation escape says "we did not
+    certify"; this says the sentence's STRUCTURE makes the word the object
+    of a denial -- "distinguishes X from certification", "explicitly
+    excludes: ... certification". It is passed in by the caller, so the
+    public-notice path is unaffected: a notice that says "fails" is
+    telling a reader something, and the notice word list has no negation
+    escape BY DESIGN.
+    """
     hits = []
     for m in rx.finditer(text):
+        if exempt is not None and exempt(text, m):
+            continue
         w0 = text[max(0, m.start() - before): m.start()]
         w1 = text[m.end(): m.end() + after]
         if text[max(0, m.start() - 4): m.start()].lower().endswith(("non-", "non ")):
@@ -571,19 +583,14 @@ def brand_enforce_held():
     return os.environ.get("BRAND_GATE_ENFORCE_HELD") == "1"
 
 
-def doctrine_checks(text, path="", owner=OWN_DOCTRINE, prices=False):
+def doctrine_checks(text, path="", owner=OWN_DOCTRINE, prices=False, exempt=None):
     """`path` is the BUILT path of the artifact (built_path() for a served page), as brand-gate.mjs sees it."""
     out = []
-    # The corrections ledger states what we published and got wrong, so an entry has to quote it
-    # ("Some pages offered or implied certification ...", "Two priced strings ($0.005/card ...)").
-    # brand-gate.mjs exempts exactly that one built path from the rules its entries quote; the two word
-    # checks below are this gate's own and had no such exemption, so the ledger could never score 100%
-    # without deleting a correction.
     quoted = quotes_withdrawn_copy(path)
     if quoted:
         out.append(R("doctrine.no_certify_language", NA, LEDGER_NA))
     else:
-        h = _hits(text, CERT, before=140, after=80)
+        h = _hits(text, CERT, before=140, after=80, exempt=exempt)
         out.append(R("doctrine.no_certify_language", FAIL if h else PASS,
                      ("certify/compliant/accredited/endorsed used without negation: " + " | ".join(h)) if h else "none found", owner))
     if prices and quoted:

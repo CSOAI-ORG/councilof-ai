@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { auditSpecialist, buildTree, sha256 } from './axis-specialists.mjs';
 
 const registry = JSON.parse(readFileSync(new URL('../council-os/axis-specialists/registry.json', import.meta.url), 'utf8'));
-const snapshot = JSON.parse(readFileSync(new URL('../council-os/axis-specialists/board-2026-10-28.snapshot.json', import.meta.url), 'utf8'));
+const snapshot = JSON.parse(readFileSync(new URL('../council-os/axis-specialists/board-2026-11-02.snapshot.json', import.meta.url), 'utf8'));
 const mcpTools = JSON.parse(readFileSync(new URL('../functions/mcp/gspc-tools.json', import.meta.url), 'utf8'));
 const spec = registry.specialists.find((item) => item.axis === 'governance');
 const row = snapshot.axes.find((item) => item.axis === 'governance');
@@ -36,7 +36,15 @@ describe('axis specialist evidence boundaries', () => {
   });
 
   it('surfaces fabricated-score findings ahead of an unmeasured-gap label', () => {
-    const gap = snapshot.axes.find((item) => item.kind === 'declared-slot');
+    const gap = snapshot.axes.find((item) => item.kind === 'declared-slot') ?? {
+      axis: 'lab-practice',
+      family: 'subject',
+      kind: 'declared-slot',
+      status: 'UNMEASURED',
+      n: 0,
+      applies_to: 'ai-labs',
+      method_status: 'no-method: declared slot',
+    };
     const gapSpec = registry.specialists.find((item) => item.axis === gap.axis);
     const value = auditSpecialist(gapSpec, { ...gap, accuracy: 0.99 }, registry);
     expect(check(value, 'NO_FABRICATED_SCORE').state).toBe('FINDING');

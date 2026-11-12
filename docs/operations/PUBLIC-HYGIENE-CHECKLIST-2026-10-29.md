@@ -247,3 +247,29 @@ Changing source bytes does not change any previously published package version.
 4. Require the released archive's actual stdio response and a Dify install/use readback before
    describing these repairs as available to registry users. Do not turn offline compilation,
    source publication or a generated catalogue into adoption.
+
+
+## Current-source reconciliation — 12 November 2026
+
+The earlier 30 October source acceptance remains dated evidence, not a current release.
+This continuation reconciles the existing PR against master `0663a4395fc331b904804169b47a427c3a712d3d`
+and retains its existing protected release route. It creates no second product or master plan.
+
+Nine text conflicts were reviewed. Current homepage/distribution wording and the newer
+capture-derived installation/submission records supersede the corresponding older proposal.
+The registry already publishes 0.2.7; this candidate therefore prepares 0.2.8 rather than
+reverting the source to 0.2.5 or replacing an immutable published archive. The HTTP server
+version and 54-tool catalogue remain unchanged.
+
+The unlanded stdio summary/full, separated-leader and original-date corrections remain,
+as do three scoped tool-description clarifications, the canonical licence-copy rule,
+metadata write controls and their regression tests. Generated outputs come from the current
+producers, including newer working-group and charter projections; those projections are
+not new appointments, adopted standards, human reviews or measured axes.
+
+Local source checks: eight renderer controls and fourteen metadata controls pass, together
+with the profile selftest, npm-guide positive/negative checks and the current wired-tool suite.
+The renderer reproduces 216 outputs across 26 configured targets. These counts are source
+validation, not deployed integrations. The complete hosted checks must qualify the composed
+head before merge; production, immutable package release and outside-user acceptance remain
+separate receipts. No old green result is carried forward as acceptance of new bytes.

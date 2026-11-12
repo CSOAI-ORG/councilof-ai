@@ -35,7 +35,6 @@ const ALLOW_PRICE: Allow[] = [
   { file: "pages/GpaiEvidencePack.tsx", why: "GPAI penalty ceiling from the regulation" },
   { file: "pages/Training-v2.tsx", why: "other providers' published rates, quoted as comparison; ours reads FREE" },
   { file: "pages/CobolBridge.tsx", why: "market-size statistic cited to Communications of the ACM" },
-  { file: "pages/RegulatoryAuthority.tsx", why: "third-party revenue statistic" },
   { file: "pages/CaseStudies.tsx", why: "a customer's reported saving, not our price" },
   { file: "pages/ProsperityFund.tsx", why: "fund mechanics illustrated with worked examples" },
   { file: "pages/legal/TermsOfService.tsx", why: "liability cap — a legal necessity" },
@@ -175,7 +174,7 @@ describe("route titles obey the ruling and type no count", () => {
  * JSON-LD is the copy a search engine reads, and the body-text checks above cannot see it: a price
  * there is written `price: "99"` with the currency in a SEPARATE key, so no currency-symbol regex
  * matches it. MCPDetail.tsx carried `price: "99", priceCurrency: "USD", category: "subscription"`
- * on the /mcp/:slug route — one page per MCP server in the registry, every one of them advertising
+ * on the /mcps/:slug route — one page per MCP server in the registry, every one of them advertising
  * a $99 subscription for a free, permissively-licensed package. Structured data gets its own check.
  */
 describe("structured data offers nothing we do not sell", () => {

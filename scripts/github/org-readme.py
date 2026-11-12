@@ -4,7 +4,9 @@ councilof-ai/README.md, the personal-profile draft and the public repo inventory
 from LIVE endpoints.
 
 The compact --account-profile introduction links live evidence without copying counts.
-Other profile modes derive every count at run time from:
+Other profile modes read measurement and distribution counts from the sources below.
+Entity information and the external-use evidence link remain maintained in this generator
+rather than hand-edited into its output.
 
   https://councilof.ai/api/gspc                 totals.lid verbatim, the board (axis count derived at run time, never typed)
   https://councilof.ai/api/badge                the board image (200 image/svg+xml, or it is left out)
@@ -363,8 +365,10 @@ def derive() -> dict:
          "as_of": None, "current": None},
         {"surface": "Kaggle dataset", "id": "nicktempleman/csoai-gspc-living-board", "url": KAGGLE_URL,
          "lands": "a new dataset version per changed fingerprint; the subtitle carries `as_of`",
-         "read_back": (f"HTTP {kst} · latest ISO timestamp on the listing page `{kiso[-1]}`" if kiso else (f"HTTP {kst} · no timestamp readable without a login" if kst else UNCHECKABLE)),
-         "as_of": kiso[-1] if kiso else None, "current": cur(kiso[-1] if kiso else None)},
+         "read_back": (f"HTTP {kst} · latest listing timestamp `{kiso[-1]}`; snapshot `as_of` not checked here" if kiso else (f"HTTP {kst} · snapshot `as_of` not readable from this listing" if kst else UNCHECKABLE)),
+         # A listing may expose upload or page-update dates. None identifies the
+         # snapshot's root timestamp, so this read cannot establish its currency.
+         "as_of": None, "current": None},
         {"surface": "GitHub mirror", "id": f"{OWNER}/gspc-board", "url": f"https://github.com/{OWNER}/gspc-board",
          "lands": "the snapshot files on `main`",
          "read_back": (f"as_of `{dig(gm, 'as_of')}` · merkle `{short(dig(gm, 'merkle_root'), 12)}` · {n_or_unc(dig(gm, 'card_count'))} leaves" if gm else UNCHECKABLE),
@@ -378,7 +382,7 @@ def derive() -> dict:
          "read_back": f"{f['pypi']['version']} · uploaded {f['pypi']['uploaded']} · {f['pypi']['license']}",
          "as_of": None, "current": None},
         {"surface": "npm", "id": "csoai-gspc-mcp", "url": "https://www.npmjs.com/package/csoai-gspc-mcp",
-         "lands": "stdio MCP server over the same endpoints (published by hand — the account is WebAuthn, so the daily spray cannot push here)",
+         "lands": "stdio MCP server over the same endpoints, released from `councilof-ai`",
          "read_back": f"{f['npm']['version']} · published {f['npm']['published']} · {f['npm']['license']}",
          "as_of": None, "current": None},
     ]
@@ -541,7 +545,7 @@ LEAD_LINE = (
 )
 
 WHO_WE_ARE = (
-    f"**{WORDMARK} — Council of AI — is the public measurement service operated by CSOAI Ltd, "
+    f"**{WORDMARK} — Council of AI — is an operating AI measurement and evidence organisation run by CSOAI Ltd, "
     # The company number is a STABLE fact about the entity, not a live endpoint, so it lives HERE
     # and not in a fetch. It was once added by hand to the emitted README, and the next daily
     # regeneration wiped it — the claim lived in the artefact and not in the generator that emits
@@ -553,10 +557,18 @@ WHO_WE_ARE = (
     "We measure; we do not certify, accredit, issue legal-compliance determinations, sell a rank, or take money from anything we rank."
 )
 
+EXTERNAL_USE = (
+    "**Documented external use:** public records include an externally operated automated rerun, "
+    "a participant's open implementation proposal, and a citation in an individual Internet-Draft. "
+    "The [dated evidence and scope of each example](https://councilof.ai/traction/#external-use) distinguish "
+    "technical reuse from package-download events, customers and institutional endorsement."
+)
+
 
 def derived_line(f: dict) -> str:
     return (f"_derived {f['derived']} by [`scripts/github/org-readme.py`](https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/github/org-readme.py) — "
-            "every number on this page is read live from the URLs in that script; if this page and the API disagree, the API is right._")
+            "measurement and distribution fields are read from the sources in that script at derive time. "
+            "Recheck those sources for current values; external-use examples retain their cited dates and scope._")
 
 
 def repos_table() -> str:
@@ -593,6 +605,8 @@ def profile_md(f: dict, product_index: Path | None) -> str:
         "",
         WHO_WE_ARE,
         "",
+        EXTERNAL_USE,
+        "",
         f"> **{f['lid']}**",
         "",
         board_image_row(f),
@@ -603,8 +617,8 @@ def profile_md(f: dict, product_index: Path | None) -> str:
         "",
         "## The board today",
         "",
-        f"`GET https://councilof.ai/api/gspc` — schema `{f['schema']}` · `totals.public_count` = **{f['public_count']}** · "
-        f"{n_or_unc(f['model_fleets'])} model fleets · {n_or_unc(f['fact_runs'])} fact runs · {n_or_unc(f['public_leader_count'])} public leader scores.",
+        f"`GET https://councilof.ai/api/gspc` — schema `{f['schema']}` · `totals.public_count` = **{f['public_count']}**. "
+        "The table preserves each axis's kind; model comparisons, deterministic facts and measured subjects are distinct populations.",
         "",
         board_table(f),
         "",
@@ -717,6 +731,8 @@ def councilof_top(f: dict, product_index: Path | None) -> str:
         LEAD_LINE,
         "",
         WHO_WE_ARE,
+        "",
+        EXTERNAL_USE,
         "",
         "**How to read the board:** measurement coverage and model-ranking separation are different determinations. "
         "TIE means the evidence does not justify a hierarchy; UNTESTED means no separation test is published yet; "

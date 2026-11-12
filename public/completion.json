@@ -1,6 +1,6 @@
 {
  "schema": "csoai.completion-ledger/1",
- "generated_at": "2026-10-27T04:05:00Z",
+ "generated_at": "2026-11-02T07:10:08Z",
  "note": "Verified completions with their receipts. A line is only here if a live read, a validator run or a merged PR backs it. Blockers are listed, not hidden. Nothing here is a customer, a sale or a valuation.",
  "verified": [
   {
@@ -202,6 +202,26 @@
    "item": "The ONE public root advanced and production serves the repository's bytes",
    "receipt": "Measured 2026-10-27. GET https://councilof.ai/root.json serves as_of 2026-10-26T19:19:22Z, card_count 325, merkle_root 81c2a553038718babede20cc5ecdb819f750d03e149e7bf80d0010e7febd0f0c, sha256 of the served bytes e360e4648283e91473bdc7141aea547c1144a20860d7c0580e8373a88eeee710. master's public/root.json is byte-identical to those served bytes over the whole 25925-byte document. The estate's own upgrade run 40445020260 compared the two digests and printed \"PUBLISHED: production serves master's root.json.\" All 18 MCP-conformance atoms are leaves of the served root (18 of 18, matched on each atom card's own sha256 against the served card_sha256 list). The root moved from the 317 leaves at as_of 2026-10-13T03:31:42Z that the ledger used to carry, to 325 leaves at a later as_of. The mass-drop floor min_count = 302 is untouched.",
    "at": "2026-10-27T04:05:00Z"
+  },
+  {
+   "item": "Board is live and honest",
+   "receipt": "Measured 2026-11-02T03:44:12Z, after the deploy that published the 34th slot. GET https://councilof.ai/api/gspc answers totals.axes 34, totals.measured_axes 23, totals.unmeasured_axes 11, public_count '34 axes · 23 measured' and lid '23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.' The 34th slot is watchdog-ingest: family subject, kind declared-slot, status UNMEASURED, n 0, public_pages HIDDEN_PENDING_OWNER_GO. A published slot is not a measurement, so the measured count stays 23 and only the unmeasured count moves, 10 -> 11. The separation line is unchanged: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED. public-incident-vigilance is NOT on the board: it stays a candidate slot and is not admitted, so the board carries one 34th axis, not two.",
+   "at": "2026-11-02T03:44:12Z"
+  },
+  {
+   "item": "MCP surface",
+   "receipt": "Measured 2026-11-02, after the deploy that published the 34th axis. scripts/mcp-probe.mjs with no --door-origin reached 4 endpoints across 2 distinct servers and probed 106 tools, 0 unreachable, 6 catalogued-not-probed, and tools_catalogued_not_probed null because a count with no source is null and never 0. The live door answers 53 tools: 48 free readers and 5 metered, of which 34 are the board's named axes, one per slot. The previous reading on this line (2026-10-26) said 52 tools, 47 free, 5 metered and 33 axis tools; the difference is the axis the 34th slot added. The committed artefact carries no probe_scope, no contacted and no stand_in_for: those fields say a stand-in answered, and this reading is the live door.",
+   "at": "2026-11-02T03:42:49Z"
+  },
+  {
+   "item": "Board is live and honest",
+   "receipt": "Measured 2026-11-02T07:08:19Z, after the deploy that measured the ten remaining subject axes. GET https://councilof.ai/api/gspc answers totals.axes 34, totals.measured_axes 34, totals.unmeasured_axes 0, public_count '34 axes · 34 measured' and lid '34 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.' The earlier reading on this line (2026-11-02T03:44:12Z) said 34 axes · 23 measured with 11 unmeasured, when watchdog-ingest was a declared slot: a published slot is not a measurement. Both readings stand as what the endpoint said on the day; this is the later one. The board's public_count is copied from the endpoint and is never typed here.",
+   "at": "2026-11-02T07:10:08Z"
+  },
+  {
+   "item": "MCP surface",
+   "receipt": "Measured 2026-11-02T07:08Z, against the live door. scripts/mcp-probe.mjs with no --door-origin reached 4 endpoints across 2 distinct servers and probed 106 tools, 0 unreachable, 6 catalogued-not-probed, and tools_catalogued_not_probed null because a count with no source is null and never 0. The live door answers 53 tools: 48 free readers and 5 metered, of which 34 are the board's named axes, one per slot. The committed artefact carries no probe_scope, no contacted and no stand_in_for: those were the pre-deploy stand-in's fields, and a stand-in is not a measurement.",
+   "at": "2026-11-02T07:10:08Z"
   }
  ],
  "blockers": [

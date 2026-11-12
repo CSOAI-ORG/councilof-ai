@@ -21,19 +21,19 @@ import { fetchAxes } from "@/lib/gspcAxes";
 export const STORY: Slide[] = [
   {
     // 01 HERO — H1 is locked. Hero video sits above the headline, over the arena.
-    kicker: "Council of AI — published measurements of AI behaviour",
-    body: "We measure AI behaviour using published, frozen tests and make the results available for review. Supported signed records can be checked with our free verifier. Each result states its scope and date; corrections remain public. Measurement does not establish certification or legal compliance.",
+    kicker: "Council of AI — AI measurement and verifiable evidence",
+    body: "Explore AI evaluations based on published methods, with evidence you can inspect. Each result has a defined subject, test scope and date; signed records can be verified using the published tools. Measurement services are scoped separately. Measurement is not certification.",
     bg: { src: "/images/coliseum_hero_arena.jpg", alt: "Clay figures and green verification seals gathered in a marble arena" },
   },
   {
     // 02 The problem — light, breathes
     kicker: "The problem",
     video: { src: "/videos/council-of-ai.mp4", poster: "/videos/council-of-ai.jpg", title: "What Council of AI does — a 9-minute look" },
-    title: "The “trust us” PDF",
-    body: "Most AI assurance is a claim on a slide — a badge, a private report, a number with no test behind it. You can’t run it, you can’t see what was skipped, and the moment the model updates the paperwork is already out of date.",
+    title: "From a reported result to inspectable evidence",
+    body: "Evaluating an AI result requires more than a headline score. Review the test method, sample, exclusions and measurement date, then inspect the supporting evidence. A changed model may require a new evaluation.",
     points: [
-      { tag: "pain", text: "You get a badge, not a test you can run" },
-      { tag: "pain", text: "No sample size, no interval, no list of what was skipped" },
+      { tag: "pain", text: "A summary alone does not provide a reproducible test" },
+      { tag: "pain", text: "Review sample size, uncertainty and exclusions" },
       { tag: "benefit", text: "Evidence built to outlive the vendor that sold it" },
       { tag: "usp", text: "We publish the test and the scoring code — recompute it yourself" },
     ],
@@ -43,12 +43,12 @@ export const STORY: Slide[] = [
     // 03 Your proof — heavy, the vault + the signed credential
     kicker: "Your proof",
     title: "One small card, signed and yours",
-    body: "We run your system on frozen, published tests, sign the result, and give you the card — under a kilobyte holding the axis, the model, the accuracy, the issuer, the date, the previous card's hash and the signature. Sample sizes and intervals live on the board beside it, not inside it. Anyone can recompute the card in their own browser, and the signing key is public.",
+    body: "We run your system on frozen, published tests, sign the result, and give you the card — under a kilobyte holding the axis, the model, the accuracy, the issuer, the date, the previous card's hash and the signature. Sample sizes and intervals live on the board beside it, not inside it. Anyone can recompute the card in their own browser, and the verification key is public.",
     points: [
       { tag: "pain", text: "Reports sit on someone else’s server and can quietly change" },
       { tag: "benefit", text: "You hold a sub-kilobyte card — recheck the signature and hash in any browser" },
       { tag: "benefit", text: "The score travels in the card; its sample size and interval stay on the live board" },
-      { tag: "usp", text: "Public signing key — anyone verifies without asking us" },
+      { tag: "usp", text: "Public verification key — check the signature independently" },
     ],
     href: "/gspc-verify",
     cta: "Verify a card",
@@ -56,14 +56,14 @@ export const STORY: Slide[] = [
   },
   {
     // 04 The honest board — light, proving-ground video
-    kicker: "The honest board",
-    title: "The living board — including the axis that catches us",
-    body: "The public board is signed and honest: empty cells stay empty, ties stay ties. Jail — whether a model can be talked out of its guardrails — is a measured floor when the stamp says so, and we say so. It caught our own fine-tune missing every escape, and we published that. Live counts: GET /api/gspc.",
+    kicker: "Transparent results",
+    title: "The measurement board — results, scope and uncertainty",
+    body: "The public board separates measured results, unmeasured subjects and statistical ties. Read each record for its method and signature status. Jailbreak results retain their stated measurement limits, including the published negative finding for our in-house fine-tune. Current counts: GET /api/gspc.",
     points: [
-      { tag: "pain", text: "Scorecards quietly hide the tests a model fails" },
+      { tag: "pain", text: "Coverage and unmeasured cases need to remain visible" },
       { tag: "benefit", text: "Empty cells stay empty — you see exactly what’s measured" },
       { tag: "benefit", text: "Jail is a floor — measured; living-board separation is TIE, stated in plain sight" },
-      { tag: "usp", text: "It caught our own fine-tune — and we published it" },
+      { tag: "usp", text: "In-house model results and corrections are also published" },
     ],
     href: "/dashboard?tab=board",
     cta: "Open the board",
@@ -75,7 +75,7 @@ export const STORY: Slide[] = [
     title: "AI versus AI",
     body: "Models face the same frozen tests, head to head. Each match is two systems and one instrument, and the verdict is a fixed rule — never one AI grading another. Any round can become a signed card.",
     points: [
-      { tag: "pain", text: "Leaderboards run on vibes and vote-brigading" },
+      { tag: "pain", text: "Different ranking methods answer different questions" },
       { tag: "benefit", text: "Every match is a fixed pass/fail rule you can audit" },
       { tag: "benefit", text: "Ties are ties — never counted as a win" },
       { tag: "usp", text: "No model ever judges another — grading is deterministic" },
@@ -89,10 +89,10 @@ export const STORY: Slide[] = [
     // 06 Colosseum — REMOVED: Citizen/Mayor/Red modes 404. Replaced with honest claim.
     kicker: "Colosseum",
     title: "You versus the AI",
-    body: "Step in and probe a system live. Signed runs count; practice runs stay practice and are never quoted.",
+    body: "Explore the available evaluation and practice scenarios. Practice results are labelled separately and do not establish a published measurement or compliance outcome.",
     points: [
-      { tag: "pain", text: "You never get to stress-test the AI yourself" },
-      { tag: "benefit", text: "Probe a system with real questions, live" },
+      { tag: "pain", text: "Review the available test scenarios and their scope" },
+      { tag: "benefit", text: "Explore the available interactive scenarios" },
       { tag: "usp", text: "Only measured runs are ever quoted — practice stays practice" },
     ],
     href: "/gspc-arena",
@@ -105,7 +105,7 @@ export const STORY: Slide[] = [
     title: "The whole board, live from the API",
     body: "Every cell is pulled live from our public API. Empty cells stay empty, every row shows its sample size, and nobody edits yesterday’s numbers.",
     points: [
-      { tag: "pain", text: "Marketing dashboards refresh silently and rewrite history" },
+      { tag: "pain", text: "Review source dates and correction history when comparing results" },
       { tag: "benefit", text: "A living grid, live from GET /api/gspc, with a sample size on every row" },
       { tag: "usp", text: "One signed source feeds people, agents and answer engines" },
     ],
@@ -119,7 +119,7 @@ export const STORY: Slide[] = [
     title: "A simulation view under evidence review",
     body: "Council City is a retained visualization concept, not a live signed world. Its former counters and ledger claims are withdrawn until every rendered figure resolves to published evidence.",
     points: [
-      { tag: "pain", text: "Governance sites are walls of text nobody reads" },
+      { tag: "pain", text: "Complex evidence benefits from clear navigation" },
       { tag: "benefit", text: "The concept can later render verified measurements as a map" },
       { tag: "usp", text: "Today it is marked review-only instead of presenting fallback data" },
     ],
@@ -164,8 +164,8 @@ export const STORY: Slide[] = [
     title: "One signed measurement, four fronts",
     body: "Insurers pricing AI risk, regulators checking behaviour against the law, teams proving a model before they ship, developers verifying a signed card — the same signed card serves them all.",
     points: [
-      { tag: "pain", text: "Everyone re-runs their own half-trusted checks" },
-      { tag: "benefit", text: "One signed result every side can rely on" },
+      { tag: "pain", text: "Evidence requirements differ by audience and use case" },
+      { tag: "benefit", text: "A signed record that each audience can inspect within its stated scope" },
       { tag: "usp", text: "Independent of all of them — we take no money from anything we rank" },
     ],
     href: "/dashboard?task=get-measured&tab=measured",
@@ -178,7 +178,7 @@ export const STORY: Slide[] = [
     title: "Free to check. No login, ever.",
     body: "Verifying a card is free forever — no account, no fee — and we take no money from anything we rank. Recompute the hash chain, check the public key, read the board: the proof is yours to hold, not ours to gatekeep.",
     points: [
-      { tag: "pain", text: "Assurance is usually paywalled and closed to the public" },
+      { tag: "pain", text: "Check which evidence and verification tools are publicly available" },
       { tag: "benefit", text: "Check any card in your own browser — free, no login" },
       { tag: "usp", text: "We take no money from anything we rank" },
     ],
@@ -190,7 +190,7 @@ export const STORY: Slide[] = [
     // 13 Public watchdog — heavy, report what looks wrong
     kicker: "Public evidence",
     title: "See what the watchdog can prove.",
-    body: "Inspect the evidence and current service boundaries in public. Incident submission is not live, so this surface does not pretend a report has been filed or acknowledged.",
+    body: "Inspect the evidence and current service boundaries in public. Incident submission is not live; viewing this surface does not file a report or establish acknowledgement.",
     points: [
       { tag: "pain", text: "Safety claims are often difficult to inspect independently" },
       { tag: "benefit", text: "A public place to examine the evidence that exists" },
@@ -198,7 +198,7 @@ export const STORY: Slide[] = [
     ],
     href: "/watchdog-hub",
     cta: "Inspect watchdog evidence",
-    image: { src: "/images/public_watchdog_intake.jpg", alt: "The public watchdog reporting funnel, open to everyone" },
+    image: { src: "/images/public_watchdog_intake.jpg", alt: "Illustration of a proposed public incident-reporting workflow" },
   },
 ];
 

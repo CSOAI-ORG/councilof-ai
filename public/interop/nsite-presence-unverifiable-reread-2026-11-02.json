@@ -1,0 +1,842 @@
+{
+ "kind": "csoai.nsite-presence-unverifiable-reread/0.1",
+ "as_of": "2026-11-02T03:48:45Z",
+ "source_ledger": "public/interop/nsite-presence-ledger.json",
+ "source_ledger_sha256": "344269534683c6ce5c2f5ad42f1c56879aa394c02c4db5b3d86a700fc3f0cc22",
+ "work_plan_row": "W5 \u2014 re-read the UNVERIFIABLE presence rows and re-pin or supersede",
+ "summary": {
+  "unverifiable_rows": 64,
+  "domains": 11,
+  "superseded_by_later_verified_row": 64,
+  "open_with_both_digests": 0
+ },
+ "boundary": "Bundle-level re-verification of the OLD pinned bytes needs the pod evidence store (D21 volume fault \u2014 writes not persisting). The supersession recorded here is row-level and comes from the ledger's own later VERIFIED rows for the same domain; the old rows keep both digests published, which is D19's rule.",
+ "domains": {
+  "arxiv.org": {
+   "unverifiable_rows": 1,
+   "superseded": 1,
+   "open": 0
+  },
+  "openalex.org": {
+   "unverifiable_rows": 1,
+   "superseded": 1,
+   "open": 0
+  },
+  "datasetsearch.research.google.com": {
+   "unverifiable_rows": 4,
+   "superseded": 4,
+   "open": 0
+  },
+  "gov.uk": {
+   "unverifiable_rows": 3,
+   "superseded": 3,
+   "open": 0
+  },
+  "company-information.service.gov.uk": {
+   "unverifiable_rows": 3,
+   "superseded": 3,
+   "open": 0
+  },
+  "api.cdp.coinbase.com": {
+   "unverifiable_rows": 3,
+   "superseded": 3,
+   "open": 0
+  },
+  "aws.amazon.com": {
+   "unverifiable_rows": 3,
+   "superseded": 3,
+   "open": 0
+  },
+  "api.ted.europa.eu": {
+   "unverifiable_rows": 2,
+   "superseded": 2,
+   "open": 0
+  },
+  "reference-data-directory.vercel.app": {
+   "unverifiable_rows": 2,
+   "superseded": 2,
+   "open": 0
+  },
+  "gov": {
+   "unverifiable_rows": 1,
+   "superseded": 1,
+   "open": 0
+  },
+  "laposte.fr": {
+   "unverifiable_rows": 41,
+   "superseded": 41,
+   "open": 0
+  }
+ },
+ "rows": [
+  {
+   "domain": "arxiv.org",
+   "row_at": "2026-09-29T05:34:51Z",
+   "pinned_bundle_sha256": "1215583d44e1d0c98421cccc9f9ebb050c5a2de2cfbfc1fc4467dbcabf411c39",
+   "recomputed_bundle_sha256": "3be162c3ef47980b5196db2ff2a07612513a0f95aeab499d1ca384576b695fe8",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-09-29T05:35:22Z",
+    "event_hash": "04ab514417708b87f86a7a282106e19046a8f91ad1f99f62116c406ad7f03d51",
+    "bundle_sha256": "3be162c3ef47980b5196db2ff2a07612513a0f95aeab499d1ca384576b695fe8"
+   }
+  },
+  {
+   "domain": "openalex.org",
+   "row_at": "2026-09-29T05:41:05Z",
+   "pinned_bundle_sha256": "61f8de25cc759f4adc4e0aff2501857df0917ee1cbb4d9dd3a98fef235afd569",
+   "recomputed_bundle_sha256": "ec8423ca929fc9a879daa6fa64a72b38e05e5de873d459c0941ee45a95b568e2",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-09-29T05:44:03Z",
+    "event_hash": "cb5afd01cfe6267ac3edb14f51ee9395068f9260bf74aa204c86c35c432abef7",
+    "bundle_sha256": "ec8423ca929fc9a879daa6fa64a72b38e05e5de873d459c0941ee45a95b568e2"
+   }
+  },
+  {
+   "domain": "datasetsearch.research.google.com",
+   "row_at": "2026-09-29T05:55:04Z",
+   "pinned_bundle_sha256": "d718d8bc0d02e75c2be7513e583d337531b0f979401f7941904f1058305d8cf7",
+   "recomputed_bundle_sha256": "617f1bcd2119946d636a7b0eb8c4746208d23a25b64d589b2a8e952fa90cd866",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:02:13Z",
+    "event_hash": "2feba54d332b1de3ed723d77db4f3a9cb1da0d800de4fda2ad26057fe5e23e82",
+    "bundle_sha256": "617f1bcd2119946d636a7b0eb8c4746208d23a25b64d589b2a8e952fa90cd866"
+   }
+  },
+  {
+   "domain": "gov.uk",
+   "row_at": "2026-09-29T06:46:03Z",
+   "pinned_bundle_sha256": "be439d1f36350608080256b08c664e27c474b0abc8a507cc9ceda86e4a475559",
+   "recomputed_bundle_sha256": "56469690432d7b110d2e4a8a3dcb9c961ba4a025d261b4f4cd062110be1b2879",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:05:16Z",
+    "event_hash": "262632d157a9b812bc4ee78badc2ad864f97e2bd5f549c5bcec19dbc5a32394c",
+    "bundle_sha256": "56469690432d7b110d2e4a8a3dcb9c961ba4a025d261b4f4cd062110be1b2879"
+   }
+  },
+  {
+   "domain": "company-information.service.gov.uk",
+   "row_at": "2026-09-29T06:53:03Z",
+   "pinned_bundle_sha256": "2ee598ade822068d2f1b99c8d3c817b8d89d2db221fdf43df59cf83613a3dfdc",
+   "recomputed_bundle_sha256": "13837ce6be88e28b2e23546a86145ce368c5e3bca7e08eb5ae8ac2a22ba7212f",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:11:10Z",
+    "event_hash": "173c54d99d3928a2b34eadafbe684378dd8d8679cfcfeff9aca92bf5ea252372",
+    "bundle_sha256": "13837ce6be88e28b2e23546a86145ce368c5e3bca7e08eb5ae8ac2a22ba7212f"
+   }
+  },
+  {
+   "domain": "api.cdp.coinbase.com",
+   "row_at": "2026-10-27T05:44:03Z",
+   "pinned_bundle_sha256": "444f64f35df69455a9445cb3e11e6eb564150df302528d4aacccee915e0c5778",
+   "recomputed_bundle_sha256": "d6440bf490964479d14d3006f0d2741e6007ccef302a966647f50262df3c8884",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:16:07Z",
+    "event_hash": "c1754a24f178950c447571282351bf579bf93bffdd32c987d7d0c119b040c95a",
+    "bundle_sha256": "d6440bf490964479d14d3006f0d2741e6007ccef302a966647f50262df3c8884"
+   }
+  },
+  {
+   "domain": "datasetsearch.research.google.com",
+   "row_at": "2026-10-27T05:47:04Z",
+   "pinned_bundle_sha256": "cac6ae0ff312a7f62960299473a4d78579e5be3d49b91fa5852dd300e51f0654",
+   "recomputed_bundle_sha256": "617f1bcd2119946d636a7b0eb8c4746208d23a25b64d589b2a8e952fa90cd866",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:02:13Z",
+    "event_hash": "2feba54d332b1de3ed723d77db4f3a9cb1da0d800de4fda2ad26057fe5e23e82",
+    "bundle_sha256": "617f1bcd2119946d636a7b0eb8c4746208d23a25b64d589b2a8e952fa90cd866"
+   }
+  },
+  {
+   "domain": "aws.amazon.com",
+   "row_at": "2026-10-27T06:22:05Z",
+   "pinned_bundle_sha256": "247404e76bb94885d418f0a2d3936597f011ab13c5b9fcb50802252742e529da",
+   "recomputed_bundle_sha256": "484f04ac436bc6fb52e6d1c7fbf3563c644c4b88d20fd4f5cb2de5c2b9abfba3",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:04:13Z",
+    "event_hash": "b0f9b2ed78e1430bdbe599d45d9c4592807322b14dee9354afb645c054640e5a",
+    "bundle_sha256": "484f04ac436bc6fb52e6d1c7fbf3563c644c4b88d20fd4f5cb2de5c2b9abfba3"
+   }
+  },
+  {
+   "domain": "gov.uk",
+   "row_at": "2026-10-27T06:27:03Z",
+   "pinned_bundle_sha256": "e94d2e5c8f9bc022ef61321efa7384f72220ed914d36cd0d40e12438af235894",
+   "recomputed_bundle_sha256": "56469690432d7b110d2e4a8a3dcb9c961ba4a025d261b4f4cd062110be1b2879",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:05:16Z",
+    "event_hash": "262632d157a9b812bc4ee78badc2ad864f97e2bd5f549c5bcec19dbc5a32394c",
+    "bundle_sha256": "56469690432d7b110d2e4a8a3dcb9c961ba4a025d261b4f4cd062110be1b2879"
+   }
+  },
+  {
+   "domain": "company-information.service.gov.uk",
+   "row_at": "2026-10-27T06:30:14Z",
+   "pinned_bundle_sha256": "7a2ef33f0f8a26e04d1d6e1dbee432467f81d57da65331023b4e7141de06bba5",
+   "recomputed_bundle_sha256": "13837ce6be88e28b2e23546a86145ce368c5e3bca7e08eb5ae8ac2a22ba7212f",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:11:10Z",
+    "event_hash": "173c54d99d3928a2b34eadafbe684378dd8d8679cfcfeff9aca92bf5ea252372",
+    "bundle_sha256": "13837ce6be88e28b2e23546a86145ce368c5e3bca7e08eb5ae8ac2a22ba7212f"
+   }
+  },
+  {
+   "domain": "api.ted.europa.eu",
+   "row_at": "2026-10-27T06:31:03Z",
+   "pinned_bundle_sha256": "3bb762c4d037944b81a0e7587675461407ab13bdcf7e1b9676438d95f9519156",
+   "recomputed_bundle_sha256": "48eaa67b68706145ba769d7870c937dde9e91e40604af084460d5f4c0c3989e6",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:10:16Z",
+    "event_hash": "62734f6c8b6f24420e4d05ec889c6480aa7c75ecff0522532c4a40968f26329e",
+    "bundle_sha256": "48eaa67b68706145ba769d7870c937dde9e91e40604af084460d5f4c0c3989e6"
+   }
+  },
+  {
+   "domain": "reference-data-directory.vercel.app",
+   "row_at": "2026-10-27T06:42:04Z",
+   "pinned_bundle_sha256": "a3cb9cc389ad74cd930ccc714edbaaf25ae50bbdf456aa512a2959dada0c6f04",
+   "recomputed_bundle_sha256": "b949873aa2889c840bba949213f2baa5d94e053eefd41dce46778acbd5207858",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:12:19Z",
+    "event_hash": "e6d740548eca8b5b07d0189ddc886e02bd1534595ceb6e48cb7428e597385daa",
+    "bundle_sha256": "b949873aa2889c840bba949213f2baa5d94e053eefd41dce46778acbd5207858"
+   }
+  },
+  {
+   "domain": "api.cdp.coinbase.com",
+   "row_at": "2026-10-27T07:44:03Z",
+   "pinned_bundle_sha256": "82c25896eda4c33abedea8858740528fe8ea9de398b238e9bace4234d87eff67",
+   "recomputed_bundle_sha256": "d6440bf490964479d14d3006f0d2741e6007ccef302a966647f50262df3c8884",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:16:07Z",
+    "event_hash": "c1754a24f178950c447571282351bf579bf93bffdd32c987d7d0c119b040c95a",
+    "bundle_sha256": "d6440bf490964479d14d3006f0d2741e6007ccef302a966647f50262df3c8884"
+   }
+  },
+  {
+   "domain": "datasetsearch.research.google.com",
+   "row_at": "2026-10-27T07:45:11Z",
+   "pinned_bundle_sha256": "459fe908c23cf196e215d738fb2c21468dcb7ad938fbcb262898e6b7a1e23a0b",
+   "recomputed_bundle_sha256": "617f1bcd2119946d636a7b0eb8c4746208d23a25b64d589b2a8e952fa90cd866",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:02:13Z",
+    "event_hash": "2feba54d332b1de3ed723d77db4f3a9cb1da0d800de4fda2ad26057fe5e23e82",
+    "bundle_sha256": "617f1bcd2119946d636a7b0eb8c4746208d23a25b64d589b2a8e952fa90cd866"
+   }
+  },
+  {
+   "domain": "aws.amazon.com",
+   "row_at": "2026-10-27T07:46:04Z",
+   "pinned_bundle_sha256": "0663f3a015d9c5ae3952cc3c9ae724f2b62095c89e6358bf46507be55d006f7e",
+   "recomputed_bundle_sha256": "484f04ac436bc6fb52e6d1c7fbf3563c644c4b88d20fd4f5cb2de5c2b9abfba3",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:04:13Z",
+    "event_hash": "b0f9b2ed78e1430bdbe599d45d9c4592807322b14dee9354afb645c054640e5a",
+    "bundle_sha256": "484f04ac436bc6fb52e6d1c7fbf3563c644c4b88d20fd4f5cb2de5c2b9abfba3"
+   }
+  },
+  {
+   "domain": "api.cdp.coinbase.com",
+   "row_at": "2026-10-27T07:47:04Z",
+   "pinned_bundle_sha256": "38f189e4b79925e7e242d0212be50896975b060dd134a2475be083f242c077db",
+   "recomputed_bundle_sha256": "d6440bf490964479d14d3006f0d2741e6007ccef302a966647f50262df3c8884",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:16:07Z",
+    "event_hash": "c1754a24f178950c447571282351bf579bf93bffdd32c987d7d0c119b040c95a",
+    "bundle_sha256": "d6440bf490964479d14d3006f0d2741e6007ccef302a966647f50262df3c8884"
+   }
+  },
+  {
+   "domain": "datasetsearch.research.google.com",
+   "row_at": "2026-10-27T07:48:03Z",
+   "pinned_bundle_sha256": "27b3d497de74ce060bf63fe7afa1ad8bf308b067801b99562713425116151af0",
+   "recomputed_bundle_sha256": "617f1bcd2119946d636a7b0eb8c4746208d23a25b64d589b2a8e952fa90cd866",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:02:13Z",
+    "event_hash": "2feba54d332b1de3ed723d77db4f3a9cb1da0d800de4fda2ad26057fe5e23e82",
+    "bundle_sha256": "617f1bcd2119946d636a7b0eb8c4746208d23a25b64d589b2a8e952fa90cd866"
+   }
+  },
+  {
+   "domain": "aws.amazon.com",
+   "row_at": "2026-10-27T07:56:03Z",
+   "pinned_bundle_sha256": "5298972eab5e884637fbb60467e86a9eaea0d4f7ad5526a42c7f0abe9870b1db",
+   "recomputed_bundle_sha256": "484f04ac436bc6fb52e6d1c7fbf3563c644c4b88d20fd4f5cb2de5c2b9abfba3",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:04:13Z",
+    "event_hash": "b0f9b2ed78e1430bdbe599d45d9c4592807322b14dee9354afb645c054640e5a",
+    "bundle_sha256": "484f04ac436bc6fb52e6d1c7fbf3563c644c4b88d20fd4f5cb2de5c2b9abfba3"
+   }
+  },
+  {
+   "domain": "gov.uk",
+   "row_at": "2026-10-27T07:59:04Z",
+   "pinned_bundle_sha256": "65fb178df594dfb6b963b474c9adf0e2dc88d3e9bacb6804e9d6da2d313f55b7",
+   "recomputed_bundle_sha256": "56469690432d7b110d2e4a8a3dcb9c961ba4a025d261b4f4cd062110be1b2879",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:05:16Z",
+    "event_hash": "262632d157a9b812bc4ee78badc2ad864f97e2bd5f549c5bcec19dbc5a32394c",
+    "bundle_sha256": "56469690432d7b110d2e4a8a3dcb9c961ba4a025d261b4f4cd062110be1b2879"
+   }
+  },
+  {
+   "domain": "company-information.service.gov.uk",
+   "row_at": "2026-10-27T08:00:14Z",
+   "pinned_bundle_sha256": "0224ddf9e06f4b87f6b138e1d361cc9698f8d33f6558d165f1b3512b88568f9b",
+   "recomputed_bundle_sha256": "13837ce6be88e28b2e23546a86145ce368c5e3bca7e08eb5ae8ac2a22ba7212f",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:11:10Z",
+    "event_hash": "173c54d99d3928a2b34eadafbe684378dd8d8679cfcfeff9aca92bf5ea252372",
+    "bundle_sha256": "13837ce6be88e28b2e23546a86145ce368c5e3bca7e08eb5ae8ac2a22ba7212f"
+   }
+  },
+  {
+   "domain": "gov",
+   "row_at": "2026-10-27T08:01:03Z",
+   "pinned_bundle_sha256": "aa66b72067d063964c82f26ed02bc83c2508d0e293138321d67dad3c60b17846",
+   "recomputed_bundle_sha256": "fa7bfb054a3040ebc825fdf50635cb86331d7ac4850ccf75d777706195515f60",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:06:09Z",
+    "event_hash": "9abdc150ce10d187ed699e0cc0aa35c249c9de275d88b10c2fcb2c051a56f2f8",
+    "bundle_sha256": "fa7bfb054a3040ebc825fdf50635cb86331d7ac4850ccf75d777706195515f60"
+   }
+  },
+  {
+   "domain": "api.ted.europa.eu",
+   "row_at": "2026-10-27T08:02:05Z",
+   "pinned_bundle_sha256": "9bcd90c909ea1124f0190ba494dabb411fe18996bb36643dedb398bae5ddf227",
+   "recomputed_bundle_sha256": "48eaa67b68706145ba769d7870c937dde9e91e40604af084460d5f4c0c3989e6",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:10:16Z",
+    "event_hash": "62734f6c8b6f24420e4d05ec889c6480aa7c75ecff0522532c4a40968f26329e",
+    "bundle_sha256": "48eaa67b68706145ba769d7870c937dde9e91e40604af084460d5f4c0c3989e6"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-27T21:00:12Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "reference-data-directory.vercel.app",
+   "row_at": "2026-10-28T01:05:11Z",
+   "pinned_bundle_sha256": "d1fdb1571b58b20581a622d5b97daca8886fb7676e3d9a342f73b756420a47ae",
+   "recomputed_bundle_sha256": "b949873aa2889c840bba949213f2baa5d94e053eefd41dce46778acbd5207858",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-29T04:12:19Z",
+    "event_hash": "e6d740548eca8b5b07d0189ddc886e02bd1534595ceb6e48cb7428e597385daa",
+    "bundle_sha256": "b949873aa2889c840bba949213f2baa5d94e053eefd41dce46778acbd5207858"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T13:10:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T13:25:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T13:40:05Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T13:55:04Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T14:10:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T14:25:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T14:40:02Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T14:55:02Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T15:10:05Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T15:25:06Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T15:40:04Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T15:55:05Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T16:10:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T16:25:06Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T16:40:05Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T16:55:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T17:10:04Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T17:25:06Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T17:40:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T17:55:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T18:10:05Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T18:26:01Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T18:40:04Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T18:55:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T19:10:05Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T19:25:04Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T19:40:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T19:55:02Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T20:10:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T20:25:06Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T20:40:04Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T20:55:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T21:10:04Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T21:25:03Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T21:40:02Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T21:55:04Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T22:10:04Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T22:25:04Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T22:40:04Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  },
+  {
+   "domain": "laposte.fr",
+   "row_at": "2026-10-28T22:55:04Z",
+   "pinned_bundle_sha256": null,
+   "recomputed_bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149",
+   "outcome": "SUPERSEDED_BY_LATER_VERIFIED_ROW",
+   "superseded_by": {
+    "at": "2026-10-28T23:09:05Z",
+    "event_hash": "7005c9fe2826ad4163ad58dbf0dd0cd9a2559f04a59af7f20b051bce5e7f1bf3",
+    "bundle_sha256": "9a34b35583ce86212278f000e4a8760a088c040ea56df3180e083f3231a0e149"
+   }
+  }
+ ],
+ "not_a_claim": "This is a re-read of a published table, not a re-measurement of any site."
+}

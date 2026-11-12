@@ -47,7 +47,7 @@ SNAPSHOT_DOI = "10.5281/zenodo.22293341"
 # 29 Sep 2026: Zenodo blocked the account holding these deposits; every record answers HTTP 410.
 # The DOIs stay as identifiers; no card links them as available. The cards on the Hub were
 # relabelled with exactly these strings, so a producer run and the hand pass land the same bytes.
-ZENODO_NOTICE = "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending."
+ZENODO_NOTICE = "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json)."
 METHODOLOGY_LIVE = "https://councilof.ai/methodology/"
 BOARD_DATASET_URL = "https://huggingface.co/datasets/csoai/gspc-board"
 DOI_TEXT = f"{DOI} ({ZENODO_NOTICE} Live methodology page (not the deposit's bytes): <{METHODOLOGY_LIVE}>)"
@@ -334,7 +334,7 @@ def scrub_legacy(text: str, lid: str | None, mcp_n: int | None, as_of: str) -> t
             nxt = lines[i + 1] if i + 1 < len(lines) else ""
             if m and "unavailable" not in nxt:
                 out.append(line)
-                new = f"{m.group(1)}note{' ' * max(1, len(m.group(2)) - 1)}= {{DOI record unavailable since 29 Sep 2026 (Zenodo account blocked; appeal pending)}},"
+                new = f"{m.group(1)}note{' ' * max(1, len(m.group(2)) - 1)}= {{DOI record unavailable since 29 Sep 2026 (Zenodo account blocked; no appeal on record)}},"
                 changes.append("bibtex doi note")
                 out.append(new)
                 continue

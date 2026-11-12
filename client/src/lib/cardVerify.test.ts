@@ -99,7 +99,7 @@ describe("DID-keyed mill measurement cards", () => {
       if (!verdict.valid) failures.push({ file: f, reasons: verdict.reasons });
     }
     expect(failures).toEqual([]);
-  });
+  }, Math.max(30_000, millFiles.length * 15)); // corpus-scale: the HF spray lane grew this to 3,197 cards
 
   it("does not guess an unknown DID or a dual-key authority", async () => {
     const card = readJson(resolve(MILL_DIR, millFiles[0]));

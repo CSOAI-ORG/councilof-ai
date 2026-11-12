@@ -1,0 +1,15 @@
+{
+  "slug": "iso-42001-lite",
+  "title": "ISO/IEC 42001 AIMS — lite crosswalk (full certification is a CAB's job, never ours)",
+  "doctrine": "human-in-the-loop attestation of evidence — NOT conformity certification; 'lite' = evidence posture, not accredited audit",
+  "segments": ["enterprise", "sme", "fortune500", "government", "lfx-orgs"],
+  "checkpoints": [
+    {"id": "iso.model-behaviour-measured", "requirement": "AI system behaviour measured on the live board (axes relevant to scope)", "mode": "machine", "evidence": {"kind": "board", "axes": ["safety", "governance", "conformance"]}},
+    {"id": "iso.provenance-measured", "requirement": "Provenance axis measured", "mode": "machine", "evidence": {"kind": "board", "axes": ["provenance"]}},
+    {"id": "iso.aims-scope-doc", "requirement": "AIMS scope statement exists and is owned", "mode": "human"},
+    {"id": "iso.roles", "requirement": "AI governance roles assigned (board-level accountability)", "mode": "human"},
+    {"id": "iso.supplier-watch", "requirement": "Third-party AI suppliers under signed continuous watch", "mode": "machine", "evidence": {"kind": "bundle", "obligation": "dora"}},
+    {"id": "iso.internal-audit-loop", "requirement": "Internal audit loop scheduled with this ceremony as input", "mode": "human"},
+    {"id": "iso.accountable-owner", "requirement": "Named accountable owner signs this attestation cycle", "mode": "human"}
+  ]
+}

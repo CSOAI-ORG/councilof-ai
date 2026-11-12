@@ -19,13 +19,62 @@ const J = (p: string) => JSON.parse(readFileSync(p, "utf8"));
 
 const doorFree = J(resolve(ROOT, "functions/mcp/gspc-tools.json")).tools.map((t: any) => t.name);
 const doorPaid = J(resolve(ROOT, "functions/mcp/paid-tools.json")).tools.map((t: any) => t.name);
+const lock = J(resolve(ROOT, "functions/mcp/tool-fleet.lock.json"));
+
+/**
+ * The number word for a tool count, so a descriptor's sentence can be checked without a
+ * hand-typed list that runs out. The same words as functions/mcp/tool-fleet.lock.test.ts —
+ * a vocabulary, not a measurement: the measurement is the lock, and every count below is
+ * derived from it.
+ */
+const ONES = [
+  "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+  "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen",
+  "nineteen",
+];
+const TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+
+function word(n: number): string {
+  if (n < 20) return ONES[n];
+  if (n < 100) {
+    const t = TENS[Math.floor(n / 10)];
+    const o = n % 10;
+    return o ? `${t}-${ONES[o]}` : t;
+  }
+  throw new Error(`no word for ${n}`);
+}
 
 describe("the packaged MCP server advertises exactly what the door serves", () => {
   it("reads the door's canonical lists, so this cannot pass vacuously", () => {
-    expect(doorFree).toHaveLength(47);
-    expect(doorPaid).toHaveLength(5);
-    expect([...doorFree, ...doorPaid]).toHaveLength(52);
-    expect([...doorFree, ...doorPaid]).not.toContain("witness_hash");
+    // Counts are DERIVED, never typed: the door grew 47 -> 48 free when
+    // axis_watchdog-ingest shipped, and a typed 47 turned this file red against
+    // the door's own bytes — the exact frozen-number defect the estate keeps
+    // repairing. What is pinned here are the PERMANENT facts: both banks are
+    // populated, disjoint, anchored on the three free-forever readers, and free
+    // of every dropped mill-tool phantom.
+    expect(doorFree.length).toBeGreaterThanOrEqual(30);
+    expect(doorPaid.length).toBeGreaterThanOrEqual(1);
+    // Node 20 is the estate's floor (package.json engines.node), and Set.prototype.intersection
+    // is Node 22+. It passed here for a week because the local battery ran Node 22 while CI ran
+    // Node 20, so the same file was green on the desk and red in the gate. The disjointness
+    // check is written the portable way.
+    const paidNames = new Set(doorPaid);
+    expect(doorFree.filter((name) => paidNames.has(name))).toEqual([]);
+    for (const anchor of ["board_totals", "get_axis", "verify_card"]) {
+      expect(doorFree).toContain(anchor);
+    }
+    // The mill tools the door refused BY NAME must never originate here either.
+    for (const phantom of ["measure", "verify", "jail-probe", "enter-arena", "witness_hash"]) {
+      expect([...doorFree, ...doorPaid]).not.toContain(phantom);
+    }
+    // AND the two banks equal the PUBLISHED fleet, name for name. The floors above catch a
+    // collapse; this catches a divergence. The lock is the authority: it is rendered from
+    // council-os/capabilities.json, and functions/mcp/tool-fleet.lock.test.ts holds it against
+    // gspc-tools.json, paid-tools.json, the registry, and — with FLEET_LOCK_LIVE=1 — the live
+    // tools/list at the door itself. No count is typed here, so the fleet can grow.
+    expect(doorFree).toEqual(lock.free);
+    expect(doorPaid).toEqual(lock.paid);
+    expect([...doorFree, ...doorPaid]).toHaveLength(lock.fleet_size);
   });
 
   it("keeps the package, runtime and registry package reference on one release version", () => {
@@ -42,7 +91,13 @@ describe("the packaged MCP server advertises exactly what the door serves", () =
   it("keeps npm's rendered description short and accurate", () => {
     const { description } = J(resolve(__dirname, "package.json"));
     expect(description.length).toBeLessThanOrEqual(255);
-    expect(description).toContain("Fifty-three tools: forty-eight free readers and five x402-metered evidence tools");
+    // The sentence carries counts, so it is checked against the lock rather than typed here:
+    // a typed sentence is what made #3692 edit this file by hand when the door grew.
+    const all = word(lock.fleet_size);
+    expect(description).toContain(
+      `${all[0].toUpperCase()}${all.slice(1)} tools: ${word(lock.free.length)} free readers ` +
+        `and ${word(lock.paid.length)} x402-metered evidence tools`,
+    );
   });
 
   it("ships both canonical tool banks in the Docker client", () => {

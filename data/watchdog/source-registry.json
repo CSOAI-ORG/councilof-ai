@@ -1,0 +1,104 @@
+{
+  "schema": "csoai.watchdog-source-registry/0.1",
+  "version": "2026-10-31",
+  "purpose": "Seed inventory of public AI incident, failure, and threat sources for metadata-only availability monitoring. This is not an exhaustive global census.",
+  "controls": {
+    "endpoint_checks_only": true,
+    "request_method": "HEAD",
+    "fetch_incident_records": false,
+    "download_snapshots": false,
+    "store_report_text": false,
+    "store_personal_data": false,
+    "automatic_classification": false,
+    "automatic_assignment": false,
+    "automatic_action": false,
+    "writes_gspc": false,
+    "requires_human_review_before_ingestion": true
+  },
+  "sources": [
+    {
+      "id": "aiid",
+      "publisher": "Responsible AI Collaborative",
+      "title": "AI Incident Database (AIID)",
+      "source_role": "curated_incident_database",
+      "url": "https://incidentdatabase.ai/research/snapshots/",
+      "rights_url": "https://incidentdatabase.ai/terms-of-use/",
+      "watch": true,
+      "coverage_note": "Indexes reported real-world AI harms and near-harms; source and language coverage follow its curation and reporting inputs.",
+      "reuse_note": "The terms license specified snapshot collections under CC BY-SA. Submissions, the report text field, and linked media/content are excluded. The snapshots page asks users to contact the project about their use case.",
+      "ingestion_gate": "REVIEW_REQUIRED_FOR_SCOPE_ATTRIBUTION_PRIVACY_AND_SHARE_ALIKE"
+    },
+    {
+      "id": "oecd-aim",
+      "publisher": "OECD.AI",
+      "title": "AI Incidents and Hazards Monitor",
+      "source_role": "news_based_incident_and_hazard_monitor",
+      "url": "https://oecd.ai/en/incidents",
+      "rights_url": "https://oecd.ai/en/incidents-methodology",
+      "watch": true,
+      "coverage_note": "Daily event pipeline based on news intelligence, AI-assisted classification and clustering; not a complete record of private or under-reported events.",
+      "reuse_note": "Public monitor and methodology are documented. Bulk data reuse terms are not recorded here; do not copy records until the applicable terms are confirmed.",
+      "ingestion_gate": "REVIEW_REQUIRED_FOR_DATA_TERMS_METHOD_AND_REUSE"
+    },
+    {
+      "id": "aiaaic",
+      "publisher": "AIAAIC",
+      "title": "AI, Algorithmic and Automation Incidents and Controversies Repository",
+      "source_role": "curated_incident_and_controversy_repository",
+      "url": "https://www.aiaaic.org/aiaaic-repository/user-guide",
+      "rights_url": "https://www.aiaaic.org/aiaaic-repository/user-guide",
+      "watch": true,
+      "coverage_note": "Manually compiled public-interest repository; its definitions and qualitative inclusion criteria differ from other sources.",
+      "reuse_note": "The user guide says use should be substantially in the public interest, adapted or redistributed material should remain CC BY-SA 4.0, and commercial risk-management or text-analysis products/services are outside its stated permitted use.",
+      "ingestion_gate": "BLOCKED_PENDING_RIGHTSHOLDER_CLARIFICATION_AND_USE_REVIEW"
+    },
+    {
+      "id": "avid",
+      "publisher": "AI Vulnerability Database (AVID)",
+      "title": "AVID database",
+      "source_role": "ai_failure_and_vulnerability_database",
+      "url": "https://avidml.org/database/",
+      "rights_url": "https://docs.avidml.org/database/introduction",
+      "watch": true,
+      "coverage_note": "Structured reports and vulnerability records for general-purpose AI failures; not a general social-harm incident census.",
+      "reuse_note": "The database is described as open source, but the applicable data-record license and reuse terms are not recorded in this registry.",
+      "ingestion_gate": "REVIEW_REQUIRED_FOR_DATA_LICENSE_AND_RECORD_SCOPE"
+    },
+    {
+      "id": "mitre-atlas",
+      "publisher": "MITRE",
+      "title": "ATLAS threat knowledge base",
+      "source_role": "adjacent_threat_knowledge_base",
+      "url": "https://atlas.mitre.org/",
+      "rights_url": "https://github.com/mitre-atlas/atlas-data",
+      "watch": true,
+      "coverage_note": "Threat tactics, techniques, mitigations and case studies for attacks involving AI; this is contextual threat intelligence, not a general incident-report database.",
+      "reuse_note": "Track as a separate security context source. Review release and licensing terms before copying case-study content.",
+      "ingestion_gate": "REFERENCE_ONLY_PENDING_VERSION_AND_LICENSE_REVIEW"
+    },
+    {
+      "id": "ai-incident-index",
+      "publisher": "AI Incident Index",
+      "title": "AI Incident Index data releases",
+      "source_role": "secondary_cross_source_index",
+      "url": "https://www.aiincidentindex.org/data",
+      "rights_url": "https://www.aiincidentindex.org/terms",
+      "watch": true,
+      "coverage_note": "A newer cross-source index. Treat its own records and its linked third-party source material as separate evidence layers.",
+      "reuse_note": "Its terms state that the Index dataset is CC BY 4.0; cited third-party material remains under its own owners' terms. Validate release provenance, deduplication and scope before use.",
+      "ingestion_gate": "REVIEW_REQUIRED_FOR_PROVENANCE_ATTRIBUTION_AND_QUALITY"
+    },
+    {
+      "id": "eu-ai-act-serious-incident-channel",
+      "publisher": "European Commission",
+      "title": "AI Act Article 73 serious-incident reporting",
+      "source_role": "regulatory_reporting_channel",
+      "url": "https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-73",
+      "rights_url": "https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-73",
+      "watch": false,
+      "coverage_note": "An official reporting obligation and authority workflow, not an open incident-record corpus.",
+      "reuse_note": "No reporting submissions are accessed or collected by this monitor.",
+      "ingestion_gate": "NOT_A_PUBLIC_DATASET"
+    }
+  ]
+}

@@ -43,7 +43,7 @@ try {
   const { onRequestGet } = await import(pathToFileURL(path.join(temporary, "api.mjs")));
   await bundle({ entryPoints: [path.join(root, "functions/api/hitl.ts")], outfile: path.join(temporary, "hitl.mjs"), bundle: true, platform: "node", format: "esm" });
   const hitl = await import(pathToFileURL(path.join(temporary, "hitl.mjs")));
-  const capturedBoard = await fs.readFile(path.join(root, "council-os/axis-specialists/board-2026-10-28.snapshot.json"));
+  const capturedBoard = await fs.readFile(path.join(root, "council-os/axis-specialists/board-2026-11-02.snapshot.json"));
   server = createServer(async (req, res) => {
     try {
       const pathname = new URL(req.url, "http://localhost").pathname;
@@ -109,8 +109,14 @@ try {
     }
   });
   await check("unmeasured axis retains measurement gap", async () => {
-    await ready(index.specialists.find(row => row.measurement_status === "UNMEASURED").axis);
-    await expect(page.getByText("UNMEASURED stays visible. n=0 is not a score.", { exact: true })).toBeVisible();
+    const unmeasuredRow = index.specialists.find(row => row.measurement_status === "UNMEASURED");
+    if (unmeasuredRow) {
+      await ready(unmeasuredRow.axis);
+      await expect(page.getByText("UNMEASURED stays visible. n=0 is not a score.", { exact: true })).toBeVisible();
+    } else {
+      assert(index.specialists.every(row => row.measurement_status === "MEASURED"));
+      await expect(page.getByText("UNMEASURED stays visible. n=0 is not a score.", { exact: true })).toHaveCount(0);
+    }
   });
   for (const failure of ["bad-count", "wrong-axis", "unknown-state", "forged-proposal"]) {
     await check(failure + " refuses evidence without crashing", async () => {

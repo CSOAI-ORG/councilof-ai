@@ -57,7 +57,8 @@
       "axis_interpretability-reproducibility",
       "axis_claim-maintenance",
       "axis_serving-fidelity",
-      "axis_watchdog-ingest"
+      "axis_watchdog-ingest",
+      "framework_readiness"
     ],
     "paid": [
       "commission_card",
@@ -331,6 +332,8 @@
         "distribution/dify/gspc/provider/gspc.py",
         "distribution/dify/gspc/tools/board_totals.yaml",
         "distribution/dify/gspc/tools/board_totals.py",
+        "distribution/dify/gspc/tools/framework_readiness.yaml",
+        "distribution/dify/gspc/tools/framework_readiness.py",
         "distribution/dify/gspc/tools/get_axis.yaml",
         "distribution/dify/gspc/tools/get_axis.py",
         "distribution/dify/gspc/tools/verify_card.yaml",
@@ -467,7 +470,11 @@
         "distribution/working-groups/LICENSE",
         "distribution/working-groups/hf/LICENSE",
         "distribution/working-groups/README.md",
-        "distribution/working-groups/manifest.json"
+        "distribution/working-groups/manifest.json",
+        "public/working-groups/controlai.html",
+        "public/working-groups/controlai.json",
+        "distribution/working-groups/hf/controlai.html",
+        "distribution/working-groups/hf/controlai.json"
       ],
       "doctrine_carriers": [
         "distribution/working-groups/README.md"
@@ -501,7 +508,7 @@
   "files": [
     {
       "path": "distribution/SUBMIT.md",
-      "sha256": "6ac55e08ccd00d57ccc2f415e39d1dc0644e87f3cfebfc3413c90f05221620c3"
+      "sha256": "6903e96eda463dbbd91aeef6b0d43a03dcbbb4d71d85fbc2f0143b0ffc14c075"
     },
     {
       "path": "distribution/agntcy/README.md",
@@ -525,23 +532,23 @@
     },
     {
       "path": "distribution/charter-federation/hf/discussion.html",
-      "sha256": "69912c7c11a2a415033b9f65b52d3351e2ba5e5be34b6e4f2d8a8b87bbb2588f"
+      "sha256": "b7de3f447b9b25e95b6293dde75668d056fc38d4a32cbc5f768e5a008577b128"
     },
     {
       "path": "distribution/charter-federation/hf/index.html",
-      "sha256": "0e369385468aae4cc1a0765b513892d6633f454d36c87f53bc7cd2de6496470e"
+      "sha256": "1143de41a48a244b7731579a2cc2b4ed046d34e5da6f42031dd05c016c1994fd"
     },
     {
       "path": "distribution/charter-federation/hf/manifest.json",
-      "sha256": "d7411f8929edded17eaa32d3a8f2e945f5cc799b9a087d3d9caabdd9c822c270"
+      "sha256": "abba500bcc41b50f4119e2bf2889563a2370fab3c862a0633aa71bc0a38bb6a8"
     },
     {
       "path": "distribution/charter-federation/hf/register.json",
-      "sha256": "e0769eac1d8c7a9bdf53887dba79d8e81942090cbba976bd78078d6af03561aa"
+      "sha256": "c0ce8529bcdd9c80ce8b752786d6c64a76d0923bd81028eaf66ccfd20f139d84"
     },
     {
       "path": "distribution/charter-federation/kaggle/charter-register.ipynb",
-      "sha256": "6e16b422658de4b90d8000823f24d3f69336ded9fb20faa61f710327a0ed3c56"
+      "sha256": "7daf2938884550e1e11313195848ab31af19ad7522c915f98cabbd82ba2f9259"
     },
     {
       "path": "distribution/charter-federation/kaggle/kernel-metadata.template.json",
@@ -549,7 +556,7 @@
     },
     {
       "path": "distribution/charter-federation/manifest.json",
-      "sha256": "033b2b82e8b551f58b61f53d766247cbe35714abd2c25a255798a0b16e43e96c"
+      "sha256": "3a67ea383703644207a1d1c5063c6dea2e8c802fee8245b64ae85ad45e691f0d"
     },
     {
       "path": "distribution/charter-federation/mcp-client.template.json",
@@ -557,15 +564,15 @@
     },
     {
       "path": "distribution/claude/connector.json",
-      "sha256": "1817e08ddbbc25ad2afdcceea886de3457a51078c200fac8f405067a7fd94616"
+      "sha256": "00a04c6b5a830baf4fd24fc157dbce6f9b76ca290063c7bb5841e566b3ce9dd8"
     },
     {
       "path": "distribution/connect/connect-matrix.json",
-      "sha256": "737b97c441fc4bd5f0694437d4d9810f4c598743607666bdbc020a80fd5ba1c8"
+      "sha256": "1a0ecc124ea1745c35934611801ff7e890d3dcec263c9ab00e5f562a0ac425f7"
     },
     {
       "path": "distribution/copilot-studio/apiDefinition.swagger.json",
-      "sha256": "58b1dae5b2d5368c5085a8842b9064dbe6555606cf38535c5543bc5770d27e72"
+      "sha256": "318a54448f8324d3fce80f7d60cd9964ebdfd5751285c59c31d63f1ffcdf359d"
     },
     {
       "path": "distribution/copilot-studio/apiProperties.json",
@@ -577,7 +584,7 @@
     },
     {
       "path": "distribution/copilot-studio/intro.md",
-      "sha256": "c4b91990c76c15f22aa0d827554bdbe6b0c397232ba1b320c264a37d03365a34"
+      "sha256": "1caf751a7e2e693d826f36cb64bdb605c491adee5abb400a1f619c2101771766"
     },
     {
       "path": "distribution/dify/gspc/PRIVACY.md",
@@ -585,7 +592,7 @@
     },
     {
       "path": "distribution/dify/gspc/README.md",
-      "sha256": "dd4d964377b4ba6243d9ff6bcab8c5a2a6d71e51cccfba78dcbd2c57932d6894"
+      "sha256": "ccdff24d560ae2dd985d38374bfe1025154d9a90d032dbda844d61c707986742"
     },
     {
       "path": "distribution/dify/gspc/_assets/icon.svg",
@@ -605,7 +612,7 @@
     },
     {
       "path": "distribution/dify/gspc/provider/gspc.yaml",
-      "sha256": "9b48db2334b958cfd149b09d6a4b13f1a169c68e7fc3bc9e52a08a73643e8845"
+      "sha256": "11b0c1748c0fb2c95e8ad361ffaa91d25939ebf17dbe25351e9654c9a694fa69"
     },
     {
       "path": "distribution/dify/gspc/requirements.txt",
@@ -900,6 +907,14 @@
       "sha256": "6bfed878fc977c82295755a57a17c99dff943e7fbafcf5c9fc048cf1e669fa67"
     },
     {
+      "path": "distribution/dify/gspc/tools/framework_readiness.py",
+      "sha256": "0a2ce0c8ab33beb4ed82742487e51419e57674abb9e0d45ad9a67a735eb69595"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/framework_readiness.yaml",
+      "sha256": "71d98a8f7baa5121b0e3ffcb349908e4eb5c1a2df6e2fb108d17a20b9d57e6e2"
+    },
+    {
       "path": "distribution/dify/gspc/tools/get_axis.py",
       "sha256": "686173b4d5579662bd31d13f203ca3a5a30d93aef26404cf9599452b5054c6b9"
     },
@@ -997,35 +1012,35 @@
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/readme.md",
-      "sha256": "e20704ba7598c222b2ad541112846a65871d04a204c3c901526d986aa9d9617c"
+      "sha256": "a01c02262a0bdfffcea710273b0a2fba6b92f429ad35ecbbc212140ebe9ff448"
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/server.yaml",
-      "sha256": "fa59d60b249b489c00b3a66c1e031f6bf189b5370d4b656d867058faef144d7e"
+      "sha256": "02c14038dc47f613bcaba90be4f1185e5e4de1779140c29226a35776d437d142"
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/tools.json",
-      "sha256": "93b072d7eb3899cbe1404aa9a326a9f4374533ea7cc106bec851e40b7b653849"
+      "sha256": "f2d39894988ca54d092d3df1b8394cf2d4f7d411d1a07ac2646f4a1580387b78"
     },
     {
       "path": "distribution/gcp-marketplace/LISTING.md",
-      "sha256": "399286ea218b87dbffa3252e1a23dc63807fca7b67ed1b644c27c934fe029726"
+      "sha256": "101ea9a2ec913a9598ccea1073b2b0b48471b1e78245cd2176b842b91d41bfac"
     },
     {
       "path": "distribution/gcp-marketplace/agent-card.json",
-      "sha256": "bf4d52f031a1c2bbb79ee1225e172d36116defe76ea5876fde9c1f02b186f28e"
+      "sha256": "ec195a8ed187e792747ccf009520e5af3ee2764e050f40c9f6f460ab176bed6e"
     },
     {
       "path": "distribution/gemini/GEMINI.md",
-      "sha256": "a1cac567cb7d09b4f22066112dd1e4e603bdf8caa0c0c4c6dc4b89ea8e9b6fbc"
+      "sha256": "90f939d6cbc8132e0c7a7b7d8827979fdc982b8bb810be2349f16c7d12428b3a"
     },
     {
       "path": "distribution/gemini/gemini-extension.json",
-      "sha256": "584509f328261e97a3b4ae2d36f8d9b36fe0f559e4a67548945ce6ed428a43fe"
+      "sha256": "bd03553333d5d448fe43fcbd684ac194f9e82e0521130529e081748e08f8f0c7"
     },
     {
       "path": "distribution/hf-space/csoai-gspc-mcp/README.md",
-      "sha256": "febd7641f8b04893366f7c0dbadab9e64dc9cf86b6d60532e64518b54ad5a6fc"
+      "sha256": "52967daca5ee2a5092dbb8bb8a3bab05ba9c4b3b94618daf1eacfc1ec2dcc3ad"
     },
     {
       "path": "distribution/hf-space/csoai-gspc-mcp/app.py",
@@ -1037,11 +1052,11 @@
     },
     {
       "path": "distribution/mcp-registry/ai.councilof-gspc/server.json",
-      "sha256": "c4bb6132c7ff2b79abe74a6cf9b1dec0d363036fc4055a88b90e1c2b9f50f523"
+      "sha256": "9afd74632259e7712213a0cea968ace8039ced713c7d03ae7cdb3c53648407ca"
     },
     {
       "path": "distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json",
-      "sha256": "a34404709476618d2e1cf673eae972cb2ae5c1c59d5f5e93a2956f8b594da8c1"
+      "sha256": "66d130d8c9ec5a86bf494cf7892ce559c94503ba533b67b3f39f2ddd97e0a571"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/LICENSE",
@@ -1049,11 +1064,11 @@
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/README.md",
-      "sha256": "e573994f60f2b8506b598ca0ec3bc74b33b55df5a0adeae224a50573f84b0e49"
+      "sha256": "9f06d2807afc9f4994abf58e9129b3179f3067e24397f7222588bd936a249917"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/gspc-client.js",
-      "sha256": "aa4b2d4fb9fb646de3d6ec84b1023de7f4d55af8deeb2e38e909399609862876"
+      "sha256": "60a59b8305629c96efa14218b44f8685df31d9c2390c3e51053b4aeb8d07acc9"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/index.d.ts",
@@ -1073,11 +1088,11 @@
     },
     {
       "path": "distribution/npm/mastra-gspc/README.md",
-      "sha256": "978c1f81a5313d2f12701313be25f308a1efb2516247e4ae37928897c9a4b782"
+      "sha256": "61c0b63a0005a4d3751f2c868b8f400ce0e4d07948c24579c9079cf869a20dcc"
     },
     {
       "path": "distribution/npm/mastra-gspc/gspc-client.js",
-      "sha256": "aa4b2d4fb9fb646de3d6ec84b1023de7f4d55af8deeb2e38e909399609862876"
+      "sha256": "60a59b8305629c96efa14218b44f8685df31d9c2390c3e51053b4aeb8d07acc9"
     },
     {
       "path": "distribution/npm/mastra-gspc/index.d.ts",
@@ -1101,39 +1116,39 @@
     },
     {
       "path": "distribution/openai-plugin/plugin.json",
-      "sha256": "4a0728105600f196dafb12bdeeb4be6b2835cfc7ad80d5cbac17d47b023e6d0e"
+      "sha256": "0b4df32b9b6316c0d901a801482748bf24c5aa80f16ca02dc01cae799c9b998e"
     },
     {
       "path": "distribution/openai-plugin/skills/get-started/SKILL.md",
-      "sha256": "c1629e5ab670dd112a73f827c53ea03d19aeefc50df716689267cb04a7a36b6e"
+      "sha256": "8a2f12cd402c15f74b8202f89f9e9b27b7685c8defef121ba73fe60594773020"
     },
     {
       "path": "distribution/openai/app.json",
-      "sha256": "09e633557825de67cd4980f419a9c8cb89e8d29ace57a9e23ffeb9e950464de8"
+      "sha256": "056913482d92e2177635f45c7779258cb2edc1c076ad578d5a356d16915d7d11"
     },
     {
       "path": "distribution/packages/gspc-openai-plugin.zip",
-      "sha256": "3a9e7d8de018b8cf14e382218d0f98e5fdcb82bd75e078d234206554593a5a02"
+      "sha256": "ab241610aa72eb636932670a7fa2395aa0b66b8c1752c3d59863732ebf3292c2"
     },
     {
       "path": "distribution/packages/gspc.difypkg",
-      "sha256": "8f1af7ab86dbbafe35cca0902965468c96761bd28d900eb3cc426a75a6584772"
+      "sha256": "1263669f1362e34f5fcd7e10afb0d5c519ca8f69e3f2604cab46cc7d540267f4"
     },
     {
       "path": "distribution/plugin/.claude-plugin/marketplace.json",
-      "sha256": "2d31be0bebe7f2e541ee7b9c912cbc532a3c7317cfe7c1e095d9489396b85a6a"
+      "sha256": "0a9d2b9bf9d4e79df010d9e69c48de0fe283a27f2c923a8292c2b6a4c348c3b5"
     },
     {
       "path": "distribution/plugin/.claude-plugin/plugin.json",
-      "sha256": "7eec25d0878821d4ae5f6d2fc21b63181a6c8516d53d9992e5a6cb65f79f8807"
+      "sha256": "8f97ecb504bc1dbb6819e19664775768aeaf8594d2b8621cfd0ccc7c96aa36be"
     },
     {
       "path": "distribution/plugin/.cursor-plugin/plugin.json",
-      "sha256": "73f00341a76b12513cf71f9afbd0804f2a7b6531a1be06b7d1a33ce99c4b3fc9"
+      "sha256": "5f8e42488890dfae8d31181a7c7d784e74c307e4dabaf0e1a2a492732e3f5602"
     },
     {
       "path": "distribution/plugin/.grok-plugin/marketplace.json",
-      "sha256": "631495ff0d12c510f50ce811f704a33a05a17148b1ed1f3466d46e3cf9e4acb7"
+      "sha256": "991561a355b19c414945ecde5b262f74904dfd7d22f3b736b829d1ca6791bd4d"
     },
     {
       "path": "distribution/plugin/.mcp.json",
@@ -1141,19 +1156,19 @@
     },
     {
       "path": "distribution/plugin/README.md",
-      "sha256": "73bb96f2567d570f928df19ef5332e00afdcefa27c5be52211c9cc9c4dda789d"
+      "sha256": "4f2306d36149999bc8bf4d1c9d3b12298b4c73ca37b54d168be485ddda05212b"
     },
     {
       "path": "distribution/plugin/kimi.plugin.json",
-      "sha256": "f291adeb2c0f99e0acc331b6878d41d7c94a595b86f18a10232c36210a1cf479"
+      "sha256": "0e624e0d555e29a12ad27eb994d76224b24dd56cb7d577b6cf8bdeebfc9b9723"
     },
     {
       "path": "distribution/plugin/locales/en-US.json",
-      "sha256": "be559acfd52d5bb3b21d1fa47f182eac9c29ab51f5b88fc022c6ecd57daa7aec"
+      "sha256": "bc5e97f7587d070d4ced50a7c23c324c766208bff881e1d5f4af53a66d5914d3"
     },
     {
       "path": "distribution/plugin/locales/zh-CN.json",
-      "sha256": "df4525c9fb9cebed829406ec164ccad51ac0e5d67ecd6e2c39176ff87089abb8"
+      "sha256": "668edfd45db6f22421f7f5accc7890bfbf62bc9771db2ea544d537d964bc39fe"
     },
     {
       "path": "distribution/plugin/mcp_config.json",
@@ -1161,7 +1176,7 @@
     },
     {
       "path": "distribution/plugin/plugin.json",
-      "sha256": "34ac4a15e87debbb150bb6a2467d7b0999999e8f609778c40f1a9eecb71ef2e7"
+      "sha256": "872784ed73d99bf777adf97cd75de879a0b46cad65f8126ee853fb20c8b0f5bd"
     },
     {
       "path": "distribution/plugin/rules/AGENTS.md",
@@ -1173,7 +1188,7 @@
     },
     {
       "path": "distribution/plugin/skills/gspc/SKILL.md",
-      "sha256": "e3cef7453962cb6b589b8d2f5127ba960085e1f2a4564a404037e39cb9bac54d"
+      "sha256": "4c44346c07daba2c8c4fe216ce38feac59958cc9ed32508257f32209e4c2e5b7"
     },
     {
       "path": "distribution/python/crewai-csoai/LICENSE",
@@ -1265,11 +1280,19 @@
     },
     {
       "path": "distribution/working-groups/hf/catalog.json",
-      "sha256": "2df0a88ba78a4e6346d01eddbdde9d261a228a7783c3e48c2328f0480799b9cb"
+      "sha256": "511ecf1eab5046fcf66fe3080d385c1d0df6e4ef565374c46c8e2efd1d820638"
+    },
+    {
+      "path": "distribution/working-groups/hf/controlai.html",
+      "sha256": "1922de89980f63161550aca3cf048a45a5d5222eedde72461f867539361b21d5"
+    },
+    {
+      "path": "distribution/working-groups/hf/controlai.json",
+      "sha256": "4cb806c2c867161ab2217f6c2404e1cbeedddb731a05b30699e8ba8f7b52f056"
     },
     {
       "path": "distribution/working-groups/hf/index.html",
-      "sha256": "f2afa976d3413cb77f4a8ac9bbdfaa42addb0f19177f536b5a2e33ee9115c44c"
+      "sha256": "243e74f224ad17e885ba5ff6566831a1c94d6360ec8ad69c3aa322f85481058b"
     },
     {
       "path": "distribution/working-groups/kaggle/kernel-metadata.template.json",
@@ -1277,11 +1300,11 @@
     },
     {
       "path": "distribution/working-groups/kaggle/working-groups.ipynb",
-      "sha256": "eb7341dd36f9e156d90cfb9e42c21b9bd23a3388904e3a30b5593baa7b660bf9"
+      "sha256": "08adf322ace0eb63f83072690a296c6ecaaffeebd5d052426c3d33c189ecb864"
     },
     {
       "path": "distribution/working-groups/manifest.json",
-      "sha256": "18dfe79fd03ca65b5434774e2469126cfc1f7a7e98a6d198c4ad239170975ff7"
+      "sha256": "028019dd49fbefb324610915871a63092243fde9a6359aa37564131101a1dfb7"
     },
     {
       "path": "distribution/working-groups/mcp-client.template.json",
@@ -1289,35 +1312,35 @@
     },
     {
       "path": "public/.claude-plugin/marketplace.json",
-      "sha256": "2d31be0bebe7f2e541ee7b9c912cbc532a3c7317cfe7c1e095d9489396b85a6a"
+      "sha256": "0a9d2b9bf9d4e79df010d9e69c48de0fe283a27f2c923a8292c2b6a4c348c3b5"
     },
     {
       "path": "public/.claude-plugin/plugin.json",
-      "sha256": "7eec25d0878821d4ae5f6d2fc21b63181a6c8516d53d9992e5a6cb65f79f8807"
+      "sha256": "8f97ecb504bc1dbb6819e19664775768aeaf8594d2b8621cfd0ccc7c96aa36be"
     },
     {
       "path": "public/.well-known/mcp.json",
-      "sha256": "d7f494dc3aabbf08ae3d47ac7ff440d7ce0fe0cf268426aa10499bad82bd5120"
+      "sha256": "29a78c6bcf2cc9b069e871716cce0da996e2f283dcf66220a3ccd60ea3ad939e"
     },
     {
       "path": "public/.well-known/mcp/server-card.json",
-      "sha256": "2381423d5dea67d6ffcf4e037cfb00feec40f7deed276d326cffa3feb5f5e086"
+      "sha256": "a1dc9933dc0aba91f76f8422371b80d659073a148bf2f44dd09bbfe1e85478c4"
     },
     {
       "path": "public/charter-register/discussion.html",
-      "sha256": "69912c7c11a2a415033b9f65b52d3351e2ba5e5be34b6e4f2d8a8b87bbb2588f"
+      "sha256": "b7de3f447b9b25e95b6293dde75668d056fc38d4a32cbc5f768e5a008577b128"
     },
     {
       "path": "public/charter-register/index.html",
-      "sha256": "0e369385468aae4cc1a0765b513892d6633f454d36c87f53bc7cd2de6496470e"
+      "sha256": "1143de41a48a244b7731579a2cc2b4ed046d34e5da6f42031dd05c016c1994fd"
     },
     {
       "path": "public/charter-register/manifest.json",
-      "sha256": "d7411f8929edded17eaa32d3a8f2e945f5cc799b9a087d3d9caabdd9c822c270"
+      "sha256": "abba500bcc41b50f4119e2bf2889563a2370fab3c862a0633aa71bc0a38bb6a8"
     },
     {
       "path": "public/charter-register/register.json",
-      "sha256": "e0769eac1d8c7a9bdf53887dba79d8e81942090cbba976bd78078d6af03561aa"
+      "sha256": "c0ce8529bcdd9c80ce8b752786d6c64a76d0923bd81028eaf66ccfd20f139d84"
     },
     {
       "path": "public/oasf/ai.councilof.gspc.oasf.json",
@@ -1325,15 +1348,23 @@
     },
     {
       "path": "public/oasf/ai.councilof.measurement-agent.oasf.json",
-      "sha256": "2f1c08d231aed238d28bbe31d03804aa21aa519a7ffbcf934a5466dc0d1e233b"
+      "sha256": "8a61d3c4713175d5b2691d2a976d1edf6f655e88774c8ec00532d25da0c73f4b"
     },
     {
       "path": "public/working-groups/catalog.json",
-      "sha256": "2df0a88ba78a4e6346d01eddbdde9d261a228a7783c3e48c2328f0480799b9cb"
+      "sha256": "511ecf1eab5046fcf66fe3080d385c1d0df6e4ef565374c46c8e2efd1d820638"
+    },
+    {
+      "path": "public/working-groups/controlai.html",
+      "sha256": "1922de89980f63161550aca3cf048a45a5d5222eedde72461f867539361b21d5"
+    },
+    {
+      "path": "public/working-groups/controlai.json",
+      "sha256": "4cb806c2c867161ab2217f6c2404e1cbeedddb731a05b30699e8ba8f7b52f056"
     },
     {
       "path": "public/working-groups/index.html",
-      "sha256": "f2afa976d3413cb77f4a8ac9bbdfaa42addb0f19177f536b5a2e33ee9115c44c"
+      "sha256": "243e74f224ad17e885ba5ff6566831a1c94d6360ec8ad69c3aa322f85481058b"
     }
   ]
 }

@@ -17,6 +17,7 @@ superseded file keeps its bytes so anyone who read it can see what was published
 | `docs/corrections/2026-09-25-board-snapshot-refreeze.md` | `docs/corrections/2026-09-25-board-snapshot-refreeze-SUPERSEDES.md` | GAP-REGISTER-2026-10-26#A19 | The board frame the 25 September note quotes ("23 axes · 23 measured · 0 unmeasured") is superseded: the live board reads 33 axes · 23 measured, with 10 declared slots and no run behind them. The note's own finding — the signed snapshot was stale — stands. |
 | `docs/tui4/gap-register-2026-10-07-probe-1108Z.json` | `docs/tui4/gap-register-2026-10-07-probe-1108Z-SUPERSEDES.md` | GAP-REGISTER-2026-10-26#A19 | The `public_count` the 2026-10-07 probe recorded is superseded: the live door reads 33 axes · 23 measured. The probe was VERIFIED and correct on its capture date; the run artefact is not edited. |
 | `measurement/ietf-audit-live-readback-2026-10-01.json` | `measurement/ietf-audit-live-readback-2026-10-01-SUPERSEDES.md` | GAP-REGISTER-2026-10-26#A19 | The `observed` block of the 2026-10-01 readback is superseded: the live estate reads 33 axes, 325 cards, a different root, merkle root, Rekor logIndex and Bitcoin block. `gspc_measured_axes` (23) and `corrections_signature_state` (VALID) did not move. The `endpoints` block stands. |
+| `contributions/osaia-safe-v1.0-port-2026-10-26.md` — section 5, the sentence that states the living board's size | `corrections/osaia-safe-v1.0-port-2026-10-26-board-count-2026-11-01-SUPERSEDES.md` | GAP-REGISTER-2026-10-26#A20 | The sentence "The **living board** — `https://councilof.ai/api/gspc` — states **33 axes · 23 measured**" was a live endpoint quoted in the present tense with no read date. It was **true when written** (the board read 33 axes · 23 measured on 26 Oct 2026) and went stale when the board grew: PR #3692 landed on master at 2026-11-01T07:33:41Z and added the declared slot `watchdog-ingest`. Read live at 2026-11-01T08:31:29Z the board is **34 axes · 23 measured · 11 unmeasured**; the measured count did not move. The freeze's own 23 axes · 23 measured, the pointer's `SUPERSEDED_KNOWN_CLAIM_DEFECT`, the separation line, the binding to the approved `SAFE.md` and "prepared, not submitted" all stand unchanged. The **28 Oct 2026** correction to this document is not withdrawn. |
 
 The last three rows supersede **repository** artefacts, not published surfaces: the three
 superseded files live under `docs/` and `measurement/` and are not served by this site, so
@@ -25,3 +26,11 @@ register id is the gap-register row (`measurement/consolidation/2026-10/GAP-REGI
 gap A19) rather than a corrections-ledger id, because the ledger's own signature covers the
 bytes of its entries and is re-issued by a separate owner-gated step; no entry was added here
 and no signed ledger byte was moved.
+
+The row dated 1 November 2026 supersedes one **sentence of a published contribution**, not a
+repository artefact: the sentence itself is edited in place, visibly, carrying the value that was
+published beside the value that is current, with a dated correction block at the head of the
+document. The register id is the gap-register row
+(`measurement/consolidation/2026-10/GAP-REGISTER-2026-10-26.md`, gap A20) rather than a
+corrections-ledger id, for the same reason as above: no entry was added here and no signed ledger
+byte was moved.

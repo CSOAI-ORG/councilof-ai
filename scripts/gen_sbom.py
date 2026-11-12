@@ -138,6 +138,66 @@ def stable_projection(document):
     value["components"] = sorted(value.get("components", []), key=lambda c: c.get("bom-ref", ""))
     return value
 
+class Uncheckable(Exception):
+    """The check could not be completed, as opposed to the check failing.
+
+    The estate's rule: an absence of evidence is not evidence of absence. A pinned
+    generation commit this store cannot read leaves the PINNED-INPUT question
+    unanswerable here — it is not a finding about the SBOM, and it must not be reported
+    as one. Exit 3 says exactly that: the check could not be made. Exit 2 says the check
+    was made and failed.
+    """
+
+
+def pin_commit(root):
+    """The commit this SBOM describes: the newest ancestor whose dependency inputs are
+    the ones the tree carries.
+
+    NOT HEAD. A pull request's HEAD is a branch commit, and a squash merge never puts it
+    in master's history: the SBOM then names a commit no reader can find in the repo, and
+    scripts/sbom-pin-gate.mjs calls that orphaned. Measured 2026-11-03: #3760 regenerated
+    the SBOM inside a branch, so master's SBOM pinned a branch commit that sits 143
+    commits off master and in no ref — the same failure #3614 had already fixed once.
+    The estate's actual practice is the durable one: the SBOM is regenerated on master
+    AFTER a merge ("Regenerate merged dependency inventory", 1ca16f141), where the pin is
+    a commit in everyone's history.
+
+    The pin is the newest commit that touched either dependency input: from that commit
+    onward neither file changed, so both carry exactly the bytes being inventoried. It is
+    an ancestor of HEAD by construction, and it is an ancestor of master whenever the
+    branch did not touch these files — which is the case for every branch that does not
+    change dependencies.
+    """
+    out = subprocess.run(
+        ["git", "log", "-1", "--format=%H", "--", "package.json", "package-lock.json"],
+        cwd=root, check=True, capture_output=True, text=True).stdout.strip()
+    if not out:
+        out = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, check=True,
+                             capture_output=True, text=True).stdout.strip()
+    return out
+
+
+def pin_durability(root, pin):
+    """Is the pin a commit that survives a squash merge of this branch?
+
+    A pin that lives only on this branch names a commit the merged master will never
+    contain. That is a fact about the future, so it is reported as a WARNING here, not
+    silently accepted and not silently refused: the SBOM is still true of this tree, and
+    the repair is to regenerate it on master after the merge.
+    """
+    for ref in ("origin/master", "master"):
+        probe = subprocess.run(["git", "rev-parse", "--verify", "--quiet", ref],
+                               cwd=root, capture_output=True, text=True)
+        if probe.returncode != 0:
+            continue
+        inside = subprocess.run(["git", "merge-base", "--is-ancestor", pin, ref],
+                                cwd=root, capture_output=True)
+        if inside.returncode == 0:
+            return True, ref
+        return False, ref
+    return None, None
+
+
 def check_output(stored, fresh, package_raw, lock_raw, read_pinned):
     metadata = stored.get("metadata", {})
     commits = [p.get("value") for p in metadata.get("properties", []) if p.get("name") == "commit"]
@@ -158,13 +218,29 @@ def check_output(stored, fresh, package_raw, lock_raw, read_pinned):
         raise ValueError("Stored SBOM timestamp needs a timezone")
     if metadata.get("component", {}).get("bom-ref") != "source:" + recorded:
         raise ValueError("Stored SBOM root reference differs from recorded commit")
+    # The INVENTORY FIRST. This is the substantive check and it needs no pinned history:
+    # the stored SBOM must describe the SAME dependency inputs the tree carries today.
+    # Running it before the pinned read means it still applies when the pinned commit is
+    # unreadable — otherwise an unreadable pin would silently skip the one check that
+    # can always be made.
+    if stable_projection(stored) != stable_projection(fresh):
+        raise ValueError("Stored SBOM detailed inventory differs; regenerate it")
+    # The PINNED INPUTS SECOND. This needs the pinned commit to be readable. When it is
+    # not, the question is UNCHECKABLE, not a finding: the stored SBOM may well be right
+    # and this store cannot say. CI already treats this fact that way (sbom-pin-gate.mjs
+    # exits 2 for UNPROVABLE and pr-gates.yml accepts it); the local pre-push gate did
+    # not, and blocked pushes on a commit a fresh clone simply does not have.
     for relative, raw in (("package.json", package_raw), ("package-lock.json", lock_raw)):
         # The recorded commit may precede the commit containing the generated BOM.
         # Verify its actual inputs rather than requiring an impossible self-reference.
-        if read_pinned(recorded, relative) != raw:
+        try:
+            pinned = read_pinned(recorded, relative)
+        except (subprocess.CalledProcessError, OSError) as error:
+            raise Uncheckable(
+                "the pinned generation commit " + recorded + " is not readable in this store (" +
+                relative + "): " + str(error))
+        if pinned != raw:
             raise ValueError("Stored SBOM source inputs are stale: " + relative)
-    if stable_projection(stored) != stable_projection(fresh):
-        raise ValueError("Stored SBOM detailed inventory differs; regenerate it")
     return True
 
 def main(argv=None):
@@ -179,8 +255,7 @@ def main(argv=None):
     try:
         package_raw = (root / "package.json").read_bytes()
         lock_raw = (root / "package-lock.json").read_bytes()
-        commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, check=True,
-                                capture_output=True, text=True).stdout.strip()
+        commit = pin_commit(root)
         for relative, original in (("package.json", package_raw), ("package-lock.json", lock_raw)):
             pinned = subprocess.run(["git", "show", commit + ":" + relative], cwd=root,
                                     check=True, capture_output=True).stdout
@@ -204,8 +279,20 @@ def main(argv=None):
             os.fsync(handle.fileno())
         os.replace(str(temporary), str(output))
         temporary = None
+        durable, ref = pin_durability(root, commit)
+        if durable is False:
+            print("WARNING: the SBOM is pinned to " + commit + ", which is NOT in " + ref + ".")
+            print("         A squash merge of this branch leaves the pin naming a commit that is in no")
+            print("         ref, and scripts/sbom-pin-gate.mjs will call it orphaned. The bytes are")
+            print("         still true of this tree; the durable repair is to regenerate the SBOM on")
+            print("         master after the merge, where the pin is in everyone's history.")
         print("SBOM written: {} ({} lockfile package entries) @ {}".format(output, len(result["components"]), commit))
         return 0
+    except Uncheckable as error:
+        # UNCHECKABLE, not a finding. The stored SBOM may well be right; this store
+        # cannot say. Exit 3 is the third state: the check could not be made.
+        print("SBOM pinned history unreadable — UNCHECKABLE, not a finding about the SBOM: " + str(error), file=sys.stderr)
+        return 3
     except (ValueError, OSError, subprocess.CalledProcessError) as error:
         print("SBOM held; previous output preserved: " + str(error), file=sys.stderr)
         return 2

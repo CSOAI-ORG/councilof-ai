@@ -1,0 +1,108 @@
+{
+  "observedAt": "2026-11-04T06:55:09.907926+00:00",
+  "baseCommit": "06a2aa9ceb95beab8e3562bd39c149602892e44d",
+  "state": "TESTED_NATIVE_UI_CANDIDATE_NOT_HOST_INSTALLED",
+  "unitCases": 50,
+  "unitScopes": {
+    "taskBenchmarkProjection": 30,
+    "academyAndUnsentNotes": 14,
+    "realMcpSdk": 6
+  },
+  "browser": {
+    "observedAt": "2026-11-04T06:46:48.712Z",
+    "passed": true,
+    "checks": [
+      "open-does-not-start-monitoring-or-contact-service",
+      "suggestion-prepares-draft-without-dispatch",
+      "observed-tool-result-and-terminal-projected",
+      "task-result-recommends-existing-Academy-lesson",
+      "service-output-is-inert-text",
+      "saved-observation-bound-to-one-task-not-signature",
+      "source-links-and-board-context-are-task-scoped",
+      "benchmark-import-is-local-retains-zero-and-provenance",
+      "unsupported-benchmark-clears-old-results-not-guessed",
+      "contextual-practice-reuses-source-without-issuing-credential",
+      "learning-source-digest-checked-explicitly",
+      "source-change-holds-further-practice-no-silent-upgrade",
+      "practice-export-is-dated-noncertifying",
+      "finding-draft-no-auto-notification-no-answer-text",
+      "second-screen-shares-only-status-and-tool-names",
+      "screen-revocation-clears-receiver",
+      "truncated-stream-not-completed-no-automatic-retry",
+      "wrong-task-identity-rejected",
+      "paid-decision-visible-without-confirmation-or-payment",
+      "narrow-panel-no-horizontal-overflow",
+      "actual-MCP-Apps-SDK-initializes-with-owned-host-fixture",
+      "HIM-explanation-uses-host-message-only-after-user-click",
+      "native-export-uses-host-download-capability",
+      "native-sandbox-does-not-pretend-TV-pairing",
+      "no-browser-script-errors"
+    ],
+    "count": 25,
+    "pageErrors": [],
+    "requestCount": 7,
+    "scope": "Actual bundled UI and MCP Apps SDK in Chrome. Owned host fixture and controlled service events, not ChatGPT or Claude native account installation."
+  },
+  "live": {
+    "observedAt": "2026-11-04T06:48:00.902Z",
+    "passed": true,
+    "checks": [
+      "one-fixed-live-readonly-task-completed",
+      "every-exported-event-bound-to-sent-task",
+      "live-result-and-terminal-without-authority-claim",
+      "only-requested-public-board-tool-used",
+      "live-result-links-to-relevant-existing-learning",
+      "source-freshness-result-visible-without-auto-adoption",
+      "no-browser-exception"
+    ],
+    "count": 7,
+    "panelSha256": "45b1ac646b0c49956c6ea2346c9588e6ce19ba4a54f0b4c4230653430e444fc6",
+    "observationSha256": "8b92cea8fccc4e6e14af20fe36596bfd6abcf2363bb0acc3412c4145c5bac8bc",
+    "request": {
+      "method": "POST",
+      "url": "https://councilof.ai/api/agui/run",
+      "runId": "run-b5bfc0bf-9086-43ea-a783-7ffb0f260f57",
+      "threadId": "panel-4873fbb5-8866-41f6-997c-a555b1d031b2"
+    },
+    "eventCount": 13,
+    "toolLabels": [
+      {
+        "tool": "board_totals",
+        "label": "MEASURED 34 of 34 slots"
+      }
+    ],
+    "sourceState": "Source bytes match the pinned exercise inventory. This checks version identity, not legal validity or your competence.",
+    "pageErrors": [],
+    "scope": "Actual staged panel in Chrome against deployed Council AG-UI service. Not installed in ChatGPT or Claude. One public question, no paid model, no human decision, no external notification."
+  },
+  "negativeControls": {
+    "scope": "Deliberately broken temporary copies; no shipped source changed.",
+    "results": [
+      {
+        "control": "task-binding-bypass",
+        "detectedByAssertion": true,
+        "status": 1
+      },
+      {
+        "control": "source-freshness-bypass",
+        "detectedByAssertion": true,
+        "status": 1
+      }
+    ]
+  },
+  "boundaries": {
+    "actualChatGPTHost": false,
+    "actualClaudeHost": false,
+    "productionDeployment": false,
+    "agentCredentialsJoined": false,
+    "externalNotification": false,
+    "certificateIssued": false,
+    "regulatoryDetermination": false,
+    "tvPairing": false
+  },
+  "gates": {
+    "brandCandidate": "PASS",
+    "fullSiteLinkGate": "NOT_ESTABLISHED_ON_PARTIAL_TREE; only existing Academy paths absent from the partial stage were reported",
+    "publicHEADReads": "403 from the worker; not treated as an origin outage; real browser task and source GET succeeded"
+  }
+}

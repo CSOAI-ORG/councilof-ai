@@ -12,6 +12,17 @@ Alliance, and nothing here states or implies that the Alliance has adopted, endo
 agreed with any of it. This is our own working position, published so that it can be read, cited and
 disagreed with. We measure; we do not certify, and we do not speak for the Alliance.
 
+> **Correction — 1 November 2026.** One number in section 5 was a live claim about the living board
+> and had gone stale: the board was read as **33 axes · 23 measured** when this document was
+> written, and it now reads **34 axes · 23 measured** — the board grew by one declared slot
+> (`watchdog-ingest`) when PR #3692 landed on 2026-11-01T07:33:41Z. The measured count did not move.
+> The correction is marked in place, with the value that was published beside the value that is
+> current, and the evidence is in
+> `public/corrections/osaia-safe-v1.0-port-2026-10-26-board-count-2026-11-01-SUPERSEDES.md`.
+> Nothing else in this document changed. The argument of the worked example is unaffected: the signed
+> freeze and the living board are two boards at two observation times, and the living board is the one
+> that moves.
+>
 > **Correction — 28 October 2026.** Two rows of the section 2 table were stale when this document was
 > published, and one sentence of the honesty register has been overtaken by events. The corrections are
 > marked in place, with the value that was published beside the value that is current. The full evidence
@@ -187,7 +198,7 @@ This is the concrete instance of the lifecycle in hunk 4.
 - The **signed board freeze** — `https://councilof.ai/signed/gspc-board.signed.json`, keyed
   `did:web:csoai.org#gspc-board-22axis-2026`, witnessed in the Rekor transparency log at index
   2687278151 — states **23 axes · 23 measured**.
-- The **living board** — `https://councilof.ai/api/gspc` — states **33 axes · 23 measured**.
+- The **living board** — `https://councilof.ai/api/gspc` — states **34 axes · 23 measured** (corrected 2026-11-01; this line read **33 axes · 23 measured** when this document was written on 26 October 2026 — the board grew by one declared slot, `watchdog-ingest`, when PR #3692 landed on 2026-11-01T07:33:41Z, and the measured count did not move).
 - The freeze's own pointer, `public/interop/gspc-board-freeze-pointer.json`, carries
   `relying_party_status.state = "SUPERSEDED_KNOWN_CLAIM_DEFECT"`, names the living board as
   `current_authority`, and says not to use it as current authority.

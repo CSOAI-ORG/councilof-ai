@@ -71,9 +71,9 @@ export const RECORD_SLIDES: Slide[] = [
       alt: "A branching white structure holding a green faceted stone at its centre, labelled as the signed result",
     },
     points: [
-      { tag: "benefit", text: "Published to Hugging Face, PyPI and GitHub — each checked live. Zenodo: record unavailable since 29 Sep 2026 (account blocked by Zenodo; appeal pending)" },
+      { tag: "benefit", text: "Published to Hugging Face, PyPI and GitHub — each checked live. Zenodo: record unavailable since 29 Sep 2026 (account blocked by Zenodo; no appeal on record)" },
       { tag: "benefit", text: "Verification is client-side: no account, no server call, no permission" },
-      { tag: "benefit", text: "DOI 10.5281/zenodo.21991104 — an archival identifier we do not control, and the reason why: Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending." },
+      { tag: "benefit", text: "DOI 10.5281/zenodo.21991104 — an archival identifier we do not control, and the reason why: Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json)." },
       { tag: "usp", text: "Software Heritage snapshot 7b219f85… records the repository visit dated 2 September 2026" },
     ],
   },
@@ -89,7 +89,7 @@ export const RECORD_SLIDES: Slide[] = [
       { tag: "usp", text: "The retraction is published, not buried — see the corrections ledger" },
     ],
     href: "/honesty",
-    cta: "Read what we got wrong",
+    cta: "Read published corrections",
   },
 ];
 
@@ -104,7 +104,7 @@ export const RECORD_NOT_CLAIMED = [
 
 export const RECORD_RELATED = [
   { href: "/gspc-verify", label: "Verify a card", what: "Client-side verification — no account, no server call." },
-  { href: "/honesty", label: "The honesty gate", what: "Our own errors, including the claim withdrawn in DR-0007." },
+  { href: "/honesty", label: "Measurement scope and limitations", what: "Our own errors, including the claim withdrawn in DR-0007." },
   { href: "/statute-to-predicate", label: "From statute to predicate", what: "What is inside the record before it is signed." },
   { href: "/trust-center", label: "Trust center", what: "The real hosting posture, without borrowed multi-region claims." },
   { href: "/.well-known/software-heritage.json", label: "Software Heritage record", what: "The dated snapshot identifier and its stated limits." },

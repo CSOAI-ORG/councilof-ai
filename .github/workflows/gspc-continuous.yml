@@ -40,6 +40,7 @@ jobs:
 
       - name: Run frontier pulse
         env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           GEMINI_TOKEN: ${{ secrets.GEMINI_TOKEN }}
           GROK_TOKEN: ${{ secrets.GROK_TOKEN }}

@@ -30,6 +30,8 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
+from gspc_live import live_line
+
 ROOT = Path(__file__).resolve().parents[2]
 OPERATOR_GRANTS = ROOT / "_operator" / "grants" / "applications"
 OPERATOR_OUTREACH = ROOT / "docs" / "operator" / "outreach"
@@ -170,7 +172,7 @@ CONTACT
             "100 signed cards across AI governance standards",
         ],
         "why_us": (
-            "We're already live. 119 atoms signed. 22 axes measured. 14 fleets. "
+            "We're already live. " + live_line() + " "
             "The substrate is open-source, MIT, deployable in 3 minutes."
         ),
         "application_body": """

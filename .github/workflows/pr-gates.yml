@@ -133,6 +133,25 @@ jobs:
           THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
         run: python3 scripts/privacy/test_third_party_identifiers.py -v
 
+  # 7 Nov 2026: .github/workflows/runpod-intake.yml called
+  # scripts/resolve_runpod_trusted_bank.py with flags the script never had ("--index-out"
+  # and "--index"), while the script's real CLI is two subcommands, "stage" and "lookup".
+  # argparse rejected both calls with exit 2, so the staging step never produced a
+  # trusted-bank directory and the verify loop -- which swallowed the error with
+  # 2>/dev/null -- reported EVERY run as HOLD_CONTROL_PLANE_BANK_ABSENT. A tool error
+  # was being published as a verdict about the banks. Neither call site had ever run,
+  # so nothing caught it. This test reads the subcommand set from the script's own
+  # --help, so it cannot drift away from the script it guards.
+  runpod-intake-wiring:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: The runpod-intake workflow calls the resolver with a CLI that exists
+        run: python3 -m unittest discover -s scripts -p test_runpod_intake_wiring.py -v
+
   # 26 Oct 2026: the pending public-root candidate could not be reconciled with master and every
   # run of public-root-candidate-upgrade.yml failed there, so the ONE public root had not advanced
   # for over nine hours. Two faults, both in the reconcile step: the merge died on a content
@@ -196,6 +215,31 @@ jobs:
       - name: Disclosure sweep rules - selftest
         run: python3 scripts/claimguard-estate-sweep.py --selftest
 
+  # 7 Nov 2026: the published-surface audit compared a page's canonical link with the url that
+  # was ASKED for, while urllib follows redirects and hands it the FINAL page's body. So
+  # /pricing/ — which answers 308 to /dashboard/?tab=measured&task=pricing-overview and carries
+  # the canonical /dashboard/, which is CORRECT — was reported as a MEDIUM "canonical points at
+  # a different path" against a page that is not defective. A checker that cries wolf on a
+  # correct page teaches its reader to ignore it. The same tool's Content-Security-Policy rule
+  # was a branch whose body was `pass`, so the machine surface (/api/gspc, /api/state, /api/cards
+  # answered with five security headers and NO policy at all) went unreported.
+  #
+  # The audit itself stays an OPERATOR tool — it touches the network. Its RULES are the part
+  # that can be a gate, and they are tested here offline against the live shapes measured on
+  # 2026-11-07: the /pricing/ redirect, the canonical on the page served there, and the three
+  # API surfaces that carried no policy. This job is RED against the unfixed script and green
+  # against the fixed one, which is what makes the green mean something.
+  published-surface-audit-rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Published-surface audit rules - selftest
+        run: python3 -m unittest discover -s scripts -p test_published_surface_audit.py -v
+
   # A PR marked "do not merge" must not show green. Lanes self-merge with the shared token and a
   # hold lived only in prose, so this makes the marker a failing check. Reads the event payload
   # only (labels + title from GITHUB_EVENT_PATH): no token, no API, no network. Fails on a label
@@ -232,10 +276,19 @@ jobs:
           set -euo pipefail
           if [ -z "${PR:-}" ]; then
             echo "gated=true" >> "$GITHUB_OUTPUT"   # workflow_dispatch: no PR to scope, run everything
+            echo "coliseum_live=false" >> "$GITHUB_OUTPUT" # finite PR qualification, no extra model calls in the merge queue
             exit 0
           fi
           changed=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
-          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|spaces/gspc-board/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
+          # Only a Coliseum implementation change requests two live model calls.
+          # Other lanes retain every existing gate without invoking this provider.
+          coliseum_changed=$(printf '%s\n' "$changed" | grep -E '^(client/(hf-coliseum\.html|src/(coliseum\.tsx|components/MunderDuel(\.test)?\.tsx|lib/(munderDuel(\.test)?|munderPractice)\.ts))|scripts/(build-coliseum-mirror|sync_hf_coliseum))' || true)
+          if [ -n "$coliseum_changed" ]; then
+            echo "coliseum_live=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "coliseum_live=false" >> "$GITHUB_OUTPUT"
+          fi
+          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|mcp/meok-gspc-layer0/|packages/council-panel/|packages/evidence-fabric/schema/evidence-event-0\.1\.schema\.json$|spaces/gspc-board/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$|\.github/workflows/bot-checks-sweeper\.yml$|\.github/workflows/native-council-panel\.yml$|\.github/workflows/deploy\.yml$)' || true)
           if [ -n "$gated" ]; then
             echo "gated=true" >> "$GITHUB_OUTPUT"
             echo "gated paths in this PR:"; printf '  %s\n' $gated
@@ -253,9 +306,43 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
 
+      - name: Release follow-on trigger contract and negative controls
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node --test scripts/workflow-trigger-coupling.node-test.mjs
+          node --test scripts/post-deploy-verification.node-test.mjs
+          node scripts/workflow-trigger-coupling.mjs
+
       - name: Outward claims — offline manifest contract selftest
         if: steps.scope.outputs.gated == 'true'
         run: node scripts/outward-claims-guard.mjs --selftest
+
+      - name: Completion audit — offline availability/outcome controls
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          ulimit -v 262144
+          ulimit -t 8
+          timeout 35s python3 -B - <<'PY'
+          import importlib.util, socket
+          from unittest.mock import patch
+          spec = importlib.util.spec_from_file_location('completion_audit_gate', 'scripts/completion_audit.py')
+          audit = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(audit)
+          def forbidden(*args, **kwargs):
+              raise AssertionError('Focused availability gate attempted live or full-audit IO')
+          original_fetch = audit.fetch
+          with patch.object(audit, 'measure', forbidden), \
+               patch.object(audit.urllib.request, 'urlopen', forbidden), \
+               patch.object(socket, 'socket', forbidden), \
+               patch.object(socket, 'getaddrinfo', forbidden), \
+               patch.object(audit.subprocess, 'run', forbidden), \
+               patch.object(audit.tempfile, 'TemporaryDirectory', forbidden):
+              faults = audit.availability_outcome_selftest()
+          assert audit.fetch is original_fetch, 'fetch stub was not restored'
+          if faults:
+              raise AssertionError('\n'.join(faults))
+          print('completion audit availability/outcome controls: PASS')
+          PY
 
       # Runs before `npm ci` so a stamped-byte edit fails in seconds. See the stamped-bytes job above
       # for why (#2871 / deploy run 37590160574). Verified to fail: the selftest goes red when any one
@@ -268,6 +355,15 @@ jobs:
           python3 scripts/stamped-bytes-gate.py --selftest
           python3 scripts/stamped-bytes-gate.py --base HEAD^1 --head HEAD
 
+      - name: Native canvas build prerequisites
+        if: steps.scope.outputs.gated == 'true'
+        timeout-minutes: 5
+        run: |
+          sudo apt-get update
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
+            build-essential pkg-config libpixman-1-dev \
+            libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+
       - name: Install deps
         if: steps.scope.outputs.gated == 'true'
         # The Python half matches deploy.yml's install. scripts/ots-manifest-fresh.test.ts (step "Unit
@@ -276,6 +372,35 @@ jobs:
         run: |
           npm ci --no-audit --no-fund
           python3 -m pip install -q cryptography opentimestamps-client jsonschema==4.26.0
+
+      - name: Native canvas runtime smoke
+        if: steps.scope.outputs.gated == 'true'
+        timeout-minutes: 1
+        run: |
+          node --input-type=commonjs <<'NODE'
+          const assert = require('node:assert/strict');
+          const { createCanvas } = require('canvas');
+          const canvas = createCanvas(2, 2);
+          const context = canvas.getContext('2d');
+          context.fillStyle = '#112233';
+          context.fillRect(0, 0, 2, 2);
+          assert.deepEqual(Array.from(context.getImageData(0, 0, 2, 2).data),
+            [17, 34, 51, 255, 17, 34, 51, 255, 17, 34, 51, 255, 17, 34, 51, 255]);
+          const png = canvas.toBuffer('image/png');
+          assert.ok(Buffer.isBuffer(png) && png.length > 8);
+          assert.deepEqual(Array.from(png.subarray(0, 8)), [137, 80, 78, 71, 13, 10, 26, 10]);
+          console.log('Native canvas smoke: PASS (2x2 RGBA and PNG signature; RAM only)');
+          NODE
+
+      - name: Instrument liveness - selftest
+        if: steps.scope.outputs.gated == 'true'
+        # The publisher that says whether the estate's own instruments are still producing. Two of
+        # them had been silent (the settlement census on 4 and 5 Nov, the deck jobs from 3 Nov) and
+        # nothing said so anywhere a reader could see. Its selftest builds a fixture tree with two
+        # published days and two that were never published, and asserts the gap is DERIVED from the
+        # files themselves - so a day that produced nothing cannot be smoothed away by a typed
+        # field, and the verdict stays a statement about elapsed time rather than about quality.
+        run: python3 scripts/pod-loops/instrument_liveness.py --selftest
 
       - name: Dependency security regressions — sanitizer, quoting and proxy trust
         if: steps.scope.outputs.gated == 'true'
@@ -395,6 +520,19 @@ jobs:
           node scripts/node-test-registry.mjs --selftest
           node scripts/node-test-registry.mjs
 
+      # The runtime floor is declared, not typed, and until 2026-11-02 nothing enforced it.
+      # A door-contract test was rewritten to use Set.prototype.intersection, which shipped in
+      # Node 22. It passed the whole local battery (Node 22) and failed here (Node 20) with
+      # "intersection is not a function". The green local run was not evidence: the desk and the
+      # gate were running different programs. This gate reads each package's own engines.node,
+      # so raising a floor is growth and the rules above it go inert on their own.
+      # The selftest runs first: a gate that has never been seen failing is decoration.
+      - name: node engine floor — selftest, then the real scan
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/node-engine-floor-gate.mjs --selftest
+          node scripts/node-engine-floor-gate.mjs
+
       # `scripts` joined this line on 2026-09-06. It was absent, and EIGHT test files under
       # scripts/ had therefore never run in CI - 1007 assertions, including the vocabulary gate
       # over docs/PROVABLE-ARCHIVE-METHOD.md and the outreach drafts, the EAS attestation
@@ -402,7 +540,12 @@ jobs:
       # full checkout; they were simply never invoked. A test nobody runs is a comment.
       - name: Unit tests — client, functions and scripts
         if: steps.scope.outputs.gated == 'true'
-        run: npx vitest run client/src functions scripts
+        # 2026-11-02: mcp/gspc-server and measurement/commissioned are in scope too. The door
+        # contract test (tools-match-door) asserts that the packaged MCP server advertises
+        # exactly what the door serves; it carried TYPED counts (47/5/52) that the 34th axis
+        # moved to 48/5/53, and because no gate ran this file, the drift sat on master
+        # unobserved. A test nobody runs is a comment.
+        run: npx vitest run client/src functions scripts mcp/gspc-server mcp/meok-gspc-layer0 measurement/commissioned
 
       # node:test files that vitest cannot collect (vitest.config.ts NODE_TEST_FILES). They used to be
       # reported by vitest as failed suites and so never actually ran. The list is read from the config
@@ -428,8 +571,25 @@ jobs:
           set -euo pipefail
           echo "PR source revision: $CODEX_DELIVERY_PR_HEAD"
           echo "Checked-out test revision: $(git rev-parse HEAD)"
-          git fetch --no-tags --depth=1 origin 10046fd8b60d75be66bd1f9dbf54155cca26dec3
+          # NO --depth=1 HERE. A depth-1 fetch writes a shallow boundary into THIS
+          # repository, and every later step in this job then walks a truncated history.
+          # That is how the SBOM pin gate came to call a REACHABLE pin orphaned: git could
+          # not finish the walk, and the gate had no way to tell that from a pin that
+          # points at nothing. The commit is still fetched, with its own history, so the
+          # test below sees exactly the same bytes it saw before. No --filter either: it
+          # needs a partial clone, and this checkout is not one.
+          git fetch --no-tags origin 10046fd8b60d75be66bd1f9dbf54155cca26dec3
           test "$(git rev-parse 10046fd8b60d75be66bd1f9dbf54155cca26dec3^{commit})" = 10046fd8b60d75be66bd1f9dbf54155cca26dec3
+          # Defence in depth for the same trap. The fetch above no longer truncates the
+          # graph, but if anything ELSE in this job ever makes the checkout shallow, every
+          # gate after this step reads a truncated history and the sbom-pin gate cannot
+          # tell "not an ancestor" from "could not finish the walk". Fail here, loudly,
+          # with the numbers, rather than letting a later gate name a false finding.
+          if [ "$(git rev-parse --is-shallow-repository)" != "false" ]; then
+            echo "::error::this job's checkout is SHALLOW - the gates after this step would read a truncated graph"
+            echo "reachable from HEAD: $(git rev-list --count HEAD) commit(s); .git/shallow holds $(grep -c . .git/shallow 2>/dev/null || echo 0) boundary commit(s)"
+            exit 1
+          fi
           node --version
           python3 scripts/test_anthropic_gspc_worker.py
           node --experimental-vm-modules --unhandled-rejections=strict scripts/test_paid_delivery_records.mjs
@@ -459,9 +619,34 @@ jobs:
           node scripts/review/published-pins-liveness.mjs --selftest
           node scripts/review/published-pins-liveness.mjs --root . --record-only
 
+      - name: Coliseum publisher offline controls
+        if: steps.scope.outputs.gated == 'true'
+        run: python3 scripts/test_sync_hf_coliseum.py
+
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
+        # HF_TOKEN so the bench-suite build's hub fetch is authenticated. The banks are
+        # public, so the token cannot change a byte — it only raises the rate limit the hub
+        # applies, and an ANONYMOUS fetch was answering 429 at random and failing this build
+        # (and so every push and deploy). See scripts/surface/hub-fetch.mjs.
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: npm run build:client
+
+      - name: Verify same-build Coliseum artifact
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          python3 scripts/sync_hf_coliseum.py --artifact dist/hf-coliseum --expected-sha "$GITHUB_SHA" --verify-only
+          node scripts/brand-gate.mjs dist/hf-coliseum
+
+      - name: Retain the verified Coliseum candidate from this single build
+        if: steps.scope.outputs.gated == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coliseum-candidate-${{ github.sha }}-${{ github.run_attempt }}
+          path: dist/hf-coliseum/
+          if-no-files-found: error
+          retention-days: 7
 
       - name: HF mirror gate — excluded dirs must exist on HF before merge
         if: steps.scope.outputs.gated == 'true'
@@ -474,6 +659,24 @@ jobs:
         run: |
           npx playwright install --with-deps chromium
           npm run prerender:dashboard
+
+      - name: GPAI matrix and daily evidence journeys — desktop and mobile
+        id: gpai_evidence_journey
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/surface/build-gpai-matrix.mjs --check
+          node scripts/build-daily-product.mjs --check
+          npx playwright test --config e2e/playwright.gpai-evidence.config.ts
+
+      - name: Retain GPAI and daily evidence journey results
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.gpai_evidence_journey.outcome == 'success' || steps.gpai_evidence_journey.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: gpai-evidence-journey-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/gpai-evidence/**
+          retention-days: 7
+          if-no-files-found: warn
 
       - name: Axis specialists — charter and human review journey
         id: axis_specialist_journey
@@ -496,7 +699,7 @@ jobs:
       - name: Council OS first question — desktop and mobile
         id: council_os_first_question
         if: steps.scope.outputs.gated == 'true'
-        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation starts minimized and remains usable across layout boundaries'
+        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation starts minimized and remains usable across layout boundaries|workflow entry and header remain usable at (375|894|1024|1280|1440|1536)px$|Boss.s Chair resume|Munder live|GSPC quests are a styled in-workspace game and never promote play into measurement$|the home header carries a booking door to /assess/ within one click$|ordinary signup has one composed main before and after reload at (1440|390)px$'
 
       - name: Retain Council OS first-question premerge evidence
         if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.council_os_first_question.outcome == 'success' || steps.council_os_first_question.outcome == 'failure') }}
@@ -507,8 +710,29 @@ jobs:
             test-results/**/trace.zip
             test-results/**/agui-request-lifecycle.json
             test-results/**/agui-local-trace.json
+            test-results/**/published-source-signup-landmark.json
             test-results/**/*.png
           retention-days: 3
+          if-no-files-found: warn
+
+      # Two bounded real-provider requests, with no retry or external world effect.
+      # Candidate HTML/assets stay local; only the existing MEOK endpoint is live.
+      - name: Coliseum candidate browsers with the real MEOK provider
+        id: coliseum_actual_provider
+        if: steps.scope.outputs.gated == 'true' && steps.scope.outputs.coliseum_live == 'true'
+        env:
+          MUNDER_LIVE_PROVIDER: "1"
+        run: >-
+          npm run test:e2e:shell -- e2e/tests/dashboard-shell.spec.ts
+          --grep 'Munder actual provider' --project=desktop --retries=0
+
+      - name: Retain Coliseum real-provider candidate evidence
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.coliseum_actual_provider.outcome == 'success' || steps.coliseum_actual_provider.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coliseum-actual-provider-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/
+          retention-days: 7
           if-no-files-found: warn
 
       # --selftest first: a gate that has never been seen failing is decoration,
@@ -573,10 +797,30 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:council-truth
 
+      # client/src/pages/ClaimsRegister.tsx says, in its own header comment,
+      # "scripts/claims-register-lint.mjs fails the build on any drift between the
+      # two". Nothing ran it. No workflow, no npm script, no reference anywhere —
+      # so the page's second lock against silently dropping a claim (the original
+      # defect: a fifth status rendered 19 of 20 claims on a site whose banner is
+      # "UNMEASURED shown honestly") was a sentence in a comment.
+      #
+      # It reads two files, writes nothing, and needs no network and no token,
+      # so it belongs on the PR rather than on a schedule.
+      - name: Claims register lint — the page must render every claim the register holds
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/claims-register-lint.mjs
+
       - name: Stablecoin readiness gate — indexed is never measured
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:stablecoin-readiness
 
+      - name: Stablecoin contracts — retained inputs and controlled offline failures
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          PYTHONPATH=scripts python3 -m unittest -v \
+            scripts/test_stablecoin_deep_adapter.py \
+            scripts/test_stablecoin_promotion_queue.py \
+            scripts/test_stablecoin_failure_diagnostics.py
       # The publisher must never retract a published measurement: a source that cannot be
       # reached does not un-measure an asset. Measured 2026-10-26 — the 2026-10-25 candidate
       # root was built while xrpl.fi was unreachable, so all 16 locked-16 asset leaves were
@@ -692,7 +936,10 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: |
           node scripts/sbom-pin-gate.mjs --selftest
-          node scripts/sbom-pin-gate.mjs
+          # Exit 2 is UNCHECKABLE: the store could not answer the question, which is not a
+          # finding about the pin. UNCHECKABLE is never FAIL, so it blocks nothing here.
+          # Exit 1 is a real orphaned pin and still stops the merge.
+          node scripts/sbom-pin-gate.mjs || [ $? -eq 2 ]
 
       # The estate's central claim is that a stranger can recompute and verify the evidence from
       # published bytes. public/signed/HOW-TO-VERIFY.md carried a JavaScript snippet offering to do
@@ -772,16 +1019,30 @@ jobs:
           # opentimestamps-client: test_ots_restamp_ledger.py builds detached proofs offline and runs
           # the release gate's own .ots check over them.
           python3 -m pip install -q pytest cryptography pyarrow huggingface_hub opentimestamps-client
+          # Qualify candidate sweeper code before it can dispatch from master.
+          python3 -m unittest discover -v -s scripts -p test_bot_checks_sweeper.py
           node --test scripts/claims/maintenance-schedule-state.node-test.mjs scripts/claims/signature-projection.node-test.mjs
           node --test scripts/claims/reread-extractor.node-test.mjs scripts/claims/reread-presence.node-test.mjs
           node scripts/claim-maintenance-register.mjs --check
           python3 -m pytest -q scripts/claims/test_maintenance_due.py
+          # The evidence mirror is a git repository on HuggingFace, and git refuses a push that leaves any
+          # directory holding more than 10,000 files. Two directories of the mirror reached that cliff on
+          # 1 Nov 2026 and the sync pushed every differing file in ONE commit, so the whole push was rejected
+          # and the OTS manifest, the card wrappers and the proofs stopped publishing with them. This test
+          # proves the per-directory commit plan: an over-cap directory fails alone and is named with the
+          # count that broke it, while the directories that fit still publish.
+          python3 -m pytest -q scripts/test_evidence_sync_per_directory.py
           # Canary privacy, safe capture retention and verified PR proposal (offline only).
           python3 -B scripts/canary/test_canary.py
           python3 -B scripts/canary/test_canary_delivery.py
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py scripts/spray/test_gspc_spray_surfaces.py
           python3 -m pytest -q scripts/surface/test_lm_eval_parity.py
           python3 -m pytest -q scripts/hf/test_product_cards.py scripts/hf/test_polish_frontdoors.py scripts/hf/test_catalogue_publication.py harness/bench/test_comparison_integrity.py harness/bench/test_paired_comparison.py harness/bench/test_run_bench.py
+          # Source custody and the derived learning-review report stay distinct from learner outcomes.
+          python3 -m pytest -q scripts/hf/test_academy_review_assets.py packages/evidence-fabric/render/test_learning_review_report.py packages/evidence-fabric/render/test_academy_learning_import.py
+          # Reproduce the existing exercises and keep unsigned self-study events and source-bound progress honest.
+          node --test scripts/academy/*.node-test.mjs
+          node scripts/academy/module-inventory.mjs --check
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
           # The pre-send mail check: no address but the one being checked may ever be put to a mail server.
@@ -804,6 +1065,8 @@ jobs:
           python3 -m pytest -q scripts/readers/test_watchdog_intake_reader.py
           python3 -B scripts/test_watchdog_intake.py
           python3 -B scripts/test_watchdog_charter_feed.py
+          # Gap-map narratives and source rights are derived without a live census or snapshot rewrite.
+          python3 -B scripts/test_build_ai_eval_gap_map.py
           # public-root halted on every run of 5-6 Oct 2026 on a stale ledger proof; the re-stamp
           # producer must keep the old pair, roll back on failure and clear the gate's own check.
           python3 -m pytest -q scripts/test_ots_restamp_ledger.py
@@ -891,3 +1154,4 @@ jobs:
         run: |
           node scripts/link-gate.mjs --selftest
           node scripts/link-gate.mjs dist/client
+

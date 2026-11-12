@@ -1,0 +1,68 @@
+identity:
+  name: framework_readiness
+  author: csoai
+  label:
+    en_US: "Framework readiness checklist"
+description:
+  human:
+    en_US: "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra."
+  llm: "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer."
+parameters:
+  - name: framework
+    type: select
+    required: true
+    label:
+      en_US: "framework"
+    human_description:
+      en_US: "The framework to check readiness against. Required."
+    llm_description: "The framework to check readiness against. Required."
+    form: llm
+    options:
+      - value: "eu-ai-act"
+        label:
+          en_US: "eu-ai-act"
+      - value: "dora"
+        label:
+          en_US: "dora"
+      - value: "nis2"
+        label:
+          en_US: "nis2"
+      - value: "gdpr"
+        label:
+          en_US: "gdpr"
+      - value: "iso-27001"
+        label:
+          en_US: "iso-27001"
+      - value: "nist-csf"
+        label:
+          en_US: "nist-csf"
+      - value: "soc2"
+        label:
+          en_US: "soc2"
+      - value: "pci-dss"
+        label:
+          en_US: "pci-dss"
+      - value: "cra"
+        label:
+          en_US: "cra"
+  - name: sector
+    type: string
+    required: false
+    label:
+      en_US: "sector"
+    human_description:
+      en_US: "Optional sector word (e.g. finance, healthcare, energy). Adds a pointer to which frameworks commonly bind the sector; never a scope determination."
+    llm_description: "Optional sector word (e.g. finance, healthcare, energy). Adds a pointer to which frameworks commonly bind the sector; never a scope determination."
+    form: llm
+  - name: role
+    type: string
+    required: false
+    label:
+      en_US: "role"
+    human_description:
+      en_US: "Optional free-text role (e.g. deployer, provider). Echoed for your notes; the tool does not determine which duties attach."
+    llm_description: "Optional free-text role (e.g. deployer, provider). Echoed for your notes; the tool does not determine which duties attach."
+    form: llm
+extra:
+  python:
+    source: tools/framework_readiness.py

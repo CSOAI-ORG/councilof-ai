@@ -5,6 +5,9 @@ are GENERATED MIRRORS from this monorepo.
 
 - Never reference internal codenames (SOVOS, sov6, OWEM, SOV-*) in public output
 - Measurement credentials, never certification
+- Before changing Watchdog intake, human review, working groups, MEOK routes, GSPC scope or public claims, read `docs/governance/council-ai-agent-operating-controls-v0.1.md`, `docs/watchdog/incident-signal-layer.md`, `docs/watchdog/public-watchdog-safe-integration-delta-v0.1.md` and `docs/watchdog/readiness-gap-register-2026-10-31.md`. Use the daily-index schema for the report contract; process evidence must reuse `csoai.evidence-event/0.1` and the existing `csoai.hitl-authority-effect/0.1` profile.
+- These controls and the SAFE-aligned integration delta are DRAFT/PROPOSED until an authorized human adopts exact versions. Do not claim global coverage, an operating Public Watchdog service, or a 34th live GSPC axis from draft code or catalogues.
+- Do not ingest report text or personal data, route a real report, contact a reporter, or execute a remediation until source rights, privacy controls, a qualified human rota and case-specific authority are recorded.
 - Package rename: sovos-* → csoai-* (e.g. sovos_core → csoai_core)
 - Never git add -A (multi-lane)
 - Deploy: **GHA on master only** (push to master triggers `deploy.yml`; direct wrangler is owner-only per DEPLOY-LOCK.md)

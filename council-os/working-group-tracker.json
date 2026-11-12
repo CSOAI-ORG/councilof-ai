@@ -9,21 +9,23 @@
       "id": "COAI-WG-001",
       "groupId": "governance",
       "title": "Review a public Council claim",
-      "version": 1,
+      "version": 2,
       "status": "draft",
-      "summary": "Review one Council self-claim and produce a dated correction or a reasoned no-change record.",
+      "summary": "Review a Council self-claim or the ControlAI evidence packet. Check dated sources, policy status, runtime scope, negative controls and retained corrections.",
       "editor": null,
       "reviewers": [],
       "decision": null,
       "discussionUrl": null,
       "source": {
-        "commit": "95d87beaf299562edca685759c2430b9d259bf04",
-        "path": "council-os/working-groups.json"
+        "commit": "73cfe699e8e3685b275e7bad9b8061effe74a363",
+        "path": "docs/governance/controlai-evidence-integration.md"
       },
       "deliverables": [
         "Exact claim, source URL and capture date.",
         "Evidence for a correction or a reasoned no-change outcome.",
-        "Scope, unresolved questions and proposed public wording."
+        "Scope, unresolved questions and proposed public wording.",
+        "Use an explicit reliance date; reject stale, unsupported and mis-scoped evidence.",
+        "Record reviewer competence, conflicts, counterevidence and a correction or reasoned no-change."
       ],
       "history": [
         {
@@ -31,6 +33,22 @@
           "date": "2026-10-30",
           "event": "Draft registered for recruitment and review; not adopted.",
           "actorKind": "automation"
+        },
+        {
+          "version": 2,
+          "date": "2026-10-30",
+          "event": "ControlAI research packet attached for review; no endorsement, adoption or authority asserted.",
+          "actorKind": "automation"
+        }
+      ],
+      "resources": [
+        {
+          "title": "Read ControlAI evidence packet",
+          "url": "/working-groups/controlai.html"
+        },
+        {
+          "title": "Download ControlAI evidence packet (JSON)",
+          "url": "/working-groups/controlai.json"
         }
       ]
     },

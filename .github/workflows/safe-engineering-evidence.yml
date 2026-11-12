@@ -1,0 +1,65 @@
+name: safe-engineering-evidence
+on:
+  pull_request:
+    paths:
+      - 'scripts/review/safe-evidence/**'
+      - 'docs/standards/osaia-safe-reverification/engineering-review/**'
+      - '.github/workflows/safe-engineering-evidence.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: safe-engineering-evidence-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  offline-reproduction-and-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reporter invariants
+        working-directory: scripts/review/safe-evidence
+        run: python3 -B -m unittest test_evidence_review.py -v
+      - name: Reporter deliberately broken controls
+        working-directory: scripts/review/safe-evidence
+        run: python3 -B negative_controls.py
+      - name: Pinned upstream control-flow reproduction, no vendor or model access
+        working-directory: scripts/review/safe-evidence
+        run: python3 -B reproduce_midojo.py --source fixtures/midojo --out evidence/ci-reproduction
+      - name: Verify the exact human-review pack
+        working-directory: scripts/review/safe-evidence
+        run: python3 -B evidence_review.py verify ../../../docs/standards/osaia-safe-reverification/engineering-review/2026-11-04/pack
+      - name: Confirm reproduction matches the retained evidence
+        working-directory: scripts/review/safe-evidence
+        run: |
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          expected = json.loads(Path('fixtures/midojo-reproduction.json').read_text())
+          observed = json.loads(Path('evidence/ci-reproduction/reproduction.json').read_text())
+          assert observed == expected, 'Pinned result changed'
+          print('Pinned original/candidate/negative-control result reproduced exactly')
+          PY
+      - name: Bundle source, evidence and review page
+        run: |
+          python3 -B - <<'PY'
+          from pathlib import Path
+          import hashlib, json, zipfile
+          roots = [Path('scripts/review/safe-evidence'), Path('docs/standards/osaia-safe-reverification/engineering-review/2026-11-04')]
+          rows = []
+          with zipfile.ZipFile('Council-SAFE-Engineering-Review-2026-11-04.zip', 'w', zipfile.ZIP_DEFLATED) as z:
+              for root in roots:
+                  for p in sorted(root.rglob('*')):
+                      if p.is_file() and not p.is_symlink() and '__pycache__' not in p.parts:
+                          z.write(p, str(p)); rows.append({'path': str(p), 'bytes': p.stat().st_size, 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()})
+              z.writestr('bundle-manifest.json', json.dumps({'scope': 'Review evidence; no deployment or issuer attestation.', 'files': rows}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: council-safe-engineering-review
+          path: Council-SAFE-Engineering-Review-2026-11-04.zip
+          if-no-files-found: error
+          retention-days: 30

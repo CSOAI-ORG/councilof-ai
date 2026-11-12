@@ -224,7 +224,8 @@ const EXPECTED_DETERMINISTIC_FACTS: Record<
   },
 };
 
-const EXPECTED_SUBJECT_SLOTS = [
+const EXPECTED_SUBJECT_SLOTS = [] as const;
+const EXPECTED_MEASURED_SUBJECT_AXES = [
   "lab-practice",
   "company-practice",
   "measurer-integrity",
@@ -248,8 +249,8 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     const axes = board.axes as Array<Record<string, any>>;
     expect(axes.map((a) => a.axis)).toEqual([...CANONICAL_AXES]);
     expect(board.totals.axes).toBe(CANONICAL_AXES.length);
-    expect(board.totals.quotable_axes).toBe(23);
-    expect(board.totals.measured_axes).toBe(23);
+    expect(board.totals.quotable_axes).toBe(34);
+    expect(board.totals.measured_axes).toBe(34);
     expect(board.totals.unmeasured_axes).toBe(EXPECTED_SUBJECT_SLOTS.length);
     expect(board.totals.comparison_axes).toBe(14);
     expect(board.totals.separated_leads).toBe(0);
@@ -335,34 +336,32 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     });
   }
 
-  for (const axisName of EXPECTED_SUBJECT_SLOTS) {
-    it(`subject declared-slot axis '${axisName}' satisfies board, visibility, and badge invariants`, async () => {
+  for (const axisName of EXPECTED_MEASURED_SUBJECT_AXES) {
+    it(`subject measured-subject axis '${axisName}' satisfies board, bank_sha256, visibility, and badge invariants`, async () => {
       const row = (board.axes as Array<Record<string, any>>).find((a) => a.axis === axisName)!;
       expect(row).toBeDefined();
       expect(row.family).toBe("subject");
-      expect(row.kind).toBe("declared-slot");
-      expect(row.status).toBe("UNMEASURED");
-      expect(row.n).toBe(0);
+      expect(row.kind).toBe("measured-subject");
+      expect(row.status).toBe("MEASURED");
+      expect(row.n).toBeGreaterThanOrEqual(30);
+      expect(row.method_status).toBe("meets-rule");
+      expect(row.bank_sha256).toMatch(/^[0-9a-f]{64}$/);
       expect(typeof row.applies_to).toBe("string");
       expect(row.applies_to.length).toBeGreaterThan(0);
       expect(typeof row.note).toBe("string");
       expect(row.leader).toBeUndefined();
       expect(row.accuracy).toBeUndefined();
       expect(row.separation).toBeUndefined();
-      if (axisName === "regulator-transparency") {
+      if (axisName === "regulator-transparency" || axisName === "watchdog-ingest") {
         expect(row.public_pages).toBe("HIDDEN_PENDING_OWNER_GO");
-      }
-      if (axisName === "serving-fidelity") {
-        expect(row.method).toBe("serving-fidelity v0.2");
-        expect(row.method_sha).toBe("18206f71");
       }
 
       const badge = await invokeBadge(axisName);
       expect(badge).toMatchObject({
         label: axisName,
-        state: "unmeasured",
-        color: "#9ca3af",
-        message: "unmeasured",
+        state: "measured",
+        color: "#65a30d",
+        message: `measured · n=${row.n}`,
       });
     });
   }
@@ -371,7 +370,7 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     const rep = await invokeReports();
     expect(rep.totals).toEqual({
       axes: CANONICAL_AXES.length,
-      measured: 23,
+      measured: 34,
       unmeasured: EXPECTED_SUBJECT_SLOTS.length,
       model_comparison_axes: 14,
       separated: 0,
@@ -389,7 +388,7 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     expect(reportsIndex.counts.axes_by_kind).toEqual({
       "model-comparison": 14,
       "deterministic-facts": 9,
-      "declared-slot": EXPECTED_SUBJECT_SLOTS.length,
+      "measured-subject": EXPECTED_MEASURED_SUBJECT_AXES.length,
     });
     expect(reportsIndex.axes.map((a: { axis: string }) => a.axis)).toEqual([...CANONICAL_AXES]);
   });
@@ -406,7 +405,7 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     const byFam = st.board.by_family.value;
     expect(byFam.gspc).toMatchObject({ axes: 15, measured: 15 });
     expect(byFam.financial).toMatchObject({ axes: 8, measured: 8 });
-    expect(byFam.subject).toMatchObject({ axes: EXPECTED_SUBJECT_SLOTS.length, measured: 0 });
+    expect(byFam.subject).toMatchObject({ axes: EXPECTED_MEASURED_SUBJECT_AXES.length, measured: EXPECTED_MEASURED_SUBJECT_AXES.length });
     expect(byFam.gspc.axes + byFam.financial.axes + byFam.subject.axes).toBe(CANONICAL_AXES.length);
   });
 
@@ -734,7 +733,7 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     expect(rec144.receipts_sha256).toMatch(/^[0-9a-f]{64}$/);
   });
 
-  it("aligns across all 8 GSPC delivery gates, 6 MEOK completion gates, @csoai/layer0@0.2.1, and Public Watchdog working groups on master", () => {
+  it("retains delivery source artifacts while presenting Watchdog and human referrals as local proposals", () => {
     const wgCatalogPath = new URL("../../public/working-groups/catalog.json", import.meta.url);
     const wgConfigPath = new URL("../../council-os/working-groups.json", import.meta.url);
     const inspectTaskPath = new URL("../../harness/bench/inspect_task.py", import.meta.url);
@@ -757,11 +756,16 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
 
     const myResultsHtml = readFileSync(myResultsPath, "utf8");
     expect(myResultsHtml).toContain("Council Space (Council City 40v40 / Coliseum 4,760 Rounds)");
-    expect(myResultsHtml).toContain("Universal Public Watchdog Layer-0 Incident Harness (12 Global Databases, n=36)");
+    expect(myResultsHtml).toContain("Draft Watchdog source-mapping example");
+    expect(myResultsHtml).toContain('href="/interop/universal-watchdog-incident-harness-v1.json"');
+    expect(myResultsHtml).toContain('intake_state:"LOCAL_EXAMPLE_ONLY"');
+    expect(myResultsHtml).toContain('dispatch_performed:false');
+    expect(myResultsHtml).toContain('human_acceptance:"NOT_RECORDED"');
+    expect(myResultsHtml).not.toContain("Universal Public Watchdog Layer-0 Incident Harness (12 Global Databases, n=36)");
     expect(myResultsHtml).not.toContain("Sovereign Space");
   });
 
-  it("universal-watchdog-incident-harness-v1.json measures 12 global incident databases (n=36), Candidate Axis 34 (public-incident-vigilance), and maps all 33 canonical axes to MEOK Specialists + 7 Working Groups + WG-SAFE Charter + 6 HITL lanes", () => {
+  it("preserves the retained Watchdog proposal fixture, its legacy count fields and mirror digest", () => {
     const whPath = new URL("../../public/interop/universal-watchdog-incident-harness-v1.json", import.meta.url);
     const hfWhPath = new URL("../../spaces/gspc-board/universal-watchdog-incident-harness-v1.json", import.meta.url);
     expect(existsSync(whPath)).toBe(true);

@@ -379,19 +379,19 @@ from measured to quotable:</b></p>
 <li>a board whose spread <b>clears the 0.15 discrimination floor</b>, so the number separates models rather than restating a common baseline;</li>
 <li>the <b>instrument's own error reported alongside</b> — unreadable answers and dropped calls counted, never folded into the metric.</li>
 </ul>
-<div class="note ok"><b>Only then does a figure appear</b> — with its n and its interval beside it. Until
-the board discriminates, the honest statement is the one above: measured at n = 1491, not quotable.</div>
+<div class="note ok"><b>Publication requirements</b> — the result must include its n and interval. Until
+the board discriminates, the published qualification remains: measured at n = 1491, not quotable.</div>
 
-<h2>The chain — 9 of 10 complete</h2>
+<h2>Implementation status — 9 of 10 complete</h2>
 <ul class="chain"><li class="on"><b>●</b> axis specified and named</li><li class="on"><b>●</b> label schema fixed (3-way)</li><li class="on"><b>●</b> items published and loadable (n = 1491)</li><li class="on"><b>●</b> card with a licence</li><li class="on"><b>●</b> deterministic scorer written</li><li class="on"><b>●</b> bank published on Hugging Face</li><li class="on"><b>●</b> page on this site</li><li class="on"><b>●</b> measured against a named model</li><li class="on"><b>●</b> n reaches usable_n = 30</li><li class="">○ board discriminates above the floor</li></ul>
 <p class="lede" style="font-size:.85rem;margin-top:.8rem">Nine links are built. The tenth — a board that
 tells models apart by more than the floor — is what stands between "measured" and "quotable", and it is
-not yet done. This list is the truthful count, not an assertion.</p>
+not established in this record. The list distinguishes completed and outstanding requirements.</p>
 
 <div style="margin:1.4rem 0"><a class="btn" href="https://huggingface.co/datasets/csoai/gspc-care">The bank ↗</a><a class="btn ghost" href="/arena">← Back to the arena</a></div>
 
 <h2>The scorer</h2>
-<p class="lede" style="font-size:.9rem">Real Python, not pseudocode. It reads the JSONL bank and a
+<p class="lede" style="font-size:.9rem">Reference Python scorer. It reads the JSONL bank and a
 JSONL of model answers, extracts a label deterministically, and returns exactly one of three outcomes —
 <b>MEASURED</b>, <b>UNPARSEABLE</b> (per item), or <b>UNMEASURED</b> (per run). A separate check decides
 whether a <i>board</i> of MEASURED runs is quotable: it is not, unless the runs separate by more than the

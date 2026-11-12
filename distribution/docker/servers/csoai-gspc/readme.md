@@ -4,7 +4,7 @@ Remote MCP: `https://councilof.ai/mcp` (streamable HTTP; no account, API key or 
 
 ## Tools
 
-48 free tools:
+49 free tools:
 
 - `board_totals` — Read the live GSPC board overview.
 - `get_axis` — Read one live board dimension by its axis id.
@@ -54,6 +54,7 @@ Remote MCP: `https://councilof.ai/mcp` (streamable HTTP; no account, API key or 
 - `axis_claim-maintenance` — The claim-maintenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
 - `axis_serving-fidelity` — The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
 - `axis_watchdog-ingest` — The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
+- `framework_readiness` — A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra.
 
 Five optional x402-metered evidence tools (payment is the explicit `x_payment` argument; an unpaid call
 returns the challenge, which is not settlement, delivery or revenue):
@@ -64,7 +65,7 @@ returns the challenge, which is not settlement, delivery or revenue):
 - `receipts_batch` — A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one manifest card citing the batch sha256.
 - `evidence_bundle` — For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: selected existing card objects with signature fields and any retained inclusion proofs, an OSCAL assessment-results wrapper and an assembly manifest.
 
-`tools/list` must return exactly these 53 names.
+`tools/list` must return exactly these 54 names.
 
 ## Evidence boundary
 

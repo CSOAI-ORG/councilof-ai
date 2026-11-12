@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-27T10:41:43Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "meta",
+      "surface": "model_cards",
+      "url": "https://www.llama.com/docs/model-cards-and-prompt-formats/",
+      "prev_sha256": "365f09f1e771453b7cb4082fb72d2ab574070aa2b923a5e4aa9948a7eb8bbf99",
+      "new_sha256": "a67b4de99daf1021c79fde62985f0b73314dbf1341ca5304e158f66ce1b275b4",
+      "prev_bytes_sha256": "b50e51527b783fac7bb30d2948d601a31542cbdbc6a99c99d97de0b4171baf3d",
+      "new_bytes_sha256": "5b55c54d9f312631c2e502853bcdeb05d41164d368ca3dfc58e9345e17b811f0",
+      "prev_fetched_at": "2026-10-25T09:54:33Z",
+      "fetched_at": "2026-10-27T10:41:43Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 179178,
+        "new": 177459
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6148cd515b1fbc799bb6043ad8d0677e9b0c82a8541e3fa36b799250ba509ec4",
+    "sig_ed25519": "4b96bafecf5b2c76c8159c93e35a99f3a063bee68a46453562ae3aa216c74933cb7a8de9e58b9ae7cd37146f3e1489240fa2dbdc07d9fb8e6287affeaefca006",
+    "source_urls": [
+      "https://www.llama.com/docs/model-cards-and-prompt-formats/"
+    ],
+    "subject": "Meta — model_cards: bytes changed 2026-10-27",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:meta",
+      "surface:model_cards",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "ece4e5df8bf56e9a2002389b782eafbe7aaa1365bb0d4ab7e15b632decbb8325",
+    "3604582e5c5e3f8dacd934e795ccc847722887f913191c7ee98682dfeb31ca50",
+    "d554cd83f332aed1bc378b098984249448ab7cc9b0c57e42e52e025006868062",
+    "8d71bfd9b41641b9aae03c228c93375f12abaf75bd70672836dd9aab39eb84f5",
+    "9b3b2c8084a09395813e5402b05a736f53129192ce0cdab407f6d36886d0086c",
+    "5c925569a940198c345b4eee3a2ce0100647efd74bf52e33ecbea62d8fb8da7c",
+    "1db97de4f1ebe5d42f878a5922f46fdfff8ba6db6183bcfddaab819602644f80",
+    "2347810be70cf927d205598cdda9d0d6536a0fb064d55814988e4d6f20499c3d",
+    "698022b669e991ba5f21c904d323f321e46b6a7c9ff3d6222083d469bca0a693"
+  ]
+}

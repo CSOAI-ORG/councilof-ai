@@ -97,7 +97,7 @@ This is the concrete instance of the lifecycle the Alliance would be being asked
 - The **signed board freeze** — `https://councilof.ai/signed/gspc-board.signed.json`, keyed
   `did:web:csoai.org#gspc-board-22axis-2026`, witnessed in the Rekor transparency log at index
   2687278151 — states **23 axes · 23 measured**.
-- The **living board** — `https://councilof.ai/api/gspc` — states **33 axes · 23 measured**.
+- The **living board** — `https://councilof.ai/api/gspc` — states **34 axes · 23 measured** (corrected 2026-11-01; this line read **33 axes · 23 measured** when this note was written on 26 October 2026 — the board grew by one declared slot, `watchdog-ingest`, when PR #3692 landed on 2026-11-01T07:33:41Z, and the measured count did not move).
 - The freeze's own pointer, `public/interop/gspc-board-freeze-pointer.json`, carries
   `relying_party_status.state = "SUPERSEDED_KNOWN_CLAIM_DEFECT"`, names the living board as
   `current_authority`, and says not to use it as current authority.

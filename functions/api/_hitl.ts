@@ -573,6 +573,7 @@ export type HitlReceipt = {
   axis: string;
   decision: HitlDecision;
   note: string;
+  /** Legacy field: a live-board answer matched; no human identity or professional competence is verified. */
   competency_verified: boolean;
   completed_modules: string[];
   module_id: string;
@@ -740,35 +741,77 @@ export async function getChallenge(store: KVNamespace, id: string): Promise<Hitl
   } catch {
     throw new Error("HITL_CHALLENGE_INVALID");
   }
-  if (!value || typeof value !== "object" || Array.isArray(value) || value.id !== id ||
-      value.schema !== HITL_CHALLENGE_SCHEMA || value.policy !== HITL_POLICY ||
-      ![value.at, value.subject, value.proposed_action, value.raised_by].every(v => typeof v === "string") ||
-      ![value.axis, value.source, value.facts, value.required_module].every(v => v === null || typeof v === "string") ||
-      !(await verifyChallenge(value))) {
+  if (!(await validStoredChallenge(value, id))) {
     throw new Error("HITL_CHALLENGE_INVALID");
   }
   return value;
 }
 
-export async function listChallenges(store: KVNamespace | null, limit = 50, strict = false): Promise<HitlChallenge[]> {
+async function validStoredChallenge(value: HitlChallenge, id: string): Promise<boolean> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value) &&
+    /^chl_[a-f0-9]{16}$/.test(id) && value.id === id &&
+    value.schema === HITL_CHALLENGE_SCHEMA && value.policy === HITL_POLICY &&
+    [value.at, value.subject, value.proposed_action, value.raised_by].every(v => typeof v === "string") &&
+    [value.axis, value.source, value.facts, value.required_module].every(v => v === null || typeof v === "string") &&
+    await verifyChallenge(value));
+}
+
+/** A failed bounded history read must not become an empty or partial successful ledger. */
+export class HitlHistoryError extends Error {
+  constructor(readonly storage_state: "READ_FAILED" | "HISTORY_INVALID" | "HISTORY_UNAVAILABLE") {
+    super(`HITL_${storage_state}`);
+    this.name = "HitlHistoryError";
+  }
+}
+
+async function readHistory<T>(
+  store: KVNamespace | null,
+  prefix: string,
+  limit: number,
+  strict: boolean,
+  valid: (value: T, key: string) => Promise<boolean>,
+): Promise<T[]> {
   if (!store) return [];
-  const out: HitlChallenge[] = [];
+  const out: T[] = [];
   try {
-    const list = await store.list({ prefix: `${HITL_PREFIX}challenge:` });
+    const list = await store.list({ prefix });
+    const seen = new Set<string>();
     for (const key of list.keys.slice(0, limit)) {
-      const raw = await store.get(key.name);
-      if (!raw) continue;
-      try {
-        const c = JSON.parse(raw) as HitlChallenge;
-        if (c?.id) out.push(c);
-      } catch {
-        /* skip an unreadable record rather than fail the list */
+      if (typeof key.name !== "string" || !key.name.startsWith(prefix) || seen.has(key.name)) {
+        if (strict) throw new HitlHistoryError("HISTORY_INVALID");
+        continue;
       }
+      seen.add(key.name);
+      const raw = await store.get(key.name);
+      if (raw === null) {
+        // KV listing and value reads are eventually consistent. A listed value that
+        // is absent now establishes an unavailable observation, not a deleted event.
+        if (strict) throw new HitlHistoryError("HISTORY_UNAVAILABLE");
+        continue;
+      }
+      let value: T;
+      try {
+        value = JSON.parse(raw) as T;
+      } catch {
+        if (strict) throw new HitlHistoryError("HISTORY_INVALID");
+        continue;
+      }
+      if (!(await valid(value, key.name))) {
+        if (strict) throw new HitlHistoryError("HISTORY_INVALID");
+        continue;
+      }
+      out.push(value);
     }
-  } catch {
-    if (strict) throw new Error("HITL_STORE_READ_FAILED");
+  } catch (error) {
+    if (strict) throw error instanceof HitlHistoryError ? error : new HitlHistoryError("READ_FAILED");
   }
   return out;
+}
+
+export async function listChallenges(store: KVNamespace | null, limit = 50, strict = false): Promise<HitlChallenge[]> {
+  const prefix = `${HITL_PREFIX}challenge:`;
+  return readHistory<HitlChallenge>(store, prefix, limit, strict,
+    (value, key) => validStoredChallenge(value, key.slice(prefix.length)));
 }
 
 export async function putReceipt(store: KVNamespace | null, r: HitlReceipt): Promise<boolean> {
@@ -786,33 +829,51 @@ export async function putReceipt(store: KVNamespace | null, r: HitlReceipt): Pro
 }
 
 export async function listReceipts(store: KVNamespace | null, limit = 50, strict = false): Promise<HitlReceipt[]> {
-  if (!store) return [];
-  const out: HitlReceipt[] = [];
-  try {
-    const list = await store.list({ prefix: `${HITL_PREFIX}receipt:` });
-    for (const key of list.keys.slice(0, limit)) {
-      const raw = await store.get(key.name);
-      if (!raw) continue;
-      try {
-        const r = JSON.parse(raw) as HitlReceipt;
-        if (r?.challenge?.id) out.push(r);
-      } catch {
-        /* skip */
-      }
-    }
-  } catch {
-    if (strict) throw new Error("HITL_STORE_READ_FAILED");
-  }
-  return out;
+  return readHistory<HitlReceipt>(store, `${HITL_PREFIX}receipt:`, limit, strict, validStoredReceipt);
 }
 
-/** Record that a module was completed. Returns false when there is no store to record it in. */
+/** Integrity only. These checks do not authenticate a signature, operator or authority. */
+async function validStoredReceipt(r: HitlReceipt, key: string): Promise<boolean> {
+  if (!r || typeof r !== "object" || Array.isArray(r) || r.schema !== HITL_RECEIPT_SCHEMA ||
+      r.policy !== HITL_POLICY || !HITL_DECISIONS.includes(r.decision) ||
+      ![r.at, r.operator, r.note, r.module_id].every(v => typeof v === "string") ||
+      !(r.axis === null || typeof r.axis === "string") || typeof r.competency_verified !== "boolean" ||
+      !Array.isArray(r.completed_modules) || !r.completed_modules.every(v => typeof v === "string") ||
+      !r.challenge || typeof r.challenge !== "object" || Array.isArray(r.challenge) ||
+      typeof r.challenge.id !== "string" || !/^chl_[a-f0-9]{16}$/.test(r.challenge.id) ||
+      ![r.challenge.subject, r.challenge.proposed_action, r.challenge.raised_by].every(v => typeof v === "string") ||
+      ![r.challenge.source, r.challenge.facts].every(v => v === null || typeof v === "string") ||
+      !r.signature || typeof r.signature !== "object" || Array.isArray(r.signature)) return false;
+
+  const s = r.signature;
+  if (s.alg !== "Ed25519" || typeof s.sha256 !== "string" || !/^[a-f0-9]{64}$/.test(s.sha256) ||
+      !Number.isSafeInteger(s.bytes) || s.bytes < 0) return false;
+  if (s.value_hex === null) {
+    if (s.value_b64 !== null || s.did !== null || typeof s.unsigned_reason !== "string") return false;
+  } else if (typeof s.value_hex !== "string" || !/^[a-f0-9]{128}$/.test(s.value_hex) ||
+      s.value_b64 !== hexToB64(s.value_hex) || typeof s.did !== "string" || !s.did ||
+      s.unsigned_reason !== null) return false;
+
+  const payload = canonicalBytes(receiptPayload(r));
+  if (payload.byteLength !== s.bytes || await sha256Hex(payload) !== s.sha256) return false;
+
+  const legacyKey = `${HITL_PREFIX}receipt:${r.challenge.id}`;
+  // Historical challenge-only keys remain valid. New keys bind the entire stored
+  // receipt, including its signature metadata, using exactly putReceipt's rule.
+  return key === legacyKey || key === `${legacyKey}:${await sha256Hex(canonicalBytes(r))}`;
+}
+
+/** Record a correct shared practice result; this store does not bind a learner identity. */
 export async function markModuleCompleted(
   store: KVNamespace | null,
   moduleId: string,
   record: Record<string, unknown>,
 ): Promise<boolean> {
-  if (!store) return false;
+  // Incorrect attempts must not create completion or overwrite an earlier correct
+  // observation. Keep this guard in the helper as well as the HTTP caller.
+  if (!store || typeof record !== "object" || record === null || Array.isArray(record) ||
+      typeof moduleId !== "string" || !moduleId.trim() ||
+      record.module_id !== moduleId || record.correct !== true) return false;
   try {
     await store.put(`${HITL_PREFIX}module:${moduleId}`, JSON.stringify(record));
     return true;
@@ -831,7 +892,10 @@ export async function listCompletedModules(store: KVNamespace | null): Promise<s
       if (!raw) continue;
       try {
         const rec = JSON.parse(raw) as Record<string, unknown>;
-        if (rec?.module_id) out.push(String(rec.module_id));
+        // Historical incorrect/malformed rows remain stored, but are not completed.
+        // Bind the record to its storage key instead of accepting a different module id.
+        if (rec?.correct === true && typeof rec.module_id === "string" && rec.module_id.trim() &&
+            key.name === `${HITL_PREFIX}module:${rec.module_id}`) out.push(rec.module_id);
       } catch {
         /* skip */
       }
@@ -895,4 +959,5 @@ export function decisionPathOpen(env: HitlEnv): boolean {
 export function signingKeyConfigured(env: HitlEnv): boolean {
   return (env.BOARD_SIGN_KEY_PKCS8_B64 ?? "").trim().length > 0;
 }
+
 

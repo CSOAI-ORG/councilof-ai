@@ -25,6 +25,7 @@ import PAID from "./paid-tools.json";
 import REGISTRY_DESCRIPTOR from "../../mcp/gspc-server/server.json";
 import SERVER_CARD from "../../public/.well-known/mcp/server-card.json";
 import MCP_JSON from "../../public/.well-known/mcp.json";
+import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
 
 const ROOT = resolve(__dirname, "../..");
 const ORIGIN = "https://councilof.ai";
@@ -46,8 +47,8 @@ describe("#19 one tool-count sentence, every number derived", () => {
     // The fleet lock (tool-fleet.lock.json) is 48 + 5 since 2026-10-30 (the 34th axis tool
     // watchdog-ingest joined the 33 axis tools and the 14 free readers); if the fleet changes,
     // the lock changes in the same commit and this literal is the one line to update.
-    expect([nFree, nPaid]).toEqual([48, 5]);
-    expect(EXPECTED).toBe("48 free tools at /mcp/free; 53 at /mcp (48 free + 5 metered). The npm package is versioned separately.");
+    expect([nFree, nPaid]).toEqual([49, 5]);
+    expect(EXPECTED).toBe("49 free tools at /mcp/free; 54 at /mcp (49 free + 5 metered). The npm package is versioned separately.");
   });
 
   it("GET /mcp (JSON and page) carries it; GET /mcp/free stays free of payment words", async () => {
@@ -158,10 +159,18 @@ describe("#3502 the last hand-written fleet sizes are held to the manifests", ()
     for (const t of PAID.tools.map((t: { name: string }) => t.name)) {
       expect(doc).toContain(`\`${t}\``);
     }
-    // the stdio line installs one exact version, and that version is the package's
-    const version = (JSON.parse(read("mcp/gspc-server/package.json")) as { version: string }).version;
+    // A submission must pin a captured PUBLISHED version, not whatever the repository prepares.
+    // Naming the full fleet also requires a matching captured name-set; counts alone are insufficient.
+    const version = NPM_CAPTURE.published.version;
     expect(doc).toContain(`csoai-gspc-mcp (v${version})`);
     expect(doc).toContain(`npx -y csoai-gspc-mcp@${version}`);
+    expect(doc).toContain(NPM_CAPTURE.checked_at);
+    expect(NPM_CAPTURE.published.total_tools).toBe(nFree + nPaid);
+    expect(NPM_CAPTURE.published.deprecated).toBe(false);
+    expect(NPM_CAPTURE.diff.live_only).toEqual([]);
+    expect(NPM_CAPTURE.diff.published_only).toEqual([]);
+    expect(doc).toContain("does not establish installation or runtime behaviour");
+    expect(doc).toContain("Recheck the registry and download the pinned tarball before sending");
   });
 
   it("no working document still says the fleet was 19 tools", () => {

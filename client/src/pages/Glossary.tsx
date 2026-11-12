@@ -1,5 +1,15 @@
 import { useState, useMemo } from "react";
-import { Search, Filter, AlertCircle, ExternalLink, BookOpen, Hash, Layers, Link2, ArrowUpRight } from "lucide-react";
+import {
+  Search,
+  Filter,
+  AlertCircle,
+  ExternalLink,
+  BookOpen,
+  Hash,
+  Layers,
+  Link2,
+  ArrowUpRight,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,11 +30,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "The principle and practice of being responsible for AI system decisions and their consequences. Accountability mechanisms include clear attribution of responsibility, ability to explain decisions, and consequences for failures or harm.",
     category: "Governance",
-    relatedTerms: [
-      "Responsibility",
-      "Transparency",
-      "Explainability",
-    ],
+    relatedTerms: ["Responsibility", "Transparency", "Explainability"],
   },
   {
     term: "AI Agent",
@@ -86,11 +92,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "A comprehensive set of policies, procedures, and tools for managing AI systems throughout their lifecycle. Includes governance, risk management, quality assurance, monitoring, and compliance activities (ISO 42001 standard).",
     category: "Governance",
-    relatedTerms: [
-      "ISO 42001",
-      "AI Governance",
-      "Quality Management",
-    ],
+    relatedTerms: ["ISO 42001", "AI Governance", "Quality Management"],
   },
   {
     term: "AI Safety",
@@ -145,12 +147,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "The degree to which the logic, data inputs, and decision-making processes of an algorithm are visible and understandable to stakeholders. Key component of trustworthy AI and regulatory compliance.",
     category: "Governance",
-    relatedTerms: [
-      "Explainability",
-      "Transparency",
-      "XAI",
-      "Model Card",
-    ],
+    relatedTerms: ["Explainability", "Transparency", "XAI", "Model Card"],
   },
 
   // B
@@ -233,7 +230,7 @@ const glossaryTerms: GlossaryTerm[] = [
   {
     term: "Council of Safety",
     definition:
-      "CSOAI's governance body and the conceptual foundation of the Council of Safety for AI. Represents the collective expertise and consensus-driven approach to AI governance across 33 specialized agent perspectives.",
+      "A proposed governance design using 33 specialist software roles. These roles organise review perspectives; their independence is not established, and they do not constitute appointed human reviewers or an operating governing body. Current measurement scope is recorded separately on the GSPC board.",
     category: "Governance",
     relatedTerms: ["CSOAI", "Governance", "Designed 33-seat Council"],
   },
@@ -244,12 +241,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "The frameworks and processes for managing data quality, access, privacy, and use throughout an organization. Critical for AI governance as data quality directly impacts AI system safety, fairness, and compliance.",
     category: "Governance",
-    relatedTerms: [
-      "Data Protection",
-      "Privacy",
-      "GDPR",
-      "AI Governance",
-    ],
+    relatedTerms: ["Data Protection", "Privacy", "GDPR", "AI Governance"],
   },
   {
     term: "Data Protection",
@@ -421,12 +413,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "A comprehensive structure defining how an organization manages AI systems responsibly. Includes policies, procedures, accountability mechanisms, risk management, compliance monitoring, and human oversight structures.",
     category: "Governance",
-    relatedTerms: [
-      "AI Governance",
-      "Framework",
-      "Policy",
-      "Risk Management",
-    ],
+    relatedTerms: ["AI Governance", "Framework", "Policy", "Risk Management"],
   },
 
   // H
@@ -601,7 +588,7 @@ const glossaryTerms: GlossaryTerm[] = [
   {
     term: "Maternal Covenant",
     definition:
-      "CSOAI's founding pledge to prioritize human well-being and create opportunities for displaced workers. Ensures AI safety efforts directly translate into meaningful employment, training, and economic support.",
+      "CSOAI's founding pledge to prioritize human well-being and create opportunities for displaced workers. It expresses a purpose; delivery of employment, training or economic support requires a funded programme and recorded outcomes.",
     category: "Governance",
     relatedTerms: ["CSOAI", "Values", "Watchdog Program"],
   },
@@ -612,12 +599,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "National Institute of Standards and Technology AI Risk Management Framework. Voluntary, flexible framework for identifying, measuring, and managing AI risks. Provides guidance across design, development, deployment, and monitoring phases.",
     category: "Compliance",
-    relatedTerms: [
-      "Framework",
-      "Risk Management",
-      "Standards",
-      "Governance",
-    ],
+    relatedTerms: ["Framework", "Risk Management", "Standards", "Governance"],
   },
   {
     term: "Non-Discrimination",
@@ -638,12 +620,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "Organization for Economic Cooperation and Development principles for responsible stewardship of trustworthy AI: human-centered values, transparency, robustness, accountability, and human oversight.",
     category: "Governance",
-    relatedTerms: [
-      "Framework",
-      "AI Ethics",
-      "Governance",
-      "Standards",
-    ],
+    relatedTerms: ["Framework", "AI Ethics", "Governance", "Standards"],
   },
   {
     term: "Operational Risk",
@@ -683,12 +660,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "Approach of integrating data privacy and protection measures from the initial design phase of AI systems rather than adding them later. Minimizes data collection, implements anonymization, and respects user rights.",
     category: "Governance",
-    relatedTerms: [
-      "Ethics by Design",
-      "Data Protection",
-      "GDPR",
-      "AI Safety",
-    ],
+    relatedTerms: ["Ethics by Design", "Data Protection", "GDPR", "AI Safety"],
   },
   {
     term: "Prohibited AI Practices",
@@ -705,7 +677,7 @@ const glossaryTerms: GlossaryTerm[] = [
   {
     term: "Prosperity Fund",
     definition:
-      "CSOAI's economic support program for displaced workers. Provides training, income support, and employment opportunities in AI safety careers, operationalizing the Maternal Covenant commitment.",
+      "A proposed CSOAI economic-support initiative for displaced workers, linked to the Maternal Covenant. Training, income support and jobs depend on adopted terms, funding and delivery capacity; this glossary is not a record of benefits paid or vacancies offered.",
     category: "Governance",
     relatedTerms: ["Maternal Covenant", "Watchdog Program", "CSOAI"],
   },
@@ -768,12 +740,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "The ability of AI systems to maintain safe and reliable performance under adverse conditions, unexpected inputs, or distribution shifts. Robust systems handle edge cases gracefully and resist adversarial attacks.",
     category: "Technical",
-    relatedTerms: [
-      "AI Safety",
-      "Testing",
-      "Red Teaming",
-      "Drift Detection",
-    ],
+    relatedTerms: ["AI Safety", "Testing", "Red Teaming", "Drift Detection"],
   },
 
   // S
@@ -806,12 +773,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "CSOAI's proprietary AI governance methodology combining Safety-Oriented AI (SOAI) principles with Plan-Do-Check-Act (PDCA) continuous improvement cycles. Provides structured approach to implement responsible AI governance.",
     category: "Governance",
-    relatedTerms: [
-      "Framework",
-      "AI Governance",
-      "PDCA Cycle",
-      "CSOAI",
-    ],
+    relatedTerms: ["Framework", "AI Governance", "PDCA Cycle", "CSOAI"],
   },
   {
     term: "Stakeholder",
@@ -830,12 +792,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "Established specifications, guidelines, and requirements that AI systems should meet. Examples include ISO 42001, NIST AI RMF, OECD Principles. Standards promote consistency, quality, and best practices.",
     category: "Compliance",
-    relatedTerms: [
-      "Framework",
-      "Certification",
-      "Compliance",
-      "Governance",
-    ],
+    relatedTerms: ["Framework", "Certification", "Compliance", "Governance"],
   },
   {
     term: "Sustainability",
@@ -868,12 +825,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "Comprehensive records describing AI system architecture, training data, performance metrics, limitations, and use cases. Required for regulatory compliance, system understanding, and knowledge transfer.",
     category: "Governance",
-    relatedTerms: [
-      "Model Card",
-      "Transparency",
-      "Compliance",
-      "Governance",
-    ],
+    relatedTerms: ["Model Card", "Transparency", "Compliance", "Governance"],
   },
   {
     term: "Transparency",
@@ -892,12 +844,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "AI systems that are reliable, fair, transparent, accountable, and aligned with human values and societal norms. Built through ethics by design, robust governance, and continuous monitoring.",
     category: "Governance",
-    relatedTerms: [
-      "AI Ethics",
-      "AI Safety",
-      "Governance",
-      "FEAT Principles",
-    ],
+    relatedTerms: ["AI Ethics", "AI Safety", "Governance", "FEAT Principles"],
   },
 
   // U
@@ -944,7 +891,7 @@ const glossaryTerms: GlossaryTerm[] = [
   {
     term: "Watchdog",
     definition:
-      "CSOAI's trained AI safety analysts who monitor, audit, and report on AI systems. Part of global community creating meaningful employment while protecting humanity from AI risks.",
+      "Council's proposed human-review and incident-signal programme. Published source-monitoring tools and logical reviewer roles are distinct from a staffed case service. Real incident handling requires source permissions, privacy controls and accepted, qualified human reviewers.",
     category: "Governance",
     relatedTerms: [
       "Watchdog Program",
@@ -996,11 +943,7 @@ const glossaryTerms: GlossaryTerm[] = [
 ];
 
 type CategoryType =
-  | "Governance"
-  | "Technical"
-  | "Legal"
-  | "Compliance"
-  | "Risk";
+  "Governance" | "Technical" | "Legal" | "Compliance" | "Risk";
 
 const categories: CategoryType[] = [
   "Governance",
@@ -1025,7 +968,7 @@ export default function Glossary() {
         item.definition.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesCategory = selectedCategories.has(
-        item.category as CategoryType
+        item.category as CategoryType,
       );
 
       return matchesSearch && matchesCategory;
@@ -1092,7 +1035,8 @@ export default function Glossary() {
               AI Governance Glossary
             </h1>
             <p className="text-xl text-gray-300">
-              Comprehensive definitions of 60+ AI governance, technical, legal, and compliance terms.
+              Comprehensive definitions of 60+ AI governance, technical, legal,
+              and compliance terms.
             </p>
           </div>
 
@@ -1101,6 +1045,7 @@ export default function Glossary() {
             <Search className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
             <Input
               type="text"
+              aria-label="Search glossary terms"
               placeholder="Search terms by name or definition..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -1119,7 +1064,9 @@ export default function Glossary() {
                 <BookOpen className="h-5 w-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-600">Total Terms</p>
+                <p className="text-sm font-semibold text-gray-600">
+                  Total Terms
+                </p>
                 <p className="text-lg font-bold text-gray-900">60+</p>
               </div>
             </div>
@@ -1128,7 +1075,9 @@ export default function Glossary() {
                 <Hash className="h-5 w-5 text-purple-600" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-600">Categories</p>
+                <p className="text-sm font-semibold text-gray-600">
+                  Categories
+                </p>
                 <p className="text-lg font-bold text-gray-900">5</p>
               </div>
             </div>
@@ -1137,7 +1086,9 @@ export default function Glossary() {
                 <Layers className="h-5 w-5 text-emerald-600" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-600">A-Z Navigation</p>
+                <p className="text-sm font-semibold text-gray-600">
+                  A-Z Navigation
+                </p>
                 <p className="text-lg font-bold text-gray-900">26</p>
               </div>
             </div>
@@ -1146,7 +1097,9 @@ export default function Glossary() {
                 <Link2 className="h-5 w-5 text-orange-600" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-600">Cross-Referenced</p>
+                <p className="text-sm font-semibold text-gray-600">
+                  Cross-Referenced
+                </p>
                 <p className="text-lg font-bold text-gray-900">Yes</p>
               </div>
             </div>
@@ -1236,7 +1189,9 @@ export default function Glossary() {
                             <h3 className="text-xl font-bold text-gray-900 flex-1">
                               {term.term}
                             </h3>
-                            <Badge className={`${getCategoryColor(term.category as CategoryType)} flex-shrink-0`}>
+                            <Badge
+                              className={`${getCategoryColor(term.category as CategoryType)} flex-shrink-0`}
+                            >
                               {term.category}
                             </Badge>
                           </div>
@@ -1313,9 +1268,13 @@ export default function Glossary() {
                 </h3>
               </div>
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                Learn AI governance through CSOAI's comprehensive free courses covering all major frameworks.
+                Learn AI governance through CSOAI's comprehensive free courses
+                covering all major frameworks.
               </p>
-              <a href="/courses" className="hover:bg-blue-50 hover:text-blue-700">
+              <a
+                href="/courses"
+                className="hover:bg-blue-50 hover:text-blue-700"
+              >
                 Browse Courses
               </a>
             </Card>
@@ -1330,10 +1289,14 @@ export default function Glossary() {
                 </h3>
               </div>
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                Free courses in AI governance, safety and compliance. Completion produces a signed
-                training record — it attests training, not conformity.
+                Free courses in AI governance, safety and compliance. Completion
+                produces a signed training record — it attests training, not
+                conformity.
               </p>
-              <a href="/certification" className="hover:bg-purple-50 hover:text-purple-700">
+              <a
+                href="/certification"
+                className="hover:bg-purple-50 hover:text-purple-700"
+              >
                 View training
               </a>
             </Card>
@@ -1348,9 +1311,13 @@ export default function Glossary() {
                 </h3>
               </div>
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                Find answers to common questions about CSOAI, governance, and compliance.
+                Find answers to common questions about CSOAI, governance, and
+                compliance.
               </p>
-              <a href="/faq" className="hover:bg-emerald-50 hover:text-emerald-700">
+              <a
+                href="/faq"
+                className="hover:bg-emerald-50 hover:text-emerald-700"
+              >
                 View FAQs
               </a>
             </Card>
@@ -1365,9 +1332,13 @@ export default function Glossary() {
                 </h3>
               </div>
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                Get help from CSOAI experts and the community. Always free, always responsive.
+                Get help from CSOAI experts and the community. Always free,
+                always responsive.
               </p>
-              <a href="/contact" className="hover:bg-orange-50 hover:text-orange-700">
+              <a
+                href="/contact"
+                className="hover:bg-orange-50 hover:text-orange-700"
+              >
                 Contact Us
               </a>
             </Card>

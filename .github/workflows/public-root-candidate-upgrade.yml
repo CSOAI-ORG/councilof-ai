@@ -95,6 +95,11 @@ jobs:
           ref: public-root/pending
           fetch-depth: 0
 
+      - uses: actions/setup-node@v4
+        if: steps.candidate.outputs.exists == 'true'
+        with:
+          node-version: 20
+
       - uses: actions/setup-python@v5
         if: steps.candidate.outputs.exists == 'true'
         with:
@@ -217,6 +222,14 @@ jobs:
           # llms.txt, so the candidate could not pass the gate and could not merge.
           # Regenerate the views from the manifest just written.
           node scripts/llms-txt.mjs
+          # The llms views quote the manifest's counts and as_of, so rebuilding the
+          # manifest without rebuilding them leaves the views one cycle stale.
+          # Regenerate the views from the manifest just written, then CHECK the
+          # manifest-derived section against it: --timestamps-only compares the
+          # timestamp section of the views against the manifest without fetching
+          # a board and without writing, so a stale as_of is caught here rather
+          # than in the candidate's next gate run.
+          node scripts/llms-txt.mjs --timestamps-only --check
           # public/reports/* is DERIVED from the tree as well, and it is registered in
           # docs/operations/PRODUCERS.json, so pr-gates' producers-check compares its
           # committed output against its producer and fails closed when the bytes move

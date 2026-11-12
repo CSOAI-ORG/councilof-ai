@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-27T10:41:42Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "meta",
+      "surface": "usage_policy",
+      "url": "https://www.llama.com/llama4/use-policy/",
+      "prev_sha256": "200d390b95a77c98eee3a904a1f68c36303299dc57996acc6aed51355383e01c",
+      "new_sha256": "9a0a7b06b61c3ff94f8cbfae8bb369f78aa97512c36040cb33747398658e2e59",
+      "prev_bytes_sha256": "adae2dcefa4de0b9ad3ab0f1323d4afa02de5b6bf610caaf0b111bd41b1842ed",
+      "new_bytes_sha256": "bea66196fad1b4c8849afb805caf765ff9412f3b2bfb636b242ef43b97d86f13",
+      "prev_fetched_at": "2026-10-25T09:54:32Z",
+      "fetched_at": "2026-10-27T10:41:42Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 175427,
+        "new": 173708
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9fdb21081b19a5cee1f49e4cc14bb5ce1289088389a40d690b5b1bec2e12b9f1",
+    "sig_ed25519": "63680fba1632ed12cf858420a6ddf0bf2dd28e37fbfeccfd1d8c5e18fb4f397b9d757a39a92fe3109fe9fb8471684d54b5a6d3e7e3bef6e0fe55e7829fa5e303",
+    "source_urls": [
+      "https://www.llama.com/llama4/use-policy/"
+    ],
+    "subject": "Meta — usage_policy: bytes changed 2026-10-27",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:meta",
+      "surface:usage_policy",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "eee515ff0fc120a5905dd56f2a74a4d5bbb64d7ea6d1b85cd0601419b46d5148",
+    "b9c5f64bcf9dcf734b80116ada0847f99886e45168825844877a28bb254bec34",
+    "22d5a8b0e4dc044bc0f0c1f95fc5b6553fa7242b17402a52983463f1cf011428",
+    "8d71bfd9b41641b9aae03c228c93375f12abaf75bd70672836dd9aab39eb84f5",
+    "9b3b2c8084a09395813e5402b05a736f53129192ce0cdab407f6d36886d0086c",
+    "5c925569a940198c345b4eee3a2ce0100647efd74bf52e33ecbea62d8fb8da7c",
+    "1db97de4f1ebe5d42f878a5922f46fdfff8ba6db6183bcfddaab819602644f80",
+    "2347810be70cf927d205598cdda9d0d6536a0fb064d55814988e4d6f20499c3d",
+    "698022b669e991ba5f21c904d323f321e46b6a7c9ff3d6222083d469bca0a693"
+  ]
+}

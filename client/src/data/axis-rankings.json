@@ -1,0 +1,1821 @@
+{
+  "schema": "csoai.axis-rankings/0.1",
+  "generated_at": "2026-11-01T04:03:06Z",
+  "source": {
+    "rows_dataset": "csoai/gspc-peritem-rows-2026-08-12",
+    "rows_measured_on": "2026-08-12",
+    "rows_record": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12",
+    "source_hashes": {
+      "manifest_sha256": "b3d67831c6a5006e2a252198b039979e10e085fb73ac334add3bdf256a6cde23",
+      "sha256sums_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec",
+      "affect": "7e8a612889d486df40ba638e36ba976cd2820460272fe65c0202e271c95e99e7",
+      "safety": "b70ccaa015668a80aeb50196623e8a138b6238e023b6cdff4308ee4fd592b2cb",
+      "art5-safeguard": "950861961ed3e1d0481c4577850b908b41ef696785b500956f11c502015cf1a3",
+      "continuity": "f90910c6cede5f97a1158226535020c17cf6f7f22a19ce65201511b179ef9e40",
+      "care": "888f230b58e5d78a8570244b9e8374c9740f24c3d6fd9f45d67b372db25f27b2",
+      "detector-interop": "665e358bedbaf899620fd5119a2a9d9b1415eb91396a463955c0e667c21b94a3",
+      "governance": "3a1d3193d3651448dd311efe4c7efcbdffb19e07fba06c15e628b844bfbfa2a5",
+      "machinery-conformity": "d3133100c2889cf259f2faa5390c69ccd3c71ac157fbb4ccd369b3c679996a0b",
+      "conformance": "9ac4db30d9d0039555702445ab940346974da36b4b1d8de58dc775849caa26da",
+      "openness": "f04421a8a8b4a6f01d79dfe771ede8ef40de4338955dcb64a48244df9008685f",
+      "provenance": "fb9efe3afda9d075cf38607c53f1c6a8044909b642e58747b9559a87fcc83237",
+      "swarm": "0a54c4abae07d638d25e7121771500dfc3f40ad0a40a46279a1b6a4dc17f6212",
+      "cross-reality": "34758dd55d2b632e8a2a26390c3f1e01d7044a92e8c38d7ee76bd0386bcc8a6a"
+    },
+    "exclusion_rule": "arms matching /sov|meok-tuned|csoai-tuned/i are excluded before comparison (board rule C-2026-0915-01, as the public board serves it)",
+    "method": "per arm: raw accuracy over its rows; Wilson 95% CI (z=1.959964); each arm vs the top arm by exact two-sided McNemar on discordant pairs; SEPARATED_LEADER only if the top arm is separated from EVERY other arm at alpha=0.05; TIE_BAND = the test cannot separate the arm from the top; SEPARATED = the arm sits significantly below the top. Exact accuracy ties share a rank and are never broken by anything but the exact McNemar test.",
+    "frontier": {
+      "arm": "MiniMax-M3.1-Flash",
+      "provider": "minimax-direct",
+      "measured_on": "2026-11-01",
+      "axis": "governance",
+      "schema": "meok.frontier-vs-meok.rows/0.1",
+      "sha256": "0162a392da6e1937717fa57a024176f33e52603005923931a312790bfe7db119"
+    },
+    "excluded_axes": {
+      "jail": "a model-comparison axis on the served board with NO published per-item rows in this dataset; never ranked here"
+    },
+    "board_api": "https://councilof.ai/api/gspc (schema csoai.gspc-axes/0.5; read 2026-11-01 for axis labels only — dataset slugs, bench, task, colour)"
+  },
+  "axes": {
+    "affect": {
+      "n": 41,
+      "dataset": "csoai/gspc-affect",
+      "bench": "AffectBench",
+      "task": "emotional & embodied safety (manipulation / disclosure / vulnerability)",
+      "colour": "#ec4899",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "7e8a612889d486df40ba638e36ba976cd2820460272fe65c0202e271c95e99e7",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "gemma3:12b",
+          "accuracy": 0.6829,
+          "k": 28,
+          "n": 41,
+          "ci95": [
+            0.53,
+            0.804
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.6585,
+          "k": 27,
+          "n": 41,
+          "ci95": [
+            0.505,
+            0.784
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 1.0,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 5,
+            "c01_arm_correct_top_wrong": 4
+          },
+          "paired_items_vs_top": 41,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.6098,
+          "k": 25,
+          "n": 41,
+          "ci95": [
+            0.457,
+            0.743
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.60723876953125,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 9,
+            "c01_arm_correct_top_wrong": 6
+          },
+          "paired_items_vs_top": 41,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 4,
+          "arm": "mistral:7b",
+          "accuracy": 0.5122,
+          "k": 21,
+          "n": 41,
+          "ci95": [
+            0.365,
+            0.657
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.09228515625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 10,
+            "c01_arm_correct_top_wrong": 3
+          },
+          "paired_items_vs_top": 41,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 5,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.3415,
+          "k": 14,
+          "n": 41,
+          "ci95": [
+            0.216,
+            0.495
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.012540951371192932,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 21,
+            "c01_arm_correct_top_wrong": 7
+          },
+          "paired_items_vs_top": 41,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 6,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.2927,
+          "k": 12,
+          "n": 41,
+          "ci95": [
+            0.176,
+            0.445
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0004024505615234375,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 18,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 41,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        }
+      ]
+    },
+    "art5-safeguard": {
+      "n": 36,
+      "dataset": "csoai/gspc-art5",
+      "bench": "Art5Bench",
+      "task": "EU AI Act Article 5 prohibited-practice trip",
+      "colour": "#fb7185",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "950861961ed3e1d0481c4577850b908b41ef696785b500956f11c502015cf1a3",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "gemma3:12b",
+          "accuracy": 0.9722,
+          "k": 35,
+          "n": 36,
+          "ci95": [
+            0.858,
+            0.995
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "mistral:7b",
+          "accuracy": 0.9444,
+          "k": 34,
+          "n": 36,
+          "ci95": [
+            0.819,
+            0.985
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 1.0,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 1,
+            "c01_arm_correct_top_wrong": 0
+          },
+          "paired_items_vs_top": 36,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.9167,
+          "k": 33,
+          "n": 36,
+          "ci95": [
+            0.782,
+            0.971
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 3,
+            "c01_arm_correct_top_wrong": 1
+          },
+          "paired_items_vs_top": 36,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 4,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.8611,
+          "k": 31,
+          "n": 36,
+          "ci95": [
+            0.713,
+            0.939
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.125,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 4,
+            "c01_arm_correct_top_wrong": 0
+          },
+          "paired_items_vs_top": 36,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 5,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.75,
+          "k": 27,
+          "n": 36,
+          "ci95": [
+            0.589,
+            0.862
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.021484375,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 9,
+            "c01_arm_correct_top_wrong": 1
+          },
+          "paired_items_vs_top": 36,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 6,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.5556,
+          "k": 20,
+          "n": 36,
+          "ci95": [
+            0.396,
+            0.705
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 6.103515625e-05,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 15,
+            "c01_arm_correct_top_wrong": 0
+          },
+          "paired_items_vs_top": 36,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        }
+      ]
+    },
+    "care": {
+      "n": 200,
+      "dataset": "csoai/gspc-care",
+      "bench": "CareBench",
+      "task": "care-cost (protect × help) under paired conduct scenarios",
+      "colour": "#f472b6",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "888f230b58e5d78a8570244b9e8374c9740f24c3d6fd9f45d67b372db25f27b2",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.405,
+          "k": 81,
+          "n": 200,
+          "ci95": [
+            0.339,
+            0.474
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.37,
+          "k": 74,
+          "n": 200,
+          "ci95": [
+            0.306,
+            0.439
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.42704285650325524,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 32,
+            "c01_arm_correct_top_wrong": 25
+          },
+          "paired_items_vs_top": 199,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.255,
+          "k": 51,
+          "n": 200,
+          "ci95": [
+            0.2,
+            0.32
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0007645817391550472,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 53,
+            "c01_arm_correct_top_wrong": 23
+          },
+          "paired_items_vs_top": 199,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 4,
+          "arm": "mistral:7b",
+          "accuracy": 0.25,
+          "k": 50,
+          "n": 200,
+          "ci95": [
+            0.195,
+            0.314
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0003713401159383162,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 52,
+            "c01_arm_correct_top_wrong": 21
+          },
+          "paired_items_vs_top": 199,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 5,
+          "arm": "gemma3:12b",
+          "accuracy": 0.245,
+          "k": 49,
+          "n": 200,
+          "ci95": [
+            0.191,
+            0.309
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.00016604182060301758,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 51,
+            "c01_arm_correct_top_wrong": 19
+          },
+          "paired_items_vs_top": 199,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 6,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.035,
+          "k": 7,
+          "n": 200,
+          "ci95": [
+            0.017,
+            0.07
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 1.311109746589136e-17,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 80,
+            "c01_arm_correct_top_wrong": 6
+          },
+          "paired_items_vs_top": 199,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        }
+      ],
+      "note": "199 distinct items; each model's bank carries one duplicated item (200 rows per model). Accuracy counts all rows; McNemar pairing folds duplicates exactly as the frozen determination did (last occurrence per item)."
+    },
+    "conformance": {
+      "n": 35,
+      "dataset": "csoai/gspc-mcp",
+      "bench": "MCPBench",
+      "task": "MCP tool conformance",
+      "colour": "#fbbf24",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "9ac4db30d9d0039555702445ab940346974da36b4b1d8de58dc775849caa26da",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "mistral:7b",
+          "accuracy": 0.7143,
+          "k": 25,
+          "n": 35,
+          "ci95": [
+            0.549,
+            0.837
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.6571,
+          "k": 23,
+          "n": 35,
+          "ci95": [
+            0.492,
+            0.792
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 3,
+            "c01_arm_correct_top_wrong": 1
+          },
+          "paired_items_vs_top": 35,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "gemma3:12b",
+          "accuracy": 0.6286,
+          "k": 22,
+          "n": 35,
+          "ci95": [
+            0.463,
+            0.768
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.5078125,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 6,
+            "c01_arm_correct_top_wrong": 3
+          },
+          "paired_items_vs_top": 35,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 4,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.4857,
+          "k": 17,
+          "n": 35,
+          "ci95": [
+            0.33,
+            0.644
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0078125,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 8,
+            "c01_arm_correct_top_wrong": 0
+          },
+          "paired_items_vs_top": 35,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 4,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.4857,
+          "k": 17,
+          "n": 35,
+          "ci95": [
+            0.33,
+            0.644
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.15158963203430176,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 16,
+            "c01_arm_correct_top_wrong": 8
+          },
+          "paired_items_vs_top": 35,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 6,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.2571,
+          "k": 9,
+          "n": 35,
+          "ci95": [
+            0.142,
+            0.421
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0008554458618164062,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 19,
+            "c01_arm_correct_top_wrong": 3
+          },
+          "paired_items_vs_top": 35,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        }
+      ]
+    },
+    "continuity": {
+      "n": 33,
+      "dataset": "csoai/gspc-asi",
+      "bench": "PQCBench",
+      "task": "post-quantum status of a cryptographic assumption",
+      "colour": "#c084fc",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "f90910c6cede5f97a1158226535020c17cf6f7f22a19ce65201511b179ef9e40",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "gemma3:12b",
+          "accuracy": 0.6061,
+          "k": 20,
+          "n": 33,
+          "ci95": [
+            0.437,
+            0.753
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.5455,
+          "k": 18,
+          "n": 33,
+          "ci95": [
+            0.38,
+            0.702
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.6875,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 4,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 33,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "mistral:7b",
+          "accuracy": 0.4242,
+          "k": 14,
+          "n": 33,
+          "ci95": [
+            0.272,
+            0.592
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.237884521484375,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 12,
+            "c01_arm_correct_top_wrong": 6
+          },
+          "paired_items_vs_top": 33,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 4,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.3939,
+          "k": 13,
+          "n": 33,
+          "ci95": [
+            0.247,
+            0.563
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.26493089646101,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 18,
+            "c01_arm_correct_top_wrong": 11
+          },
+          "paired_items_vs_top": 33,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 4,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.3939,
+          "k": 13,
+          "n": 33,
+          "ci95": [
+            0.247,
+            0.563
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0390625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 8,
+            "c01_arm_correct_top_wrong": 1
+          },
+          "paired_items_vs_top": 33,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 6,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.3636,
+          "k": 12,
+          "n": 33,
+          "ci95": [
+            0.222,
+            0.534
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.1849333420395851,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 18,
+            "c01_arm_correct_top_wrong": 10
+          },
+          "paired_items_vs_top": 33,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        }
+      ]
+    },
+    "cross-reality": {
+      "n": 32,
+      "dataset": "csoai/gspc-xr",
+      "bench": "XRAIV",
+      "task": "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
+      "colour": "#a78bfa",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "34758dd55d2b632e8a2a26390c3f1e01d7044a92e8c38d7ee76bd0386bcc8a6a",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "mistral:7b",
+          "accuracy": 0.8125,
+          "k": 26,
+          "n": 32,
+          "ci95": [
+            0.647,
+            0.911
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.5938,
+          "k": 19,
+          "n": 32,
+          "ci95": [
+            0.423,
+            0.745
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0654296875,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 9,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 32,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.4375,
+          "k": 14,
+          "n": 32,
+          "ci95": [
+            0.282,
+            0.607
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0018310546875,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 13,
+            "c01_arm_correct_top_wrong": 1
+          },
+          "paired_items_vs_top": 32,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 4,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.4062,
+          "k": 13,
+          "n": 32,
+          "ci95": [
+            0.255,
+            0.577
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0009765625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 14,
+            "c01_arm_correct_top_wrong": 1
+          },
+          "paired_items_vs_top": 32,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 4,
+          "arm": "gemma3:12b",
+          "accuracy": 0.4062,
+          "k": 13,
+          "n": 32,
+          "ci95": [
+            0.255,
+            0.577
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.002349853515625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 15,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 32,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 6,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.3438,
+          "k": 11,
+          "n": 32,
+          "ci95": [
+            0.204,
+            0.517
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.000274658203125,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 16,
+            "c01_arm_correct_top_wrong": 1
+          },
+          "paired_items_vs_top": 32,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        }
+      ]
+    },
+    "detector-interop": {
+      "n": 33,
+      "dataset": "csoai/gspc-det",
+      "bench": "DetBench",
+      "task": "cross-detector watermark interoperability matrix",
+      "colour": "#38bdf8",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "665e358bedbaf899620fd5119a2a9d9b1415eb91396a463955c0e667c21b94a3",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.8788,
+          "k": 29,
+          "n": 33,
+          "ci95": [
+            0.727,
+            0.952
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "mistral:7b",
+          "accuracy": 0.7879,
+          "k": 26,
+          "n": 33,
+          "ci95": [
+            0.622,
+            0.893
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.453125,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 5,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 33,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "gemma3:12b",
+          "accuracy": 0.7576,
+          "k": 25,
+          "n": 33,
+          "ci95": [
+            0.59,
+            0.872
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.34375,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 7,
+            "c01_arm_correct_top_wrong": 3
+          },
+          "paired_items_vs_top": 33,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 4,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.6667,
+          "k": 22,
+          "n": 33,
+          "ci95": [
+            0.496,
+            0.802
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0654296875,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 9,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 33,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 5,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.3333,
+          "k": 11,
+          "n": 33,
+          "ci95": [
+            0.198,
+            0.504
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.00012111663818359375,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 20,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 33,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 6,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.2121,
+          "k": 7,
+          "n": 33,
+          "ci95": [
+            0.107,
+            0.378
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 1.049041748046875e-05,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 24,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 33,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        }
+      ]
+    },
+    "governance": {
+      "n": 237,
+      "dataset": "csoai/gspc-gov",
+      "bench": "GovBench",
+      "task": "EU AI Act risk-tier classification",
+      "colour": "#34d399",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "3a1d3193d3651448dd311efe4c7efcbdffb19e07fba06c15e628b844bfbfa2a5",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "MiniMax-M3.1-Flash",
+          "accuracy": 0.6709,
+          "k": 159,
+          "n": 237,
+          "ci95": [
+            0.609,
+            0.728
+          ],
+          "measured_on": "2026-11-01",
+          "frontier": true,
+          "provider": "minimax-direct",
+          "grading": "raw_correct (raw label vs gold — the frozen rows' `correct` convention)",
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "mistral:7b",
+          "accuracy": 0.5865,
+          "k": 139,
+          "n": 237,
+          "ci95": [
+            0.523,
+            0.647
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.06956519633623019,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 65,
+            "c01_arm_correct_top_wrong": 45
+          },
+          "paired_items_vs_top": 237,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.5401,
+          "k": 128,
+          "n": 237,
+          "ci95": [
+            0.476,
+            0.602
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.001924347777526304,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 63,
+            "c01_arm_correct_top_wrong": 32
+          },
+          "paired_items_vs_top": 237,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 4,
+          "arm": "gemma3:12b",
+          "accuracy": 0.4726,
+          "k": 112,
+          "n": 237,
+          "ci95": [
+            0.41,
+            0.536
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 2.720422673945318e-05,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 85,
+            "c01_arm_correct_top_wrong": 38
+          },
+          "paired_items_vs_top": 237,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 5,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.4641,
+          "k": 110,
+          "n": 237,
+          "ci95": [
+            0.402,
+            0.528
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 8.412315212060281e-08,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 67,
+            "c01_arm_correct_top_wrong": 18
+          },
+          "paired_items_vs_top": 237,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 6,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.4304,
+          "k": 102,
+          "n": 237,
+          "ci95": [
+            0.369,
+            0.494
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 7.237363065075456e-10,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 73,
+            "c01_arm_correct_top_wrong": 16
+          },
+          "paired_items_vs_top": 237,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 7,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.2785,
+          "k": 66,
+          "n": 237,
+          "ci95": [
+            0.225,
+            0.339
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 6.531981443073304e-19,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 107,
+            "c01_arm_correct_top_wrong": 14
+          },
+          "paired_items_vs_top": 237,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        }
+      ],
+      "frontier_alignment": {
+        "frontier_rows": 237,
+        "matched_items": 237,
+        "unmatched_items": 0,
+        "error_rows": 0,
+        "gold_mismatches_vs_frozen": 0
+      }
+    },
+    "machinery-conformity": {
+      "n": 33,
+      "dataset": "csoai/gspc-mach",
+      "bench": "MachBench",
+      "task": "Machinery Reg self-evolving safety-function classification (PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION)",
+      "colour": "#fb923c",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "d3133100c2889cf259f2faa5390c69ccd3c71ac157fbb4ccd369b3c679996a0b",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.5455,
+          "k": 18,
+          "n": 33,
+          "ci95": [
+            0.38,
+            0.702
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.4545,
+          "k": 15,
+          "n": 33,
+          "ci95": [
+            0.298,
+            0.62
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.5810546875,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 8,
+            "c01_arm_correct_top_wrong": 5
+          },
+          "paired_items_vs_top": 33,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "mistral:7b",
+          "accuracy": 0.4242,
+          "k": 14,
+          "n": 33,
+          "ci95": [
+            0.272,
+            0.592
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.2890625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 6,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 33,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 4,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.3636,
+          "k": 12,
+          "n": 33,
+          "ci95": [
+            0.222,
+            0.534
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0703125,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 7,
+            "c01_arm_correct_top_wrong": 1
+          },
+          "paired_items_vs_top": 33,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 4,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.3636,
+          "k": 12,
+          "n": 33,
+          "ci95": [
+            0.222,
+            0.534
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.03125,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 6,
+            "c01_arm_correct_top_wrong": 0
+          },
+          "paired_items_vs_top": 33,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 6,
+          "arm": "gemma3:12b",
+          "accuracy": 0.3333,
+          "k": 11,
+          "n": 33,
+          "ci95": [
+            0.198,
+            0.504
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.015625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 7,
+            "c01_arm_correct_top_wrong": 0
+          },
+          "paired_items_vs_top": 33,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        }
+      ]
+    },
+    "openness": {
+      "n": 32,
+      "dataset": "csoai/gspc-oss",
+      "bench": "OSSBench",
+      "task": "licence reasoning versus intended use",
+      "colour": "#2dd4bf",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "f04421a8a8b4a6f01d79dfe771ede8ef40de4338955dcb64a48244df9008685f",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "gemma3:12b",
+          "accuracy": 0.8438,
+          "k": 27,
+          "n": 32,
+          "ci95": [
+            0.682,
+            0.931
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "mistral:7b",
+          "accuracy": 0.7188,
+          "k": 23,
+          "n": 32,
+          "ci95": [
+            0.546,
+            0.844
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.4239501953125,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 9,
+            "c01_arm_correct_top_wrong": 5
+          },
+          "paired_items_vs_top": 32,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.625,
+          "k": 20,
+          "n": 32,
+          "ci95": [
+            0.453,
+            0.771
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.09228515625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 10,
+            "c01_arm_correct_top_wrong": 3
+          },
+          "paired_items_vs_top": 32,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 4,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.5938,
+          "k": 19,
+          "n": 32,
+          "ci95": [
+            0.423,
+            0.745
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.03857421875,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 10,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 32,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 5,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.5,
+          "k": 16,
+          "n": 32,
+          "ci95": [
+            0.336,
+            0.664
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0192108154296875,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 15,
+            "c01_arm_correct_top_wrong": 4
+          },
+          "paired_items_vs_top": 32,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 6,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.4375,
+          "k": 14,
+          "n": 32,
+          "ci95": [
+            0.282,
+            0.607
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.002349853515625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 15,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 32,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        }
+      ]
+    },
+    "provenance": {
+      "n": 32,
+      "dataset": "csoai/gspc-prv",
+      "bench": "ProvBench",
+      "task": "Article 50 marking survival by validity",
+      "colour": "#60a5fa",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "fb9efe3afda9d075cf38607c53f1c6a8044909b642e58747b9559a87fcc83237",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.7188,
+          "k": 23,
+          "n": 32,
+          "ci95": [
+            0.546,
+            0.844
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "gemma3:12b",
+          "accuracy": 0.6875,
+          "k": 22,
+          "n": 32,
+          "ci95": [
+            0.514,
+            0.82
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 1.0,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 6,
+            "c01_arm_correct_top_wrong": 5
+          },
+          "paired_items_vs_top": 32,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "mistral:7b",
+          "accuracy": 0.6562,
+          "k": 21,
+          "n": 32,
+          "ci95": [
+            0.483,
+            0.796
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.803619384765625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 9,
+            "c01_arm_correct_top_wrong": 7
+          },
+          "paired_items_vs_top": 32,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.6562,
+          "k": 21,
+          "n": 32,
+          "ci95": [
+            0.483,
+            0.796
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.803619384765625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 9,
+            "c01_arm_correct_top_wrong": 7
+          },
+          "paired_items_vs_top": 32,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 5,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.4688,
+          "k": 15,
+          "n": 32,
+          "ci95": [
+            0.309,
+            0.636
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.076812744140625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 12,
+            "c01_arm_correct_top_wrong": 4
+          },
+          "paired_items_vs_top": 32,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 6,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.1875,
+          "k": 6,
+          "n": 32,
+          "ci95": [
+            0.089,
+            0.353
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.00022125244140625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 19,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 32,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        }
+      ]
+    },
+    "safety": {
+      "n": 36,
+      "dataset": "csoai/gspc-agi",
+      "bench": "DefBench",
+      "task": "calibrated refusal on paired requests",
+      "colour": "#f87171",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "b70ccaa015668a80aeb50196623e8a138b6238e023b6cdff4308ee4fd592b2cb",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "gemma3:12b",
+          "accuracy": 0.9444,
+          "k": 34,
+          "n": 36,
+          "ci95": [
+            0.819,
+            0.985
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.8889,
+          "k": 32,
+          "n": 36,
+          "ci95": [
+            0.747,
+            0.956
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.6875,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 4,
+            "c01_arm_correct_top_wrong": 2
+          },
+          "paired_items_vs_top": 36,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 3,
+          "arm": "mistral:7b",
+          "accuracy": 0.8056,
+          "k": 29,
+          "n": 36,
+          "ci95": [
+            0.65,
+            0.902
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0625,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 5,
+            "c01_arm_correct_top_wrong": 0
+          },
+          "paired_items_vs_top": 36,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 4,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.7778,
+          "k": 28,
+          "n": 36,
+          "ci95": [
+            0.619,
+            0.883
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 0.0703125,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 7,
+            "c01_arm_correct_top_wrong": 1
+          },
+          "paired_items_vs_top": 36,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 5,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.4444,
+          "k": 16,
+          "n": 36,
+          "ci95": [
+            0.295,
+            0.604
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 4.00543212890625e-05,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 19,
+            "c01_arm_correct_top_wrong": 1
+          },
+          "paired_items_vs_top": 36,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        },
+        {
+          "rank": 6,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.4167,
+          "k": 15,
+          "n": 36,
+          "ci95": [
+            0.271,
+            0.578
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 2.09808349609375e-05,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 20,
+            "c01_arm_correct_top_wrong": 1
+          },
+          "paired_items_vs_top": 36,
+          "band": "SEPARATED",
+          "verdict": "separated BELOW the top arm at alpha=0.05 (exact McNemar)"
+        }
+      ]
+    },
+    "swarm": {
+      "n": 40,
+      "dataset": "csoai/gspc-swarm",
+      "bench": "SwarmBench v2b",
+      "task": "multi-agent coordination safety",
+      "colour": "#94a3b8",
+      "measured_on": "2026-08-12",
+      "rows_sha256": "0a54c4abae07d638d25e7121771500dfc3f40ad0a40a46279a1b6a4dc17f6212",
+      "excluded_own_arms": 13,
+      "models": [
+        {
+          "rank": 1,
+          "arm": "qwen2.5:0.5b-instruct",
+          "accuracy": 0.975,
+          "k": 39,
+          "n": 40,
+          "ci95": [
+            0.871,
+            0.996
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": null,
+          "band": "TIE_BAND",
+          "verdict": "top arm by accuracy — the test does not separate it from every other arm; this is a tie band, not a winner",
+          "discordant_vs_top": null
+        },
+        {
+          "rank": 2,
+          "arm": "deepseek-r1:8b",
+          "accuracy": 0.475,
+          "k": 19,
+          "n": 40,
+          "ci95": [
+            0.329,
+            0.625
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 1.0,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 1,
+            "c01_arm_correct_top_wrong": 0
+          },
+          "paired_items_vs_top": 3,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 2,
+          "arm": "gemma3:12b",
+          "accuracy": 0.475,
+          "k": 19,
+          "n": 40,
+          "ci95": [
+            0.329,
+            0.625
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 1.0,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 1,
+            "c01_arm_correct_top_wrong": 0
+          },
+          "paired_items_vs_top": 3,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 2,
+          "arm": "llama3.2:3b",
+          "accuracy": 0.475,
+          "k": 19,
+          "n": 40,
+          "ci95": [
+            0.329,
+            0.625
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 1.0,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 1,
+            "c01_arm_correct_top_wrong": 0
+          },
+          "paired_items_vs_top": 3,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 2,
+          "arm": "mistral:7b",
+          "accuracy": 0.475,
+          "k": 19,
+          "n": 40,
+          "ci95": [
+            0.329,
+            0.625
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 1.0,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 1,
+            "c01_arm_correct_top_wrong": 0
+          },
+          "paired_items_vs_top": 3,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        },
+        {
+          "rank": 2,
+          "arm": "qwen2.5:3b",
+          "accuracy": 0.475,
+          "k": 19,
+          "n": 40,
+          "ci95": [
+            0.329,
+            0.625
+          ],
+          "measured_on": "2026-08-12",
+          "frontier": false,
+          "mcnemar_vs_top": 1.0,
+          "discordant_vs_top": {
+            "b10_top_correct_arm_wrong": 1,
+            "c01_arm_correct_top_wrong": 0
+          },
+          "paired_items_vs_top": 3,
+          "band": "TIE_BAND",
+          "verdict": "tie with the top arm — the test does not establish a difference (a tie is not equality)"
+        }
+      ],
+      "note": "The published rows are the retired swarm bank (n rows per model over 3 distinct items, pairing by item with last occurrence winning). The served axis states its own fleet and bank (n=37); nothing here overrides it — this table ranks the rows only."
+    }
+  },
+  "sha256": {
+    "algorithm": "sha256",
+    "recipe": "sha256 of the UTF-8 bytes of json.dumps(this document with the \"sha256\" field removed, sort_keys=True, separators=(\",\",\":\"), ensure_ascii=False)",
+    "hex": "15aa28595d60bbf5d34576c24bc4e48b2e08a597f9550948cf7bf84434cdd608"
+  }
+}

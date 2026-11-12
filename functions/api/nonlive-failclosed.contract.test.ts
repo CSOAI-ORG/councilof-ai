@@ -14,7 +14,6 @@ import * as include from './include';
 import * as mint from './mint';
 import * as report from './report';
 import * as reported from './reported';
-import * as subscribe from './subscribe';
 import * as verifyBatch from './verify-batch';
 import * as verifyCard from './verify-card';
 
@@ -44,8 +43,6 @@ const cases:{name:string;method:'GET'|'POST';handler:Handler}[]=[
  ['mint','GET',mint.onRequestGet as Handler],
  ['report','POST',report.onRequestPost as Handler],
  ['reported','POST',reported.onRequestPost as Handler],
- ['subscribe','GET',subscribe.onRequestGet as Handler],
- ['subscribe','POST',subscribe.onRequestPost as Handler],
  ['verify-batch','GET',verifyBatch.onRequestGet as Handler],
  ['verify-card','GET',verifyCard.onRequestGet as Handler],
 ].map(([name,method,handler])=>({name:name as string,method:method as 'GET'|'POST',handler:handler as Handler}));
