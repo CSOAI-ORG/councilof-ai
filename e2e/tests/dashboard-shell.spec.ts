@@ -444,8 +444,9 @@ test("one workspace keeps the composer and account access while a tool pane is o
     page.getByLabel("Open Council OS"),
     "no legacy overlay launcher over the shell",
   ).toHaveCount(0);
-  // Account access remains available through Sections while navigation starts minimized.
-  await page.getByRole("button", { name: "Open workspace navigation", exact: true }).click();
+  // Desktop navigation is open on arrival; mobile opens through Sections.
+  const sections = page.getByTestId("workspace-sections-toggle");
+  if (await sections.getAttribute("aria-expanded") === "false") await sections.click();
   if (isMobile) {
     // The drawer's accessible name is now i18n'd (dashboard.title, default "Menu"), so the
     // product property is pinned instead of a translated string: the navigation dialog must
@@ -716,7 +717,7 @@ test("a cold /assess door lands on the measured pane with the RAS booking link",
   ).toBe(true);
 });
 
-test("workspace navigation starts minimized and remains usable across layout boundaries", async ({ page }, info) => {
+test("workspace navigation opens on desktop and remains usable across layout boundaries", async ({ page }, info) => {
   test.skip(info.project.name !== "desktop", "Exercise responsive widths with the existing desktop project");
   test.setTimeout(180_000);
   for (const width of [639, 640, 641, 767, 768]) {
@@ -725,6 +726,12 @@ test("workspace navigation starts minimized and remains usable across layout bou
     const trigger = page.getByTestId("workspace-sections-toggle");
     const navigation = page.getByRole("navigation", { name: "Workspace destinations", exact: true });
     await expect(trigger, String(width)).toBeVisible();
+    if (width >= 768) {
+      await expect(trigger).toHaveAttribute("aria-expanded", "true");
+      await expect(navigation).toBeVisible();
+      // Test an explicit desktop collapse as well as the initial discoverability.
+      await trigger.click();
+    }
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
     await expect(navigation).toBeHidden();
     await expect(page.getByTestId("ask-pane")).toHaveCount(0);
@@ -751,8 +758,9 @@ test("workspace navigation starts minimized and remains usable across layout bou
     await expect(trigger).toBeFocused();
     await page.reload({ waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("dashboard-shell")).toBeVisible({ timeout: 60_000 });
-    await expect(trigger).toHaveAttribute("aria-expanded", "false");
-    await expect(navigation).toBeHidden();
+    await expect(trigger).toHaveAttribute("aria-expanded", width >= 768 ? "true" : "false");
+    if (width >= 768) await expect(navigation).toBeVisible();
+    else await expect(navigation).toBeHidden();
     await expect(page.getByTestId("ask-pane")).toHaveCount(0);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow, String(width)).toBeLessThanOrEqual(1);
