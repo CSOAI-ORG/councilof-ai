@@ -1,0 +1,65 @@
+{
+  "study": "csoai.eat.a2a-metadata-repair.20261112.v1",
+  "state": "SOURCE_CANDIDATE_TESTED",
+  "baseline_commit": "0663a4395fc331b904804169b47a427c3a712d3d",
+  "source_pins": {
+    "baseline_probe_sha256": "8ff0c15b9a5fc249873a5bcddae86ed70486bea7203567c79d59cbef40db14eb",
+    "candidate_probe_sha256": "aa795ddc8f77b6b6062370a4b97bf0d1beaf7c9e5999e962d6f385d3d24492ee",
+    "a2a_helper_sha256": "94b6ba413b1b90ed7c18e76fa5e54e09b37c02fb51a4567f62d1598d0eb3d4d9",
+    "tests_sha256": "52c7e1a3938639b4a0099685a37a37d0d5263f0c7cfd9c637f48a40b82ac55b6",
+    "unchanged_common_sha256": "46ec7be5346b16f654210a2af1159bc9cc7d3a449df7ba0bd2caa447b73ea562"
+  },
+  "baseline_fixture_results": {
+    "HTML_maintenance_HTTP200": "LIVE",
+    "JSON_error_HTTP200": "LIVE",
+    "JSON_array_HTTP200": "LIVE",
+    "duplicate_key_JSON_HTTP200": "LIVE",
+    "rate_limited_HTTP429": "PLACEHOLDER",
+    "explicit_card_url_requested_as": "https://example.invalid/card.json/.well-known/agent-card.json",
+    "network_calls": 0
+  },
+  "qualification": {
+    "python": "3.10.12",
+    "platform": "Linux x86_64",
+    "test_methods": 41,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "offline_test_network_requests": 0,
+    "helper_subset_previously_executed": 38,
+    "protected_other_function_asts": 10,
+    "mutations": [
+      {"name":"accept_any_200_body","detected":true,"test_failures":4,"test_errors":1},
+      {"name":"probe_other_paths_after_auth","detected":true,"test_failures":0,"test_errors":2},
+      {"name":"remove_direct_resource_guard","detected":true,"test_failures":0,"test_errors":3},
+      {"name":"remove_read_limit","detected":true,"test_failures":1,"test_errors":0}
+    ]
+  },
+  "dated_public_observation": {
+    "at": "2026-11-12T01:24:05.317839+00:00",
+    "url": "https://councilof.ai/.well-known/agent-card.json",
+    "http_status": 200,
+    "bytes": 22025,
+    "sha256": "ec195a8ed187e792747ccf009520e5af3ee2764e050f40c9f6f460ab176bed6e",
+    "classification": "LIVE_METADATA_ONLY_UNGRADED",
+    "requests": 1,
+    "redirects_followed": 0,
+    "wall_seconds_diagnostic": 0.2129367319867015
+  },
+  "scope": {
+    "agent_tasks_called": 0,
+    "model_calls": 0,
+    "training": false,
+    "feed_written": false,
+    "historical_states_relabelled": false,
+    "signing": false,
+    "gspc_admitted": false,
+    "runtime_deployment": false,
+    "protected_merge": false,
+    "new_scheduler": false,
+    "full_protocol_conformance": "NOT_ESTABLISHED",
+    "card_signature_and_identity": "NOT_VERIFIED",
+    "cost": "UNKNOWN",
+    "energy": "UNKNOWN"
+  }
+}
