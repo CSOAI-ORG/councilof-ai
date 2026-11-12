@@ -1,5 +1,6 @@
 /** Council of AI front door: one proposition, one results surface, distinct next steps. */
 import HomeHero from "@/components/home/HomeHero";
+import HomeWatchdog from "@/components/home/HomeWatchdog";
 import HomeResults from "@/components/home/HomeResults";
 import HomeMine from "@/components/home/HomeMine";
 import HomeProducts from "@/components/home/HomeProducts";
@@ -45,6 +46,7 @@ export default function HomeVerify() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }}
       />
       <HomeHero />
+      <HomeWatchdog />
       <HomeResults />
       {/* The live board strip + daily-report/newsletter band (owner-verified 1 Nov;
           restored 2026-11-09 after the journey rebuild dropped them). */}

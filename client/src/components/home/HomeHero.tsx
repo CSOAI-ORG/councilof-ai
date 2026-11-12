@@ -90,8 +90,8 @@ export default function HomeHero() {
         <a href="#products">
           <span>02</span> Put evidence to work
         </a>
-        <a href="#how-it-works">
-          <span>03</span> How to check it
+        <a href="/watchdog/" data-testid="hero-cta-watchdog">
+          <span>03</span> Public Watchdog
         </a>
         <a href="#developers">
           <span>04</span> For developers
