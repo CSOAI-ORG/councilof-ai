@@ -144,7 +144,30 @@ function unreachable(path, e) {
 
 /* --------------------------------------------------------------------- tools */
 
-async function boardTotals() {
+// Self-contained stdio mirrors of functions/mcp/_board.ts and functions/_lib/leaderLabel.ts.
+// functions/mcp/stdio-board-parity.test.ts compares both transports on loopback fixtures.
+// Keep their result semantics aligned; do not introduce a separate measurement rule here.
+// A top observed estimate is a leader only when the existing separation test says so.
+const SEPARATED_LEADER_LABEL = "separated leader";
+const TOP_OBSERVED_LABEL = "top observed (not separated)";
+function isSeparated(separation) {
+  return String(separation ?? "").trim().toUpperCase() === "SEPARATED";
+}
+/** "separated leader" only for a SEPARATED row; every other state (TIE, UNTESTED, absent) is top observed. */
+function leaderLabel(separation) {
+  return isSeparated(separation) ? SEPARATED_LEADER_LABEL : TOP_OBSERVED_LABEL;
+}
+function boardDateOf(measuredOn) {
+  if (typeof measuredOn === "string")
+    return measuredOn;
+  if (measuredOn && typeof measuredOn === "object" && !Array.isArray(measuredOn)) {
+    const date = measuredOn.date;
+    if (typeof date === "string")
+      return date;
+  }
+  return null;
+}
+async function boardTotals(args = {}) {
   let d;
   try {
     d = await fetchJson("/api/gspc");
@@ -152,39 +175,65 @@ async function boardTotals() {
     return unreachable("/api/gspc", e);
   }
   const t = d.totals ?? {};
+  const fetched_at = new Date().toISOString();
+  const counts = [
+    {
+      name: "axis_slots",
+      value: t.axes ?? null,
+      kind: "declared slot count — a slot is a position on the board, not evidence anything was measured",
+    },
+    {
+      name: "measured",
+      value: t.measured_axes ?? null,
+      kind: "measurement count — slots with a real run behind them",
+    },
+    {
+      name: "unmeasured",
+      value: t.unmeasured_axes ?? null,
+      kind: "declared slots with no run behind them — published so the gap is visible; first-class, not an error",
+    },
+  ];
+  if (args.detail !== "full") {
+    return {
+      state: "LIVE",
+      reachable: true,
+      kind: "live-board-totals",
+      detail: "summary",
+      source: `${ORIGIN}/api/gspc`,
+      as_of: { board_measured_on: boardDateOf(d.measured_on), fetched_at },
+      counts,
+      public_count: t.public_count ?? null,
+      separation: {
+        public_count: t.separation_public_count ?? null,
+        comparison_axes: t.comparison_axes ?? null,
+        separated_leads: t.separated_leads ?? null,
+        ties: t.ties ?? null,
+        untested: t.untested_separations ?? null,
+        note: "A measured axis is not a separated leader: separation is a separate determination, and TIE and UNTESTED are not folded into it.",
+      },
+      more: 'Call again with detail: "full" for count_grammar, by_family and the board\'s full measured_on block.',
+      not_a_certification: true,
+    };
+  }
   return {
     state: "LIVE",
     reachable: true,
     kind: "live-board-totals",
+    detail: "full",
     source: `${ORIGIN}/api/gspc`,
-    as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
-    counts: [
-      {
-        name: "axis_slots",
-        value: t.axes ?? null,
-        kind: "declared slot count — a slot is a position on the board, not evidence anything was measured",
-      },
-      {
-        name: "measured",
-        value: t.measured_axes ?? null,
-        kind: "measurement count — slots with a real run behind them",
-      },
-      {
-        name: "unmeasured",
-        value: t.unmeasured_axes ?? null,
-        kind: "declared slots with no run behind them — published so the gap is visible; first-class, not an error",
-      },
-    ],
+    as_of: { board_measured_on: d.measured_on ?? null, fetched_at },
+    counts,
     count_grammar: t.count_grammar ?? null,
     public_count: t.public_count ?? null,
     by_family: t.by_family ?? null,
     not_a_certification: true,
   };
 }
-
 async function getAxis(args) {
   const asked = String(args.axis ?? "").trim();
-  if (!asked) return { state: "BAD_INPUT", error: "pass an axis name, e.g. governance" };
+  if (!asked)
+    return { state: "BAD_INPUT", error: "pass an axis name, e.g. governance" };
+  // Canonical ids and their aliases (gov, gspc-governance, …), case-insensitive — ./axis-aliases.json.
   const wanted = canonicalAxis(asked);
   let d;
   try {
@@ -204,6 +253,11 @@ async function getAxis(args) {
     };
   }
   const measured = String(row.status ?? "").toUpperCase() === "MEASURED";
+  // A row is a leader only when separation SEPARATED it (functions/_lib/leaderLabel.ts). On a TIE or
+  // UNTESTED axis the board's top row is the top observed point estimate, so it is returned under that
+  // name and `leader` stays null. separation is copied so a caller can see why.
+  const topName = typeof row.leader === "string" && row.leader.trim() ? row.leader : null;
+  const separated = isSeparated(row.separation);
   return {
     state: "LIVE",
     axis: row.axis,
@@ -217,16 +271,24 @@ async function getAxis(args) {
     n: row.n ?? null,
     accuracy: row.accuracy ?? null,
     interval: row.interval ?? null,
-    leader: row.leader ?? null,
+    separation: row.separation ?? null,
+    leader: separated ? topName : null,
+    top_observed_not_separated: separated ? null : topName,
+    leader_label: topName ? leaderLabel(row.separation) : null,
     dataset: row.dataset ?? null,
-    // Same three door fields the HTTP door returns (functions/mcp/_board.ts): copied from the row,
-    // null when the row carries none, never invented.
+    // The doors behind the row, copied from it: a model-comparison axis carries a frozen bank on
+    // the Hub, a deterministic-facts axis carries a run artifact, and a row that carries neither
+    // returns null for both rather than an invented URL. row_url is the same board filtered to
+    // this one axis, so a caller can re-fetch exactly what this tool read.
     kind: row.kind ?? null,
     dataset_url: row.dataset_url ?? null,
     evidence_url: typeof row.evidence_url === "string" && row.evidence_url.startsWith("/")
       ? `${ORIGIN}${row.evidence_url}` : (row.evidence_url ?? null),
     row_url: `${ORIGIN}/api/gspc?axis=${encodeURIComponent(String(row.axis))}`,
     note: row.note ?? null,
+    // Preserve per-axis measurement provenance; board/retrieval dates do not refresh it.
+    facts_as_of: row.facts_as_of ?? null,
+    measurement_time: row.measurement_time ?? null,
     as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
     source: `${ORIGIN}/api/gspc`,
     not_a_certification: true,
