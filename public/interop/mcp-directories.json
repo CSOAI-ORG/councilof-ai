@@ -32,11 +32,12 @@
       "tool_counts": {
         "note": "The mandate is 'the listing resolves and the tool count is true'. Declared counts are read from Smithery's detail endpoint; served tools are DERIVED from the two canonical files the door reads (functions/mcp/gspc-tools.json + paid-tools.json), never typed. Neither hosted deployment could be called directly: gspc--csoai.run.tools answers 401 at / and 404 at /mcp, so Smithery's runtime needs a key we do not hold. The comparison is therefore declared-vs-source, not declared-vs-tools/list.",
         "served_by_the_door": {
-          "free": 49,
+          "free": 50,
           "paid": 5,
-          "total": 54,
+          "total": 55,
           "names": [
             "board_totals",
+            "board_counts",
             "get_axis",
             "verify_card",
             "list_cards",
@@ -150,7 +151,7 @@
       "tool_counts": {
         "verdict": "UNCHECKABLE",
         "declared": 11,
-        "served_by_the_door": 54,
+        "served_by_the_door": 55,
         "names": [
           "art50_marking_evidence",
           "board_totals",

@@ -83,7 +83,7 @@ describe("/mcp/free serves exactly the free tools", () => {
     const { response, message } = await rpc("/mcp/free", "tools/list");
     expect(response.status).toBe(200);
     const tools = message.result!.tools!;
-    expect(FREE_NAMES).toHaveLength(49);
+    expect(FREE_NAMES).toHaveLength(50);
     expect(tools.map((t) => t.name)).toEqual(FREE_NAMES);
     // Exact underlying tool contract is preserved; only the explicit UI metadata and
     // the board presentation title differ. Unknown metadata is still refused.

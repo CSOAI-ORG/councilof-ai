@@ -13,6 +13,7 @@
       "api-claims-register",
       "api-claims-watch-request-post",
       "api-commissions",
+      "api-counts",
       "api-evidence-bundle-post",
       "api-feeds-provider-diff-post",
       "api-free-door-post",
@@ -139,6 +140,17 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "path": "/api/commissions",
+      "method": "GET"
+    },
+    {
+      "id": "api-counts",
+      "kind": "http",
+      "name": "Counts",
+      "description": "The read figure, or null when the read failed or the shape was wrong.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/counts",
       "method": "GET"
     },
     {

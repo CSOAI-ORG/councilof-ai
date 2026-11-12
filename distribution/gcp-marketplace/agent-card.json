@@ -62,6 +62,16 @@
       ]
     },
     {
+      "id": "board-counts",
+      "name": "Count grammar — every published count, labelled",
+      "description": "SendMessage answers with GET /api/counts: every published count (board slots vs measurements, frozen-bank models, own model tags, card matrix, signed public root, signed card index) with its entry, source, as_of, what it means and how to quote it. A NOT_READ row is a read that failed, never a zero; figures are never summed or reconciled — where two surfaces disagree, the disagreement is the finding. Quote the ONE figure whose meaning answers the question.",
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"board-counts\",\"input\":{}}",
+        "Legacy compatibility: one text Part containing exactly \"counts\"",
+        "GET /api/counts — the same grammar, outside A2A"
+      ]
+    },
+    {
       "id": "east-west-crosswalk",
       "name": "East-West crosswalk & cross-border card",
       "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only — determination stays with authorities.",

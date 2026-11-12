@@ -114,11 +114,47 @@ function isLocalPreview(): boolean {
   return window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
 }
 
+/**
+ * Conditional-request cache for the shared board read. The door serves a strong ETag that is the
+ * sha256 of the served bytes (functions/api/_etag.ts), so a refresh that the board did not answer
+ * costs a 304 instead of the whole payload. The payload is retained here ONLY while its etag
+ * matches what the door last served for this URL: a 200 replaces both entries, a 304 reuses the
+ * pair, and anything else touches neither. There is no expiry simulation and no bundled fallback —
+ * a stale pair is simply re-fetched as a plain GET.
+ */
+const etagByUrl = new Map<string, string>();
+const payloadByUrl = new Map<string, GspcPayload>();
+
+/** Test seam: clears the conditional cache without touching module state otherwise. */
+export function resetGspcConditionalCacheForTest(): void {
+  etagByUrl.clear();
+  payloadByUrl.clear();
+}
+
 async function fetchGspcPayload(url: string): Promise<GspcPayload> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
-    const r = await fetch(url, { headers: { accept: "application/json" }, cache: "no-store", signal: controller.signal });
+    // One conditional attempt; a 304 with no retained payload (impossible against our own door,
+    // defensive against others) drops the validator and retries once as a plain GET.
+    let attemptedConditional = false;
+    let r = await (async () => {
+      const cachedEtag = etagByUrl.get(url);
+      const headers: Record<string, string> = { accept: "application/json" };
+      if (cachedEtag) {
+        attemptedConditional = true;
+        headers["if-none-match"] = cachedEtag;
+      }
+      return fetch(url, { headers, cache: "no-store", signal: controller.signal });
+    })();
+    if (r.status === 304) {
+      const hit = payloadByUrl.get(url);
+      if (hit) return hit;
+      if (attemptedConditional) {
+        etagByUrl.delete(url);
+        r = await fetch(url, { headers: { accept: "application/json" }, cache: "no-store", signal: controller.signal });
+      }
+    }
     if (!r.ok) throw new Error(`${url} answered HTTP ${r.status}`);
     const text = await r.text();
     const trimmed = text.replace(/^\uFEFF/, "").trim();
@@ -133,6 +169,16 @@ async function fetchGspcPayload(url: string): Promise<GspcPayload> {
     }
     if (!payload || typeof payload !== "object" || !Array.isArray(payload.axes)) {
       throw new Error(`${url} is not a GSPC payload`);
+    }
+    // Retain the exact pair the door served: the etag it named and the bytes it hashed.
+    // (Header-less test doubles are treated as a door that names no validator.)
+    const etag = typeof r.headers?.get === "function" ? r.headers.get("etag") : null;
+    if (etag) {
+      etagByUrl.set(url, etag);
+      payloadByUrl.set(url, payload);
+    } else {
+      etagByUrl.delete(url);
+      payloadByUrl.delete(url);
     }
     return payload;
   } catch (error) {

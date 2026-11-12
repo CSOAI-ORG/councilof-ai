@@ -11,6 +11,7 @@ import {
   FETCHABLE_ORIGINS,
   UPSTREAM,
   signedCardPath,
+  boardCountsTool,
   boardTotalsTool,
   getAxisTool,
   listCardsTool,
@@ -94,6 +95,11 @@ function sharedToolSummary(
   if (payload.state === "UNREACHABLE" || (idx && idx.state === "UNREACHABLE"))
     return "UNREACHABLE — the live source could not be fetched; no cached number is substituted.";
   switch (name) {
+    case "board_counts": {
+      const figs = Array.isArray(payload.figures) ? (payload.figures as Record<string, unknown>[]) : [];
+      const read = figs.filter((f) => f.state === "READ").length;
+      return `LIVE count grammar — ${payload.board_count_line ?? "board line not read"} · ${read} of ${figs.length} figures READ. Each figure is labelled with its source and as_of; figures are never summed or reconciled — where two surfaces disagree, the disagreement is the finding.`;
+    }
     case "board_totals": {
       const sep = payload.separation as Record<string, unknown> | undefined;
       return `LIVE board totals — ${payload.public_count ?? "see counts"} (slots and measurements are different kinds; never summed).${
@@ -173,8 +179,10 @@ export async function sharedToolResult(
   const payload =
     axis !== null
       ? await getAxisTool(origin, { axis })
-      : name === "board_totals"
-      ? await boardTotalsTool(origin, args)
+      : name === "board_counts"
+        ? await boardCountsTool(origin)
+        : name === "board_totals"
+          ? await boardTotalsTool(origin, args)
       : name === "get_axis"
         ? await getAxisTool(origin, args)
         : name === "list_cards"

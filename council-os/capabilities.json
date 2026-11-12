@@ -447,6 +447,34 @@
       ]
     },
     {
+      "id": "board-counts",
+      "kind": "a2a_skill",
+      "name": "Count grammar — every published count, labelled",
+      "description": "SendMessage answers with GET /api/counts: every published count (board slots vs measurements, frozen-bank models, own model tags, card matrix, signed public root, signed card index) with its entry, source, as_of, what it means and how to quote it. A NOT_READ row is a read that failed, never a zero; figures are never summed or reconciled — where two surfaces disagree, the disagreement is the finding. Quote the ONE figure whose meaning answers the question.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "a2a"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/a2a",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"board-counts\",\"input\":{}}",
+        "Legacy compatibility: one text Part containing exactly \"counts\"",
+        "GET /api/counts — the same grammar, outside A2A"
+      ]
+    },
+    {
       "id": "card-status-link",
       "kind": "a2a_skill",
       "name": "Card status link",
@@ -2346,6 +2374,35 @@
         "safe": true
       },
       "source": "functions/api/counters.ts"
+    },
+    {
+      "id": "api-counts",
+      "kind": "http",
+      "path": "/api/counts",
+      "method": "GET",
+      "name": "Counts",
+      "description": "The read figure, or null when the read failed or the shape was wrong.",
+      "description_state": "DOCUMENTED",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.counts/0.1"
+      ],
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/counts",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/counts.ts"
     },
     {
       "id": "api-coverage",
@@ -7622,7 +7679,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 50
+      "order": 51
     },
     {
       "id": "axis_affect",
@@ -7648,7 +7705,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 26
+      "order": 27
     },
     {
       "id": "axis_ai-adoption-components",
@@ -7674,7 +7731,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 34
+      "order": 35
     },
     {
       "id": "axis_art5-safeguard",
@@ -7700,7 +7757,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 24
+      "order": 25
     },
     {
       "id": "axis_care",
@@ -7726,7 +7783,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 21
+      "order": 22
     },
     {
       "id": "axis_claim-maintenance",
@@ -7752,7 +7809,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 45
+      "order": 46
     },
     {
       "id": "axis_company-practice",
@@ -7778,7 +7835,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 38
+      "order": 39
     },
     {
       "id": "axis_conformance",
@@ -7804,7 +7861,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 18
+      "order": 19
     },
     {
       "id": "axis_continuity",
@@ -7830,7 +7887,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 17
+      "order": 18
     },
     {
       "id": "axis_cross-reality",
@@ -7856,7 +7913,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 22
+      "order": 23
     },
     {
       "id": "axis_custody-disclosure",
@@ -7882,7 +7939,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 33
+      "order": 34
     },
     {
       "id": "axis_detector-interop",
@@ -7908,7 +7965,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 23
+      "order": 24
     },
     {
       "id": "axis_distribution-integrity",
@@ -7934,7 +7991,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 32
+      "order": 33
     },
     {
       "id": "axis_effect-binding",
@@ -7960,7 +8017,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 28
+      "order": 29
     },
     {
       "id": "axis_governance",
@@ -7986,7 +8043,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 14
+      "order": 15
     },
     {
       "id": "axis_harness-fidelity",
@@ -8012,7 +8069,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 40
+      "order": 41
     },
     {
       "id": "axis_humanoid-deployment",
@@ -8038,7 +8095,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 42
+      "order": 43
     },
     {
       "id": "axis_humanoid-labour-index",
@@ -8064,7 +8121,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 36
+      "order": 37
     },
     {
       "id": "axis_interop-conformance",
@@ -8090,7 +8147,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 41
+      "order": 42
     },
     {
       "id": "axis_interpretability-reproducibility",
@@ -8116,7 +8173,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 44
+      "order": 45
     },
     {
       "id": "axis_jail",
@@ -8142,7 +8199,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 27
+      "order": 28
     },
     {
       "id": "axis_lab-practice",
@@ -8168,7 +8225,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 37
+      "order": 38
     },
     {
       "id": "axis_labour-components",
@@ -8194,7 +8251,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 35
+      "order": 36
     },
     {
       "id": "axis_machinery-conformity",
@@ -8220,7 +8277,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 20
+      "order": 21
     },
     {
       "id": "axis_measurer-integrity",
@@ -8246,7 +8303,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 39
+      "order": 40
     },
     {
       "id": "axis_openness",
@@ -8272,7 +8329,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 19
+      "order": 20
     },
     {
       "id": "axis_provenance",
@@ -8298,7 +8355,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 16
+      "order": 17
     },
     {
       "id": "axis_provenance-controls",
@@ -8324,7 +8381,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 29
+      "order": 30
     },
     {
       "id": "axis_regulator-transparency",
@@ -8350,7 +8407,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 43
+      "order": 44
     },
     {
       "id": "axis_regulatory-framework",
@@ -8376,7 +8433,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 31
+      "order": 32
     },
     {
       "id": "axis_reserve-attestation",
@@ -8402,7 +8459,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 30
+      "order": 31
     },
     {
       "id": "axis_safety",
@@ -8428,7 +8485,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 15
+      "order": 16
     },
     {
       "id": "axis_serving-fidelity",
@@ -8454,7 +8511,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 46
+      "order": 47
     },
     {
       "id": "axis_swarm",
@@ -8480,7 +8537,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 25
+      "order": 26
     },
     {
       "id": "axis_watchdog-ingest",
@@ -8506,7 +8563,33 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 47
+      "order": 48
+    },
+    {
+      "id": "board_counts",
+      "kind": "mcp_tool",
+      "name": "board_counts",
+      "description": "The estate's published counts as one labelled table from https://councilof.ai/api/counts: board slots and measurements, frozen-bank models, own model tags, card-matrix models, the signed public root and the signed card index — each with its source file, its as_of, what it means and how to quote it. A failed or self-disagreeing read is a NOT_READ state, never a zero. Figures are never summed or reconciled; where two surfaces disagree, the disagreement is the finding. Quote the one figure whose meaning answers the question, and carry its source and as_of. Measurement, not certification.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/mcp",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [],
+      "order": 1
     },
     {
       "id": "board_totals",
@@ -8561,7 +8644,7 @@
       "required_args": [
         "subject"
       ],
-      "order": 49
+      "order": 50
     },
     {
       "id": "evidence_bundle",
@@ -8590,7 +8673,7 @@
       "required_args": [
         "obligation"
       ],
-      "order": 53
+      "order": 54
     },
     {
       "id": "evidence_bundle_preview",
@@ -8618,7 +8701,7 @@
       "required_args": [
         "obligation"
       ],
-      "order": 12
+      "order": 13
     },
     {
       "id": "framework_readiness",
@@ -8646,7 +8729,7 @@
       "required_args": [
         "framework"
       ],
-      "order": 48
+      "order": 49
     },
     {
       "id": "get_axis",
@@ -8674,7 +8757,7 @@
       "required_args": [
         "axis"
       ],
-      "order": 1
+      "order": 2
     },
     {
       "id": "get_card",
@@ -8702,7 +8785,7 @@
       "required_args": [
         "sha256"
       ],
-      "order": 5
+      "order": 6
     },
     {
       "id": "get_root",
@@ -8728,7 +8811,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 4
+      "order": 5
     },
     {
       "id": "list_cards",
@@ -8754,7 +8837,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 3
+      "order": 4
     },
     {
       "id": "mcp_trust",
@@ -8780,7 +8863,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 8
+      "order": 9
     },
     {
       "id": "measurement_index",
@@ -8806,7 +8889,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 9
+      "order": 10
     },
     {
       "id": "receipts_batch",
@@ -8835,7 +8918,7 @@
       "required_args": [
         "from"
       ],
-      "order": 52
+      "order": 53
     },
     {
       "id": "route",
@@ -8861,7 +8944,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 13
+      "order": 14
     },
     {
       "id": "rwa_evidence",
@@ -8890,7 +8973,7 @@
       "required_args": [
         "asset"
       ],
-      "order": 51
+      "order": 52
     },
     {
       "id": "server_evidence",
@@ -8918,7 +9001,7 @@
       "required_args": [
         "endpoint_url"
       ],
-      "order": 11
+      "order": 12
     },
     {
       "id": "verify_capsule",
@@ -8946,7 +9029,7 @@
       "required_args": [
         "capsule_json"
       ],
-      "order": 10
+      "order": 11
     },
     {
       "id": "verify_card",
@@ -8974,7 +9057,7 @@
       "required_args": [
         "card"
       ],
-      "order": 2
+      "order": 3
     },
     {
       "id": "verify_inclusion",
@@ -9002,7 +9085,7 @@
       "required_args": [
         "sha256"
       ],
-      "order": 6
+      "order": 7
     },
     {
       "id": "x402_trust",
@@ -9028,7 +9111,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 7
+      "order": 8
     },
     {
       "id": "api-pop-a2a",

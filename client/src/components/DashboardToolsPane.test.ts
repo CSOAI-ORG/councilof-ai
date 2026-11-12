@@ -11,6 +11,7 @@ describe("dashboard MCP inventory", () => {
   it("matches the runtime's free and paid tools, by name", () => {
     expect(FREE_TOOLS).toEqual([
       "board_totals",
+      "board_counts",
       "get_axis",
       "verify_card",
       "list_cards",
@@ -67,7 +68,7 @@ describe("dashboard MCP inventory", () => {
       "receipts_batch",
       "evidence_bundle",
     ]);
-    expect(PUBLISHED_TOOL_COUNT).toBe(54);
+    expect(PUBLISHED_TOOL_COUNT).toBe(55);
   });
 
   it("does not advertise the quarantined witness SKU", () => {

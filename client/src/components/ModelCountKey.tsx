@@ -58,6 +58,16 @@ export default function ModelCountKey({ tone = "light", className = "" }: { tone
             </li>
           ))}
         </ul>
+        {/* The same grammar as a machine surface, so the human answer and the agent answer are one
+            answer: an agent reading /api/counts gets these figures with the same never-summed rules
+            (functions/api/counts.ts; MCP tool board_counts serves the same rows). */}
+        <p className="mt-2 text-[11px] opacity-75">
+          Agents: this table as JSON at{" "}
+          <a href="/api/counts" className="underline underline-offset-2">
+            GET /api/counts
+          </a>{" "}
+          (MCP tool <span className="font-mono">board_counts</span>).
+        </p>
       </div>
     </details>
   );

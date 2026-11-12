@@ -80,6 +80,14 @@ export const PURPOSE: Record<string, Pattern[]> = {
       w: 3,
     },
   ],
+  board_counts: [
+    // "Which number do I quote?" — the door exists because five pages gave five counts with
+    // nothing to say which was which (persona sweep finding T15). Route the quoting question,
+    // the how-many-models question and the two-surface counts here, not at board_totals.
+    { re: /\b(which number|which figure|which count)\b.*\b(quote|use|cite)\b|\b(quote|cite)\b.*\b(which number|which figure|which count)\b/, w: 4 },
+    { re: /\bhow many (third[- ]party |ai )?models\b(?=.*\b(measured|frozen)\b)|\bhow many models\b(?=.*\b(measured|frozen)\b)/, w: 3 },
+    { re: /\b(root|card index|card matrix|hub[- ]?cards?)\b(?=.*\bcount)|\bcount\b(?=.*\b(root|card index|card matrix|hub[- ]?cards?)\b)/, w: 3 },
+  ],
   get_axis: [
     { re: /\baxis\b/, w: 2 },
     { re: /\b(accuracy|interval|sample size|separation)\b/, w: 2 },

@@ -204,6 +204,7 @@ const numOrNull = (v: unknown): number | null => (typeof v === "number" && Numbe
 
 export const SKILL_IDS = [
   "gspc-board",
+  "board-counts",
   "east-west-crosswalk",
   "card-status-link",
   "benchmark-quality-register",
@@ -434,6 +435,7 @@ function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | T
   if (semanticKeys[0] === "text") {
     const text = str(part.text)?.trim().replace(/\s+/g, " ").toLowerCase();
     if (text === "board") return { skill: "gspc-board", input: {} };
+    if (text === "counts" || text === "which number do i quote") return { skill: "board-counts", input: {} };
     // A2A directory task probes and first-contact agents send a greeting. Answer with the
     // declared capability contract, never with a measurement or a guessed skill.
     // Until 2026-09-26 only three exact strings qualified, so a bare "hello" got
@@ -467,7 +469,7 @@ function validateSkillInput(selection: SkillSelection): string | null {
   // A skill that takes no input belongs in this list. Forgetting it here means the router accepts
   // the skill name and then refuses it as "unsupported skill" — which is what happened to
   // estate-index on 2026-09-16, after it had already been added to the card and to SKILL_IDS.
-  if (["gspc-board", "east-west-crosswalk", "benchmark-quality-register", "x402-discovery", "estate-index"].includes(skill)) {
+  if (["gspc-board", "board-counts", "east-west-crosswalk", "benchmark-quality-register", "x402-discovery", "estate-index"].includes(skill)) {
     return Object.keys(input).length === 0 ? null : `${skill} input must be an empty object`;
   }
   if (skill === "card-status-link") {
@@ -759,6 +761,11 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
   let method: "GET" | "POST" = "GET";
   let body: string | undefined;
   switch (skill) {
+    case "board-counts":
+      // The count grammar door answers for itself; the router only frames the delivery. Figures
+      // are never summed here because they are never summed at the door.
+      path = "/api/counts";
+      break;
     case "east-west-crosswalk":
       path = "/api/cross";
       break;

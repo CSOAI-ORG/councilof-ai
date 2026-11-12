@@ -93,6 +93,7 @@ const call = async (
 
 const FREE_LIST = [
   "board_totals",
+  "board_counts",
   "get_axis",
   "verify_card",
   "list_cards",

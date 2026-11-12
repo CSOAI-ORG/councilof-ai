@@ -11,6 +11,7 @@
   "tools": {
     "free": [
       "board_totals",
+      "board_counts",
       "get_axis",
       "verify_card",
       "list_cards",
@@ -332,6 +333,8 @@
         "distribution/dify/gspc/provider/gspc.py",
         "distribution/dify/gspc/tools/board_totals.yaml",
         "distribution/dify/gspc/tools/board_totals.py",
+        "distribution/dify/gspc/tools/board_counts.yaml",
+        "distribution/dify/gspc/tools/board_counts.py",
         "distribution/dify/gspc/tools/framework_readiness.yaml",
         "distribution/dify/gspc/tools/framework_readiness.py",
         "distribution/dify/gspc/tools/get_axis.yaml",
@@ -508,7 +511,7 @@
   "files": [
     {
       "path": "distribution/SUBMIT.md",
-      "sha256": "6903e96eda463dbbd91aeef6b0d43a03dcbbb4d71d85fbc2f0143b0ffc14c075"
+      "sha256": "4c6722e8393c456194650bc5b42b2bd9a07e190f2503fe8cb5c9da25eb852f00"
     },
     {
       "path": "distribution/agntcy/README.md",
@@ -564,15 +567,15 @@
     },
     {
       "path": "distribution/claude/connector.json",
-      "sha256": "00a04c6b5a830baf4fd24fc157dbce6f9b76ca290063c7bb5841e566b3ce9dd8"
+      "sha256": "edd04c71247dc5862dff62fcf9aba692a715678982dab8bf92279ee848fd97eb"
     },
     {
       "path": "distribution/connect/connect-matrix.json",
-      "sha256": "1a0ecc124ea1745c35934611801ff7e890d3dcec263c9ab00e5f562a0ac425f7"
+      "sha256": "582b090d3c3b3ec7fd7c5dedc7d3089f966bbd9a7322e960da917444654dab5c"
     },
     {
       "path": "distribution/copilot-studio/apiDefinition.swagger.json",
-      "sha256": "318a54448f8324d3fce80f7d60cd9964ebdfd5751285c59c31d63f1ffcdf359d"
+      "sha256": "c57d009fe4eeaa2b6501c8f75d87b443e9de0bce896928faf355db0bfc4fc20e"
     },
     {
       "path": "distribution/copilot-studio/apiProperties.json",
@@ -584,7 +587,7 @@
     },
     {
       "path": "distribution/copilot-studio/intro.md",
-      "sha256": "6ba624e964775220193e7c23f49f6ba73cfe80a68b5170561d1efd3caa83db64"
+      "sha256": "ef319af2c6cd235d535c18815847fc0df0a80f1e8c34edbf25d7056f2edf0358"
     },
     {
       "path": "distribution/dify/gspc/PRIVACY.md",
@@ -592,7 +595,7 @@
     },
     {
       "path": "distribution/dify/gspc/README.md",
-      "sha256": "7b3a3a10a48f0c8c83666eaf98ba242107ee6a8e8a47b6a8e9c52dddbefb7176"
+      "sha256": "8ceafdafbba022c93e35bb54f0e14dff6714a2e825a530adfe607e83b96ddf33"
     },
     {
       "path": "distribution/dify/gspc/_assets/icon.svg",
@@ -612,7 +615,7 @@
     },
     {
       "path": "distribution/dify/gspc/provider/gspc.yaml",
-      "sha256": "11b0c1748c0fb2c95e8ad361ffaa91d25939ebf17dbe25351e9654c9a694fa69"
+      "sha256": "46abdb331769182bc72db0bbf06cc57b928c234c40a55fff4d206d539c67b72a"
     },
     {
       "path": "distribution/dify/gspc/requirements.txt",
@@ -891,6 +894,14 @@
       "sha256": "89158ee685e1fb20c6e9bc6b42e2d9c5f2b036873170dfceb37ce13150aca6de"
     },
     {
+      "path": "distribution/dify/gspc/tools/board_counts.py",
+      "sha256": "40e75fa4668019dc31f496cbeb910e78f01e71c408ad2958416b4d9d7467613c"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/board_counts.yaml",
+      "sha256": "b4898d71dc67ae79fab96fbc4e5c434925d29eec309f68981eae00095f16f2e2"
+    },
+    {
       "path": "distribution/dify/gspc/tools/board_totals.py",
       "sha256": "a5acebebaff8dc2a2c51c828fe68b3dce1bd35e8dcf50a5ce4fa69aa04fa9062"
     },
@@ -1012,35 +1023,35 @@
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/readme.md",
-      "sha256": "c26a3c26ab1bc6b186e6797153ff7bd794c5917dd08f2cd97d6e2e03c8db294e"
+      "sha256": "627ca4e46c13007916e433d9c54ae8e501e15e041dee7923d8e0161af5af1639"
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/server.yaml",
-      "sha256": "02c14038dc47f613bcaba90be4f1185e5e4de1779140c29226a35776d437d142"
+      "sha256": "b76b1211e0550748df4ed80097050089ee6f739b916122c9b8aed6d3221797bb"
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/tools.json",
-      "sha256": "b1adbd4557effae1f309742b2cc1823a8512fbfb73eeca0ae0cac1598d330b76"
+      "sha256": "48a6852160a6cd8d4a3716cbc1c5ce1ed1e8a5e1e63a555eb5bd6b5840394782"
     },
     {
       "path": "distribution/gcp-marketplace/LISTING.md",
-      "sha256": "101ea9a2ec913a9598ccea1073b2b0b48471b1e78245cd2176b842b91d41bfac"
+      "sha256": "c4046400ab27b87d9a49cf7ccd9f101bba685e8ec26a49cc9e511b213f3663be"
     },
     {
       "path": "distribution/gcp-marketplace/agent-card.json",
-      "sha256": "ec195a8ed187e792747ccf009520e5af3ee2764e050f40c9f6f460ab176bed6e"
+      "sha256": "91d78a03f907e689404e577e38640f06e4d7430fd00f705a560cdba24e015389"
     },
     {
       "path": "distribution/gemini/GEMINI.md",
-      "sha256": "56942b9e1b0ad615fd96f72745e79f48afe72eb6ea4127b08c5021082ab14ba6"
+      "sha256": "ea07a1feb5f18a1e64c2fa3913a174597bc10cc6ba97b90bf1d7e89d47ca97e3"
     },
     {
       "path": "distribution/gemini/gemini-extension.json",
-      "sha256": "bd03553333d5d448fe43fcbd684ac194f9e82e0521130529e081748e08f8f0c7"
+      "sha256": "fd075de6e61d8443e7042200391dd4f9de02c23caeaa422fc98af4cf0abeb902"
     },
     {
       "path": "distribution/hf-space/csoai-gspc-mcp/README.md",
-      "sha256": "52967daca5ee2a5092dbb8bb8a3bab05ba9c4b3b94618daf1eacfc1ec2dcc3ad"
+      "sha256": "01caea6211cb9c1c534b265dcf34d87b1d26cf30b17a2ec36731e4443ba3d412"
     },
     {
       "path": "distribution/hf-space/csoai-gspc-mcp/app.py",
@@ -1052,11 +1063,11 @@
     },
     {
       "path": "distribution/mcp-registry/ai.councilof-gspc/server.json",
-      "sha256": "9afd74632259e7712213a0cea968ace8039ced713c7d03ae7cdb3c53648407ca"
+      "sha256": "aa9212d84e42e745a231f71e6a7149e63a883dcd9a5379ac67ec2ca2bb384042"
     },
     {
       "path": "distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json",
-      "sha256": "dfe522534eb2ddb29c65f3de1064577d5a65d7545c3eeb8566a0f47d0747cdfe"
+      "sha256": "51e406909c93a0cf5ee196550116346ec9fca692e258ecc360523557ae7b998d"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/LICENSE",
@@ -1064,11 +1075,11 @@
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/README.md",
-      "sha256": "9f06d2807afc9f4994abf58e9129b3179f3067e24397f7222588bd936a249917"
+      "sha256": "cd97b8f8f3ef9eba824eb90f9191686a1b566a71ff47977498ae433aa6b93f8c"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/gspc-client.js",
-      "sha256": "60a59b8305629c96efa14218b44f8685df31d9c2390c3e51053b4aeb8d07acc9"
+      "sha256": "77e8fc8d4dd5a9e244c657317e48a2804fad6cf613994143f7525859901b8428"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/index.d.ts",
@@ -1088,11 +1099,11 @@
     },
     {
       "path": "distribution/npm/mastra-gspc/README.md",
-      "sha256": "61c0b63a0005a4d3751f2c868b8f400ce0e4d07948c24579c9079cf869a20dcc"
+      "sha256": "b17cb68135fcdb0568aa6a9345d4c9f69694d00d38fc27eac78c2274477603ec"
     },
     {
       "path": "distribution/npm/mastra-gspc/gspc-client.js",
-      "sha256": "60a59b8305629c96efa14218b44f8685df31d9c2390c3e51053b4aeb8d07acc9"
+      "sha256": "77e8fc8d4dd5a9e244c657317e48a2804fad6cf613994143f7525859901b8428"
     },
     {
       "path": "distribution/npm/mastra-gspc/index.d.ts",
@@ -1116,39 +1127,39 @@
     },
     {
       "path": "distribution/openai-plugin/plugin.json",
-      "sha256": "0b4df32b9b6316c0d901a801482748bf24c5aa80f16ca02dc01cae799c9b998e"
+      "sha256": "909dee67e8ca1f3f6444e9cda7b1bdefe23db6af920f4799e2e426d1cc43b106"
     },
     {
       "path": "distribution/openai-plugin/skills/get-started/SKILL.md",
-      "sha256": "dd79227eea18a408e157acd394361c2e1fa199bb72166fc5fc5b3b5c2ea116dc"
+      "sha256": "7d88dbd9ff6246569187a6fafeba9d655a2aa773bee911883426b306b4e22db7"
     },
     {
       "path": "distribution/openai/app.json",
-      "sha256": "629a4064e95ca0411adde119f44c35bb72792fa3fdd044fa6546249d88cde1b0"
+      "sha256": "e6e5b33ce1cf0d50c6934f406192818aae4312b117a27bb5b81d209b58d09a50"
     },
     {
       "path": "distribution/packages/gspc-openai-plugin.zip",
-      "sha256": "ba3369d95944d66042d771e428091af9c67fc03fef2112958156eb435fd5d8a5"
+      "sha256": "bc1289f4af2961c13f9c22ef1f71e8b04ef64407458cf7ac75b714601f41e154"
     },
     {
       "path": "distribution/packages/gspc.difypkg",
-      "sha256": "07aaf35537ef00669e0672d010ba47f8327f6e68f23cf1e6d4ec1b0dbb298fe8"
+      "sha256": "1f1efbc472f0e12fa277eaf771526ee01bdf6887eec8c261744e35d3afc0a599"
     },
     {
       "path": "distribution/plugin/.claude-plugin/marketplace.json",
-      "sha256": "0a9d2b9bf9d4e79df010d9e69c48de0fe283a27f2c923a8292c2b6a4c348c3b5"
+      "sha256": "36e2de676d54694d3d02888c0693b4ab4f8417db1eb8c0cf530cff0cd5c5684d"
     },
     {
       "path": "distribution/plugin/.claude-plugin/plugin.json",
-      "sha256": "8f97ecb504bc1dbb6819e19664775768aeaf8594d2b8621cfd0ccc7c96aa36be"
+      "sha256": "d506ce456345418ba3f5ab0c1c12b13c735aab5e12697f8539be3279b7fd98e2"
     },
     {
       "path": "distribution/plugin/.cursor-plugin/plugin.json",
-      "sha256": "5f8e42488890dfae8d31181a7c7d784e74c307e4dabaf0e1a2a492732e3f5602"
+      "sha256": "25e7a63b86bd2fe208e1718a09cac70a1b7640f536c0fb81ae5375ed1e771e71"
     },
     {
       "path": "distribution/plugin/.grok-plugin/marketplace.json",
-      "sha256": "991561a355b19c414945ecde5b262f74904dfd7d22f3b736b829d1ca6791bd4d"
+      "sha256": "fce3f1cbd6f45ff07c29f1fa58f8caffd69061dfe4ba8f2048ddd541da8a0695"
     },
     {
       "path": "distribution/plugin/.mcp.json",
@@ -1156,19 +1167,19 @@
     },
     {
       "path": "distribution/plugin/README.md",
-      "sha256": "4f2306d36149999bc8bf4d1c9d3b12298b4c73ca37b54d168be485ddda05212b"
+      "sha256": "32df4298584d2c87485fdcc8a6ede1dad215858a549a9dee5ef5a07e6e0bc325"
     },
     {
       "path": "distribution/plugin/kimi.plugin.json",
-      "sha256": "0e624e0d555e29a12ad27eb994d76224b24dd56cb7d577b6cf8bdeebfc9b9723"
+      "sha256": "da40aa4ff0a67f58a960f6eab543f2b38f50ed20f7a185d97a03ac4681344294"
     },
     {
       "path": "distribution/plugin/locales/en-US.json",
-      "sha256": "bc5e97f7587d070d4ced50a7c23c324c766208bff881e1d5f4af53a66d5914d3"
+      "sha256": "659e756c8ac4398a6cd949a1610aec1cd20031a64ee3c3dbc0d534f56f91e60f"
     },
     {
       "path": "distribution/plugin/locales/zh-CN.json",
-      "sha256": "668edfd45db6f22421f7f5accc7890bfbf62bc9771db2ea544d537d964bc39fe"
+      "sha256": "640ddf52a74cfebac54523a18166ae0e284a1aa5a86d2e3c31253c55e6effd23"
     },
     {
       "path": "distribution/plugin/mcp_config.json",
@@ -1176,7 +1187,7 @@
     },
     {
       "path": "distribution/plugin/plugin.json",
-      "sha256": "872784ed73d99bf777adf97cd75de879a0b46cad65f8126ee853fb20c8b0f5bd"
+      "sha256": "c84303bb3b216d48401bf0b688f7bf941e2aac41c623d63a7aef4ca2979a5417"
     },
     {
       "path": "distribution/plugin/rules/AGENTS.md",
@@ -1188,7 +1199,7 @@
     },
     {
       "path": "distribution/plugin/skills/gspc/SKILL.md",
-      "sha256": "cc150b7c02e3e711ecdb56e1b2bec45202c685404dec1e079e653a992e3c9ab6"
+      "sha256": "924e4624d2c679e9c731e9b0e826bcf3626eca9349a19e44a00ce0710d8a2a87"
     },
     {
       "path": "distribution/python/crewai-csoai/LICENSE",
@@ -1312,19 +1323,19 @@
     },
     {
       "path": "public/.claude-plugin/marketplace.json",
-      "sha256": "0a9d2b9bf9d4e79df010d9e69c48de0fe283a27f2c923a8292c2b6a4c348c3b5"
+      "sha256": "36e2de676d54694d3d02888c0693b4ab4f8417db1eb8c0cf530cff0cd5c5684d"
     },
     {
       "path": "public/.claude-plugin/plugin.json",
-      "sha256": "8f97ecb504bc1dbb6819e19664775768aeaf8594d2b8621cfd0ccc7c96aa36be"
+      "sha256": "d506ce456345418ba3f5ab0c1c12b13c735aab5e12697f8539be3279b7fd98e2"
     },
     {
       "path": "public/.well-known/mcp.json",
-      "sha256": "f7f1d97ed3c2ab72b954fd35a714a39b280edea124a50230f0f1c83b210c1853"
+      "sha256": "e72f3619e3ff9edfdbfe1c86b22154183a45fa7178781f248b9f7bee9fb68acb"
     },
     {
       "path": "public/.well-known/mcp/server-card.json",
-      "sha256": "ef6ab02ae43d01f83577fa83539827fa965de1194270e589d7e85c22ac055502"
+      "sha256": "a04f9a3a0f0b79dd488385a4a437c8637e2bbc6002a21139c1753cc984ff110c"
     },
     {
       "path": "public/charter-register/discussion.html",
@@ -1348,7 +1359,7 @@
     },
     {
       "path": "public/oasf/ai.councilof.measurement-agent.oasf.json",
-      "sha256": "8a61d3c4713175d5b2691d2a976d1edf6f655e88774c8ec00532d25da0c73f4b"
+      "sha256": "28317779d105b0d222b21129c98d5b4f6a0ec16e588842e627fff87391b35b8c"
     },
     {
       "path": "public/working-groups/catalog.json",

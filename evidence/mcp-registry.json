@@ -16,7 +16,7 @@
     "reachable_distinct_servers": 2,
     "unreachable_endpoints": 0,
     "catalogued_not_probed": 6,
-    "tools_probed": 108,
+    "tools_probed": 110,
     "tools_catalogued_not_probed": null,
     "external_catalogues_not_probed": [
       {
@@ -43,11 +43,16 @@
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
-      "tools_count": 54,
+      "tools_count": 55,
       "tools": [
         {
           "name": "board_totals",
           "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus the board's separation line, and as_of dates for the board and for this fetch. Compact by default; pass detail \"full\" for the long-form count grammar, the per-family counts and the board's full measured_on block. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+          "required_args": []
+        },
+        {
+          "name": "board_counts",
+          "description": "The estate's published counts as one labelled table from https://councilof.ai/api/counts: board slots and measurements, frozen-bank models, ",
           "required_args": []
         },
         {
@@ -357,7 +362,7 @@
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
-      "tools_count": 54,
+      "tools_count": null,
       "tools": [
         {
           "name": "board_totals",
@@ -671,7 +676,7 @@
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
-      "tools_count": 54,
+      "tools_count": null,
       "tools": [
         {
           "name": "board_totals",
@@ -985,11 +990,16 @@
       "http_status": null,
       "protocol_version": "2024-11-05",
       "server_version": "0.2.5",
-      "tools_count": 54,
+      "tools_count": 55,
       "tools": [
         {
           "name": "board_totals",
           "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus the board's separation line, and as_of dates for the board and for this fetch. Compact by default; pass detail \"full\" for the long-form count grammar, the per-family counts and the board's full measured_on block. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+          "required_args": []
+        },
+        {
+          "name": "board_counts",
+          "description": "The estate's published counts as one labelled table from https://councilof.ai/api/counts: board slots and measurements, frozen-bank models, ",
           "required_args": []
         },
         {

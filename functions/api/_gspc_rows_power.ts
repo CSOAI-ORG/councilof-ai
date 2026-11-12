@@ -8,7 +8,7 @@ export const ROWS_POWER = {
   "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec",
   "alpha": 0.05,
   "power": 0.8,
-  "method": "Minimum detectable effect (MDE): the smallest accuracy difference between the leader and the best base model that the board's exact two-sided McNemar test (p<0.05) detects with 80% probability, given the axis's paired items and its observed discordance rate (the share of paired items on which exactly one of the two models is right). Exact binomial enumeration with the same test body, not a normal approximation; rounded up to 0.001. Our own models are removed before comparison, as for separation. NOT_REACHABLE means no difference up to the observed discordance reaches 80% power, so there is no MDE to state; UNDEFINED means no paired item is discordant, so the test has nothing to count.",
+  "method": "Minimum detectable effect (MDE): the smallest accuracy difference between the leader and the best base model that the board's exact two-sided McNemar test (p<0.05) detects with 80% probability, given the axis's paired items and its observed discordance rate (the share of paired items on which exactly one of the two models is right). Exact binomial enumeration with the same test body, not a normal approximation; rounded up to 0.001. Our own models are removed before comparison, as for separation. NOT_REACHABLE means no difference up to the observed discordance reaches 80% power, so there is no MDE to state; UNDEFINED means no paired item is discordant, so the test has nothing to count. Effect sizes (2026-11-04): cliff_delta is the paired binary form (b10 - c01) / paired in [-1, 1], positive favouring the leader; paired_odds_ratio is b10 / c01, null with state UNDEFINED when the comparator never won a discordant item. Both are computed from the same hash-verified rows as the test, published beside the p-value — never instead of it.",
   "fleet": {
     "models_in_rows": 19,
     "base_count": 6,
@@ -41,7 +41,10 @@ export const ROWS_POWER = {
       "discordant_items": 129,
       "discordance_rate": 0.5443,
       "mde": 0.138,
-      "mde_state": "MEASURED"
+      "mde_state": "MEASURED",
+      "cliff_delta": 0.0464,
+      "paired_odds_ratio": 1.1864,
+      "effect_state": "MEASURED"
     },
     "safety": {
       "file": "peritem_agi.jsonl",
@@ -55,7 +58,10 @@ export const ROWS_POWER = {
       "discordant_items": 6,
       "discordance_rate": 0.1667,
       "mde": null,
-      "mde_state": "NOT_REACHABLE"
+      "mde_state": "NOT_REACHABLE",
+      "cliff_delta": 0.0556,
+      "paired_odds_ratio": 2.0,
+      "effect_state": "MEASURED"
     },
     "continuity": {
       "file": "peritem_asi.jsonl",
@@ -69,7 +75,10 @@ export const ROWS_POWER = {
       "discordant_items": 6,
       "discordance_rate": 0.1818,
       "mde": null,
-      "mde_state": "NOT_REACHABLE"
+      "mde_state": "NOT_REACHABLE",
+      "cliff_delta": 0.0606,
+      "paired_odds_ratio": 2.0,
+      "effect_state": "MEASURED"
     },
     "provenance": {
       "file": "peritem_prv.jsonl",
@@ -83,7 +92,10 @@ export const ROWS_POWER = {
       "discordant_items": 11,
       "discordance_rate": 0.3438,
       "mde": 0.288,
-      "mde_state": "MEASURED"
+      "mde_state": "MEASURED",
+      "cliff_delta": 0.0312,
+      "paired_odds_ratio": 1.2,
+      "effect_state": "MEASURED"
     },
     "cross-reality": {
       "file": "peritem_xr.jsonl",
@@ -97,7 +109,10 @@ export const ROWS_POWER = {
       "discordant_items": 11,
       "discordance_rate": 0.3438,
       "mde": 0.288,
-      "mde_state": "MEASURED"
+      "mde_state": "MEASURED",
+      "cliff_delta": 0.2188,
+      "paired_odds_ratio": 4.5,
+      "effect_state": "MEASURED"
     },
     "detector-interop": {
       "file": "peritem_det.jsonl",
@@ -111,7 +126,10 @@ export const ROWS_POWER = {
       "discordant_items": 7,
       "discordance_rate": 0.2121,
       "mde": null,
-      "mde_state": "NOT_REACHABLE"
+      "mde_state": "NOT_REACHABLE",
+      "cliff_delta": 0.0909,
+      "paired_odds_ratio": 2.5,
+      "effect_state": "MEASURED"
     },
     "art5-safeguard": {
       "file": "peritem_art5.jsonl",
@@ -125,7 +143,10 @@ export const ROWS_POWER = {
       "discordant_items": 1,
       "discordance_rate": 0.0278,
       "mde": null,
-      "mde_state": "NOT_REACHABLE"
+      "mde_state": "NOT_REACHABLE",
+      "cliff_delta": 0.0278,
+      "paired_odds_ratio": null,
+      "effect_state": "UNDEFINED"
     },
     "care": {
       "file": "peritem_care.jsonl",
@@ -139,7 +160,10 @@ export const ROWS_POWER = {
       "discordant_items": 57,
       "discordance_rate": 0.2864,
       "mde": 0.109,
-      "mde_state": "MEASURED"
+      "mde_state": "MEASURED",
+      "cliff_delta": 0.0352,
+      "paired_odds_ratio": 1.28,
+      "effect_state": "MEASURED"
     },
     "conformance": {
       "file": "peritem_mcp.jsonl",
@@ -153,7 +177,10 @@ export const ROWS_POWER = {
       "discordant_items": 4,
       "discordance_rate": 0.1143,
       "mde": null,
-      "mde_state": "NOT_REACHABLE"
+      "mde_state": "NOT_REACHABLE",
+      "cliff_delta": 0.0571,
+      "paired_odds_ratio": 3.0,
+      "effect_state": "MEASURED"
     },
     "openness": {
       "file": "peritem_oss.jsonl",
@@ -167,7 +194,10 @@ export const ROWS_POWER = {
       "discordant_items": 14,
       "discordance_rate": 0.4375,
       "mde": 0.329,
-      "mde_state": "MEASURED"
+      "mde_state": "MEASURED",
+      "cliff_delta": 0.125,
+      "paired_odds_ratio": 1.8,
+      "effect_state": "MEASURED"
     },
     "machinery-conformity": {
       "file": "peritem_mach.jsonl",
@@ -181,7 +211,10 @@ export const ROWS_POWER = {
       "discordant_items": 13,
       "discordance_rate": 0.3939,
       "mde": 0.306,
-      "mde_state": "MEASURED"
+      "mde_state": "MEASURED",
+      "cliff_delta": 0.0909,
+      "paired_odds_ratio": 1.6,
+      "effect_state": "MEASURED"
     },
     "swarm": {
       "file": "peritem_swarm.jsonl",
@@ -195,7 +228,10 @@ export const ROWS_POWER = {
       "discordant_items": 1,
       "discordance_rate": 0.3333,
       "mde": null,
-      "mde_state": "NOT_REACHABLE"
+      "mde_state": "NOT_REACHABLE",
+      "cliff_delta": 0.3333,
+      "paired_odds_ratio": null,
+      "effect_state": "UNDEFINED"
     },
     "affect": {
       "file": "peritem_affect.jsonl",
@@ -209,7 +245,10 @@ export const ROWS_POWER = {
       "discordant_items": 9,
       "discordance_rate": 0.2195,
       "mde": 0.203,
-      "mde_state": "MEASURED"
+      "mde_state": "MEASURED",
+      "cliff_delta": 0.0244,
+      "paired_odds_ratio": 1.25,
+      "effect_state": "MEASURED"
     }
   }
 } as const;

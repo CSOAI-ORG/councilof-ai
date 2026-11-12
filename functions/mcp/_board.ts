@@ -58,6 +58,44 @@ export function boardDateOf(measuredOn: unknown): string | null {
 }
 
 /**
+ * board_counts. The count grammar door (functions/api/counts.ts) as a tool: every published
+ * count labelled with its source, state and quote rule — board slots vs measurements, frozen-bank
+ * models, own tags, card-matrix models, the signed root and the signed card index. The tool
+ * forwards the door's own states: a NOT_READ row is a read that failed or a file that disagreed
+ * with itself, published as a state and never as a zero. Nothing is summed here because nothing
+ * is summed at the door; where two surfaces disagree, the relationships array carries the
+ * disagreement as the finding. Agents quote the ONE figure whose meaning answers their question,
+ * with its source and as_of attached.
+ */
+export async function boardCountsTool(origin: string) {
+  let d: Record<string, unknown>;
+  try {
+    d = (await fetchOriginJson(origin, "/api/counts")) as Record<string, unknown>;
+  } catch (e) {
+    return unreachablePayload(origin, "/api/counts", e);
+  }
+  const figuresAll = Array.isArray(d.figures) ? (d.figures as Record<string, unknown>[]) : [];
+  const figures = figuresAll.map((f) => ({
+    name: typeof f.name === "string" ? f.name : null,
+    value: typeof f.value === "number" && Number.isFinite(f.value) ? f.value : null,
+    state: f.state === "READ" ? "READ" : "NOT_READ",
+    source: typeof f.source === "string" ? f.source : null,
+    ...(typeof f.as_of === "string" ? { as_of: f.as_of } : {}),
+  }));
+  return {
+    state: "LIVE",
+    schema: typeof d.schema === "string" ? d.schema : null,
+    board_count_line: typeof d.board_count_line === "string" ? d.board_count_line : null,
+    grammar: typeof d.grammar === "string" ? d.grammar : null,
+    figures,
+    relationships: Array.isArray(d.relationships) ? d.relationships : [],
+    fetched_at: new Date().toISOString(),
+    source: `${origin}/api/counts`,
+    not_a_certification: true,
+  };
+}
+
+/**
  * board_totals. The default answer is the SUMMARY: the three labelled counts, the board's own
  * public_count and separation line, the dates and the source — about 1,500 characters. It used to
  * return about 15,000 to answer two numbers, nearly all of it the board's measured_on block copied

@@ -162,6 +162,7 @@ Claim maintenance is the continuous, independent observation of the public claim
 - A receipt proves this server signed those bytes. It is not proof money moved; check `transaction` against Base yourself
 - Verify stays free: https://councilof.ai/gspc-verify
 - Living board: GET https://councilof.ai/api/gspc — quote `totals.public_count` + `totals.lid` (never freeze here)
+- Every published count, labelled with its source, as_of and how to quote it: GET https://councilof.ai/api/counts — the count grammar as JSON (the human answer is the "Which number do I quote?" accordion; MCP: board_counts). A NOT_READ row is a state, never a zero; figures are never summed or reconciled — where two surfaces disagree, the disagreement is the finding. Quote the one figure whose meaning answers the question
 - Human: free + x402 pay-as-you-go · human booking not live · no processor named
 - Agents: payTo is merchant receive — never the signer
 - Self-settle proves the rail; stranger revenue is separate (do not invent buyers)
@@ -311,16 +312,16 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - Source-linked SOV World observatory (dated simulation archive; check source date and signature-verification status on the page): https://councilof.ai/world/observatory/
 - Agent card: https://councilof.ai/.well-known/agent-card.json
 - Agent Skills (the 15 executable skills, each with a digest and one SKILL.md): https://councilof.ai/.well-known/agent-skills/index.json — the index lists every skill id and the path of its SKILL.md; each SKILL.md names the exact call it makes. Send a skill to the A2A door (POST https://councilof.ai/api/a2a, header `A2A-Version: 1.0`, JSON-RPC 2.0 `SendMessage`).
-- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 54 tools: forty-nine free readers plus five x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
-- MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the forty-nine free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
+- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 55 tools: fifty free readers plus five x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
+- MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the fifty free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
 - Install guide (the canonical remote install for any client, the exact reviewed tool catalog, and the safe first checks): https://councilof.ai/llms-install.md
 - Public root (https://councilof.ai/root.json): Merkle envelope. Read live `sig_ed25519` and the stated preimage fields (`kind`, `schema`, `as_of`, `merkle_root`, `card_count`, `did_intended`). Check the signature against a published pinned key; report an absent signature as unsigned and an unavailable check as UNCHECKABLE. Presence in the root does not by itself establish a GSPC measurement or grade. Verification is free.
 - Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending until an independent `ots verify` confirms a Bitcoin attestation; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
 - Dated immutable mill-card root (as of 2026-10-26T04:00:34Z, 1511 leaves): https://councilof.ai/interop/card-root-2026-10-26.json (SHA-256 66df4b5332f861b79000c62f27050b75e7e34c9a2e811ef3c5afcf465d660775). Its .ots sidecar (SHA-256 46ccfd4dd39e1887fff2d8da0ef303d15c1474dabc2c59765c0c97da6f07a323) carries a BitcoinBlockHeaderAttestation, as parsed from the proof bytes into https://councilof.ai/interop/ots/manifest.json. No public-header audit is published for this root, so the block header is not independently corroborated here; this is not local Bitcoin full-node chain validation or verification of individual card measurements.
-- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 54-tool contract as the HTTP door. The latest published npm release is 0.2.7 (published 2026-11-04T06:18:50.741Z, measured 2026-11-04) and is not marked deprecated on npm; its published tarball carries the same 54 tool names the door serves. This dated comparison is of tool names; it does not establish equivalent tool behavior between a local install and the remote door. The free door stays the no-install path.
+- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 55-tool contract as the HTTP door. The latest published npm release is 0.2.7 (published 2026-11-04T06:18:50.741Z, measured 2026-11-08) and is not marked deprecated on npm; its published tarball carries 54 tool names against the 55 the door serves — 1 name short. Until a published release carries the door's tool set, use https://councilof.ai/mcp/free.
 - Verify a server (per-server evidence, in the browser): https://councilof.ai/verify-server/ — every signed measurement capsule keyed to ONE endpoint URL, each re-derivable in the page (capsule id + Merkle inclusion + index signature). States only; an unknown URL is NOT_MEASURED, never clean. Same module as the MCP tools server_evidence / verify_capsule.
 - MCP registry: ai.councilof/gspc → https://councilof.ai/mcp (the canonical, domain-verified name; io.github.CSOAI-ORG/gspc is its deprecated alias for the same door. Query the official registry for the currently published server version.)
-- Smithery: the third-party directory listing of this door came and went (removed 2026-11-02), so it is not linked here — the registry line above is the durable pointer. Third-party tools[] snapshots can lag the door; before relying on any listing, read the live POST https://councilof.ai/mcp tools/list (54 tools: forty-nine free readers plus five x402-metered evidence tools).
+- Smithery: the third-party directory listing of this door came and went (removed 2026-11-02), so it is not linked here — the registry line above is the durable pointer. Third-party tools[] snapshots can lag the door; before relying on any listing, read the live POST https://councilof.ai/mcp tools/list (55 tools: fifty free readers plus five x402-metered evidence tools).
 - Open banks: https://huggingface.co/csoai
 
 - Signed per-axis arena leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard
@@ -356,7 +357,7 @@ Distribution mirrors reproduce published evidence. The live board (GET /api/gspc
   nobody should read our footprint as a vetting layer, never as an allegation about any registry: we
   assert no falsity about anyone, and a count of our own listings is not a judgement on the ecosystem
   they sit in. If you want to know whether a server does what it says, probe it; we did not vet it.
-- npm stdio: https://registry.npmjs.org/csoai-gspc-mcp (`csoai-gspc-mcp`) — the latest published release is 0.2.7 and is not marked deprecated on npm; it carries the same 54 tool names the door serves (measured 2026-11-04) — use https://councilof.ai/mcp/free
+- npm stdio: https://registry.npmjs.org/csoai-gspc-mcp (`csoai-gspc-mcp`) — the latest published release is 0.2.7 and is not marked deprecated on npm; it carries 54 tool names against the 55 the door serves — 1 name short (measured 2026-11-08) — use https://councilof.ai/mcp/free
 - Glama directory search (flagship discovery UNSTABLE on 2026-09-04; other CSOAI servers are present): https://glama.ai/mcp/servers?query=csoai
 - Kaggle twin: https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board
 - Methodology DOI (from live GET /api/gspc `doi`): 10.5281/zenodo.21991104 — the methodology deposit is marked UNAVAILABLE in the dated record-level status at https://councilof.ai/interop/zenodo-status.json. Live methodology: https://councilof.ai/methodology/ (not the deposit's bytes).
@@ -433,14 +434,14 @@ board, whose totals stay GET https://councilof.ai/api/gspc. A superseded version
 ## Timestamp proofs (anchored is not the same claim as submitted)
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-07T23:24:56Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-08T03:54:43Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
 - Detached OpenTimestamps proofs that actually deserialize: 698. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 696.
-- Still calendar-pending: 2. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 694.
+- Still calendar-pending: 4. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 89 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.

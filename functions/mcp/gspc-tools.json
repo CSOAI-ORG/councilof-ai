@@ -76,6 +76,74 @@
       }
     },
     {
+      "name": "board_counts",
+      "title": "The count grammar — every published count, labelled",
+      "description": "The estate's published counts as one labelled table from https://councilof.ai/api/counts: board slots and measurements, frozen-bank models, own model tags, card-matrix models, the signed public root and the signed card index — each with its source file, its as_of, what it means and how to quote it. A failed or self-disagreeing read is a NOT_READ state, never a zero. Figures are never summed or reconciled; where two surfaces disagree, the disagreement is the finding. Quote the one figure whose meaning answers the question, and carry its source and as_of. Measurement, not certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE or UNREACHABLE"
+          },
+          "schema": {
+            "type": "string"
+          },
+          "board_count_line": {
+            "type": "string"
+          },
+          "grammar": {
+            "type": "string"
+          },
+          "figures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": ["number", "null"]
+                },
+                "state": {
+                  "type": "string",
+                  "enum": ["READ", "NOT_READ"]
+                },
+                "source": {
+                  "type": "string"
+                },
+                "as_of": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "relationships": {
+            "type": "array"
+          },
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        }
+      },
+      "annotations": {
+        "title": "The count grammar — every published count, labelled",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
       "name": "get_axis",
       "title": "One GSPC board axis",
       "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",

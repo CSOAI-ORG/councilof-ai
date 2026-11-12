@@ -8,7 +8,7 @@
     "title": "Council of AI — GSPC Measurement Tools",
     "version": "1.4.4"
   },
-  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.4 (io.github.CSOAI-ORG/gspc is its deprecated alias). 49 free tools at /mcp/free; 54 at /mcp (49 free + 5 metered). The npm package is versioned separately.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.4 (io.github.CSOAI-ORG/gspc is its deprecated alias). 50 free tools at /mcp/free; 55 at /mcp (50 free + 5 metered). The npm package is versioned separately.",
   "icon_url": "https://councilof.ai/csoai-icon.svg",
   "provider": {
     "name": "CSOAI Ltd",
@@ -24,10 +24,11 @@
     "mcp": {
       "primary": "https://councilof.ai/mcp",
       "current": "https://councilof.ai/mcp",
-      "stdio": "npx -y csoai-gspc-mcp@0.2.7",
-      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is 54: 49 free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
+      "stdio": null,
+      "stdio_note": "npm csoai-gspc-mcp: the latest published release is 0.2.7 (published 2026-11-04T06:18:50.741Z, measured 2026-11-08) and is not marked deprecated on npm; it carries 54 tool names against the 55 the door serves — 1 name short. Use the free door https://councilof.ai/mcp/free",
+      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is 55: 50 free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
       "free": "https://councilof.ai/mcp/free",
-      "free_note": "https://councilof.ai/mcp/free serves the 49 free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
+      "free_note": "https://councilof.ai/mcp/free serves the 50 free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
     },
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
@@ -38,6 +39,7 @@
   "capabilities": {
     "tools": [
       "board_totals",
+      "board_counts",
       "get_axis",
       "verify_card",
       "list_cards",
@@ -92,15 +94,16 @@
       "receipts_batch",
       "evidence_bundle"
     ],
-    "total_tools": 54,
-    "free_tools": 49,
+    "total_tools": 55,
+    "free_tools": 50,
     "metered_tools": 5,
-    "tool_counts": "49 free tools at /mcp/free; 54 at /mcp (49 free + 5 metered). The npm package is versioned separately.",
+    "tool_counts": "50 free tools at /mcp/free; 55 at /mcp (50 free + 5 metered). The npm package is versioned separately.",
     "streaming": false,
     "auth_required": false,
-    "tool_names_sha256": "411dee1bb0ae9e643fb9fbb5f2919f1da18e7dc2abc0cf002427e25e856cf186",
+    "tool_names_sha256": "f2fae36235af01648696215d25f88d0a47180371ff0846e349c1cac6b6affdb2",
     "free_door_tool_names": [
       "board_totals",
+      "board_counts",
       "get_axis",
       "verify_card",
       "list_cards",
@@ -150,7 +153,7 @@
       "axis_watchdog-ingest",
       "framework_readiness"
     ],
-    "free_door_tool_names_sha256": "3db0a725b22ea8d9859968e179cc31d7813a9bf3041be5969de8d0d27bfb3688",
+    "free_door_tool_names_sha256": "1217d7db9487802be571e64ac73ec0e922851edb3907fc4564332553f62702b4",
     "tool_names_sha256_rule": "sha256 of the tool names from tools/list, sorted, joined by \"\\n\" (UTF-8)",
     "derived_from": "tools/list of https://councilof.ai/mcp (functions/mcp/gspc-tools.json + paid-tools.json) and of https://councilof.ai/mcp/free (gspc-tools.json)"
   },
@@ -222,6 +225,80 @@
       },
       "annotations": {
         "title": "Live GSPC board totals",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "board_counts",
+      "title": "The count grammar — every published count, labelled",
+      "description": "The estate's published counts as one labelled table from https://councilof.ai/api/counts: board slots and measurements, frozen-bank models, own model tags, card-matrix models, the signed public root and the signed card index — each with its source file, its as_of, what it means and how to quote it. A failed or self-disagreeing read is a NOT_READ state, never a zero. Figures are never summed or reconciled; where two surfaces disagree, the disagreement is the finding. Quote the one figure whose meaning answers the question, and carry its source and as_of. Measurement, not certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE or UNREACHABLE"
+          },
+          "schema": {
+            "type": "string"
+          },
+          "board_count_line": {
+            "type": "string"
+          },
+          "grammar": {
+            "type": "string"
+          },
+          "figures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "READ",
+                    "NOT_READ"
+                  ]
+                },
+                "source": {
+                  "type": "string"
+                },
+                "as_of": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "relationships": {
+            "type": "array"
+          },
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        }
+      },
+      "annotations": {
+        "title": "The count grammar — every published count, labelled",
         "readOnlyHint": true,
         "destructiveHint": false,
         "idempotentHint": true,

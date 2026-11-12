@@ -122,6 +122,7 @@ Claim maintenance is the continuous, independent observation of the public claim
 - A receipt proves this server signed those bytes. It is not proof money moved; check `transaction` against Base yourself
 - Verify stays free: https://councilof.ai/gspc-verify
 - Living board: GET https://councilof.ai/api/gspc — quote `totals.public_count` + `totals.lid` (never freeze here)
+- Every published count, labelled with its source, as_of and how to quote it: GET https://councilof.ai/api/counts — the count grammar as JSON (the human answer is the "Which number do I quote?" accordion; MCP: board_counts). A NOT_READ row is a state, never a zero; figures are never summed or reconciled — where two surfaces disagree, the disagreement is the finding. Quote the one figure whose meaning answers the question
 - Human: free + x402 pay-as-you-go · human booking not live · no processor named
 - Agents: payTo is merchant receive — never the signer
 - Self-settle proves the rail; stranger revenue is separate (do not invent buyers)
