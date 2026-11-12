@@ -292,11 +292,12 @@ def topics_for(name: str, desc: str, readme: str, existing: list[str]) -> list[s
 def licence_for(name: str, ours: bool, is_fork: bool, archived: bool, has_lic: bool, declared: str | None) -> str | None:
     if not ours or is_fork or archived or has_lic or name in MIRRORS:
         return None
-    if declared and "apache" in declared.lower():
+    declared = (declared or "").strip()
+    if declared == "MIT":
+        return "MIT"
+    if declared in ("Apache-2.0", "Apache 2.0"):
         return "Apache-2.0"
-    if declared and "mit" not in declared.lower():
-        return None  # something else declared; a person decides
-    return "MIT"
+    return None  # something else declared; a person decides
 
 
 def plan(out: str) -> None:
