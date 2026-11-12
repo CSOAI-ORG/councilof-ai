@@ -30,6 +30,8 @@ MAX_BYTES=8_000_000
 MAX_PACKET_BYTES=128_000_000
 # Explicitly requalified historical reader: only I/O and packet-size guards changed.
 LEGACY_READER_SHA256='02193825afd8703cfeb6ea127e8636be29dc8b976ce0d1109a6e09321c252a75'
+# Requalified predecessor: input I/O bounds changed; event derivation is identical.
+INPUT_IO_PREDECESSOR_SHA256='e7be9b704c40a64cfdcb1bfef636b318da75c16994342bdd6738c4d37db48bb4'
 PIN=re.compile(r'^[0-9a-f]{40}$')
 DIGEST=re.compile(r'^[0-9a-f]{64}$')
 REPO=re.compile(r'^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$')
@@ -89,7 +91,7 @@ def derive(cat_raw,obs_raw,binding):
  asof=timestamp(binding['as_of']);hours=binding['max_age_hours']
  if type(hours)!=int or not 1<=hours<=168:raise CycleError('age window must be an integer from 1 to 168 hours')
  current_pins=source_pins()
- if binding.get('implementation_pins') not in (current_pins,current_pins|{'research_cycle.py':LEGACY_READER_SHA256}):raise CycleError('trusted reader revision differs; requalify instead of importing bundle code')
+ if binding.get('implementation_pins') not in (current_pins,current_pins|{'research_cycle.py':LEGACY_READER_SHA256},current_pins|{'research_cycle.py':INPUT_IO_PREDECESSOR_SHA256}):raise CycleError('trusted reader revision differs; requalify instead of importing bundle code')
  if not isinstance(observations,list) or len(observations)>2000:raise CycleError('bounded observation list required')
  lookup={};known={r['repo'] for r in selected}
  for row in observations:
@@ -164,8 +166,22 @@ def verify(root,expected):
  return {'state':'VERIFIED_LOCAL_DERIVATION','manifest_sha256':expected,'cycle_id':manifest['cycle_id'],'events':summary['repository_count'],'state_counts':summary['state_counts'],
   'prior_chain':'REFERENCE_ONLY' if manifest.get('previous_manifest_sha256') else 'NO_PARENT','producer_authenticated':False,'runtime_qualification':'NOT_RUN','grants_authority':False}
 
+def read_input(path,max_bytes=MAX_BYTES):
+ """Read a bounded regular input without blocking on a pipe or following a final symlink.
+
+ Parent directories must remain trusted. This is not an untrusted-path sandbox.
+ """
+ if type(max_bytes)!=int or max_bytes<0:raise CycleError('invalid input byte bound')
+ fd=os.open(path,os.O_RDONLY|os.O_NONBLOCK|getattr(os,'O_NOFOLLOW',0)|getattr(os,'O_CLOEXEC',0))
+ with os.fdopen(fd,'rb') as stream:
+  info=os.fstat(stream.fileno())
+  if not stat.S_ISREG(info.st_mode) or info.st_size>max_bytes:raise CycleError('bounded regular input file required')
+  raw=stream.read(max_bytes+1)
+  if len(raw)>max_bytes:raise CycleError('input exceeds byte limit')
+  return raw
+
 def build(catalogue,observations,store,as_of,max_age_hours=24,previous=None,expected_previous=None):
- cat_raw=Path(catalogue).read_bytes();obs_raw=Path(observations).read_bytes()
+ cat_raw=read_input(catalogue);obs_raw=read_input(observations)
  selected,_=records(parse(cat_raw));prior={}
  if bool(previous)!=bool(expected_previous):raise CycleError('previous directory and its selected digest must be supplied together')
  if previous:
@@ -247,7 +263,7 @@ def main():
   if a.command=='build':result=build(a.catalogue,a.observations,a.store,a.as_of,a.max_age_hours,a.previous,a.expected_previous)
   elif a.command=='verify':result=verify(a.directory,a.expected_manifest)
   elif a.command=='verify-chain':result=verify_chain(a.directory,a.expected_manifest,a.previous,a.expected_previous)
-  else:result=verify_packet(Path(a.packet).read_bytes(),a.expected_manifest)
+  else:result=verify_packet(read_input(a.packet,MAX_PACKET_BYTES),a.expected_manifest)
   print(json.dumps(result,indent=2));return 0
  except (ValueError,KeyError,TypeError,OSError) as exc:
   print(json.dumps({'state':'REJECTED','reason':str(exc)}),file=sys.stderr);return 2
