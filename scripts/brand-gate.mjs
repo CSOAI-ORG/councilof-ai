@@ -16,6 +16,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SELFTEST = process.argv.includes("--selftest");
@@ -439,8 +440,23 @@ const DISPLAY_KEYS = /^(name|title|label|headline|criteria|tagline|cta|heading|d
  * Estate prose that USES the word, anywhere, is untouched by this.
  */
 const REGISTRY_IDENTIFIER = /^io\.github\.[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+$/;
-function jsonDisplayHits(obj, rel) {
+// One immutable external observation contains a real token named BLACK SWAN. It is not
+// our strategy/brand. Preserve the evidence bytes; do not create a mirror-folder exemption.
+// The exception is bound to the complete raw artifact, exact field, exact value and one rule.
+// A changed observation, a copied claim or an absent raw-byte witness receives normal checks.
+const OBSERVED_TOKEN_NAME = Object.freeze({
+  path: "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-6400.json",
+  sha256: "62a6f8c94b0b294def2e1d71ab5c6fd149efd16344e4cbf6300f87c579a5473b",
+  field: "[21].meta.token.name",
+  value: "BLACK SWAN",
+  rule: "internal_strategy_codename",
+});
+function jsonDisplayHits(obj, rel, raw = null) {
   const hits = [];
+  const preservedExternalObservation = rel === OBSERVED_TOKEN_NAME.path &&
+    typeof raw === "string" &&
+    createHash("sha256").update(raw).digest("hex") === OBSERVED_TOKEN_NAME.sha256;
+
   (function rec(node, at, key) {
     if (typeof node === "string") {
       if (!DISPLAY_KEYS.test(key || "")) return;
@@ -450,6 +466,8 @@ function jsonDisplayHits(obj, rel) {
       if (REGISTRY_IDENTIFIER.test(node.trim())) return;
       const text = decodeEntities(node); // what a consumer that renders the field shows
       for (const rule of RULES) {
+        if (preservedExternalObservation && rule.id === OBSERVED_TOKEN_NAME.rule &&
+            at === OBSERVED_TOKEN_NAME.field && node === OBSERVED_TOKEN_NAME.value) continue;
         if (rule.pagesOnly) continue; // see the rule: pages and text files only
         if (rule.allowOn && rule.allowOn.test(rel)) continue;
         const re = new RegExp(rule.pattern.source, "gi");
@@ -665,6 +683,35 @@ if (SELFTEST) {
   }
   if (!jsonDisplayHits({ title: "SOVOS downloads" }, "/interop/footprint-packages.json").length) {
     console.error("\u2716 selftest: catalogue display copy no longer gated"); bad++;
+  }
+  // Recorded third-party name: positive/negative controls bind the narrow exception to
+  // its evidence, not a filename convention. Original raw bytes are never rewritten.
+  {
+    const fixturePath = path.join(REPO, "public", OBSERVED_TOKEN_NAME.path.slice(1));
+    const raw = fs.readFileSync(fixturePath, "utf8");
+    const observed = JSON.parse(raw);
+    const hit = (obj, rel, bytes) => jsonDisplayHits(obj, rel, bytes)
+      .some((h) => h.rule === OBSERVED_TOKEN_NAME.rule);
+    const assertControl = (condition, label) => {
+      if (!condition) { console.error(`✖ selftest: external-name boundary ${label}`); bad++; }
+    };
+    assertControl(createHash("sha256").update(raw).digest("hex") === OBSERVED_TOKEN_NAME.sha256,
+      "fixture is not the pinned external observation");
+    assertControl(!hit(observed, OBSERVED_TOKEN_NAME.path, raw), "blocks the unchanged named observation");
+    assertControl(hit(observed, OBSERVED_TOKEN_NAME.path, null), "accepts without raw-byte evidence");
+    assertControl(hit(observed, "/products/catalog.json", raw), "leaks into another path");
+    assertControl(hit(observed, OBSERVED_TOKEN_NAME.path, raw + "\n"), "accepts modified artifact bytes");
+    const changedName = structuredClone(observed);
+    changedName[21].meta.token.name = "Black Swan Predictor";
+    assertControl(hit(changedName, OBSERVED_TOKEN_NAME.path, JSON.stringify(changedName)),
+      "accepts changed token-name copy");
+    const addedCopy = structuredClone(observed);
+    addedCopy[0].title = "Black Swan Predictor";
+    assertControl(jsonDisplayHits(addedCopy, OBSERVED_TOKEN_NAME.path, JSON.stringify(addedCopy))
+      .some((h) => h.rule === OBSERVED_TOKEN_NAME.rule && h.at === "[0].title"),
+      "allows our added display claim inside the observation file");
+    assertControl(hit({ title: "BLACK SWAN" }, "/products/catalog.json", '{"title":"BLACK SWAN"}'),
+      "no longer catches the standalone phrase in our catalogue");
   }
   // A whole-string MCP Registry identifier is an address, not copy; the same words as prose still fail.
   if (jsonDisplayHits({ servers: [{ name: "io.github.CSOAI-ORG/bft-progress-council-mcp" }] }, "/interop/effect-binding-server-probe-2026-09-22.json").length) {
@@ -969,9 +1016,9 @@ for (const jf of walkAll(DIST)) {
   if (!jf.endsWith(".json")) continue;
   const jrel = "/" + path.relative(DIST, jf);
   if (/^\/signed\//.test(jrel)) continue; // signed evidence carries the real model id — same carve-out
-  let parsed;
-  try { parsed = JSON.parse(fs.readFileSync(jf, "utf8")); } catch { continue; }
-  for (const h of jsonDisplayHits(parsed, jrel)) {
+  let parsed, raw;
+  try { raw = fs.readFileSync(jf, "utf8"); parsed = JSON.parse(raw); } catch { continue; }
+  for (const h of jsonDisplayHits(parsed, jrel, raw)) {
     const held = RULES.find((r) => r.id === h.rule)?.held && !ENFORCE_HELD;
     (held ? heldHits : failures).push({ rel: jrel + " -> " + h.at, rule: h.rule, why: h.why, hit: h.hit, ctx: h.ctx });
   }
