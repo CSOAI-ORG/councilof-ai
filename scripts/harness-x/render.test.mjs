@@ -65,3 +65,43 @@ test("every declared target output is in the manifest", () => {
   const inManifest = new Set(m.files.map((f) => f.path));
   for (const row of dist.distribution) for (const p of row.output) assert.ok(inManifest.has(p), `${row.id}: ${p}`);
 });
+
+// Tool identifiers may contain hyphens; Python class identifiers may not. Parse the
+// emitted modules without importing dify_plugin or contacting the MCP endpoint.
+test("Dify Python modules parse without running the integration", () => {
+  const manifest = JSON.parse(readFileSync(join(REPO, "distribution/MANIFEST.json"), "utf8"));
+  const paths = manifest.files.map(row => row.path)
+    .filter(path => path.startsWith("distribution/dify/gspc/") && path.endsWith(".py"));
+  const free = JSON.parse(readFileSync(join(REPO, "functions/mcp/gspc-tools.json"), "utf8")).tools;
+  assert.ok(paths.length >= free.length, "must inspect every generated tool module");
+  const result = spawnSync("python3", ["-c",
+    "import ast, pathlib, sys\nfor name in sys.argv[1:]: ast.parse(pathlib.Path(name).read_text(), filename=name)\nprint(len(sys.argv)-1)",
+    ...paths.map(path => join(REPO, path))], { encoding: "utf8", timeout: 10000 });
+  assert.equal(result.status, 0, String(result.error || "") + result.stdout + result.stderr);
+  assert.equal(Number(result.stdout.trim()), paths.length);
+});
+
+test("Dify class names are unique identifiers while MCP names remain unchanged", () => {
+  const tools = JSON.parse(readFileSync(join(REPO, "functions/mcp/gspc-tools.json"), "utf8")).tools;
+  const classes = [];
+  assert.ok(tools.some(tool => tool.name.includes("-")), "the regression needs a hyphenated tool");
+  for (const tool of tools) {
+    const text = readFileSync(join(REPO, "distribution/dify/gspc/tools", tool.name + ".py"), "utf8");
+    const name = /^class ([A-Za-z_][A-Za-z0-9_]*)\(Tool\):$/m.exec(text)?.[1];
+    assert.ok(name, "invalid Python class for " + tool.name);
+    classes.push(name);
+    assert.ok(text.includes('"params": {"name": ' + JSON.stringify(tool.name)),
+      "Python identifier repair must not rename MCP tool " + tool.name);
+  }
+  assert.equal(new Set(classes).size, tools.length, "class-name normalization must not collide");
+});
+
+test("control: Python rejects the former hyphenated class declaration", () => {
+  const parse = name => spawnSync("python3", ["-c", "import ast,sys; ast.parse(sys.argv[1])",
+    `class ${name}(Tool): pass`], { encoding: "utf8", timeout: 10000 });
+  const bad = parse("AxisAi-adoption-componentsTool");
+  assert.notEqual(bad.status, 0);
+  assert.match(bad.stderr, /SyntaxError/);
+  const good = parse("AxisAiAdoptionComponentsTool");
+  assert.equal(good.status, 0, good.stderr);
+});

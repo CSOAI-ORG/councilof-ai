@@ -2,6 +2,10 @@ name: gspc-one guard test
 on:
   pull_request:
     paths: ["public/interop/gspc-one.json", "scripts/gspc-one/**", ".github/workflows/gspc-one-*.yml"]
+concurrency:
+  group: gspc-one-guard-test-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions: {contents: read}
 jobs:
   guard:
