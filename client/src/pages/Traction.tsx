@@ -66,14 +66,14 @@ export default function Traction() {
   const usdc = live.revenue ? `$${(live.revenue.atomic / 1_000_000).toFixed(2)}` : undefined;
 
   return <section className="min-h-screen bg-slate-950 text-slate-100">
-    <Helmet><title>Operation and external use | Council of AI</title><meta name="description" content="Council of AI's evidence services, operating infrastructure, external use and business model. Information for organisations, partners and investors." /></Helmet>
+    <Helmet><title>Operation and external use | Council of AI</title><meta name="description" content="Council of AI's measurement infrastructure, documented outside use and public technical contributions, with primary records and separate commercial evidence." /></Helmet>
     <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,.18),transparent_36%)]">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <p className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-300">Operating work and documented external use</p>
         <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight sm:text-6xl">AI measurement infrastructure you can inspect.</h1>
         <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">{OPERATING_ORGANISATION_SUMMARY}</p>
         <p className="mt-4 max-w-3xl leading-7 text-slate-300">For evaluators, partners and investors, this page connects what operates today to dated outside evidence, published assets and the separately recorded commercial position.</p>
-        <div className="mt-8 flex flex-wrap gap-3"><a href="#external-use" className="rounded-full bg-emerald-400 px-5 py-3 font-bold text-slate-950">Inspect external use</a><Link href="/gspc-verify" className="rounded-full border border-slate-600 px-5 py-3 font-bold">Verify a record</Link><Link href="/contact/?arm=run" className="rounded-full border border-slate-600 px-5 py-3 font-bold">Discuss evidence work</Link></div>
+        <div className="mt-8 flex flex-wrap gap-3"><a href="#external-use" className="rounded-full bg-emerald-400 px-5 py-3 font-bold text-slate-950">Inspect external use</a><a href="#external-use-contributions" className="rounded-full border border-slate-600 px-5 py-3 font-bold">Read public contributions</a><Link href="/gspc-verify" className="rounded-full border border-slate-600 px-5 py-3 font-bold">Verify a record</Link><Link href="/contact/?arm=run" className="rounded-full border border-slate-600 px-5 py-3 font-bold">Discuss evidence work</Link></div>
       </div>
     </section>
 
