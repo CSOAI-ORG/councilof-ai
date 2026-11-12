@@ -68,6 +68,7 @@ describe("Organization structured data", () => {
       "https://huggingface.co/csoai",
       "https://www.wikidata.org/wiki/Q141128616",
       "https://github.com/CSOAI-ORG",
+      "https://linkedin.com/company/csoai",
     ]));
     expect(JSON.stringify(organization)).not.toMatch(/FDIC|SEC EDGAR|sec\.gov|fdic\.gov/i);
     expect(organization.legalName).toBe("CSOAI LTD");

@@ -4,6 +4,10 @@ on:
     paths:
       - 'scripts/governance-watch/**'
       - '.github/workflows/governance-watch-tests.yml'
+concurrency:
+  group: governance-watch-tests-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:
