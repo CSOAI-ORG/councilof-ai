@@ -2013,20 +2013,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "b04c8d07014b1c0c9497e889481e5e3ededf76736427bac3d814bfd2b3d3f34a",
+    id: "75375feadd13f390f0e5a41c92e5bddffd37b79584962b0bb5c98d57607ae12e",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "a699fbc4d89fbc49e6b06dc618f4445bbef59e18b74dc05ac33d0b8cc0b3917e7793c5430fbcf4304ba6456b6fd80d3b2fee7e498943ae1563e896b48f697206",
+    signature: "0ac33a64b006a50ec14cdbb9716dfc9cf0d66660dce87569ded2b7b8a7e15c3534352ae0f3b15f1999bfdc0d97165bbd3e685d820cb570434cb82998a84e0a0e",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "b04c8d07014b1c0c9497e889481e5e3ededf76736427bac3d814bfd2b3d3f34a",
+          "content_id": "75375feadd13f390f0e5a41c92e5bddffd37b79584962b0bb5c98d57607ae12e",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 93,
-          "latest_entry_id": "C-2026-1006-13",
-          "ledger_canonical_bytes": 229171,
+          "entries": 94,
+          "latest_entry_id": "C-2026-1103-01",
+          "ledger_canonical_bytes": 231645,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-10-06T13:51:47Z"
+          "signed_at": "2026-11-12T02:08:01Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
