@@ -299,6 +299,7 @@ describe("no in-page anchor on the front door points at nothing", () => {
   const mounted = [
     "HomeVerify.tsx",
     "../components/home/HomeHero.tsx",
+    "../components/home/HomePublicJourney.tsx",
     "../components/home/HomeResults.tsx",
     "../components/home/HomeEvidence.tsx",
     "../components/home/HomeDevelopers.tsx",
