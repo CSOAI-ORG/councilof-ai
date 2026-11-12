@@ -48,6 +48,6 @@ export async function researchRead(index, args = {}) {
     const matched = q.filter(t => title.has(t) || body.has(t));
     return {row, order, score: matched.length + q.filter(t => title.has(t)).length * 2};
   }).filter(x => x.score > 0).sort((a,b) => b.score - a.score || a.order - b.order).slice(0,3);
-  const results = ranked.map(({row}) => ({title:row.title, url:row.url, source_path:row.path, source_sha256:row.source_sha256, excerpt_sha256:row.text_sha256, source_revision:index.source_revision, excerpt:excerpt(row.text,q)}));
+  const results = ranked.map(({row}) => ({title:row.title, url:row.url, source_path:row.path, source_sha256:row.source_sha256, projection_sha256:row.text_sha256, source_revision:index.source_revision, excerpt:excerpt(row.text,q)}));
   return {...base, state: results.length ? 'RETAINED_PUBLIC_RESEARCH' : 'NO_RETAINED_MATCH', searched_publications:index.records.length, results};
 }

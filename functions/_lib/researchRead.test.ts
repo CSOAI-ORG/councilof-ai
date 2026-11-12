@@ -43,7 +43,7 @@ describe('public research source and refusal contract', () => {
     const result = await researchRead(INDEX,{query:question});
     expect(result.results.length).toBeGreaterThan(0);
     expect(result.results.length).toBeLessThanOrEqual(3);
-    for (const row of result.results) expect(INDEX.records.some(x => x.url===row.url && x.source_sha256===row.source_sha256)).toBe(true);
+    for (const row of result.results) expect(INDEX.records.some(x => x.url===row.url && x.source_sha256===row.source_sha256 && x.text_sha256===row.projection_sha256)).toBe(true);
     expect(result.grants_authority).toBe(false);
     expect(result.model_called).toBe(false);
     expect(result.new_measurement).toBe(false);
