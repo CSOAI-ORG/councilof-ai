@@ -1,5 +1,6 @@
-// CSOAI Claims-Verification E2E — asserts every headline claim is functionally TRUE
-// on the live site + brain (not just rendered). Run before any demo. See DEMO_READINESS.md.
+// CSOAI Claims-Verification E2E — checks the enumerated live-site assertions and
+// historical backend contract. Tool-list and signature-field checks have the limits below.
+// Run before any demo. See DEMO_READINESS.md.
 // Robust: createRequire import (works local + CI); waits for lazy-loaded elements before
 // interacting so it never throws a false fail.
 import { createRequire } from "module";
@@ -86,9 +87,9 @@ async function apiTruth() {
       unchecked(c, "depends on the brain host above; not probed");
     }
   } else {
-    try { const d = await rpc("tools/list"); const n = (d.result?.tools || []).length; n >= 5 ? pass("Live MCP tools", `${n} execute server-side`) : fail("Live MCP tools", `only ${n}`); } catch (e) { fail("tools/list", e.message); }
+    try { const d = await rpc("tools/list"); const n = (d.result?.tools || []).length; n >= 5 ? pass("Live MCP tools", `tools/list count=${n}; execution not checked`) : fail("Live MCP tools", `only ${n}`); } catch (e) { fail("tools/list", e.message); }
     try { const d = await rpc("tools/call", { name: "meok_govern", arguments: { industry: "a bank" } }); const t = d.result?.content?.map((c) => c.text).join(" ") || ""; /EU AI Act|DORA|GDPR/.test(t) ? pass("meok_govern executes", t.slice(0, 55)) : fail("meok_govern", "no framework output"); } catch (e) { fail("meok_govern", e.message); }
-    try { const r = await fetch(BRAIN + "/sign", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "claims-test" }) }); const d = await r.json(); (d.signature && d.publicKey) ? pass('CLAIM "Ed25519 signing"', `real sig len=${String(d.signature).length}, alg=${d.alg || "?"}`) : fail("Ed25519 signing", "no signature — the signed claim would be FALSE"); } catch (e) { fail("Ed25519 signing", e.message); }
+    try { const r = await fetch(BRAIN + "/sign", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "claims-test" }) }); const d = await r.json(); (d.signature && d.publicKey) ? pass('CLAIM "Ed25519 signing"', `signature/publicKey fields present; signature len=${String(d.signature).length}, reported alg=${d.alg || "?"}; cryptographic verification not performed`) : fail("Ed25519 signing", "signature/publicKey response check failed"); } catch (e) { fail("Ed25519 signing", e.message); }
     pass("Brain health", brain.health.service);
   }
   try { const r = await fetch(SITE + "/api/og?title=Test"); (r.status === 200 && (r.headers.get("content-type") || "").includes("image")) ? pass("Dynamic OG", "image/png 200") : fail("Dynamic OG", r.status + ""); } catch (e) { fail("OG", e.message); }
