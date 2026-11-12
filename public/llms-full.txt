@@ -1088,7 +1088,7 @@ Each record below is a dated account of what public sources state, with its sour
 ## 10d. PUBLISHED INTEROP FILES — every file under /interop/, with its digest (except the index itself)
 
 Derived at generation from https://councilof.ai/interop/file-index.json (same bytes on disk at
-public/interop/file-index.json, schema csoai.interop-file-index/0.2, artifact as_of 2026-11-11T19:50:37Z). It is a
+public/interop/file-index.json, schema csoai.interop-file-index/0.2, artifact as_of 2026-11-12T07:40:27Z). It is a
 MEASUREMENT of the published tree, not a list of intentions: each row carries the path, the size,
 the SHA-256 of the bytes and how the file is served.
 
@@ -1096,12 +1096,12 @@ The index does not list itself. A file cannot carry its own digest — hashing t
 gives a digest that depends on the digest — so a row claiming one would be wrong the moment it was
 written. Every OTHER file under /interop/ is listed.
 
-- Files indexed: 16,380. Bytes indexed: 259,553,963.
-- By how they are served: 13,240 hf-mirror; 3,134 pages; 6 retired-bytes.
+- Files indexed: 16,382. Bytes indexed: 259,583,374.
+- By how they are served: 13,240 hf-mirror; 3,136 pages; 6 retired-bytes.
 - hf-mirror: routed by a 302 redirect to the HuggingFace evidence mirror (scripts/deploy-exclusions.json); the sha256 is of the canonical tree bytes, which are the bytes the mirror holds. THE MIRROR IS A SEPARATE HOST AND ITS MEMBERSHIP IS NOT RECORDED HERE, so this row's claim is true UNDER THE CONDITION THAT THE MIRROR STILL HOLDS THE FILE. MEASURED 2026-11-07: all five mirror classes (mill-cards-signed, mill-cards-unsigned, mill-evidence, the file-kind exclusions and the ots/*.invalid records) resolved ANONYMOUSLY with HTTP 200 and an exact digest match. If the mirror ever stops holding a path, the reader gets HUGGINGFACE's 'Entry not found' — a 404 and a 15-byte body from the mirror, NOT from this site — so a mismatch on one of these rows is a statement about the mirror's membership until it is shown otherwise
 - pages: served by the site build
 - retired-bytes: a retired .invalid record. The estate's Function intercepts every .invalid path and serves it from the retired-bytes archive when that archive holds these exact bytes (200, x-evidence-state: retired-or-invalid-historical-bytes), and answers 404 BY DESIGN when it does not. The sha256 is of the canonical tree bytes, which are the bytes the archive copies verbatim. Which case applies is decided by the archive in force, published at /archive/retired-proof-bytes-v1.json
-- By how the served bytes compare with the published bytes: 16,379 as-published; 1 edge-transformed-per-request.
+- By how the served bytes compare with the published bytes: 16,381 as-published; 1 edge-transformed-per-request.
 - as-published: the bytes the site serves for this path are the bytes the estate published here; the sha256 is checkable against a fetch
 - edge-transformed-per-request: the edge rewrites this markup and the rewrite is randomised per request, so the bytes the site serves differ on EVERY fetch; no digest of them can be reproduced, by a reader or by the estate
 - To check one file: fetch its path and hash it. On a row whose served_bytes reads "as-published", a
