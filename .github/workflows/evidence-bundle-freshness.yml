@@ -18,6 +18,10 @@ on:
       - "scripts/check-evidence-bundle-freshness.mjs"
       - ".github/workflows/evidence-bundle-freshness.yml"
 
+concurrency:
+  group: evidence-bundle-freshness-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

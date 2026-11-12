@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { useWorkspaceNavigation } from "@/components/lobby/useWorkspaceNavigation";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useSearch } from "wouter";
 import {
@@ -61,7 +62,6 @@ const CORPUS_PANES = new Set(["verify", "cards", "evidence", "evidence-index", "
 // The menu's own label for a pane lives in lobby/tabs (the Ask panel reads it too).
 export { sidebarLabel };
 
-const SMALL_QUERY = "(max-width: 767px)";
 
 const SECTION_ICONS: Record<DashboardNavGroupId, typeof Gauge> = {
   ask: SearchIcon,
@@ -263,16 +263,8 @@ export default function DashboardLayout({
   const Landmark = useInsideMainLandmark() ? "section" : "main";
   const search = useSearch();
   const [, setLocation] = useLocation();
-  const drawerRef = useRef<HTMLDivElement>(null);
-  const desktopNavigationRef = useRef<HTMLElement>(null);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const [isSmall, setIsSmall] = useState(
-    () =>
-      typeof window !== "undefined" && window.matchMedia?.(SMALL_QUERY).matches,
-  );
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [desktopNavOpen, setDesktopNavOpen] = useState(false);
-  const navigationOpen = isSmall ? drawerOpen : desktopNavOpen;
+  const { isSmall, drawerOpen, setDrawerOpen, desktopNavOpen, navigationOpen,
+    drawerRef, desktopNavigationRef, menuButtonRef, toggleNavigation } = useWorkspaceNavigation();
   const framed = isEmbedded();
 
   useEffect(() => {
@@ -285,34 +277,6 @@ export default function DashboardLayout({
       setOsOpen(false);
     };
   }, []);
-
-  useEffect(() => {
-    if (!window.matchMedia) return;
-    const query = window.matchMedia(SMALL_QUERY);
-    const update = (event: MediaQueryListEvent) => {
-      setIsSmall(event.matches);
-      if (!event.matches) setDrawerOpen(false);
-    };
-    query.addEventListener?.("change", update);
-    return () => query.removeEventListener?.("change", update);
-  }, []);
-
-  // Navigation opens deliberately on every width. Escape returns focus to its trigger.
-  useEffect(() => {
-    if (!navigationOpen) return;
-    const navigation = isSmall ? drawerRef.current : desktopNavigationRef.current;
-    navigation?.querySelector<HTMLElement>("a")?.focus();
-    const close = (event: KeyboardEvent) => {
-      if (event.key !== "Escape" || event.defaultPrevented) return;
-      if (!isSmall && !(event.target instanceof Node && navigation?.contains(event.target)) && event.target !== menuButtonRef.current) return;
-      event.preventDefault();
-      setDrawerOpen(false);
-      setDesktopNavOpen(false);
-      menuButtonRef.current?.focus();
-    };
-    window.addEventListener("keydown", close);
-    return () => window.removeEventListener("keydown", close);
-  }, [isSmall, navigationOpen]);
 
   const params = new URLSearchParams(
     search.startsWith("?") ? search.slice(1) : search,
@@ -372,7 +336,7 @@ export default function DashboardLayout({
       <Header inApp />
 
       <div className="flex min-h-0 flex-1">
-        {/* Both navigation layouts start collapsed, leaving the full canvas available. */}
+        {/* Desktop destinations are visible on arrival; mobile opens on request. */}
         {!isSmall && desktopNavOpen ? (
           <aside
             ref={desktopNavigationRef}
@@ -464,10 +428,7 @@ export default function DashboardLayout({
                 ref={menuButtonRef}
                 data-testid="workspace-sections-toggle"
                 type="button"
-                onClick={() => {
-                  if (isSmall) setDrawerOpen((open) => !open);
-                  else setDesktopNavOpen((open) => !open);
-                }}
+                onClick={toggleNavigation}
                 aria-expanded={navigationOpen}
                 aria-controls={navigationOpen ? NAV_ID : undefined}
                 aria-label={
