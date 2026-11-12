@@ -161,8 +161,9 @@ class FoldTests(unittest.TestCase):
     def test_bare_ledger_delegation_is_noop(self):
         self.source.unlink();self.write(self.ledger,{'fixture':self.payload});before=self.snapshot();code,text=self.run_fold(True);self.assertEqual(code,0);self.assertIn('DELEGATED',text);self.assertEqual(before,self.snapshot())
 
-    def test_changed_bare_ledger_not_delegated(self):
-        self.source.unlink();self.write(self.ledger,{'fixture':{'different':True}});self.assert_refused_without_writes(True)
+    def test_changed_bare_ledger_delegated_not_certified(self):
+        self.source.unlink();self.write(self.ledger,{'fixture':{'different':True}});before=self.snapshot()
+        rc,text=self.run_fold(True);self.assertEqual(rc,0,text);self.assertIn('DELEGATED_UNVERIFIED',text);self.assertIn('payload_differences=1',text);self.assertEqual(before,self.snapshot())
 
     def test_mixed_invalid_batch_has_no_partial_writes(self):
         big={'text':'x'*3100};self.write(self.compact,{self.surface:self.payload,'autoeat.toobig':big});self.write(self.feed/'card-autoeat-toobig-unsigned.json',dict(self.atom,surface='autoeat.toobig',payload=big));self.assert_refused_without_writes()
@@ -207,6 +208,63 @@ class FoldTests(unittest.TestCase):
             atomic(path,data)
         with patch.object(fold,'_atomic_write',side_effect=fail_ledger):self.assertEqual(self.run_fold()[0],1)
         self.assertEqual(self.run_fold(True)[0],1);self.assertEqual(self.run_fold()[0],0);self.assertEqual(self.run_fold(True)[0],0)
+
+    def legacy_installed(self, missing=("sig_ed25519", "state")):
+        atom=copy.deepcopy(self.atom)
+        for name in missing:atom.pop(name,None)
+        atom['sha256']='opaque historical value; not reinterpreted here'
+        self.write(self.source,atom);self.write(self.destination,atom)
+        self.write(self.ledger,{self.surface:self.payload,"other.owner":{"count":7}})
+        return atom
+
+    def test_identical_legacy_without_metadata_preserved_readonly(self):
+        self.legacy_installed();before=self.snapshot()
+        for check in [True,False]:
+            rc,text=self.run_fold(check);self.assertEqual(rc,0,text);self.assertIn('PRESERVED_LEGACY',text);self.assertIn('preserved_legacy=1',text)
+            self.assertEqual(before,self.snapshot())
+
+    def test_legacy_one_missing_metadata_field_preserved(self):
+        for missing in [('sig_ed25519',),('state',)]:
+            with self.subTest(missing=missing):
+                self.legacy_installed(missing);before=self.snapshot();self.assertEqual(self.run_fold()[0],0);self.assertEqual(before,self.snapshot())
+
+    def test_legacy_missing_destination_not_created(self):
+        self.legacy_installed();self.destination.unlink();self.assert_refused_without_writes()
+
+    def test_legacy_changed_destination_never_repaired_implicitly(self):
+        atom=self.legacy_installed();atom['subject']='changed';self.write(self.destination,atom);self.assert_refused_without_writes()
+
+    def test_legacy_missing_ledger_binding_refused(self):
+        self.legacy_installed();self.write(self.ledger,{});self.assert_refused_without_writes()
+
+    def test_legacy_nonnull_signature_not_preserved_as_authority(self):
+        atom=self.legacy_installed(('state',));atom['sig_ed25519']='not authenticated';self.write(self.source,atom);self.write(self.destination,atom);self.assert_refused_without_writes(True)
+
+    def test_legacy_explicit_measured_state_not_preserved(self):
+        atom=self.legacy_installed(('sig_ed25519',));atom['state']='MEASURED';self.write(self.source,atom);self.write(self.destination,atom);self.assert_refused_without_writes(True)
+
+    def test_unsigned_fold_preserves_legacy_neighbor_bytes(self):
+        self.legacy_installed();before_source=self.source.read_bytes();before_destination=self.destination.read_bytes()
+        second='autoeat.new';payload={'count':2};self.write(self.compact,{self.surface:self.payload,second:payload});self.write(self.feed/'card-autoeat-new-unsigned.json',dict(self.atom,surface=second,payload=payload))
+        code,text=self.run_fold();self.assertEqual(code,0,text);self.assertIn('folded=1',text);self.assertEqual(self.source.read_bytes(),before_source);self.assertEqual(self.destination.read_bytes(),before_destination)
+        self.assertTrue((self.interop/'ledger-card-autoeat-new-unsigned.json').is_file());self.assertEqual(self.run_fold(True)[0],0)
+
+    def test_invalid_legacy_neighbor_prevents_all_new_writes(self):
+        self.legacy_installed();self.destination.unlink();second='autoeat.new';payload={'count':2};self.write(self.compact,{second:payload,self.surface:self.payload});self.write(self.feed/'card-autoeat-new-unsigned.json',dict(self.atom,surface=second,payload=payload));self.assert_refused_without_writes()
+
+    def test_exact_known_dated_alias_is_preserved_not_rebound(self):
+        self.source.unlink();surface='autoeat.a2a.mining.summary';atom=dict(self.atom,surface='a2a.mining.summary.2026.09.16');atom.pop('sig_ed25519');atom.pop('state')
+        self.write(self.compact,{surface:self.payload});self.write(self.ledger,{surface:self.payload});self.write(self.feed/'card-a2a-mining-summary-2026-09-16-unsigned.json',atom);self.write(self.interop/'ledger-card-autoeat-a2a-mining-summary-unsigned.json',atom)
+        before=self.snapshot();rc,text=self.run_fold();self.assertEqual(rc,0,text);self.assertIn('PRESERVED_LEGACY',text);self.assertEqual(before,self.snapshot())
+
+    def test_unknown_dated_alias_cannot_rebind_payload(self):
+        self.source.unlink();self.write(self.feed/'card-unknown-unsigned.json',dict(self.atom,surface='something.else'));self.assert_refused_without_writes(True)
+
+    def test_missing_owned_source_without_bare_key_refused(self):
+        self.source.unlink();self.write(self.ledger,{self.surface:self.payload});self.assert_refused_without_writes(True)
+
+    def test_delegated_large_payload_is_not_a_new_atom(self):
+        self.source.unlink();large={'text':'x'*4000};self.write(self.compact,{self.surface:large});self.write(self.ledger,{'fixture':large});before=self.snapshot();rc,text=self.run_fold();self.assertEqual(rc,0,text);self.assertIn('DELEGATED_UNVERIFIED',text);self.assertFalse(self.destination.exists());self.assertEqual(before,self.snapshot())
 
     def test_numeric_types_not_laundered(self):
         self.installed();different=copy.deepcopy(self.atom);different['payload']['count']=True;self.write(self.source,different);self.assert_refused_without_writes(True)

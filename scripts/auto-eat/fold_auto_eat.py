@@ -6,8 +6,12 @@ The entire input batch is validated before any output replacement. --check
 compares both the ledger payload and the complete unsigned destination atom.
 An unreadable source is not an empty source. A confirmed {} is a valid no-op.
 
-A source with no staged atom may be delegated to an existing bare ledger key
-only when its payload matches exactly. That row remains the other writer's.
+A source with no staged atom and an existing bare ledger key is ledger-direct:
+that row belongs to another writer. It is counted as delegated/unverified and
+never folded; payload differences are reported, not silently called matches.
+Legacy atoms missing signature/state metadata are preserved without rewriting
+only when source, existing destination and ledger payload already agree. They
+are not relabelled unsigned, authenticated, measured or newly folded.
 
 File replacements are atomic individually; this is not a multi-file database
 transaction. An I/O failure is nonzero and may require a check/rerun. Writers
@@ -33,6 +37,11 @@ MAX_ATOM_BYTES = 64 * 1024
 MAX_STAGED_ATOMS = 4096
 SURFACE = re.compile(r"autoeat\.[A-Za-z0-9_-]+(?:[./][A-Za-z0-9_-]+)*\Z")
 SCHEMA = "https://councilof.ai/schema/card-v0.json"
+# Two pre-existing dated source identities: preserved only, never rebound.
+LEGACY_ALIASES = {
+    "autoeat.a2a.mining.summary": "a2a.mining.summary.2026.09.16",
+    "autoeat.hf.mining.summary": "hf.mining.summary.2026.09.16",
+}
 
 
 class FoldError(ValueError):
@@ -98,18 +107,26 @@ def _read(path: Path, limit: int, snapshots: dict, *, optional=False):
     return value
 
 
-def _validate_atom(atom: dict, surface: str, payload: dict, name: str):
-    if atom.get("schema") != SCHEMA or atom.get("surface") != surface:
+def _validate_identity(atom: dict, surface: str, payload: dict, name: str):
+    incomplete = "sig_ed25519" not in atom or "state" not in atom
+    identity_matches = atom.get("surface") == surface or (
+        incomplete and surface in LEGACY_ALIASES
+        and atom.get("surface") == LEGACY_ALIASES[surface])
+    if atom.get("schema") != SCHEMA or not identity_matches:
         raise FoldError(f"atom identity differs: {name}")
-    if "sig_ed25519" not in atom or atom["sig_ed25519"] is not None:
-        raise FoldError(f"atom is not explicitly unsigned: {name}")
-    if atom.get("state") != "queued":
-        raise FoldError(f"atom is not queued: {name}")
     if not isinstance(atom.get("payload"), dict) or canonical(atom["payload"]) != canonical(payload):
         raise FoldError(f"staged payload differs from compact: {name}")
     flags = payload.get("flags")
     if isinstance(flags, dict) and flags.get("auto_measured", False) is not False:
         raise FoldError(f"auto_measured is not false: {name}")
+
+
+def _validate_atom(atom: dict, surface: str, payload: dict, name: str):
+    _validate_identity(atom, surface, payload, name)
+    if "sig_ed25519" not in atom or atom["sig_ed25519"] is not None:
+        raise FoldError(f"atom is not explicitly unsigned: {name}")
+    if atom.get("state") != "queued":
+        raise FoldError(f"atom is not queued: {name}")
 
 
 def _stable(snapshots: dict) -> None:
@@ -167,24 +184,23 @@ def fold(check: bool = False) -> int:
     planned = []
     destinations = set()
     delegated = 0
+    delegated_payload_differences = 0
+    preserved_legacy = 0
     for surface, payload in compact.items():
         if not surface.startswith("autoeat."):
             print(f"fold: SKIP non-autoeat surface {surface}")
             continue
-        if not SURFACE.fullmatch(surface) or not isinstance(payload, dict):
-            raise FoldError(f"invalid surface or payload: {surface}")
-        if len(canonical(payload)) > c.MAX_PAYLOAD_BYTES:
-            raise FoldError(f"payload exceeds {c.MAX_PAYLOAD_BYTES} bytes: {surface}")
-        destination = c.INTEROP / f"ledger-card-{slug(surface)}-unsigned.json"
-        if destination in destinations:
-            raise FoldError(f"surface filename collision: {surface}")
-        destinations.add(destination)
-        source = c.FEED / f"card-{slug(surface)}-unsigned.json"
+        # Establish which writer owns this row before applying file-write rules.
+        # An unowned bare-key mirror is never given an atom by this bridge.
+        if not isinstance(payload, dict):
+            raise FoldError(f"invalid payload: {surface}")
+        safe_surface = SURFACE.fullmatch(surface) is not None
+        source = c.FEED / f"card-{slug(surface)}-unsigned.json" if safe_surface else None
         atom = atoms.get(source)
         if atom is None:
-            # Legacy file names are allowed only with the same semantic identity.
             matches = [(p, a) for p, a in atoms.items()
-                       if a.get("surface") == surface and isinstance(a.get("payload"), dict)
+                       if a.get("surface") in (surface, LEGACY_ALIASES.get(surface))
+                       and isinstance(a.get("payload"), dict)
                        and canonical(a["payload"]) == canonical(payload)]
             if len(matches) > 1:
                 raise FoldError(f"ambiguous staged atoms: {surface}")
@@ -192,13 +208,35 @@ def fold(check: bool = False) -> int:
                 source, atom = matches[0]
             else:
                 bare = surface[len("autoeat."):]
-                if bare in ledger and canonical(ledger[bare]) == canonical(payload):
+                if bare in ledger:
                     delegated += 1
-                    print(f"fold: DELEGATED {surface}; matching bare ledger row, no atom modified")
+                    delegated_payload_differences += canonical(ledger[bare]) != canonical(payload)
                     continue
                 raise FoldError(f"missing matching staged atom: {surface}")
-        _validate_atom(atom, surface, payload, source.name)
+        if not safe_surface:
+            raise FoldError(f"invalid staged surface: {surface}")
+        if len(canonical(payload)) > c.MAX_PAYLOAD_BYTES:
+            raise FoldError(f"payload exceeds {c.MAX_PAYLOAD_BYTES} bytes: {surface}")
+        destination = c.INTEROP / f"ledger-card-{slug(surface)}-unsigned.json"
+        if destination in destinations:
+            raise FoldError(f"surface filename collision: {surface}")
+        destinations.add(destination)
+        _validate_identity(atom, surface, payload, source.name)
         existing = _read(destination, MAX_ATOM_BYTES, snapshots, optional=True)
+        atom_matches = existing is not None and canonical(existing) == canonical(atom)
+        ledger_matches = surface in ledger and canonical(ledger[surface]) == canonical(payload)
+        incomplete_envelope = "sig_ed25519" not in atom or "state" not in atom
+        if incomplete_envelope:
+            # Historical absence is NOT a valid signature or an unsigned assertion.
+            # Preserve only an already-consistent triple, and never rewrite it.
+            if atom.get("sig_ed25519") is not None or atom.get("state", "queued") != "queued":
+                raise FoldError(f"legacy atom carries unsupported signature/state: {source.name}")
+            if not atom_matches or not ledger_matches:
+                raise FoldError(f"legacy atom requires owner migration, not an implicit fold: {source.name}")
+            preserved_legacy += 1
+            print(f"fold: PRESERVED_LEGACY {surface}; metadata incomplete, no writes or authority claim")
+            continue
+        _validate_atom(atom, surface, payload, source.name)
         if existing is not None:
             # Do not overwrite signed/nonqueued evidence, even on an explicit fold.
             if "sig_ed25519" not in existing or existing["sig_ed25519"] is not None or existing.get("state") != "queued":
@@ -208,16 +246,19 @@ def fold(check: bool = False) -> int:
         atom_matches = existing is not None and canonical(existing) == canonical(atom)
         ledger_matches = surface in ledger and canonical(ledger[surface]) == canonical(payload)
         planned.append((surface, payload, destination, atom, atom_matches, ledger_matches))
+    if delegated:
+        print(f"fold: DELEGATED_UNVERIFIED {delegated} ledger-direct rows; "
+              f"payload_differences={delegated_payload_differences}; other writer owns them, no writes")
     drift = sum(not a or not l for _, _, _, _, a, l in planned)
     if check:
         for surface, _, _, _, a, l in planned:
             if not a or not l:
                 print(f"fold: DRIFT {surface}; ledger_match={l} atom_match={a}")
-        print(f"fold --check: checked={len(planned)} delegated={delegated} drift={drift}")
+        print(f"fold --check: checked={len(planned) + preserved_legacy} preserved_legacy={preserved_legacy} delegated={delegated} drift={drift}")
         return 1 if drift else 0
     # Batch validation above is complete: invalid input cannot cause partial writes.
     if not drift:
-        print(f"fold: unchanged={len(planned)} delegated={delegated}; no writes")
+        print(f"fold: unchanged={len(planned) + preserved_legacy} preserved_legacy={preserved_legacy} delegated={delegated}; no writes")
         return 0
     lock = c.INTEROP / ".auto-eat-fold.lock"
     try:
@@ -239,7 +280,7 @@ def fold(check: bool = False) -> int:
             _atomic_write(c.LEDGER_COMPACT, json.dumps(ledger, indent=2).encode("utf-8"))
     finally:
         lock.unlink()
-    print(f"fold: folded={drift} checked={len(planned)} delegated={delegated}; unsigned only")
+    print(f"fold: folded={drift} checked={len(planned) + preserved_legacy} preserved_legacy={preserved_legacy} delegated={delegated}; new writes unsigned only")
     return 0
 
 

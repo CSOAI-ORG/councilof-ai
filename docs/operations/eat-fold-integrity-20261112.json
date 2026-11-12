@@ -1,13 +1,13 @@
 {
   "kind": "eat-fold-integrity-qualification",
-  "version": "2026-11-12.1",
-  "checked_at": "2026-11-12T01:14:28.608553+00:00",
+  "version": "2026-11-12.2",
+  "checked_at": "2026-11-12T01:50:42.904758+00:00",
   "status": "QUALIFIED_CANDIDATE_NOT_PRODUCTION_DEPLOYED",
   "execution_environment": "Authorised M2; M4 was offline. Source-only isolated worktree.",
   "source_base": "0663a4395fc331b904804169b47a427c3a712d3d",
-  "candidate_source_sha256": "d27a5d6ef412de8fa40345f78ee20e6e3e7ea95c3f63d28a32fbd3255f0d5e7d",
-  "test_source_sha256": "ae1c74ec1d57d4f925fd4457b617ef24dcd1a709709e1f6829b7685deed85c5d",
-  "new_test_methods": 41,
+  "candidate_source_sha256": "8ba93bcaf3137d8745816e4986682cacd26427c4fa3d10266adba9ab82855d10",
+  "test_source_sha256": "22d575b6871184809c6b63d21001c6e9311f4c8edd798187d4dc2a1f6ae0428d",
+  "new_test_methods": 54,
   "local_python_versions": [
     "3.9.6",
     "3.11.14"
@@ -49,51 +49,43 @@
     {
       "mutant": "swallow_corrupt_compact",
       "exit_code": 1,
-      "tests_run": 41,
-      "detected": true,
-      "failure_summary": "failures=6, errors=2"
+      "test_count": 54,
+      "failure_summary": "failures=6, errors=2",
+      "detected": true
     },
     {
       "mutant": "ignore_destination_bytes",
       "exit_code": 1,
-      "tests_run": 41,
-      "detected": true,
-      "failure_summary": "failures=2"
+      "test_count": 54,
+      "failure_summary": "failures=3",
+      "detected": true
     },
     {
       "mutant": "skip_source_identity_validation",
       "exit_code": 1,
-      "tests_run": 41,
-      "detected": true,
-      "failure_summary": "failures=6"
+      "test_count": 54,
+      "failure_summary": "failures=3",
+      "detected": true
     }
   ],
   "frozen_feed_replay": {
-    "at": "2026-11-12T01:10:49.661945+00:00",
-    "feed_revision": "bee70bf94f56d3c327477979e2ac8b57564069ac",
-    "source_revision_before_repair": "0663a4395fc331b904804169b47a427c3a712d3d",
-    "candidate_source_sha256": "d27a5d6ef412de8fa40345f78ee20e6e3e7ea95c3f63d28a32fbd3255f0d5e7d",
-    "snapshot_manifest_sha256": "11b72a683aa47901941cd3b6886dc3dbaeb93942e64b4b03ba0c77fed17110ce",
-    "staged_surfaces": 8,
-    "baseline_readonly": {
+    "source_revision": "bee70bf94f56d3c327477979e2ac8b57564069ac",
+    "autoeat_surfaces": 8,
+    "check_before": {
       "exit_code": 1,
-      "stdout": "fold: DRIFT autoeat.hf.newmodels (not folded into ledger yet)\nfold: DRIFT autoeat.mcp.registry (not folded into ledger yet)\nfold: DRIFT autoeat.erc8004.newagents (not folded into ledger yet)\nfold: DRIFT autoeat.xrpl.accounts (not folded into ledger yet)\nfold: DRIFT autoeat.hf.spaces (not folded into ledger yet)\nfold: DRIFT autoeat.npm.registry (not folded into ledger yet)\nfold: 0 ledger-direct surface(s) (no staged atom; the ledger row is under the bare key) \u2014 not this bridge's to fold\nfold --check: drift=6\n"
+      "output": "fold: DRIFT autoeat.hf.newmodels; ledger_match=False atom_match=False\nfold: DRIFT autoeat.mcp.registry; ledger_match=False atom_match=False\nfold: DRIFT autoeat.erc8004.newagents; ledger_match=False atom_match=False\nfold: DRIFT autoeat.xrpl.accounts; ledger_match=False atom_match=False\nfold: DRIFT autoeat.hf.spaces; ledger_match=False atom_match=False\nfold: DRIFT autoeat.npm.registry; ledger_match=False atom_match=False\nfold --check: checked=8 preserved_legacy=0 delegated=0 drift=6\n"
     },
-    "candidate_readonly_before": {
-      "exit_code": 1,
-      "stdout": "fold: DRIFT autoeat.hf.newmodels; ledger_match=False atom_match=False\nfold: DRIFT autoeat.mcp.registry; ledger_match=False atom_match=False\nfold: DRIFT autoeat.erc8004.newagents; ledger_match=False atom_match=False\nfold: DRIFT autoeat.xrpl.accounts; ledger_match=False atom_match=False\nfold: DRIFT autoeat.hf.spaces; ledger_match=False atom_match=False\nfold: DRIFT autoeat.npm.registry; ledger_match=False atom_match=False\nfold --check: checked=8 delegated=0 drift=6\n"
-    },
-    "candidate_fold": {
+    "fold": {
       "exit_code": 0,
-      "stdout": "fold: folded=6 checked=8 delegated=0; unsigned only\n"
+      "output": "fold: folded=6 checked=8 preserved_legacy=0 delegated=0; new writes unsigned only\n"
     },
-    "candidate_readonly_after": {
+    "check_after": {
       "exit_code": 0,
-      "stdout": "fold --check: checked=8 delegated=0 drift=0\n"
+      "output": "fold --check: checked=8 preserved_legacy=0 delegated=0 drift=0\n"
     },
-    "second_fold": {
+    "repeat": {
       "exit_code": 0,
-      "stdout": "fold: unchanged=8 delegated=0; no writes\n"
+      "output": "fold: unchanged=8 preserved_legacy=0 delegated=0; no writes\n"
     },
     "changed_copy_files": [
       "public/interop/ledger-cards-compact.json",
@@ -105,22 +97,15 @@
       "public/interop/ledger-card-autoeat-xrpl-accounts-unsigned.json"
     ],
     "checks": {
-      "snapshot_unchanged": true,
-      "checks_readonly": true,
-      "fold_returned_success": true,
-      "post_fold_check_passed": true,
-      "repeat_is_noop": true,
-      "unrelated_ledger_rows_preserved": true,
-      "feed_source_bytes_preserved": true,
-      "all_eight_outputs_unsigned_queued": true
+      "read_only_check_did_not_write": true,
+      "write_passed": true,
+      "post_check_passed": true,
+      "repeat_noop": true,
+      "original_snapshot_unchanged": true,
+      "feed_inputs_unchanged": true,
+      "unrelated_ledger_preserved": true
     },
-    "status": "PASS",
-    "writes_to_original_source": false,
-    "new_probes": false,
-    "signatures_created": 0,
-    "training": false,
-    "authority": false,
-    "scope": "Exact existing eight-surface feed snapshot, folded only in a disposable copy. Does not establish source freshness, signer acceptance or deployed release."
+    "status": "PASS"
   },
   "files_sha256": {
     "baseline-failures.json": "c174e9eb75268a04013e4a51abfa8d2de922b0f92bb12a76c38d7f72048e261b",
@@ -130,7 +115,14 @@
     "fold-python39.log": "ccf4bdd4a8f3c6fc4d1a72ab9dd984ced2a0b361070c9a55a29fcf731ed6dfa3",
     "existing-g2.log": "b986091cdd4d7aeb1185de9a51d74065913d71702d10fa5dada3e4c584a2ddd7",
     "existing-honesty.log": "2f8f383026f250be6ebd98052361fe4899b05e3d9fee275ad8aab6ab11b641f6",
-    "mutation-checks.json": "8337c42d66e18b6e87894d61d55cb3f1156087441265ecd52a384eb68fe93234"
+    "mutation-checks.json": "8337c42d66e18b6e87894d61d55cb3f1156087441265ecd52a384eb68fe93234",
+    "qualification-v2.json": "8d5cfbb95f89411649cc8d8be211c02ecfe10c5e3953deb7733d9d88c03441cc",
+    "verified-master-manifest.json": "c3fd3600c985e56dc5d4bb70339cd8347bed9dee7423f73bbd1fa4e7a25d1bb4",
+    "fold-tests-v2.log": "40ef06a98325f3ca21342ca4941e985a5257e95f0f93191ee0e3fe70b8e5dcbc",
+    "fold-python39-v2.log": "c81363717d8869d78ca412e49ceedf4d868fef30860da7a356fe3f11ce6d2443",
+    "existing-honesty-v2.log": "2f8f383026f250be6ebd98052361fe4899b05e3d9fee275ad8aab6ab11b641f6",
+    "existing-g2-v2.log": "0c4133c5815fec5e2f1509c21ec487e5c18d91facdcb58f7cab7015d00401a3a",
+    "full-gate-failure.log": "dc77e184d2a41688e350a4f1bb2223cf08ad7054c8480057c28df85a538a4643"
   },
   "canonical_event": "docs/operations/eat-fold-integrity-20261112-event.json",
   "limits": [
@@ -140,6 +132,56 @@
     "Atomic replacement is per file, not a multi-file database transaction; an I/O interruption may require check/rerun.",
     "The local advisory lock and pre-write snapshot check do not replace the repository single-writer protocol.",
     "Canonical event is unsigned and partial; no GSPC admission, human approval or independent certification.",
-    "Protected merge and owner-controlled production/signing steps remain separate from source qualification."
-  ]
+    "Protected merge and owner-controlled production/signing steps remain separate from source qualification.",
+    "Rows owned by the bare-key ledger writer are delegated/unverified, including reported payload differences; this fold cannot certify them or rewrite them.",
+    "Nineteen historical atoms missing signature/state metadata are byte-preserved only when staged source, destination and ledger payload already agree; absence is not a signature or an unsigned admission.",
+    "V1 narrow CI passed but the full repository producer gate failed. V2 full CI status must be observed on the exact updated commit."
+  ],
+  "current_master_copy_replay": {
+    "source_revision": "0663a4395fc331b904804169b47a427c3a712d3d",
+    "autoeat_surfaces": 11534,
+    "check_before": {
+      "exit_code": 0,
+      "output": "fold: PRESERVED_LEGACY autoeat.eat-mining.swift; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.eat-mining.cobol; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.eat-mining.stablecoins; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.x402.settlement.census; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.mcp.registry.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.npm.registry.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.a2a.mining.summary; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.hf.mining.summary; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.hf.full.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.xrpl.fi.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.kaggle.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.erc8004.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.art50.hub.queue.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.ai.platforms.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.github.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.mcp.fleet.state; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.hub.census.state; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.gspc.board.state; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.github.topics.mining; metadata incomplete, no writes or authority claim\nfold: DELEGATED_UNVERIFIED 11507 ledger-direct rows; payload_differences=11501; other writer owns them, no writes\nfold --check: checked=27 preserved_legacy=19 delegated=11507 drift=0\n"
+    },
+    "fold": {
+      "exit_code": 0,
+      "output": "fold: PRESERVED_LEGACY autoeat.eat-mining.swift; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.eat-mining.cobol; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.eat-mining.stablecoins; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.x402.settlement.census; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.mcp.registry.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.npm.registry.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.a2a.mining.summary; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.hf.mining.summary; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.hf.full.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.xrpl.fi.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.kaggle.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.erc8004.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.art50.hub.queue.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.ai.platforms.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.github.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.mcp.fleet.state; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.hub.census.state; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.gspc.board.state; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.github.topics.mining; metadata incomplete, no writes or authority claim\nfold: DELEGATED_UNVERIFIED 11507 ledger-direct rows; payload_differences=11501; other writer owns them, no writes\nfold: unchanged=27 preserved_legacy=19 delegated=11507; no writes\n"
+    },
+    "check_after": {
+      "exit_code": 0,
+      "output": "fold: PRESERVED_LEGACY autoeat.eat-mining.swift; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.eat-mining.cobol; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.eat-mining.stablecoins; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.x402.settlement.census; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.mcp.registry.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.npm.registry.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.a2a.mining.summary; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.hf.mining.summary; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.hf.full.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.xrpl.fi.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.kaggle.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.erc8004.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.art50.hub.queue.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.ai.platforms.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.github.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.mcp.fleet.state; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.hub.census.state; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.gspc.board.state; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.github.topics.mining; metadata incomplete, no writes or authority claim\nfold: DELEGATED_UNVERIFIED 11507 ledger-direct rows; payload_differences=11501; other writer owns them, no writes\nfold --check: checked=27 preserved_legacy=19 delegated=11507 drift=0\n"
+    },
+    "repeat": {
+      "exit_code": 0,
+      "output": "fold: PRESERVED_LEGACY autoeat.eat-mining.swift; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.eat-mining.cobol; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.eat-mining.stablecoins; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.x402.settlement.census; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.mcp.registry.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.npm.registry.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.a2a.mining.summary; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.hf.mining.summary; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.hf.full.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.xrpl.fi.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.kaggle.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.erc8004.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.art50.hub.queue.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.ai.platforms.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.github.mining; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.mcp.fleet.state; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.hub.census.state; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.gspc.board.state; metadata incomplete, no writes or authority claim\nfold: PRESERVED_LEGACY autoeat.github.topics.mining; metadata incomplete, no writes or authority claim\nfold: DELEGATED_UNVERIFIED 11507 ledger-direct rows; payload_differences=11501; other writer owns them, no writes\nfold: unchanged=27 preserved_legacy=19 delegated=11507; no writes\n"
+    },
+    "changed_copy_files": [],
+    "checks": {
+      "read_only_check_did_not_write": true,
+      "write_passed": true,
+      "post_check_passed": true,
+      "repeat_noop": true,
+      "original_snapshot_unchanged": true,
+      "feed_inputs_unchanged": true,
+      "unrelated_ledger_preserved": true
+    },
+    "status": "PASS"
+  },
+  "initial_ci_regression": {
+    "run": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/43133200962",
+    "candidate": "7dc5733592f0391b2aaa1d22deb2a4f7029c75ce",
+    "observed_failure": "Full producer gate refused an unchanged legacy atom missing state/signature metadata. Missing metadata was not a valid signature.",
+    "log_sha256": "dc77e184d2a41688e350a4f1bb2223cf08ad7054c8480057c28df85a538a4643",
+    "correction": "Preserve only exact already-consistent legacy triples without rewriting or relabelling; retain existing ledger-direct ownership separately and visibly unverified. Only two fixed pre-existing dated aliases may match; no generic identity rebinding."
+  },
+  "ownership_scope": {
+    "indexed_rows": 11534,
+    "owned_staged_rows_checked": 27,
+    "legacy_rows_preserved_without_rewrite": 19,
+    "explicit_unsigned_queued_rows": 8,
+    "other_writer_rows_not_verified": 11507,
+    "other_writer_payload_differences_observed_not_repaired": 11501,
+    "new_legacy_authority_claim": false
+  }
 }

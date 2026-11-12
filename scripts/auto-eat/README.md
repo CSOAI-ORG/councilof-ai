@@ -94,7 +94,7 @@ nohup env EAT_INTERVAL=3600 EAT_PIDFILE=/workspace/auto-eat/eat-loop.pid \
 
 The whole batch is validated before output replacements, so a later invalid item cannot cause an earlier valid item to be written. A small exclusive fold lock and exact input recheck detect competing folds and pre-write changes; existing locks are not removed automatically. Each output is replaced atomically, but this is not a multi-file database transaction. An I/O failure can leave recoverable partial staging, returns nonzero and requires `--check`/rerun. Other writers must still honour the repository lane ownership.
 
-An unchanged valid batch does not rewrite files. A matching bare ledger-owned row can remain delegated; that is not proof of a new fold or a signature. The script signs nothing, performs no probes, admits no measurement and does not train a model.
+An unchanged valid batch does not rewrite files. Rows with no staged atom but an existing bare ledger key remain owned by that other writer. They are explicitly counted as DELEGATED_UNVERIFIED, with payload differences reported; they are not folded, matched, certified or signed by this bridge. The script signs nothing, performs no probes, admits no measurement and does not train a model.
 
 ```sh
 python3 scripts/auto-eat/test_fold_auto_eat.py
@@ -103,3 +103,7 @@ python3 scripts/auto-eat/test_g2_gate.py
 ```
 
 The read-only GitHub `auto-eat-integrity` workflow runs these controls for relevant pull requests on Python 3.11 and 3.12. It has no signing, token-writing, deployment or scheduling role. Source tests are not proof that a candidate is merged, deployed or operating on the live queue.
+
+### Historical compatibility is preserve-only
+
+An existing atom missing signature/state metadata can pass only as `PRESERVED_LEGACY` when source, destination and ledger payload are already consistent. It is not rewritten or relabelled unsigned. A mismatch or missing destination is a refusal requiring owner migration. Non-null signatures and explicit nonqueued states are never accepted as authority. Two fixed historical A2A/HF dated identities are supported only in this preserve-only path; arbitrary payload-based identity substitution is refused. The qualification record distinguishes 27 owned staged rows from 11,507 delegated/unverified ledger-direct rows in the pinned master snapshot.
