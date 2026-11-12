@@ -1,7 +1,7 @@
 {
  "schema": "csoai.interop-file-index/0.2",
- "as_of": "2026-11-11T07:03:48Z",
- "source_commit": "c216492b1f20fbcaa597dffb94a3dbeed8ed0d8d",
+ "as_of": "2026-11-11T19:50:37Z",
+ "source_commit": "4b220ce7b7ec58c3eff1faea67bb5fc66fa884d3",
  "what_this_is": "Every file the estate's committed tree publishes under /interop/, with its size, its sha256 and how it is served. Built by reading the tree, so it is a measurement, not a list of intentions. Three served states occur, because there are three \u2014 a path routed to the mirror is not the same path as one the estate serves from its retired-bytes archive, and a fourth state (retired-bytes-absent) is reserved for a retired record the archive does not hold, which is not emitted because the archive is a deploy-time artefact and naming its membership here would make this index stale on every deploy.",
  "how_to_verify": "sha256 is the digest of the file's bytes as published. Fetch the path and hash it; on a row whose served_bytes reads 'as-published', a match means you hold what the estate published. Three things to know when it does not match: the digest is of the bytes at THIS index's source_commit, and the live site serves the bytes of the currently DEPLOYED commit, so the two agree once that commit is deployed; for pages-served HTML the digest is over the BUILT file, which carries the workspace-launcher script the build injects; and the EDGE rewrites some HTML in transit, so on a row whose served_bytes reads 'edge-transformed' or 'edge-transformed-per-request' the bytes the site serves are NOT the bytes published here, and on a 'per-request' row they differ on every fetch, so no digest of them can be reproduced by anyone, including us. A row whose served state is hf-mirror is a different case again: the bytes come from the HuggingFace evidence mirror, which is a SEPARATE HOST whose membership this index does not record, so the row's digest is checkable only while the mirror still holds the file. For retired-bytes paths the digest is of the canonical bytes, which the archive copies verbatim.",
  "retired": "A retired record is HISTORICAL evidence of a past measurement, never current proof. The estate's server marks these with the response header x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE SAME AS BEING UNREACHABLE: a retired path that is served answers 200 and its bytes verify against the sha256 below; a retired path that is not served answers 404. The `served` field says which.",
@@ -17,20 +17,20 @@
   "edge-transformed-per-request": "the edge rewrites this markup and the rewrite is randomised per request, so the bytes the site serves differ on EVERY fetch; no digest of them can be reproduced, by a reader or by the estate"
  },
  "counts": {
-  "files": 16379,
-  "bytes": 259569607,
+  "files": 16380,
+  "bytes": 259553963,
   "by_served": {
-   "pages": 3133,
+   "pages": 3134,
    "retired-bytes": 6,
    "hf-mirror": 13240
   },
   "by_served_bytes": {
-   "as-published": 16378,
+   "as-published": 16379,
    "edge-transformed-per-request": 1
   },
   "digests_taken_from_the_built_tree": 0,
   "digests_taken_from_the_injectors_transform": 53,
-  "digests_taken_from_the_tree_bytes": 3080,
+  "digests_taken_from_the_tree_bytes": 3081,
   "digests_not_comparable_no_built_tree": 0,
   "excluded_the_index_itself": 1,
   "excluded_not_present_in_the_tree": 0
@@ -6868,14 +6868,14 @@
   {
    "path": "/interop/hf-census/SUMMARY.json",
    "bytes": 690,
-   "sha256": "fad9c03a5efbdb382c8cb76aa0c76505b2199db674ec3853e323c7747e642349",
+   "sha256": "a8151343b0f073fc038ba8dd95664e6a8f4d85567059fa5d048be44466851d53",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/hf-census/axis-sources.json",
-   "bytes": 5541,
-   "sha256": "63e23f64609d61375ba104f9828050ac90937d2ff7510ffe8cb13ec9c5f83d9b",
+   "bytes": 5543,
+   "sha256": "06dbfa61d9c0a09f0e1c5ab93c5391f8922886fb5dadd3042564d6b1673abb98",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -6888,8 +6888,8 @@
   },
   {
    "path": "/interop/hf-census/org-register.json",
-   "bytes": 1022710,
-   "sha256": "8aaa0c87c6eb87b4145aa6787b259364177dd153b6f894d45fc8b979700f1e5b",
+   "bytes": 1003366,
+   "sha256": "6f593394bddd9f6f5462122510bd45e94a129db6315785c43b915b24440fc00c",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -109893,8 +109893,8 @@
   },
   {
    "path": "/interop/silent-route-canary-2026-09/baseline.jsonl",
-   "bytes": 34287,
-   "sha256": "dbea0e07b9ae7c033b7d1bfcab6c16207e56e88913a035b61e781001ad825ca7",
+   "bytes": 36305,
+   "sha256": "6ac1ef1522cabe26442b4c0b6f18f005b995067500c8ea72848e3387150c924d",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110153,42 +110153,42 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/artefact-manifest.json",
    "bytes": 6509,
-   "sha256": "cf9ece6b258848d80088061a21d59d301476cd7cbd131277f597fac914e360ad",
+   "sha256": "89d85260934a843cac9dfaf74b3b3635511bd00c4b4efb3bb5daf7aa0719bf41",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/deep.json",
    "bytes": 15335,
-   "sha256": "530e651abc1713277a293c854092f14c7f142ec1dcf232da337713b0a6bb4f3e",
+   "sha256": "8e8b2ba2ae0dea9c9908d0f75b36e1bebb0611a61eca2972d9fad59eb6294b52",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/1.html",
    "bytes": 48926,
-   "sha256": "e96d861529488f351da029cd02b6ea6916cd2c003b0757f36438a53a42c68c7e",
+   "sha256": "1485466dc6afd2a465beb92df5a31d13e95d34e8d07e7e72ea1ccd2f2004178e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/1.meta.json",
    "bytes": 253,
-   "sha256": "fda5acdf97b01c3bf404702de3f0c33e96415e8a1809dbc3c3fc1c6ab4192d28",
+   "sha256": "d2aefe92a7811d5ba55aae81b3e8f77dd7956b2196d9d9941107bdd8bfa42c5c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/118.html",
-   "bytes": 439739,
-   "sha256": "b9b43ad6f7f8450dce6fa92d4867b9dfa6fb5a81090da614d01234fae4a7835b",
+   "bytes": 439743,
+   "sha256": "234634bad31b96c0cb69db24c637aa3dc03370ab537bb9c24afee1790dfe7c13",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/118.meta.json",
    "bytes": 238,
-   "sha256": "e5ba429dc553922914b065baa23c1d314757d08f35bde239358ef5bd6b26daba",
+   "sha256": "31441f75b12f199b4362d241c878d978338938f4a831b6779a6c62ec3225722e",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110202,14 +110202,14 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/120.meta.json",
    "bytes": 259,
-   "sha256": "d26bc76756d97e1959e7f19129c53d59c39902a1e075400175d4f37c95e45acc",
+   "sha256": "f23d42dc5d03871c2e62121bb94b35f7740aa94b7eea5a9f15b2d61913d2db1f",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/129.html",
-   "bytes": 1423176,
-   "sha256": "4bdce3fb09f102a30fb1ad6ae31428763b2d18f757e5e2f3cad392c4dd5d8d4a",
+   "bytes": 1423293,
+   "sha256": "e60822e52ba2c375dd48019dfbb2159736b52d2c0a3c21cd5493e7359e3157e6",
    "served": "pages",
    "served_bytes": "edge-transformed-per-request",
    "served_bytes_note": "the edge rewrites this markup (email-obfuscation, https-rewrite) and the rewrite is randomised per request, so the bytes served differ on every fetch and no digest of them can be reproduced; the sha256 here is of the bytes the estate published"
@@ -110217,7 +110217,7 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/129.meta.json",
    "bytes": 248,
-   "sha256": "a6857a384c8e7b654fb1c13d1a44203e6937af6bf27e1a1c832aa2bea088ebdb",
+   "sha256": "4bcd3024986954b94b180ec5ae05cc93a03fdf48fe19eeaec9f569c017f122c7",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110231,21 +110231,21 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/14.meta.json",
    "bytes": 236,
-   "sha256": "a69b1bb6a3ad9b46b5c30b9c189a7f51f0073baaed85b5d5d4d14c1a78160588",
+   "sha256": "9b3412138f648921dd5b386a94ff77cda50c4ccbbbb30a86871e30cb0b1620e4",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/146.html",
    "bytes": 45183,
-   "sha256": "09c8b7f7f4367e60349a869f82d66cc8f90d618cd99e0923f76ab1dc27c2175e",
+   "sha256": "b268c9a41cfefbce0fc4be757eac88fb2e09fe6bd0813e80ce46a2e8c763c6ec",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/146.meta.json",
    "bytes": 266,
-   "sha256": "00051f43eb969e03a91fd5486606001176d778cd8c5bdaa1640bdf6dae8e2616",
+   "sha256": "929e307655e7afac3bfdfca1da798141193ed5a510fb755025ea68cfda93a624",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110259,7 +110259,7 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/173.meta.json",
    "bytes": 242,
-   "sha256": "96e1cd15565dba9a74f195176bea49656927f8def84a651d110bce7e6d496ccb",
+   "sha256": "9f6f92fdca0974b26777831705f82891a673979f14e0eddd570cc948b2de5c9c",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110273,21 +110273,21 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/195.meta.json",
    "bytes": 243,
-   "sha256": "7a2b3c7203bfa273eb81eca97bb301bb2cfc833973826934332062a1a035d056",
+   "sha256": "bd96ab5c8030e5efb4cb0a0c902d563a958508c8f44d36bf5cd3e64e4b212343",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/2.html",
    "bytes": 422079,
-   "sha256": "91537f04de3a90e299e35e574c14b6bc6d60c50865cb9cfd6602fe4de26b87f6",
+   "sha256": "e70eaf0eedd8910573cdf8870661205704b32a775435659517458426673df427",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/2.meta.json",
    "bytes": 258,
-   "sha256": "1fa97755676964be7cedf38ea6534aa21a16659068e2a23ef3d7c258c704dfe5",
+   "sha256": "4518e3a7ffbb6f0effa836a2937cb70d931634e5072a24e86e3acab964546b9c",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110301,7 +110301,7 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/221.meta.json",
    "bytes": 241,
-   "sha256": "75f6c30a39a8499f274604808289b8eeb575e2ce5cc50311fc953aa1e03efb05",
+   "sha256": "0c940e0b615101ebbc513320be16373aa772b9ca79f425c9e058066ce9cf6940",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110315,49 +110315,49 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/237.meta.json",
    "bytes": 247,
-   "sha256": "e4cd56755897c8ac7aca9c94c150f83110c9ff108f9365fcc1fc4e4a94b58e91",
+   "sha256": "1a4d2a8d69447aca27f9902c2282f5c483b14681442bb7b7a490582ca11daa6e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/246.html",
-   "bytes": 77495,
-   "sha256": "41cd38aadef45ea926e33d14f800b8f860b5f43e52fbc6719fd5971ee8698215",
+   "bytes": 77496,
+   "sha256": "5d0331c156f8d473bfb06e0a1f0c06123bab3e2612412c9afbd38a13bdc1abed",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/246.meta.json",
    "bytes": 244,
-   "sha256": "4e858b84c67871041f1edf0ec7080b56e3a78afb7a58e6e450dec9a8a59f6c15",
+   "sha256": "b1468ddd7e24b1d9e3a9ebded803d46e7a99ab9f34d3464ef7d238a38addb703",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/250.html",
-   "bytes": 283996,
-   "sha256": "28c7752b11c926b04c77a810f60f71e5db4ed77a088aa512759e21dda19e1f1c",
+   "bytes": 283970,
+   "sha256": "8f84be6bebd9cc359ef6c86b1bdfcc68ff8d295e9c63a5e14b6e44c06f59b5c9",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/250.meta.json",
    "bytes": 252,
-   "sha256": "c245e6181927bad5063185619c561814a3f2d90cf2b1a4c84e399ce0d465eef6",
+   "sha256": "075d806bfa517b050e405700de75f369f5c40aedefbd11feadd00978ada7f3f3",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/262.html",
    "bytes": 105662,
-   "sha256": "dedb47b40290d4686253d9ba5215fd5c464ce11dd694b604dd307aaa78181a6a",
+   "sha256": "d22f4b26d8a447ea726dbc617bc45689e7bec3b4e7c13ba02410fbad2dd22c53",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/262.meta.json",
    "bytes": 260,
-   "sha256": "f643b2b3354b59121133438a40c31d49b76ddc63307649e3205bdf24b3e3542d",
+   "sha256": "f6e8716646f386410beb172babcf54a2bc9a7481bfd15b601d293b982035476a",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110385,7 +110385,7 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/286.meta.json",
    "bytes": 258,
-   "sha256": "51edc42671b1d1e9b59f8861a44e21220b95968f0fed31b2f8d200c9d37a630b",
+   "sha256": "bb2431a4f1a56a9d723b99d82ab64f806cfb0c40ea1de94879330f101f96dc2f",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110399,35 +110399,35 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/336.meta.json",
    "bytes": 189,
-   "sha256": "21f673f3a18637108afaeaac40b0ac7939c2c00e135299a7ca7de6b9715ecae6",
+   "sha256": "eda33564aa2c97d592c4aa1be21f37e154bf30ff2e2f55bbf76542599bbb5dc4",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/347.html",
    "bytes": 199016,
-   "sha256": "3d73c76b2540cad8f785c8bbf61f2962f274b45c28be4d8667f1acc79870f441",
+   "sha256": "5284483cdadbbcc66781ae0ad046b2d208232e48c424326d0bd1e08851a2cc5a",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/347.meta.json",
    "bytes": 240,
-   "sha256": "fc4f0423264433eec78156ae01a4c857deb10c734e9e779e759254da089bb764",
+   "sha256": "c392e04b68ffbe16dd8e49bfc77b3b09bd3985244557e493b3902f544d24637d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/5.html",
    "bytes": 127930,
-   "sha256": "9166fc03d84c60a33da01cf0a2d44a02e28096b513c752b1a362fdb0df56410e",
+   "sha256": "fa7c567149dd84cfd3586daf8cfd3c7948f60ea02dc858c765ca3c5010b5e024",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/5.meta.json",
    "bytes": 244,
-   "sha256": "b49fa5311c4350f41c9a235f3d6ea0b6c1806ae978035f28a5a36e05558ca372",
+   "sha256": "4451a40bfd7f0f3ae6dee987d04bbac7551e9226009f7bb80cde355a354e4b10",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110511,7 +110511,7 @@
   {
    "path": "/interop/stablecoin-universe-2026-09/promotion-queue.json",
    "bytes": 990021,
-   "sha256": "82b58ab9839b7d306294f974b30e97a18bbc2d09bd467ee40ee5d4e11ac82acb",
+   "sha256": "419ad034c3a4c8f16eeb1a47df820449061e362b80a1e0383f126b93ef787b1e",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -114172,6 +114172,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/x402-trust/20261111T065630Z.json",
+   "bytes": 1584,
+   "sha256": "4636b6f2ebc65058d13341703f6e5c8a1f0ea07d8cd7bd7719996750bac54402",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/x402-trust/index.html",
    "bytes": 1940,
    "sha256": "3a025483c48fcb19b7d57ce87378d0f5234af085789ed8ecbf8b7756d681a1cd",
@@ -114181,7 +114188,7 @@
   {
    "path": "/interop/x402-trust/latest.json",
    "bytes": 1584,
-   "sha256": "c731a15d543d84be06d3c244b79747df0f3a439acdf81d9d97164779308e3bd7",
+   "sha256": "4636b6f2ebc65058d13341703f6e5c8a1f0ea07d8cd7bd7719996750bac54402",
    "served": "pages",
    "served_bytes": "as-published"
   },
