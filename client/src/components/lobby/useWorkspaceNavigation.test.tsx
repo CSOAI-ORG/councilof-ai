@@ -45,7 +45,7 @@ describe("workspace navigation", () => {
     mount(); const input = container.querySelector("input")!; input.focus(); escape(input); expect(container.querySelector("aside")).not.toBeNull(); expect(document.activeElement).toBe(input);
   });
   it("closes desktop navigation with Escape from inside the navigation", () => {
-    mount(); const link = container.querySelector("aside a")!; link.focus(); escape(link); expect(container.querySelector("aside")).toBeNull(); expect(document.activeElement).toBe(button());
+    mount(); const link = container.querySelector<HTMLAnchorElement>("aside a")!; link.focus(); escape(link); expect(container.querySelector("aside")).toBeNull(); expect(document.activeElement).toBe(button());
   });
   it("preserves a deliberate desktop collapse across responsive changes", () => {
     mount(); act(() => button().click()); resize(true); resize(false); expect(container.querySelector("aside")).toBeNull();

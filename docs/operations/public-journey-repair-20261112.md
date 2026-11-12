@@ -41,5 +41,9 @@ These digests identify the candidate bytes; they are not signatures or correctne
 - `client/src/styles/home-public-journey.css`: `3d400eb24074cda738e5c35d6daf57f5300335e22d9e035c7968c17c9a2f0cc9`
 - `client/src/components/DashboardLayout.tsx`: `976a70921c7a72d2fe0ece704af9de5814daacdf368175f69bd5c03005f61713`
 - `client/src/components/lobby/useWorkspaceNavigation.ts`: `552f8f6969dd2ff5455fb5da0223d8067bcb8c9ad22090cc03732aa0efd31ba8`
-- `client/src/components/lobby/useWorkspaceNavigation.test.tsx`: `d55577ab5b04ad6b1fcc3835c5aa3afc24a53bacc8bee42cdfb8115b1a2b2586`
+- `client/src/components/lobby/useWorkspaceNavigation.test.tsx`: `c68eaf9d107dfd0d788fdea6c2f285548870aa9422f11eca3c75de44bcc93519`
 - `vitest.public-journey.config.ts`: `ae82e6541dbbaaaf59db39ef8438ffaf2e4544b6b7813931b4ef14d9ad0272ee`
+
+## Protected CI follow-up
+
+The initial candidate passed the normal GitHub build, but the TypeScript debt ratchet caught one new test-only typing error: `Element.focus` in the desktop Escape test. The locator is now explicitly `querySelector<HTMLAnchorElement>`, with no runtime or baseline relaxation. Required checks must run again on the corrected commit. The 19-test execution remains the earlier bounded test receipt, not a claim about the final CI result.
