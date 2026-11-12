@@ -327,7 +327,7 @@ const RULES = [
     // "Do not …" is an IMPERATIVE only when no subject precedes it: "We do not invent scores" is
     // doctrine stated to the reader and must ship, so a first-person/second-person subject right
     // before it is excluded (the scanner always matches case-insensitively).
-    pattern: /(?<!\b(?:we|i|you|they)\s)\b(?:Do not (?:invent|restore|paint|mint|put|ship|build from)|public door|This VM\b|planted key|per-site agent|in-lane only|Apex 5\d\d|SPEC only, not a live|war brief|domination playbook)\b/i,
+    pattern: /(?<!\b(?:we|i|you|they)\s)\b(?:Do not (?:invent|restore|paint|mint|put|ship|build from)|public door|This VM\b|planted key|per-site agent|in-lane only|Apex 5\d\d|SPEC only, not a live|war brief|domination playbook|the gap is the product|certification theatre|certification theater|unsolicited and permissionless|honesty gate)\b/i,
     why: "Agent/operator instruction or internal strategy note on a public surface. Say what the reader can do, or move the note to /status/internal (noindex).",
     // Exempt, by exact built path: the corrections ledger (quotes withdrawn copy verbatim), the two
     // files WRITTEN FOR AGENTS (instructions to agents are their purpose), and the noindex operator

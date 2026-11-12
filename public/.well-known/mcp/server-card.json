@@ -24,8 +24,7 @@
     "mcp": {
       "primary": "https://councilof.ai/mcp",
       "current": "https://councilof.ai/mcp",
-      "stdio": null,
-      "stdio_note": "npm csoai-gspc-mcp: published releases are deprecated on npm and carry fewer tools; use the free door https://councilof.ai/mcp/free",
+      "stdio": "npx -y csoai-gspc-mcp@0.2.7",
       "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is 54: 49 free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
       "free": "https://councilof.ai/mcp/free",
       "free_note": "https://councilof.ai/mcp/free serves the 49 free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
@@ -3472,12 +3471,58 @@
           "x_payment": {
             "type": "string",
             "description": "The X-PAYMENT header value (base64 x402 payload) signed by your wallet against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
           }
         },
-        "required": [
-          "subject"
-        ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "subject"
+            ]
+          },
+          {
+            "required": [
+              "purchase_action"
+            ]
+          }
+        ]
       },
       "csoai": {
         "paid": true,
@@ -3569,6 +3614,43 @@
           "x_payment": {
             "type": "string",
             "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
           }
         },
         "additionalProperties": false
@@ -3653,12 +3735,58 @@
           "x_payment": {
             "type": "string",
             "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
           }
         },
-        "required": [
-          "asset"
-        ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "asset"
+            ]
+          },
+          {
+            "required": [
+              "purchase_action"
+            ]
+          }
+        ]
       },
       "csoai": {
         "paid": true,
@@ -3744,12 +3872,58 @@
           "x_payment": {
             "type": "string",
             "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
           }
         },
-        "required": [
-          "from"
-        ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "from"
+            ]
+          },
+          {
+            "required": [
+              "purchase_action"
+            ]
+          }
+        ]
       },
       "csoai": {
         "paid": true,
@@ -3841,12 +4015,58 @@
           "x_payment": {
             "type": "string",
             "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
           }
         },
-        "required": [
-          "obligation"
-        ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "obligation"
+            ]
+          },
+          {
+            "required": [
+              "purchase_action"
+            ]
+          }
+        ]
       },
       "csoai": {
         "paid": true,

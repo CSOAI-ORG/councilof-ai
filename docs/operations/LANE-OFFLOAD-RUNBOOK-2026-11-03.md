@@ -56,9 +56,19 @@ in a day, and each window came within minutes.
 | Work | Runs on | Entry point |
 |---|---|---|
 | Lane work: sweeps, guards, generators, docs | GitHub Actions | the lane's own workflow (see `hygiene-sweeper.yml`) or plain PR gates |
+| **Board mirrors + storage (HF-first, 2026-11-04 revision)** | **Hugging Face** — datasets (snapshot storage), Spaces (served mirrors), private scratch datasets | `hf-gspc-surface-sync.yml` (2×/day, verified live); board mirror: [`csoai/gspc-board`](https://huggingface.co/datasets/csoai/gspc-board) dataset + Space; lane scratch: private `csoai/lane-hygiene-scratch` |
+| Measurement batches (CPU) | **HF CPU (free tier)** | per the Antigravity week plan (`docs/operations/ANTIGRAVITY-LANE-WEEK-PLAN-2026-11-03.md`) |
+| Measurement batches (GPU/CPU) | Kaggle | `kaggle-gspc-batch.yml`, `gspc-one-publish.yml` |
 | Measurement mill (HF Jobs GPU) | HF Jobs, 4×/day | `hf-jobs-mill-launch.yml` → `mill-jobs-land.yml` — **both `disabled_manually` since 23/24 Oct; re-enabling is owner-gated (tracked on #3746)** |
-| Batch rounds | Kaggle | `kaggle-gspc-batch.yml` |
-| Long-lived pod workspaces | RunPod | `runpod-intake` / `runpod-land` + the RUNPOD-GSPC-* docs; durable state on `/workspace`, never `/opt` or `/root` (see the substrate doc for why) |
+| Busabase substrate (legacy, running) | RunPod | `runpod-intake` / `runpod-land` + the RUNPOD-GSPC-* docs; durable state on `/workspace`, never `/opt` or `/root` (see the substrate doc for why). **Legacy: new lane work goes to HF first; the pod serves the existing substrate only.** |
+
+**The 2026-11-04 revision (owner word: "moving from RunPod to HuggingFace Spaces and
+buckets")**: HF is the primary lane substrate. The credentials are plumbed (B7: the working
+HF token synced into `HF_TOKEN` / `HUGGINGFACE_TOKEN` / `HF_INFERENCE_TOKEN`, and the board
+parity across HF dataset + Space + Kaggle + GitHub is EXTERNALLY_VERIFIED per the
+Antigravity lane). RunPod keeps only the live Busabase substrate; lane scratch goes to
+private HF datasets, batch work to HF CPU / Kaggle, and the petabyte `/workspace` volume is
+inherited by the existing pod workloads rather than grown.
 
 A lane that needs a pod does NOT clone the repo onto the Mac to reach it: the workflows
 dispatch the pod; the lane reads results from PRs and artifacts.
@@ -72,8 +82,8 @@ dispatch the pod; the lane reads results from PRs and artifacts.
 - **Anything removed moves to Trash with a manifest** (path, HEAD sha, why-safe, restore
   command) — the 2026-11-02 pass moved nothing because nothing qualified; the manifest's
   re-check commands make the next pass one command per candidate.
-- **Scratch belongs in the repo's CI or `/workspace` on a pod**, not `/tmp` on the Mac —
-  `/tmp` repro clones are how 7.5 GB vanished overnight.
+- **Scratch belongs in repo CI or a private HF dataset**, not `/tmp` on the Mac — `/tmp`
+  repro clones are how 7.5 GB vanished overnight.
 
 ## 5. Human steps that remain owner-gated
 

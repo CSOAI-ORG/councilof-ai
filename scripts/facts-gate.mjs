@@ -368,6 +368,57 @@ function ruleMeasuredOverclaim(facts, file, text, add, liveMeasured) {
   }
 }
 
+// THE MIDDLE FORM of the board's own sentence: "<N> axes \u00b7 <M> measured".
+//
+// That is exactly the shape of totals.public_count — the string every live surface is told
+// to quote VERBATIM. COUNT_RE reads only the slot count out of it, and MEASURED_RE does not
+// match "M measured" at all, so the measured half of a live surface's board sentence was
+// invisible to this gate. Measured 2026-11-06: three surfaces that may never be exempt
+// published "34 axes \u00b7 23 measured" while the board read "34 axes \u00b7 34 measured",
+// and the gate was green throughout.
+//
+// The rule is deliberately narrow, because a wide one would flag history:
+//   - it fires ONLY when the slot count in the sentence IS the current slot count, so a
+//     historical quote ("the board read 23 axes \u00b7 22 measured" on an older date) names
+//     a different slot count and is left alone;
+//   - it fires ONLY for a surface in LIVE_SURFACES_NEVER_EXEMPT, the list of surfaces a
+//     reader quotes AS the board's state;
+//   - it fires only when the measured half disagrees with the board's measured count, in
+//     EITHER direction: on these surfaces an underclaim is not a safer claim, it is a stale
+//     one, and "claiming fewer is safe" is the wrong rule for the surface that must carry
+//     the board's current sentence.
+//
+// Every other surface keeps the existing grammar untouched.
+const BOARD_SENTENCE_RE =
+  /\b(\d{1,3})\s+(?:canonical\s+|public\s+)?(?:axes|axis|slots)\s*[\u00b7\u2022]\s*(\d{1,3})\s+measured\b/gi;
+
+function ruleLiveBoardSentence(facts, file, text, add, liveCount, liveMeasured) {
+  if (liveCount == null || liveMeasured == null) return;
+  if (!LIVE_SURFACES_NEVER_EXEMPT.includes(file)) return;
+  BOARD_SENTENCE_RE.lastIndex = 0;
+  let m;
+  while ((m = BOARD_SENTENCE_RE.exec(text))) {
+    const slots = Number(m[1]);
+    const measured = Number(m[2]);
+    if (slots !== liveCount) continue;       // a historical read names a different slot count
+    if (measured === liveMeasured) continue; // it quotes the board's current sentence
+    if (isProhibition(text, m.index)) continue;
+    if (isNegated(text, m.index, BOARD_SENTENCE_RE.lastIndex)) continue;
+    if (CORRECTION_CTX.test(ctx(text, m.index, BOARD_SENTENCE_RE.lastIndex, 300))) continue;
+    add({
+      rule: "live-board-sentence",
+      file,
+      text: m[0],
+      why:
+        `"${m[0]}" is a live surface quoting the board's own sentence, but the board reads ` +
+        `${liveCount} axes \u00b7 ${liveMeasured} measured. A surface that may never be exempt ` +
+        `carries the board's CURRENT state: an underclaim is not a safer claim, it is a stale one. ` +
+        `Rebuild it with scripts/surface/rebind-board-cites.mjs.`,
+      ctx: ctx(text, m.index, BOARD_SENTENCE_RE.lastIndex),
+    });
+  }
+}
+
 // Present-tense assertions that a planned/devnet rail is already live.
 const LIVE_TENSE = [
   "is live",
@@ -608,6 +659,7 @@ function runRules(facts, files, rootDir, liveCount, liveMeasured, gatedIds = [])
     const countText=contentOf(f,currentCountContent(corrected));
     ruleAxisCount(facts, rel, countText, add, liveCount, corrected);
     ruleMeasuredOverclaim(facts, rel, text, add, liveMeasured);
+    ruleLiveBoardSentence(facts, rel, text, add, liveCount, liveMeasured);
     ruleCapabilityTense(facts, rel, text, add);
     ruleAnchorCount(facts, rel, text, add);
     ruleOwnerGated(rel, raw, gatedIds, add);
@@ -788,6 +840,7 @@ async function selftest(facts) {
     ruleBoundary(facts, file, text, add);
     ruleAxisCount(facts, file, text, add, liveCount, html);
     ruleMeasuredOverclaim(facts, file, text, add, liveMeasured);
+    ruleLiveBoardSentence(facts, file, text, add, liveCount, liveMeasured);
     ruleCapabilityTense(facts, file, text, add);
     ruleAnchorCount(facts, file, text, add);
     const didFail = violations.length > 0;
@@ -866,6 +919,30 @@ async function selftest(facts) {
     console.log(`  ${ok ? "ok  " : "FAIL"}  ${shouldFail ? "must CATCH " : "must PASS  "} ${name}`);
   }
   // The page-level rule: a gated axis is a PAGE, whether or not the markup carries a hook.
+  // \u2500\u2500 THE MIDDLE FORM of the board's own sentence \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // These call ruleLiveBoardSentence ALONE, so each case proves what THIS rule does and
+  // not what some other rule does to the same sentence. Three live surfaces published
+  // "N axes \u00b7 M-11 measured" against a board reading "N axes \u00b7 M measured" and the gate was
+  // green: COUNT_RE reads only the slot count out of that shape, and MEASURED_RE does not
+  // match "M measured" at all.
+  for (const [name, file, body, shouldFail] of [
+    ["VIOLATION: a live surface that misquotes the measured half of the board sentence fails",
+     "publisher-health.json", `{"public_count": "${liveCount} axes \u00b7 ${Math.max(0, liveMeasured - 11)} measured"}`, true],
+    ["a live surface that quotes the board's current sentence passes",
+     "publisher-health.json", `{"public_count": "${liveCount} axes \u00b7 ${liveMeasured} measured"}`, false],
+    ["a HISTORICAL board sentence with an older slot count is left alone",
+     "publisher-health.json", `{"note": "On 2026-09-01 the board read 23 axes \u00b7 22 measured."}`, false],
+    ["a surface that may never be exempt is the only one judged",
+     "interop/not-a-live-surface.json", `{"public_count": "${liveCount} axes \u00b7 ${Math.max(0, liveMeasured - 11)} measured"}`, false],
+    ["a live surface that OVERSTATES the measured count fails",
+     "owm/v0.1/latest.json", `{"public_count": "${liveCount} axes \u00b7 ${liveMeasured + 5} measured"}`, true],
+  ]) {
+    const v = [];
+    ruleLiveBoardSentence(facts, file, body, (x) => v.push(x), liveCount, liveMeasured);
+    const ok = (v.length > 0) === shouldFail;
+    ok ? pass++ : fail++;
+    console.log(`  ${ok ? "ok  " : "FAIL"}  ${shouldFail ? "must CATCH " : "must PASS  "} ${name} (board ${liveCount} \u00b7 ${liveMeasured})`);
+  }
   for (const [name, file, html, shouldFail] of [
     ["owner-gated axis page by path", "axis/regulator-transparency.html", "<html><body>x</body></html>", true],
     ["owner-gated axis page by canonical", "axis/somewhere.html", '<link rel="canonical" href="https://councilof.ai/axis/regulator-transparency" />', true],

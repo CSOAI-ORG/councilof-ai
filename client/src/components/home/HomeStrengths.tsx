@@ -228,14 +228,13 @@ export default function HomeStrengths({
       data-testid="home-strengths"
     >
       <div className="section-shell">
-        <p className="t-kicker text-emerald-700 dark:text-emerald-300">Why this one is different</p>
+        <p className="t-kicker text-emerald-700 dark:text-emerald-300">Evidence you can inspect</p>
         <h2 id="strengths-h" className="t-band mt-4 max-w-3xl text-foreground">
-          Six things you can check before you believe anything else on this page.
+          Six ways to review our published evidence.
         </h2>
         <p className="t-lede measure mt-5 text-muted-foreground">
-          None of these is an adjective. Each one names a thing we publish and gives you the door
-          to go and look at it — and the small print beside each figure is the honest state of that
-          source, not decoration.
+          Each area links to a published source you can inspect. The notes beside each figure
+          identify its current status and the limits of what it establishes.
         </p>
         <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {cards.map((c) => (

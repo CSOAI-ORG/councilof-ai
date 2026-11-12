@@ -22,8 +22,17 @@ const WORKFLOWS = [
     path: ".github/workflows/kaggle-community-cells.yml",
     relative: "../.github/workflows/kaggle-community-cells.yml",
     checkout: "      - uses: actions/checkout@v4",
-    before: { bytes: 6249, sha256: "f36471c9d6a4ece308202409f887490151f587ac5c114e2d7a9c6c42792f7bc9" },
-    after: { bytes: 6373, sha256: "7646806e2acfd41c3e1b167d488361b1cb74bbf4754dc4c9d98aad449be18a67" },
+    // RE-PINNED 2026-11-03. #3823 changed this workflow on master (qualified
+    // kaggle==2.2.4+six pins and fail-closed on empty status polls), so the
+    // whole-byte pins below no longer described the reviewed file and the
+    // contract failed closed on a workflow change that was itself reviewed.
+    // The STRUCTURAL contract is unchanged and still holds: exactly one
+    // unchanged `actions/checkout@v4`, the explicit deploy-head `with: ref:`,
+    // and nothing after it. Only the byte counts and digests moved, and they
+    // were recomputed from the reviewed file — not copied from anywhere.
+    // An independent lane landed the same re-pin; both derivations agree.
+    before: { bytes: 6340, sha256: "9e0d0cbfe8d903a1afe79a7609726c2a07bac808a56fe733aa643bec4b666809" },
+    after: { bytes: 6464, sha256: "c08c0b9bc4a2fd563591d06d1038fbb53da2962d1d7a0d10627ba97c066b58eb" },
   },
 ];
 const digest = (text) => createHash("sha256").update(text, "utf8").digest("hex");

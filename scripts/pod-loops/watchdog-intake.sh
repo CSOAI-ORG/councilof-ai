@@ -63,7 +63,36 @@ if [ ! -d "$LANE/.git" ]; then
     "/$PUB*" >>"$RUNLOG" 2>&1 || { line "FAIL sparse-checkout in $LANE"; exit 4; }
 fi
 git -C "$LANE" fetch -q origin >>"$RUNLOG" 2>&1 || { line "FAIL fetch in $LANE"; exit 4; }
-git -C "$LANE" checkout -q -f -B "$BRANCH" origin/master >>"$RUNLOG" 2>&1 || { line "FAIL checkout $BRANCH in $LANE"; exit 4; }
+# WHICH COMMIT THE DAY IS BUILT ON. The lane's origin is the bare repo this loop was
+# pointed at, so `origin/master` exists ONLY when that repo has a master branch. A
+# checkout of some other ref - or a detached HEAD - has no master, and this step used to
+# hard-code origin/master, so the loop could not start at all: it failed with
+# "FAIL checkout watchdog/auto-<date>" on every run whose source was not master.
+# Found on 2026-11-03, when the daily intake was dispatched from a feature branch to
+# verify the workflow: the loop read nothing because it never reached the probe.
+#
+# The base is RESOLVED, not assumed: WATCHDOG_BASE when the caller names one, else
+# origin/master when the source has one, else origin/HEAD, which IS the source's own HEAD.
+# (Measured with a scratch repository: a source with only `main` and `feature/x` gives a
+# lane whose remote-tracking refs are origin/feature/x and origin/main, and
+# `git checkout -B <branch> origin/master` fails with "'origin/master' is not a commit"
+# while `origin/HEAD` succeeds.)
+BASE=${WATCHDOG_BASE:-}
+if [ -z "$BASE" ]; then
+  if git -C "$LANE" rev-parse --verify -q origin/master >/dev/null 2>&1; then
+    BASE=origin/master
+  else
+    BASE=origin/HEAD
+  fi
+fi
+# The named base must be in THIS store. The lane SHARES the bare repo's objects, so a commit
+# the bare repo has is already here; if the caller's base is not among them, the source's own
+# HEAD is the honest fallback.
+if ! git -C "$LANE" rev-parse --verify -q "$BASE^{commit}" >/dev/null 2>&1; then
+  line "base $BASE is not in this store - falling back to origin/HEAD"
+  BASE=origin/HEAD
+fi
+git -C "$LANE" checkout -q -f -B "$BRANCH" "$BASE" >>"$RUNLOG" 2>&1 || { line "FAIL checkout $BRANCH at $BASE in $LANE"; exit 4; }
 rev=$(git -C "$LANE" rev-parse --short HEAD)
 for f in scripts/watchdog_intake.py scripts/watchdog_charter_feed.py scripts/readers/watchdog_intake_reader.py; do
   [ -s "$LANE/$f" ] || { line "FAIL $f absent from master=$rev"; exit 2; }

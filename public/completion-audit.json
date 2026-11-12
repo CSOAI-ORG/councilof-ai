@@ -1,6 +1,6 @@
 {
  "schema": "csoai.completion-audit/0.1",
- "measured_at": "2026-11-02T07:10:08Z",
+ "measured_at": "2026-11-10T13:29:10Z",
  "note": "Every LIVE line was probed against the live surface and carries the measured value and the receipt URL. An item is LIVE only if a probe saw it. Owner-gated items are named as owner-gated, never as done. This is a measurement of completion, not a claim of a market outcome: 'unicorn status' is a trajectory, not a claim, and nothing here asserts it.",
  "not_claimed": [
   "a customer",
@@ -15,8 +15,8 @@
  ],
  "counts": {
   "total": 27,
-  "live": 12,
-  "open": 6,
+  "live": 9,
+  "open": 9,
   "staged": 3,
   "owner": 6
  },
@@ -26,8 +26,8 @@
    "item": "Product live end to end (discover -> identify -> pay -> verify)",
    "lane": "agent",
    "closer": "probe",
-   "state": "LIVE",
-   "measured": "6/6 surfaces answered 200: board=200, root=200, corrections=200, x402=200, mcp=200, verify=200",
+   "state": "OPEN",
+   "measured": "availability=LIVE; 6/6 surfaces answered 200: board=200, root=200, corrections=200, x402=200, mcp=200, verify=200; completion not verified: this GET-only audit does not consume a qualified non-fixture discover/identify/pay/deliver/verify receipt",
    "receipt": "https://councilof.ai/"
   },
   {
@@ -35,8 +35,8 @@
    "item": "Flagship public (claim maintenance)",
    "lane": "agent",
    "closer": "probe",
-   "state": "LIVE",
-   "measured": "GET / -> HTTP 200",
+   "state": "OPEN",
+   "measured": "availability=LIVE; GET / -> HTTP 200; completion not verified: this GET-only audit does not consume qualified claim-maintenance acceptance linking the claim, supporting evidence, correction history and independent readback",
    "receipt": "https://councilof.ai/"
   },
   {
@@ -54,7 +54,7 @@
    "lane": "agent",
    "closer": "probe",
    "state": "LIVE",
-   "measured": "root as_of=2026-11-01T15:09:42Z, 428 leaves; board public_count=34 axes · 34 measured; corrections=93, signature_state=VALID",
+   "measured": "root as_of=2026-11-07T20:54:37Z, 442 leaves; board public_count=34 axes · 34 measured; corrections=93, signature_state=VALID",
    "receipt": "https://councilof.ai/root.json"
   },
   {
@@ -63,7 +63,7 @@
    "lane": "agent",
    "closer": "probe",
    "state": "LIVE",
-   "measured": "14 skill(s) in the published index",
+   "measured": "15 skill(s) in the published index",
    "receipt": "https://councilof.ai/.well-known/agent-skills/index.json"
   },
   {
@@ -71,8 +71,8 @@
    "item": "OpenTimestamps: every published proof Bitcoin-attested",
    "lane": "agent",
    "closer": "probe",
-   "state": "LIVE",
-   "measured": "677/677 proofs Bitcoin-attested, 0 pending",
+   "state": "OPEN",
+   "measured": "696/698 proofs Bitcoin-attested, 2 pending",
    "receipt": "https://councilof.ai/interop/ots/manifest.json"
   },
   {
@@ -81,7 +81,7 @@
    "lane": "agent",
    "closer": "probe",
    "state": "LIVE",
-   "measured": "40 verified, 5 blockers, 8 not_claimed; no unamended 'Public root stale' blocker",
+   "measured": "44 verified, 5 blockers, 8 not_claimed; no unamended 'Public root stale' blocker",
    "receipt": "https://councilof.ai/completion.json"
   },
   {

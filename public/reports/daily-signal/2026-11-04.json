@@ -1,0 +1,381 @@
+{
+ "as_of": "2026-11-04",
+ "corrections": {
+  "delta_state": "NOT_COMPUTED",
+  "register_as_of": "2026-11-01T07:17:54Z",
+  "register_state": "PRESENT",
+  "subjects_listed": 28
+ },
+ "excluded_events": [
+  {
+   "date": "2026-08-06",
+   "event_sha256": "5ff203a8548a31716ab55aba83d8bee7d064f3db1e4dc3025a97c14785ea8ee7",
+   "reason": "BEFORE_WINDOW",
+   "source_index": 0
+  },
+  {
+   "date": "2026-09-11",
+   "event_sha256": "b9a826e13545fab7f1dd399329592ebfea314d6329850420546fb6b6351d165c",
+   "reason": "BEFORE_WINDOW",
+   "source_index": 1
+  },
+  {
+   "date": "2026-09-12",
+   "event_sha256": "dfe7a57a6366d896b48ebfdeca88773d984c493713c0d78a5c7c67c65b588b25",
+   "reason": "BEFORE_WINDOW",
+   "source_index": 2
+  },
+  {
+   "date": "2027-08-02",
+   "event_sha256": "14abc486807f20d744ff04b311d1c19f3da34b7976a79a5dd5dfcea31f51cdc4",
+   "reason": "AFTER_WINDOW",
+   "source_index": 11
+  },
+  {
+   "date": "2027-08-02",
+   "event_sha256": "42a2189ca05b15793c8dc085315fec1d844b08500ebc41e2c31cb4852f54e0c1",
+   "reason": "AFTER_WINDOW",
+   "source_index": 12
+  },
+  {
+   "date": "2027-12-02",
+   "event_sha256": "c28e21a6ca8779e5ada8b164e1fe409e15dd09b3a36232876a20ec8e797221a9",
+   "reason": "AFTER_WINDOW",
+   "source_index": 13
+  },
+  {
+   "date": "2027-12-11",
+   "event_sha256": "15c08e6f8a15100f47edc23bd2d057e1d10b00cfdab5a1bd383a3257ac6e114c",
+   "reason": "AFTER_WINDOW",
+   "source_index": 14
+  },
+  {
+   "date": "2028-01-01",
+   "event_sha256": "b6d495ff993475a3a2fa5c7ba43f208632576eeed4c6dd28aa22c4f9143a660a",
+   "reason": "AFTER_WINDOW",
+   "source_index": 15
+  },
+  {
+   "date": "2028-01-28",
+   "event_sha256": "f0113d99eff519112942aa43db4bb2612d969f397f2eb92f501c9eff7a635218",
+   "reason": "AFTER_WINDOW",
+   "source_index": 16
+  },
+  {
+   "date": "2028-08-02",
+   "event_sha256": "e91b6abc43d2e113785cd38356b6cca60b7b8ba2f442e17d05c055f1f839c2fb",
+   "reason": "AFTER_WINDOW",
+   "source_index": 17
+  },
+  {
+   "date": "2030-08-02",
+   "event_sha256": "4531fb5a6c7a28c98b891f566c70073288a2cf00b6e733c66a6a0240bf79313f",
+   "reason": "AFTER_WINDOW",
+   "source_index": 18
+  }
+ ],
+ "generated_from": {
+  "board": {
+   "path": "public/signed/card-matrix.json",
+   "sha256": "792873fbc2a14f86e566a350994f9eefef0b0d245a374972e70532796f3c738c",
+   "state": "READ"
+  },
+  "claims": {
+   "path": "public/spec/claim-maintenance/register.json",
+   "sha256": "c5df622446f2fe164f8c47880e0fb8698d28080ae163fe4af1009865a67c6a80",
+   "state": "READ"
+  },
+  "clock": {
+   "path": "public/regulatory-clock.json",
+   "sha256": "96e08a1c338c2a6e000a025ae47b4a3374504c905499fa43c7fedd7c91043ae6",
+   "state": "READ"
+  },
+  "crosswalk": {
+   "path": "tui3-crosswalk/regulatory-crosswalk-20260912.json",
+   "sha256": "c00f3ce978e86a8838114ad510afc7da4037700fb749740d70211e23f1b4f665",
+   "state": "READ"
+  },
+  "mappings": {
+   "path": null,
+   "sha256": null,
+   "state": "ABSENT"
+  }
+ },
+ "headline": {
+  "clock_events": 19,
+  "events_in_horizon": 8,
+  "excluded_events": 11,
+  "invalid_events": 0,
+  "mapped_events": 0,
+  "unmapped_events": 8
+ },
+ "horizon_days": 90,
+ "invalid_events": [],
+ "limitations": [
+  "Only this clock snapshot and stated time window are covered; not a global regulatory census.",
+  "Dates, legal assertions and review identities have not been independently validated by this builder.",
+  "No legal conclusion, signing, payment, delivery or execution authority is established."
+ ],
+ "orphaned_mapping_event_ids": [],
+ "schema": "csoai.daily-signal/0.1",
+ "signals": [
+  {
+   "binds": "providers of generative AI placed on the market before 2 Aug 2026",
+   "confidence": "A",
+   "date": "2026-12-02",
+   "days_until": 28,
+   "event_sha256": "829590cc786308c786a63346aa411f8fbaccaba936d2faa81f5b683a705ab332",
+   "evidence_coverage": null,
+   "framework_matched": null,
+   "gspc_axes": [],
+   "instrument": "EU AI Act as amended by Reg. 2026/1744",
+   "jurisdiction": "EU",
+   "limitations": [
+    "Mapping is not applicability or obligation satisfaction.",
+    "Board labels and card references are not verified measurement results."
+   ],
+   "mapped_provisions": [],
+   "mapping": {
+    "declaration": null,
+    "reason": "No reviewed event-to-provision mapping declaration",
+    "state": "UNMAPPED"
+   },
+   "provision": "Art 111(4) → Art 50(2)",
+   "requires": "Machine-readable marking of synthetic audio, image, video and text. The four-month transitional expires.",
+   "source_index": 3,
+   "source_status": "CLOCK_ASSERTION_NOT_REVALIDATED"
+  },
+  {
+   "binds": "providers AND deployers, all sectors, not only high-risk",
+   "confidence": "A",
+   "date": "2026-12-02",
+   "days_until": 28,
+   "event_sha256": "fd4086b7d726b037f13770c6f5024583f49abff41444bace07c783c78422656e",
+   "evidence_coverage": null,
+   "framework_matched": null,
+   "gspc_axes": [],
+   "instrument": "EU AI Act as amended",
+   "jurisdiction": "EU",
+   "limitations": [
+    "Mapping is not applicability or obligation satisfaction.",
+    "Board labels and card references are not verified measurement results."
+   ],
+   "mapped_provisions": [],
+   "mapping": {
+    "declaration": null,
+    "reason": "No reviewed event-to-provision mapping declaration",
+    "state": "UNMAPPED"
+   },
+   "provision": "Art 5(1)(ba),(bb); Art 5(1a),(1b)",
+   "requires": "New prohibitions on AI generating or manipulating non-consensual intimate imagery and CSAM — including where such output is 'reasonably foreseeable and reproducible in the absence of reasonable, proportionate and effective safeguards'.",
+   "source_index": 4,
+   "source_status": "CLOCK_ASSERTION_NOT_REVALIDATED"
+  },
+  {
+   "binds": "manufacturers and providers of software and AI",
+   "confidence": "B",
+   "date": "2026-12-09",
+   "days_until": 35,
+   "event_sha256": "385e9b34f127966db907a03e1ef4027549c8f3029562d549f21aee051e3d0416",
+   "evidence_coverage": null,
+   "framework_matched": null,
+   "gspc_axes": [],
+   "instrument": "Product Liability Directive (EU) 2024/2853",
+   "jurisdiction": "EU",
+   "limitations": [
+    "Mapping is not applicability or obligation satisfaction.",
+    "Board labels and card references are not verified measurement results."
+   ],
+   "mapped_provisions": [],
+   "mapping": {
+    "declaration": null,
+    "reason": "No reviewed event-to-provision mapping declaration",
+    "state": "UNMAPPED"
+   },
+   "provision": "Art 22 transposition",
+   "requires": "Software and AI are 'products'. Defectiveness presumptions apply where complexity makes proof excessively difficult. Applies to products placed on the market after this date.",
+   "source_index": 5,
+   "source_status": "CLOCK_ASSERTION_NOT_REVALIDATED"
+  },
+  {
+   "binds": "generative AI hosting platforms",
+   "confidence": "B",
+   "date": "2027-01-01",
+   "days_until": 58,
+   "event_sha256": "87655c97cfa70d7ed099bbe0378054780713ef14874500caa18e7ea472c0e8f8",
+   "evidence_coverage": null,
+   "framework_matched": null,
+   "gspc_axes": [],
+   "instrument": "California SB 942 as amended by AB 853",
+   "jurisdiction": "US-CA",
+   "limitations": [
+    "Mapping is not applicability or obligation satisfaction.",
+    "Board labels and card references are not verified measurement results."
+   ],
+   "mapped_provisions": [],
+   "mapping": {
+    "declaration": null,
+    "reason": "No reviewed event-to-provision mapping declaration",
+    "state": "UNMAPPED"
+   },
+   "provision": "AI Transparency Act",
+   "requires": "Convey and retain provenance metadata on hosted AI content.",
+   "source_index": 7,
+   "source_status": "CLOCK_ASSERTION_NOT_REVALIDATED"
+  },
+  {
+   "binds": "developers and deployers of covered automated decision-making technology",
+   "confidence": "B",
+   "date": "2027-01-01",
+   "days_until": 58,
+   "event_sha256": "9f747d68a2fa090108d3fc76ef45b02fa5fe3e9c4a9e6817c31cffb45dd6b613",
+   "evidence_coverage": null,
+   "framework_matched": null,
+   "gspc_axes": [],
+   "instrument": "Colorado SB 26-189 (ADMT Act)",
+   "jurisdiction": "US-CO",
+   "limitations": [
+    "Mapping is not applicability or obligation satisfaction.",
+    "Board labels and card references are not verified measurement results."
+   ],
+   "mapped_provisions": [],
+   "mapping": {
+    "declaration": null,
+    "reason": "No reviewed event-to-provision mapping declaration",
+    "state": "UNMAPPED"
+   },
+   "provision": "whole act",
+   "requires": "Repeals and replaces the Colorado AI Act. Developer disclosures on intended and harmful uses, training-data categories and limitations; deployer consumer notice and adverse-decision notices; three-year record retention.",
+   "source_index": 6,
+   "source_status": "CLOCK_ASSERTION_NOT_REVALIDATED"
+  },
+  {
+   "binds": "manufacturers of machinery and safety components placed on the EU market — including humanoid and mobile robots",
+   "confidence": "A",
+   "date": "2027-01-20",
+   "days_until": 77,
+   "event_sha256": "36cf7472f46e84ca596e4c25244d3110d25a62aed0a14ca0be6f1c19a8c5c18c",
+   "evidence_coverage": null,
+   "framework_matched": null,
+   "gspc_axes": [],
+   "instrument": "Machinery Regulation (EU) 2023/1230",
+   "jurisdiction": "EU",
+   "limitations": [
+    "Mapping is not applicability or obligation satisfaction.",
+    "Board labels and card references are not verified measurement results."
+   ],
+   "mapped_provisions": [],
+   "mapping": {
+    "declaration": null,
+    "reason": "No reviewed event-to-provision mapping declaration",
+    "state": "UNMAPPED"
+   },
+   "provision": "Art 54 date of application; Annex I Part A",
+   "requires": "Repeals Directive 2006/42/EC. Annex I Part A adds two categories to the mandatory third-party conformity-assessment list: safety components with fully or partially self-evolving behaviour using machine learning, and machinery with embedded AI systems ensuring safety functions. Self-certification is no longer available for those.",
+   "source_index": 8,
+   "source_status": "CLOCK_ASSERTION_NOT_REVALIDATED"
+  },
+  {
+   "binds": "domestic and qualifying foreign AI businesses",
+   "confidence": "C",
+   "date": "2027-01-22",
+   "days_until": 79,
+   "event_sha256": "8464e079ed216737c030c3993cdfd733f91e0a3b4fb37b1ef1e674c041d5d3e4",
+   "evidence_coverage": null,
+   "framework_matched": null,
+   "gspc_axes": [],
+   "instrument": "Korea AI Framework (Basic) Act",
+   "jurisdiction": "KR",
+   "limitations": [
+    "Mapping is not applicability or obligation satisfaction.",
+    "Board labels and card references are not verified measurement results."
+   ],
+   "mapped_provisions": [],
+   "mapping": {
+    "declaration": null,
+    "reason": "No reviewed event-to-provision mapping declaration",
+    "state": "UNMAPPED"
+   },
+   "provision": "MSIT administrative grace",
+   "requires": "One-year grace period on administrative fines ends. The Act itself has been in force since 22 Jan 2026: generative AI labelling, high-impact AI explainability and human oversight, and a fundamental-rights impact assessment BEFORE deployment.",
+   "source_index": 9,
+   "source_status": "CLOCK_ASSERTION_NOT_REVALIDATED"
+  },
+  {
+   "binds": "the ~190 Code signatories, including Anthropic, Google, Meta, Microsoft, OpenAI, Mistral",
+   "confidence": "B",
+   "date": "2027-02-02",
+   "days_until": 90,
+   "event_sha256": "1eba527a42d7174955accb2152d7739005203a26a504fa9d5987b89c49e06c47",
+   "evidence_coverage": null,
+   "framework_matched": null,
+   "gspc_axes": [],
+   "instrument": "Code of Practice on Transparency of AI-generated Content",
+   "jurisdiction": "EU",
+   "limitations": [
+    "Mapping is not applicability or obligation satisfaction.",
+    "Board labels and card references are not verified measurement results."
+   ],
+   "mapped_provisions": [],
+   "mapping": {
+    "declaration": null,
+    "reason": "No reviewed event-to-provision mapping declaration",
+    "state": "UNMAPPED"
+   },
+   "provision": "Provider Commitment 2",
+   "requires": "Watermark detection mechanisms must be INTEROPERABLE, meeting quality criteria of effectiveness, reliability, robustness and interoperability.",
+   "source_index": 10,
+   "source_status": "CLOCK_ASSERTION_NOT_REVALIDATED"
+  }
+ ],
+ "unmapped": [
+  {
+   "date": "2026-12-02",
+   "event_sha256": "829590cc786308c786a63346aa411f8fbaccaba936d2faa81f5b683a705ab332",
+   "instrument": "EU AI Act as amended by Reg. 2026/1744",
+   "reason": "No reviewed event-to-provision mapping declaration"
+  },
+  {
+   "date": "2026-12-02",
+   "event_sha256": "fd4086b7d726b037f13770c6f5024583f49abff41444bace07c783c78422656e",
+   "instrument": "EU AI Act as amended",
+   "reason": "No reviewed event-to-provision mapping declaration"
+  },
+  {
+   "date": "2026-12-09",
+   "event_sha256": "385e9b34f127966db907a03e1ef4027549c8f3029562d549f21aee051e3d0416",
+   "instrument": "Product Liability Directive (EU) 2024/2853",
+   "reason": "No reviewed event-to-provision mapping declaration"
+  },
+  {
+   "date": "2027-01-01",
+   "event_sha256": "9f747d68a2fa090108d3fc76ef45b02fa5fe3e9c4a9e6817c31cffb45dd6b613",
+   "instrument": "Colorado SB 26-189 (ADMT Act)",
+   "reason": "No reviewed event-to-provision mapping declaration"
+  },
+  {
+   "date": "2027-01-01",
+   "event_sha256": "87655c97cfa70d7ed099bbe0378054780713ef14874500caa18e7ea472c0e8f8",
+   "instrument": "California SB 942 as amended by AB 853",
+   "reason": "No reviewed event-to-provision mapping declaration"
+  },
+  {
+   "date": "2027-01-20",
+   "event_sha256": "36cf7472f46e84ca596e4c25244d3110d25a62aed0a14ca0be6f1c19a8c5c18c",
+   "instrument": "Machinery Regulation (EU) 2023/1230",
+   "reason": "No reviewed event-to-provision mapping declaration"
+  },
+  {
+   "date": "2027-01-22",
+   "event_sha256": "8464e079ed216737c030c3993cdfd733f91e0a3b4fb37b1ef1e674c041d5d3e4",
+   "instrument": "Korea AI Framework (Basic) Act",
+   "reason": "No reviewed event-to-provision mapping declaration"
+  },
+  {
+   "date": "2027-02-02",
+   "event_sha256": "1eba527a42d7174955accb2152d7739005203a26a504fa9d5987b89c49e06c47",
+   "instrument": "Code of Practice on Transparency of AI-generated Content",
+   "reason": "No reviewed event-to-provision mapping declaration"
+  }
+ ]
+}

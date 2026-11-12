@@ -1,8 +1,16 @@
-import copy, importlib.util, json, re, tempfile, unittest
+import copy, importlib.util, json, re, subprocess, tempfile, unittest
 from pathlib import Path
 from unittest.mock import patch
 spec=importlib.util.spec_from_file_location("gen_sbom",Path(__file__).with_name("gen_sbom.py"))
 gen=importlib.util.module_from_spec(spec);spec.loader.exec_module(gen)
+
+class GitRun:
+    """A stand-in for a completed git subprocess. `returncode` matters: the durability
+    check reads it, and a stub without one is not a subprocess."""
+    def __init__(self, stdout=b"", returncode=0):
+        self.stdout = stdout
+        self.returncode = returncode
+        self.stderr = b""
 class LockfileInventory(unittest.TestCase):
     def setUp(self):
         self.package={"name":"fixture","version":"1.0.0","dependencies":{"@sample/lib":"^1.0.0"}}
@@ -62,8 +70,9 @@ class LockfileInventory(unittest.TestCase):
             lock=copy.deepcopy(self.lock);lock["packages"][""]["dependencies"]={}
             (root/"package-lock.json").write_text(json.dumps(lock));out=root/"old.json";out.write_bytes(b"existing original output")
             def git_read(args, **kwargs):
-                stdout = "c"*40 if args[1]=="rev-parse" else (root/args[2].split(":",1)[1]).read_bytes()
-                return type("Run",(),{"stdout":stdout})()
+                if args[1] in ("rev-parse","log"): return GitRun("c"*40)
+                if args[1]=="merge-base": return GitRun(b"",0)
+                return GitRun((root/args[2].split(":",1)[1]).read_bytes())
             with patch.object(gen.subprocess,"run",side_effect=git_read):
                 self.assertEqual(gen.main(["--root",str(root),"--output",str(out)]),2)
             self.assertEqual(out.read_bytes(),b"existing original output")
@@ -72,8 +81,9 @@ class LockfileInventory(unittest.TestCase):
             root=Path(directory);(root/"package.json").write_text(json.dumps(self.package))
             (root/"package-lock.json").write_text(json.dumps(self.lock))
             def git_read(args, **kwargs):
-                stdout = "c"*40 if args[1]=="rev-parse" else (root/args[2].split(":",1)[1]).read_bytes()
-                return type("Run",(),{"stdout":stdout})()
+                if args[1] in ("rev-parse","log"): return GitRun("c"*40)
+                if args[1]=="merge-base": return GitRun(b"",0)
+                return GitRun((root/args[2].split(":",1)[1]).read_bytes())
             with patch.object(gen.subprocess,"run",side_effect=git_read):
                 self.assertEqual(gen.main(["--root",str(root)]),0)
             value=json.loads((root/"public/interop/sbom-councilof-ai.json").read_bytes())
@@ -85,7 +95,9 @@ class LockfileInventory(unittest.TestCase):
             (root/"package-lock.json").write_text(json.dumps(self.lock))
             out=root/"existing.json";out.write_bytes(b"original artifact must remain")
             def git_read(args, **kwargs):
-                return type("Run",(),{"stdout":"c"*40 if args[1]=="rev-parse" else b"different committed bytes"})()
+                if args[1] in ("rev-parse","log"): return GitRun("c"*40)
+                if args[1]=="merge-base": return GitRun(b"",0)
+                return GitRun(b"different committed bytes")
             with patch.object(gen.subprocess,"run",side_effect=git_read):
                 self.assertEqual(gen.main(["--root",str(root),"--output",str(out)]),2)
             self.assertEqual(out.read_bytes(),b"original artifact must remain")
@@ -129,7 +141,9 @@ class LockfileInventory(unittest.TestCase):
             (root/"package.json").write_bytes(package_raw);(root/"package-lock.json").write_bytes(lock_raw)
             out=root/"old.json";out.write_text(json.dumps(old));before=out.read_bytes()
             def git_read(args,**kwargs):
-                return type("Run",(),{"stdout":"d"*40 if args[1]=="rev-parse" else (package_raw if args[2].endswith(":package.json") else lock_raw)})()
+                if args[1] in ("rev-parse","log"): return GitRun("d"*40)
+                if args[1]=="merge-base": return GitRun(b"",0)
+                return GitRun(package_raw if args[2].endswith(":package.json") else lock_raw)
             with patch.object(gen.subprocess,"run",side_effect=git_read):
                 self.assertEqual(gen.main(["--root",str(root),"--output",str(out),"--check"]),0)
             self.assertEqual(out.read_bytes(),before)
@@ -137,6 +151,55 @@ class LockfileInventory(unittest.TestCase):
             with patch.object(gen.subprocess,"run",side_effect=git_read):
                 self.assertEqual(gen.main(["--root",str(root),"--output",str(out),"--check"]),2)
             self.assertEqual(out.read_bytes(),changed)
+    def test_pin_is_the_newest_input_commit_and_not_head(self):
+        # A pull request's HEAD is a branch commit, and a squash merge never puts it in
+        # master's history: a pin that names it points at nothing a reader can find. The
+        # pin must be the newest commit that touched the dependency inputs — a commit in
+        # everyone's history — and the generator must SAY so when it cannot be.
+        with tempfile.TemporaryDirectory(prefix="csoai-sbom-test-") as directory:
+            root=Path(directory);(root/"package.json").write_text(json.dumps(self.package))
+            (root/"package-lock.json").write_text(json.dumps(self.lock))
+            calls=[]
+            def git_read(args,**kwargs):
+                calls.append(list(args))
+                if args[1]=="log": return GitRun("c"*40)
+                if args[1]=="rev-parse": return GitRun("d"*40)
+                if args[1]=="merge-base": return GitRun(b"",1)
+                return GitRun((root/args[2].split(":",1)[1]).read_bytes())
+            with patch.object(gen.subprocess,"run",side_effect=git_read):
+                self.assertEqual(gen.main(["--root",str(root)]),0)
+            self.assertTrue(any(a[1]=="log" for a in calls),"the pin must come from the newest input commit")
+            value=json.loads((root/"public/interop/sbom-councilof-ai.json").read_bytes())
+            pin=[p["value"] for p in value["metadata"]["properties"] if p["name"]=="commit"][0]
+            self.assertEqual(pin,"c"*40,"the pin must be the input commit, not HEAD")
+            self.assertNotEqual(pin,"d"*40)
+    def test_unreadable_pinned_history_is_uncheckable_and_not_a_finding(self):
+        old,fresh,package_raw,lock_raw,pinned=self.parity_fixture()
+        def unreadable(revision,path):
+            raise subprocess.CalledProcessError(128,["git","show",revision+":"+path])
+        with self.assertRaises(gen.Uncheckable):
+            gen.check_output(old,fresh,package_raw,lock_raw,unreadable)
+        # The substantive check still applies. An inventory that differs from the tree is a
+        # FINDING even when the pinned history cannot be read — otherwise an unreadable pin
+        # would quietly switch the one check that can always be made off.
+        drifted=copy.deepcopy(old);drifted["components"][0]["version"]="7.7.7"
+        with self.assertRaisesRegex(ValueError,"detailed"):
+            gen.check_output(drifted,fresh,package_raw,lock_raw,unreadable)
+    def test_cli_check_reports_unreadable_pinned_history_as_uncheckable(self):
+        with tempfile.TemporaryDirectory(prefix="csoai-sbom-test-") as directory:
+            root=Path(directory);old,fresh,package_raw,lock_raw,pinned=self.parity_fixture()
+            (root/"package.json").write_bytes(package_raw);(root/"package-lock.json").write_bytes(lock_raw)
+            out=root/"old.json";out.write_text(json.dumps(old));before=out.read_bytes()
+            recorded="c"*40
+            def git_read(args,**kwargs):
+                if args[1] in ("rev-parse","log"): return GitRun("d"*40)
+                if args[1]=="merge-base": return GitRun(b"",0)
+                target=args[2]
+                if target.startswith(recorded+":"): raise subprocess.CalledProcessError(128,args)
+                return GitRun(package_raw if target.endswith(":package.json") else lock_raw)
+            with patch.object(gen.subprocess,"run",side_effect=git_read):
+                self.assertEqual(gen.main(["--root",str(root),"--output",str(out),"--check"]),3)
+            self.assertEqual(out.read_bytes(),before)
     def test_parity_rejects_invalid_volatile_fields(self):
         original,fresh,package_raw,lock_raw,pinned=self.parity_fixture()
         for field,value in [("serialNumber","not-a-uuid"),("timestamp","tomorrow"),("timestamp","2026-10-14T09:00:00"),("timestamp","2026-10-14Q09:00:00+00:00"),("timestamp","2026-10-14 09:00:00+00:00"),("timestamp","2026-10-14T09:00:00+01:99")]:

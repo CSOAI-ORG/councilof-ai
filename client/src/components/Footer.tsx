@@ -1,11 +1,10 @@
 /**
- * Slim Footer — 2026-08-28 Owner Stack
- *
- * Compact footer with essential links, framework wordmarks, and honesty line.
- * Newsletter is inline. No duplicate columns.
+ * The homepage keeps essential destinations visible and the full link directory
+ * in a native disclosure. Other public routes retain the existing evidence footer.
  */
 
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
+import { CouncilBrand } from './brand/CouncilBrand';
 import { BookOpen, Mail } from 'lucide-react';
 import EmailOff from './EmailOff';
 import { CONTACT_MAILBOX } from '@/lib/buying';
@@ -26,6 +25,9 @@ interface FooterLink {
 }
 
 export function Footer() {
+  const [location] = useLocation();
+  const homepage = location === "/";
+  const Directory = homepage ? "details" : "div";
   const hideChrome = useSiteChromeHidden();
   if (hideChrome) return null;
   const currentYear = new Date().getFullYear();
@@ -35,6 +37,7 @@ export function Footer() {
       title: 'Product',
       links: [
         { name: 'Check a record', href: '/gspc-verify/' },
+        { name: 'Services and buying', href: '/services/' },
         { name: 'Measurement enquiries', href: '/assess/' },
         { name: 'Board', href: '/dashboard/?tab=board' },
         { name: 'Connect tools to your AI', href: '/tools/' },
@@ -70,10 +73,11 @@ export function Footer() {
       title: 'Evidence',
       links: [
         { name: 'Measurement data (JSON)', href: '/api/gspc', external: true },
+        { name: 'GSPC Master dataset', href: 'https://huggingface.co/datasets/csoai/gspc-master', external: true },
         { name: 'Metered evidence catalog (live quotes)', href: '/metered/' },
         { name: 'Evidence files (cards, proofs)', href: 'https://huggingface.co/datasets/csoai/councilof-ai-evidence', external: true },
         { name: 'Methodology', href: '/methodology/' },
-        { name: 'What we cannot measure yet', href: '/honesty/' },
+        { name: 'Measurement scope and limitations', href: '/honesty/' },
         // The readable ledger page (renders /api/corrections), not raw JSON.
         { name: 'Corrections', href: '/corrections/' },
         { name: 'How far this reaches', href: '/reach/' },
@@ -103,6 +107,8 @@ export function Footer() {
       title: 'Company',
       links: [
         { name: 'About', href: '/about/' },
+        { name: 'Operation and external use', href: '/traction/' },
+        { name: 'Partners and investors', href: '/traction/#partners' },
         { name: 'Brand & impostor notice', href: '/brand/' },
         { name: 'Evidence and reuse rights', href: '/licensing-agreement/#rights' },
         { name: 'Independence and conflicts', href: '/independence/' },
@@ -118,9 +124,28 @@ export function Footer() {
         { name: 'Disclaimers', href: '/disclaimers/' },
         { name: 'Privacy', href: '/privacy-policy/' },
         { name: 'Terms', href: '/terms-of-service/' },
+        { name: 'Refunds', href: '/refund-policy/' },
       ],
     },
   ];
+
+  // The home page keeps its essential destinations visible. The disclosure carries
+  // the remaining directory once, with no repeated destinations or live widgets.
+  const homepageEssentials = new Set([
+    "/board/", "/#how-it-works", "/connect/", "/about/", "/gspc-verify/",
+    "/methodology/", "/.well-known/did.json", "/corrections/", "/contact/",
+    "/memberships/", "/independence/", "/privacy-policy/", "/terms-of-service/",
+    "/.well-known/security.txt", "/llms.txt",
+  ]);
+  const seen = new Set(homepageEssentials);
+  const directorySections = homepage ? footerSections.map((section) => ({
+    ...section,
+    links: section.links.filter((link) => {
+      if (seen.has(link.href)) return false;
+      seen.add(link.href);
+      return true;
+    }),
+  })).filter((section) => section.links.length > 0) : footerSections;
 
   const socialLinks = [
     { name: 'Source snapshot (archived)', icon: BookOpen, href: 'https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai' },
@@ -137,10 +162,11 @@ export function Footer() {
       // this also used to clear was removed on 27 Sep 2026.)
       style={{ paddingBottom: "calc(1rem + var(--cookie-banner-h, 0px))" }}
     >
-      <div className="section-shell py-12 sm:py-14">
+      <div className={homepage ? "section-shell py-10 sm:py-12" : "section-shell py-12 sm:py-14"}>
         {/* Brand + socials */}
-        <div className="mb-10 flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-6">
+        <div className={homepage ? "mb-7 flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8" : "mb-10 flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-6"}>
           <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+            {homepage ? <CouncilBrand size="sm" /> : <>
             <svg viewBox="0 0 100 100" className="h-9 w-9" aria-hidden="true">
               <defs>
                 <linearGradient id="footerShieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -168,9 +194,10 @@ export function Footer() {
               </g>
             </svg>
             <span className="text-xl font-bold">CSOAI</span>
+            </>}
           </Link>
           <p className="text-muted-foreground text-sm max-w-md">
-            UK AI measurement infrastructure operated by CSOAI Ltd. We publish records you can check. Measurement is not certification.
+            An operating UK AI measurement and evidence organisation run by CSOAI Ltd. We publish records you can check. Measurement is not certification.
           </p>
           <div className="-mx-2.5 flex gap-1 sm:ml-auto">
             {socialLinks.map((social) => (
@@ -189,9 +216,52 @@ export function Footer() {
           </div>
         </div>
 
+        {homepage && (
+          <nav aria-label="Footer essentials" className="mb-7 grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-3">
+            {[
+              { title: "Explore", links: [
+                { label: "Measurement results", href: "/board/" },
+                { label: "How it works", href: "/#how-it-works" },
+                { label: "Developers", href: "/connect/" },
+                { label: "About Council of AI", href: "/about/" },
+              ] },
+              { title: "Check the evidence", links: [
+                { label: "Verify a record", href: "/gspc-verify/" },
+                { label: "Methodology", href: "/methodology/" },
+                { label: "Public keys", href: "/.well-known/did.json" },
+                { label: "Corrections", href: "/corrections/" },
+              ] },
+              { title: "Company", links: [
+                { label: "Contact", href: "/contact/" },
+                { label: "Participation records", href: "/memberships/" },
+                { label: "Independence and conflicts", href: "/independence/" },
+                { label: "Privacy", href: "/privacy-policy/" },
+                { label: "Terms", href: "/terms-of-service/" },
+              ] },
+            ].map((group) => (
+              <div key={group.title}>
+                <h2 className="mb-2 text-xs font-bold uppercase tracking-widest text-foreground">{group.title}</h2>
+                <ul>
+                  {group.links.map((link) => (
+                    <li key={link.href}><a href={link.href} className="inline-flex min-h-11 items-center text-sm text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600">{link.label}</a></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </nav>
+        )}
+
+        <Directory className={homepage ? "mb-7 border-y border-border" : undefined}>
+          {homepage && (
+            <summary className="min-h-12 cursor-pointer py-4 text-sm font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600">
+              Full evidence and developer directory
+            </summary>
+          )}
+          <div className={homepage ? "pb-6 pt-4" : undefined}>
+
         {/* Link columns (6) */}
         <div className="mb-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
-          {footerSections.map((section) => (
+          {directorySections.map((section) => (
             <div key={section.title}>
               <h3 className="t-kicker mb-3 text-foreground">{section.title}</h3>
               <ul className="space-y-2">
@@ -222,6 +292,18 @@ export function Footer() {
           ))}
         </div>
 
+          </div>
+        </Directory>
+
+        {homepage && (
+          <nav aria-label="Company and security records" className="mb-6 flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground">
+            <a href="https://find-and-update.company-information.service.gov.uk/company/16939677" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center underline decoration-dotted underline-offset-4 hover:text-primary">Companies House 16939677</a>
+            <a href="/.well-known/security.txt" className="inline-flex min-h-9 items-center underline decoration-dotted underline-offset-4 hover:text-primary">Security contact</a>
+            <a href="/llms.txt" className="inline-flex min-h-9 items-center underline decoration-dotted underline-offset-4 hover:text-primary">Machine-readable guide</a>
+          </nav>
+        )}
+
+        {!homepage && (<>
         {/*
           REFERENCE FRAMEWORKS — text, with the relationship named, never a logo row.
           2026-09-26: "framework we measure against" became "reference framework (no crosswalk
@@ -402,6 +484,8 @@ export function Footer() {
             ))}
           </ul>
         </div>
+
+        </>)}
 
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">

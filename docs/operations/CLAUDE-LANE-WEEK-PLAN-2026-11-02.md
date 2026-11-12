@@ -43,14 +43,24 @@ never edit · the judge is never the subject · a lock is not a grade.
 | Thu | **W4/W5 refresh PR** — regenerate both artefacts from the grown ledger; supersession table updated | counts match the served ledger of that day |
 | Fri | **week close-out** — re-run the whole local suite (`npm test` + guards), triage anything red into fixed-or-filed, append the week's coordination report | suite green; coordination entry posted |
 
-### Track C — estate alignment (the owner's ask: all agents off the local disk)
+### Track C — estate alignment (REVISED 2026-11-04: RunPod → HuggingFace Spaces/buckets)
 
-| day | work | dependency |
+**Direction change, owner-confirmed:** compute and storage move from RunPod to **HuggingFace
+Spaces + HF datasets as buckets**. The estate's own tooling already serves this: the spray lane
+publishes the board snapshot to the `csoai/gspc-board` dataset and the ONE living Space
+(`csoai/gspc-board`), and `scripts/runpod_gspc_push_to_hf.py` carries pod runs to the private
+intake dataset (`csoai/runpod-gspc-intake`) with an atomic transport contract. The RunPod-first
+proposal of 2 Nov is superseded; **D21 (the pod volume) stops gating this lane** — the lane's
+durable outputs now land on HF, not on the failing pod volume. (D21 stays open for the pods
+themselves; it just no longer blocks this lane.)
+
+| day | work | state |
 |---|---|---|
-| Mon | **RunPod-first proposal posted** to LANE_COORDINATION: lanes keep working trees on RunPod pod workspaces (`/workspace/lanes-<lane>/`), the M4 shrinks to orchestrator + credentials | **D21 must close first** — the pod network volume loses writes (owner console act). Until then RunPod working trees are NOT safe and this lane says so |
-| Mon–Tue | **compute alignment**: measurement/eval batches target HF CPU (free tier) and Kaggle GPU/CPU sessions per the estate's existing mirror lanes; batch jobs carry their own receipts | B7 (HF_TOKEN secret) still blocks mirror re-spray — observed, not worked around |
-| Wed | **local disk hygiene PR**: `git gc` + prune merged branches + worktree prune on the M4 checkout (525 MB today); report the 6.8 GiB-free state to the owner queue — the shortfall is NOT in this checkout, so the reclaim target is elsewhere (owner rows B14/B15) | — |
-| Thu | **Desktop Commander wiring** — the DC MCP endpoint (mcp.desktopcommander.app) is confirmed with three devices online since 2026-10-07; wiring remains blocked on the owner's one-time Authorize click. This lane remains ready; the block is owner-gated and re-observed in the Friday report | owner act |
+| Mon | **B7 re-measured per the owner's own verification pass (OWNER_ASKS.md, 3 Nov 04:14Z): the HF token is VALID again locally** (~/.cache/huggingface/token, admin of the csoai org; model renames to csoai-* done). The CI secret (GSPC_BOARD_TOKEN / #3) remains dead — local HF ops GO, CI-side spray still blocked | updated |
+| Mon | **W1 measured CLOSED by GET**: the HF mirror snapshot carries as_of == live root as_of (2026-11-01T15:09:42Z), root_sha256 == live root bytes (a1309620…), merkle == live merkle (4e576078…) — the spray lane refreshed it 2 Nov 19:46Z. The weekly mirror-gate passes all 6 directory exclusions | closed |
+| daily | local HF ops use the valid local token; the CI secret remains the blocker for scheduled sprays — observed, not worked around | standing |
+| Wed | **lane offload**: follow `docs/operations/LANE-OFFLOAD-RUNBOOK-2026-11-03.md` (how a lane works without a fat local clone) — the M4 checkout shrinks to orchestrator+credentials; durable outputs land on HF datasets | runbook landed 3 Nov by the offload lane |
+| Thu | **W4/W5 refresh** on HF land: regenerate + publish the ledger artefacts the same way the spray lane publishes the snapshot | — |
 
 ### Not worked this week (stated, so absence is honest)
 

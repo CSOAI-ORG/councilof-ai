@@ -1,0 +1,1921 @@
+{
+  "schema": "csoai.gpai-matrix/0.1",
+  "kind": "DERIVED_GROUNDING_MATRIX",
+  "layer": "Council of AI — Global Regulation Atlas",
+  "title": "EU AI Act provision × estate-tooling grounding matrix (GPAI focus: Arts 53–55 and the Code of Practice)",
+  "as_of": "2026-10-26T03:37:48.681Z",
+  "measurement_not_certification": true,
+  "grounded_in": [
+    {
+      "path": "public/interop/regulatory-inventory-latest.json",
+      "sha256": "345e4bd936a96ef5a594e364665589cc05d858c9d772227f3f61823d5fad755c",
+      "role": "discovery pointer (schema csoai.regulatory-inventory-pointer/1)"
+    },
+    {
+      "path": "public/interop/regulatory-inventory-2026-10-26-7bc985bfc7c2.json",
+      "sha256": "ac5c2e73bbabaa2059b4ff4eb88c23d674bee04de94b77b3ef74fae957b144cd",
+      "role": "stamped regulatory inventory selected by the pointer"
+    },
+    {
+      "path": "public/interop/frozen-provision-hashes.json",
+      "sha256": "e43c9bd52adeeda96b67a3ae63700c44f0aae3a44c74a0dac46fbed5f8008788",
+      "role": "frozen provision identifiers + sha256 (evidence_source named by the inventory)"
+    },
+    {
+      "path": "functions/api/_obligations.ts",
+      "sha256": "e67a9d8c44938577b281642854d08e3ae407490c07b6afcdf0e33b92c52871b8",
+      "role": "served obligation registry (article-50, article-53)"
+    },
+    {
+      "path": "functions/api/regulation.ts",
+      "sha256": "b4bcc9cdd65ad502b8b3ef589607a664b53b75b1dd41675f963aa7ab3117046d",
+      "role": "served deadline register (GET /api/regulation body)"
+    },
+    {
+      "path": "client/src/data/enforcement.ts",
+      "sha256": "00139053403ef04fb5f41f3976d831178f36d1f6bbc9609202e846ded17e4279",
+      "role": "First-Fine Watch + deadline register (shared with GET /api/fines)"
+    },
+    {
+      "path": "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json",
+      "sha256": "74378437b0ff53fb5ab5078bf5c3dadf404e1421ea905ddbc5fc70d5a644ccda",
+      "role": "inventory crosswalk asset gpai-art12-pact-iaw (INFORMATIVE_MAPPING)"
+    },
+    {
+      "path": "public/interop/art50-marking-posture-2026-09/index.json",
+      "sha256": "7e7cf21d2fbb3c395266e7c45e4955ad441612f496d72d31a2e44a8341781eec",
+      "role": "Art 50(2) stated-posture card index"
+    },
+    {
+      "path": "public/interop/art50-recheck-schedule-2026-10/schedule.json",
+      "sha256": "9c32703c5f30d6b9ccbfc28590991b16d4e401dd1a88138f684b357f7341f42e",
+      "role": "Art 50 re-check schedule"
+    },
+    {
+      "path": "public/interop/art5-emotion-ai-2026-09/index.json",
+      "sha256": "3edf4de2216c8d30d811777b0aab1f36b0ac80959b6431999a53137f4263a963",
+      "role": "Art 5(1)(f) product-quote card index"
+    },
+    {
+      "path": "public/.well-known/eu-ai-act-art71-database.json",
+      "sha256": "ef29712d143562d5a40f9fef00e36a2b1e588b911e5af8071ab66e0dc9fad046",
+      "role": "Art 71 database probe record"
+    },
+    {
+      "path": "public/.well-known/eu-ai-act.json",
+      "sha256": "0d0171cd9b79ef7980f0af55b513cc4ee4ca4f4346d3b1d1e3d34864becf1661",
+      "role": "EU AI Act discovery door"
+    },
+    {
+      "path": "public/.well-known/eu-ai-act-gpai.json",
+      "sha256": "8422afb9f3114d3a2e194fc5d12b1cb92564127fc3773d4693fca343c9ddc39b",
+      "role": "GPAI discovery door"
+    },
+    {
+      "path": "public/interop/gpai-signatory-2026-09/index.json",
+      "sha256": "c72efd2c6f43c1051e4596c45d35bcf7294d96d1f4a50f85b79dd9b7f614b0b8",
+      "role": "GPAI Code signatory census index"
+    },
+    {
+      "path": "public/interop/gpai-signatory-2026-09/artefact-manifest.json",
+      "sha256": "df1e7718884b43e7e04cea92be4080747d458366aa60960083ceddf0673876ac",
+      "role": "GPAI Code census artefact manifest"
+    },
+    {
+      "path": "public/interop/gpai-signatories-2026-09-05.json",
+      "sha256": "3c53b87fa951545d7238f7ff67755177aac26e03e84428893445df8449f1c4f1",
+      "role": "GPAI Code signatory sweep (2026-09-05 page)"
+    },
+    {
+      "path": "public/interop/axis-doors-2026-09-22.json",
+      "sha256": "03199f895efcff5119e253acdb3b54395ca99844f44139087fb68e7e1c4dddf2",
+      "role": "axis doors (Art 53(2) hook mention, analyst judgement)"
+    }
+  ],
+  "instrument_scope": {
+    "name": "EU AI Act",
+    "celex": "32024R1689",
+    "instrument_label": "Regulation (EU) 2024/1689",
+    "frozen_identifier_count": 126,
+    "inventory_frozen_provision_counter": 417,
+    "inventory_state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+    "inventory_limitation": "The public manifest proves the 417 identifiers, their frozen hashes and their aggregate root. It does not include the exact normalized source-text bytes needed to regenerate each per-provision hash, and no authority watcher was active when it was frozen.",
+    "corpus_root_recomputed": true,
+    "corpus_root": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7",
+    "normaliser_version": "1.0.0",
+    "anchored_at": "2026-08-12T05:22:20.629949+00:00",
+    "authority_watcher": "NOT BUILT — local corpus only; no authority is polled",
+    "deadline_register_rows_naming_this_instrument": 8
+  },
+  "status_vocabulary": {
+    "WIRED": "At least one artifact names the provision AND the estate serves a live tool for it whose own artifact carries a counsel-confirmed obligation record or an executed measurement pane. This is tooling that exists today — it is not a claim that the provision is satisfied.",
+    "PARTIAL": "The provision is named in estate artifacts and at least one served surface (register row, obligation record, informative crosswalk, probe record or card pack) touches it — but no counsel-confirmed obligation record and no executed measurement of the provision's own duty exists. Tracking, not measurement.",
+    "UNMEASURED": "The provision exists in the estate ONLY as a frozen identifier and SHA-256 in the hash manifest. No published artifact names it, no tooling touches it. UNMEASURED is a first-class answer, not a failure to count."
+  },
+  "counts": {
+    "total": 126,
+    "WIRED": 1,
+    "PARTIAL": 11,
+    "UNMEASURED": 114
+  },
+  "truth_boundaries": [
+    "417 now resolves to 417 unique provision identifiers and SHA-256 content hashes, and the aggregate corpus root recomputes. The original SQLite database and exact historical source-text bytes were not recovered, so this is a frozen hash manifest, not a complete inspectable legal corpus.",
+    "The 17 adapters below are source-and-routing records. They do not confer regulator authority and they are not 17 live regulator APIs.",
+    "The 26 crosswalk assets are heterogeneous: measurement-derived statements, mappings, an example, a catalog, a producer and user-interface views. They are not 26 equivalent signed legal crosswalks.",
+    "The only public multi-jurisdiction crosswalk counted here maps four regimes in public/crosswalk/east-west-v1.json.",
+    "GSPC measurements are dated evidence, not certification, accreditation, legal advice or an authority's compliance decision.",
+    "Every label in this matrix is quoted or summarised from the estate artifacts listed in grounded_in; where no artifact names a provision, the label is null and the row is UNMEASURED. No article text has been added from outside this commit.",
+    "WIRED means tooling exists today; it never means the provision is satisfied. PARTIAL means tracked or mapped, not measured. UNMEASURED is a first-class answer.",
+    "The GPAI Code of Practice census is name-presence on a Commission page at retrieval time; it is not a legal list of signatories and is not a compliance judgement.",
+    "This matrix is generated by scripts/surface/build-gpai-matrix.mjs from this commit's artifacts; regenerate it rather than editing it."
+  ],
+  "provisions": [
+    {
+      "provision_id": "32024R1689:-13",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-13=276cd851ac5d51d8e014cc4b601c998dc4e4d143ab6f230e7ee0433ae26c0cce"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:-12",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-12=61ea45235c396ecbd80c6939f69c3395b2583fb74bd83ad00d1c64b6ab018390"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:-11",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-11=c2ce2abc69d23045d3ffd56b234d8d227de188e8db524cca12b2f851a9dfa31b"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:-10",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-10=91eb50bcfb7f1fb7bf9ae4d560379f3de9024232a4f23a456acf0afde2b967fb"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:-9",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-9=38a6ba7db7f67d984562262ee27b7e620e03e51355ee406a9ec3dcccf27dc476"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:-8",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-8=14c1ab1292c548d1883cb014238c496746d4e1e806382411fda1d60faa165970"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:-7",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-7=f10ec2a9e534ab99e9baefd6508c2cacf0fc069584462e0ef15e12dee9e6d417"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:-6",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-6=026f32b677d8380737a20e7d31e1c8941e790af2e191c520d5191130a24580e0"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:-5",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-5=75d657204cdd9b347afb5601e2bcfa8e1aecd4b6db7101db577cf72db7611451"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:-4",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-4=63a4971caba2912a5a9f79d7ebabb64d7e46f5cbde2e1c233bd9ebfe8224de5c"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:-3",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-3=51c3027a3162587ad1a8a7899b66256441953fc0e2a9d9d56f287784f8535c40"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:-2",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-2=108b8b01b15bfb8de09a2ad9ee60bf78e4223ab1911634a44c2bbb1243bb1cc7"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:-1",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "negative-ordinal identifier — the published artifacts do not state what class of provision this id denotes (normaliser_version 1.0.0)",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:-1=4045b1cca57f28fe5bfce6867251ab517b0c4263ded1b9d65bdb91a6abdefc57"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:1",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:1=22edc95ce62267c25cdb9768666f9358eba3069d5da6bd3a647594302953e42c"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:2",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:2=7e1f89e287ff72a665210fbda309002c48ced91f0a94c36b541e150feee57900"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:3",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:3=41763c584568cbf0188bb2c6ff886fb039ca74cd2fafccf8ba137f9adfb3bd4b"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:4",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": [
+        {
+          "from": "functions/api/regulation.ts",
+          "label": "named in 1 deadline-register row (2025-02-02)"
+        }
+      ],
+      "tooling_wired": [
+        {
+          "tool": "Regulation deadline register (signed feed)",
+          "href": "/api/regulation",
+          "kind": "REGISTER",
+          "note": "GET /api/regulation — cited deadlines and statuses; dates are statements from the cited instrument, not a compliance decision."
+        },
+        {
+          "tool": "Signed-card verifier",
+          "href": "/gspc-verify",
+          "kind": "VERIFIER",
+          "note": "Free, loginless verification of any signed card published by this estate. Verify stays free forever."
+        }
+      ],
+      "status": "PARTIAL",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:4=f940911d45d4ca30be836f6de6744ed2a6100efcd68c2fbc90e51fbf96bbfb88",
+        "functions/api/regulation.ts=b4bcc9cdd65ad502b8b3ef589607a664b53b75b1dd41675f963aa7ab3117046d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:5",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": [
+        {
+          "from": "functions/api/regulation.ts",
+          "label": "named in 2 deadline-register rows (2025-02-02, 2026-12-02)"
+        }
+      ],
+      "tooling_wired": [
+        {
+          "tool": "Regulation deadline register (signed feed)",
+          "href": "/api/regulation",
+          "kind": "REGISTER",
+          "note": "GET /api/regulation — cited deadlines and statuses; dates are statements from the cited instrument, not a compliance decision."
+        },
+        {
+          "tool": "Art 5(1)(f) emotion-AI product-quote cards",
+          "href": "/interop/art5-emotion-ai-2026-09/index.json",
+          "kind": "CARD_PACK",
+          "note": "Product-page verbatim quotes beside the obligation text; PROBED only — no classification, no conclusion (the pack's own status)."
+        },
+        {
+          "tool": "Signed-card verifier",
+          "href": "/gspc-verify",
+          "kind": "VERIFIER",
+          "note": "Free, loginless verification of any signed card published by this estate. Verify stays free forever."
+        }
+      ],
+      "status": "PARTIAL",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:5=8433d9f8d20a038af749eea977e67dfe0cce05c64742369f9e96c9c3e67c69bb",
+        "public/interop/art5-emotion-ai-2026-09/index.json=3edf4de2216c8d30d811777b0aab1f36b0ac80959b6431999a53137f4263a963",
+        "functions/api/regulation.ts=b4bcc9cdd65ad502b8b3ef589607a664b53b75b1dd41675f963aa7ab3117046d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:6",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:6=3502efed4d31908373736c3feb7c1690b0a6ad0610ab89bff132b69331c4a2a3"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:7",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:7=02e5cb2e3baa0f1adde8a6b90c9589bde8862a0d322f0c2990f865eaaea5fd23"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:8",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:8=d97bbf79c73c2a0b0b6798c8bf3f5969e52e3f0dc89bb7a64a2f38ac6110c39a"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:9",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:9=1985fa349934bd61a93834128deabe2d93e7c3a59475431b888c744af71cf97e"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:10",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:10=97a44b22228a6a494167563752a487080dd428b544fbdffcf012c1705695f68e"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:11",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:11=1c5469788cd00c211eeb08c92738593b10e76c178d7fc9395160163765f77da0"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:12",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": [
+        {
+          "from": "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json",
+          "label": "EU AI Act Art.12 (Record-keeping)"
+        }
+      ],
+      "tooling_wired": [
+        {
+          "tool": "GPAI Art.12 / EU AI Pact related-measures crosswalk",
+          "href": "/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json",
+          "kind": "CROSSWALK",
+          "note": "INFORMATIVE_MAPPING: lists GSPC axes that are related measures for Art.12 record-keeping. The mapping itself states it is not a legal determination, certification or compliance claim."
+        },
+        {
+          "tool": "Signed-card verifier",
+          "href": "/gspc-verify",
+          "kind": "VERIFIER",
+          "note": "Free, loginless verification of any signed card published by this estate. Verify stays free forever."
+        }
+      ],
+      "status": "PARTIAL",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:12=8a789f38ba029d9f2c7cb0b97c76152b4759a1af3a26f31cbed863f67dac703d",
+        "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json=74378437b0ff53fb5ab5078bf5c3dadf404e1421ea905ddbc5fc70d5a644ccda"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:13",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:13=adc974984b0a9b7d23ca7ee49668d3c661d36b8c1182721c6ca2b4d8a997e8a9"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:14",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:14=40be5fa70658fb847635eccc61d47b16999573cc99b36b699bc0a732c75574dd"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:15",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:15=3ec8c22f288b643eaacf29252df55f3e665fec5897dad2bb8dbea5a711636995"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:16",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:16=e91a37d3d55b705fc173fc8709d63b5f367186ebc0513e6978e680124e5eb4ee"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:17",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:17=b0c15f74e86002117c3c24ae679f93f99fa1a0c8a6a4cb7bf4a865c95087225f"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:18",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:18=bb579b61c1f1b413c822d24a8601913e15bd8fbeb6b0e446ce2657e3f8724d6c"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:19",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:19=d0151e6d7df8132ac40fe1ef61d81f33d6869cf2acdb4d75a830a9419d63a945"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:20",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:20=51557a5a889850e6a25256283378b3f10a2f216e8177171646884c508e4c1d10"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:21",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:21=806d2a8728f5cc3cecfc882c7ce6dc5fc126a1406b6375af352507e4894783da"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:22",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:22=5eb9502ccd720f317e80899c68b3a37b0297c31fd7c2c9be74925c77d09c0f5a"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:23",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:23=275acd3fa81672ae21eef411bd34e87c4145f9d7f1c9e3a501329148ff627bb0"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:24",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:24=87873fe9ee95a67a28f2e3999eea6ac726905099f87e5bface3e3633c9b09da5"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:25",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:25=e168a76b8257460e71508d7cd59315468205991e5bfc3615836e90ce5e7a2ded"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:26",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:26=f1e0808125b9f3327ec8e617938c362b2ecbe5dfc9cc0460fcaf2e5dadd7c7ae"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:27",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:27=3c2cc2aba08e430f30dec535f02bfd2f20fb57a7361f775a160e4abdd973ba6f"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:28",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:28=da398bf73740e57fd4f4c2a4dc0a6c202aa5127a4954bf55e9f244b995f386f7"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:29",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:29=63182417e85e35cdb675e0765446a0555ec5042717ae9b86d3abcd5e7731cbaf"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:30",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:30=51d337fef8990af1bac031935430755bd4e1b348717c4f32f8ad0f08eec144e7"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:31",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:31=406bc65d27e5fc39bbf4daaa1b7f6b9cd82067681531157b3ab157dde7d46f82"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:32",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:32=c77491e8bc380f421f268ebb2f96946ace524023be33176a0156670fb7ce047d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:33",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:33=7c8b714bfa92088ec87bcf33e5bdc5606d2664c5943e42e6bc323061d2ff4871"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:34",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:34=c25d29f9093ce1a9cac2e1549bfc53828670398cc5601c67530cd4034f186929"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:35",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:35=57a174b69e9255c6d9cf6da3f8bb945d3fda20a592a4f06366f567109acaa406"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:36",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:36=edb44bb018cd5a16273dcc8f8ce06d5ec16c34021252a0f6788383b3849b4aad"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:37",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:37=1ce25a13eac08bb71376b21d440e453cad66bf8881399225208e5b90f652c882"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:38",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:38=1cc82869e77a484b7d4272833b56754e62722badef76d27f0519805cb2f60153"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:39",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:39=124239fb07bc4b28cc93562205be39759ffa8143f01bd8cba476f4a8a88fee6f"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:40",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:40=ae58c05d4bfdb97dff73ae77d4a5363c9eb87b45a8f2789060a9750409a8fc49"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:41",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:41=6e96d6fb22bd7913600dc2877ea4fc9aeff999b11d1c524095c55cef20098106"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:42",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:42=c58a4d33694b27f4f3ac8152d715ba44a63ea6f6e3dce507b463a140ff958e97"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:43",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:43=e880d3b8b715286398fec9541f516beed3648ca6db46f650f1719b76ff4f57dd"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:44",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:44=b4ac1b45ac2b303025877038bd86c9de5cf5ae71b8b5977a604ea7e089b2bddb"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:45",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:45=81e12062366b72106a7e5c5364ec849c1870ea9944c330341ac8cb3a3ed40747"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:46",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:46=e1858ce2b820b2f9436ee47749850864439a7d4f2b14645636a90aac63d02231"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:47",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:47=c40816a40c97b45fff2e056e41cbff7afb455e735e6c4905489cf6f3bef5ddc3"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:48",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:48=5d5ff013af73b1764d86be4995e92fe3076ffa9c127ea200911f5f44c7cda678"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:49",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:49=df66f8adab021542ea08af5428d6b7321bc7cb88376862b26c837605d271d7e0"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:50",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": [
+        {
+          "from": "functions/api/_obligations.ts",
+          "label": "EU AI Act Article 50 — transparency & marking of AI-generated content"
+        },
+        {
+          "from": "functions/api/regulation.ts",
+          "label": "named in 2 deadline-register rows (2026-08-02, 2026-12-02)"
+        },
+        {
+          "from": "client/src/data/enforcement.ts",
+          "label": "named in enforcement register row(s): EU AI Act Art 50(2) transparency grace ends"
+        }
+      ],
+      "tooling_wired": [
+        {
+          "tool": "Evidence-bundle obligation record (counsel-confirmed)",
+          "href": "/api/evidence-bundle?obligation=article-50",
+          "kind": "OBLIGATION_REGISTRY",
+          "note": "Free obligation record; counsel_confirmed true; assembles an existing OSCAL pack at /packs/eu-article-50."
+        },
+        {
+          "tool": "Article 50 OSCAL evidence pack",
+          "href": "/packs/eu-article-50/article50_oscal.json",
+          "kind": "EVIDENCE_PACK",
+          "note": "Published OSCAL pack (with its Ed25519 sidecar signature) that the article-50 obligation record assembles against."
+        },
+        {
+          "tool": "Article 50 verification services pane",
+          "href": "/art50",
+          "kind": "MEASUREMENT_PANE",
+          "note": "Marking-presence census, detector-interop bench and specimen ledger for Article 50 marking; dates derived live from the register."
+        },
+        {
+          "tool": "Regulation deadline register (signed feed)",
+          "href": "/api/regulation",
+          "kind": "REGISTER",
+          "note": "GET /api/regulation — cited deadlines and statuses; dates are statements from the cited instrument, not a compliance decision."
+        },
+        {
+          "tool": "First-Fine Watch (signed feed)",
+          "href": "/api/fines",
+          "kind": "WATCH",
+          "note": "GET /api/fines — systematic signed coverage of the public AI enforcement record; an unverified entry is stated UNMEASURED, never a zero."
+        },
+        {
+          "tool": "Art 50(2) stated-marking-posture cards",
+          "href": "/interop/art50-marking-posture-2026-09/index.json",
+          "kind": "CARD_PACK",
+          "note": "Stated vs detectable marking posture for three providers; stated posture located, detectable posture UNMEASURED (the pack's own honest_sentence)."
+        },
+        {
+          "tool": "Art 50 re-check schedule",
+          "href": "/interop/art50-recheck-schedule-2026-10/schedule.json",
+          "kind": "CARD_PACK",
+          "note": "Dated re-check schedule for the Art 50 posture probes."
+        },
+        {
+          "tool": "Signed-card verifier",
+          "href": "/gspc-verify",
+          "kind": "VERIFIER",
+          "note": "Free, loginless verification of any signed card published by this estate. Verify stays free forever."
+        }
+      ],
+      "status": "WIRED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:50=7acac08345151e9d00babc21ffbc91af3768c7043288f3cbbedd3c838e10d22c",
+        "public/interop/art50-marking-posture-2026-09/index.json=7e7cf21d2fbb3c395266e7c45e4955ad441612f496d72d31a2e44a8341781eec",
+        "public/interop/art50-recheck-schedule-2026-10/schedule.json=9c32703c5f30d6b9ccbfc28590991b16d4e401dd1a88138f684b357f7341f42e",
+        "public/interop/axis-doors-2026-09-22.json=03199f895efcff5119e253acdb3b54395ca99844f44139087fb68e7e1c4dddf2",
+        "functions/api/_obligations.ts=e67a9d8c44938577b281642854d08e3ae407490c07b6afcdf0e33b92c52871b8",
+        "functions/api/regulation.ts=b4bcc9cdd65ad502b8b3ef589607a664b53b75b1dd41675f963aa7ab3117046d",
+        "client/src/data/enforcement.ts=00139053403ef04fb5f41f3976d831178f36d1f6bbc9609202e846ded17e4279"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:51",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:51=d5b084909a18f884d9887ec579cb50a386c6b2ea9f39afea0802820add5dde4d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:52",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:52=87e2937da118e9fa4e6f9340ee7de429db9519ec2478b3e6f25c04e6c7f6171d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:53",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": [
+        {
+          "from": "functions/api/_obligations.ts",
+          "label": "EU AI Act Article 53 — GPAI model provider obligations (technical documentation, downstream information, copyright policy, training-content summary)"
+        },
+        {
+          "from": "functions/api/regulation.ts",
+          "label": "named in 1 deadline-register row (2025-08-02)"
+        }
+      ],
+      "tooling_wired": [
+        {
+          "tool": "Evidence-bundle obligation record (counsel review pending)",
+          "href": "/api/evidence-bundle?obligation=article-53",
+          "kind": "OBLIGATION_REGISTRY",
+          "note": "Free obligation record for Article 53; counsel_confirmed false; the record itself states the evidence is behavioural measurement mapped to documentation duties, never a conformity mark."
+        },
+        {
+          "tool": "GPAI evidence pack page",
+          "href": "/gpai-evidence",
+          "kind": "MEASUREMENT_PANE",
+          "note": "The existing_pack the article-53 obligation record points at."
+        },
+        {
+          "tool": "Regulation deadline register (signed feed)",
+          "href": "/api/regulation",
+          "kind": "REGISTER",
+          "note": "GET /api/regulation — cited deadlines and statuses; dates are statements from the cited instrument, not a compliance decision."
+        },
+        {
+          "tool": "Signed-card verifier",
+          "href": "/gspc-verify",
+          "kind": "VERIFIER",
+          "note": "Free, loginless verification of any signed card published by this estate. Verify stays free forever."
+        }
+      ],
+      "status": "PARTIAL",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:53=74c1adf00052f52b3de3b01ec66ecd47838d141b71fb5e0c2a8f3bcc5b423719",
+        "functions/api/_obligations.ts=e67a9d8c44938577b281642854d08e3ae407490c07b6afcdf0e33b92c52871b8",
+        "functions/api/regulation.ts=b4bcc9cdd65ad502b8b3ef589607a664b53b75b1dd41675f963aa7ab3117046d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:54",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": [
+        {
+          "from": "functions/api/regulation.ts",
+          "label": "named in 1 deadline-register row (2025-08-02)"
+        }
+      ],
+      "tooling_wired": [
+        {
+          "tool": "Regulation deadline register (signed feed)",
+          "href": "/api/regulation",
+          "kind": "REGISTER",
+          "note": "GET /api/regulation — cited deadlines and statuses; dates are statements from the cited instrument, not a compliance decision."
+        },
+        {
+          "tool": "Signed-card verifier",
+          "href": "/gspc-verify",
+          "kind": "VERIFIER",
+          "note": "Free, loginless verification of any signed card published by this estate. Verify stays free forever."
+        }
+      ],
+      "status": "PARTIAL",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:54=4295bad715216a075ee7aa1fba5bed3cfd4c60c495d9ef75c4983c902e201b01",
+        "functions/api/regulation.ts=b4bcc9cdd65ad502b8b3ef589607a664b53b75b1dd41675f963aa7ab3117046d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:55",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": [
+        {
+          "from": "functions/api/regulation.ts",
+          "label": "named in 1 deadline-register row (2025-08-02)"
+        }
+      ],
+      "tooling_wired": [
+        {
+          "tool": "Regulation deadline register (signed feed)",
+          "href": "/api/regulation",
+          "kind": "REGISTER",
+          "note": "GET /api/regulation — cited deadlines and statuses; dates are statements from the cited instrument, not a compliance decision."
+        },
+        {
+          "tool": "Signed-card verifier",
+          "href": "/gspc-verify",
+          "kind": "VERIFIER",
+          "note": "Free, loginless verification of any signed card published by this estate. Verify stays free forever."
+        }
+      ],
+      "status": "PARTIAL",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:55=5f536599dee43623e07422294f38dde7e4fd901436779644cbec24d9087c2e7a",
+        "functions/api/regulation.ts=b4bcc9cdd65ad502b8b3ef589607a664b53b75b1dd41675f963aa7ab3117046d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:56",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:56=6ba200bf1c35109dfc83b641e6f1176108108f5890cea924bb4a52407c0ea456"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:57",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:57=6f3b230f2f2a9e5cd4903e3f67ee5d0e391fe8c71637d0c44fee321900ee26d5"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:58",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:58=9ed92e28e7a486da39591d00a5c69151a04052a0e5192eae019000f8b525a998"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:59",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:59=54fcd3d77ae4fccdcb39c6b26c3ed98bcda94342841954c1c8ea78a737161bb3"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:60",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:60=f89ecde6d28d35d7667dd655fbfa2043608e2216b0a2f2dcb5c22eea9066cbb3"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:61",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:61=09bc45f437606c1971309eccd293b8c0072c84979ca06200a78a2712a9d7acde"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:62",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:62=645fdfcc6d9446fe16edf41602130b4727c700309f6e8cc41b151408e37ec625"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:63",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:63=535c9ba8f310c2ee6a14b71a26ea013216a38423145c9afb286789acb7fca5df"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:64",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:64=4581003249e1293b80aa9107fc3ddc11878992dec0aba9459938c88b32014c80"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:65",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:65=843086e8fb9ba1d9ce6e1c47a4ca7ed57f7ecb547834c2b5e97a2bb133c108a5"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:66",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:66=26c2c02690866393650192ab541f16c5f8ffc0f67fa18176a27ec6852c4db679"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:67",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:67=e032f0bc74f472150d2b29c6b36b58da83d52eda51a1641ffbdef40fc19bb890"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:68",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:68=1d3261ec15a055accf019dada7ed94a36404d7b9913af7d0ce49368b8d92275c"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:69",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:69=c643cba0c9d72c0d2ce8da11152a57e2514d346cb9f471fd37f83c3a830c5d14"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:70",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:70=207a0bde0bdbe742db2987c5ec960c65686412bf86a5872c4c436d595b9fd336"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:71",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [
+        {
+          "tool": "Art 71 database probe record",
+          "href": "/.well-known/eu-ai-act-art71-database.json",
+          "kind": "PROBE_RECORD",
+          "note": "State UNVERIFIED_PROBED_NOT_FOUND: the upstream endpoint was looked for on a stated date and not located. Absent is not zero."
+        },
+        {
+          "tool": "Signed-card verifier",
+          "href": "/gspc-verify",
+          "kind": "VERIFIER",
+          "note": "Free, loginless verification of any signed card published by this estate. Verify stays free forever."
+        }
+      ],
+      "status": "PARTIAL",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:71=7a0622800659409e63e98778e156e81abe2ab5d3914ec01c4c87c238789b2c45",
+        "public/.well-known/eu-ai-act-art71-database.json=ef29712d143562d5a40f9fef00e36a2b1e588b911e5af8071ab66e0dc9fad046"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:72",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:72=291db077bbc38588909c724b2b7e8d0b960c5dae1b1e8ba463106e041deda773"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:73",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:73=74158a4f19a0cd590480f74b0bf7c9208d98c267b55e824d3aa92ec393da7ccb"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:74",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:74=94c532c5a89d5dfc94912d81a1ac2b6c26ff1284374f4bf05228ee4653e02c65"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:75",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:75=bdd85d79ab677e080a5091efd668e7fb542c38c733d1250d8832762e54cf2607"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:76",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:76=fb301602ce5ae4f4054ee71c011c0bcf4b9c64523afdb1df7eae18c90a64b3c0"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:77",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:77=5e784cb1cecca71bbcadcafc2f94a19c4428cc38254535003613b49f2f10e095"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:78",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:78=adc0cc93fe782847a02055bd38011f5c5a5619405a999e9daa3728ae887d3e72"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:79",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:79=d367b0c1e5d55d610092ea102b2459aedc51b5b3979fb85c8537e50191ec7f5f"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:80",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:80=84420871af9f8f160f14c0c0c77ff8990658bab58735a5e483fc874ff27a967b"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:81",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:81=b0bc48025f4996124d50bdf9c8cb12485381fcce32943adcf70036fb4a2efc2c"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:82",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:82=009aefe7abbb4bab57e9ce69a3901e4392b6cba86765e3cc4a9e7551d3d747cd"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:83",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:83=6fcb934365abd2788d651a6d13bf34df03d47e9d3087dfe61fbec4007b79e550"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:84",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:84=a10e1390c6de11302a088f5222b647ed0df41a35b9622e21ce44f669db1b1e05"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:85",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:85=c973d76d85ef0acbbd8d9f670bb0f9f0ffe9e1c92ffb198b2188eaac8aea34fe"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:86",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:86=fd29d4106faed799996a33c61025ebe5cb8c641cb2839b0a75cedaf4d5fb5797"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:87",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:87=abf04e1c9386e3b864034402b365e4f2d5091d6e56e7d9948449139a02d73b63"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:88",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:88=f1b53adb420bda908144132092371e9dc301a1d3769064fd37a74a4ba99c0a94"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:89",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:89=a6b5575bcf061cb8ee1ce1e88061bb2454d3db450862d13332adb004d90a2208"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:90",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:90=ef2e888b05aec3e32052691f11b1a76a2d4478b77e58b99cd1e56717d19ed829"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:91",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:91=e2c48396abbb051f051526ddccdeb4a40fb44d93779fd14777c8935a7939f41d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:92",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:92=e33fe3920f2a9cd5545963fa5aae3267ee332a24e5802ef89198400eddc8c472"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:93",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:93=bac4a9b6522a1ceaa4bbd03626b091741cd802efb9427db9b25806195bd96034"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:94",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:94=8d302b79d14fc333e35445ba03f18c3de55d009be27d7ca9c4aa1dbcb3cf8d9f"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:95",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:95=f93ef9455114df2e5566843d9f28a849df889c4696304dcfacbba223e6a4e5c0"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:96",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:96=fdf4c499ab1caf11b382ec7594547de7aba228506670c266c7f8f08d1cf47238"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:97",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:97=3ef266d666f162029f59dac2e32a75d00aa703a23ead52f18692e26076750cf2"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:98",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:98=d257e2f8d17793d86754c9fdae6cba4777f01894855f13303cebf980e39156b7"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:99",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": [
+        {
+          "from": "functions/api/regulation.ts",
+          "label": "named in 8 deadline-register rows (2025-02-02, 2025-08-02, 2026-08-02, 2026-12-02, 2026-12-02, 2027-08-02, 2027-12-02, 2028-08-02)"
+        }
+      ],
+      "tooling_wired": [
+        {
+          "tool": "Regulation deadline register (signed feed)",
+          "href": "/api/regulation",
+          "kind": "REGISTER",
+          "note": "GET /api/regulation — cited deadlines and statuses; dates are statements from the cited instrument, not a compliance decision."
+        },
+        {
+          "tool": "Signed-card verifier",
+          "href": "/gspc-verify",
+          "kind": "VERIFIER",
+          "note": "Free, loginless verification of any signed card published by this estate. Verify stays free forever."
+        }
+      ],
+      "status": "PARTIAL",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:99=86b3bc5fe5a72252a5eae4be41eccda088950104d1190c67cae785dedf4a4d93",
+        "functions/api/regulation.ts=b4bcc9cdd65ad502b8b3ef589607a664b53b75b1dd41675f963aa7ab3117046d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:100",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:100=4dd25a62b6a9e91770072005ac93ef728ae08333c673946adb710e6f9102ccf2"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:101",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": [
+        {
+          "from": "client/src/data/enforcement.ts",
+          "label": "named in enforcement register row(s): EU AI Act (Art 101 GPAI)"
+        }
+      ],
+      "tooling_wired": [
+        {
+          "tool": "First-Fine Watch (signed feed)",
+          "href": "/api/fines",
+          "kind": "WATCH",
+          "note": "GET /api/fines — systematic signed coverage of the public AI enforcement record; an unverified entry is stated UNMEASURED, never a zero."
+        },
+        {
+          "tool": "Signed-card verifier",
+          "href": "/gspc-verify",
+          "kind": "VERIFIER",
+          "note": "Free, loginless verification of any signed card published by this estate. Verify stays free forever."
+        }
+      ],
+      "status": "PARTIAL",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:101=d44fa8538313f1c610dcbba3f05c86dc5b0be6f82a897201ace91ed9a6477385",
+        "client/src/data/enforcement.ts=00139053403ef04fb5f41f3976d831178f36d1f6bbc9609202e846ded17e4279"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:102",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:102=6df8f40ae84476946a668a18c32998f98329b7de66b58b4f83bee5f11dc197d5"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:103",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:103=697dbb76fde6934a495118b8aea5c49e51e001fbffde0334138a782ba199c73d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:104",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:104=97526fe8856ad97962387a8c486336599037f3642e90a5c37cdb7832695bf21f"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:105",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:105=d34cffeb140f88e077ee4f4f01a08e0e549caf863d460a34ab976489815194ba"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:106",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:106=c2bbc18671250fdbf2ea513d05dd611ff3479191bd37de6285be13bea095d68f"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:107",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:107=5d4d8d32e67ab5528747398cca5300aa607bec22d17759138427ed81d65eed0d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:108",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:108=8692ae26bfed99173b67dbd09649ed193de2ea01b18c5b075b7df0090cc3b85c"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:109",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:109=cc3986c4b71a1da7996e41382b741dfab9cff7efdb07ed20a5f6f9185fc7c4a3"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:110",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:110=1ba5fc4e975cefbc81563fb3e214d8fc066974de07ec3816abdcba7e1d8a3558"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:111",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": [
+        {
+          "from": "functions/api/regulation.ts",
+          "label": "named in 1 deadline-register row (2026-12-02)"
+        }
+      ],
+      "tooling_wired": [
+        {
+          "tool": "Regulation deadline register (signed feed)",
+          "href": "/api/regulation",
+          "kind": "REGISTER",
+          "note": "GET /api/regulation — cited deadlines and statuses; dates are statements from the cited instrument, not a compliance decision."
+        },
+        {
+          "tool": "Art 50 re-check schedule",
+          "href": "/interop/art50-recheck-schedule-2026-10/schedule.json",
+          "kind": "CARD_PACK",
+          "note": "Dated re-check schedule for the Art 50 posture probes."
+        },
+        {
+          "tool": "Signed-card verifier",
+          "href": "/gspc-verify",
+          "kind": "VERIFIER",
+          "note": "Free, loginless verification of any signed card published by this estate. Verify stays free forever."
+        }
+      ],
+      "status": "PARTIAL",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:111=a1a304fc0d67b149a48e5bc1a718e095978abcd7fbda6f0e7801820eabe9ffcb",
+        "public/interop/art50-recheck-schedule-2026-10/schedule.json=9c32703c5f30d6b9ccbfc28590991b16d4e401dd1a88138f684b357f7341f42e",
+        "functions/api/regulation.ts=b4bcc9cdd65ad502b8b3ef589607a664b53b75b1dd41675f963aa7ab3117046d"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:112",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": null,
+      "tooling_wired": [],
+      "status": "UNMEASURED",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:112=e9d11bbb7e88d959419f40717f0f0ce343a5f2c66cff33f1cb44b3d034098a87"
+      ]
+    },
+    {
+      "provision_id": "32024R1689:113",
+      "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+      "provision_class": "article identifier",
+      "title_or_label_from_artifacts": [
+        {
+          "from": "functions/api/regulation.ts",
+          "label": "named in 3 deadline-register rows (2025-02-02, 2025-08-02, 2026-08-02)"
+        },
+        {
+          "from": "functions/api/_obligations.ts",
+          "label": "named in the served text of obligation record(s) article-53"
+        }
+      ],
+      "tooling_wired": [
+        {
+          "tool": "Regulation deadline register (signed feed)",
+          "href": "/api/regulation",
+          "kind": "REGISTER",
+          "note": "GET /api/regulation — cited deadlines and statuses; dates are statements from the cited instrument, not a compliance decision."
+        },
+        {
+          "tool": "Art 50 re-check schedule",
+          "href": "/interop/art50-recheck-schedule-2026-10/schedule.json",
+          "kind": "CARD_PACK",
+          "note": "Dated re-check schedule for the Art 50 posture probes."
+        },
+        {
+          "tool": "Signed-card verifier",
+          "href": "/gspc-verify",
+          "kind": "VERIFIER",
+          "note": "Free, loginless verification of any signed card published by this estate. Verify stays free forever."
+        }
+      ],
+      "status": "PARTIAL",
+      "evidence": [
+        "public/interop/frozen-provision-hashes.json#32024R1689:113=ff10f407c801f07e1e17b55e4b106a9db56337c19fc1c7bc5abf4b6d173f9c5b",
+        "public/interop/art50-recheck-schedule-2026-10/schedule.json=9c32703c5f30d6b9ccbfc28590991b16d4e401dd1a88138f684b357f7341f42e",
+        "functions/api/_obligations.ts=e67a9d8c44938577b281642854d08e3ae407490c07b6afcdf0e33b92c52871b8",
+        "functions/api/regulation.ts=b4bcc9cdd65ad502b8b3ef589607a664b53b75b1dd41675f963aa7ab3117046d"
+      ]
+    }
+  ],
+  "gpai_code_of_practice": {
+    "note": "The GPAI Code of Practice is a Commission voluntary instrument, not a provision of Regulation (EU) 2024/1689, so it earns no provision row. What the estate can check today is name-presence on the Commission's public list, published as the artifacts below.",
+    "artifacts": [
+      {
+        "path": "public/interop/gpai-signatory-2026-09/index.json",
+        "sha256": "c72efd2c6f43c1051e4596c45d35bcf7294d96d1f4a50f85b79dd9b7f614b0b8",
+        "as_of": "2026-09-02T05:44:40Z",
+        "measured": {
+          "n": 10,
+          "n_measured": 0,
+          "n_appears": 6,
+          "n_does_not_appear": 3,
+          "n_partial": 1,
+          "full_signatory_names_observed": 21
+        }
+      },
+      {
+        "path": "public/interop/gpai-signatory-2026-09/artefact-manifest.json",
+        "sha256": "df1e7718884b43e7e04cea92be4080747d458366aa60960083ceddf0673876ac",
+        "method": "keyless HTTPS GET Commission GPAI CoP page; sha256; meta-only mirror (HTML body not in-repo)"
+      },
+      {
+        "path": "public/interop/gpai-signatories-2026-09-05.json",
+        "sha256": "3c53b87fa951545d7238f7ff67755177aac26e03e84428893445df8449f1c4f1",
+        "detected_entities": [
+          "Google",
+          "Microsoft",
+          "Meta",
+          "Adobe"
+        ],
+        "principle": "Name-presence in the official page's text at retrieval time; not a legal list, not a claim of signed commitments (the EC page shows update info)."
+      },
+      {
+        "path": "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json",
+        "sha256": "74378437b0ff53fb5ab5078bf5c3dadf404e1421ea905ddbc5fc70d5a644ccda",
+        "as_of": "2026-09-02T03:32:11Z",
+        "status": "MAPPING"
+      }
+    ],
+    "honest_sentence": "Appearance on the live European Commission GPAI CoP public list. Voluntary code. Dated. Not a compliance judgement. Unsigned public.notice. Council of AI is not a GPAI Code signatory."
+  },
+  "discovery_doors": [
+    {
+      "tool": "EU AI Act discovery door",
+      "href": "/.well-known/eu-ai-act.json",
+      "kind": "DISCOVERY_DOOR",
+      "note": "Discovery document only; measurement status UNMAPPED, axes_covered 0 — by its own lid."
+    },
+    {
+      "tool": "GPAI discovery door",
+      "href": "/.well-known/eu-ai-act-gpai.json",
+      "kind": "DISCOVERY_DOOR",
+      "note": "Layer-0 discovery document; asserts no measurement."
+    },
+    {
+      "tool": "Regulation deadline register (signed feed)",
+      "href": "/api/regulation",
+      "kind": "REGISTER",
+      "note": "GET /api/regulation — cited deadlines and statuses; dates are statements from the cited instrument, not a compliance decision."
+    },
+    {
+      "tool": "First-Fine Watch (signed feed)",
+      "href": "/api/fines",
+      "kind": "WATCH",
+      "note": "GET /api/fines — systematic signed coverage of the public AI enforcement record; an unverified entry is stated UNMEASURED, never a zero."
+    },
+    {
+      "tool": "Evidence-bundle obligation record (counsel review pending)",
+      "href": "/api/evidence-bundle?obligation=article-53",
+      "kind": "OBLIGATION_REGISTRY",
+      "note": "Free obligation record for Article 53; counsel_confirmed false; the record itself states the evidence is behavioural measurement mapped to documentation duties, never a conformity mark."
+    },
+    {
+      "tool": "Regulatory inventory pointer",
+      "href": "/interop/regulatory-inventory-latest.json",
+      "kind": "REGISTER",
+      "note": "Selects the stamped, OpenTimestamps-proved inventory whose derived-statement rows match the in-toto crosswalk index on this commit."
+    },
+    {
+      "tool": "East–west multi-jurisdiction crosswalk",
+      "href": "/crosswalk/east-west-v1.json",
+      "kind": "CROSSWALK",
+      "note": "The only public multi-jurisdiction crosswalk counted in the inventory: four regimes."
+    }
+  ],
+  "regeneration": "node scripts/surface/build-gpai-matrix.mjs (add --check to fail on staleness)"
+}

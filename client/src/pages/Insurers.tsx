@@ -332,7 +332,7 @@ function InsurersEvidencePack() {
             </p>
           </div>
           <div className="rounded-xl border border-emerald-600/15 bg-white p-5">
-            <p className="font-bold text-gray-900">The honesty gate</p>
+            <p className="font-bold text-gray-900">Measurement scope and limitations</p>
             <p className="mt-1 text-sm text-gray-600">
               At{" "}
               <Link

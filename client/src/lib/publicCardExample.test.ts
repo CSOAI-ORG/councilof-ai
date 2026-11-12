@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
 import {
   CARD_PARAM_MAX_BYTES,
@@ -99,7 +100,7 @@ describe("public example loading", () => {
     expect(
       await loadPublicCardExample(CARD, ORIGIN, signal, fetchImpl),
     ).toEqual({
-      raw,
+      raw, file: expect.any(Blob),
       href: verifyCardHref(`${ORIGIN}${CARD}`),
     });
     expect(mock).toHaveBeenCalledExactlyOnceWith(`${ORIGIN}${CARD}`, {
@@ -107,6 +108,25 @@ describe("public example loading", () => {
       redirect: "error",
       signal,
     });
+  });
+
+  it("loads the original historical governance specimen without following a mirror redirect", async () => {
+    const { mock, fetchImpl } = fakeFetch(new Response("changed upstream bytes", {status: 503}));
+    const item = await loadPublicCardExample(GOVERNANCE_RETRIEVE, ORIGIN, new AbortController().signal, fetchImpl);
+    expect(mock).not.toHaveBeenCalled();
+    const bytes = new Uint8Array(await item.file.arrayBuffer());
+    expect(createHash("sha256").update(bytes).digest("hex")).toBe("41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318");
+    expect(await item.file.text()).toBe(item.raw);
+    expect(JSON.parse(item.raw).id).toBe("e9bc92b7b39be3dda65573dc571fd5fd544d17aab7b875783f78f082234ee294");
+    expect(item.href).toBe(verifyCardHref(ORIGIN+GOVERNANCE_RETRIEVE));
+  });
+
+  it("keeps the source bytes even when text decoding strips a BOM", async () => {
+    const data = new Uint8Array([239,187,191,123,125,10]);
+    const { fetchImpl } = fakeFetch(new Response(data));
+    const item = await loadPublicCardExample(CARD, ORIGIN, new AbortController().signal, fetchImpl);
+    expect(item.raw).toBe("{}\n");
+    expect(new Uint8Array(await item.file.arrayBuffer())).toEqual(data);
   });
 
   it("does not fetch pasted private JSON", async () => {

@@ -50,7 +50,7 @@ const FREE_DOORS = [
   { href: "https://councilof.ai/gspc-verify", label: "/gspc-verify", note: "verify any card in the browser, no account" },
   { href: "https://councilof.ai/root.json", label: "/root.json", note: "the signed public Merkle root" },
   { href: "https://councilof.ai/signed/HOW-TO-VERIFY.md", label: "HOW-TO-VERIFY.md", note: "recompute every signature yourself" },
-  { href: "https://councilof.ai/mcp", label: "/mcp", note: "the free MCP door — the measurement tools cost nothing" },
+  { href: "https://councilof.ai/mcp/free", label: "/mcp/free", note: "the free-only MCP door — no sign-in or payment" },
 ];
 
 const TYPE_LABEL: Record<Row["type"], string> = {

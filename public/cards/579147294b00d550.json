@@ -1,0 +1,88 @@
+{
+  "card": {
+    "as_of": "2026-11-07T10:36:22Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "347",
+      "symbol": "USDGO",
+      "attestation_page": "https://usdgo.com/",
+      "auditor": null,
+      "cadence_claimed": "monthly",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "24361f5c5b92f5b1635a6caece209170359eb6b9801449a910dce9170fe8cab7",
+      "excerpt": "re Transparent Reserves, Verified Monthly USDGO reserve holdings are fully disclosed on a monthly basis provided by independent third-party. Learn more Built fo",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "staleness"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "579147294b00d550da286c3250e8dfd4288ef6eac16601ef2827fe112894db25",
+    "sig_ed25519": "da4a5386c63eb766b769fa329c0111f2431fc2ef27160aab68a18c52563353a7f7487d503d51ed629a85ebb96fa16cfff567b2e9e64bc39c779dbb2cfc2a0e0a",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://usdgo.com/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDGO",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "staleness"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "a9b86d0047ee709c22f4c40899cf913eb20f3f50b978a3a068dfe02dac8f8119",
+    "4838c9588f0ee4eb74ce6394d35c65fcc33e3c30ef7bd143fc2eadda0d96c0bb",
+    "8cdcc5005e7d107ffbf2a5d470a31d3bdb4fba83b6363104c7efa362781f0632",
+    "21661f30f0ce711fa732bfeb05d87ed53ef760c5c107d56ec14c1dce6f2ebf2a",
+    "3a6c16731ece7384e180693df9b3843c7cb6f72512370827758f31faca9cf0e4",
+    "51366516a2310f28f3f88eeb9c25e25a382ee0e2ef5f26921bd9b72ebf176ec2",
+    "edd512ba933595456fa9d9026a961e388c6f35d1e11d0c552cbb55486f71e6ae",
+    "4b63eab48de91f6fdc6476e21b6156cfa1f6135c1cce9c11a69bd7ed17ef68c5",
+    "698022b669e991ba5f21c904d323f321e46b6a7c9ff3d6222083d469bca0a693"
+  ]
+}

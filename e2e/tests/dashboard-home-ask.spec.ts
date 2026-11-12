@@ -1,7 +1,7 @@
-import { test, expect, type Page, type Request } from "@playwright/test";
+import { test, expect, type Page, type Request, type CDPSession } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
-import { createHash } from "node:crypto";
-import { qualifyLocalFirstAskCompletion } from "../../scripts/review/first-ask-completion.mjs";
+import { createHash, randomUUID } from "node:crypto";
+import { qualifyLocalFirstAskCompletion, qualifyLocalFirstAskWithProtocol } from "../../scripts/review/first-ask-completion.mjs";
 import { CSOAI_STAFF_PROFILE } from "../../client/src/lib/csoaiStaffProfile";
 
 /**
@@ -100,9 +100,188 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
+
+/** Local-only protocol diagnostics: native console marker and network events on one owned session. */
+async function observeRawRunProtocol(page: Page, origin: string) {
+  const marker = { nonce: randomUUID() };
+  const prefix = "__csoaiNativeEOF:";
+  const limits = { events: 96, requests: 8, contexts: 32, faults: 8, markerBytes: 2048, idChars: 256 };
+  const events: Record<string, unknown>[] = [], faults: Record<string, unknown>[] = [];
+  type Context = { id: number; uniqueId: string | null; frameId: string; origin: string; generation: number; loaderId: string; isDefault: boolean };
+  type Run = { id: string; frameId: string; loaderId: string; generation: number; url: string; method: string;
+    bodyBytes: number | null; bodySHA256: string | null; bodyUnavailable: boolean; redirected: boolean };
+  const contexts = new Map<number, Context>(), requests = new Map<string, Run>();
+  const flags = { eventsTruncated: false, requestsTruncated: false, contextsTruncated: false,
+    faultsTruncated: false, markerTruncated: false, identifierTruncated: false };
+  let receiveSequence = 0, ready = false, session: CDPSession | null = null;
+  let mainFrameId = "", frameGeneration = 0, loaderId = "", matchingMarkers = 0;
+  const target = origin + "/api/agui/run";
+  const id = (value: string) => {
+    if (value.length > limits.idChars) { flags.identifierTruncated = true; return value.slice(0, limits.idChars); }
+    return value;
+  };
+  const fault = (stage: string, error: unknown) => {
+    if (faults.length >= limits.faults) { flags.faultsTruncated = true; return; }
+    faults.push({ stage, errorName: error instanceof Error ? error.name.slice(0, 80) : typeof error });
+  };
+  const append = (sequence: number, event: string, value: Record<string, unknown>) => {
+    if (events.length >= limits.events) { flags.eventsTruncated = true; return; }
+    events.push({ receiveSequence: sequence, event, ...value });
+  };
+  const snapshot = (native: unknown, emitter: unknown) => {
+    const joins: Record<string, unknown>[] = [];
+    try {
+      const runs = native && typeof native === "object" && "requests" in native && Array.isArray(native.requests)
+        ? native.requests as Record<string, unknown>[] : [];
+      if (runs.length > limits.requests) flags.requestsTruncated = true;
+      for (const event of events.filter(value => value.event === "native-eof-console")) {
+        const matches = runs.slice(0, limits.requests).filter(run =>
+          run.nativeFetchId === event.nativeFetchId && run.signalId === event.signalId &&
+          run.method === "POST" && run.url === target && run.requestBodyTruncated === false &&
+          typeof run.requestBody === "string" && Buffer.byteLength(run.requestBody) <= 4096);
+        const body = matches.length === 1 ? matches[0].requestBody as string : null;
+        const bodySHA256 = body === null ? null : createHash("sha256").update(body).digest("hex");
+        const network = [...requests.values()].filter(run =>
+          body !== null && event.contextMatched === true && !run.bodyUnavailable && !run.redirected &&
+          run.frameId === event.frameId && run.generation === event.generation &&
+          run.loaderId.length > 0 && run.loaderId === event.contextLoaderId &&
+          run.bodyBytes === Buffer.byteLength(body) && run.bodySHA256 === bodySHA256);
+        joins.push({ markerReceiveSequence: event.receiveSequence, nativeFetchId: event.nativeFetchId,
+          nativeMatches: matches.length, bodySHA256, candidateRequestIds: network.map(run => run.id),
+          unambiguous: matches.length === 1 && network.length === 1 });
+      }
+    } catch (error) { fault("native-join", error); }
+    return { schema: "csoai.first-ask-passive-protocol/2", diagnosticOnly: true,
+      orderingBasis: "one-owned-cdp-session-handler-entry-sequence", ready, marker,
+      mainFrameId, matchingMarkers, limits, ...flags, faults: faults.map(value => ({ ...value })), emitter, events: events.map(value => ({ ...value })),
+      requests: [...requests.values()].map(value => ({ ...value })), joins,
+      markerCoverage: matchingMarkers === 0 ? "UNAVAILABLE_NO_MATCHING_NATIVE_MARKER_OBSERVED" : "OBSERVED",
+      correlationAvailable: ready && !Object.values(flags).some(Boolean) && faults.length === 0 &&
+        requests.size === 1 && matchingMarkers === 1 && joins.length === 1 && joins[0].unambiguous === true };
+  };
+  try {
+    session = await page.context().newCDPSession(page);
+    const client = session;
+    client.on("Page.frameNavigated", event => {
+      const sequence = ++receiveSequence;
+      try {
+        if (event.frame.parentId) return;
+        mainFrameId = id(event.frame.id); loaderId = id(event.frame.loaderId); frameGeneration++;
+        append(sequence, "main-frame-navigation", { frameId: mainFrameId, loaderId, generation: frameGeneration });
+      } catch (error) { fault("frame-navigation", error); }
+    });
+    client.on("Runtime.executionContextCreated", event => {
+      const sequence = ++receiveSequence;
+      try {
+        const context = event.context, aux = context.auxData as { frameId?: string; isDefault?: boolean } | undefined;
+        if (aux?.frameId !== mainFrameId || aux.isDefault !== true || context.origin !== origin) return;
+        if (!contexts.has(context.id) && contexts.size >= limits.contexts) { flags.contextsTruncated = true; return; }
+        const value: Context = { id: context.id, uniqueId: context.uniqueId ? id(context.uniqueId) : null,
+          frameId: aux.frameId, origin: context.origin, generation: frameGeneration, loaderId, isDefault: true };
+        contexts.set(context.id, value);
+        append(sequence, "main-default-context-created", { ...value });
+      } catch (error) { fault("context-created", error); }
+    });
+    client.on("Runtime.executionContextDestroyed", event => {
+      const sequence = ++receiveSequence;
+      if (contexts.has(event.executionContextId)) append(sequence, "context-destroyed", { executionContextId: event.executionContextId });
+      contexts.delete(event.executionContextId);
+    });
+    client.on("Runtime.executionContextsCleared", () => {
+      const sequence = ++receiveSequence; contexts.clear(); append(sequence, "contexts-cleared", {});
+    });
+    client.on("Network.requestWillBeSent", event => {
+      const sequence = ++receiveSequence;
+      try {
+        if (event.request.method !== "POST" || event.request.url !== target || event.frameId !== mainFrameId) return;
+        if (requests.has(event.requestId) || requests.size >= limits.requests) { flags.requestsTruncated = true; return; }
+        const body = event.request.postData, size = typeof body === "string" ? Buffer.byteLength(body) : null;
+        const unavailable = size === null || size > 4096;
+        const run: Run = { id: id(event.requestId), frameId: id(event.frameId), loaderId: id(event.loaderId),
+          generation: frameGeneration, url: target, method: "POST", bodyBytes: size,
+          bodySHA256: unavailable ? null : createHash("sha256").update(body!).digest("hex"),
+          bodyUnavailable: unavailable, redirected: event.redirectResponse !== undefined };
+        requests.set(run.id, run);
+        append(sequence, "request", { ...run, activeMainLoaderId: loaderId });
+      } catch (error) { fault("network-request", error); }
+    });
+    client.on("Network.loadingFinished", event => {
+      const sequence = ++receiveSequence;
+      try { if (requests.has(event.requestId)) append(sequence, "loading-finished",
+        { requestId: event.requestId, encodedDataLength: event.encodedDataLength }); }
+      catch (error) { fault("network-finished", error); }
+    });
+    client.on("Network.loadingFailed", event => {
+      const sequence = ++receiveSequence;
+      try { if (requests.has(event.requestId)) append(sequence, "loading-failed",
+        { requestId: event.requestId, errorText: event.errorText.slice(0, 160),
+          canceled: event.canceled ?? null, blockedReason: event.blockedReason ?? null }); }
+      catch (error) { fault("network-failed", error); }
+    });
+    client.on("Runtime.consoleAPICalled", event => {
+      const sequence = ++receiveSequence;
+      try {
+        if (event.type !== "debug" || event.args.length !== 1 || event.args[0].type !== "string" ||
+          typeof event.args[0].value !== "string" || !event.args[0].value.startsWith(prefix)) return;
+        const text = event.args[0].value;
+        if (Buffer.byteLength(text) > limits.markerBytes) { flags.markerTruncated = true; return; }
+        const value = JSON.parse(text.slice(prefix.length)) as Record<string, unknown>;
+        if (value.nonce !== marker.nonce) return;
+        matchingMarkers++;
+        if (value.schema !== "csoai.native-eof-marker/1" || value.eof !== true || value.url !== target ||
+          typeof value.nativeFetchId !== "number" || !Number.isSafeInteger(value.nativeFetchId) ||
+          value.nativeFetchId < 1 || typeof value.aborted !== "boolean") throw new Error("Unqualified EOF marker");
+        const context = contexts.get(event.executionContextId);
+        append(sequence, "native-eof-console", { executionContextId: event.executionContextId,
+          contextUniqueId: context?.uniqueId ?? null, contextLoaderId: context?.loaderId ?? null,
+          contextMatched: !!context && context.generation === frameGeneration && context.loaderId === loaderId && loaderId.length > 0,
+          frameId: context?.frameId ?? null, generation: context?.generation ?? null,
+          nonce: marker.nonce, eof: true, nativeFetchId: value.nativeFetchId,
+          signalId: typeof value.signalId === "number" ? value.signalId : null, url: target, aborted: value.aborted });
+      } catch (error) { fault("native-console-marker", error); }
+    });
+    await client.send("Page.enable");
+    const tree = await client.send("Page.getFrameTree");
+    mainFrameId = id(tree.frameTree.frame.id); loaderId = id(tree.frameTree.frame.loaderId);
+    await client.send("Runtime.enable");
+    await client.send("Network.enable", { maxPostDataSize: 8192 });
+    ready = true;
+  } catch (error) { fault("setup", error); }
+  return { marker, read: snapshot, settled: () => matchingMarkers > 0 &&
+      events.some(value => value.event === "loading-finished" || value.event === "loading-failed") ||
+      faults.length > 0 || Object.values(flags).some(Boolean),
+    dispose: async (native: unknown, emitter: unknown) => {
+    if (session) {
+      session.removeAllListeners();
+      try { await session.detach(); } catch (error) { fault("detach", error); }
+    }
+    return snapshot(native, emitter);
+  } };
+}
+
+/** Node-only bounded producer observation; never browser-delivery proof. */
+async function readFixtureProducerDiagnostics(page: Page, origin: string) {
+  let response: Awaited<ReturnType<Page["request"]["get"]>> | null = null;
+  try {
+    response = await page.request.get(origin + "/__e2e/first-ask-fixture-diagnostics", {
+      headers: { "x-csoai-e2e-fixture": "first-ask" }, timeout: 5000,
+    });
+    const length = response.headers()["content-length"];
+    if (response.status() !== 200 || !length || !/^\d+$/.test(length) || Number(length) > 131072)
+      return { unavailable: true, reason: "unqualified-diagnostic-envelope", status: response.status() };
+    const bytes = await response.body();
+    if (bytes.length > 131072) return { unavailable: true, reason: "diagnostic-body-over-bound" };
+    const value = JSON.parse(bytes.toString("utf8"));
+    if (value?.schema !== "csoai.first-ask-producer-diagnostic/1") return { unavailable: true, reason: "unexpected-diagnostic-schema" };
+    return value;
+  } catch (error) {
+    return { unavailable: true, reason: "diagnostic-read-failed", errorName: error instanceof Error ? error.name : typeof error };
+  } finally { await response?.dispose().catch(() => {}); }
+}
+
 /** Passive test diagnostics only: never clone, consume, cancel, or replace native transport. */
-async function observeRunTransport(page: Page) {
-  await page.addInitScript(() => {
+async function observeRunTransport(page: Page, protocolMarker: { nonce: string } | null = null) {
+  await page.addInitScript((protocolMarker: { nonce: string } | null) => {
     type Run = {
       nativeFetchId: number; signalId: number | null; method: string; url: string;
       requestBody: string | null; requestBodyTruncated: boolean;
@@ -142,6 +321,9 @@ async function observeRunTransport(page: Page) {
         observedAt: new Date().toISOString(), monotonicMs: performance.now(), ...detail,
       });
     });
+    const protocolEmit = protocolMarker ? console.debug.bind(console) : null;
+    const protocolEmitter = { enabled: protocolMarker !== null, emitted: 0, faults: 0, truncated: false };
+    if (protocolMarker) (window as Window & { __aguiProtocolEmitter?: unknown }).__aguiProtocolEmitter = protocolEmitter;
     const signalIds = new WeakMap<AbortSignal, number>();
     const signalRuns = new WeakMap<AbortSignal, Run[]>();
     const controllerIds = new WeakMap<AbortController, number>();
@@ -260,6 +442,16 @@ async function observeRunTransport(page: Page) {
                   void notify({ nativeFetchId: run.nativeFetchId, signalId: run.signalId, url: run.url,
                     requestBody: run.requestBody, observedAt, aborted: run.signalAbortedAtEOF,
                     reason: run.signalReasonAtEOF }).catch((error: unknown) => observe(() => { throw error; }));
+                  if (protocolMarker && protocolEmit) {
+                    try {
+                      const marker = "__csoaiNativeEOF:" + JSON.stringify({ schema: "csoai.native-eof-marker/1",
+                        nonce: protocolMarker.nonce, eof: true, nativeFetchId: run.nativeFetchId,
+                        signalId: run.signalId, url: run.url, aborted: run.signalAbortedAtEOF });
+                      if (protocolEmitter.emitted >= 8 || new TextEncoder().encode(marker).length > 2048)
+                        protocolEmitter.truncated = true;
+                      else { protocolEmit(marker); protocolEmitter.emitted++; }
+                    } catch { protocolEmitter.faults++; }
+                  }
                   if (run.nativeBytesTruncated) { run.nativeDigestState = "too_large"; return; }
                   const joined = new Uint8Array(run.nativeBytesObserved);
                   let offset = 0;
@@ -316,7 +508,7 @@ async function observeRunTransport(page: Page) {
         },
       });
     });
-  });
+  }, protocolMarker);
 }
 
 for (const vp of VIEWPORTS) {
@@ -338,6 +530,10 @@ for (const vp of VIEWPORTS) {
     let eofReceiptsTruncated = false;
     let receiptSequence = 0;
     let completionQualification: unknown = null;
+    let completionObservation: unknown = null;
+    let protocolCompletionQualification: unknown = null;
+    let protocolQualificationObservation: unknown = null;
+    let rawProtocol: Awaited<ReturnType<typeof observeRawRunProtocol>> | null = null;
     const requestIds = new Map<Request, number>();
     const events: Record<string, unknown>[] = [];
     const eventLimit = 50;
@@ -390,12 +586,13 @@ for (const vp of VIEWPORTS) {
     page.on("requestfailed", onFailed);
 
     try {
+      if (localFixture) rawProtocol = await observeRawRunProtocol(page, origin);
       await page.exposeBinding("__csoaiObserveRunDone", (source, value: Record<string, unknown>) => {
         if (eofReceipts.length >= eventLimit) { eofReceiptsTruncated = true; return; }
         eofReceipts.push({ ...value, receiptSequence: ++receiptSequence,
           mainFrame: source.frame === page.mainFrame(), samePage: source.page === page });
       });
-      await observeRunTransport(page);
+      await observeRunTransport(page, rawProtocol?.marker ?? null);
       await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
       await page.locator('[data-testid="dashboard-shell"]').waitFor({ state: "visible", timeout: 60_000 });
       // Explicit opening alone must never submit a question on either width.
@@ -436,7 +633,7 @@ for (const vp of VIEWPORTS) {
         const request = postRequests[0], requestId = requestIds.get(request);
         const nativeTransport = await page.evaluate(() =>
           (window as Window & { __aguiNativeTransport?: unknown }).__aguiNativeTransport ?? null);
-        completionQualification = qualifyLocalFirstAskCompletion({
+        completionQualification = qualifyLocalFirstAskCompletion(completionObservation = {
           localFixture: true, orderingBasis: "one-node-receipt-sequence", origin, question: QUESTION,
           fixture: { count: localFixture.count, requestId: requestIds.get(localFixture.request!),
             url: localFixture.url, requestBody: localFixture.requestBody, body: localFixture.body,
@@ -452,9 +649,18 @@ for (const vp of VIEWPORTS) {
           fullAnswerRetained: (await page.getByTestId("talk-tool-card").textContent() ?? "")
             .replace(/\s+/g, " ").trim().includes(RESULT.summary.replace(/\s+/g, " ").trim()),
         });
-        const qualificationReason = completionQualification && typeof completionQualification === "object" && "reason" in completionQualification && typeof completionQualification.reason === "string"
-          ? completionQualification.reason.slice(0, 160) : "missing qualifier reason";
-        expect(completionQualification, "Complete finite local fixture; raw browser verdict remains separate; " + qualificationReason)
+        // Collection occurs only after native EOF/digest and the original browser terminal.
+        // It cannot delay native reads or change the order of already observed protocol events.
+        const emitter = await page.evaluate(() =>
+          (window as Window & { __aguiProtocolEmitter?: unknown }).__aguiProtocolEmitter ?? null);
+        await expect.poll(() => rawProtocol?.settled() ?? false, {
+          timeout: 5000, message: "Owned protocol session received the native marker and terminal",
+        }).toBe(true);
+        protocolQualificationObservation = rawProtocol?.read(nativeTransport, emitter) ?? null;
+        protocolCompletionQualification = qualifyLocalFirstAskWithProtocol(completionObservation, protocolQualificationObservation);
+        const qualificationReason = protocolCompletionQualification && typeof protocolCompletionQualification === "object" && "reason" in protocolCompletionQualification && typeof protocolCompletionQualification.reason === "string"
+          ? protocolCompletionQualification.reason.slice(0, 160) : "missing qualifier reason";
+        expect(protocolCompletionQualification, "Complete finite local fixture; legacy and raw browser verdicts retained; " + qualificationReason)
           .toMatchObject({ accepted: true });
       } else {
         // BASE_URL uses the real endpoint: no local-fixture browser-error exception.
@@ -467,6 +673,16 @@ for (const vp of VIEWPORTS) {
       page.off("request", onRequest);
       page.off("requestfinished", onFinished);
       page.off("requestfailed", onFailed);
+      const retainedNativeTransport = await page.evaluate(() =>
+        (window as Window & { __aguiNativeTransport?: unknown }).__aguiNativeTransport ?? null,
+      ).catch((error: unknown) => ({ unavailable: true, error: String(error).slice(0, 1024) }));
+      const protocolEmitter = rawProtocol ? await page.evaluate(() =>
+        (window as Window & { __aguiProtocolEmitter?: unknown }).__aguiProtocolEmitter ?? null,
+      ).catch(() => ({ unavailable: true })) : null;
+      const passiveProtocolDiagnostic = rawProtocol ? await rawProtocol.dispose(retainedNativeTransport, protocolEmitter)
+        : { unavailable: true, reason: localFixture ? "local-diagnostic-not-started" : "production-mode-not-instrumented" };
+      const fixtureProducerDiagnostic = localFixture ? await readFixtureProducerDiagnostics(page, origin)
+        : { unavailable: true, reason: "production-mode-not-instrumented" };
       const lifecyclePath = testInfo.outputPath("agui-request-lifecycle.json");
       await writeFile(lifecyclePath, JSON.stringify({
           question: QUESTION,
@@ -474,16 +690,16 @@ for (const vp of VIEWPORTS) {
           retry: testInfo.retry,
           viewport: vp.size,
           localFixture: !process.env.BASE_URL,
-          completionQualification, eofReceipts, eofReceiptsTruncated,
+          completionQualification, protocolCompletionQualification, protocolQualificationObservation,
+          eofReceipts, eofReceiptsTruncated,
           rawBrowserFailures: aborted,
           postRequests: postRequests.length,
           completedPostRequests: completedPostRequests.length,
           eventLimit,
           eventsTruncated,
           events,
-          nativeTransport: await page.evaluate(() =>
-            (window as Window & { __aguiNativeTransport?: unknown }).__aguiNativeTransport ?? null,
-          ).catch((error: unknown) => ({ unavailable: true, error: String(error).slice(0, 1024) })),
+          nativeTransport: retainedNativeTransport,
+          passiveProtocolDiagnostic, fixtureProducerDiagnostic,
         }, null, 2));
       await testInfo.attach("agui-request-lifecycle", {
         path: lifecyclePath,
@@ -1001,6 +1217,40 @@ for (const vp of VIEWPORTS) {
       scope: "local native HTTP fixtures only; no public, payment or native speech execution",
       viewport: vp.size, posts: posts.length, progressBeforeEOF: true, duplicateEventDeduped: true,
       permissionWithoutExecution: true, localStopNotExecutorAck: true, malformedTerminalRejected: true,
+    }, null, 2));
+  });
+}
+
+/** Actual App composition: page content lives inside App's single main landmark. */
+for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+  test("ordinary signup has one composed main before and after reload at " + viewport.width + "px", async ({ page, baseURL }, info) => {
+    test.setTimeout(60_000);
+    await page.setViewportSize(viewport);
+    const origin = new URL(baseURL || "http://127.0.0.1:4180").origin;
+    const authPosts: string[] = [];
+    page.on("request", request => {
+      const u = new URL(request.url());
+      if (u.origin === origin && request.method() === "POST" && /^\/api\/auth\/(register|login)\/?$/.test(u.pathname))
+        authPosts.push(u.pathname);
+    });
+    const check = async () => {
+      await expect(page.locator("main")).toHaveCount(1);
+      const main = page.getByRole("main", { name: "Main content", exact: true });
+      await expect(main.getByRole("heading", { name: "Create your Council account", exact: true })).toBeVisible();
+      for (const id of ["name", "email", "password", "confirmation"])
+        await expect(main.locator("#" + id)).toBeVisible();
+      await expect(main.getByRole("button", { name: "Create account", exact: true })).toBeEnabled();
+      await expect(main.getByRole("link", { name: "Sign in", exact: true })).toHaveAttribute("href", "/login/");
+    };
+    await page.goto("/signup?next=%2Fdashboard", { waitUntil: "domcontentloaded" });
+    await check();
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await check();
+    expect(authPosts).toEqual([]);
+    await writeFile(info.outputPath("published-source-signup-landmark.json"), JSON.stringify({
+      scope: "Built candidate actual App/signup composition and ordinary reload; no account submission or native case acceptance",
+      viewport, path: "/signup?next=%2Fdashboard", mainLandmarks: 1, reloadVerified: true,
+      visibleFields: ["name", "email", "password", "confirmation"], authPosts,
     }, null, 2));
   });
 }

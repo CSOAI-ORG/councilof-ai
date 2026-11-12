@@ -1,8 +1,8 @@
 {
  "schema": "csoai.master-catalogue/0.1",
  "title": "CSOAI — Master Catalogue of All Jewels",
- "edition": "2026-11-02",
- "published_at": "2026-11-02T07:16:04.980Z",
+ "edition": "2026-11-11",
+ "published_at": "2026-11-11T11:58:05.521Z",
  "page": "https://councilof.ai/jewels/master-catalogue/",
  "what_this_is": "The estate’s master catalogue of every jewel, state-checked, with the state table repaired at the source and the board read live.",
  "what_this_is_not": [
@@ -168,7 +168,7 @@
   ]
  },
  "live_state": {
-  "read_at": "2026-11-02T07:16:05.067Z",
+  "read_at": "2026-11-11T11:58:05.521Z",
   "board": {
    "url": "https://councilof.ai/api/gspc",
    "http": 200,
@@ -176,58 +176,52 @@
    "measured_axes": 34,
    "unmeasured_axes": 0,
    "public_count": "34 axes · 34 measured",
-   "separation": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED"
-  },
-  "claim_maintenance_axis": {
-   "axis": "claim-maintenance",
-   "status": "MEASURED",
-   "kind": "measured-subject",
-   "method": "claim-maintenance v0.2",
-   "method_sha": "32470d102112154b14a4d5530d71d7a30ecc2acdc5cd8c906c21f672b1deeef7",
-   "bank": "public/interop/claim-maintenance-wave-2026-10-28.json",
-   "bank_sha256": "a62b017a9081b817613c03887c3c6690597a2016ea175f9d95c211d593db0877",
-   "facts_as_of": "2026-10-28T06:05:00Z",
-   "n": 174,
-   "named_in_the_corrections_ledger": false
+   "separation": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED",
+   "board_count_source": "derived from this commit's /api/gspc (functions/api/gspc.ts, computed offline by scripts/surface/commit-board.mjs; sha256 5ec3c714c943c50cb863065ebb0b5dbc2ddecb1dbf30960b56b0d337a62ee4e1) by scripts/surface/rebind-catalogue-live-state.mjs"
   },
   "unmeasured_axes": [],
   "public_root": {
    "url": "https://councilof.ai/root.json",
    "http": 200,
-   "card_count": 428,
-   "as_of": "2026-11-01T15:09:42Z",
-   "merkle_root": "4e57607854bea40122c738aa83bbcfcd0d7bd7461add1683af4ee011e1e08aa0"
+   "card_count": 442,
+   "as_of": "2026-11-07T20:54:37Z",
+   "merkle_root": "bc2b1b4e6ecda0b25608fcfea1bdf3208d5161c12a7bd15a7e77615f27b78776",
+   "count_digest": "6c0e2654259942114ad8e3aff5672734996bd19d6b79a82b89864a5b86f508bf"
   },
   "corrections_ledger": {
    "url": "https://councilof.ai/api/corrections",
    "http": 200,
-   "entries": 93
+   "entries": 93,
+   "count_digest": "e6f32133e245440619608c3401dc56a77fb7993645da2d229232d2f8c2bac468"
   },
   "x402_catalogue": {
    "url": "https://councilof.ai/api/x402",
    "http": 200,
-   "resources": 30
+   "resources": 30,
+   "count_digest": "c7c4466e9d05ba27574588e7219097ea468bbbc72a74145d80265ea0268a0841"
   },
   "agent_skills": {
    "url": "https://councilof.ai/.well-known/agent-skills/index.json",
    "http": 200,
-   "published": 14,
+   "published": 15,
    "names": [
-    "gspc-board",
-    "east-west-crosswalk",
-    "card-status-link",
-    "benchmark-quality-register",
     "article50-detect",
-    "eu-ai-act-screen",
-    "x402-discovery",
+    "axis-specialist",
+    "benchmark-quality-register",
+    "card-status-link",
+    "east-west-crosswalk",
     "estate-index",
+    "eu-ai-act-screen",
+    "evidence-bundle",
+    "evidence-delivery",
+    "framework-readiness",
+    "gspc-board",
+    "gspc-route",
     "measurement-capsules",
     "server-evidence",
-    "evidence-bundle",
-    "gspc-route",
-    "evidence-delivery",
-    "axis-specialist"
-   ]
+    "x402-discovery"
+   ],
+   "count_digest": "75f9b604d939ccaec324d5037d56684da3b95be63b85f35fc0609dac0dc7e954"
   },
   "mechanism_coverage": {
    "url": "https://councilof.ai/mechanism/coverage.json",
@@ -237,7 +231,8 @@
     "RELATED_MEASURE": 12,
     "CROSSWALK_ONLY": 38,
     "HASH_ONLY": 366
-   }
+   },
+   "count_digest": "fedf1c0c20cca92fbc9cfdc7df9ca0591450922fd79df610c00e3a6236e262b8"
   },
   "claim_maintenance_register": {
    "url": "https://councilof.ai/spec/claim-maintenance/register.json",
@@ -250,9 +245,10 @@
     "CLAIM_MEASURED": 33,
     "UNMEASURED": 39,
     "UNCHECKABLE": 26
-   }
+   },
+   "count_digest": "d0d35d06220a5b0654882282091f21eadbdca67c8263b1af514993dd622e0c53"
   },
-  "open_pull_requests": 51
+  "open_pull_requests": 97
  },
  "counts": {
   "jewel_rows": 130,
@@ -4097,42 +4093,6 @@
    }
   ]
  },
- "lane_activity_since_2026_11_01": {
-  "what_this_is": "What the other sessions working this estate merged since the previous edition, so the catalogue is the reconciled picture rather than one lane’s view.",
-  "open_pull_requests_now": 51,
-  "merged": [
-   {
-    "merged_at": "2026-11-02T07:03:04Z",
-    "sha": "41f0e1e4ae",
-    "title": "PR #3737"
-   },
-   {
-    "merged_at": "2026-11-02T06:26:01Z",
-    "sha": "69af4cc4a9",
-    "title": "PR #3723"
-   },
-   {
-    "merged_at": "2026-11-02T04:11:03Z",
-    "sha": "8695d6f2ca",
-    "title": "PR #3715"
-   },
-   {
-    "merged_at": "2026-11-02T03:26:24Z",
-    "sha": "73d4280b3e",
-    "title": "PR #3711"
-   },
-   {
-    "merged_at": "2026-11-01T18:00:07Z",
-    "sha": "735a3f8259",
-    "title": "PR #3672"
-   },
-   {
-    "merged_at": "2026-11-01T07:56:37Z",
-    "sha": "d09846079a",
-    "title": "PR #3695"
-   }
-  ]
- },
  "owner_gates": [
   {
    "gate": "Sign the wave-2 card and the five subject-axis banks",
@@ -4186,5 +4146,213 @@
   "https://councilof.ai/claims-register/",
   "https://councilof.ai/interop/subject-axis-live-20261027/README.md",
   "https://councilof.ai/jewels/master-catalogue/index.json"
- ]
+ ],
+ "supersedes_edition": "2026-11-10",
+ "edition_written_by": "scripts/surface/rebind-catalogue-live-state.mjs",
+ "lane_activity": {
+  "what_this_is": "What the other sessions working this estate merged since the edition this one supersedes, so the catalogue is the reconciled picture rather than one lane's view. The window is named here, the list is complete for it, and the open-pull-request count is the live one read at the same moment as the rest of this block.",
+  "window_start": "2026-11-10T00:00:00Z",
+  "window_end": "2026-11-11T11:58:05.521Z",
+  "window_start_source": "the edition this one supersedes (2026-11-10)",
+  "merged_count": 39,
+  "merged": [
+   {
+    "merged_at": "2026-11-11T11:56:48Z",
+    "sha": "f98cb16e0b",
+    "pr": 4225
+   },
+   {
+    "merged_at": "2026-11-11T11:32:05Z",
+    "sha": "74e9d80265",
+    "pr": 4222
+   },
+   {
+    "merged_at": "2026-11-11T11:06:44Z",
+    "sha": "cb4b29dda6",
+    "pr": 4214
+   },
+   {
+    "merged_at": "2026-11-11T10:44:23Z",
+    "sha": "0cf6ff7909",
+    "pr": 4206
+   },
+   {
+    "merged_at": "2026-11-11T10:20:44Z",
+    "sha": "e120fe7645",
+    "pr": 4207
+   },
+   {
+    "merged_at": "2026-11-11T09:53:51Z",
+    "sha": "bbf2d037c6",
+    "pr": 4180
+   },
+   {
+    "merged_at": "2026-11-11T07:16:19Z",
+    "sha": "6804254c2b",
+    "pr": 4210
+   },
+   {
+    "merged_at": "2026-11-11T06:56:23Z",
+    "sha": "c216492b1f",
+    "pr": 4216
+   },
+   {
+    "merged_at": "2026-11-11T06:37:20Z",
+    "sha": "fd97145b10",
+    "pr": 4217
+   },
+   {
+    "merged_at": "2026-11-11T06:25:08Z",
+    "sha": "d0af115906",
+    "pr": 4213
+   },
+   {
+    "merged_at": "2026-11-11T06:01:28Z",
+    "sha": "4a9e1d6bc9",
+    "pr": 4211
+   },
+   {
+    "merged_at": "2026-11-11T05:45:22Z",
+    "sha": "3bfcac428e",
+    "pr": 4120
+   },
+   {
+    "merged_at": "2026-11-11T05:31:22Z",
+    "sha": "73990029a6",
+    "pr": 4204
+   },
+   {
+    "merged_at": "2026-11-11T03:43:36Z",
+    "sha": "ccd06e2d62",
+    "pr": 4209
+   },
+   {
+    "merged_at": "2026-11-11T03:30:07Z",
+    "sha": "aa8c55c486",
+    "pr": 4208
+   },
+   {
+    "merged_at": "2026-11-11T03:06:36Z",
+    "sha": "9e96f58336",
+    "pr": 4205
+   },
+   {
+    "merged_at": "2026-11-11T02:46:38Z",
+    "sha": "28d24c1fe1",
+    "pr": 4116
+   },
+   {
+    "merged_at": "2026-11-11T01:56:23Z",
+    "sha": "b5cef696a1",
+    "pr": 4202
+   },
+   {
+    "merged_at": "2026-11-11T01:29:56Z",
+    "sha": "31653cb915",
+    "pr": 4199
+   },
+   {
+    "merged_at": "2026-11-10T20:03:46Z",
+    "sha": "eaa51302d4",
+    "pr": 4201
+   },
+   {
+    "merged_at": "2026-11-10T16:07:34Z",
+    "sha": "f8484e17db",
+    "pr": 4196
+   },
+   {
+    "merged_at": "2026-11-10T15:39:39Z",
+    "sha": "c8ac2b4bc8",
+    "pr": 4198
+   },
+   {
+    "merged_at": "2026-11-10T15:25:16Z",
+    "sha": "eb5c1e88d6",
+    "pr": 4195
+   },
+   {
+    "merged_at": "2026-11-10T14:46:33Z",
+    "sha": "e6d98b5ffb",
+    "pr": 4194
+   },
+   {
+    "merged_at": "2026-11-10T14:24:26Z",
+    "sha": "920b68422a",
+    "pr": 4191
+   },
+   {
+    "merged_at": "2026-11-10T13:58:55Z",
+    "sha": "7d2a8b0e6b",
+    "pr": 4190
+   },
+   {
+    "merged_at": "2026-11-10T13:34:31Z",
+    "sha": "05eeaad51e",
+    "pr": 4192
+   },
+   {
+    "merged_at": "2026-11-10T13:06:45Z",
+    "sha": "5b2e1a09c3",
+    "pr": 4193
+   },
+   {
+    "merged_at": "2026-11-10T10:29:38Z",
+    "sha": "5b947bd1b9",
+    "pr": 4188
+   },
+   {
+    "merged_at": "2026-11-10T10:07:13Z",
+    "sha": "d8bbdb2647",
+    "pr": 4185
+   },
+   {
+    "merged_at": "2026-11-10T09:39:11Z",
+    "sha": "463face96f",
+    "pr": 4187
+   },
+   {
+    "merged_at": "2026-11-10T09:21:43Z",
+    "sha": "2aabd2b18e",
+    "pr": 4186
+   },
+   {
+    "merged_at": "2026-11-10T09:04:25Z",
+    "sha": "8fa725a97a",
+    "pr": 4184
+   },
+   {
+    "merged_at": "2026-11-10T08:11:07Z",
+    "sha": "e8d6363bca",
+    "pr": 4183
+   },
+   {
+    "merged_at": "2026-11-10T07:47:54Z",
+    "sha": "969b8ec2cc",
+    "pr": 4182
+   },
+   {
+    "merged_at": "2026-11-10T04:52:08Z",
+    "sha": "ca5ff304cf",
+    "pr": 4171
+   },
+   {
+    "merged_at": "2026-11-10T04:28:41Z",
+    "sha": "5ced00bbe1",
+    "pr": 4178
+   },
+   {
+    "merged_at": "2026-11-10T04:06:00Z",
+    "sha": "a6764489ce",
+    "pr": 4174
+   },
+   {
+    "merged_at": "2026-11-10T03:53:02Z",
+    "sha": "cb8941e484",
+    "pr": 4177
+   }
+  ],
+  "open_pull_requests_now": 97,
+  "open_pull_requests_source": "GitHub search API — the same read as live_state.open_pull_requests; a catalogue may carry one open-pull-request number, not two"
+ }
 }

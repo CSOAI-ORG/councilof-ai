@@ -1,3 +1,9 @@
+/**
+ * Public oversight state, live-board knowledge checks, challenges, and decision records.
+ * Recording a decision requires a configured shared operator token. A matching answer
+ * and a caller-supplied operator label do not establish identity, human presence,
+ * professional competence, or execution authority.
+ */
 // functions/api/hitl.ts — the human-in-the-loop surface.
 //
 //   GET  /api/hitl                 the oversight state: policy, gates, modules, counts
@@ -37,6 +43,7 @@ import {
   HITL_POLICY,
   HITL_RECEIPT_SCHEMA,
   HITL_STATE_SCHEMA,
+  HitlHistoryError,
   buildChallenge,
   buildReceipt,
   checkAnswer,
@@ -64,6 +71,17 @@ import {
   type HitlEnv,
   type HitlReceipt,
 } from "./_hitl";
+
+/** Response interpretation only; never part of a signed receipt payload. */
+export const HITL_ASSESSMENT_SCOPE = Object.freeze({
+  decision_recording_credential: "SHARED_OPERATOR_TOKEN",
+  operator_label: "CALLER_SUPPLIED",
+  operator_identity: "NOT_VERIFIED",
+  human_presence: "NOT_ESTABLISHED",
+  competency_verified_meaning: "LIVE_BOARD_ANSWER_MATCH_ONLY",
+  professional_competence: "NOT_ASSESSED",
+  execution_authority: false,
+} as const);
 
 const CORS: Record<string, string> = {
   "access-control-allow-origin": "*",
@@ -112,7 +130,7 @@ function publicReceipt(r: HitlReceipt): Record<string, unknown> {
     signature: r.signature,
     verification:
       r.signature.value_hex
-        ? "This receipt is signed under the Council's board attestation key. Verify it against the published DID document — the same key and the same rule that verify every published card leaf."
+        ? "This receipt contains an Ed25519 signature. This endpoint has not verified the signature or authenticated its signer. Verify it against an independently selected, trusted published DID key using the published card-leaf verification rule."
         : `This receipt is UNSIGNED: ${r.signature.unsigned_reason}. An unsigned receipt is honest; it is not a fabricated signature.`,
   };
 }
@@ -171,10 +189,16 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
     [challenges, receipts] = await Promise.all([
       listChallenges(store, 50, true), listReceipts(store, 50, true),
     ]);
-  } catch {
+  } catch (error) {
+    const storageState = error instanceof HitlHistoryError ? error.storage_state : "READ_FAILED";
     return json({
-      ok: false, store_bound: Boolean(store), storage_state: "READ_FAILED",
-      error: "decision history could not be read; no empty-ledger claim is made",
+      ok: false, store_bound: Boolean(store), storage_state: storageState,
+      error: storageState === "HISTORY_INVALID"
+        ? "a retained challenge or decision failed its integrity checks; no partial history is published"
+        : storageState === "HISTORY_UNAVAILABLE"
+        ? "a listed challenge or decision is unavailable in this read; no empty-ledger claim is made"
+        : "decision history could not be read; no empty-ledger claim is made",
+      note: "The bounded history could not be established. Stored records were not changed; this response grants no execution authority.",
     }, 503);
   }
   const decidedIds = new Set(receipts.map((r) => r.challenge?.id).filter(Boolean));
@@ -196,6 +220,7 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
     }
     return json({
       ...publicModule(mod, completed.includes(mod.id)),
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       completed_modules: completed,
     });
   }
@@ -205,6 +230,7 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
     const modules = deriveModules(board);
     return json({
       schema: "csoai.hitl-curriculum/0.1",
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       policy: HITL_POLICY,
       derived_from: "GET /api/gspc → axes[] (read live on every request)",
       count: modules.length,
@@ -233,11 +259,16 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
   if (path === "record") {
     return json({
       schema: "csoai.hitl-record/0.1",
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       policy: HITL_POLICY,
       store_bound: Boolean(store),
       count: receipts.length,
       receipts: receipts.map(publicReceipt),
-      history_scope: { limit: 50, complete: false, consistency: "eventual", selection: "KV_KEY_ORDER" },
+      history_scope: {
+        limit: 50, complete: false, consistency: "eventual", selection: "KV_KEY_ORDER",
+        integrity: "CANONICAL_DIGEST_AND_STORAGE_KEY_CHECKED",
+        signature_verification: "NOT_PERFORMED",
+      },
       note: store
         ? "A bounded view of recorded decisions, including historical decisions, with their signature states. This is not an exhaustive ledger or current execution authority."
         : "No decision store is bound to this deployment, so this is an empty ledger — which is not the same as 'no decision was ever taken'.",
@@ -249,10 +280,11 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
   const counts = decisionCounts(challenges, receipts);
   return json({
     schema: HITL_STATE_SCHEMA,
+    assessment_scope: HITL_ASSESSMENT_SCOPE,
     policy: HITL_POLICY,
     title: "Human in the loop",
     one_line:
-      "A measurement says what was observed. It never says what should happen. The acts — publish, release, send, approve — wait for a competent, named human.",
+      "Record a review decision after a live-board knowledge check. Human identity, professional competence and action authority require separate evidence.",
     statutory_basis: "EU AI Act Art. 14 (human oversight) · Art. 4 (AI literacy) · ETSI EN 304 223 P11",
     decisions: [...HITL_DECISIONS],
     receipt_schema: HITL_RECEIPT_SCHEMA,
@@ -389,7 +421,7 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
     }
 
     const module = checked.module;
-    const stored = await markModuleCompleted(store, module.id, {
+    const stored = checked.correct && await markModuleCompleted(store, module.id, {
       module_id: module.id,
       axis: module.axis,
       at: new Date().toISOString(),
@@ -404,6 +436,7 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       correct_option: module.correct_option,
       explanation: module.explanation,
       oversight_gate_unlocked: checked.correct,
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       recorded: stored,
       note: checked.correct
         ? "Correct. The decision endpoint re-checks this answer against the live record at the moment of signing, so a stale answer cannot pass."
@@ -544,7 +577,6 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
 
     const operator = String(body?.operator ?? "").trim() || "the operator";
     const note = String(body?.note ?? "").trim();
-    const completed = await listCompletedModules(store);
 
     const receipt = await buildReceipt({
       operator,
@@ -552,7 +584,9 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       decision,
       note: note || `Competency-verified human-in-the-loop decision (${checked.module.id})`,
       competency_verified: true,
-      completed_modules: Array.from(new Set([...completed, checked.module.id])).sort(),
+      // The shared practice store has no learner identity. Only this request's
+      // rechecked module belongs in this decision; do not attribute others' history.
+      completed_modules: [checked.module.id],
       module_id: checked.module.id,
       // Sign the public projection, with the original id still binding its full content.
       // Do not disclose private context through the new decision or public history.
@@ -577,10 +611,11 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       stored: true,
       storage_state: "WRITE_ACKNOWLEDGED",
       execution_authority: false,
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       blocked_by_competency_gate: false,
       receipt: publicReceipt(receipt),
       note: receipt.signature.value_hex
-        ? "Signed under the board attestation key. Verify it against the published DID document."
+        ? "Recorded with an Ed25519 signature from the configured signing key. Verify it against an independently selected, trusted published DID key."
         : `Recorded, but UNSIGNED: ${receipt.signature.unsigned_reason}.`,
     });
   }
@@ -590,4 +625,5 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
 
 /** HEAD answers what GET answers, with no body (functions/api/_head.ts). */
 export const onRequestHead = headFromGet(onRequestGet);
+
 

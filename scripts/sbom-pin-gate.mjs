@@ -133,6 +133,46 @@ export function recordedCommit(doc) {
 }
 
 /**
+ * Is this working tree a READABLE git repository at all?
+ *
+ * WHY A THIRD DISTINCTION. "The commit is not in the local store" has at least three
+ * causes, and they print the same words while wanting different repairs:
+ *
+ *   1. THE REPOSITORY ITSELF IS UNREADABLE — the work tree lost its .git link (a
+ *      sibling's offload removed it), so every git command dies with "fatal: not a git
+ *      repository". The repair is to restore the link, or to run the gate in a real
+ *      clone. Nothing about the pin can be said until then.
+ *   2. THE STORE'S HISTORY IS TRUNCATED — a --depth=1 fetch. The repair is to deepen.
+ *   3. THE PIN NAMES A COMMIT IN NO REF — a real finding about the pin.
+ *
+ * Reading 1 as 3 names a false finding and sends the reader after a mechanism that
+ * cannot help. Check the repository first; it costs one command.
+ */
+export function repoReadable(cwd = REPO) {
+  try {
+    const dir = execFileSync("git", ["rev-parse", "--git-dir"], {
+      cwd,
+      encoding: "utf8",
+      // stderr is CAPTURED, not printed: git's "fatal: not a git repository" is the fact
+      // this function reports, not noise for the reader.
+      stdio: ["ignore", "pipe", "pipe"],
+      env: gitEnv(),
+    }).trim();
+    return { readable: true, gitDir: dir, why: null };
+  } catch (error) {
+    return {
+      readable: false,
+      gitDir: null,
+      why:
+        "this working tree is not a readable git repository (git says " +
+        (error?.stderr ? String(error.stderr).trim().split("\n")[0] : "nothing") +
+        ") — the repository link is missing or broken, so no reachability question can be " +
+        "asked here at all",
+    };
+  }
+}
+
+/**
  * Is `sha` an ancestor of `ref`?
  *
  * `git merge-base --is-ancestor` exits 0 for yes, 1 for no, and 128 for "I cannot
@@ -254,10 +294,17 @@ export function countReachable(cwd = REPO) {
  * This reads the store. It changes no tree, commits nothing and pushes nothing.
  */
 export function answerReachability(sha, ref = "HEAD", cwd = REPO) {
+  // THE REPOSITORY FIRST. A work tree that is not a git repository cannot answer any
+  // reachability question, and calling that "the commit is not in the local store"
+  // names a false cause with a false remedy.
+  const repo = repoReadable(cwd);
+  if (!repo.readable) {
+    return { reachable: false, unprovable: true, cause: "NO_REPOSITORY", why: repo.why };
+  }
   const first = isAncestor(sha, ref, cwd);
   if (first.reachable) return first;
   // The pin itself is not in this store (git exit 128): the question cannot be asked here.
-  if (first.unprovable) return first;
+  if (first.unprovable) return { ...first, cause: "PIN_NOT_IN_STORE" };
   // The store's history is truncated, so the walk from HEAD stopped at the boundary. That
   // is a question this repository cannot answer, and "cannot answer" is not a finding
   // about the pin: on 2026-11-02 twenty open pull requests were red on this gate with the
@@ -268,6 +315,7 @@ export function answerReachability(sha, ref = "HEAD", cwd = REPO) {
   return {
     reachable: false,
     unprovable: true,
+    cause: "TRUNCATED_STORE",
     why:
       "this repository's history is truncated (a shallow boundary), so reachability cannot be " +
       "decided here — UNCHECKABLE, not an orphaned pin",
@@ -387,6 +435,33 @@ function selftest() {
       fs.rmSync(shallowDir, { recursive: true, force: true });
     }
 
+    // A work tree that is NOT a git repository at all. A sibling lane's offload removed
+    // the .git link, so every git command died with "fatal: not a git repository" and the
+    // gate printed the same words as a truncated graph. It must name its own cause: the
+    // repair is to restore the link, not to deepen a history that is not there.
+    const notARepo = fs.mkdtempSync(path.join(os.tmpdir(), "sbom-pin-gate-not-a-repo-"));
+    try {
+      const verdict = judge(shaB, answerReachability(shaB, "HEAD", notARepo));
+      if (verdict.state !== "UNPROVABLE") {
+        failures++;
+        console.log("  ✗ a directory that is not a repository must read UNPROVABLE, never ORPHANED");
+      } else {
+        console.log("  ✓ a directory that is not a repository reads UNPROVABLE");
+      }
+      const answer = answerReachability(shaB, "HEAD", notARepo);
+      if (answer.cause !== "NO_REPOSITORY") {
+        failures++;
+        console.log(`  ✗ an unreadable repository must name its own cause, not the pin's (got ${answer.cause})`);
+      } else if (/not in the local store/.test(answer.why)) {
+        failures++;
+        console.log("  ✗ an unreadable repository must not be reported as a missing pin");
+      } else {
+        console.log("  ✓ an unreadable repository names itself, and not the pin");
+      }
+    } finally {
+      fs.rmSync(notARepo, { recursive: true, force: true });
+    }
+
     // The decision function itself, without a repository: an absent pin is never
     // silently treated as fine.
     const noSha = judge(null, { reachable: true, why: null });
@@ -452,7 +527,21 @@ if (SELFTEST) {
     console.error("");
     console.error("  The pin may well be reachable — this repository cannot tell. That is an");
     console.error("  UNCHECKABLE state, not a finding about the pin, and it does not block a merge.");
-    console.error("  A truncated store is the usual cause; the workflow's own depth-1 fetch makes one.");
+    // Three causes, three repairs. Naming the wrong one sends the reader after a
+    // mechanism that cannot help them.
+    if (ancestor.cause === "NO_REPOSITORY") {
+      console.error("  THE REPOSITORY ITSELF IS UNREADABLE. Restore the repository link, or run");
+      console.error("  this gate in a real clone: no question about the pin can be asked until then.");
+      console.error("  (A sibling lane's offload removed the .git link; every git command died with");
+      console.error("  'fatal: not a git repository', and that is not the same fact as a truncated graph.)");
+    } else if (ancestor.cause === "TRUNCATED_STORE") {
+      console.error("  THE STORE'S HISTORY IS TRUNCATED. Deepen it — fetch without --depth — and");
+      console.error("  re-run. The workflow's own depth-1 fetch makes one; do not re-stamp a pin on");
+      console.error("  the strength of a verdict the graph cannot support.");
+    } else {
+      console.error("  THE PIN IS NOT IN THIS STORE. Fetch it, or run the gate where the history is");
+      console.error("  complete, and ask again.");
+    }
     process.exit(2);
   }
   if (!verdict.ok) {

@@ -81,12 +81,12 @@ export default function Team() {
       <section aria-labelledby="agents">
         <h2 id="agents" className="mb-2 text-2xl font-bold">AI agents</h2>
         <p className="mb-2 text-gray-300">
-          Each desk is the same Council staff with a narrower scope. It answers from published records, or says
+          Each software desk has a defined scope within Council of AI. It answers from published records, or says
           UNMEASURED, or talks — and it tells you which of those it just did.
         </p>
         {modelConfigured === false ? (
           <p role="note" data-testid="team-model-state" className="mb-6 rounded-xl border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-[13px] text-amber-100">
-            No language model is configured for this deployment, so these staff answer from published records only.
+            No language model is configured for this deployment, so these AI agents answer from published records only.
             Nothing is invented to fill the gap.
           </p>
         ) : null}

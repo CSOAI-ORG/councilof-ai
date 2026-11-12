@@ -21,6 +21,8 @@ tags:
 
 Search a model, open an axis and inspect the published record. This viewer displays two separate populations: the **Council GSPC board** and **published third-party Hugging Face measured cells**. Their counts have different meanings and must not be combined.
 
+Council of AI is an operating AI measurement and evidence organisation run by CSOAI Ltd. See its [documented external use and distribution evidence](https://councilof.ai/traction/) alongside the methods and records linked below.
+
 [Download the board dataset](https://huggingface.co/datasets/csoai/gspc-board) · [Work in Kaggle](https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board) · [Verify a record](https://councilof.ai/gspc-verify) · [Methodology](https://councilof.ai/methodology/)
 
 ## How to use this Space
