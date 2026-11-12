@@ -43,6 +43,7 @@ import {
   HITL_POLICY,
   HITL_RECEIPT_SCHEMA,
   HITL_STATE_SCHEMA,
+  HitlHistoryError,
   buildChallenge,
   buildReceipt,
   checkAnswer,
@@ -129,7 +130,7 @@ function publicReceipt(r: HitlReceipt): Record<string, unknown> {
     signature: r.signature,
     verification:
       r.signature.value_hex
-        ? "This receipt is signed under the Council's board attestation key. Verify it against the published DID document — the same key and the same rule that verify every published card leaf."
+        ? "This receipt contains an Ed25519 signature. This endpoint has not verified the signature or authenticated its signer. Verify it against an independently selected, trusted published DID key using the published card-leaf verification rule."
         : `This receipt is UNSIGNED: ${r.signature.unsigned_reason}. An unsigned receipt is honest; it is not a fabricated signature.`,
   };
 }
@@ -188,10 +189,16 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
     [challenges, receipts] = await Promise.all([
       listChallenges(store, 50, true), listReceipts(store, 50, true),
     ]);
-  } catch {
+  } catch (error) {
+    const storageState = error instanceof HitlHistoryError ? error.storage_state : "READ_FAILED";
     return json({
-      ok: false, store_bound: Boolean(store), storage_state: "READ_FAILED",
-      error: "decision history could not be read; no empty-ledger claim is made",
+      ok: false, store_bound: Boolean(store), storage_state: storageState,
+      error: storageState === "HISTORY_INVALID"
+        ? "a retained challenge or decision failed its integrity checks; no partial history is published"
+        : storageState === "HISTORY_UNAVAILABLE"
+        ? "a listed challenge or decision is unavailable in this read; no empty-ledger claim is made"
+        : "decision history could not be read; no empty-ledger claim is made",
+      note: "The bounded history could not be established. Stored records were not changed; this response grants no execution authority.",
     }, 503);
   }
   const decidedIds = new Set(receipts.map((r) => r.challenge?.id).filter(Boolean));
@@ -257,7 +264,11 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
       store_bound: Boolean(store),
       count: receipts.length,
       receipts: receipts.map(publicReceipt),
-      history_scope: { limit: 50, complete: false, consistency: "eventual", selection: "KV_KEY_ORDER" },
+      history_scope: {
+        limit: 50, complete: false, consistency: "eventual", selection: "KV_KEY_ORDER",
+        integrity: "CANONICAL_DIGEST_AND_STORAGE_KEY_CHECKED",
+        signature_verification: "NOT_PERFORMED",
+      },
       note: store
         ? "A bounded view of recorded decisions, including historical decisions, with their signature states. This is not an exhaustive ledger or current execution authority."
         : "No decision store is bound to this deployment, so this is an empty ledger — which is not the same as 'no decision was ever taken'.",
@@ -604,7 +615,7 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       blocked_by_competency_gate: false,
       receipt: publicReceipt(receipt),
       note: receipt.signature.value_hex
-        ? "Signed under the board attestation key. Verify it against the published DID document."
+        ? "Recorded with an Ed25519 signature from the configured signing key. Verify it against an independently selected, trusted published DID key."
         : `Recorded, but UNSIGNED: ${receipt.signature.unsigned_reason}.`,
     });
   }

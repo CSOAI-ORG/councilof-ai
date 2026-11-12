@@ -10,10 +10,23 @@ from pathlib import Path
 from inspect_ai import Task, task
 from inspect_ai.dataset import Sample
 from inspect_ai.scorer import Score, metric, scorer
-from inspect_ai.solver import generate
+from inspect_ai.solver import generate, solver
+from inspect_ai.model import get_model
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from run_bench import MILL, bank_items, label_vocabulary, resolve_axis
+from execution_context import context_digest, load_context
+
+
+@solver
+def contextual_generate(context):
+    """Bind declared generation limits to the actual call; never grant access."""
+    async def solve(state, generate):
+        if context['model'] != 'unknown' and get_model().name != context['model']:
+            raise ValueError('execution_context.model differs from the configured Inspect model')
+        limits = {k: v for k, v in context['generation'].items() if v is not None}
+        return await generate(state, **limits)
+    return solve
 
 
 @metric
@@ -52,7 +65,7 @@ def canonical_gspc(labels: list[str]):
 
 
 @task
-def gspc(bank_path: str, bank_sha256: str, axis: str):
+def gspc(bank_path: str, bank_sha256: str, axis: str, execution_context_path: str | None = None):
     axis = resolve_axis(axis)
     raw = Path(bank_path).read_bytes()
     digest = hashlib.sha256(raw).hexdigest()
@@ -61,14 +74,20 @@ def gspc(bank_path: str, bank_sha256: str, axis: str):
     items = bank_items(raw)
     labels = label_vocabulary(items)
     MILL.exact_label_menu(labels)
+    context = load_context(execution_context_path)
     samples = []
     for i, (text, expected) in enumerate(items):
         prompt = MILL.axis_prompt(axis, text, labels)
         samples.append(Sample(id=i, input=prompt, target=expected.strip().upper(), metadata={
             'index': i, 'prompt_sha256': hashlib.sha256(prompt.encode()).hexdigest()}))
-    return Task(dataset=samples, solver=generate(), scorer=canonical_gspc(labels),
+    return Task(dataset=samples, solver=contextual_generate(context) if execution_context_path else generate(),
+        scorer=canonical_gspc(labels),
         fail_on_error=True, epochs=1, name='gspc_'+axis.replace('-', '_'), metadata={
             'bank_sha256': digest, 'bank_items_total': len(items), 'axis': axis,
             'grader_source_sha256': hashlib.sha256(Path(MILL.__file__).read_bytes()).hexdigest(),
+            'execution_context': context, 'execution_context_sha256': context_digest(context),
+            'execution_context_note': 'Access provenance is supplied, not authenticated by this task. '
+                'With execution_context_path, its declared temperature/max_tokens are applied at generation; '
+                'other Inspect/provider settings remain in the native log and require review.',
             'result_scope': 'evaluation log; no automatic board admission',
             'coverage_note': 'Inspect limit/sample_id can reduce execution; compare completed sample IDs with bank_items_total before claiming full coverage.'})
