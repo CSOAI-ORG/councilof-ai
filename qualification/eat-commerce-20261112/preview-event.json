@@ -1,0 +1,84 @@
+{
+  "schema": "csoai.evidence-event/0.1",
+  "subject": {
+    "kind": "route",
+    "locator": "https://councilof.ai/gpai-evidence"
+  },
+  "claim": {
+    "text": "The isolated GPAI page candidate preserves subject-bound preview and terms navigation, distinguishes empty from unavailable evidence, and rejects a changed terms origin in executed source and browser checks.",
+    "source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/0663a4395fc331b904804169b47a427c3a712d3d/client/src/pages/GpaiEvidencePack.tsx",
+    "source_sha256": "cd9ca0d91a92f7e7334c378a810bd6da8766686db4bff8608384571dde2392f6",
+    "read_at": "2026-11-12T01:33:47.836807+00:00"
+  },
+  "method": {
+    "id": "gpai-report-preview-journey",
+    "version": "1.0.0",
+    "holder": "csoai",
+    "code_sha256": "c776be788ae3b86fad0f72f06cb99d2753eccbfc80286ae4916ac23fd09bc162"
+  },
+  "declared": {
+    "preview_route": "/api/evidence-bundle?obligation=article-53",
+    "payments_permitted": false,
+    "new_measurement": false
+  },
+  "observed": {
+    "qualification": {
+      "checked_at": "2026-11-12T01:33:47.836807+00:00",
+      "base_source": "0663a4395fc331b904804169b47a427c3a712d3d",
+      "source_hashes": {
+        "client/src/pages/GpaiEvidencePack.tsx": "db026794d5117597fbdb1b7fb311ea9c8c5685133702af8589b07b3078282385",
+        "client/src/pages/GpaiEvidencePack.preview.test.tsx": "58bc90d4a7dd767f28275f37a2fbd1f9f9c874b25d270ac765a5dc9c2020175b",
+        "client/src/components/GpaiEvidencePreview.tsx": "8352645fb5752ae659e71e43ecf22ef0be97841cd8ef73a6b5b73288f5be519a",
+        "client/src/components/GpaiEvidencePreview.test.tsx": "6171932285debabf79888be93c89906e435c56d5c04fc0acee25a5a8055d499c",
+        "client/src/lib/gpaiEvidencePreview.ts": "c776be788ae3b86fad0f72f06cb99d2753eccbfc80286ae4916ac23fd09bc162",
+        "client/src/lib/gpaiEvidencePreview.test.ts": "6844319be548d935f21acfd8d3a586a5fe7e7e9c6b59de70f36f6f2aa120ca4c"
+      },
+      "unit_and_component_tests": 59,
+      "unit_failures": 0,
+      "unit_skips": 0,
+      "browser_assertions": 44,
+      "typecheck_exit": 0,
+      "rendered_brand_gate_exit": 0,
+      "directory_helper_regressions": 37,
+      "counts_are_distinct_scopes_not_summed": true,
+      "environment": {
+        "node": "v22.22.3",
+        "react": "19.2.1",
+        "vitest": "4.1.11",
+        "vite": "8.3.8",
+        "typescript": "5.9.3"
+      },
+      "known_limits": [
+        "Focused source tests and isolated browser bundle, not a full monorepo build or production deployment.",
+        "The existing published CSS and recorded public preview JSON were used for browser qualification.",
+        "No signature verification, paid order, customer acceptance or new model measurement was performed.",
+        "Cached third-party numeric prices remain unchanged."
+      ]
+    },
+    "read_only_browser_requests": 10
+  },
+  "state": "CONSISTENT",
+  "value": null,
+  "negative_control": {
+    "id": "changed-terms-origin",
+    "expected": "REJECTED",
+    "got": "REJECTED"
+  },
+  "limits": [
+    "Focused source tests and isolated browser bundle, not a full monorepo build or production deployment.",
+    "The existing published CSS and recorded public preview JSON were used for browser qualification.",
+    "No signature verification, paid order, customer acceptance or new model measurement was performed.",
+    "Cached third-party numeric prices remain unchanged."
+  ],
+  "supersedes": null,
+  "signature": null,
+  "anchors": {
+    "ots": "none",
+    "rekor": {
+      "log_index": null,
+      "uuid": null
+    }
+  },
+  "maintenance": null,
+  "event_id": "sha256:775b5f320d731652cc65f0342a934fc7e352fe65abec752f2a9ef9c0f1a19972"
+}
