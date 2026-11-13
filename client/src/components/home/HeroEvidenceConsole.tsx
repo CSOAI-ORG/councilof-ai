@@ -1,10 +1,10 @@
 import { useGspcBoard } from "@/components/board/useGspcBoard";
+import { boardAxisLabel } from "./HomeGspcBoard";
 import {
-  boardAxisLabel,
   boardTiles,
   type Tile,
   type TileState,
-} from "@/components/home/LiveBoardGlance";
+} from "./LiveBoardGlance";
 import { axisHref } from "@/lib/axisHref";
 
 const STATE_LABEL: Record<TileState, string> = {
