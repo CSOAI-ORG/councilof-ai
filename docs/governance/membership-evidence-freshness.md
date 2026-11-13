@@ -14,7 +14,7 @@ The limits are monitoring thresholds, not evidence that a membership is legally 
 
 ## Row verification
 
-The live checker fetches every row whose evidence kind is `public_url`, including rows recorded as `UNVERIFIED` or `PENDING` with their respective semantics. Private mailbox evidence is schema-checked and counted, but is not fetched or represented as independently verified. The current manifest has 35 rows: 26 public-evidence rows and 9 private-evidence rows.
+The live checker fetches every row whose evidence kind is `public_url`, including rows recorded as `UNVERIFIED` or `PENDING` with their respective semantics. Smithery is expected to remain unavailable at its cited detail route until an owner re-verifies an alternate current listing. OpenAIRE uses a dedicated Graph v4 negative-control check: the DOI query must return HTTP 200, `header.numFound=0`, and an empty `results` array; if a record reappears, the check fails and requires owner review. Private mailbox evidence is schema-checked and counted, but is not fetched or represented as independently verified. The current manifest has 35 rows: 26 public-evidence rows and 9 private-evidence rows.
 
 ## Execution
 
