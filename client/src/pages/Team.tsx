@@ -59,9 +59,10 @@ export default function Team() {
   }, []);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 text-emerald-50">
+    <div className="min-h-screen bg-[#03110b] text-emerald-50">
+      <div className="mx-auto max-w-5xl px-4 py-16">
       <h1 className="mb-4 text-3xl font-bold sm:text-4xl">Team</h1>
-      <p className="mb-8 text-gray-300">
+      <p className="mb-8 text-emerald-100/80">
         The people who run Council of AI, and the AI agents that answer questions from our published records.
         The agents are software. They are listed separately and are never presented as staff.
       </p>
@@ -69,18 +70,18 @@ export default function Team() {
 
       <section aria-labelledby="people" className="mb-12">
         <h2 id="people" className="mb-4 text-2xl font-bold">People</h2>
-        <div className="rounded-2xl border border-emerald-500/20 p-5" data-testid="team-person">
+        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-950/35 p-5" data-testid="team-person">
           <h3 className="text-lg font-semibold">Nicholas Templeman</h3>
-          <p className="text-gray-300">
+          <p className="mt-1 text-emerald-100/80">
             Founder of CSOAI Ltd (UK Companies House 16939677), which operates Council of AI and is accountable for
-            everything published on this site. See <a href="/about/" className="underline">About</a>.
+            everything published on this site. See <a href="/about/" className="text-emerald-300 underline underline-offset-2">About</a>.
           </p>
         </div>
       </section>
 
       <section aria-labelledby="agents">
         <h2 id="agents" className="mb-2 text-2xl font-bold">AI agents</h2>
-        <p className="mb-2 text-gray-300">
+        <p className="mb-2 text-emerald-100/80">
           Each software desk has a defined scope within Council of AI. It answers from published records, or says
           UNMEASURED, or talks — and it tells you which of those it just did.
         </p>
@@ -95,27 +96,27 @@ export default function Team() {
             const d = DESKS[id];
             const rec = registry[id];
             return (
-              <article key={id} data-testid={`agent-${id}`} className="flex flex-col rounded-2xl border border-sky-400/30 bg-sky-500/5 p-5">
+              <article key={id} data-testid={`agent-${id}`} className="flex flex-col rounded-2xl border border-sky-400/30 bg-sky-950/20 p-5">
                 <div className="mb-1 flex items-center gap-2">
                   <h3 className="text-lg font-semibold">{d.name}</h3>
                   <span className="rounded-full border border-sky-400/50 px-2 py-0.5 text-[11px] text-sky-200">AI agent</span>
                 </div>
-                <p className="mb-3 text-sm text-gray-300">{d.role}</p>
+                <p className="mb-3 text-sm text-emerald-100/80">{d.role}</p>
                 <p className="text-xs font-semibold uppercase text-emerald-300">Can answer</p>
-                <ul className="mb-2 list-disc pl-5 text-sm">{d.can.map((c) => <li key={c}>{c}</li>)}</ul>
+                <ul className="mb-2 list-disc pl-5 text-sm text-emerald-50/90">{d.can.map((c) => <li key={c}>{c}</li>)}</ul>
                 <p className="text-xs font-semibold uppercase text-amber-300">Can't answer</p>
-                <ul className="mb-3 list-disc pl-5 text-sm">{d.cannot.map((c) => <li key={c}>{c}</li>)}</ul>
+                <ul className="mb-3 list-disc pl-5 text-sm text-emerald-50/90">{d.cannot.map((c) => <li key={c}>{c}</li>)}</ul>
                 <p role="note" className="mb-4 text-[12px] text-sky-100/80">{deskDisclosure(d.name)}</p>
                 {rec?.did ? (
-                  <p className="mb-3 break-all text-[11px] text-emerald-100/60" data-testid={`agent-did-${id}`}>
+                  <p className="mb-3 break-all text-[11px] text-emerald-100/70" data-testid={`agent-did-${id}`}>
                     did:key:{rec.did.replace(/^did:key:/, "").slice(0, 16)}…
                   </p>
                 ) : (
-                  <p className="mb-3 text-[11px] text-emerald-100/60" data-testid={`agent-unsigned-${id}`}>
+                  <p className="mb-3 text-[11px] text-emerald-100/70" data-testid={`agent-unsigned-${id}`}>
                     No signing key yet — these answers cannot be attributed to a key.
                   </p>
                 )}
-                <button type="button" onClick={() => setOpen(id)} className="mt-auto rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold">
+                <button type="button" onClick={() => setOpen(id)} className="mt-auto rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300">
                   Ask {d.name}
                 </button>
               </article>
@@ -126,6 +127,7 @@ export default function Team() {
       {open && <PalAskPanel desk={open} onClose={() => setOpen(null)} onEscalation={setChallenge} />}
 
       <HitlConsole challenge={challenge} />
+      </div>
     </div>
   );
 }

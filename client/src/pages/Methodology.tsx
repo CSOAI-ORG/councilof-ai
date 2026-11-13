@@ -154,37 +154,33 @@ export default function Methodology() {
             Three are used on the measured behavioural axis; two describe checks that are not yet available.
             The table distinguishes them. The rules and reference answers remain open to review.
           </p>
+          <p className="mt-2 text-[11px] font-mono text-emerald-300/70 sm:hidden">
+            Scroll sideways to inspect all columns →
+          </p>
           <div
             className="mt-4 overflow-x-auto rounded-2xl border border-emerald-500/20 bg-[#05140d] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
             tabIndex={0}
             role="region"
             aria-label="The five published test rules (scrolls sideways)"
           >
-            {/* min-w so the overflow-x-auto wrapper scrolls on a phone instead
-                of crushing "PREDICATE" to one character per line. tabIndex + a named
-                region so a keyboard user can reach and scroll it too. */}
-            <table className="w-full min-w-[40rem] text-[13px]">
+            <table className="w-full min-w-[34rem] md:min-w-0 table-auto text-[13px]">
               <thead>
-                <tr className="border-b border-emerald-500/20 text-left font-mono text-[11px] uppercase tracking-wider text-emerald-100/60">
-                  <th className="whitespace-nowrap px-4 py-3">Predicate</th>
-                  <th className="px-4 py-3">What it checks</th>
-                  <th className="whitespace-nowrap px-4 py-3">Verdict</th>
-                  <th className="px-4 py-3">Available today?</th>
+                <tr className="border-b border-emerald-500/20 text-left font-mono text-[11px] uppercase tracking-wider text-emerald-100/70">
+                  <th className="whitespace-nowrap px-4 py-3 md:w-[19%]">Predicate</th>
+                  <th className="px-4 py-3 md:w-[27%]">What it checks</th>
+                  <th className="px-4 py-3 md:w-[20%]">Verdict</th>
+                  <th className="px-4 py-3 md:w-[34%]">Available today?</th>
                 </tr>
               </thead>
               <tbody>
                 {PREDICATES.map((p) => (
-                  <tr key={p.name} className="border-b border-emerald-500/10 last:border-0">
-                    {/* Identifiers and file:line pointers must never break
-                        mid-token ("actor/transcript.py:L" / "42" reads as two
-                        different pointers); the prose columns keep wrapping, but at a readable
-                        min width: without one a phone crushed them to a letter per line. */}
+                  <tr key={p.name} className="border-b border-emerald-500/10 align-top last:border-0">
                     <td className="whitespace-nowrap px-4 py-3">
                       <code className="font-mono text-emerald-300">{p.name}</code>
                     </td>
-                    <td className="min-w-[14rem] px-4 py-3 text-emerald-100/80">{p.checks}</td>
-                    <td className="whitespace-nowrap px-4 py-3 text-emerald-100/60">{p.verdict}</td>
-                    <td className="min-w-[14rem] px-4 py-3 text-[12px] leading-relaxed text-emerald-100/60">
+                    <td className="px-4 py-3 text-emerald-100/85">{p.checks}</td>
+                    <td className="px-4 py-3 text-emerald-100/70">{p.verdict}</td>
+                    <td className="px-4 py-3 text-[12px] leading-relaxed text-emerald-100/75">
                       {p.status}
                     </td>
                   </tr>

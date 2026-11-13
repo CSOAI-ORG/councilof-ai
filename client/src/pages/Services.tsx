@@ -73,7 +73,7 @@ export default function Services() {
             The catalogue below lists data feeds and evidence services from the published technical catalogue.
             Check each entry for its scope, preview and payment requirements.
           </p>
-          <nav aria-label="Published evidence path" className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4" data-testid="services-supply-led-entry">
+          <nav aria-label="Published evidence path" className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-5" data-testid="services-supply-led-entry">
             <a href="/dashboard?tab=board" className="rounded-lg bg-emerald-400 px-3 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-300">1 · Explore measurements</a>
             <a href="/press" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">2 · See what changed</a>
             <a href="/gspc-verify" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">3 · Check a record</a>

@@ -1455,9 +1455,9 @@ export default function MeasurementBoard() {
         data-testid="board-commission-callout"
         role="note"
         aria-label="Measurement services"
-        className="mb-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 sm:p-5"
+        className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3"
       >
-        <p className="text-base leading-relaxed text-emerald-950">
+        <p className="text-sm leading-relaxed text-emerald-950">
           Need evidence for a specific model or system?{" "}
           <a
             href="/services/"
@@ -1485,13 +1485,17 @@ export default function MeasurementBoard() {
           and period, with its own sample size and supporting evidence. Counts from different
           sets are not directly comparable. Review the scope and limitations alongside each result.
         </p>
-        <p className="mt-3 max-w-3xl rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700">
-          <strong className="font-semibold">About the dates on this page.</strong> A date shown
-          against a set is the stamp carried inside the data itself — when the measuring actually
-          happened. It is not the time this page was rendered or deployed, so it advances only when
-          something new is measured and recorded. Each set names the exact field its date was read
-          from, so you can open the file and check.
-        </p>
+        <details className="mt-3 max-w-3xl rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-700">
+          <summary className="cursor-pointer font-semibold text-gray-900 hover:underline">
+            About the dates on this page
+          </summary>
+          <p className="mt-2 leading-relaxed">
+            A date shown against a set is the stamp carried inside the data itself — when the measuring actually
+            happened. It is not the time this page was rendered or deployed, so it advances only when
+            something new is measured and recorded. Each set names the exact field its date was read
+            from, so you can open the file and check.
+          </p>
+        </details>
       </header>
 
       {/* ── the living board: freshness, rank spread on one frozen bank, downloads ── */}

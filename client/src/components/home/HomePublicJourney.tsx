@@ -36,7 +36,7 @@ export function HomeWatchdog() {
   return <section id="watchdog" className="hp-section hp-public-journey" aria-labelledby="home-watchdog-h" data-testid="home-public-watchdog">
     <div className="section-shell">
       <div className="hp-section-heading">
-        <div><p className="hp-eyebrow">Public Watchdog</p><h2 id="home-watchdog-h">An AI claim deserves<br /><span>a closer look.</span></h2></div>
+        <div><p className="hp-eyebrow">02 / Public Watchdog</p><h2 id="home-watchdog-h">An AI claim deserves<br /><span>a closer look.</span></h2></div>
         <p className="hp-heading-aside">Choosing a provider, researching a concern or checking our own work? Follow the public claim to its evidence, history and corrections. You do not have to take a headline at face value.</p>
       </div>
       <JourneyCards journeys={WATCHDOG_JOURNEYS} />
@@ -54,7 +54,7 @@ export function HomeLearningJourney() {
   return <section id="learning" className="hp-section hp-public-journey hp-public-journey-soft" aria-labelledby="home-learning-journey-h" data-testid="home-learning-journey">
     <div className="section-shell">
       <div className="hp-section-heading">
-        <div><p className="hp-eyebrow">Academy · practice · human review</p><h2 id="home-learning-journey-h">Better evidence.<br /><span>Better-informed people.</span></h2></div>
+        <div><p className="hp-eyebrow">04 / Academy · practice · human review</p><h2 id="home-learning-journey-h">Better evidence.<br /><span>Better-informed people.</span></h2></div>
         <p className="hp-heading-aside">Council of AI — the Council for the Safety of Artificial Intelligence — connects measurement with learning. Understand a result, practise evaluating it and see where human judgement and permission belong.</p>
       </div>
       <JourneyCards journeys={LEARNING_JOURNEYS} />

@@ -150,35 +150,48 @@ export default function Products() {
         <Link href="/services/#services-scope-h" className="mt-4 inline-flex min-h-11 items-center font-semibold text-emerald-300 underline">What to agree in the written scope</Link>
       </section>
 
-      {/* Public runtime doors and source integrations. Source-only projects say so: a
-          repository is inspectable, but it is not a browser-store or host installation. */}
-      <section aria-label="Runtime and integration status" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      {/* Live runtime doors and verification surfaces */}
+      <section aria-label="Runtime and verification surfaces" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/mcp">
-          <p className="font-mono text-sm text-emerald-100">MCP</p>
+          <p className="font-mono text-sm text-emerald-100">MCP Endpoint</p>
           <p className="mt-1 text-xs text-emerald-200/80">{toolSummary()}</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">POST /mcp</p>
-        </a>
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/extension/">
-          <p className="font-mono text-sm text-emerald-100">Browser extension source</p>
-          <p className="mt-1 text-xs text-emerald-200/80">MV3 prototype — download the zip with its SHA256SUMS and load it unpacked</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">No browser-store install claimed</p>
-        </a>
-        <div className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4">
-          <p className="font-mono text-sm text-emerald-100">Grok integration source</p>
-          <p className="mt-1 text-xs text-emerald-200/80">Not publicly hosted at present: the GitHub organisation that held it is unavailable</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">Source, not a store listing</p>
-        </div>
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/what-is-new.html">
-          <p className="font-mono text-sm text-emerald-100">Hermes integration notes</p>
-          <p className="mt-1 text-xs text-emerald-200/80">Historical local integration, documented for inspection</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">No public installation package</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">POST /mcp · Streamable HTTP</p>
         </a>
         <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="https://councilof.ai/api/gspc" target="_blank" rel="noreferrer">
-          <p className="font-mono text-sm text-emerald-100">REST + curl</p>
+          <p className="font-mono text-sm text-emerald-100">REST JSON API</p>
           <p className="mt-1 text-xs text-emerald-200/80">GET /api/gspc · /api/state · /api/corrections</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">application/json</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">application/json · CORS open</p>
         </a>
+        <Link className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/gspc-verify">
+          <p className="font-mono text-sm text-emerald-100">Offline Verifier</p>
+          <p className="mt-1 text-xs text-emerald-200/80">Check Ed25519 signatures locally in your browser</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">Zero account · /gspc-verify</p>
+        </Link>
+        <Link className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/dashboard">
+          <p className="font-mono text-sm text-emerald-100">Council OS</p>
+          <p className="mt-1 text-xs text-emerald-200/80">Inspect live boards, evidence packs & review lanes</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">Unified workspace · /dashboard</p>
+        </Link>
       </section>
+      <details className="mt-4 rounded-xl border border-emerald-400/15 bg-emerald-950/25 px-4 py-2.5 text-xs text-slate-300">
+        <summary className="cursor-pointer font-semibold text-emerald-200 hover:underline">
+          Experimental &amp; historical client prototypes
+        </summary>
+        <div className="mt-3 grid gap-3 sm:grid-cols-3">
+          <a className="rounded-lg border border-emerald-400/20 bg-emerald-950/40 p-3 hover:border-emerald-300/50" href="/extension/">
+            <p className="font-mono text-emerald-100">Browser extension source</p>
+            <p className="mt-1 text-emerald-200/75">No browser-store install claimed — unpacked rc zip with SHA256SUMS.</p>
+          </a>
+          <div className="rounded-lg border border-emerald-400/20 bg-emerald-950/40 p-3">
+            <p className="font-mono text-emerald-100">Grok integration source</p>
+            <p className="mt-1 text-emerald-200/75">Source, not a store listing.</p>
+          </div>
+          <div className="rounded-lg border border-emerald-400/20 bg-emerald-950/40 p-3">
+            <p className="font-mono text-emerald-100">Hermes integration notes</p>
+            <p className="mt-1 text-emerald-200/75">No public installation package.</p>
+          </div>
+        </div>
+      </details>
 
       <section aria-labelledby="sku-h" className="mt-12">
         <h2 id="sku-h" className="text-xl font-bold text-emerald-300">

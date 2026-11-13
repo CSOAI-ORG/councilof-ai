@@ -157,8 +157,8 @@ export const PRIMARY_PATHS = new Set<string>([
   "/academy", "/verify-certificate", "/accreditation",
   // /charter: in-app pointer to the operational charter (a direct request 308s to /constitutional-harness/).
   "/charter",
-  // Company
-  "/about", "/library", "/contact", "/disclaimers",
+  // Company & public identity references
+  "/about", "/team", "/brand", "/docs", "/council-system-card", "/council-model-card", "/workbench-paper", "/library", "/contact", "/disclaimers",
   // These three routes serve the operative Terms v1.1 and are indexed. Calling
   // the current contract a "reference / archive" contradicts its acceptance text.
   "/terms-of-service", "/terms", "/legal/terms",

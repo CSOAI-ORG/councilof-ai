@@ -167,17 +167,14 @@ console.log({
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/">
-            <div className="flex items-center gap-2 cursor-pointer">
-              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xs">CSOAI</span>
-              </div>
-              <span className="font-semibold text-lg">API Documentation</span>
-            </div>
-          </Link>
+      {/* Contextual bar beneath global header */}
+      <div className="border-b bg-card">
+        <div className="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 text-sm">
+            <span className="font-mono text-xs uppercase tracking-wider text-emerald-700 font-semibold">Council of AI</span>
+            <span aria-hidden="true" className="text-muted-foreground">/</span>
+            <span className="font-semibold text-foreground">API Documentation</span>
+          </div>
           <div className="flex items-center gap-3">
             <a href={BASE} target="_blank" rel="noopener noreferrer">
               <Button size="sm" className="gap-2">
@@ -186,9 +183,9 @@ console.log({
             </a>
           </div>
         </div>
-      </nav>
+      </div>
 
-      <div className="pt-24 pb-20 px-4">
+      <div className="pt-10 pb-20 px-4">
         <div className="container mx-auto max-w-5xl">
           {/* Header */}
           <div className="text-center mb-12">
