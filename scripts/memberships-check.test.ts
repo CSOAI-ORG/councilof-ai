@@ -52,7 +52,7 @@ describe("memberships-check: the committed manifest", () => {
 
 describe("memberships-check: it can fail", () => {
   it("goes red on a 404 and on a 200 that no longer names us; green on a good row and a reachable PENDING docket", async () => {
-    const out = await runChecks(selftestManifest(), selftestFetcher);
+    const out = await runChecks(selftestManifest(), selftestFetcher, undefined, new Date("2026-09-22T00:00:00.000Z"));
     expect(out.schemaProblems).toEqual([]);
     expect(out.failures.map((f) => f.id).sort()).toEqual(["gone", "renamed"]);
     expect(out.results.find((r) => r.id === "good")?.ok).toBe(true);
@@ -77,6 +77,7 @@ describe("memberships-check: it can fail", () => {
           group: manifest.groups[0].id,
           kind: "member",
           since: "2026-01-01",
+          verified_on: manifest.as_of,
           evidence: "https://example.test/roster",
           evidence_kind: "public_url",
           public_evidence: true,
@@ -97,12 +98,14 @@ describe("memberships-check: it can fail", () => {
       ...manifest.rows.flatMap((r: { check?: { expect?: string[] } }) => r.check?.expect ?? []),
     ].join(" ");
     const fetcher = async (url: string) =>
-      recordedGone.has(url)
+      url === "https://councilof.ai/memberships"
+        ? { status: 200, body: `Machine-readable: /interop/memberships.json (schema csoai.memberships/0.1, as of ${manifest.as_of}, unsigned)` }
+        : recordedGone.has(url)
         ? { status: 410, body: "User was blocked" }
         : url === "https://example.test/roster"
         ? { status: 200, body: "Members: Somebody Else" }
         : { status: 200, body: JSON.stringify({ pagination: { total: 1 }, items: [ourNames] }) };
-    const out = await runChecks(planted, fetcher);
+    const out = await runChecks(planted, fetcher, undefined, new Date(`${manifest.as_of}T00:00:00.000Z`));
     expect(out.failures.map((f) => f.id)).toEqual(["bogus-roster"]);
     expect(out.exitCode).toBe(1);
   });
