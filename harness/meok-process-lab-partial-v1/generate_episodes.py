@@ -57,5 +57,3 @@ print(json.dumps({"state":"FRESH_EPISODES_REPRODUCED","episodes":320,"rows":len(
 "episode_ids":[1000,1319],"split_rows":{"train":1600,"validation":400,"test":560},
 "internal_sha256":digest,"source_files_verified":len(FILES),
 "public_v1_dataset_excludes_privileged_features":True},separators=(",",":")),flush=True)
-
-[executed on device: sov33-owem-micro2 (b4b647b8-0a67-4b8f-9b25-2981363e9bd0)]
