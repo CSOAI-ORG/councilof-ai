@@ -13,6 +13,10 @@ on:
   # which falls back to github.sha (the merge_group commit) when there is no pull request.
   merge_group:
 
+concurrency:
+  group: ci-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

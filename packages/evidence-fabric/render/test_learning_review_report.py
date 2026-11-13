@@ -264,6 +264,37 @@ class LearningReviewTests(unittest.TestCase):
         self.assertEqual(x["structurally_paired_handles"], 0)
         self.assertEqual(x["issues"]["MISSING_PRE_OR_POST"], 2)
 
+    def test_transfer_remains_a_separate_ordered_phase_without_gain_claim(self):
+        evs = [assessment(self.card), assessment(self.card, "POST", "post-1", when=POST),
+               assessment(self.card, "TRANSFER", "transfer-1", when="2026-11-10T03:00:00Z", response_label="ABSTAIN")]
+        x = self.report(evs)["before_after"]
+        self.assertEqual(x["phase_counts"], {"PRE": 1, "POST": 1, "TRANSFER": 1})
+        self.assertEqual(x["phase_response_label_counts"]["TRANSFER"], {"ABSTAIN": 1})
+        self.assertEqual(x["structurally_paired_transfer_handles"], 1)
+        self.assertIsNone(x["human_learning_gain"])
+
+    def test_missing_transfer_is_not_filled_from_post(self):
+        x = self.report([assessment(self.card), assessment(self.card, "POST", "post-1", when=POST)])["before_after"]
+        self.assertEqual(x["structurally_paired_handles"], 1)
+        self.assertEqual(x["structurally_paired_transfer_handles"], 0)
+        self.assertEqual(x["issues"]["MISSING_TRANSFER"], 1)
+
+    def test_reused_or_earlier_transfer_does_not_become_structurally_complete(self):
+        evs = [assessment(self.card), assessment(self.card, "POST", "post-1", when=POST),
+               assessment(self.card, "TRANSFER", "pre-1", when=PRE)]
+        x = self.report(evs)["before_after"]
+        self.assertEqual(x["structurally_paired_transfer_handles"], 0)
+        self.assertEqual(x["issues"]["REUSED_TRANSFER_CASES"], 1)
+        self.assertEqual(x["issues"]["POST_TRANSFER_CHRONOLOGY_NOT_ESTABLISHED"], 1)
+
+    def test_retention_must_follow_prior_phases_and_use_distinct_cases(self):
+        evs = [assessment(self.card), assessment(self.card, "POST", "post-1", when=POST),
+               assessment(self.card, "RETENTION", "post-1", when=PRE)]
+        x = self.report(evs)["before_after"]
+        self.assertEqual(x["issues"]["REUSED_RETENTION_CASES"], 1)
+        self.assertEqual(x["issues"]["RETENTION_CHRONOLOGY_NOT_ESTABLISHED"], 1)
+        self.assertIsNone(x["retention_gain"])
+
     def test_reused_transfer_cases_and_changed_rubric_flagged(self):
         evs = [assessment(self.card), assessment(self.card, "POST", "pre-1", when=POST, rubric_sha256="f" * 64)]
         x = self.report(evs)["before_after"]

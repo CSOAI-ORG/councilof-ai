@@ -1,0 +1,106 @@
+{
+  "checked_at": "2026-11-12T01:18:18.784629+00:00",
+  "manifest_sha256": "851cb7f800daecf7029936dbe5600c3b3de8ff324b8750e21ad361efa864eb62",
+  "selected": [
+    "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+    "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+    "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+    "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+    "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png"
+  ],
+  "plans": [
+    {
+      "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+      "listing_id": "83d8c070-6171-4171-a3b0-ae2163cebfd0",
+      "before_description": "Commission receipt for a named subject, with references to matching existing measurement cards. Signing is conditional on signing-key availability. Payment does not establish a fresh measurement or Merkle inclusion of the new commission. The current offer is 0.01 USDC per request until 2026-10-11T00:00:00Z; fresh compute is excluded. Check the live 402 challenge for current terms. Free verification: https://councilof.ai/gspc-verify. Measurement, not certification.",
+      "before_description_sha256": "a7bc590d0d8856922475d651b31080c2b4313c189fc817ff92f07a1098887c5a",
+      "payload": {
+        "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+        "name": "CSOAI Subject Commission Receipt - existing-card references",
+        "protocol": "x402",
+        "http_method": "GET",
+        "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
+        "provider": "CSOAI Ltd",
+        "category": "ai-measurement",
+        "payment_asset": "USDC",
+        "payment_network": "Base"
+      },
+      "reason": "Existing description differs from current canonical manifest; no new product or price."
+    },
+    {
+      "url": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+      "listing_id": "fc9f48dc-a981-4bb5-ac79-530c0a2df16f",
+      "before_description": "Per-field changes in wrapped-token supply and bridge-escrow balances between recorded ledger snapshots for a named pair. A snapshot delta, not a price return, reserve guarantee, rating or legal conclusion. Check snapshot dates, available inputs and correction status; a new request does not establish a fresh chain measurement. Current offer: 0.01 USDC until 2026-10-11T00:00:00Z; fresh compute excluded. Free preview: https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum&preview=1.",
+      "before_description_sha256": "422a0febb8bfdb7589c793435fe5ed12577e58feb024f1b6cf143e891b986b22",
+      "payload": {
+        "url": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+        "name": "CSOAI Wrapped-Asset Changes - ledger-snapshot deltas",
+        "protocol": "x402",
+        "http_method": "GET",
+        "description": "Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.",
+        "provider": "CSOAI Ltd",
+        "category": "rwa-evidence",
+        "payment_asset": "USDC",
+        "payment_network": "Base"
+      },
+      "reason": "Existing description differs from current canonical manifest; no new product or price."
+    },
+    {
+      "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+      "listing_id": "48c5d974-e29e-4a08-b08c-b18ca5309a37",
+      "before_description": "Evidence service comparing wrapped-token supply with the canonical token bridge-escrow balance at pinned finalized blocks for a named pair. Signing is conditional on key availability. A supply/escrow ratio, not a reserve audit, redeemability guarantee, price or credit rating. Inspect block identifiers, source dates, raw-read hashes and proof status. Current offer: 0.01 USDC until 2026-10-11T00:00:00Z; fresh compute excluded. Free preview: https://councilof.ai/api/wrapper?id=usdc.e:arbitrum&preview=1.",
+      "before_description_sha256": "f2880366bd4e8f4540d35ebeb43f2b06076aa28cc60a22a740f45211725589e5",
+      "payload": {
+        "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+        "name": "CSOAI Wrapped-Asset Parity - pinned-block observation",
+        "protocol": "x402",
+        "http_method": "GET",
+        "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+        "provider": "CSOAI Ltd",
+        "category": "rwa-evidence",
+        "payment_asset": "USDC",
+        "payment_network": "Base"
+      },
+      "reason": "Existing description differs from current canonical manifest; no new product or price."
+    },
+    {
+      "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+      "listing_id": "fab34d13-9f34-43a7-8c73-498cfcaa03ec",
+      "before_description": "Assembly of historical measurement-card leaves for a requested time window, capped at 200, with available inclusion paths and carrying roots. These are measurement records, not payment or settlement receipts. Inspect dates, truncation, proofs and corrections before use. The current offer is 0.01 USDC per batch until 2026-10-11T00:00:00Z; fresh compute is excluded. Verification remains free. Measurement, not certification.",
+      "before_description_sha256": "3b1eff0c15df0558f596d13282a86f57e9ddeaeb875ff712b420f624cf762029",
+      "payload": {
+        "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+        "name": "CSOAI Historical Measurement-Card Batch - not payment receipts",
+        "protocol": "x402",
+        "http_method": "GET",
+        "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free.",
+        "provider": "CSOAI Ltd",
+        "category": "ai-measurement",
+        "payment_asset": "USDC",
+        "payment_network": "Base"
+      },
+      "reason": "Existing description differs from current canonical manifest; no new product or price."
+    },
+    {
+      "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+      "listing_id": "a4864ccc-5d7e-4db1-839a-4fd3faa8bc86",
+      "before_description": "Records whether a machine-readable mark was detected in one named output, by named methods at a stated time. Signing is conditional on the service signing-key availability. Detection is not a conformity opinion, guarantee or certificate, and does not determine legal compliance or an applicable deadline. Inspect methods, source dates and missing evidence. The current offer is 0.01 USDC until 2026-10-11T00:00:00Z; fresh compute is excluded. Check the live challenge for current terms.",
+      "before_description_sha256": "ef08e14cbda370cfc9310ec136e205876c351ae47fe47b031570e702cf33d7ea",
+      "payload": {
+        "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+        "name": "CSOAI Machine-Readable Mark Detection Evidence",
+        "protocol": "x402",
+        "http_method": "GET",
+        "description": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Detects C2PA and IPTC metadata only (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark is read. States: DETECTED, NOT_DETECTED (not proof the output is unmarked) or UNCHECKABLE; never a legal determination. CSOAI is a C2PA member. Free unsigned preview; verification is free.",
+        "provider": "CSOAI LTD (Council of AI)",
+        "category": "ai",
+        "payment_asset": "USDC",
+        "payment_network": "Base"
+      },
+      "reason": "Existing description differs from current canonical manifest; no new product or price."
+    }
+  ],
+  "unmatched_legacy_urls": [
+    "https://councilof.ai/api/eunomia-data?feed=1"
+  ]
+}
