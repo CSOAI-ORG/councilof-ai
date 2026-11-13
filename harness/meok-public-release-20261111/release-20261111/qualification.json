@@ -1,0 +1,59 @@
+{
+  "state": "PUBLIC_CANDIDATE_QUALIFIED",
+  "at": "2026-11-11T02:39:03.173216+00:00",
+  "base_space_revision": "d4994f5d3ce159dc8ab752b6a6875b5cb4b3ec50",
+  "suites": [
+    {
+      "suite": "root-replay",
+      "exit_code": 0,
+      "stdout_sha256": "cb74f135301202662dd771eb1f2ef874af9bf50a89cecf5d1b1bbeb064ef389a",
+      "tail": "{\n  \"status\": \"PASS\",\n  \"checks\": 37,\n  \"rows\": 560,\n  \"max_js_python_difference\": 0,\n  \"metrics\": {\n    \"raw_neural\": {\n      \"mae\": 0.006131327370676576,\n      \"max_abs_error\": 0.8376974230647828,\n      \"out_of_range_fraction\": 0.20625,\n      \"sum_constraint_mae\": 0.005347967734986905\n    },\n    \"constrained_neural\": {\n      \"mae\": 0.002879733110959901,\n      \"max_abs_error\": 0.7499076603275623,\n      \"out_of_range_fraction\": 0,\n      \"sum_constraint_mae\": 1.883414059631962e-17\n    },\n    \"persistence\": {\n      \"mae\": 0.05964746425070628,\n      \"max_abs_error\": 1,\n      \"out_of_range_fraction\": 0,\n      \"sum_constraint_mae\": 0\n    },\n    \"exact_synthetic_rule\": {\n      \"mae\": 4.460717509654646e-19,\n      \"max_abs_error\": 1.1102230246251565e-16,\n      \"out_of_range_fraction\": 0,\n      \"sum_constraint_mae\": 0\n    }\n  }\n}\n"
+    },
+    {
+      "suite": "research-replay",
+      "exit_code": 0,
+      "stdout_sha256": "968099052f509ad0af45a5967efb0e50487deec70001b69069aa25aeefc590e6",
+      "tail": "{\"status\":\"PASS\",\"checks\":38,\"old_rows\":560,\"new_rows\":640,\"total_inference_evaluations\":7200,\"max_metric_difference_vs_numpy\":2.220446049250313e-16,\"production_promotion\":false,\"gspc_admitted\":false}\n"
+    },
+    {
+      "suite": "ui-contract",
+      "exit_code": 0,
+      "stdout_sha256": "c8378854956197d1af5e436318950d5ea6e78ec3d3bd64e9b8fbc69d828845ab",
+      "tail": "{\"status\":\"PASS\",\"checks\":18,\"assertions\":[\"startup actual inference returned receipt\",\"edit clears successful result and export\",\"edit clears prediction cells\",\"malformed input cannot retain success\",\"malformed input reports error\",\"valid input recovers after refusal\",\"blank row is refused rather than row zero\",\"out of range row refuses\",\"valid row recovers\",\"delayed receipt cannot overwrite edited input\",\"delayed completion preserves changed-input status\",\"current valid receipt can be exported\",\"invalidated receipt cannot be exported\",\"invalid dimensions clear old display\",\"full replay still returns 560 rows\",\"replay keeps unsigned boundary\",\"row selector change clears current export\",\"tampered weights refuse at startup\"],\"scope\":\"actual UI module with deterministic DOM adapter and real inference; not rendered browser acceptance\",\"model_weights_changed\":false}\n"
+    },
+    {
+      "suite": "specialist-presentation",
+      "exit_code": 0,
+      "stdout_sha256": "b7a29feb54806d0a2f93c3ab5b453c1f82866691d0b21ec950a4edb364a6ab60",
+      "tail": "..................\n----------------------------------------------------------------------\nRan 18 tests in 0.037s\n\nOK\n\nPASS: 18 presentation controls; no inference, credentials, job or deployed service.\n"
+    },
+    {
+      "suite": "specialist-join",
+      "exit_code": 0,
+      "stdout_sha256": "56c28db7d387474969165edf1cacc2961f41cc6bd335c77e97b1cd2125a9ee15",
+      "tail": ".......................................................................................\n----------------------------------------------------------------------\nRan 87 tests in 0.213s\n\nOK\n"
+    },
+    {
+      "suite": "prior-ui-negative-control",
+      "exit_code": 1,
+      "stdout_sha256": "6c99eb3ffa34b0d92cc65075265a8b21d9f3da1d1e14cb7b90083fed94d4181e",
+      "tail": "node:internal/modules/run_main:123\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: edit clears successful result and export\n    at check (file://<LOCAL_WORKSPACE>/prior-ui-control-_a9hvj9q/test-ui-contract.mjs:17:39)\n    at file://<LOCAL_WORKSPACE>/prior-ui-control-_a9hvj9q/test-ui-contract.mjs:31:61 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: '=='\n}\n\nNode.js v22.16.0\n"
+    }
+  ],
+  "existing_numeric_checks": {
+    "root": 37,
+    "research": 38,
+    "research_inference_evaluations": 7200
+  },
+  "new_ui_contract_checks": 18,
+  "retained_specialist_presentation_checks": 18,
+  "retained_join_checks": 87,
+  "negative_control": "Prior exact public UI fails the new stale-result clearing assertion; patched UI passes.",
+  "research_manifest_entries_verified": 44,
+  "weights_changed": false,
+  "new_training": false,
+  "paid_compute": false,
+  "gspc_admitted": false,
+  "source_scope": "Existing public files and original synthetic fixtures only. Tests are not independent expert review or universal correctness.",
+  "log_excerpt_note": "Local path redacted in displayed excerpts; stdout_sha256 binds the unredacted original local log, not the excerpt."
+}
