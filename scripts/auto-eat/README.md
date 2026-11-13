@@ -81,6 +81,27 @@ Do not enable the schedule as part of a repair. Moving from manual dispatch to
 automatic signing requires a separate explicit governance decision, monitoring
 and rollback plan.
 
+## Canonical keyless GitHub Actions keeper
+
+`.github/workflows/auto-eat-feed.yml` runs one bounded discovery/probe cycle
+hourly at minute 43, and supports manual `workflow_dispatch`. It executes
+tested master code in an isolated `auto-eat-feed` worktree, retains the
+historical queue through the guarded ancestry migration, and uses the scoped
+GitHub Actions checkout credential to push **only** `auto-eat-feed`.
+
+Limits per run: 25 discoveries per source, 40 probes total, four probe
+workers, 25-minute job timeout, and one job at a time. Only unsigned
+DISCOVERED / probed-LIVE records are published. This workflow has
+`contents: write` but no `id-token`, no signer and no deployment step.
+After pushing, it independently compares the worktree HEAD with the remote
+feed branch and checks the four required feed records. Any fetch, test,
+discovery, probe, commit or push failure fails the job; it does not report
+a false green. A separate approved PR and the existing signer are still
+required before any measurement claim.
+
+The older sink-pod method below remains a manual fallback. Do not run
+both keepers as simultaneous feed writers; a non-fast-forward push fails
+rather than replacing another writer's evidence.
 ## Running the keeper (sink pod)
 
 ```bash
