@@ -16,7 +16,6 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { createHash } from "node:crypto";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SELFTEST = process.argv.includes("--selftest");
@@ -440,22 +439,49 @@ const DISPLAY_KEYS = /^(name|title|label|headline|criteria|tagline|cta|heading|d
  * Estate prose that USES the word, anywhere, is untouched by this.
  */
 const REGISTRY_IDENTIFIER = /^io\.github\.[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+$/;
-// One immutable external observation contains a real token named BLACK SWAN. It is not
-// our strategy/brand. Preserve the evidence bytes; do not create a mirror-folder exemption.
-// The exception is bound to the complete raw artifact, exact field, exact value and one rule.
-// A changed observation, a copied claim or an absent raw-byte witness receives normal checks.
+// One external XRPL ledger observation contains a third-party token named BLACK SWAN. It is not
+// our strategy/brand, and public-root refreshes live market metrics (updatedAt/price/supply) in
+// the mirror file. Preserve the evidence bytes without creating a mirror-folder exemption: bind
+// the narrow exception to the mirror path, unpadded raw-byte witness, immutable XRPL token
+// identity (id + currency + issuer + createdAt), exact meta.token.name field, exact value and rule.
 const OBSERVED_TOKEN_NAME = Object.freeze({
   path: "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-6400.json",
-  sha256: "62a6f8c94b0b294def2e1d71ab5c6fd149efd16344e4cbf6300f87c579a5473b",
-  field: "[21].meta.token.name",
+  mirrorPattern: /^\/interop\/xrpl-impersonation-2026-09\/mirrors\/xrpscan-tokens-\d+\.json$/,
+  id: "424C41434B5357414E0000000000000000000000.rNhbPUzxcpjNzevvKZd2BzUJp5keth7Y77",
+  currency: "424C41434B5357414E0000000000000000000000",
+  issuer: "rNhbPUzxcpjNzevvKZd2BzUJp5keth7Y77",
+  createdAt: "2025-02-03T23:38:19.937Z",
   value: "BLACK SWAN",
   rule: "internal_strategy_codename",
 });
+function isObservedXrplTokenRecord(entry) {
+  return Boolean(
+    entry && typeof entry === "object" &&
+    entry.id === OBSERVED_TOKEN_NAME.id &&
+    entry.currency === OBSERVED_TOKEN_NAME.currency &&
+    entry.issuer === OBSERVED_TOKEN_NAME.issuer &&
+    entry.createdAt === OBSERVED_TOKEN_NAME.createdAt &&
+    entry.meta?.token?.name === OBSERVED_TOKEN_NAME.value
+  );
+}
 function jsonDisplayHits(obj, rel, raw = null) {
   const hits = [];
-  const preservedExternalObservation = rel === OBSERVED_TOKEN_NAME.path &&
-    typeof raw === "string" &&
-    createHash("sha256").update(raw).digest("hex") === OBSERVED_TOKEN_NAME.sha256;
+  const allowedObservedFields = new Set();
+  if (OBSERVED_TOKEN_NAME.mirrorPattern.test(rel) &&
+      typeof raw === "string" && raw.length > 0 && raw === raw.trim() && Array.isArray(obj)) {
+    try {
+      const reparsed = JSON.parse(raw);
+      if (Array.isArray(reparsed) && JSON.stringify(reparsed) === JSON.stringify(obj)) {
+        obj.forEach((entry, idx) => {
+          if (isObservedXrplTokenRecord(entry)) {
+            allowedObservedFields.add(`[${idx}].meta.token.name`);
+          }
+        });
+      }
+    } catch {
+      // malformed raw witness receives normal checks
+    }
+  }
 
   (function rec(node, at, key) {
     if (typeof node === "string") {
@@ -466,8 +492,8 @@ function jsonDisplayHits(obj, rel, raw = null) {
       if (REGISTRY_IDENTIFIER.test(node.trim())) return;
       const text = decodeEntities(node); // what a consumer that renders the field shows
       for (const rule of RULES) {
-        if (preservedExternalObservation && rule.id === OBSERVED_TOKEN_NAME.rule &&
-            at === OBSERVED_TOKEN_NAME.field && node === OBSERVED_TOKEN_NAME.value) continue;
+        if (allowedObservedFields.has(at) && rule.id === OBSERVED_TOKEN_NAME.rule &&
+            node === OBSERVED_TOKEN_NAME.value) continue;
         if (rule.pagesOnly) continue; // see the rule: pages and text files only
         if (rule.allowOn && rule.allowOn.test(rel)) continue;
         const re = new RegExp(rule.pattern.source, "gi");
@@ -685,26 +711,32 @@ if (SELFTEST) {
     console.error("\u2716 selftest: catalogue display copy no longer gated"); bad++;
   }
   // Recorded third-party name: positive/negative controls bind the narrow exception to
-  // its evidence, not a filename convention. Original raw bytes are never rewritten.
+  // its immutable XRPL ledger identity and raw-byte witness, not a filename convention.
   {
     const fixturePath = path.join(REPO, "public", OBSERVED_TOKEN_NAME.path.slice(1));
     const raw = fs.readFileSync(fixturePath, "utf8");
     const observed = JSON.parse(raw);
+    const tokenIdx = observed.findIndex((entry) => isObservedXrplTokenRecord(entry));
     const hit = (obj, rel, bytes) => jsonDisplayHits(obj, rel, bytes)
       .some((h) => h.rule === OBSERVED_TOKEN_NAME.rule);
     const assertControl = (condition, label) => {
       if (!condition) { console.error(`✖ selftest: external-name boundary ${label}`); bad++; }
     };
-    assertControl(createHash("sha256").update(raw).digest("hex") === OBSERVED_TOKEN_NAME.sha256,
-      "fixture is not the pinned external observation");
+    assertControl(tokenIdx >= 0, "fixture is missing the pinned external XRPL token identity");
     assertControl(!hit(observed, OBSERVED_TOKEN_NAME.path, raw), "blocks the unchanged named observation");
     assertControl(hit(observed, OBSERVED_TOKEN_NAME.path, null), "accepts without raw-byte evidence");
     assertControl(hit(observed, "/products/catalog.json", raw), "leaks into another path");
     assertControl(hit(observed, OBSERVED_TOKEN_NAME.path, raw + "\n"), "accepts modified artifact bytes");
-    const changedName = structuredClone(observed);
-    changedName[21].meta.token.name = "Black Swan Predictor";
-    assertControl(hit(changedName, OBSERVED_TOKEN_NAME.path, JSON.stringify(changedName)),
-      "accepts changed token-name copy");
+    if (tokenIdx >= 0) {
+      const forgedIssuer = structuredClone(observed);
+      forgedIssuer[tokenIdx].issuer = "rForgedIssuer111111111111111111111";
+      assertControl(hit(forgedIssuer, OBSERVED_TOKEN_NAME.path, JSON.stringify(forgedIssuer)),
+        "accepts unverified issuer identity");
+      const changedName = structuredClone(observed);
+      changedName[tokenIdx].meta.token.name = "Black Swan Predictor";
+      assertControl(hit(changedName, OBSERVED_TOKEN_NAME.path, JSON.stringify(changedName)),
+        "accepts changed token-name copy");
+    }
     const addedCopy = structuredClone(observed);
     addedCopy[0].title = "Black Swan Predictor";
     assertControl(jsonDisplayHits(addedCopy, OBSERVED_TOKEN_NAME.path, JSON.stringify(addedCopy))
