@@ -1,0 +1,89 @@
+--- a/scripts/hf-meok/memory_ui.py
++++ b/scripts/hf-meok/memory_ui.py
+@@ -7,6 +7,7 @@
+ 
+ from memory_auth import MemoryAuthError
+ from memory_store import MemoryService, MemoryStoreError
++from memory_readiness import assess_storage
+ 
+ _SERVICE = MemoryService()
+ 
+@@ -23,11 +24,13 @@
+ 
+ 
+ def create_controls():
++    readiness = assess_storage()
++    available = readiness["can_attempt"]
+     gr.Markdown(
+         "### Saved copies\n"
+-        "Optionally keep a text snapshot in this private workspace and restore it "
++        "When private storage is available, optionally keep a text snapshot and restore it "
+         "after signing in again. Saving happens only when you press **Save a copy**. "
+-        "Copies are available to your verified Hugging Face account and workspace "
++        "Saved copies are scoped to your verified Hugging Face account and workspace "
+         "administrators. Up to 20 copies per account; images are excluded. "
+         "Restoring brings back conversation text with a fresh session and consent."
+     )
+@@ -42,22 +45,20 @@
+         login = gr.Button("Hugging Face sign-in is unavailable here", interactive=False)
+         gr.Markdown("Browser sign-in is available when this Space has OAuth configured. "
+                     "Chat and device exports remain available.")
+-    opt_in = gr.Checkbox(value=False, label="Save this conversation text in the private workspace.")
++    opt_in = gr.Checkbox(value=False, interactive=available, label="Save this conversation text in the private workspace.")
+     with gr.Row():
+-        save = gr.Button("Save a copy")
+-        refresh = gr.Button("List my saved copies")
++        save = gr.Button("Save a copy", interactive=available)
++        refresh = gr.Button("List my saved copies", interactive=available)
+     selection = gr.Dropdown(choices=[], value=None, label="Your saved copies", interactive=True)
+     with gr.Row():
+-        restore = gr.Button("Restore selected copy")
+-        remove = gr.Button("Remove selected saved copy")
+-    status = gr.Markdown(
+-        "Sign in to use saved copies. If sign-in or persistent storage is unavailable, "
+-        "you can still chat and export on your device."
+-    )
++        restore = gr.Button("Restore selected copy", interactive=available)
++        remove = gr.Button("Remove selected saved copy", interactive=available)
++    availability = gr.Button("Check saved-copy availability")
++    status = gr.Markdown(readiness["message"])
+     receipt = gr.JSON(label="Saved-copy result", value={})
+     return dict(login=login, opt_in=opt_in, save=save, refresh=refresh,
+                 selection=selection, restore=restore, remove=remove,
+-                status=status, receipt=receipt)
++                status=status, receipt=receipt, availability=availability)
+ 
+ 
+ def bind_controls(controls, state, chat_outputs, chat_consent, chat_event):
+@@ -113,6 +114,22 @@
+         return (gr.Dropdown(choices=[], value=None),
+                 "Saved-copy view cleared. Sign in and list your copies to continue.", {}, False)
+ 
++    def refresh_availability():
++        # A current configuration hint, never account identity or permission.
++        readiness = assess_storage()
++        available = readiness["can_attempt"]
++        return (gr.Button(interactive=available), gr.Button(interactive=available),
++                gr.Button(interactive=available), gr.Button(interactive=available),
++                gr.Checkbox(value=False, interactive=available),
++                gr.Dropdown(choices=[], value=None), readiness["message"],
++                dict(operation="readiness", **readiness))
++
++    controls["availability"].click(
++        refresh_availability, [],
++        [controls[name] for name in ("save", "refresh", "restore", "remove",
++                                     "opt_in", "selection", "status", "receipt")],
++        queue=False, api_name="memory_readiness", api_visibility="undocumented")
++
+     common = dict(api_visibility="undocumented", concurrency_limit=1,
+                   concurrency_id="meok-memory")
+     memory_outputs = [controls["selection"], controls["status"], controls["receipt"]]
+@@ -131,7 +148,7 @@
+     controls["login"].click(clear_saved_view, [], memory_outputs + [controls["opt_in"]],
+                             queue=False, api_visibility="private")
+     return dict(save=save_copy, list=list_copies, restore=restore_copy,
+-                remove=remove_copy, clear=clear_saved_view, components=controls)
++                remove=remove_copy, clear=clear_saved_view, availability=refresh_availability, components=controls)
+ 
+ 
+ def bind_clear_events(bound, events):

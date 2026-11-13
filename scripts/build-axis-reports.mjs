@@ -65,17 +65,17 @@ export function slugify(id) {
   return String(id).toLowerCase().replace(/[^a-z0-9.]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
-// ─── the 23 slots: run the same modules /api/gspc imports ───────────────────
+// ─── the 33 slots: run the same modules /api/gspc imports ───────────────────
 export async function loadSlots(repo = REPO_DEFAULT) {
   const { build } = await import("esbuild");
   const api = join(repo, "functions/api");
-  const entry = ["a", "b", "c", "fin"].map((s) => `export { AXES_${s.toUpperCase()} } from "./_gspc_axes_${s}";`).join("\n");
+  const entry = ["a", "b", "c", "fin", "d"].map((s) => `export { AXES_${s.toUpperCase()} } from "./_gspc_axes_${s}";`).join("\n");
   const r = await build({
     stdin: { contents: entry, resolveDir: api, loader: "ts" },
     bundle: true, format: "esm", platform: "neutral", write: false, logLevel: "silent",
   });
   const mod = await import("data:text/javascript;base64," + Buffer.from(r.outputFiles[0].text).toString("base64"));
-  const slots = [...mod.AXES_A, ...mod.AXES_B, ...mod.AXES_C, ...mod.AXES_FIN];
+  const slots = [...mod.AXES_A, ...mod.AXES_B, ...mod.AXES_C, ...mod.AXES_FIN, ...mod.AXES_D];
   const ids = new Set();
   for (const s of slots) {
     if (ids.has(s.axis)) throw new Error(`duplicate slot id ${s.axis}`);
@@ -165,11 +165,13 @@ export function deriveObligations(xwalk, sourceAxes) {
 }
 
 // ─── the tree, in memory ─────────────────────────────────────────────────────
-export async function buildTree({ repo = REPO_DEFAULT, slots, verify, now = new Date().toISOString() } = {}) {
+export async function buildTree({ repo = REPO_DEFAULT, slots, verify, now = null } = {}) {
+  // Determinism fix (7 Oct 2026): now derives from committed inputs (matrix.as_of), never wall-clock.
   slots ??= await loadSlots(repo);
   verify ??= (await import(pathToFileURL(join(repo, "public/signed/verify-card.mjs")).href)).verifyCard;
 
   const matrix = JSON.parse(readFileSync(join(repo, "public/signed/card-matrix.json"), "utf8"));
+  now ??= matrix.as_of ?? "1970-01-01T00:00:00Z";
   const xwalk = JSON.parse(readFileSync(join(repo, "client/src/data/regulator-crosswalk.json"), "utf8"));
   const roots = loadRootLeaves(repo);
   const slotById = Object.fromEntries(slots.map((s) => [s.axis, s]));
@@ -321,7 +323,7 @@ export async function buildTree({ repo = REPO_DEFAULT, slots, verify, now = new 
       not_a: "grade, rank, conformity mark, or legal determination. Measurement, not certification. Verification is free.",
     },
     generated_from: {
-      slots: "functions/api/_gspc_axes_{a,b,c,fin}.ts — executed, the same modules GET /api/gspc imports",
+      slots: "functions/api/_gspc_axes_{a,b,c,fin,d}.ts — executed, the same modules GET /api/gspc imports",
       cards: "public/signed/card-matrix.json and the verified card file behind every cell",
       crosswalk: "client/src/data/regulator-crosswalk.json (pointers + board_axis join)",
       roots: "public/interop/card-root-*.json leaves",

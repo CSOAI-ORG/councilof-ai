@@ -1,0 +1,61 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="50%" style="stop-color:#1e293b"/>
+      <stop offset="100%" style="stop-color:#064e3b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#0ea5e9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Grid pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-width="0.5" opacity="0.1"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Accent line -->
+  <rect x="0" y="0" width="1200" height="8" fill="url(#accent)"/>
+
+  <!-- Shield icon -->
+  <g transform="translate(100, 200)">
+    <circle cx="60" cy="60" r="60" fill="#10b981" opacity="0.2"/>
+    <circle cx="60" cy="60" r="45" fill="#10b981" opacity="0.4"/>
+    <path d="M60 25 L90 40 L90 70 C90 90 75 105 60 115 C45 105 30 90 30 70 L30 40 Z" fill="#10b981"/>
+    <path d="M50 65 L58 73 L73 53" stroke="white" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Main text -->
+  <text x="250" y="230" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="bold" fill="white">CSOAI</text>
+  <text x="250" y="290" font-family="system-ui, -apple-system, sans-serif" font-size="32" fill="#94a3b8">Council of Safety of AI</text>
+
+  <!-- Tagline -->
+  <text x="250" y="360" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#10b981">AI Safety Training &amp; Certification Platform</text>
+
+  <!-- Features -->
+  <g fill="#64748b" font-family="system-ui, -apple-system, sans-serif" font-size="20">
+    <text x="250" y="430">EU AI Act</text>
+    <text x="250" y="460">NIST AI RMF</text>
+    <text x="450" y="430">ISO 42001</text>
+    <text x="450" y="460">TC260</text>
+    <text x="650" y="430">33-Agent Council</text>
+    <text x="650" y="460">PDCA Framework</text>
+  </g>
+
+  <!-- URL -->
+  <text x="250" y="550" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#0ea5e9">councilof.ai</text>
+
+  <!-- Insurance badge -->
+  <g transform="translate(900, 450)">
+    <rect x="0" y="0" width="220" height="100" rx="10" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+    <text x="110" y="35" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#10b981">PROFESSIONALLY INSURED</text>
+    <text x="110" y="60" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="bold" fill="white">£5,000,000</text>
+    <text x="110" y="85" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#64748b">UK Registered Company</text>
+  </g>
+</svg>

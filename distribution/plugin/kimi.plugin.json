@@ -1,0 +1,68 @@
+{
+  "$schema": "https://catalog.msh.team/misc/kimi.plugin.schema.json",
+  "name": "gspc",
+  "version": "1.4.4",
+  "description": "Council of AI GSPC over MCP: 52 tools (47 free, 5 x402-metered). Read the live board, verify signed measurement cards (VALID / INVALID / UNCHECKABLE). Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
+  "keywords": [
+    "gspc",
+    "csoai",
+    "layer0",
+    "measurement",
+    "mcp",
+    "ed25519",
+    "provenance"
+  ],
+  "author": "CSOAI Ltd",
+  "homepage": "https://councilof.ai",
+  "license": "Apache-2.0",
+  "skillInstructions": "Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free. Data: https://councilof.ai/api/gspc · Corrections ledger: https://councilof.ai/corrections/ (JSON: https://councilof.ai/api/corrections) · Verify a card, free: https://councilof.ai/gspc-verify/",
+  "interface": {
+    "displayName": "Council of AI GSPC",
+    "shortDescription": "The live GSPC board and signed-card verification, over MCP.",
+    "longDescription": "Council of AI GSPC over MCP: 52 tools (47 free, 5 x402-metered). Read the live board, verify signed measurement cards (VALID / INVALID / UNCHECKABLE). Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
+    "developerName": "CSOAI Ltd",
+    "websiteURL": "https://councilof.ai",
+    "iconUrl": "https://councilof.ai/csoai-icon.svg",
+    "category": "DEVELOPER",
+    "hostKind": "local",
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "defaultLocale": "en-US",
+    "locales": "./locales/",
+    "tryPrompts": [
+      "Read the live GSPC board totals and tell me how many axes are measured.",
+      "Verify this measurement card and give me the state: VALID, INVALID or UNCHECKABLE.",
+      "Show me the governance axis row with its n, accuracy and separation state."
+    ],
+    "skillOverrides": {
+      "gspc": {
+        "displayName": "Council of AI GSPC",
+        "description": "Read the live GSPC board and verify signed measurement cards through the free Council of AI MCP door."
+      },
+      "gspc-verify": {
+        "displayName": "GSPC & SAFE evidence verification",
+        "description": "Verify a signed card, a measurement capsule or a SAFE evidence pack deterministically, offline or over the free verifier."
+      }
+    },
+    "mcpOverrides": {
+      "gspc": {
+        "displayName": "Council of AI GSPC",
+        "description": "The free Council of AI MCP door: the live board, signed-card verification, and the public measurement corpus."
+      }
+    }
+  },
+  "skills": "./skills/",
+  "mcpServers": {
+    "gspc": {
+      "url": "https://councilof.ai/mcp"
+    }
+  },
+  "x-csoai-doctrine": {
+    "sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",
+    "source": "docs/DOCTRINE.md",
+    "human_page": "https://councilof.ai/doctrine/"
+  }
+}

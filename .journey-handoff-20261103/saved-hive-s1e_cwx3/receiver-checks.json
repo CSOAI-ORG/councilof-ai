@@ -1,0 +1,56 @@
+{
+  "at": "2026-11-03T06:46:42.454663+00:00",
+  "source_commit": "911160dc55532beb91f44f331e9dffd10688956e",
+  "scope": "Operator-relayed qualification; M4 OOWM classifier, separate Linux host, independent M4 file. Not a live private gateway or H.I.M. invocation.",
+  "outputs": {
+    "worker-reply": {
+      "bytes": 1428,
+      "message": "The worker and receiver found the expected saved bytes.",
+      "observed_sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+      "replayed": false,
+      "request_id": "4c45e07bdca24314aecd9b1a6ba72d8e",
+      "saved_file_readable": true,
+      "state": "MATCH",
+      "worker": "owem.gov.saved-record-check",
+      "worker_complete": true
+    },
+    "retained-replay": {
+      "bytes": 1428,
+      "message": "The worker and receiver found the expected saved bytes.",
+      "observed_sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+      "replayed": true,
+      "request_id": "4c45e07bdca24314aecd9b1a6ba72d8e",
+      "saved_file_readable": true,
+      "state": "MATCH",
+      "worker": "owem.gov.saved-record-check",
+      "worker_complete": true
+    },
+    "unanswered": {
+      "message": "No worker reply. The saved result is still readable.",
+      "request_id": "4c45e07bdca24314aecd9b1a6ba72d8e",
+      "saved_file_readable": true,
+      "state": "NO_WORKER_REPLY",
+      "worker_complete": false
+    },
+    "wrong-id": {
+      "state": "REFUSED",
+      "reason": "wrong task, worker or request binding",
+      "worker_complete": false
+    },
+    "wrong-worker": {
+      "state": "REFUSED",
+      "reason": "wrong task, worker or request binding",
+      "worker_complete": false
+    },
+    "wrong-hash": {
+      "state": "REFUSED",
+      "reason": "contradictory worker result",
+      "worker_complete": false
+    },
+    "prior-reply-not-current": {
+      "state": "REFUSED",
+      "reason": "invalid observation time",
+      "worker_complete": false
+    }
+  }
+}

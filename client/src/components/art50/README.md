@@ -1,6 +1,6 @@
 # components/art50 — Article 50 suite (ported from csoai-org-v2)
 
-Donor: `~/clawd/csoai-org-v2` (CONSOLIDATION.md surface #3, "harvest jewels then retire").
+Donor: `csoai-org-v2` (CONSOLIDATION.md surface #3, "harvest jewels then retire").
 Ported 2026-08-02. Theme: master wing (dark-emerald on `#03110b`), same register as
 `components/gspc/` and the already-ported `pages/ProvenanceFinding.tsx`.
 

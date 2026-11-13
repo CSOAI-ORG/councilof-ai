@@ -1,0 +1,66 @@
+{
+ "as_of": "2026-10-26T02:12:31Z",
+ "payload": {
+  "check_counts": {
+   "FAILURE": 21,
+   "SUCCESS": 18
+  },
+  "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/agntcy_a2a-helloworld__alpha-2026-07-28.json",
+  "checks_sha256": "d3b2f8cb4b57f1b9112dcc7c8e567a98cb24117d88f9111145e7471f6042d26a",
+  "deviation_checks": [
+   "CompletionComplete",
+   "DNSRebindingRejected",
+   "LocalhostHostAccepted",
+   "PromptsGetEmbeddedResource",
+   "PromptsGetSimple",
+   "PromptsGetWithArgs",
+   "PromptsGetWithImage",
+   "PromptsList",
+   "ResourcesList",
+   "ResourcesReadBinary",
+   "ResourcesReadText",
+   "ResourcesTemplateRead",
+   "ServerSSEMultipleStreamsTest",
+   "ToolsCallAudio",
+   "ToolsCallEmbeddedResource",
+   "ToolsCallError",
+   "ToolsCallImage",
+   "ToolsCallMixedContent",
+   "ToolsCallSimpleText",
+   "ToolsCallWithProgress",
+   "ToolsList"
+  ],
+  "instrument": "alpha-2026-07-28",
+  "instrument_channel": "alpha",
+  "kind": "csoai.mcp-conformance/0.1",
+  "not_a_grade": true,
+  "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+  "run_state": "RUN_DEVIATIONS",
+  "scenarios": 20,
+  "scope_note": "declared endpoint is a loopback address; any reachability observed is a property of the measuring host, not of the published record",
+  "spec_version": "2026-07-28",
+  "state": "PROBED",
+  "subject_id": "agntcy:a2a-helloworld",
+  "suite_version": "0.2.0-alpha.12"
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "2a5a18cd61917dc6319e408a1ae0d7a19e9bcc3d1f23c87640a9fc54e5bc11d7",
+ "source_urls": [
+  "https://ai-catalog.outshift.io/v1/agents",
+  "https://councilof.ai/interop/mcp-conformance-2026-10/checks/agntcy_a2a-helloworld__alpha-2026-07-28.json",
+  "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+ ],
+ "subject": "MCP conformance run alpha-2026-07-28 for agntcy:a2a-helloworld",
+ "surface": "public.notice",
+ "tags": [
+  "mcp",
+  "conformance",
+  "probe",
+  "mcp-conformance-2026-10"
+ ],
+ "unmeasured": [
+  "behaviour under load",
+  "scenarios outside the frozen spec version",
+  "subjects outside the pinned set"
+ ]
+}

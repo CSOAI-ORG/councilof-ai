@@ -124,7 +124,7 @@ export const PRICING_RISK_SLIDES: Slide[] = [
     kicker: "The neutrality firewall",
     title: "Nobody we rank pays us. The relying party does.",
     body:
-      "This is the whole reason the evidence is worth anything. A grader funded by the graded is a marketing department with a methodology page. So the developer never pays and never can: verification is free forever, the rail is open, and the money comes from the observers who need the truth to be neutral — insurers, procurement, auditors.",
+      "This is the whole reason the evidence is worth anything. A grader funded by the graded is a marketing department with a methodology page. A measured or ranked party cannot buy measurement, placement, cadence, visibility, or a favourable outcome: verification is free forever, the rail is open, and a relying party may pay for neutral evidence delivery, assembly, cadence, or licensed history — insurers, procurement, auditors.",
     points: [
       { tag: "pain", text: "Assurance firms that grade a model and sell the remediation for the grade" },
       { tag: "pain", text: "Underwriters buying scores from a party that also carries the risk" },
@@ -140,7 +140,7 @@ export const PRICING_RISK_SLIDES: Slide[] = [
     kicker: "Where it sits",
     title: "One rail, three parties, no conflict of interest",
     body:
-      "The regulator sets the provisions and the penalty bands — under the EU AI Act those run to €35 million or 7% of worldwide turnover for prohibited practices, which is the statute's number and not a measurement of ours. The developer needs continuous evidence against those provisions. The insurer needs rows it can model. We are the piece in the middle that is paid by none of the first two.",
+      "The regulator sets the provisions and the penalty bands — under the EU AI Act those run to €35 million or 7% of worldwide turnover for prohibited practices, which is the statute's number and not a measurement of ours. The developer needs continuous evidence against those provisions. The insurer needs rows it can model. We are the piece in the middle where a relying party may pay for neutral evidence delivery without changing the measurement.",
     points: [
       { tag: "pain", text: "Every party re-running its own half-trusted assessment of the same system" },
       { tag: "benefit", text: "One signed measurement all three sides can read and check" },

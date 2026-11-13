@@ -1,0 +1,249 @@
+{
+  "study": "csoai.platform-replay.20261111.v1",
+  "state": "EXECUTED",
+  "observed_at": "2026-11-11T05:52:53.127602+00:00",
+  "platform": "KAGGLE",
+  "runtime": {
+    "python": "3.13.18 (main, Oct 26 2026, 15:28:15) [GCC 13.3.0]",
+    "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "sqlite": "3.45.1"
+  },
+  "runner_sha256": "43ec3956cc8ce931869c41448675316b3180693eb652e83adff39b5c2ef3df32",
+  "protocol_sha256": "5630ade7b39ade4038b3aed46abeddba486e7b290d70590b45747ca18c2cb2ab",
+  "reference_sha256": "f953cb1af0a5ea9221475a56df2dc6118cb9a22a23ec09e3e0f914cb88a000ea",
+  "download_manifest_sha256": "d680a8d5a9e5bc09c03658742c038386310f9815350fd31703975626e8956fb7",
+  "input_files_verified": 18,
+  "original_checker": {
+    "discovered": 21,
+    "tests_run": 21,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0
+  },
+  "reader_acceptance": {
+    "study": "csoai.measured-reuse.refresh-retain.20261110.r06",
+    "historical": {
+      "history_rows": 36,
+      "reconciled_totals": 12,
+      "historical_timing_unchanged": true,
+      "pinned_inputs": 10,
+      "candidate_sha256": "a0332c36471bf2b726ee00bdcac7733d7b98e2991954b6beb61b6b103e635e69"
+    },
+    "fresh_replay": {
+      "unit_suite": {
+        "discovered": 49,
+        "tests_run": 49,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0
+      },
+      "batches_checked": 1440,
+      "fixtures_checked": 192,
+      "replayed_history_assertions": 576,
+      "timing_result": "new host observation; historical timing values were not replaced",
+      "command_wall_seconds": {
+        "prepare": 0.08653877300002932,
+        "unit_tests": 1.7878246730000455,
+        "benchmark": 17.764993971000024
+      },
+      "model_calls": 0,
+      "training": false,
+      "gspc_admitted": false,
+      "production_authority": "NONE",
+      "cost": "UNKNOWN",
+      "energy": "UNKNOWN"
+    }
+  },
+  "process_parity": [
+    {
+      "id": "case-0",
+      "constrained": true,
+      "prediction": [
+        0.2946643557481588,
+        0.399647985422912,
+        0.30568765882892907,
+        0.0
+      ],
+      "raw_prediction": [
+        0.2933720601730284,
+        0.3978952680918304,
+        0.3043470188730933,
+        -0.0008985360223439376
+      ],
+      "exact_numeric_match": true,
+      "maximum_absolute_difference": 0.0,
+      "compute_seconds": 0.00016945300001225405
+    },
+    {
+      "id": "case-0",
+      "constrained": false,
+      "prediction": [
+        0.2933720601730284,
+        0.3978952680918304,
+        0.3043470188730933,
+        -0.0008985360223439376
+      ],
+      "raw_prediction": [
+        0.2933720601730284,
+        0.3978952680918304,
+        0.3043470188730933,
+        -0.0008985360223439376
+      ],
+      "exact_numeric_match": true,
+      "maximum_absolute_difference": 0.0,
+      "compute_seconds": 0.00015327500000239525
+    },
+    {
+      "id": "case-1",
+      "constrained": true,
+      "prediction": [
+        0.00985173032526002,
+        0.6833685528429794,
+        0.30677971683176064,
+        0.0
+      ],
+      "raw_prediction": [
+        0.009842302953029958,
+        0.6827146200306436,
+        0.30648615148966124,
+        -0.0005293465617385168
+      ],
+      "exact_numeric_match": true,
+      "maximum_absolute_difference": 0.0,
+      "compute_seconds": 0.0001364479999779178
+    },
+    {
+      "id": "case-1",
+      "constrained": false,
+      "prediction": [
+        0.009842302953029958,
+        0.6827146200306436,
+        0.30648615148966124,
+        -0.0005293465617385168
+      ],
+      "raw_prediction": [
+        0.009842302953029958,
+        0.6827146200306436,
+        0.30648615148966124,
+        -0.0005293465617385168
+      ],
+      "exact_numeric_match": true,
+      "maximum_absolute_difference": 0.0,
+      "compute_seconds": 0.00013292500000261498
+    },
+    {
+      "id": "case-2",
+      "constrained": true,
+      "prediction": [
+        0.2,
+        0.5,
+        0.3,
+        0
+      ],
+      "raw_prediction": [
+        0.2092148848206153,
+        0.4893526199911915,
+        0.3005755418316313,
+        -0.002224502715848675
+      ],
+      "exact_numeric_match": true,
+      "maximum_absolute_difference": 0.0,
+      "compute_seconds": 0.0001331440000171824
+    },
+    {
+      "id": "case-2",
+      "constrained": false,
+      "prediction": [
+        0.2092148848206153,
+        0.4893526199911915,
+        0.3005755418316313,
+        -0.002224502715848675
+      ],
+      "raw_prediction": [
+        0.2092148848206153,
+        0.4893526199911915,
+        0.3005755418316313,
+        -0.002224502715848675
+      ],
+      "exact_numeric_match": true,
+      "maximum_absolute_difference": 0.0,
+      "compute_seconds": 0.00012876799996774935
+    },
+    {
+      "id": "case-3",
+      "constrained": true,
+      "prediction": [
+        0.30660743980296223,
+        0.4274122612685315,
+        0.2538619575282646,
+        0.012118341400241556
+      ],
+      "raw_prediction": [
+        0.26346569700643274,
+        0.36727246213130293,
+        0.21814186122353668,
+        0.01041320871283602
+      ],
+      "exact_numeric_match": true,
+      "maximum_absolute_difference": 0.0,
+      "compute_seconds": 0.0001364820000162581
+    },
+    {
+      "id": "case-3",
+      "constrained": false,
+      "prediction": [
+        0.26346569700643274,
+        0.36727246213130293,
+        0.21814186122353668,
+        0.01041320871283602
+      ],
+      "raw_prediction": [
+        0.26346569700643274,
+        0.36727246213130293,
+        0.21814186122353668,
+        0.01041320871283602
+      ],
+      "exact_numeric_match": true,
+      "maximum_absolute_difference": 0.0,
+      "compute_seconds": 0.00012724300000854782
+    }
+  ],
+  "negative_controls": [
+    {
+      "case": "length",
+      "rejected": true
+    },
+    {
+      "case": "boolean",
+      "rejected": true
+    },
+    {
+      "case": "nonfinite",
+      "rejected": true
+    },
+    {
+      "case": "invalid_proportions",
+      "rejected": true
+    },
+    {
+      "case": "wrong_weight_digest",
+      "rejected": true
+    }
+  ],
+  "download_seconds": 1.4238685160000273,
+  "checker_wall_seconds": 0.1808830719999719,
+  "reader_wall_seconds": 20.029525793999994,
+  "model_calls": 8,
+  "foundation_model_calls": 0,
+  "training": false,
+  "gpu_requested": false,
+  "gspc_admitted": false,
+  "actual_human_authorization": false,
+  "cost": "UNKNOWN",
+  "energy": "UNKNOWN",
+  "scope": "CPU process-model numerical parity and existing synthetic reuse replay; not new task accuracy, independence, safety certification or hardware speedup."
+}

@@ -1,0 +1,82 @@
+{
+  "base_space_revision": "8339ca14e40024b166d5235f74845118aab6b8f6",
+  "behavior": {
+    "automatic_chat_save": false,
+    "automatic_training": false,
+    "configured_mounted_storage_required": true,
+    "ephemeral_fallback": false,
+    "explicit_save_consent_required": true,
+    "fresh_identity_per_operation": true,
+    "images_saved": false,
+    "restored_authority": false
+  },
+  "canonical_source": {
+    "commit_provenance": "SOURCE_BUILD.json in the generated source archive",
+    "path": "scripts/hf-meok",
+    "repository": "CSOAI-ORG/meok-ai-site",
+    "review_lane": "codex/ai-runtime-switching-20261107"
+  },
+  "composition_qualification": {
+    "actual_bucket_writes": 0,
+    "composed_methods": 272,
+    "historical_fixture_methods": 3,
+    "huggingface_hub": "2.4.0",
+    "path": "SOURCE_QUALIFICATION.json",
+    "provider_calls": 0,
+    "real_hf_auth_calls": 0,
+    "retained_join_methods": 87,
+    "sha256": "f8266696b37fc303d0a0067ca3a0b97db06ffad40be43ebc053e86960f7e931a"
+  },
+  "concurrent_overlay": {
+    "preserved_files_sha256": {
+      "SOURCE_REVISION.json": "dc6f23da4df28d39cb757328ca22b1d0901d82aa7f0441dbe05de851243ca966",
+      "specialist_presentation.py": "9c3750812999cd1b022469d95ae6f099cc1b4b2cb81e698a4b18832578aeb47a",
+      "specialist_review_ui.py": "8d467fc320d78270c0a30ab17f31162f845379cb1b1af7a6baefa2f3358746da",
+      "test_specialist_presentation.py": "23bd379ccc6b0f708054cf5f74d5948378ddd21ef8c7be29498a9c8131ac54ab"
+    },
+    "revision": "8339ca14e40024b166d5235f74845118aab6b8f6",
+    "source_manifest": "Complete regenerated canonical inventory preserves the concurrent overlay and qualified saved-copy composition.",
+    "space": "Nicholastempleman/meok-hf-runtime"
+  },
+  "date": "2026-11-10",
+  "dependency_repair": {
+    "details": "SOURCE_QUALIFICATION.json",
+    "huggingface_hub": "2.4.0",
+    "previous_failed_space_commit": "a4bedb1f80f40b3f8f31643c335807de16869fce",
+    "serving_resolver_gate": "Linux/Python3.12 CI uses actual runtime requirements and HF builder constraints; no model loading."
+  },
+  "historical_records_preserved": [
+    "SOURCE_REVISION.json",
+    "CHAT_RELEASE.json"
+  ],
+  "hosted_acceptance": [
+    "Verify configured private mounted storage and MEOK_MEMORY_ROOT.",
+    "Exercise save/list/restore/remove with a freshly authenticated account and direct bucket readback.",
+    "Reopen a retained copy after a Space restart; confirm refusal without current identity and isolation between accounts."
+  ],
+  "limits": [
+    "Source qualification is not proof of hosted persistence or a model capability gain.",
+    "Single mounted Space replica; local locks do not provide distributed multi-mount quota guarantees.",
+    "SHA256 records detect corruption or substitution, not a malicious storage administrator."
+  ],
+  "native_qant_qualification": {
+    "path": "qant-cffi-qualification.json",
+    "physical_hardware_calls": 0,
+    "sha256": "d0a1ecd097fba3a25baed3fca136d6ec3140819d8d3e2e1f867a8df06f7ac6c5",
+    "status": "PASS_TESTED_VENDOR_PIN_OVERRIDE",
+    "upstream_supported_compatibility_claim": false
+  },
+  "qualification": {
+    "actual_bucket_writes": 0,
+    "frozen_candidate_base_space_revision": "130aba7caf5f8d9044e56b4e0fca3059e4f2878f",
+    "new_saved_copy_methods": 53,
+    "path": "memory-qualification.json",
+    "provider_calls": 0,
+    "real_hf_auth_calls": 0,
+    "retained_methods": 193,
+    "sha256": "fcf908ddeb539d3334d754e295b06eed44e7913a13c25c553d1c4a029b7561db",
+    "test_methods": 246
+  },
+  "schema": "meok.memory-source-release/1",
+  "status": "SOURCE_QUALIFIED_HOSTED_ACCEPTANCE_PENDING"
+}

@@ -1,0 +1,1058 @@
+{
+ "checks_sha256": "6b7c8161908af00521b09cc8e2a1f1a645f572dc0ca0689217e9cc3681f541ae",
+ "deviation_checks": [
+  "CompletionComplete",
+  "WireSchemaValid",
+  "DNSRebindingRejected",
+  "LocalhostHostAccepted",
+  "PromptsGetEmbeddedResource",
+  "PromptsGetSimple",
+  "PromptsGetWithArgs",
+  "PromptsGetWithImage",
+  "PromptsList",
+  "ResourcesList",
+  "ResourcesReadBinary",
+  "ResourcesReadText",
+  "ResourcesTemplateRead",
+  "ServerAcceptsMultiplePostStreams",
+  "ToolsCallAudio",
+  "ToolsCallEmbeddedResource",
+  "ToolsCallError",
+  "ToolsCallImage",
+  "ToolsCallMixedContent",
+  "ToolsCallSimpleText",
+  "ToolsCallWithProgress",
+  "ToolsList"
+ ],
+ "generated_at": "2026-10-26T02:12:31Z",
+ "instrument": "alpha-2026-07-28",
+ "instrument_channel": "alpha",
+ "not_a_grade": true,
+ "note": "",
+ "scenarios": [
+  {
+   "checks": [
+    {
+     "check": "CompletionComplete",
+     "description": "Server responds to completion requests",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'completion/complete', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "completion-complete",
+     "specReferences": [
+      {
+       "id": "MCP-Completion",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/completion"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'completion/complete'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'completion/complete' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "fb0b075b8cf016f6fff03092cc11a7b4d7224be8c408fa81f836abd4436ab342",
+   "scenario": "completion-complete",
+   "scenario_run_id": "server-completion-complete-2026-10-26T02-14-03-425Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "DNSRebindingRejected",
+     "description": "Server rejects requests with non-localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-rebinding-rejected",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "LocalhostHostAccepted",
+     "description": "Server accepts requests with valid localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-valid-accepted",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "ae05781f881a27f344d78196d194d34aee1aaf163f3e85ca958383c4afbc441e",
+   "scenario": "dns-rebinding-protection",
+   "scenario_run_id": "server-dns-rebinding-protection-2026-10-26T02-14-27-799Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetEmbeddedResource",
+     "description": "Get prompt with embedded resource",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'prompts/get', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "prompts-get-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Embedded-Resources",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#embedded-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'prompts/get'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'prompts/get' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "1bc13c2ccb6acfcd7be0e7fab6723f4167c2331328ebd8e9aa3686d9cd5320e2",
+   "scenario": "prompts-get-embedded-resource",
+   "scenario_run_id": "server-prompts-get-embedded-resource-2026-10-26T02-14-25-228Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetSimple",
+     "description": "Get simple prompt successfully",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'prompts/get', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "prompts-get-simple",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'prompts/get'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'prompts/get' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "46500d3ec01233761061a6edc136adaf2a11c9012194ce45f17222c974a4b07a",
+   "scenario": "prompts-get-simple",
+   "scenario_run_id": "server-prompts-get-simple-2026-10-26T02-14-23-043Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithArgs",
+     "description": "Get parameterized prompt with argument substitution",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'prompts/get', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "prompts-get-with-args",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'prompts/get'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'prompts/get' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "9ba06ee525003eacd2f318b1cb168a1a04596b870d7faf4c94c358427cd85d67",
+   "scenario": "prompts-get-with-args",
+   "scenario_run_id": "server-prompts-get-with-args-2026-10-26T02-14-24-096Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithImage",
+     "description": "Get prompt with image content",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'prompts/get', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "prompts-get-with-image",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Image",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#image-content"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'prompts/get'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'prompts/get' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "f10d4d8f38ff62fc8495250fcfcae2973fef2010fe0a73ced56c6e10b041c1c4",
+   "scenario": "prompts-get-with-image",
+   "scenario_run_id": "server-prompts-get-with-image-2026-10-26T02-14-26-476Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsList",
+     "description": "Server lists available prompts with valid structure",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'prompts/list', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "prompts-list",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#listing-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'prompts/list'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'prompts/list' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "3bafd1e8c73fae75e0aedfd434e4d18e9ddfe88e1ef3aeeb01a681c1f23e5701",
+   "scenario": "prompts-list",
+   "scenario_run_id": "server-prompts-list-2026-10-26T02-14-21-721Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesList",
+     "description": "Server lists available resources with valid structure",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'resources/list', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "resources-list",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#listing-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'resources/list'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'resources/list' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "52f68056d4e18963eddba4654891db3030d4299f089d1db3a1534b5a86f81add",
+   "scenario": "resources-list",
+   "scenario_run_id": "server-resources-list-2026-10-26T02-14-16-744Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadBinary",
+     "description": "Read binary resource successfully",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'resources/read', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "resources-read-binary",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'resources/read'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'resources/read' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "b1dccf257f501034546c91ceb0892121293b498d1912262efdec7bcb41a89867",
+   "scenario": "resources-read-binary",
+   "scenario_run_id": "server-resources-read-binary-2026-10-26T02-14-19-152Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadText",
+     "description": "Read text resource successfully",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'resources/read', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "resources-read-text",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'resources/read'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'resources/read' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "babf713f5b418d04245c427db952bd2d3f7079d84786ca984fb7eeb0fd6dbc8c",
+   "scenario": "resources-read-text",
+   "scenario_run_id": "server-resources-read-text-2026-10-26T02-14-17-989Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesTemplateRead",
+     "description": "Read resource from template with parameter substitution",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'resources/read', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "resources-templates-read",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Templates",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-templates"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'resources/read'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'resources/read' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "d48411b0a567f118c7a5a7701400ca24026bb230970524a4a6abf2975933dd0e",
+   "scenario": "resources-templates-read",
+   "scenario_run_id": "server-resources-templates-read-2026-10-26T02-14-20-442Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerAcceptsMultiplePostStreams",
+     "description": "Server allows multiple concurrent POST requests (each may return SSE or JSON)",
+     "details": {
+      "contentTypes": [
+       "application/json",
+       "application/json",
+       "application/json"
+      ],
+      "numSseStreams": 0,
+      "numStreamsAccepted": 0,
+      "numStreamsAttempted": 3,
+      "statuses": [
+       401,
+       401,
+       401
+      ]
+     },
+     "errorMessage": "Server rejected some requests. Statuses: 401, 401, 401",
+     "id": "server-accepts-multiple-post-streams",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "ServerSSEStreamsFunctional",
+     "description": "Server returned JSON responses (SSE streams optional)",
+     "details": {
+      "message": "Server returned JSON for all requests - SSE streaming is optional",
+      "numSseStreams": 0,
+      "results": [
+       {
+        "index": 0,
+        "skipped": true,
+        "type": "json"
+       },
+       {
+        "index": 1,
+        "skipped": true,
+        "type": "json"
+       },
+       {
+        "index": 2,
+        "skipped": true,
+        "type": "json"
+       }
+      ]
+     },
+     "id": "server-sse-streams-functional",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "INFO"
+    }
+   ],
+   "checks_sha256": "b6664d35d83b829eb9b06c75200386412c7208d663312471d88ecd43fccaaefb",
+   "scenario": "server-sse-multiple-streams",
+   "scenario_run_id": "server-server-sse-multiple-streams-2026-10-26T02-14-15-337Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallAudio",
+     "description": "Tool returns audio content",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'tools/call', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "tools-call-audio",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "8a9ebf0f429c4f0a779b8e19d383e6fd1189dc0baf2a9c6db137d1c69169f6e0",
+   "scenario": "tools-call-audio",
+   "scenario_run_id": "server-tools-call-audio-2026-10-26T02-14-08-595Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallEmbeddedResource",
+     "description": "Tool returns embedded resource content",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'tools/call', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "tools-call-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "f35faa61a7db1787feef04c2a7b45662e88569a38868d9a65edf91fbbfadeaf0",
+   "scenario": "tools-call-embedded-resource",
+   "scenario_run_id": "server-tools-call-embedded-resource-2026-10-26T02-14-09-928Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallError",
+     "description": "Tool returns error correctly",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'tools/call', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "tools-call-error",
+     "specReferences": [
+      {
+       "id": "MCP-Error-Handling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "15a5be4f0318b9bb074bbb924ddcd3f6b099f8794d1c4bec73e8393973b1af9b",
+   "scenario": "tools-call-error",
+   "scenario_run_id": "server-tools-call-error-2026-10-26T02-14-12-584Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallImage",
+     "description": "Tool returns image content",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'tools/call', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "tools-call-image",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "e56ce0eebbda98331b9f49e0ab8801d32c86f8d82bb42bc5be6fbb2cf4f2a565",
+   "scenario": "tools-call-image",
+   "scenario_run_id": "server-tools-call-image-2026-10-26T02-14-07-335Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallMixedContent",
+     "description": "Tool returns multiple content types",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'tools/call', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "tools-call-mixed-content",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "90c04e454f92f0aa4f71987a22b93470f5fcb123aecc4702aecb95e26dc75d84",
+   "scenario": "tools-call-mixed-content",
+   "scenario_run_id": "server-tools-call-mixed-content-2026-10-26T02-14-11-267Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSimpleText",
+     "description": "Tool returns simple text content",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'tools/call', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "tools-call-simple-text",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "222d5836a33628e76067e3642aa5b175bf6bf1eb2817d86b9cd089d8c92e8465",
+   "scenario": "tools-call-simple-text",
+   "scenario_run_id": "server-tools-call-simple-text-2026-10-26T02-14-05-988Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithProgress",
+     "description": "Tool reports progress notifications",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'tools/call', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "tools-call-with-progress",
+     "specReferences": [
+      {
+       "id": "MCP-Progress",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/progress"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "ceb914b662023bb7628d038ab193bedd9bf8ef92666bfda7579df4393fae0ee1",
+   "scenario": "tools-call-with-progress",
+   "scenario_run_id": "server-tools-call-with-progress-2026-10-26T02-14-13-979Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsList",
+     "description": "Server lists available tools with valid structure",
+     "errorMessage": "Failed: HTTP 401: expected a JSON-RPC result for 'tools/list', got unexpected body {\"error\":\"unauthorized\"}",
+     "id": "tools-list",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#listing-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/list'",
+        "errors": [
+         "JSONRPCErrorResponse: must have required property 'jsonrpc'",
+         "JSONRPCErrorResponse/error: must be object"
+        ],
+        "message": {
+         "error": "unauthorized"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/list' (spec 2026-07-28): JSONRPCErrorResponse: must have required property 'jsonrpc'; JSONRPCErrorResponse/error: must be object \u2014 message: {\"error\":\"unauthorized\"}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "26c3879652ec700fc230e96cb416d6621a1ab4b795b7651bbcd73c00d16e6d85",
+   "scenario": "tools-list",
+   "scenario_run_id": "server-tools-list-2026-10-26T02-14-04-819Z"
+  }
+ ],
+ "schema": "csoai.mcp-conformance-run/0.1",
+ "source": "mcp-registry",
+ "spec_version": "2026-07-28",
+ "subject_id": "ai.1325/mcp@0.1.0",
+ "subject_record_url": "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp",
+ "subject_url": "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp",
+ "suite_version": "0.2.0-alpha.12"
+}

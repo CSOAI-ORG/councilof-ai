@@ -11,6 +11,7 @@ Sections whose -01 text is decided are written out. Everything that must be read
 day of posting is a bracketed placeholder; no number is carried over from -00.
 """
 import json
+import pathlib
 import re
 import sys
 import textwrap
@@ -256,6 +257,16 @@ open.</t>
     rows = "\n".join(
         "<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (esc(n["id"]), esc(n["expected"]["rule"]), esc(n["why"]))
         for n in v["N_controls"])
+    vocab_path = pathlib.Path(__file__).resolve().parents[3] / "packages" / "venturi-capsule" / "vocabularies.json"
+    vocab = json.loads(vocab_path.read_text(encoding="utf-8"))
+    vocab_rows = []
+    for kind_name, kmeta in vocab["kinds"].items():
+        for st in kmeta["states"]:
+            vocab_rows.append(
+                "<tr><td><tt>%s</tt></td><td><tt>%s</tt></td><td>%s</td><td>%s</td></tr>"
+                % (esc(kind_name), esc(st["state"]), esc(st["family"]), esc(st["meaning"]))
+            )
+    vocab_table_rows = "\n".join(vocab_rows)
     app = """<section anchor="test-vectors"><name>Test Vectors</name>
 
 <t>These vectors are synthetic. The signing key is the TEST 1 key of
@@ -355,9 +366,16 @@ the control that names it and of no other vector.</t>
 </section>
 <section anchor="vocabularies"><name>State Vocabularies</name>
 
-<t>[GENERATED AT BUILD from the implementation's vocabulary file: for each
-kind, each state, its family and a one-line meaning. Not written by hand,
-so that the text and the implementation cannot drift apart.]</t>
+<t>Generated at build from <tt>packages/venturi-capsule/vocabularies.json</tt>
+(<tt>csoai.measurement-capsule-vocabularies/0.2</tt>) so that the text and the
+implementation cannot drift apart.</t>
+
+<table>
+<thead><tr><th>Kind</th><th>State</th><th>Family</th><th>Meaning</th></tr></thead>
+<tbody>
+{vocab_rows}
+</tbody>
+</table>
 
 </section>
 <section anchor="changes"><name>Changes from -00</name>
@@ -388,7 +406,7 @@ so that the text and the implementation cannot drift apart.]</t>
            edn3=wrap_text(v3["protected_edn"], 68), prot3=wrap_hex(v3["protected_hex"]),
            sig3=wrap_hex(v3["signature_hex"]), edn4=wrap_text(v4["protected_edn"], 68),
            prot4=wrap_hex(v4["protected_hex"]), pay4=v4["payload_hex"], sig4=wrap_hex(v4["signature_hex"]),
-           rows=rows)
+           rows=rows, vocab_rows=vocab_table_rows)
     s = s.replace('<section numbered="false" anchor="acknowledgments">', app + '<section numbered="false" anchor="acknowledgments">', 1)
     sys.stdout.write(s)
 

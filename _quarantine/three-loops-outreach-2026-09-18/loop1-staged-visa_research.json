@@ -1,0 +1,42 @@
+{
+  "schema": "csoai.outreach-send/0.1",
+  "kind": "outreach-send-staged",
+  "name": "Visa Research",
+  "kind_org": "payments-research",
+  "staged_at": "2026-09-17T05:23:03.517711+00:00",
+  "verified_claims": [
+    {
+      "claim": "xrpl_onchain_count",
+      "url": "https://xrpl.org/mainnet/ledger",
+      "verified_at": "2026-09-17T05:23:03.453075+00:00",
+      "state": "FAILED_VERIFICATION",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "claim": "csoai_axes_count",
+      "url": "https://councilof.ai/api/gspc",
+      "verified_at": "2026-09-17T05:23:03.517559+00:00",
+      "status": 200,
+      "state": "VERIFIED"
+    }
+  ],
+  "draft_body": "Subject: CSOAI crosswalk \u2014 signed measurement of tokenized settlement\n\nHi Visa Research,\n\nWe have published a measurement of XRPL on-ledger settlement against the GENIUS Act \u00a7310 custody requirements. The CLARITY Act / Senate market-structure text (Sept 14) is crosswalked. CLARITY \u00a7501 transaction-integrity obligations are mapped to XRPL native primitives. Every figure is signed (Ed25519) and Bitcoin-anchored.\n\nWhat we are NOT claiming:\n  - that Visa accepts or endorses this\n  - that XRPL is the only settlement rail\n  - any specific institution is non-compliant\n\nBest,\nNicholas Templeman",
+  "claims_register_NOT_claiming": [
+    "that the recipient accepts or endorses this",
+    "that any specific institution is non-compliant",
+    "any relationship that has not been verified",
+    "any filed contribution has been accepted"
+  ],
+  "send_via": "Open-Xchange API path (operator-driven)",
+  "send_conditions": [
+    "every quoted figure verified at send time",
+    "no second message to a non-replier",
+    "no fabricated relationship",
+    "no LinkedIn path"
+  ],
+  "disclaimers": [
+    "MEASUREMENT, not CERTIFICATION.",
+    "Loop 1 sends are operator-driven (OAuth/send-gate is owner's)."
+  ],
+  "sha256": "d8434ead6f0ea61c48f1cd5ed06dc3142a03bed6a986821b0307e57541b0de7b"
+}

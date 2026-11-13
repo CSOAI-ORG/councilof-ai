@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article 50 Transparency Obligations — CSOAI</title>
+    <meta name="description" content="Plain-language guide to EU AI Act Article 50 transparency requirements for AI-generated content, chatbots, and deepfakes.">
+    <link rel="canonical" href="https://csoai.org/article-50-transparency">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Article 50 Transparency Obligations — CSOAI">
+    <meta property="og:description" content="Plain-language guide to EU AI Act Article 50 transparency requirements for AI-generated content, chatbots, and deepfakes.">
+    <meta property="og:image" content="https://csoai.org/og-image.png">
+    <meta property="og:url" content="https://csoai.org/article-50-transparency">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"EU AI Act Article 50 Transparency Obligations","description":"Plain-language guide to EU AI Act Article 50 transparency requirements for AI-generated content, chatbots, and deepfakes.","author":{"@type":"Organization","name":"Council for the Safety of AI","url":"https://csoai.org"},"publisher":{"@type":"Organization","name":"CSOAI","url":"https://csoai.org"},"url":"https://csoai.org/article-50-transparency","datePublished":"2026-06-22","dateModified":"2026-06-22"}</script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #EF4444;
+            --bg: #0a0a0f;
+            --surface: #11111a;
+            --border: #1e293b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --gold: #c9a84c;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
+        
+        .emergency-header {
+            text-align: center;
+            border: 2px solid var(--primary);
+            padding: 3rem;
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(239, 68, 68, 0.1) 0%, var(--surface) 100%);
+            margin-bottom: 4rem;
+        }
+        .emergency-header h1 { font-family: 'Space Grotesk', sans-serif; font-size: 3rem; color: var(--primary); margin-bottom: 1rem; }
+        .emergency-header .countdown { font-size: 1.5rem; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 0.1em; }
+        
+        .problem-section { margin-bottom: 4rem; }
+        .problem-section h2 { font-size: 2rem; margin-bottom: 1.5rem; border-left: 4px solid var(--primary); padding-left: 1rem; }
+        
+        .kit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 12px;
+        }
+        .feature-card h3 { color: var(--gold); margin-bottom: 1rem; }
+        
+        .cta-box {
+            text-align: center;
+            background: var(--surface);
+            padding: 4rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+        .price { font-size: 4rem; font-weight: 800; margin-bottom: 1rem; }
+        .price span { font-size: 1.25rem; color: var(--muted); text-decoration: line-through; }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            padding: 1.5rem 3rem;
+            border-radius: 10px;
+            font-weight: 800;
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: scale(1.05); }
+
+    </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+    <!-- ═══ MEGA NAV ═══ -->
+<header style="position:sticky;top:0;z-index:1000;background:rgba(13,11,33,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(212,168,67,.15);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center">
+  <a href="index.html" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+    <span style="font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#D4A843,#E8B76D);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CSOAI</span>
+    <span style="font-size:.7rem;color:rgba(232,228,240,.4);margin-left:.25rem">by MEOK AI Labs</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:.25rem" class="nav-links">
+    <!-- Standards -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Standards ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;left:-100px;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">Governance Frameworks</div>
+        <a href="article-50-kit.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:#EF4444;transition:background .2s;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);margin-bottom:.5rem" onmouseover="this.style.background='rgba(239,68,68,.15)'" onmouseout="this.style.background='rgba(239,68,68,.1)'"><span style="font-size:1.2rem">🚨</span><span><strong style="display:block;font-size:.9rem">Article 50 Emergency Kit</strong><small style="color:rgba(239,68,68,.8);font-size:.8rem">Secure EU AI Act compliance in 48hrs</small></span></a>
+        <a href="charter.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📜</span><span><strong style="display:block;font-size:.9rem">52-Article Charter</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Complete governance framework</small></span></a>
+        <a href="crosswalks.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🔄</span><span><strong style="display:block;font-size:.9rem">Framework Crosswalks</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">ISO 42001, NIST, EU AI Act, IEEE</small></span></a>
+        <a href="guides.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📖</span><span><strong style="display:block;font-size:.9rem">Implementation Guides</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">8 step-by-step modules</small></span></a>
+        <a href="glossary.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📚</span><span><strong style="display:block;font-size:.9rem">AI Safety Glossary</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">250+ terms defined</small></span></a>
+      </div>
+    </div>
+    <!-- Products -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Products ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;left:-100px;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">CSOAI Solutions</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <a href="mcp-packs.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📦</span><span><strong style="display:block;font-size:.9rem">Premium MCP Packs</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Curated server bundles</small></span></a>
+          <a href="finance.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">💳</span><span><strong style="display:block;font-size:.9rem">Agentic Finance</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Payment pre-checks</small></span></a>
+          <a href="legacy.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏛️</span><span><strong style="display:block;font-size:.9rem">Legacy Bridge</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">COBOL/Mainframe tunnels</small></span></a>
+          <a href="governance.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🌍</span><span><strong style="display:block;font-size:.9rem">Global Mesh</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Cross-regional handoff</small></span></a>
+          <a href="certification.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏅</span><span><strong style="display:block;font-size:.9rem">CASA Certification</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Standard AI safety cert</small></span></a>
+          <a href="enterprise.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏢</span><span><strong style="display:block;font-size:.9rem">Enterprise Governance</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Turnkey compliance for orgs</small></span></a>
+          <a href="advisory.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🎯</span><span><strong style="display:block;font-size:.9rem">Advisory Services</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Expert AI governance consultancy</small></span></a>
+          <a href="pricing.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">💰</span><span><strong style="display:block;font-size:.9rem">Pricing & Plans</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">From £1 to Enterprise</small></span></a>
+        </div>
+      </div>
+    </div>
+    <!-- Ecosystem -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Ecosystem ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;right:0;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">CSOAI Group Network</div>
+        <a href="https://meok.ai" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🧠</span><span><strong style="display:block;font-size:.9rem">MEOK.AI</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Sovereign AI OS &amp; agent marketplace</small></span></a>
+        <a href="https://cobolbridge.ai" target="_blank" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🔗</span><span><strong style="display:block;font-size:.9rem">CobolBridge</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Legacy COBOL migration platform</small></span></a>
+        <a href="mcp-infrastructure.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🛠</span><span><strong style="display:block;font-size:.9rem">207 MCP Servers</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">1,050+ tools across 30 frameworks</small></span></a>
+        <a href="https://github.com/csoai-org" target="_blank" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🐙</span><span><strong style="display:block;font-size:.9rem">GitHub</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">518 open-source repositories</small></span></a>
+      </div>
+    </div>
+    <a href="about.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">About</a>
+    <a href="blog.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">Blog</a>
+    <a href="contact.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">Contact</a>
+    <!-- Developer -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Developer ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;right:0;width:320px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">Developer Resources</div>
+        <a href="api-docs.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📚</span><span><strong style="display:block;font-size:.9rem">API Documentation</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">REST API reference</small></span></a>
+        <a href="status.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📊</span><span><strong style="display:block;font-size:.9rem">System Status</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Platform health monitoring</small></span></a>
+        <a href="verify.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">✓</span><span><strong style="display:block;font-size:.9rem">Certificate Verification</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Verify certifications</small></span></a>
+        <a href="layer0.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">⚡</span><span><strong style="display:block;font-size:.9rem">Layer 0 Protocol</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">The 8 trust layers</small></span></a>
+        <a href="mcp-distribution.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🌐</span><span><strong style="display:block;font-size:.9rem">MCP Distribution Map</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">AEO &amp; GEO fleet registry</small></span></a>
+      </div>
+    </div>
+    <a href="dashboard.html" style="background:linear-gradient(135deg,#D4A843,#E8B76D);color:#0D0B21;padding:.5rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:700;text-decoration:none;margin-left:.5rem;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 15px rgba(212,168,67,.3)" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(212,168,67,.5)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 15px rgba(212,168,67,.3)'">Dashboard</a>
+  </div>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('mobile-open');this.classList.toggle('active')" style="display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;z-index:1001"><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span></button>
+</header>
+<script>
+function toggleMega(btn){
+  const panel=btn.nextElementSibling;
+  const wasOpen=panel.style.display==='block';
+  document.querySelectorAll('.mega-panel').forEach(p=>p.style.display='none');
+  if(!wasOpen)panel.style.display='block';
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.mega-wrap'))document.querySelectorAll('.mega-panel').forEach(p=>p.style.display='none')});
+</script>
+    <div class="container">
+        <div class="emergency-header">
+            <span style="display:inline-block;margin-bottom:1rem;padding:.4rem 1rem;border-radius:999px;background:var(--primary);color:#fff;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;">EU AI Act Compliance</span>
+            <h1>Article 50 Transparency</h1>
+            <div class="countdown">Synthetic content must be disclosed by August 2, 2026</div>
+        </div>
+
+        <section class="problem-section">
+            <h2>What Article 50 requires</h2>
+            <p>Article 50 of the EU AI Act mandates that providers and deployers make it clear when users are interacting with an AI system, when content is AI-generated, and when material constitutes a deepfake.</p>
+        </section>
+
+        <section class="problem-section">
+            <h2>Four disclosure triggers</h2>
+            <div class="kit-grid">
+                <div class="feature-card"><h3>Chatbots & bots</h3><p>Inform users they are communicating with an AI unless obvious from context.</p></div>
+                <div class="feature-card"><h3>Emotion recognition</h3><p>Notify people when AI is analysing their emotions or biometric categorisation.</p></div>
+                <div class="feature-card"><h3>AI-generated content</h3><p>Mark text, image, audio, or video produced by AI in a machine-readable way.</p></div>
+                <div class="feature-card"><h3>Deepfakes</h3><p>Disclose synthetic media that resembles real persons, places, or events.</p></div>
+            </div>
+        </section>
+
+        <section class="problem-section">
+            <h2>Technical documentation</h2>
+            <p>Providers must maintain and publish documentation describing training data, model architecture, evaluation results, known limitations, and risk-mitigation measures. The Article 50 Kit templates this into a regulator-ready pack.</p>
+        </section>
+
+        <section class="problem-section">
+            <h2>Penalties</h2>
+            <p>Non-compliance can trigger fines of up to 7% of global annual turnover or €35 million, whichever is higher. Transparency is the lowest-cost defence.</p>
+        </section>
+
+        <div class="cta-box">
+            <h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--primary);">Prove transparency in 48 hours</h2>
+            <p style="margin-bottom: 2rem; color: var(--muted);">The Article 50 Emergency Kit gives you filed disclosure templates, a public attestation, and a post-market monitoring plan.</p>
+            <a href="article-50-kit.html" class="btn">SECURE COMPLIANCE NOW</a>
+        </div>
+    </div>
+
+    <footer style="background:var(--dark);border-top:3px solid var(--accent);padding:4rem 0 2rem;margin-top:4rem;position:relative;z-index:1">
+<div class="container">
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;gap:2rem;margin-bottom:3rem">
+    <div>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,#D4A843,#E8B76D);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CSOAI</span>
+      </div>
+      <p style="color:rgba(232,228,240,.6);font-size:.9rem;line-height:1.6;margin-bottom:1rem">The global standard for AI safety. Institutional governance through the 52-article charter and Byzantine consensus.</p>
+      <div style="display:flex;gap:.75rem"><a aria-label="CSOAI on X" href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">𝕏</a><a aria-label="CSOAI on LinkedIn" href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">in</a><a aria-label="CSOAI on YouTube" href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">▶</a></div>
+    </div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Standards</h4><a href="charter.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Charter</a><a href="crosswalks.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Crosswalks</a><a href="guides.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Guides</a><a href="glossary.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Glossary</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Products</h4>
+      <a href="mcp-packs.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Premium Packs</a>
+      <a href="finance.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Agentic Finance</a>
+      <a href="legacy.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Legacy Bridge</a>
+      <a href="governance.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Global Mesh</a>
+      <a href="certification.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">CASA Certification</a>
+      <a href="enterprise.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Enterprise</a>
+      <a href="advisory.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Advisory</a>
+      <a href="pricing.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Pricing</a>
+    </div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Ecosystem</h4><a href="https://meok.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">MEOK.AI</a><a href="https://cobolbridge.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">CobolBridge</a><a href="mcp-infrastructure.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">207 MCP Servers</a><a href="https://github.com/csoai-org" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">GitHub (518 repos)</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Company</h4><a href="about.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">About</a><a href="case-studies.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Case Studies</a><a href="blog.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Blog</a><a href="contact.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Contact</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Account</h4><a href="dashboard.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Dashboard</a><a href="faq.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">FAQ</a><a href="resources.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Resources</a><a href="api-docs.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">API Docs</a><a href="status.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">System Status</a></div>
+  </div>
+  <div style="border-top:1px solid rgba(212,168,67,.1);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+    <p style="color:rgba(232,228,240,.4);font-size:.8rem">&copy; 2026 CSOAI — The Global Standard for AI Safety. Powered by <a href="https://meok.ai" style="color:rgba(232,228,240,.4);text-decoration:none">MEOK AI Labs</a>. All rights reserved.</p>
+    <div style="display:flex;gap:1.5rem"><a href="privacy.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Privacy</a><a href="terms.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Terms</a><a href="cookies.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Cookies</a></div>
+  </div>
+</div>
+</footer>
+
+
+<!-- CSOAI Buy Buttons (Day 5 auto-injected) -->
+<div class="csoai-buy-buttons" style="margin: 4rem auto; max-width: 900px;">
+<h2 style="text-align: center; font-size: 1.5rem; margin: 2rem 0 1rem 0; color: var(--text, #f8fafc);">Take Action Now</h2>
+<div class="stripe-buy-container" style="text-align: center; margin: 3rem auto; padding: 2rem; border: 2px solid #EF4444; border-radius: 16px; max-width: 600px;">
+  <h2 style="color: #EF4444;">Article 50 Emergency Kit — £999 one-time</h2>
+  <p>Complete Article 50 compliance bundle: signed risk classification, human-oversight plan, audit log setup, 48-hour deadline guarantee.</p>
+  <a href="https://buy.stripe.com/fZu00l4O8fZ07oh0Q88k91V" class="stripe-buy-btn" style="display: inline-block; padding: 1rem 3rem; background: #EF4444; color: white; border-radius: 8px; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em;">Buy Article 50 Kit →</a>
+  <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 1rem;">Instant download · 30-day money-back · CSOAI LTD (UK 16939677)</p>
+</div>
+
+<!-- Enterprise: £1,499/mo -->
+
+
+<div class="stripe-buy-container" style="text-align: center; margin: 3rem auto; padding: 2rem; border: 2px solid #10B981; border-radius: 16px; max-width: 600px;">
+  <h2 style="color: #10B981;">Pro Compliance — £199/month</h2>
+  <p>Up to 50 AI system audits per month. Dashboard of all attested systems. Charter-mapped risk classification. Watchdog Certificate on demand.</p>
+  <a href="https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T" class="stripe-buy-btn" style="display: inline-block; padding: 1rem 3rem; background: #10B981; color: #0a0a0f; border-radius: 8px; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em;">Subscribe Pro →</a>
+  <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 1rem;">Free 7-day trial · Cancel anytime · CSOAI LTD</p>
+</div>
+
+<!-- Sovereign: £29/mo -->
+
+
+<div class="stripe-buy-container" style="text-align: center; margin: 2rem auto; padding: 1.5rem; border: 1px solid #94a3b8; border-radius: 8px; max-width: 500px;">
+  <h3 style="color: #94a3b8;">Quick Compliance Check — £9 one-time</h3>
+  <p>Single-shot AI risk classification. PDF report. 24-hour turnaround.</p>
+  <a href="https://buy.stripe.com/9B68wR6WgfZ0gYR8iA8k91W" class="stripe-buy-btn" style="display: inline-block; padding: 0.75rem 2rem; background: #94a3b8; color: #0a0a0f; border-radius: 6px; font-weight: 700; text-decoration: none; text-transform: uppercase;">Buy Quick Check →</a>
+</div>
+
+<!-- Watchdog Cert: £4,950 -->
+
+
+<div class="stripe-buy-container" style="text-align: center; margin: 2rem auto; padding: 1.5rem; border: 1px dashed #6366F1; border-radius: 12px; max-width: 500px; background: rgba(99,102,241,0.05);">
+  <h3 style="color: #6366F1;">Free Watchdog Certificate (3/day)</h3>
+  <p>Get a free HMAC-signed attestation for any email. Public verify URL. No credit card.</p>
+  <a href="https://meok-attestation-api.vercel.app/sign" class="stripe-buy-btn" style="display: inline-block; padding: 0.75rem 2rem; background: transparent; color: #6366F1; border: 2px solid #6366F1; border-radius: 6px; font-weight: 700; text-decoration: none; text-transform: uppercase;">Get Free Cert →</a>
+</div>
+
+</div>
+
+<!-- Live Countdown to 2 Aug 2026 -->
+<div id="countdown-banner" style="position:fixed;top:0;left:0;right:0;background:linear-gradient(90deg,#EF4444,#DC2626);color:white;padding:8px;text-align:center;z-index:9999;font-family:monospace;font-weight:700;font-size:14px;border-bottom:2px solid #B91C1C;">
+  🚨 EU AI Act Article 50 — <span id="cd-days">--</span> days <span id="cd-hours">--</span>:<span id="cd-mins">--</span>:<span id="cd-secs">--</span> until 2 Aug 2026 enforcement
+</div>
+<script>
+function tick() {
+  const target = new Date('2026-08-02T00:00:00Z').getTime();
+  const now = Date.now();
+  const diff = target - now;
+  if (diff < 0) { document.getElementById('countdown-banner').innerHTML = '🚨 EU AI Act Article 50 — IN EFFECT'; return; }
+  const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+  document.getElementById('cd-days').textContent = d;
+  document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
+  document.getElementById('cd-mins').textContent = String(m).padStart(2,'0');
+  document.getElementById('cd-secs').textContent = String(s).padStart(2,'0');
+}
+setInterval(tick, 1000); tick();
+</script>
+</body>
+</html>

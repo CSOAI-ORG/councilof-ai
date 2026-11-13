@@ -10,6 +10,7 @@ import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
+import { AXES_D } from "./_gspc_axes_d";
 import { MEASURED_IN_LANE } from "./_gspc_lane";
 import { buildCite, citeUrl, sha256Hex } from "./_gspc_cite";
 import { FINANCIAL_FACTS_AS_OF, financialFamilyBlock } from "./_gspc_fin_as_of";
@@ -21,7 +22,21 @@ import { headFromGet } from "./_head";
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
 // in but absent from the data, so the board reported 14 — the un-swept state.
-const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
+// method_status (Measure ruling 2026-10-16, AXES-33-SPEC.md): each live axis either meets the rule
+// (frozen sha-pinned bank or method, n_valid >= 30) or names its exact gap. Fact-axis gaps read n off
+// the row, never typed. Remediation is queued in bank-next-version. The measured count is unchanged.
+const LEGACY_GAP: Record<string, string> = {
+  jail: "27 distinct prompts, n<30",
+  swarm: "bank sha points to retired bank",
+  "effect-binding": "no method sha published",
+};
+const withMethodStatus = (a: AxisScore): AxisScore => {
+  if (a.status !== "MEASURED") return a;
+  if (LEGACY_GAP[a.axis]) return { ...a, method_status: `legacy: ${LEGACY_GAP[a.axis]}` };
+  if (a.family === "financial") return { ...a, method_status: `legacy: n ${a.n}` };
+  return { ...a, method_status: "meets-rule" };
+};
+const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D].map(withMethodStatus);
 
 const round = (x: number, p = 4) => Math.round(x * 10 ** p) / 10 ** p;
 
@@ -686,7 +701,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       // Every number below is computed from the axis array.
       const measured = m.length;                       // status MEASURED — a run exists
       const unmeasured = selected.length - measured;   // slot published, no run
-      const bySelectedFamily = (fam: "gspc" | "financial") => {
+      const bySelectedFamily = (fam: "gspc" | "financial" | "subject") => {
         const all = selected.filter((a) => a.family === fam);
         return { axes: all.length, measured: all.filter((a) => a.status === "MEASURED").length };
       };
@@ -767,6 +782,12 @@ export const onRequestGet: PagesFunction = async (context) => {
             note: "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically. " +
               "Plus effect-binding (ADR-002), a deterministic-facts probe of tool-call SERVERS, not a fleet: " +
               "n counts servers probed, it has no leader, no accuracy and no separation, and it joins no mean.",
+          },
+          subject: {
+            ...bySelectedFamily("subject"),
+            note: "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). Declared slots, " +
+              "UNMEASURED until a frozen sha-pinned bank with n_valid >= 30 passes the gate. Census checks are a " +
+              "DISCOVERED check grid, never scores here. No aggregate score and no overall rank.",
           },
           financial: {
             ...financialFamilyBlock(bySelectedFamily("financial").axes, bySelectedFamily("financial").measured),
@@ -892,7 +913,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       // overlays on stock base models (C-2026-0930-11). The signed bytes stay as signed; the served
       // sentence is corrected here and names the correction, so a reader of both sees why they differ.
       own_model_exclusion:
-        "Our own models (sov6-*-v3-light in the rows; council-*-v3-light on the board) are prompt overlays " +
+        "Our own models (own-model *-v3-light in the rows; council-*-v3-light on the board) are prompt overlays " +
         "on stock base models (system prompts, not trained weights). They are removed before comparison. " +
         "Base fleet of 6.",
       own_model_exclusion_correction:

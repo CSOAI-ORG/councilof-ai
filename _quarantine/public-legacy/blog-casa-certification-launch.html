@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASA Certification Launch: First Organizations Achieve AI Safety Certification | CSOAI Blog</title>
+    <meta name="description" content="CASA has certified the first wave of organizations across commercial, government, and defense sectors. Read the success stories and lessons learned from early adopters.">
+    <meta name="theme-color" content="#0D0B21">
+    <meta property="og:title" content="CASA Certification Launch: First Organizations Achieve AI Safety Certification">
+    <meta property="og:description" content="CASA has certified the first wave of organizations across commercial, government, and defense sectors. Read the success stories and lessons learned from early adopters.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://csoai.org/blog-casa-certification-launch.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="https://csoai.org/assets/og-image.png">
+    <link rel="canonical" href="https://csoai.org/blog-casa-certification-launch.html">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --color-dark: #0D0B21;
+            --color-dark-light: #1A1145;
+            --color-accent: #D4A843;
+            --color-accent-bright: #E8B76D;
+            --color-text: #E8E4F0;
+            --color-white: #FFFFFF;
+            --color-glass-bg: rgba(255, 255, 255, 0.03);
+            --color-glass-border: rgba(255, 255, 255, 0.08);
+            --easing: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--color-dark) 0%, var(--color-dark-light) 100%);
+            color: var(--color-text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle, rgba(212, 168, 67, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+            animation: drift 20s ease-in-out infinite;
+        }
+        @keyframes drift { 0%,100%{background-position:0 0} 50%{background-position:20px 20px} }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(60px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes slideDown { from{opacity:0;transform:translateY(-30px)} to{opacity:1;transform:translateY(0)} }
+        main { position: relative; z-index: 1; }
+        h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.2; color: var(--color-white); margin-bottom: 1.5rem; }
+        h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; color: var(--color-white); margin: 2.5rem 0 1rem; }
+        h3 { font-size: 1.25rem; font-weight: 600; color: var(--color-white); margin: 1.5rem 0 0.75rem; }
+        p { font-size: 1.05rem; line-height: 1.8; color: var(--color-text); margin-bottom: 1.25rem; }
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--color-text); }
+        li { margin-bottom: 0.5rem; line-height: 1.7; }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-bright) 100%);
+            color: var(--color-dark); border: none; border-radius: 12px; font-weight: 600; font-size: 1rem;
+            cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(212, 168, 67, 0.25); text-decoration: none; position: relative; overflow: hidden;
+        }
+        .btn:hover { transform: scale(1.02); box-shadow: 0 15px 45px rgba(212, 168, 67, 0.4); }
+        .btn-secondary { background: transparent; color: var(--color-accent); border: 2px solid var(--color-accent); box-shadow: none; }
+        .btn-secondary:hover { background: rgba(212, 168, 67, 0.1); box-shadow: 0 0 20px rgba(212, 168, 67, 0.2); }
+        section { max-width: 1400px; margin: 0 auto; padding: 80px 2rem; position: relative; z-index: 1; }
+        .article-content { max-width: 800px; margin: 0 auto; }
+        .article-meta-bar {
+            display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;
+            margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-glass-border);
+        }
+        .article-category {
+            display: inline-block; padding: 0.4rem 1rem; background: rgba(212, 168, 67, 0.15);
+            color: var(--color-accent); border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+        }
+        .article-date { font-size: 0.9rem; color: rgba(232, 228, 240, 0.7); }
+        .article-readtime { font-size: 0.9rem; color: rgba(232, 228, 240, 0.7); }
+        .newsletter {
+            background: var(--color-glass-bg); border: 1px solid var(--color-glass-border);
+            backdrop-filter: blur(20px); border-radius: 16px; padding: 3rem; text-align: center;
+            margin-top: 4rem; max-width: 600px; margin-left: auto; margin-right: auto;
+        }
+        .newsletter h3 { margin-bottom: 1rem; }
+        .newsletter-form { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+        .newsletter-form input {
+            flex: 1; min-width: 200px; padding: 0.875rem 1.5rem;
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px; color: var(--color-white); font-family: inherit; font-size: 1rem;
+        }
+        .newsletter-form input::placeholder { color: rgba(232, 228, 240, 0.5); }
+        .newsletter-form input:focus { outline: none; background: rgba(255, 255, 255, 0.12); border-color: var(--color-accent); }
+        .sticky-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 99; padding: 1.5rem 2rem;
+            background: rgba(13, 11, 33, 0.8); backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap;
+        }
+        .sticky-message { font-size: 1rem; font-weight: 500; color: var(--color-text); flex: 1; min-width: 200px; }
+        .cookie-banner {
+            position: fixed; bottom: 80px; left: 2rem; z-index: 98;
+            background: var(--color-glass-bg); border: 1px solid var(--color-glass-border);
+            backdrop-filter: blur(20px); border-radius: 16px; padding: 1.5rem; max-width: 300px;
+            animation: slideUp 0.5s ease;
+        }
+        @keyframes slideUp { from{transform: translateY(100px); opacity: 0} to{transform: translateY(0); opacity: 1} }
+        .cookie-text { font-size: 0.85rem; color: var(--color-text); margin-bottom: 1rem; }
+        .cookie-buttons { display: flex; gap: 0.75rem; flex-direction: column; }
+        .cookie-buttons button { padding: 0.5rem 1rem; border: none; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; }
+        .cookie-accept { background: var(--color-accent); color: var(--color-dark); }
+        .cookie-accept:hover { transform: scale(1.02); }
+        .cookie-decline { background: transparent; color: var(--color-accent); border: 1px solid var(--color-accent); }
+        footer { background: linear-gradient(135deg, #0A0820 0%, #0D0B21 100%); padding: 4rem 2rem 2rem; margin-top: 6rem; border-top: 1px solid rgba(255, 255, 255, 0.05); position: relative; z-index: 2; }
+        .footer-content { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
+        .footer-section h4 { color: var(--color-accent); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; font-weight: 700; }
+        .footer-section ul { list-style: none; }
+        .footer-section a { color: var(--color-text); text-decoration: none; font-size: 0.95rem; display: block; margin-bottom: 0.75rem; transition: color 0.3s ease; }
+        .footer-section a:hover { color: var(--color-accent); }
+        .footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.9rem; color: var(--color-text); max-width: 1400px; margin: 0 auto; }
+        .social-links { display: flex; gap: 1.5rem; }
+        .social-links a { color: var(--color-text); text-decoration: none; transition: color 0.3s ease; }
+        .social-links a:hover { color: var(--color-accent); }
+        @media (max-width: 1024px) {
+            .sticky-bar { flex-direction: column; padding: 1rem; }
+            .sticky-bar .btn { width: 100%; }
+            .footer-content { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            section { padding: 60px 1.5rem; }
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            .sticky-bar { bottom: 60px; }
+            .cookie-banner { left: 1rem; right: 1rem; max-width: none; bottom: 70px; }
+            .footer-content { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            section { padding: 50px 1rem; }
+            .btn { width: 100%; }
+            .sticky-bar { bottom: 50px; padding: 0.75rem; gap: 1rem; }
+            .sticky-message { text-align: center; font-size: 0.9rem; }
+            .cookie-banner { left: 0.5rem; right: 0.5rem; bottom: 60px; padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+
+<!-- ═══ MEGA NAV ═══ -->
+<header style="position:sticky;top:0;z-index:1000;background:rgba(13,11,33,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(212,168,67,.15);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center">
+  <a href="index.html" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+    <span style="font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#D4A843,#E8B76D);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CSOAI</span>
+    <span style="font-size:.7rem;color:rgba(232,228,240,.4);margin-left:.25rem">by MEOK AI Labs</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:.25rem" class="nav-links">
+    <!-- Standards -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Standards ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;left:-100px;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">Governance Frameworks</div>
+        <a href="article-50-kit.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:#EF4444;transition:background .2s;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);margin-bottom:.5rem" onmouseover="this.style.background='rgba(239,68,68,.15)'" onmouseout="this.style.background='rgba(239,68,68,.1)'"><span style="font-size:1.2rem">🚨</span><span><strong style="display:block;font-size:.9rem">Article 50 Emergency Kit</strong><small style="color:rgba(239,68,68,.8);font-size:.8rem">Secure EU AI Act compliance in 48hrs</small></span></a>
+        <a href="charter.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📜</span><span><strong style="display:block;font-size:.9rem">52-Article Charter</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Complete governance framework</small></span></a>
+        <a href="crosswalks.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🔄</span><span><strong style="display:block;font-size:.9rem">Framework Crosswalks</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">ISO 42001, NIST, EU AI Act, IEEE</small></span></a>
+        <a href="guides.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📖</span><span><strong style="display:block;font-size:.9rem">Implementation Guides</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">8 step-by-step modules</small></span></a>
+        <a href="glossary.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📚</span><span><strong style="display:block;font-size:.9rem">AI Safety Glossary</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">250+ terms defined</small></span></a>
+      </div>
+    </div>
+    <!-- Products -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Products ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;left:-100px;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">CSOAI Solutions</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <a href="mcp-packs.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📦</span><span><strong style="display:block;font-size:.9rem">Premium MCP Packs</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Curated server bundles</small></span></a>
+          <a href="finance.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">💳</span><span><strong style="display:block;font-size:.9rem">Agentic Finance</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Payment pre-checks</small></span></a>
+          <a href="legacy.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏛️</span><span><strong style="display:block;font-size:.9rem">Legacy Bridge</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">COBOL/Mainframe tunnels</small></span></a>
+          <a href="governance.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🌍</span><span><strong style="display:block;font-size:.9rem">Global Mesh</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Cross-regional handoff</small></span></a>
+          <a href="certification.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏅</span><span><strong style="display:block;font-size:.9rem">CASA Certification</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Standard AI safety cert</small></span></a>
+          <a href="enterprise.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏢</span><span><strong style="display:block;font-size:.9rem">Enterprise Governance</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Turnkey compliance for orgs</small></span></a>
+          <a href="advisory.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🎯</span><span><strong style="display:block;font-size:.9rem">Advisory Services</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Expert AI governance consultancy</small></span></a>
+          <a href="pricing.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">💰</span><span><strong style="display:block;font-size:.9rem">Pricing & Plans</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">From £1 to Enterprise</small></span></a>
+        </div>
+      </div>
+    </div>
+    <!-- Ecosystem -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Ecosystem ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;right:0;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">CSOAI Group Network</div>
+        <a href="https://meok.ai" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🧠</span><span><strong style="display:block;font-size:.9rem">MEOK.AI</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Sovereign AI OS &amp; agent marketplace</small></span></a>
+        <a href="https://cobolbridge.ai" target="_blank" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🔗</span><span><strong style="display:block;font-size:.9rem">CobolBridge</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Legacy COBOL migration platform</small></span></a>
+        <a href="mcp-infrastructure.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🛠</span><span><strong style="display:block;font-size:.9rem">207 MCP Servers</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">1,050+ tools across 30 frameworks</small></span></a>
+        <a href="https://github.com/csoai-org" target="_blank" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🐙</span><span><strong style="display:block;font-size:.9rem">GitHub</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">518 open-source repositories</small></span></a>
+      </div>
+    </div>
+    <a href="about.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">About</a>
+    <a href="blog.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">Blog</a>
+    <a href="contact.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">Contact</a>
+    <!-- Developer -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Developer ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;right:0;width:320px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">Developer Resources</div>
+        <a href="api-docs.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📚</span><span><strong style="display:block;font-size:.9rem">API Documentation</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">REST API reference</small></span></a>
+        <a href="status.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📊</span><span><strong style="display:block;font-size:.9rem">System Status</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Platform health monitoring</small></span></a>
+        <a href="verify.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">✓</span><span><strong style="display:block;font-size:.9rem">Certificate Verification</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Verify certifications</small></span></a>
+        <a href="layer0.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">⚡</span><span><strong style="display:block;font-size:.9rem">Layer 0 Protocol</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">The 8 trust layers</small></span></a>
+        <a href="mcp-distribution.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🌐</span><span><strong style="display:block;font-size:.9rem">MCP Distribution Map</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">AEO &amp; GEO fleet registry</small></span></a>
+      </div>
+    </div>
+    <a href="dashboard.html" style="background:linear-gradient(135deg,#D4A843,#E8B76D);color:#0D0B21;padding:.5rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:700;text-decoration:none;margin-left:.5rem;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 15px rgba(212,168,67,.3)" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(212,168,67,.5)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 15px rgba(212,168,67,.3)'">Dashboard</a>
+  </div>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('mobile-open');this.classList.toggle('active')" style="display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;z-index:1001"><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span></button>
+</header>
+<script>
+function toggleMega(btn){
+  const panel=btn.nextElementSibling;
+  const wasOpen=panel.style.display==='block';
+  document.querySelectorAll('.mega-panel').forEach(p=>p.style.display='none');
+  if(!wasOpen)panel.style.display='block';
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.mega-wrap'))document.querySelectorAll('.mega-panel').forEach(p=>p.style.display='none')});
+</script>
+<section style="animation:fadeUp 0.8s var(--easing) backwards;">
+    <div class="article-content">
+        <span class="article-category">Certification</span>
+        <h1>CASA Certification Launch: First Organizations Achieve AI Safety Certification</h1>
+        <div class="article-meta-bar">
+            <span class="article-date">February 5, 2026</span>
+            <span class="article-readtime">12 min read</span>
+        </div>
+        <p>The launch of the CSOAI AI Safety Accreditation (CASA) program marks a defining inflection point in the global effort to operationalize artificial intelligence governance. After years of theoretical debate, fragmented standards, and inconsistent regulatory guidance, the first cohort of organizations has successfully completed the rigorous CASA assessment process—establishing a concrete, replicable benchmark for what responsible AI deployment looks like in practice. As <a href="index.html">the global standard for AI safety</a>, CSOAI designed CASA not merely as a compliance exercise, but as a transformative framework that embeds accountability, transparency, and resilience into the very fabric of institutional AI systems.</p>
+        <p>For these pioneering organizations, certification is more than a credential. It is a signal to customers, regulators, and partners that their AI operations meet the highest internationally recognized standards for safety and governance. In an era where public trust in AI is fragile and regulatory scrutiny is intensifying across every jurisdiction, early certification offers a decisive competitive and reputational advantage. The experience of this first cohort provides a detailed roadmap for the thousands of organizations now preparing to follow in their footsteps.</p>
+
+        <h2>What CASA Certification Represents</h2>
+        <p>The <a href="certification.html">CASA certification framework</a> was developed by CSOAI to address a critical gap in the AI ecosystem: the absence of a unified, cross-sector accreditation that validates both technical safety and organizational governance. While numerous frameworks exist—from the EU AI Act to NIST AI RMF to ISO 42001—none provide the integrated, third-party audited assurance that stakeholders increasingly demand. CASA fills this void by combining technical evaluation of AI systems with deep institutional audits of the policies, processes, and people that shape how those systems are built and deployed.</p>
+        <p>The certification process evaluates organizations across multiple domains including risk management, data governance, model validation, human oversight, incident response, and stakeholder transparency. It applies equally to foundation model developers, enterprise deployers, government agencies, and defense contractors—though the depth and intensity of assessment scales appropriately with the risk profile of each use case. This risk-proportionate approach ensures that a startup building a customer service chatbot and a national security agency deploying autonomous systems both receive appropriately rigorous scrutiny without facing one-size-fits-all burdens.</p>
+
+        <h2>The First Cohort: A Cross-Sector Achievement</h2>
+        <p>The inaugural class of CASA-certified organizations reflects the extraordinary breadth of AI application across modern society. Certified entities span four distinct sectors, each presenting unique governance challenges and demonstrating the adaptability of the CASA framework to diverse operational contexts.</p>
+        <p>In <strong>healthcare diagnostics</strong>, certified organizations have deployed machine learning systems for medical imaging analysis and early disease detection. For these deployers, certification required demonstrating not only model accuracy and validation against clinical datasets, but also rigorous processes for human-in-the-loop decision making, patient data protection, and algorithmic explainability for clinical practitioners. The stakes could not be higher: a false positive or an opaque recommendation can directly impact patient outcomes and erode trust in life-saving technologies.</p>
+        <p>The <strong>financial services</strong> sector presented different but equally demanding challenges. Certified institutions had to prove that their credit scoring, fraud detection, and algorithmic trading systems were free from discriminatory bias, subject to robust model risk management, and transparent to both regulators and affected consumers. Given the profound economic consequences of AI-driven financial decisions, CASA certification in this sector sends a powerful signal of institutional responsibility.</p>
+        <p><strong>Defense contractors</strong> and <strong>public sector agencies</strong> rounded out the first cohort, achieving the highest tiers of CASA assessment. These organizations underwent extensive evaluations of their adversarial robustness, supply chain security, and continuous monitoring capabilities. Their success demonstrates that even in the most sensitive and complex operational environments, world-class AI governance is achievable. Detailed accounts of these implementations can be found in our growing library of <a href="case-studies.html">case studies</a>.</p>
+
+        <h2>The Certification Journey: What It Takes</h2>
+        <p>Achieving CASA certification is a structured, multi-phase journey that typically spans three to six months depending on organizational maturity and scope of AI operations. Understanding this pathway is essential for leadership teams currently evaluating whether and when to pursue accreditation.</p>
+        <p>The process begins with a <strong>readiness assessment</strong>, during which organizations map their existing governance practices against CASA requirements. This gap analysis is often the most revealing phase, surfacing inconsistencies between documented policies and actual operational practices, or identifying missing accountability structures that had previously gone unnoticed. CSOAI provides <a href="guides.html">implementation guides</a> and advisory support to help organizations navigate this diagnostic phase efficiently.</p>
+        <p>Following readiness assessment, organizations enter the <strong>documentation and remediation</strong> phase. Here, they formalize risk management protocols, establish model inventory and tracking systems, create incident response procedures, and document oversight mechanisms. For many early adopters, this phase required more organizational change management than technical engineering—shifting AI governance from an informal, engineering-led activity to a structured, cross-functional discipline with board-level visibility.</p>
+        <p>The <strong>audit phase</strong> involves both desk-based review of documentation and on-site or remote technical testing of AI systems. Independent CASA auditors examine training data provenance, evaluate model performance under adversarial conditions, review logs of human oversight decisions, and interview key personnel to verify that governance practices are lived realities rather than paper exercises. Any findings are documented and must be remediated before certification can be awarded.</p>
+        <p>Finally, successful organizations receive their CASA certificate and are entered into the public <a href="verify.html">verification registry</a>, allowing customers, partners, and regulators to confirm their accredited status in real time. Certification is valid for two years, subject to surveillance audits to ensure continued compliance.</p>
+
+        <h2>Success Factors of Early Achievers</h2>
+        <p>Analysis of the first cohort reveals clear patterns among the organizations that achieved certification most efficiently and with the fewest audit findings. These success factors offer valuable guidance for subsequent applicants.</p>
+        <p>First and foremost, <strong>executive sponsorship</strong> was non-negotiable. In every certified organization, a C-suite executive—typically the Chief Technology Officer, Chief Risk Officer, or a dedicated Chief AI Ethics Officer—owned the certification initiative and reported progress directly to the board. This top-down mandate ensured that governance improvements received the budget, personnel, and organizational authority they required.</p>
+        <p>Second, certified organizations uniformly established <strong>cross-functional governance teams</strong> that brought together technical engineers, legal and compliance officers, risk managers, and business unit leaders. AI governance cannot be the exclusive domain of any single function. The early adopters who succeeded fastest were those who broke down silos and created shared accountability for AI outcomes.</p>
+        <p>Third, organizations with <strong>mature documentation practices</strong> had a significant advantage. This does not mean excessive bureaucracy, but rather a disciplined habit of recording design decisions, risk assessments, testing results, and oversight actions in accessible, auditable form. Modern AI development is iterative and fast-moving; without contemporaneous documentation, even well-intentioned governance efforts can appear as afterthoughts during audit.</p>
+
+        <h2>Lessons Learned and Insights for the Market</h2>
+        <p>The first wave of certifications also surfaced important lessons that CSOAI has incorporated into program updates and that prospective applicants should take to heart. Perhaps the most striking insight is that the greatest challenges were organizational rather than technical. Few organizations failed because their models were inherently unsafe; most struggled with unclear accountability chains, inconsistent documentation across distributed teams, and difficulty aligning internal stakeholders with external standards.</p>
+        <p>Another key lesson concerns the pace of AI development itself. In organizations practicing continuous deployment, maintaining governance documentation alongside rapid iteration proved difficult. Successful organizations addressed this by integrating governance checkpoints into their MLOps and DevSecOps pipelines, treating safety and compliance as first-class engineering requirements rather than external impositions.</p>
+        <p>Finally, early adopters emphasized the value of starting early. Organizations that treated CASA as a last-minute compliance checkbox experienced significantly more disruption and cost than those that began integrating the framework into their development culture months in advance. For enterprises with extensive AI portfolios, <a href="enterprise.html">enterprise governance programs</a> offer structured pathways to prepare for certification at scale.</p>
+
+        <h2>The Road Ahead: Scaling AI Safety Globally</h2>
+        <p>The certification of the first CASA cohort is not an endpoint but a beginning. CSOAI is committed to scaling the program globally, with regional accreditation bodies being established across North America, Europe, Asia-Pacific, and the Middle East. The goal is to make rigorous AI safety certification as routine and expected as ISO 9001 quality management or SOC 2 information security assurance.</p>
+        <p>For organizations watching from the sidelines, the message is clear: the window for voluntary leadership is narrowing. With regulatory deadlines approaching—including the August 2026 threshold referenced in our industry communications—and with customers and procurement officers increasingly requiring third-party AI safety assurance, certification is rapidly shifting from a differentiator to a baseline expectation.</p>
+        <p>CSOAI has already begun onboarding the second cohort of applicants, with demand significantly exceeding initial projections. Our updated <a href="guides.html">implementation guides</a>, expanded auditor training programs, and enhanced <a href="advisory.html">advisory services</a> are designed to meet this growing demand without sacrificing the rigor that makes CASA certification meaningful.</p>
+        <p>The first organizations to achieve CASA certification have proven that world-class AI governance is not a distant ideal but an achievable reality. They have set the standard. The question for every other organization deploying AI is no longer whether rigorous governance is possible, but whether they have the will to match the example these pioneers have established.</p>
+        <p>Organizations ready to begin their certification journey can <a href="contact.html">contact CSOAI</a> to schedule a readiness assessment and receive tailored guidance aligned with their sector, risk profile, and strategic objectives.</p>
+    </div>
+
+        <div class="newsletter">
+            <h3>Stay Updated on AI Governance</h3>
+            <p>Get weekly articles on certification, regulation, and AI safety best practices delivered to your inbox.</p>
+            <form action="/api/newsletter" method="POST" class="newsletter-form csoai-form" data-form-type="newsletter">
+                <input type="email" placeholder="your@email.com" required>
+                <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off"><button type="submit" class="btn">Subscribe</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<div class="sticky-bar">
+    <span class="sticky-message">Get your organization AI-certified before the August 2026 deadline.</span>
+    <a href="contact.html" class="btn">Get Started →</a>
+</div>
+
+<div class="cookie-banner" id="cookieBanner">
+    <p class="cookie-text">We use cookies to enhance your experience and analyze site performance.</p>
+    <div class="cookie-buttons">
+        <button class="cookie-accept" onclick="closeCookieBanner()">Accept All</button>
+        <button class="cookie-decline" onclick="closeCookieBanner()">Decline</button>
+    </div>
+</div>
+
+<footer style="background:var(--dark);border-top:3px solid var(--accent);padding:4rem 0 2rem;margin-top:4rem;position:relative;z-index:1">
+<div class="container">
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;gap:2rem;margin-bottom:3rem">
+    <div>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,#D4A843,#E8B76D);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CSOAI</span>
+      </div>
+      <p style="color:rgba(232,228,240,.6);font-size:.9rem;line-height:1.6;margin-bottom:1rem">The global standard for AI safety. Institutional governance through the 52-article charter and Byzantine consensus.</p>
+      <div style="display:flex;gap:.75rem"><a aria-label="CSOAI on X" href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">𝕏</a><a aria-label="CSOAI on LinkedIn" href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">in</a><a aria-label="CSOAI on YouTube" href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">▶</a></div>
+    </div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Standards</h4><a href="charter.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Charter</a><a href="crosswalks.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Crosswalks</a><a href="guides.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Guides</a><a href="glossary.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Glossary</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Products</h4>
+      <a href="mcp-packs.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Premium Packs</a>
+      <a href="finance.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Agentic Finance</a>
+      <a href="legacy.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Legacy Bridge</a>
+      <a href="governance.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Global Mesh</a>
+      <a href="certification.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">CASA Certification</a>
+      <a href="enterprise.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Enterprise</a>
+      <a href="advisory.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Advisory</a>
+      <a href="pricing.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Pricing</a>
+    </div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Ecosystem</h4><a href="https://meok.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">MEOK.AI</a><a href="https://cobolbridge.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">CobolBridge</a><a href="mcp-infrastructure.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">207 MCP Servers</a><a href="https://github.com/csoai-org" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">GitHub (518 repos)</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Company</h4><a href="about.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">About</a><a href="case-studies.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Case Studies</a><a href="blog.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Blog</a><a href="contact.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Contact</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Account</h4><a href="dashboard.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Dashboard</a><a href="faq.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">FAQ</a><a href="resources.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Resources</a><a href="api-docs.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">API Docs</a><a href="status.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">System Status</a></div>
+  </div>
+  <div style="border-top:1px solid rgba(212,168,67,.1);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+    <p style="color:rgba(232,228,240,.4);font-size:.8rem">&copy; 2026 CSOAI — The Global Standard for AI Safety. Powered by <a href="https://meok.ai" style="color:rgba(232,228,240,.4);text-decoration:none">MEOK AI Labs</a>. All rights reserved.</p>
+    <div style="display:flex;gap:1.5rem"><a href="privacy.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Privacy</a><a href="terms.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Terms</a><a href="cookies.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Cookies</a></div>
+  </div>
+</div>
+</footer>
+
+<script>
+function closeCookieBanner() {
+    const banner = document.getElementById('cookieBanner');
+    banner.style.animation = 'slideUp 0.5s ease forwards';
+    setTimeout(() => banner.remove(), 500);
+    localStorage.setItem('csoai-cookie-consent', 'true');
+}
+if (localStorage.getItem('csoai-cookie-consent') === 'true') {
+    const banner = document.getElementById('cookieBanner');
+    if (banner) banner.style.display = 'none';
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "CASA Certification Launch: First Organizations Achieve AI Safety Certification",
+    "description": "CASA has certified the first wave of organizations across commercial, government, and defense sectors. Read the success stories and lessons learned from early adopters.",
+    "url": "https://csoai.org/blog-casa-certification-launch.html",
+    "datePublished": "2026-02-05",
+    "author": {
+        "@type": "Organization",
+        "name": "CSOAI"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "CSOAI",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://csoai.org/assets/og-image.png"
+        }
+    }
+}
+</script>
+
+<script>
+/* CSOAI Form Handler — intercepts Formspree submissions for smoother UX */
+document.querySelectorAll('.csoai-form').forEach(function(form){
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    var originalText = btn ? btn.textContent : 'Submit';
+    if(btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
+    var formType = form.dataset.formType || 'contact';
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(function(r){ return r.json(); }).then(function(data){
+      if(data && data.ok){
+        form.innerHTML = '<div style="padding:1.5rem;background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.2);border-radius:12px;text-align:center;"><p style="color:#D4A843;font-weight:600;margin-bottom:0.5rem;">' + (formType === 'newsletter' ? 'You're subscribed!' : 'Message sent!') + '</p><p style="color:rgba(232,228,240,0.7);font-size:0.9rem;">' + (formType === 'newsletter' ? 'Thanks for joining the CSOAI community.' : 'We'll be in touch within 24 hours.') + '</p></div>';
+      } else {
+        throw new Error('Formspree error');
+      }
+    }).catch(function(){
+      if(btn){ btn.disabled = false; btn.textContent = originalText; }
+      var err = form.querySelector('.form-error');
+      if(!err){
+        err = document.createElement('p');
+        err.className = 'form-error';
+        err.style.cssText = 'color:#ff6b6b;margin-top:0.75rem;font-size:0.9rem;';
+        err.textContent = 'Something went wrong. Please try again or email us directly at nicholas@csoai.org';
+        form.appendChild(err);
+      }
+    });
+  });
+});
+</script>
+
+<script>
+/* CSOAI Form Handler — intercepts Formspree submissions for smoother UX */
+document.querySelectorAll('.csoai-form').forEach(function(form){
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    var originalText = btn ? btn.textContent : 'Submit';
+    if(btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
+    var formType = form.dataset.formType || 'contact';
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(function(r){ return r.json(); }).then(function(data){
+      if(data && data.ok){
+        form.innerHTML = '<div style="padding:1.5rem;background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.2);border-radius:12px;text-align:center;"><p style="color:#D4A843;font-weight:600;margin-bottom:0.5rem;">' + (formType === 'newsletter' ? 'You're subscribed!' : 'Message sent!') + '</p><p style="color:rgba(232,228,240,0.7);font-size:0.9rem;">' + (formType === 'newsletter' ? 'Thanks for joining the CSOAI community.' : 'We'll be in touch within 24 hours.') + '</p></div>';
+      } else {
+        throw new Error('Formspree error');
+      }
+    }).catch(function(){
+      if(btn){ btn.disabled = false; btn.textContent = originalText; }
+      var err = form.querySelector('.form-error');
+      if(!err){
+        err = document.createElement('p');
+        err.className = 'form-error';
+        err.style.cssText = 'color:#ff6b6b;margin-top:0.75rem;font-size:0.9rem;';
+        err.textContent = 'Something went wrong. Please try again or email us directly at nicholas@csoai.org';
+        form.appendChild(err);
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>

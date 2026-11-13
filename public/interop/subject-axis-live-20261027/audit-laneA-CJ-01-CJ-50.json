@@ -1,0 +1,502 @@
+[
+  {
+    "id": "CJ-01",
+    "jewel": "Claim maintenance category (zero incumbents)",
+    "claimed_state": "LIVE page",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "https://councilof.ai/claim-maintenance/ -> HTTP 200, page renders 'Claim maintenance' spec v0.1 + claim register (Subjects 28, Claims 99, Measured 33, Events 9, Corrections 93). https://councilof.ai/spec/claim-maintenance/index.json -> HTTP 200, versions[0].version='0.1' status='superseded', versions[1].version='0.2' date='2026-09-25' status='current'. Live register schema = 'csoai.claim-maintenance.register/0.1' (NOT 'claimreg v1.2' as the step implies). 'Zero incumbents' is NOT verifiable from the live surface — no competitor registry is published; the estate's own boundary text says authorship is not exclusive ownership.",
+    "as_of": "2026-10-27",
+    "next_step": "Publish the spec version + register schema as the category's discoverable identifiers, and either drop the 'claimreg v1.2' string or ship it; do not publish 'zero incumbents' as a measured fact without a census.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-02",
+    "jewel": "Corrections ledger (93 entries)",
+    "claimed_state": "LIVE compounding",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "https://councilof.ai/api/corrections -> HTTP 200, jq '.corrections|length' = 93, signature_state='VALID', timing_fields.added='2026-09-26'. Cross-check on https://councilof.ai/claim-maintenance/ shows 'Corrections 93'. LOCAL repo: ~/csoai.org etc. not needed; LOCAL estate 'CROWN-JEWELS-TODAY-2026-09-27.md' also treats /api/corrections as the one current ledger. The step's 'approve+publish #60-70' is already done (ledger is at 93, past #70).",
+    "as_of": "2026-10-27",
+    "next_step": "Replace 'approve+publish #60-70' with 'publish #94-100 plus the weekly digest', since #60-70 are inside the live 93.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-03",
+    "jewel": "FractalAI unsolicited conformant implementation",
+    "claimed_state": "ADOPTED",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Third-party npm registry, read live: https://registry.npmjs.org/@fractalai/pqc-agent-receipts-conformance -> HTTP 200, name '@fractalai/pqc-agent-receipts-conformance', author 'FractalAI', license Apache-2.0, latest 0.3.2. time map: 0.1.0 = 2026-08-25T03:51:48Z, 0.3.1 = 2026-09-27T03:59:41Z, 0.3.2 = 2026-10-21T15:50:23Z (package still maintained after our draft). README (live bytes) states 'a2a-receipt-ml-dsa-65 — CSOAI's signed-receipts/v1 A2A extension proposal ... the receipt object'. NOTE the estate's own CROWN-JEWELS doc (27 Sep) killed the stronger phrase 'FractalAI implemented our spec'; the defensible wording is the README sentence itself.",
+    "as_of": "2026-10-27",
+    "next_step": "Publish only the exact README-grounded sentence on https://councilof.ai/spec/signed-receipts/ (currently 404 on that path — verify) and re-point the README's dead 'CSOAI-ORG/a2a-signed-receipts' reference at a canonical URL we control.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-04",
+    "jewel": "Independent implementation of capsule-00 (CounterProof)",
+    "claimed_state": "ADOPTED Oct 8",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Local estate primary source ~/mail-review-20261014-resident/bodies/INBOX-10124.txt: dated 'Thu, 8 Oct 2026', from 'brook li <hippoleyer@gmail.com>', subject 'Possible second implementation experiment for SCITT Measurement Capsules', stating 'I've been reading draft-templeman-scitt-measurement-capsule-00', and citing 'CounterProof also now has an experimental consumer-side Evidence Relationship Envelope' at https://github.com/hippoley/CounterProof/pull/188 and WindowPilot PR https://github.com/hippoley/WindowPilot/pull/47. Live third-party: https://github.com/hippoley/CounterProof/pull/188 -> HTTP 200, embedded PR JSON shows mergedBy='hippoley', merged trigger present. GitHub REST API /repos/hippoley/CounterProof/pulls/188 -> HTTP 403 (rate limited), so merged_at was not machine-read. IMPORTANT boundary: the implementer's own artefact 'explicitly records independence_proven=false' — so 'independent' is NOT established by this row's own evidence.",
+    "as_of": "2026-10-27",
+    "next_step": "Re-read PR #188 merged_at and diff once GitHub API quota resets, and record the implementer's independence_proven=false flag in the public register rather than calling it independent.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-05",
+    "jewel": "Third-party IETF citation of capsule draft (Gruszka -03)",
+    "claimed_state": "CITED Oct 19",
+    "status": "CONTRADICTED",
+    "evidence": "CLAIM: Gruszka -03 cites our capsule draft. LIVE: https://www.ietf.org/archive/id/draft-gruszka-evaluation-receipt-mappings-03.txt -> HTTP 200, header 'K. Gruszka / b7n0de', date '12 October 2026' (not Oct 19). Its [CAPSULE] reference (line 1747) reads: 'Mih, S., \"An Agent Action Capsule Profile for SCITT\", Work ... capsule-05, 26 September 2026'. Zero occurrences of templeman/csoai/'council of ai' in that file. Checked all six Gruszka drafts live (evaluation-receipt-mappings -00/-01/-02/-03 and scitt-statement-identification -00/-01): csoai_hits=0 in every one. So the -03 cites a DIFFERENT capsule draft (Mih's action-capsule-05), not draft-templeman-scitt-measurement-capsule-00.",
+    "as_of": "2026-10-27",
+    "next_step": "Correct the row: the Gruszka -03 citation is of Mih's action-capsule-05, not our capsule-00; do not amplify 'cited' until a third-party draft names draft-templeman-scitt-measurement-capsule-00.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-06",
+    "jewel": "SCITT claim-card I-D (name free)",
+    "claimed_state": "OPEN",
+    "status": "OWNER_GATED",
+    "evidence": "The row's own step is 'OWNER: submit + list post THIS WEEK' — submitting an I-D needs the owner's IETF account and the list post is an outward email, so it must never be attempted by an agent. Live name check: https://datatracker.ietf.org/doc/draft-ietf-scitt-claim-card/ -> HTTP 404 (no such draft exists) and https://www.ietf.org/archive/id/draft-ietf-scitt-claim-card-00.txt -> HTTP 404, i.e. the name 'claim-card' is NOT taken — the row's 'name free' premise holds. TIMING: 'THIS WEEK' was written on 2026-10-26, so the self-imposed window ends ~31 Oct (inside 7 days) but there is no external submission deadline; the next real slot is IETF 127, 14-20 Nov 2026 (https://www.ietf.org/meeting/127/ -> HTTP 200, 'IETF 127 San Francisco 14 Nov 2026 - 20 Nov 2026').",
+    "as_of": "2026-10-27",
+    "next_step": "Owner submits the claim-card I-D (name confirmed free) and posts to scitt@ietf.org; agent must not submit or send — and should re-target the announcement to the IETF 127 cycle (14-20 Nov 2026).",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-07",
+    "jewel": "Two I-Ds already on datatracker (framing-space, measurement-capsule)",
+    "claimed_state": "ON RECORD",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live datatracker API https://datatracker.ietf.org/api/v1/doc/document/?name__startswith=draft-templeman -> HTTP 200, total_count=2: 'draft-templeman-scitt-framing-space' rev=01 time=2026-09-27T04:37:55Z and 'draft-templeman-scitt-measurement-capsule' rev=00 time=2026-09-27T04:37:42Z. Both render on datatracker: /doc/draft-templeman-scitt-framing-space/ -> HTTP 200 (57671 b), /doc/draft-templeman-scitt-measurement-capsule/ -> HTTP 200 (76865 b). Raw I-D text live at https://www.ietf.org/archive/id/draft-templeman-scitt-framing-space-01.txt (19992 b, 'N. Templeman / Council of AI (CSOAI Ltd)', 27 September 2026) and .../draft-templeman-scitt-measurement-capsule-00.txt (38340 b, same author/date). NOTE: these are INDIVIDUAL submissions, not datatracker WG documents; they are also not discoverable via name__contains=csoai (total_count=0).",
+    "as_of": "2026-10-27",
+    "next_step": "Keep quoting the exact draft names and their 27 Sep 2026 date; if WG-track adoption is wanted, the missing step is a WG chair's sponsorship, not another post.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-08",
+    "jewel": "W3C CG participant seat (publicly listed)",
+    "claimed_state": "LIVE",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Third-party live read https://www.w3.org/community/agent-conformance/participants -> HTTP 200 (34200 b). Page contains an entry '<p class=\"chair-name name\">Nicholas Templeman</p>' with '<p class=\"chair-affiliation rep\">csoai ltd</p>' inside a 'Check and nominate participant' list item, alongside 'Anton Sokolov / Tyche Institute' under Chairs. Estate cross-check: CATALOG-OPENINGS-20261025.md recorded the same seat as 'verified'. Both LOCAL estate doc and LIVE page agree.",
+    "as_of": "2026-10-27",
+    "next_step": "Contribute the discriminating-power fixtures to the group's own channel (the seat is proven; participation is not).",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-09",
+    "jewel": "W3C Agent Identity CG formalizes our posts into 6 rules",
+    "claimed_state": "ADOPTED Oct 1",
+    "status": "UNVERIFIED",
+    "evidence": "Membership is real: https://www.w3.org/community/agent-identity/participants -> HTTP 200 (78413 b) lists 'Nicholas Templeman Individual CLA commitment but affiliated with csoai ltd'. But the CLAIM (that the CG formalised OUR posts into 6 rules) could not be confirmed: fetched the group home https://www.w3.org/community/agent-identity/ -> HTTP 200 (49463 b) — the only 'rule' string on the page is the HTML '<script type=\"speculationrules\">' boilerplate, not a 6-rule output; no CSOAI/csoai/templeman string appears in the group home body. GitHub code search API for templeman org:w3c -> HTTP 403 (rate limit), so no deeper sweep was possible. No artefact in ~/csoai.org, ~/csoai-static-deploy2 or ~/councilof-pages-deploy mentions '6 rules'.",
+    "as_of": "2026-10-27",
+    "next_step": "Do not cite '6 rules' until a CG output document naming our posts is produced; re-run the GitHub code search for org:w3c once the API quota resets.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-10",
+    "jewel": "x402 Foundation engagement validated same-day (Base-ledger data)",
+    "claimed_state": "VALIDATED Oct 26",
+    "status": "UNVERIFIED",
+    "evidence": "Tried: https://github.com/x402-foundation -> HTTP 200; the org's repo list (foundation, tsc, wg-card-acceptance, wg-domain-discovery, wg-identity, wg-tax, x402) contains no councilof reference (grep count 0 on both /x402-foundation/foundation and /x402-foundation/wg-domain-discovery, both HTTP 200). https://github.com/x402-foundation/ecosystem -> HTTP 404 (no ecosystem listing repo exists under that name). GitHub REST /search/code -> HTTP 403 (rate limit), so no PR-history sweep was possible. The 'Base-ledger data' half is confirmed live: https://councilof.ai/api/x402 -> HTTP 200, rail.mode='live', network='eip155:8453', asset USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, pay_to 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31, 29 resources. But a same-day VALIDATION of FOUNDATION ENGAGEMENT could not be confirmed from a live third-party surface.",
+    "as_of": "2026-10-27",
+    "next_step": "Re-check github.com/x402-foundation/wg-domain-discovery for our findings-note reference (the estate note 'drafts/X402-DOMAIN-DISCOVERY-FINDINGS-2026-09-28.md' says a findings note was queued) once GitHub search is available; otherwise downgrade the row to 'prepared, not evidenced'.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-11",
+    "jewel": "NIST AI Consortium LOI",
+    "claimed_state": "OPEN",
+    "status": "CONTRADICTED",
+    "evidence": "CLAIM: OPEN, 'submit by Nov 2 cohort (form window lapsed Sep 30)'. LIVE: https://www.nist.gov/artificial-intelligence/nist-ai-consortium -> HTTP 200, text reads 'NIST will accept letters of interest from new organizations to participate in this Consortium on an ongoing basis with regular periods of review for new applicants, likely occurring bian...' — no Nov 2 cohort and no Sep 30 form window appear anywhere on the live page; the submission form page https://www.nist.gov/artificial-intelligence/nist-ai-consortium/submit-letter-interest-join-nist-ai-consortium -> HTTP 200 carries no cohort date. LOCAL estate says the opposite of 'OPEN': the LOI was already SENT (~/SENT-LOG.md line 42: '2026-10-14T05:27:40 | SENT CONFIRMED | Codex | To aiconsortium@nist.gov | RE: [EXTERNAL] Letter of Interest: NIST AI Consortium'), and WEEK-AHEAD-2026-09-28.md states '30 Sep is the OMB form's expiry date (0690-0038), not a submission deadline'. The estate's own EAT-MAIL-2026-10-06.md records NIST asking us (5 Oct) to resubmit via the webform, and that the form ends in a CAPTCHA so it goes to the owner.",
+    "as_of": "2026-10-27",
+    "next_step": "Correct the row to 'LOI sent 27 Sep + follow-up sent 14 Oct; webform resubmission outstanding'; the owner (not the agent) must submit the webform because of its CAPTCHA.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-12",
+    "jewel": "NIST TEVV-Athlon comment (Oct 6)",
+    "claimed_state": "STAGED",
+    "status": "OWNER_GATED",
+    "evidence": "The row's own step is 'owner send with Bailey+ASL-3+EvasionBench+Circle' — an outward signed comment that needs the human's credentials/company-email send, so it must never be attempted by an agent. Drafting material exists locally: ~/SAFE_GSPC_CROWN_JEWELS_20261009/REPLY_AND_SUBMISSION_DRAFTS.md and NIST_PR_DESCRIPTION.md. Live: no TEVV-Athlon comment page was reachable — https://www.nist.gov/itl/ai-100-5/tep-athlon -> HTTP 404 and https://www.nist.gov/news-events/news/2026/10/tevv-athlon-ai-agent-evaluation -> HTTP 404 — so I could not confirm the live comment window or deadline.",
+    "as_of": "2026-10-27",
+    "next_step": "Owner to confirm the live TEVV-Athlon comment window on nist.gov and send the staged comment; agent must not send it.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-13",
+    "jewel": "Circle 'trusted discovery: MISSING' capstone",
+    "claimed_state": "VERIFIED",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Third-party live read https://www.circle.com/blog/building-the-open-agentic-economy -> HTTP 200 (247420 b). Text extracted verbatim: 'The capstone: trusted discovery' / 'Trusted discovery: a multi-input ranking Missing Search / PageRank' and 'The capstone, trusted discovery, is still missing'. Matches the estate's earlier audit (DIGEST-AUDIT-2026-09-26.md row 5, which cites the same 12 Aug 2026 piece). Quote the table row and the one-line body sentence only.",
+    "as_of": "2026-10-27",
+    "next_step": "Cite the exact table row in the NIST comment and Series A pack; re-read the page for a post-12-Aug update before publishing.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-14",
+    "jewel": "GLEIF Model (c) third-party attestation market",
+    "claimed_state": "VERIFIED",
+    "status": "UNVERIFIED",
+    "evidence": "Tried: https://www.gleif.org/en -> HTTP 200; https://www.gleif.org/en/lei-data -> HTTP 200; https://search.gleif.org/ -> HTTP 200; but every GLEIF page naming Model (c) returned HTTP 404 — /en/organization-data/gleif-organization-identifying-attributes/gleif-organization-identifying-attributes, .../gleif-lei-records, .../gleif-organization-identifying-attributes-for-registrants, .../gleif-model-c. api.gleif.org did not resolve (curl error 6). No Model (c) text could be confirmed on any reachable GLEIF page. LOCAL estate only has a one-line plan reference (CROWN-JEWELS-TODAY-2026-09-27.md:278 'GLEIF Model-(c) letter (owner signature)'), and MASTER-CONSOLIDATION-20261025.md §5C records the *Circle* LEI binding as state PARTIAL (4 LEIs, 2 LAPSED) — a partial, not a verified Model (c) market.",
+    "as_of": "2026-10-27",
+    "next_step": "Locate the authoritative GLEIF Model (c) page (try api.gleif.org from a network that resolves it) before citing the market; the LEI order (~GBP50) is an owner payment, not an agent step.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-15",
+    "jewel": "DSRB (forming defence bank)",
+    "claimed_state": "WATCH",
+    "status": "UNVERIFIED",
+    "evidence": "Tried: https://www.canada.ca/en/department-finance.html -> HTTP 200 but no DSRB item on the landing page; the specific release URL https://www.canada.ca/en/department-finance/news/2026/03/canada-announces-progress-to-establish-defence-security-and-resilience-bank.html -> HTTP 404, and the variant .../2026/03/defence-security-and-resilience-bank.html -> HTTP 404. No live third-party read confirmed the founding status. LOCAL estate has a careful prior audit (DIGEST-AUDIT-2026-09-26.md row 7: '18 countries' Canada Mar 2026; JPMorgan/ING/Deutsche advisory support, not capital; no source links DSRB to AI). A WATCH claim about a forming institution is not checkable to 'current' without a live primary source.",
+    "as_of": "2026-10-27",
+    "next_step": "Watch canada.ca/financial-administration and NATO communiques for a founding-instrument publication; until one appears, keep the claim scoped to 'negotiating/announced'.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-16",
+    "jewel": "Appia Foundation (conformity assessment, whales on roster)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Third-party live read https://www.linuxfoundation.org/press/linux-foundation-launches-appia-foundation-to-establish-standardized-conformity-specifications-across-the-ai-value-chain -> HTTP 200 (100706 b) — the Appia Foundation launch release is live and names the roster. Matches LOCAL estate RESEARCH-DEEP-2026-09-30.md row 23, which lists Arm, Armilla AI, Ericsson, Google, Mastercard, Microsoft, Mitsubishi Electric, Naaia, Nemko, Omron, OpenAI. (appia.foundation itself: DNS/host not resolvable from here — curl 'Could not resolve host'.) The row's own 'membership inquiry' step is a contact/outward send, which is not an agent action.",
+    "as_of": "2026-10-27",
+    "next_step": "Draft the Appia membership inquiry for the owner to send (never the agent), and open the TRACE conformance-predicate PR only after the membership route is confirmed.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-17",
+    "jewel": "TRACE (LF) composes SCITT/RATS/EAT/SLSA",
+    "claimed_state": "OPEN",
+    "status": "CONTRADICTED",
+    "evidence": "CLAIM implies TRACE is an LF spec to contribute a conformance predicate to. LIVE: https://github.com/aaif/project-proposals/issues/42 -> HTTP 200 (550510 b), title '[Project Proposal] TRACE Specification' — it is an AAIF project PROPOSAL, not an adopted LF/AAIF specification. LOCAL estate RESEARCH-DEEP-2026-09-30.md row 24 independently records the same: 'TRACE ... is an open AAIF project proposal, issue #42, opened 14 Sep 2026 by imran-siddique. It is labelled as not yet reviewed by AAIF staff or the TC, so it is not an adopted LF/AAIF specification' and marks the 'TRACE is an LF evidence spec' claim WRONG. The estate's own Part D kill-list does not include TRACE, but the research row does correct it.",
+    "as_of": "2026-10-27",
+    "next_step": "Re-title the row as 'TRACE AAIF proposal #42 (not yet reviewed)' and contribute the conformance predicate to the PROPOSAL, never to a spec that does not exist.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-18",
+    "jewel": "OSAIA shaping window (no officers published)",
+    "claimed_state": "OPEN",
+    "status": "CONTRADICTED",
+    "evidence": "CLAIM: an OSAIA shaping window with no officers published. LIVE: https://osaia.org/ -> HTTP 200 but the page is a Korean/Indonesian consumer-shopping storefront ('Sensa138 — Platform Game Online...', 'FEATURED SENSA138', 'Troli Number of Products') — it is NOT an Open Safe AI Alliance site. https://www.osaia.org/ -> HTTP 200, same storefront (server: cloudflare, last-modified 2026-10-12). https://open-safety.org/ -> DNS failure (curl error 6). LOCAL estate CATALOG-OPENINGS-20261025.md row 'OSAIA General Member since 21 Sep' records: 'not found in this pass — press coverage of the launch lists 35+ members and does not name CSOAI ... not publicly verifiable'. The estate's Part D kill-list also records 'OSAIA steering list' as killed.",
+    "as_of": "2026-10-27",
+    "next_step": "Do not cite osaia.org as the OSAIA surface; find the correct alliance domain (the storefront is squatted/parked) or drop the row to 'unverified membership, no published officers'.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-19",
+    "jewel": "ITU Focus Group (free, open)",
+    "claimed_state": "OPEN",
+    "status": "UNVERIFIED",
+    "evidence": "Tried: https://www.itu.int/en/ITU-T/focusgroups/Pages/default.aspx -> HTTP 200 (132687 b) — the FG index is live; https://www.itu.int/en/ITU-T/focusgroups/ai/ -> HTTP 404 and /focusgroups/ai/011/ -> HTTP 404 (no AI-specific FG page at those paths); https://www.itu.int/en/ITU-T/focusgroups/ai/011/Pages/default.aspx -> HTTP 404. So I could confirm the ITU-T Focus Group mechanism is live but could not confirm which FG slot CSOAI would join or that the AI FG page exists. Registration itself requires an ITU account = account creation, which is owner-side.",
+    "as_of": "2026-10-27",
+    "next_step": "Enumerate the live ITU-T FG list from the index and pick the exact FG, then the owner registers the seat (free) — agent must not create the account.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-20",
+    "jewel": "UKAS AIMS technical-expert channel (free)",
+    "claimed_state": "OPEN",
+    "status": "OWNER_GATED",
+    "evidence": "The row's step is 'technicalresources@ukas.com expression' — an outward email requiring the owner's company-email send, so it must not be attempted. Live: https://www.ukas.com/ -> HTTP 200 (273076 b); the AI-management-systems paths tried both 404 (https://www.ukas.com/en/ai-management-systems and https://www.ukas.com/en/products-and-services/ai-management-systems), so I could not confirm a currently-published technical-expert channel page. LOCAL ~/SENT-LOG.md grep for 'ukas|technicalresources' returned no match, i.e. no sent expression on record.",
+    "as_of": "2026-10-27",
+    "next_step": "Owner sends the expression; agent confirms the live AIMS technical-expert page URL on ukas.com first so the email cites a real page.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-21",
+    "jewel": "AIQI Consortium + free ISO 42001 course",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Third-party live read https://aiqiconsortium.org/ -> HTTP 200 (248608 b) — the consortium site is live and reachable. LOCAL estate CATALOG-OPENINGS-20261025.md lists AIQI as a course/bridge opportunity and the checklist's Part C names AIQI alongside the MOOC. Joining a consortium requires membership/account creation (owner-side), and completing a 6-module course is an account-bound action — neither is an agent send.",
+    "as_of": "2026-10-27",
+    "next_step": "Owner joins AIQI and enrols in the free ISO 42001 course; the MOOC bridge (CJ-62) should reuse these modules rather than rebuild them.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-22",
+    "jewel": "IETF 127 hackathon SCITT time-anchor",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live: https://www.ietf.org/meeting/127/ -> HTTP 200 (96435 b), 'IETF 127 San Francisco 14 Nov 2026 - 20 Nov 2026', 'IETF 127 starts Saturday 14 November and runs through Friday afternoon'. The hackathon/codesprint 'take place on the weekend' per the same page. So the event is live and dated ~3.5 weeks out (inside the 7-day window? No — 18 days out; it does NOT close within 7 days). The independent-implementation + test-vector work (Cedulon replay) is agent-doable and needs no owner key. Note this row is the live successor to CJ-06's lapsed 'THIS WEEK' framing.",
+    "as_of": "2026-10-27",
+    "next_step": "Build the SCITT time-anchor implementation and Cedulon replay test vectors against draft-templeman-scitt-measurement-capsule-00 and register a hackathon project for 13-14 Nov 2026.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-23",
+    "jewel": "OpenID AuthZEN self-certification (automated, public)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live: https://openid.net/groups/authzen/ -> HTTP 200 (150234 b) — 'AuthZEN Working Group - OpenID Foundation' is live; https://openid.net/certification/ -> HTTP 200 (132923 b) is the public certification surface. I searched the certification index for 'AuthZEN' (grep -ic authzen = 0 matches), so no AuthZEN self-certification entry is published yet there. The action (run conformance, publish results) is public and agent-doable.",
+    "as_of": "2026-10-27",
+    "next_step": "Run the AuthZEN conformance suite against our claim-event/measurement-capsule profile and publish the result as an unsigned-labelled receipt; no owner key needed.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-24",
+    "jewel": "x402scan validator self-cert",
+    "claimed_state": "OPEN",
+    "status": "OWNER_GATED",
+    "evidence": "Live: https://www.x402scan.com/ -> HTTP 200 (2044462 b) — the index is live and greps for 'validator' return only unrelated paid-tool listings ('DNSSEC status for...', 'Checks up to 5 EU VAT...'), not a self-cert programme; https://www.x402scan.com/validators -> HTTP 404. LOCAL estate CROWN-JEWELS-TODAY-2026-09-27.md owner-action O1 records our x402scan server 9b8bcb34-6c9f-45d6-b881-9a6afe7bf6b5 as 'verified:false' and requires signing an SIWX challenge with the payTo wallet 0x2126…ae31 — a wallet signature only the owner can make.",
+    "as_of": "2026-10-27",
+    "next_step": "Owner signs the SIWX challenge for the payTo wallet to set verified:true; the agent must not sign.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-25",
+    "jewel": "Claude MCP directory (opened Sep 25)",
+    "claimed_state": "OPEN",
+    "status": "OWNER_GATED",
+    "evidence": "https://claude.ai/directory -> HTTP 403 (login-walled, unauthenticated read refused) — I cannot confirm our listing's presence or state, and submission requires an Anthropic account/login = owner-side. The estate's own gating condition is now met on our side: the three LOCAL-precondition URLs read live HTTP 200 — https://councilof.ai/mcp/free -> 200, https://councilof.ai/privacy/ -> 200, https://councilof.ai/docs/ -> 200 (CROWN-JEWELS O3 required all three live before submitting).",
+    "as_of": "2026-10-27",
+    "next_step": "Owner submits the paste-ready directory entry now that /mcp/free, /privacy/ and /docs/ are all live 200; agent prepares the text only.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-26",
+    "jewel": "Docker MCP Catalog (remote, no Dockerfile)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live third-party: https://github.com/docker/mcp-registry -> HTTP 200 (314474 b) and the servers tree https://github.com/docker/mcp-registry/tree/main/servers -> HTTP 200 (464932 b); grep for 'councilof' across both = 0 occurrences, so our server is NOT listed (the gap the row describes is real). The listed row's step is a server.yaml PR. Note the estate's own earlier note (27 Sep) said this route was 'blocked: GitHub is dark' — GitHub is reachable now (https://github.com returns HTTP 200), so the blocker has cleared. PR creation is an outward write = owner/agent-with-credentials action, but no key is inherently owner-only.",
+    "as_of": "2026-10-27",
+    "next_step": "Open the server.yaml PR against docker/mcp-registry with the remote server card URL https://councilof.ai/.well-known/mcp/server-card.json — confirm that card URL is 200 first.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-27",
+    "jewel": "AgentCash marketplace (July)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live third-party: https://agentcash.dev/ -> HTTP 200 (562456 b) and the merchant onboarding page https://agentcash.dev/docs/sell-to-agents -> HTTP 200 (260351 b) — the marketplace and its 'sell to agents' path are live and reachable. Matches LOCAL estate ONE-INDEX-2026-09-29.md row 79 (AgentCash at agentcash.dev, with a SIWX wallet sign-in requirement) and X402-INDEX-PRESENCE-2026-09-28.md row 3 ('uses the x402scan registry', 'reading search needs a SIWX wallet sign-in'). IMPORTANT: the correct domain is agentcash.dev — https://www.agentcash.com resolves (HTTP 200) but serves a completely unrelated 'Mews POS' hotel-POS product, so any action must target agentcash.dev. Onboarding itself needs a wallet sign-in (owner).",
+    "as_of": "2026-10-27",
+    "next_step": "Owner completes AgentCash merchant onboarding at agentcash.dev (not agentcash.com) after the x402scan origin verification in CJ-24 is done.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-28",
+    "jewel": "ARD well-known file",
+    "claimed_state": "DEPLOYED",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live third-party read: https://councilof.ai/.well-known/ard.json -> HTTP 200 (3275 b), specVersion '1.0', host identifier 'did:web:csoai.org', entries[0].@context 'https://agenticresourcediscovery.org/context/v1', identifier 'urn:air:councilof.ai:server:gspc-mcp', url 'https://councilof.ai/.well-known/mcp/server-card.json', 20 named capabilities. LOCAL repo cross-check: ~/csoai-static-deploy2 / ~/councilof-pages-deploy carry public/.well-known/ard.json in the source tree — both the live file and the local file exist. The row's second half, 'HermesHub crawl', could NOT be verified: https://hermeshub.io/ did not resolve from here (curl error 6).",
+    "as_of": "2026-10-27",
+    "next_step": "Verify the linked server-card URL https://councilof.ai/.well-known/mcp/server-card.json is 200, then confirm HermesHub indexing separately when that host resolves.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-29",
+    "jewel": "IANA well-known URI (claim-card.json)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live third-party: https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml -> HTTP 200 — IANA's well-known URI registry is live and reachable; grep for 'claim-card' in it returned 0 matches, i.e. the name claim-card.json is NOT taken in the registry, so the row's 'name free' premise holds and registration remains open. LOCAL: the spec page https://councilof.ai/spec/claim-maintenance/v0.1/ -> HTTP 200 exists to cite.",
+    "as_of": "2026-10-27",
+    "next_step": "File the provisional well-known URI registration for claim-card.json pointing at the published spec page; owner submits the IANA request form.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-30",
+    "jewel": "Vendor media type application/vnd.csoai.claim-card+json",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live third-party: https://www.iana.org/assignments/media-types/media-types.xhtml -> HTTP 200 — IANA's media-type registry is live and reachable; grep for 'csoai' in it returned 0 matches, so 'application/vnd.csoai.claim-card+json' is unregistered and the row is accurately OPEN. The 'template' half is agent-doable; the FCFS registration itself is an IANA submission (owner-side send).",
+    "as_of": "2026-10-27",
+    "next_step": "Ship the media-type template with a live sample body on the spec page, then owner files the IANA registration to take first-come rights.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-31",
+    "jewel": "DID method registration",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live third-party: https://w3c-ccg.github.io/did-method-registry/ -> HTTP 200 (312 b); grep for 'csoai' = 0 matches, so did:csoai-class is NOT in the registry and the row is accurately OPEN. A W3C CCG registry PR is the stated step (GitHub is reachable today — https://github.com returns HTTP 200, and the GitHub REST API is rate-limited but the web UI is live).",
+    "as_of": "2026-10-27",
+    "next_step": "Prepare the did:csoai-class method specification and open the PR against w3c-ccg/did-method-registry.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-32",
+    "jewel": "URN namespace urn:csoai",
+    "claimed_state": "OPEN",
+    "status": "UNVERIFIED",
+    "evidence": "Tried the IANA URN namespace registry at four paths — https://www.iana.org/assignments/urn-ns/, .../urn-ns/urn-ns.xhtml, .../urn-ns/urn-ns.xml, .../urn-ns/urn-ns.csv — all HTTP 404 (the registry index https://www.iana.org/assignments/ is HTTP 200, 1968030 b, so the host is reachable and the specific registry path was wrong or moved). No urn:csoai hit could be read either way, so I could neither confirm the namespace is free nor confirm a registration. LOCAL estate has no urn:csoai record. Claiming 'urn:csoai' in any published document is currently UNVERIFIED.",
+    "as_of": "2026-10-27",
+    "next_step": "Find the current IANA URN namespace registry URL from the assignments index and re-read it for 'csoai' before any urn:csoai string is published.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-33",
+    "jewel": "MCP com.councilof/* DNS namespace (fixes B-3)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live DNS read (dig +short TXT @8.8.8.8, with a working positive control: _dmarc.google.com -> 'v=DMARC1; p=reject; rua=mailto:mailauth-reports@google.com'): _mcp.com.councilof.ai -> no TXT record; _namespace.com.councilof.ai -> no TXT record; com.councilof.ai -> no TXT record. So no conflicting claim exists and the row is accurately OPEN. The claim is $0 and needs no owner key (it is a DNS TXT write, i.e. an outward write to our own zone).",
+    "as_of": "2026-10-27",
+    "next_step": "Publish the MCP namespace TXT at the owner-specified _mcp.com.councilof.ai label naming com.councilof/*, then verify with dig and record the exact TXT string.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-34",
+    "jewel": "ERC-8004 Validation Registry (zero deployments)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live third-party: https://www.8004scan.io/ -> HTTP 200 (295303 b) and the page does expose a 'Validation Registry' section ('Identity, reputation and validation for trustless agents across 29 chains'), with '2 deployments' and '2 registries' strings present. The registries themselves are read-only pages: /api/registry/validation, /api/validators, /api/stats and /api/registry all returned HTTP 404, and https://www.8004scan.io/validation-registry -> HTTP 404, so I could not read a deployment count from the API. The claim 'zero deployments' is therefore not confirmed by a readable live counter, but no registration by us exists and the registration route is open. LOCAL estate BENCH-PLATFORMS-2026-09-29.md records 8004scan.io as REAL with account-required onboarding.",
+    "as_of": "2026-10-27",
+    "next_step": "Read the Validation Registry deployment count from the 8004scan UI section (API paths are 404) and only then assert 'zero deployments' in a claimreg row.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-35",
+    "jewel": "Circle Marketplace census",
+    "claimed_state": "POD QUEUE",
+    "status": "OWNER_GATED",
+    "evidence": "Live reachability: https://www.circle.com/agent-stack -> HTTP 200 (262750 b) — the page IS reachable from here, so the 'egress-walled here' premise no longer holds for this URL. But the census needs the marketplace's authenticated listing (a Circle account/human review), and LOCAL estate CROWN-JEWELS-TODAY-2026-09-27.md owner-action O6 records 'Circle Agent Marketplace form, only with a truthful working offer. Do not resubmit the 18 Sep entry' — an outward submission requiring the owner. A census of a signed-in marketplace is therefore not an agent read.",
+    "as_of": "2026-10-27",
+    "next_step": "Owner submits the Circle Agent Marketplace form once with the truthful working offer; agent can census the public /agent-stack page only, and must say so.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-36",
+    "jewel": "EIC Pathfinder DeepRAP (EUR0.5-4M, Oct 28)",
+    "claimed_state": "OPEN",
+    "status": "OWNER_GATED",
+    "evidence": "DEADLINE: 28 Oct 2026 — this is TOMORROW, so the window is NOT closed and it DOES close within 7 days; it is the second-tightest live funding window in this lane. Live verification of the call failed: https://eic.ecuropa.eu/eic-funding-opportunities/pathfinder_en -> curl exit 6 / 'Could not resolve host: eic.ecuropa.eu' (same for https://eic.ecuropa.eu/ and the paths variant), and web_fetch to the same URL returned 'web_fetch network request failed' — so the figure EUR0.5-4M could not be confirmed against a live EIC source. LOCAL estate shows the internal decision already lapsed: estate-body-20261007/funding-standards-partners.md:214 'Wed 7 Oct | EIC DeepRAP go/no-go | say no-go unless a coordinator approached us' and :226 'Wed 28 Oct 16:00Z | EIC DeepRAP (17:00 Brussels) | skip by default | —'; hermes-reports/2026-10-26-am.md lists EIC DeepRAP among 11 overdue deadlines (56h). The only live step left is an owner go/no-go reversal, which is not an agent action.",
+    "as_of": "2026-10-27",
+    "next_step": "Owner decides by 17:00 Brussels on Wed 28 Oct whether to reverse the 7 Oct default no-go (no coordinator approached us); agent prepares the concept note only if the owner says go.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-37",
+    "jewel": "Innovate UK SME Champions (Nov 11)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "LOCAL primary source ~/business-20260930/10-revenue-pack/frontier-ai-sme-champions/DEADLINE.md, read live from the Innovation Funding Service competition page on 2026-09-30: competition 2584 'Frontier AI: SME Champions, Phase 1'; closes 'Wednesday 11 November 2026, 11:00am UK time'; applicants notified 26 Jan 2027; one application per SME ('A second application from CSOAI Ltd makes both ineligible'); internal target: text final 30 Oct, appendices 4 Nov, submit by Mon 9 Nov 17:00. LIVE: the IFS host apply.innovateuk.uk did not resolve from here (curl 'Could not resolve host', also for https://www.innovateuk.ukri.uk/), so the live portal status is unconfirmed — but www.ukri.org is HTTP 200. The 11 Nov deadline is 15 days away: NOT within 7 days, and still open.",
+    "as_of": "2026-10-27",
+    "next_step": "Confirm the 30% match-funding gap is resolved (MORNING-REPORT-2026-10-01.md:47 records the draft as 'parked' because match funding is unavailable) before spending effort on the 4-page application.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-38",
+    "jewel": "KTP R3 (Oct 14, ~85%)",
+    "claimed_state": "OPEN",
+    "status": "DEAD",
+    "evidence": "The row's own deadline is Oct 14 — 13 days before today (2026-10-27). That window has closed. Live attempts all failed: https://www.ukri.org/opportunities/knowledge-transfer-partnerships/ -> HTTP 404, https://www.ukri.org/find-funding-opportunities/ -> HTTP 404, https://www.ukri.org/manage-your-award/ -> HTTP 200 (generic site, no R3 round live). LOCAL estate NEXT-100-MOVES-2026-09-28.md lists 'KTP' as a go/no-go item and the house rule (funding-standards-partners.md) is that lapsed rounds are closed out by the owner, not silently reopened.",
+    "as_of": "2026-10-27",
+    "next_step": "Close as missed (round closed 14 Oct); if a successor R4 appears, treat it as a new row with a fresh deadline rather than reviving R3.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-39",
+    "jewel": "Manifund regranting (rolling)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live third-party: https://manifund.org/about/open-call -> HTTP 200 (44685 b) — the open-call page is live and reachable, consistent with a rolling window. LOCAL estate SIGNUP-SHEET-2026-09-29.md row 23 'Manifund | rolling; drafted 28 Sep (grants lane)' and N-SITES-SPRAY-2026-09-29.md row 105 record 'Manifund | AI-safety regranting; a public project page | https://manifund.org, create project | O-ACCOUNT' — creating the project page needs an account (owner-side), the drafting is done.",
+    "as_of": "2026-10-27",
+    "next_step": "Owner creates the Manifund project account and publishes the drafted AI-safety regranting page; rolling window means no deadline pressure.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-40",
+    "jewel": "NLnet NGI Zero (EUR5-50k)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live third-party read https://nlnet.nl/propose/ -> HTTP 200 (43192 b); page text: 'Next deadline: November 3rd 2026 12:00 CET (noon) Through this form you can request financial support for your project'. This matches LOCAL estate DRAFT-NLNET-2026-10-07.md:17 ('Tuesday 3 Nov 2026, 12:00 CET (noon) = 11:00 UK time ... NLnet runs a call every two months ... next one is 3 Jan 2027'). DEADLINE MATH: 3 Nov is 7 days from 27 Oct — this closes WITHIN the 7-day window (and is the tightest live deadline among the Part A funding rows). The application draft already exists (DRAFT-NLNET-2026-10-07.md, field-by-field from the form).",
+    "as_of": "2026-10-27",
+    "next_step": "Submit the NLnet proposal at https://nlnet.nl/propose/ BEFORE 3 Nov 12:00 CET — this is the only Part A funding row whose window closes inside 7 days.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-41",
+    "jewel": "DSIT AI Assurance Fund GBP11M",
+    "claimed_state": "WATCH",
+    "status": "UNVERIFIED",
+    "evidence": "Tried: https://www.gov.uk/ai-assurance-fund -> HTTP 404 and https://www.gov.uk/government/collections/ai-assurance-fund -> HTTP 404, so no live DSIT round-2 page could be read. LOCAL estate MORNING-ALIGNMENT-2026-08-26.md:115 records the same fund as 'GBP11M | not open — email ai-assurance@dsit.gov.uk to confirm opening' and OWNER-FIRE-PACK-2026-08-25.md:14 'GBP11M AI Assurance Innovation Fund (DSIT) | GBP11M | Not open (slipped)'. The GBP11M figure and 'not open' status are therefore estate-only, ~2 months old, with no live confirmation. Note the estate's own PART D honesty register lists 'UK Budget figure' as UNVERIFIED.",
+    "as_of": "2026-10-27",
+    "next_step": "Keep the daily portal watch on gov.uk/dsit and treat the 11M figure as unverified until a live DSIT page states it; an owner email to ai-assurance@dsit.gov.uk would confirm but is an outward send.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-42",
+    "jewel": "XRPL GLOW retro (pays completed work)",
+    "claimed_state": "OPEN",
+    "status": "UNVERIFIED",
+    "evidence": "Tried: https://xrpl.org/ -> HTTP 200 (361107 b) — the site is live; but the GLOW project page paths all 404: https://xrpl.org/ecosystem/projects/glow.html, https://xrpl.org/oss/glow.html and https://xrpl.org/ecosystem/glow all HTTP 404, and https://xrpl.org/ecosystem.html -> HTTP 404. No live GLOW retro-programme page could be read, so neither the retro stream nor its 'pays completed work' mechanic could be confirmed. LOCAL estate: no GLOW record was found by grep in ~/_alignment, ~/csoai.org, ~/csoai-static-deploy2 or ~/councilof-pages-deploy.",
+    "as_of": "2026-10-27",
+    "next_step": "Find the current GLOW programme URL from xrpl.org's live navigation, then confirm the retro terms and the RLUSD corpus application route before counting it as a live opening.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-43",
+    "jewel": "OSO metrics registration (retro clock)",
+    "claimed_state": "OPEN",
+    "status": "UNVERIFIED",
+    "evidence": "The target could not be identified from the row alone. Live tries: https://www.opensource.org/ -> HTTP 200 (225880 b) but https://www.opensource.org/metrics -> HTTP 404; https://osmfoundation.org/ -> HTTP 200 (44462 b) but that is the OpenStreetMap Foundation (no metrics/retro-clock programme); https://www.oscars.dev/ -> HTTP 200 (10639 b) is the Academy Awards site, not an OSO metrics registry. LOCAL estate NSITES-LIVE-LOG.md:49 lists 'OSO' only as a GitHub-only directory target with no programme detail, and ONE-INDEX-2026-09-29.md records it as NOT_PRESENT. No OSO metrics/retro-clock specification exists locally to register against.",
+    "as_of": "2026-10-27",
+    "next_step": "Name the actual OSO programme and its registration endpoint (one line) before this row can be actioned — as written it is not a checkable claim.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-44",
+    "jewel": "Base Builder Code (ERC-8021)",
+    "claimed_state": "OPEN",
+    "status": "UNVERIFIED",
+    "evidence": "Live: https://base.org/build -> HTTP 200 (63739 b) — the Base Build page is live ('75M+ Agent TX', '22K+ x402 APIs') but a grep for 'builder code' across the served bytes returned 0 matches, so the Builder Code programme is not described on that page as served. The cited ERC does not resolve: https://eips.ethereum.org/EIPS/eip-8021 -> HTTP 404, and https://eips.ethereum.org/EIPS/eip-7546 -> HTTP 200 is 'ERC-7546: Upgradeable Clone for Scalable Contracts' (unrelated to Base Builder Code). LOCAL estate has no ERC-8021 record. The specific EIP number in the row could not be confirmed against any live registry.",
+    "as_of": "2026-10-27",
+    "next_step": "Confirm the correct ERC number for Base Builder Code from base.org's own documentation before any base.dev claim; the claim in the ignition batch is the gate.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-45",
+    "jewel": "EAS proof-pointer first attestation",
+    "claimed_state": "SPECCED",
+    "status": "UNVERIFIED",
+    "evidence": "Live: https://eips.ethereum.org/EIPS/eip-7546 -> HTTP 200 is 'ERC-7546: Upgradeable Clone for Scalable Contracts' — NOT the Ethereum Attestation Service (EAS is EIP-7546 in the ERC series, but this served page is a different proposal; a grep for 'proof pointer' in it returned 0 matches). https://eas.ethereum.org/ did not resolve from here (curl error 6). No proof-pointer schema file was found in ~/csoai.org, ~/csoai-static-deploy2, ~/councilof-pages-deploy or ~/csoai.org's public tree, and no 'proof-pointer' artefact was located in ~/_alignment (the ~10,941 grep hits were mostly unrelated EAS substrings). The claim 'schema exact' is therefore not evidenced.",
+    "as_of": "2026-10-27",
+    "next_step": "Pin the exact EAS proof-pointer schema bytes (with a file hash) in the repo before the ignition batch; cite the correct EIP rather than eip-7546.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-46",
+    "jewel": "Inngot Sollomon IP valuation",
+    "claimed_state": "OPEN",
+    "status": "OWNER_GATED",
+    "evidence": "The row's step is 'order (~GBP795-1k) as equity diligence asset' — a paid instruction on the owner's money, and the valuation order also needs the owner's identity/engagement. https://www.inngot.co.uk/ did not resolve from here (curl exit 6), so the supplier's live terms could not be read. LOCAL estate PORTFOLIO-MAP-20261024.md:43 records 'Inngot/Sollomon appraisal preparation (private brief, 23 Oct)' and :63-75 ranks 'the Inngot suitability email' as a send that 'needs no account and no payment' (i.e. the no-cost step is a suitability email, not the GBP795-1k order); ESTATE_MINE_RECONCILIATION_20260922.md:11 records 'Ingot Solomon = ZERO corpus hits' against Inngot's Goldseam profile MLKX-CDVI.",
+    "as_of": "2026-10-27",
+    "next_step": "Owner decides whether to send the free suitability email (no payment) before authorising any GBP795-1k valuation order; agent sends nothing.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-47",
+    "jewel": "UK IPO marks (4 classes GBP385)",
+    "claimed_state": "OPEN",
+    "status": "OWNER_GATED",
+    "evidence": "A trademark filing is a legal act + payment, both owner-only. Live: https://www.ipo.gov.uk/ -> HTTP 403 (bot-blocked to unauthenticated reads) so the current fee list could not be confirmed live. LOCAL estate MOAT-AND-IP-RESEARCH-2026-09-26.md:34 gives 'UK IPO, online e-TM3 from 1 Apr 2026: GBP205 including one class, plus GBP60 for each extra class' — GBP205 + 3xGBP60 = GBP385, which reconciles exactly with the row's figure. And INBOX-SWEEP-60D-2026-09-30.md:38 records the TM3 application as 'Trade-mark application draft, never submitted, now exp[ired]' (retrievable 24 Aug to 21 Sep) — i.e. the DRAFT LAPSED, which the row does not say.",
+    "as_of": "2026-10-27",
+    "next_step": "Owner re-drafts and files the e-TM3 with the 4 classes (GBP385 total per the local fee calculation) — the previous draft has expired and must be rebuilt, not amended.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-48",
+    "jewel": "Dual-anchor timestamps (eIDAS QTSP + OTS)",
+    "claimed_state": "RESEARCHED",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "Live anchor side confirmed: https://councilof.ai/root.json -> HTTP 200, card_count=325, as_of='2026-10-26T19:19:22Z', sig_ed25519 present, xrpl_basket_merkle='9c45aaf325e26c1856b4f148244ce546c680c21f463e9c2f5ef0590b935b6c64', xrpl_asset_count_attempted=16, and tree_caveat documenting the odd-node duplication caveat. LOCAL git log in ~/_work/councilof-ai shows HEAD commit '3d2a939ff ots: five pending proofs upgraded to Bitcoin attestations, manifest rebuilt from the proof bytes' — the OTS/dual-anchor work is real and current in the repo. NOT CHECKABLE LIVE: https://ots.calendar.chronicle.host/ did not resolve (curl error 6) so I could not verify the OTS calendar side from here, and the eIDAS QTSP list URL I tried (ec.europa.eu/.../eIDAS+Trust+Service+Providers) returned HTTP 404. LOCAL estate growth-npm-discovery-current-20260930/docs/REVENUE-LOOPS.md:21 confirms the QTSP contract itself is 'an owner step'.",
+    "as_of": "2026-10-27",
+    "next_step": "Verify the five upgraded Bitcoin attestations in the published proof manifest (OOTS calendar unreachable from here) and owner selects a QTSP (Disig/Swisscom class) — the contract is owner-side.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-49",
+    "jewel": "State of Claim Maintenance report #1",
+    "claimed_state": "OPEN",
+    "status": "UNVERIFIED",
+    "evidence": "No such report is published. Live: path:/state-of-claim-maintenance/ -> HTTP 404; https://councilof.ai/reports/ -> HTTP 200 (a generic Reports index whose only 'claim maintenance' hits are navigation links to the existing spec/register page, not a report #1). The underlying material IS live: https://councilof.ai/claim-maintenance/ -> HTTP 200 shows 'Subjects 28 / Claims 99 / Measured 33 / Events 9 / Corrections 93'. But note the live register's own totals contradict the estate's convergence note of 30 Sep (CLAIM-MAINTENANCE-CATEGORY-CONVERGENCE-20260930.md:59-60 'subjects_with_a_scheduled_next_read: 26', 'scheduled subject coverage: 92.86%') — the live register now reads 'subjects_with_a_scheduled_next_read: 0' with 'subjects_with_a_due_unrun_next_read: 26'. Local grep found only a planning line (moves-20261007/inv-claims-reactions.md:193 'RP-10 | D30 \"state of claim maintenance\" note -> research compiler'), no report artefact.",
+    "as_of": "2026-10-27",
+    "next_step": "Publish report #1 from the live register — and fix the stale scheduling claim first: 26 subjects have a DUE but UNRUN next read, so coverage is not 92.86%.",
+    "lane": "A"
+  },
+  {
+    "id": "CJ-50",
+    "jewel": "The Ecosystem Health Board",
+    "claimed_state": "PROTOTYPE BUILT",
+    "status": "UNVERIFIED",
+    "evidence": "No prototype was found on any live or local surface. Live: path:/ecosystem-health/ -> HTTP 404, path:/health-board/ -> HTTP 404, https://councilof.ai/reports/ -> HTTP 200 (generic index, no Health Board entry). LOCAL: grep for 'Ecosystem Health|ecosystem-health|health.board|EHB' over ~/csoai.org, ~/csoai-static-deploy2, ~/councilof-pages-deploy and ~/_alignment returned only unrelated hits (payload16.json plan text, a charter-health-dashboard.html which is a charter dashboard, and 'health board' inside unrelated patch/blueprint text) — no board prototype, no board spec, no artefact with the claimed name. https://councilof-pages-deploy/ecosystem.html is a static 'AI Safety Ecosystem - 11 Specialized Platforms' page, not a health board.",
+    "as_of": "2026-10-27",
+    "next_step": "Produce the prototype artifact (a local file with a hash) before calling it BUILT, then deploy it unsigned-labelled as the row's step says — do not publish a 'prototype built' claim with no artefact.",
+    "lane": "A"
+  }
+]

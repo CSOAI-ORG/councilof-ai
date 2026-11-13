@@ -1,0 +1,49 @@
+{
+  "schema": "csoai.outreach-send/0.1",
+  "kind": "outreach-send-staged",
+  "name": "Stripe",
+  "kind_org": "payments",
+  "staged_at": "2026-09-17T05:21:09.022956+00:00",
+  "verified_claims": [
+    {
+      "claim": "x402_payai_count",
+      "url": "https://payai.x402.org/api/resources",
+      "verified_at": "2026-09-17T05:21:08.593004+00:00",
+      "state": "FAILED_VERIFICATION",
+      "error": "<urlopen error [Errno 8] nodename nor servname provided, or "
+    },
+    {
+      "claim": "x402_cdp_count",
+      "url": "https://api.cdp.coinbase.com/x402/resources",
+      "verified_at": "2026-09-17T05:21:08.941923+00:00",
+      "state": "FAILED_VERIFICATION",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "claim": "csoai_axes_count",
+      "url": "https://councilof.ai/api/gspc",
+      "verified_at": "2026-09-17T05:21:09.022879+00:00",
+      "status": 200,
+      "state": "VERIFIED"
+    }
+  ],
+  "draft_body": "Subject: CSOAI crosswalk \u2014 signed measurement of agentic payments\n\nHi Stripe Research,\n\nWe have published a permissionless, signed crosswalk of x402 payment rails (USDC on Base) versus the AI Act Article 50 transparency obligations. The 25,491 x402 PayAI resources and 15,742 x402 CDP resources are indexed; 1,104 overlap; an indicative sample suggests between a quarter and two-fifths of declared payable endpoints never issue a 402 challenge. Every figure is signed (Ed25519), Bitcoin-anchored (OTS), and reproducible from a public artifact.\n\nWhat we are NOT claiming:\n  - that Stripe accepts or endorses this\n  - that x402 is the only payment rail (it is one of several)\n  - that any specific merchant is non-compliant\n\nLive: https://councilof.ai/api/gspc\nDiscovery: https://councilof.ai/.well-known/\nVerifier (offline, any browser): https://councilof.ai/gspc-verify\n\nBest,\nNicholas Templeman\nFounder, CSOAI Ltd (UK 16939677)",
+  "claims_register_NOT_claiming": [
+    "that the recipient accepts or endorses this",
+    "that any specific institution is non-compliant",
+    "any relationship that has not been verified",
+    "any filed contribution has been accepted"
+  ],
+  "send_via": "Open-Xchange API path (operator-driven)",
+  "send_conditions": [
+    "every quoted figure verified at send time",
+    "no second message to a non-replier",
+    "no fabricated relationship",
+    "no LinkedIn path"
+  ],
+  "disclaimers": [
+    "MEASUREMENT, not CERTIFICATION.",
+    "Loop 1 sends are operator-driven (OAuth/send-gate is owner's)."
+  ],
+  "sha256": "ca9bc7ee07288d13ff382417936dbee75e85dbf551159d03d126f09c653f0bfc"
+}

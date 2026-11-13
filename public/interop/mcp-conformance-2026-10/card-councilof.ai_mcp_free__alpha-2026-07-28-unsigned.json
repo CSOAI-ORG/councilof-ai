@@ -1,0 +1,64 @@
+{
+ "as_of": "2026-10-26T02:12:31Z",
+ "payload": {
+  "check_counts": {
+   "FAILURE": 19,
+   "INFO": 1,
+   "SUCCESS": 22
+  },
+  "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/councilof.ai_mcp_free__alpha-2026-07-28.json",
+  "checks_sha256": "59a0ac201a4d8da1441ff181ec8afc04aad4f053d5c7685f98bdc40177fb9902",
+  "deviation_checks": [
+   "CompletionComplete",
+   "DNSRebindingRejected",
+   "LocalhostHostAccepted",
+   "PromptsGetEmbeddedResource",
+   "PromptsGetSimple",
+   "PromptsGetWithArgs",
+   "PromptsGetWithImage",
+   "PromptsList",
+   "ResourcesList",
+   "ResourcesReadBinary",
+   "ResourcesReadText",
+   "ResourcesTemplateRead",
+   "ToolsCallAudio",
+   "ToolsCallEmbeddedResource",
+   "ToolsCallError",
+   "ToolsCallImage",
+   "ToolsCallMixedContent",
+   "ToolsCallSimpleText",
+   "ToolsCallWithProgress"
+  ],
+  "instrument": "alpha-2026-07-28",
+  "instrument_channel": "alpha",
+  "kind": "csoai.mcp-conformance/0.1",
+  "not_a_grade": true,
+  "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+  "run_state": "RUN_DEVIATIONS",
+  "scenarios": 20,
+  "spec_version": "2026-07-28",
+  "state": "PROBED",
+  "subject_id": "councilof.ai/mcp/free",
+  "suite_version": "0.2.0-alpha.12"
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "b81bb3d8a04f61026e309a4346f3023d5b88d081608c596ae14ace12cbb43e2e",
+ "source_urls": [
+  "https://councilof.ai/mcp/free",
+  "https://councilof.ai/interop/mcp-conformance-2026-10/checks/councilof.ai_mcp_free__alpha-2026-07-28.json",
+  "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+ ],
+ "subject": "MCP conformance run alpha-2026-07-28 for councilof.ai/mcp/free",
+ "surface": "public.notice",
+ "tags": [
+  "mcp",
+  "conformance",
+  "probe",
+  "mcp-conformance-2026-10"
+ ],
+ "unmeasured": [
+  "behaviour under load",
+  "scenarios outside the frozen spec version",
+  "subjects outside the pinned set"
+ ]
+}

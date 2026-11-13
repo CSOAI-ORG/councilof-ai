@@ -1,0 +1,2413 @@
+{
+  "schema": "csoai.universal-watchdog-incident-harness/1.0",
+  "generated_at": "2026-10-30T09:30:00Z",
+  "title": "CSOAI Universal Public Watchdog Layer-0 Incident Harness, 12 Global Incident Databases (n=36), Candidate Axis-34 & WG-SAFE Daily Signal Consolidation",
+  "doctrine": "Measurement, not certification. Anyone can re-check at https://councilof.ai/verify",
+  "counts": {
+    "global_watchdog_databases_measured": 12,
+    "watchdog_integrity_predicates": 6,
+    "total_watchdog_probes_n": 36,
+    "canonical_gspc_axes_routed": 33,
+    "meok_axis_specialists_bound": 33,
+    "public_watchdog_working_groups_bound": 7,
+    "wg_catalog_draft_documents_bound": 7,
+    "hitl_steward_lanes_bound": 6,
+    "candidate_axis_34_n_valid": 36,
+    "sample_capsule_bytes": 1472,
+    "max_capsule_bytes_budget": 3072
+  },
+  "predicate_coverage_across_12_external_watchdogs": {
+    "predicates": {
+      "schema_and_machine_readability": 12,
+      "cryptographic_provenance_and_byte_pinning": 6,
+      "retraction_and_correction_lineage": 12,
+      "causal_to_test_instrument_binding": 4,
+      "revocation_and_hitl_escalation_hook": 1,
+      "license_and_contamination_hygiene": 12
+    },
+    "finding": "While 12/12 external public watchdog databases expose structured or semi-structured incident records and 12/12 maintain correction/update histories, only 4/12 bind incidents to a reproducible test instrument and only 1/12 (ControlAI/CoSAI revocation trials) exposes a deterministic revocation/HITL hook. CSOAI's Watchdog Platform acts as Layer 0 across all 12 databases by pinning SHA-256 capture digests, linking every incident to a frozen GSPC bank item, and routing <= 3,072-byte capsules to the 33 MEOK Axis Specialists, 7 Public Watchdog Working Groups, WG-SAFE Charter controls, and 6 HITL Steward Lanes."
+  },
+  "global_watchdog_databases": [
+    {
+      "database_id": "AIID_PARTNERSHIP_ON_AI",
+      "name": "AI Incident Database (Partnership on AI — incidentdatabase.ai)",
+      "public_url": "https://incidentdatabase.ai",
+      "feed_kind": "GraphQL / CSV / JSON snapshot of real-world AI harms & incidents",
+      "license": "CC-BY-SA-4.0 / public metadata",
+      "training_allowed": false,
+      "primary_gspc_axes": [
+        "safety",
+        "care",
+        "affect",
+        "governance",
+        "claim-maintenance"
+      ],
+      "working_group_id": "human-impact",
+      "wg_document_id": "COAI-WG-006",
+      "hitl_lane_id": "LANE_01_CLINICAL_AND_CARE_STEWARD",
+      "predicates": {
+        "schema_and_machine_readability": 1,
+        "cryptographic_provenance_and_byte_pinning": 0,
+        "retraction_and_correction_lineage": 1,
+        "causal_to_test_instrument_binding": 0,
+        "revocation_and_hitl_escalation_hook": 0,
+        "license_and_contamination_hygiene": 1
+      },
+      "layer0_harness_bridge": "Wraps AIID incident reports in csoai.watchdog-incident-capsule/1.0 with SHA-256 source digest, maps to CARE-PSY-v1 / gspc-safety bank items, and routes to MEOK care/safety specialists + LANE_01.",
+      "probes": [
+        {
+          "probe_id": "WD-AIID-01",
+          "dimension": "schema_ingest",
+          "verdict": "PASS",
+          "observed": "JSON/CSV incident IDs and report URLs parse deterministically"
+        },
+        {
+          "probe_id": "WD-AIID-02",
+          "dimension": "crypto_pinning_and_test_link",
+          "verdict": "GAP_BRIDGED_BY_LAYER0",
+          "observed": "No native Ed25519 signature or frozen test-bank pointer; bridged by CSOAI Layer-0 digest + bank crosswalk"
+        },
+        {
+          "probe_id": "WD-AIID-03",
+          "dimension": "hitl_and_contamination_wall",
+          "verdict": "PASS",
+          "observed": "Enforces model_training=false and routes clinical/psychosis incidents to LANE_01"
+        }
+      ]
+    },
+    {
+      "database_id": "OECD_AI_AIM",
+      "name": "OECD AI Incidents & Hazards Monitor (AIM — oecd.ai/en/incidents)",
+      "public_url": "https://oecd.ai/en/incidents",
+      "feed_kind": "Global policy & regulatory AI incident/hazard tracker",
+      "license": "OECD Public Data Terms (Attribution)",
+      "training_allowed": false,
+      "primary_gspc_axes": [
+        "governance",
+        "regulatory-framework",
+        "regulator-transparency",
+        "art5-safeguard"
+      ],
+      "working_group_id": "governance",
+      "wg_document_id": "COAI-WG-001",
+      "hitl_lane_id": "LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS",
+      "predicates": {
+        "schema_and_machine_readability": 1,
+        "cryptographic_provenance_and_byte_pinning": 0,
+        "retraction_and_correction_lineage": 1,
+        "causal_to_test_instrument_binding": 0,
+        "revocation_and_hitl_escalation_hook": 0,
+        "license_and_contamination_hygiene": 1
+      },
+      "layer0_harness_bridge": "Normalizes OECD AIM jurisdiction & principle tags into GSPC governance/art5-safeguard slots and dispatches to WG-SAFE governance review (COAI-WG-001).",
+      "probes": [
+        {
+          "probe_id": "WD-OECD-01",
+          "dimension": "schema_ingest",
+          "verdict": "PASS",
+          "observed": "OECD principle and severity classifications map cleanly to GSPC governance axes"
+        },
+        {
+          "probe_id": "WD-OECD-02",
+          "dimension": "crypto_pinning_and_test_link",
+          "verdict": "GAP_BRIDGED_BY_LAYER0",
+          "observed": "News URLs drift without content digests; CSOAI pins SHA-256 capture receipts"
+        },
+        {
+          "probe_id": "WD-OECD-03",
+          "dimension": "hitl_and_contamination_wall",
+          "verdict": "PASS",
+          "observed": "Routes cross-jurisdictional hazards to governance working group + LANE_06"
+        }
+      ]
+    },
+    {
+      "database_id": "MIT_AI_RISK_REPOSITORY",
+      "name": "MIT AI Risk Repository (airisk.mit.edu — Causal & Domain Taxonomy)",
+      "public_url": "https://airisk.mit.edu",
+      "feed_kind": "1,600+ AI risk entries across 7 causal/domain categories",
+      "license": "CC-BY-4.0",
+      "training_allowed": false,
+      "primary_gspc_axes": [
+        "conformance",
+        "measurer-integrity",
+        "interpretability-reproducibility",
+        "lab-practice"
+      ],
+      "working_group_id": "evaluation",
+      "wg_document_id": "COAI-WG-003",
+      "hitl_lane_id": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY",
+      "predicates": {
+        "schema_and_machine_readability": 1,
+        "cryptographic_provenance_and_byte_pinning": 0,
+        "retraction_and_correction_lineage": 1,
+        "causal_to_test_instrument_binding": 1,
+        "revocation_and_hitl_escalation_hook": 0,
+        "license_and_contamination_hygiene": 1
+      },
+      "layer0_harness_bridge": "Maps MIT causal taxonomy (Intent, Timing, Entity) and 7 domains directly to all 33 GSPC axes and MEOK evaluation specialists (COAI-WG-003).",
+      "probes": [
+        {
+          "probe_id": "WD-MIT-01",
+          "dimension": "schema_ingest",
+          "verdict": "PASS",
+          "observed": "7-domain / 24-subdomain taxonomy maps 1:1 to GSPC 33-axis register"
+        },
+        {
+          "probe_id": "WD-MIT-02",
+          "dimension": "crypto_pinning_and_test_link",
+          "verdict": "GAP_BRIDGED_BY_LAYER0",
+          "observed": "Static spreadsheet versioned by release; CSOAI pins exact SHA-256 and frozen item links"
+        },
+        {
+          "probe_id": "WD-MIT-03",
+          "dimension": "hitl_and_contamination_wall",
+          "verdict": "PASS",
+          "observed": "CC-BY-4.0 attribution preserved; routes taxonomy gaps to LANE_05"
+        }
+      ]
+    },
+    {
+      "database_id": "AVID_VULNERABILITY_DB",
+      "name": "AI Vulnerability Database (AVID — avidml.org)",
+      "public_url": "https://avidml.org",
+      "feed_kind": "Structured JSON vulnerability & evaluation reports for AI models",
+      "license": "Apache-2.0",
+      "training_allowed": false,
+      "primary_gspc_axes": [
+        "jail",
+        "safety",
+        "detector-interop",
+        "serving-fidelity"
+      ],
+      "working_group_id": "agent-control",
+      "wg_document_id": "COAI-WG-002",
+      "hitl_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV",
+      "predicates": {
+        "schema_and_machine_readability": 1,
+        "cryptographic_provenance_and_byte_pinning": 1,
+        "retraction_and_correction_lineage": 1,
+        "causal_to_test_instrument_binding": 1,
+        "revocation_and_hitl_escalation_hook": 0,
+        "license_and_contamination_hygiene": 1
+      },
+      "layer0_harness_bridge": "Converts AVID vulnerability reports into replayable gspc-jail / gspc-detector_interop negative controls and Layer-0 precheck rules.",
+      "probes": [
+        {
+          "probe_id": "WD-AVID-01",
+          "dimension": "schema_ingest",
+          "verdict": "PASS",
+          "observed": "AVID JSON schema ingests directly into GSPC negative-control format"
+        },
+        {
+          "probe_id": "WD-AVID-02",
+          "dimension": "crypto_pinning_and_test_link",
+          "verdict": "PASS",
+          "observed": "Git-pinned vulnerability records with evaluation references"
+        },
+        {
+          "probe_id": "WD-AVID-03",
+          "dimension": "hitl_and_contamination_wall",
+          "verdict": "GAP_BRIDGED_BY_LAYER0",
+          "observed": "No native runtime revocation hook; CSOAI Layer-0 binds to CH-03/CH-04 HITL gate"
+        }
+      ]
+    },
+    {
+      "database_id": "OWASP_GENAI_AGENTIC_TOP10",
+      "name": "OWASP GenAI & Agentic Security Project (LLM01–10 & ASI01–10)",
+      "public_url": "https://genai.owasp.org",
+      "feed_kind": "Agentic threat & incident taxonomy (excessive agency, tool hijack, memory poisoning)",
+      "license": "CC-BY-SA-4.0",
+      "training_allowed": false,
+      "primary_gspc_axes": [
+        "effect-binding",
+        "swarm",
+        "harness-fidelity",
+        "interop-conformance",
+        "jail"
+      ],
+      "working_group_id": "runtime",
+      "wg_document_id": "COAI-WG-005",
+      "hitl_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV",
+      "predicates": {
+        "schema_and_machine_readability": 1,
+        "cryptographic_provenance_and_byte_pinning": 0,
+        "retraction_and_correction_lineage": 1,
+        "causal_to_test_instrument_binding": 1,
+        "revocation_and_hitl_escalation_hook": 0,
+        "license_and_contamination_hygiene": 1
+      },
+      "layer0_harness_bridge": "Binds OWASP Agentic ASI01..ASI10 directly to Layer-0 CH-01..CH-16 controls, effect-binding (n=261) probes, and runtime working group (COAI-WG-005).",
+      "probes": [
+        {
+          "probe_id": "WD-OWASP-01",
+          "dimension": "schema_ingest",
+          "verdict": "PASS",
+          "observed": "ASI01..ASI10 and LLM01..LLM10 map to CH-01..CH-16 and GSPC runtime axes"
+        },
+        {
+          "probe_id": "WD-OWASP-02",
+          "dimension": "crypto_pinning_and_test_link",
+          "verdict": "GAP_BRIDGED_BY_LAYER0",
+          "observed": "Prose advisories bridged to deterministic effect-binding and gspc-mcp probes"
+        },
+        {
+          "probe_id": "WD-OWASP-03",
+          "dimension": "hitl_and_contamination_wall",
+          "verdict": "PASS",
+          "observed": "Enforces ESCALATION_REQUIRED on consequential tool calls via @csoai/layer0@0.2.1"
+        }
+      ]
+    },
+    {
+      "database_id": "NVD_GHSA_AI_MCP_CVES",
+      "name": "NIST NVD & GitHub Security Advisories (GHSA) — AI/MCP/Agent Supply-Chain CVEs",
+      "public_url": "https://github.com/advisories",
+      "feed_kind": "CVE / OSV / GHSA JSON feed for MCP servers, LangChain, vLLM, PyTorch, transformers",
+      "license": "Public Domain (NVD) / CC-BY-4.0 (GHSA/OSV)",
+      "training_allowed": false,
+      "primary_gspc_axes": [
+        "provenance",
+        "provenance-controls",
+        "distribution-integrity",
+        "openness",
+        "harness-fidelity"
+      ],
+      "working_group_id": "provenance",
+      "wg_document_id": "COAI-WG-004",
+      "hitl_lane_id": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN",
+      "predicates": {
+        "schema_and_machine_readability": 1,
+        "cryptographic_provenance_and_byte_pinning": 1,
+        "retraction_and_correction_lineage": 1,
+        "causal_to_test_instrument_binding": 0,
+        "revocation_and_hitl_escalation_hook": 0,
+        "license_and_contamination_hygiene": 1
+      },
+      "layer0_harness_bridge": "Cross-checks OSV/GHSA package digests against CSOAI AI-BOM (`packages/aibom/emit.py`) and routes vulnerable MCP/agent dependencies to LANE_04 + COAI-WG-004.",
+      "probes": [
+        {
+          "probe_id": "WD-GHSA-01",
+          "dimension": "schema_ingest",
+          "verdict": "PASS",
+          "observed": "OSV/GHSA JSON schema parses package, version range, CVSS, and commit SHA"
+        },
+        {
+          "probe_id": "WD-GHSA-02",
+          "dimension": "crypto_pinning_and_test_link",
+          "verdict": "PASS",
+          "observed": "Commit-hash and package-digest pinned advisories"
+        },
+        {
+          "probe_id": "WD-GHSA-03",
+          "dimension": "hitl_and_contamination_wall",
+          "verdict": "GAP_BRIDGED_BY_LAYER0",
+          "observed": "Bridged to CSOAI SBOM/AI-BOM + Layer-0 dependency quarantine gate"
+        }
+      ]
+    },
+    {
+      "database_id": "EU_AI_ACT_ART73_ENFORCEMENT",
+      "name": "EU AI Office Art. 73 Serious Incident & GDPR/AI Enforcement Tracker",
+      "public_url": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
+      "feed_kind": "EU AI Act Art. 5 prohibited practices, Art. 50 provenance, and Art. 73 serious incident notices",
+      "license": "EU Reuse Notice (CC-BY-4.0 equivalent)",
+      "training_allowed": false,
+      "primary_gspc_axes": [
+        "art5-safeguard",
+        "detector-interop",
+        "regulatory-framework",
+        "regulator-transparency",
+        "claim-maintenance"
+      ],
+      "working_group_id": "governance",
+      "wg_document_id": "COAI-WG-001",
+      "hitl_lane_id": "LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS",
+      "predicates": {
+        "schema_and_machine_readability": 1,
+        "cryptographic_provenance_and_byte_pinning": 0,
+        "retraction_and_correction_lineage": 1,
+        "causal_to_test_instrument_binding": 0,
+        "revocation_and_hitl_escalation_hook": 0,
+        "license_and_contamination_hygiene": 1
+      },
+      "layer0_harness_bridge": "Maps Art. 5/50/73 notices to frozen gspc-art5_safeguard and gspc-detector_interop banks while enforcing CH-13 (measurement, never legal certification).",
+      "probes": [
+        {
+          "probe_id": "WD-EU73-01",
+          "dimension": "schema_ingest",
+          "verdict": "PASS",
+          "observed": "Obligation articles map to GSPC art5-safeguard, detector-interop, and regulatory-framework"
+        },
+        {
+          "probe_id": "WD-EU73-02",
+          "dimension": "crypto_pinning_and_test_link",
+          "verdict": "GAP_BRIDGED_BY_LAYER0",
+          "observed": "Bridged to frozen 36-item gspc-art5_safeguard and 33-item gspc-detector_interop banks"
+        },
+        {
+          "probe_id": "WD-EU73-03",
+          "dimension": "hitl_and_contamination_wall",
+          "verdict": "PASS",
+          "observed": "CH-13 blocks legal compliance determinations; routes evidence to LANE_06"
+        }
+      ]
+    },
+    {
+      "database_id": "FDA_MAUDE_AI_ML_SAMD",
+      "name": "FDA MAUDE & AI/ML Software as a Medical Device (SaMD) Adverse Event Database",
+      "public_url": "https://open.fda.gov/apis/device/event/",
+      "feed_kind": "OpenFDA JSON API of clinical & medical device adverse event reports",
+      "license": "US Government Public Domain (CC0)",
+      "training_allowed": false,
+      "primary_gspc_axes": [
+        "care",
+        "machinery-conformity",
+        "humanoid-deployment",
+        "cross-reality"
+      ],
+      "working_group_id": "human-impact",
+      "wg_document_id": "COAI-WG-006",
+      "hitl_lane_id": "LANE_01_CLINICAL_AND_CARE_STEWARD",
+      "predicates": {
+        "schema_and_machine_readability": 1,
+        "cryptographic_provenance_and_byte_pinning": 0,
+        "retraction_and_correction_lineage": 1,
+        "causal_to_test_instrument_binding": 0,
+        "revocation_and_hitl_escalation_hook": 0,
+        "license_and_contamination_hygiene": 1
+      },
+      "layer0_harness_bridge": "Ingests openFDA MDR adverse event JSON records, pins SHA-256 payload digests, maps to care / machinery-conformity banks, and routes to clinical HITL steward (LANE_01).",
+      "probes": [
+        {
+          "probe_id": "WD-FDA-01",
+          "dimension": "schema_ingest",
+          "verdict": "PASS",
+          "observed": "openFDA device/event JSON endpoint provides structured MDR report IDs and narratives"
+        },
+        {
+          "probe_id": "WD-FDA-02",
+          "dimension": "crypto_pinning_and_test_link",
+          "verdict": "GAP_BRIDGED_BY_LAYER0",
+          "observed": "Bridged to gspc-care (n=199), CARE-PSY-v1 (n=36), and gspc-machinery_conformity (n=33)"
+        },
+        {
+          "probe_id": "WD-FDA-03",
+          "dimension": "hitl_and_contamination_wall",
+          "verdict": "PASS",
+          "observed": "Patient narratives hard-blocked from training (model_training=false); routed to COAI-WG-006"
+        }
+      ]
+    },
+    {
+      "database_id": "SEC_EDGAR_8K_ITEM_1_05",
+      "name": "SEC EDGAR Form 8-K Item 1.05 Material Cybersecurity & S-1/10-K AI Risk Disclosures",
+      "public_url": "https://www.sec.gov/edgar/searchedgar/companysearch",
+      "feed_kind": "Public EDGAR XBRL/JSON filings of material incidents and AI risk factors",
+      "license": "US Government Public Domain (CC0)",
+      "training_allowed": false,
+      "primary_gspc_axes": [
+        "company-practice",
+        "provenance-controls",
+        "custody-disclosure",
+        "ai-adoption-components",
+        "labour-components"
+      ],
+      "working_group_id": "economy",
+      "wg_document_id": "COAI-WG-007",
+      "hitl_lane_id": "LANE_03_FINANCIAL_RWA_AND_COBOL_AUDITOR",
+      "predicates": {
+        "schema_and_machine_readability": 1,
+        "cryptographic_provenance_and_byte_pinning": 1,
+        "retraction_and_correction_lineage": 1,
+        "causal_to_test_instrument_binding": 0,
+        "revocation_and_hitl_escalation_hook": 0,
+        "license_and_contamination_hygiene": 1
+      },
+      "layer0_harness_bridge": "Links EDGAR 8-K / S-1 / 10-K filings to permissionless S-1 measurement bulletins (`s1-ipo-measurement-readiness-v1.json`) and financial deterministic-facts axes.",
+      "probes": [
+        {
+          "probe_id": "WD-SEC-01",
+          "dimension": "schema_ingest",
+          "verdict": "PASS",
+          "observed": "EDGAR accession numbers and XBRL facts parse deterministically"
+        },
+        {
+          "probe_id": "WD-SEC-02",
+          "dimension": "crypto_pinning_and_test_link",
+          "verdict": "GAP_BRIDGED_BY_LAYER0",
+          "observed": "Bridged to 33-axis S-1/10-K risk crosswalk and COBOL/ISO-20022 parity checks"
+        },
+        {
+          "probe_id": "WD-SEC-03",
+          "dimension": "hitl_and_contamination_wall",
+          "verdict": "PASS",
+          "observed": "Routes financial/labour/disclosure anomalies to COAI-WG-007 + LANE_03"
+        }
+      ]
+    },
+    {
+      "database_id": "CISA_KEV_AND_ICS_OT",
+      "name": "CISA Known Exploited Vulnerabilities (KEV) & Industrial Control Systems (ICS/OT) Catalog",
+      "public_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "feed_kind": "Daily JSON catalog of actively exploited infrastructure, runtime, and OT vulnerabilities",
+      "license": "US Government Public Domain (CC0)",
+      "training_allowed": false,
+      "primary_gspc_axes": [
+        "continuity",
+        "machinery-conformity",
+        "harness-fidelity",
+        "serving-fidelity",
+        "humanoid-deployment"
+      ],
+      "working_group_id": "runtime",
+      "wg_document_id": "COAI-WG-005",
+      "hitl_lane_id": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN",
+      "predicates": {
+        "schema_and_machine_readability": 1,
+        "cryptographic_provenance_and_byte_pinning": 1,
+        "retraction_and_correction_lineage": 1,
+        "causal_to_test_instrument_binding": 0,
+        "revocation_and_hitl_escalation_hook": 0,
+        "license_and_contamination_hygiene": 1
+      },
+      "layer0_harness_bridge": "Ingests CISA KEV JSON feed, checks against agent sandbox/container dependencies, and binds due-date remediation to gspc-continuity and gspc-machinery_conformity.",
+      "probes": [
+        {
+          "probe_id": "WD-CISA-01",
+          "dimension": "schema_ingest",
+          "verdict": "PASS",
+          "observed": "CISA KEV JSON feed provides CVE ID, vendor, product, and required action due dates"
+        },
+        {
+          "probe_id": "WD-CISA-02",
+          "dimension": "crypto_pinning_and_test_link",
+          "verdict": "GAP_BRIDGED_BY_LAYER0",
+          "observed": "Bridged to gspc-continuity (n=33) and gspc-machinery_conformity (n=33) banks"
+        },
+        {
+          "probe_id": "WD-CISA-03",
+          "dimension": "hitl_and_contamination_wall",
+          "verdict": "PASS",
+          "observed": "Routes active exploitation alerts to runtime working group (COAI-WG-005) + LANE_04"
+        }
+      ]
+    },
+    {
+      "database_id": "DEFILLAMA_REKT_RWA_LEDGER",
+      "name": "DeFiLlama & Rekt Cryptographic Reserve, Bridge, Oracle & RWA Custody Incident Ledger",
+      "public_url": "https://defillama.com/hacks",
+      "feed_kind": "Structured JSON feed of reserve depegs, bridge compromises, oracle failures, and custody incidents",
+      "license": "Open API / Public Ledger Data",
+      "training_allowed": false,
+      "primary_gspc_axes": [
+        "reserve-attestation",
+        "distribution-integrity",
+        "custody-disclosure",
+        "provenance-controls",
+        "humanoid-labour-index"
+      ],
+      "working_group_id": "economy",
+      "wg_document_id": "COAI-WG-007",
+      "hitl_lane_id": "LANE_03_FINANCIAL_RWA_AND_COBOL_AUDITOR",
+      "predicates": {
+        "schema_and_machine_readability": 1,
+        "cryptographic_provenance_and_byte_pinning": 1,
+        "retraction_and_correction_lineage": 1,
+        "causal_to_test_instrument_binding": 0,
+        "revocation_and_hitl_escalation_hook": 0,
+        "license_and_contamination_hygiene": 1
+      },
+      "layer0_harness_bridge": "Binds on-chain reserve/bridge incidents directly to GSPC 8 financial deterministic-facts axes (`reserve-attestation`, `custody-disclosure`, `distribution-integrity`) and x402 RAS fresh reads.",
+      "probes": [
+        {
+          "probe_id": "WD-RWA-01",
+          "dimension": "schema_ingest",
+          "verdict": "PASS",
+          "observed": "On-chain transaction hashes, chain IDs, and loss classifications parse deterministically"
+        },
+        {
+          "probe_id": "WD-RWA-02",
+          "dimension": "crypto_pinning_and_test_link",
+          "verdict": "PASS",
+          "observed": "Anchored to on-chain tx hashes and CSOAI financial-measure-run-* deterministic probes"
+        },
+        {
+          "probe_id": "WD-RWA-03",
+          "dimension": "hitl_and_contamination_wall",
+          "verdict": "PASS",
+          "observed": "Routes reserve/custody failures to economy working group (COAI-WG-007) + LANE_03"
+        }
+      ]
+    },
+    {
+      "database_id": "COSAI_CONTROLAI_AAIF_WATCHDOG",
+      "name": "Coalition for Secure AI (CoSAI / OASIS), ControlAI & Linux Foundation AAIF Watchdog Reports",
+      "public_url": "https://www.coalitionforsecureai.org",
+      "feed_kind": "Agentic delegation revocation, halt latency, multi-agent swarm, and MCP interoperability reports",
+      "license": "Apache-2.0 / CC-BY-4.0",
+      "training_allowed": false,
+      "primary_gspc_axes": [
+        "effect-binding",
+        "swarm",
+        "interop-conformance",
+        "measurer-integrity",
+        "lab-practice"
+      ],
+      "working_group_id": "agent-control",
+      "wg_document_id": "COAI-WG-002",
+      "hitl_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV",
+      "predicates": {
+        "schema_and_machine_readability": 1,
+        "cryptographic_provenance_and_byte_pinning": 1,
+        "retraction_and_correction_lineage": 1,
+        "causal_to_test_instrument_binding": 1,
+        "revocation_and_hitl_escalation_hook": 1,
+        "license_and_contamination_hygiene": 1
+      },
+      "layer0_harness_bridge": "Integrates ControlAI revocation latency trials (`evidence/research/controlai/revocation-observation.json`) and AAIF 4-layer portability checks directly into COAI-WG-002 and Layer-0 gate.",
+      "probes": [
+        {
+          "probe_id": "WD-CTRL-01",
+          "dimension": "schema_ingest",
+          "verdict": "PASS",
+          "observed": "Revocation latency and delegation traces map directly to COAI-WG-002"
+        },
+        {
+          "probe_id": "WD-CTRL-02",
+          "dimension": "crypto_pinning_and_test_link",
+          "verdict": "PASS",
+          "observed": "SHA-256 digest-pinned revocation control traces and negative controls"
+        },
+        {
+          "probe_id": "WD-CTRL-03",
+          "dimension": "hitl_and_contamination_wall",
+          "verdict": "PASS",
+          "observed": "Integrated with Public Watchdog review (#3651) and LANE_02 HITL steward"
+        }
+      ]
+    }
+  ],
+  "candidate_axis_34_public_incident_vigilance": {
+    "slot_number_candidate": 34,
+    "axis_id": "public-incident-vigilance",
+    "aliases": [
+      "watchdog-incident-vigilance",
+      "gspc-public-incident-vigilance"
+    ],
+    "family": "gspc",
+    "kind": "deterministic-facts",
+    "board_admission_state": "CANDIDATE_SLOT_MEASURED_IN_WATCHDOG",
+    "adr_001_boundary_note": "Per council-os/ADR-001-axis-count.md and canon.json, live GET /api/gspc publishes 33 canonical slots (23 measured, 10 unmeasured) so ROW_SHA256_ON_MASTER and drift-guard remain green. Slot 34 (public-incident-vigilance) is measured here with n=36 (>=30) across 12 global watchdog databases and staged for the next owner canon.json + signed-board-freeze ceremony.",
+    "n_databases_measured": 12,
+    "n_probes_total": 36,
+    "n_valid": 36,
+    "tally": {
+      "PASS_NATIVE": 26,
+      "GAP_BRIDGED_BY_CSOAI_LAYER0": 10
+    },
+    "method": "watchdog-incident-vigilance-v1.0 (12 databases x 3 probes = 36 items)",
+    "probes": [
+      {
+        "probe_id": "WD-AIID-01",
+        "database_id": "AIID_PARTNERSHIP_ON_AI",
+        "dimension": "schema_ingest",
+        "verdict": "PASS",
+        "observed": "JSON/CSV incident IDs and report URLs parse deterministically"
+      },
+      {
+        "probe_id": "WD-AIID-02",
+        "database_id": "AIID_PARTNERSHIP_ON_AI",
+        "dimension": "crypto_pinning_and_test_link",
+        "verdict": "GAP_BRIDGED_BY_LAYER0",
+        "observed": "No native Ed25519 signature or frozen test-bank pointer; bridged by CSOAI Layer-0 digest + bank crosswalk"
+      },
+      {
+        "probe_id": "WD-AIID-03",
+        "database_id": "AIID_PARTNERSHIP_ON_AI",
+        "dimension": "hitl_and_contamination_wall",
+        "verdict": "PASS",
+        "observed": "Enforces model_training=false and routes clinical/psychosis incidents to LANE_01"
+      },
+      {
+        "probe_id": "WD-OECD-01",
+        "database_id": "OECD_AI_AIM",
+        "dimension": "schema_ingest",
+        "verdict": "PASS",
+        "observed": "OECD principle and severity classifications map cleanly to GSPC governance axes"
+      },
+      {
+        "probe_id": "WD-OECD-02",
+        "database_id": "OECD_AI_AIM",
+        "dimension": "crypto_pinning_and_test_link",
+        "verdict": "GAP_BRIDGED_BY_LAYER0",
+        "observed": "News URLs drift without content digests; CSOAI pins SHA-256 capture receipts"
+      },
+      {
+        "probe_id": "WD-OECD-03",
+        "database_id": "OECD_AI_AIM",
+        "dimension": "hitl_and_contamination_wall",
+        "verdict": "PASS",
+        "observed": "Routes cross-jurisdictional hazards to governance working group + LANE_06"
+      },
+      {
+        "probe_id": "WD-MIT-01",
+        "database_id": "MIT_AI_RISK_REPOSITORY",
+        "dimension": "schema_ingest",
+        "verdict": "PASS",
+        "observed": "7-domain / 24-subdomain taxonomy maps 1:1 to GSPC 33-axis register"
+      },
+      {
+        "probe_id": "WD-MIT-02",
+        "database_id": "MIT_AI_RISK_REPOSITORY",
+        "dimension": "crypto_pinning_and_test_link",
+        "verdict": "GAP_BRIDGED_BY_LAYER0",
+        "observed": "Static spreadsheet versioned by release; CSOAI pins exact SHA-256 and frozen item links"
+      },
+      {
+        "probe_id": "WD-MIT-03",
+        "database_id": "MIT_AI_RISK_REPOSITORY",
+        "dimension": "hitl_and_contamination_wall",
+        "verdict": "PASS",
+        "observed": "CC-BY-4.0 attribution preserved; routes taxonomy gaps to LANE_05"
+      },
+      {
+        "probe_id": "WD-AVID-01",
+        "database_id": "AVID_VULNERABILITY_DB",
+        "dimension": "schema_ingest",
+        "verdict": "PASS",
+        "observed": "AVID JSON schema ingests directly into GSPC negative-control format"
+      },
+      {
+        "probe_id": "WD-AVID-02",
+        "database_id": "AVID_VULNERABILITY_DB",
+        "dimension": "crypto_pinning_and_test_link",
+        "verdict": "PASS",
+        "observed": "Git-pinned vulnerability records with evaluation references"
+      },
+      {
+        "probe_id": "WD-AVID-03",
+        "database_id": "AVID_VULNERABILITY_DB",
+        "dimension": "hitl_and_contamination_wall",
+        "verdict": "GAP_BRIDGED_BY_LAYER0",
+        "observed": "No native runtime revocation hook; CSOAI Layer-0 binds to CH-03/CH-04 HITL gate"
+      },
+      {
+        "probe_id": "WD-OWASP-01",
+        "database_id": "OWASP_GENAI_AGENTIC_TOP10",
+        "dimension": "schema_ingest",
+        "verdict": "PASS",
+        "observed": "ASI01..ASI10 and LLM01..LLM10 map to CH-01..CH-16 and GSPC runtime axes"
+      },
+      {
+        "probe_id": "WD-OWASP-02",
+        "database_id": "OWASP_GENAI_AGENTIC_TOP10",
+        "dimension": "crypto_pinning_and_test_link",
+        "verdict": "GAP_BRIDGED_BY_LAYER0",
+        "observed": "Prose advisories bridged to deterministic effect-binding and gspc-mcp probes"
+      },
+      {
+        "probe_id": "WD-OWASP-03",
+        "database_id": "OWASP_GENAI_AGENTIC_TOP10",
+        "dimension": "hitl_and_contamination_wall",
+        "verdict": "PASS",
+        "observed": "Enforces ESCALATION_REQUIRED on consequential tool calls via @csoai/layer0@0.2.1"
+      },
+      {
+        "probe_id": "WD-GHSA-01",
+        "database_id": "NVD_GHSA_AI_MCP_CVES",
+        "dimension": "schema_ingest",
+        "verdict": "PASS",
+        "observed": "OSV/GHSA JSON schema parses package, version range, CVSS, and commit SHA"
+      },
+      {
+        "probe_id": "WD-GHSA-02",
+        "database_id": "NVD_GHSA_AI_MCP_CVES",
+        "dimension": "crypto_pinning_and_test_link",
+        "verdict": "PASS",
+        "observed": "Commit-hash and package-digest pinned advisories"
+      },
+      {
+        "probe_id": "WD-GHSA-03",
+        "database_id": "NVD_GHSA_AI_MCP_CVES",
+        "dimension": "hitl_and_contamination_wall",
+        "verdict": "GAP_BRIDGED_BY_LAYER0",
+        "observed": "Bridged to CSOAI SBOM/AI-BOM + Layer-0 dependency quarantine gate"
+      },
+      {
+        "probe_id": "WD-EU73-01",
+        "database_id": "EU_AI_ACT_ART73_ENFORCEMENT",
+        "dimension": "schema_ingest",
+        "verdict": "PASS",
+        "observed": "Obligation articles map to GSPC art5-safeguard, detector-interop, and regulatory-framework"
+      },
+      {
+        "probe_id": "WD-EU73-02",
+        "database_id": "EU_AI_ACT_ART73_ENFORCEMENT",
+        "dimension": "crypto_pinning_and_test_link",
+        "verdict": "GAP_BRIDGED_BY_LAYER0",
+        "observed": "Bridged to frozen 36-item gspc-art5_safeguard and 33-item gspc-detector_interop banks"
+      },
+      {
+        "probe_id": "WD-EU73-03",
+        "database_id": "EU_AI_ACT_ART73_ENFORCEMENT",
+        "dimension": "hitl_and_contamination_wall",
+        "verdict": "PASS",
+        "observed": "CH-13 blocks legal compliance determinations; routes evidence to LANE_06"
+      },
+      {
+        "probe_id": "WD-FDA-01",
+        "database_id": "FDA_MAUDE_AI_ML_SAMD",
+        "dimension": "schema_ingest",
+        "verdict": "PASS",
+        "observed": "openFDA device/event JSON endpoint provides structured MDR report IDs and narratives"
+      },
+      {
+        "probe_id": "WD-FDA-02",
+        "database_id": "FDA_MAUDE_AI_ML_SAMD",
+        "dimension": "crypto_pinning_and_test_link",
+        "verdict": "GAP_BRIDGED_BY_LAYER0",
+        "observed": "Bridged to gspc-care (n=199), CARE-PSY-v1 (n=36), and gspc-machinery_conformity (n=33)"
+      },
+      {
+        "probe_id": "WD-FDA-03",
+        "database_id": "FDA_MAUDE_AI_ML_SAMD",
+        "dimension": "hitl_and_contamination_wall",
+        "verdict": "PASS",
+        "observed": "Patient narratives hard-blocked from training (model_training=false); routed to COAI-WG-006"
+      },
+      {
+        "probe_id": "WD-SEC-01",
+        "database_id": "SEC_EDGAR_8K_ITEM_1_05",
+        "dimension": "schema_ingest",
+        "verdict": "PASS",
+        "observed": "EDGAR accession numbers and XBRL facts parse deterministically"
+      },
+      {
+        "probe_id": "WD-SEC-02",
+        "database_id": "SEC_EDGAR_8K_ITEM_1_05",
+        "dimension": "crypto_pinning_and_test_link",
+        "verdict": "GAP_BRIDGED_BY_LAYER0",
+        "observed": "Bridged to 33-axis S-1/10-K risk crosswalk and COBOL/ISO-20022 parity checks"
+      },
+      {
+        "probe_id": "WD-SEC-03",
+        "database_id": "SEC_EDGAR_8K_ITEM_1_05",
+        "dimension": "hitl_and_contamination_wall",
+        "verdict": "PASS",
+        "observed": "Routes financial/labour/disclosure anomalies to COAI-WG-007 + LANE_03"
+      },
+      {
+        "probe_id": "WD-CISA-01",
+        "database_id": "CISA_KEV_AND_ICS_OT",
+        "dimension": "schema_ingest",
+        "verdict": "PASS",
+        "observed": "CISA KEV JSON feed provides CVE ID, vendor, product, and required action due dates"
+      },
+      {
+        "probe_id": "WD-CISA-02",
+        "database_id": "CISA_KEV_AND_ICS_OT",
+        "dimension": "crypto_pinning_and_test_link",
+        "verdict": "GAP_BRIDGED_BY_LAYER0",
+        "observed": "Bridged to gspc-continuity (n=33) and gspc-machinery_conformity (n=33) banks"
+      },
+      {
+        "probe_id": "WD-CISA-03",
+        "database_id": "CISA_KEV_AND_ICS_OT",
+        "dimension": "hitl_and_contamination_wall",
+        "verdict": "PASS",
+        "observed": "Routes active exploitation alerts to runtime working group (COAI-WG-005) + LANE_04"
+      },
+      {
+        "probe_id": "WD-RWA-01",
+        "database_id": "DEFILLAMA_REKT_RWA_LEDGER",
+        "dimension": "schema_ingest",
+        "verdict": "PASS",
+        "observed": "On-chain transaction hashes, chain IDs, and loss classifications parse deterministically"
+      },
+      {
+        "probe_id": "WD-RWA-02",
+        "database_id": "DEFILLAMA_REKT_RWA_LEDGER",
+        "dimension": "crypto_pinning_and_test_link",
+        "verdict": "PASS",
+        "observed": "Anchored to on-chain tx hashes and CSOAI financial-measure-run-* deterministic probes"
+      },
+      {
+        "probe_id": "WD-RWA-03",
+        "database_id": "DEFILLAMA_REKT_RWA_LEDGER",
+        "dimension": "hitl_and_contamination_wall",
+        "verdict": "PASS",
+        "observed": "Routes reserve/custody failures to economy working group (COAI-WG-007) + LANE_03"
+      },
+      {
+        "probe_id": "WD-CTRL-01",
+        "database_id": "COSAI_CONTROLAI_AAIF_WATCHDOG",
+        "dimension": "schema_ingest",
+        "verdict": "PASS",
+        "observed": "Revocation latency and delegation traces map directly to COAI-WG-002"
+      },
+      {
+        "probe_id": "WD-CTRL-02",
+        "database_id": "COSAI_CONTROLAI_AAIF_WATCHDOG",
+        "dimension": "crypto_pinning_and_test_link",
+        "verdict": "PASS",
+        "observed": "SHA-256 digest-pinned revocation control traces and negative controls"
+      },
+      {
+        "probe_id": "WD-CTRL-03",
+        "database_id": "COSAI_CONTROLAI_AAIF_WATCHDOG",
+        "dimension": "hitl_and_contamination_wall",
+        "verdict": "PASS",
+        "observed": "Integrated with Public Watchdog review (#3651) and LANE_02 HITL steward"
+      }
+    ]
+  },
+  "all_33_axes_to_watchdog_meok_wg_safe_crosswalk": [
+    {
+      "slot_index": 1,
+      "axis": "governance",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-governance",
+        "reviewer_role": "governance measurement reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "separation_evidence",
+          "leader_card_url",
+          "measurement_time"
+        ],
+        "negative_controls": [
+          "remove the leader card and require the leader claim to be withheld",
+          "alter one per-item row digest and require lineage failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "governance",
+        "working_group_name": "Governance, rights and regulatory evidence",
+        "wg_catalog_document_id": "COAI-WG-001",
+        "first_task": "Review one Council self-claim and produce a dated correction or a reasoned no-change record."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.14",
+          "Art.15",
+          "Art.18"
+        ],
+        "controls": [
+          "CH-13",
+          "CH-14",
+          "CH-15"
+        ]
+      },
+      "hitl_steward_lane": "LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS",
+      "ingested_global_watchdog_databases": [
+        "AIID_PARTNERSHIP_ON_AI",
+        "OECD_AI_AIM"
+      ]
+    },
+    {
+      "slot_index": 2,
+      "axis": "safety",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-safety",
+        "reviewer_role": "safety evaluation reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "macro_f1",
+          "unparsed_rate",
+          "cvar05_harm",
+          "mean_harm"
+        ],
+        "negative_controls": [
+          "hide an unparsed response and require the parse-rate check to fail",
+          "move tail harm into the mean and require the aggregate guard to reject it"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "agent-control",
+        "working_group_name": "Agent authority and stopping",
+        "wg_catalog_document_id": "COAI-WG-002",
+        "first_task": "Replay four local revocation controls and challenge how issue, last-action and quiescence timestamps are interpreted."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.3",
+          "Art.7",
+          "Art.20"
+        ],
+        "controls": [
+          "CH-01",
+          "CH-03",
+          "CH-04",
+          "CH-09"
+        ]
+      },
+      "hitl_steward_lane": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV",
+      "ingested_global_watchdog_databases": [
+        "AIID_PARTNERSHIP_ON_AI",
+        "AVID_VULNERABILITY_DB"
+      ]
+    },
+    {
+      "slot_index": 3,
+      "axis": "provenance",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-provenance",
+        "reviewer_role": "provenance and evidence reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "leader_card_url",
+          "separation_evidence",
+          "measurement_time"
+        ],
+        "negative_controls": [
+          "substitute an untracked source URL and require rejection",
+          "detach the signed leader card and require no leader assertion"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "provenance",
+        "working_group_name": "Provenance and open evidence",
+        "wg_catalog_document_id": "COAI-WG-004",
+        "first_task": "Trace one public claim from source capture through its signed record and verification result."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.5",
+          "Art.8",
+          "Art.9"
+        ],
+        "controls": [
+          "CH-02",
+          "CH-05",
+          "CH-10"
+        ]
+      },
+      "hitl_steward_lane": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN",
+      "ingested_global_watchdog_databases": [
+        "NVD_GHSA_AI_MCP_CVES",
+        "MIT_AI_RISK_REPOSITORY"
+      ]
+    },
+    {
+      "slot_index": 4,
+      "axis": "continuity",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-continuity",
+        "reviewer_role": "continuity evaluation reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "separation_evidence",
+          "measurement_time",
+          "method_status"
+        ],
+        "negative_controls": [
+          "drop recovery items from replay and require coverage failure",
+          "present a text-only result as an operational drill and require scope rejection"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "agent-control",
+        "working_group_name": "Agent authority and stopping",
+        "wg_catalog_document_id": "COAI-WG-002",
+        "first_task": "Replay four local revocation controls and challenge how issue, last-action and quiescence timestamps are interpreted."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.3",
+          "Art.7",
+          "Art.20"
+        ],
+        "controls": [
+          "CH-01",
+          "CH-03",
+          "CH-04",
+          "CH-09"
+        ]
+      },
+      "hitl_steward_lane": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV",
+      "ingested_global_watchdog_databases": [
+        "CISA_KEV_AND_ICS_OT",
+        "MIT_AI_RISK_REPOSITORY"
+      ]
+    },
+    {
+      "slot_index": 5,
+      "axis": "conformance",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-conformance",
+        "reviewer_role": "conformance measurement reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "separation_evidence",
+          "measurement_time",
+          "method_status"
+        ],
+        "negative_controls": [
+          "map one item to a different requirement and require mapping failure",
+          "emit certified language and require the claims guard to reject it"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "evaluation",
+        "working_group_name": "Evaluation and reproducibility",
+        "wg_catalog_document_id": "COAI-WG-003",
+        "first_task": "Reproduce one published result from its exact source revision and record any missing inputs."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.11",
+          "Art.12",
+          "Art.16"
+        ],
+        "controls": [
+          "CH-06",
+          "CH-07",
+          "CH-12"
+        ]
+      },
+      "hitl_steward_lane": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY",
+      "ingested_global_watchdog_databases": [
+        "MIT_AI_RISK_REPOSITORY",
+        "OECD_AI_AIM"
+      ]
+    },
+    {
+      "slot_index": 6,
+      "axis": "openness",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-openness",
+        "reviewer_role": "openness and licensing reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "separation_evidence",
+          "measurement_time",
+          "method_status"
+        ],
+        "negative_controls": [
+          "treat public availability as an open licence and require classification failure",
+          "remove licence evidence and require the related slice to become UNCHECKABLE"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "provenance",
+        "working_group_name": "Provenance and open evidence",
+        "wg_catalog_document_id": "COAI-WG-004",
+        "first_task": "Trace one public claim from source capture through its signed record and verification result."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.5",
+          "Art.8",
+          "Art.9"
+        ],
+        "controls": [
+          "CH-02",
+          "CH-05",
+          "CH-10"
+        ]
+      },
+      "hitl_steward_lane": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN",
+      "ingested_global_watchdog_databases": [
+        "NVD_GHSA_AI_MCP_CVES",
+        "MIT_AI_RISK_REPOSITORY"
+      ]
+    },
+    {
+      "slot_index": 7,
+      "axis": "machinery-conformity",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-machinery-conformity",
+        "reviewer_role": "machinery and conformity reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "separation_untested_reason_code",
+          "measurement_time"
+        ],
+        "negative_controls": [
+          "inject an uncarded leader and require public suppression",
+          "describe a text bank as physical machine certification and require scope rejection"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "human-impact",
+        "working_group_name": "Human impact and embodied systems",
+        "wg_catalog_document_id": "COAI-WG-006",
+        "first_task": "Review one synthetic care scenario with a domain specialist and an affected-user representative."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.1",
+          "Art.2",
+          "Art.20"
+        ],
+        "controls": [
+          "CH-03",
+          "CH-14",
+          "CH-16"
+        ]
+      },
+      "hitl_steward_lane": "LANE_01_CLINICAL_AND_CARE_STEWARD",
+      "ingested_global_watchdog_databases": [
+        "FDA_MAUDE_AI_ML_SAMD",
+        "CISA_KEV_AND_ICS_OT"
+      ]
+    },
+    {
+      "slot_index": 8,
+      "axis": "care",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-care",
+        "reviewer_role": "care and human-factors reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "n_note",
+          "separation_n_note",
+          "leader_card_url"
+        ],
+        "negative_controls": [
+          "drop n_note and require the independence audit to fail",
+          "aggregate away a high-harm care slice and require the slice guard to fail"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "human-impact",
+        "working_group_name": "Human impact and embodied systems",
+        "wg_catalog_document_id": "COAI-WG-006",
+        "first_task": "Review one synthetic care scenario with a domain specialist and an affected-user representative."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.1",
+          "Art.2",
+          "Art.20"
+        ],
+        "controls": [
+          "CH-03",
+          "CH-14",
+          "CH-16"
+        ]
+      },
+      "hitl_steward_lane": "LANE_01_CLINICAL_AND_CARE_STEWARD",
+      "ingested_global_watchdog_databases": [
+        "AIID_PARTNERSHIP_ON_AI",
+        "FDA_MAUDE_AI_ML_SAMD"
+      ]
+    },
+    {
+      "slot_index": 9,
+      "axis": "cross-reality",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-cross-reality",
+        "reviewer_role": "cross-reality evaluation reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "separation_untested_reason_code",
+          "measurement_time"
+        ],
+        "negative_controls": [
+          "relabel simulation evidence as physical deployment and require scope failure",
+          "restore an uncarded external leader and require suppression"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "human-impact",
+        "working_group_name": "Human impact and embodied systems",
+        "wg_catalog_document_id": "COAI-WG-006",
+        "first_task": "Review one synthetic care scenario with a domain specialist and an affected-user representative."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.1",
+          "Art.2",
+          "Art.20"
+        ],
+        "controls": [
+          "CH-03",
+          "CH-14",
+          "CH-16"
+        ]
+      },
+      "hitl_steward_lane": "LANE_01_CLINICAL_AND_CARE_STEWARD",
+      "ingested_global_watchdog_databases": [
+        "FDA_MAUDE_AI_ML_SAMD",
+        "MIT_AI_RISK_REPOSITORY"
+      ]
+    },
+    {
+      "slot_index": 10,
+      "axis": "detector-interop",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-detector-interop",
+        "reviewer_role": "detector interoperability reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "separation_untested_reason_code",
+          "measurement_time"
+        ],
+        "negative_controls": [
+          "treat two detectors' agreement as truth and require the guard to reject the inference",
+          "drop disagreement rows and require coverage failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "provenance",
+        "working_group_name": "Provenance and open evidence",
+        "wg_catalog_document_id": "COAI-WG-004",
+        "first_task": "Trace one public claim from source capture through its signed record and verification result."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.5",
+          "Art.8",
+          "Art.9"
+        ],
+        "controls": [
+          "CH-02",
+          "CH-05",
+          "CH-10"
+        ]
+      },
+      "hitl_steward_lane": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN",
+      "ingested_global_watchdog_databases": [
+        "AVID_VULNERABILITY_DB",
+        "EU_AI_ACT_ART73_ENFORCEMENT"
+      ]
+    },
+    {
+      "slot_index": 11,
+      "axis": "art5-safeguard",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-art5-safeguard",
+        "reviewer_role": "fundamental-rights and safeguard reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "separation_untested_reason_code",
+          "cvar05_harm"
+        ],
+        "negative_controls": [
+          "convert a test response into an Article 5 legal determination and require rejection",
+          "hide a severe failure inside the mean and require the harm guard to fail"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "governance",
+        "working_group_name": "Governance, rights and regulatory evidence",
+        "wg_catalog_document_id": "COAI-WG-001",
+        "first_task": "Review one Council self-claim and produce a dated correction or a reasoned no-change record."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.14",
+          "Art.15",
+          "Art.18"
+        ],
+        "controls": [
+          "CH-13",
+          "CH-14",
+          "CH-15"
+        ]
+      },
+      "hitl_steward_lane": "LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS",
+      "ingested_global_watchdog_databases": [
+        "OECD_AI_AIM",
+        "EU_AI_ACT_ART73_ENFORCEMENT"
+      ]
+    },
+    {
+      "slot_index": 12,
+      "axis": "swarm",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-swarm",
+        "reviewer_role": "multi-agent systems reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "n_note",
+          "method_status",
+          "separation_basis"
+        ],
+        "negative_controls": [
+          "use the retired bank digest and require lineage failure",
+          "confuse instances with prompts and require denominator failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "runtime",
+        "working_group_name": "Runtime and interoperability",
+        "wg_catalog_document_id": "COAI-WG-005",
+        "first_task": "Compare a declared tool contract with one bounded execution trace and its refusal paths."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.6",
+          "Art.10",
+          "Art.17"
+        ],
+        "controls": [
+          "CH-04",
+          "CH-08",
+          "CH-11"
+        ]
+      },
+      "hitl_steward_lane": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV",
+      "ingested_global_watchdog_databases": [
+        "OWASP_GENAI_AGENTIC_TOP10",
+        "COSAI_CONTROLAI_AAIF_WATCHDOG"
+      ]
+    },
+    {
+      "slot_index": 13,
+      "axis": "affect",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-affect",
+        "reviewer_role": "affect and human-factors reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "cvar05_harm",
+          "mean_harm"
+        ],
+        "negative_controls": [
+          "infer a user's diagnosis from an affect score and require scope rejection",
+          "remove tail-harm data and require the audit to name the missing evidence"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "human-impact",
+        "working_group_name": "Human impact and embodied systems",
+        "wg_catalog_document_id": "COAI-WG-006",
+        "first_task": "Review one synthetic care scenario with a domain specialist and an affected-user representative."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.1",
+          "Art.2",
+          "Art.20"
+        ],
+        "controls": [
+          "CH-03",
+          "CH-14",
+          "CH-16"
+        ]
+      },
+      "hitl_steward_lane": "LANE_01_CLINICAL_AND_CARE_STEWARD",
+      "ingested_global_watchdog_databases": [
+        "AIID_PARTNERSHIP_ON_AI",
+        "MIT_AI_RISK_REPOSITORY"
+      ]
+    },
+    {
+      "slot_index": 14,
+      "axis": "jail",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-jail",
+        "reviewer_role": "adversarial evaluation reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "dataset_note",
+          "null_grammar",
+          "quotable_models",
+          "method_status"
+        ],
+        "negative_controls": [
+          "convert null to zero and require grammar failure",
+          "claim thirty distinct prompts without the underlying bank and require sample-lineage failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "agent-control",
+        "working_group_name": "Agent authority and stopping",
+        "wg_catalog_document_id": "COAI-WG-002",
+        "first_task": "Replay four local revocation controls and challenge how issue, last-action and quiescence timestamps are interpreted."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.3",
+          "Art.7",
+          "Art.20"
+        ],
+        "controls": [
+          "CH-01",
+          "CH-03",
+          "CH-04",
+          "CH-09"
+        ]
+      },
+      "hitl_steward_lane": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV",
+      "ingested_global_watchdog_databases": [
+        "AVID_VULNERABILITY_DB",
+        "OWASP_GENAI_AGENTIC_TOP10"
+      ]
+    },
+    {
+      "slot_index": 15,
+      "axis": "effect-binding",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-effect-binding",
+        "reviewer_role": "tool-effects and interoperability reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "evidence_url",
+          "facts_as_of",
+          "run_attestation",
+          "coverage",
+          "n_unit"
+        ],
+        "negative_controls": [
+          "infer safety from a read-only declaration and require mismatch reporting",
+          "treat unreachable as a failed effect and require UNREACHABLE to remain distinct"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "agent-control",
+        "working_group_name": "Agent authority and stopping",
+        "wg_catalog_document_id": "COAI-WG-002",
+        "first_task": "Replay four local revocation controls and challenge how issue, last-action and quiescence timestamps are interpreted."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.3",
+          "Art.7",
+          "Art.20"
+        ],
+        "controls": [
+          "CH-01",
+          "CH-03",
+          "CH-04",
+          "CH-09"
+        ]
+      },
+      "hitl_steward_lane": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV",
+      "ingested_global_watchdog_databases": [
+        "OWASP_GENAI_AGENTIC_TOP10",
+        "COSAI_CONTROLAI_AAIF_WATCHDOG"
+      ]
+    },
+    {
+      "slot_index": 16,
+      "axis": "provenance-controls",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-provenance-controls",
+        "reviewer_role": "ledger provenance reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "coverage",
+          "carrier"
+        ],
+        "negative_controls": [
+          "accept a one-way ledger link and require the control check to fail",
+          "infer full issuer coverage from the covered subset and require denominator failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "provenance",
+        "working_group_name": "Provenance and open evidence",
+        "wg_catalog_document_id": "COAI-WG-004",
+        "first_task": "Trace one public claim from source capture through its signed record and verification result."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.5",
+          "Art.8",
+          "Art.9"
+        ],
+        "controls": [
+          "CH-02",
+          "CH-05",
+          "CH-10"
+        ]
+      },
+      "hitl_steward_lane": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN",
+      "ingested_global_watchdog_databases": [
+        "NVD_GHSA_AI_MCP_CVES",
+        "SEC_EDGAR_8K_ITEM_1_05",
+        "DEFILLAMA_REKT_RWA_LEDGER"
+      ]
+    },
+    {
+      "slot_index": 17,
+      "axis": "reserve-attestation",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-reserve-attestation",
+        "reviewer_role": "reserve evidence reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "n_unit"
+        ],
+        "negative_controls": [
+          "describe account flags as reserve sufficiency and require scope rejection",
+          "infer a signature from content_id and require attestation failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "economy",
+        "working_group_name": "Economic evidence and work",
+        "wg_catalog_document_id": "COAI-WG-007",
+        "first_task": "Audit the provenance, date and limitations of one published labour or reserve observation."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.4",
+          "Art.13",
+          "Art.19"
+        ],
+        "controls": [
+          "CH-05",
+          "CH-12",
+          "CH-15"
+        ]
+      },
+      "hitl_steward_lane": "LANE_03_FINANCIAL_RWA_AND_COBOL_AUDITOR",
+      "ingested_global_watchdog_databases": [
+        "DEFILLAMA_REKT_RWA_LEDGER",
+        "MIT_AI_RISK_REPOSITORY"
+      ]
+    },
+    {
+      "slot_index": 18,
+      "axis": "regulatory-framework",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-regulatory-framework",
+        "reviewer_role": "regulatory evidence reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "n_unit"
+        ],
+        "negative_controls": [
+          "apply one jurisdiction's framework globally and require scope failure",
+          "drop facts_as_of and require freshness to become UNCHECKABLE"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "governance",
+        "working_group_name": "Governance, rights and regulatory evidence",
+        "wg_catalog_document_id": "COAI-WG-001",
+        "first_task": "Review one Council self-claim and produce a dated correction or a reasoned no-change record."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.14",
+          "Art.15",
+          "Art.18"
+        ],
+        "controls": [
+          "CH-13",
+          "CH-14",
+          "CH-15"
+        ]
+      },
+      "hitl_steward_lane": "LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS",
+      "ingested_global_watchdog_databases": [
+        "OECD_AI_AIM",
+        "EU_AI_ACT_ART73_ENFORCEMENT"
+      ]
+    },
+    {
+      "slot_index": 19,
+      "axis": "distribution-integrity",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-distribution-integrity",
+        "reviewer_role": "distribution and supply-chain reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "n_unit"
+        ],
+        "negative_controls": [
+          "treat channel presence as artifact integrity and require scope failure",
+          "change an artifact digest without changing the run and require replay failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "provenance",
+        "working_group_name": "Provenance and open evidence",
+        "wg_catalog_document_id": "COAI-WG-004",
+        "first_task": "Trace one public claim from source capture through its signed record and verification result."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.5",
+          "Art.8",
+          "Art.9"
+        ],
+        "controls": [
+          "CH-02",
+          "CH-05",
+          "CH-10"
+        ]
+      },
+      "hitl_steward_lane": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN",
+      "ingested_global_watchdog_databases": [
+        "NVD_GHSA_AI_MCP_CVES",
+        "DEFILLAMA_REKT_RWA_LEDGER"
+      ]
+    },
+    {
+      "slot_index": 20,
+      "axis": "custody-disclosure",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-custody-disclosure",
+        "reviewer_role": "custody disclosure reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "n_unit"
+        ],
+        "negative_controls": [
+          "treat absent custody disclosure as self-custody and require classification failure",
+          "collapse ambiguous and absent into one state and require vocabulary failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "agent-control",
+        "working_group_name": "Agent authority and stopping",
+        "wg_catalog_document_id": "COAI-WG-002",
+        "first_task": "Replay four local revocation controls and challenge how issue, last-action and quiescence timestamps are interpreted."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.3",
+          "Art.7",
+          "Art.20"
+        ],
+        "controls": [
+          "CH-01",
+          "CH-03",
+          "CH-04",
+          "CH-09"
+        ]
+      },
+      "hitl_steward_lane": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV",
+      "ingested_global_watchdog_databases": [
+        "SEC_EDGAR_8K_ITEM_1_05",
+        "DEFILLAMA_REKT_RWA_LEDGER"
+      ]
+    },
+    {
+      "slot_index": 21,
+      "axis": "ai-adoption-components",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-ai-adoption-components",
+        "reviewer_role": "statistical-series reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "dataset_note",
+          "evidence_url",
+          "facts_as_of",
+          "method_status"
+        ],
+        "negative_controls": [
+          "reconstruct a composite index from components and require the retired-claim guard to fail",
+          "mix series vintages silently and require lineage failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "economy",
+        "working_group_name": "Economic evidence and work",
+        "wg_catalog_document_id": "COAI-WG-007",
+        "first_task": "Audit the provenance, date and limitations of one published labour or reserve observation."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.4",
+          "Art.13",
+          "Art.19"
+        ],
+        "controls": [
+          "CH-05",
+          "CH-12",
+          "CH-15"
+        ]
+      },
+      "hitl_steward_lane": "LANE_03_FINANCIAL_RWA_AND_COBOL_AUDITOR",
+      "ingested_global_watchdog_databases": [
+        "SEC_EDGAR_8K_ITEM_1_05",
+        "MIT_AI_RISK_REPOSITORY"
+      ]
+    },
+    {
+      "slot_index": 22,
+      "axis": "labour-components",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-labour-components",
+        "reviewer_role": "labour statistics reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "dataset_note",
+          "evidence_url",
+          "facts_as_of",
+          "method_status"
+        ],
+        "negative_controls": [
+          "compare incompatible populations without labels and require denominator failure",
+          "publish a labour index score and require the retired-claim guard to fail"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "economy",
+        "working_group_name": "Economic evidence and work",
+        "wg_catalog_document_id": "COAI-WG-007",
+        "first_task": "Audit the provenance, date and limitations of one published labour or reserve observation."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.4",
+          "Art.13",
+          "Art.19"
+        ],
+        "controls": [
+          "CH-05",
+          "CH-12",
+          "CH-15"
+        ]
+      },
+      "hitl_steward_lane": "LANE_03_FINANCIAL_RWA_AND_COBOL_AUDITOR",
+      "ingested_global_watchdog_databases": [
+        "SEC_EDGAR_8K_ITEM_1_05",
+        "MIT_AI_RISK_REPOSITORY"
+      ]
+    },
+    {
+      "slot_index": 23,
+      "axis": "humanoid-labour-index",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-humanoid-labour-index",
+        "reviewer_role": "humanoid labour evidence reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "dataset_url",
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation"
+        ],
+        "negative_controls": [
+          "convert component facts into an index score and require scope rejection",
+          "treat a demo announcement as labour deployment and require evidence-class failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "economy",
+        "working_group_name": "Economic evidence and work",
+        "wg_catalog_document_id": "COAI-WG-007",
+        "first_task": "Audit the provenance, date and limitations of one published labour or reserve observation."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.4",
+          "Art.13",
+          "Art.19"
+        ],
+        "controls": [
+          "CH-05",
+          "CH-12",
+          "CH-15"
+        ]
+      },
+      "hitl_steward_lane": "LANE_03_FINANCIAL_RWA_AND_COBOL_AUDITOR",
+      "ingested_global_watchdog_databases": [
+        "DEFILLAMA_REKT_RWA_LEDGER",
+        "MIT_AI_RISK_REPOSITORY"
+      ]
+    },
+    {
+      "slot_index": 24,
+      "axis": "lab-practice",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-lab-practice",
+        "reviewer_role": "AI laboratory practice reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "negative_controls": [
+          "promote census checks to MEASURED and require the n-floor gate to reject them",
+          "include a non-lab company and require subject-scope failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "evaluation",
+        "working_group_name": "Evaluation and reproducibility",
+        "wg_catalog_document_id": "COAI-WG-003",
+        "first_task": "Reproduce one published result from its exact source revision and record any missing inputs."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.11",
+          "Art.12",
+          "Art.16"
+        ],
+        "controls": [
+          "CH-06",
+          "CH-07",
+          "CH-12"
+        ]
+      },
+      "hitl_steward_lane": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY",
+      "ingested_global_watchdog_databases": [
+        "MIT_AI_RISK_REPOSITORY",
+        "COSAI_CONTROLAI_AAIF_WATCHDOG"
+      ]
+    },
+    {
+      "slot_index": 25,
+      "axis": "company-practice",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-company-practice",
+        "reviewer_role": "company disclosure reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "negative_controls": [
+          "infer internal practice from marketing copy and require scope rejection",
+          "score fewer than thirty subjects and require the n-floor gate to fail"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "governance",
+        "working_group_name": "Governance, rights and regulatory evidence",
+        "wg_catalog_document_id": "COAI-WG-001",
+        "first_task": "Review one Council self-claim and produce a dated correction or a reasoned no-change record."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.14",
+          "Art.15",
+          "Art.18"
+        ],
+        "controls": [
+          "CH-13",
+          "CH-14",
+          "CH-15"
+        ]
+      },
+      "hitl_steward_lane": "LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS",
+      "ingested_global_watchdog_databases": [
+        "SEC_EDGAR_8K_ITEM_1_05",
+        "MIT_AI_RISK_REPOSITORY"
+      ]
+    },
+    {
+      "slot_index": 26,
+      "axis": "measurer-integrity",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-measurer-integrity",
+        "reviewer_role": "measurement integrity reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "negative_controls": [
+          "exempt CSOAI from a control and require neutrality failure",
+          "treat a published method without reproducible results as full integrity and require rubric failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "evaluation",
+        "working_group_name": "Evaluation and reproducibility",
+        "wg_catalog_document_id": "COAI-WG-003",
+        "first_task": "Reproduce one published result from its exact source revision and record any missing inputs."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.11",
+          "Art.12",
+          "Art.16"
+        ],
+        "controls": [
+          "CH-06",
+          "CH-07",
+          "CH-12"
+        ]
+      },
+      "hitl_steward_lane": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY",
+      "ingested_global_watchdog_databases": [
+        "MIT_AI_RISK_REPOSITORY",
+        "COSAI_CONTROLAI_AAIF_WATCHDOG"
+      ]
+    },
+    {
+      "slot_index": 27,
+      "axis": "harness-fidelity",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-harness-fidelity",
+        "reviewer_role": "evaluation harness reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "negative_controls": [
+          "change the bank between harnesses and require comparability failure",
+          "attribute a transport error to model behavior and require error-class failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "runtime",
+        "working_group_name": "Runtime and interoperability",
+        "wg_catalog_document_id": "COAI-WG-005",
+        "first_task": "Compare a declared tool contract with one bounded execution trace and its refusal paths."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.6",
+          "Art.10",
+          "Art.17"
+        ],
+        "controls": [
+          "CH-04",
+          "CH-08",
+          "CH-11"
+        ]
+      },
+      "hitl_steward_lane": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV",
+      "ingested_global_watchdog_databases": [
+        "OWASP_GENAI_AGENTIC_TOP10",
+        "NVD_GHSA_AI_MCP_CVES",
+        "CISA_KEV_AND_ICS_OT"
+      ]
+    },
+    {
+      "slot_index": 28,
+      "axis": "interop-conformance",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-interop-conformance",
+        "reviewer_role": "interoperability standards reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "negative_controls": [
+          "treat standards-group membership as conformance and require classification failure",
+          "accept an unversioned specification and require lineage failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "runtime",
+        "working_group_name": "Runtime and interoperability",
+        "wg_catalog_document_id": "COAI-WG-005",
+        "first_task": "Compare a declared tool contract with one bounded execution trace and its refusal paths."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.6",
+          "Art.10",
+          "Art.17"
+        ],
+        "controls": [
+          "CH-04",
+          "CH-08",
+          "CH-11"
+        ]
+      },
+      "hitl_steward_lane": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV",
+      "ingested_global_watchdog_databases": [
+        "OWASP_GENAI_AGENTIC_TOP10",
+        "COSAI_CONTROLAI_AAIF_WATCHDOG"
+      ]
+    },
+    {
+      "slot_index": 29,
+      "axis": "humanoid-deployment",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-humanoid-deployment",
+        "reviewer_role": "humanoid deployment reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "negative_controls": [
+          "classify a demonstration as production and require stage failure",
+          "use only the manufacturer's claim and require independent-evidence failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "human-impact",
+        "working_group_name": "Human impact and embodied systems",
+        "wg_catalog_document_id": "COAI-WG-006",
+        "first_task": "Review one synthetic care scenario with a domain specialist and an affected-user representative."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.1",
+          "Art.2",
+          "Art.20"
+        ],
+        "controls": [
+          "CH-03",
+          "CH-14",
+          "CH-16"
+        ]
+      },
+      "hitl_steward_lane": "LANE_01_CLINICAL_AND_CARE_STEWARD",
+      "ingested_global_watchdog_databases": [
+        "FDA_MAUDE_AI_ML_SAMD",
+        "CISA_KEV_AND_ICS_OT"
+      ]
+    },
+    {
+      "slot_index": 30,
+      "axis": "regulator-transparency",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-regulator-transparency",
+        "reviewer_role": "regulator transparency reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "public_pages",
+          "n",
+          "status"
+        ],
+        "negative_controls": [
+          "convert artifact presence into a regulator rating and require scope rejection",
+          "remove the owner gate and require publication policy failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "governance",
+        "working_group_name": "Governance, rights and regulatory evidence",
+        "wg_catalog_document_id": "COAI-WG-001",
+        "first_task": "Review one Council self-claim and produce a dated correction or a reasoned no-change record."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.14",
+          "Art.15",
+          "Art.18"
+        ],
+        "controls": [
+          "CH-13",
+          "CH-14",
+          "CH-15"
+        ]
+      },
+      "hitl_steward_lane": "LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS",
+      "ingested_global_watchdog_databases": [
+        "OECD_AI_AIM",
+        "EU_AI_ACT_ART73_ENFORCEMENT"
+      ]
+    },
+    {
+      "slot_index": 31,
+      "axis": "interpretability-reproducibility",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-interpretability-reproducibility",
+        "reviewer_role": "interpretability and reproducibility reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "negative_controls": [
+          "treat explanatory prose as reproduction and require evidence-class failure",
+          "ignore environment drift and require replay-manifest failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "evaluation",
+        "working_group_name": "Evaluation and reproducibility",
+        "wg_catalog_document_id": "COAI-WG-003",
+        "first_task": "Reproduce one published result from its exact source revision and record any missing inputs."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.11",
+          "Art.12",
+          "Art.16"
+        ],
+        "controls": [
+          "CH-06",
+          "CH-07",
+          "CH-12"
+        ]
+      },
+      "hitl_steward_lane": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY",
+      "ingested_global_watchdog_databases": [
+        "MIT_AI_RISK_REPOSITORY",
+        "OECD_AI_AIM"
+      ]
+    },
+    {
+      "slot_index": 32,
+      "axis": "claim-maintenance",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-claim-maintenance",
+        "reviewer_role": "claim maintenance reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n_note",
+          "n",
+          "status"
+        ],
+        "negative_controls": [
+          "label an unreachable claim withdrawn and require state-vocabulary failure",
+          "interpret a silent change as falsehood and require scope rejection"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "governance",
+        "working_group_name": "Governance, rights and regulatory evidence",
+        "wg_catalog_document_id": "COAI-WG-001",
+        "first_task": "Review one Council self-claim and produce a dated correction or a reasoned no-change record."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.14",
+          "Art.15",
+          "Art.18"
+        ],
+        "controls": [
+          "CH-13",
+          "CH-14",
+          "CH-15"
+        ]
+      },
+      "hitl_steward_lane": "LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS",
+      "ingested_global_watchdog_databases": [
+        "AIID_PARTNERSHIP_ON_AI",
+        "EU_AI_ACT_ART73_ENFORCEMENT"
+      ]
+    },
+    {
+      "slot_index": 33,
+      "axis": "serving-fidelity",
+      "meok_axis_specialist": {
+        "specialist_id": "meok-specialist-serving-fidelity",
+        "reviewer_role": "serving and inference fidelity reviewer",
+        "rsi_mode": "RECOMMENDATION_ONLY",
+        "initial_decision": "HOLD",
+        "required_fields": [
+          "applies_to",
+          "method",
+          "method_sha",
+          "method_status",
+          "n_note"
+        ],
+        "negative_controls": [
+          "run paid inference without approval and require the spend gate to refuse",
+          "treat a reviewed method as a completed run and require status failure"
+        ]
+      },
+      "public_watchdog_working_group": {
+        "working_group_id": "runtime",
+        "working_group_name": "Runtime and interoperability",
+        "wg_catalog_document_id": "COAI-WG-005",
+        "first_task": "Compare a declared tool contract with one bounded execution trace and its refusal paths."
+      },
+      "wg_safe_charter_binding": {
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "articles": [
+          "Art.6",
+          "Art.10",
+          "Art.17"
+        ],
+        "controls": [
+          "CH-04",
+          "CH-08",
+          "CH-11"
+        ]
+      },
+      "hitl_steward_lane": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV",
+      "ingested_global_watchdog_databases": [
+        "AVID_VULNERABILITY_DB",
+        "CISA_KEV_AND_ICS_OT"
+      ]
+    }
+  ],
+  "daily_gspc_signal_to_wg_safe_consolidation": {
+    "consolidation_flow": [
+      "1. Ingest & Pin: Poll all 12 Global Public Watchdog & Incident Databases + GSPC Daily Signal (33 canonical axes + Candidate Axis 34, n=36).",
+      "2. Layer-0 Constitutional Envelope: Wrap each incident in a <= 3,072-byte csoai.watchdog-layer0-incident-capsule/1.0 pinned to CHARTER_V0_1_0_SHA256 (writes_board=false, model_training=false).",
+      "3. MEOK 33 Axis Specialists (RECOMMENDATION_ONLY): Dispatch to the matching axis specialist in council-os/axis-specialists/registry.json to replay negative controls and draft a candidate bank/gate rule (initial_decision=HOLD).",
+      "4. WG-SAFE & 7 Public Watchdog Working Groups: Route the candidate finding to the matching working group (governance, agent-control, evaluation, provenance, runtime, human-impact, economy) and COAI-WG-001..007 docket.",
+      "5. Human-in-the-Loop (HITL) & End-User Protection: Named human steward (LANE_01..LANE_06) reviews the challenge; end users and enterprises verify exposure via @csoai/layer0@0.2.1 and /my-results/."
+    ],
+    "sample_3kb_incident_capsule": {
+      "capsule": {
+        "schema": "csoai.watchdog-layer0-incident-capsule/1.0",
+        "as_of": "2026-10-30T09:30:00Z",
+        "charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "source_watchdog_database": "AIID_PARTNERSHIP_ON_AI",
+        "external_incident_ref": "AIID-INC-2026-0842",
+        "incident_summary": "Open-weight assistant reinforced a user's persecutory delusion and discouraged clinical follow-up.",
+        "gspc_routing": {
+          "canonical_axis": "care",
+          "candidate_axis_34": "public-incident-vigilance",
+          "linked_frozen_instrument": "CARE-PSY-v1"
+        },
+        "meok_specialist_dispatch": {
+          "specialist_id": "meok-specialist-care",
+          "reviewer_role": "care and human-factors reviewer",
+          "rsi_mode": "RECOMMENDATION_ONLY",
+          "initial_decision": "HOLD",
+          "negative_control_to_replay": "drop n_note and require the independence audit to fail"
+        },
+        "wg_safe_and_working_group_docket": {
+          "working_group_id": "human-impact",
+          "wg_catalog_document_id": "COAI-WG-006",
+          "charter_articles": [
+            "Art.1",
+            "Art.2",
+            "Art.20"
+          ],
+          "charter_controls": [
+            "CH-03",
+            "CH-14",
+            "CH-16"
+          ]
+        },
+        "hitl_steward_routing": {
+          "lane_id": "LANE_01_CLINICAL_AND_CARE_STEWARD",
+          "state": "AWAITING_OPERATOR_REVIEW",
+          "writes_board": false,
+          "model_training": false,
+          "execution_authority_granted_by_charter": false
+        },
+        "end_user_layer0_protection_command": "npx @csoai/layer0 verify-incident --axis care --incident AIID-INC-2026-0842",
+        "framing": "Measurement, not certification. Anyone can re-check at https://councilof.ai/verify",
+        "capsule_sha256": "3cd99fd22a59dc4c227668080ae543dc5b0e44710ef87950aa33b55f75f3d72b"
+      },
+      "capsule_bytes": 1472,
+      "within_3kb_budget": true
+    }
+  },
+  "harness_sha256": "7be57059928e2a5b4567d9bfb48fe02d12d43f83b2d56d42180c8d57efc2c0d5"
+}

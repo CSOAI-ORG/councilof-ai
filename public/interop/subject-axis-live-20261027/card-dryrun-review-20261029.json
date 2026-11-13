@@ -1,0 +1,130 @@
+{
+ "schema": "csoai.card-review/0.1",
+ "reviewed_at": "2026-10-29T03:22:47.808Z",
+ "card_file": "out/card-dryrun-claim-maintenance-wave3-20261028.json",
+ "card_content_id": "30acaa37a95efecd0418a2d39f29ea4afb17767f21003def604e98035575a09e",
+ "verdict": "REVIEWED_AND_ACCEPTED_FOR_DISPATCH",
+ "what_was_checked": "Every declared number against the artefact it describes, the canonical id rule, the method digest, the baseline, the signature state, and the publishable vocabulary. Nothing was signed and no signer was dispatched by this step.",
+ "what_this_is_not": "Not a signature, not a certification, not a promotion of the claim-maintenance axis. The axis stays a declared slot with no run behind it.",
+ "checks": [
+  {
+   "id": "content_id",
+   "question": "Does the declared content_id reproduce under the estate canonical rule (sha256 of the canonical body minus content_id, sig_ed25519, signature_state)?",
+   "verdict": "REPRODUCES",
+   "detail": {
+    "declared": "30acaa37a95efecd0418a2d39f29ea4afb17767f21003def604e98035575a09e",
+    "recomputed": "30acaa37a95efecd0418a2d39f29ea4afb17767f21003def604e98035575a09e",
+    "rule": "json.dumps(obj, sort_keys=True, separators=(\",\",\":\"), ensure_ascii=False)"
+   }
+  },
+  {
+   "id": "count:n_subjects",
+   "question": "Does card.n_subjects equal the wave-3 record's n_subjects?",
+   "verdict": "MATCHES",
+   "detail": {
+    "card": 77,
+    "wave3": 77
+   }
+  },
+  {
+   "id": "count:n_valid",
+   "question": "Does card.n_valid equal the wave-3 record's n_valid?",
+   "verdict": "MATCHES",
+   "detail": {
+    "card": 77,
+    "wave3": 77
+   }
+  },
+  {
+   "id": "count:n_valid_min",
+   "question": "Does card.n_valid_min equal the wave-3 record's n_valid_min?",
+   "verdict": "MATCHES",
+   "detail": {
+    "card": 30,
+    "wave3": 30
+   }
+  },
+  {
+   "id": "count:TEXT_CHANGED",
+   "question": "Does card.counts.TEXT_CHANGED equal the wave-3 record's TEXT_CHANGED?",
+   "verdict": "MATCHES",
+   "detail": {
+    "card": 32,
+    "wave3": 32
+   }
+  },
+  {
+   "id": "count:TEXT_UNCHANGED",
+   "question": "Does card.counts.TEXT_UNCHANGED equal the wave-3 record's TEXT_UNCHANGED?",
+   "verdict": "MATCHES",
+   "detail": {
+    "card": 45,
+    "wave3": 45
+   }
+  },
+  {
+   "id": "counts_sum",
+   "question": "Do the card counts sum to n_valid?",
+   "verdict": "MATCHES",
+   "detail": {
+    "sum": 77,
+    "n_valid": 77
+   }
+  },
+  {
+   "id": "baseline",
+   "question": "Does the card name a wave-2 baseline whose observed_at is the one on disk?",
+   "verdict": "MATCHES",
+   "detail": {
+    "card": "2026-10-27T08:09:16.700Z",
+    "wave2_on_disk": "2026-10-27T08:09:16.700Z",
+    "wave2_text_digest_baseline": false
+   }
+  },
+  {
+   "id": "method_sha256",
+   "question": "Is method_sha256 the sha256 of the runner file the card names?",
+   "verdict": "MATCHES",
+   "detail": {
+    "card": "0a0a89b502985b656ea455d22f2e4f9fb849b238d78ac761ab6cc40e9d73f1ff",
+    "runner_on_disk": "0a0a89b502985b656ea455d22f2e4f9fb849b238d78ac761ab6cc40e9d73f1ff",
+    "runner": "wave3.mjs"
+   }
+  },
+  {
+   "id": "signature_state",
+   "question": "Is the card unsigned and does it declare that state?",
+   "verdict": "YES",
+   "detail": {
+    "sig_ed25519": null,
+    "signature_state": "UNSIGNED_DRY_RUN"
+   }
+  },
+  {
+   "id": "vocabulary",
+   "question": "Does the card avoid the words the estate may not publish (certification, compliant, approved, violation, grade, rank, MEASURED)?",
+   "verdict": "CLEAN",
+   "detail": {
+    "note": "no forbidden token in the canonical body"
+   }
+  },
+  {
+   "id": "third_party",
+   "question": "Does the card state that no third party is named from a delta?",
+   "verdict": "YES",
+   "detail": {
+    "flag": true
+   }
+  },
+  {
+   "id": "scope",
+   "question": "Does the card state the n_valid floor it was held to, and that a measurement is not a certification?",
+   "verdict": "YES",
+   "detail": {
+    "n_valid_min": 30,
+    "not_a_certification": true,
+    "authority_state": "measurement_only_not_a_certification"
+   }
+  }
+ ]
+}

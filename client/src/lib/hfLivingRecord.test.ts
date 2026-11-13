@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { HF_LIVING_RULING, HF_PLANTED, HF_VIEWERS } from "./hfLivingRecord";
+import {
+  HF_LIVING_RULING,
+  HF_PLANTED,
+  HF_VIEWERS,
+  KAGGLE_AND_HF_COMPETITIONS,
+} from "./hfLivingRecord";
 
 describe("HF living record", () => {
   it("plants the Hub datasets and never stamps hub-queue MEASURED", () => {
@@ -20,9 +25,22 @@ describe("HF living record", () => {
   });
 
   it("keeps Hub viewers as links, not a fused grade", () => {
-    const blob = JSON.stringify({ HF_LIVING_RULING, HF_PLANTED, HF_VIEWERS });
+    const blob = JSON.stringify({
+      HF_LIVING_RULING,
+      HF_PLANTED,
+      HF_VIEWERS,
+      KAGGLE_AND_HF_COMPETITIONS,
+    });
     expect(HF_VIEWERS.some((v) => /iframe/i.test(v.role))).toBe(true);
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
     expect(blob).not.toMatch(/we scored the Hub|hub-queue is MEASURED/i);
+  });
+
+  it("registers ARC Prize 2026 (arc-prize-2026-arc-agi-3) and companion competition tracks", () => {
+    expect(KAGGLE_AND_HF_COMPETITIONS.map((c) => c.id)).toContain("arc-prize-2026-arc-agi-3");
+    expect(KAGGLE_AND_HF_COMPETITIONS.map((c) => c.id)).toContain("arc-prize-2026-paper-rtr-001");
+    expect(KAGGLE_AND_HF_COMPETITIONS.every((c) => c.license === "CC0-1.0" || c.license === "MIT-0")).toBe(
+      true,
+    );
   });
 });

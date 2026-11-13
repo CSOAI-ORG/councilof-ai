@@ -1,0 +1,426 @@
+{
+  "study": "csoai.platform-replay.20261111.v1",
+  "source_revision": "afdb579fa778a2f967d975fb5235d656077b0dd7",
+  "source_unchanged_during_calls": true,
+  "model": "csoai/meok-process-world-v0",
+  "model_revision": "90d6aa6c87629b9f4296142ba2019247b51686c4",
+  "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+  "comparison_tolerance": 1e-12,
+  "comparison_scope": "same-checkpoint inference parity, not task accuracy or independent model quality",
+  "fixtures": [
+    {
+      "id": "hf-predict-0-1",
+      "features": [
+        0,
+        0,
+        0,
+        1,
+        0.3,
+        0.4,
+        0.3,
+        0,
+        1,
+        1,
+        0
+      ],
+      "constrained": true,
+      "hf_output": {
+        "authorises_execution": false,
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.2946643557481588,
+          0.399647985422912,
+          0.30568765882892907,
+          0.0
+        ],
+        "raw_prediction": [
+          0.2933720601730284,
+          0.3978952680918304,
+          0.3043470188730933,
+          -0.0008985360223439376
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      }
+    },
+    {
+      "id": "hf-predict-1-1",
+      "features": [
+        0.3,
+        0.4,
+        0.3,
+        0,
+        0.3,
+        0.4,
+        0.3,
+        1,
+        0.5,
+        1,
+        0.25
+      ],
+      "constrained": true,
+      "hf_output": {
+        "authorises_execution": false,
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.00985173032526002,
+          0.6833685528429794,
+          0.30677971683176064,
+          0.0
+        ],
+        "raw_prediction": [
+          0.009842302953029958,
+          0.6827146200306436,
+          0.30648615148966124,
+          -0.0005293465617385168
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      }
+    },
+    {
+      "id": "hf-predict-2-1",
+      "features": [
+        0.2,
+        0.5,
+        0.3,
+        0,
+        0.2,
+        0.5,
+        0.3,
+        0,
+        0,
+        1,
+        0.5
+      ],
+      "constrained": true,
+      "hf_output": {
+        "authorises_execution": false,
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": true,
+        "prediction": [
+          0.2,
+          0.5,
+          0.3,
+          0
+        ],
+        "raw_prediction": [
+          0.2092148848206153,
+          0.4893526199911915,
+          0.3005755418316313,
+          -0.002224502715848675
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      }
+    },
+    {
+      "id": "hf-predict-3-1",
+      "features": [
+        0,
+        0,
+        0,
+        1,
+        0.3,
+        0.4,
+        0.3,
+        1,
+        0.125,
+        0,
+        0.75
+      ],
+      "constrained": true,
+      "hf_output": {
+        "authorises_execution": false,
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.30660743980296223,
+          0.4274122612685315,
+          0.2538619575282646,
+          0.012118341400241556
+        ],
+        "raw_prediction": [
+          0.26346569700643274,
+          0.36727246213130293,
+          0.21814186122353668,
+          0.01041320871283602
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      }
+    },
+    {
+      "id": "hf-predict-0-0",
+      "features": [
+        0,
+        0,
+        0,
+        1,
+        0.3,
+        0.4,
+        0.3,
+        0,
+        1,
+        1,
+        0
+      ],
+      "constrained": false,
+      "hf_output": {
+        "authorises_execution": false,
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.2933720601730284,
+          0.3978952680918304,
+          0.3043470188730933,
+          -0.0008985360223439376
+        ],
+        "raw_prediction": [
+          0.2933720601730284,
+          0.3978952680918304,
+          0.3043470188730933,
+          -0.0008985360223439376
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      }
+    },
+    {
+      "id": "hf-predict-1-0",
+      "features": [
+        0.3,
+        0.4,
+        0.3,
+        0,
+        0.3,
+        0.4,
+        0.3,
+        1,
+        0.5,
+        1,
+        0.25
+      ],
+      "constrained": false,
+      "hf_output": {
+        "authorises_execution": false,
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.009842302953029958,
+          0.6827146200306436,
+          0.30648615148966124,
+          -0.0005293465617385168
+        ],
+        "raw_prediction": [
+          0.009842302953029958,
+          0.6827146200306436,
+          0.30648615148966124,
+          -0.0005293465617385168
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      }
+    },
+    {
+      "id": "hf-predict-2-0",
+      "features": [
+        0.2,
+        0.5,
+        0.3,
+        0,
+        0.2,
+        0.5,
+        0.3,
+        0,
+        0,
+        1,
+        0.5
+      ],
+      "constrained": false,
+      "hf_output": {
+        "authorises_execution": false,
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.2092148848206153,
+          0.4893526199911915,
+          0.3005755418316313,
+          -0.002224502715848675
+        ],
+        "raw_prediction": [
+          0.2092148848206153,
+          0.4893526199911915,
+          0.3005755418316313,
+          -0.002224502715848675
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      }
+    },
+    {
+      "id": "hf-predict-3-0",
+      "features": [
+        0,
+        0,
+        0,
+        1,
+        0.3,
+        0.4,
+        0.3,
+        1,
+        0.125,
+        0,
+        0.75
+      ],
+      "constrained": false,
+      "hf_output": {
+        "authorises_execution": false,
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.26346569700643274,
+          0.36727246213130293,
+          0.21814186122353668,
+          0.01041320871283602
+        ],
+        "raw_prediction": [
+          0.26346569700643274,
+          0.36727246213130293,
+          0.21814186122353668,
+          0.01041320871283602
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      }
+    }
+  ],
+  "live_checks": [
+    {
+      "label": "hf-status-before",
+      "state": "complete"
+    },
+    {
+      "label": "hf-predict-0-1",
+      "state": "complete",
+      "prediction": [
+        0.2946643557481588,
+        0.399647985422912,
+        0.30568765882892907,
+        0.0
+      ]
+    },
+    {
+      "label": "hf-predict-1-1",
+      "state": "complete",
+      "prediction": [
+        0.00985173032526002,
+        0.6833685528429794,
+        0.30677971683176064,
+        0.0
+      ]
+    },
+    {
+      "label": "hf-predict-2-1",
+      "state": "complete",
+      "prediction": [
+        0.2,
+        0.5,
+        0.3,
+        0
+      ]
+    },
+    {
+      "label": "hf-predict-3-1",
+      "state": "complete",
+      "prediction": [
+        0.30660743980296223,
+        0.4274122612685315,
+        0.2538619575282646,
+        0.012118341400241556
+      ]
+    },
+    {
+      "label": "hf-predict-0-0",
+      "state": "complete",
+      "prediction": [
+        0.2933720601730284,
+        0.3978952680918304,
+        0.3043470188730933,
+        -0.0008985360223439376
+      ]
+    },
+    {
+      "label": "hf-predict-1-0",
+      "state": "complete",
+      "prediction": [
+        0.009842302953029958,
+        0.6827146200306436,
+        0.30648615148966124,
+        -0.0005293465617385168
+      ]
+    },
+    {
+      "label": "hf-predict-2-0",
+      "state": "complete",
+      "prediction": [
+        0.2092148848206153,
+        0.4893526199911915,
+        0.3005755418316313,
+        -0.002224502715848675
+      ]
+    },
+    {
+      "label": "hf-predict-3-0",
+      "state": "complete",
+      "prediction": [
+        0.26346569700643274,
+        0.36727246213130293,
+        0.21814186122353668,
+        0.01041320871283602
+      ]
+    },
+    {
+      "label": "hf-predict-invalid",
+      "state": "error"
+    },
+    {
+      "label": "hf-memory-17",
+      "state": "complete",
+      "actual_neural_evaluations": 8,
+      "request_attempts": 13,
+      "exact_cache_hits": 4,
+      "access_revocation": "ACCESS_DENIED",
+      "output_equal": true
+    },
+    {
+      "label": "hf-memory-29",
+      "state": "complete",
+      "actual_neural_evaluations": 8,
+      "request_attempts": 13,
+      "exact_cache_hits": 4,
+      "access_revocation": "ACCESS_DENIED",
+      "output_equal": true
+    },
+    {
+      "label": "hf-memory-invalid",
+      "state": "error"
+    },
+    {
+      "label": "hf-status-after",
+      "state": "complete"
+    }
+  ],
+  "training": false,
+  "gspc_admitted": false
+}

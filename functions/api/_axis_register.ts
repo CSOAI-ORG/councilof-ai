@@ -45,6 +45,6 @@ export const AXES: AxisEntry[] = [
     models: 7,
     majority_baseline: 0.5352,
     status: "MEASURED",
-    separation: "TIE",
+    separation: "UNTESTED",
   },
 ];

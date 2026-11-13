@@ -1,0 +1,74 @@
+{
+ "as_of": "2026-10-26T02:12:31Z",
+ "payload": {
+  "check_counts": {
+   "FAILURE": 31
+  },
+  "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ai.1325_mcp_0.1.0__stable-2025-11-25.json",
+  "checks_sha256": "5eb5c77f55b19ebde17172ba97b13d261b6290a925628e128fd43f8d1f8b9812",
+  "deviation_checks": [
+   "CompletionComplete",
+   "DNSRebindingRejected",
+   "LocalhostHostAccepted",
+   "ElicitationSEP1034General",
+   "ElicitationSEP1330General",
+   "LoggingSetLevel",
+   "Ping",
+   "PromptsGetEmbeddedResource",
+   "PromptsGetSimple",
+   "PromptsGetWithArgs",
+   "PromptsGetWithImage",
+   "PromptsList",
+   "ResourcesList",
+   "ResourcesReadBinary",
+   "ResourcesReadText",
+   "ResourcesSubscribe",
+   "ResourcesTemplateRead",
+   "ResourcesUnsubscribe",
+   "ServerInitialize",
+   "ServerSSEMultipleStreamsTest",
+   "ToolsCallAudio",
+   "ToolsCallElicitation",
+   "ToolsCallEmbeddedResource",
+   "ToolsCallError",
+   "ToolsCallImage",
+   "ToolsCallMixedContent",
+   "ToolsCallSampling",
+   "ToolsCallSimpleText",
+   "ToolsCallWithLogging",
+   "ToolsCallWithProgress",
+   "ToolsList"
+  ],
+  "instrument": "stable-2025-11-25",
+  "instrument_channel": "stable",
+  "kind": "csoai.mcp-conformance/0.1",
+  "not_a_grade": true,
+  "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+  "run_state": "RUN_DEVIATIONS",
+  "scenarios": 30,
+  "spec_version": "2025-11-25",
+  "state": "PROBED",
+  "subject_id": "ai.1325/mcp@0.1.0",
+  "suite_version": "0.1.16"
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "2b6500f0f344e61b4ea17bc9f832dbb583af278e0fe7659cabc673eab999470c",
+ "source_urls": [
+  "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp",
+  "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ai.1325_mcp_0.1.0__stable-2025-11-25.json",
+  "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+ ],
+ "subject": "MCP conformance run stable-2025-11-25 for ai.1325/mcp@0.1.0",
+ "surface": "public.notice",
+ "tags": [
+  "mcp",
+  "conformance",
+  "probe",
+  "mcp-conformance-2026-10"
+ ],
+ "unmeasured": [
+  "behaviour under load",
+  "scenarios outside the frozen spec version",
+  "subjects outside the pinned set"
+ ]
+}

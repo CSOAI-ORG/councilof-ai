@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign AI Independence Day — 4th July 2026 | CSOAI</title>
+    <meta name="description" content="Declare independence from black-box AI. CSOAI's 4th July 2026 sovereign AI offer: 17% off CASA certification + free Article 50 readiness review until 7 July.">
+    <link rel="canonical" href="https://csoai.org/independence-day-2026">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #c9a84c;
+            --bg: #0a0a0f;
+            --surface: #11111a;
+            --border: #1e293b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --accent: #3b82f6;
+            --emerald: #10B981;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+        h1, h2, h3, .btn { font-family: 'Space Grotesk', sans-serif; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        .nav { padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .nav a { color: var(--text); text-decoration: none; font-weight: 700; font-size: 1.25rem; }
+        .nav a span { color: var(--primary); }
+        .nav small { color: var(--muted); font-size: .7rem; margin-left: .5rem; font-weight: 500; }
+
+        .hero { padding: 8rem 0 5rem; text-align: center; position: relative; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(201,168,76,.12) 0%, transparent 60%); pointer-events: none; }
+        .pill { display: inline-flex; align-items: center; gap: .5rem; background: rgba(201,168,76,.12); border: 1px solid rgba(201,168,76,.25); color: var(--primary); padding: .5rem 1.25rem; border-radius: 100px; font-size: .75rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2rem; }
+        .hero h1 { font-size: clamp(2.75rem, 7vw, 5rem); line-height: 1; font-weight: 800; letter-spacing: -.04em; margin-bottom: 1.5rem; }
+        .hero h1 span { background: linear-gradient(to right, #ef4444, #ffffff, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p.lead { font-size: 1.35rem; color: var(--muted); max-width: 720px; margin: 0 auto 2.5rem; }
+
+        .countdown { display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap; }
+        .countdown .box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.25rem 1.75rem; min-width: 90px; text-align: center; }
+        .countdown .box .num { font-size: 2.25rem; font-weight: 800; color: #fff; display: block; line-height: 1; }
+        .countdown .box .label { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .15em; margin-top: .5rem; }
+
+        .btn { display: inline-block; padding: 1.1rem 2.5rem; border-radius: 12px; font-weight: 800; text-decoration: none; text-transform: uppercase; letter-spacing: .08em; transition: all .2s; margin: .25rem; }
+        .btn-primary { background: var(--emerald); color: #000; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(16,185,129,.3); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: #fff; }
+        .btn-outline:hover { border-color: var(--primary); background: rgba(255,255,255,.05); }
+
+        .offer { background: var(--surface); border: 1px solid rgba(201,168,76,.2); border-radius: 24px; padding: 3rem; margin: 4rem auto; max-width: 900px; text-align: center; }
+        .offer h2 { font-size: 2rem; margin-bottom: 1rem; color: var(--primary); }
+        .offer p { color: var(--muted); font-size: 1.1rem; margin-bottom: 1.5rem; }
+        .offer ul { list-style: none; display: inline-block; text-align: left; color: var(--text); margin-bottom: 2rem; }
+        .offer li { padding: .4rem 0; padding-left: 1.75rem; position: relative; }
+        .offer li::before { content: '✓'; position: absolute; left: 0; color: var(--emerald); font-weight: 800; }
+
+        .section { padding: 5rem 0; }
+        .section h2 { font-size: 2.25rem; margin-bottom: 1.25rem; text-align: center; }
+        .section .sub { color: var(--muted); text-align: center; max-width: 700px; margin: 0 auto 3rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; }
+        .card h3 { font-size: 1.25rem; margin-bottom: .75rem; color: #fff; }
+        .card p { color: var(--muted); font-size: .95rem; }
+
+        .cta { text-align: center; padding: 6rem 0; }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .cta p { color: var(--muted); margin-bottom: 2rem; }
+
+        footer { border-top: 1px solid var(--border); padding: 3rem 0; text-align: center; color: var(--muted); font-size: .9rem; }
+        footer a { color: var(--primary); text-decoration: none; }
+
+        @media (max-width: 640px) {
+            .countdown .box { padding: 1rem 1.25rem; min-width: 70px; }
+            .countdown .box .num { font-size: 1.75rem; }
+            .offer { padding: 2rem 1.25rem; }
+        }
+    </style>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CSOAI">
+    <meta property="og:title" content="Sovereign AI Independence Day — 4th July 2026">
+    <meta property="og:description" content="Declare independence from black-box AI. 17% off CASA certification + free Article 50 review until 7 July.">
+    <meta property="og:url" content="https://csoai.org/independence-day-2026">
+    <meta property="og:image" content="https://csoai.org/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sovereign AI Independence Day — 4th July 2026">
+    <meta name="twitter:description" content="Declare independence from black-box AI. 17% off CASA certification + free Article 50 review until 7 July.">
+    <meta name="twitter:image" content="https://csoai.org/og-image.png">
+
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+</head>
+<body>
+    <nav class="nav container">
+        <a href="/">CSOAI<span>.</span> <small>by MEOK AI Labs</small></a>
+        <a href="blog.html" style="font-size:.9rem;font-weight:600;color:var(--muted);">Blog</a>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="pill">🇺🇸 Limited offer · 4—7 July 2026</div>
+            <h1>Declare <span>Independence</span> from Black-Box AI</h1>
+            <p class="lead">This 4th July, choose sovereign AI: models you govern, decisions you verify, and compliance you own. No vendor lock-in. No opaque scores. Just cryptographic trust.</p>
+
+            <div class="countdown" id="countdown">
+                <div class="box"><span class="num" id="days">--</span><div class="label">Days</div></div>
+                <div class="box"><span class="num" id="hours">--</span><div class="label">Hours</div></div>
+                <div class="box"><span class="num" id="minutes">--</span><div class="label">Minutes</div></div>
+                <div class="box"><span class="num" id="seconds">--</span><div class="label">Seconds</div></div>
+            </div>
+
+            <a href="https://calendly.com/meok-ai/30min" class="btn btn-primary">Book a free readiness review</a>
+            <a href="certification.html" class="btn btn-outline">Explore CASA certification</a>
+        </div>
+    </section>
+
+    <section class="offer container">
+        <h2>🎆 The Sovereign AI Independence Bundle</h2>
+        <p>Until midnight UTC on 7 July 2026, claim independence from AI uncertainty with:</p>
+        <ul>
+            <li><strong>17% off</strong> CASA AI Safety Certification</li>
+            <li><strong>Free</strong> EU AI Act Article 50 readiness review</li>
+            <li><strong>Free</strong> SIGIL verification setup for one system</li>
+            <li><strong>Priority</strong> scheduling with a CSOAI governance advisor</li>
+        </ul>
+        <a href="contact.html" class="btn btn-primary">Claim the offer</a>
+        <a href="whitepaper.html" class="btn btn-outline">Read the Sovereign AI white paper</a>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2>Three pillars of AI sovereignty</h2>
+            <p class="sub">Independence isn't anti-technology. It's pro-accountability.</p>
+            <div class="grid">
+                <div class="card">
+                    <h3>1. Own your models</h3>
+                    <p>Deploy on infrastructure you control — on-prem, sovereign cloud, or private VPC. No hidden fine-print that lets a third party change behaviour under your nose.</p>
+                </div>
+                <div class="card">
+                    <h3>2. Verify every verdict</h3>
+                    <p>Ed25519 SIGILs, 33-agent BFT councils, and public certificate lookup mean a decision can be traced, audited, and disputed — not just believed.</p>
+                </div>
+                <div class="card">
+                    <h3>3. Comply by design</h3>
+                    <p>EU AI Act, ISO 42001, NIST AI RMF, and 12+ frameworks mapped into one crosswalk. Compliance becomes a by-product of architecture, not a last-minute panic.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to govern your own AI?</h2>
+            <p>Book before 7 July and we'll also audit your current AI supply chain for vendor-lock-in risk — free.</p>
+            <a href="https://calendly.com/meok-ai/30min" class="btn btn-primary">Schedule the review</a>
+            <a href="article-50-kit.html" class="btn btn-outline">See the Article 50 kit</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 CSOAI LTD (UK 16939677) · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
+            <p style="margin-top:.5rem;font-size:.8rem;">Offer valid 00:00 UTC 4 July 2026 — 23:59 UTC 7 July 2026. Cannot be combined with other discounts.</p>
+        </div>
+    </footer>
+
+    <script>
+        const target = new Date('2026-07-04T00:00:00Z').getTime();
+        function update() {
+            const now = new Date().getTime();
+            const diff = target - now;
+            const days = Math.max(0, Math.floor(diff / (1000*60*60*24)));
+            const hours = Math.max(0, Math.floor((diff % (1000*60*60*24)) / (1000*60*60)));
+            const minutes = Math.max(0, Math.floor((diff % (1000*60*60)) / (1000*60)));
+            const seconds = Math.max(0, Math.floor((diff % (1000*60)) / 1000));
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+        }
+        update();
+        setInterval(update, 1000);
+    </script>
+</body>
+</html>

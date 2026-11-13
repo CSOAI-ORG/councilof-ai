@@ -13,6 +13,7 @@ import unittest
 from unittest import mock
 
 PACKAGE = Path(__file__).resolve().parents[1]
+REPO_ROOT = PACKAGE.parents[1] if (PACKAGE.parents[1] / "docs/standards").exists() else Path.home() / "clawd/councilof-ai-work"
 sys.path.insert(0, str(PACKAGE))
 import safe_pack_verify as verifier
 import safe_freeze_v2 as signature_helper
@@ -26,7 +27,7 @@ class WholePackVerdict(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        self.pack = Path(self.tmp.name) / "pack"
+        self.pack = Path(self.tmp.name).resolve() / "pack"
         self.pack.mkdir()
         (self.pack / "FREEZE.json").write_bytes(FREEZE)
         self.saved_here = verifier.HERE
@@ -132,7 +133,7 @@ class WholePackVerdict(unittest.TestCase):
         self.assertEqual(json.loads(out.getvalue().splitlines()[-1])["state"], "UNCHECKABLE")
 
     def test_validator_missing_dependency_is_unknown(self):
-        schema = PACKAGE.parents[1] / "docs/standards/osaia-safe-reverification/safe-reverification-record-v0.1.schema.json"
+        schema = REPO_ROOT / "docs/standards/osaia-safe-reverification/safe-reverification-record-v0.1.schema.json"
         (self.pack / "schema").mkdir()
         (self.pack / "schema/safe-reverification-record-v0.1.schema.json").write_bytes(schema.read_bytes())
         with mock.patch.object(verifier, "HERE", str(self.pack)), mock.patch.dict(sys.modules, {"jsonschema": None}):
@@ -146,7 +147,7 @@ class WholePackVerdict(unittest.TestCase):
                 verifier.check_validate()
 
     def test_selected_pack_path_is_used_by_checks(self):
-        other = Path(self.tmp.name) / "other"
+        other = Path(self.tmp.name).resolve() / "other"
         other.mkdir()
         seen = []
         def sums():
@@ -174,10 +175,10 @@ class WholePackVerdict(unittest.TestCase):
         check.assert_called_once_with(raw["FREEZE.json"], raw["FREEZE.signed.json"], raw["did.json"])
 
     def known_derived_pack(self, name, count):
-        pack = Path(self.tmp.name) / name
+        pack = Path(self.tmp.name).resolve() / name
         for directory in ("records", "events", "render", "lib"):
             (pack / directory).mkdir(parents=True)
-        source_records = PACKAGE.parents[1] / "docs/standards/osaia-safe-evidence-pack/records"
+        source_records = REPO_ROOT / "docs/standards/osaia-safe-evidence-pack/records"
         for record in sorted(source_records.glob("*.safe-rv.json"))[:count]:
             (pack / "records" / record.name).write_bytes(record.read_bytes())
         spec = importlib.util.spec_from_file_location("_trusted_fixture_generator", PACKAGE / "safe_pack.py")
@@ -208,7 +209,7 @@ class WholePackVerdict(unittest.TestCase):
         spec = importlib.util.spec_from_file_location("_safe_pack_generator", PACKAGE / "safe_pack.py")
         generator = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(generator)
-        draft = Path(self.tmp.name) / "draft"
+        draft = Path(self.tmp.name).resolve() / "draft"
         generator.copy_lib(str(draft))
         helper = draft / "lib/safe_freeze_v2.py"
         self.assertEqual(hashlib.sha256(helper.read_bytes()).hexdigest(), HELPER_SHA)
@@ -273,7 +274,7 @@ class PackPathBoundary(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        self.root = Path(self.tmp.name)
+        self.root = Path(self.tmp.name).resolve()
         self.pack = self.root / "pack"
         self.pack.mkdir()
         self.target = self.root / "owned-target"
@@ -459,7 +460,7 @@ class PackCodeBoundary(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        self.root = Path(self.tmp.name)
+        self.root = Path(self.tmp.name).resolve()
         self.pack = self.root / "pack"
         (self.pack / "lib").mkdir(parents=True)
         (self.pack / "events").mkdir()
@@ -523,6 +524,12 @@ class PackCodeBoundary(unittest.TestCase):
         self.run_reader()
         self.assertFalse((self.root / "lib-marker").exists(),
                          "default reader imported the selected pack's lib/safe_pack.py")
+
+
+TESTS_DIR = Path(__file__).resolve().parent
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
+from test_aaif_portability_suite import AaifPortabilitySuiteTest  # noqa: E402,F401
 
 
 if __name__ == "__main__":

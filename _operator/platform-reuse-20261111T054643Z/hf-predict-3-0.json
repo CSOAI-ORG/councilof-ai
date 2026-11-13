@@ -1,0 +1,81 @@
+{
+  "label": "hf-predict-3-0",
+  "api": "lab_predict_process",
+  "input": [
+    "[0, 0, 0, 1, 0.3, 0.4, 0.3, 1, 0.125, 0, 0.75]",
+    false
+  ],
+  "state": "complete",
+  "response": [
+    "{\n  \"authorises_execution\": false,\n  \"compute_seconds\": 0.00014901673421263695,\n  \"evidence_event\": {\n    \"anchors\": {\n      \"ots\": \"none\",\n      \"rekor\": {\n        \"log_index\": null,\n        \"uuid\": null\n      }\n    },\n    \"claim\": {\n      \"read_at\": \"2026-11-11T05:48:33.998786+00:00\",\n      \"source_sha256\": \"e93187ec5f743ef55a79c016debf591d498bf7e59e294118d9e2997224eb3424\",\n      \"text\": \"The named research function returned the hash-bound output for the supplied input.\"\n    },\n    \"declared\": {\n      \"input_sha256\": \"e93187ec5f743ef55a79c016debf591d498bf7e59e294118d9e2997224eb3424\"\n    },\n    \"event_id\": \"sha256:527051b1dce79b7a88c3226644c8b4f713e4bb721eeca7a44927682d25e905e1\",\n    \"limits\": [\n      \"Unsigned execution record, not independent verification of prediction truth.\",\n      \"No production GSPC admission, action authorisation, signing or training occurs.\",\n      \"Response records are not durably archived by this research tool.\"\n    ],\n    \"maintenance\": null,\n    \"method\": {\n      \"code_sha256\": \"f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34\",\n      \"holder\": \"csoai\",\n      \"id\": \"meok-hf-research/predict_process\",\n      \"version\": \"2026-11-10.1\"\n    },\n    \"negative_control\": {\n      \"expected\": null,\n      \"got\": \"NOT_RUN\",\n      \"id\": null\n    },\n    \"observed\": {\n      \"output_sha256\": \"157710d41519d126def2fec9badb70b5fd201c1fa9e20ae31d81eccfcbb3cc76\"\n    },\n    \"schema\": \"csoai.evidence-event/0.1\",\n    \"signature\": null,\n    \"state\": \"PARTIAL\",\n    \"subject\": {\n      \"kind\": \"model_run\",\n      \"locator\": \"urn:meok:research-call:0c35f778-1d60-4f6c-91fe-6245ca681fc9\"\n    },\n    \"supersedes\": null,\n    \"value\": null\n  },\n  \"gspc_admitted\": false,\n  \"known_expiry_rule_applied\": false,\n  \"prediction\": [\n    0.26346569700643274,\n    0.36727246213130293,\n    0.21814186122353668,\n    0.01041320871283602\n  ],\n  \"raw_prediction\": [\n    0.26346569700643274,\n    0.36727246213130293,\n    0.21814186122353668,\n    0.01041320871283602\n  ],\n  \"state\": \"MODEL_PREDICTION_NOT_OBSERVED\",\n  \"synthetic_domain_only\": true,\n  \"weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\"\n}"
+  ],
+  "parsed": {
+    "authorises_execution": false,
+    "compute_seconds": 0.00014901673421263695,
+    "evidence_event": {
+      "anchors": {
+        "ots": "none",
+        "rekor": {
+          "log_index": null,
+          "uuid": null
+        }
+      },
+      "claim": {
+        "read_at": "2026-11-11T05:48:33.998786+00:00",
+        "source_sha256": "e93187ec5f743ef55a79c016debf591d498bf7e59e294118d9e2997224eb3424",
+        "text": "The named research function returned the hash-bound output for the supplied input."
+      },
+      "declared": {
+        "input_sha256": "e93187ec5f743ef55a79c016debf591d498bf7e59e294118d9e2997224eb3424"
+      },
+      "event_id": "sha256:527051b1dce79b7a88c3226644c8b4f713e4bb721eeca7a44927682d25e905e1",
+      "limits": [
+        "Unsigned execution record, not independent verification of prediction truth.",
+        "No production GSPC admission, action authorisation, signing or training occurs.",
+        "Response records are not durably archived by this research tool."
+      ],
+      "maintenance": null,
+      "method": {
+        "code_sha256": "f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34",
+        "holder": "csoai",
+        "id": "meok-hf-research/predict_process",
+        "version": "2026-11-10.1"
+      },
+      "negative_control": {
+        "expected": null,
+        "got": "NOT_RUN",
+        "id": null
+      },
+      "observed": {
+        "output_sha256": "157710d41519d126def2fec9badb70b5fd201c1fa9e20ae31d81eccfcbb3cc76"
+      },
+      "schema": "csoai.evidence-event/0.1",
+      "signature": null,
+      "state": "PARTIAL",
+      "subject": {
+        "kind": "model_run",
+        "locator": "urn:meok:research-call:0c35f778-1d60-4f6c-91fe-6245ca681fc9"
+      },
+      "supersedes": null,
+      "value": null
+    },
+    "gspc_admitted": false,
+    "known_expiry_rule_applied": false,
+    "prediction": [
+      0.26346569700643274,
+      0.36727246213130293,
+      0.21814186122353668,
+      0.01041320871283602
+    ],
+    "raw_prediction": [
+      0.26346569700643274,
+      0.36727246213130293,
+      0.21814186122353668,
+      0.01041320871283602
+    ],
+    "state": "MODEL_PREDICTION_NOT_OBSERVED",
+    "synthetic_domain_only": true,
+    "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+  },
+  "wall_seconds": 0.8085060000003068
+}

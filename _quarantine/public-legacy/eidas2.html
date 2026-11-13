@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<title>eIDAS 2 Compliance — Electronic Signatures for AI Agents | CSOAI</title>
+<meta name="description" content="eIDAS 2.0 + EU AI Act + Article 12 record-keeping. CSOAI gives your AI agents qualified electronic signatures with cryptographic audit trail.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://csoai.org/eidas2">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#c9a84c;--bg:#0a0a0f;--surface:#11111a;--border:#1e293b;--text:#f8fafc;--muted:#94a3b8;--emerald:#10B981}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:1100px;margin:0 auto;padding:0 2rem}
+.hero{padding:6rem 0 3rem;text-align:center;background:radial-gradient(ellipse at top,rgba(201,168,76,.08) 0%,transparent 60%)}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:800;line-height:1.1;margin-bottom:1rem}
+.hero h1 em{color:var(--primary);font-style:normal}
+.hero p{font-size:1.2rem;color:var(--muted);max-width:680px;margin:0 auto 2rem}
+.btn{display:inline-block;padding:.85rem 1.75rem;border-radius:8px;font-weight:700;text-decoration:none;text-transform:uppercase;font-size:.9rem;letter-spacing:.05em}
+.btn-accent{background:var(--primary);color:#0a0a0f}
+.btn-outline{border:2px solid rgba(201,168,76,.4);color:var(--primary);background:transparent}
+.section{padding:4rem 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:1rem 0}
+.card h3{color:var(--primary);margin-bottom:1rem;font-family:'Space Grotesk',sans-serif}
+.card ul{list-style:none;padding:0}
+.card li{padding:.5rem 0;padding-left:1.5rem;position:relative}
+.card li::before{content:'✓';position:absolute;left:0;color:var(--emerald);font-weight:700}
+nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,15,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:1rem 0}
+nav .container{display:flex;justify-content:space-between;align-items:center}
+nav a.logo{color:var(--primary);font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;text-decoration:none}
+nav .nav-links a{color:var(--muted);text-decoration:none;margin:0 .75rem;font-size:.9rem}
+footer{text-align:center;padding:3rem 0;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<nav><div class="container"><a href="index.html" class="logo">🐉 CSOAI</a><div class="nav-links"><a href="article-50-kit.html">🚨 Article 50</a><a href="dora.html">DORA</a><a href="nis2.html">NIS2</a><a href="pricing.html">Pricing</a></div></div></nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>eIDAS 2 + <em>AI</em></h1>
+    <p>eIDAS 2.0 (Regulation (EU) 2024/1183) extends electronic identification to AI agents. Every agent decision becomes a qualified electronic signature — cryptographically verifiable, regulator-acceptable, legally binding.</p>
+    <a href="contact.html?service=eidas2" class="btn btn-accent">Get eIDAS 2 Ready</a>
+    <a href="switch.html" class="btn btn-outline">Switch from your incumbent →</a>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="card">
+      <h3>What eIDAS 2.0 requires of AI systems (Article 12 + 24)</h3>
+      <ul>
+        <li>Qualified Electronic Signature (QES) for high-value AI decisions</li>
+        <li>Electronic Attestation of Attributes (EAA) for AI systems</li>
+        <li>EU Digital Identity Wallet (EUDIW) integration for AI agents acting on behalf of humans</li>
+        <li>Trust services for AI-generated evidence (logs, attestations, decisions)</li>
+        <li>Record-keeping for AI decisions (Annex IV technical documentation)</li>
+        <li>Cross-border recognition of AI signatures</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>What CSOAI provides for eIDAS 2</h3>
+      <ul>
+        <li><code style="background:rgba(201,168,76,.1);padding:.1rem .3rem">did:csoai</code> as Qualified Electronic Signature (QES) for AI agent decisions</li>
+        <li>Ed25519 + P-256 key support (qualified signature algorithms)</li>
+        <li>Electronic Attestation of Attributes (EAA) per AI system</li>
+        <li>EUDIW integration via OpenID4VP / OpenID4VCI</li>
+        <li>Hash-chained audit log (legally-binding record-keeping)</li>
+        <li>Public verify URLs (auditor checks truth without calling us)</li>
+        <li>Solana SBT mint (qualified electronic attestations)</li>
+        <li>Optional eIDAS QTSP integration for AdES / PAdES signatures</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="text-align:center">
+  <div class="container">
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:2rem;margin-bottom:1rem">13 frameworks. One substrate. Cryptographic proof.</h2>
+    <p style="color:var(--muted);max-width:680px;margin:0 auto 2rem">eIDAS 2 + EU AI Act + DORA + NIS2 + GDPR + ISO 42001 + NIST AI RMF + 6 more.</p>
+    <a href="contact.html?service=eidas2" class="btn btn-accent">Get Started</a>
+  </div>
+</section>
+
+<footer><p>🐉 CSOAI LTD (UK Companies House 16939677) · eIDAS 2 + EU AI Act + 12 frameworks</p></footer>
+</body></html>

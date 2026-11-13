@@ -3,7 +3,7 @@
  "generated_utc": "2026-09-17T13:46:34Z",
  "as_of": "2026-09-17",
  "repo": "CSOAI-ORG/councilof-ai",
- "working_tree": "/Users/nicholas/clawd/csoai-mirror-lane",
+ "working_tree": "csoai-mirror-lane",
  "git_head": "2a440d2e2294410017a22a460d28c71e848c0854",
  "signed": false,
  "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, disabled account-wide.",
@@ -11,7 +11,7 @@
  "what_this_measures": "Every .ots under public/ was parsed with the official opentimestamps Python library, its attestations classified BY TYPE, and every BitcoinBlockHeaderAttestation checked against real block headers fetched from three independent public sources. A proof is called BITCOIN_VERIFIED only where the merkle root the proof derives equals the merkle root in the real block header at the claimed height, with at least two independent sources agreeing on that header. A parsed Bitcoin attestation that was not checked against a block is not a verified proof.",
  "method": {
   "parser": "opentimestamps (official Python library)",
-  "parser_path": "/Users/nicholas/Library/Python/3.14/lib/python/site-packages/opentimestamps",
+  "parser_path": "python3/site-packages/opentimestamps",
   "enumeration": "os.walk over public/, every file ending .ots, tracked and untracked alike",
   "merkle_extraction": "Timestamp.all_attestations() yields (msg, attestation). For a BitcoinBlockHeaderAttestation the msg IS the digest the proof commits to, i.e. the block's merkle root in internal byte order; it is byte-reversed for display comparison.",
   "chain_sources": [

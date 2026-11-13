@@ -1,0 +1,40 @@
+{
+  "version": "3.1.0",
+  "generated_at": "2026-06-11T10:00:00Z",
+  "status": "live",
+  "layer": "0",
+  "stats": {
+    "active_systems": 1247,
+    "pdca_cycles": 8932,
+    "mcp_servers": 290,
+    "open_violations": 23,
+    "avg_compliance": 84,
+    "pending_approvals": 7
+  },
+  "region_heat": [
+    {"name": "EU", "score": 72, "status": "critical", "color": "from-red-500 to-orange-500"},
+    {"name": "US", "score": 68, "status": "warning", "color": "from-amber-500 to-yellow-500"},
+    {"name": "UK", "score": 91, "status": "active", "color": "from-green-500 to-emerald-400"},
+    {"name": "China", "score": 74, "status": "warning", "color": "from-orange-500 to-amber-500"},
+    {"name": "Singapore", "score": 88, "status": "active", "color": "from-green-500 to-emerald-400"},
+    {"name": "Korea", "score": 85, "status": "active", "color": "from-green-500 to-emerald-400"}
+  ],
+  "regulatory_clocks": [
+    {"name": "EU AI Act", "days_remaining": 52, "deadline": "2026-08-02", "color": "#EF4444"},
+    {"name": "Colorado AI Act", "days_remaining": 49, "deadline": "2026-07-30", "color": "#F59E0B"},
+    {"name": "NIST RMF 2.0", "days_remaining": 110, "deadline": "2026-09-30", "color": "#3B82F6"},
+    {"name": "TC260 WG9", "days_remaining": 51, "deadline": "2026-08-01", "color": "#F59E0B"}
+  ],
+  "recent_activity": [
+    {"type": "handoff", "title": "Cross-regional handoff", "desc": "EU agent → US agent: Art 9 risk mapping synced to NIST GOVERN-1.1", "time": "2 min ago", "status": "success"},
+    {"type": "violation", "title": "Violation detected", "desc": "High-risk system lacks human oversight clause — Art 14 flagged", "time": "7 min ago", "status": "error"},
+    {"type": "remediation", "title": "Remediation complete", "desc": "Transparency pack updated for Art 50 compliance — SIGIL re-anchored", "time": "12 min ago", "status": "success"},
+    {"type": "certification", "title": "Certificate issued", "desc": "Watchdog Certified renewed for 3 systems — expires 2026-09-11", "time": "19 min ago", "status": "success"}
+  ],
+  "blockchain": {
+    "anchored": true,
+    "last_anchor": "2026-06-11T09:45:00Z",
+    "chain": "ethereum",
+    "contract": "0xCSOAI_DOME_ANCHOR"
+  }
+}

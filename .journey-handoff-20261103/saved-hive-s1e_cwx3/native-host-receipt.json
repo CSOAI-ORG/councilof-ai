@@ -1,0 +1,56 @@
+{
+  "time": "2026-11-03T06:40:21.137145+00:00",
+  "native_client": "2.1.296 (Claude Code)",
+  "gate_sha256": "060bea0631495a4aec1f302a23e47393fe01cc676c109f75a5ac297cd66d98e7",
+  "real_vendor_inference": false,
+  "test_provider": "loopback scripted tool proposals",
+  "real_client_real_bash": true,
+  "installed_plugin_claim": false,
+  "cases": [
+    {
+      "case": "deny",
+      "host_exit": 0,
+      "hook_events": [
+        {
+          "event": "PreToolUse",
+          "tool": "Bash",
+          "decision": "deny"
+        }
+      ],
+      "tool_results": [
+        {
+          "native_tool_result": "toolu_deny",
+          "reported_error": true,
+          "recorded_guard_reason": true
+        }
+      ],
+      "observer": {
+        "exists": false,
+        "correct": false
+      }
+    },
+    {
+      "case": "allow",
+      "host_exit": 0,
+      "hook_events": [
+        {
+          "event": "PreToolUse",
+          "tool": "Bash",
+          "decision": "abstain"
+        }
+      ],
+      "tool_results": [
+        {
+          "native_tool_result": "toolu_allow",
+          "reported_error": false,
+          "recorded_guard_reason": false
+        }
+      ],
+      "observer": {
+        "exists": true,
+        "correct": true
+      }
+    }
+  ],
+  "passed": true
+}

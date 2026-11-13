@@ -81,6 +81,7 @@ export default function LivingBoard({
       <ul className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
         {state.axes.map((a) => {
           const scored = quotable(a);
+          const isMeasured = a.status === "MEASURED";
           const iv = publishedInterval(a);
           const sep = publishedSeparation(a);
           return (
@@ -89,13 +90,13 @@ export default function LivingBoard({
                 type="button"
                 onClick={onOpenBoard}
                 className={`${SURFACE} ${SP.card} flex h-full w-full flex-col items-start text-left transition hover:bg-white motion-reduce:transition-none ${FOCUS} ${
-                  scored ? "bg-white/85" : "border-dashed bg-transparent"
+                  isMeasured ? "bg-white/85" : "border-dashed bg-transparent"
                 }`}
               >
                 <span className="flex w-full items-center justify-between gap-2">
                   <span className="truncate text-[13px] font-semibold text-slate-900">{a.axis}</span>
                   <span className={`shrink-0 rounded-full px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide ${
-                    scored ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"
+                    isMeasured ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"
                   }`}>
                     {a.status}
                   </span>
@@ -107,6 +108,20 @@ export default function LivingBoard({
                     <span className="ml-1 text-[11px] text-slate-600">
                       n={a.n}{iv ? ` · ${formatPublishedInterval(iv)}` : " · no interval"}
                     </span>
+                  </span>
+                ) : isMeasured && a.kind === "deterministic-facts" ? (
+                  <span className="mt-2 font-mono text-[12px] tabular-nums text-sky-800">
+                    facts · n={a.n}{a.n_unit ? ` (${a.n_unit})` : ""}
+                  </span>
+                ) : isMeasured && a.public_leader_state === "EXCLUDED_OWN_MODEL" ? (
+                  <span className="mt-2 font-mono text-[12px] tabular-nums text-slate-700">
+                    own leader excluded · n={a.n}
+                    {typeof a.fleet_mean === "number" ? ` · mean ${(a.fleet_mean * 100).toFixed(0)}%` : ""}
+                  </span>
+                ) : isMeasured && a.public_leader_state === "NO_SIGNED_CARD" ? (
+                  <span className="mt-2 font-mono text-[12px] tabular-nums text-slate-700">
+                    no signed card · n={a.n}
+                    {typeof a.fleet_mean === "number" ? ` · mean ${(a.fleet_mean * 100).toFixed(0)}%` : ""}
                   </span>
                 ) : (
                   <span className="mt-2 font-mono text-[13px] font-semibold uppercase tracking-wide text-slate-700">

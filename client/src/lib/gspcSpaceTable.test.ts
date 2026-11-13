@@ -89,4 +89,15 @@ describe("gspc-board Space is CSOAI-GSPC", () => {
     expect(blob).not.toMatch(/rank for sale|buy a grade|£79|£499|Byzantine|22\/22|dorado|cibola|sovos/i);
     expect(blob).not.toMatch(/hub-queue is MEASURED/);
   });
+
+  it("maps all 23 axes including effect-binding, separates model-comparison states from deterministic facts, and exposes all Hub and registry model cohorts", () => {
+    expect(js).toContain('"effect-binding"');
+    expect(js).toContain("axisFigureAndWho");
+    expect(js).toContain("EXCLUDED_OWN_MODEL");
+    expect(js).toContain("NO_SIGNED_CARD");
+    expect(js).toContain("https://councilof.ai/interop/models-measured.json");
+    expect(html).toContain('id="hub-toggle-all"');
+    expect(html).toContain('id="mod-cohorts"');
+    expect(blob).not.toContain("Twenty-two axes");
+  });
 });

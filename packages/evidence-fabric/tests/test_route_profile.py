@@ -10,6 +10,8 @@ import verify as VF
 pytest.importorskip("jsonschema")
 HERE = os.path.dirname(os.path.abspath(__file__))
 GOLD = sorted(glob.glob(os.path.join(HERE, "..", "..", "..", "fixtures", "route-golden", "*.record.json")))
+if not GOLD:
+    GOLD = sorted(glob.glob(os.path.join(os.path.expanduser("~"), "clawd", "councilof-ai-work", "fixtures", "route-golden", "*.record.json")))
 
 
 def load(name):

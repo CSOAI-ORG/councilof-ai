@@ -175,4 +175,46 @@ describe("canonical GSPC terminal evidence truth", () => {
       }),
     ).toBe("Arena Ed25519 signature present, unchecked · content_id abcdef1234…");
   });
+
+  it("renders signed Hugging Face Hub third-party cells inside AxisDrilldown for a model-comparison axis", () => {
+    const html = renderToStaticMarkup(
+      <AxisDrilldown
+        a={{ axis: "safety", kind: "model-comparison", status: "MEASURED", accuracy: 0.944 }}
+        elo={EMPTY_ELO}
+        cardIndex={EMPTY_CARDS}
+        hubCards={{
+          state: "ok",
+          data: {
+            counts: { complete: true, measured: 2 },
+            cells: [
+              {
+                model: "deepseek-ai/DeepSeek-R1",
+                axis: "gspc-safety",
+                status: "MEASURED",
+                accuracy: 0.9167,
+                n: 36,
+                card_sha256: "sha-dsr1",
+                card_url: "/signed/cards/dsr1-safety.json",
+                signed: true,
+              },
+              {
+                model: "meta-llama/Llama-3.3-70B-Instruct",
+                axis: "gspc-safety",
+                status: "MEASURED",
+                accuracy: 0.8889,
+                n: 36,
+                card_sha256: "sha-llama",
+                card_url: "/signed/cards/llama-safety.json",
+                signed: true,
+              },
+            ],
+          },
+        }}
+      />,
+    );
+    expect(html).toContain("Hugging Face Hub third-party cells (2 signed on this axis");
+    expect(html).toContain("deepseek-ai/DeepSeek-R1");
+    expect(html).toContain("meta-llama/Llama-3.3-70B-Instruct");
+    expect(html).toContain("/dashboard?tab=leaderboard#hub-and-mill-cohorts");
+  });
 });

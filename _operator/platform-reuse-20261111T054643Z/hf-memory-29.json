@@ -1,0 +1,243 @@
+{
+  "label": "hf-memory-29",
+  "api": "lab_memory_venturi",
+  "input": [
+    29,
+    80
+  ],
+  "state": "complete",
+  "response": [
+    "{\n  \"cache_experiment\": {\n    \"actual_model_calls\": 0,\n    \"private_data_read\": false,\n    \"production_cache_changed\": false,\n    \"rows\": [\n      {\n        \"accepted\": 103,\n        \"cache_hits\": 0,\n        \"correct_accepted\": 103,\n        \"eager_invalidations\": 0,\n        \"p50_seconds\": 0.00018819794058799744,\n        \"p95_seconds\": 0.0002240869216620922,\n        \"provider_computations\": 103,\n        \"refused\": 17,\n        \"requests\": 120,\n        \"seconds_per_correct_accepted\": 0.0001961735927147194,\n        \"stale_or_forbidden_returns\": 0,\n        \"strategy\": \"always_fresh\",\n        \"wall_seconds\": 0.0202058800496161\n      },\n      {\n        \"accepted\": 116,\n        \"cache_hits\": 93,\n        \"correct_accepted\": 72,\n        \"eager_invalidations\": 0,\n        \"p50_seconds\": 1.400010660290718e-06,\n        \"p95_seconds\": 0.0001949039287865162,\n        \"provider_computations\": 23,\n        \"refused\": 4,\n        \"requests\": 120,\n        \"seconds_per_correct_accepted\": 6.430795959507425e-05,\n        \"stale_or_forbidden_returns\": 44,\n        \"strategy\": \"query_only_unsafe\",\n        \"wall_seconds\": 0.0046301730908453465\n      },\n      {\n        \"accepted\": 103,\n        \"cache_hits\": 69,\n        \"correct_accepted\": 103,\n        \"eager_invalidations\": 0,\n        \"p50_seconds\": 4.3809181079268456e-05,\n        \"p95_seconds\": 0.0002920352853834629,\n        \"provider_computations\": 34,\n        \"refused\": 17,\n        \"requests\": 120,\n        \"seconds_per_correct_accepted\": 0.00012218368067903426,\n        \"stale_or_forbidden_returns\": 0,\n        \"strategy\": \"revision_lazy\",\n        \"wall_seconds\": 0.012584919109940529\n      },\n      {\n        \"accepted\": 103,\n        \"cache_hits\": 61,\n        \"correct_accepted\": 103,\n        \"eager_invalidations\": 26,\n        \"p50_seconds\": 4.233513027429581e-05,\n        \"p95_seconds\": 0.000299608800560236,\n        \"provider_computations\": 42,\n        \"refused\": 17,\n        \"requests\": 120,\n        \"seconds_per_correct_accepted\": 0.0001390314145574292,\n        \"stale_or_forbidden_returns\": 0,\n        \"strategy\": \"revision_eager\",\n        \"wall_seconds\": 0.014320235699415207\n      }\n    ],\n    \"scope\": \"SYNTHETIC_CACHE_REHEARSAL\",\n    \"training\": false,\n    \"version\": \"0.1.0\",\n    \"warning\": \"A hit reuses output bytes, not authority. Callback authentication and source truth remain host responsibilities; timings are CPU fixtures, not Cosmos speedups.\"\n  },\n  \"canonical_gspc_admission\": false,\n  \"evidence_event\": {\n    \"anchors\": {\n      \"ots\": \"none\",\n      \"rekor\": {\n        \"log_index\": null,\n        \"uuid\": null\n      }\n    },\n    \"claim\": {\n      \"read_at\": \"2026-11-11T05:48:36.565713+00:00\",\n      \"source_sha256\": \"fe2b4447ac07fbdeec41e03ea2b0278d69abc75af22941d5517db2ecbad71b2f\",\n      \"text\": \"The named research function returned the hash-bound output for the supplied input.\"\n    },\n    \"declared\": {\n      \"input_sha256\": \"fe2b4447ac07fbdeec41e03ea2b0278d69abc75af22941d5517db2ecbad71b2f\"\n    },\n    \"event_id\": \"sha256:de02577050dc1c130a76514590b500647c2dc01c25a0c1b020110e9d965fbf10\",\n    \"limits\": [\n      \"Unsigned execution record, not independent verification of prediction truth.\",\n      \"No production GSPC admission, action authorisation, signing or training occurs.\",\n      \"Response records are not durably archived by this research tool.\"\n    ],\n    \"maintenance\": null,\n    \"method\": {\n      \"code_sha256\": \"f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34\",\n      \"holder\": \"csoai\",\n      \"id\": \"meok-hf-research/memory_venturi_rehearsal\",\n      \"version\": \"2026-11-10.1\"\n    },\n    \"negative_control\": {\n      \"expected\": null,\n      \"got\": \"NOT_RUN\",\n      \"id\": null\n    },\n    \"observed\": {\n      \"output_sha256\": \"970dac3d28cfdd00ae2917f7e71d168155473b88d16bd5ad24eee474adb0c5fd\"\n    },\n    \"schema\": \"csoai.evidence-event/0.1\",\n    \"signature\": null,\n    \"state\": \"PARTIAL\",\n    \"subject\": {\n      \"kind\": \"sandbox_run\",\n      \"locator\": \"urn:meok:research-call:b9cf37a4-a6b4-4768-90e5-08beb2453188\"\n    },\n    \"supersedes\": null,\n    \"value\": null\n  },\n  \"limitations\": [\n    \"Trusted callbacks are fixtures here, not real-user authentication.\",\n    \"Production adoption still needs the authoritative source/version and access adapter.\",\n    \"Cached output is not cached action permission, and a hash is not a correctness proof.\"\n  ],\n  \"llm_inference_calls\": 0,\n  \"memory_backend\": \"temporary derived SQLite, destroyed after this rehearsal\",\n  \"production_routes_changed\": false,\n  \"trained_process_replay\": {\n    \"access_revocation\": \"ACCESS_DENIED\",\n    \"actual_neural_evaluations\": 8,\n    \"cache_directory_deleted_after_run\": true,\n    \"cross_request_user_memory_retained\": false,\n    \"events\": [\n      {\n        \"fixture\": 0,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378\",\n        \"phase\": \"initial\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 1,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb\",\n        \"phase\": \"initial\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 2,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7\",\n        \"phase\": \"initial\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 3,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330\",\n        \"phase\": \"initial\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 0,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378\",\n        \"phase\": \"unchanged-repeat\",\n        \"state\": \"REUSED_RESULT\"\n      },\n      {\n        \"fixture\": 1,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb\",\n        \"phase\": \"unchanged-repeat\",\n        \"state\": \"REUSED_RESULT\"\n      },\n      {\n        \"fixture\": 2,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7\",\n        \"phase\": \"unchanged-repeat\",\n        \"state\": \"REUSED_RESULT\"\n      },\n      {\n        \"fixture\": 3,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330\",\n        \"phase\": \"unchanged-repeat\",\n        \"state\": \"REUSED_RESULT\"\n      },\n      {\n        \"fixture\": 0,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378\",\n        \"phase\": \"source-revision-changed\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 1,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb\",\n        \"phase\": \"source-revision-changed\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 2,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7\",\n        \"phase\": \"source-revision-changed\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 3,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330\",\n        \"phase\": \"source-revision-changed\",\n        \"state\": \"FRESH_RESULT\"\n      }\n    ],\n    \"exact_cache_hits\": 4,\n    \"model\": \"csoai/meok-process-world-v0\",\n    \"model_quality_remeasured\": false,\n    \"model_revision\": \"90d6aa6c87629b9f4296142ba2019247b51686c4\",\n    \"request_attempts\": 13,\n    \"scope\": \"Real small neural predictor on synthetic inputs; not Cosmos or physical dynamics.\",\n    \"weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\",\n    \"whole_loop_seconds\": 0.06493542995303869\n  },\n  \"training_performed\": false\n}"
+  ],
+  "parsed": {
+    "cache_experiment": {
+      "actual_model_calls": 0,
+      "private_data_read": false,
+      "production_cache_changed": false,
+      "rows": [
+        {
+          "accepted": 103,
+          "cache_hits": 0,
+          "correct_accepted": 103,
+          "eager_invalidations": 0,
+          "p50_seconds": 0.00018819794058799744,
+          "p95_seconds": 0.0002240869216620922,
+          "provider_computations": 103,
+          "refused": 17,
+          "requests": 120,
+          "seconds_per_correct_accepted": 0.0001961735927147194,
+          "stale_or_forbidden_returns": 0,
+          "strategy": "always_fresh",
+          "wall_seconds": 0.0202058800496161
+        },
+        {
+          "accepted": 116,
+          "cache_hits": 93,
+          "correct_accepted": 72,
+          "eager_invalidations": 0,
+          "p50_seconds": 1.400010660290718e-06,
+          "p95_seconds": 0.0001949039287865162,
+          "provider_computations": 23,
+          "refused": 4,
+          "requests": 120,
+          "seconds_per_correct_accepted": 6.430795959507425e-05,
+          "stale_or_forbidden_returns": 44,
+          "strategy": "query_only_unsafe",
+          "wall_seconds": 0.0046301730908453465
+        },
+        {
+          "accepted": 103,
+          "cache_hits": 69,
+          "correct_accepted": 103,
+          "eager_invalidations": 0,
+          "p50_seconds": 4.3809181079268456e-05,
+          "p95_seconds": 0.0002920352853834629,
+          "provider_computations": 34,
+          "refused": 17,
+          "requests": 120,
+          "seconds_per_correct_accepted": 0.00012218368067903426,
+          "stale_or_forbidden_returns": 0,
+          "strategy": "revision_lazy",
+          "wall_seconds": 0.012584919109940529
+        },
+        {
+          "accepted": 103,
+          "cache_hits": 61,
+          "correct_accepted": 103,
+          "eager_invalidations": 26,
+          "p50_seconds": 4.233513027429581e-05,
+          "p95_seconds": 0.000299608800560236,
+          "provider_computations": 42,
+          "refused": 17,
+          "requests": 120,
+          "seconds_per_correct_accepted": 0.0001390314145574292,
+          "stale_or_forbidden_returns": 0,
+          "strategy": "revision_eager",
+          "wall_seconds": 0.014320235699415207
+        }
+      ],
+      "scope": "SYNTHETIC_CACHE_REHEARSAL",
+      "training": false,
+      "version": "0.1.0",
+      "warning": "A hit reuses output bytes, not authority. Callback authentication and source truth remain host responsibilities; timings are CPU fixtures, not Cosmos speedups."
+    },
+    "canonical_gspc_admission": false,
+    "evidence_event": {
+      "anchors": {
+        "ots": "none",
+        "rekor": {
+          "log_index": null,
+          "uuid": null
+        }
+      },
+      "claim": {
+        "read_at": "2026-11-11T05:48:36.565713+00:00",
+        "source_sha256": "fe2b4447ac07fbdeec41e03ea2b0278d69abc75af22941d5517db2ecbad71b2f",
+        "text": "The named research function returned the hash-bound output for the supplied input."
+      },
+      "declared": {
+        "input_sha256": "fe2b4447ac07fbdeec41e03ea2b0278d69abc75af22941d5517db2ecbad71b2f"
+      },
+      "event_id": "sha256:de02577050dc1c130a76514590b500647c2dc01c25a0c1b020110e9d965fbf10",
+      "limits": [
+        "Unsigned execution record, not independent verification of prediction truth.",
+        "No production GSPC admission, action authorisation, signing or training occurs.",
+        "Response records are not durably archived by this research tool."
+      ],
+      "maintenance": null,
+      "method": {
+        "code_sha256": "f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34",
+        "holder": "csoai",
+        "id": "meok-hf-research/memory_venturi_rehearsal",
+        "version": "2026-11-10.1"
+      },
+      "negative_control": {
+        "expected": null,
+        "got": "NOT_RUN",
+        "id": null
+      },
+      "observed": {
+        "output_sha256": "970dac3d28cfdd00ae2917f7e71d168155473b88d16bd5ad24eee474adb0c5fd"
+      },
+      "schema": "csoai.evidence-event/0.1",
+      "signature": null,
+      "state": "PARTIAL",
+      "subject": {
+        "kind": "sandbox_run",
+        "locator": "urn:meok:research-call:b9cf37a4-a6b4-4768-90e5-08beb2453188"
+      },
+      "supersedes": null,
+      "value": null
+    },
+    "limitations": [
+      "Trusted callbacks are fixtures here, not real-user authentication.",
+      "Production adoption still needs the authoritative source/version and access adapter.",
+      "Cached output is not cached action permission, and a hash is not a correctness proof."
+    ],
+    "llm_inference_calls": 0,
+    "memory_backend": "temporary derived SQLite, destroyed after this rehearsal",
+    "production_routes_changed": false,
+    "trained_process_replay": {
+      "access_revocation": "ACCESS_DENIED",
+      "actual_neural_evaluations": 8,
+      "cache_directory_deleted_after_run": true,
+      "cross_request_user_memory_retained": false,
+      "events": [
+        {
+          "fixture": 0,
+          "output_equal_to_initial": true,
+          "output_sha256": "fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378",
+          "phase": "initial",
+          "state": "FRESH_RESULT"
+        },
+        {
+          "fixture": 1,
+          "output_equal_to_initial": true,
+          "output_sha256": "2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb",
+          "phase": "initial",
+          "state": "FRESH_RESULT"
+        },
+        {
+          "fixture": 2,
+          "output_equal_to_initial": true,
+          "output_sha256": "e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7",
+          "phase": "initial",
+          "state": "FRESH_RESULT"
+        },
+        {
+          "fixture": 3,
+          "output_equal_to_initial": true,
+          "output_sha256": "f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330",
+          "phase": "initial",
+          "state": "FRESH_RESULT"
+        },
+        {
+          "fixture": 0,
+          "output_equal_to_initial": true,
+          "output_sha256": "fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378",
+          "phase": "unchanged-repeat",
+          "state": "REUSED_RESULT"
+        },
+        {
+          "fixture": 1,
+          "output_equal_to_initial": true,
+          "output_sha256": "2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb",
+          "phase": "unchanged-repeat",
+          "state": "REUSED_RESULT"
+        },
+        {
+          "fixture": 2,
+          "output_equal_to_initial": true,
+          "output_sha256": "e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7",
+          "phase": "unchanged-repeat",
+          "state": "REUSED_RESULT"
+        },
+        {
+          "fixture": 3,
+          "output_equal_to_initial": true,
+          "output_sha256": "f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330",
+          "phase": "unchanged-repeat",
+          "state": "REUSED_RESULT"
+        },
+        {
+          "fixture": 0,
+          "output_equal_to_initial": true,
+          "output_sha256": "fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378",
+          "phase": "source-revision-changed",
+          "state": "FRESH_RESULT"
+        },
+        {
+          "fixture": 1,
+          "output_equal_to_initial": true,
+          "output_sha256": "2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb",
+          "phase": "source-revision-changed",
+          "state": "FRESH_RESULT"
+        },
+        {
+          "fixture": 2,
+          "output_equal_to_initial": true,
+          "output_sha256": "e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7",
+          "phase": "source-revision-changed",
+          "state": "FRESH_RESULT"
+        },
+        {
+          "fixture": 3,
+          "output_equal_to_initial": true,
+          "output_sha256": "f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330",
+          "phase": "source-revision-changed",
+          "state": "FRESH_RESULT"
+        }
+      ],
+      "exact_cache_hits": 4,
+      "model": "csoai/meok-process-world-v0",
+      "model_quality_remeasured": false,
+      "model_revision": "90d6aa6c87629b9f4296142ba2019247b51686c4",
+      "request_attempts": 13,
+      "scope": "Real small neural predictor on synthetic inputs; not Cosmos or physical dynamics.",
+      "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+      "whole_loop_seconds": 0.06493542995303869
+    },
+    "training_performed": false
+  },
+  "wall_seconds": 0.803628375000244
+}

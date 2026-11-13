@@ -1,7 +1,7 @@
 /**
  * Drift Product — Customer-facing delta reports.
  *
- * Backed by the REAL corpus-watch pipeline (~/clawd/corpus-watch): 5 instruments
+ * Backed by the REAL corpus-watch pipeline (CSOAI-ORG/corpus-watch): 5 instruments
  * (EU AI Act, EU CRA, DORA, NIS2, UK GDPR), 399 provisions under normalised
  * SHA-256, fetched daily from EUR-Lex CELLAR + legislation.gov.uk. Every number
  * on this page comes from /corpus-watch/status.json — the watcher's own heartbeat,

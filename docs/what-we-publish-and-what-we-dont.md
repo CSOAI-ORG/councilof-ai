@@ -1,54 +1,53 @@
 # What we publish, and what we don't
 
-Council of AI is built on one promise: **check us, don't trust us.** Everything a
-third party needs to independently *verify* a published measurement is public,
-free, and reproducible. That is the whole point of the project, and it will never
-change.
+Council of AI is built on one promise: **check us, don't trust us.** For cleared
+public verification artifacts, everything a third party needs to independently
+*verify* the published bytes and signatures is public and free.
 
-Being honest about verification also means being honest about the other half:
-like any measurement body, we hold some trade secrets. Hiding *that* we hold them
-would itself be a form of dishonesty. So here is the exact boundary.
+Being honest about verification also means being honest about boundaries: rights,
+confidentiality, and trade secrets govern what can be published, and different
+artifacts carry distinct verification profiles:
 
-## What we publish (everything needed to verify a result)
+- **Publicly reproducible measurements** — frozen gold banks and deterministic
+  grader rules where third parties can re-run the grader on public inputs.
+  No LLM-as-judge scoring is introduced by this policy.
+- **Byte-verifiable artifacts** — Ed25519-signed cards and content-addressed
+  snapshots (`did:web:csoai.org`, `GET /api/assess/key`, `GET /api/gspc`) whose
+  published bytes and signatures can be checked offline.
+- **Controlled verification** — evaluations involving third-party, licensed, or
+  confidential material where verification happens under controlled access rather
+  than unconditional public redistribution.
+- **Unsigned supporting evidence** — local research observations, intermediate
+  diagnostics, and unsigned supporting evidence that are explicitly labelled as
+  such and never represented as signed credentials.
 
-- **Frozen gold banks** — the exact instruments a system is run against.
-- **Deterministic grader rules** — the scoring is rule-based on frozen banks.
-  No LLM-as-judge, no invented scores. You can re-run the grader yourself.
-- **Signed measurement cards** — every result is an Ed25519-signed, offline-
-  verifiable credential (`n_cards == n_cells`).
-- **The public verification key** (`did:web:csoai.org`, and
-  `GET /api/assess/key`) so you can check every signature without us.
-- **The live board** — `GET /api/gspc` and `GET /api/arena/scoreboard`
-  (with `?verify=1` to recompute `sha256(canonical body)` and compare).
-- **The methodology** — the white paper and DOI, canonical-JSON rules, and the
-  step-by-step HOW-TO-VERIFY.
-- **UNMEASURED is first-class** — gaps are published with their `n` and limits,
-  never hidden or invented.
+## Explicit boundaries
 
-If this page and `GET /api/gspc` ever disagree, **the API is right.**
+- Existing licences and upstream notices remain unchanged.
+- A hash or signature establishes neither ownership nor permission to publish.
+- The API is evidence to inspect, not an automatic adjudicator.
+- Do not use customer material to train or improve a shared system without the required permission.
+- This document is not an implemented access-control or release-enforcement gate.
 
-## What we don't publish (the edge — never needed to verify a result)
+## What we withhold or control
 
 - **Model-tuning methods** — fine-tune weights, adapters, training data, and
-  training recipes (including our self-improving fix_loop / QLoRA specifics).
-- **Gold-bank construction method** — *how* we build and curate the banks. The
-  frozen banks themselves are public (you need them to verify); the curation
-  recipe is not.
+  training recipes (including internal fix_loop / QLoRA specifics).
+- **Gold-bank construction method** — *how* we build and curate the banks.
 - **Internal architecture research** — early-stage synthesis and system
-  internals that are not part of any published, verifiable measurement.
+  internals that are not part of a cleared public measurement.
 - **Production infrastructure** — private pod/host addresses, ports, endpoints,
-  and internal keys. None of this is needed to verify a card: verification uses
-  only the public key and the published bytes.
+  and internal keys.
 
-## The test we apply
+## Decision rule (`HOLD FOR REVIEW` by default when uncertain)
 
-For any artifact, we ask one question: *does a stranger need this to reproduce or
-verify a published card?*
+| Case | Action |
+| --- | --- |
+| Cleared public verification material | Existing release review |
+| Unknown rights or confidentiality | Hold for review (`HOLD FOR REVIEW`) |
+| API/document contradiction | Record and reconcile the versioned conflict |
+| Protected input required for reproduction | Qualify or withhold the public-reproducibility claim |
 
-- **Yes → it stays public, forever.** We will never remove a gold bank, grader
-  rule, key, or signed card that verification depends on.
-- **No, and it reveals the edge → it may be a trade secret.**
-- **Unsure → we keep it public.** We err toward verifiability.
-
-Verification is free and loginless. We measure, we sign, we re-attest — and
-anyone can check.
+Verification of public artifacts remains free and loginless. We measure, we sign
+where applicable, we state our claim boundaries — and anyone can check the
+published evidence.

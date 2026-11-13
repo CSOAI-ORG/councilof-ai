@@ -272,25 +272,55 @@ function ModelRankings({
   );
 }
 
+export type HubCardCell = {
+  model: string;
+  axis: string;
+  status?: string;
+  accuracy?: number;
+  n?: number;
+  card_sha256?: string;
+  card_url?: string;
+  signed?: boolean;
+};
+export type HubCards = {
+  counts?: { complete?: boolean; measured?: number };
+  cells?: HubCardCell[];
+};
+
+const HUB_CARDS_URL = "/api/hub-cards";
+
 export function AxisDrilldown({
   a,
   elo,
   cardIndex,
+  hubCards,
 }: {
   a: Axis;
   elo: Load<Elo>;
   cardIndex: Load<CardIndex>;
+  hubCards?: Load<HubCards>;
 }) {
   const eloKey = AXIS_TO_ELO[a.axis];
   const rows = eloKey && elo.state === "ok" ? elo.data?.per_axis?.[eloKey] : undefined;
 
-  const groups = AXIS_TO_CARDGROUP[a.axis] || [a.axis];
+  const groups = AXIS_TO_CARDGROUP[a.axis] || [a.axis, `gspc-${a.axis}`];
   const cardCount =
     cardIndex.state === "ok"
       ? (cardIndex.data?.cards || []).filter(
           (c) => c.signed === true && c.axis && groups.includes(c.axis),
         ).length
       : 0;
+  const hubAxisRows =
+    a.kind === "model-comparison" && hubCards?.state === "ok"
+      ? (hubCards.data?.cells || []).filter(
+          (c) =>
+            c &&
+            c.status === "MEASURED" &&
+            c.signed === true &&
+            c.axis &&
+            (c.axis === a.axis || c.axis === `gspc-${a.axis}` || groups.includes(c.axis)),
+        )
+      : [];
   const runEvidence = axisRunEvidence(a);
 
   return (
@@ -355,6 +385,50 @@ export function AxisDrilldown({
         </p>
       )}
 
+      {hubAxisRows.length > 0 && (
+        <div className="mt-3 rounded-xl border border-slate-200 bg-white p-3">
+          <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-wide text-emerald-800">
+              Hugging Face Hub third-party cells ({hubAxisRows.length} signed on this axis · GET /api/hub-cards)
+            </span>
+            <a
+              href="/dashboard?tab=leaderboard#hub-and-mill-cohorts"
+              className="font-mono text-[10px] font-semibold text-emerald-700 hover:underline"
+            >
+              Browse all Hub &amp; 166-model cohorts →
+            </a>
+          </div>
+          <div className="max-h-48 overflow-y-auto">
+            <table className="w-full border-collapse text-left font-mono text-[11px]">
+              <thead>
+                <tr className="border-b border-slate-200 text-[9px] uppercase tracking-wider text-slate-500">
+                  <th className="py-1 pr-2">Model (Hugging Face Hub)</th>
+                  <th className="py-1 pr-2 text-right">Observed accuracy</th>
+                  <th className="py-1 pr-2 text-right">n</th>
+                  <th className="py-1 text-right">Evidence</th>
+                </tr>
+              </thead>
+              <tbody>
+                {hubAxisRows.map((c) => (
+                  <tr key={`${c.model}-${c.card_sha256 ?? ""}`} className="border-b border-slate-100 last:border-0">
+                    <td className="py-1 pr-2 font-sans font-medium text-slate-900">{c.model}</td>
+                    <td className="py-1 pr-2 text-right tabular-nums text-emerald-800">{pct(c.accuracy)}</td>
+                    <td className="py-1 pr-2 text-right tabular-nums text-slate-600">{c.n ?? "—"}</td>
+                    <td className="py-1 text-right">
+                      {c.card_url ? (
+                        <a href={c.card_url} target="_blank" rel="noreferrer" className="text-emerald-700 hover:underline">
+                          card ↗
+                        </a>
+                      ) : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* Evidence links preserve the distinction between signed cards, signed
           runs and content-addressed-but-unsigned runs. */}
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px]">
@@ -393,23 +467,34 @@ export default function GspcTerminal({ className }: { className?: string }) {
   const board = useJson<Board>(GSPC_URL);
   const elo = useJson<Elo>(ELO_URL);
   const cardIndex = useJson<CardIndex>(CARD_INDEX_URL);
+  const hubCards = useJson<HubCards>(HUB_CARDS_URL);
   const [open, setOpen] = useState<string | null>(null);
   const [q, setQ] = useState("");
 
   const axes = board.state === "ok" ? board.data?.axes || [] : [];
   const totals = board.state === "ok" ? board.data?.totals : undefined;
 
-  // Search matches an axis by its own text OR by a model name inside its ranking.
+  // Search matches an axis by its own text OR by a model name inside Elo or Hugging Face Hub cells.
   const query = q.trim().toLowerCase();
   const modelMatch = useMemo(() => {
-    if (!query || elo.state !== "ok") return new Set<string>();
+    if (!query) return new Set<string>();
     const hit = new Set<string>();
-    for (const [board_axis, eloKey] of Object.entries(AXIS_TO_ELO)) {
-      const rows = elo.data?.per_axis?.[eloKey] || [];
-      if (rows.some((r) => r.model.toLowerCase().includes(query))) hit.add(board_axis);
+    if (elo.state === "ok") {
+      for (const [board_axis, eloKey] of Object.entries(AXIS_TO_ELO)) {
+        const rows = elo.data?.per_axis?.[eloKey] || [];
+        if (rows.some((r) => r.model.toLowerCase().includes(query))) hit.add(board_axis);
+      }
+    }
+    if (hubCards.state === "ok") {
+      for (const c of hubCards.data?.cells || []) {
+        if (c?.status === "MEASURED" && c.signed === true && String(c.model || "").toLowerCase().includes(query)) {
+          const cleanAx = String(c.axis || "").replace(/^gspc-/, "");
+          if (cleanAx) hit.add(cleanAx);
+        }
+      }
     }
     return hit;
-  }, [query, elo]);
+  }, [query, elo, hubCards]);
 
   const filtered = axes.filter((a) => {
     if (!query) return true;
@@ -444,7 +529,7 @@ export default function GspcTerminal({ className }: { className?: string }) {
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search axis or model — e.g. governance, mistral, qwen…"
+          placeholder="Search axis or model — e.g. governance, DeepSeek-R1, Llama-3.3, mistral, qwen…"
           className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-[12px] text-slate-800 placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
           aria-label="Search the GSPC board by axis or model"
         />
@@ -459,11 +544,6 @@ export default function GspcTerminal({ className }: { className?: string }) {
         <div className="px-4 py-10 text-center font-mono text-[12px] text-slate-500">LOADING · GET /api/gspc</div>
       ) : (
         <div className="relative overflow-x-auto">
-          {/* At 390px this board read n=237 as "2/3/7" down three lines, "UNME/ASUR/ED" and
-              "governanc/e": auto table layout crushed columns to one glyph. The whole-word sizing
-              for tables inside a scroller now lives once in styles/index.css. Bench is dropped
-              below sm: it is repeated in the row's drill-down and the axis deep-dive, and the
-              columns that remain fit a phone without scrolling. */}
           <table className="w-full border-collapse text-left">
             <thead>
               <tr className="border-b border-slate-200 font-mono text-[9px] uppercase tracking-wider text-slate-600">
@@ -513,7 +593,7 @@ export default function GspcTerminal({ className }: { className?: string }) {
                     {isOpen && (
                       <tr>
                         <td colSpan={6} className="p-0">
-                          <AxisDrilldown a={a} elo={elo} cardIndex={cardIndex} />
+                          <AxisDrilldown a={a} elo={elo} cardIndex={cardIndex} hubCards={hubCards} />
                         </td>
                       </tr>
                     )}
@@ -535,7 +615,14 @@ export default function GspcTerminal({ className }: { className?: string }) {
       {/* Terminal footer — provenance + register */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 px-4 py-2.5 text-[10px] text-slate-500">
         <span className="font-mono">
-          Measurement, not certification · empty cells stay empty · nothing is written here.
+          Measurement, not certification · empty cells stay empty ·{" "}
+          <a href="/models-measured/" className="font-semibold text-emerald-700 hover:underline">
+            All measured third-party models
+          </a>{" "}
+          ·{" "}
+          <a href="/dashboard?tab=leaderboard#hub-and-mill-cohorts" className="font-semibold text-emerald-700 hover:underline">
+            Hugging Face Hub cells
+          </a>
         </span>
         <span className="font-mono">
           {elo.state === "ok"

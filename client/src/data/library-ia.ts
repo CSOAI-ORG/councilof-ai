@@ -340,7 +340,7 @@ const ACRONYMS: [RegExp, string][] = [
 // CamelCase component names concatenate it ("CEASAITraining"), which \bceasai\b missed —
 // that title shipped verbatim on /library (qa-sweep 2026-08-19).
 const FORBIDDEN_DISPLAY =
-  /\b(?:sovereign|byzantine|bft|owem|sigil)\b|\bceasai|33[\s-]?agent|fault[\s-]?toleran(?:t|ce)|crown[\s-]?jewels?|goldmines?|black\s+swans?/gi;
+  /\b(?:sovereign|byzantine|bft|owem|sigil)\b|\bceasai|33[\s-]?agent|fault[\s-]?toleran(?:t|ce)|crown[\s-]?jewels?|goldmines?|black[\s_-]?swans?/gi;
 /** True if a path/title carries a killed brand ANYWHERE (non-anchored, non-stateful). A page whose
  *  URL itself contains a killed brand (e.g. /about-ceasai) must never surface in the archive — the
  *  path renders as visible text and would trip the deploy gate. */

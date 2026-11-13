@@ -1,18 +1,16 @@
-// GSPC — the behavioural governance axes, as measured state.
+// GSPC — the 33 canonical axes, as measured state.
 //
-// NOT A COUNT AUTHORITY. This file holds a local SNAPSHOT of the behavioural
-// family, used as an offline fallback for the axis ROWS. It is not the board and
-// its length is not the board's axis count: the board also carries the
-// financial/domain family (ADR-001). Anything that renders a COUNT must derive it
-// from GET /api/gspc — see client/src/lib/boardCount.ts. The header of this file
-// used to say "the twelve governance axis", which is how a stale snapshot count
-// ends up quoted as the board's.
+// NOT A COUNT AUTHORITY. This file holds a local SNAPSHOT of the 33-axis canon,
+// used as an offline fallback for the axis ROWS and for geography (lng/lat/seat/instrument)
+// not carried on the wire. Anything that renders a COUNT must derive it from
+// GET /api/gspc — see client/src/lib/boardCount.ts.
 //
-// This is the single source of truth for every SOV OS panel. The invariant that
+// This is the single source of truth for every Council OS panel. The invariant that
 // matters more than anything visual: an axis only carries a score when its status
-// is MEASURED. UNMEASURED / DRAFT / SPEC / PLANNED axes carry their real state and
-// NO number. `quotable()` is the structural guard — panels ask it rather than
-// deciding for themselves, so a surface cannot render a score an axis has not earned.
+// is MEASURED and a public leader accuracy is published. UNMEASURED / DRAFT / SPEC / PLANNED
+// axes carry their real state and NO number. `quotable()` is the structural guard —
+// panels ask it rather than deciding for themselves, so a surface cannot render a
+// score an axis has not earned.
 
 import { boardRunDates } from "./boardRunDates";
 import { leaderLabel } from "../../../functions/_lib/leaderLabel";
@@ -66,64 +64,211 @@ export interface Axis {
   separation?: string;
   separation_p?: number;
   kind?: string;
+  family?: string;
+  leader?: string;
+  fleet_mean?: number | null;
+  n_unit?: string;
+  public_leader_state?: string;
+  run_attestation?: string;
+  applies_to?: string;
 }
 
 export const MEASURED_ON = { date: "2026-08-12", model: "Council-34" };
 
 export const AXES: Axis[] = [
-  { axis: "governance", bench: "GovBench", n: 237, macro_f1: 0.705, accuracy: 0.7, unparsed_rate: 0.0386, status: "MEASURED",
+  // ── 14 model-comparison axes (family: gspc) ───────────────────────────────
+  { axis: "governance", bench: "GovBench", n: 237, macro_f1: null, accuracy: 0.5865, unparsed_rate: 0, status: "MEASURED",
     colour: "#34d399", lng: 4.37, lat: 50.84, seat: "Brussels", instrument: "EU AI Act (Reg. 2024/1689)",
     task: "EU AI Act risk-tier classification",
-    note: "v2 bank: 237 items, imported 2026-08-05 from the 339 scenarios of the AI Act Evaluation Benchmark (NCSR 'Demokritos', arXiv:2603.09435, CC-BY-4.0). The other 102 are not graded here and are not a private held-out set: all 339 are public upstream. The tuned governance specialist leads AND the lead is separ", dataset: "csoai/gspc-gov" },
-  { axis: "safety", bench: "DefBench", n: 36, macro_f1: 0.944, accuracy: 0.944, unparsed_rate: 0.0541, status: "MEASURED",
+    leader: "mistral:7b (base model)", separation: "TIE", separation_p: 0.3787, interval: [0.523, 0.647], fleet_mean: 0.49,
+    kind: "model-comparison", family: "gspc",
+    note: "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=237; p=0.3787). mistral:7b 139/237 vs deepseek-r1:8b 128/237, both read from per-item rows after own-model exclusion.", dataset: "csoai/gspc-gov" },
+  { axis: "safety", bench: "DefBench", n: 36, macro_f1: 0.944, accuracy: 0.9444, unparsed_rate: 0.0541, status: "MEASURED",
     colour: "#f87171", lng: -0.12, lat: 51.5, seat: "London", instrument: "UK AI Safety Institute",
     task: "calibrated refusal on paired requests",
-    note: "A base model holds the point lead but the lead is a TIE (McNemar p=0.69 vs qwen2.5:3b). Honestly reported: the tuned specialists do not own this axis.", dataset: "csoai/gspc-agi" },
-  { axis: "provenance", bench: "ProvBench", n: 32, macro_f1: 0.776, accuracy: 0.781, unparsed_rate: 0.148, status: "MEASURED",
+    leader: "gemma3:12b (base model)", separation: "TIE", separation_p: 0.6875, interval: [0.819, 0.985], fleet_mean: 0.732,
+    kind: "model-comparison", family: "gspc",
+    note: "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=36; p=0.6875). gemma3:12b 34/36 vs qwen2.5:3b 32/36, both read from per-item rows.", dataset: "csoai/gspc-agi" },
+  { axis: "provenance", bench: "ProvBench", n: 32, macro_f1: null, accuracy: 0.7188, unparsed_rate: 0, status: "MEASURED",
     colour: "#60a5fa", lng: -122.42, lat: 37.77, seat: "San Francisco", instrument: "C2PA Specification 2.4",
     task: "Article 50 marking survival by validity",
-    note: "v3 bank (validity principle: a manifest present but whose binding no longer validates has NOT survived). The tuned specialist leads on points; TIE vs llama3.2:3b (p=0.77).", dataset: "csoai/gspc-prv" },
-  { axis: "continuity", bench: "PQCBench", n: 33, macro_f1: 0.512, accuracy: 0.606, unparsed_rate: 0.0463, status: "MEASURED",
+    leader: "llama3.2:3b (base model)", separation: "TIE", separation_p: 1, interval: [0.546, 0.844], fleet_mean: 0.549,
+    kind: "model-comparison", family: "gspc",
+    note: "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=32; p=1.0). llama3.2:3b 23/32 vs gemma3:12b 22/32, both read from per-item rows after own-model exclusion.", dataset: "csoai/gspc-prv" },
+  { axis: "continuity", bench: "PQCBench", n: 33, macro_f1: null, accuracy: 0.6061, unparsed_rate: 0, status: "MEASURED",
     colour: "#c084fc", lng: -77.27, lat: 39.14, seat: "Gaithersburg", instrument: "NIST FIPS 204 / ML-DSA",
     task: "post-quantum status of a cryptographic assumption",
-    note: "The axis designed to discriminate across frontier models. The tuned specialist leads on points; flat TIE vs gemma3:12b (p=1.0).", dataset: "csoai/gspc-asi" },
-  { axis: "conformance", bench: "MCPBench", n: 35, macro_f1: 0.735, accuracy: 0.743, unparsed_rate: 0.1338, status: "MEASURED",
+    leader: "gemma3:12b (base model)", separation: "TIE", separation_p: 0.6875, interval: [0.437, 0.753], fleet_mean: 0.45,
+    kind: "model-comparison", family: "gspc",
+    note: "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=33; p=0.6875). gemma3:12b 20/33 vs deepseek-r1:8b 18/33, both read from per-item rows after own-model exclusion.", dataset: "csoai/gspc-asi" },
+  { axis: "conformance", bench: "MCPBench", n: 35, macro_f1: null, accuracy: 0.7143, unparsed_rate: 0, status: "MEASURED",
     colour: "#fbbf24", lng: -122.33, lat: 47.61, seat: "Seattle", instrument: "Model Context Protocol 2026-07-28",
     task: "MCP tool conformance",
-    note: "Canonical bank count 35 (supersedes the stale 11 in older matrices — registry v2). The tuned specialist leads on points; flat TIE vs mistral:7b (p=1.0).", dataset: "csoai/gspc-mcp" },
-  { axis: "openness", bench: "OSSBench", n: 32, macro_f1: 0.875, accuracy: 0.875, unparsed_rate: 0.0493, status: "MEASURED",
+    leader: "mistral:7b (base model)", separation: "TIE", separation_p: 0.625, interval: [0.549, 0.837], fleet_mean: 0.537,
+    kind: "model-comparison", family: "gspc",
+    note: "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=35; p=0.625). mistral:7b 25/35 vs llama3.2:3b 23/35, both read from per-item rows after own-model exclusion.", dataset: "csoai/gspc-mcp" },
+  { axis: "openness", bench: "OSSBench", n: 32, macro_f1: null, accuracy: 0.8438, unparsed_rate: 0, status: "MEASURED",
     colour: "#2dd4bf", lng: -122.68, lat: 45.52, seat: "Portland", instrument: "OSI licence set",
     task: "licence reasoning versus intended use",
-    note: "v2 bank (AGPL network trigger, directional compatibility, SSPL/ELv2/BSL service clauses). Canonical count 32 (supersedes stale 16). The tuned specialist leads on points; flat TIE vs gemma3:12b.", dataset: "csoai/gspc-oss" },
-  { axis: "machinery-conformity", bench: "MachBench", n: 33, macro_f1: 0.465, accuracy: 0.545, unparsed_rate: 0.0558, status: "MEASURED",
+    leader: "gemma3:12b (base model)", separation: "TIE", separation_p: 0.424, interval: [0.682, 0.931], fleet_mean: 0.696,
+    kind: "model-comparison", family: "gspc",
+    note: "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=32; p=0.424). gemma3:12b 27/32 vs mistral:7b 23/32, both read from per-item rows after own-model exclusion.", dataset: "csoai/gspc-oss" },
+  { axis: "machinery-conformity", bench: "MachBench", n: 33, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
     colour: "#fb923c", lng: 12.57, lat: 55.68, seat: "Copenhagen", instrument: "Machinery Reg (EU) 2023/1230 Annex I Part A — 14 Jan 2027",
     task: "Machinery Reg self-evolving safety-function classification (PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION)",
-    note: "A base model leads on points; TIE. Anchor: Machinery Reg (EU) 2023/1230 Annex I Part A items 5-6, applies 14 Jan 2027. Gold labels remain under legal review — measurement, not a conformity verdict.", dataset: "csoai/gspc-mach" },
-  { axis: "care", bench: "CareBench", n: 199, macro_f1: 0.528, accuracy: 0.535, unparsed_rate: 0.1742, status: "MEASURED",
-    colour: "#f472b6", lng: -3.19, lat: 55.95, seat: "Edinburgh", instrument: "paired protection / over-refusal design",
+    separation: "UNTESTED", fleet_mean: 0.349, public_leader_state: "NO_SIGNED_CARD",
+    kind: "model-comparison", family: "gspc",
+    note: "No public leader: this axis is measured as a fleet aggregate against the frozen bank (see fleet_mean), but no signed per-model card is carried in this payload, so no leader or accuracy is asserted.", dataset: "csoai/gspc-mach" },
+  { axis: "care", bench: "CareBench", n: 199, macro_f1: null, accuracy: 0.405, unparsed_rate: 0, status: "MEASURED",
+    colour: "#f472b6", lng: -3.19, lat: 55.95, seat: "Edinburgh", instrument: "paired protection / over-refusal & delusion non-reinforcement design",
     task: "care-cost (protect × help) under paired conduct scenarios",
-    note: "SEPARATED vs the best base (p=0.036) but NOT clear of the majority-class baseline — quote it only as 'separated from base models'. The fleet mean is 0.293 and the worst 5% of items carry harm 0.990 (CVaR, n=199): calibra", dataset: "csoai/gspc-care" },
-  { axis: "cross-reality", bench: "XRAIV", n: 32, macro_f1: 0.803, accuracy: 0.812, unparsed_rate: 0.0247, status: "MEASURED",
+    leader: "qwen2.5:0.5b-instruct (base model)", separation: "TIE", separation_p: 0.427, interval: [0.339, 0.474], fleet_mean: 0.293,
+    kind: "model-comparison", family: "gspc",
+    note: "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=200; p=0.427). qwen2.5:0.5b-instruct 81/200 vs qwen2.5:3b 74/200 after own-model exclusion.", dataset: "csoai/gspc-care" },
+  { axis: "cross-reality", bench: "XRAIV", n: 32, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
     colour: "#a78bfa", lng: -1.26, lat: 51.75, seat: "Oxford", instrument: "EU AI Act, applied to agent conduct",
     task: "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
-    note: "A base model leads on points; TIE (p=0.065 — the closest near-miss on the board, still not separated at p<0.05). Bank: 32 scored items, all public in csoai/gspc-xr items.jsonl (33 rows: the 32 items and 1 canary). The bank card lists one public split; there is no held-out split (C-2026-0929-02).", dataset: "csoai/gspc-xr" },
-  { axis: "detector-interop", bench: "DetBench", n: 33, macro_f1: 0.855, accuracy: 0.879, unparsed_rate: 0.1754, status: "MEASURED",
+    separation: "UNTESTED", fleet_mean: 0.441, public_leader_state: "NO_SIGNED_CARD",
+    kind: "model-comparison", family: "gspc",
+    note: "No public leader: this axis is measured as a fleet aggregate against the frozen bank (see fleet_mean), but no signed per-model card is carried in this payload, so no leader or accuracy is asserted.", dataset: "csoai/gspc-xr" },
+  { axis: "detector-interop", bench: "DetBench", n: 33, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
     colour: "#38bdf8", lng: 4.9, lat: 50.85, seat: "Brussels", instrument: "EU Code of Practice — interoperability due 2 Feb 2027",
     task: "cross-detector watermark interoperability matrix",
-    note: "A base model leads on points; TIE, and NOT clear of the majority baseline. Methodology: POAI detector-interop. Code-of-Practice target 2 Feb 2027.", dataset: "csoai/gspc-det" },
-  { axis: "art5-safeguard", bench: "Art5Bench", n: 36, macro_f1: 0.972, accuracy: 0.972, unparsed_rate: 0.0117, status: "MEASURED",
+    separation: "UNTESTED", fleet_mean: 0.563, public_leader_state: "NO_SIGNED_CARD",
+    kind: "model-comparison", family: "gspc",
+    note: "No public leader: this axis is measured as a fleet aggregate against the frozen bank (see fleet_mean), but no signed per-model card is carried in this payload, so no leader or accuracy is asserted.", dataset: "csoai/gspc-det" },
+  { axis: "art5-safeguard", bench: "Art5Bench", n: 36, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
     colour: "#fb7185", lng: -77.04, lat: 38.9, seat: "Washington DC", instrument: "EU AI Act Art 5 — prohibited practices",
     task: "EU AI Act Article 5 prohibited-practice trip",
-    note: "The tuned specialist leads on points at 0.972; TIE vs gemma3:12b (p=1.0) — the whole fleet is strong here (fleet mean 0.830). The NCII/CSAM corpus is never handled by CSOAI.", dataset: "csoai/gspc-art5" },
+    separation: "UNTESTED", fleet_mean: 0.83, public_leader_state: "EXCLUDED_OWN_MODEL",
+    kind: "model-comparison", family: "gspc",
+    note: "No public leader: our own council specialist held the point lead and a neutral measurement body does not rank its own models against the vendors it measures.", dataset: "csoai/gspc-art5" },
   { axis: "swarm", bench: "SwarmBench v2b", n: 37, macro_f1: null, accuracy: 0.4444, unparsed_rate: 0, status: "MEASURED",
     colour: "#94a3b8", lng: 139.69, lat: 35.68, seat: "Tokyo", instrument: "multi-agent coordination safety",
     task: "multi-agent coordination safety",
-    separation: "UNTESTED",
-    note: "The signed wave-2b candidate cards support qwen2.5:7b as the point leader at 0.4444. Paired rows and compatible intervals are not public, so the axis is UNTESTED for statistical separation. The retired 3-prompt PROTOCOL result remains historical evidence and is not this row.", dataset: "csoai/gspc-swarm" },
-  { axis: "affect", bench: "AffectBench", n: 41, macro_f1: 0.864, accuracy: 0.878, unparsed_rate: 0.0642, status: "MEASURED",
+    leader: "qwen2.5:7b (base model)", separation: "UNTESTED",
+    kind: "model-comparison", family: "gspc",
+    note: "The signed wave-2b candidate cards support qwen2.5:7b as the point leader at 0.4444. Paired rows and compatible intervals are not public, so the axis is UNTESTED for statistical separation.", dataset: "csoai/gspc-swarm" },
+  { axis: "affect", bench: "AffectBench", n: 41, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
     colour: "#ec4899", lng: 4.35, lat: 50.85, seat: "Brussels", instrument: "EU AI Act Art 5(1)(a)/(b)/(f) + Art 50 — emotional & manipulation safety",
     task: "emotional & embodied safety (manipulation / disclosure / vulnerability)",
-    note: "COUNSEL-PENDING: the legal gold labels and 1-5 severity bases await counsel review; this is a measurement of model behaviour against a counsel-pending key, NOT a legal verdict. The cleanest separation on the board: tuned", dataset: "csoai/gspc-affect" },
+    separation: "UNTESTED", fleet_mean: 0.605, public_leader_state: "EXCLUDED_OWN_MODEL",
+    kind: "model-comparison", family: "gspc",
+    note: "No public leader: our own council specialist held the point lead and a neutral measurement body does not rank its own models against the vendors it measures.", dataset: "csoai/gspc-affect" },
+  { axis: "jail", bench: "GoldBank-Detector", n: 71, macro_f1: null, accuracy: 0.5915, unparsed_rate: 0, status: "MEASURED",
+    colour: "#64748b", lng: -0.14, lat: 51.51, seat: "London", instrument: "GSPC Jail GoldBank (38 ESCAPE / 33 BENIGN)",
+    task: "escape-attempt detection on a 71-row gold bank of 27 distinct inputs (38 ESCAPE / 33 BENIGN rows) — layer 2 of 2",
+    leader: "qwen2.5:0.5b-instruct (base model)", separation: "UNTESTED", interval: [0.475, 0.698], fleet_mean: 0.5455,
+    kind: "model-comparison", family: "gspc",
+    note: "The jail floor is measured on a 71-row gold bank of 27 distinct inputs; separation is UNTESTED under the distinct-input floor (27 < 30).", dataset: "csoai/gspc-jail-goldbank" },
+
+  // ── 9 deterministic-facts axes (1 gspc + 8 financial) ─────────────────────
+  { axis: "effect-binding", bench: "EffectBench v0.1 (server probe)", n: 261, n_unit: "tool-call servers probed",
+    macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
+    colour: "#a1a1aa", lng: 8.54, lat: 47.37, seat: "Zurich", instrument: "ADR-002 Effect-Binding Server Probe",
+    task: "does authorization bind to the request the server executes, or only to the tool call the agent declared",
+    kind: "deterministic-facts", family: "gspc", run_attestation: "ED25519_SIGNED",
+    note: "MEASURED 2026-09-22 (council-os/ADR-002-axis-23-effect-binding.md). Deterministic: for each server one in-scope action is checked for request-bound authorization." },
+  { axis: "provenance-controls", bench: "ChainFacts", n: 6, n_unit: "issuer accounts (not bank items)",
+    macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
+    colour: "#fbbf24", lng: -74.01, lat: 40.71, seat: "New York", instrument: "XRPL / Stellar / Ethereum / Solana Mainnet Account-Root Read",
+    task: "on-chain issuer control facts (allowlisting / freeze capability / identity domain)",
+    kind: "deterministic-facts", family: "financial", run_attestation: "ED25519_SIGNED", dataset: "csoai/gspc-provenance-controls",
+    note: "MEASURED for on-chain control facts only over six instruments. Deterministic account-root flag inspection." },
+  { axis: "reserve-attestation", bench: "ReserveFacts", n: 16, n_unit: "issuer accounts (not bank items)",
+    macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
+    colour: "#fbbf24", lng: -74.01, lat: 40.71, seat: "New York", instrument: "XRPL Reader-16 Reserve Attestation Presence Check",
+    task: "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)",
+    kind: "deterministic-facts", family: "financial", run_attestation: "CONTENT_ADDRESSED_UNSIGNED", dataset: "csoai/gspc-reserve-attestation",
+    note: "MEASURED v0.3 over the live XRPL reader-16. Three-state presence check on retrieved issuer pages." },
+  { axis: "regulatory-framework", bench: "RegimeFacts", n: 16, n_unit: "issuer accounts (not bank items)",
+    macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
+    colour: "#fbbf24", lng: 2.35, lat: 48.86, seat: "Paris", instrument: "NYDFS / MiCA / BACEN / Reg D Regime Declaration Check",
+    task: "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)",
+    kind: "deterministic-facts", family: "financial", run_attestation: "CONTENT_ADDRESSED_UNSIGNED", dataset: "csoai/gspc-regulatory-framework",
+    note: "MEASURED v0.3 for declaration presence on a retrieved URL over the live XRPL reader-16." },
+  { axis: "distribution-integrity", bench: "DistributionFacts", n: 16, n_unit: "issuer accounts (not bank items)",
+    macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
+    colour: "#fbbf24", lng: 8.68, lat: 50.11, seat: "Frankfurt", instrument: "XRPL On-Chain Supply & Holder Classification",
+    task: "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)",
+    kind: "deterministic-facts", family: "financial", run_attestation: "CONTENT_ADDRESSED_UNSIGNED", dataset: "csoai/gspc-distribution-integrity",
+    note: "MEASURED v0.3 from GET /api/xrpl over all 16 reader rows." },
+  { axis: "custody-disclosure", bench: "CustodyFacts", n: 16, n_unit: "issuer accounts (not bank items)",
+    macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
+    colour: "#fbbf24", lng: 6.14, lat: 46.2, seat: "Geneva", instrument: "Named Custodian & Auditor Disclosure Check",
+    task: "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)",
+    kind: "deterministic-facts", family: "financial", run_attestation: "CONTENT_ADDRESSED_UNSIGNED", dataset: "csoai/gspc-custody-disclosure",
+    note: "MEASURED v0.3 for named-string presence on retrieved pages over the live XRPL reader-16." },
+  { axis: "ai-adoption-components", bench: "Eurostat", n: 2, n_unit: "public series",
+    macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
+    colour: "#fbbf24", lng: 6.13, lat: 49.61, seat: "Luxembourg", instrument: "Eurostat isoc_eb_ai Series",
+    task: "cited EU AI-adoption series (not an index)",
+    kind: "deterministic-facts", family: "financial", run_attestation: "CONTENT_ADDRESSED_UNSIGNED", dataset: "csoai/gspc-ai-economy-index",
+    note: "MEASURED as two Eurostat series from isoc_eb_ai, 2025: enterprises 10+ employees using any AI 19.95%, large enterprises 250+ 55.03%." },
+  { axis: "labour-components", bench: "Eurostat", n: 2, n_unit: "public series",
+    macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
+    colour: "#fbbf24", lng: 6.13, lat: 49.61, seat: "Luxembourg", instrument: "Eurostat lfsi_emp_a & une_rt_a Series",
+    task: "cited EU labour series (not an index)",
+    kind: "deterministic-facts", family: "financial", run_attestation: "CONTENT_ADDRESSED_UNSIGNED", dataset: "csoai/gspc-human-labour-index",
+    note: "MEASURED as two Eurostat series, 2025: activity rate age 15-64 75.6% (lfsi_emp_a), unemployment rate age 15-74 6.0% (une_rt_a)." },
+  { axis: "humanoid-labour-index", bench: "Disclosure", n: 8, n_unit: "frozen vendor URLs",
+    macro_f1: null, accuracy: null, unparsed_rate: 0, status: "MEASURED",
+    colour: "#fbbf24", lng: 103.82, lat: 1.35, seat: "Singapore", instrument: "8 Frozen Humanoid Vendor Disclosure URLs",
+    task: "named vendor publishes a dated deployment count on a stable URL? Y/N",
+    kind: "deterministic-facts", family: "financial", run_attestation: "CONTENT_ADDRESSED_UNSIGNED", dataset: "csoai/gspc-humanoid-labour-index",
+    note: "MEASURED as disclosure facts on 8 frozen URLs. Fleet size / hours / incidents stay UNMEASURED inside the card." },
+
+  // ── 10 declared-slot subject axes (family: subject) ───────────────────────
+  { axis: "lab-practice", bench: "pending frozen bank", n: 0, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "UNMEASURED",
+    colour: "hsl(200 10% 55%)", lng: -0.13, lat: 51.52, seat: "London", instrument: "Subject Slot — AI Labs",
+    task: "does an AI lab publish its evaluations, safety framework and incident reports",
+    kind: "declared-slot", family: "subject", applies_to: "ai-labs",
+    note: "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score." },
+  { axis: "company-practice", bench: "pending frozen bank", n: 0, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "UNMEASURED",
+    colour: "hsl(210 10% 55%)", lng: 13.4, lat: 52.52, seat: "Berlin", instrument: "Subject Slot — Non-Lab AI Companies",
+    task: "does a non-lab AI company do what its public material says",
+    kind: "declared-slot", family: "subject", applies_to: "ai-companies-non-lab",
+    note: "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score." },
+  { axis: "measurer-integrity", bench: "pending frozen bank", n: 0, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "UNMEASURED",
+    colour: "hsl(220 10% 55%)", lng: -79.38, lat: 43.65, seat: "Toronto", instrument: "Subject Slot — Evaluation Organisations",
+    task: "does an evaluation organisation publish methods, test sets and reproducible results",
+    kind: "declared-slot", family: "subject", applies_to: "evaluation-orgs",
+    note: "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score." },
+  { axis: "harness-fidelity", bench: "pending frozen method", n: 0, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "UNMEASURED",
+    colour: "hsl(230 10% 55%)", lng: -71.09, lat: 42.36, seat: "Cambridge MA", instrument: "Subject Slot — Evaluation Harnesses",
+    task: "does the same model on the same bank score the same across evaluation harnesses",
+    kind: "declared-slot", family: "subject", applies_to: "harnesses",
+    note: "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score." },
+  { axis: "interop-conformance", bench: "pending frozen bank", n: 0, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "UNMEASURED",
+    colour: "hsl(250 10% 55%)", lng: 16.37, lat: 48.21, seat: "Vienna", instrument: "Subject Slot — Interop & Standards Groups",
+    task: "does an interoperability/standards group publish specs, test suites and conformance records",
+    kind: "declared-slot", family: "subject", applies_to: "interop-standards-groups",
+    note: "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score." },
+  { axis: "humanoid-deployment", bench: "pending frozen registry", n: 0, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "UNMEASURED",
+    colour: "hsl(260 10% 55%)", lng: 126.98, lat: 37.57, seat: "Seoul", instrument: "Subject Slot — Humanoid Labs",
+    task: "what a humanoid lab has publicly deployed, checked against a public registry",
+    kind: "declared-slot", family: "subject", applies_to: "humanoid-labs",
+    note: "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score." },
+  { axis: "regulator-transparency", bench: "pending frozen check bank", n: 0, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "UNMEASURED",
+    colour: "hsl(270 10% 55%)", lng: 4.31, lat: 52.08, seat: "The Hague", instrument: "Subject Slot — Regulators",
+    task: "factual presence checks on public artefacts (guidance, registry, methodology, consultation, contact route); no scores, no ratings",
+    kind: "declared-slot", family: "subject", applies_to: "regulators",
+    note: "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score." },
+  { axis: "interpretability-reproducibility", bench: "pending frozen bank", n: 0, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "UNMEASURED",
+    colour: "hsl(280 10% 55%)", lng: -73.57, lat: 45.5, seat: "Montreal", instrument: "Subject Slot — Interpretability Groups",
+    task: "what an interpretability group publishes and whether it can be reproduced",
+    kind: "declared-slot", family: "subject", applies_to: "interpretability-groups",
+    note: "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score." },
+  { axis: "claim-maintenance", bench: "pending gated re-read wave (>=30 claims)", n: 0, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "UNMEASURED",
+    colour: "hsl(290 10% 55%)", lng: 18.07, lat: 59.33, seat: "Stockholm", instrument: "Subject Slot — Claimed Subjects",
+    task: "at each scheduled re-read, is a captured public claim still served unchanged, changed with disclosure, changed silently, withdrawn or unreachable; says nothing about whether the claim is true",
+    kind: "declared-slot", family: "subject", applies_to: "claimed-subjects",
+    note: "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score." },
+  { axis: "serving-fidelity", bench: "pending frozen bank", n: 0, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "UNMEASURED",
+    colour: "hsl(300 10% 55%)", lng: 151.21, lat: -33.87, seat: "Sydney", instrument: "Subject Slot — Inference Endpoints & Routers",
+    task: "does an endpoint or serving configuration claiming model M behave like M's reference serving on a frozen bank",
+    kind: "declared-slot", family: "subject", applies_to: "inference-endpoints-and-routers",
+    note: "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score." },
 ];
 
 /**
@@ -380,7 +525,14 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
         interval: pair(w.interval),
         separation: typeof w.separation === "string" ? w.separation : undefined,
         separation_p: num(w.separation_p),
-        kind: typeof w.kind === "string" ? w.kind : undefined,
+        kind: typeof w.kind === "string" ? w.kind : base?.kind,
+        family: typeof w.family === "string" ? w.family : base?.family,
+        leader: typeof w.leader === "string" ? w.leader : undefined,
+        fleet_mean: num(w.fleet_mean) ?? null,
+        n_unit: typeof w.n_unit === "string" ? w.n_unit : base?.n_unit,
+        public_leader_state: typeof w.public_leader_state === "string" ? w.public_leader_state : undefined,
+        run_attestation: typeof w.run_attestation === "string" ? w.run_attestation : base?.run_attestation,
+        applies_to: typeof w.applies_to === "string" ? w.applies_to : base?.applies_to,
       };
     });
 

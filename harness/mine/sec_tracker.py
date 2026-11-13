@@ -26,17 +26,23 @@ def sec_url():
 
 
 def fetch_sec_filings():
-    """Fetch recent SEC filings mentioning AI."""
-    try:
-        req = urllib.request.Request(
-            sec_url(),
-            headers={"User-Agent": "CSOAI Council research@csoai.org"}
-        )
-        with urllib.request.urlopen(req, timeout=15) as r:
-            return json.loads(r.read())
-    except Exception as e:
-        print(f"  SEC fetch failed: {e}")
-        return {}
+    """Fetch recent SEC filings mentioning AI (with 3-attempt retry on transient network/DNS blips)."""
+    import time
+    last_err = None
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(
+                sec_url(),
+                headers={"User-Agent": "CSOAI Council research@csoai.org"}
+            )
+            with urllib.request.urlopen(req, timeout=15) as r:
+                return json.loads(r.read())
+        except Exception as e:
+            last_err = e
+            if attempt < 2:
+                time.sleep(2 * (attempt + 1))
+    print(f"  SEC fetch failed: {last_err}")
+    return {}
 
 
 def write_card(subject, kind, metrics):

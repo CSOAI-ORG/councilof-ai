@@ -1,0 +1,75 @@
+{
+ "as_of": "2026-10-26T02:12:31Z",
+ "payload": {
+  "check_counts": {
+   "FAILURE": 31
+  },
+  "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/agntcy_Hello World Agent__stable-2025-11-25.json",
+  "checks_sha256": "b4b522325a7f7a40692fe3951b647a98ae06ff8dedb9cef7f44f761dc1344498",
+  "deviation_checks": [
+   "CompletionComplete",
+   "DNSRebindingRejected",
+   "LocalhostHostAccepted",
+   "ElicitationSEP1034General",
+   "ElicitationSEP1330General",
+   "LoggingSetLevel",
+   "Ping",
+   "PromptsGetEmbeddedResource",
+   "PromptsGetSimple",
+   "PromptsGetWithArgs",
+   "PromptsGetWithImage",
+   "PromptsList",
+   "ResourcesList",
+   "ResourcesReadBinary",
+   "ResourcesReadText",
+   "ResourcesSubscribe",
+   "ResourcesTemplateRead",
+   "ResourcesUnsubscribe",
+   "ServerInitialize",
+   "ServerSSEMultipleStreamsTest",
+   "ToolsCallAudio",
+   "ToolsCallElicitation",
+   "ToolsCallEmbeddedResource",
+   "ToolsCallError",
+   "ToolsCallImage",
+   "ToolsCallMixedContent",
+   "ToolsCallSampling",
+   "ToolsCallSimpleText",
+   "ToolsCallWithLogging",
+   "ToolsCallWithProgress",
+   "ToolsList"
+  ],
+  "instrument": "stable-2025-11-25",
+  "instrument_channel": "stable",
+  "kind": "csoai.mcp-conformance/0.1",
+  "not_a_grade": true,
+  "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+  "run_state": "RUN_DEVIATIONS",
+  "scenarios": 30,
+  "scope_note": "declared endpoint is a loopback address; any reachability observed is a property of the measuring host, not of the published record",
+  "spec_version": "2025-11-25",
+  "state": "PROBED",
+  "subject_id": "agntcy:Hello World Agent",
+  "suite_version": "0.1.16"
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "565b52572583410f20543d8c2a982f9e4d42d3126a49b28ca281d502e4ecaba7",
+ "source_urls": [
+  "https://ai-catalog.outshift.io/v1/agents",
+  "https://councilof.ai/interop/mcp-conformance-2026-10/checks/agntcy_Hello World Agent__stable-2025-11-25.json",
+  "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+ ],
+ "subject": "MCP conformance run stable-2025-11-25 for agntcy:Hello World Agent",
+ "surface": "public.notice",
+ "tags": [
+  "mcp",
+  "conformance",
+  "probe",
+  "mcp-conformance-2026-10"
+ ],
+ "unmeasured": [
+  "behaviour under load",
+  "scenarios outside the frozen spec version",
+  "subjects outside the pinned set"
+ ]
+}

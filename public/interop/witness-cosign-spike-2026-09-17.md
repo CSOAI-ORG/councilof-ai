@@ -108,15 +108,15 @@ So when a witness cosigns:
 
 ## Parts that DON'T fit (named explicitly)
 
-1. **GitHub Actions is dead.** No new Ed25519 key issuance. No new OIDC token. No Fulcio. So we CANNOT deploy a fresh witness ourselves until Actions is restored.
+1. **GitHub Actions OIDC is offline.** No new Ed25519 key issuance. No new OIDC token. No Fulcio. So we CANNOT deploy a fresh witness ourselves until Actions is restored.
 
-2. **The COSE interop key in `~/.csoai-keys/`** is a different system's key. Using it for witness cosigning would be forgery. NOT an option.
+2. **The COSE interop key** is a different system's key. Using it for witness cosigning would be forgery. NOT an option.
 
 3. **Our existing `checkpoint` field** is a single Ed25519 over `(root_hash, tree_size)`. The exact byte string the operator signed is not in the envelope — readers must trust the operator's key fingerprint. A witness would not sign the same bytes (their `(root_hash, tree_size)` would be identical, but the witness has their own `kind` discriminator). Both signatures can be verified independently.
 
 4. **The `/public/interop/ots/` directory** carries the producer's detached OTS proofs. These are CALENDAR-pending proofs, not anchored. A witness would NOT include OTS — that's a separate timing-anchor layer (Bitcoin confirmation).
 
-5. **The per-machine harvest key** in `~/.csoai/keys/harvest_ed25519.pem` has `signer_authority=NOT_ESTABLISHED` (per #2610). It CANNOT sign as the operator, and therefore CANNOT be one of the k-of-n witnesses either — witnesses need an established identity.
+5. **The per-machine harvest key** (`harvest_ed25519.pem`) has `signer_authority=NOT_ESTABLISHED` (per #2610). It CANNOT sign as the operator, and therefore CANNOT be one of the k-of-n witnesses either — witnesses need an established identity.
 
 6. **The 305-vs-335 corpus split** is a freshness defect, not a witness concern. Witnesses do not fix staleness; they fix equivocation.
 
@@ -143,11 +143,11 @@ required migration: non-destructive (add checkpoints[] next to checkpoint; old
                      readers ignore new fields; old signed bytes preserved).
 
 parts that DO NOT fit:
-  1. GHA dead → no fresh witness key issuance (ticket #4720908, day 15)
-  2. COSE interop key ~/.csoai-keys/ → different system, using it is forgery
+  1. GHA OIDC offline → no fresh witness key issuance (ticket #4720908, day 15)
+  2. COSE interop key → different system, using it is forgery
   3. Existing checkpoint: single operator, witness cannot reuse its bytes
   4. /public/interop/ots/ → calendar-pending, not anchored; not a witness
-  5. ~/.csoai/keys/harvest_ed25519.pem → NOT_ESTABLISHED, cannot be a witness
+  5. harvest_ed25519.pem → NOT_ESTABLISHED, cannot be a witness
   6. 305 vs 335 freshness defect → witnesses don't fix staleness
   7. DEPLOY-LOCK → no deploy without owner action
 

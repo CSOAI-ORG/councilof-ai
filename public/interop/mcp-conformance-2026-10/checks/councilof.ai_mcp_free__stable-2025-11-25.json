@@ -1,0 +1,700 @@
+{
+ "checks_sha256": "f01cb8de52e681540b90192f78aacd0cd85a065a55f3f4f066915215c8d65f5d",
+ "deviation_checks": [
+  "CompletionComplete",
+  "DNSRebindingRejected",
+  "LocalhostHostAccepted",
+  "ElicitationSEP1034General",
+  "ElicitationSEP1330General",
+  "LoggingSetLevel",
+  "PromptsGetEmbeddedResource",
+  "PromptsGetSimple",
+  "PromptsGetWithArgs",
+  "PromptsGetWithImage",
+  "PromptsList",
+  "ResourcesList",
+  "ResourcesReadBinary",
+  "ResourcesReadText",
+  "ResourcesSubscribe",
+  "ResourcesTemplateRead",
+  "ResourcesUnsubscribe",
+  "ToolsCallAudio",
+  "ToolsCallElicitation",
+  "ToolsCallEmbeddedResource",
+  "ToolsCallError",
+  "ToolsCallImage",
+  "ToolsCallMixedContent",
+  "ToolsCallSampling",
+  "ToolsCallSimpleText",
+  "ToolsCallWithLogging",
+  "ToolsCallWithProgress"
+ ],
+ "generated_at": "2026-10-26T02:12:31Z",
+ "instrument": "stable-2025-11-25",
+ "instrument_channel": "stable",
+ "not_a_grade": true,
+ "note": "",
+ "scenarios": [
+  {
+   "checks": [
+    {
+     "check": "CompletionComplete",
+     "description": "Server responds to completion requests",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "completion-complete",
+     "specReferences": [
+      {
+       "id": "MCP-Completion",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/completion"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "f7a14c819638a7d38840e1d2cf060db42976504f69ea4b794e6b3174f2fec177",
+   "scenario": "completion-complete",
+   "scenario_run_id": "server-completion-complete-2026-10-26T02-12-35-038Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "DNSRebindingRejected",
+     "description": "Server rejects requests with non-localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://councilof.ai/mcp/free"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-rebinding-rejected",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "LocalhostHostAccepted",
+     "description": "Server accepts requests with valid localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://councilof.ai/mcp/free"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-valid-accepted",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "b859800a62aa8315d088ef184d37067e0ff2c3fb4dd6bcc1601fd7a3adef237f",
+   "scenario": "dns-rebinding-protection",
+   "scenario_run_id": "server-dns-rebinding-protection-2026-10-26T02-12-38-395Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ElicitationSEP1034General",
+     "description": "Server requests elicitation with default values",
+     "errorMessage": "Failed: MCP error -32602: Tool test_elicitation_sep1034_defaults not found",
+     "id": "elicitation-sep1034-general",
+     "specReferences": [
+      {
+       "id": "SEP-1034",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1034"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "37aaae2f916cdf1a51589d2837fac02b5fd4da74586f7edcfb851e7aa11ea573",
+   "scenario": "elicitation-sep1034-defaults",
+   "scenario_run_id": "server-elicitation-sep1034-defaults-2026-10-26T02-12-36-772Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ElicitationSEP1330General",
+     "description": "Server requests elicitation with enum schemas",
+     "errorMessage": "Failed: MCP error -32602: Tool test_elicitation_sep1330_enums not found",
+     "id": "elicitation-sep1330-general",
+     "specReferences": [
+      {
+       "id": "SEP-1330",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1330"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "42228394b7c40373e9b7e2ad752c8e160994b0e721fc773d52c1a6eb74ffb845",
+   "scenario": "elicitation-sep1330-enums",
+   "scenario_run_id": "server-elicitation-sep1330-enums-2026-10-26T02-12-36-942Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "LoggingSetLevel",
+     "description": "Server accepts logging level setting",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "logging-set-level",
+     "specReferences": [
+      {
+       "id": "MCP-Logging",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/logging"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "b5457cd68f8ce54db1e344367f5670140274bbf8c64ee1a907891d2fd07e0cc1",
+   "scenario": "logging-set-level",
+   "scenario_run_id": "server-logging-set-level-2026-10-26T02-12-34-729Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "Ping",
+     "description": "Server responds to ping requests",
+     "details": {
+      "result": {}
+     },
+     "id": "ping",
+     "specReferences": [
+      {
+       "id": "MCP-Ping",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/utilities/ping"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "a45cdc5c75c13e5c8437e8223895adf05fd1b8f0c5d1c366520adead128a0107",
+   "scenario": "ping",
+   "scenario_run_id": "server-ping-2026-10-26T02-12-34-859Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetEmbeddedResource",
+     "description": "Get prompt with embedded resource",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "prompts-get-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Embedded-Resources",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#embedded-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "3613c54dee1ca9d9bb5299b367aa7b9cfb48018afd8e9ce6f4669a9d543cf51e",
+   "scenario": "prompts-get-embedded-resource",
+   "scenario_run_id": "server-prompts-get-embedded-resource-2026-10-26T02-12-38-174Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetSimple",
+     "description": "Get simple prompt successfully",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "prompts-get-simple",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "e7dd62027816e9ed07f2c1ebfe92b0da950082ac00ed763578b56e82e5d4c673",
+   "scenario": "prompts-get-simple",
+   "scenario_run_id": "server-prompts-get-simple-2026-10-26T02-12-37-912Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithArgs",
+     "description": "Get parameterized prompt with argument substitution",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "prompts-get-with-args",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "40a991acd2a75fd39d22fc0f11dc8fee701295a6d1f58f0e9c5f4f510061725a",
+   "scenario": "prompts-get-with-args",
+   "scenario_run_id": "server-prompts-get-with-args-2026-10-26T02-12-38-011Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithImage",
+     "description": "Get prompt with image content",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "prompts-get-with-image",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Image",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#image-content"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "67d58d2efd36a75c32bdeced0260699b2c04055a2892a6a17f134692ac6270ea",
+   "scenario": "prompts-get-with-image",
+   "scenario_run_id": "server-prompts-get-with-image-2026-10-26T02-12-38-299Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsList",
+     "description": "Server lists available prompts with valid structure",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "prompts-list",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#listing-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "7ac0d8b05578db1aa19a83cac8b3391a54222735ef65130d03a9dd84c0788d82",
+   "scenario": "prompts-list",
+   "scenario_run_id": "server-prompts-list-2026-10-26T02-12-37-823Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesList",
+     "description": "Server lists available resources with valid structure",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "resources-list",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#listing-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "e502a9925c0630d01ed40a52d04ff830f79c8d2e64e41b40b7ddab434d928eca",
+   "scenario": "resources-list",
+   "scenario_run_id": "server-resources-list-2026-10-26T02-12-37-124Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadBinary",
+     "description": "Read binary resource successfully",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "resources-read-binary",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "18f4220e36ccdcf32fff385b6b188320ad63372c7784607a9994758c4a870d30",
+   "scenario": "resources-read-binary",
+   "scenario_run_id": "server-resources-read-binary-2026-10-26T02-12-37-323Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadText",
+     "description": "Read text resource successfully",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "resources-read-text",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "00ce6cf38ab96ff14e917b3a04c976c75623d4a96ce58616ac1dffcc58effa2e",
+   "scenario": "resources-read-text",
+   "scenario_run_id": "server-resources-read-text-2026-10-26T02-12-37-225Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesSubscribe",
+     "description": "Subscribe to resource successfully",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "resources-subscribe",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Subscribe",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-subscriptions"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "96275d637cde1dee4d093ef62a5822f2d8f6e506f8e4cc883af01e1d4fdca373",
+   "scenario": "resources-subscribe",
+   "scenario_run_id": "server-resources-subscribe-2026-10-26T02-12-37-531Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesTemplateRead",
+     "description": "Read resource from template with parameter substitution",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "resources-templates-read",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Templates",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-templates"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "c90352e3191bc8417a3921aa46360b0e5f0616a40d382d801bf6651f1ef290c8",
+   "scenario": "resources-templates-read",
+   "scenario_run_id": "server-resources-templates-read-2026-10-26T02-12-37-423Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesUnsubscribe",
+     "description": "Unsubscribe from resource successfully",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "resources-unsubscribe",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Subscribe",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-subscriptions"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "4d839283b13f9edf53c650eb1cbe9015faf285053dd9749ebdb86e3170189edb",
+   "scenario": "resources-unsubscribe",
+   "scenario_run_id": "server-resources-unsubscribe-2026-10-26T02-12-37-717Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerInitialize",
+     "description": "Server responds to initialize request with valid structure",
+     "details": {
+      "connected": true,
+      "serverUrl": "https://councilof.ai/mcp/free"
+     },
+     "id": "server-initialize",
+     "specReferences": [
+      {
+       "id": "MCP-Initialize",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle#initialization"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "230e94c45e38d6b343670cb02a1c66ba927efc702d0f6a30aeb286352b06b74c",
+   "scenario": "server-initialize",
+   "scenario_run_id": "server-server-initialize-2026-10-26T02-12-34-564Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerSSEMultipleStreamsSession",
+     "description": "Server provides session ID for multiple streams test",
+     "details": {
+      "message": "Server did not provide session ID - multiple streams test may not work correctly"
+     },
+     "id": "server-sse-multiple-streams-session",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "WARNING"
+    }
+   ],
+   "checks_sha256": "3e2d2dcc4076dfdf7dbb73ae4945339028399bdcfb339e04f307dd4d9c32f885",
+   "scenario": "server-sse-multiple-streams",
+   "scenario_run_id": "server-server-sse-multiple-streams-2026-10-26T02-12-36-876Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallAudio",
+     "description": "Tool returns audio content",
+     "errorMessage": "Failed: MCP error -32602: Tool test_audio_content not found",
+     "id": "tools-call-audio",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "e8a7fc5bc90d8ec43b3023b6bf6ded1ea8c4393d2638c8898e5ad5cae34d0e00",
+   "scenario": "tools-call-audio",
+   "scenario_run_id": "server-tools-call-audio-2026-10-26T02-12-35-755Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallElicitation",
+     "description": "Tool requests user input from client",
+     "errorMessage": "Failed: MCP error -32602: Tool test_elicitation not found",
+     "id": "tools-call-elicitation",
+     "specReferences": [
+      {
+       "id": "MCP-Elicitation",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/elicitation"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "6231a7d7e10104937b3863c12936577e7b7ff73717cba6541378865a19d5b6bd",
+   "scenario": "tools-call-elicitation",
+   "scenario_run_id": "server-tools-call-elicitation-2026-10-26T02-12-36-658Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallEmbeddedResource",
+     "description": "Tool returns embedded resource content",
+     "errorMessage": "Failed: MCP error -32602: Tool test_embedded_resource not found",
+     "id": "tools-call-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "1c4ab9a1df27569863f3b0c1aff6555b2f58bb1d7bf783433e0b91c54732b78a",
+   "scenario": "tools-call-embedded-resource",
+   "scenario_run_id": "server-tools-call-embedded-resource-2026-10-26T02-12-35-902Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallError",
+     "description": "Tool returns error correctly",
+     "errorMessage": "Failed: MCP error -32602: Tool test_error_handling not found",
+     "id": "tools-call-error",
+     "specReferences": [
+      {
+       "id": "MCP-Error-Handling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "b904865f87f6819489884aba07bf0e215ffb13af242ed58f27d5e4494750102c",
+   "scenario": "tools-call-error",
+   "scenario_run_id": "server-tools-call-error-2026-10-26T02-12-36-285Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallImage",
+     "description": "Tool returns image content",
+     "errorMessage": "Failed: MCP error -32602: Tool test_image_content not found",
+     "id": "tools-call-image",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "7830dc9741843204454a5d20389819c182f60503160381d62e96ef503a7ee98a",
+   "scenario": "tools-call-image",
+   "scenario_run_id": "server-tools-call-image-2026-10-26T02-12-35-427Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallMixedContent",
+     "description": "Tool returns multiple content types",
+     "errorMessage": "Failed: MCP error -32602: Tool test_multiple_content_types not found",
+     "id": "tools-call-mixed-content",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "f762ffd87b5869888c0b82a8101fd1433f089e7d9757b67cc40a79f00c04bc18",
+   "scenario": "tools-call-mixed-content",
+   "scenario_run_id": "server-tools-call-mixed-content-2026-10-26T02-12-36-080Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSampling",
+     "description": "Tool requests LLM sampling from client",
+     "errorMessage": "Failed: MCP error -32602: Tool test_sampling not found",
+     "id": "tools-call-sampling",
+     "specReferences": [
+      {
+       "id": "MCP-Sampling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/sampling"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "e7ea012fc3972f7bb26a6854913280819c0dc37da6f6068b350b62d2fe0f3207",
+   "scenario": "tools-call-sampling",
+   "scenario_run_id": "server-tools-call-sampling-2026-10-26T02-12-36-474Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSimpleText",
+     "description": "Tool returns simple text content",
+     "errorMessage": "Failed: MCP error -32602: Tool test_simple_text not found",
+     "id": "tools-call-simple-text",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "bcbe59c6c924db1bb165a092ea41c4d3d29f841bb3add6868958d38ae53f6ea0",
+   "scenario": "tools-call-simple-text",
+   "scenario_run_id": "server-tools-call-simple-text-2026-10-26T02-12-35-325Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithLogging",
+     "description": "Tool sends log messages during execution",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "tools-call-with-logging",
+     "specReferences": [
+      {
+       "id": "MCP-Logging",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/logging"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "4d0b198a5e997b289014c6ca1ef3cdf794145f05e904d2f24f55dfa5b53380ba",
+   "scenario": "tools-call-with-logging",
+   "scenario_run_id": "server-tools-call-with-logging-2026-10-26T02-12-36-184Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithProgress",
+     "description": "Tool reports progress notifications",
+     "errorMessage": "Failed: MCP error -32602: Tool test_tool_with_progress not found",
+     "id": "tools-call-with-progress",
+     "specReferences": [
+      {
+       "id": "MCP-Progress",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/progress"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "a6e1b00b60f537a0843d956b0b0e6d452f6f825a69722493b04589cb536fba32",
+   "scenario": "tools-call-with-progress",
+   "scenario_run_id": "server-tools-call-with-progress-2026-10-26T02-12-36-381Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsList",
+     "description": "Server lists available tools with valid structure",
+     "details": {
+      "toolCount": 14,
+      "tools": [
+       "board_totals",
+       "get_axis",
+       "verify_card",
+       "list_cards",
+       "get_root",
+       "get_card",
+       "verify_inclusion",
+       "x402_trust",
+       "mcp_trust",
+       "measurement_index",
+       "verify_capsule",
+       "server_evidence",
+       "evidence_bundle_preview",
+       "route"
+      ]
+     },
+     "id": "tools-list",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#listing-tools"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "7fd434f287b85e123ddfa0756596065950fe44239a0068d9b58ed1f6357319f5",
+   "scenario": "tools-list",
+   "scenario_run_id": "server-tools-list-2026-10-26T02-12-35-158Z"
+  }
+ ],
+ "schema": "csoai.mcp-conformance-run/0.1",
+ "source": "first-party",
+ "spec_version": "2025-11-25",
+ "subject_id": "councilof.ai/mcp/free",
+ "subject_record_url": "https://councilof.ai/mcp/free",
+ "subject_url": "https://councilof.ai/mcp/free",
+ "suite_version": "0.1.16"
+}

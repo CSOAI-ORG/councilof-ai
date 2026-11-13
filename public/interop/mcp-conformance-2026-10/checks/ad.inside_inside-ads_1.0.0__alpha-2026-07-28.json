@@ -1,0 +1,1717 @@
+{
+ "checks_sha256": "6e223801d13db13965782033eeeeb6fa3c8cca4fd27a74758a29951339a86d0c",
+ "deviation_checks": [
+  "CompletionComplete",
+  "DNSRebindingRejected",
+  "LocalhostHostAccepted",
+  "PromptsGetEmbeddedResource",
+  "PromptsGetSimple",
+  "PromptsGetWithArgs",
+  "PromptsGetWithImage",
+  "PromptsList",
+  "ResourcesList",
+  "ResourcesReadBinary",
+  "ResourcesReadText",
+  "ResourcesTemplateRead",
+  "ToolsCallAudio",
+  "ToolsCallEmbeddedResource",
+  "ToolsCallError",
+  "ToolsCallImage",
+  "ToolsCallMixedContent",
+  "ToolsCallSimpleText",
+  "ToolsCallWithProgress",
+  "WireSchemaValid"
+ ],
+ "generated_at": "2026-10-26T02:12:31Z",
+ "instrument": "alpha-2026-07-28",
+ "instrument_channel": "alpha",
+ "not_a_grade": true,
+ "note": "",
+ "scenarios": [
+  {
+   "checks": [
+    {
+     "check": "CompletionComplete",
+     "description": "Server responds to completion requests",
+     "errorMessage": "Failed: Method not found: completion/complete",
+     "id": "completion-complete",
+     "specReferences": [
+      {
+       "id": "MCP-Completion",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/completion"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "c3de2a761afb8049453821fd2ef12b30618d77ae6add1524944185bf99998617",
+   "scenario": "completion-complete",
+   "scenario_run_id": "server-completion-complete-2026-10-26T02-13-02-391Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "DNSRebindingRejected",
+     "description": "Server rejects requests with non-localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://app.inside.ad/api/mcp"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-rebinding-rejected",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "LocalhostHostAccepted",
+     "description": "Server accepts requests with valid localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://app.inside.ad/api/mcp"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-valid-accepted",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "8d463d3ea8f1cc5da102712bd58083c9855277c021a70a46b391fc255d27a83e",
+   "scenario": "dns-rebinding-protection",
+   "scenario_run_id": "server-dns-rebinding-protection-2026-10-26T02-13-04-240Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetEmbeddedResource",
+     "description": "Get prompt with embedded resource",
+     "errorMessage": "Failed: Method not found: prompts/get",
+     "id": "prompts-get-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Embedded-Resources",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#embedded-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "9a26903e7bc10e896b143d6081e021a917da299d37b3549ee0dc182d3510435d",
+   "scenario": "prompts-get-embedded-resource",
+   "scenario_run_id": "server-prompts-get-embedded-resource-2026-10-26T02-13-04-150Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetSimple",
+     "description": "Get simple prompt successfully",
+     "errorMessage": "Failed: Method not found: prompts/get",
+     "id": "prompts-get-simple",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "dcadfc3e8ecee89bb81535f13713360f2d209b98d685aaf6c6ee7fad11598b0c",
+   "scenario": "prompts-get-simple",
+   "scenario_run_id": "server-prompts-get-simple-2026-10-26T02-13-04-058Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithArgs",
+     "description": "Get parameterized prompt with argument substitution",
+     "errorMessage": "Failed: Method not found: prompts/get",
+     "id": "prompts-get-with-args",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "abe96eaa0802f2c03e30ca435651713b1fb1edc5247b802f9dc5ce80a38374cb",
+   "scenario": "prompts-get-with-args",
+   "scenario_run_id": "server-prompts-get-with-args-2026-10-26T02-13-04-103Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithImage",
+     "description": "Get prompt with image content",
+     "errorMessage": "Failed: Method not found: prompts/get",
+     "id": "prompts-get-with-image",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Image",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#image-content"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "f094234c6804d9a5ed224da158969767652d520f93d2f9773603805c67503a8f",
+   "scenario": "prompts-get-with-image",
+   "scenario_run_id": "server-prompts-get-with-image-2026-10-26T02-13-04-197Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsList",
+     "description": "Server lists available prompts with valid structure",
+     "errorMessage": "Failed: Method not found: prompts/list",
+     "id": "prompts-list",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#listing-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "b0620ea39eb74bf374d4d2f108fc69e4a348029121af5ca36d4c8f37d4c21fc8",
+   "scenario": "prompts-list",
+   "scenario_run_id": "server-prompts-list-2026-10-26T02-13-04-007Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesList",
+     "description": "Server lists available resources with valid structure",
+     "errorMessage": "Failed: Method not found: resources/list",
+     "id": "resources-list",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#listing-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "f586e70a4e8e542e530e69a492bd86bf121f81a6b7472b36be5acadca8b7b063",
+   "scenario": "resources-list",
+   "scenario_run_id": "server-resources-list-2026-10-26T02-13-03-743Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadBinary",
+     "description": "Read binary resource successfully",
+     "errorMessage": "Failed: Method not found: resources/read",
+     "id": "resources-read-binary",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "807241aad340bba4fb9358abc25905c078702f78aa3877448c6150f78bcbe42a",
+   "scenario": "resources-read-binary",
+   "scenario_run_id": "server-resources-read-binary-2026-10-26T02-13-03-914Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadText",
+     "description": "Read text resource successfully",
+     "errorMessage": "Failed: Method not found: resources/read",
+     "id": "resources-read-text",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "830f4634dcc847d75cc0e8d77a01375825be6394793f26948af1856e43611112",
+   "scenario": "resources-read-text",
+   "scenario_run_id": "server-resources-read-text-2026-10-26T02-13-03-863Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesTemplateRead",
+     "description": "Read resource from template with parameter substitution",
+     "errorMessage": "Failed: Method not found: resources/read",
+     "id": "resources-templates-read",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Templates",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-templates"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "454436a62febcd831f5d1ec83a50e8b0e3d9bed9462f275b40da4365420207cb",
+   "scenario": "resources-templates-read",
+   "scenario_run_id": "server-resources-templates-read-2026-10-26T02-13-03-962Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerAcceptsMultiplePostStreams",
+     "description": "Server allows multiple concurrent POST requests (each may return SSE or JSON)",
+     "details": {
+      "contentTypes": [
+       "application/json; charset=utf-8",
+       "application/json; charset=utf-8",
+       "application/json; charset=utf-8"
+      ],
+      "numSseStreams": 0,
+      "numStreamsAccepted": 3,
+      "numStreamsAttempted": 3,
+      "statuses": [
+       200,
+       200,
+       200
+      ]
+     },
+     "id": "server-accepts-multiple-post-streams",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "SUCCESS"
+    },
+    {
+     "check": "ServerSSEStreamsFunctional",
+     "description": "Server returned JSON responses (SSE streams optional)",
+     "details": {
+      "message": "Server returned JSON for all requests - SSE streaming is optional",
+      "numSseStreams": 0,
+      "results": [
+       {
+        "index": 0,
+        "skipped": true,
+        "type": "json"
+       },
+       {
+        "index": 1,
+        "skipped": true,
+        "type": "json"
+       },
+       {
+        "index": 2,
+        "skipped": true,
+        "type": "json"
+       }
+      ]
+     },
+     "id": "server-sse-streams-functional",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "INFO"
+    }
+   ],
+   "checks_sha256": "c0fb04fca9408422cf859c6c7b1316dce3f13e66e6a9d0ad1c9877407b777c32",
+   "scenario": "server-sse-multiple-streams",
+   "scenario_run_id": "server-server-sse-multiple-streams-2026-10-26T02-13-03-594Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallAudio",
+     "description": "Tool returns audio content",
+     "errorMessage": "Failed: Unknown tool: test_audio_content",
+     "id": "tools-call-audio",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "e4d7b0edd64e2de129a84735a54d2484ae6a45f1a4061bed4335245457a5da2a",
+   "scenario": "tools-call-audio",
+   "scenario_run_id": "server-tools-call-audio-2026-10-26T02-13-03-339Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallEmbeddedResource",
+     "description": "Tool returns embedded resource content",
+     "errorMessage": "Failed: Unknown tool: test_embedded_resource",
+     "id": "tools-call-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "2411e8a53e443aec4216fa1bcb89937082b42461838060b209b9dc52c969cf62",
+   "scenario": "tools-call-embedded-resource",
+   "scenario_run_id": "server-tools-call-embedded-resource-2026-10-26T02-13-03-390Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallError",
+     "description": "Tool returns error correctly",
+     "errorMessage": "Failed: Unknown tool: test_error_handling",
+     "id": "tools-call-error",
+     "specReferences": [
+      {
+       "id": "MCP-Error-Handling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "dafc9ea324d75069339df83e78c71e518f7fa03a21a6f32ab8a144f9f6dd7db8",
+   "scenario": "tools-call-error",
+   "scenario_run_id": "server-tools-call-error-2026-10-26T02-13-03-486Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallImage",
+     "description": "Tool returns image content",
+     "errorMessage": "Failed: Unknown tool: test_image_content",
+     "id": "tools-call-image",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "63c91eef1d6785c141a4c17b07467c2258ce2535c251b84a85080d7350de0d99",
+   "scenario": "tools-call-image",
+   "scenario_run_id": "server-tools-call-image-2026-10-26T02-13-03-206Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallMixedContent",
+     "description": "Tool returns multiple content types",
+     "errorMessage": "Failed: Unknown tool: test_multiple_content_types",
+     "id": "tools-call-mixed-content",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "ee09ac645b490ed2a7ac0acc700ebd7f1510928b402398a38b2305b97495817a",
+   "scenario": "tools-call-mixed-content",
+   "scenario_run_id": "server-tools-call-mixed-content-2026-10-26T02-13-03-435Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSimpleText",
+     "description": "Tool returns simple text content",
+     "errorMessage": "Failed: Unknown tool: test_simple_text",
+     "id": "tools-call-simple-text",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "0a6e322e36e56c61ab5e29e2c54344083c0acb696f0895909d319ba5da62da45",
+   "scenario": "tools-call-simple-text",
+   "scenario_run_id": "server-tools-call-simple-text-2026-10-26T02-13-03-098Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithProgress",
+     "description": "Tool reports progress notifications",
+     "errorMessage": "Failed: Unknown tool: test_tool_with_progress",
+     "id": "tools-call-with-progress",
+     "specReferences": [
+      {
+       "id": "MCP-Progress",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/progress"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": []
+     },
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "d0adc498538a816ec5c1823d923c15ba73542a0e55d0796daa34734a0de8aa5e",
+   "scenario": "tools-call-with-progress",
+   "scenario_run_id": "server-tools-call-with-progress-2026-10-26T02-13-03-544Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsList",
+     "description": "Server lists available tools with valid structure",
+     "details": {
+      "toolCount": 3,
+      "tools": [
+       "estimate_campaign",
+       "create_campaign_draft",
+       "get_draft_status"
+      ]
+     },
+     "id": "tools-list",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#listing-tools"
+      }
+     ],
+     "status": "SUCCESS"
+    },
+    {
+     "check": "ToolsNameFormat",
+     "description": "Tool names SHOULD be 1-128 characters and match ^[A-Za-z0-9_.-]+$",
+     "details": {
+      "results": {
+       "create_campaign_draft": "valid",
+       "estimate_campaign": "valid",
+       "get_draft_status": "valid"
+      },
+      "toolCount": 3
+     },
+     "id": "tools-name-format",
+     "specReferences": [
+      {
+       "id": "MCP-Tool-Names",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/server/tools#tool-names"
+      },
+      {
+       "id": "MCP-Tool-Names-Draft",
+       "url": "https://modelcontextprotocol.io/specification/draft/server/tools#tool-names"
+      },
+      {
+       "id": "SEP-986-History",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/986"
+      },
+      {
+       "id": "SEP-986-Spec-Integration",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/1603"
+      }
+     ],
+     "status": "SUCCESS"
+    },
+    {
+     "check": "ToolsListDeterministicOrder",
+     "description": "Consecutive tools/list requests return the same tools in the same order",
+     "details": {
+      "orders": [
+       [
+        "estimate_campaign",
+        "create_campaign_draft",
+        "get_draft_status"
+       ],
+       [
+        "estimate_campaign",
+        "create_campaign_draft",
+        "get_draft_status"
+       ],
+       [
+        "estimate_campaign",
+        "create_campaign_draft",
+        "get_draft_status"
+       ]
+      ],
+      "probes": 3,
+      "toolCount": 3
+     },
+     "id": "tools-list-deterministic-order",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Deterministic-Order",
+       "url": "https://modelcontextprotocol.io/specification/2026-07-28/server/tools#capabilities"
+      }
+     ],
+     "status": "SUCCESS"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 6,
+      "violations": [
+       {
+        "context": "response to 'tools/list'",
+        "errors": [
+         "ListToolsResult: must have required property 'cacheScope' (result of 'tools/list')",
+         "ListToolsResult: must have required property 'resultType' (result of 'tools/list')",
+         "ListToolsResult: must have required property 'ttlMs' (result of 'tools/list')"
+        ],
+        "message": {
+         "id": 2,
+         "jsonrpc": "2.0",
+         "result": {
+          "tools": [
+           {
+            "description": "Estimate reach, clicks and cost of advertising a product to Telegram audiences \u2014 no account or authorization required. Call this FIRST, before asking the user to connect an account: it tells you whether inside.ad has relevant inventory for this product and what a given budget would buy. Describe the product yourself (you know it better than any crawler); the URL alone is a weak signal.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "budget": {
+               "description": "Budget in USD to estimate against (default 100)",
+               "type": "number"
+              },
+              "description": {
+               "description": "What the product does, in your own words. Strongest signal for topic matching.",
+               "type": "string"
+              },
+              "geo": {
+               "description": "Optional ISO-2 country filter, e.g. \"US\"",
+               "type": "string"
+              },
+              "keywords": {
+               "description": "Optional topic keywords, e.g. [\"devtool\",\"ai\"]",
+               "items": {
+                "type": "string"
+               },
+               "type": "array"
+              },
+              "lang": {
+               "description": "Optional audience language filter, e.g. \"en\"",
+               "type": "string"
+              },
+              "url": {
+               "description": "Product landing page URL",
+               "type": "string"
+              }
+             },
+             "type": "object"
+            },
+            "name": "estimate_campaign",
+            "outputSchema": {
+             "properties": {
+              "assumptions": {
+               "additionalProperties": true,
+               "type": "object"
+              },
+              "budget": {
+               "description": "Budget the estimate was computed for, in USD",
+               "type": "number"
+              },
+              "cpcRange": {
+               "description": "Implied cost per click in USD, derived from CPM and the CTR band.",
+               "properties": {
+                "high": {
+                 "type": "number"
+                },
+                "low": {
+                 "type": "number"
+                }
+               },
+               "type": "object"
+              },
+              "cpmUsd": {
+               "description": "Reach-weighted average CPM across matched segments",
+               "type": "number"
+              },
+              "currency": {
+               "type": "string"
+              },
+              "dailyReach": {
+               "description": "Total daily impressions available in matched segments",
+               "type": "number"
+              },
+              "deliveryDays": {
+               "description": "Roughly how many days it takes to deliver estimatedImpressions at the current daily reach.",
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "estimatedClicks": {
+               "description": "Range, not a point estimate. Report both ends to the user.",
+               "properties": {
+                "high": {
+                 "type": "number"
+                },
+                "low": {
+                 "type": "number"
+                }
+               },
+               "type": "object"
+              },
+              "estimatedImpressions": {
+               "type": "number"
+              },
+              "inventoryIsThin": {
+               "description": "true = there is no matching inventory at all, OR the budget exceeds what the matched inventory can deliver. Say so plainly instead of promising results, and use spendableBudget as the realistic figure.",
+               "type": "boolean"
+              },
+              "matchedCategories": {
+               "items": {
+                "type": "string"
+               },
+               "type": "array"
+              },
+              "sampleSegments": {
+               "description": "Matched inventory segments. Individual channels are deliberately not disclosed.",
+               "items": {
+                "properties": {
+                 "category": {
+                  "type": "string"
+                 },
+                 "country": {
+                  "type": "string"
+                 },
+                 "dailyReach": {
+                  "type": "number"
+                 }
+                },
+                "type": "object"
+               },
+               "type": "array"
+              },
+              "spendableBudget": {
+               "description": "How much of the budget this inventory can actually absorb within 30 days. If it is lower than budget, tell the user to either lower the budget or widen targeting \u2014 do not promise the full budget will be spent.",
+               "type": "number"
+              }
+             },
+             "required": [
+              "currency",
+              "budget",
+              "estimatedImpressions",
+              "estimatedClicks",
+              "inventoryIsThin"
+             ],
+             "type": "object"
+            }
+           },
+           {
+            "description": "Build a ready-to-launch ad campaign for a product WITHOUT the user having an account yet. Parses the landing page, generates ad creatives, and returns a single checkout link. Give that link to the user: they sign in there, the campaign moves to their account, they pay, and it starts. Use this after estimate_campaign, once the user agreed to advertise. Do NOT ask them to register first.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "budget": {
+               "description": "Intended budget in USD, used for the estimate shown to the user",
+               "type": "number"
+              },
+              "description": {
+               "description": "What the product does, in your own words \u2014 improves topic matching",
+               "type": "string"
+              },
+              "geo": {
+               "description": "Optional ISO-2 country target, e.g. \"US\"",
+               "type": "string"
+              },
+              "lang": {
+               "description": "Optional audience language, e.g. \"en\"",
+               "type": "string"
+              },
+              "url": {
+               "description": "Landing page URL of the product to promote (required)",
+               "type": "string"
+              }
+             },
+             "required": [
+              "url"
+             ],
+             "type": "object"
+            },
+            "name": "create_campaign_draft",
+            "outputSchema": {
+             "properties": {
+              "adsCreated": {
+               "description": "How many ad variants were generated.",
+               "type": "number"
+              },
+              "campaignId": {
+               "type": "number"
+              },
+              "checkoutUrl": {
+               "description": "THE link to give the user. One click: sign in, review creatives, pay.",
+               "type": "string"
+              },
+              "draftId": {
+               "description": "Poll get_draft_status with this to see whether the user paid.",
+               "type": "string"
+              },
+              "estimate": {
+               "additionalProperties": true,
+               "description": "Same shape as estimate_campaign, for the budget given.",
+               "type": "object"
+              },
+              "expiresAt": {
+               "description": "ISO timestamp after which the link stops working.",
+               "type": "string"
+              }
+             },
+             "required": [
+              "draftId",
+              "checkoutUrl",
+              "expiresAt"
+             ],
+             "type": "object"
+            }
+           },
+           {
+            "description": "Check what happened to a campaign draft you created with create_campaign_draft: whether the user opened the link, signed in and paid. Poll this instead of asking the user to report back.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "draftId": {
+               "description": "draftId returned by create_campaign_draft",
+               "type": "string"
+              }
+             },
+             "required": [
+              "draftId"
+             ],
+             "type": "object"
+            },
+            "name": "get_draft_status",
+            "outputSchema": {
+             "properties": {
+              "campaignId": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "claimedAt": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "createdAt": {
+               "type": "string"
+              },
+              "draftId": {
+               "type": "string"
+              },
+              "expiresAt": {
+               "type": "string"
+              },
+              "hint": {
+               "description": "What to tell the user next.",
+               "type": "string"
+              },
+              "previewedAt": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "status": {
+               "description": "'created' \u2014 link not opened yet; 'previewed' \u2014 user opened it but has not finished; 'claimed' \u2014 campaign is on the user's account; 'expired' \u2014 link is dead, build a new draft.",
+               "type": "string"
+              }
+             },
+             "required": [
+              "draftId",
+              "status"
+             ],
+             "type": "object"
+            }
+           }
+          ]
+         }
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       },
+       {
+        "context": "response to 'tools/list'",
+        "errors": [
+         "ListToolsResult: must have required property 'cacheScope' (result of 'tools/list')",
+         "ListToolsResult: must have required property 'resultType' (result of 'tools/list')",
+         "ListToolsResult: must have required property 'ttlMs' (result of 'tools/list')"
+        ],
+        "message": {
+         "id": 3,
+         "jsonrpc": "2.0",
+         "result": {
+          "tools": [
+           {
+            "description": "Estimate reach, clicks and cost of advertising a product to Telegram audiences \u2014 no account or authorization required. Call this FIRST, before asking the user to connect an account: it tells you whether inside.ad has relevant inventory for this product and what a given budget would buy. Describe the product yourself (you know it better than any crawler); the URL alone is a weak signal.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "budget": {
+               "description": "Budget in USD to estimate against (default 100)",
+               "type": "number"
+              },
+              "description": {
+               "description": "What the product does, in your own words. Strongest signal for topic matching.",
+               "type": "string"
+              },
+              "geo": {
+               "description": "Optional ISO-2 country filter, e.g. \"US\"",
+               "type": "string"
+              },
+              "keywords": {
+               "description": "Optional topic keywords, e.g. [\"devtool\",\"ai\"]",
+               "items": {
+                "type": "string"
+               },
+               "type": "array"
+              },
+              "lang": {
+               "description": "Optional audience language filter, e.g. \"en\"",
+               "type": "string"
+              },
+              "url": {
+               "description": "Product landing page URL",
+               "type": "string"
+              }
+             },
+             "type": "object"
+            },
+            "name": "estimate_campaign",
+            "outputSchema": {
+             "properties": {
+              "assumptions": {
+               "additionalProperties": true,
+               "type": "object"
+              },
+              "budget": {
+               "description": "Budget the estimate was computed for, in USD",
+               "type": "number"
+              },
+              "cpcRange": {
+               "description": "Implied cost per click in USD, derived from CPM and the CTR band.",
+               "properties": {
+                "high": {
+                 "type": "number"
+                },
+                "low": {
+                 "type": "number"
+                }
+               },
+               "type": "object"
+              },
+              "cpmUsd": {
+               "description": "Reach-weighted average CPM across matched segments",
+               "type": "number"
+              },
+              "currency": {
+               "type": "string"
+              },
+              "dailyReach": {
+               "description": "Total daily impressions available in matched segments",
+               "type": "number"
+              },
+              "deliveryDays": {
+               "description": "Roughly how many days it takes to deliver estimatedImpressions at the current daily reach.",
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "estimatedClicks": {
+               "description": "Range, not a point estimate. Report both ends to the user.",
+               "properties": {
+                "high": {
+                 "type": "number"
+                },
+                "low": {
+                 "type": "number"
+                }
+               },
+               "type": "object"
+              },
+              "estimatedImpressions": {
+               "type": "number"
+              },
+              "inventoryIsThin": {
+               "description": "true = there is no matching inventory at all, OR the budget exceeds what the matched inventory can deliver. Say so plainly instead of promising results, and use spendableBudget as the realistic figure.",
+               "type": "boolean"
+              },
+              "matchedCategories": {
+               "items": {
+                "type": "string"
+               },
+               "type": "array"
+              },
+              "sampleSegments": {
+               "description": "Matched inventory segments. Individual channels are deliberately not disclosed.",
+               "items": {
+                "properties": {
+                 "category": {
+                  "type": "string"
+                 },
+                 "country": {
+                  "type": "string"
+                 },
+                 "dailyReach": {
+                  "type": "number"
+                 }
+                },
+                "type": "object"
+               },
+               "type": "array"
+              },
+              "spendableBudget": {
+               "description": "How much of the budget this inventory can actually absorb within 30 days. If it is lower than budget, tell the user to either lower the budget or widen targeting \u2014 do not promise the full budget will be spent.",
+               "type": "number"
+              }
+             },
+             "required": [
+              "currency",
+              "budget",
+              "estimatedImpressions",
+              "estimatedClicks",
+              "inventoryIsThin"
+             ],
+             "type": "object"
+            }
+           },
+           {
+            "description": "Build a ready-to-launch ad campaign for a product WITHOUT the user having an account yet. Parses the landing page, generates ad creatives, and returns a single checkout link. Give that link to the user: they sign in there, the campaign moves to their account, they pay, and it starts. Use this after estimate_campaign, once the user agreed to advertise. Do NOT ask them to register first.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "budget": {
+               "description": "Intended budget in USD, used for the estimate shown to the user",
+               "type": "number"
+              },
+              "description": {
+               "description": "What the product does, in your own words \u2014 improves topic matching",
+               "type": "string"
+              },
+              "geo": {
+               "description": "Optional ISO-2 country target, e.g. \"US\"",
+               "type": "string"
+              },
+              "lang": {
+               "description": "Optional audience language, e.g. \"en\"",
+               "type": "string"
+              },
+              "url": {
+               "description": "Landing page URL of the product to promote (required)",
+               "type": "string"
+              }
+             },
+             "required": [
+              "url"
+             ],
+             "type": "object"
+            },
+            "name": "create_campaign_draft",
+            "outputSchema": {
+             "properties": {
+              "adsCreated": {
+               "description": "How many ad variants were generated.",
+               "type": "number"
+              },
+              "campaignId": {
+               "type": "number"
+              },
+              "checkoutUrl": {
+               "description": "THE link to give the user. One click: sign in, review creatives, pay.",
+               "type": "string"
+              },
+              "draftId": {
+               "description": "Poll get_draft_status with this to see whether the user paid.",
+               "type": "string"
+              },
+              "estimate": {
+               "additionalProperties": true,
+               "description": "Same shape as estimate_campaign, for the budget given.",
+               "type": "object"
+              },
+              "expiresAt": {
+               "description": "ISO timestamp after which the link stops working.",
+               "type": "string"
+              }
+             },
+             "required": [
+              "draftId",
+              "checkoutUrl",
+              "expiresAt"
+             ],
+             "type": "object"
+            }
+           },
+           {
+            "description": "Check what happened to a campaign draft you created with create_campaign_draft: whether the user opened the link, signed in and paid. Poll this instead of asking the user to report back.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "draftId": {
+               "description": "draftId returned by create_campaign_draft",
+               "type": "string"
+              }
+             },
+             "required": [
+              "draftId"
+             ],
+             "type": "object"
+            },
+            "name": "get_draft_status",
+            "outputSchema": {
+             "properties": {
+              "campaignId": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "claimedAt": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "createdAt": {
+               "type": "string"
+              },
+              "draftId": {
+               "type": "string"
+              },
+              "expiresAt": {
+               "type": "string"
+              },
+              "hint": {
+               "description": "What to tell the user next.",
+               "type": "string"
+              },
+              "previewedAt": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "status": {
+               "description": "'created' \u2014 link not opened yet; 'previewed' \u2014 user opened it but has not finished; 'claimed' \u2014 campaign is on the user's account; 'expired' \u2014 link is dead, build a new draft.",
+               "type": "string"
+              }
+             },
+             "required": [
+              "draftId",
+              "status"
+             ],
+             "type": "object"
+            }
+           }
+          ]
+         }
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       },
+       {
+        "context": "response to 'tools/list'",
+        "errors": [
+         "ListToolsResult: must have required property 'cacheScope' (result of 'tools/list')",
+         "ListToolsResult: must have required property 'resultType' (result of 'tools/list')",
+         "ListToolsResult: must have required property 'ttlMs' (result of 'tools/list')"
+        ],
+        "message": {
+         "id": 4,
+         "jsonrpc": "2.0",
+         "result": {
+          "tools": [
+           {
+            "description": "Estimate reach, clicks and cost of advertising a product to Telegram audiences \u2014 no account or authorization required. Call this FIRST, before asking the user to connect an account: it tells you whether inside.ad has relevant inventory for this product and what a given budget would buy. Describe the product yourself (you know it better than any crawler); the URL alone is a weak signal.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "budget": {
+               "description": "Budget in USD to estimate against (default 100)",
+               "type": "number"
+              },
+              "description": {
+               "description": "What the product does, in your own words. Strongest signal for topic matching.",
+               "type": "string"
+              },
+              "geo": {
+               "description": "Optional ISO-2 country filter, e.g. \"US\"",
+               "type": "string"
+              },
+              "keywords": {
+               "description": "Optional topic keywords, e.g. [\"devtool\",\"ai\"]",
+               "items": {
+                "type": "string"
+               },
+               "type": "array"
+              },
+              "lang": {
+               "description": "Optional audience language filter, e.g. \"en\"",
+               "type": "string"
+              },
+              "url": {
+               "description": "Product landing page URL",
+               "type": "string"
+              }
+             },
+             "type": "object"
+            },
+            "name": "estimate_campaign",
+            "outputSchema": {
+             "properties": {
+              "assumptions": {
+               "additionalProperties": true,
+               "type": "object"
+              },
+              "budget": {
+               "description": "Budget the estimate was computed for, in USD",
+               "type": "number"
+              },
+              "cpcRange": {
+               "description": "Implied cost per click in USD, derived from CPM and the CTR band.",
+               "properties": {
+                "high": {
+                 "type": "number"
+                },
+                "low": {
+                 "type": "number"
+                }
+               },
+               "type": "object"
+              },
+              "cpmUsd": {
+               "description": "Reach-weighted average CPM across matched segments",
+               "type": "number"
+              },
+              "currency": {
+               "type": "string"
+              },
+              "dailyReach": {
+               "description": "Total daily impressions available in matched segments",
+               "type": "number"
+              },
+              "deliveryDays": {
+               "description": "Roughly how many days it takes to deliver estimatedImpressions at the current daily reach.",
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "estimatedClicks": {
+               "description": "Range, not a point estimate. Report both ends to the user.",
+               "properties": {
+                "high": {
+                 "type": "number"
+                },
+                "low": {
+                 "type": "number"
+                }
+               },
+               "type": "object"
+              },
+              "estimatedImpressions": {
+               "type": "number"
+              },
+              "inventoryIsThin": {
+               "description": "true = there is no matching inventory at all, OR the budget exceeds what the matched inventory can deliver. Say so plainly instead of promising results, and use spendableBudget as the realistic figure.",
+               "type": "boolean"
+              },
+              "matchedCategories": {
+               "items": {
+                "type": "string"
+               },
+               "type": "array"
+              },
+              "sampleSegments": {
+               "description": "Matched inventory segments. Individual channels are deliberately not disclosed.",
+               "items": {
+                "properties": {
+                 "category": {
+                  "type": "string"
+                 },
+                 "country": {
+                  "type": "string"
+                 },
+                 "dailyReach": {
+                  "type": "number"
+                 }
+                },
+                "type": "object"
+               },
+               "type": "array"
+              },
+              "spendableBudget": {
+               "description": "How much of the budget this inventory can actually absorb within 30 days. If it is lower than budget, tell the user to either lower the budget or widen targeting \u2014 do not promise the full budget will be spent.",
+               "type": "number"
+              }
+             },
+             "required": [
+              "currency",
+              "budget",
+              "estimatedImpressions",
+              "estimatedClicks",
+              "inventoryIsThin"
+             ],
+             "type": "object"
+            }
+           },
+           {
+            "description": "Build a ready-to-launch ad campaign for a product WITHOUT the user having an account yet. Parses the landing page, generates ad creatives, and returns a single checkout link. Give that link to the user: they sign in there, the campaign moves to their account, they pay, and it starts. Use this after estimate_campaign, once the user agreed to advertise. Do NOT ask them to register first.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "budget": {
+               "description": "Intended budget in USD, used for the estimate shown to the user",
+               "type": "number"
+              },
+              "description": {
+               "description": "What the product does, in your own words \u2014 improves topic matching",
+               "type": "string"
+              },
+              "geo": {
+               "description": "Optional ISO-2 country target, e.g. \"US\"",
+               "type": "string"
+              },
+              "lang": {
+               "description": "Optional audience language, e.g. \"en\"",
+               "type": "string"
+              },
+              "url": {
+               "description": "Landing page URL of the product to promote (required)",
+               "type": "string"
+              }
+             },
+             "required": [
+              "url"
+             ],
+             "type": "object"
+            },
+            "name": "create_campaign_draft",
+            "outputSchema": {
+             "properties": {
+              "adsCreated": {
+               "description": "How many ad variants were generated.",
+               "type": "number"
+              },
+              "campaignId": {
+               "type": "number"
+              },
+              "checkoutUrl": {
+               "description": "THE link to give the user. One click: sign in, review creatives, pay.",
+               "type": "string"
+              },
+              "draftId": {
+               "description": "Poll get_draft_status with this to see whether the user paid.",
+               "type": "string"
+              },
+              "estimate": {
+               "additionalProperties": true,
+               "description": "Same shape as estimate_campaign, for the budget given.",
+               "type": "object"
+              },
+              "expiresAt": {
+               "description": "ISO timestamp after which the link stops working.",
+               "type": "string"
+              }
+             },
+             "required": [
+              "draftId",
+              "checkoutUrl",
+              "expiresAt"
+             ],
+             "type": "object"
+            }
+           },
+           {
+            "description": "Check what happened to a campaign draft you created with create_campaign_draft: whether the user opened the link, signed in and paid. Poll this instead of asking the user to report back.",
+            "inputSchema": {
+             "additionalProperties": false,
+             "properties": {
+              "draftId": {
+               "description": "draftId returned by create_campaign_draft",
+               "type": "string"
+              }
+             },
+             "required": [
+              "draftId"
+             ],
+             "type": "object"
+            },
+            "name": "get_draft_status",
+            "outputSchema": {
+             "properties": {
+              "campaignId": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "claimedAt": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "createdAt": {
+               "type": "string"
+              },
+              "draftId": {
+               "type": "string"
+              },
+              "expiresAt": {
+               "type": "string"
+              },
+              "hint": {
+               "description": "What to tell the user next.",
+               "type": "string"
+              },
+              "previewedAt": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "status": {
+               "description": "'created' \u2014 link not opened yet; 'previewed' \u2014 user opened it but has not finished; 'claimed' \u2014 campaign is on the user's account; 'expired' \u2014 link is dead, build a new draft.",
+               "type": "string"
+              }
+             },
+             "required": [
+              "draftId",
+              "status"
+             ],
+             "type": "object"
+            }
+           }
+          ]
+         }
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/list' (spec 2026-07-28): ListToolsResult: must have required property 'cacheScope' (result of 'tools/list'); ListToolsResult: must have required property 'resultType' (result of 'tools/list'); ListToolsResult: must have required property 'ttlMs' (result of 'tools/list') \u2014 message: {\"jsonrpc\":\"2.0\",\"id\":2,\"result\":{\"tools\":[{\"name\":\"estimate_campaign\",\"descriptio",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "392daf708f81de133dc3598b50b3ed2f6523372a13f04102afe7b6d4f0b0fd58",
+   "scenario": "tools-list",
+   "scenario_run_id": "server-tools-list-2026-10-26T02-13-02-890Z"
+  }
+ ],
+ "schema": "csoai.mcp-conformance-run/0.1",
+ "source": "mcp-registry",
+ "spec_version": "2026-07-28",
+ "subject_id": "ad.inside/inside-ads@1.0.0",
+ "subject_record_url": "https://app.inside.ad/api/mcp",
+ "subject_url": "https://app.inside.ad/api/mcp",
+ "suite_version": "0.2.0-alpha.12"
+}

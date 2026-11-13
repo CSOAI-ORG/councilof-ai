@@ -8,7 +8,7 @@
 //
 // The default badge states the board's own honest count, derived from the same
 // MEASURED / separation split as GET /api/gspc totals.public_count - never a typed
-// slot count. Jail is MEASURED; living-board separation is TIE (not a separated lead). The
+// slot count. Jail is MEASURED; living-board separation is UNTESTED (not a separated lead; C-2026-0929-02). The
 // in-lane slot stays unnamed and visible empty. A visiting agent that enrols and
 // is measured on fewer axes states its real count, and an unmeasured subject
 // renders honestly as "unmeasured" in grey - never a fabricated score.
@@ -40,6 +40,7 @@ import { axisCountLine } from "./_boardCounts";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
+import { AXES_D } from "./_gspc_axes_d";
 import { verifyCard } from "../_lib/cardVerify";
 import { headFromGet } from "./_head";
 
@@ -64,7 +65,7 @@ import { headFromGet } from "./_head";
 // The grammar below is now character-for-character the one in functions/api/gspc.ts:
 // axes = every slot, measured = status MEASURED. If those two files ever disagree again,
 // the badge is wrong, not the board.
-const AXES = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
+const AXES = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
 
 // BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — badge alt carries the derived
 // public-leader clause. Visible message stays short; aria-label/title carry the
@@ -104,11 +105,12 @@ const GREEN = "#16a34a";
 const LIME = "#65a30d";
 const AMBER = "#ca8a04";
 
-// One axis's honest live status, derived from the SAME AXES data GET /api/gspc
+// One axis's honest live status, derived from the SAME publicView(AXES) data GET /api/gspc
 // serves. Three states only; n is the axis's real bank size, never invented.
+const PUBLIC_AXES = publicView(AXES);
 type AxisBadge = { label: string; message: string; colour: string; state: string };
 const axisBadge = (name: string): AxisBadge => {
-  const a = AXES.find((x) => x.axis === name);
+  const a = PUBLIC_AXES.find((x) => x.axis === name);
   if (!a) {
     // Unknown axis: honest grey, and the img still renders (a 404 would break it).
     return { label: name.slice(0, 40) || "axis", message: "not on the board", colour: GREY, state: "unknown" };
@@ -218,7 +220,7 @@ const cardBadge = async (
   const label = "card";
   const claimNorm = (claim || "").trim().toLowerCase();
   // A hub badge must never claim certification. "issued" = the card exists;
-  // "verified" = a real subject-bound card; "measured" only after the signer signs.
+  // "verified" = a subject-bound card whose signature verifies; "measured" likewise.
   if (claimNorm === "certified" || claimNorm === "certification") {
     return { label, message: "not a certificate", colour: GREY, state: "refused" };
   }
@@ -255,9 +257,6 @@ const cardBadge = async (
     if (claimNorm === "issued") {
       return { label: axis, message: "issued", colour: LIME, state: "issued" };
     }
-    if (claimNorm === "verified") {
-      return { label: axis, message: "verified", colour: LIME, state: "verified" };
-    }
 
     if (entry.signed !== true) {
       if (claimNorm === "measured") {
@@ -266,7 +265,17 @@ const cardBadge = async (
       return { label, message: "unsigned", colour: GREY, state: "unsigned" };
     }
     const verdict = await verifyCard(card, []);
-    const signedValid = Boolean(verdict.valid && verdict.id === h);
+    // verdict.valid alone is not a signature: an empty signature leaves the Signature check at
+    // ok:null ("unsigned") and still comes back valid:true. "verified", "measured" and "valid"
+    // need the Signature check itself to have run and passed (14 Oct 2026).
+    const signature = verdict.checks?.find((c) => c.label === "Signature");
+    const signedValid =
+      verdict.valid === true && verdict.id === h && signature?.ok === true && signature.code === "signature_valid";
+    // A verdict the verifier could not reach (UNCHECKABLE: e.g. ed25519_unsupported, key_not_pinned)
+    // is not evidence of a bad signature: say it was not checked, never "invalid signature".
+    if (!signedValid && verdict.state === "UNCHECKABLE") {
+      return { label, message: "unchecked", colour: GREY, state: "unavailable" };
+    }
     if (claimNorm === "measured") {
       if (!signedValid) {
         return { label: axis, message: "unmeasured", colour: GREY, state: "unmeasured" };
@@ -275,6 +284,9 @@ const cardBadge = async (
     }
     if (!signedValid) {
       return { label, message: "invalid signature", colour: GREY, state: "invalid" };
+    }
+    if (claimNorm === "verified") {
+      return { label: axis, message: "verified", colour: LIME, state: "verified" };
     }
     return {
       label: axis,
@@ -366,7 +378,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         unmeasured: board.unmeasured,
         ruling:
           `${board.publicCount} · ${board.comparisonClause} — computed here from the same axis arrays GET /api/gspc ` +
-          `serves (_gspc_axes_a + _gspc_axes_b + _gspc_axes_fin), under the same rule: ` +
+          `serves (_gspc_axes_a + _gspc_axes_b + _gspc_axes_c + _gspc_axes_fin + _gspc_axes_d), under the same rule: ` +
           `axes counts slots, measured counts slots with a run. ${board.unmeasured} are ` +
           `declared slots with no run behind them and are never quoted as measured. ` +
           `Lid (BLUEPRINT 02Sep2026 §2.3): ${board.lid}`,

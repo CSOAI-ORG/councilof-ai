@@ -1,0 +1,76 @@
+{
+  "at": "2026-11-03T06:52:48.014Z",
+  "passed": true,
+  "checks": [
+    "keyboard click → M4 OOWM classification → authenticated M2 subprocess → same matched task in H.I.M. qualification copy",
+    "reopen uses read-only lookup; no re-execution",
+    "withheld fixture worker: no false success; saved bytes still readable",
+    "restoring worker cannot execute a previously unanswered job during read-only lookup",
+    "a distinct fresh request succeeds after restoring only the fixture worker",
+    "390px panel fits",
+    "no live studio, provider, or production task POST"
+  ],
+  "results": [
+    {
+      "request_id": "25faeaa3cc8e43a7aef281aaf10fdd99",
+      "worker": "owem.gov.saved-record-check",
+      "state": "MATCH",
+      "saved_file_readable": true,
+      "worker_complete": true,
+      "bytes": 1428,
+      "observed_sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+      "replayed": false,
+      "message": "The worker and receiver found the expected saved bytes.",
+      "scope": "qualification copy; no production Hive or human approval"
+    },
+    {
+      "request_id": "25faeaa3cc8e43a7aef281aaf10fdd99",
+      "worker": "owem.gov.saved-record-check",
+      "state": "MATCH",
+      "saved_file_readable": true,
+      "worker_complete": true,
+      "bytes": 1428,
+      "observed_sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+      "replayed": true,
+      "message": "The worker and receiver found the expected saved bytes.",
+      "scope": "qualification copy; no production Hive or human approval"
+    },
+    {
+      "request_id": "22ae3f6e56dc4279b73706865611845b",
+      "state": "WORKER_UNAVAILABLE",
+      "saved_file_readable": true,
+      "worker_complete": false,
+      "message": "Worker unavailable; your saved result is still readable.",
+      "scope": "qualification copy; no production Hive or human approval"
+    },
+    {
+      "request_id": "22ae3f6e56dc4279b73706865611845b",
+      "state": "OUTCOME_UNKNOWN",
+      "saved_file_readable": true,
+      "worker_complete": false,
+      "message": "Outcome unknown; check this task ID. Do not retry automatically.",
+      "scope": "qualification copy; no production Hive or human approval"
+    },
+    {
+      "request_id": "041722f7d44b4899b59aafae7618a016",
+      "worker": "owem.gov.saved-record-check",
+      "state": "MATCH",
+      "saved_file_readable": true,
+      "worker_complete": true,
+      "bytes": 1428,
+      "observed_sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+      "replayed": false,
+      "message": "The worker and receiver found the expected saved bytes.",
+      "scope": "qualification copy; no production Hive or human approval"
+    }
+  ],
+  "observed_posts": [
+    "/qualification/new",
+    "/qualification/last",
+    "/qualification/new",
+    "/qualification/last",
+    "/qualification/new"
+  ],
+  "other_page_diagnostics": [],
+  "scope": "Actual two Macs and native browser; ephemeral isolated copy of served H.I.M., per-test protocol adapter, existing SSH with strict host keys. NOT the private production gateway, inference, or a signed worker identity."
+}

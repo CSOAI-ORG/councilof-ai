@@ -164,6 +164,29 @@ export const PURPOSE: Record<string, Pattern[]> = {
   ],
 };
 
+// The axis family: one tool per board axis, named for the axis it answers (axis_<axis-id>).
+// A request that names an axis matches THAT axis's tool and only that one, so the purpose
+// pattern is the axis's own id plus the aliases the one alias table gives it.
+//
+// The patterns are derived from functions/mcp/axis-aliases.json — the same table the door
+// resolves axis names with — so the route and the door cannot disagree about what an axis is
+// called. Not a typed copy: a typed copy would drift from the board.
+const AXIS_PATTERN = (() => {
+  const axes = (AXIS_ALIASES as { axes: Record<string, string[]> }).axes;
+  const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const out: Record<string, Pattern[]> = {};
+  for (const [axis, aliases] of Object.entries(axes)) {
+    const names = [axis, ...aliases]
+      .filter((n) => n.length >= 4)
+      .sort((a, b) => b.length - a.length)
+      .map(escape);
+    if (!names.length) continue;
+    out[`axis_${axis}`] = [{ re: new RegExp(`\\b(?:${names.join("|")})\\b`, "i"), w: 5 }];
+  }
+  return out;
+})();
+Object.assign(PURPOSE, AXIS_PATTERN);
+
 /** Entity rules: an entity in the request names what the request is about. */
 function entityScore(tool: string, text: string, t: string): number {
   const hex = HEX64.test(text);

@@ -1,0 +1,36 @@
+{
+  "version": "3.1.0",
+  "generated_at": "2026-06-11T10:00:00Z",
+  "council": {
+    "name": "CSOAI Byzantine Fault Tolerant Council",
+    "total_nodes": 6,
+    "online_nodes": 5,
+    "degraded_nodes": 1,
+    "fault_tolerance": 1,
+    "consensus_threshold": 4
+  },
+  "nodes": [
+    {"region": "EU", "agents": 7, "consensus": 94, "status": "online", "last_seen": "2026-06-11T09:58:00Z"},
+    {"region": "US", "agents": 5, "consensus": 91, "status": "online", "last_seen": "2026-06-11T09:57:00Z"},
+    {"region": "UK", "agents": 4, "consensus": 96, "status": "online", "last_seen": "2026-06-11T09:59:00Z"},
+    {"region": "China", "agents": 6, "consensus": 88, "status": "degraded", "last_seen": "2026-06-11T09:30:00Z"},
+    {"region": "Singapore", "agents": 3, "consensus": 93, "status": "online", "last_seen": "2026-06-11T09:58:00Z"},
+    {"region": "Korea", "agents": 4, "consensus": 90, "status": "online", "last_seen": "2026-06-11T09:56:00Z"}
+  ],
+  "recent_votes": [
+    {"topic": "Approve Art 50 transparency pack v2.3", "result": "PASSED", "count": "5 / 6", "time": "12 min ago", "proposal_id": "prop-001"},
+    {"topic": "Escalate Colorado AI Act gap findings", "result": "BLOCKED", "count": "2 / 6", "time": "34 min ago", "proposal_id": "prop-002"},
+    {"topic": "Renew ISO 42001 certificate for EU-3", "result": "PASSED", "count": "6 / 6", "time": "1 hr ago", "proposal_id": "prop-003"}
+  ],
+  "vote_counts": {
+    "approve": 42,
+    "reject": 7,
+    "escalate": 11
+  },
+  "pbft_state": {
+    "phase": "idle",
+    "primary": "EU",
+    "view_number": 12847,
+    "sequence_number": 8932
+  }
+}

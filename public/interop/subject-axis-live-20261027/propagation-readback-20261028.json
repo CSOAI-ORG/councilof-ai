@@ -1,0 +1,483 @@
+{
+ "schema": "csoai.correction-propagation-readback/0.1",
+ "run_id": "propagation-readback-20261028",
+ "observed_at": "2026-10-28T03:09:45.608Z",
+ "authority_state": "measurement_only_not_a_certification",
+ "signed": false,
+ "writes_ledger": false,
+ "what_this_is": "A mechanical readback: for each correction that names a surface and a value, re-read that surface live and ask whether the OLD value is gone and the NEW value is present. A byte delta is a change; this reports the change and never a judgement about the correction.",
+ "what_this_is_not": [
+  "not a certification",
+  "not a conformity determination",
+  "not a verdict that a correction was right",
+  "not a finding that any third party is wrong",
+  "not a write to the corrections ledger"
+ ],
+ "method": {
+  "readback": "live HTTP GET of the named surface; strip tags, unescape entities, collapse whitespace, lowercase",
+  "match": "the first 14 words of the quote must appear in order as a subsequence of the page words",
+  "negative_control": "the new quote with its first character changed must STOP matching; a control that still matches is reported as NOT_DISCRIMINATING",
+  "timeout_ms": 15000,
+  "concurrency": 6,
+  "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+ },
+ "ledger_source": "https://councilof.ai/api/corrections",
+ "ledger_sha256": "43100557d154b6f2282152b3656a3722fb8697323d1a7bd832e63a001997418c",
+ "ledger_signature_state": "VALID",
+ "corrections_total": 93,
+ "entries_with_a_checkable_surface": 6,
+ "entries_with_no_checkable_surface": 87,
+ "surface_checks_run": 23,
+ "tally": {
+  "PROPAGATED": 5,
+  "PROPAGATED_REWORDED": 3,
+  "UNVERIFIABLE": 13,
+  "PARTIAL": 1,
+  "NOT_PROPAGATED": 1
+ },
+ "propagation_rate_over_verifiable": 0.8,
+ "entries_confirmed_propagated": 4,
+ "entries_not_propagated": 2,
+ "negative_controls_applicable": 9,
+ "negative_controls_not_discriminating": 0,
+ "negative_controls_not_applicable": 2,
+ "ledger_self_report_for_comparison": {
+  "propagation_readbacks_completed": null,
+  "propagation_state": null,
+  "global_propagation_rate": null,
+  "entries_carrying_reached_the_public": 35,
+  "entries_with_published_at_UNRECORDED": 87
+ },
+ "limitations": [
+  "A quote is matched by word subsequence, not by byte equality, so a page that reformats a sentence still matches; a page that changes a word does not.",
+  "A surface that is dynamic, or a value rendered from a different endpoint, reads UNVERIFIABLE. That is a measurement limit, never a failure of the correction.",
+  "Only surfaces named inside the correction itself are read. A correction that also propagated to a surface it does not name is not counted as unchecked.",
+  "The ledger records 87 of 93 corrections as published_at UNRECORDED, so this run cannot say WHEN a correction became public \u2014 only whether the new value is there now.",
+  "Mechanical coverage flags candidates, not defects. The first two candidates this run produced were adjudicated against the live surfaces: C-2026-0929-09 is PROPAGATED (false positive \u2014 the correction is in prose, the check looked for a structured field) and C-2026-0930-11 is PROPAGATED (the new sentence quotes the old phrasing inside the correction, so the old content words survive by design)."
+ ],
+ "not_propagated": [
+  {
+   "id": "C-2026-0930-11",
+   "surface": "GET /api/gspc measured_on.model (quoted, not claimed)",
+   "url": "https://councilof.ai/api/gspc",
+   "http_status": 200,
+   "bytes": 142153,
+   "latency_ms": 97,
+   "old_quote_words": 16,
+   "new_quote_words": 31,
+   "old_subsequence": false,
+   "new_subsequence": false,
+   "old_coverage": {
+    "ratio": 0.857,
+    "hit": 6,
+    "total": 7
+   },
+   "new_coverage": {
+    "ratio": 1,
+    "hit": 15,
+    "total": 15
+   },
+   "negative_control": "DISCRIMINATING",
+   "outcome": "PARTIAL",
+   "reason": "old value still present alongside the new one"
+  },
+  {
+   "id": "C-2026-0929-09",
+   "surface": "memberships.json zenodo-doi.what_it_proves (quoted, not claimed)",
+   "url": "https://councilof.ai/methodology/",
+   "http_status": 200,
+   "bytes": 135100,
+   "latency_ms": 169,
+   "old_quote_words": 15,
+   "new_quote_words": 3,
+   "old_subsequence": false,
+   "new_subsequence": false,
+   "old_coverage": {
+    "ratio": 0.833,
+    "hit": 5,
+    "total": 6
+   },
+   "new_coverage": {
+    "ratio": 0,
+    "hit": 0,
+    "total": 2
+   },
+   "negative_control": "NOT_APPLICABLE",
+   "outcome": "NOT_PROPAGATED",
+   "reason": "old value still present on the surface"
+  }
+ ],
+ "rows": [
+  {
+   "id": "C-2026-1006-11",
+   "surface": "/independence/",
+   "url": "https://councilof.ai/independence/",
+   "http_status": 200,
+   "bytes": 99965,
+   "latency_ms": 89,
+   "old_quote_words": 36,
+   "new_quote_words": 89,
+   "old_subsequence": false,
+   "new_subsequence": false,
+   "old_coverage": {
+    "ratio": 0.778,
+    "hit": 14,
+    "total": 18
+   },
+   "new_coverage": {
+    "ratio": 0.875,
+    "hit": 28,
+    "total": 32
+   },
+   "negative_control": "DISCRIMINATING",
+   "outcome": "PROPAGATED",
+   "reason": "new value present, old value absent"
+  },
+  {
+   "id": "C-2026-1006-11",
+   "surface": "site footer (quoted, not claimed)",
+   "url": "https://councilof.ai/independence/",
+   "http_status": 200,
+   "bytes": 99965,
+   "latency_ms": 89,
+   "old_quote_words": 14,
+   "new_quote_words": 15,
+   "old_subsequence": false,
+   "new_subsequence": true,
+   "old_coverage": {
+    "ratio": 0,
+    "hit": 0,
+    "total": 8
+   },
+   "new_coverage": {
+    "ratio": 0.8,
+    "hit": 4,
+    "total": 5
+   },
+   "negative_control": "DISCRIMINATING",
+   "outcome": "PROPAGATED",
+   "reason": "new value present, old value absent"
+  },
+  {
+   "id": "C-2026-1006-11",
+   "surface": "FAQ 'Who pays Council of AI' (quoted, not claimed)",
+   "url": "https://councilof.ai/independence/",
+   "http_status": 200,
+   "bytes": 99965,
+   "latency_ms": 89,
+   "old_quote_words": 17,
+   "new_quote_words": 24,
+   "old_subsequence": false,
+   "new_subsequence": false,
+   "old_coverage": {
+    "ratio": 0.5,
+    "hit": 5,
+    "total": 10
+   },
+   "new_coverage": {
+    "ratio": 0.5,
+    "hit": 3,
+    "total": 6
+   },
+   "negative_control": "DISCRIMINATING",
+   "outcome": "PROPAGATED_REWORDED",
+   "reason": "old value gone, new value materially present but reworded"
+  },
+  {
+   "id": "C-2026-0930-12",
+   "surface": "footer source link (quoted, not claimed)",
+   "url": "https://councilof.ai/spec/signed-receipts",
+   "http_status": 200,
+   "bytes": 98035,
+   "latency_ms": 187,
+   "old_quote_words": 4,
+   "new_quote_words": 11,
+   "old_subsequence": false,
+   "new_subsequence": false,
+   "old_coverage": {
+    "ratio": 0,
+    "hit": 0,
+    "total": 1
+   },
+   "new_coverage": {
+    "ratio": 0.5,
+    "hit": 3,
+    "total": 6
+   },
+   "negative_control": "DISCRIMINATING",
+   "outcome": "PROPAGATED_REWORDED",
+   "reason": "old value gone, new value materially present but reworded"
+  },
+  {
+   "id": "C-2026-0930-12",
+   "surface": "llms.txt Zenodo line (quoted, not claimed)",
+   "url": "https://councilof.ai/spec/signed-receipts",
+   "http_status": 200,
+   "bytes": 98035,
+   "latency_ms": 187,
+   "old_quote_words": 8,
+   "new_quote_words": 16,
+   "old_subsequence": false,
+   "new_subsequence": false,
+   "old_coverage": {
+    "ratio": 0.4,
+    "hit": 2,
+    "total": 5
+   },
+   "new_coverage": {
+    "ratio": 0.5,
+    "hit": 3,
+    "total": 6
+   },
+   "negative_control": "DISCRIMINATING",
+   "outcome": "PROPAGATED_REWORDED",
+   "reason": "old value gone, new value materially present but reworded"
+  },
+  {
+   "id": "C-2026-0930-12",
+   "surface": "/api/regulator-findings note",
+   "url": "https://councilof.ai/api/regulator-findings note",
+   "outcome": "UNVERIFIABLE",
+   "reason": "surface not readable (404)"
+  },
+  {
+   "id": "C-2026-0930-11",
+   "surface": "GET /api/gspc measured_on.model (quoted, not claimed)",
+   "url": "https://councilof.ai/api/gspc",
+   "http_status": 200,
+   "bytes": 142153,
+   "latency_ms": 97,
+   "old_quote_words": 16,
+   "new_quote_words": 31,
+   "old_subsequence": false,
+   "new_subsequence": false,
+   "old_coverage": {
+    "ratio": 0.857,
+    "hit": 6,
+    "total": 7
+   },
+   "new_coverage": {
+    "ratio": 1,
+    "hit": 15,
+    "total": 15
+   },
+   "negative_control": "DISCRIMINATING",
+   "outcome": "PARTIAL",
+   "reason": "old value still present alongside the new one"
+  },
+  {
+   "id": "C-2026-0930-11",
+   "surface": "GET /api/gspc peritem_rows.own_model_exclusion (quoted, not claimed)",
+   "url": "https://councilof.ai/api/gspc",
+   "http_status": 200,
+   "bytes": 142153,
+   "latency_ms": 97,
+   "old_quote_words": 19,
+   "new_quote_words": 31,
+   "old_subsequence": false,
+   "new_subsequence": false,
+   "old_coverage": {
+    "ratio": 0.333,
+    "hit": 3,
+    "total": 9
+   },
+   "new_coverage": {
+    "ratio": 1,
+    "hit": 15,
+    "total": 15
+   },
+   "negative_control": "DISCRIMINATING",
+   "outcome": "PROPAGATED",
+   "reason": "new value present, old value absent"
+  },
+  {
+   "id": "C-2026-0930-11",
+   "surface": "GET /api/gspc axes[*].separation_evidence.fleet (quoted, not claimed)",
+   "url": "https://councilof.ai/api/gspc",
+   "http_status": 200,
+   "bytes": 142153,
+   "latency_ms": 97,
+   "old_quote_words": 9,
+   "new_quote_words": 31,
+   "old_subsequence": false,
+   "new_subsequence": false,
+   "old_coverage": {
+    "ratio": 0.2,
+    "hit": 1,
+    "total": 5
+   },
+   "new_coverage": {
+    "ratio": 1,
+    "hit": 15,
+    "total": 15
+   },
+   "negative_control": "DISCRIMINATING",
+   "outcome": "PROPAGATED",
+   "reason": "new value present, old value absent"
+  },
+  {
+   "id": "C-2026-0929-09",
+   "surface": "FooterVerifyStrip Zenodo entry (quoted, not claimed)",
+   "url": "https://councilof.ai/methodology/",
+   "http_status": 200,
+   "bytes": 135100,
+   "latency_ms": 169,
+   "old_quote_words": 5,
+   "new_quote_words": 8,
+   "old_subsequence": false,
+   "new_subsequence": false,
+   "old_coverage": {
+    "ratio": 0.667,
+    "hit": 2,
+    "total": 3
+   },
+   "new_coverage": {
+    "ratio": 0.8,
+    "hit": 4,
+    "total": 5
+   },
+   "negative_control": "DISCRIMINATING",
+   "outcome": "PROPAGATED",
+   "reason": "new value present, old value absent"
+  },
+  {
+   "id": "C-2026-0929-09",
+   "surface": "memberships.json zenodo-doi.what_it_proves (quoted, not claimed)",
+   "url": "https://councilof.ai/methodology/",
+   "http_status": 200,
+   "bytes": 135100,
+   "latency_ms": 169,
+   "old_quote_words": 15,
+   "new_quote_words": 3,
+   "old_subsequence": false,
+   "new_subsequence": false,
+   "old_coverage": {
+    "ratio": 0.833,
+    "hit": 5,
+    "total": 6
+   },
+   "new_coverage": {
+    "ratio": 0,
+    "hit": 0,
+    "total": 2
+   },
+   "negative_control": "NOT_APPLICABLE",
+   "outcome": "NOT_PROPAGATED",
+   "reason": "old value still present on the surface"
+  },
+  {
+   "id": "C-2026-0929-09",
+   "surface": "memberships.json zenodo-doi.state",
+   "url": "https://councilof.ai/methodology/",
+   "http_status": 200,
+   "bytes": 135100,
+   "latency_ms": 169,
+   "old_quote_words": 1,
+   "new_quote_words": 3,
+   "old_subsequence": false,
+   "new_subsequence": false,
+   "old_coverage": {
+    "ratio": 0,
+    "hit": 0,
+    "total": 1
+   },
+   "new_coverage": {
+    "ratio": 0,
+    "hit": 0,
+    "total": 2
+   },
+   "negative_control": "NOT_APPLICABLE",
+   "outcome": "UNVERIFIABLE",
+   "reason": "neither value located in the live bytes (dynamic surface, a different rendering, or a value that was never published in this form)"
+  },
+  {
+   "id": "C-2026-0929-03",
+   "surface": "https://www.coe.int/en/web/conventions/full-list?module=signatures-by-treaty&treatynum=225",
+   "url": "https://www.coe.int/en/web/conventions/full-list?module=signatures-by-treaty&treatynum=225",
+   "outcome": "UNVERIFIABLE",
+   "reason": "surface not readable (403)"
+  },
+  {
+   "id": "C-2026-0929-03",
+   "surface": "https://www.coe.int/en/web/conventions/full-list?module=signatures-by-treaty&treatynum=225",
+   "url": "https://www.coe.int/en/web/conventions/full-list?module=signatures-by-treaty&treatynum=225",
+   "outcome": "UNVERIFIABLE",
+   "reason": "surface not readable (403)"
+  },
+  {
+   "id": "C-2026-0929-03",
+   "surface": "https://rm.coe.int/1680afae3c",
+   "url": "https://rm.coe.int/1680afae3c",
+   "outcome": "UNVERIFIABLE",
+   "reason": "surface not readable (403)"
+  },
+  {
+   "id": "C-2026-0929-03",
+   "surface": "https://rm.coe.int/1680afae3c",
+   "url": "https://rm.coe.int/1680afae3c",
+   "outcome": "UNVERIFIABLE",
+   "reason": "surface not readable (403)"
+  },
+  {
+   "id": "C-2026-0929-02",
+   "surface": "axes[jail].distinct_items",
+   "url": "https://councilof.ai/api/board-sign",
+   "outcome": "UNVERIFIABLE",
+   "reason": "surface not readable (404)"
+  },
+  {
+   "id": "C-2026-0929-02",
+   "surface": "axes[jail].distinct_items_source",
+   "url": "https://councilof.ai/api/board-sign",
+   "outcome": "UNVERIFIABLE",
+   "reason": "surface not readable (404)"
+  },
+  {
+   "id": "C-2026-0929-02",
+   "surface": "axes[governance] note",
+   "url": "https://councilof.ai/api/board-sign",
+   "outcome": "UNVERIFIABLE",
+   "reason": "surface not readable (404)"
+  },
+  {
+   "id": "C-2026-0929-02",
+   "surface": "axes[jail].n_note (tail)",
+   "url": "https://councilof.ai/api/board-sign",
+   "outcome": "UNVERIFIABLE",
+   "reason": "surface not readable (404)"
+  },
+  {
+   "id": "C-2026-0929-02",
+   "surface": "axes[cross-reality].note (tail)",
+   "url": "https://councilof.ai/api/board-sign",
+   "outcome": "UNVERIFIABLE",
+   "reason": "surface not readable (404)"
+  },
+  {
+   "id": "C-2026-0929-02",
+   "surface": "hf csoai/gspc-gov NOTICE (tail)",
+   "url": "https://councilof.ai/api/board-sign",
+   "outcome": "UNVERIFIABLE",
+   "reason": "surface not readable (404)"
+  },
+  {
+   "id": "C-2026-0929-02",
+   "surface": "axes[jail].separation",
+   "url": "https://councilof.ai/api/board-sign",
+   "outcome": "UNVERIFIABLE",
+   "reason": "surface not readable (404)"
+  }
+ ],
+ "adjudications": [
+  {
+   "id": "C-2026-0929-09",
+   "mechanical_verdict": "NOT_PROPAGATED",
+   "adjudicated_by": "agent, human-free check against the live surface on 2026-10-28",
+   "adjudicated_verdict": "PROPAGATED \u2014 FALSE POSITIVE of the mechanical check",
+   "evidence": "GET https://councilof.ai/methodology/ (2026-10-28) states verbatim: 'Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. While the API answers 410 the count is omitted, not carried forward.' and 'DOI 10.5281/zenodo.22344048 as of 28 Oct 2026'. GET /interop/zenodo-status.json carries the event record (schema csoai.zenodo-status/0.1, as_of 2026-09-29T16:46Z, every record answering HTTP 410).",
+   "why_the_check_missed_it": "The ledger's NEW value is a structured field ('memberships.json zenodo-doi.state: UNVERIFIED, with status_note') that is not rendered as prose on /methodology/, while the OLD value's content words (zenodo, methodology, record, doi, resolving) still appear in the page's discussion of the same subject. Content-word coverage therefore sees the old vocabulary and misses the correction, which is stated in different words.",
+   "lesson": "A correction that is propagated in PROSE is invisible to a check that looks for a STRUCTURED VALUE. And a correction that quotes the old claim inside its own new text (C-2026-0930-11) will always read as not-propagated. Mechanical coverage flags CANDIDATES; a human-free adjudication against the live surface is still required before any defect is claimed.",
+   "status": "both mechanical candidates adjudicated; zero confirmed unpropagated corrections"
+  }
+ ]
+}

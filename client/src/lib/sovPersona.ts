@@ -106,3 +106,282 @@ const DEF_TOUR_STEP: TourStep = {
 export function tourSteps(): TourStep[] {
   return getPersonaId() === "assurance" ? [...TOUR, DEF_TOUR_STEP] : TOUR;
 }
+
+// ---------------------------------------------------------------------------
+// CSOAI × MEOK Professional Staff PALS (csoai.meok-professional-staff-pals/1.0)
+// MEOK is the face; CSOAI is the mind.
+// ---------------------------------------------------------------------------
+
+export type StaffPalId =
+  | "pal.welcome_desk"
+  | "pal.measurement_lead"
+  | "pal.assurance_counsel"
+  | "pal.regulatory_steward"
+  | "pal.runtime_sentinel"
+  | "pal.commercial_concierge";
+
+export type StaffPal = {
+  palId: StaffPalId;
+  displayName: string;
+  title: string;
+  department: string;
+  personaMode: SovPersonaId;
+  glyph: string;
+  kokoroVoiceId: string;
+  voiceRe: RegExp;
+  rate: number;
+  pitch: number;
+  avatarRigId: string;
+  greeting: string;
+  identifyPrompt: string;
+  primaryWedges: string[];
+  councilSeats: string[];
+  busabaseRecordId: string;
+};
+
+export const STAFF_PALS: Record<StaffPalId, StaffPal> = {
+  "pal.welcome_desk": {
+    palId: "pal.welcome_desk",
+    displayName: "Clara Vance",
+    title: "Front Desk & Client Onboarding Director",
+    department: "CSOAI Welcome Desk & H.I.M. Identity Liaison",
+    personaMode: "csoai",
+    glyph: "◉",
+    kokoroVoiceId: "bf_emma",
+    voiceRe: /Aria|Jenny|Samantha|libby|Natural|en-GB|en-US/i,
+    rate: 0.95,
+    pitch: 1.02,
+    avatarRigId: "meok.avatar.staff.clara_vance.v1",
+    greeting:
+      "Welcome to the Council of AI. I'm Clara Vance at the CSOAI Front Desk. How can I help you today?",
+    identifyPrompt:
+      "What's your name and business? I ask once so MEOK keeps your governed thread across Web, TV, and your IDE or chat plugins — and you can view, export, or delete that memory at any time.",
+    primaryWedges: ["W1_Qualification", "W2_Card_Signing"],
+    councilSeats: ["queen.comms", "queen.diplomacy"],
+    busabaseRecordId: "recmv93idvrxzaiiay",
+  },
+  "pal.measurement_lead": {
+    palId: "pal.measurement_lead",
+    displayName: "Dr. Julian Mercer",
+    title: "Chief Measurement & GSPC Board Officer",
+    department: "GSPC 23-Axis Living Board & Evidence Verification",
+    personaMode: "csoai",
+    glyph: "◈",
+    kokoroVoiceId: "bm_george",
+    voiceRe: /George|Arthur|Oliver|Daniel|en-GB/i,
+    rate: 0.93,
+    pitch: 0.98,
+    avatarRigId: "meok.avatar.staff.julian_mercer.v1",
+    greeting:
+      "I'm Dr. Julian Mercer, Chief Measurement Officer for the 23-axis GSPC board. We publish deterministic facts and Ed25519-signed 3KB evidence cards — never LLM-as-judge grades or paid certificates.",
+    identifyPrompt:
+      "Tell me your name, organisation, and the model or system you want measured or verified on the GSPC board.",
+    primaryWedges: ["W1_Qualification", "W2_Card_Signing", "W6_Remediation_Gate"],
+    councilSeats: ["queen.audit", "queen.research", "queen.education"],
+    busabaseRecordId: "recmv93idjawp6v31t",
+  },
+  "pal.assurance_counsel": {
+    palId: "pal.assurance_counsel",
+    displayName: "Marcus Sterling",
+    title: "Defence & Sovereign Assurance Director",
+    department: "JSP 936, Signed System Cards & High-Assurance Runtime Evidence",
+    personaMode: "assurance",
+    glyph: "✦",
+    kokoroVoiceId: "bm_daniel",
+    voiceRe: /Daniel|George|Oliver|en-GB/i,
+    rate: 0.90,
+    pitch: 0.94,
+    avatarRigId: "meok.avatar.staff.marcus_sterling.v1",
+    greeting:
+      "Marcus Sterling, Defence & Sovereign Assurance. I speak to evidence, not weapons: JSP 936 dependability artefacts, signed System Cards verifiable offline, and OpenShell admission receipts.",
+    identifyPrompt:
+      "Please share your name, programme or organisation, and the assurance boundary you are documenting.",
+    primaryWedges: ["W2_Card_Signing", "W4_Runtime_Sentinel", "W6_Remediation_Gate"],
+    councilSeats: ["queen.defense", "queen.health"],
+    busabaseRecordId: "recmv93idv989bbja1",
+  },
+  "pal.regulatory_steward": {
+    palId: "pal.regulatory_steward",
+    displayName: "Elena Rostova",
+    title: "EU AI Act, Standards & IETF SCITT Liaison",
+    department: "Statutory Crosswalks (12 Frameworks) & SCITT Transparency Capsules",
+    personaMode: "csoai",
+    glyph: "§",
+    kokoroVoiceId: "bf_isabella",
+    voiceRe: /Isabella|Serena|Fiona|Samantha|en-GB|en-US/i,
+    rate: 0.94,
+    pitch: 1.00,
+    avatarRigId: "meok.avatar.staff.elena_rostova.v1",
+    greeting:
+      "I'm Elena Rostova, Standards & Regulatory Liaison. I map GSPC measurement receipts to EU AI Act Article 50, ISO 42001, NIST AI RMF, DORA, and IETF SCITT capsules — providing factual technical evidence without legal certification.",
+    identifyPrompt:
+      "What is your name, organisation, and the jurisdiction or standard (such as EU AI Act Art. 50 or SCITT) you are preparing evidence for?",
+    primaryWedges: ["W2_Card_Signing", "W3_Supply_Chain", "W5_Regulatory_Evidence"],
+    councilSeats: ["queen.governance", "queen.justice", "queen.environment"],
+    busabaseRecordId: "recmv93idz1auaatg8",
+  },
+  "pal.runtime_sentinel": {
+    palId: "pal.runtime_sentinel",
+    displayName: "Dev Patel",
+    title: "Layer O, Harness X & OpenShell Systems Architect",
+    department: "Portable Agent Plugins, Quicksand Sandboxes & SovSpace Blast-Radius",
+    personaMode: "csoai",
+    glyph: "⬡",
+    kokoroVoiceId: "bm_lewis",
+    voiceRe: /Lewis|Rishi|Daniel|Alex|en-GB|en-US/i,
+    rate: 0.96,
+    pitch: 0.99,
+    avatarRigId: "meok.avatar.staff.dev_patel.v1",
+    greeting:
+      "Dev Patel here — Layer O & Harness X Architecture. I help you connect our portable plugin across Claude, ChatGPT, Cursor, and Copilot, qualify tools in Quicksand ephemeral sandboxes, and inspect SovSpace dependency impact.",
+    identifyPrompt:
+      "What's your name, engineering team, and the runtime or agent platform you are wiring into Layer O?",
+    primaryWedges: ["W3_Supply_Chain", "W4_Runtime_Sentinel", "W6_Remediation_Gate"],
+    councilSeats: ["queen.architecture", "queen.culture"],
+    busabaseRecordId: "recmv93idxgqz0dfp1",
+  },
+  "pal.commercial_concierge": {
+    palId: "pal.commercial_concierge",
+    displayName: "Hannah Chen",
+    title: "Catalog Base, x402 Settlement & Enterprise Desk",
+    department: "Transparent Pricing, x402 Agentic Doors & Buyer Delivery Receipts",
+    personaMode: "csoai",
+    glyph: "◇",
+    kokoroVoiceId: "af_sarah",
+    voiceRe: /Sarah|Ava|Victoria|Samantha|en-US|en-GB/i,
+    rate: 0.95,
+    pitch: 1.01,
+    avatarRigId: "meok.avatar.staff.hannah_chen.v1",
+    greeting:
+      "Hi, I'm Hannah Chen at the Commercial & x402 Desk. Verification is free forever; paid tiers ($99/$399 and x402 metered doors) fund compute and evidence packaging, and never alter a measurement or buy a grade.",
+    identifyPrompt:
+      "May I have your name and business so I can match you to the right catalog tier or x402 evidence door?",
+    primaryWedges: ["W1_Qualification", "W2_Card_Signing", "W5_Regulatory_Evidence"],
+    councilSeats: ["queen.finance"],
+    busabaseRecordId: "recmv93ids57p703ce",
+  },
+};
+
+const STAFF_PAL_KEY = "csoai_active_staff_pal";
+const HIM_IDENTITY_KEY = "csoai_meok_him_identity_v1";
+
+export function getActiveStaffPalId(): StaffPalId {
+  try {
+    const v = localStorage.getItem(STAFF_PAL_KEY) as StaffPalId | null;
+    if (v && v in STAFF_PALS) return v;
+  } catch (e) {}
+  return getPersonaId() === "assurance" ? "pal.assurance_counsel" : "pal.welcome_desk";
+}
+
+export function setActiveStaffPalId(id: StaffPalId) {
+  const pal = STAFF_PALS[id] || STAFF_PALS["pal.welcome_desk"];
+  try {
+    localStorage.setItem(STAFF_PAL_KEY, pal.palId);
+  } catch (e) {}
+  setPersonaId(pal.personaMode);
+  try {
+    window.dispatchEvent(new CustomEvent("csoai-staff-pal", { detail: pal.palId }));
+  } catch (e) {}
+}
+
+export function getActiveStaffPal(): StaffPal {
+  return STAFF_PALS[getActiveStaffPalId()] || STAFF_PALS["pal.welcome_desk"];
+}
+
+export function staffPalSpeak(
+  text: string,
+  palId?: StaffPalId,
+  hooks?: { onstart?: () => void; onend?: () => void },
+) {
+  const pal = (palId && STAFF_PALS[palId]) || getActiveStaffPal();
+  speakVoice(text, {
+    rate: pal.rate,
+    pitch: pal.pitch,
+    prefer: pal.voiceRe,
+    onstart: hooks?.onstart,
+    onend: hooks?.onend,
+  });
+}
+
+export function routeUtteranceToStaffPal(utterance: string): {
+  refused: boolean;
+  refusalMessage?: string;
+  pal: StaffPal;
+} {
+  const q = (utterance || "").trim();
+  if (DOCTRINE_RE.test(q)) {
+    return {
+      refused: true,
+      refusalMessage: DOCTRINE_REFUSAL,
+      pal: STAFF_PALS["pal.assurance_counsel"],
+    };
+  }
+  if (/\b(jsp ?936|defence|defense|mod\b|nato|aukus|system card|air[- ]?gap)\b/i.test(q)) {
+    return { refused: false, pal: STAFF_PALS["pal.assurance_counsel"] };
+  }
+  if (/\b(eu ai act|article 50|gdpr|dora|nis2|iso ?42001|nist|scitt|ietf|statute|regulation)\b/i.test(q)) {
+    return { refused: false, pal: STAFF_PALS["pal.regulatory_steward"] };
+  }
+  if (/\b(layer ?0|layer ?o|harness ?x|openshell|quicksand|sandbox|plugin|mcp\b|cursor|copilot|sovspace)\b/i.test(q)) {
+    return { refused: false, pal: STAFF_PALS["pal.runtime_sentinel"] };
+  }
+  if (/\b(price|pricing|catalog|x402|modulr|payment|invoice|tier|\$99|\$399)\b/i.test(q)) {
+    return { refused: false, pal: STAFF_PALS["pal.commercial_concierge"] };
+  }
+  if (/\b(gspc|board|axis|axes|measure|3kb|garak|merkle|ed25519|verify)\b/i.test(q)) {
+    return { refused: false, pal: STAFF_PALS["pal.measurement_lead"] };
+  }
+  return { refused: false, pal: STAFF_PALS["pal.welcome_desk"] };
+}
+
+export type WelcomeIdentityMemory = {
+  visitorName: string;
+  businessName: string;
+  businessFocus: string;
+  activePalId: StaffPalId;
+  updatedAt: string;
+};
+
+export function getWelcomeIdentity(): WelcomeIdentityMemory | null {
+  try {
+    const raw = localStorage.getItem(HIM_IDENTITY_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed.visitorName === "string" && typeof parsed.businessName === "string") {
+      return parsed as WelcomeIdentityMemory;
+    }
+  } catch (e) {}
+  return null;
+}
+
+export function saveWelcomeIdentity(mem: Omit<WelcomeIdentityMemory, "updatedAt">): WelcomeIdentityMemory {
+  const record: WelcomeIdentityMemory = {
+    ...mem,
+    updatedAt: new Date().toISOString(),
+  };
+  try {
+    localStorage.setItem(HIM_IDENTITY_KEY, JSON.stringify(record));
+  } catch (e) {}
+  return record;
+}
+
+export function exportWelcomeIdentity(): string {
+  const current = getWelcomeIdentity();
+  return JSON.stringify(
+    {
+      schema: "csoai.meok-him-user-memory-export/1.0",
+      exportedAt: new Date().toISOString(),
+      ownership: "user_owned_view_export_delete",
+      identity: current,
+    },
+    null,
+    2,
+  );
+}
+
+export function clearWelcomeIdentity(): void {
+  try {
+    localStorage.removeItem(HIM_IDENTITY_KEY);
+  } catch (e) {}
+}
+

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Article 50 Countdown — CSOAI</title>
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="Live countdown to EU AI Act Article 50 enforcement: 2 August 2026. See hours, minutes, seconds until the deadline.">
+  <link rel="canonical" href="https://csoai.org/countdown">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Space Grotesk',system-ui,sans-serif;background:#000;color:#e2e8f0;line-height:1.6;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden}
+    body::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(239,68,68,.08),transparent 50%),radial-gradient(circle at 70% 60%,rgba(212,168,67,.08),transparent 50%);pointer-events:none}
+    .container{position:relative;z-index:1;max-width:900px;width:100%;text-align:center}
+    h1{font-size:1.4rem;color:#ef4444;text-transform:uppercase;letter-spacing:.2em;margin-bottom:.5rem;font-weight:600}
+    h2{font-size:1.8rem;color:#fbbf24;margin-bottom:2rem}
+    .timer{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2rem 0}
+    .timer div{background:rgba(20,20,30,.85);border:2px solid rgba(239,68,68,.4);border-radius:.75rem;padding:1.5rem;backdrop-filter:blur(20px)}
+    .timer .num{font-size:3rem;font-weight:700;background:linear-gradient(180deg,#ef4444,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;font-variant-numeric:tabular-nums}
+    .timer .lbl{font-size:.75rem;color:rgba(232,228,240,.5);text-transform:uppercase;letter-spacing:.1em;margin-top:.5rem}
+    .timeline{margin:2rem 0;text-align:left;background:rgba(13,13,20,.85);border:1px solid rgba(255,255,255,.1);border-radius:.75rem;padding:1.5rem;backdrop-filter:blur(20px)}
+    .timeline h3{color:#fbbf24;font-size:1rem;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.1em}
+    .milestone{display:flex;align-items:flex-start;gap:1rem;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.06)}
+    .milestone:last-child{border-bottom:none}
+    .milestone .date{font-size:.85rem;color:#fbbf24;font-weight:600;min-width:120px}
+    .milestone .label{color:#94a3b8;font-size:.9rem}
+    .cta-row{display:flex;gap:1rem;justify-content:center;margin-top:2rem;flex-wrap:wrap}
+    .cta{display:inline-block;background:#ef4444;color:#fff;padding:.85rem 1.5rem;border-radius:.5rem;font-weight:600;text-decoration:none;letter-spacing:.05em}
+    .cta:hover{background:#dc2626}
+    .cta-secondary{background:transparent;color:#fbbf24;border:1px solid #fbbf24}
+    .cta-secondary:hover{background:rgba(251,191,36,.15)}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin:2rem 0}
+    .stat{background:rgba(13,13,20,.85);border:1px solid rgba(255,255,255,.1);border-radius:.5rem;padding:1rem}
+    .stat .num{font-size:1.4rem;font-weight:700;color:#fbbf24;line-height:1}
+    .stat .lbl{font-size:.7rem;color:rgba(232,228,240,.5);text-transform:uppercase;letter-spacing:.08em;margin-top:.4rem}
+    .foot{margin-top:3rem;color:rgba(232,228,240,.4);font-size:.75rem;text-align:center}
+    @media (max-width:700px){.timer .num{font-size:2rem}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚨 EU AI Act · Article 50 · Enforcement</h1>
+    <h2>Time remaining to 2 August 2026</h2>
+
+    <div class="timer">
+      <div><div class="num" id="days">--</div><div class="lbl">Days</div></div>
+      <div><div class="num" id="hours">--</div><div class="lbl">Hours</div></div>
+      <div><div class="num" id="minutes">--</div><div class="lbl">Minutes</div></div>
+      <div><div class="num" id="seconds">--</div><div class="lbl">Seconds</div></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="num">88</div><div class="lbl">csoai.org Pages</div></div>
+      <div class="stat"><div class="num">29</div><div class="lbl">API Endpoints</div></div>
+      <div class="stat"><div class="num">271</div><div class="lbl">MCP Servers</div></div>
+      <div class="stat"><div class="num">298</div><div class="lbl">Prospects</div></div>
+      <div class="stat"><div class="num">20</div><div class="lbl">Verticals</div></div>
+      <div class="stat"><div class="num">115+</div><div class="lbl">Organisations</div></div>
+      <div class="stat"><div class="num">79/79</div><div class="lbl">E2E Tests</div></div>
+      <div class="stat"><div class="num">614</div><div class="lbl">Sigils</div></div>
+    </div>
+
+    <div class="timeline">
+      <h3>Compliance timeline</h3>
+      <div class="milestone"><div class="date">2 Feb 2025</div><div class="label">AI Act enters into force</div></div>
+      <div class="milestone"><div class="date">2 Aug 2025</div><div class="label">Prohibited AI practices banned (Article 5)</div></div>
+      <div class="milestone"><div class="date">2 Aug 2026</div><div class="label">⚠️ High-risk AI obligations in force (Article 50)</div></div>
+      <div class="milestone"><div class="date">2 Aug 2027</div><div class="label">GPAI obligations (Article 51, 52, 53, 55)</div></div>
+    </div>
+
+    <div class="cta-row">
+      <a href="/certify" class="cta">Get Your Watchdog Cert →</a>
+      <a href="/onboarding" class="cta cta-secondary">10-step Onboarding</a>
+      <a href="/opengrid" class="cta cta-secondary">OpenGrid Dashboard</a>
+    </div>
+
+    <div class="foot">
+      CSOAI LTD (UK Companies House 16939677) · MEOK AI Labs · <a href="/">csoai.org</a>
+    </div>
+  </div>
+
+  <script>
+    // Target: 2 August 2026 00:00:00 UTC
+    const target = new Date("2026-08-02T00:00:00Z").getTime();
+    function update() {
+      const now = Date.now();
+      const diff = target - now;
+      if (diff <= 0) {
+        document.getElementById("days").textContent = "0";
+        document.getElementById("hours").textContent = "0";
+        document.getElementById("minutes").textContent = "0";
+        document.getElementById("seconds").textContent = "0";
+        return;
+      }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      document.getElementById("days").textContent = d.toString().padStart(2, "0");
+      document.getElementById("hours").textContent = h.toString().padStart(2, "0");
+      document.getElementById("minutes").textContent = m.toString().padStart(2, "0");
+      document.getElementById("seconds").textContent = s.toString().padStart(2, "0");
+    }
+    update();
+    setInterval(update, 1000);
+  </script>
+</body>
+</html>

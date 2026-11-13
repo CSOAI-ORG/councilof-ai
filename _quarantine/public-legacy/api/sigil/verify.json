@@ -1,0 +1,26 @@
+{
+  "version": "3.1.0",
+  "generated_at": "2026-06-11T10:00:00Z",
+  "endpoint": "/api/sigil/verify",
+  "method": "POST",
+  "description": "Verify a SIGIL certificate by ID",
+  "example_request": {
+    "cert_id": "WD-2026-001",
+    "sigil_digest": "8cc4a6002bb8201a"
+  },
+  "example_response": {
+    "valid": true,
+    "cert_id": "WD-2026-001",
+    "system_name": "Acme AI Platform",
+    "framework": "EU AI Act",
+    "compliance_score": 0.87,
+    "issued_at": "2026-05-15T10:00:00Z",
+    "expires_at": "2026-11-15T10:00:00Z",
+    "issuer": "CSOAI Watchdog",
+    "sigil_digest": "8cc4a6002bb8201a",
+    "blockchain_anchor": "0xabc123...",
+    "status": "active"
+  },
+  "verification_methods": ["sigil_digest", "blockchain_anchor", "qr_code"],
+  "public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA...\n-----END PUBLIC KEY-----"
+}

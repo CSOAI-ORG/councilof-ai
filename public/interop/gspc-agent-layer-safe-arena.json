@@ -1,0 +1,1754 @@
+{
+  "arena_city_academy_hitl": {
+    "academy_hitl_training": {
+      "completion_rule": "A module is complete only through an exercise whose state is REPRODUCED (your result's sha256 equals the published result's sha256 and the negative control fails). Modules with no exercise are reading or practice; finishing them completes nothing.",
+      "reproducible_exercises": [
+        {
+          "completion_gate": "REPRODUCED (output sha256 == published sha256 AND negative control fails)",
+          "exercise_id": "board-totals",
+          "realises_modules": [
+            "learn/board",
+            "dashboard/learn"
+          ],
+          "title": "Read the living board and count it yourself"
+        },
+        {
+          "completion_gate": "REPRODUCED (output sha256 == published sha256 AND negative control fails)",
+          "exercise_id": "verify-card",
+          "realises_modules": [
+            "learn/board",
+            "academy/attest",
+            "learn/build"
+          ],
+          "title": "Verify one signed measurement card with your own code"
+        },
+        {
+          "completion_gate": "REPRODUCED (output sha256 == published sha256 AND negative control fails)",
+          "exercise_id": "card-chain",
+          "realises_modules": [
+            "academy/attest"
+          ],
+          "title": "Re-measure the whole signed card chain"
+        },
+        {
+          "completion_gate": "REPRODUCED (output sha256 == published sha256 AND negative control fails)",
+          "exercise_id": "inclusion",
+          "realises_modules": [
+            "academy/foundations",
+            "learn/build"
+          ],
+          "title": "Prove a leaf is inside the public root"
+        },
+        {
+          "completion_gate": "REPRODUCED (output sha256 == published sha256 AND negative control fails)",
+          "exercise_id": "root-signature",
+          "realises_modules": [
+            "academy/foundations"
+          ],
+          "title": "Check who signed the public root"
+        },
+        {
+          "completion_gate": "REPRODUCED (output sha256 == published sha256 AND negative control fails)",
+          "exercise_id": "charter-hash",
+          "realises_modules": [
+            "academy/foundations",
+            "learn/found"
+          ],
+          "title": "Reproduce the charter hash"
+        },
+        {
+          "completion_gate": "REPRODUCED (output sha256 == published sha256 AND negative control fails)",
+          "exercise_id": "three-corpora",
+          "realises_modules": [
+            "learn/board"
+          ],
+          "title": "Keep the three card corpora apart"
+        },
+        {
+          "completion_gate": "REPRODUCED (output sha256 == published sha256 AND negative control fails)",
+          "exercise_id": "board-stamp",
+          "realises_modules": [
+            "learn/board",
+            "academy/foundations"
+          ],
+          "title": "Verify the board snapshot stamp"
+        },
+        {
+          "completion_gate": "REPRODUCED (output sha256 == published sha256 AND negative control fails)",
+          "exercise_id": "article-50-marking",
+          "realises_modules": [
+            "learn/law",
+            "learn/sector",
+            "academy/your-jurisdiction",
+            "academy/apply"
+          ],
+          "title": "Reproduce an Article 50 marking measurement, then apply it to your own output"
+        }
+      ],
+      "reproducible_exercises_count": 9,
+      "schema": "csoai.academy-module-inventory/0.1",
+      "served_modules": 10,
+      "total_modules": 63,
+      "total_surfaces": 5
+    },
+    "arena_scoreboard": {
+      "as_of": "2026-08-29T05:45:52Z",
+      "axes": [
+        {
+          "axis": "accountability",
+          "models_tested": 5,
+          "n_rounds": 1576,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "affect",
+          "models_tested": 6,
+          "n_rounds": 1579,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "care",
+          "models_tested": 6,
+          "n_rounds": 1586,
+          "top_pass_rate": 0.956
+        },
+        {
+          "axis": "continuity",
+          "models_tested": 5,
+          "n_rounds": 1576,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "creativity",
+          "models_tested": 5,
+          "n_rounds": 1575,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "efficiency",
+          "models_tested": 5,
+          "n_rounds": 1575,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "fairness",
+          "models_tested": 5,
+          "n_rounds": 1576,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "gov",
+          "models_tested": 6,
+          "n_rounds": 1578,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "human-vs-ai",
+          "models_tested": 5,
+          "n_rounds": 1576,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "jail",
+          "models_tested": 6,
+          "n_rounds": 1580,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "safety",
+          "models_tested": 5,
+          "n_rounds": 1575,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "slot15",
+          "models_tested": 5,
+          "n_rounds": 1579,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "sovereignty",
+          "models_tested": 6,
+          "n_rounds": 1567,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "swarm",
+          "models_tested": 6,
+          "n_rounds": 1582,
+          "top_pass_rate": 0.0
+        },
+        {
+          "axis": "transparency",
+          "models_tested": 5,
+          "n_rounds": 1577,
+          "top_pass_rate": 0.0
+        }
+      ],
+      "axes_count": 15,
+      "bench_sources": 398,
+      "generation": "2026-08-23-b",
+      "n_rounds": 4760,
+      "schema": "csoai.signed-arena-leaderboard/0.1"
+    },
+    "battle_modes": [
+      {
+        "busabase_ref": "recmvaeyavx42upkzv / recmvagob90cgk882j",
+        "description": "Human reviewer (via MEOK H.I.M.) challenges a model on a live GSPC axis (`safety`, `art5-safeguard`, `effect-binding`, `claim-maintenance`, `care`, `jail`, `swarm`). Reviewer interaction updates HITL training and claim-maintenance state in real time.",
+        "grading_rule": "Deterministic verifier + negative control (`no model judges another model`).",
+        "mode_id": "BATTLE_1_HUMAN_VS_AI_HIM_CHALLENGE",
+        "surface": "https://councilof.ai/gspc-arena/ & Council OS Agent HUD",
+        "title": "Human vs AI Axis Challenge (H.I.M. Live Reviewer vs Model)"
+      },
+      {
+        "busabase_ref": "recmvaexq93i5lslh8 / recmvaexq6mqcnlpt6",
+        "description": "Paired bouts across open-weight and frontier models on GSPC axes (`gov`, `care`, `swarm`, `affect`, `safety`, `jail`) with signed scoreboard snapshots.",
+        "grading_rule": "Exact-label deterministic pass rate and per-axis Elo (`4,760` signed rounds across `398` bench sources).",
+        "mode_id": "BATTLE_2_GSPC_ARENA_AXIS_ELO",
+        "surface": "https://councilof.ai/signed/arena_scoreboard.json",
+        "title": "GSPC Arena Multi-Model Axis Bouts (`gspc-tool-arena` / `gspc-index-arena-elo`)"
+      },
+      {
+        "busabase_ref": "recmv93idshekdrdrb / recmvaeygovkjzvn6z",
+        "description": "Stratified simulation: 40 BLUE citizens vs 40 RED citizens over 400 turns / 5 epochs (`ALLOWED: 278`, `BLOCKED: 37`, `UNMEASURED: 85`).",
+        "grading_rule": "Article Zero V1\u2013V8 + EU AI Act Art 5(1)(a)\u2013(h) deterministic grader with positive canary controls.",
+        "mode_id": "BATTLE_3_COUNCIL_CITY_RED_VS_BLUE",
+        "surface": "https://councilof.ai/city/board.json",
+        "title": "Council City & Colosseum (`40` RED vs `40` BLUE Citizens on EU AI Act Art 5)"
+      }
+    ],
+    "council_city_colosseum": {
+      "breaches_by_article": {
+        "Art 5(1)(d)": 10,
+        "Art 5(1)(e)": 15,
+        "Art 5(1)(f)": 10,
+        "Art 5(1)(h)": 2
+      },
+      "counts": {
+        "ALLOWED": 278,
+        "BLOCKED": 37,
+        "UNMEASURED": 85
+      },
+      "epochs": 5,
+      "gate_exercised": true,
+      "kind": "council-os-city.board",
+      "law_enforced": {
+        "article_zero": "V1-V8 (council-os-article-zero, imported)",
+        "eu_ai_act": "Art 5(1)(a)-(h)",
+        "grader": "deterministic \u2014 no model judges another model"
+      },
+      "turns": 400,
+      "valid": true
+    }
+  },
+  "auto_merge_allowed": false,
+  "ax_protocols": [
+    {
+      "authority_boundary": "Read-only exploration; never invents a score or executes a paid/signing action.",
+      "capabilities": "Routes natural-language questions about any model, axis, harness, lab, humanoid, AI company, or SAFE record onto the 19 read-only MCP tools; quotes only measured fields from named tool outputs.",
+      "endpoint": "POST /api/chat",
+      "implementation_file": "functions/_lib/talkRouter.ts",
+      "protocol": "Grounded Chat & Deterministic Tool Router",
+      "protocol_id": "AX_CHAT_ROUTER"
+    },
+    {
+      "authority_boundary": "Paid x402 tools require caller wallet settlement; MCP read tools never mutate state.",
+      "capabilities": "19 read-only measurement & verification tools (`board_totals`, `verify_card`, `axis_detail`, `model_lookup`, etc.) + 29 paid x402 doors (`/request-attestation`, `/evidence-bundle`, `/eunomia-data`, `/art50/marking-evidence`, `/rwa/evidence`).",
+      "endpoint": "POST /mcp",
+      "implementation_file": "functions/mcp/index.ts",
+      "protocol": "Model Context Protocol (MCP 2025-11-25)",
+      "protocol_id": "AX_MCP_19_TOOLS"
+    },
+    {
+      "authority_boundary": "Identity & capability declaration only; no delegated signing authority.",
+      "capabilities": "Cryptographically signed Agent Card with RFC 8785 JCS canonicalisation and detached Ed25519 signature under `did:web:csoai.org` so external agents can verify identity before delegating measurement queries.",
+      "endpoint": "GET /.well-known/agent-card.json",
+      "implementation_file": "public/.well-known/agent-card.json",
+      "protocol": "Agent-to-Agent (A2A v0.3 / RFC 8785 JCS)",
+      "protocol_id": "AX_A2A_AGENT_CARD"
+    },
+    {
+      "authority_boundary": "Never moves the page without `consent.watch === true`; stops at a visible Confirm before any `commit`, `pay`, or `schedule` step.",
+      "capabilities": "Streams `RUN_STARTED`, `TOOL_CALL_*`, `STATE_SNAPSHOT`, `STATE_DELTA` (RFC 6902), `TEXT_MESSAGE_*`, `CUSTOM` (`a2ui`, `confirm_required`, `consent_required`), and `RUN_FINISHED`. Supports 9 Watch Mode frontend tools (`navigate`, `openSubject`, `setFilter`, `highlight`, `fillForm`, `openPanel`, `runVerify`, `scroll`, `focus`) when `forwardedProps.consent = {watch: true}`.",
+      "endpoint": "POST /api/agui/run & GET /api/agui/gspc-state",
+      "implementation_file": "functions/_lib/aguiRun.ts",
+      "protocol": "AG-UI 1.0 Event Stream + Watch Mode Frontend Tools",
+      "protocol_id": "AX_AG_UI_1_0"
+    },
+    {
+      "authority_boundary": "UI projection only; missing fields render as 'not in the payload' and a TIE stays a TIE.",
+      "capabilities": "Emits `createSurface`, `updateComponents`, and `updateDataModel` for `gspc_board`, `gspc_verify`, and the 6-state MEOK Agent HUD (`waiting_for_me`, `running`, `finished_speaking`, `outcome_established`, `needs_reconciliation`, `result_retained`).",
+      "endpoint": "POST /api/a2ui/run & GET /api/v1/gspc/knowledge-hud-sandbox",
+      "implementation_file": "functions/_lib/a2uiSurfaces.ts + condor/condor/gspc_a2ui.py",
+      "protocol": "A2UI v0.9.1 (Production) & v1.0 (Candidate) Declarative Surfaces",
+      "protocol_id": "AX_A2UI_V0_9_1_AND_V1_0"
+    }
+  ],
+  "ax_protocols_count": 5,
+  "claim_boundary": "Measurement, not certification. AI models and AX/AG-UI/A2UI surfaces assist exploration, reproducible measurement, and proposal drafting; human approval via H.I.M. is required before signing or merging.",
+  "execution": "disabled",
+  "grok_bot_master_alignment": {
+    "council_city_colosseum_arena": "recmv93idshekdrdrb",
+    "gspc_agent_layer_plan": "recmvagob90cgk882j",
+    "gspc_staleness_to_ras_loop": "recmvagpnwbx7vffpu",
+    "hitl_call_clip_0423_bst": "recmvaeyavx42upkzv",
+    "osaia_safe_adapter": "recmv93idzjpxivjxh",
+    "osaia_safe_wg_conformance_pack": "recmvahelovto7pz9c"
+  },
+  "meok_him_action_loop": [
+    {
+      "action_id": "WORK_EXPLORE",
+      "busabase_ref": "recmvagob90cgk882j",
+      "hud_state": "finished_speaking / result_retained",
+      "human_gate_required": false,
+      "meok_pals_assigned": [
+        "PALS-01 Aria (Board & Axis Steward)",
+        "PALS-05 Soren (Regulatory & Art 50 Steward)"
+      ],
+      "mode": "READ_ONLY_GROUNDED_EXPLORER",
+      "verb": "WORK",
+      "what_happens": "End user or agent inspects any record across the SHA-pinned Busabase `gspc` export (`1,044` records), `23` GSPC axes, `6` non-model cohorts (`133` public rows), `417` frozen EU provisions, and `10` frozen SAFE records via Chat, MCP, A2A, AG-UI, or A2UI."
+    },
+    {
+      "action_id": "MEASURE_PROPOSE",
+      "busabase_ref": "recmvagob90cgk882j / recmvae0x6b59fzvxc",
+      "hud_state": "running -> outcome_established",
+      "human_gate_required": false,
+      "meok_pals_assigned": [
+        "PALS-02 Marcus (Harness & Reproducibility Steward)",
+        "PALS-06 Nadia (Compute & Batch Steward)"
+      ],
+      "mode": "BOUNDED_MEASUREMENT_AND_VERIFICATION",
+      "verb": "MEASURE",
+      "what_happens": "Runs or proposes a deterministic measurement (`verify_card`, `safe_pack_verify.py --offline`, Academy exercise, Arena bout, or `/request-attestation`) preserving `method`, `configuration`, `runtime`, `scope`, and a designed-to-fail negative control (`instrument_can_fail`)."
+    },
+    {
+      "action_id": "FIX_PROPOSE",
+      "busabase_ref": "recmvagob90cgk882j / recmv93idla9neff7d",
+      "hud_state": "needs_reconciliation -> waiting_for_me",
+      "human_gate_required": true,
+      "meok_pals_assigned": [
+        "PALS-03 Elena (Provenance & Corrections Steward)",
+        "PALS-04 Devon (Interop & MCP Steward)"
+      ],
+      "mode": "PROPOSAL_ONLY_NEVER_SELF_MERGED",
+      "verb": "FIX",
+      "what_happens": "Creates a bounded remediation or correction proposal (`autoMerge: false`, `effective_state: PROPOSED`) in Busabase `:15430` or `/api/corrections`. A correction is always a new dated record naming the superseded record by ID and SHA-256 while leaving replaced bytes readable."
+    },
+    {
+      "action_id": "SIGN_ATTEST",
+      "busabase_ref": "recmvagob90cgk882j / recmv93idkwqlk1n4k",
+      "hud_state": "waiting_for_me -> outcome_established -> result_retained",
+      "human_gate_required": true,
+      "meok_pals_assigned": [
+        "H.I.M. Human Reviewer (Nick / Authorised Signer)"
+      ],
+      "mode": "HIM_HUMAN_GATED_ED25519_AND_WITNESS",
+      "verb": "SIGN",
+      "what_happens": "H.I.M. escalates the verified measurement + negative-control receipt to a human reviewer. Only after explicit human approval is the record signed (`Ed25519` under `did:web:csoai.org`), witnessed (`RFC 9923`), and anchored (`OpenTimestamps` / `Rekor`)."
+    }
+  ],
+  "meok_him_action_loop_count": 4,
+  "safe_end_to_end_integration": {
+    "adapter_v0_2_pipeline": {
+      "automatic_fixes": false,
+      "automatic_notifications": false,
+      "corrections": [
+        "SAFE means Shared AI Findings Exchange, not Security Analysis Findings Exchange.",
+        "The old illustrative scanner fields are not a verified official SAFE JSON schema.",
+        "Illustrative scanner outputs do not establish executed GSPC measurements, confidence intervals, signatures or a quorum.",
+        "Public claim maintenance and private incident evidence require separate disclosure paths."
+      ],
+      "corrects": "/interop/osaia-safe-evidence-adapter-v0.1.json",
+      "goals_touched": [
+        {
+          "goal": "assurance",
+          "what_the_source_raises": "turning incidents and near misses into evidence-based controls"
+        },
+        {
+          "goal": "provenance",
+          "what_the_source_raises": "evidence preservation covering prompts, traces, tool calls, logs, configurations, model and safeguard versions and third-party dependencies"
+        },
+        {
+          "goal": "change",
+          "what_the_source_raises": "machine-readable updates while a risk remains unresolved"
+        },
+        {
+          "goal": "agent-authority",
+          "what_the_source_raises": "delegated authority in agentic incidents"
+        }
+      ],
+      "gspc_axis_mapping": {
+        "conformance": "declared schema and executable contract tests",
+        "continuity": "recoverability and observation-gap contracts",
+        "effect-binding": "action-to-evidence binding only when measured",
+        "governance": "actor and approval-scope checks where a declared contract exists",
+        "other_axes": "NOT_APPLICABLE without an explicit matching contract",
+        "provenance": "source, method, version and digest lineage"
+      },
+      "privacy_default": "CONFIDENTIAL",
+      "private_case_schema": "csoai.safe-informed-case/0.2",
+      "schema": "csoai.osaia-safe-evidence-adapter/0.2",
+      "stages": [
+        {
+          "action": "Authenticated tenant and operator context must come from the host.",
+          "implementation": "Local self-case integration only; external authenticated intake is not provided.",
+          "stage": "Intake"
+        },
+        {
+          "action": "Account for prompts, model traces, tool calls, system logs, configuration, safeguard versions and approval events.",
+          "implementation": "Bounded private files checked by digest or explicitly missing/not applicable.",
+          "stage": "Preserve"
+        },
+        {
+          "action": "Preserve method, configuration, runtime, scope and outcome.",
+          "implementation": "Record-consistency gate, not proof of original execution or arbitrary model inference.",
+          "stage": "Measure"
+        },
+        {
+          "action": "Bind a reported negative result to the same declared method, configuration, runtime and scope.",
+          "implementation": "Synthetic gate tests do not substitute for an earlier operation missing its own control.",
+          "stage": "Test the check"
+        },
+        {
+          "action": "Keep proposal, authorised execution and comparable retest separate.",
+          "implementation": "Comparison gate only; no fix executor.",
+          "stage": "Remediate and retest"
+        },
+        {
+          "action": "Purpose-specific review, redaction and audience approval.",
+          "implementation": "Sharing disabled; no public incident export.",
+          "stage": "Review and share"
+        }
+      ]
+    },
+    "frozen_evidence_pack": {
+      "as_of": "2026-09-30T10:05:00Z",
+      "events_count": 10,
+      "files_count": 37,
+      "records": [
+        {
+          "canonical_sha256": "d84c899abdf065315698ab52cf9558f28f0a3c3168e54d374a512847e65d0327",
+          "claim_id": "signed-receipts/v1/interceptor.py@d908b9e7:resolves-before-valid",
+          "claim_type": "control_holds",
+          "file": "C-2026-0928-01.pre-fix.safe-rv.json",
+          "gspc_axes_mapped": [
+            "provenance",
+            "conformance",
+            "governance"
+          ],
+          "negative_control": "FAIL",
+          "procedure": "python3 safe_export.py (conformance()); equivalently python3 run.py <results> --vectors https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json",
+          "record_id": "csoai:safe-rv:C-2026-0928-01:pre-fix",
+          "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-01.pre-fix.safe-rv.json",
+          "state": "FAIL",
+          "statement": "interceptor.py (sha256 d908b9e7...) returns VALID only for receipts whose key resolves to the named issuer, and never INVALID merely because resolution failed."
+        },
+        {
+          "canonical_sha256": "5f3a6c1bb846e9ae408bfaae03cc4181ba15a1aab10b1dbfbdf5fe99a9ec5c8e",
+          "claim_id": "signed-receipts/v1/interceptor.py@b79ed7fe:resolves-before-valid",
+          "claim_type": "control_holds",
+          "file": "C-2026-0928-01.post-fix.safe-rv.json",
+          "gspc_axes_mapped": [
+            "provenance",
+            "conformance",
+            "governance"
+          ],
+          "negative_control": "FAIL",
+          "procedure": "python3 safe_export.py (conformance()); equivalently python3 run.py <results> --vectors https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json",
+          "record_id": "csoai:safe-rv:C-2026-0928-01:post-fix",
+          "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-01.post-fix.safe-rv.json",
+          "state": "PASS",
+          "statement": "interceptor.py as served (sha256 b79ed7fe...) returns the expected VALID / INVALID / UNVERIFIABLE_KEY result for all 17 core cases."
+        },
+        {
+          "canonical_sha256": "141a53b4c95a54261924b43db7cd2861389254ed0eb653cb41703b72458c9524",
+          "claim_id": "signed-receipts/v1/_canon@d908b9e7:rfc8785-scalars",
+          "claim_type": "control_holds",
+          "file": "C-2026-0928-02.pre-fix.safe-rv.json",
+          "gspc_axes_mapped": [
+            "conformance",
+            "provenance"
+          ],
+          "negative_control": "FAIL",
+          "procedure": "python3 safe_export.py (jcs_probe()): 14 edge values + 2000 seeded doubles from 1e-8 to 1e22",
+          "record_id": "csoai:safe-rv:C-2026-0928-02:pre-fix",
+          "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-02.pre-fix.safe-rv.json",
+          "state": "FAIL",
+          "statement": "The reference canonicaliser writes every probed number and string exactly as RFC 8785 (ECMAScript) does."
+        },
+        {
+          "canonical_sha256": "b90a1a1cd61938308ffc1acc028b50a76dec5541f9ade45b8ba9830aac2280de",
+          "claim_id": "signed-receipts/v1/_canon@b79ed7fe:rfc8785-scalars",
+          "claim_type": "control_holds",
+          "file": "C-2026-0928-02.post-fix.safe-rv.json",
+          "gspc_axes_mapped": [
+            "conformance",
+            "provenance"
+          ],
+          "negative_control": "FAIL",
+          "procedure": "python3 safe_export.py (jcs_probe()): 14 edge values + 2000 seeded doubles from 1e-8 to 1e22",
+          "record_id": "csoai:safe-rv:C-2026-0928-02:post-fix",
+          "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-02.post-fix.safe-rv.json",
+          "state": "PASS",
+          "statement": "The reference canonicaliser writes every probed number and string exactly as RFC 8785 (ECMAScript) does."
+        },
+        {
+          "canonical_sha256": "820d730d4591ee16a5bdfc69bfe236bf1902008d25b67c141513593840497839",
+          "claim_id": "api/corrections:content_id+signature",
+          "claim_type": "artifact_integrity",
+          "file": "corrections-ledger.integrity.safe-rv.json",
+          "gspc_axes_mapped": [
+            "provenance",
+            "continuity",
+            "governance"
+          ],
+          "negative_control": "FAIL",
+          "procedure": "Computed on this request, from these bytes. Strip unsigned_wrapper_fields from this document, canonicalise with json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True), SHA-256 it: that is recomputed_content_id and it must equal signature.attestation.content_id and signature.id. Then verify signature.signature as Ed25519 over the same canonical form of signature.attestation under key_ed25519_hex, which is the published key for did:web:csoai.org#board-attestation-1. Both must hold.",
+          "record_id": "csoai:safe-rv:corrections-ledger:integrity",
+          "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/corrections-ledger.integrity.safe-rv.json",
+          "state": "PASS",
+          "statement": "The served ledger body hashes to the signed content_id, and that attestation verifies under the key in did.json."
+        },
+        {
+          "canonical_sha256": "fb0528ea41b76c8c5689e33f4b4ed154188e028ddd4c479a669f086212bec470",
+          "claim_id": "api/corrections:time_to_correct-measurable",
+          "claim_type": "property_value",
+          "file": "corrections-ledger.timing.safe-rv.json",
+          "gspc_axes_mapped": [
+            "provenance",
+            "continuity",
+            "governance"
+          ],
+          "negative_control": "FAIL",
+          "procedure": "read correction_latency {exact, upper_bound, unmeasured} from the signed ledger; recount per_entry",
+          "record_id": "csoai:safe-rv:corrections-ledger:time-to-correct",
+          "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/corrections-ledger.timing.safe-rv.json",
+          "state": "FAIL",
+          "statement": "Every ledger entry carries a first-hand detected_at and published_at, so its time-to-correct is measurable."
+        },
+        {
+          "canonical_sha256": "e39b8a41d1b1be7df14930bd859cb7415da66afc49032eccbed30548966b07a7",
+          "claim_id": "mcp-contract-parity:v0.1.2:supersession-chain",
+          "claim_type": "artifact_integrity",
+          "file": "mcp-contract-parity.v0.1.2.safe-rv.json",
+          "gspc_axes_mapped": [
+            "effect-binding",
+            "conformance",
+            "provenance"
+          ],
+          "negative_control": "FAIL",
+          "procedure": "record.v0.1.2.signed.json: canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256(record.v0.1.2.json); verify sig_ed25519 with #board-attestation-1 in https://csoai.org/.well-known/did.json",
+          "record_id": "csoai:safe-rv:mcp-contract-parity:v0.1.2",
+          "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/mcp-contract-parity.v0.1.2.safe-rv.json",
+          "state": "PASS",
+          "statement": "record.v0.1.2.json is signed by the board key and names v0.1.1 and v0.1 by sha256, and those bytes are still published."
+        },
+        {
+          "canonical_sha256": "3528babf009f5f507b11d31c81190a2b65e592ab3a548a8d11c9a57948eb680b",
+          "claim_id": "incident_to_authority_notified",
+          "claim_type": "property_value",
+          "file": "disclosure-lag.incident-to-notification.safe-rv.json",
+          "gspc_axes_mapped": [
+            "governance",
+            "continuity",
+            "provenance"
+          ],
+          "negative_control": "FAIL",
+          "procedure": "Web search for the Australian Government's statement, any vendor statement and at least two independent reputable reports; each source fetched and its response hashed (response_sha256) on 2026-09-26; each date taken only from a quoted sentence; intervals are whole calendar days between dates (date(b) - date(a)); a month-only date yields a range, never a midpoint.",
+          "record_id": "csoai:safe-rv:disclosure-lag:2026-06-au-portal:incident_to_authority_notified",
+          "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/disclosure-lag.incident-to-notification.safe-rv.json",
+          "state": "PASS",
+          "statement": "The government's own transcript dates the run to 18 June 2026 and the first notification to 10 September 2026: 84 whole days."
+        },
+        {
+          "canonical_sha256": "b64010b0a4c337b3be7a2370d8aab4c509c0cbf70274b6bc223a430d86a198b5",
+          "claim_id": "activity_stopped",
+          "claim_type": "property_value",
+          "file": "disclosure-lag.activity-stopped.safe-rv.json",
+          "gspc_axes_mapped": [
+            "governance",
+            "continuity",
+            "provenance"
+          ],
+          "negative_control": "NOT_RUN",
+          "procedure": "Web search for the Australian Government's statement, any vendor statement and at least two independent reputable reports; each source fetched and its response hashed (response_sha256) on 2026-09-26; each date taken only from a quoted sentence; intervals are whole calendar days between dates (date(b) - date(a)); a month-only date yields a range, never a midpoint.",
+          "record_id": "csoai:safe-rv:disclosure-lag:2026-06-au-portal:activity_stopped",
+          "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/disclosure-lag.activity-stopped.safe-rv.json",
+          "state": "UNMEASURED",
+          "statement": "The public record states when the agent's access to the portal ended."
+        },
+        {
+          "canonical_sha256": "8d70139398cb9688a7bf1cd0a6f4cfe3ec769bc25c1fecc01c7c2828e270e7b7",
+          "claim_id": "measurement-capsules/v0.2/index.json:signed",
+          "claim_type": "artifact_integrity",
+          "file": "measurement-capsules.index.safe-rv.json",
+          "gspc_axes_mapped": [
+            "provenance",
+            "conformance",
+            "continuity"
+          ],
+          "negative_control": "FAIL",
+          "procedure": "for each batch: recompute every capsule_id and the batch Merkle root, check record sha256 and its board signature; then recompute index_root over the union of capsule ids; the index itself is signed (.signed.json) and OTS-stamped (.json.ots)",
+          "record_id": "csoai:safe-rv:measurement-capsules:v0.2:index",
+          "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/measurement-capsules.index.safe-rv.json",
+          "state": "PARTIAL",
+          "statement": "The capsule index is signed by the board key and its digest matches the served bytes."
+        }
+      ],
+      "records_count": 10,
+      "schema": "csoai.safe-evidence-pack/0.1",
+      "sha256sums_sha256": "f869e917c61265edc69eebb3b331d9ae60f407a8af349b5f5e8996892a09a0ce",
+      "state_counts": {
+        "CONSISTENT": 5,
+        "DIVERGENT": 3,
+        "PARTIAL": 1,
+        "UNMEASURED": 1
+      }
+    },
+    "offline_verifier_and_renderers": {
+      "record_schema_sha256": "4ae3befcf78b027f9f72e99c71602b4310de64f9fb299674f3621984007ff94d",
+      "regression_methods_count": 35,
+      "supported_renderers": [
+        {
+          "module": "packages/evidence-fabric/render/ocsf.py",
+          "renderer": "OCSF",
+          "unmeasured_behavior": "status_id 99 with status_detail; no numeric score"
+        },
+        {
+          "module": "packages/evidence-fabric/render/otel.py",
+          "renderer": "OpenTelemetry (OTel)",
+          "unmeasured_behavior": "score.label only; no score.value"
+        },
+        {
+          "module": "packages/evidence-fabric/render/sarif.py",
+          "renderer": "SARIF 2.1.0",
+          "unmeasured_behavior": "kind: open; refuses fabricated numeric score"
+        },
+        {
+          "module": "packages/evidence-fabric/render/intoto.py",
+          "renderer": "in-toto Attestation",
+          "unmeasured_behavior": "preserves method.holder and assuranceLevel"
+        },
+        {
+          "module": "packages/evidence-fabric/render/ecs_hec.py",
+          "renderer": "Splunk ECS / HEC",
+          "unmeasured_behavior": "preserves null value for UNMEASURED/UNCHECKABLE"
+        }
+      ],
+      "verifier_entrypoint": "packages/evidence-fabric/safe_pack_verify.py",
+      "whole_pack_qualification": "SELF_CONSISTENT_UNAUTHENTICATED_KEY (signature_valid: true, issuer_authenticated: null)"
+    },
+    "safe_rfc_fieldmap_and_extensions": {
+      "csoai_extensions_not_in_rfc": [
+        {
+          "ours": "Dated ledger entries (78 as of 2026-09-28), each with what was wrong, how caught, what changed. Corrected records are new records that name the old by sha256; old bytes stay published (parity v0.1 -> v0.1.1 -> v0.1.2, AUTH INCONSISTENT 23 -> 10 -> 5).",
+          "property": "correction and supersession",
+          "rfc_gap": "The RFC lets the affected party correct facts but says nothing about how a published finding is corrected, versioned or withdrawn.",
+          "threads": "#31 (CSOAI comment), #32, #35, #4 clause A3"
+        },
+        {
+          "ours": "Detached Ed25519 under did:web:csoai.org#board-attestation-1 with tamper controls; every signed record says a signature is not truth.",
+          "property": "signatures",
+          "rfc_gap": "No integrity, custody or signature requirement.",
+          "threads": "#11, #17, #37, #38, PR #18, PR #27"
+        },
+        {
+          "ours": "UNMEASURED carries null, never 0 or an estimate; PARTIAL never reported as a population total; NOT_DISCRIMINATING when a test has not shown it can fail; UNVERIFIABLE_KEY distinct from INVALID.",
+          "property": "UNMEASURED and other non-binary states",
+          "rfc_gap": "Review Framework questions are yes/no.",
+          "threads": "#31, #20, #34"
+        },
+        {
+          "ours": "Every PASS/FAIL here carries a designed-to-fail control that failed; 44 of our own results were withdrawn when their grader could not fail.",
+          "property": "negative controls on the verification method",
+          "rfc_gap": "Asks for a reproducible method, not one shown able to fail.",
+          "threads": "#4, PR #9, #10, #32"
+        },
+        {
+          "ours": "detected_at may be UNRECORDED; first-hand windows give upper bounds only; 72 of 78 ledger entries are UNMEASURED for time-to-correct rather than estimated.",
+          "property": "honest timing",
+          "rfc_gap": "Clocks (ASAP, 72 h, 4 business days) assume detection and notification times exist.",
+          "threads": "#45"
+        },
+        {
+          "ours": "limits[] / what_it_does_not_show on every record.",
+          "property": "stated limits",
+          "rfc_gap": "None.",
+          "threads": "#34 coverage disclosure"
+        }
+      ],
+      "csoai_extensions_not_in_rfc_count": 6,
+      "rfc_field_states": {
+        "HAVE": 8,
+        "MISSING": 7,
+        "PARTIAL": 11
+      },
+      "rfc_fields_mapped_count": 26
+    },
+    "upstream_identity": {
+      "body": "Open Secure AI Alliance / Linux Foundation",
+      "busabase_master_refs": [
+        "recmvahelovto7pz9c",
+        "recmv93idzjpxivjxh"
+      ],
+      "migrated_issues": [
+        "#32",
+        "#64",
+        "#72"
+      ],
+      "name": "Shared AI Findings Exchange (SAFE)",
+      "source_id": "osaia-safe",
+      "status_qualification": "CSOAI_INTERNAL_REFERENCE_PROPOSAL_NOT_OFFICIAL_SAFE_SCHEMA",
+      "wg_repo": "https://github.com/OpenSecureAIAlliance/wg-safe"
+    }
+  },
+  "schema": "csoai.gspc-agent-layer-safe-arena-engine/1.0",
+  "sign_human_gated": true,
+  "staleness_and_claim_maintenance": {
+    "claim_maintenance_spec": {
+      "axis_kb_v3_1_busabase_ref": "recmvagko0zl3b02jy",
+      "latest_version": "0.2",
+      "machine_records": {
+        "claim_events": "https://councilof.ai/api/claims/events",
+        "claim_events_head": "https://councilof.ai/api/claims/events/head",
+        "corrections": "https://councilof.ai/api/corrections",
+        "priority": "https://councilof.ai/spec/claim-maintenance/priority.json",
+        "priority_root": "https://councilof.ai/spec/claim-maintenance/priority-root.json",
+        "reaction_index": "https://councilof.ai/spec/claim-maintenance/reaction-index.json"
+      },
+      "normative_v0_2_sha256": "d649ba0fdefb63abc205102bc8863db2e7852b207fd4e9e23e05e286e13e3b2e",
+      "schema": "csoai.claim-maintenance.spec-index/0.1"
+    },
+    "fluid_staleness_to_ras_loop": {
+      "busabase_ref": "recmvagpnwbx7vffpu",
+      "frozen_to_fluid_saas_to_ras_pipeline": [
+        {
+          "description": "Enterprise or end-user record is SHA-256 pinned against the `417` frozen EU provisions, `23` GSPC axes (`axes-kb v3.1`), and `10` frozen OSAIA SAFE re-verification records.",
+          "record_regime": "FROZEN (MEASURED / VALID)",
+          "service_tier": "SaaS / Baseline Verified Record",
+          "stage": 1,
+          "stage_id": "STAGE_1_FROZEN_RECORD_ACTIVE"
+        },
+        {
+          "description": "Any change in a bound EU provision, GSPC axis bank, model/wrapper SHA-256 digest, or SAFE finding automatically transitions dependent training and attestation records from Frozen (`MEASURED`) to Fluid (`STALE`).",
+          "record_regime": "FLUID (STALE / needs_reconciliation)",
+          "service_tier": "Drift Detected \u2014 Prior Bytes Immutable",
+          "stage": 2,
+          "stage_id": "STAGE_2_CHANGE_EVENT_FLIPS_FROZEN_TO_FLUID_STALE"
+        },
+        {
+          "description": "H.I.M. human reviewer approves the impacted list; MEOK drafts a consented Zernio message (`docs.zernio.com`, Nick-gated, zero unsolicited sends) or triggers a consented MEOK Voice / Agent HUD summon.",
+          "record_regime": "FLUID (SUMMON_DRAFTED_HIM_APPROVED)",
+          "service_tier": "H.I.M. Human-Approved Consented Summon",
+          "stage": 3,
+          "stage_id": "STAGE_3_HIM_APPROVED_ZERNIO_MESSAGE_OR_MEOK_VOICE_SUMMON"
+        },
+        {
+          "description": "End user/enterprise enters the exact up-to-date Academy training module mapped to the changed regulation, GSPC axis, or OSAIA SAFE finding.",
+          "record_regime": "FLUID (IN_ACADEMY_TRAINING)",
+          "service_tier": "Academy Targeted Refresher (`63` Modules / `10` Served)",
+          "stage": 4,
+          "stage_id": "STAGE_4_UP_TO_DATE_ACADEMY_TRAINING_REFRESHER"
+        },
+        {
+          "description": "User executes the reproducible exercise (`council-os/academy/module-inventory.json`); exam passes only when `state == 'REPRODUCED'` (local SHA-256 matches published SHA-256 AND the negative control fails as designed).",
+          "record_regime": "FLUID (EXAM_VERIFICATION)",
+          "service_tier": "Deterministic SHA-256 Exam (`9` Reproducible Exercises)",
+          "stage": 5,
+          "stage_id": "STAGE_5_REPRODUCIBLE_SHA256_EXAM_WITH_NEGATIVE_CONTROL"
+        },
+        {
+          "description": "User completes the gamified Human-vs-AI Arena / Council City Red-vs-Blue simulation challenge and receives a `<= 3KB` Water/Milk/Honey MOOC completion receipt.",
+          "record_regime": "FLUID (GAMIFIED_MOOC_COMPLETED)",
+          "service_tier": "Gamified Human-vs-AI Arena (`4,760` Rounds) & Council City (`40v40`) MOOC",
+          "stage": 6,
+          "stage_id": "STAGE_6_GAMIFIED_ARENA_COUNCIL_CITY_MOOC_COMPLETION"
+        },
+        {
+          "description": "With H.I.M. human-in-the-loop sign-off (`Ed25519` + `RFC 9923` witness), a new content-addressed RAS record is issued (`supersedes: <prior_sha256>`), returning the enterprise from Fluid (`STALE`) back to Frozen (`MEASURED`).",
+          "record_regime": "FROZEN (REATTESTED_SUPERSEDED)",
+          "service_tier": "Request-as-a-Service (RAS) Live Re-Attestation",
+          "stage": 7,
+          "stage_id": "STAGE_7_HIM_HUMAN_IN_LOOP_SAAS_TO_RAS_REATTESTATION"
+        }
+      ],
+      "stages": [
+        {
+          "busabase_ref": "recmvagpnwbx7vffpu / bsemv93yqe0f5gf1ce",
+          "description": "A change event in a regulatory provision (`417` frozen provisions), a GSPC axis bank (`axes-kb v3.1`), a model/wrapper SHA-256 digest, or a SAFE finding (`DIVERGENT`/`FAIL`) is recorded with `inception_*` lineage.",
+          "stage_id": "CHANGE_EVENT_DETECTED",
+          "step": 1,
+          "title": "Regulation, Axis Bank, Model Digest, or SAFE Finding Change Event"
+        },
+        {
+          "busabase_ref": "recmvagpnwbx7vffpu / recmvagko0zl3b02jy",
+          "description": "Affected training completions or measurement attestation records transition from `MEASURED` to `STALE` (projected as `needs_reconciliation` in the 6-state MEOK Agent HUD). Prior signed bytes remain immutable.",
+          "stage_id": "FLUID_RECORD_MARKED_STALE",
+          "step": 2,
+          "title": "Dependent Training & Attestation Records Marked `STALE`"
+        },
+        {
+          "busabase_ref": "recmvagpnwbx7vffpu / recmv93idkwqlk1n4k",
+          "description": "H.I.M. compiles the impact list for human approval; outreach is generated strictly as opt-in consented drafts (zero unsolicited sends; outbound messaging stays Nick-gated).",
+          "stage_id": "HIM_APPROVED_CONSENTED_IMPACT_LIST",
+          "step": 3,
+          "title": "H.I.M.-Approved Impact List & Opt-In Consented Notification Drafts"
+        },
+        {
+          "busabase_ref": "recmvagpnwbx7vffpu / recmvaeyavx42upkzv",
+          "description": "Operator/reviewer runs the updated Academy reproducible exercise (`state: REPRODUCED` + negative control) and executes a comparable re-measurement on the affected GSPC axis.",
+          "stage_id": "ACADEMY_HITL_REFRESHER_AND_RETEST",
+          "step": 4,
+          "title": "Academy HITL Refresher, Reproducible Exercise & Comparable Retest"
+        },
+        {
+          "busabase_ref": "recmvagpnwbx7vffpu / recmv93idpbo3772ps",
+          "description": "Issues a new human-signed, content-addressed measurement record (`supersedes: <prior_sha256>`) via the RAS / `x402` evidence rail (`measurement, never certification`).",
+          "stage_id": "RAS_REATTESTATION_SUPERSEDING_PRIOR",
+          "step": 5,
+          "title": "Re-Attest as Request-as-a-Service (RAS) with Explicit Supersession"
+        }
+      ],
+      "stages_count": 5,
+      "unsolicited_sends_allowed": false,
+      "zernio_and_meok_summon_channels": [
+        {
+          "adapter_state": "DRAFTED_NICK_GATED_NOT_CONFIGURED",
+          "busabase_ref": "recmvagpnwbx7vffpu",
+          "channel_id": "ZERNIO_UNIFIED_DM_API",
+          "description": "Prepares structured Zernio social/DM summon drafts for opted-in, consented enterprises/end users when a bound regulation, GSPC axis bank, or SAFE finding transitions their record from Frozen (`MEASURED`) to Fluid (`STALE`). Never sends unsolicited messages; stays Nick-gated until Zernio credentials are configured.",
+          "him_human_approval_required": true,
+          "opt_in_consented_only": true,
+          "title": "Zernio Unified Social / DM Messaging Adapter (Drafted & Nick-Gated)",
+          "unsolicited_sends_allowed": false,
+          "upstream_docs": "https://docs.zernio.com"
+        },
+        {
+          "adapter_state": "LIVE_CONSENTED_SESSION_SUMMON",
+          "busabase_ref": "recmvagpnwbx7vffpu / recmvaeyavx42upkzv",
+          "channel_id": "MEOK_VOICE_CALL_AND_PALS_SUMMON",
+          "description": "Assigned MEOK Staff PAL (`PALS-01 Aria` through `PALS-06 Nadia`) briefs or summons the opted-in end user during live MEOK Voice / In-Car / Council OS sessions with the exact SHA-256 diff and Academy refresher link.",
+          "him_human_approval_required": true,
+          "opt_in_consented_only": true,
+          "title": "MEOK Voice / In-Car Briefing / PALS Steward Call Summon",
+          "unsolicited_sends_allowed": false,
+          "upstream_docs": "https://councilof.ai/in-car-briefing"
+        },
+        {
+          "adapter_state": "LIVE_IN_APP_HUD_STATE",
+          "busabase_ref": "recmvagob90cgk882j / recmvagpnwbx7vffpu",
+          "channel_id": "COUNCIL_OS_6_STATE_AGENT_HUD",
+          "description": "Flips the user's 6-state MEOK Agent HUD badge to `needs_reconciliation` -> `waiting_for_me` with a one-click summon into Academy Training -> SHA-256 Exam -> Gamified Arena/Council City MOOC -> RAS Re-Attestation.",
+          "him_human_approval_required": true,
+          "opt_in_consented_only": true,
+          "title": "Council OS 6-State MEOK Agent HUD Reconciliation Summon",
+          "unsolicited_sends_allowed": false,
+          "upstream_docs": "https://councilof.ai/board"
+        }
+      ]
+    },
+    "frozen_regulatory_corpus": {
+      "corpus_root_sha256": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7",
+      "instruments": [
+        {
+          "celex": "32024R1689",
+          "frozen_provisions_count": 126,
+          "instrument": "EU AI Act (Regulation (EU) 2024/1689)"
+        },
+        {
+          "celex": "32016R0679",
+          "frozen_provisions_count": 99,
+          "instrument": "GDPR (Regulation (EU) 2016/679)"
+        },
+        {
+          "celex": "32024R2847",
+          "frozen_provisions_count": 71,
+          "instrument": "Cyber Resilience Act (Regulation (EU) 2024/2847)"
+        },
+        {
+          "celex": "32022R2554",
+          "frozen_provisions_count": 64,
+          "instrument": "DORA (Regulation (EU) 2022/2554)"
+        },
+        {
+          "celex": "32022L2555",
+          "frozen_provisions_count": 46,
+          "instrument": "NIS2 Directive (Directive (EU) 2022/2555)"
+        },
+        {
+          "celex": "32022L2464",
+          "frozen_provisions_count": 11,
+          "instrument": "CSRD (Directive (EU) 2022/2464)"
+        }
+      ],
+      "instruments_count": 6,
+      "note": "417 frozen provisions across 6 EU instruments (provisions, not 417 separate frameworks).",
+      "source_file": "public/interop/frozen-provision-hashes.json",
+      "total_frozen_provisions": 417
+    }
+  },
+  "summary_sha256": "88af0ec8241e25e825b0663bf22300cf34dfc9021ee41b90b1856e06f8ba19c9",
+  "synthetic_contract": {
+    "all_passed": true,
+    "negative_checks": [
+      {
+        "id": "N01_non_dict_rejected",
+        "rejected": true
+      },
+      {
+        "id": "N02_wrong_schema_rejected",
+        "rejected": true
+      },
+      {
+        "id": "N03_auto_merge_true_rejected",
+        "rejected": true
+      },
+      {
+        "id": "N04_autonomous_signing_rejected",
+        "rejected": true
+      },
+      {
+        "id": "N05_missing_ax_protocols_rejected",
+        "rejected": true
+      },
+      {
+        "id": "N06_broken_work_measure_fix_sign_order_rejected",
+        "rejected": true
+      },
+      {
+        "id": "N07_sign_without_human_gate_rejected",
+        "rejected": true
+      },
+      {
+        "id": "N08_unsolicited_staleness_outreach_rejected",
+        "rejected": true
+      },
+      {
+        "id": "N09_wrong_frozen_provision_count_rejected",
+        "rejected": true
+      },
+      {
+        "id": "N10_incomplete_safe_pack_records_rejected",
+        "rejected": true
+      }
+    ],
+    "negative_rejected": 10,
+    "negative_total": 10,
+    "positive_checks": [
+      {
+        "id": "P01_canonical_packet_valid",
+        "passed": true
+      },
+      {
+        "id": "P02_all_5_ax_ui_protocols_wired",
+        "passed": true
+      },
+      {
+        "id": "P03_work_measure_fix_sign_loop_enforced",
+        "passed": true
+      },
+      {
+        "id": "P04_sign_stays_strictly_human_gated",
+        "passed": true
+      },
+      {
+        "id": "P05_arena_4760_rounds_and_city_400_turns_loaded",
+        "passed": true
+      },
+      {
+        "id": "P06_academy_9_reproducible_hitl_exercises_loaded",
+        "passed": true
+      },
+      {
+        "id": "P07_417_frozen_provisions_across_6_eu_instruments_verified",
+        "passed": true
+      },
+      {
+        "id": "P08_staleness_loop_5_stages_and_opt_in_only",
+        "passed": true
+      },
+      {
+        "id": "P09_safe_6_stages_and_10_frozen_reverification_records_loaded",
+        "passed": true
+      },
+      {
+        "id": "P10_safe_26_rfc_fields_and_5_renderers_mapped",
+        "passed": true
+      }
+    ],
+    "positive_passed": 10,
+    "positive_total": 10,
+    "schema": "csoai.gspc-agent-layer-safe-arena-engine/1.0"
+  },
+  "verified_record_and_report_explorer": {
+    "answered_from_verified_records_only": true,
+    "busabase_ref": "recmvagob90cgk882j",
+    "him_escalation_triggers": [
+      {
+        "hud_state": "needs_reconciliation -> waiting_for_me",
+        "human_in_loop_action": "H.I.M. brings in a human reviewer to approve the impacted list and dispatch a consented Zernio/MEOK Voice summon into the Academy refresher -> SHA-256 Exam -> Gamified MOOC -> RAS re-attestation pipeline.",
+        "meok_pal": "PALS-05 Soren (Regulatory & Art 50 Steward)",
+        "title": "Fluid Record Marked `STALE` After Regulation, Axis, Digest, or SAFE Change",
+        "trigger_id": "HIM_TRIGGER_1_STALE_FLUID_RECORD",
+        "when_triggered": "Requested record or training attestation has transitioned from Frozen (`MEASURED`) to Fluid (`STALE`) following a change in the `417` frozen EU provisions, `axes-kb v3.1`, model SHA-256 digest, or SAFE finding."
+      },
+      {
+        "hud_state": "needs_reconciliation",
+        "human_in_loop_action": "MEOK quotes the verified SHA-256 record and supersession lineage verbatim, then brings in H.I.M. human oversight before any remediation proposal or drift closure.",
+        "meok_pal": "PALS-03 Elena (Provenance & Corrections Steward)",
+        "title": "OSAIA SAFE Finding is `DIVERGENT` or `FAIL`",
+        "trigger_id": "HIM_TRIGGER_2_SAFE_DIVERGENT_OR_FAIL",
+        "when_triggered": "User asks MEOK to show or explain a SAFE re-verification report with state `DIVERGENT` or `FAIL` (e.g., `csoai:rv:2026-0928:c-2026-0928-01` or `csoai:rv:2026-0930:mcp-contract-parity`)."
+      },
+      {
+        "hud_state": "waiting_for_me",
+        "human_in_loop_action": "MEOK states what the verified record measures and what it does not claim (`measurement, not certification`), and connects a human specialist through H.I.M. when legal or governance interpretation is required.",
+        "meok_pal": "PALS-01 Aria (Board & Axis Steward) & PALS-05 Soren",
+        "title": "Legal/Compliance Interpretation or Claim Beyond Measured Scope",
+        "trigger_id": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "when_triggered": "User asks whether a model, lab, or enterprise is 'certified compliant' or asks for interpretation outside the explicit `method`, `configuration`, `runtime`, and `scope` of the verified record."
+      },
+      {
+        "hud_state": "needs_reconciliation -> waiting_for_me",
+        "human_in_loop_action": "MEOK drafts a bounded Busabase Change Request (`autoMerge: false`, `effective_state: PROPOSED`) naming the superseded record by ID and SHA-256, routing merge approval strictly to H.I.M.",
+        "meok_pal": "PALS-03 Elena & PALS-04 Devon (Interop & MCP Steward)",
+        "title": "Request to Propose a Fix, Remediation, or Correction (`FIX`)",
+        "trigger_id": "HIM_TRIGGER_4_FIX_OR_CORRECTION_PROPOSAL",
+        "when_triggered": "End user or operator asks MEOK to submit a correction or remediation proposal against any GSPC or Busabase record."
+      },
+      {
+        "hud_state": "waiting_for_me -> outcome_established -> result_retained",
+        "human_in_loop_action": "H.I.M. verifies the reproducible exam receipt and negative-control failure, then requires explicit human signer approval before issuing the `Ed25519` + `RFC 9923` witnessed RAS record (`supersedes: <prior_sha256>`).",
+        "meok_pal": "H.I.M. Human Signer & PALS-02 Marcus (Harness Steward)",
+        "title": "Request to Sign or Issue a `SaaS-to-RAS` Re-Attestation (`SIGN`)",
+        "trigger_id": "HIM_TRIGGER_5_SIGN_OR_SAAS_TO_RAS_ATTESTATION",
+        "when_triggered": "End user or enterprise completes the Academy training, SHA-256 exam (`REPRODUCED`), and Gamified MOOC, and requests a signed `SaaS-to-RAS` measurement attestation."
+      }
+    ],
+    "him_escalation_triggers_count": 5,
+    "him_human_in_loop_always_available": true,
+    "unmeasured_fabrication_forbidden": true,
+    "verified_records_catalog": [
+      {
+        "assigned_meok_pal": "PALS-03 Elena (Provenance & Corrections Steward)",
+        "axes": [
+          "provenance",
+          "conformance",
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_2_SAFE_DIVERGENT_OR_FAIL",
+        "him_human_in_loop_status": "ESCALATED_TO_HIM_FOR_REVIEW",
+        "negative_control": "FAIL",
+        "plain_english_report_explanation": "Verified OSAIA SAFE record `csoai:safe-rv:C-2026-0928-01:pre-fix` has state `FAIL` (negative control `FAIL`): interceptor.py (sha256 d908b9e7...) returns VALID only for receipts whose key resolves to the named issuer, and never INVALID merely because resolution failed.",
+        "record_id": "csoai:safe-rv:C-2026-0928-01:pre-fix",
+        "record_kind": "OSAIA_SAFE_REVERIFICATION_RECORD",
+        "sha256": "d84c899abdf065315698ab52cf9558f28f0a3c3168e54d374a512847e65d0327",
+        "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-01.pre-fix.safe-rv.json",
+        "state": "FAIL",
+        "title": "OSAIA SAFE Re-Verification \u2014 csoai:safe-rv:C-2026-0928-01:pre-fix",
+        "what_this_does_not_claim": "Bounded strictly to the offline verifier (`safe_pack_verify.py --offline`) and canonical JSON SHA-256; does not certify production deployment outside the measured artifact."
+      },
+      {
+        "assigned_meok_pal": "PALS-02 Marcus (Harness & Reproducibility Steward)",
+        "axes": [
+          "provenance",
+          "conformance",
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "FAIL",
+        "plain_english_report_explanation": "Verified OSAIA SAFE record `csoai:safe-rv:C-2026-0928-01:post-fix` has state `PASS` (negative control `FAIL`): interceptor.py as served (sha256 b79ed7fe...) returns the expected VALID / INVALID / UNVERIFIABLE_KEY result for all 17 core cases.",
+        "record_id": "csoai:safe-rv:C-2026-0928-01:post-fix",
+        "record_kind": "OSAIA_SAFE_REVERIFICATION_RECORD",
+        "sha256": "5f3a6c1bb846e9ae408bfaae03cc4181ba15a1aab10b1dbfbdf5fe99a9ec5c8e",
+        "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-01.post-fix.safe-rv.json",
+        "state": "PASS",
+        "title": "OSAIA SAFE Re-Verification \u2014 csoai:safe-rv:C-2026-0928-01:post-fix",
+        "what_this_does_not_claim": "Bounded strictly to the offline verifier (`safe_pack_verify.py --offline`) and canonical JSON SHA-256; does not certify production deployment outside the measured artifact."
+      },
+      {
+        "assigned_meok_pal": "PALS-03 Elena (Provenance & Corrections Steward)",
+        "axes": [
+          "conformance",
+          "provenance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_2_SAFE_DIVERGENT_OR_FAIL",
+        "him_human_in_loop_status": "ESCALATED_TO_HIM_FOR_REVIEW",
+        "negative_control": "FAIL",
+        "plain_english_report_explanation": "Verified OSAIA SAFE record `csoai:safe-rv:C-2026-0928-02:pre-fix` has state `FAIL` (negative control `FAIL`): The reference canonicaliser writes every probed number and string exactly as RFC 8785 (ECMAScript) does.",
+        "record_id": "csoai:safe-rv:C-2026-0928-02:pre-fix",
+        "record_kind": "OSAIA_SAFE_REVERIFICATION_RECORD",
+        "sha256": "141a53b4c95a54261924b43db7cd2861389254ed0eb653cb41703b72458c9524",
+        "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-02.pre-fix.safe-rv.json",
+        "state": "FAIL",
+        "title": "OSAIA SAFE Re-Verification \u2014 csoai:safe-rv:C-2026-0928-02:pre-fix",
+        "what_this_does_not_claim": "Bounded strictly to the offline verifier (`safe_pack_verify.py --offline`) and canonical JSON SHA-256; does not certify production deployment outside the measured artifact."
+      },
+      {
+        "assigned_meok_pal": "PALS-02 Marcus (Harness & Reproducibility Steward)",
+        "axes": [
+          "conformance",
+          "provenance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "FAIL",
+        "plain_english_report_explanation": "Verified OSAIA SAFE record `csoai:safe-rv:C-2026-0928-02:post-fix` has state `PASS` (negative control `FAIL`): The reference canonicaliser writes every probed number and string exactly as RFC 8785 (ECMAScript) does.",
+        "record_id": "csoai:safe-rv:C-2026-0928-02:post-fix",
+        "record_kind": "OSAIA_SAFE_REVERIFICATION_RECORD",
+        "sha256": "b90a1a1cd61938308ffc1acc028b50a76dec5541f9ade45b8ba9830aac2280de",
+        "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-02.post-fix.safe-rv.json",
+        "state": "PASS",
+        "title": "OSAIA SAFE Re-Verification \u2014 csoai:safe-rv:C-2026-0928-02:post-fix",
+        "what_this_does_not_claim": "Bounded strictly to the offline verifier (`safe_pack_verify.py --offline`) and canonical JSON SHA-256; does not certify production deployment outside the measured artifact."
+      },
+      {
+        "assigned_meok_pal": "PALS-02 Marcus (Harness & Reproducibility Steward)",
+        "axes": [
+          "provenance",
+          "continuity",
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "FAIL",
+        "plain_english_report_explanation": "Verified OSAIA SAFE record `csoai:safe-rv:corrections-ledger:integrity` has state `PASS` (negative control `FAIL`): The served ledger body hashes to the signed content_id, and that attestation verifies under the key in did.json.",
+        "record_id": "csoai:safe-rv:corrections-ledger:integrity",
+        "record_kind": "OSAIA_SAFE_REVERIFICATION_RECORD",
+        "sha256": "820d730d4591ee16a5bdfc69bfe236bf1902008d25b67c141513593840497839",
+        "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/corrections-ledger.integrity.safe-rv.json",
+        "state": "PASS",
+        "title": "OSAIA SAFE Re-Verification \u2014 csoai:safe-rv:corrections-ledger:integrity",
+        "what_this_does_not_claim": "Bounded strictly to the offline verifier (`safe_pack_verify.py --offline`) and canonical JSON SHA-256; does not certify production deployment outside the measured artifact."
+      },
+      {
+        "assigned_meok_pal": "PALS-03 Elena (Provenance & Corrections Steward)",
+        "axes": [
+          "provenance",
+          "continuity",
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_2_SAFE_DIVERGENT_OR_FAIL",
+        "him_human_in_loop_status": "ESCALATED_TO_HIM_FOR_REVIEW",
+        "negative_control": "FAIL",
+        "plain_english_report_explanation": "Verified OSAIA SAFE record `csoai:safe-rv:corrections-ledger:time-to-correct` has state `FAIL` (negative control `FAIL`): Every ledger entry carries a first-hand detected_at and published_at, so its time-to-correct is measurable.",
+        "record_id": "csoai:safe-rv:corrections-ledger:time-to-correct",
+        "record_kind": "OSAIA_SAFE_REVERIFICATION_RECORD",
+        "sha256": "fb0528ea41b76c8c5689e33f4b4ed154188e028ddd4c479a669f086212bec470",
+        "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/corrections-ledger.timing.safe-rv.json",
+        "state": "FAIL",
+        "title": "OSAIA SAFE Re-Verification \u2014 csoai:safe-rv:corrections-ledger:time-to-correct",
+        "what_this_does_not_claim": "Bounded strictly to the offline verifier (`safe_pack_verify.py --offline`) and canonical JSON SHA-256; does not certify production deployment outside the measured artifact."
+      },
+      {
+        "assigned_meok_pal": "PALS-02 Marcus (Harness & Reproducibility Steward)",
+        "axes": [
+          "effect-binding",
+          "conformance",
+          "provenance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "FAIL",
+        "plain_english_report_explanation": "Verified OSAIA SAFE record `csoai:safe-rv:mcp-contract-parity:v0.1.2` has state `PASS` (negative control `FAIL`): record.v0.1.2.json is signed by the board key and names v0.1.1 and v0.1 by sha256, and those bytes are still published.",
+        "record_id": "csoai:safe-rv:mcp-contract-parity:v0.1.2",
+        "record_kind": "OSAIA_SAFE_REVERIFICATION_RECORD",
+        "sha256": "e39b8a41d1b1be7df14930bd859cb7415da66afc49032eccbed30548966b07a7",
+        "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/mcp-contract-parity.v0.1.2.safe-rv.json",
+        "state": "PASS",
+        "title": "OSAIA SAFE Re-Verification \u2014 csoai:safe-rv:mcp-contract-parity:v0.1.2",
+        "what_this_does_not_claim": "Bounded strictly to the offline verifier (`safe_pack_verify.py --offline`) and canonical JSON SHA-256; does not certify production deployment outside the measured artifact."
+      },
+      {
+        "assigned_meok_pal": "PALS-02 Marcus (Harness & Reproducibility Steward)",
+        "axes": [
+          "governance",
+          "continuity",
+          "provenance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "FAIL",
+        "plain_english_report_explanation": "Verified OSAIA SAFE record `csoai:safe-rv:disclosure-lag:2026-06-au-portal:incident_to_authority_notified` has state `PASS` (negative control `FAIL`): The government's own transcript dates the run to 18 June 2026 and the first notification to 10 September 2026: 84 whole days.",
+        "record_id": "csoai:safe-rv:disclosure-lag:2026-06-au-portal:incident_to_authority_notified",
+        "record_kind": "OSAIA_SAFE_REVERIFICATION_RECORD",
+        "sha256": "3528babf009f5f507b11d31c81190a2b65e592ab3a548a8d11c9a57948eb680b",
+        "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/disclosure-lag.incident-to-notification.safe-rv.json",
+        "state": "PASS",
+        "title": "OSAIA SAFE Re-Verification \u2014 csoai:safe-rv:disclosure-lag:2026-06-au-portal:incident_to_authority_notified",
+        "what_this_does_not_claim": "Bounded strictly to the offline verifier (`safe_pack_verify.py --offline`) and canonical JSON SHA-256; does not certify production deployment outside the measured artifact."
+      },
+      {
+        "assigned_meok_pal": "PALS-03 Elena (Provenance & Corrections Steward)",
+        "axes": [
+          "governance",
+          "continuity",
+          "provenance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_2_SAFE_DIVERGENT_OR_FAIL",
+        "him_human_in_loop_status": "ESCALATED_TO_HIM_FOR_REVIEW",
+        "negative_control": "NOT_RUN",
+        "plain_english_report_explanation": "Verified OSAIA SAFE record `csoai:safe-rv:disclosure-lag:2026-06-au-portal:activity_stopped` has state `UNMEASURED` (negative control `NOT_RUN`): The public record states when the agent's access to the portal ended.",
+        "record_id": "csoai:safe-rv:disclosure-lag:2026-06-au-portal:activity_stopped",
+        "record_kind": "OSAIA_SAFE_REVERIFICATION_RECORD",
+        "sha256": "b64010b0a4c337b3be7a2370d8aab4c509c0cbf70274b6bc223a430d86a198b5",
+        "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/disclosure-lag.activity-stopped.safe-rv.json",
+        "state": "UNMEASURED",
+        "title": "OSAIA SAFE Re-Verification \u2014 csoai:safe-rv:disclosure-lag:2026-06-au-portal:activity_stopped",
+        "what_this_does_not_claim": "Bounded strictly to the offline verifier (`safe_pack_verify.py --offline`) and canonical JSON SHA-256; does not certify production deployment outside the measured artifact."
+      },
+      {
+        "assigned_meok_pal": "PALS-02 Marcus (Harness & Reproducibility Steward)",
+        "axes": [
+          "provenance",
+          "conformance",
+          "continuity"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "FAIL",
+        "plain_english_report_explanation": "Verified OSAIA SAFE record `csoai:safe-rv:measurement-capsules:v0.2:index` has state `PARTIAL` (negative control `FAIL`): The capsule index is signed by the board key and its digest matches the served bytes.",
+        "record_id": "csoai:safe-rv:measurement-capsules:v0.2:index",
+        "record_kind": "OSAIA_SAFE_REVERIFICATION_RECORD",
+        "sha256": "8d70139398cb9688a7bf1cd0a6f4cfe3ec769bc25c1fecc01c7c2828e270e7b7",
+        "source_url": "https://councilof.ai/docs/standards/osaia-safe-evidence-pack/records/measurement-capsules.index.safe-rv.json",
+        "state": "PARTIAL",
+        "title": "OSAIA SAFE Re-Verification \u2014 csoai:safe-rv:measurement-capsules:v0.2:index",
+        "what_this_does_not_claim": "Bounded strictly to the offline verifier (`safe_pack_verify.py --offline`) and canonical JSON SHA-256; does not certify production deployment outside the measured artifact."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `agent_and_mcp_harnesses` record `None` (``) in state `MEASURED`: 3/6 components present (A2A=True, MCP=True, signed_card=False, ERC8004=False)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_AGENT_AND_MCP_HARNESSES",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/gspc-axis-agent-identity-measurement-v0.1.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `agent_and_mcp_harnesses` record `None` (``) in state `MEASURED`: 3/6 components present (A2A=True, MCP=True, signed_card=False, ERC8004=False)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_AGENT_AND_MCP_HARNESSES",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/gspc-axis-agent-identity-measurement-v0.1.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `agent_and_mcp_harnesses` record `None` (``) in state `MEASURED`: 3/6 components present (A2A=True, MCP=True, signed_card=False, ERC8004=False)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_AGENT_AND_MCP_HARNESSES",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/gspc-axis-agent-identity-measurement-v0.1.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `agent_and_mcp_harnesses` record `None` (``) in state `MEASURED`: 5/6 components present (A2A=True, MCP=False, signed_card=True, ERC8004=True)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_AGENT_AND_MCP_HARNESSES",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/gspc-axis-agent-identity-measurement-v0.1.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "art5-safeguard"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `ai_companies` record `None` (``) in state `MEASURED`: HTTP 200 \u00b7 retrieved 2026-09-02 \u00b7 obligation=Regulation (EU) 2024/1689 Art 5(1)(f) \u00b7 workplace/education deployment context UNMEASURED",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_AI_COMPANIES",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/art5-emotion-ai-2026-09/card-behavioral-signals-unsigned.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "art5-safeguard"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `ai_companies` record `None` (``) in state `MEASURED`: HTTP 200 \u00b7 retrieved 2026-09-02 \u00b7 obligation=Regulation (EU) 2024/1689 Art 5(1)(f) \u00b7 workplace/education deployment context UNMEASURED",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_AI_COMPANIES",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/art5-emotion-ai-2026-09/card-cogito-unsigned.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "art5-safeguard"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `ai_companies` record `None` (``) in state `MEASURED`: HTTP 200 \u00b7 retrieved 2026-09-02 \u00b7 obligation=Regulation (EU) 2024/1689 Art 5(1)(f) \u00b7 workplace/education deployment context UNMEASURED",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_AI_COMPANIES",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/art5-emotion-ai-2026-09/card-hirevue-unsigned.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "art5-safeguard"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `ai_companies` record `None` (``) in state `MEASURED`: HTTP 200 \u00b7 retrieved 2026-09-02 \u00b7 obligation=Regulation (EU) 2024/1689 Art 5(1)(f) \u00b7 workplace/education deployment context UNMEASURED",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_AI_COMPANIES",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/art5-emotion-ai-2026-09/card-hume-ai-unsigned.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `ai_labs` record `None` (``) in state `MEASURED`: signed=NO \u00b7 content_addressed=PARTIAL \u00b7 bank_published=PARTIAL \u00b7 corrections=PARTIAL \u00b7 recomputable=PARTIAL (10 artefacts examined)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_AI_LABS",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/lab-card-census-2026-09-17.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `ai_labs` record `None` (``) in state `MEASURED`: signed=NO \u00b7 content_addressed=NO \u00b7 bank_published=PARTIAL \u00b7 corrections=YES \u00b7 recomputable=NO (13 artefacts examined)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_AI_LABS",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/lab-card-census-2026-09-17.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `ai_labs` record `None` (``) in state `MEASURED`: signed=NO \u00b7 content_addressed=NO \u00b7 bank_published=PARTIAL \u00b7 corrections=NO \u00b7 recomputable=PARTIAL (11 artefacts examined)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_AI_LABS",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/lab-card-census-2026-09-17.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `ai_labs` record `None` (``) in state `MEASURED`: signed=NO \u00b7 content_addressed=PARTIAL \u00b7 bank_published=YES \u00b7 corrections=NO \u00b7 recomputable=PARTIAL (7 artefacts examined)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_AI_LABS",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/lab-card-census-2026-09-17.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "humanoid-labour-index"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `humanoid_labs_and_deployments` record `None` (``) in state `MEASURED`: HTTP 200 \u00b7 dated_deployment_count_published=False \u00b7 fleet_size_status=UNMEASURED (Ed25519 signed card)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_HUMANOID_LABS_AND_DEPLOYMENTS",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/financial-measure-card-humanoid-labour-index.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "humanoid-labour-index"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `humanoid_labs_and_deployments` record `None` (``) in state `MEASURED`: HTTP 200 \u00b7 dated_deployment_count_published=False \u00b7 fleet_size_status=UNMEASURED (Ed25519 signed card)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_HUMANOID_LABS_AND_DEPLOYMENTS",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/financial-measure-card-humanoid-labour-index.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "humanoid-labour-index"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `humanoid_labs_and_deployments` record `None` (``) in state `MEASURED`: HTTP 200 \u00b7 dated_deployment_count_published=False \u00b7 fleet_size_status=UNMEASURED (Ed25519 signed card)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_HUMANOID_LABS_AND_DEPLOYMENTS",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/financial-measure-card-humanoid-labour-index.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "humanoid-labour-index"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `humanoid_labs_and_deployments` record `None` (``) in state `MEASURED`: HTTP 200 \u00b7 dated_deployment_count_published=False \u00b7 fleet_size_status=UNMEASURED (Ed25519 signed card)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_HUMANOID_LABS_AND_DEPLOYMENTS",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/financial-measure-card-humanoid-labour-index.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `interop_working_groups` record `None` (``) in state `MEASURED`: Open Source Summit EU Prague 7-9 Oct ; LFX project count unverified. \u00b7 code: n/a",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_INTEROP_WORKING_GROUPS",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/gspc-universal-ledger.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `interop_working_groups` record `None` (``) in state `MEASURED`: AI 800-2 automated benchmark evaluation practices (ipd; comments closed 31 Mar 2026); AI 200-3 ARIA planning manual (Sep 2026); TEVV-Athlon (AI 200-2 ipd). \u00b7 code: US Gov works \u2013 public domain",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_INTEROP_WORKING_GROUPS",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/gspc-universal-ledger.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `interop_working_groups` record `None` (``) in state `MEASURED`: Inspect eval framework; Oct 2026 work on oversight getting harder (eval awareness, hidden reasoning, multi-agent), real-time monitors escalating to humans, Transect transcript-review tool; frontier best practice paper. \u00b7 code: UKGovernmentBEIS/inspect_ai MIT; Transect (licence unverified)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_INTEROP_WORKING_GROUPS",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/gspc-universal-ledger.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `interop_working_groups` record `None` (``) in state `MEASURED`: Trust and Safety Evaluations Initiative; Evaluation Reference Stack; trust-safety user guide. \u00b7 code: The-AI-Alliance/eval-ref-stack, trust-safety-evals (licence field empty \u2013 verify)",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_INTEROP_WORKING_GROUPS",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/gspc-universal-ledger.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `measurers_and_harnesses` record `None` (``) in state `MEASURED`: signed=NO \u00b7 content_addressed=PARTIAL \u00b7 bank_published=PARTIAL \u00b7 corrections=YES \u00b7 recomputable=YES",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_MEASURERS_AND_HARNESSES",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/verifiability-census-2026-09-17-v0.3.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `measurers_and_harnesses` record `None` (``) in state `MEASURED`: signed=NO \u00b7 content_addressed=PARTIAL \u00b7 bank_published=YES \u00b7 corrections=YES \u00b7 recomputable=PARTIAL",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_MEASURERS_AND_HARNESSES",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/verifiability-census-2026-09-17-v0.3.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `measurers_and_harnesses` record `None` (``) in state `MEASURED`: signed=NO \u00b7 content_addressed=PARTIAL \u00b7 bank_published=PARTIAL \u00b7 corrections=YES \u00b7 recomputable=NO",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_MEASURERS_AND_HARNESSES",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/verifiability-census-2026-09-17-v0.3.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-01 Aria (Board & Axis Steward)",
+        "axes": [
+          "governance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_3_BOUNDARY_OR_INTERPRETATION",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified `measurers_and_harnesses` record `None` (``) in state `MEASURED`: signed=NO \u00b7 content_addressed=NO \u00b7 bank_published=PARTIAL \u00b7 corrections=YES \u00b7 recomputable=PARTIAL",
+        "record_id": "",
+        "record_kind": "UNIVERSAL_LEDGER_MEASURERS_AND_HARNESSES",
+        "sha256": "52d125bd3454dc780d75468f4a47be5a801d4b59ebc557ddbbd97e9b75661453",
+        "source_url": "/interop/verifiability-census-2026-09-17-v0.3.json",
+        "state": "MEASURED",
+        "title": "",
+        "what_this_does_not_claim": "Reports only the cited measurement/catalogue state (`MEASURED`, `CATALOGUED`, or `UNMEASURED`); never substitutes an unmeasured score."
+      },
+      {
+        "assigned_meok_pal": "PALS-05 Soren (Regulatory & Art 50 Steward)",
+        "axes": [
+          "governance",
+          "conformance",
+          "provenance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_1_STALE_FLUID_RECORD",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified frozen regulatory anchor for `EU AI Act (Regulation (EU) 2024/1689)` (`CELEX 32024R1689`) containing `126` SHA-256 pinned provisions (`417` total across `6` EU instruments). When any bound provision or axis mapping updates, dependent records transition from Frozen to Fluid (`STALE`).",
+        "record_id": "celex:32024R1689",
+        "record_kind": "FROZEN_EU_REGULATORY_INSTRUMENT",
+        "sha256": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7",
+        "source_url": "https://councilof.ai/interop/frozen-provision-hashes.json",
+        "state": "FROZEN_VERIFIED",
+        "title": "EU AI Act (Regulation (EU) 2024/1689) (126 Frozen Provisions)",
+        "what_this_does_not_claim": "Anchors exact statutory provision text by SHA-256 for claim-maintenance staleness checks; does not constitute legal advice or regulatory certification."
+      },
+      {
+        "assigned_meok_pal": "PALS-05 Soren (Regulatory & Art 50 Steward)",
+        "axes": [
+          "governance",
+          "conformance",
+          "provenance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_1_STALE_FLUID_RECORD",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified frozen regulatory anchor for `GDPR (Regulation (EU) 2016/679)` (`CELEX 32016R0679`) containing `99` SHA-256 pinned provisions (`417` total across `6` EU instruments). When any bound provision or axis mapping updates, dependent records transition from Frozen to Fluid (`STALE`).",
+        "record_id": "celex:32016R0679",
+        "record_kind": "FROZEN_EU_REGULATORY_INSTRUMENT",
+        "sha256": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7",
+        "source_url": "https://councilof.ai/interop/frozen-provision-hashes.json",
+        "state": "FROZEN_VERIFIED",
+        "title": "GDPR (Regulation (EU) 2016/679) (99 Frozen Provisions)",
+        "what_this_does_not_claim": "Anchors exact statutory provision text by SHA-256 for claim-maintenance staleness checks; does not constitute legal advice or regulatory certification."
+      },
+      {
+        "assigned_meok_pal": "PALS-05 Soren (Regulatory & Art 50 Steward)",
+        "axes": [
+          "governance",
+          "conformance",
+          "provenance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_1_STALE_FLUID_RECORD",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified frozen regulatory anchor for `Cyber Resilience Act (Regulation (EU) 2024/2847)` (`CELEX 32024R2847`) containing `71` SHA-256 pinned provisions (`417` total across `6` EU instruments). When any bound provision or axis mapping updates, dependent records transition from Frozen to Fluid (`STALE`).",
+        "record_id": "celex:32024R2847",
+        "record_kind": "FROZEN_EU_REGULATORY_INSTRUMENT",
+        "sha256": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7",
+        "source_url": "https://councilof.ai/interop/frozen-provision-hashes.json",
+        "state": "FROZEN_VERIFIED",
+        "title": "Cyber Resilience Act (Regulation (EU) 2024/2847) (71 Frozen Provisions)",
+        "what_this_does_not_claim": "Anchors exact statutory provision text by SHA-256 for claim-maintenance staleness checks; does not constitute legal advice or regulatory certification."
+      },
+      {
+        "assigned_meok_pal": "PALS-05 Soren (Regulatory & Art 50 Steward)",
+        "axes": [
+          "governance",
+          "conformance",
+          "provenance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_1_STALE_FLUID_RECORD",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified frozen regulatory anchor for `DORA (Regulation (EU) 2022/2554)` (`CELEX 32022R2554`) containing `64` SHA-256 pinned provisions (`417` total across `6` EU instruments). When any bound provision or axis mapping updates, dependent records transition from Frozen to Fluid (`STALE`).",
+        "record_id": "celex:32022R2554",
+        "record_kind": "FROZEN_EU_REGULATORY_INSTRUMENT",
+        "sha256": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7",
+        "source_url": "https://councilof.ai/interop/frozen-provision-hashes.json",
+        "state": "FROZEN_VERIFIED",
+        "title": "DORA (Regulation (EU) 2022/2554) (64 Frozen Provisions)",
+        "what_this_does_not_claim": "Anchors exact statutory provision text by SHA-256 for claim-maintenance staleness checks; does not constitute legal advice or regulatory certification."
+      },
+      {
+        "assigned_meok_pal": "PALS-05 Soren (Regulatory & Art 50 Steward)",
+        "axes": [
+          "governance",
+          "conformance",
+          "provenance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_1_STALE_FLUID_RECORD",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified frozen regulatory anchor for `NIS2 Directive (Directive (EU) 2022/2555)` (`CELEX 32022L2555`) containing `46` SHA-256 pinned provisions (`417` total across `6` EU instruments). When any bound provision or axis mapping updates, dependent records transition from Frozen to Fluid (`STALE`).",
+        "record_id": "celex:32022L2555",
+        "record_kind": "FROZEN_EU_REGULATORY_INSTRUMENT",
+        "sha256": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7",
+        "source_url": "https://councilof.ai/interop/frozen-provision-hashes.json",
+        "state": "FROZEN_VERIFIED",
+        "title": "NIS2 Directive (Directive (EU) 2022/2555) (46 Frozen Provisions)",
+        "what_this_does_not_claim": "Anchors exact statutory provision text by SHA-256 for claim-maintenance staleness checks; does not constitute legal advice or regulatory certification."
+      },
+      {
+        "assigned_meok_pal": "PALS-05 Soren (Regulatory & Art 50 Steward)",
+        "axes": [
+          "governance",
+          "conformance",
+          "provenance"
+        ],
+        "him_escalation_trigger": "HIM_TRIGGER_1_STALE_FLUID_RECORD",
+        "him_human_in_loop_status": "READY_ON_DEMAND_VIA_HIM",
+        "negative_control": "PASS",
+        "plain_english_report_explanation": "Verified frozen regulatory anchor for `CSRD (Directive (EU) 2022/2464)` (`CELEX 32022L2464`) containing `11` SHA-256 pinned provisions (`417` total across `6` EU instruments). When any bound provision or axis mapping updates, dependent records transition from Frozen to Fluid (`STALE`).",
+        "record_id": "celex:32022L2464",
+        "record_kind": "FROZEN_EU_REGULATORY_INSTRUMENT",
+        "sha256": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7",
+        "source_url": "https://councilof.ai/interop/frozen-provision-hashes.json",
+        "state": "FROZEN_VERIFIED",
+        "title": "CSRD (Directive (EU) 2022/2464) (11 Frozen Provisions)",
+        "what_this_does_not_claim": "Anchors exact statutory provision text by SHA-256 for claim-maintenance staleness checks; does not constitute legal advice or regulatory certification."
+      }
+    ],
+    "verified_records_catalog_count": 40,
+    "verified_sources_anchored": {
+      "academy_reproducible_exercises": 9,
+      "arena_signed_rounds": 4760,
+      "busabase_gspc_base_id": "bsemvaekntqom40ksh",
+      "frozen_eu_provisions": 417,
+      "safe_frozen_records": 10,
+      "universal_ledger_public_rows": 133
+    }
+  }
+}

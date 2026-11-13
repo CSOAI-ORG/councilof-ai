@@ -350,17 +350,25 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(noStamp).toContain("UNCHECKABLE — the payload carries no measured_on.date");
   });
 
-  it("renders the Hub feed as a separate interactive measured-model table", () => {
+  it("renders the Hub feed as a separate interactive measured-model table and expands all Hub rows on demand", () => {
     const html = renderToStaticMarkup(<HomeGspcBoard data={payload} hubData={hubPayload} />);
     expect(html).toContain("Hugging Face measured-model results");
     expect(html).toContain('data-testid="hub-results-table"');
     expect(html).toContain(`href="${HUB_CARDS_PAGE_URL}"`);
+    expect(html).toContain('href="/models-measured/"');
     expect(html).toContain("12 published MEASURED cells · 12 models · 2 model axes");
     expect(html).toContain("publisher/model-1");
     expect(html).not.toContain("publisher/pending");
     expect(html.match(/data-hub-model-row=/g) ?? []).toHaveLength(9);
+    expect(html).toContain('data-testid="hub-results-expand"');
+    expect(html).toContain("Show all 11 Hub models on this axis");
     expect(html).toContain("not a top-nine ranking");
     expect(html).toContain("deterministic fact axes do not score models");
+
+    const expandedHtml = renderToStaticMarkup(<HubResultsBoard data={hubPayload} initiallyExpanded />);
+    expect(expandedHtml.match(/data-hub-model-row=/g) ?? []).toHaveLength(11);
+    expect(expandedHtml).toContain("publisher/tied-model");
+    expect(expandedHtml).toContain("Show first 9 models on axis");
   });
 
   it("filters Hub rows by exact published state and orders observations by model, never score", () => {

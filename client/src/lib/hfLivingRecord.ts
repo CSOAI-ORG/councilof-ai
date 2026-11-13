@@ -66,3 +66,62 @@ export const HF_VIEWERS: { id: string; href: string; role: string }[] = [
     role: "Verify viewer. Same Ed25519 check as /gspc-verify.",
   },
 ];
+
+export type CompetitionTrackItem = {
+  id: string;
+  platform: "Kaggle" | "Hugging Face";
+  title: string;
+  href: string;
+  axis: string;
+  role: string;
+  license: "CC0-1.0" | "MIT-0";
+};
+
+export const KAGGLE_AND_HF_COMPETITIONS: CompetitionTrackItem[] = [
+  {
+    id: "arc-prize-2026-arc-agi-3",
+    platform: "Kaggle",
+    title: "ARC Prize 2026 (ARC-AGI-3 Interactive Reasoning)",
+    href: "https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3",
+    axis: "GSPC-MATH + GSPC-SCIENCE",
+    role: "Offline-verifiable interactive action agent (gpu-offload/kaggle-arc-agi-3) with <= 3KB per-episode action receipts and 3-state SOLVED/FAILED/UNGRADED discipline.",
+    license: "CC0-1.0",
+  },
+  {
+    id: "arc-prize-2026-paper-rtr-001",
+    platform: "Kaggle",
+    title: "ARC Prize 2026 Paper Track — Rating the Raters #001",
+    href: "https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3",
+    axis: "GSPC-MATH + GSPC-CONSISTENCY",
+    role: "Paired-arm answer-match vs human-reference rule-match methodology (RTR-A1, scripts/rating_the_raters_001_arc.py + scripts/build_arc_paired_arm.py).",
+    license: "CC0-1.0",
+  },
+  {
+    id: "kaggle-benchmarks-community-cells",
+    platform: "Kaggle",
+    title: "Kaggle Community Benchmarks (7 GSPC Evaluation Cells)",
+    href: "https://www.kaggle.com/code/nicktempleman/csoai-gspc-community-benchmark-cells",
+    axis: "GSPC-TOOL + GSPC-CONSISTENCY + GSPC-REFUSAL + GSPC-INJECTION",
+    role: "7 self-contained @kbench.task cells (tool schema, seed parity, calibration, refusal boundary, prompt injection, code fix, citation honesty).",
+    license: "MIT-0",
+  },
+  {
+    id: "kaggle-dataset-csoai-gspc-board",
+    platform: "Kaggle",
+    title: "CSOAI-GSPC 23-Axis Signed Dataset Mirror",
+    href: "https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-board",
+    axis: "ALL-23-AXES",
+    role: "Signed 23-axis GSPC board & Merkle root mirror on Kaggle Datasets. Cite GET /api/gspc.",
+    license: "CC0-1.0",
+  },
+  {
+    id: "hf-open-llm-eval-bridge",
+    platform: "Hugging Face",
+    title: "Hugging Face Hub 118-Model Third-Party Cohort Bridge",
+    href: "https://huggingface.co/datasets/csoai/gspc-hub-cards",
+    axis: "ALL-23-AXES",
+    role: "Third-party open-weights cohort evaluated on GSPC axes and published to csoai/gspc-hub-cards (separate from Council fleet).",
+    license: "CC0-1.0",
+  },
+];
+

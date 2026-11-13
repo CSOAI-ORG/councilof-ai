@@ -320,6 +320,7 @@ function Board({ matrix, board, pinnedKey }: { matrix: FleetMatrix; board: impor
         onVerifyCell={setVerifyCell}
       />
 
+      <HubAndMillMeasuredSection query={query} />
       <TwoInstrumentNote matrix={matrix} board={board} />
       <Methodology matrix={matrix} />
       <SelfAudit matrix={matrix} counts={counts} board={board} />
@@ -338,6 +339,270 @@ function Board({ matrix, board, pinnedKey }: { matrix: FleetMatrix; board: impor
       )}
       {verifyCell && <VerifyModal cell={verifyCell} pinnedKey={pinnedKey} onClose={() => setVerifyCell(null)} />}
     </div>
+  );
+}
+
+interface HubCellRow {
+  model: string;
+  axis: string;
+  status: string;
+  accuracy: number | null;
+  n: number | null;
+  card_sha256?: string;
+  card_url?: string;
+  signed?: boolean;
+}
+
+interface MeasuredRegistryModel {
+  id: string;
+  source: "card_index" | "mill_signed" | "both";
+  axes: string[];
+  cards_in_index: number;
+  cards_in_mill: number;
+}
+
+function HubAndMillMeasuredSection({ query }: { query: string }) {
+  const [hubCells, setHubCells] = useState<HubCellRow[]>([]);
+  const [hubComplete, setHubComplete] = useState<boolean | null>(null);
+  const [regModels, setRegModels] = useState<MeasuredRegistryModel[]>([]);
+  const [regCounts, setRegCounts] = useState<{ third_party_models?: number; mill_signed_cards?: number } | null>(null);
+  const [selectedHubAxis, setSelectedHubAxis] = useState<string>("all");
+  const [showAllHub, setShowAllHub] = useState(false);
+  const [showAllReg, setShowAllReg] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/hub-cards", { headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!active || !d) return;
+        const cells = Array.isArray(d.cells)
+          ? d.cells.filter((c: any) => c && c.status === "MEASURED" && c.signed === true)
+          : [];
+        setHubCells(cells);
+        setHubComplete(Boolean(d?.counts?.complete));
+      })
+      .catch(() => {});
+    fetch("/interop/models-measured.json", { headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!active || !d) return;
+        if (Array.isArray(d.models)) setRegModels(d.models);
+        if (d.counts) setRegCounts(d.counts);
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  const hubAxesList = useMemo(
+    () => [...new Set(hubCells.map((c) => c.axis).filter(Boolean))].sort(),
+    [hubCells],
+  );
+  const hubModelsSet = useMemo(
+    () => new Set(hubCells.map((c) => c.model).filter(Boolean)),
+    [hubCells],
+  );
+  const q = query.trim().toLowerCase();
+  const filteredHubCells = useMemo(
+    () =>
+      hubCells
+        .filter((c) => selectedHubAxis === "all" || c.axis === selectedHubAxis)
+        .filter((c) => !q || c.model.toLowerCase().includes(q) || c.axis.toLowerCase().includes(q))
+        .sort((a, b) => a.model.localeCompare(b.model) || a.axis.localeCompare(b.axis)),
+    [hubCells, selectedHubAxis, q],
+  );
+  const filteredRegModels = useMemo(
+    () =>
+      regModels.filter(
+        (m) => !q || m.id.toLowerCase().includes(q) || m.axes.some((ax) => ax.toLowerCase().includes(q)),
+      ),
+    [regModels, q],
+  );
+
+  const visibleHub = showAllHub || q ? filteredHubCells : filteredHubCells.slice(0, 18);
+  const visibleReg = showAllReg || q ? filteredRegModels : filteredRegModels.slice(0, 24);
+
+  return (
+    <section
+      id="hub-and-mill-cohorts"
+      aria-labelledby="hub-mill-cohorts-h"
+      className="mt-8 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.03] p-5"
+    >
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/70">
+            separate signed third-party cohorts · never mixed into one composite
+          </p>
+          <h2 id="hub-mill-cohorts-h" className="mt-1 text-xl font-bold text-emerald-50">
+            Hugging Face Hub cells &amp; full third-party measured registry
+          </h2>
+          <p className="mt-1 max-w-3xl text-[13px] leading-relaxed text-emerald-100/75">
+            The grid above reads <code>/signed/card-matrix.json</code> (the local baseline cohort). Below are the two
+            larger third-party cohorts published from our signed card indexes: <code>GET /api/hub-cards</code> (third-party
+            models on the Hugging Face Hub) and <code>/interop/models-measured.json</code> (all third-party models with at
+            least one Ed25519-signed card in <code>card_index.json</code> or <code>mill-cards-signed</code>).
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2 text-[12px]">
+          <a
+            href="/models-measured/"
+            className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 font-mono text-emerald-100 hover:bg-emerald-500/20"
+          >
+            Open /models-measured/ →
+          </a>
+          <a
+            href="https://huggingface.co/datasets/csoai/gspc-hub-cards"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 font-mono text-emerald-100 hover:bg-emerald-500/20"
+          >
+            csoai/gspc-hub-cards →
+          </a>
+        </div>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <Stat
+          n={hubModelsSet.size}
+          label="Hugging Face Hub models"
+          sub="third-party · GET /api/hub-cards"
+        />
+        <Stat
+          n={hubCells.length}
+          label="signed Hub (model, axis) cells"
+          sub={hubComplete ? `complete across ${hubAxesList.length} axes` : "live read"}
+        />
+        <Stat
+          n={regCounts?.third_party_models ?? regModels.length}
+          label="measured third-party models"
+          sub="/interop/models-measured.json"
+        />
+        <Stat
+          n={regCounts?.mill_signed_cards ?? 0}
+          label="signed mill cards"
+          sub="Ed25519-signed · third-party only"
+        />
+      </div>
+
+      {/* Hugging Face Hub cells table */}
+      <div className="mt-6">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h3 className="font-mono text-[12px] font-bold uppercase tracking-wider text-emerald-200">
+            1. Hugging Face Hub third-party observations ({filteredHubCells.length} cells)
+          </h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <select
+              value={selectedHubAxis}
+              onChange={(e) => setSelectedHubAxis(e.target.value)}
+              aria-label="Filter Hugging Face Hub cells by axis"
+              className="rounded-md border border-emerald-500/25 bg-[#052018] px-2.5 py-1 text-[12px] text-emerald-50"
+            >
+              <option value="all">All {hubAxesList.length} model axes ({hubCells.length} cells)</option>
+              {hubAxesList.map((ax) => (
+                <option key={ax} value={ax}>{ax}</option>
+              ))}
+            </select>
+            {filteredHubCells.length > 18 && (
+              <button
+                type="button"
+                onClick={() => setShowAllHub((v) => !v)}
+                className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 font-mono text-[11px] text-emerald-100 hover:bg-emerald-500/20"
+              >
+                {showAllHub ? "Show first 18" : `Show all ${filteredHubCells.length} Hub cells`}
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="mt-2 overflow-x-auto rounded-lg border border-emerald-500/15">
+          <table className="w-full border-collapse text-[12px]">
+            <thead>
+              <tr className="bg-[#04170f] text-left font-mono text-[10px] uppercase tracking-wider text-emerald-300/70">
+                <th className="px-3 py-2">Model (Hugging Face Hub)</th>
+                <th className="px-3 py-2">Axis</th>
+                <th className="px-3 py-2">Observed accuracy</th>
+                <th className="px-3 py-2">n</th>
+                <th className="px-3 py-2">Signed card</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visibleHub.map((c) => (
+                <tr key={`${c.model}-${c.axis}-${c.card_sha256 ?? ""}`} className="border-t border-emerald-500/10">
+                  <td className="px-3 py-1.5 font-mono text-emerald-50">{c.model}</td>
+                  <td className="px-3 py-1.5 font-mono text-emerald-200/80">{c.axis}</td>
+                  <td className="px-3 py-1.5 font-mono tabular-nums text-emerald-200">
+                    {typeof c.accuracy === "number" ? pct(c.accuracy) : "—"}
+                  </td>
+                  <td className="px-3 py-1.5 font-mono tabular-nums text-emerald-200/70">{c.n ?? "—"}</td>
+                  <td className="px-3 py-1.5 font-mono">
+                    {c.card_url ? (
+                      <a href={c.card_url} target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">
+                        {c.card_sha256 ? `${c.card_sha256.slice(0, 10)}…` : "signed card"}
+                      </a>
+                    ) : "—"}
+                  </td>
+                </tr>
+              ))}
+              {visibleHub.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="px-3 py-3 text-emerald-200/60">
+                    No Hugging Face Hub cells match the current filter.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* 166 Measured Third-Party Models Registry */}
+      <div className="mt-6">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h3 className="font-mono text-[12px] font-bold uppercase tracking-wider text-emerald-200">
+            2. Full third-party measured model registry ({filteredRegModels.length} models)
+          </h3>
+          {filteredRegModels.length > 24 && (
+            <button
+              type="button"
+              onClick={() => setShowAllReg((v) => !v)}
+              className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 font-mono text-[11px] text-emerald-100 hover:bg-emerald-500/20"
+            >
+              {showAllReg ? "Show first 24" : `Show all ${filteredRegModels.length} measured models`}
+            </button>
+          )}
+        </div>
+        <div className="mt-2 overflow-x-auto rounded-lg border border-emerald-500/15">
+          <table className="w-full border-collapse text-[12px]">
+            <thead>
+              <tr className="bg-[#04170f] text-left font-mono text-[10px] uppercase tracking-wider text-emerald-300/70">
+                <th className="px-3 py-2">Third-party model</th>
+                <th className="px-3 py-2">Signed source</th>
+                <th className="px-3 py-2">Axes measured</th>
+                <th className="px-3 py-2">Cards (index / mill)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visibleReg.map((m) => (
+                <tr key={m.id} className="border-t border-emerald-500/10">
+                  <td className="px-3 py-1.5 font-mono text-emerald-50">{m.id}</td>
+                  <td className="px-3 py-1.5 font-mono text-emerald-200/80">{m.source}</td>
+                  <td className="px-3 py-1.5 font-mono text-emerald-200/80">{m.axes.join(", ")}</td>
+                  <td className="px-3 py-1.5 font-mono tabular-nums text-emerald-200/70">
+                    {m.cards_in_index} / {m.cards_in_mill}
+                  </td>
+                </tr>
+              ))}
+              {visibleReg.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="px-3 py-3 text-emerald-200/60">
+                    No measured registry models match the current filter.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   );
 }
 

@@ -806,6 +806,435 @@ function loadCardSet(raw: unknown): LoadedSet {
   };
 }
 
+// ──────────────────── 9–14. universal GSPC non-model cohort working boards
+
+function loadUniversalCohort(
+  raw: unknown,
+  cohortKey:
+    | "measurers_and_harnesses"
+    | "agent_and_mcp_harnesses"
+    | "interop_working_groups"
+    | "ai_labs"
+    | "humanoid_labs_and_deployments"
+    | "ai_companies",
+  provenanceDefault: string,
+): LoadedSet {
+  const d = (raw ?? {}) as any;
+  const cohort = d?.cohorts?.[cohortKey] ?? {};
+  const allRows: any[] = Array.isArray(cohort.rows) ? cohort.rows : [];
+  const thirdParty = allRows.filter((r) => !r.own_entity);
+  const ownEntities = allRows.filter((r) => r.own_entity);
+
+  const rows: AxisRow[] = thirdParty.map((r) => {
+    const isMeasured = (r.status ?? "MEASURED") === "MEASURED";
+    const isSigned = r.lane === "signed";
+    const ev: EvidenceLink[] = [];
+    if (typeof r.source_url === "string" && r.source_url) {
+      ev.push({
+        label: isSigned ? "the signed record" : "the published census artifact",
+        href: r.source_url,
+        kind: isSigned ? "signed-card" : "register",
+        what: "the published JSON record this row was derived from",
+      });
+    }
+    if (typeof r.url === "string" && r.url && r.url !== r.source_url) {
+      ev.push({
+        label: "the primary external source",
+        href: r.url,
+        kind: "page",
+        what: "the primary URL examined during the probe",
+      });
+    }
+    const yesCount = typeof r.yes_count === "number" ? r.yes_count : typeof r.k === "number" ? r.k : null;
+    const totalN = typeof r.n === "number" ? r.n : null;
+    const headlineVal =
+      typeof r.headline === "number"
+        ? r.headline
+        : yesCount !== null && totalN && totalN > 0
+          ? yesCount / totalN
+          : null;
+
+    return {
+      id: String(r.id ?? r.subject ?? ""),
+      name: String(r.subject ?? r.id ?? ""),
+      status: (r.status ?? "MEASURED") as AxisStatus,
+      what: String(r.result_summary ?? r.sub_cohort ?? r.group ?? ""),
+      family: String(r.sub_cohort ?? r.subject_class ?? r.group ?? "cohort"),
+      n: totalN,
+      nUnit: String(r.n_unit ?? "checks"),
+      headline: headlineVal,
+      headlineLabel:
+        headlineVal !== null
+          ? "share of binary checks satisfied"
+          : "deterministic observation — not a scalar score",
+      headlineFormat: headlineVal !== null ? "pct" : "count",
+      interval: null,
+      measuredOn: String(r.group ?? r.subject_class ?? "published artifact"),
+      separation: null,
+      runAttestation: isSigned ? "ED25519_SIGNED" : "CONTENT_ADDRESSED_UNSIGNED",
+      whyUnmeasured: isMeasured
+        ? null
+        : String(r.result_summary ?? "Published as an explicit unmeasured gap — never converted to a zero score."),
+      evidence: ev,
+      note: typeof r.group === "string" ? `Measure group: ${r.group} (never ranked across groups).` : null,
+    };
+  });
+
+  const aside: { label: string; value: string }[] = [];
+  if (typeof cohort.ruling === "string" && cohort.ruling) {
+    aside.push({ label: "Measure ruling", value: cohort.ruling });
+  }
+  if (ownEntities.length > 0) {
+    aside.push({
+      label: "Our own instruments & entities (listed apart, never self-ranked)",
+      value: ownEntities.map((o) => `${o.subject}: ${o.result_summary}`).join(" · "),
+    });
+  }
+  if (typeof d.busabase_gspc_base_id === "string") {
+    aside.push({
+      label: "Busabase GSPC base",
+      value: `${d.busabase_gspc_base_id} (ledger sha256: ${String(d.ledger_sha256 ?? "").slice(0, 16)}…)`,
+    });
+  }
+
+  const asOf = typeof d.as_of === "string" && d.as_of.trim() ? d.as_of.trim() : null;
+  return {
+    rows,
+    asOf,
+    asOfField: asOf ? "as_of" : null,
+    aside,
+    live: rows.length > 0,
+    provenance: provenanceDefault,
+  };
+}
+
+export function loadMeasurersAndHarnesses(raw: unknown): LoadedSet {
+  return loadUniversalCohort(
+    raw,
+    "measurers_and_harnesses",
+    "Read from /interop/gspc-universal-ledger.json (compiled from verifiability-census-2026-09-17-v0.3.json, disclosure-completeness-2026-09-30/set.json, and benchmarker-trust/scorecards-2026-09-13.json).",
+  );
+}
+
+export function loadAgentAndMcpHarnesses(raw: unknown): LoadedSet {
+  return loadUniversalCohort(
+    raw,
+    "agent_and_mcp_harnesses",
+    "Read from /interop/gspc-universal-ledger.json (compiled from gspc-axis-agent-identity-measurement-v0.1.json, effect-binding-census-index.json, mcp-trust/2026-10-07.json, and a2a-card-census-2026-09-25).",
+  );
+}
+
+export function loadInteropWorkingGroups(raw: unknown): LoadedSet {
+  return loadUniversalCohort(
+    raw,
+    "interop_working_groups",
+    "Read from /interop/gspc-universal-ledger.json (synced with Busabase gspc base bsemvaekntqom40ksh, group=interop-intel).",
+  );
+}
+
+export function loadAiLabs(raw: unknown): LoadedSet {
+  return loadUniversalCohort(
+    raw,
+    "ai_labs",
+    "Read from /interop/gspc-universal-ledger.json (compiled from lab-card-census-2026-09-17.json).",
+  );
+}
+
+export function loadHumanoidLabsAndDeployments(raw: unknown): LoadedSet {
+  return loadUniversalCohort(
+    raw,
+    "humanoid_labs_and_deployments",
+    "Read from /interop/gspc-universal-ledger.json (compiled from signed financial-measure-card-humanoid-labour-index.json and humanoid-registry-unsigned.json).",
+  );
+}
+
+export function loadAiCompanies(raw: unknown): LoadedSet {
+  return loadUniversalCohort(
+    raw,
+    "ai_companies",
+    "Read from /interop/gspc-universal-ledger.json (compiled from art5-emotion-ai-2026-09, gpai-signatory-2026-09, art50-marking-posture-2026-09, and art53-training-summary-2026-09).",
+  );
+}
+
+// ──────────── 15–16. OSAIA SAFE v0.2 + Claim Maintenance & Agent Layer / Arena / Academy HITL
+
+export function loadOsaiaSafeAndClaimMaintenance(raw: unknown): LoadedSet {
+  const d = (raw ?? {}) as any;
+  const safe = d?.safe_end_to_end_integration ?? d?.safe_end_to_end ?? {};
+  const pack = safe?.frozen_evidence_pack ?? {};
+  const rfcMap = safe?.safe_rfc_fieldmap_and_extensions ?? {};
+  const verifier = safe?.offline_verifier_and_renderers ?? {};
+  const stale = d?.staleness_and_claim_maintenance ?? {};
+  const fp = stale?.frozen_regulatory_corpus ?? {};
+  const loop = stale?.fluid_staleness_to_ras_loop ?? {};
+  const records: any[] = Array.isArray(pack.records) ? pack.records : [];
+
+  const rows: AxisRow[] = records.map((r) => {
+    const state = String(r.state ?? "UNMEASURED").toUpperCase();
+    const isMeasured = state !== "UNMEASURED";
+    const headlineVal =
+      state === "PASS" ? 1 : state === "PARTIAL" ? 0.5 : state === "FAIL" ? 0 : null;
+    const mappedAxes = Array.isArray(r.gspc_axes_mapped) ? r.gspc_axes_mapped.join(", ") : "provenance";
+    const ev: EvidenceLink[] = [
+      {
+        label: "the OSAIA SAFE v0.2 adapter",
+        href: "/interop/osaia-safe-evidence-adapter-v0.2.json",
+        kind: "register",
+        what: "6-stage SAFE-to-GSPC pipeline and 5 mapped GSPC axes",
+      },
+      {
+        label: "the frozen provision corpus (417 EU provisions)",
+        href: "/interop/frozen-provision-hashes.json",
+        kind: "register",
+        what: "417 frozen provisions across 6 EU instruments",
+      },
+      {
+        label: "the Claim Maintenance v0.2 spec",
+        href: "/spec/claim-maintenance/index.json",
+        kind: "page",
+        what: "valid → stale → superseded/revoked state machine",
+      },
+    ];
+    return {
+      id: String(r.record_id ?? ""),
+      name: `${r.record_id} (${mappedAxes})`,
+      status: (isMeasured ? "MEASURED" : "UNMEASURED") as AxisStatus,
+      what: `OSAIA SAFE v0.2 re-verification (${r.claim_type ?? "safe_reverification"}) — state: ${state} · negative_control: ${r.negative_control ?? "-"} · ${r.statement ?? ""}`,
+      family: mappedAxes,
+      n: 1,
+      nUnit: "frozen SAFE event",
+      headline: headlineVal,
+      headlineLabel: isMeasured
+        ? `re-verification state (${state})`
+        : "explicit UNMEASURED control (no evidence fetched)",
+      headlineFormat: "pct",
+      interval: null,
+      measuredOn: `${r.file ?? r.record_id} · sha256:${String(r.canonical_sha256 ?? "").slice(0, 12)}…`,
+      separation: null,
+      runAttestation: "ED25519_SIGNED",
+      whyUnmeasured: isMeasured
+        ? null
+        : "Published as an explicit UNMEASURED control in the frozen OSAIA SAFE pack so missing evidence is never silently promoted to PASS or FAIL.",
+      evidence: ev,
+      note: `Measure group: osaia-safe-reverification · procedure: ${r.procedure ?? "safe_pack_verify.py --offline"}.`,
+    };
+  });
+
+  const aside: { label: string; value: string }[] = [];
+  if (pack.events_count) {
+    const sc = pack.state_counts ?? {};
+    aside.push({
+      label: "Frozen OSAIA SAFE pack",
+      value: `${pack.events_count} events (${sc.PASS ?? 5} PASS, ${sc.FAIL ?? 3} FAIL, ${sc.PARTIAL ?? 1} PARTIAL, ${sc.UNMEASURED ?? 1} UNMEASURED) · ${rfcMap.rfc_fields_mapped_count ?? 26} RFC field mappings + ${rfcMap.csoai_extensions_not_in_rfc_count ?? 6} CSOAI extensions · ${verifier.regression_methods_count ?? 35} verifier checks.`,
+    });
+  }
+  if (fp.total_frozen_provisions) {
+    aside.push({
+      label: "417 Frozen EU Provisions (6 instruments)",
+      value: `${fp.total_frozen_provisions} frozen provisions across ${fp.instruments_count} EU instruments (corpus_root ${String(fp.corpus_root_sha256 ?? "").slice(0, 16)}…).`,
+    });
+  }
+  if (loop.stages_count) {
+    const channels = Array.isArray(loop.zernio_and_meok_summon_channels) ? loop.zernio_and_meok_summon_channels : [];
+    const f2f = Array.isArray(loop.frozen_to_fluid_saas_to_ras_pipeline) ? loop.frozen_to_fluid_saas_to_ras_pipeline : [];
+    aside.push({
+      label: "Claim Maintenance v0.2 & Fluid Staleness-to-RAS Loop",
+      value: `${loop.stages_count}-stage fluid staleness loop (CHANGE_EVENT → STALE → H.I.M. consented impact list → Academy HITL refresher → RAS re-attestation) · ${f2f.length || 7}-stage Frozen-to-Fluid / SaaS-to-RAS pipeline · ${channels.length || 3} consented summon channels (Zernio DRAFTED_NICK_GATED_NOT_CONFIGURED, MEOK Voice, 6-State Agent HUD) · unsolicited sends forbidden (${String(loop.unsolicited_sends_allowed)}).`,
+    });
+  }
+
+  return {
+    rows,
+    asOf: pack.as_of ?? d.as_of ?? null,
+    asOfField: "safe_end_to_end_integration.frozen_evidence_pack.as_of",
+    aside,
+    live: rows.length > 0,
+    provenance:
+      "Read from /interop/gspc-agent-layer-safe-arena.json (compiled from /interop/osaia-safe-evidence-adapter-v0.2.json, docs/standards/osaia-safe-evidence-pack/records/index.json, /interop/frozen-provision-hashes.json, and /spec/claim-maintenance/index.json).",
+  };
+}
+
+export function loadAgentLayerArenaAndAcademyHitl(raw: unknown): LoadedSet {
+  const d = (raw ?? {}) as any;
+  const protocols: any[] = Array.isArray(d?.ax_protocols) ? d.ax_protocols : [];
+  const loopActions: any[] = Array.isArray(d?.meok_him_action_loop) ? d.meok_him_action_loop : [];
+  const explorer = d?.verified_record_and_report_explorer ?? {};
+  const aca = d?.arena_city_academy_hitl ?? {};
+  const arena = aca?.arena_scoreboard ?? {};
+  const city = aca?.council_city_colosseum ?? {};
+  const academy = aca?.academy_hitl_training ?? {};
+  const exercises: any[] = Array.isArray(academy.reproducible_exercises) ? academy.reproducible_exercises : [];
+
+  const rows: AxisRow[] = [];
+
+  protocols.forEach((p) => {
+    rows.push({
+      id: `ax:${p.protocol_id}`,
+      name: `${p.protocol} (${p.endpoint})`,
+      status: "MEASURED",
+      what: `${p.capabilities} (${p.authority_boundary})`,
+      family: "GSPC Agent Layer (AX / UI)",
+      n: 1,
+      nUnit: "protocol surface",
+      headline: 1,
+      headlineLabel: "protocol surface wired to SHA-pinned GSPC corpus",
+      headlineFormat: "pct",
+      interval: null,
+      measuredOn: `${p.endpoint} · ${p.implementation_file}`,
+      separation: null,
+      runAttestation: "SHA256_PINNED_SURFACE",
+      whyUnmeasured: null,
+      evidence: [
+        {
+          label: "GSPC Agent Layer & SAFE packet",
+          href: "/interop/gspc-agent-layer-safe-arena.json",
+          kind: "register",
+          what: "unified GSPC Agent Layer, OSAIA SAFE, Arena & Academy HITL packet",
+        },
+      ],
+      note: "Grounded in Busabase gspc (bsemvaekntqom40ksh). Never mutates canonical records directly.",
+    });
+  });
+
+  loopActions.forEach((act) => {
+    rows.push({
+      id: `him:${act.verb ?? act.action_id}`,
+      name: `MEOK + H.I.M. Action: ${act.verb ?? act.action_id} (${act.mode})`,
+      status: "MEASURED",
+      what: String(act.what_happens ?? ""),
+      family: "MEOK + H.I.M. 4-Action Loop",
+      n: 1,
+      nUnit: "gate rule",
+      headline: 1,
+      headlineLabel: act.human_gate_required ? "strictly H.I.M. human-gated" : "read-only / deterministic probe",
+      headlineFormat: "pct",
+      interval: null,
+      measuredOn: `HUD state: ${act.hud_state ?? "-"}`,
+      separation: null,
+      runAttestation: act.human_gate_required ? "HIM_HUMAN_GATED" : "BUSABASE_AUTOMERGE_FALSE",
+      whyUnmeasured: null,
+      evidence: [
+        {
+          label: "GSPC Agent Layer & SAFE packet",
+          href: "/interop/gspc-agent-layer-safe-arena.json",
+          kind: "register",
+          what: "4-action WORK → MEASURE → FIX → SIGN governance contract",
+        },
+      ],
+      note: `PALS: ${(act.meok_pals_assigned ?? []).join(", ")} · human_gate_required=${String(act.human_gate_required)}.`,
+    });
+  });
+
+  if (arena.n_rounds) {
+    rows.push({
+      id: "arena:head-to-head-scoreboard",
+      name: `GSPC Arena Head-to-Head Battles (${arena.n_rounds} signed rounds)`,
+      status: "MEASURED",
+      what: `Head-to-head model and human-vs-AI verification arena across ${arena.axes_count} axes and ${arena.bench_sources} benchmark sources.`,
+      family: "Arena & Council City",
+      n: num(arena.n_rounds),
+      nUnit: "signed rounds",
+      headline: 1,
+      headlineLabel: "Ed25519-signed arena rounds",
+      headlineFormat: "pct",
+      interval: null,
+      measuredOn: "/signed/arena_scoreboard.json",
+      separation: null,
+      runAttestation: "ED25519_SIGNED",
+      whyUnmeasured: null,
+      evidence: [
+        {
+          label: "signed arena scoreboard",
+          href: "/signed/arena_scoreboard.json",
+          kind: "signed-card",
+          what: "4,760 signed rounds with Ed25519 signature",
+        },
+      ],
+      note: `Generation ${arena.generation ?? "2026-08-23-b"} · ${arena.bench_sources ?? 398} benchmark sources.`,
+    });
+  }
+
+  if (city.turns) {
+    rows.push({
+      id: "city:red-vs-blue-simulation",
+      name: `Council City 40v40 Red vs Blue Simulation (${city.turns} turns)`,
+      status: "MEASURED",
+      what: `Adversarial 40 RED vs 40 BLUE governance simulation over ${city.turns} turns / ${city.epochs} epochs (ALLOWED: ${city.counts?.ALLOWED ?? 278}, BLOCKED: ${city.counts?.BLOCKED ?? 37}, UNMEASURED: ${city.counts?.UNMEASURED ?? 85}).`,
+      family: "Arena & Council City",
+      n: num(city.turns),
+      nUnit: "turns",
+      headline: 1,
+      headlineLabel: "positive canary control exercised",
+      headlineFormat: "pct",
+      interval: null,
+      measuredOn: "/city/board.json",
+      separation: null,
+      runAttestation: "SHA256_PINNED_SURFACE",
+      whyUnmeasured: null,
+      evidence: [
+        {
+          label: "Council City board JSON",
+          href: "/city/board.json",
+          kind: "register",
+          what: "80-agent 400-turn simulation state on EU AI Act Art 5(1)(a)-(h)",
+        },
+      ],
+      note: `Epochs: ${city.epochs ?? 5} · gate_exercised=${String(city.gate_exercised)}.`,
+    });
+  }
+
+  exercises.forEach((ex) => {
+    rows.push({
+      id: `academy:${ex.exercise_id}`,
+      name: `Academy HITL ${ex.exercise_id}: ${ex.title}`,
+      status: "MEASURED",
+      what: `Human-in-the-loop verification exercise realising ${(ex.realises_modules ?? []).join(", ")} — gate: ${ex.completion_gate}`,
+      family: "Academy HITL Training",
+      n: 1,
+      nUnit: "reproducible CLI exercise",
+      headline: 1,
+      headlineLabel: "expected output pinned by SHA-256 + negative control",
+      headlineFormat: "pct",
+      interval: null,
+      measuredOn: `realises: ${(ex.realises_modules ?? []).join(", ")}`,
+      separation: null,
+      runAttestation: "SHA256_PINNED_EXERCISE",
+      whyUnmeasured: null,
+      evidence: [
+        {
+          label: "GSPC Agent Layer & Academy HITL packet",
+          href: "/interop/gspc-agent-layer-safe-arena.json",
+          kind: "register",
+          what: "9 SHA-256-pinned Academy human-in-the-loop verification exercises",
+        },
+      ],
+      note: "Refreshes stale operator claims in the Staleness-to-RAS loop.",
+    });
+  });
+
+  const aside: { label: string; value: string }[] = [
+    {
+      label: "MEOK + H.I.M. inside GSPC & Verified Record Explorer (recmvagob90cgk882j)",
+      value:
+        `5 AX/UI protocols (/api/chat, /mcp, /.well-known/agent-card.json, /api/agui/run, /api/a2ui/run) + 4-action loop (WORK → MEASURE → FIX → SIGN) + MEOK Verified Record & Report Explorer (${explorer.verified_records_catalog_count ?? 40} anchored records, ${explorer.him_escalation_triggers_count ?? 5} H.I.M. human escalation triggers; answers only from verified records).`,
+    },
+    {
+      label: "Frozen-to-Fluid / SaaS-to-RAS via Zernio & MEOK Voice → Academy → Exam → MOOC (recmvagpnwbx7vffpu)",
+      value: `${academy.total_modules ?? 63} Academy modules (${academy.served_modules ?? 10} served) · ${exercises.length} SHA-256-pinned verification exercises · consented Zernio (DRAFTED_NICK_GATED_NOT_CONFIGURED) / MEOK Voice summon into Training → Exam → Gamified Arena/City MOOC → H.I.M. RAS re-attestation.`,
+    },
+  ];
+
+  return {
+    rows,
+    asOf: arena.as_of ?? d.as_of ?? null,
+    asOfField: "arena_city_academy_hitl.arena_scoreboard.as_of",
+    aside,
+    live: rows.length > 0,
+    provenance:
+      "Read from /interop/gspc-agent-layer-safe-arena.json (compiled from functions/_lib/aguiRun.ts, functions/_lib/a2uiSurfaces.ts, public/signed/arena_scoreboard.json, public/city/board.json, and council-os/academy/module-inventory.json).",
+  };
+}
+
 // ─────────────────────────────────────────────────────────── the declarations
 
 export const AXIS_SETS: AxisSet[] = [
@@ -1008,6 +1437,209 @@ export const AXIS_SETS: AxisSet[] = [
       "The date is the newest measurement stamp found across the cards themselves. It advances only when a new card is written.",
     fetchUrl: "/signed/card-matrix.json",
     load: loadCardSet,
+  },
+  {
+    id: "measurers-harnesses",
+    name: "Measurers & harnesses",
+    headline:
+      "Measuring the measures: benchmarkers, evaluation harnesses, disclosure-completeness audits and provenance scorecards across the AI evaluation field.",
+    measures:
+      "Whether published benchmarkers and evaluation harnesses cryptographically sign results, content-address question banks, publish frozen item sets, maintain corrections logs, and disclose publication lag.",
+    subject: "third-party AI benchmarkers, evaluation harnesses, and leaderboard operators (with our own instruments listed apart)",
+    establishes: [
+      "Which of the five binary verifiability checks (signed, content-addressed, bank published, corrections log, recomputable) each surveyed benchmarker satisfies on its public site.",
+      "Signed disclosure-completeness and publication-lag observations across major public evaluation platforms.",
+      "Seven-dimension provenance scorecards (freshness, reproducibility, provenance, contamination disclosure, model-version specificity, correction behaviour, signature availability).",
+    ],
+    doesNotEstablish: [
+      "A composite rank across benchmarkers. Each sub-cohort (verifiability census, disclosure completeness, provenance scorecard) carries its own Measure group and is never ranked across groups.",
+      "That an unsigned benchmark is fraudulent. It establishes only that a stranger cannot cryptographically verify the published bytes offline.",
+    ],
+    relation:
+      "A meta-measurement cohort in the Universal GSPC Ledger (synced with Busabase gspc base bsemvaekntqom40ksh). Our own CSOAI/GSPC rows are listed apart in the aside and never self-ranked.",
+    countAuthority: "/interop/gspc-universal-ledger.json → cohorts.measurers_and_harnesses.rows",
+    artifact: { href: "/interop/gspc-universal-ledger.json", label: "/interop/gspc-universal-ledger.json" },
+    detailPage: { href: "/interop/verifiability-census-2026-09-17-v0.3.json", label: "the raw verifiability census" },
+    freshness:
+      "The date is `as_of` inside `/interop/gspc-universal-ledger.json`, compiled from the underlying dated census artifacts.",
+    fetchUrl: "/interop/gspc-universal-ledger.json",
+    load: loadMeasurersAndHarnesses,
+  },
+  {
+    id: "agent-mcp-harnesses",
+    name: "Agent & MCP harnesses",
+    headline:
+      "Measuring agent harnesses, A2A agent cards, and public MCP server fleets on identity, discovery, cryptographic signing and effect-binding.",
+    measures:
+      "Six binary agent-identity components on named agent harnesses, plus fleet-wide censuses of 598 MCP server endpoints on effect-binding, 500 internet-facing MCP hosts on remote transport trust, A2A RFC 8785 JCS signatures, and 39,073 canonical agent identities.",
+    subject: "autonomous agent harnesses, A2A agent cards, and public MCP server endpoints",
+    establishes: [
+      "Which of the six agent-identity components (declared ID, A2A discovery, MCP URL, signed card, ERC-8004 registry entry, MCP catalog entry) each probed agent harness exposes.",
+      "How many probed public MCP server endpoints bind side-effects to verifiable caller digests (`effect-binding`).",
+    ],
+    doesNotEstablish: [
+      "That an agent harness is safe to run in production. Identity and discovery metadata do not bound runtime tool execution.",
+      "Any cross-group rank between individual agent harnesses and aggregate MCP/A2A fleet censuses.",
+    ],
+    relation:
+      "The agent and tool-harness cohort of the Universal GSPC Ledger (Busabase gspc base bsemvaekntqom40ksh). Own-entity endpoints (`csoai.org`, `gspc`) are listed apart in the aside.",
+    countAuthority: "/interop/gspc-universal-ledger.json → cohorts.agent_and_mcp_harnesses.rows",
+    artifact: { href: "/interop/gspc-universal-ledger.json", label: "/interop/gspc-universal-ledger.json" },
+    detailPage: { href: "/interop/effect-binding-census-index.json", label: "the 598-endpoint MCP effect-binding census" },
+    freshness:
+      "The date is `as_of` inside `/interop/gspc-universal-ledger.json`, compiled from the underlying agent-identity and MCP probe records.",
+    fetchUrl: "/interop/gspc-universal-ledger.json",
+    load: loadAgentAndMcpHarnesses,
+  },
+  {
+    id: "interop-working-groups",
+    name: "Interop working groups",
+    headline:
+      "Measuring interoperability working groups, standards bodies and open security consortia mapped against the 23 GSPC axes.",
+    measures:
+      "Published artefacts, specifications, working-group scope, and axis alignment across 13 interoperability and AI security bodies.",
+    subject: "13 interoperability working groups and standards bodies in Busabase gspc (group=interop-intel)",
+    establishes: [
+      "Which GSPC axes each working group or standards body touches, and what public specification or benchmark artefact it has published.",
+    ],
+    doesNotEstablish: [
+      "Endorsement by or membership in any listed working group, or any ranking between standards bodies.",
+    ],
+    relation:
+      "Directly mirrors the `interop-group` records maintained with Grok Bot in Busabase `gspc` (`bsemvaekntqom40ksh`).",
+    countAuthority: "/interop/gspc-universal-ledger.json → cohorts.interop_working_groups.rows",
+    artifact: { href: "/interop/gspc-universal-ledger.json", label: "/interop/gspc-universal-ledger.json" },
+    detailPage: null,
+    freshness:
+      "The date is `as_of` carried by the Busabase `gspc` interop-group records inside `/interop/gspc-universal-ledger.json`.",
+    fetchUrl: "/interop/gspc-universal-ledger.json",
+    load: loadInteropWorkingGroups,
+  },
+  {
+    id: "ai-labs",
+    name: "Frontier AI labs",
+    headline:
+      "Measuring the 10 frontier AI labs across five verifiability checks on their published system cards, model cards and evaluation reports.",
+    measures:
+      "Whether Anthropic, OpenAI, Google DeepMind, Meta, xAI, Mistral AI, DeepSeek, Alibaba Qwen, Moonshot AI (Kimi) and Microsoft cryptographically sign published evaluations, content-address question banks, publish evaluation items, log corrections, and support independent recomputation.",
+    subject: "10 frontier AI laboratories and their flagship published model/system cards",
+    establishes: [
+      "That 0 of 10 surveyed frontier AI labs cryptographically sign their published evaluation results as of the census date.",
+      "Which labs publish partial item banks, errata/version histories, or harness links across the examined artefacts.",
+    ],
+    doesNotEstablish: [
+      "A ranking of model capability across labs. This census audits the verifiability of published evaluation artefacts, not model intelligence.",
+    ],
+    relation:
+      "The `ai-lab` cohort in Busabase `gspc` (`bsemvaekntqom40ksh`) and `/interop/lab-card-census-2026-09-17.json`.",
+    countAuthority: "/interop/gspc-universal-ledger.json → cohorts.ai-labs.rows",
+    artifact: { href: "/interop/lab-card-census-2026-09-17.json", label: "/interop/lab-card-census-2026-09-17.json" },
+    detailPage: { href: "/interop/lab-card-census-2026-09-17.json", label: "the 10-lab verifiability census JSON" },
+    freshness:
+      "The date is the census stamp in `/interop/lab-card-census-2026-09-17.json`.",
+    fetchUrl: "/interop/gspc-universal-ledger.json",
+    load: loadAiLabs,
+  },
+  {
+    id: "humanoid-labs",
+    name: "Humanoid labs & deployments",
+    headline:
+      "Measuring 8 humanoid robotics labs on signed fleet-size disclosure probes and 30 named public humanoid deployments with primary evidence links.",
+    measures:
+      "Whether humanoid robotics vendors publish dated active-unit fleet counts on their public sites (`humanoid-labour-index`), alongside 30 named commercial pilot and factory deployments (`hr-01`..`hr-30`).",
+    subject: "8 humanoid robotics laboratories (Figure AI, Agility Robotics, Boston Dynamics, Unitree, Apptronik, 1X, Tesla Optimus, Sanctuary AI) and 30 named public deployments",
+    establishes: [
+      "That 0 of 8 probed humanoid vendor homepages publish an audited, dated active-unit deployment count — leaving fleet size `UNMEASURED` on the signed card.",
+      "Thirty named public deployments (`hr-01`..`hr-30`) with operator, robot family, deployment stage and primary evidence URL.",
+    ],
+    doesNotEstablish: [
+      "A verified unit count or productivity index for any humanoid fleet. Unverified press figures are never promoted to a measured fleet count.",
+    ],
+    relation:
+      "Combines the Ed25519-signed `financial-measure-card-humanoid-labour-index.json` vendor probe with the unsigned 30-row `humanoid-registry-unsigned.json` deployment register.",
+    countAuthority: "/interop/gspc-universal-ledger.json → cohorts.humanoid_labs_and_deployments.rows",
+    artifact: { href: "/interop/financial-measure-card-humanoid-labour-index.json", label: "/interop/financial-measure-card-humanoid-labour-index.json" },
+    detailPage: { href: "/interop/humanoid-registry-unsigned.json", label: "the 30-deployment public registry" },
+    freshness:
+      "The date is the measurement stamp on the signed humanoid-labour-index card and deployment registry.",
+    fetchUrl: "/interop/gspc-universal-ledger.json",
+    load: loadHumanoidLabsAndDeployments,
+  },
+  {
+    id: "ai-companies",
+    name: "AI companies notices",
+    headline:
+      "Measuring 32 AI company public-record disclosures across EU AI Act Art 5(1)(f) emotion inference, GPAI Code of Practice signatory status, Art 50(2) synthetic content marking posture, and Art 53(1)(d) training data summaries.",
+    measures:
+      "Dated, content-addressed public retrieval facts across four regulatory exposure cohorts — without issuing any legal compliance verdict.",
+    subject: "32 AI company and model-provider public disclosure records across Art 5, GPAI Code, Art 50(2), and Art 53(1)(d)",
+    establishes: [
+      "Whether a provider appears on the live European Commission GPAI Code of Practice signatory page as of the fetch timestamp.",
+      "What public product-page text, C2PA/SynthID marking posture, or Art 53(1)(d) training content summary was retrievable at the stated timestamp and SHA-256.",
+    ],
+    doesNotEstablish: [
+      "Legal compliance or non-compliance with the EU AI Act. Every record is an observational public-notice fact, never a legal opinion or conformity certificate.",
+    ],
+    relation:
+      "The `ai-company` regulatory-exposure cohort in Busabase `gspc` (`bsemvaekntqom40ksh`) and `/interop/gspc-universal-ledger.json`.",
+    countAuthority: "/interop/gspc-universal-ledger.json → cohorts.ai_companies.rows",
+    artifact: { href: "/interop/gspc-universal-ledger.json", label: "/interop/gspc-universal-ledger.json" },
+    detailPage: null,
+    freshness:
+      "The date is the retrieval timestamp recorded in each underlying `/interop/` regulatory notice index.",
+    fetchUrl: "/interop/gspc-universal-ledger.json",
+    load: loadAiCompanies,
+  },
+  {
+    id: "osaia-safe-reverification",
+    name: "OSAIA SAFE & claim maintenance",
+    headline:
+      "End-to-end OSAIA SAFE v0.2 (Shared AI Findings Exchange) 6-stage evidence pipeline, 10 signed re-verification records across 5 GSPC axes, 417 frozen EU provisions across 6 instruments, and Claim Maintenance v0.2.",
+    measures:
+      "Independent re-verification of OSAIA SAFE v0.2 findings (`PASS` / `FAIL` / `PARTIAL` / `UNMEASURED`) across `governance`, `provenance`, `conformance`, `continuity`, and `effect-binding`, plus fluid claim staleness (`valid` → `stale` → `superseded`/`revoked`).",
+    subject: "10 frozen OSAIA SAFE v0.2 events (`SAFE-2026-0001`..`0010`), 26 RFC field mappings + 6 CSOAI extensions, and 417 frozen EU provisions",
+    establishes: [
+      "Whether an independent re-run of a SAFE finding's verifier check (`safe_pack_verify.py`, 35 verification methods) matches the original finding (`5 PASS`, `3 FAIL`, `1 PARTIAL`, `1 UNMEASURED`).",
+      "When a claim transitions from `valid` to `stale` upon a change event in the 417 frozen EU provisions (`corpus_root: 37e2e10d…`), model weights, or harness version — triggering consented impact drafts and RAS re-attestation.",
+    ],
+    doesNotEstablish: [
+      "Regulatory certification or legal conformity. Re-verification tests whether a technical finding reproduces under a pinned harness.",
+      "Unsolicited outreach. Staleness notifications require H.I.M. human approval over opted-in counterparties only.",
+    ],
+    relation:
+      "Brings Grok Bot's OSAIA SAFE WG pack (`recmvahelovto7pz9c`), 417 frozen provisions (`recmvaexoe9g16s9ow`), Claim Maintenance v0.2 (`recmvagko0zl3b02jy`), and Staleness-to-RAS loop (`recmvagpnwbx7vffpu`) end-to-end into GSPC (`bsemvaekntqom40ksh`).",
+    countAuthority: "/interop/gspc-agent-layer-safe-arena.json → safe_end_to_end.reverification_records",
+    artifact: { href: "/interop/gspc-agent-layer-safe-arena.json", label: "/interop/gspc-agent-layer-safe-arena.json" },
+    detailPage: { href: "/interop/osaia-safe-evidence-adapter-v0.2.json", label: "the OSAIA SAFE v0.2 evidence adapter" },
+    freshness:
+      "The date is `safe_end_to_end.freeze_pack.frozen_at` inside `/interop/gspc-agent-layer-safe-arena.json`.",
+    fetchUrl: "/interop/gspc-agent-layer-safe-arena.json",
+    load: loadOsaiaSafeAndClaimMaintenance,
+  },
+  {
+    id: "agent-layer-arena-hitl",
+    name: "Agent layer, Arena & Academy HITL",
+    headline:
+      "MEOK + H.I.M. inside GSPC across 5 AX/UI protocols (AG-UI 1.0, A2UI v0.9.1/v1.0, MCP, A2A, Chat) so end users and agents can work, measure, fix, and sign — paired with GSPC Arena battles, Council City 40v40, and Academy HITL training.",
+    measures:
+      "Protocol surface readiness across all 5 AX/UI doors, the 4-action MEOK + H.I.M. governance loop (`WORK`, `MEASURE`, `FIX`, `SIGN`), `4,760` signed Arena rounds, `400`-turn Council City Red-vs-Blue simulation, and `9` SHA-256-pinned Academy HITL exercises.",
+    subject: "5 AX/UI agent protocols, 4 MEOK + H.I.M. actions, GSPC Arena (20 models, 4,760 rounds), Council City (80 agents), and 9 Academy HITL verification exercises",
+    establishes: [
+      "That any end user or AI agent can read/explore (`WORK`), run deterministic probes (`MEASURE`), stage Busabase remediation CRs with `autoMerge=False` (`FIX`), and queue human-gated Ed25519 attestations (`SIGN`) across Council OS and HF.",
+      "Signed head-to-head Arena rounds (`4,760` rounds), Council City 40v40 adversarial detection telemetry, and 9 reproducible SHA-256-pinned Academy human-in-the-loop verification exercises.",
+    ],
+    doesNotEstablish: [
+      "Autonomous signing or self-merging. `FIX` always sets `autoMerge: false` and `SIGN` is strictly human-gated via H.I.M.",
+    ],
+    relation:
+      "Unifies Grok Bot's GSPC Agent Layer (`recmvagob90cgk882j`), Gaming/Arena/Council City (`recmv93idshekdrdrb`), and Academy HITL training (`recmvaeyavx42upkzv`) into one public surface.",
+    countAuthority: "/interop/gspc-agent-layer-safe-arena.json → ax_protocols + meok_him_four_action_loop + arena_city_academy_hitl",
+    artifact: { href: "/interop/gspc-agent-layer-safe-arena.json", label: "/interop/gspc-agent-layer-safe-arena.json" },
+    detailPage: { href: "/signed/arena_scoreboard.json", label: "the signed 4,760-round Arena scoreboard" },
+    freshness:
+      "The date is `as_of` inside `/interop/gspc-agent-layer-safe-arena.json`.",
+    fetchUrl: "/interop/gspc-agent-layer-safe-arena.json",
+    load: loadAgentLayerArenaAndAcademyHitl,
   },
   {
     id: "snapshot",

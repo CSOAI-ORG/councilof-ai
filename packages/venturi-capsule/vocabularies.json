@@ -1,0 +1,247 @@
+{
+  "schema": "csoai.measurement-capsule-vocabularies/0.2",
+  "capsule_schema": "csoai.measurement-capsule/0.2",
+  "doctrine": "measurement, not endorsement",
+  "families": {
+    "agreement": "Comparison of two or more declared or observed statements without judging which statement is true.",
+    "verification": "Cryptographic signature or on-chain identity check result under a named rule.",
+    "reproduction": "Cross-runtime comparison of itemwise and aggregate evaluation outcomes under a pinned instrument.",
+    "reading": "Evidence-ladder or counter reading state from a named source.",
+    "absence_and_inability": "Explicit terminal state where a source was absent, permissioned, partial, or unreachable; never mapped to zero or failure."
+  },
+  "kinds": {
+    "measurement.contract_parity": {
+      "adapter": "contract_parity",
+      "subject": "MCP endpoint and contract dimension (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION)",
+      "states": [
+        {
+          "state": "CONSISTENT",
+          "family": "agreement",
+          "meaning": "Two or more speaking surfaces (registry, mcp.json, server card, payment manifest, live initialize/tools/list) agreed on the dimension."
+        },
+        {
+          "state": "INCONSISTENT",
+          "family": "agreement",
+          "meaning": "Two or more speaking surfaces gave different values on the dimension; states that they disagree, not which surface is authoritative."
+        },
+        {
+          "state": "UNCHECKABLE",
+          "family": "absence_and_inability",
+          "meaning": "At least two surfaces were declared or observed for the dimension, but the comparison could not be completed."
+        }
+      ]
+    },
+    "measurement.a2a_card_signature": {
+      "adapter": "a2a_card",
+      "subject": "Signed A2A agent card URL or registry listing",
+      "states": [
+        {
+          "state": "VERIFIED",
+          "family": "verification",
+          "meaning": "Every signature on the served card verified under the canonicalisation rule of its declared protocol version."
+        },
+        {
+          "state": "FAILED",
+          "family": "verification",
+          "meaning": "A cryptographic signature check on the served card did not pass under the canonicalisation rule of its declared protocol version."
+        },
+        {
+          "state": "UNCHECKABLE",
+          "family": "absence_and_inability",
+          "meaning": "The referenced key document or card bytes could not be retrieved or parsed."
+        }
+      ]
+    },
+    "measurement.cross_ledger_supply": {
+      "adapter": "cross_ledger",
+      "subject": "Tokenised asset deployment on a named ledger",
+      "states": [
+        {
+          "state": "STATE_PROOF_VERIFIED",
+          "family": "reading",
+          "meaning": "A Merkle account and storage proof was verified against a block header state commitment."
+        },
+        {
+          "state": "STATE_PROOF_RECORDED",
+          "family": "reading",
+          "meaning": "A state proof was returned and its digest recorded, but it did not verify locally; the supply figure is the operator's answer."
+        },
+        {
+          "state": "OPERATOR_API",
+          "family": "reading",
+          "meaning": "The supply figure comes from an operator RPC/API response without a verified state proof."
+        },
+        {
+          "state": "CONSISTENT",
+          "family": "agreement",
+          "meaning": "Compared operator reads or deployment supply figures agreed."
+        },
+        {
+          "state": "INCONSISTENT",
+          "family": "agreement",
+          "meaning": "Compared operator reads or deployment supply figures disagreed."
+        },
+        {
+          "state": "TOTAL_COMPLETE",
+          "family": "reading",
+          "meaning": "Every deployment on the issuer's list for the asset was read."
+        },
+        {
+          "state": "TOTAL_PARTIAL",
+          "family": "reading",
+          "meaning": "Only a subset of deployments on the issuer's list for the asset could be read."
+        },
+        {
+          "state": "LISTED_NOT_READ",
+          "family": "absence_and_inability",
+          "meaning": "The deployment is listed on the issuer's page but was not read by this probe; never treated as zero supply."
+        },
+        {
+          "state": "PERMISSIONED_NOT_READABLE",
+          "family": "absence_and_inability",
+          "meaning": "The asset lives on a permissioned ledger that an unauthenticated third party cannot read."
+        },
+        {
+          "state": "ISSUER_LIST_UNAVAILABLE",
+          "family": "absence_and_inability",
+          "meaning": "No public deployment list from the issuer could be retrieved."
+        },
+        {
+          "state": "REJECTED",
+          "family": "verification",
+          "meaning": "An on-chain identity check did not pass; no supply is recorded against the asset."
+        },
+        {
+          "state": "UNCHECKABLE",
+          "family": "absence_and_inability",
+          "meaning": "The ledger read did not complete; never recorded as zero or absent."
+        }
+      ]
+    },
+    "measurement.cross_runtime_reproduction": {
+      "adapter": "mill_cross_runtime",
+      "subject": "Signed evaluation card re-run on a second hardware/software runtime",
+      "states": [
+        {
+          "state": "REPRODUCED_ITEMWISE",
+          "family": "reproduction",
+          "meaning": "Every item grade on the second runtime equalled the baseline runtime's grade (grade_equal == n_items)."
+        },
+        {
+          "state": "REPRODUCED_AGGREGATE_ONLY",
+          "family": "reproduction",
+          "meaning": "Aggregate accuracy equalled the baseline runtime, while one or more per-item grades differed and cancelled out."
+        },
+        {
+          "state": "NOT_REPRODUCED",
+          "family": "reproduction",
+          "meaning": "Aggregate accuracy on the second runtime differed from the baseline runtime."
+        }
+      ]
+    },
+    "measurement.public_signal": {
+      "adapter": "public_signals",
+      "subject": "Public counter or external index signal read on a given date",
+      "states": [
+        {
+          "state": "MEASURED",
+          "family": "reading",
+          "meaning": "The public counter was read completely from its declared source URL."
+        },
+        {
+          "state": "PARTIAL",
+          "family": "reading",
+          "meaning": "Only part of the counter's underlying pages or items could be read."
+        },
+        {
+          "state": "UNCHECKABLE",
+          "family": "absence_and_inability",
+          "meaning": "The source could not be read; the observed value is null, never zero."
+        }
+      ]
+    },
+    "measurement.self_parity": {
+      "adapter": "self_parity",
+      "subject": "External directory listing or own-surface declaration of a CSOAI offering",
+      "states": [
+        {
+          "state": "CONSISTENT",
+          "family": "agreement",
+          "meaning": "The external directory listing or own-surface declaration matched the live served bytes."
+        },
+        {
+          "state": "INCONSISTENT",
+          "family": "agreement",
+          "meaning": "One or more fields in the listing or declaration differed from the live served bytes."
+        },
+        {
+          "state": "NOT_LISTED",
+          "family": "absence_and_inability",
+          "meaning": "The offering was absent from a complete read of an open directory."
+        },
+        {
+          "state": "NOT_DECLARED",
+          "family": "absence_and_inability",
+          "meaning": "The compared field was not declared on the surface."
+        },
+        {
+          "state": "UNCHECKABLE",
+          "family": "absence_and_inability",
+          "meaning": "The directory read was incomplete or unreachable."
+        }
+      ]
+    },
+    "measurement.tool_drift": {
+      "adapter": "tool_drift",
+      "subject": "MCP endpoint observed at two times (T1 and T2) joined by exact URL",
+      "combinable_change_flags": true,
+      "states": [
+        {
+          "state": "UNCHANGED",
+          "family": "agreement",
+          "meaning": "Tool names, descriptions, and canonical input schemas were identical at T1 and T2 (per_tool_hashes recorded at both times)."
+        },
+        {
+          "state": "UNCHANGED_AT_NAME_GRANULARITY",
+          "family": "agreement",
+          "meaning": "Sorted tool-name multiset hash was identical at T1 and T2; per-tool description and schema hashes were not recorded on both sides."
+        },
+        {
+          "state": "TOOLS_ADDED",
+          "family": "agreement",
+          "meaning": "One or more tool names were present in the T2 multiset that were not present at T1 (combinable with '+' when multiple dimensions changed)."
+        },
+        {
+          "state": "TOOLS_REMOVED",
+          "family": "agreement",
+          "meaning": "One or more tool names were present in the T1 multiset that were not present at T2 (combinable with '+')."
+        },
+        {
+          "state": "NAME_SET_CHANGED",
+          "family": "agreement",
+          "meaning": "The tool_names_sha256 digest changed between T1 and T2 where full name lists were not retained (combinable with '+')."
+        },
+        {
+          "state": "DESCRIPTION_CHANGED",
+          "family": "agreement",
+          "meaning": "One or more tools present at both times changed description content or presence (combinable with '+')."
+        },
+        {
+          "state": "DESCRIPTION_CHANGED_WHITESPACE_ONLY",
+          "family": "agreement",
+          "meaning": "Raw description bytes differed while whitespace-collapsed description bytes were equal (combinable with '+')."
+        },
+        {
+          "state": "SCHEMA_CHANGED",
+          "family": "agreement",
+          "meaning": "One or more tools present at both times changed canonical inputSchema digest (combinable with '+')."
+        },
+        {
+          "state": "UNCHECKABLE",
+          "family": "absence_and_inability",
+          "meaning": "The endpoint did not respond or tools/list was incomplete at T1 or T2."
+        }
+      ]
+    }
+  }
+}

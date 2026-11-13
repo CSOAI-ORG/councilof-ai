@@ -1,0 +1,49 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.financial.fred",
+  "subject": "economic-20261014T0216",
+  "measured_at": "2026-10-14T02:16:44.635774Z",
+  "metrics": {
+    "series_count": 6,
+    "series_total": 15,
+    "series_data": {
+      "GDPC1": {
+        "name": "Real GDP",
+        "date": "2026-04-01",
+        "value": "24408.011"
+      },
+      "CPIAUCSL": {
+        "name": "Consumer Price Index",
+        "date": "2026-08-01",
+        "value": "334.131"
+      },
+      "DGS10": {
+        "name": "10-Year Treasury Yield",
+        "date": "2026-10-09",
+        "value": "5.24"
+      },
+      "WALCL": {
+        "name": "Fed Balance Sheet",
+        "date": "2026-10-07",
+        "value": "6747560"
+      },
+      "DEXUSEU": {
+        "name": "USD/EUR Exchange Rate",
+        "date": "2026-10-09",
+        "value": "1.1193"
+      },
+      "VIXCLS": {
+        "name": "VIX Volatility",
+        "date": "2026-10-12",
+        "value": "15.21"
+      }
+    },
+    "data_source": "FRED St Louis Fed public CSV",
+    "auto_churn": true,
+    "miner_version": "fred-tracker-1"
+  },
+  "honest_sentence": "FRED tracker: 6/15 series tracked.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true
+}

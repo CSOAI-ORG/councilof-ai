@@ -1,0 +1,349 @@
+{
+  "schema": "csoai.gspc-model-matrix/0.1",
+  "what_this_is": "The axis view of the board: every axis, its state, its n, its separation, and its leader — including every UNMEASURED axis, so the gap is visible rather than hidden.",
+  "what_this_does_not_establish": "A ranking. The board separates a leader only when the board's own test separates one; where it says TIE, that is the result.",
+  "live_board": "https://councilof.ai/api/gspc",
+  "totals": {
+    "axes": 33,
+    "measured_axes": 23,
+    "unmeasured_axes": 10,
+    "note": "A slot is a declared position on the board. A measurement is a real run behind it. The two are never summed."
+  },
+  "separation_states": [
+    "SEPARATED",
+    "TIE",
+    "UNTESTED"
+  ],
+  "axes": [
+    {
+      "axis": "governance",
+      "status": "MEASURED",
+      "n": 237,
+      "separation": "TIE",
+      "leader": "mistral:7b (base model)",
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-gov",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "safety",
+      "status": "MEASURED",
+      "n": 36,
+      "separation": "TIE",
+      "leader": "gemma3:12b (base model)",
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-agi",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "provenance",
+      "status": "MEASURED",
+      "n": 32,
+      "separation": "TIE",
+      "leader": "llama3.2:3b (base model)",
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-prv",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "continuity",
+      "status": "MEASURED",
+      "n": 33,
+      "separation": "TIE",
+      "leader": "gemma3:12b (base model)",
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-asi",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "conformance",
+      "status": "MEASURED",
+      "n": 35,
+      "separation": "TIE",
+      "leader": "mistral:7b (base model)",
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-mcp",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "openness",
+      "status": "MEASURED",
+      "n": 32,
+      "separation": "TIE",
+      "leader": "gemma3:12b (base model)",
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-oss",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "machinery-conformity",
+      "status": "MEASURED",
+      "n": 33,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": "NO_SIGNED_CARD",
+      "dataset": "csoai/gspc-mach",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "care",
+      "status": "MEASURED",
+      "n": 199,
+      "separation": "TIE",
+      "leader": "qwen2.5:0.5b-instruct (base model)",
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-care",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "cross-reality",
+      "status": "MEASURED",
+      "n": 32,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": "NO_SIGNED_CARD",
+      "dataset": "csoai/gspc-xr",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "detector-interop",
+      "status": "MEASURED",
+      "n": 33,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": "NO_SIGNED_CARD",
+      "dataset": "csoai/gspc-det",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "art5-safeguard",
+      "status": "MEASURED",
+      "n": 36,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": "EXCLUDED_OWN_MODEL",
+      "dataset": "csoai/gspc-art5",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "swarm",
+      "status": "MEASURED",
+      "n": 37,
+      "separation": "UNTESTED",
+      "leader": "qwen2.5:7b (base model)",
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-swarm",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "affect",
+      "status": "MEASURED",
+      "n": 41,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": "EXCLUDED_OWN_MODEL",
+      "dataset": "csoai/gspc-affect",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "jail",
+      "status": "MEASURED",
+      "n": 71,
+      "separation": "UNTESTED",
+      "leader": "qwen2.5:0.5b-instruct (base model)",
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-jail-goldbank",
+      "kind": "model-comparison"
+    },
+    {
+      "axis": "effect-binding",
+      "status": "MEASURED",
+      "n": 261,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": null,
+      "kind": "deterministic-facts"
+    },
+    {
+      "axis": "provenance-controls",
+      "status": "MEASURED",
+      "n": 6,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-provenance-controls",
+      "kind": "deterministic-facts"
+    },
+    {
+      "axis": "reserve-attestation",
+      "status": "MEASURED",
+      "n": 16,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-reserve-attestation",
+      "kind": "deterministic-facts"
+    },
+    {
+      "axis": "regulatory-framework",
+      "status": "MEASURED",
+      "n": 16,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-regulatory-framework",
+      "kind": "deterministic-facts"
+    },
+    {
+      "axis": "distribution-integrity",
+      "status": "MEASURED",
+      "n": 16,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-distribution-integrity",
+      "kind": "deterministic-facts"
+    },
+    {
+      "axis": "custody-disclosure",
+      "status": "MEASURED",
+      "n": 16,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-custody-disclosure",
+      "kind": "deterministic-facts"
+    },
+    {
+      "axis": "ai-adoption-components",
+      "status": "MEASURED",
+      "n": 2,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-ai-economy-index",
+      "kind": "deterministic-facts"
+    },
+    {
+      "axis": "labour-components",
+      "status": "MEASURED",
+      "n": 2,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-human-labour-index",
+      "kind": "deterministic-facts"
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "status": "MEASURED",
+      "n": 8,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": "csoai/gspc-humanoid-labour-index",
+      "kind": "deterministic-facts"
+    },
+    {
+      "axis": "lab-practice",
+      "status": "UNMEASURED",
+      "n": 0,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": null,
+      "kind": "declared-slot"
+    },
+    {
+      "axis": "company-practice",
+      "status": "UNMEASURED",
+      "n": 0,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": null,
+      "kind": "declared-slot"
+    },
+    {
+      "axis": "measurer-integrity",
+      "status": "UNMEASURED",
+      "n": 0,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": null,
+      "kind": "declared-slot"
+    },
+    {
+      "axis": "harness-fidelity",
+      "status": "UNMEASURED",
+      "n": 0,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": null,
+      "kind": "declared-slot"
+    },
+    {
+      "axis": "interop-conformance",
+      "status": "UNMEASURED",
+      "n": 0,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": null,
+      "kind": "declared-slot"
+    },
+    {
+      "axis": "humanoid-deployment",
+      "status": "UNMEASURED",
+      "n": 0,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": null,
+      "kind": "declared-slot"
+    },
+    {
+      "axis": "regulator-transparency",
+      "status": "UNMEASURED",
+      "n": 0,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": null,
+      "kind": "declared-slot"
+    },
+    {
+      "axis": "interpretability-reproducibility",
+      "status": "UNMEASURED",
+      "n": 0,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": null,
+      "kind": "declared-slot"
+    },
+    {
+      "axis": "claim-maintenance",
+      "status": "UNMEASURED",
+      "n": 0,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": null,
+      "kind": "declared-slot"
+    },
+    {
+      "axis": "serving-fidelity",
+      "status": "UNMEASURED",
+      "n": 0,
+      "separation": "UNTESTED",
+      "leader": null,
+      "public_leader_state": null,
+      "dataset": null,
+      "kind": "declared-slot"
+    }
+  ]
+}

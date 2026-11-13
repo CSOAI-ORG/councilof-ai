@@ -1,0 +1,32 @@
+wrangler r2 object put <objectPath>
+
+Create an object in an R2 bucket
+
+POSITIONALS
+  objectPath  The destination object path in the form of {bucket}/{key}  [string] [required]
+
+GLOBAL FLAGS
+  -c, --config          Path to Wrangler configuration file  [string]
+      --cwd             Run as if Wrangler was started in the specified directory instead of the current working directory  [string]
+  -e, --env             Environment to use for operations, and for selecting .env and .dev.vars files  [string]
+      --env-file        Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files  [array]
+  -h, --help            Show help  [boolean]
+      --install-skills  Install Cloudflare skills for detected AI coding agents before running the command  [boolean] [default: false]
+      --profile         Use a specific auth profile  [string]
+  -v, --version         Show version number  [boolean]
+
+OPTIONS
+      --content-type, --ct         A standard MIME type describing the format of the object data  [string]
+      --content-disposition, --cd  Specifies presentational information for the object  [string]
+      --content-encoding, --ce     Specifies what content encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field  [string]
+      --content-language, --cl     The language the content is in  [string]
+      --cache-control, --cc        Specifies caching behavior along the request/reply chain  [string]
+      --expires                    The date and time at which the object is no longer cacheable  [string]
+      --local                      Interact with local storage  [boolean]
+      --remote                     Interact with remote storage  [boolean]
+      --persist-to                 Directory for local persistence  [string]
+  -J, --jurisdiction               The jurisdiction where the object will be created  [string]
+  -s, --storage-class              The storage class of the object to be created  [string]
+  -y, --force                      Skip data catalog validation prompt  [boolean] [default: false]
+  -f, --file                       The path of the file to upload  [string]
+  -p, --pipe                       Enables the file to be piped in, rather than specified with the --file option  [boolean]

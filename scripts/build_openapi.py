@@ -503,7 +503,7 @@ def compose(fix: Path = FIX) -> dict:
         # extractInputSchema, read 2026-09-28). What the door does read is the payment header
         # (functions/api/free-door.ts reads X-PAYMENT or PAYMENT-SIGNATURE), so that is what it declares
         # — nothing invented, both optional, and omitting them is how a caller reads the zero-amount 402.
-        if path == "/api/free-door" and not parameters:
+        if (path == "/api/free-door" or path.startswith("/api/discover/")) and not parameters:
             parameters.extend([
                 {"name": "X-PAYMENT", "in": "header", "required": False, "schema": {"type": "string"},
                  "description": "x402 payment payload (base64 JSON) settling the zero-amount challenge. Omit it to read the 402; nothing is charged either way."},

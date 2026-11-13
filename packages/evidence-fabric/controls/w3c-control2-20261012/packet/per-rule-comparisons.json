@@ -1,0 +1,331 @@
+[
+  {
+    "comparison_fixture_count": 5,
+    "evidence": {
+      "bytes": 14003,
+      "container_refs": "recorded-packet.json/result/observations; input_packet_refs resolve inside recorded-packet.json",
+      "path": "observations.json",
+      "sha256": "e37b8fa592108fe7daad78794f97daf9d5c238b57dd180d0c398ea3172523972"
+    },
+    "flipped_fixture_ids": [
+      "unsigned-declared-payload-digest"
+    ],
+    "native_cause_changes": [
+      {
+        "fixture_id": "unsigned-declared-payload-digest",
+        "from": [
+          "fail",
+          "payload-digest"
+        ],
+        "to": [
+          "pass",
+          null
+        ]
+      },
+      {
+        "fixture_id": "original-signed-payload-multi-guard",
+        "from": [
+          "fail",
+          "payload-digest"
+        ],
+        "to": [
+          "fail",
+          "artifact-digest"
+        ]
+      }
+    ],
+    "pairs": [
+      {
+        "fixture_id": "baseline",
+        "native_return_changed": false,
+        "relaxed_case_id": "baseline--payload-digest",
+        "relaxed_native_return": [
+          "pass",
+          null
+        ],
+        "state_changed": false,
+        "unrelaxed_case_id": "baseline--unrelaxed",
+        "unrelaxed_native_return": [
+          "pass",
+          null
+        ]
+      },
+      {
+        "fixture_id": "unsigned-declared-payload-digest",
+        "native_return_changed": true,
+        "relaxed_case_id": "unsigned-declared-payload-digest--payload-digest",
+        "relaxed_native_return": [
+          "pass",
+          null
+        ],
+        "state_changed": true,
+        "unrelaxed_case_id": "unsigned-declared-payload-digest--unrelaxed",
+        "unrelaxed_native_return": [
+          "fail",
+          "payload-digest"
+        ]
+      },
+      {
+        "fixture_id": "artifact-newline",
+        "native_return_changed": false,
+        "relaxed_case_id": "artifact-newline--payload-digest",
+        "relaxed_native_return": [
+          "fail",
+          "artifact-digest"
+        ],
+        "state_changed": false,
+        "unrelaxed_case_id": "artifact-newline--unrelaxed",
+        "unrelaxed_native_return": [
+          "fail",
+          "artifact-digest"
+        ]
+      },
+      {
+        "fixture_id": "signature-hex-nibble",
+        "native_return_changed": false,
+        "relaxed_case_id": "signature-hex-nibble--payload-digest",
+        "relaxed_native_return": [
+          "fail",
+          "ed25519-signature"
+        ],
+        "state_changed": false,
+        "unrelaxed_case_id": "signature-hex-nibble--unrelaxed",
+        "unrelaxed_native_return": [
+          "fail",
+          "ed25519-signature"
+        ]
+      },
+      {
+        "fixture_id": "original-signed-payload-multi-guard",
+        "native_return_changed": true,
+        "relaxed_case_id": "original-signed-payload-multi-guard--payload-digest",
+        "relaxed_native_return": [
+          "fail",
+          "artifact-digest"
+        ],
+        "state_changed": false,
+        "unrelaxed_case_id": "original-signed-payload-multi-guard--unrelaxed",
+        "unrelaxed_native_return": [
+          "fail",
+          "payload-digest"
+        ]
+      }
+    ],
+    "relaxed_rule": "payload-digest",
+    "unchanged_count": 4,
+    "unchanged_count_definition": "State unchanged relative to same fixture unrelaxed case; separate full native-return count includes cause",
+    "unchanged_native_return_count": 3
+  },
+  {
+    "comparison_fixture_count": 5,
+    "evidence": {
+      "bytes": 14003,
+      "container_refs": "recorded-packet.json/result/observations; input_packet_refs resolve inside recorded-packet.json",
+      "path": "observations.json",
+      "sha256": "e37b8fa592108fe7daad78794f97daf9d5c238b57dd180d0c398ea3172523972"
+    },
+    "flipped_fixture_ids": [
+      "artifact-newline"
+    ],
+    "native_cause_changes": [
+      {
+        "fixture_id": "artifact-newline",
+        "from": [
+          "fail",
+          "artifact-digest"
+        ],
+        "to": [
+          "pass",
+          null
+        ]
+      }
+    ],
+    "pairs": [
+      {
+        "fixture_id": "baseline",
+        "native_return_changed": false,
+        "relaxed_case_id": "baseline--artifact-digest",
+        "relaxed_native_return": [
+          "pass",
+          null
+        ],
+        "state_changed": false,
+        "unrelaxed_case_id": "baseline--unrelaxed",
+        "unrelaxed_native_return": [
+          "pass",
+          null
+        ]
+      },
+      {
+        "fixture_id": "unsigned-declared-payload-digest",
+        "native_return_changed": false,
+        "relaxed_case_id": "unsigned-declared-payload-digest--artifact-digest",
+        "relaxed_native_return": [
+          "fail",
+          "payload-digest"
+        ],
+        "state_changed": false,
+        "unrelaxed_case_id": "unsigned-declared-payload-digest--unrelaxed",
+        "unrelaxed_native_return": [
+          "fail",
+          "payload-digest"
+        ]
+      },
+      {
+        "fixture_id": "artifact-newline",
+        "native_return_changed": true,
+        "relaxed_case_id": "artifact-newline--artifact-digest",
+        "relaxed_native_return": [
+          "pass",
+          null
+        ],
+        "state_changed": true,
+        "unrelaxed_case_id": "artifact-newline--unrelaxed",
+        "unrelaxed_native_return": [
+          "fail",
+          "artifact-digest"
+        ]
+      },
+      {
+        "fixture_id": "signature-hex-nibble",
+        "native_return_changed": false,
+        "relaxed_case_id": "signature-hex-nibble--artifact-digest",
+        "relaxed_native_return": [
+          "fail",
+          "ed25519-signature"
+        ],
+        "state_changed": false,
+        "unrelaxed_case_id": "signature-hex-nibble--unrelaxed",
+        "unrelaxed_native_return": [
+          "fail",
+          "ed25519-signature"
+        ]
+      },
+      {
+        "fixture_id": "original-signed-payload-multi-guard",
+        "native_return_changed": false,
+        "relaxed_case_id": "original-signed-payload-multi-guard--artifact-digest",
+        "relaxed_native_return": [
+          "fail",
+          "payload-digest"
+        ],
+        "state_changed": false,
+        "unrelaxed_case_id": "original-signed-payload-multi-guard--unrelaxed",
+        "unrelaxed_native_return": [
+          "fail",
+          "payload-digest"
+        ]
+      }
+    ],
+    "relaxed_rule": "artifact-digest",
+    "unchanged_count": 4,
+    "unchanged_count_definition": "State unchanged relative to same fixture unrelaxed case; separate full native-return count includes cause",
+    "unchanged_native_return_count": 4
+  },
+  {
+    "comparison_fixture_count": 5,
+    "evidence": {
+      "bytes": 14003,
+      "container_refs": "recorded-packet.json/result/observations; input_packet_refs resolve inside recorded-packet.json",
+      "path": "observations.json",
+      "sha256": "e37b8fa592108fe7daad78794f97daf9d5c238b57dd180d0c398ea3172523972"
+    },
+    "flipped_fixture_ids": [
+      "signature-hex-nibble"
+    ],
+    "native_cause_changes": [
+      {
+        "fixture_id": "signature-hex-nibble",
+        "from": [
+          "fail",
+          "ed25519-signature"
+        ],
+        "to": [
+          "pass",
+          null
+        ]
+      }
+    ],
+    "pairs": [
+      {
+        "fixture_id": "baseline",
+        "native_return_changed": false,
+        "relaxed_case_id": "baseline--ed25519-signature",
+        "relaxed_native_return": [
+          "pass",
+          null
+        ],
+        "state_changed": false,
+        "unrelaxed_case_id": "baseline--unrelaxed",
+        "unrelaxed_native_return": [
+          "pass",
+          null
+        ]
+      },
+      {
+        "fixture_id": "unsigned-declared-payload-digest",
+        "native_return_changed": false,
+        "relaxed_case_id": "unsigned-declared-payload-digest--ed25519-signature",
+        "relaxed_native_return": [
+          "fail",
+          "payload-digest"
+        ],
+        "state_changed": false,
+        "unrelaxed_case_id": "unsigned-declared-payload-digest--unrelaxed",
+        "unrelaxed_native_return": [
+          "fail",
+          "payload-digest"
+        ]
+      },
+      {
+        "fixture_id": "artifact-newline",
+        "native_return_changed": false,
+        "relaxed_case_id": "artifact-newline--ed25519-signature",
+        "relaxed_native_return": [
+          "fail",
+          "artifact-digest"
+        ],
+        "state_changed": false,
+        "unrelaxed_case_id": "artifact-newline--unrelaxed",
+        "unrelaxed_native_return": [
+          "fail",
+          "artifact-digest"
+        ]
+      },
+      {
+        "fixture_id": "signature-hex-nibble",
+        "native_return_changed": true,
+        "relaxed_case_id": "signature-hex-nibble--ed25519-signature",
+        "relaxed_native_return": [
+          "pass",
+          null
+        ],
+        "state_changed": true,
+        "unrelaxed_case_id": "signature-hex-nibble--unrelaxed",
+        "unrelaxed_native_return": [
+          "fail",
+          "ed25519-signature"
+        ]
+      },
+      {
+        "fixture_id": "original-signed-payload-multi-guard",
+        "native_return_changed": false,
+        "relaxed_case_id": "original-signed-payload-multi-guard--ed25519-signature",
+        "relaxed_native_return": [
+          "fail",
+          "payload-digest"
+        ],
+        "state_changed": false,
+        "unrelaxed_case_id": "original-signed-payload-multi-guard--unrelaxed",
+        "unrelaxed_native_return": [
+          "fail",
+          "payload-digest"
+        ]
+      }
+    ],
+    "relaxed_rule": "ed25519-signature",
+    "unchanged_count": 4,
+    "unchanged_count_definition": "State unchanged relative to same fixture unrelaxed case; separate full native-return count includes cause",
+    "unchanged_native_return_count": 4
+  }
+]

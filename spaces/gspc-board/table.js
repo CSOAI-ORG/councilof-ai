@@ -9,6 +9,11 @@ const QUEUE = "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/SUMM
 const CATALOG = "https://huggingface.co/datasets/csoai/living-catalog/resolve/main/catalog.json";
 const CENSUS_WALK = "./census-manifest.json";
 const MARKET = "https://councilof.ai/interop/market-universe-2026-09/index.json";
+const MEASURED_MODELS = "https://councilof.ai/interop/models-measured.json";
+const UNIVERSAL_LEDGER_URL = "https://councilof.ai/interop/gspc-universal-ledger.json";
+const UNIVERSAL_LEDGER_LOCAL = "./gspc-universal-ledger.json";
+const AGENT_LAYER_SAFE_URL = "https://councilof.ai/interop/gspc-agent-layer-safe-arena.json";
+const AGENT_LAYER_SAFE_LOCAL = "./gspc-agent-layer-safe-arena.json";
 const VERIFY = "https://councilof.ai/gspc-verify";
 const SITE = "https://councilof.ai";
 const LOOKUP_KEY = "csoai.gspc.desk.lookup.v1";
@@ -16,7 +21,7 @@ const LOOKUP_KEY = "csoai.gspc.desk.lookup.v1";
 const PILLARS = [
   { id: "gov", title: "Governance", axes: ["governance"] },
   { id: "saf", title: "Safety", axes: ["safety", "jail", "art5-safeguard", "care", "affect", "swarm"] },
-  { id: "prv", title: "Provenance", axes: ["provenance", "provenance-controls", "openness", "conformance"] },
+  { id: "prv", title: "Provenance", axes: ["provenance", "provenance-controls", "openness", "conformance", "effect-binding"] },
   { id: "con", title: "Continuity", axes: ["continuity", "machinery-conformity", "cross-reality", "detector-interop"] },
   { id: "mkt", title: "Markets", axes: ["reserve-attestation", "regulatory-framework", "distribution-integrity", "custody-disclosure", "ai-adoption-components", "labour-components", "humanoid-labour-index"] },
 ];
@@ -28,15 +33,21 @@ const ALIAS = {
   continuity: ["continuity", "gspc-continuity"],
   conformance: ["conformance", "gspc-conformance"],
   openness: ["openness", "gspc-openness"],
-  care: ["care", "care-refusal-protect", "care-refusal-help"],
-  jail: ["jail", "jail-escape-detection"],
-  swarm: ["swarm", "swarm-candidates"],
+  care: ["care", "care-refusal-protect", "care-refusal-help", "gspc-care"],
+  jail: ["jail", "jail-escape-detection", "gspc-jail"],
+  swarm: ["swarm", "swarm-candidates", "gspc-swarm"],
+  "machinery-conformity": ["machinery-conformity", "gspc-machinery-conformity"],
+  "cross-reality": ["cross-reality", "gspc-cross-reality"],
+  "detector-interop": ["detector-interop", "gspc-detector-interop"],
+  "art5-safeguard": ["art5-safeguard", "gspc-art5-safeguard"],
+  affect: ["affect", "gspc-affect"],
+  "effect-binding": ["effect-binding", "gspc-effect-binding"],
 };
 
 const READ = [
   { title: "A listing is not a grade", body: "A Hub name can sit on a public list. That is DISCOVERED. It is not a GSPC cell." },
   { title: "The board snapshot is signed", body: "Every measured axis carries a published measurement. Public cards check. They do not yet name a unique weight file." },
-  { title: "An empty slot is a finding", body: "Twenty-two axes stay on the map so the gaps stay visible. No invented zero, no invented leader." },
+  { title: "An empty slot is a finding", body: "Every published axis stays on the map so the gaps stay visible. No invented zero, no invented leader." },
   { title: "A TIE is not a win", body: "When the leader interval contains the fleet mean, the point lead is not a measured advantage. Jail is a measured floor." },
 ];
 
@@ -71,6 +82,9 @@ const DOORS = [
 
 let BOARD = null;
 let HUB = null;
+let MEASURED_REGISTRY = null;
+let UNIVERSAL_LEDGER = null;
+let AGENT_LAYER_SAFE = null;
 let QUEUE_SUMMARY = null;
 let CENSUS_WALK_SUMMARY = null;
 let INDEX = [];
@@ -80,6 +94,10 @@ let pillarFilter = null;
 let query = "";
 let lbAxis = "governance";
 let hubAxis = "";
+let hubShowAll = false;
+let modelCohort = "all";
+let ucCohort = "all";
+let alsaFilter = "all";
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({
@@ -115,6 +133,13 @@ function cardsFor(name) {
     return keys.some((k) => ax === k || ax.startsWith(`${k}-`) || ax.endsWith(`-${k}`));
   });
 }
+function hubCellsFor(name) {
+  const keys = aliases(name);
+  return (HUB?.cells || []).filter((c) => {
+    const ax = String(c.axis || "").toLowerCase();
+    return keys.some((k) => ax === k || ax === `gspc-${k}`);
+  });
+}
 function mentions(hay, name) {
   const text = String(hay || "").toLowerCase();
   return aliases(name).some((k) => text.includes(k));
@@ -127,6 +152,50 @@ function displayName(a) {
 }
 function cleanModel(s) {
   return String(s || "").replace(/\s*\([^)]*\)\s*$/, "").trim();
+}
+function axisFigureAndWho(a) {
+  if (!measuredOf(a)) {
+    return { fig: "empty", tableFig: "-", deskFig: "no figure", who: "No grade yet", tableWho: "-" };
+  }
+  if (a.kind === "deterministic-facts") {
+    const unitLabel = a.n_unit ? `facts · ${a.n_unit}` : "deterministic facts";
+    return { fig: "facts", tableFig: "facts", deskFig: "facts · no leader accuracy", who: "facts", tableWho: unitLabel };
+  }
+  if (typeof a.accuracy === "number") {
+    return {
+      fig: pct(a.accuracy),
+      tableFig: pct(a.accuracy),
+      deskFig: pct(a.accuracy),
+      who: cleanModel(a.leader) || "-",
+      tableWho: a.leader || "-",
+    };
+  }
+  const fm = typeof a.fleet_mean === "number" ? `mean ${pct(a.fleet_mean)}` : null;
+  if (a.public_leader_state === "EXCLUDED_OWN_MODEL") {
+    return {
+      fig: fm || "own excluded",
+      tableFig: fm || "own excluded",
+      deskFig: fm ? `${fm} (own leader excluded)` : "own model excluded",
+      who: "own leader excluded",
+      tableWho: "own model excluded (see fleet)",
+    };
+  }
+  if (a.public_leader_state === "NO_SIGNED_CARD") {
+    return {
+      fig: fm || "no card",
+      tableFig: fm || "no signed card",
+      deskFig: fm ? `${fm} (no signed card)` : "no signed public card",
+      who: "no signed card",
+      tableWho: "no signed public card",
+    };
+  }
+  return {
+    fig: fm || "measured",
+    tableFig: fm || "measured",
+    deskFig: fm || "measured",
+    who: cleanModel(a.leader) || "-",
+    tableWho: a.leader || "-",
+  };
 }
 
 function seatsFor(a) {
@@ -179,25 +248,59 @@ function visibleAxes() {
 
 function modelIndex() {
   const map = new Map();
+  const upsert = (rawName, axisName, figure, cohort, sourceLabel) => {
+    const cleaned = cleanModel(rawName);
+    const key = cleaned.toLowerCase();
+    if (!key) return;
+    if (!map.has(key)) {
+      map.set(key, { name: cleaned, axes: [], best: null, cohorts: new Set(), sources: new Set() });
+    }
+    const row = map.get(key);
+    const cleanAx = String(axisName || "").replace(/^gspc-/, "");
+    if (cleanAx && !row.axes.includes(cleanAx)) row.axes.push(cleanAx);
+    row.cohorts.add(cohort);
+    row.sources.add(sourceLabel);
+    if (typeof figure === "number" && Number.isFinite(figure) && (row.best == null || figure > row.best)) {
+      row.best = figure;
+    }
+  };
+
   (BOARD?.axes || []).forEach((a) => {
-    const add = (name, figure, role) => {
-      const key = cleanModel(name).toLowerCase();
-      if (!key) return;
-      if (!map.has(key)) map.set(key, { name: cleanModel(name), axes: [], best: null, roles: [] });
-      const row = map.get(key);
-      row.axes.push(a.axis);
-      row.roles.push(role);
-      if (typeof figure === "number" && (row.best == null || figure > row.best)) row.best = figure;
-    };
-    if (a.leader) add(a.leader, a.accuracy, "leader");
+    if (a.leader) upsert(a.leader, a.axis, a.accuracy, "board", "Board leader");
     if (a.per_model) {
-      Object.entries(a.per_model).forEach(([m, r]) => add(m, r.accuracy ?? r.honesty_rate, "row"));
+      Object.entries(a.per_model).forEach(([m, r]) => upsert(m, a.axis, r.accuracy ?? r.honesty_rate, "board", "Board row"));
     }
   });
-  let rows = [...map.values()];
+
+  (HUB?.cells || []).forEach((c) => {
+    if (c && c.model && String(c.status || "").toUpperCase() === "MEASURED") {
+      upsert(c.model, c.axis, c.accuracy, "hub", "Hugging Face Hub");
+    }
+  });
+
+  (MEASURED_REGISTRY?.models || []).forEach((m) => {
+    if (m && m.id) {
+      const axes = Array.isArray(m.axes) && m.axes.length ? m.axes : [""];
+      axes.forEach((ax) => upsert(m.id, ax, null, "registry", m.source === "both" ? "Card index + Mill" : (m.source === "mill_signed" ? "Signed mill card" : "Signed card index")));
+    }
+  });
+
+  let rows = [...map.values()].map((r) => ({
+    ...r,
+    sourceText: [...r.sources].join(" · "),
+  }));
+  if (modelCohort && modelCohort !== "all") {
+    rows = rows.filter((r) => r.cohorts.has(modelCohort));
+  }
   const q = query.trim().toLowerCase();
-  if (q) rows = rows.filter((r) => r.name.toLowerCase().includes(q) || r.axes.some((ax) => ax.includes(q)));
-  rows.sort((a, b) => (b.best ?? -1) - (a.best ?? -1) || a.name.localeCompare(b.name));
+  if (q) {
+    rows = rows.filter((r) =>
+      r.name.toLowerCase().includes(q) ||
+      r.sourceText.toLowerCase().includes(q) ||
+      r.axes.some((ax) => ax.toLowerCase().includes(q))
+    );
+  }
+  rows.sort((a, b) => (b.best ?? -1) - (a.best ?? -1) || b.axes.length - a.axes.length || a.name.localeCompare(b.name));
   return rows;
 }
 
@@ -248,19 +351,24 @@ function renderPillars() {
 function renderMap() {
   renderPillars();
   const host = document.getElementById("graph");
-  const shown = pillarFilter ? PILLARS.filter((p) => p.id === pillarFilter) : PILLARS;
+  const knownAxes = new Set(PILLARS.flatMap((p) => p.axes));
+  const uncategorised = (BOARD?.axes || []).map((a) => a.axis).filter((id) => !knownAxes.has(id));
+  const groups = uncategorised.length
+    ? [...PILLARS, { id: "other", title: "Additional axes", axes: uncategorised }]
+    : PILLARS;
+  const shown = pillarFilter ? groups.filter((p) => p.id === pillarFilter) : groups;
   host.innerHTML = shown.map((p) => {
     const tiles = p.axes.map((id) => {
       const a = axisOf(id);
       if (!a) return "";
       const on = measuredOf(a);
       const tie = a.axis === "jail" && a.separation === "TIE";
-      const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : "facts") : "empty";
+      const fw = axisFigureAndWho(a);
       const klass = `tile${on ? "" : " empty"}${tie ? " jail" : ""}${selected === id ? " on" : ""}`;
       return `<button type="button" class="${klass}" data-axis="${esc(id)}" role="listitem">
-        <div class="fig">${esc(fig)}</div>
+        <div class="fig">${esc(fw.fig)}</div>
         <div class="name">${esc(displayName(a))}</div>
-        <div class="who">${on ? esc(cleanModel(a.leader) || (a.kind === "deterministic-facts" ? "facts" : "-")) : "No grade yet"}</div>
+        <div class="who">${esc(fw.who)}</div>
         ${chip(a.status, a.separation)}
       </button>`;
     }).join("");
@@ -273,7 +381,7 @@ function renderMap() {
   if (note) {
     note.textContent = pillarFilter
       ? `${visibleAxes().length} axes in this family. Click a tile to open the record.`
-      : "Five families. Green is measured. Slate is empty. Click a family, then an axis.";
+      : `${(BOARD?.axes || []).length || 23} published axes across five families (14 model-comparison, 9 deterministic-facts). Green is measured. Slate is empty. Click a family, then an axis.`;
   }
 }
 
@@ -287,18 +395,20 @@ function renderBoardTable() {
   }
   document.getElementById("board-body").innerHTML = rows.map((a) => {
     const on = measuredOf(a);
-    const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : "facts") : "-";
+    const fw = axisFigureAndWho(a);
     const iv = on && Array.isArray(a.interval) ? `${pct(a.interval[0])}-${pct(a.interval[1])}` : "-";
-    const sep = on ? (a.axis === "jail" && a.separation === "TIE" ? "TIE · floor" : (a.separation || "-")) : "-";
+    const sep = on
+      ? (a.kind === "deterministic-facts" ? "facts" : (a.axis === "jail" && a.separation === "TIE" ? "TIE · floor" : (a.separation || "-")))
+      : "-";
     return `<tr data-axis="${esc(a.axis)}" tabindex="0" class="${selected === a.axis ? "active" : ""}">
       <td>${esc(a.axis)}</td>
-      <td>${esc(a.family || "")}</td>
+      <td>${esc(a.family || a.kind || "")}</td>
       <td>${chip(a.status, a.separation)}</td>
-      <td>${esc(fig)}</td>
+      <td>${esc(fw.tableFig)}</td>
       <td>${esc(on && a.n != null ? a.n : "-")}</td>
       <td>${esc(iv)}</td>
       <td>${esc(sep)}</td>
-      <td>${on ? esc(a.leader || "-") : "-"}</td>
+      <td>${esc(fw.tableWho)}</td>
     </tr>`;
   }).join("") || `<tr><td colspan="8">No axes match.</td></tr>`;
   document.querySelectorAll("#board-body tr[data-axis]").forEach((tr) => {
@@ -349,6 +459,10 @@ function renderLeaderboard(name) {
     note.textContent = "This slot is published empty. No measurement has been signed. Nine seats stay blank so a gap is visible.";
   } else if (pack.kind === "facts") {
     note.textContent = pack.note || "This axis measures published facts, not a model contest.";
+  } else if (a.public_leader_state === "EXCLUDED_OWN_MODEL") {
+    note.textContent = `Our own model held the point lead on this axis and is excluded from the public leader column. Fleet mean: ${typeof a.fleet_mean === "number" ? pct(a.fleet_mean) : "-"}. See Hugging Face measured cells below for third-party signed cards on this axis.`;
+  } else if (a.public_leader_state === "NO_SIGNED_CARD") {
+    note.textContent = `The top point row on this axis has no verifiable signed card yet, so no public leader is crowned. Fleet mean: ${typeof a.fleet_mean === "number" ? pct(a.fleet_mean) : "-"}.`;
   } else if (pack.published === 1) {
     note.textContent = "The signed board publishes one leader and a fleet mean on this axis. The other eight seats stay blank until per-model rows are signed. A rank is never sold.";
   } else {
@@ -365,23 +479,37 @@ function renderLeaderboard(name) {
 }
 
 function renderModels() {
+  const cohortWrap = document.getElementById("mod-cohorts");
+  if (cohortWrap && !cohortWrap.dataset.bound) {
+    cohortWrap.querySelectorAll("[data-cohort]").forEach((btn) => {
+      btn.onclick = () => {
+        modelCohort = btn.getAttribute("data-cohort") || "all";
+        cohortWrap.querySelectorAll("[data-cohort]").forEach((b) => b.classList.toggle("on", b === btn));
+        renderModels();
+      };
+    });
+    cohortWrap.dataset.bound = "1";
+  }
   const rows = modelIndex();
   const note = document.getElementById("mod-note");
   if (note) {
+    const hubModelsN = new Set((HUB?.cells || []).map((c) => c.model).filter(Boolean)).size;
+    const regModelsN = (MEASURED_REGISTRY?.models || []).length;
     note.textContent = query.trim()
       ? `${rows.length} published names match "${query.trim()}".`
-      : `${rows.length} names appear as a leader or a signed per-model row. Search above.`;
+      : `${rows.length} third-party model names in current view (Board leaders, ${hubModelsN || "-"} Hugging Face Hub models, ${regModelsN || "-"} in the measured registry). Search above or filter by cohort.`;
   }
   const tb = document.querySelector("#mod-table tbody");
   tb.innerHTML = rows.map((r) =>
     `<tr data-axis="${esc(r.axes[0] || "")}">
       <td>${esc(r.name)}</td>
-      <td>${esc(r.axes.join(", "))}</td>
+      <td>${esc(r.sourceText || "-")}</td>
+      <td>${esc(r.axes.length ? r.axes.join(", ") : "-")}</td>
       <td>${esc(r.best != null ? pct(r.best) : "-")}</td>
-      <td><button type="button" data-axis="${esc(r.axes[0] || "")}">Open</button></td>
+      <td>${r.axes[0] ? `<button type="button" data-axis="${esc(r.axes[0])}">Open</button>` : "-"}</td>
     </tr>`
-  ).join("") || `<tr><td colspan="4">No published model names match.</td></tr>`;
-  tb.querySelectorAll("[data-axis]").forEach((n) => {
+  ).join("") || `<tr><td colspan="5">No published model names match.</td></tr>`;
+  tb.querySelectorAll("button[data-axis]").forEach((n) => {
     n.onclick = () => {
       const id = n.getAttribute("data-axis");
       if (id) openAxis(id);
@@ -395,29 +523,43 @@ function hubAxes() {
 
 function renderHubCells() {
   const select = document.getElementById("hub-axis");
+  const toggleBtn = document.getElementById("hub-toggle-all");
+  const heading = document.getElementById("hub-h");
   const body = document.querySelector("#hub-table tbody");
   const note = document.getElementById("hub-note");
   const tape = document.getElementById("hub-tape");
   if (!select || !body || !note || !tape) return;
 
   if (!HUB) {
-    body.innerHTML = '<tr><td colspan="6" class="err">UNCHECKABLE — the Hub-cell endpoint did not answer.</td></tr>';
+    body.innerHTML = '<tr><td colspan="7" class="err">UNCHECKABLE — the Hub-cell endpoint did not answer.</td></tr>';
     note.textContent = "No local fallback is substituted for a failed live fetch.";
     tape.innerHTML = "";
     return;
   }
 
   const axes = hubAxes();
-  if (!hubAxis || !axes.includes(hubAxis)) hubAxis = axes.includes("governance") ? "governance" : (axes[0] || "");
-  select.innerHTML = axes.map((axis) => `<option value="${esc(axis)}"${axis === hubAxis ? " selected" : ""}>${esc(axis)}</option>`).join("");
+  if (!hubAxis || (hubAxis !== "__all__" && !axes.includes(hubAxis))) {
+    hubAxis = axes.includes("governance") ? "governance" : (axes[0] || "__all__");
+  }
+  select.innerHTML =
+    `<option value="__all__"${hubAxis === "__all__" ? " selected" : ""}>All model axes (${(HUB.cells || []).length})</option>` +
+    axes.map((axis) => `<option value="${esc(axis)}"${axis === hubAxis ? " selected" : ""}>${esc(axis)}</option>`).join("");
   select.onchange = () => {
     hubAxis = select.value;
     renderHubCells();
   };
 
+  if (toggleBtn && !toggleBtn.dataset.bound) {
+    toggleBtn.onclick = () => {
+      hubShowAll = !hubShowAll;
+      renderHubCells();
+    };
+    toggleBtn.dataset.bound = "1";
+  }
+
   const cells = (HUB.cells || [])
-    .filter((cell) => cell.axis === hubAxis)
-    .filter((cell) => !query.trim() || String(cell.model || "").toLowerCase().includes(query.trim().toLowerCase()))
+    .filter((cell) => hubAxis === "__all__" || cell.axis === hubAxis)
+    .filter((cell) => !query.trim() || String(cell.model || "").toLowerCase().includes(query.trim().toLowerCase()) || String(cell.axis || "").toLowerCase().includes(query.trim().toLowerCase()))
     .sort((a, b) => (Number(b.accuracy) || -1) - (Number(a.accuracy) || -1) || String(a.model).localeCompare(String(b.model)));
   const models = new Set((HUB.cells || []).map((cell) => cell.model).filter(Boolean));
   const counts = HUB.counts || {};
@@ -428,17 +570,30 @@ function renderHubCells() {
     [counts.indexes_read ?? "-", "Indexes read"],
     [counts.duplicates_collapsed ?? "-", "Duplicates collapsed"],
   ].map(([value, label]) => `<div><b>${esc(value)}</b><span>${esc(label)}</span></div>`).join("");
+
+  const shownCells = (hubShowAll || hubAxis === "__all__") ? cells : cells.slice(0, 9);
+  if (toggleBtn) {
+    toggleBtn.textContent = (hubShowAll || hubAxis === "__all__")
+      ? "Show top 9 on axis"
+      : `Show all (${cells.length})`;
+  }
+  if (heading) {
+    heading.textContent = (hubShowAll || hubAxis === "__all__")
+      ? `All published measurements (${shownCells.length} of ${cells.length})`
+      : "Top nine published measurements by axis";
+  }
   note.textContent = counts.complete
-    ? `${cells.length} published cell${cells.length === 1 ? "" : "s"} on ${hubAxis}; showing the top nine by the card's published figure. All discovered indexes answered.`
+    ? `${cells.length} published cell${cells.length === 1 ? "" : "s"} on ${hubAxis === "__all__" ? "all axes" : hubAxis}; showing ${shownCells.length} row${shownCells.length === 1 ? "" : "s"} by the card's published figure. All discovered indexes answered.`
     : `Partial read. ${counts.indexes_unread?.length || "Some"} index file(s) did not answer; no total is claimed.`;
-  body.innerHTML = cells.slice(0, 9).map((cell, index) => `<tr>
+  body.innerHTML = shownCells.map((cell, index) => `<tr>
     <td>${index + 1}</td>
     <td>${esc(cell.model)}</td>
+    <td>${esc(cell.axis || "-")}</td>
     <td>${pct(cell.accuracy)}</td>
     <td>${esc(cell.n ?? "-")}</td>
     <td>${chip(cell.status)}</td>
     <td>${cell.card_url ? `<a href="${esc(cell.card_url)}" target="_blank" rel="noreferrer">Open</a>` : "-"}</td>
-  </tr>`).join("") || '<tr><td colspan="6">No published cell matches this filter.</td></tr>';
+  </tr>`).join("") || '<tr><td colspan="7">No published cell matches this filter.</td></tr>';
 }
 
 function rows(pairs) {
@@ -459,19 +614,20 @@ function openAxis(name) {
   const desk = document.getElementById("desk");
   desk.hidden = false;
   const on = measuredOf(a);
+  const fw = axisFigureAndWho(a);
   document.getElementById("desk-kicker").textContent = on ? "Published finding" : "Published empty slot";
   document.getElementById("desk-h").textContent = a.axis;
   document.getElementById("desk-sub").textContent = [a.bench, a.task].filter(Boolean).join(" · ");
-  const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : "facts · no accuracy") : "no figure";
+  const fig = fw.deskFig;
   const iv = on && Array.isArray(a.interval) ? `${pct(a.interval[0])} - ${pct(a.interval[1])}` : (on ? "withheld" : "-");
-  const sep = a.axis === "jail" && a.separation === "TIE" ? "TIE · floor" : (a.separation || "-");
+  const sep = a.kind === "deterministic-facts" ? "facts · no separation test" : (a.axis === "jail" && a.separation === "TIE" ? "TIE · floor" : (a.separation || "-"));
   document.getElementById("quote").innerHTML = [
     [chip(a.status, a.separation), "Status"],
     [esc(fig), "Figure"],
-    [esc(on && a.n != null ? a.n : "-"), "n"],
+    [esc(on && a.n != null ? a.n : "-"), a.n_unit ? `n (${a.n_unit})` : "n"],
     [esc(iv), "95% interval"],
     [esc(sep), "Separation"],
-    [esc(on && a.leader ? a.leader : "-"), "Leader"],
+    [esc(fw.tableWho), "Leader / state"],
     [esc(on && typeof a.fleet_mean === "number" ? pct(a.fleet_mean) : "-"), "Fleet mean"],
     [esc(on && typeof a.macro_f1 === "number" ? String(a.macro_f1) : "-"), "Macro F1"],
   ].map(([v, k]) => `<div><b>${v}</b><span>${esc(k)}</span></div>`).join("");
@@ -484,8 +640,8 @@ function openAxis(name) {
     ["Family", esc(a.family || "-")],
     ["Kind", esc(a.kind || "-")],
     ["Instrument / task", esc(a.task || a.bench || "-")],
-    ["Leader", on ? esc(a.leader || "-") : "-"],
-    ["n", on && a.n != null ? esc(String(a.n)) : "-"],
+    ["Leader / state", esc(fw.tableWho)],
+    ["n", on && a.n != null ? esc(a.n_unit ? `${a.n} (${a.n_unit})` : String(a.n)) : "-"],
     ["Figure", on ? esc(fig) : "-"],
     ["95% interval", esc(iv)],
     ["Fleet mean", on && typeof a.fleet_mean === "number" ? esc(pct(a.fleet_mean)) : "-"],
@@ -494,29 +650,40 @@ function openAxis(name) {
     ["McNemar p", on && a.separation_p != null ? esc(String(a.separation_p)) : "-"],
     ["Unparsed rate", on && typeof a.unparsed_rate === "number" ? esc(pct(a.unparsed_rate)) : "-"],
   ];
+  if (a.run_attestation) finding.push(["Run attestation", esc(a.run_attestation)]);
+  if (a.facts_as_of) finding.push(["Facts as of", esc(a.facts_as_of)]);
   if (on && typeof a.mean_harm === "number") finding.push(["Mean harm", esc(num(a.mean_harm))]);
   if (on && typeof a.cvar05_harm === "number") finding.push(["CVaR harm", esc(num(a.cvar05_harm))]);
   const bank = a.dataset_url
     ? `<a href="${esc(a.dataset_url)}" target="_blank" rel="noreferrer">${esc(a.dataset || a.dataset_url)}</a>`
-    : esc(a.dataset || "-");
-  finding.push(["Bank", bank]);
+    : (a.evidence_url ? `<a href="${esc(a.evidence_url.startsWith("http") ? a.evidence_url : SITE + a.evidence_url)}" target="_blank" rel="noreferrer">${esc(a.evidence_url)}</a>` : esc(a.dataset || "-"));
+  finding.push(["Bank / Evidence", bank]);
   if (a.axis === "jail") finding.push(["Note", "Measured floor. A TIE is not a scored arena door."]);
   if (!on) finding.push(["Note", "This slot is published empty. No measurement has been signed."]);
   document.getElementById("find-table").innerHTML = rows(finding);
 
   const recs = cardsFor(name);
-  if (!recs.length) {
+  const hubRecs = hubCellsFor(name);
+  if (!recs.length && !hubRecs.length) {
     document.getElementById("rec-table").innerHTML =
       `<thead><tr><th>Record</th><th>State</th></tr></thead>` +
       `<tbody><tr><td colspan="2">${on ? "No compact cards listed for this axis yet. The cell on the board is still the finding." : "Empty slot - no signed compact cards."}</td></tr></tbody>`;
-  } else {
+  } else if (recs.length) {
     document.getElementById("rec-table").innerHTML =
       `<thead><tr><th>Card</th><th>When</th><th></th></tr></thead><tbody>` +
       recs.slice(0, 12).map((c) => {
         const url = c.card_url ? (c.card_url.startsWith("http") ? c.card_url : SITE + c.card_url) : VERIFY;
         return `<tr><td>${esc(String(c.card || "").slice(0, 12))}...</td><td>${esc(c.ts ? String(c.ts).replace("T", " ").slice(0, 19) : "-")}</td><td><a href="${esc(url)}" target="_blank" rel="noreferrer">open</a> · <a href="${VERIFY}" target="_blank" rel="noreferrer">verify</a></td></tr>`;
       }).join("") +
-      `<tr><td colspan="3">${recs.length} compact card(s). They check. They do not yet bind a subject or weight-manifest digest.</td></tr></tbody>`;
+      `<tr><td colspan="3">${recs.length} compact card(s)${hubRecs.length ? ` + ${hubRecs.length} Hub cell(s)` : ""}. They check. They do not yet bind a subject or weight-manifest digest.</td></tr></tbody>`;
+  } else {
+    document.getElementById("rec-table").innerHTML =
+      `<thead><tr><th>Hub model</th><th>Figure</th><th>Signed card</th></tr></thead><tbody>` +
+      hubRecs.slice(0, 12).map((c) => {
+        const url = c.card_url || VERIFY;
+        return `<tr><td>${esc(c.model)}</td><td>${esc(pct(c.accuracy))} (n=${esc(c.n ?? "-")})</td><td><a href="${esc(url)}" target="_blank" rel="noreferrer">open</a> · <a href="${VERIFY}" target="_blank" rel="noreferrer">verify</a></td></tr>`;
+      }).join("") +
+      `<tr><td colspan="3">${hubRecs.length} signed Hugging Face Hub cell(s) on this axis.</td></tr></tbody>`;
   }
 
   const honest = [];
@@ -550,6 +717,7 @@ function openAxis(name) {
   document.getElementById("desk-note").textContent = a.note || "";
   const links = [];
   if (a.dataset_url) links.push(`<a href="${esc(a.dataset_url)}" target="_blank" rel="noreferrer">Bank</a>`);
+  if (a.evidence_url) links.push(`<a href="${esc(a.evidence_url.startsWith("http") ? a.evidence_url : SITE + a.evidence_url)}" target="_blank" rel="noreferrer">Run artifact</a>`);
   links.push(`<a href="${API}?axis=${encodeURIComponent(a.axis)}" target="_blank" rel="noreferrer">Live axis</a>`);
   links.push(`<a href="${VERIFY}" target="_blank" rel="noreferrer">Verify a card</a>`);
   document.getElementById("desk-links").innerHTML = links.join("");
@@ -741,11 +909,284 @@ async function refreshLookup() {
   document.getElementById("watch-note").textContent = "File list refreshed. Still DISCOVERED. Not a grade.";
 }
 
+function renderUniversalCohorts() {
+  const wrap = document.getElementById("uc-cohorts");
+  const note = document.getElementById("uc-note");
+  const ownEl = document.getElementById("uc-own");
+  const tbody = document.querySelector("#uc-table tbody");
+  if (!tbody) return;
+
+  if (wrap) {
+    wrap.querySelectorAll("button[data-uc]").forEach((btn) => {
+      const id = btn.getAttribute("data-uc") || "all";
+      btn.classList.toggle("on", id === ucCohort);
+      btn.onclick = () => {
+        ucCohort = id;
+        renderUniversalCohorts();
+      };
+    });
+  }
+
+  if (!UNIVERSAL_LEDGER || !UNIVERSAL_LEDGER.cohorts) {
+    if (note) note.textContent = "Universal GSPC ledger unavailable — nothing fabricated.";
+    tbody.innerHTML = `<tr><td colspan="6" class="fine">No universal cohort rows loaded.</td></tr>`;
+    return;
+  }
+
+  const cohortKeys =
+    ucCohort === "all"
+      ? [
+          "measurers_and_harnesses",
+          "agent_and_mcp_harnesses",
+          "interop_working_groups",
+          "ai_labs",
+          "humanoid_labs_and_deployments",
+          "ai_companies",
+        ]
+      : [ucCohort];
+
+  const allSelected = [];
+  cohortKeys.forEach((ck) => {
+    const c = UNIVERSAL_LEDGER.cohorts[ck];
+    if (c && Array.isArray(c.rows)) {
+      c.rows.forEach((r) => allSelected.push({ ...r, _cohortKey: ck }));
+    }
+  });
+
+  const ownRows = allSelected.filter((r) => r.own_entity);
+  let thirdPartyRows = allSelected.filter((r) => !r.own_entity);
+
+  const q = query.trim().toLowerCase();
+  if (q) {
+    thirdPartyRows = thirdPartyRows.filter((r) =>
+      `${r.subject || ""} ${r.subject_class || ""} ${r.group || ""} ${r.result_summary || ""} ${r.sub_cohort || ""}`
+        .toLowerCase()
+        .includes(q),
+    );
+  }
+
+  if (note) {
+    const sha = String(UNIVERSAL_LEDGER.ledger_sha256 || "").slice(0, 16);
+    note.textContent =
+      `Showing ${thirdPartyRows.length} third-party record(s) across ${cohortKeys.length} cohort(s) · ` +
+      `Busabase gspc (${UNIVERSAL_LEDGER.busabase_gspc_base_id || "bsemvaekntqom40ksh"}) · ` +
+      `ledger sha256 ${sha}… · Measure rule: one group per Measure (never ranked across groups).`;
+  }
+  if (ownEl) {
+    ownEl.textContent = ownRows.length
+      ? `Our own entities listed apart (never self-ranked): ${ownRows.map((o) => `${o.subject} [${o.result_summary}]`).join(" · ")}`
+      : "";
+  }
+
+  if (!thirdPartyRows.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="fine">No matching records in this cohort filter.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = thirdPartyRows
+    .map((r) => {
+      const srcHref = r.source_url
+        ? r.source_url.startsWith("http")
+          ? r.source_url
+          : `${SITE}${r.source_url}`
+        : VERIFY;
+      const laneBadge =
+        r.lane === "signed"
+          ? `<span class="chip ok">SIGNED</span>`
+          : `<span class="chip empty">UNSIGNED</span>`;
+      return `<tr>
+        <td><b>${esc(r.subject)}</b></td>
+        <td>${esc(r.subject_class || r.sub_cohort || "-")}</td>
+        <td>${esc(r.group || "-")}</td>
+        <td>${laneBadge}</td>
+        <td>${esc(r.result_summary || "-")}</td>
+        <td><a href="${esc(srcHref)}" target="_blank" rel="noreferrer">record</a></td>
+      </tr>`;
+    })
+    .join("");
+}
+
+function renderAgentLayerSafeArena() {
+  const wrap = document.getElementById("alsa-filters");
+  const note = document.getElementById("alsa-note");
+  const staleEl = document.getElementById("alsa-staleness");
+  const tbody = document.querySelector("#alsa-table tbody");
+  if (!tbody) return;
+
+  if (wrap) {
+    wrap.querySelectorAll("button[data-alsa]").forEach((btn) => {
+      const id = btn.getAttribute("data-alsa") || "all";
+      btn.classList.toggle("on", id === alsaFilter);
+      btn.onclick = () => {
+        alsaFilter = id;
+        renderAgentLayerSafeArena();
+      };
+    });
+  }
+
+  if (!AGENT_LAYER_SAFE) {
+    if (note) note.textContent = "GSPC Agent Layer & OSAIA SAFE packet unavailable — nothing fabricated.";
+    tbody.innerHTML = `<tr><td colspan="6" class="fine">No Agent Layer / OSAIA SAFE rows loaded.</td></tr>`;
+    return;
+  }
+
+  const rows = [];
+  if (alsaFilter === "all" || alsaFilter === "ax_him") {
+    (AGENT_LAYER_SAFE.ax_protocols || []).forEach((p) => {
+      rows.push({
+        title: `${p.protocol} (${p.endpoint})`,
+        lane: "AX / UI Protocol",
+        scope: p.implementation_file || "-",
+        state: "LIVE_SURFACE",
+        detail: p.capabilities || "-",
+        href: `${SITE}/interop/gspc-agent-layer-safe-arena.json`,
+      });
+    });
+    (AGENT_LAYER_SAFE.meok_him_action_loop || []).forEach((a) => {
+      rows.push({
+        title: `MEOK + H.I.M. ${a.verb || a.action_id}`,
+        lane: "4-Action Loop",
+        scope: a.mode || "-",
+        state: a.human_gate_required ? "HIM_HUMAN_GATED" : "AUTOMERGE_FALSE",
+        detail: a.what_happens || "-",
+        href: `${SITE}/interop/gspc-agent-layer-safe-arena.json`,
+      });
+    });
+  }
+
+  if (alsaFilter === "all" || alsaFilter === "him_explorer") {
+    const exp = AGENT_LAYER_SAFE.verified_record_and_report_explorer || {};
+    (exp.him_escalation_triggers || []).forEach((t) => {
+      rows.push({
+        title: `${t.trigger_id}: ${t.title}`,
+        lane: "MEOK + H.I.M. Explorer",
+        scope: `${t.meok_pal || "H.I.M."} · HUD: ${t.hud_state || "-"}`,
+        state: "VERIFIED_ONLY",
+        detail: `${t.when_triggered || ""} → ${t.human_in_loop_action || ""}`,
+        href: `${SITE}/interop/gspc-agent-layer-safe-arena.json`,
+      });
+    });
+  }
+
+  if (alsaFilter === "all" || alsaFilter === "safe_staleness") {
+    const safeRecs = AGENT_LAYER_SAFE.safe_end_to_end_integration?.frozen_evidence_pack?.records || [];
+    safeRecs.forEach((r) => {
+      rows.push({
+        title: `${r.record_id}`,
+        lane: "OSAIA SAFE v0.2",
+        scope: (r.gspc_axes_mapped || []).join(", ") || "provenance",
+        state: r.state || "UNMEASURED",
+        detail: `${r.claim_type} · neg_control=${r.negative_control} · ${r.statement || ""} · sha256:${String(r.canonical_sha256 || "").slice(0, 12)}…`,
+        href: r.source_url || `${SITE}/interop/osaia-safe-evidence-adapter-v0.2.json`,
+      });
+    });
+  }
+
+  if (alsaFilter === "all" || alsaFilter === "frozen_fluid_zernio") {
+    const loop = AGENT_LAYER_SAFE.staleness_and_claim_maintenance?.fluid_staleness_to_ras_loop || {};
+    (loop.zernio_and_meok_summon_channels || []).forEach((ch) => {
+      rows.push({
+        title: `${ch.title}`,
+        lane: "Consented Summon Channel",
+        scope: `${ch.channel_id} · opt_in_only=${String(ch.opt_in_consented_only)}`,
+        state: ch.adapter_state || "CONSENTED_ONLY",
+        detail: ch.description || "-",
+        href: ch.upstream_docs || `${SITE}/interop/gspc-agent-layer-safe-arena.json`,
+      });
+    });
+    (loop.frozen_to_fluid_saas_to_ras_pipeline || []).forEach((st) => {
+      rows.push({
+        title: `Stage ${st.stage}: ${st.stage_id}`,
+        lane: "Frozen → Fluid · SaaS → RAS",
+        scope: `${st.record_regime} · ${st.service_tier}`,
+        state: st.record_regime?.startsWith("FROZEN") ? "FROZEN_PINNED" : "FLUID_STALE_LOOP",
+        detail: st.description || "-",
+        href: `${SITE}/interop/gspc-agent-layer-safe-arena.json`,
+      });
+    });
+  }
+
+  if (alsaFilter === "all" || alsaFilter === "arena_academy") {
+    const aca = AGENT_LAYER_SAFE.arena_city_academy_hitl || {};
+    const arena = aca.arena_scoreboard || {};
+    const city = aca.council_city_colosseum || {};
+    const acad = aca.academy_hitl_training || {};
+    if (arena.n_rounds) {
+      rows.push({
+        title: `GSPC Arena (${arena.n_rounds} signed rounds)`,
+        lane: "Arena Battles",
+        scope: `${arena.axes_count} axes · ${arena.bench_sources} sources`,
+        state: "ED25519_SIGNED",
+        detail: `Generation ${arena.generation} · Human-vs-AI & Model-vs-Model deterministic verification bouts`,
+        href: `${SITE}/signed/arena_scoreboard.json`,
+      });
+    }
+    if (city.turns) {
+      rows.push({
+        title: `Council City 40v40 (${city.turns} turns)`,
+        lane: "Red vs Blue Sim",
+        scope: `${city.epochs} epochs · Art 5(1)(a)-(h)`,
+        state: "SHA256_PINNED",
+        detail: `ALLOWED ${city.counts?.ALLOWED ?? 278} · BLOCKED ${city.counts?.BLOCKED ?? 37} · UNMEASURED ${city.counts?.UNMEASURED ?? 85}`,
+        href: `${SITE}/city/board.json`,
+      });
+    }
+    (acad.reproducible_exercises || []).forEach((ex) => {
+      rows.push({
+        title: `Academy ${ex.exercise_id}: ${ex.title}`,
+        lane: "Academy HITL",
+        scope: (ex.realises_modules || []).join(", "),
+        state: "SHA256_EXERCISE",
+        detail: ex.completion_gate || "-",
+        href: `${SITE}/interop/gspc-agent-layer-safe-arena.json`,
+      });
+    });
+  }
+
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? rows.filter((r) => `${r.title} ${r.lane} ${r.scope} ${r.state} ${r.detail}`.toLowerCase().includes(q))
+    : rows;
+
+  const fp = AGENT_LAYER_SAFE.staleness_and_claim_maintenance?.frozen_regulatory_corpus || {};
+  const loop = AGENT_LAYER_SAFE.staleness_and_claim_maintenance?.fluid_staleness_to_ras_loop || {};
+  if (note) {
+    const sha = String(AGENT_LAYER_SAFE.summary_sha256 || "").slice(0, 16);
+    note.textContent =
+      `Showing ${filtered.length} record(s) · 5 AX/UI protocols + 4-action MEOK/H.I.M. loop + 5 H.I.M. verified-record escalation triggers + 10 OSAIA SAFE v0.2 re-verifications + 7-stage Frozen-to-Fluid / SaaS-to-RAS Zernio/Voice summon pipeline + Arena (4,760 rounds) + Council City (40v40) + 9 Academy HITL exercises · packet sha256 ${sha}…`;
+  }
+  if (staleEl) {
+    staleEl.textContent =
+      `Compliance & Claim Maintenance v0.2: ${fp.total_frozen_provisions || 417} frozen provisions across ${fp.instruments_count || 6} EU instruments (corpus_root ${String(fp.corpus_root_sha256 || "").slice(0, 14)}…) · ` +
+      `7-stage Frozen-to-Fluid / SaaS-to-RAS loop via consented Zernio (DRAFTED_NICK_GATED_NOT_CONFIGURED) / MEOK Voice summon → Academy Training → SHA-256 Exam → Gamified Arena/City MOOC → H.I.M. RAS Re-Attestation (unsolicited sends forbidden).`;
+  }
+
+  tbody.innerHTML = filtered.length
+    ? filtered
+        .map((r) => {
+          const isUnm = r.state === "UNMEASURED";
+          const isWarn = r.state === "PARTIAL" || r.state === "FAIL";
+          const cls = isUnm ? "empty" : isWarn ? "warn" : "ok";
+          return `<tr>
+            <td><b>${esc(r.title)}</b></td>
+            <td>${esc(r.lane)}</td>
+            <td>${esc(r.scope)}</td>
+            <td><span class="chip ${cls}">${esc(r.state)}</span></td>
+            <td>${esc(r.detail)}</td>
+            <td><a href="${esc(r.href)}" target="_blank" rel="noreferrer">open</a></td>
+          </tr>`;
+        })
+        .join("")
+    : `<tr><td colspan="6" class="fine">No matching Agent Layer / OSAIA SAFE records.</td></tr>`;
+}
+
 function applySearch() {
   renderMap();
   renderBoardTable();
   renderModels();
   renderHubCells();
+  renderUniversalCohorts();
+  renderAgentLayerSafeArena();
   if (lbAxis) renderLeaderboard(lbAxis);
 }
 
@@ -793,11 +1234,41 @@ async function boot() {
   try {
     HUB = await loadJson(HUB_CARDS);
     renderHubCells();
+    renderModels();
+    if (BOARD) { renderTape(BOARD); renderHealth(); }
+    if (selected) openAxis(selected);
     renderRuling(QUEUE_SUMMARY?.n, CENSUS_WALK_SUMMARY?.n_unique_ids);
   } catch {
     HUB = null;
     renderHubCells();
   }
+  try {
+    MEASURED_REGISTRY = await loadJson(MEASURED_MODELS);
+    renderModels();
+    if (BOARD) { renderTape(BOARD); renderHealth(); }
+  } catch {
+    MEASURED_REGISTRY = null;
+  }
+  try {
+    UNIVERSAL_LEDGER = await loadJson(UNIVERSAL_LEDGER_URL);
+  } catch {
+    try {
+      UNIVERSAL_LEDGER = await loadJson(UNIVERSAL_LEDGER_LOCAL);
+    } catch {
+      UNIVERSAL_LEDGER = null;
+    }
+  }
+  renderUniversalCohorts();
+  try {
+    AGENT_LAYER_SAFE = await loadJson(AGENT_LAYER_SAFE_URL);
+  } catch {
+    try {
+      AGENT_LAYER_SAFE = await loadJson(AGENT_LAYER_SAFE_LOCAL);
+    } catch {
+      AGENT_LAYER_SAFE = null;
+    }
+  }
+  renderAgentLayerSafeArena();
   renderQueue();
   renderMarketCoverage();
 }
@@ -807,3 +1278,4 @@ window.addEventListener("hashchange", () => {
   const hash = decodeURIComponent((location.hash || "").replace(/^#/, ""));
   if (hash && axisOf(hash)) openAxis(hash);
 });
+

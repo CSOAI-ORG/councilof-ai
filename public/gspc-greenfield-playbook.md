@@ -424,7 +424,7 @@ Sheet 18_MOVES_2000 is the work-list. Filter by Wave, Axis, Family, Action, or B
 
   AXIS_FINISH             462                     Per-axis grep finishers to reach 2000 without padding
 
-  BLACK_SWAN              25                      Public halt card
+  HALT_CARD               25                      Public halt card
 
   CENSUS_3M               30                      Physics of 3M, agreed scale path
 
@@ -442,7 +442,7 @@ Sheet 18_MOVES_2000 is the work-list. Filter by Wave, Axis, Family, Action, or B
 
   OVERLAY                 33                      abstract-reasoning / ARC-AGI-3
 
-  RAIL                    40                      8004, Dorado, Index, Isaac, SCITT, XRPL, x402
+  RAIL                    40                      8004, Wrapped-Asset Index, Isaac, SCITT, XRPL, x402
 
   REVIEW_ITEM             67                      Completion Review section 5 concretes, unique
 
@@ -461,15 +461,15 @@ One writer: the GHA publisher. Loop: trigger → pin live root (halt on split) �
 
 MetaMask is not connected. x402 payTo is wired after the signed root. Treasury address is not the signer address. Data stays free. Proofs are the only paid path. A successful payment does not create a MEASURED cell. A failed payment does not delete a free card.
 
-# **12. Grokbot / TUI goal mode**
+# **12. Execution sequence and hard stops**
 
-Open CSOAI_GSPC_GREENFIELD_PLAYBOOK_31Aug2026.xlsx. Sheet 20_GROKBOT first, then sheet 18_MOVES_2000 filtered by Wave. Order: G0_ROOT → LANGUAGE / SPACES_UI → HUB_RECORD → AXIS_CLEAN / AXIS_DEEP (gspc then financial) → REVIEW_ITEM → OVERLAY / RAIL → EU_ACT / CENSUS_3M → WALLET_X402 → NEVER / BLACK_SWAN → SCITT_OSS / FLEET → vector check. Hard stops: MEASURED stamp from a listing; key on RunPod, laptop, or MetaMask; collapse Art. 5 into governance; fill 7 financial empties; paywall /root; we graded every Hugging Face model; second writer of public/root.json.
+Filter sheet 18_MOVES_2000 by Wave. Order: G0_ROOT → LANGUAGE / SPACES_UI → HUB_RECORD → AXIS_CLEAN / AXIS_DEEP (gspc then financial) → REVIEW_ITEM → OVERLAY / RAIL → EU_ACT / CENSUS_3M → WALLET_X402 → NEVER / HALT_CARD → SCITT_OSS / FLEET → vector check. Hard stops: MEASURED stamp from a listing; key on RunPod, laptop, or MetaMask; collapse Art. 5 into governance; fill 7 financial empties; paywall /root; we graded every Hugging Face model; second writer of public/root.json.
 
 # **13. Sources used in this playbook**
 
 Living board and method: GET https://councilof.ai/api/gspc ; https://councilof.ai/gspc-scoreboard ; https://councilof.ai/os ; https://councilof.ai/mcp ; https://councilof.ai/api/xrpl ; GitHub CSOAI-ORG/councilof-ai ; Zenodo 10.5281/zenodo.21991104 and 10.5281/zenodo.21991105 (Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending).
 
-Hub record: https://huggingface.co/csoai and the gspc-\* dataset / Space family. Capability context: BenchAlign, Artificial Analysis, archived HF Open LLM Leaderboard methodology, ARC Prize results, AnotherWrapper ARC-AGI board (31 Aug 2026). Economy and agents: Anthropic Economic Index (June 2026 Cadences); ERC-8004 scans; hidorado/dorado; ERC-3643 Association. Humanoids: Counterpoint H1 2026; China MIIT 29-character ID; NVIDIA Isaac Sim / Isaac Lab / GR00T; \$10-\$25/hr pilots. Statistics: Wilson interval already in GSPC; McNemar paired test; arXiv 2605.30315. RWA public page: app.rwa.xyz/networks as_of 2026-08-30, Distributed \$38.40B / Represented \$380.88B, never summed. Companions: MASTER_ALL, HF_GSPC_2000, SCALE_3M_FACTORY, GSPC_22_READY_FIN7, BLACK_SWAN, Completion Review. Do not fork doctrine.
+Hub record: https://huggingface.co/csoai and the gspc-\* dataset / Space family. Capability context: BenchAlign, Artificial Analysis, archived HF Open LLM Leaderboard methodology, ARC Prize results, AnotherWrapper ARC-AGI board (31 Aug 2026). Economy and agents: Anthropic Economic Index (June 2026 Cadences); ERC-8004 scans; wrapped-asset index; ERC-3643 Association. Humanoids: Counterpoint H1 2026; China MIIT 29-character ID; NVIDIA Isaac Sim / Isaac Lab / GR00T; \$10-\$25/hr pilots. Statistics: Wilson interval already in GSPC; McNemar paired test; arXiv 2605.30315. RWA public page: app.rwa.xyz/networks as_of 2026-08-30, Distributed \$38.40B / Represented \$380.88B, never summed. Companions: MASTER_ALL, HF_GSPC_2000, SCALE_3M_FACTORY, GSPC_22_READY_FIN7, HALT_CARD, Completion Review. Do not fork doctrine.
 
 # **14. Close**
 

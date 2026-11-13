@@ -32,6 +32,7 @@ import { useEffect, useState } from "react";
 // Relative, not "@/data/facts.json": vitest.config.ts declares no path aliases, so
 // an aliased import here breaks every test that transitively reaches this module.
 import facts from "../data/facts.json";
+import { boardRunDates } from "./boardRunDates";
 
 /**
  * Separation over the MODEL-COMPARISON axis only. A separation test asks whether
@@ -94,6 +95,11 @@ export interface BoardCount {
   separation: SeparationCount | null;
   /** true when these numbers came off the live board; false for the recorded observation. */
   live: boolean;
+  /**
+   * The board's own run dates (measured_on.date, completed by boardRunDates), read off the live
+   * payload. null/absent on the recorded observation: a date is never typed here.
+   */
+  measured_on?: string | null;
 }
 
 /** Format the count as a sentence. Never emit one of these numbers on its own. */
@@ -174,6 +180,7 @@ export const BOARD_COUNT_OBSERVED: BoardCount = {
   // worse than no number, because a reader cannot tell it is stale.
   separation: null,
   live: false,
+  measured_on: null,
 };
 
 function familyFrom(raw: any): FamilyCount | null {
@@ -214,6 +221,7 @@ export function boardCountFromPayload(payload: any): BoardCount | null {
     financial_family: familyFrom(t.by_family?.financial),
     separation: separationFrom(t),
     live: true,
+    measured_on: boardRunDates(payload),
   };
 }
 

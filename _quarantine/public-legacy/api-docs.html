@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>API Documentation — CSOAI</title>
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="Developer documentation for the csoai-mcp-monetization API. 26 endpoints, OpenAPI 3.1.0 spec, all code examples in Python, TypeScript, and curl.">
+  <link rel="canonical" href="https://csoai.org/api-docs">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.65}
+    .container{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+    h1{font-size:2rem;letter-spacing:-.02em;margin-bottom:.5rem;color:#c9a84c}
+    h2{margin-top:2.5rem;margin-bottom:1rem;font-size:1.3rem;color:#c9a84c;border-bottom:1px solid #334155;padding-bottom:.5rem}
+    h3{font-size:1.1rem;margin-top:1.5rem;margin-bottom:.5rem;color:#f8fafc}
+    p{color:#cbd5e1;margin-bottom:.75rem}
+    a{color:#c9a84c;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .lead{color:#94a3b8;font-size:1.1rem;margin-bottom:2rem}
+    pre{background:#020617;border:1px solid #334155;padding:1rem;border-radius:.4rem;overflow-x:auto;margin:1rem 0;font-size:.85rem;line-height:1.5}
+    code{background:#020617;padding:.15rem .35rem;border-radius:.2rem;font-size:.88em;color:#fbbf24;border:1px solid #334155}
+    pre code{background:transparent;border:none;padding:0;color:#e2e8f0}
+    .endpoint{background:#020617;border:1px solid #334155;border-radius:.5rem;padding:1rem 1.25rem;margin-bottom:1rem;display:grid;grid-template-columns:90px 1fr;gap:1rem;align-items:start}
+    .method{padding:.25rem .65rem;border-radius:.3rem;font-weight:600;font-size:.85rem;text-align:center;display:inline-block}
+    .method-get{background:#10b981;color:#020617}
+    .method-post{background:#3b82f6;color:#fff}
+    .path{font-family:ui-monospace,monospace;color:#fbbf24}
+    .desc{color:#94a3b8;font-size:.9rem}
+    .footer{margin-top:3rem;color:#64748b;font-size:.85rem;border-top:1px solid #334155;padding-top:1.5rem;text-align:center}
+    .toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.5rem;margin:1.5rem 0 2rem;padding:1rem;background:#020617;border:1px solid #334155;border-radius:.4rem}
+    .toc a{padding:.25rem .5rem;font-size:.85rem}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p style="color:#94a3b8;text-transform:uppercase;letter-spacing:.15em;font-size:.78rem;font-weight:600;margin-bottom:1rem">CSOAI · API Documentation</p>
+    <h1>csoai-mcp-monetization API</h1>
+    <p class="lead">26 endpoints · OpenAPI 3.1.0 · Python + TypeScript + curl examples · Live at <code>http://localhost:3400</code></p>
+
+    <div class="toc">
+      <a href="#quickstart">Quickstart</a>
+      <a href="#endpoints">Endpoints</a>
+      <a href="#auth">Auth</a>
+      <a href="#errors">Errors</a>
+      <a href="#webhooks">Webhooks</a>
+    </div>
+
+    <h2 id="quickstart">Quickstart (60 seconds)</h2>
+    <p>Three steps to your first Watchdog Certificate:</p>
+    <pre><code># 1. Verify the API is alive
+curl -s http://localhost:3400/healthz
+
+# 2. See the catalog
+curl -s http://localhost:3400/api
+
+# 3. Buy a tier
+curl -s -X POST http://localhost:3400/purchase/tier \
+  -H "Content-Type: application/json" \
+  -d '{"tier_id": "pro", "customer_email": "you@yourco.com"}'</code></pre>
+
+    <h2 id="auth">Auth (Day 1+)</h2>
+    <p>Currently the API is open. In production (Day 7+, after first £199/mo charge), all POSTs will require an <code>X-API-Key</code> header.</p>
+    <pre><code>curl -s http://localhost:3400/api/whoami \
+  -H "X-API-Key: sk_live_..."</code></pre>
+
+    <h2 id="endpoints">All 26 endpoints</h2>
+
+    <h3>Catalog</h3>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/api</span>
+        <p class="desc">Service info (version, server/tier/pack/sector counts)</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/servers</span>
+        <p class="desc">List 271 published MCP servers. Params: <code>limit</code>, <code>sector</code>, <code>tier</code>, <code>q</code></p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/search</span>
+        <p class="desc">Full-text search across servers. Params: <code>q</code>, <code>tier</code>, <code>sector</code>, <code>limit</code></p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/packs</span>
+        <p class="desc">3 CSOAI packs (£499, £999, £1,499/yr)</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/tiers</span>
+        <p class="desc">8 canonical CSOAI tiers (£9 → £4,950)</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/sectors</span>
+        <p class="desc">12 industry sectors indexed</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/sectors/{name}</span>
+        <p class="desc">Per-sector server list. Names: finance, healthcare, government, legal, media, energy, education, manufacturing, retail, transportation, insurance, general</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/bundles</span>
+        <p class="desc">4 subscription bundles (£19, £49, £99, £299)</p>
+      </div>
+    </div>
+
+    <h3>Purchasing</h3>
+    <div class="endpoint">
+      <span class="method method-post">POST</span>
+      <div>
+        <span class="path">/subscribe</span>
+        <p class="desc">Create a subscription. Body: <code>{"bundle_id": "professional"}</code></p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-post">POST</span>
+      <div>
+        <span class="path">/purchase/pack</span>
+        <p class="desc">Buy a pack. Body: <code>{"pack_id": "pack_eu_ai_act", "customer_email": "you@yourco.com"}</code></p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-post">POST</span>
+      <div>
+        <span class="path">/purchase/tier</span>
+        <p class="desc">Buy a tier. Body: <code>{"tier_id": "pro", "customer_email": "you@yourco.com"}</code></p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-post">POST</span>
+      <div>
+        <span class="path">/purchase/tier (with coupon)</span>
+        <p class="desc">Add <code>?code=GRCWL30</code> for 30% off (white-label partners)</p>
+      </div>
+    </div>
+
+    <h3>Webhooks (Stripe)</h3>
+    <div class="endpoint">
+      <span class="method method-post">POST</span>
+      <div>
+        <span class="path">/webhook/stripe</span>
+        <p class="desc">Stripe webhook receiver. Activates when STRIPE_WEBHOOK_SECRET env var is set. Listens for: checkout.session.completed, customer.subscription.created, invoice.paid, payment_intent.succeeded</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-post">POST</span>
+      <div>
+        <span class="path">/webhook/test</span>
+        <p class="desc">Manual webhook simulator for Stripe dashboard testing. Params: <code>event_type</code>, <code>customer_email</code>, <code>amount_gbp</code>, <code>kind</code>, <code>item_id</code></p>
+      </div>
+    </div>
+
+    <h3>Reseller program</h3>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/partner</span>
+        <p class="desc">List 3 white-label reseller partners (PARTNERLABS25, GRCWL30, EMPIRE20)</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/partner/{partner_id}</span>
+        <p class="desc">Get specific partner details</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/coupon</span>
+        <p class="desc">Validate a coupon code. Params: <code>code</code>, <code>item_type</code>, <code>item_id</code>. Returns discounted price.</p>
+      </div>
+    </div>
+
+    <h3>Discovery + recommendation</h3>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/recommend</span>
+        <p class="desc">List 5 use cases for server recommendations</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/recommend?use_case=X</span>
+        <p class="desc">Get enriched server list for a specific use case</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/api/discover</span>
+        <p class="desc">A2A-compatible manifest for AI agent discovery</p>
+      </div>
+    </div>
+
+    <h3>Customer + revenue</h3>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/customer/{email}</span>
+        <p class="desc">Look up all purchases by email (SQLite-aware)</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/revenue</span>
+        <p class="desc">Live revenue dashboard with ARR potential + by-day buckets</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/analytics</span>
+        <p class="desc">Simpler analytics (subscriptions + packs + tiers)</p>
+      </div>
+    </div>
+
+    <h3>Operations</h3>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/healthz</span>
+        <p class="desc">Liveness probe (200 if process alive)</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/readyz</span>
+        <p class="desc">Readiness probe (DB check + catalog stats)</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/metrics</span>
+        <p class="desc">Prometheus metrics text format</p>
+      </div>
+    </div>
+    <div class="endpoint">
+      <span class="method method-get">GET</span>
+      <div>
+        <span class="path">/admin</span>
+        <p class="desc">Full in-memory state dashboard. Optional <code>?token=...</code> with ADMIN_TOKEN env var.</p>
+      </div>
+    </div>
+
+    <h2 id="errors">Error codes</h2>
+    <pre><code>200 OK          # Success
+400 Bad Request # Invalid params (e.g. unknown tier_id)
+404 Not Found   # Resource not found (e.g. unknown sector_name)
+422 Unprocessable # Validation error
+500 Server Error # Bug on our side</code></pre>
+
+    <h2 id="webhooks">Stripe webhook setup</h2>
+    <p>To enable real Stripe payments:</p>
+    <ol style="margin:1rem 0 1.5rem 1.5rem">
+      <li>Set <code>STRIPE_SECRET_KEY</code> + <code>STRIPE_WEBHOOK_SECRET</code> in <code>csoai-mcp-monetization/.env</code></li>
+      <li>In Stripe dashboard, add webhook endpoint: <code>https://your-host/webhook/stripe</code></li>
+      <li>Subscribe to events: <code>checkout.session.completed</code>, <code>customer.subscription.created</code>, <code>invoice.paid</code>, <code>payment_intent.succeeded</code></li>
+      <li>Use <code>POST /webhook/test</code> for testing without a real payment</li>
+    </ol>
+
+    <div class="footer">© 2026 CSOAI LTD (UK Companies House 16939677) · MEOK AI Labs · <a href="/">csoai.org</a> · <a href="/api/playground">/api/playground</a></div>
+  </div>
+</body>
+</html>

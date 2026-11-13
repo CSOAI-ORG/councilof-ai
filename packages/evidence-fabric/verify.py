@@ -90,7 +90,8 @@ def _schema_errors(obj, name):
         import jsonschema
     except ImportError:
         return None  # reported as a limit, never as a pass
-    schema = json.load(open(os.path.join(SCHEMA_DIR, name), encoding="utf-8"))
+    with open(os.path.join(SCHEMA_DIR, name), encoding="utf-8") as fh:
+        schema = json.load(fh)
     return [f"{name}: {'/'.join(map(str, e.absolute_path)) or '<root>'}: {e.message}"
             for e in jsonschema.Draft7Validator(schema).iter_errors(obj)]
 

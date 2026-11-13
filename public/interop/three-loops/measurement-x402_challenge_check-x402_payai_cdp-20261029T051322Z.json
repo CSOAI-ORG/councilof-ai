@@ -1,0 +1,38 @@
+{
+  "schema": "csoai.published-measurement/0.1",
+  "kind": "published-measurement",
+  "generated_at": "2026-10-29T05:13:22.532101+00:00",
+  "axis": "x402_challenge_check",
+  "source": "x402_payai_cdp",
+  "observation": {
+    "payai": [
+      {
+        "state": "UNCHECKABLE",
+        "url": "https://payai.x402.org/api/resources",
+        "observation": "Network must not run"
+      }
+    ],
+    "cdp": [
+      {
+        "state": "UNCHECKABLE",
+        "url": "https://api.cdp.coinbase.com/x402/resources",
+        "observation": "Network must not run"
+      }
+    ],
+    "csoai_board": {
+      "error": "Network must not run"
+    }
+  },
+  "states_recorded": [
+    "PASS",
+    "FAIL",
+    "UNCHECKABLE",
+    "NOT_DECLARED"
+  ],
+  "deliberately_failing_control": "An empty body passed through the checker must NOT pass. Verified.",
+  "disclaimers": [
+    "MEASUREMENT, not CERTIFICATION.",
+    "An empty finding is a finding: we record what we measured, not what we'd wish were true."
+  ],
+  "sha256": "3899eafec55d61291e3f9a372b470b71be128f3695b867c83ed6cdd8cabf5905"
+}

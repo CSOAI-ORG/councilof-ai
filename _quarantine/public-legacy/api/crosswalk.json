@@ -1,0 +1,27 @@
+{
+  "version": "3.1.0",
+  "generated_at": "2026-06-11T10:00:00Z",
+  "total_frameworks": 4,
+  "total_domains": 8,
+  "frameworks": [
+    {"id": "eu_ai_act", "name": "EU AI Act", "region": "EU", "status": "enforced", "effective_date": "2026-08-02"},
+    {"id": "nist_ai_rmf", "name": "NIST AI RMF", "region": "US", "status": "voluntary", "effective_date": null},
+    {"id": "iso_42001", "name": "ISO 42001", "region": "Global", "status": "published", "effective_date": "2023-12-01"},
+    {"id": "tc260", "name": "TC260 WG9 / GB/T", "region": "China", "status": "draft", "effective_date": null}
+  ],
+  "crosswalk": [
+    {"domain": "Risk Management", "eu_ai_act": "Art 9", "nist_ai_rmf": "GOVERN-1.1", "iso_42001": "Clause 6.1", "tc260": "GB/T 41867", "risk": "High"},
+    {"domain": "Data Governance", "eu_ai_act": "Art 10", "nist_ai_rmf": "MAP-1.1", "iso_42001": "Clause 7.2", "tc260": "GB/T 35273", "risk": "High"},
+    {"domain": "Transparency", "eu_ai_act": "Art 50", "nist_ai_rmf": "GOVERN-5.1", "iso_42001": "Clause 7.5", "tc260": "GB/T 39204", "risk": "Critical"},
+    {"domain": "Human Oversight", "eu_ai_act": "Art 14", "nist_ai_rmf": "MANAGE-1.1", "iso_42001": "Clause 6.3", "tc260": "TC260 WG9", "risk": "High"},
+    {"domain": "Accuracy", "eu_ai_act": "Art 15", "nist_ai_rmf": "MEASURE-1.1", "iso_42001": "Clause 8.1", "tc260": "GB/T 41867", "risk": "Medium"},
+    {"domain": "Cybersecurity", "eu_ai_act": "Art 14", "nist_ai_rmf": "MANAGE-2.1", "iso_42001": "Clause 8.2", "tc260": "GB/T 22239", "risk": "High"},
+    {"domain": "Bias / Fairness", "eu_ai_act": "Art 10", "nist_ai_rmf": "MAP-3.1", "iso_42001": "Clause 7.3", "tc260": "GB/T 41867", "risk": "High"},
+    {"domain": "Audit Trail", "eu_ai_act": "Art 12", "nist_ai_rmf": "MEASURE-2.1", "iso_42001": "Clause 9.1", "tc260": "GB/T 39204", "risk": "Medium"}
+  ],
+  "api": {
+    "batch_endpoint": "/api/crosswalk/batch",
+    "gaps_endpoint": "/api/crosswalk/gaps/{framework}",
+    "compare_endpoint": "/api/crosswalk/compare/{from}/{to}"
+  }
+}

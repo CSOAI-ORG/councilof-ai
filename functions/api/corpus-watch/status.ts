@@ -1,7 +1,7 @@
 /**
  * GET /api/corpus-watch/status — serves the watcher heartbeat JSON with register-honest semantics.
  *
- * Source of truth:  ~/clawd/corpus-watch/reports/status.json (regenerated daily by the cron workflow on
+ * Source of truth:  corpus-watch/reports/status.json (regenerated daily by the cron workflow on
  *                  CSOAI-ORG/corpus-watch, commit ac2ad37+). The artefact is shipped to the deployed
  *                  site via wrangler --include='public/corpus-watch/**' or a downstream sync step.
  *

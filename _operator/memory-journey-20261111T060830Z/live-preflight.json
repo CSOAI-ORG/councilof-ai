@@ -1,0 +1,28 @@
+{
+  "revision_before": "afdb579fa778a2f967d975fb5235d656077b0dd7",
+  "memory_root_configured": false,
+  "memory_root": null,
+  "revision_after": "afdb579fa778a2f967d975fb5235d656077b0dd7",
+  "checks": [
+    {
+      "label": "authenticated-list",
+      "api": "memory_list",
+      "authenticated": true,
+      "event": "complete",
+      "result": "REFUSED",
+      "reason": "Saved copies are unavailable: persistent storage is not configured.",
+      "wall_seconds": 0.8034790829997291
+    },
+    {
+      "label": "anonymous-list",
+      "api": "memory_list",
+      "authenticated": false,
+      "result": "HTTP_OR_TRANSPORT_ERROR",
+      "error_type": "HTTPError",
+      "http_status": 404,
+      "wall_seconds": 0.0793527499999982
+    }
+  ],
+  "model_calls": 0,
+  "writes_requested": 0
+}

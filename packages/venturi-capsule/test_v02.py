@@ -144,6 +144,19 @@ class VerifyBothVersions(unittest.TestCase):
             with self.assertRaises(AssertionError):
                 v.verify_batch(d, check_signature=False)
 
+    def test_vocabularies_file_covers_all_adapters_and_fixture_states(self):
+        vocab_path = pathlib.Path(__file__).resolve().parent / "vocabularies.json"
+        vocab = json.loads(vocab_path.read_text(encoding="utf-8"))
+        self.assertEqual(vocab["schema"], "csoai.measurement-capsule-vocabularies/0.2")
+        self.assertEqual(len(vocab["kinds"]), 7)
+        for name, mk in ALL_FIXTURES.items():
+            for c in mk():
+                kind = c["kind"]
+                self.assertIn(kind, vocab["kinds"])
+                declared_states = {s["state"] for s in vocab["kinds"][kind]["states"]}
+                for token in c["measurement_state"].split("+"):
+                    self.assertIn(token, declared_states, (kind, token))
+
 
 if __name__ == "__main__":
     unittest.main()

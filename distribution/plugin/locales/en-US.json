@@ -1,0 +1,27 @@
+{
+  "displayName": "Council of AI GSPC",
+  "shortDescription": "The live GSPC board and signed-card verification, over MCP.",
+  "longDescription": "Council of AI GSPC over MCP: 52 tools (47 free, 5 x402-metered). Read the live board, verify signed measurement cards (VALID / INVALID / UNCHECKABLE). Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
+  "developerName": "CSOAI Ltd",
+  "tryPrompts": [
+    "Read the live GSPC board totals and tell me how many axes are measured.",
+    "Verify this measurement card and give me the state: VALID, INVALID or UNCHECKABLE.",
+    "Show me the governance axis row with its n, accuracy and separation state."
+  ],
+  "mcpOverrides": {
+    "gspc": {
+      "displayName": "Council of AI GSPC",
+      "description": "The free Council of AI MCP door: the live board, signed-card verification, and the public measurement corpus."
+    }
+  },
+  "skillOverrides": {
+    "gspc": {
+      "displayName": "Council of AI GSPC",
+      "description": "Read the live GSPC board and verify signed measurement cards through the free Council of AI MCP door."
+    },
+    "gspc-verify": {
+      "displayName": "GSPC & SAFE evidence verification",
+      "description": "Verify a signed card, a measurement capsule or a SAFE evidence pack deterministically, offline or over the free verifier."
+    }
+  }
+}

@@ -2,7 +2,7 @@
   "acquisition": {
     "http_requests": 19,
     "max_body_bytes": 33554432,
-    "retained_body_bytes": 1407619,
+    "retained_body_bytes": 1430747,
     "reuse_scope": "same_run_same_url_not_independent_witnesses",
     "snapshot_reuses": 12
   },
@@ -99,29 +99,73 @@
       {
         "axis": "humanoid-labour-index",
         "status": "MEASURED"
+      },
+      {
+        "axis": "lab-practice",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "company-practice",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "measurer-integrity",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "harness-fidelity",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "interop-conformance",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "humanoid-deployment",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "regulator-transparency",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "interpretability-reproducibility",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "claim-maintenance",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "serving-fidelity",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "watchdog-ingest",
+        "status": "MEASURED"
       }
     ],
-    "axis_count": 23,
+    "axis_count": 34,
     "claim_boundary": "This touch observes the roster in the exact hashed HTTP snapshot. It is not a new axis measurement or an independent second witness.",
-    "measured": 23,
-    "observed_at": "2026-10-13T02:50:09Z",
-    "sha256": "ea6dcbc9baaf602ff85f28c8c9668a02bf1c6f89dbf15a609921a360f022953e",
+    "measured": 34,
+    "observed_at": "2026-11-13T02:50:09Z",
+    "sha256": "e19300ad4f9f635c760aa3fd29260cfc833613d5b3972811db4dcdca90731e7c",
     "source": "https://councilof.ai/api/gspc",
     "state": "OBSERVED",
     "unmeasured": 0
   },
   "baseline_loops": 0,
-  "changed_loops": 14,
+  "changed_loops": 13,
   "claim_boundary": "An hourly touch receipt proves only the declared probe was observed. UNCHANGED means the cheap fingerprint did not change, not that the entire external population was re-downloaded. Deep candidates do not mean deep measurement executed.",
-  "content_hash": "ab576ab37cee914e2d3eadb98205ecf2044836fe93d4fb75ccd003a41df1d56e",
-  "deep_candidates_created": 7,
+  "content_hash": "2a3fccad7a1fcc46149d916c67c0c0d9a4e0d810407b305ed606df52f6ac14e4",
+  "deep_candidates_created": 8,
   "execution": "disabled",
-  "hour_key": "2026-10-13T02",
-  "hourly_merkle_root": "6f4b0191d7713f568ffa12d187a9b5c50867576e29b9ac2dd3802330d32addb0",
-  "inconclusive_loops": 6,
+  "hour_key": "2026-11-13T02",
+  "hourly_merkle_root": "84b386a65b39aefb0adf61cfe766b9fc3b10c9de4a8367f740876d8100940d9a",
+  "inconclusive_loops": 5,
   "loop_count": 40,
-  "observed_at": "2026-10-13T02:50:01Z",
-  "observed_loops": 34,
+  "observed_at": "2026-11-13T02:50:01Z",
+  "observed_loops": 35,
   "publication": "disabled",
   "receipts": [
     {
@@ -132,37 +176,37 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "trust",
-      "fingerprint": "8e180195b43bf6e812e5fcdb444f14df502d559e8c9e74f3a80df52756d00f06",
-      "freshness_observed_at": "2026-10-13T02:50:01Z",
-      "freshness_source_sha256": "7d5967a4c5d08aa6db35103f5b1ce67fb98f3bd735edeed977cc3184d8165585",
+      "fingerprint": "6b78d4b5382b7a429e6efa13a185d0d9c9956bf5d18ebdf7cc9d85c7a3c73a92",
+      "freshness_observed_at": "2026-11-13T02:50:01Z",
+      "freshness_source_sha256": "735f78b96888ade0b832141aaeb34b63e45e5e9095dd62d1e08ecd35bc3debe7",
       "freshness_state": "STALE_OVER_60M",
       "id": "H-01",
       "name": "Root freshness",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 25369,
-          "etag": "\"710b9a5a065d83f93f2c3d1414c84e2f\"",
+          "bytes": 34349,
+          "etag": "\"111e657f33298bc70b66aa878b6c6bcc\"",
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:01Z",
-          "sha256": "7d5967a4c5d08aa6db35103f5b1ce67fb98f3bd735edeed977cc3184d8165585",
+          "observed_at": "2026-11-13T02:50:01Z",
+          "sha256": "735f78b96888ade0b832141aaeb34b63e45e5e9095dd62d1e08ecd35bc3debe7",
           "source": "https://councilof.ai/root.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "b2b9d0af3c716b4a200f786fa4e247d6aacbcc6dd3f726a0972005b99a4db64f",
+      "receipt_hash": "c974f4915de50e960b30a0d2efe964a8f3a32f2c55debea91bb08e041e981252",
       "related_axes": [
         "provenance",
         "provenance-controls"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
-      "source_age_seconds": 377600.6,
-      "source_as_of": "2026-10-08T17:56:41Z",
+      "source_age_seconds": 453325.0,
+      "source_as_of": "2026-11-07T20:54:37Z",
       "state": "OBSERVED",
-      "transition_id": "09ba452a9dc858c13235e5b0040a91cf1203f93ed846f2e947d3e9a9bfbb3326"
+      "transition_id": "fc7cd0a85a49cdbb2ee13d40f373cb2261e81d30ad8ae59d9f60f6a130a9daae"
     },
     {
       "blocked_dependencies": [],
@@ -172,29 +216,29 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "trust",
-      "fingerprint": "24241194cbf68856c67be154e700b603885f3e910a681badbf8e479cb4d99fc5",
+      "fingerprint": "0560c8f21282f3cb41ed4f00346dcc803d1cb8b2f07ce0128d87c773a72ca33e",
       "id": "H-02",
       "name": "Rekor witness state",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 133276,
-          "files": 47,
+          "bytes": 212721,
+          "files": 74,
           "kind": "glob",
-          "sha256": "0f7f8f51f3bccc0e6444149c922b636b2f6c24693b46bb8163eb93ab1fa65186",
+          "sha256": "6461d847279b30e72f5a5b4f83e953c77e6586aad5eb8fd3112f691590e8a839",
           "source": "public/interop/rekor-root-*.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "e4c235fc1743ffff9eb2eb9fc467cb630a890c871d8b8733c323da848cd68436",
+      "receipt_hash": "df94995c3c7ca241b35f78bf1db0815f5d6b1529b9c0fb6cc89daa8803a5e8df",
       "related_axes": [
         "provenance",
         "provenance-controls"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "d77c7e8252ca5232022052f4be47393cb43a63b1717400ba3ad525b9e7596339"
+      "transition_id": "f9a1c963823e015b1e1343ba9ed2270c4d16a7662dd441f025ab64abfa5cd577"
     },
     {
       "blocked_dependencies": [],
@@ -204,29 +248,29 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "trust",
-      "fingerprint": "15e3ec02ef796ab7f404bfb52fc8aaca4af93ebc46bbe72c0dc29d6cf65e20d3",
+      "fingerprint": "89adef66706bfa47fbe7042243cac15fccd584c0421c2fbb2ca7842285160b61",
       "id": "H-03",
       "name": "OTS/BTC witness state",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 236819,
-          "files": 47,
+          "bytes": 557367,
+          "files": 121,
           "kind": "glob",
-          "sha256": "6ad329c49addc3416b8b89828a46f3ba4edf2c45e8a19e95ce116fc97444a3c9",
+          "sha256": "9885cea8e45a7eeb7141cd66becf7381c00c317feed47c65026eab05bd59dbb0",
           "source": "public/interop/root-*.json.ots",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "b46587ce423401098cbc63590036ca2002c1bd204bf33c0f6d618af4522ad313",
+      "receipt_hash": "97a6be7f239218561f3dae6cdf905270bb61c7660c243de5e2d3735d3657625c",
       "related_axes": [
         "provenance",
         "provenance-controls"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "623d7ccd9f1cd42ee01bab31229e9a839d71cc1df857cc7699c1a96f6bc931d8"
+      "transition_id": "bf358fcac11d4ea7b74b4ea474f77da5b2ed6d59563d6f4716e9dbfa08781dc8"
     },
     {
       "blocked_dependencies": [],
@@ -239,19 +283,19 @@
       "fingerprint": "9709d8a60a0031523e78250567af175c627b1803cbfa1a929b4b4ed3ee9414e8",
       "id": "H-04",
       "name": "Signer status",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "http": 308,
           "kind": "http",
-          "observed_at": "2026-10-13T02:50:01Z",
+          "observed_at": "2026-11-13T02:50:02Z",
           "reason": "unexpected_status:308",
           "source": "https://councilof.ai/api/eunomia-data",
           "state": "INCONCLUSIVE"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "28a54f82253062170ceac7bd2e472c3ee319c4b4bca2a8098eb33fdff307abce",
+      "receipt_hash": "011c501249f7f49d95d931281559c9d85da171b00a627ab767313a15658eb367",
       "related_axes": [
         "governance",
         "provenance-controls",
@@ -272,7 +316,7 @@
       "fingerprint": "fb27e0e9b99eb69247d0fcc6f0e3226d3972486cc9dc32a631cbcb925bca4836",
       "id": "H-05",
       "name": "Corrections watch",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 248487,
@@ -281,8 +325,8 @@
           "identity_rule": "verified_corrections_signed_body_v1",
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:01Z",
-          "sha256": "35539887fff744553819aef4f61747f6513098ba4a86f9fb686d557e3ad0ef1f",
+          "observed_at": "2026-11-13T02:50:02Z",
+          "sha256": "3445531dbeeb4f886ec125a59238c210b83911079a3920213d49d2f3c0b2f368",
           "signed_body_archive": "signed-corrections/b04c8d07014b1c0c9497e889481e5e3ededf76736427bac3d814bfd2b3d3f34a.json",
           "signed_content_id": "b04c8d07014b1c0c9497e889481e5e3ededf76736427bac3d814bfd2b3d3f34a",
           "source": "https://councilof.ai/api/corrections",
@@ -290,7 +334,7 @@
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "d6c40fbc3d6d5f8642e055bb9ec45d1eacd9ebc4278d815f15fa007a1d521bdb",
+      "receipt_hash": "bd7e6010ee6bcdb94b2526b3a1d313f3656bc5f5db029308028a8ee2725bb004",
       "related_axes": [
         "governance",
         "provenance",
@@ -308,43 +352,43 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "revenue",
-      "fingerprint": "19d33919de2d6e28e71615b45a98db3bf34889a1758ee4cf51e557a91e70ecfc",
+      "fingerprint": "e582c991bd7a8da812be3fd7b7c6537a159e5c86683cf8abf4f3dc8a398f74b9",
       "id": "H-06",
       "name": "x402 challenge surfaces",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 144824,
+          "bytes": 149566,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:02Z",
-          "sha256": "b084cc4c8dd590767544f8b6b0e5c0c2ac8701501606c19243f097d17507b31a",
+          "observed_at": "2026-11-13T02:50:02Z",
+          "sha256": "851cb7f800daecf7029936dbe5600c3b3de8ff324b8750e21ad361efa864eb62",
           "source": "https://councilof.ai/.well-known/x402.json",
           "state": "OBSERVED"
         },
         {
-          "bytes": 5753,
+          "bytes": 5414,
           "etag": null,
           "http": 402,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:02Z",
-          "sha256": "1fcaf2d18f3a5da7ca4adb2baa3e6a670236a91d715a2477b5577fe249877e79",
+          "observed_at": "2026-11-13T02:50:02Z",
+          "sha256": "83216a4f7c7ee0dbcb3cbc6372160f76c9fdaf31a20bf0c766b1a72cacb0dc13",
           "source": "https://councilof.ai/api/proof?bundle=1",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "53dc5a379d41d902208776247d3bce3ed6375b2f7893552ebce4fa4d84aaf951",
+      "receipt_hash": "970e4a28ace89cfde80e793efaccd7e68a29470ca66c5d9960836481056dee64",
       "related_axes": [
         "machinery-conformity",
         "distribution-integrity"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "52db89e5ccad5647ac62da61b26488c1e724b96022b95254504530d8c3de63d3"
+      "transition_id": "d6ed402bc4298c5254554f5d6a9e08807ab1f7c144d9ae2c4d834ea84413f6ee"
     },
     {
       "blocked_dependencies": [],
@@ -354,32 +398,32 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "revenue",
-      "fingerprint": "12a945aaab92525504a1f383b0e697a67b1f38bd34163da3c1c671953227159b",
+      "fingerprint": "753234d7a316f8eaf4c84bf572c1b66a6594f5a116a2d6f754ea27e533ba930f",
       "id": "H-07",
       "name": "Revenue counter",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 5769,
+          "bytes": 5821,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:02Z",
-          "sha256": "9f30f220189794886fa25e4f92dbe2acbd538dc11f60b23ac63065c66f230307",
+          "observed_at": "2026-11-13T02:50:02Z",
+          "sha256": "76f9e1f977ff73452a880ce11994e83c0501a310abc919186297ce7966f4d650",
           "source": "https://councilof.ai/api/revenue",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "5cea39e5f44ccc5f91c93fce082e552ca824c81fa7f6a414ea5be923c5a0424f",
+      "receipt_hash": "1a53440a7139572dacd28f581699f6a979504ac1721285a22d7e1f2cf18db74c",
       "related_axes": [
         "governance",
         "distribution-integrity"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "221ddf53631b3217881632dec96091672756d5adcd0bec3f83168554b8e817ed"
+      "transition_id": "34cde15fc08074ba7f9ff90f219776f21e6881e18a77170d53fe27cdc633b7b7"
     },
     {
       "blocked_dependencies": [],
@@ -389,32 +433,32 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "revenue",
-      "fingerprint": "5b75169cbe48fd53b653fdcc16f7a3284935560006d30c6c498d4c8810603a48",
+      "fingerprint": "2eb766ab2d464802752c3cfe1522d84793905fbcc929b20128b2588b85d5253b",
       "id": "H-08",
       "name": "PayAI listing metadata",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 2259,
-          "etag": "W/\"8d3-BJViTG9ubOYR3P1XA46XnDN6vj4\"",
+          "bytes": 2240,
+          "etag": "W/\"8c0-CYgXHdHU4JbESiGg70inT4Aznas\"",
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:02Z",
-          "sha256": "e5a22a64c28924766c83cb5e1df9d4a5f8488a49d57ab2c14029b116cf1e3d69",
+          "observed_at": "2026-11-13T02:50:02Z",
+          "sha256": "77d3d5a4e535b1029153023573d04bcafce51c8489645c9fa968a7a0a3a721bb",
           "source": "https://facilitator.payai.network/discovery/resources?limit=1&offset=0",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "b06d3dd79f6a93b7e7eaca19ecdb2ab4c529d8d9a167c5195fccb63ac97246fb",
+      "receipt_hash": "0af00f2510afbadec9c077b92e91a1aeb2b7420939d3742fcb7227b1b8a8633e",
       "related_axes": [
         "machinery-conformity",
         "distribution-integrity"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "3d25b193ddccf1493c4e6d3874b46e1a518106399d4524207edd4df04fa440ca"
+      "transition_id": "af39d6037bc8ca1686d8dc63b2430923343281dfbade82d6526b06e6c847e5d9"
     },
     {
       "blocked_dependencies": [],
@@ -424,43 +468,43 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "revenue",
-      "fingerprint": "4564d253e6b421467af5fb3ce6a3f139ace3a64bd51b2b28949e3a6ac9b0fb15",
+      "fingerprint": "0b28695a162ff703866aecd83a353581ea07048694abbdfe9bfe55743878ce87",
       "id": "H-09",
       "name": "Bazaar presence",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 73334,
+          "bytes": 49278,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:03Z",
-          "sha256": "ac3808f8d521498b8861c98d35a7f534c27818e232eb7f87fc3d80fc58af08cd",
+          "observed_at": "2026-11-13T02:50:03Z",
+          "sha256": "9a7f9b61c41f77cbf181501d948d5d73849b7eb5b6e1be46a59d53d4664402cb",
           "source": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources?limit=1&offset=0",
           "state": "OBSERVED"
         },
         {
-          "bytes": 2259,
-          "etag": "W/\"8d3-BJViTG9ubOYR3P1XA46XnDN6vj4\"",
+          "bytes": 2240,
+          "etag": "W/\"8c0-CYgXHdHU4JbESiGg70inT4Aznas\"",
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:02Z",
-          "sha256": "e5a22a64c28924766c83cb5e1df9d4a5f8488a49d57ab2c14029b116cf1e3d69",
+          "observed_at": "2026-11-13T02:50:02Z",
+          "sha256": "77d3d5a4e535b1029153023573d04bcafce51c8489645c9fa968a7a0a3a721bb",
           "source": "https://facilitator.payai.network/discovery/resources?limit=1&offset=0",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "3a1bcc7ebea5604282c544ddba253111ff6a285da7b1477e6dcb8e76c5b94ade",
+      "receipt_hash": "b2e84be3b0a2a4e1e87c160386fff526a18290f70e912a3c2dffc3bb1fab7906",
       "related_axes": [
         "machinery-conformity",
         "distribution-integrity"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "0dd28fd9ba0a62dce6a923512f1a8acdd5007189c68f2866919ab19090e0b9db"
+      "transition_id": "b2fe1b0a9e033cf8898cb536403c8eb3321c11190e9c2ddc253853f9d1345ba3"
     },
     {
       "blocked_dependencies": [],
@@ -470,40 +514,40 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "revenue",
-      "fingerprint": "478456cb9935478e95124242628f21f7647b20b4408d9e7fb5663520ee74f25d",
+      "fingerprint": "991c7402d6dcbb3898e78a8dfb9c3a4224947d98f43ec0bf20171d7a40509a56",
       "id": "H-10",
       "name": "Billing lifecycle",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 269,
           "kind": "file",
-          "mtime_ns": 1789378904683911222,
+          "mtime_ns": 1789378904000000000,
           "sha256": "ac3ffb3e9aba08e2bf3356e607a0126443907dfaa5bf4835d0abc21ed48c06df",
           "source": "public/interop/commission-fulfillment/index.json",
           "state": "OBSERVED"
         },
         {
-          "bytes": 5769,
+          "bytes": 5821,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:02Z",
-          "sha256": "9f30f220189794886fa25e4f92dbe2acbd538dc11f60b23ac63065c66f230307",
+          "observed_at": "2026-11-13T02:50:02Z",
+          "sha256": "76f9e1f977ff73452a880ce11994e83c0501a310abc919186297ce7966f4d650",
           "source": "https://councilof.ai/api/revenue",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "58e6b572a4018d6dbc5d923794158dd6d606fc4714d55a4b3681839c82c49099",
+      "receipt_hash": "17930da1aba34c0f7b1700c3e87b856f43296798787c45c60175121e4144b562",
       "related_axes": [
         "governance",
         "provenance-controls"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "c96166f6f4026b4d37e668da9ec21540bbafaa953673471d4492381a2585e330"
+      "transition_id": "1d3b1bbe0bf2e67e6953fc05865b862e97a0b64f9595110deeaf7cd8cb2b7695"
     },
     {
       "blocked_dependencies": [],
@@ -513,29 +557,29 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "distribution",
-      "fingerprint": "909bd2977b0c127dcd6d6d46a14d28911442b43b2084600f1bb032a69246b9b0",
+      "fingerprint": "123dcfdd8cdab4dd557671360785ccfe66496d0d002471c3941c99c0b2164b9b",
       "id": "H-11",
       "name": "PyPI distribution estate",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 136,
-          "files": 1,
+          "bytes": 4022,
+          "files": 2,
           "kind": "glob",
-          "sha256": "0fcbe9741064fa7e72025a991c29136426c29fadd9f9bab653b77bb20e4b8ffd",
+          "sha256": "30444afee5553b5e4744669d717c4a87d16872c888c4cfa2751b1e97c1cfbd4b",
           "source": "public/interop/*pypi*",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "5a76f55ea9de369bd1428934c7f9bf284b517726cde6d6ccb0de4d82ee64a8d2",
+      "receipt_hash": "641bdc744a359ad1e3f29cbab9ddfef5137100901abea0408ede1b62d40fb80e",
       "related_axes": [
         "openness",
         "distribution-integrity"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "da87f73472430ff1a62475dd1a78ce28303b4f9be1aa812a4b7393d163ddf59c"
+      "transition_id": "e4871e8ca058a1c93c5c31af227ca973c0f457c31286a27914a40c48dc4fd135"
     },
     {
       "blocked_dependencies": [],
@@ -545,29 +589,29 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "distribution",
-      "fingerprint": "09aa33c9c52cecf51d13d22542aec5ef9f635a5d42ca4749c69fabc12da60262",
+      "fingerprint": "53128a661315e5708876ea72a6ea4d215420a078cee1cb8f1e9d07930644cc5c",
       "id": "H-12",
       "name": "npm distribution estate",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 9538,
-          "files": 5,
+          "bytes": 18641,
+          "files": 8,
           "kind": "glob",
-          "sha256": "ecdb80280d2e897216d0c9735999a43f5c4217678b6c5716546cabd09f1f356d",
+          "sha256": "18f1448c678236dadd325d32931edea0e758baef1361424a35e2e2c6443d345e",
           "source": "public/interop/*npm*",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "d5fe370dd97a189750d9e08d2abbc25dd5455328246974e8456e7562faffb2cd",
+      "receipt_hash": "b220557556f0a4c7086c8f4a5e8d6b996455a4a3a2fe31fb55459a81ab39e68e",
       "related_axes": [
         "openness",
         "distribution-integrity"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "1b27ae8cd6bb9f6b16888c8d0e3252baa3bf2e109eebce6274be01c43273e51c"
+      "transition_id": "120828484d24147fe6d09d177a0949a924dffef5b3e64e3d69f52a37180ccbb6"
     },
     {
       "blocked_dependencies": [],
@@ -580,12 +624,12 @@
       "fingerprint": "f70150256cec4cd02a97b1a227f4962186435960ea0318c5d18ded8105792a6d",
       "id": "H-13",
       "name": "Hugging Face distribution estate",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 690,
           "kind": "file",
-          "mtime_ns": 1791434828016879286,
+          "mtime_ns": 1791434828000000000,
           "sha256": "5d5346aab497928666f778a45f589905ef434b29a64166a1cdcd89126232f987",
           "source": "public/interop/hf-census/SUMMARY.json",
           "state": "OBSERVED"
@@ -593,14 +637,14 @@
         {
           "bytes": 1002235,
           "kind": "file",
-          "mtime_ns": 1791434828079600479,
+          "mtime_ns": 1791434828000000000,
           "sha256": "0ff5250f575753c0686b85185c1df697a63c4e315962e1a9c9f45a075b651a23",
           "source": "public/interop/hf-census/org-register.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "478e861e7407a993eb9f043e251a4f4fe8fbae9f1121482dc3ae392324d72fef",
+      "receipt_hash": "dc00d872e3cf8b2990007b5641b27570b302474c8435e4075efec15a13b7423d",
       "related_axes": [
         "openness",
         "distribution-integrity",
@@ -621,12 +665,12 @@
       "fingerprint": "0a4f7db07a759e03eddabfa3e0ff4aa11bfa9ebd2816b1071fff32dd3fb7c6f2",
       "id": "H-14",
       "name": "MCP registry own estate",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 9608,
           "kind": "file",
-          "mtime_ns": 1789196695218131543,
+          "mtime_ns": 1789196695000000000,
           "sha256": "ea9a5fec8371fd299028599d5cfe6844db0f9d3964b0be776ca23e8c6bc5f808",
           "source": "public/interop/mcp-registry-resolution.json",
           "state": "OBSERVED"
@@ -634,14 +678,14 @@
         {
           "bytes": 1118,
           "kind": "file",
-          "mtime_ns": 1789555750474944487,
+          "mtime_ns": 1789555750000000000,
           "sha256": "56084e97a5aac27a8a854945efa11dd7a29bfd53033851c8efb2e8f35e84ebee",
           "source": "public/interop/auto-eat/card-autoeat-mcp-registry-mining-unsigned.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "9bbed7e80895c2225d1f4940928df7e2cbfccc8178d1f57825ed653601410ebf",
+      "receipt_hash": "1a04f1953ffe78d04fd2cfdf9a2663d907f2c1e98fad726c42e83c7d049c898d",
       "related_axes": [
         "openness",
         "machinery-conformity",
@@ -662,7 +706,7 @@
       "fingerprint": "fdc040aafc211ee30e72089f7fc481e5ec450f4a82b1f8320c4b6eafac9ce67e",
       "id": "H-15",
       "name": "GitHub organisation aggregate",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 119,
@@ -670,14 +714,14 @@
           "http": 404,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:05Z",
+          "observed_at": "2026-11-13T02:50:04Z",
           "sha256": "7387010f9301104f857dae4e19fa47431afc100012ff74699246a1ca24a1bc84",
           "source": "https://api.github.com/orgs/CSOAI-ORG",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "c2f06fcc2cd9affe44fef051c3bc410db7dc9804ada69d14e4d40ed8913c57f6",
+      "receipt_hash": "fb05b124724ff334660cc32c6ab769b0a177446e1c693ff2d6b059c8c99e1ee3",
       "related_axes": [
         "openness",
         "distribution-integrity"
@@ -697,19 +741,19 @@
       "fingerprint": "6cdf5e5aca55446305825cc6049695e3f843436f9ef1de7004b0508389377447",
       "id": "H-16",
       "name": "Remote endpoint survival",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 25833,
           "kind": "file",
-          "mtime_ns": 1789378904688833925,
+          "mtime_ns": 1789378904000000000,
           "sha256": "8d86b0bb54075c262af0625367b8109c62a28af6e8aad77d31c0c5daedfe811b",
           "source": "public/interop/mcp-liveness-2026-09/report.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "544ec80be4b24ea4a32b579ff1d2fff376e1780c50ebcd2fd0e1d72b8caac182",
+      "receipt_hash": "33572f16915013454375016ef8423b1b73fb419730198630909994c56dab175c",
       "related_axes": [
         "continuity",
         "machinery-conformity",
@@ -730,12 +774,12 @@
       "fingerprint": "16ea2208d77e90b00276fa0db455713c875079c5aa5bae3953e2a9d0540e58eb",
       "id": "H-17",
       "name": "Stablecoin universe",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 12928,
           "kind": "file",
-          "mtime_ns": 1789555079532923247,
+          "mtime_ns": 1789555079000000000,
           "sha256": "752175b2c55d689e8d847429e538dd9b3d62b6bc1d56957599a254e3d7a8e8f4",
           "source": "public/interop/stablecoins-extended.json",
           "state": "OBSERVED"
@@ -743,14 +787,14 @@
         {
           "bytes": 215064,
           "kind": "file",
-          "mtime_ns": 1789538308663466630,
+          "mtime_ns": 1789538308000000000,
           "sha256": "4d08e094955aae7a66bade6e388a109a80f0b97295c1308e373ada838a978a20",
           "source": "public/interop/stablecoin-universe-2026-09/index.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "f199d926a0e75edb283c079a385b3acfea04c0a08b2336e285c87b1a0022172f",
+      "receipt_hash": "e8198f7ab1e5b8e967a68467ad4b99159b177f9391dd468d713294e378be91d5",
       "related_axes": [
         "reserve-attestation",
         "custody-disclosure",
@@ -771,19 +815,19 @@
       "fingerprint": "61cc38fa316de0553d02515cb9fe0e868ae6ba5fda31470bc90539b80c0a0d2f",
       "id": "H-18",
       "name": "XRPL instruments",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 2099,
           "kind": "file",
-          "mtime_ns": 1789196695713543179,
+          "mtime_ns": 1789196695000000000,
           "sha256": "1d67107f57a2a357329f63833017dbae9836acc01a11864fa8b2502761377fe7",
           "source": "public/interop/xrpl-instruments.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "e108fd547ac76058712c8a904d12f646cc848be08cf011b56c66e37f0f7cd1e6",
+      "receipt_hash": "fe46643c8109f8da6680ae5a46484b16b73672ffc2ee56b1a57af76731405cec",
       "related_axes": [
         "cross-reality",
         "reserve-attestation",
@@ -804,12 +848,12 @@
       "fingerprint": "3856d35ffb9f1462fab1e9858c7c5c804ee4ac80e13e9ee99578317dccea3c3f",
       "id": "H-19",
       "name": "SWIFT identity estate",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 11048,
           "kind": "file",
-          "mtime_ns": 1789196695673424718,
+          "mtime_ns": 1789196695000000000,
           "sha256": "9725e8a66be96be390563bc84853dc143f31c88a572263d6268a181c126730d6",
           "source": "public/interop/swift-census-2026-09/index.json",
           "state": "OBSERVED"
@@ -817,14 +861,14 @@
         {
           "bytes": 3812,
           "kind": "file",
-          "mtime_ns": 1789196695080323049,
+          "mtime_ns": 1789196695000000000,
           "sha256": "124eded8c84dd6aa7ff5166bdab5da9602a3d61ea1225de4a91c59cdef1622dd",
           "source": "public/interop/coverage-xrpl-swift.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "7829d2a63588c94e270fe1185fab9a5722dbd1d4a584b97f104ba9ab4d42cf10",
+      "receipt_hash": "62b1e87d94803d58e70166ef4b58320de5b2028106373f5db0d6725c2daa9d0c",
       "related_axes": [
         "cross-reality",
         "regulatory-framework",
@@ -845,19 +889,19 @@
       "fingerprint": "6473d716caccb5186fc2db5952e9aa95de3b1e647b82e0420603bfbf9e1a3a07",
       "id": "H-20",
       "name": "Wrapper/index board",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 2511,
           "kind": "file",
-          "mtime_ns": 1789196695207655610,
+          "mtime_ns": 1789196695000000000,
           "sha256": "9fc2cce35c2e83538614f9ef171c75d45425b19d751ce93f04611d4bd8d0bfee",
           "source": "public/interop/index-reference-reverify.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "bb6c09cab03a8b7578fec4e911b7f7320dbc6d8bb0f7551044c9876f7c14fd86",
+      "receipt_hash": "2e7794ac7d59ef519a0e45fedbfc0814f9aeb0e53cbb8594a70031829fc62f2d",
       "related_axes": [
         "cross-reality",
         "provenance-controls",
@@ -878,12 +922,12 @@
       "fingerprint": "1f7140c6adf20b59fbfcc4b8413bbe88635b8e3bd4056aa771a72f48175eb02c",
       "id": "H-21",
       "name": "MCP ecosystem",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 9608,
           "kind": "file",
-          "mtime_ns": 1789196695218131543,
+          "mtime_ns": 1789196695000000000,
           "sha256": "ea9a5fec8371fd299028599d5cfe6844db0f9d3964b0be776ca23e8c6bc5f808",
           "source": "public/interop/mcp-registry-resolution.json",
           "state": "OBSERVED"
@@ -891,14 +935,14 @@
         {
           "bytes": 21262,
           "kind": "file",
-          "mtime_ns": 1791434832101880594,
+          "mtime_ns": 1791434832000000000,
           "sha256": "74844f510a873bb7ac09827c44f9080a69fc4c5deaa4fc390038d0326285f237",
           "source": "public/interop/mcp-directories.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "6e449ad42fbd476d2daa19f0c602424e1e433a37fdcba5598799d953813bc119",
+      "receipt_hash": "ab156fd779a5bef2204a7676819edb0b3ace7b405c86d6224cbf24c516cf0302",
       "related_axes": [
         "machinery-conformity",
         "detector-interop",
@@ -919,7 +963,7 @@
       "fingerprint": "ad9ae12f30c79a8fde280913ac70a9ce46d90959117b870b9d36e08f64ebda45",
       "id": "H-22",
       "name": "A2A agent ecosystem",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "kind": "file",
@@ -930,14 +974,14 @@
         {
           "bytes": 3062,
           "kind": "file",
-          "mtime_ns": 1791434558169911567,
+          "mtime_ns": 1791434558000000000,
           "sha256": "0cc2ffbd935b4bc5e5475a579a9d7f7d1d5d009f353aed36130a3dd01966a676",
           "source": "public/interop/a2a-engine-cards.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "464507ff6ede140d9551f6544c16f5b7db4874123c7de059092a51a7f728e6f2",
+      "receipt_hash": "42d2c61d270f7f1fadc880cbd408ae9ea17ed0192f65dc48ba1185067c96fee7",
       "related_axes": [
         "machinery-conformity",
         "swarm",
@@ -955,74 +999,76 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "ecosystem",
-      "fingerprint": "53f243e9b224123a3900ffff9795e7cfb697bf4af0c03f922cce77d1dad0edfa",
+      "fingerprint": "50007c13021b561fb91cc09ce6504728ea451a932a23d380b1b8499a51d7b0f0",
       "id": "H-23",
       "name": "x402 ecosystem",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 73334,
+          "bytes": 49278,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:03Z",
-          "sha256": "ac3808f8d521498b8861c98d35a7f534c27818e232eb7f87fc3d80fc58af08cd",
+          "observed_at": "2026-11-13T02:50:03Z",
+          "sha256": "9a7f9b61c41f77cbf181501d948d5d73849b7eb5b6e1be46a59d53d4664402cb",
           "source": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources?limit=1&offset=0",
           "state": "OBSERVED"
         },
         {
-          "bytes": 2259,
-          "etag": "W/\"8d3-BJViTG9ubOYR3P1XA46XnDN6vj4\"",
+          "bytes": 2240,
+          "etag": "W/\"8c0-CYgXHdHU4JbESiGg70inT4Aznas\"",
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:02Z",
-          "sha256": "e5a22a64c28924766c83cb5e1df9d4a5f8488a49d57ab2c14029b116cf1e3d69",
+          "observed_at": "2026-11-13T02:50:02Z",
+          "sha256": "77d3d5a4e535b1029153023573d04bcafce51c8489645c9fa968a7a0a3a721bb",
           "source": "https://facilitator.payai.network/discovery/resources?limit=1&offset=0",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "31f6f5d9e4b895d2695b03542eb8c41b42c0eb6f191c86a2f2be9c8219983093",
+      "receipt_hash": "3a712dc7e1c381fa18e3d516724a84d5d65f4db158d6a202284c16fcfef27221",
       "related_axes": [
         "machinery-conformity",
         "distribution-integrity"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "29b75d83344d7aa3217ccbcc7092ba476f33b25c0849d920454c4af2ef88f00e"
+      "transition_id": "c8f854562ca285ec706485418f41133be759e458f23931b50a00a1747be57e70"
     },
     {
       "blocked_dependencies": [],
       "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
-      "delta": "CHANGED",
+      "delta": "UNCHANGED",
       "dependencies": {},
       "dependency_states": {},
       "execution_authority": "none",
       "family": "ecosystem",
-      "fingerprint": "39f4dcc9703884d3a03c97d39e4d7358534d3feccef3a0ab7dd31646cde5da09",
+      "fingerprint": "fabe2d63b716cea10ce0b155421ca075516ad02386dbe5126b17f24fb37dfb57",
       "id": "H-24",
       "name": "AI lab/model drift",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
+          "bytes": 79510,
           "kind": "file",
-          "reason": "missing_file",
+          "mtime_ns": 1791862402000000000,
+          "sha256": "d7ca649050b8340f2cc6927ab34a8a27a72fcd896aa22d0a35d3b7f66b5eee34",
           "source": "public/interop/lab-card-census-2026-09-17.json",
-          "state": "INCONCLUSIVE"
+          "state": "OBSERVED"
         },
         {
-          "bytes": 412881,
-          "files": 71,
+          "bytes": 414353,
+          "files": 72,
           "kind": "glob",
-          "sha256": "a4c913323a3e183e591807d36cb884ff1568167a10fe4b1ab3afb6e750211fcc",
+          "sha256": "9f25c8f90ec961696eeecece7ed7d2b2d3953fd50b4dc414abbf616eea6ee2a6",
           "source": "public/feeds/provider-diff/**/*.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "25c216f98a24137a0815535e1a59dba8de3758b94a8114b10cdf3bc162106b82",
+      "receipt_hash": "4b841eff1267e68a012c868ea179f0c70e3cf2fdd23137c792d1a381b2028b0f",
       "related_axes": [
         "governance",
         "safety",
@@ -1035,8 +1081,8 @@
         "jail"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
-      "state": "INCONCLUSIVE",
-      "transition_id": null
+      "state": "OBSERVED",
+      "transition_id": "30c105624e5fe3bb266560e2c0e98514a5eefb88441ee7ea4e29592445d0e21a"
     },
     {
       "blocked_dependencies": [],
@@ -1053,10 +1099,10 @@
       "fingerprint": "966d4fc88662b3b2d084cf811cd966d9d3f7a7209bb153b1169c8205bca82996",
       "id": "H-25",
       "name": "X-1 MCP concentration",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [],
       "publication_authority": "none",
-      "receipt_hash": "b6559a4c373d0726890c7180c39120a668beda1bf1d0b3c50506f39094326062",
+      "receipt_hash": "8ab5bbca09f0bd779ba61f949f3ad6179837fa5bb63edcf8a92053632a0b9596",
       "related_axes": [
         "machinery-conformity",
         "distribution-integrity"
@@ -1070,27 +1116,27 @@
       "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
       "delta": "CHANGED",
       "dependencies": {
-        "H-23": "53f243e9b224123a3900ffff9795e7cfb697bf4af0c03f922cce77d1dad0edfa"
+        "H-23": "50007c13021b561fb91cc09ce6504728ea451a932a23d380b1b8499a51d7b0f0"
       },
       "dependency_states": {
         "H-23": "OBSERVED"
       },
       "execution_authority": "none",
       "family": "index",
-      "fingerprint": "3a6849083ea3097bf131ab2dc3bf321f861b1b6525a498bc09d0e0ddc014e8b3",
+      "fingerprint": "d007f308325841d57d64992d5a4de05dbeb6a4560cdcbf34bbe9012d4ee0ed2a",
       "id": "H-26",
       "name": "X-2 x402 adoption",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [],
       "publication_authority": "none",
-      "receipt_hash": "3e78f0d4097f1bedc6f28f3efc90185c43e1f2f8ae2b8f3cfef2597136642141",
+      "receipt_hash": "05c141040eac80d21f8b2999e74a37a51ac2c0c931ee0f5392c8cfba459264fc",
       "related_axes": [
         "machinery-conformity",
         "distribution-integrity"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "48902d0d6d06e6f0824f5814ae9b1dd6837982003a8b99fffeaa1da9a9632520"
+      "transition_id": "32d5c0a112c4330ba8ceab94a7263723570647c4e7fcbc1b85b3b63ad68598f3"
     },
     {
       "blocked_dependencies": [
@@ -1109,10 +1155,10 @@
       "fingerprint": "e648737f655a41f5035aa794c3292857fe8a851a0bbb055c691e032204b51351",
       "id": "H-27",
       "name": "X-3 A2A churn",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [],
       "publication_authority": "none",
-      "receipt_hash": "1f1224c7fbb155ebbcc09fe62acd0ce910ed2f683728a865a6e1c32d49061cca",
+      "receipt_hash": "9a9d83cdf701853d43964da0729d1ef81306d7c618e43992f761a92f5e7dd157",
       "related_axes": [
         "swarm",
         "effect-binding"
@@ -1136,10 +1182,10 @@
       "fingerprint": "bc6d483f25c926429683e7bc837898df13fe26f945fba7858828a5d36b493f1c",
       "id": "H-28",
       "name": "X-4 stablecoin divergence",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [],
       "publication_authority": "none",
-      "receipt_hash": "ca552174ee87a61df3e88f0c36748382fe1a82f6f690276d8a75eb2d54a48e4b",
+      "receipt_hash": "0cb0abfde4ddb8e2b159f856b496fabdb2b98babfe983bd182cb01198350a6d9",
       "related_axes": [
         "reserve-attestation",
         "custody-disclosure"
@@ -1153,7 +1199,7 @@
       "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
       "delta": "UNCHANGED",
       "dependencies": {
-        "H-01": "8e180195b43bf6e812e5fcdb444f14df502d559e8c9e74f3a80df52756d00f06",
+        "H-01": "6b78d4b5382b7a429e6efa13a185d0d9c9956bf5d18ebdf7cc9d85c7a3c73a92",
         "H-05": "fb27e0e9b99eb69247d0fcc6f0e3226d3972486cc9dc32a631cbcb925bca4836"
       },
       "dependency_states": {
@@ -1162,13 +1208,13 @@
       },
       "execution_authority": "none",
       "family": "index",
-      "fingerprint": "cd26b51ab533bbbe082f074d890f0279a8946aacdd313dbf13bdaab2472e0c2b",
+      "fingerprint": "14cb66ec544288750b98c186668178172f15db1b36b49e32267d3bd82e2b792a",
       "id": "H-29",
       "name": "X-5 evidence freshness/correction latency",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [],
       "publication_authority": "none",
-      "receipt_hash": "8d33daa3497bf9cea6d1848b29aaf70fcf4c1a20492f46bd3b19ba06a534d29f",
+      "receipt_hash": "78d55118d6244ad4b7b6121cd5d3721acca0c9157b062c99d5ff68dc10331512",
       "related_axes": [
         "provenance",
         "continuity",
@@ -1176,7 +1222,7 @@
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "f335cea69da00df1b71b21f03cb09927c918f46924979eb854de63ccf50fdf61"
+      "transition_id": "d527f57bbbe905b4665b25a49405738a51e2f6882818bc46e6ae9c7df12ae5c1"
     },
     {
       "blocked_dependencies": [],
@@ -1193,10 +1239,10 @@
       "fingerprint": "d44293e87aa548f8cf31a12b6832aa3792fbcd7ba31d61ff0e5f986b290a4cc5",
       "id": "H-30",
       "name": "X-6 endpoint survival",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [],
       "publication_authority": "none",
-      "receipt_hash": "0facb9cd1d48549e182294b0c0ed52d7f71e8b19507b8daa573f09f168cb87f3",
+      "receipt_hash": "fa5a8f965b41bf0afed4a39f22bfddeeed96ed5d90d52666e243ccaeeed7ac46",
       "related_axes": [
         "continuity",
         "distribution-integrity"
@@ -1216,19 +1262,19 @@
       "fingerprint": "5b522b83a412d88113c5941ea6be9a5eda508d87ea072a4a48523f57c069fcb8",
       "id": "H-31",
       "name": "Regulator corridor",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 14442,
           "kind": "file",
-          "mtime_ns": 1789619406401226368,
+          "mtime_ns": 1789619406000000000,
           "sha256": "1592c6c5e37d34a4adb0bf4813169e2f57d9961f524c1a578b59ac1df895e5e6",
           "source": "public/interop/deep-research-regulatory-2026-09.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "f6e83cd4e55f88e7193b2d47d321e0c654f8ee950026208ba4bb608e1115a063",
+      "receipt_hash": "95d6f50d1c377d9da0255f4f2ba303f65060e8b08c590dab0cfb9f12ab6dcb33",
       "related_axes": [
         "governance",
         "regulatory-framework",
@@ -1246,36 +1292,36 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "institutional",
-      "fingerprint": "e2cca3b15de8909f0e8ea43b01176487c0c3ef0c39520b8ddb9c091bc0dfbb06",
+      "fingerprint": "02d558e37965e739cf1eff0cc7496542ab79f4bb6fae73795336aeb6284e3bc2",
       "id": "H-32",
       "name": "Standards corridor",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 57671,
+          "bytes": 57836,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:07Z",
-          "sha256": "1737707b240bfb9b7549949c279f03ad9234f58695a957749df611ce636e6609",
+          "observed_at": "2026-11-13T02:50:06Z",
+          "sha256": "7343ef6f5c8b540ce909bdfdeac922fe866310d0eac30b9d2977e2dc6a34fc8b",
           "source": "https://datatracker.ietf.org/doc/draft-templeman-scitt-framing-space/",
           "state": "OBSERVED"
         },
         {
-          "bytes": 47375,
+          "bytes": 47645,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:07Z",
-          "sha256": "6ada53639a303f88097dd5923c803a5a562faaac3e2937d61199ab3e650326eb",
+          "observed_at": "2026-11-13T02:50:07Z",
+          "sha256": "42fa3d121f38ffd688cbe4b52f4db9805141fa15930fe2f45feff0cd94d6896f",
           "source": "https://www.w3.org/community/agent-conformance/",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "f36b4e95d3081506d48cb865283cb44bf27f18c2be92fcdfb71965fd7f6a4da2",
+      "receipt_hash": "53a8743b8a732dd8fd598838de0b93faba0c77b54700c52a8ee84ec956b4d5ed",
       "related_axes": [
         "conformance",
         "governance",
@@ -1283,7 +1329,7 @@
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "2935cbd32d941f2b35223ad5bf2ac89956186280050480547d89d010af321568"
+      "transition_id": "a27ca579d03b8639d7e64354f8b35f014394ce444a6eceec555b9f6e2d09a88b"
     },
     {
       "blocked_dependencies": [],
@@ -1296,19 +1342,19 @@
       "fingerprint": "5d3a47d5f56837f4802cda2f934126d879ef79486ecc2e06b9f8f2430a336fa3",
       "id": "H-33",
       "name": "Deadline board",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 2592,
           "kind": "file",
-          "mtime_ns": 1791434559137604366,
+          "mtime_ns": 1791434559000000000,
           "sha256": "3c1f9c0193da8507ff976f34a2d1cb1e9599f393ca970f31155d5ca5742e6eb3",
           "source": "scripts/business-operations/calendar.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "0c106375e65e3b0ee162898e5cc2e113ee4a6081ed7b6ee99cad09c13f03b62f",
+      "receipt_hash": "495ff51b28acd7b6ebbfd7a050fa994516d2c39aec14f9b64fb2cc5c250b9882",
       "related_axes": [
         "governance",
         "regulatory-framework"
@@ -1328,7 +1374,7 @@
       "fingerprint": "9c2661c9fc4c7bb207f1e05985a17b408c167ac5cf2daa3d291795ceb6798fe1",
       "id": "H-34",
       "name": "Grant/funding windows",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 5009,
@@ -1340,7 +1386,7 @@
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "fb9143ce52bb5c516761f34a19f29b20b3a1cae27a5e130bb19dd3a6251ca117",
+      "receipt_hash": "9c237918e42b85de9aa9fa9312489c4daff75d6437c7cbbc0d284d7b02c7d760",
       "related_axes": [
         "governance"
       ],
@@ -1356,69 +1402,69 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "self-integrity",
-      "fingerprint": "55d1d465323c1979e1b7c69cd4f86cb58cf4ab74b89d97a14388ff5de30a438c",
+      "fingerprint": "cb35489d2c732fec4d1290dd5305aeb02a06aaa38c8e23b1dedb941f79d2744b",
       "id": "H-35",
       "name": "Public surface regression",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 127556,
+          "bytes": 136304,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:08Z",
-          "sha256": "4d4fb74badb31c1871675d62801341842d004d94ecfaa7db04db664105a604c3",
+          "observed_at": "2026-11-13T02:50:08Z",
+          "sha256": "d6123d88c9b29f825467d385173a9a252b11f5e04430749db1767bb470d20780",
           "source": "https://councilof.ai/",
           "state": "OBSERVED"
         },
         {
-          "bytes": 99656,
+          "bytes": 108840,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:08Z",
-          "sha256": "6e697cb71bd0f61085e760a434688ae8c9430454caf81c2f80e6da9729223823",
+          "observed_at": "2026-11-13T02:50:08Z",
+          "sha256": "11a50d313e3a560427840549f2841c2897691faa121b7bb61c133db2e33ea57e",
           "source": "https://councilof.ai/dashboard/?tab=measured&task=pricing-overview",
           "state": "OBSERVED"
         },
         {
-          "bytes": 111903,
+          "bytes": 94044,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:08Z",
-          "sha256": "593db9775834f3b6826673a8b0ed32c835f8c97d8f02b531bdddd1754fba6c47",
+          "observed_at": "2026-11-13T02:50:09Z",
+          "sha256": "2daa805f6043a8de42f899d34a77b947c283541aacff4dd2d0320f5f9ba6c998",
           "source": "https://councilof.ai/assess/",
           "state": "OBSERVED"
         },
         {
-          "bytes": 66972,
-          "etag": "\"55f46aa73144bff72a7efd13b705b158\"",
+          "bytes": 75329,
+          "etag": "\"df11e0d9e8ea917321801a5afa0637dd\"",
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:08Z",
-          "sha256": "f4819c420aab1e8283357624a9ecec41fbf148399d764318ec084dacaaa4ce8c",
+          "observed_at": "2026-11-13T02:50:09Z",
+          "sha256": "5698ae6fb3dba3b8e2dab8532b2e652ec7492d17a296f1a09a3fbe2f8b2981b9",
           "source": "https://councilof.ai/llms.txt",
           "state": "OBSERVED"
         },
         {
-          "bytes": 18702,
-          "etag": "\"8183e2e9a38bbf3953903d44f27cfada\"",
+          "bytes": 22025,
+          "etag": "\"89b1f34e20a1349f66a26b2b00c26643\"",
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:09Z",
-          "sha256": "91d3918b65a17e8db38649c39004cbcbbe86cd3d08539d8fbfa10773e98ec188",
+          "observed_at": "2026-11-13T02:50:09Z",
+          "sha256": "ec195a8ed187e792747ccf009520e5af3ee2764e050f40c9f6f460ab176bed6e",
           "source": "https://councilof.ai/.well-known/agent.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "3404f6a49eb9120046781023c99add58f54b9a007f9652fa2d94d17d5bb1b3d3",
+      "receipt_hash": "e9358cc568ff035679b2f622f3a883a13f7bdfcffdbff75ed40ce67e41999c17",
       "related_axes": [
         "governance",
         "continuity",
@@ -1426,7 +1472,7 @@
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "174339db7770a7bed5ee86610cc20f2d004a7c6f5d878445a4914143f9bde229"
+      "transition_id": "a390b5c9d95da4b5237e65ba13a870032dddf5eb6398fc440f0df6fc3695d501"
     },
     {
       "blocked_dependencies": [],
@@ -1436,47 +1482,47 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "self-integrity",
-      "fingerprint": "223355995003e6c59e835b98a7570ee83c84209ef3cc538351f7ec80195f9d04",
+      "fingerprint": "3f535220e099a5ca3ba2bab3bac811ee1d9a87455e0e5bb116d3f953c9f84327",
       "id": "H-36",
       "name": "Tool/count consistency",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 127941,
+          "bytes": 154776,
           "etag": null,
           "http": 200,
           "kind": "http",
-          "last_modified": "Tue, 13 Oct 2026 02:46:04 GMT",
-          "observed_at": "2026-10-13T02:50:09Z",
-          "sha256": "ea6dcbc9baaf602ff85f28c8c9668a02bf1c6f89dbf15a609921a360f022953e",
+          "last_modified": "Fri, 13 Nov 2026 02:49:00 GMT",
+          "observed_at": "2026-11-13T02:50:09Z",
+          "sha256": "e19300ad4f9f635c760aa3fd29260cfc833613d5b3972811db4dcdca90731e7c",
           "source": "https://councilof.ai/api/gspc",
           "state": "OBSERVED"
         },
         {
-          "bytes": 107202,
+          "bytes": 121957,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:09Z",
-          "sha256": "ee440e2a2ae44549c4c7cf8f1013b1a588376a9f93fdb5201216aaadf17eaa7f",
+          "observed_at": "2026-11-13T02:50:09Z",
+          "sha256": "203c67b662aa21e569fe1d9085ef4e8cf0e911fd0c3c5706e9b5d1a3e9070a8e",
           "source": "https://councilof.ai/tools/",
           "state": "OBSERVED"
         },
         {
-          "bytes": 136727,
+          "bytes": 116717,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:09Z",
-          "sha256": "5492a63769ee5e147ec88fde52bb6b500b11893cbc898d56293be83361ffeaf0",
+          "observed_at": "2026-11-13T02:50:09Z",
+          "sha256": "16998493f2f647c3c6fa16c2492e3cb8ca03bd2cb8bc2fd20ca8e18a170a207e",
           "source": "https://councilof.ai/products/",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "53ffc4d6483c28efdce817d863d1fb63483f565f34c37a99edc42e08f86dd919",
+      "receipt_hash": "5049652c71566c5b9c46cd76aeb3fcbdf7e4f01c89f41e4a95bd8afe260ddbf2",
       "related_axes": [
         "governance",
         "conformance",
@@ -1484,7 +1530,7 @@
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "94d6302b97847f8de39f255e26f40a24af67ab4e9d4f2b28c3ff2f1b739157c4"
+      "transition_id": "5bcbe3ad0b29da46f9a5f950ee21f5ee2f315050f04880291763b98a88b93314"
     },
     {
       "blocked_dependencies": [],
@@ -1494,30 +1540,30 @@
       "dependency_states": {},
       "execution_authority": "none",
       "family": "self-integrity",
-      "fingerprint": "cf68f9eca3ff79b2f372746df2b909f2534b1577c5a47015dadc84f29bf4bdc2",
+      "fingerprint": "bac749312d7a742ff5f5da6acb1d3d46f964f67128195ec5104717af733a9074",
       "id": "H-37",
       "name": "Truth-register projection",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
-          "bytes": 127941,
+          "bytes": 154776,
           "etag": null,
           "http": 200,
           "kind": "http",
-          "last_modified": "Tue, 13 Oct 2026 02:46:04 GMT",
-          "observed_at": "2026-10-13T02:50:09Z",
-          "sha256": "ea6dcbc9baaf602ff85f28c8c9668a02bf1c6f89dbf15a609921a360f022953e",
+          "last_modified": "Fri, 13 Nov 2026 02:49:00 GMT",
+          "observed_at": "2026-11-13T02:50:09Z",
+          "sha256": "e19300ad4f9f635c760aa3fd29260cfc833613d5b3972811db4dcdca90731e7c",
           "source": "https://councilof.ai/api/gspc",
           "state": "OBSERVED"
         },
         {
-          "bytes": 5769,
+          "bytes": 5821,
           "etag": null,
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:02Z",
-          "sha256": "9f30f220189794886fa25e4f92dbe2acbd538dc11f60b23ac63065c66f230307",
+          "observed_at": "2026-11-13T02:50:02Z",
+          "sha256": "76f9e1f977ff73452a880ce11994e83c0501a310abc919186297ce7966f4d650",
           "source": "https://councilof.ai/api/revenue",
           "state": "OBSERVED"
         },
@@ -1528,27 +1574,27 @@
           "identity_rule": "verified_corrections_signed_body_v1",
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:01Z",
-          "sha256": "35539887fff744553819aef4f61747f6513098ba4a86f9fb686d557e3ad0ef1f",
+          "observed_at": "2026-11-13T02:50:02Z",
+          "sha256": "3445531dbeeb4f886ec125a59238c210b83911079a3920213d49d2f3c0b2f368",
           "signed_body_archive": "signed-corrections/b04c8d07014b1c0c9497e889481e5e3ededf76736427bac3d814bfd2b3d3f34a.json",
           "signed_content_id": "b04c8d07014b1c0c9497e889481e5e3ededf76736427bac3d814bfd2b3d3f34a",
           "source": "https://councilof.ai/api/corrections",
           "state": "OBSERVED"
         },
         {
-          "bytes": 25369,
-          "etag": "\"710b9a5a065d83f93f2c3d1414c84e2f\"",
+          "bytes": 34349,
+          "etag": "\"111e657f33298bc70b66aa878b6c6bcc\"",
           "http": 200,
           "kind": "http",
           "last_modified": null,
-          "observed_at": "2026-10-13T02:50:01Z",
-          "sha256": "7d5967a4c5d08aa6db35103f5b1ce67fb98f3bd735edeed977cc3184d8165585",
+          "observed_at": "2026-11-13T02:50:01Z",
+          "sha256": "735f78b96888ade0b832141aaeb34b63e45e5e9095dd62d1e08ecd35bc3debe7",
           "source": "https://councilof.ai/root.json",
           "state": "OBSERVED"
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "e39e8a1f36fda654cc9443db73cca2caee360ddd3c5f50be53af002e15d5a23b",
+      "receipt_hash": "3e40f7a99a56d61e7470b5646611e7fe5ffd4b41578fead9a66a2d64e21010aa",
       "related_axes": [
         "governance",
         "provenance",
@@ -1556,7 +1602,7 @@
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "5c2a5d9c0377acc24c03594a71d800da813510ecc80ea21ebf81b75b503c027f"
+      "transition_id": "3bf29e7ae3f2c09ccb1244d2472df06b2b0b519038efdc6faa392ad5fc3d2297"
     },
     {
       "blocked_dependencies": [],
@@ -1569,7 +1615,7 @@
       "fingerprint": "fdfcb39e202fee91d3540fb9addd1a3d4f39ef8498ef273752b3f5227805462d",
       "id": "H-38",
       "name": "Data-room projection",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [
         {
           "bytes": 8164,
@@ -1589,14 +1635,14 @@
         }
       ],
       "publication_authority": "none",
-      "receipt_hash": "0af29634739777a728d79397167d71d8695d85d01db0e0e5f40d7d5bc8539f83",
+      "receipt_hash": "b52a29e1503e20232a8b44717159dcf11b6734b930a136de7bfef8439a93e5b5",
       "related_axes": [
         "governance",
         "provenance-controls"
       ],
       "schema": "csoai.hourly-loop-receipt/0.1",
       "state": "OBSERVED",
-      "transition_id": "76becfd68d8bbf7214a6977ba09ed67ec1427557999841feb75486ae7bf1d2e5"
+      "transition_id": "32a7d910c095b885a1568333aeab0e6e735083f9f2f36692edcb5c13320843ea"
     },
     {
       "blocked_dependencies": [
@@ -1608,7 +1654,7 @@
         "H-17": "16ea2208d77e90b00276fa0db455713c875079c5aa5bae3953e2a9d0540e58eb",
         "H-21": "1f7140c6adf20b59fbfcc4b8413bbe88635b8e3bd4056aa771a72f48175eb02c",
         "H-22": "ad9ae12f30c79a8fde280913ac70a9ce46d90959117b870b9d36e08f64ebda45",
-        "H-23": "53f243e9b224123a3900ffff9795e7cfb697bf4af0c03f922cce77d1dad0edfa"
+        "H-23": "50007c13021b561fb91cc09ce6504728ea451a932a23d380b1b8499a51d7b0f0"
       },
       "dependency_states": {
         "H-17": "OBSERVED",
@@ -1618,13 +1664,13 @@
       },
       "execution_authority": "none",
       "family": "self-integrity",
-      "fingerprint": "260940293a13ae0b8ae71d1e7ed62b2db9f9d28e2ebc413ed05cdbd810c13cce",
+      "fingerprint": "f299693b348077b7acc8b051f063f6056758b9b0f58084b19c2190ece108edc4",
       "id": "H-39",
       "name": "Census delta materiality",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [],
       "publication_authority": "none",
-      "receipt_hash": "d19fc6d87bc014b526980070058e64728b1b69ec494caf2e00a35aafd6ae1b26",
+      "receipt_hash": "b2aea4d79a0650ae3d2ebd05bb4644dc01731a334f8e947d6e4c14506528001b",
       "related_axes": [
         "ai-adoption-components",
         "labour-components",
@@ -1639,25 +1685,24 @@
       "blocked_dependencies": [
         "H-04",
         "H-22",
-        "H-24",
         "H-27",
         "H-39"
       ],
       "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
       "delta": "CHANGED",
       "dependencies": {
-        "H-01": "8e180195b43bf6e812e5fcdb444f14df502d559e8c9e74f3a80df52756d00f06",
-        "H-02": "24241194cbf68856c67be154e700b603885f3e910a681badbf8e479cb4d99fc5",
-        "H-03": "15e3ec02ef796ab7f404bfb52fc8aaca4af93ebc46bbe72c0dc29d6cf65e20d3",
+        "H-01": "6b78d4b5382b7a429e6efa13a185d0d9c9956bf5d18ebdf7cc9d85c7a3c73a92",
+        "H-02": "0560c8f21282f3cb41ed4f00346dcc803d1cb8b2f07ce0128d87c773a72ca33e",
+        "H-03": "89adef66706bfa47fbe7042243cac15fccd584c0421c2fbb2ca7842285160b61",
         "H-04": "9709d8a60a0031523e78250567af175c627b1803cbfa1a929b4b4ed3ee9414e8",
         "H-05": "fb27e0e9b99eb69247d0fcc6f0e3226d3972486cc9dc32a631cbcb925bca4836",
-        "H-06": "19d33919de2d6e28e71615b45a98db3bf34889a1758ee4cf51e557a91e70ecfc",
-        "H-07": "12a945aaab92525504a1f383b0e697a67b1f38bd34163da3c1c671953227159b",
-        "H-08": "5b75169cbe48fd53b653fdcc16f7a3284935560006d30c6c498d4c8810603a48",
-        "H-09": "4564d253e6b421467af5fb3ce6a3f139ace3a64bd51b2b28949e3a6ac9b0fb15",
-        "H-10": "478456cb9935478e95124242628f21f7647b20b4408d9e7fb5663520ee74f25d",
-        "H-11": "909bd2977b0c127dcd6d6d46a14d28911442b43b2084600f1bb032a69246b9b0",
-        "H-12": "09aa33c9c52cecf51d13d22542aec5ef9f635a5d42ca4749c69fabc12da60262",
+        "H-06": "e582c991bd7a8da812be3fd7b7c6537a159e5c86683cf8abf4f3dc8a398f74b9",
+        "H-07": "753234d7a316f8eaf4c84bf572c1b66a6594f5a116a2d6f754ea27e533ba930f",
+        "H-08": "2eb766ab2d464802752c3cfe1522d84793905fbcc929b20128b2588b85d5253b",
+        "H-09": "0b28695a162ff703866aecd83a353581ea07048694abbdfe9bfe55743878ce87",
+        "H-10": "991c7402d6dcbb3898e78a8dfb9c3a4224947d98f43ec0bf20171d7a40509a56",
+        "H-11": "123dcfdd8cdab4dd557671360785ccfe66496d0d002471c3941c99c0b2164b9b",
+        "H-12": "53128a661315e5708876ea72a6ea4d215420a078cee1cb8f1e9d07930644cc5c",
         "H-13": "f70150256cec4cd02a97b1a227f4962186435960ea0318c5d18ded8105792a6d",
         "H-14": "0a4f7db07a759e03eddabfa3e0ff4aa11bfa9ebd2816b1071fff32dd3fb7c6f2",
         "H-15": "fdc040aafc211ee30e72089f7fc481e5ec450f4a82b1f8320c4b6eafac9ce67e",
@@ -1668,23 +1713,23 @@
         "H-20": "6473d716caccb5186fc2db5952e9aa95de3b1e647b82e0420603bfbf9e1a3a07",
         "H-21": "1f7140c6adf20b59fbfcc4b8413bbe88635b8e3bd4056aa771a72f48175eb02c",
         "H-22": "ad9ae12f30c79a8fde280913ac70a9ce46d90959117b870b9d36e08f64ebda45",
-        "H-23": "53f243e9b224123a3900ffff9795e7cfb697bf4af0c03f922cce77d1dad0edfa",
-        "H-24": "39f4dcc9703884d3a03c97d39e4d7358534d3feccef3a0ab7dd31646cde5da09",
+        "H-23": "50007c13021b561fb91cc09ce6504728ea451a932a23d380b1b8499a51d7b0f0",
+        "H-24": "fabe2d63b716cea10ce0b155421ca075516ad02386dbe5126b17f24fb37dfb57",
         "H-25": "966d4fc88662b3b2d084cf811cd966d9d3f7a7209bb153b1169c8205bca82996",
-        "H-26": "3a6849083ea3097bf131ab2dc3bf321f861b1b6525a498bc09d0e0ddc014e8b3",
+        "H-26": "d007f308325841d57d64992d5a4de05dbeb6a4560cdcbf34bbe9012d4ee0ed2a",
         "H-27": "e648737f655a41f5035aa794c3292857fe8a851a0bbb055c691e032204b51351",
         "H-28": "bc6d483f25c926429683e7bc837898df13fe26f945fba7858828a5d36b493f1c",
-        "H-29": "cd26b51ab533bbbe082f074d890f0279a8946aacdd313dbf13bdaab2472e0c2b",
+        "H-29": "14cb66ec544288750b98c186668178172f15db1b36b49e32267d3bd82e2b792a",
         "H-30": "d44293e87aa548f8cf31a12b6832aa3792fbcd7ba31d61ff0e5f986b290a4cc5",
         "H-31": "5b522b83a412d88113c5941ea6be9a5eda508d87ea072a4a48523f57c069fcb8",
-        "H-32": "e2cca3b15de8909f0e8ea43b01176487c0c3ef0c39520b8ddb9c091bc0dfbb06",
+        "H-32": "02d558e37965e739cf1eff0cc7496542ab79f4bb6fae73795336aeb6284e3bc2",
         "H-33": "5d3a47d5f56837f4802cda2f934126d879ef79486ecc2e06b9f8f2430a336fa3",
         "H-34": "9c2661c9fc4c7bb207f1e05985a17b408c167ac5cf2daa3d291795ceb6798fe1",
-        "H-35": "55d1d465323c1979e1b7c69cd4f86cb58cf4ab74b89d97a14388ff5de30a438c",
-        "H-36": "223355995003e6c59e835b98a7570ee83c84209ef3cc538351f7ec80195f9d04",
-        "H-37": "cf68f9eca3ff79b2f372746df2b909f2534b1577c5a47015dadc84f29bf4bdc2",
+        "H-35": "cb35489d2c732fec4d1290dd5305aeb02a06aaa38c8e23b1dedb941f79d2744b",
+        "H-36": "3f535220e099a5ca3ba2bab3bac811ee1d9a87455e0e5bb116d3f953c9f84327",
+        "H-37": "bac749312d7a742ff5f5da6acb1d3d46f964f67128195ec5104717af733a9074",
         "H-38": "fdfcb39e202fee91d3540fb9addd1a3d4f39ef8498ef273752b3f5227805462d",
-        "H-39": "260940293a13ae0b8ae71d1e7ed62b2db9f9d28e2ebc413ed05cdbd810c13cce"
+        "H-39": "f299693b348077b7acc8b051f063f6056758b9b0f58084b19c2190ece108edc4"
       },
       "dependency_states": {
         "H-01": "OBSERVED",
@@ -1710,7 +1755,7 @@
         "H-21": "OBSERVED",
         "H-22": "INCONCLUSIVE",
         "H-23": "OBSERVED",
-        "H-24": "INCONCLUSIVE",
+        "H-24": "OBSERVED",
         "H-25": "OBSERVED",
         "H-26": "OBSERVED",
         "H-27": "INCONCLUSIVE",
@@ -1730,16 +1775,16 @@
       "evidence_coverage_state": "PARTIAL_OBSERVATIONS",
       "execution_authority": "none",
       "family": "self-integrity",
-      "fingerprint": "822cf904f1a8ae172bd25502badf9119ca9c7712090338579d0c29980091b907",
-      "hourly_merkle_root": "6f4b0191d7713f568ffa12d187a9b5c50867576e29b9ac2dd3802330d32addb0",
+      "fingerprint": "197c9e1d734205f8ac7b9308562e2ab76f871a809dce4865e7f28c717f658823",
+      "hourly_merkle_root": "84b386a65b39aefb0adf61cfe766b9fc3b10c9de4a8367f740876d8100940d9a",
       "id": "H-40",
       "leaf_count": 39,
       "name": "Receipt of receipts",
-      "observed_at": "2026-10-13T02:50:01Z",
+      "observed_at": "2026-11-13T02:50:01Z",
       "probes": [],
       "publication_authority": "none",
       "receipt_assembly_state": "ASSEMBLED",
-      "receipt_hash": "3282578c2e17e611b9fe7897e4e18d73f85db796ea971c62cac51af3d61cd5a4",
+      "receipt_hash": "ff24cf3d6f8ab35bf628b378c004c6226a4283ce1e42468594d4dc290f560908",
       "related_axes": [
         "provenance",
         "continuity",
@@ -1755,18 +1800,6 @@
     "already_queued": 6,
     "blocked": [
       {
-        "loop_id": "H-36",
-        "sources": [
-          "H-24"
-        ],
-        "state": "HOLD_SOURCE_EVIDENCE",
-        "trigger_loops": [
-          "H-11",
-          "H-12",
-          "H-36"
-        ]
-      },
-      {
         "loop_id": "H-39",
         "sources": [
           "H-22",
@@ -1781,7 +1814,6 @@
         "loop_id": "H-37",
         "sources": [
           "H-27",
-          "H-36",
           "H-39"
         ],
         "state": "HOLD_SOURCE_EVIDENCE",
@@ -1817,7 +1849,8 @@
           "H-32",
           "H-35",
           "H-36",
-          "H-37"
+          "H-37",
+          "H-38"
         ]
       },
       {
@@ -1825,9 +1858,7 @@
         "sources": [
           "H-04",
           "H-22",
-          "H-24",
           "H-27",
-          "H-36",
           "H-37",
           "H-38",
           "H-39",
@@ -1849,7 +1880,8 @@
           "H-32",
           "H-35",
           "H-36",
-          "H-37"
+          "H-37",
+          "H-38"
         ]
       }
     ],
@@ -1860,11 +1892,11 @@
     "jobs": [
       {
         "action": "root_freshness_reconcile",
-        "candidate_id": "ead46ebb5e4d20ec2017752b",
+        "candidate_id": "3a0943fc872591a4b8df1deb",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -1877,21 +1909,21 @@
         "schema": "csoai.deep-measurement-candidate/0.1",
         "signing": "not_performed",
         "source_dependencies": {},
-        "source_fingerprint": "8e180195b43bf6e812e5fcdb444f14df502d559e8c9e74f3a80df52756d00f06",
-        "source_receipt_hash": "b2b9d0af3c716b4a200f786fa4e247d6aacbcc6dd3f726a0972005b99a4db64f",
+        "source_fingerprint": "6b78d4b5382b7a429e6efa13a185d0d9c9956bf5d18ebdf7cc9d85c7a3c73a92",
+        "source_receipt_hash": "c974f4915de50e960b30a0d2efe964a8f3a32f2c55debea91bb08e041e981252",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-01": "09ba452a9dc858c13235e5b0040a91cf1203f93ed846f2e947d3e9a9bfbb3326"
+          "H-01": "fc7cd0a85a49cdbb2ee13d40f373cb2261e81d30ad8ae59d9f60f6a130a9daae"
         },
-        "work_key": "ead46ebb5e4d20ec2017752b4c0053080a15aed57c0ca1507f8174daf89ddf6f"
+        "work_key": "3a0943fc872591a4b8df1debcd92eaf1ec69ad1df7baf98b008d50d9f0357f17"
       },
       {
         "action": "x402_challenge_diff",
-        "candidate_id": "7eea1b9eec60a2a03fac3e13",
+        "candidate_id": "a75a2852cb271ef8aa0738cd",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -1904,21 +1936,21 @@
         "schema": "csoai.deep-measurement-candidate/0.1",
         "signing": "not_performed",
         "source_dependencies": {},
-        "source_fingerprint": "19d33919de2d6e28e71615b45a98db3bf34889a1758ee4cf51e557a91e70ecfc",
-        "source_receipt_hash": "53dc5a379d41d902208776247d3bce3ed6375b2f7893552ebce4fa4d84aaf951",
+        "source_fingerprint": "e582c991bd7a8da812be3fd7b7c6537a159e5c86683cf8abf4f3dc8a398f74b9",
+        "source_receipt_hash": "970e4a28ace89cfde80e793efaccd7e68a29470ca66c5d9960836481056dee64",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-06": "52db89e5ccad5647ac62da61b26488c1e724b96022b95254504530d8c3de63d3"
+          "H-06": "d6ed402bc4298c5254554f5d6a9e08807ab1f7c144d9ae2c4d834ea84413f6ee"
         },
-        "work_key": "7eea1b9eec60a2a03fac3e13defb895b24e6be308b7f3ef33f68aec60e11db45"
+        "work_key": "a75a2852cb271ef8aa0738cdd73f9c92745ae2457e0beca4190d7c0dee71a19d"
       },
       {
         "action": "business_truth_refresh",
-        "candidate_id": "6a2cb3fd06d209ad8674cbc3",
+        "candidate_id": "2e57262e4ee8eb10eaa0c6bf",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -1931,21 +1963,21 @@
         "schema": "csoai.deep-measurement-candidate/0.1",
         "signing": "not_performed",
         "source_dependencies": {},
-        "source_fingerprint": "12a945aaab92525504a1f383b0e697a67b1f38bd34163da3c1c671953227159b",
-        "source_receipt_hash": "5cea39e5f44ccc5f91c93fce082e552ca824c81fa7f6a414ea5be923c5a0424f",
+        "source_fingerprint": "753234d7a316f8eaf4c84bf572c1b66a6594f5a116a2d6f754ea27e533ba930f",
+        "source_receipt_hash": "1a53440a7139572dacd28f581699f6a979504ac1721285a22d7e1f2cf18db74c",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-07": "221ddf53631b3217881632dec96091672756d5adcd0bec3f83168554b8e817ed"
+          "H-07": "34cde15fc08074ba7f9ff90f219776f21e6881e18a77170d53fe27cdc633b7b7"
         },
-        "work_key": "6a2cb3fd06d209ad8674cbc37ed497880aa1e110733b8e79ffe007324cfd1408"
+        "work_key": "2e57262e4ee8eb10eaa0c6bfed367cddc4982076e218e8abe33755081e561d4d"
       },
       {
         "action": "payai_metadata_review",
-        "candidate_id": "bb6a6eca28a97ae482849a2f",
+        "candidate_id": "9df2e0365f5a56793b8cd127",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -1958,21 +1990,21 @@
         "schema": "csoai.deep-measurement-candidate/0.1",
         "signing": "not_performed",
         "source_dependencies": {},
-        "source_fingerprint": "5b75169cbe48fd53b653fdcc16f7a3284935560006d30c6c498d4c8810603a48",
-        "source_receipt_hash": "b06d3dd79f6a93b7e7eaca19ecdb2ab4c529d8d9a167c5195fccb63ac97246fb",
+        "source_fingerprint": "2eb766ab2d464802752c3cfe1522d84793905fbcc929b20128b2588b85d5253b",
+        "source_receipt_hash": "0af00f2510afbadec9c077b92e91a1aeb2b7420939d3742fcb7227b1b8a8633e",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-08": "3d25b193ddccf1493c4e6d3874b46e1a518106399d4524207edd4df04fa440ca"
+          "H-08": "af39d6037bc8ca1686d8dc63b2430923343281dfbade82d6526b06e6c847e5d9"
         },
-        "work_key": "bb6a6eca28a97ae482849a2f0ba6b72e97c4c7d3d12f51dc8114ddd00ab03e1b"
+        "work_key": "9df2e0365f5a56793b8cd127d835c6759cb6e8a9e10c9b7d6f07353f0c26ed51"
       },
       {
         "action": "x402_index_deep_census",
-        "candidate_id": "6d610c7b7a3a8f5929538a8c",
+        "candidate_id": "03d2ab36cdc64b32e29c9424",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -1985,23 +2017,23 @@
         "schema": "csoai.deep-measurement-candidate/0.1",
         "signing": "not_performed",
         "source_dependencies": {},
-        "source_fingerprint": "4564d253e6b421467af5fb3ce6a3f139ace3a64bd51b2b28949e3a6ac9b0fb15",
-        "source_receipt_hash": "3a1bcc7ebea5604282c544ddba253111ff6a285da7b1477e6dcb8e76c5b94ade",
+        "source_fingerprint": "0b28695a162ff703866aecd83a353581ea07048694abbdfe9bfe55743878ce87",
+        "source_receipt_hash": "b2e84be3b0a2a4e1e87c160386fff526a18290f70e912a3c2dffc3bb1fab7906",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-09": "0dd28fd9ba0a62dce6a923512f1a8acdd5007189c68f2866919ab19090e0b9db"
+          "H-09": "b2fe1b0a9e033cf8898cb536403c8eb3321c11190e9c2ddc253853f9d1345ba3"
         },
-        "work_key": "6d610c7b7a3a8f5929538a8cf06b6e141ad1926cf0746c3ce4541cb541cc997a"
+        "work_key": "03d2ab36cdc64b32e29c9424ae7dccbec8d1e4c7950e7b3c81eb0511065b251a"
       },
       {
         "action": "billing_lifecycle_reconcile",
-        "candidate_id": "7863615ce4ace1548c7e51e8",
+        "candidate_id": "95b6a510893025822e84c0b1",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [
-          "6a2cb3fd06d209ad8674cbc3"
+          "2e57262e4ee8eb10eaa0c6bf"
         ],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -2014,24 +2046,24 @@
         "schema": "csoai.deep-measurement-candidate/0.1",
         "signing": "not_performed",
         "source_dependencies": {
-          "H-07": "12a945aaab92525504a1f383b0e697a67b1f38bd34163da3c1c671953227159b"
+          "H-07": "753234d7a316f8eaf4c84bf572c1b66a6594f5a116a2d6f754ea27e533ba930f"
         },
-        "source_fingerprint": "478456cb9935478e95124242628f21f7647b20b4408d9e7fb5663520ee74f25d",
-        "source_receipt_hash": "58e6b572a4018d6dbc5d923794158dd6d606fc4714d55a4b3681839c82c49099",
+        "source_fingerprint": "991c7402d6dcbb3898e78a8dfb9c3a4224947d98f43ec0bf20171d7a40509a56",
+        "source_receipt_hash": "17930da1aba34c0f7b1700c3e87b856f43296798787c45c60175121e4144b562",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-07": "221ddf53631b3217881632dec96091672756d5adcd0bec3f83168554b8e817ed",
-          "H-10": "c96166f6f4026b4d37e668da9ec21540bbafaa953673471d4492381a2585e330"
+          "H-07": "34cde15fc08074ba7f9ff90f219776f21e6881e18a77170d53fe27cdc633b7b7",
+          "H-10": "1d3b1bbe0bf2e67e6953fc05865b862e97a0b64f9595110deeaf7cd8cb2b7695"
         },
-        "work_key": "7863615ce4ace1548c7e51e80dad0e672ad6e8ef834c3b02aa6cad417ba8d1ad"
+        "work_key": "95b6a510893025822e84c0b1d58fb549bfefda4e205979f23ce9da18c95f8671"
       },
       {
         "action": "pypi_distribution_snapshot",
-        "candidate_id": "5f6d7e78a400c5f553f67d70",
+        "candidate_id": "0c891601ef7c9451a312b920",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -2044,21 +2076,21 @@
         "schema": "csoai.deep-measurement-candidate/0.1",
         "signing": "not_performed",
         "source_dependencies": {},
-        "source_fingerprint": "909bd2977b0c127dcd6d6d46a14d28911442b43b2084600f1bb032a69246b9b0",
-        "source_receipt_hash": "5a76f55ea9de369bd1428934c7f9bf284b517726cde6d6ccb0de4d82ee64a8d2",
+        "source_fingerprint": "123dcfdd8cdab4dd557671360785ccfe66496d0d002471c3941c99c0b2164b9b",
+        "source_receipt_hash": "641bdc744a359ad1e3f29cbab9ddfef5137100901abea0408ede1b62d40fb80e",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-11": "da87f73472430ff1a62475dd1a78ce28303b4f9be1aa812a4b7393d163ddf59c"
+          "H-11": "e4871e8ca058a1c93c5c31af227ca973c0f457c31286a27914a40c48dc4fd135"
         },
-        "work_key": "5f6d7e78a400c5f553f67d705d0a3020265922f9675d2a60b63a3a260cfc514f"
+        "work_key": "0c891601ef7c9451a312b92069bc0f2768d54ed6c4415f44a314dd38cebf1226"
       },
       {
         "action": "npm_distribution_snapshot",
-        "candidate_id": "09cb4f0ff87a454c3f098ee4",
+        "candidate_id": "e5e7178310e6143fd62f49df",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -2071,21 +2103,21 @@
         "schema": "csoai.deep-measurement-candidate/0.1",
         "signing": "not_performed",
         "source_dependencies": {},
-        "source_fingerprint": "09aa33c9c52cecf51d13d22542aec5ef9f635a5d42ca4749c69fabc12da60262",
-        "source_receipt_hash": "d5fe370dd97a189750d9e08d2abbc25dd5455328246974e8456e7562faffb2cd",
+        "source_fingerprint": "53128a661315e5708876ea72a6ea4d215420a078cee1cb8f1e9d07930644cc5c",
+        "source_receipt_hash": "b220557556f0a4c7086c8f4a5e8d6b996455a4a3a2fe31fb55459a81ab39e68e",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-12": "1b27ae8cd6bb9f6b16888c8d0e3252baa3bf2e109eebce6274be01c43273e51c"
+          "H-12": "120828484d24147fe6d09d177a0949a924dffef5b3e64e3d69f52a37180ccbb6"
         },
-        "work_key": "09cb4f0ff87a454c3f098ee4209a81e25236194530abcdad2b33429b0cc7d616"
+        "work_key": "e5e7178310e6143fd62f49df05c6857ee24d706bc1f84dc783204b974cefd94b"
       },
       {
         "action": "x402_adoption_recompute",
-        "candidate_id": "f2cefa2d373de53b39ddd139",
+        "candidate_id": "6c17d69d388df694207cd620",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -2098,23 +2130,23 @@
         "schema": "csoai.deep-measurement-candidate/0.1",
         "signing": "not_performed",
         "source_dependencies": {},
-        "source_fingerprint": "53f243e9b224123a3900ffff9795e7cfb697bf4af0c03f922cce77d1dad0edfa",
-        "source_receipt_hash": "31f6f5d9e4b895d2695b03542eb8c41b42c0eb6f191c86a2f2be9c8219983093",
+        "source_fingerprint": "50007c13021b561fb91cc09ce6504728ea451a932a23d380b1b8499a51d7b0f0",
+        "source_receipt_hash": "3a712dc7e1c381fa18e3d516724a84d5d65f4db158d6a202284c16fcfef27221",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-23": "29b75d83344d7aa3217ccbcc7092ba476f33b25c0849d920454c4af2ef88f00e"
+          "H-23": "c8f854562ca285ec706485418f41133be759e458f23931b50a00a1747be57e70"
         },
-        "work_key": "f2cefa2d373de53b39ddd139bf3d8519d125fa1a240124fd5929bbdaf4f0642e"
+        "work_key": "6c17d69d388df694207cd62043f27427e059340f2f2a39df4ea656f28f3baff1"
       },
       {
         "action": "x2_recompute",
-        "candidate_id": "050c7f1aebbd174b956e921e",
+        "candidate_id": "95ffaa2d796d56ba2e41ff06",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [
-          "f2cefa2d373de53b39ddd139"
+          "6c17d69d388df694207cd620"
         ],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -2127,26 +2159,26 @@
         "schema": "csoai.deep-measurement-candidate/0.1",
         "signing": "not_performed",
         "source_dependencies": {
-          "H-23": "53f243e9b224123a3900ffff9795e7cfb697bf4af0c03f922cce77d1dad0edfa"
+          "H-23": "50007c13021b561fb91cc09ce6504728ea451a932a23d380b1b8499a51d7b0f0"
         },
-        "source_fingerprint": "3a6849083ea3097bf131ab2dc3bf321f861b1b6525a498bc09d0e0ddc014e8b3",
-        "source_receipt_hash": "3e78f0d4097f1bedc6f28f3efc90185c43e1f2f8ae2b8f3cfef2597136642141",
+        "source_fingerprint": "d007f308325841d57d64992d5a4de05dbeb6a4560cdcbf34bbe9012d4ee0ed2a",
+        "source_receipt_hash": "05c141040eac80d21f8b2999e74a37a51ac2c0c931ee0f5392c8cfba459264fc",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-23": "29b75d83344d7aa3217ccbcc7092ba476f33b25c0849d920454c4af2ef88f00e",
-          "H-26": "48902d0d6d06e6f0824f5814ae9b1dd6837982003a8b99fffeaa1da9a9632520"
+          "H-23": "c8f854562ca285ec706485418f41133be759e458f23931b50a00a1747be57e70",
+          "H-26": "32d5c0a112c4330ba8ceab94a7263723570647c4e7fcbc1b85b3b63ad68598f3"
         },
-        "work_key": "050c7f1aebbd174b956e921e9f75563fde092aab27bfe83e4912d852b6f1acc8"
+        "work_key": "95ffaa2d796d56ba2e41ff0672f5860ef4df019f0d6a9ee7f05fe10a58f4d032"
       },
       {
         "action": "x5_recompute",
-        "candidate_id": "b504e8cb1ca0c09be654f6ea",
+        "candidate_id": "eb89829fd302059c00a78d3a",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [
-          "ead46ebb5e4d20ec2017752b"
+          "3a0943fc872591a4b8df1deb"
         ],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -2159,25 +2191,25 @@
         "schema": "csoai.deep-measurement-candidate/0.1",
         "signing": "not_performed",
         "source_dependencies": {
-          "H-01": "8e180195b43bf6e812e5fcdb444f14df502d559e8c9e74f3a80df52756d00f06",
+          "H-01": "6b78d4b5382b7a429e6efa13a185d0d9c9956bf5d18ebdf7cc9d85c7a3c73a92",
           "H-05": "fb27e0e9b99eb69247d0fcc6f0e3226d3972486cc9dc32a631cbcb925bca4836"
         },
-        "source_fingerprint": "cd26b51ab533bbbe082f074d890f0279a8946aacdd313dbf13bdaab2472e0c2b",
-        "source_receipt_hash": "8d33daa3497bf9cea6d1848b29aaf70fcf4c1a20492f46bd3b19ba06a534d29f",
+        "source_fingerprint": "14cb66ec544288750b98c186668178172f15db1b36b49e32267d3bd82e2b792a",
+        "source_receipt_hash": "78d55118d6244ad4b7b6121cd5d3721acca0c9157b062c99d5ff68dc10331512",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-01": "09ba452a9dc858c13235e5b0040a91cf1203f93ed846f2e947d3e9a9bfbb3326",
-          "H-29": "f335cea69da00df1b71b21f03cb09927c918f46924979eb854de63ccf50fdf61"
+          "H-01": "fc7cd0a85a49cdbb2ee13d40f373cb2261e81d30ad8ae59d9f60f6a130a9daae",
+          "H-29": "d527f57bbbe905b4665b25a49405738a51e2f6882818bc46e6ae9c7df12ae5c1"
         },
-        "work_key": "b504e8cb1ca0c09be654f6eac7c2085605fe42a7079810abca63020ccef837b5"
+        "work_key": "eb89829fd302059c00a78d3afb8ebcee4078c59befd99e52000c707bc47949b5"
       },
       {
         "action": "standards_change_classification",
-        "candidate_id": "2d7ed2627a736f2809288dbd",
+        "candidate_id": "ac48d9403c86c0650a413594",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -2190,23 +2222,23 @@
         "schema": "csoai.deep-measurement-candidate/0.1",
         "signing": "not_performed",
         "source_dependencies": {},
-        "source_fingerprint": "e2cca3b15de8909f0e8ea43b01176487c0c3ef0c39520b8ddb9c091bc0dfbb06",
-        "source_receipt_hash": "f36b4e95d3081506d48cb865283cb44bf27f18c2be92fcdfb71965fd7f6a4da2",
+        "source_fingerprint": "02d558e37965e739cf1eff0cc7496542ab79f4bb6fae73795336aeb6284e3bc2",
+        "source_receipt_hash": "53a8743b8a732dd8fd598838de0b93faba0c77b54700c52a8ee84ec956b4d5ed",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-32": "2935cbd32d941f2b35223ad5bf2ac89956186280050480547d89d010af321568"
+          "H-32": "a27ca579d03b8639d7e64354f8b35f014394ce444a6eceec555b9f6e2d09a88b"
         },
-        "work_key": "2d7ed2627a736f2809288dbd9a04e47106c5b354eef1f33aefaa923ebfdb3734"
+        "work_key": "ac48d9403c86c0650a413594ba5b287a56b3f60ffdaecd6d00cd94d682892fe5"
       },
       {
         "action": "claim_maintenance_dogfood",
-        "candidate_id": "1d844322fa6f0d809673c052",
+        "candidate_id": "abcbe50c95835919359ea6c1",
         "chain_revision": "csoai.review-chain/0.1",
         "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
         "cost_authorized": null,
-        "created_at": "2026-10-13T02:50:01Z",
+        "created_at": "2026-11-13T02:50:01Z",
         "depends_on_candidate_ids": [
-          "2d7ed2627a736f2809288dbd"
+          "ac48d9403c86c0650a413594"
         ],
         "execution": "not_performed",
         "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
@@ -2220,84 +2252,127 @@
         "signing": "not_performed",
         "source_dependencies": {
           "H-31": "5b522b83a412d88113c5941ea6be9a5eda508d87ea072a4a48523f57c069fcb8",
-          "H-32": "e2cca3b15de8909f0e8ea43b01176487c0c3ef0c39520b8ddb9c091bc0dfbb06"
+          "H-32": "02d558e37965e739cf1eff0cc7496542ab79f4bb6fae73795336aeb6284e3bc2"
         },
-        "source_fingerprint": "55d1d465323c1979e1b7c69cd4f86cb58cf4ab74b89d97a14388ff5de30a438c",
-        "source_receipt_hash": "3404f6a49eb9120046781023c99add58f54b9a007f9652fa2d94d17d5bb1b3d3",
+        "source_fingerprint": "cb35489d2c732fec4d1290dd5305aeb02a06aaa38c8e23b1dedb941f79d2744b",
+        "source_receipt_hash": "e9358cc568ff035679b2f622f3a883a13f7bdfcffdbff75ed40ce67e41999c17",
         "state": "QUEUED_INTERNAL_REVIEW",
         "trigger_transitions": {
-          "H-32": "2935cbd32d941f2b35223ad5bf2ac89956186280050480547d89d010af321568",
-          "H-35": "174339db7770a7bed5ee86610cc20f2d004a7c6f5d878445a4914143f9bde229"
+          "H-32": "a27ca579d03b8639d7e64354f8b35f014394ce444a6eceec555b9f6e2d09a88b",
+          "H-35": "a390b5c9d95da4b5237e65ba13a870032dddf5eb6398fc440f0df6fc3695d501"
         },
-        "work_key": "1d844322fa6f0d809673c05244dd52166c14a2d9136c413ba315078b8a6f0c68"
+        "work_key": "abcbe50c95835919359ea6c1b70786f253b63459797e00b634289e55e4ff061e"
+      },
+      {
+        "action": "count_consistency_review",
+        "candidate_id": "b940661a9b1c8b156e0d602c",
+        "chain_revision": "csoai.review-chain/0.1",
+        "claim_boundary": "Review-routing intent only. Requires scoped owner approval and actual upstream result receipts; no execution, delivery, buyer acceptance or revenue is inferred.",
+        "cost_authorized": null,
+        "created_at": "2026-11-13T02:50:01Z",
+        "depends_on_candidate_ids": [
+          "0c891601ef7c9451a312b920",
+          "e5e7178310e6143fd62f49df"
+        ],
+        "execution": "not_performed",
+        "graph_id": "37dde9843272613570a0dd6c78bb9e9dd1270da210c5cac32c0b8815be4df046",
+        "loop_id": "H-36",
+        "model_training": "not_authorized",
+        "payment": "not_performed",
+        "publication": "not_performed",
+        "readiness": "WAITING_FOR_UPSTREAM_REVIEW",
+        "reason": "CHANGED",
+        "schema": "csoai.deep-measurement-candidate/0.1",
+        "signing": "not_performed",
+        "source_dependencies": {
+          "H-11": "123dcfdd8cdab4dd557671360785ccfe66496d0d002471c3941c99c0b2164b9b",
+          "H-12": "53128a661315e5708876ea72a6ea4d215420a078cee1cb8f1e9d07930644cc5c",
+          "H-13": "f70150256cec4cd02a97b1a227f4962186435960ea0318c5d18ded8105792a6d",
+          "H-14": "0a4f7db07a759e03eddabfa3e0ff4aa11bfa9ebd2816b1071fff32dd3fb7c6f2",
+          "H-24": "fabe2d63b716cea10ce0b155421ca075516ad02386dbe5126b17f24fb37dfb57"
+        },
+        "source_fingerprint": "3f535220e099a5ca3ba2bab3bac811ee1d9a87455e0e5bb116d3f953c9f84327",
+        "source_receipt_hash": "5049652c71566c5b9c46cd76aeb3fcbdf7e4f01c89f41e4a95bd8afe260ddbf2",
+        "state": "QUEUED_INTERNAL_REVIEW",
+        "trigger_transitions": {
+          "H-11": "e4871e8ca058a1c93c5c31af227ca973c0f457c31286a27914a40c48dc4fd135",
+          "H-12": "120828484d24147fe6d09d177a0949a924dffef5b3e64e3d69f52a37180ccbb6",
+          "H-36": "5bcbe3ad0b29da46f9a5f950ee21f5ee2f315050f04880291763b98a88b93314"
+        },
+        "work_key": "b940661a9b1c8b156e0d602ce48c8c4a25d02e4c62d8ac3d815e3d6be4417799"
       }
     ],
     "loop_count": 40,
-    "new": 7,
+    "new": 8,
     "payment": "disabled",
     "pending_triggers": {
       "H-01": {
-        "fingerprint": "8e180195b43bf6e812e5fcdb444f14df502d559e8c9e74f3a80df52756d00f06",
-        "source_receipt_hash": "aeb94bb58be15104daea511a17f2bbc3af9f20b30bc9e0838d4c37a0fdadb96b",
-        "transition_id": "09ba452a9dc858c13235e5b0040a91cf1203f93ed846f2e947d3e9a9bfbb3326"
+        "fingerprint": "6b78d4b5382b7a429e6efa13a185d0d9c9956bf5d18ebdf7cc9d85c7a3c73a92",
+        "source_receipt_hash": "f15a99e8328ac252acfc1548003e42fbfa3e4399d909ce849a16b361964c0c51",
+        "transition_id": "fc7cd0a85a49cdbb2ee13d40f373cb2261e81d30ad8ae59d9f60f6a130a9daae"
       },
       "H-07": {
-        "fingerprint": "12a945aaab92525504a1f383b0e697a67b1f38bd34163da3c1c671953227159b",
-        "source_receipt_hash": "11266ad0d2f69d02c8cf25c6b4500b8cd375fa6378344398009d1ab3cf837189",
-        "transition_id": "221ddf53631b3217881632dec96091672756d5adcd0bec3f83168554b8e817ed"
+        "fingerprint": "753234d7a316f8eaf4c84bf572c1b66a6594f5a116a2d6f754ea27e533ba930f",
+        "source_receipt_hash": "e356447582c9f2a59f4f5832fc8f022e0efeaf5c445f3134b6841b7900aef049",
+        "transition_id": "34cde15fc08074ba7f9ff90f219776f21e6881e18a77170d53fe27cdc633b7b7"
       },
       "H-10": {
-        "fingerprint": "478456cb9935478e95124242628f21f7647b20b4408d9e7fb5663520ee74f25d",
-        "source_receipt_hash": "3f97ed0715833577c3a62cef13053d5e745d29794b81ecc6c1f5a7f6275c9cf7",
-        "transition_id": "c96166f6f4026b4d37e668da9ec21540bbafaa953673471d4492381a2585e330"
+        "fingerprint": "991c7402d6dcbb3898e78a8dfb9c3a4224947d98f43ec0bf20171d7a40509a56",
+        "source_receipt_hash": "31639a9a991b286403228dc65d3d1c7558be72711ee5bd135a2eade4205e9186",
+        "transition_id": "1d3b1bbe0bf2e67e6953fc05865b862e97a0b64f9595110deeaf7cd8cb2b7695"
       },
       "H-11": {
-        "fingerprint": "909bd2977b0c127dcd6d6d46a14d28911442b43b2084600f1bb032a69246b9b0",
-        "source_receipt_hash": "d69c400087886bd6384c214c8a242c40cae77898f45a5779bd5571dd0b161369",
-        "transition_id": "da87f73472430ff1a62475dd1a78ce28303b4f9be1aa812a4b7393d163ddf59c"
+        "fingerprint": "123dcfdd8cdab4dd557671360785ccfe66496d0d002471c3941c99c0b2164b9b",
+        "source_receipt_hash": "4769ba5467eae5df7c19ddcae67501bdb072a5f9632290f7973f77d6a868931e",
+        "transition_id": "e4871e8ca058a1c93c5c31af227ca973c0f457c31286a27914a40c48dc4fd135"
       },
       "H-12": {
-        "fingerprint": "09aa33c9c52cecf51d13d22542aec5ef9f635a5d42ca4749c69fabc12da60262",
-        "source_receipt_hash": "5014343021fb58f5c6592a1d1ba277c1c20e915d891794eb5c4de0707b3b12b2",
-        "transition_id": "1b27ae8cd6bb9f6b16888c8d0e3252baa3bf2e109eebce6274be01c43273e51c"
+        "fingerprint": "53128a661315e5708876ea72a6ea4d215420a078cee1cb8f1e9d07930644cc5c",
+        "source_receipt_hash": "ec3ed7c081390182378f9e29f888dfe453ecf015897a4e7de03676419245c120",
+        "transition_id": "120828484d24147fe6d09d177a0949a924dffef5b3e64e3d69f52a37180ccbb6"
       },
       "H-23": {
-        "fingerprint": "53f243e9b224123a3900ffff9795e7cfb697bf4af0c03f922cce77d1dad0edfa",
-        "source_receipt_hash": "31f6f5d9e4b895d2695b03542eb8c41b42c0eb6f191c86a2f2be9c8219983093",
-        "transition_id": "29b75d83344d7aa3217ccbcc7092ba476f33b25c0849d920454c4af2ef88f00e"
+        "fingerprint": "50007c13021b561fb91cc09ce6504728ea451a932a23d380b1b8499a51d7b0f0",
+        "source_receipt_hash": "3a712dc7e1c381fa18e3d516724a84d5d65f4db158d6a202284c16fcfef27221",
+        "transition_id": "c8f854562ca285ec706485418f41133be759e458f23931b50a00a1747be57e70"
       },
       "H-26": {
-        "fingerprint": "3a6849083ea3097bf131ab2dc3bf321f861b1b6525a498bc09d0e0ddc014e8b3",
-        "source_receipt_hash": "3e78f0d4097f1bedc6f28f3efc90185c43e1f2f8ae2b8f3cfef2597136642141",
-        "transition_id": "48902d0d6d06e6f0824f5814ae9b1dd6837982003a8b99fffeaa1da9a9632520"
+        "fingerprint": "d007f308325841d57d64992d5a4de05dbeb6a4560cdcbf34bbe9012d4ee0ed2a",
+        "source_receipt_hash": "05c141040eac80d21f8b2999e74a37a51ac2c0c931ee0f5392c8cfba459264fc",
+        "transition_id": "32d5c0a112c4330ba8ceab94a7263723570647c4e7fcbc1b85b3b63ad68598f3"
       },
       "H-29": {
-        "fingerprint": "cd26b51ab533bbbe082f074d890f0279a8946aacdd313dbf13bdaab2472e0c2b",
-        "source_receipt_hash": "b2da6ffe4af215872237709ce653f3c900ff28771bfbb577b6f63f4ed7e8db04",
-        "transition_id": "f335cea69da00df1b71b21f03cb09927c918f46924979eb854de63ccf50fdf61"
+        "fingerprint": "14cb66ec544288750b98c186668178172f15db1b36b49e32267d3bd82e2b792a",
+        "source_receipt_hash": "27c66e119606c4079cb19bc2a5e0f0f1cae374bba6cacb0f645b6526baea7f90",
+        "transition_id": "d527f57bbbe905b4665b25a49405738a51e2f6882818bc46e6ae9c7df12ae5c1"
       },
       "H-32": {
-        "fingerprint": "e2cca3b15de8909f0e8ea43b01176487c0c3ef0c39520b8ddb9c091bc0dfbb06",
-        "source_receipt_hash": "f36b4e95d3081506d48cb865283cb44bf27f18c2be92fcdfb71965fd7f6a4da2",
-        "transition_id": "2935cbd32d941f2b35223ad5bf2ac89956186280050480547d89d010af321568"
+        "fingerprint": "02d558e37965e739cf1eff0cc7496542ab79f4bb6fae73795336aeb6284e3bc2",
+        "source_receipt_hash": "53a8743b8a732dd8fd598838de0b93faba0c77b54700c52a8ee84ec956b4d5ed",
+        "transition_id": "a27ca579d03b8639d7e64354f8b35f014394ce444a6eceec555b9f6e2d09a88b"
       },
       "H-35": {
-        "fingerprint": "55d1d465323c1979e1b7c69cd4f86cb58cf4ab74b89d97a14388ff5de30a438c",
-        "source_receipt_hash": "3404f6a49eb9120046781023c99add58f54b9a007f9652fa2d94d17d5bb1b3d3",
-        "transition_id": "174339db7770a7bed5ee86610cc20f2d004a7c6f5d878445a4914143f9bde229"
+        "fingerprint": "cb35489d2c732fec4d1290dd5305aeb02a06aaa38c8e23b1dedb941f79d2744b",
+        "source_receipt_hash": "e9358cc568ff035679b2f622f3a883a13f7bdfcffdbff75ed40ce67e41999c17",
+        "transition_id": "a390b5c9d95da4b5237e65ba13a870032dddf5eb6398fc440f0df6fc3695d501"
       },
       "H-36": {
-        "fingerprint": "223355995003e6c59e835b98a7570ee83c84209ef3cc538351f7ec80195f9d04",
-        "source_receipt_hash": "53ffc4d6483c28efdce817d863d1fb63483f565f34c37a99edc42e08f86dd919",
-        "transition_id": "94d6302b97847f8de39f255e26f40a24af67ab4e9d4f2b28c3ff2f1b739157c4"
+        "fingerprint": "3f535220e099a5ca3ba2bab3bac811ee1d9a87455e0e5bb116d3f953c9f84327",
+        "source_receipt_hash": "5049652c71566c5b9c46cd76aeb3fcbdf7e4f01c89f41e4a95bd8afe260ddbf2",
+        "transition_id": "5bcbe3ad0b29da46f9a5f950ee21f5ee2f315050f04880291763b98a88b93314"
       },
       "H-37": {
-        "fingerprint": "cf68f9eca3ff79b2f372746df2b909f2534b1577c5a47015dadc84f29bf4bdc2",
-        "source_receipt_hash": "56b8b74fa4a6025a1ca5184b5d157c206bee40f9fc0e2a2a0d6b7e44417dbb8d",
-        "transition_id": "5c2a5d9c0377acc24c03594a71d800da813510ecc80ea21ebf81b75b503c027f"
+        "fingerprint": "bac749312d7a742ff5f5da6acb1d3d46f964f67128195ec5104717af733a9074",
+        "source_receipt_hash": "1af5b2480f0a3785a8510eade8f00173a8b25f3992a68bf9655f1efd1dcfe791",
+        "transition_id": "3bf29e7ae3f2c09ccb1244d2472df06b2b0b519038efdc6faa392ad5fc3d2297"
+      },
+      "H-38": {
+        "fingerprint": "fdfcb39e202fee91d3540fb9addd1a3d4f39ef8498ef273752b3f5227805462d",
+        "source_receipt_hash": "aa47e5440bbce2b57027b0b6a27529e511fc17b8e50a3967338ff1d80299b62b",
+        "transition_id": "32a7d910c095b885a1568333aeab0e6e735083f9f2f36692edcb5c13320843ea"
       }
     },
-    "planned": 13,
+    "planned": 14,
     "publication": "disabled",
     "scheduler": "existing-standing-cycle",
     "schema": "csoai.review-chain/0.1",
@@ -2305,27 +2380,27 @@
       {
         "loop_id": "H-23",
         "reason": "later observed source transition",
-        "transition_id": "e2872c13657dde7712cc175a67530e214b70a480e56e22d9820b2c5f83b08513"
+        "transition_id": "6346b8332f21cf3b8e6517ec95ec958d792fd384efe9b028a2ab725841270c04"
       },
       {
         "loop_id": "H-26",
         "reason": "later observed source transition",
-        "transition_id": "fc6d553b13212cae6e2637b12d993b8f65d2cf673cc0b2749cc992e9643bfadc"
+        "transition_id": "8a1eee4461e01ba3918664cef3a64fd712143304ad975982815f9962ba6bbb8d"
       },
       {
         "loop_id": "H-32",
         "reason": "later observed source transition",
-        "transition_id": "191b655501bc06151e4c031ef3e9179b074d16912adbdbab77b6a205099048de"
+        "transition_id": "e8718c71bfa0bc5a50821da9dd12b5d5c66df11877df3e2d6db8ee9687543c03"
       },
       {
         "loop_id": "H-35",
         "reason": "later observed source transition",
-        "transition_id": "e45df7c7b9740abdcfda996ebf30857fc165b7962c77984c4f45b013cb7f0cb6"
+        "transition_id": "3527bc7dac16f038c2e9db568c20129ae6213b8fa2fe8cb079ae229a236da2b1"
       },
       {
         "loop_id": "H-36",
         "reason": "later observed source transition",
-        "transition_id": "f72cb01d86dc527acb696f61efa71bd3d11dd41e81ecdd849de51396ddf26b79"
+        "transition_id": "952efe6944e569d778c55d40e7f8145edfdeb9e9486cdb158cc605391dd469a0"
       }
     ]
   },

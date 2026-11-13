@@ -76,7 +76,7 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
   },
   {
     id: "corrections-append",
-    claim: "The corrections ledger is public, append-only and never silently edited.",
+    claim: "The corrections ledger is public, source-maintained and never silently edited.",
     verdict: "keep",
     live: "GET /api/corrections — 30 entries. Honesty asset, not a score.",
   },

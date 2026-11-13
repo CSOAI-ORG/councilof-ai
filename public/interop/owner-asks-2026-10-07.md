@@ -1,6 +1,6 @@
 # OWNER ASKS — directory wave, 7 October 2026
 
-Every blocker that needs a human, in ONE file, with the exact action. (M4 brief rule D.)
+Every blocker that needs a human, in ONE file, with the exact action.
 
 ## 1. MCP Registry device code — 1 CLICK (code expires ~15 min from 05:55 BST)
 - Go to: **https://github.com/login/device**

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is My AI System High-Risk? — EU AI Act Annex III Checker | CSOAI</title>
+    <meta name="description" content="Free interactive decision guide to check whether your AI system is classified high-risk under EU AI Act Annex III. Walk the categories, get an instant classification, and see your obligations before the deadlines.">
+    <meta property="og:title" content="Is My AI System High-Risk? — EU AI Act Annex III Checker">
+    <meta property="og:description" content="Interactive decision guide for the EU AI Act high-risk classification. Step through Annex III categories and get an instant verdict plus your obligations.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://csoai.org/assets/og-image.png">
+    <meta property="og:url" content="https://csoai.org/high-risk-classifier">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Is My AI System High-Risk? — EU AI Act Annex III Checker">
+    <meta name="twitter:description" content="Step through the EU AI Act Annex III categories and get an instant high-risk classification.">
+    <link rel="canonical" href="https://csoai.org/high-risk-classifier">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to determine if your AI system is high-risk under the EU AI Act",
+      "description": "A step-by-step decision guide for classifying an AI system against EU AI Act Annex III high-risk categories and prohibited practices.",
+      "totalTime": "PT5M",
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "Check for prohibited practices", "text": "Confirm your system does not perform an Article 5 prohibited practice such as social scoring, untargeted facial-image scraping, or manipulative subliminal techniques. Prohibited systems cannot be placed on the EU market at all." },
+        { "@type": "HowToStep", "position": 2, "name": "Test against Annex III categories", "text": "Check whether your AI system is used in any of the eight Annex III domains: biometrics, critical infrastructure, education, employment, essential public and private services, law enforcement, migration and border control, or administration of justice and democratic processes." },
+        { "@type": "HowToStep", "position": 3, "name": "Apply the Article 6(3) filter", "text": "Even within an Annex III domain, a system is not high-risk if it performs only a narrow procedural task, improves a previously completed human activity, detects decision patterns without replacing human assessment, or performs preparatory work — unless it profiles natural persons." },
+        { "@type": "HowToStep", "position": 4, "name": "Check transparency (Article 50) obligations", "text": "Regardless of risk tier, systems that interact with people, generate synthetic content, perform emotion recognition, or create deepfakes carry Article 50 transparency duties applying from 2 August 2026." },
+        { "@type": "HowToStep", "position": 5, "name": "Map your obligations", "text": "If high-risk, prepare a risk-management system, data governance, technical documentation, logging, human oversight, accuracy and cybersecurity measures, conformity assessment, and EU database registration." }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What makes an AI system high-risk under the EU AI Act?",
+          "acceptedAnswer": { "@type": "Answer", "text": "An AI system is high-risk if it is a safety component of a product covered by EU harmonisation legislation (Annex I), or if it is used in one of the eight Annex III domains — biometrics, critical infrastructure, education, employment, essential services, law enforcement, migration, or justice and democracy — and is not exempted by the Article 6(3) narrow-task filter." }
+        },
+        {
+          "@type": "Question",
+          "name": "When do high-risk obligations apply?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Annex III high-risk obligations apply from 2 August 2026, while Annex I product-safety high-risk systems have until 2 August 2027. Prohibited practices have applied since 2 February 2025, and general-purpose AI model obligations since 2 August 2025." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this classification tool legal advice?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. This guide is an educational triage tool based on the published text of Regulation (EU) 2024/1689. It does not constitute legal advice. A formal classification should be confirmed through a documented conformity assessment." }
+        }
+      ]
+    }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --navy: #1B2A4A; --dark-navy: #0F1A2E; --teal: #0D7377; --teal-light: #14919B;
+            --gold: #D4A843; --gold-dark: #B8912E; --white: #FFFFFF; --gray-light: #E8E8E8; --gray-dark: #2A3F5F;
+            --red: #C7493B; --green: #2E8B6F;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--navy); color: var(--white); line-height: 1.6; overflow-x: hidden; }
+        header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1.5rem 2rem; background: rgba(27, 42, 74, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(13, 115, 119, 0.2); transition: all 0.3s ease; }
+        header.scrolled { padding: 1rem 2rem; background: rgba(27, 42, 74, 0.98); box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
+        .header-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--gold); letter-spacing: 2px; text-decoration: none; }
+        .logo span { color: var(--teal); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { color: var(--white); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: color 0.3s ease; position: relative; }
+        nav a:hover { color: var(--teal); }
+        nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--gold); transition: width 0.3s ease; }
+        nav a:hover::after { width: 100%; }
+        .cta-button { background: linear-gradient(135deg, var(--teal), var(--teal-light)); color: var(--white); padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(13,115,119,0.3); font-size: 0.95rem; }
+        .cta-button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(13,115,119,0.5); }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        .page-hero { min-height: 44vh; display: flex; align-items: center; justify-content: center; padding-top: 100px; background: linear-gradient(135deg, var(--navy) 0%, var(--dark-navy) 50%, #0A1428 100%); text-align: center; }
+        .page-hero h1 { font-size: clamp(2rem, 6vw, 3.4rem); font-weight: 800; margin-bottom: 1rem; }
+        .page-hero h1 span { color: var(--gold); }
+        .page-hero p { color: #B0B8C8; font-size: 1.1rem; max-width: 720px; margin: 0 auto; }
+        .deadline-pill { display: inline-block; background: rgba(199,73,59,0.15); border: 1px solid var(--red); color: #F0A99E; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem; }
+        section { padding: 4rem 0; }
+        section.light-bg { background-color: #273548; }
+        h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 800; margin-bottom: 1rem; }
+        h2 span { color: var(--gold); }
+        p.lead { color: #B0B8C8; font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.2rem; }
+        .quiz { background: linear-gradient(135deg, #273548 0%, #2A4A6A 100%); border: 1px solid rgba(13,115,119,0.3); padding: 2.5rem; border-radius: 12px; }
+        .step { display: none; }
+        .step.active { display: block; animation: fade 0.3s ease; }
+        @keyframes fade { from { opacity: 0; transform: translateY(8px);} to {opacity:1;transform:none;} }
+        .step h3 { color: var(--gold); font-size: 1.3rem; margin-bottom: 0.4rem; }
+        .step .ctx { color: #8A92A2; font-size: 0.9rem; margin-bottom: 1.4rem; }
+        .opt-btn { display: block; width: 100%; text-align: left; background: rgba(15,26,46,0.6); border: 1px solid rgba(13,115,119,0.3); color: var(--white); padding: 1rem 1.2rem; border-radius: 8px; margin-bottom: 0.8rem; cursor: pointer; font-family: inherit; font-size: 0.98rem; transition: all 0.2s ease; }
+        .opt-btn:hover { border-color: var(--gold); background: rgba(212,168,67,0.08); transform: translateX(4px); }
+        .opt-btn small { display: block; color: #8A92A2; font-size: 0.82rem; margin-top: 0.3rem; }
+        .progress { height: 6px; background: rgba(255,255,255,0.08); border-radius: 999px; margin-bottom: 1.8rem; overflow: hidden; }
+        .progress span { display: block; height: 100%; background: linear-gradient(90deg, var(--teal), var(--gold)); width: 0; transition: width 0.4s ease; }
+        .result { display: none; padding: 2.2rem; border-radius: 12px; margin-top: 0.5rem; }
+        .result.show { display: block; animation: fade 0.4s ease; }
+        .result.prohibited { background: rgba(199,73,59,0.12); border: 1px solid var(--red); }
+        .result.high { background: rgba(212,168,67,0.12); border: 1px solid var(--gold); }
+        .result.limited { background: rgba(20,145,155,0.12); border: 1px solid var(--teal-light); }
+        .result.minimal { background: rgba(46,139,111,0.12); border: 1px solid var(--green); }
+        .result h3 { font-size: 1.5rem; margin-bottom: 0.6rem; }
+        .result ul { list-style: none; margin: 1rem 0; }
+        .result li { padding-left: 1.5rem; position: relative; margin-bottom: 0.6rem; color: #D6DCE6; }
+        .result li::before { content: '→'; position: absolute; left: 0; color: var(--gold); }
+        .restart { background: none; border: 1px solid rgba(255,255,255,0.25); color: #B0B8C8; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-family: inherit; margin-top: 0.8rem; }
+        .restart:hover { border-color: var(--gold); color: var(--gold); }
+        .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .card { background: linear-gradient(135deg, #273548 0%, #2A4A6A 100%); border: 1px solid rgba(13,115,119,0.3); padding: 1.6rem; border-radius: 8px; }
+        .card h4 { color: var(--gold); margin-bottom: 0.5rem; }
+        .card p { color: #B0B8C8; font-size: 0.92rem; }
+        .disclaimer { font-size: 0.82rem; color: #7A828F; margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1rem; }
+        footer { background: linear-gradient(180deg, var(--dark-navy) 0%, #050A15 100%); border-top: 1px solid rgba(13,115,119,0.2); padding: 3rem 0 2rem; margin-top: 2rem; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .footer-section h4 { color: var(--gold); font-size: 1rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-section ul { list-style: none; }
+        .footer-section ul li { margin-bottom: 0.5rem; }
+        .footer-section a { color: #B0B8C8; text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease; }
+        .footer-section a:hover { color: var(--teal); }
+        .footer-bottom { border-top: 1px solid rgba(13,115,119,0.1); padding-top: 1.5rem; text-align: center; color: #8A92A2; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <div class="header-container">
+            <a href="/" class="logo">CS<span>AI</span></a>
+            <nav>
+                <a href="/about">About</a>
+                <a href="/article-50-explained">Article 50</a>
+                <a href="/framework-crosswalk">Crosswalk</a>
+                <a href="/mcp-infrastructure">MCP Infrastructure</a>
+                <a href="/contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-hero">
+        <div class="container">
+            <div class="deadline-pill">⏱ EU AI Act Article 50 transparency duties apply 2 August 2026</div>
+            <h1>Is My AI System <span>High-Risk?</span></h1>
+            <p>An interactive decision guide built on the published text of the EU AI Act (Regulation (EU) 2024/1689). Walk the Annex III categories and the Article 6(3) filter to get an instant classification and your next obligations.</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="quiz">
+                <div class="progress"><span id="bar"></span></div>
+
+                <div class="step active" data-step="0">
+                    <h3>Step 1 — Prohibited practices (Article 5)</h3>
+                    <p class="ctx">Does your system do any of the following? Social scoring of individuals; untargeted scraping of facial images to build recognition databases; manipulative subliminal or deceptive techniques that cause harm; real-time remote biometric identification in public spaces for law enforcement (outside narrow exceptions); emotion inference in workplaces or schools; or biometric categorisation by protected characteristics.</p>
+                    <button class="opt-btn" onclick="answer('prohibited')">Yes — one or more applies<small>The system performs a banned practice.</small></button>
+                    <button class="opt-btn" onclick="go(1)">No — none of these apply<small>Continue to Annex III screening.</small></button>
+                </div>
+
+                <div class="step" data-step="1">
+                    <h3>Step 2 — Annex III domains</h3>
+                    <p class="ctx">Is the AI system used in, or as a safety component within, any of these eight domains?</p>
+                    <button class="opt-btn" onclick="go(2)">Yes — biometrics, critical infrastructure, education, employment/HR, essential public or private services (e.g. credit, insurance, benefits), law enforcement, migration/border control, or justice/democratic processes<small>Continue to the narrow-task filter.</small></button>
+                    <button class="opt-btn" onclick="go(3)">No — none of these domains<small>Skip to transparency check.</small></button>
+                </div>
+
+                <div class="step" data-step="2">
+                    <h3>Step 3 — Article 6(3) narrow-task filter</h3>
+                    <p class="ctx">Within that domain, does the system ONLY perform a narrow procedural task, improve the result of a completed human activity, detect decision-making patterns without replacing human judgement, or do preparatory work — AND it does NOT profile natural persons?</p>
+                    <button class="opt-btn" onclick="answer('limited')">Yes — it is a narrow, non-profiling task<small>Likely exempt from high-risk under Article 6(3); transparency duties may still apply.</small></button>
+                    <button class="opt-btn" onclick="answer('high')">No — it materially influences outcomes or profiles people<small>Classified high-risk.</small></button>
+                </div>
+
+                <div class="step" data-step="3">
+                    <h3>Step 4 — Transparency triggers (Article 50)</h3>
+                    <p class="ctx">Does the system interact directly with people (e.g. a chatbot), generate synthetic audio/image/video/text, perform emotion recognition or biometric categorisation, or produce deepfakes?</p>
+                    <button class="opt-btn" onclick="answer('limited')">Yes — one or more applies<small>Limited-risk: Article 50 transparency obligations apply.</small></button>
+                    <button class="opt-btn" onclick="answer('minimal')">No — none of these apply<small>Minimal risk: voluntary codes of conduct.</small></button>
+                </div>
+
+                <!-- Results -->
+                <div class="result prohibited" id="r-prohibited">
+                    <h3>🚫 Prohibited</h3>
+                    <p class="lead">Your system appears to fall under an Article 5 prohibited practice. These cannot be placed on or used in the EU market. The prohibition has been in force since <strong>2 February 2025</strong>.</p>
+                    <ul>
+                        <li>Stop deployment in the EU and document the assessment.</li>
+                        <li>Redesign to remove the banned function, or confirm a narrow legal exception with counsel.</li>
+                        <li>Penalties reach up to €35m or 7% of global annual turnover.</li>
+                    </ul>
+                    <button class="restart" onclick="reset()">↺ Start over</button>
+                </div>
+
+                <div class="result high" id="r-high">
+                    <h3>⚠️ High-Risk (Annex III)</h3>
+                    <p class="lead">Your system is likely high-risk. Obligations apply from <strong>2 August 2026</strong> for Annex III use cases. You must put in place:</p>
+                    <ul>
+                        <li>A continuous risk-management system and data-governance controls.</li>
+                        <li>Technical documentation, automatic logging, and traceability.</li>
+                        <li>Human oversight, plus accuracy, robustness, and cybersecurity measures.</li>
+                        <li>A conformity assessment and registration in the EU high-risk database.</li>
+                        <li>Clear instructions for use for downstream deployers.</li>
+                    </ul>
+                    <a href="/pricing" class="cta-button">See CASA certification &amp; audit support</a>
+                    <button class="restart" onclick="reset()">↺ Start over</button>
+                </div>
+
+                <div class="result limited" id="r-limited">
+                    <h3>ℹ️ Limited-Risk — Transparency obligations</h3>
+                    <p class="lead">Your system is not high-risk, but it carries <strong>Article 50</strong> transparency duties that apply from <strong>2 August 2026</strong>.</p>
+                    <ul>
+                        <li>Tell users they are interacting with an AI system.</li>
+                        <li>Mark synthetic and AI-generated content in a machine-readable way.</li>
+                        <li>Disclose deepfakes and AI-generated text on matters of public interest.</li>
+                        <li>Inform people subject to emotion recognition or biometric categorisation.</li>
+                    </ul>
+                    <a href="/article-50-explained" class="cta-button">Read the Article 50 guide</a>
+                    <button class="restart" onclick="reset()">↺ Start over</button>
+                </div>
+
+                <div class="result minimal" id="r-minimal">
+                    <h3>✅ Minimal-Risk</h3>
+                    <p class="lead">Your system appears to fall outside the prohibited, high-risk, and transparency tiers. No mandatory obligations apply, but best practice still matters.</p>
+                    <ul>
+                        <li>Adopt a voluntary code of conduct.</li>
+                        <li>Keep documentation in case the use case changes.</li>
+                        <li>Re-run this check whenever you add features that profile people or generate content.</li>
+                    </ul>
+                    <button class="restart" onclick="reset()">↺ Start over</button>
+                </div>
+
+                <p class="disclaimer">This is an educational triage tool based on the published text of Regulation (EU) 2024/1689 (EU AI Act). It is not legal advice and does not replace a documented conformity assessment. Verify edge cases against the official text and, where needed, with qualified counsel.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="light-bg">
+        <div class="container">
+            <h2>The four <span>risk tiers</span></h2>
+            <p class="lead">The EU AI Act is risk-based. Every system lands in one of four tiers, and the tier determines the obligations.</p>
+            <div class="grid3">
+                <div class="card"><h4>Unacceptable</h4><p>Banned outright under Article 5 — social scoring, manipulative techniques, untargeted biometric scraping. In force since Feb 2025.</p></div>
+                <div class="card"><h4>High-Risk</h4><p>Annex III use cases and Annex I safety components. Full conformity regime; Annex III applies Aug 2026, Annex I Aug 2027.</p></div>
+                <div class="card"><h4>Limited-Risk</h4><p>Chatbots, generative content, deepfakes, emotion recognition. Article 50 transparency duties from Aug 2026.</p></div>
+                <div class="card"><h4>Minimal-Risk</h4><p>Everything else — spam filters, recommendation engines, most consumer AI. Voluntary codes only.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>CSOAI</h4>
+                    <p style="color:#B0B8C8;font-size:0.9rem;">The governance infrastructure for the global AI economy.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>EU AI Act</h4>
+                    <ul>
+                        <li><a href="/high-risk-classifier">High-risk checker</a></li>
+                        <li><a href="/article-50-explained">Article 50 explained</a></li>
+                        <li><a href="/framework-crosswalk">Framework crosswalk</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Explore</h4>
+                    <ul>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/mcp-infrastructure">MCP Infrastructure</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul><li><a href="/legal">Privacy &amp; Terms</a></li></ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CSOAI - Chief Standards Office for Artificial Intelligence</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+        const steps = document.querySelectorAll('.step');
+        const bar = document.getElementById('bar');
+        const totalSteps = steps.length;
+        function show(i){
+            steps.forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.result').forEach(r => r.classList.remove('show'));
+            steps[i].classList.add('active');
+            bar.style.width = ((i)/(totalSteps))*100 + '%';
+        }
+        function go(i){ show(i); }
+        function answer(tier){
+            steps.forEach(s => s.classList.remove('active'));
+            const r = document.getElementById('r-' + tier);
+            r.classList.add('show');
+            bar.style.width = '100%';
+            r.scrollIntoView({behavior:'smooth', block:'center'});
+        }
+        function reset(){
+            document.querySelectorAll('.result').forEach(r => r.classList.remove('show'));
+            show(0);
+            document.querySelector('.quiz').scrollIntoView({behavior:'smooth', block:'start'});
+        }
+    </script>
+</body>
+</html>

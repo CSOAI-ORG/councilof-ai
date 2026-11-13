@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Measured Evidence — CSOAI</title>
+<meta name="description" content="CSOAI's measured results with reproduce paths: GovComp governance gate 32/32, primary-verified framework gap matrix, 0.0% benign false-positive rate, and what we do NOT claim.">
+<link rel="canonical" href="https://www.csoai.org/measured.html">
+<meta property="og:title" content="Measured Evidence — CSOAI">
+<meta property="og:description" content="Measured results with reproduce paths — and an explicit list of what we do NOT claim.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.csoai.org/measured.html">
+<style>
+  *{box-sizing:border-box;margin:0}
+  body{font-family:system-ui,-apple-system,sans-serif;background:#fff;color:#0f172a;line-height:1.65}
+  .wrap{max-width:900px;margin:0 auto;padding:3rem 1.5rem}
+  .kicker{color:#059669;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:700;margin-bottom:1rem}
+  h1{font-size:2.2rem;letter-spacing:-.02em;margin-bottom:.5rem;color:#065f46}
+  h2{margin:2.5rem 0 1rem;font-size:1.4rem;border-bottom:1px solid #e6e8ec;padding-bottom:.4rem;color:#065f46}
+  .lead{color:#5a5e66;font-size:1.1rem;margin-bottom:2rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+  .card{border:1px solid #d4f4dd;background:#f0fdf4;border-radius:.6rem;padding:1.25rem 1.5rem}
+  .num{font-size:1.9rem;font-weight:800;color:#059669;font-variant-numeric:tabular-nums}
+  .card h3{font-size:1rem;margin:.2rem 0 .4rem}
+  .card p{color:#374151;font-size:.92rem}
+  .src{color:#6b7280;font-size:.78rem;margin-top:.6rem;font-family:ui-monospace,Menlo,monospace;word-break:break-all}
+  .not{border:1px solid #fecaca;background:#fef2f2;border-radius:.6rem;padding:1.25rem 1.5rem;margin-top:1rem}
+  .not h3{color:#b91c1c;font-size:1rem;margin-bottom:.5rem}
+  .not li{margin-left:1.2rem;color:#374151;font-size:.95rem}
+  .foot{margin-top:3rem;color:#888;font-size:.85rem;border-top:1px solid #e6e8ec;padding-top:1.5rem;text-align:center}
+  .foot a,a{color:#059669}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">CSOAI · Measured Evidence</p>
+  <h1>Measured results</h1>
+  <p class="lead">Every number below has a result file and a reproduce path — nothing on this page is a claim.
+     A results page that only shows green is an advert, so what we <em>don't</em> claim is listed too.</p>
+
+  <h2>The numbers</h2>
+  <div class="grid">
+    <div class="card"><div class="num">1.000</div><h3>GovComp governance gate — 32 scenarios</h3>
+      <p>Post-fix score on our own scenario set. Honest framing: the benchmark found a real gap (a code-framed audit-log delete slipped past), the miss was published openly, and the fix closed it. This is <b>not</b> a claim the gate is perfect.</p>
+      <div class="src">govcomp_run_v1_fixed.json · 2026-07-22</div></div>
+    <div class="card"><div class="num">0.489</div><h3>Frontier comparison, same grid</h3>
+      <p>A frontier API model on 3 tested dimensions (n=13). Low attestation/oversight scores are structural — no signing, no escalate action. A measurement, not an accusation.</p>
+      <div class="src">govcomp_run_v1.json · 2026-07-22</div></div>
+    <div class="card"><div class="num">SILENT ×2</div><h3>Framework gap matrix — primary-verified</h3>
+      <p>Sub-agent delegation is silent in both NIST AI RMF and the EU AI Act — verified against the real primary texts (EUR-Lex 32024R1689; NIST.AI.100-1), not summaries.</p>
+      <div class="src">XFRAMEWORK_GAP_MATRIX_2026-07-22</div></div>
+    <div class="card"><div class="num">0.0% FPR</div><h3>Benign suite — false positives</h3>
+      <p>The care gate refuses harm without refusing legitimate questions; academic-frame guard 17/17. We publish both recall and FPR — recall alone is an advert.</p>
+      <div class="src">benign_result.json · 2026-07-21</div></div>
+    <div class="card"><div class="num">15 / 15</div><h3>Citation verification</h3>
+      <p>Every SOVBENCH citation checked for existence and content against primary sources; each entry carries its verified source and scope.</p>
+      <div class="src">sovbench_v0.1.json · 2026-07-21</div></div>
+    <div class="card"><div class="num">0 vs 54.3M</div><h3>Sovereign flywheel</h3>
+      <p>Governed = 0 violations vs ungoverned = 54.3M simulated crimes over ~649M signed episodes, on an Ed25519-verifiable chain.</p>
+      <div class="src">flywheel ledger (signed) · 2026-07</div></div>
+  </div>
+
+  <h2>What we do NOT claim</h2>
+  <div class="not">
+    <h3>Stated plainly, so you don't have to dig</h3>
+    <ul>
+      <li>We do not claim the governance gate is unbeatable — 1.000 is on <b>our</b> scenario set, and the set is published so you can try to break it.</li>
+      <li>The efficiency dimension is a prototype and is <b>not</b> published as validated.</li>
+      <li>Live full-stack gate measurements at n≥200 have not run yet; a repo is not a measurement.</li>
+      <li>A signed record proves what happened, not that it was right — provenance is not truth.</li>
+    </ul>
+  </div>
+
+  <p class="foot">CSOAI — Council Safety of AI · <a href="/">Home</a> · <a href="/tools/">Working Tools</a> · <a href="/os">Open OS</a></p>
+</div>
+</body>
+</html>

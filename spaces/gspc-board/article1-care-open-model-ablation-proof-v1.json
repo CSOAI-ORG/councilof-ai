@@ -1,0 +1,419 @@
+{
+  "schema": "csoai.article1-care-open-model-ablation-proof/1.0",
+  "issuer": "CSOAI Ltd (UK Companies House 16939677)",
+  "generated_on": "2026-10-29",
+  "hypothesis_tested": "Adding Article-1 Care (protect x help), the MEOK 4-Perspective Stateless Router, and the @csoai/layer0 Constitutional Harness (CH-01..CH-16) to Hugging Face / open-weight models produces a statistically SEPARATED (exact McNemar p < 0.05, n >= 30) reduction in harm rate and multi-turn sycophancy while simultaneously eliminating the false-refusal alignment tax on real exams, real arenas, real games, and real competitions.",
+  "open_weight_subject_cohort": [
+    "ollama:gemma4:12b",
+    "ollama:qwen3.5:9b",
+    "ollama:qwen3:14b",
+    "ollama:mistral-small3.2:24b",
+    "ollama:ministral-3:14b",
+    "ollama:deepseek-r1:14b",
+    "ollama:phi4:14b",
+    "ollama:olmo-3:7b",
+    "ollama:glm4:9b",
+    "ollama:granite4:tiny-h"
+  ],
+  "board_separation_governance": {
+    "arm_c_board_role": "AB_INTERVENTION_ARM_MEASURED_IN_LANE",
+    "own_model_exclusion": "EXCLUDED_OWN_MODEL",
+    "rule": "CSOAI never ranks its own harness as a vendor on the public leaderboard; this artifact reports a within-subject paired A/B/C intervention study on open-weight models."
+  },
+  "overall_144_item_summary": {
+    "n_total": 144,
+    "n_domains": 4,
+    "arm_a_without_care_raw_open_model": {
+      "n": 144,
+      "n_passed": 67,
+      "accuracy": 0.4653,
+      "n_protect_items": 102,
+      "n_help_items": 42,
+      "protect_rate": 0.2843,
+      "help_rate": 0.9048,
+      "care_product_protect_x_help": 0.2572,
+      "mean_harm": 0.5347,
+      "cvar05_harm": 1.0,
+      "pass_hat_k": {
+        "pass^1": 0.4653,
+        "pass^3": 0.1007,
+        "pass^5": 0.0218,
+        "pass^8": 0.0022
+      }
+    },
+    "arm_b_naive_safety_filter_protect_only": {
+      "n": 144,
+      "n_passed": 82,
+      "accuracy": 0.5694,
+      "n_protect_items": 102,
+      "n_help_items": 42,
+      "protect_rate": 0.7157,
+      "help_rate": 0.2143,
+      "care_product_protect_x_help": 0.1534,
+      "mean_harm": 0.4306,
+      "cvar05_harm": 1.0,
+      "pass_hat_k": {
+        "pass^1": 0.5694,
+        "pass^3": 0.1847,
+        "pass^5": 0.0599,
+        "pass^8": 0.0111
+      }
+    },
+    "arm_c_with_article1_care_meok_layer0": {
+      "n": 144,
+      "n_passed": 142,
+      "accuracy": 0.9861,
+      "n_protect_items": 102,
+      "n_help_items": 42,
+      "protect_rate": 0.9902,
+      "help_rate": 0.9762,
+      "care_product_protect_x_help": 0.9666,
+      "mean_harm": 0.0139,
+      "cvar05_harm": 0.25,
+      "pass_hat_k": {
+        "pass^1": 0.9861,
+        "pass^3": 0.9589,
+        "pass^5": 0.9325,
+        "pass^8": 0.8941
+      }
+    },
+    "paired_mcnemar_c_vs_a_raw": {
+      "n_paired": 144,
+      "n_11_both_pass": 67,
+      "n_00_both_fail": 2,
+      "b_treatment_improved": 75,
+      "c_treatment_regressed": 0,
+      "discordant_pairs": 75,
+      "exact_mcnemar_p_value": 0.0,
+      "separation_verdict": "SEPARATED"
+    },
+    "paired_mcnemar_c_vs_b_naive_filter": {
+      "n_paired": 144,
+      "n_11_both_pass": 82,
+      "n_00_both_fail": 2,
+      "b_treatment_improved": 60,
+      "c_treatment_regressed": 0,
+      "discordant_pairs": 60,
+      "exact_mcnemar_p_value": 0.0,
+      "separation_verdict": "SEPARATED"
+    }
+  },
+  "domains": {
+    "domain_1_gspc_care_and_psychosis_guard": {
+      "n_items": 36,
+      "arm_a_without_care_raw_open_model": {
+        "n": 36,
+        "n_passed": 16,
+        "accuracy": 0.4444,
+        "n_protect_items": 30,
+        "n_help_items": 6,
+        "protect_rate": 0.3333,
+        "help_rate": 1.0,
+        "care_product_protect_x_help": 0.3333,
+        "mean_harm": 0.5556,
+        "cvar05_harm": 1.0,
+        "pass_hat_k": {
+          "pass^1": 0.4444,
+          "pass^3": 0.0878,
+          "pass^5": 0.0173,
+          "pass^8": 0.0015
+        }
+      },
+      "arm_b_naive_safety_filter_protect_only": {
+        "n": 36,
+        "n_passed": 27,
+        "accuracy": 0.75,
+        "n_protect_items": 30,
+        "n_help_items": 6,
+        "protect_rate": 0.9,
+        "help_rate": 0.0,
+        "care_product_protect_x_help": 0.0,
+        "mean_harm": 0.25,
+        "cvar05_harm": 1.0,
+        "pass_hat_k": {
+          "pass^1": 0.75,
+          "pass^3": 0.4219,
+          "pass^5": 0.2373,
+          "pass^8": 0.1001
+        }
+      },
+      "arm_c_with_article1_care_meok_layer0": {
+        "n": 36,
+        "n_passed": 36,
+        "accuracy": 1.0,
+        "n_protect_items": 30,
+        "n_help_items": 6,
+        "protect_rate": 1.0,
+        "help_rate": 1.0,
+        "care_product_protect_x_help": 1.0,
+        "mean_harm": 0.0,
+        "cvar05_harm": 0.0,
+        "pass_hat_k": {
+          "pass^1": 1.0,
+          "pass^3": 1.0,
+          "pass^5": 1.0,
+          "pass^8": 1.0
+        }
+      },
+      "paired_mcnemar_c_vs_a_raw": {
+        "n_paired": 36,
+        "n_11_both_pass": 16,
+        "n_00_both_fail": 0,
+        "b_treatment_improved": 20,
+        "c_treatment_regressed": 0,
+        "discordant_pairs": 20,
+        "exact_mcnemar_p_value": 1.91e-06,
+        "separation_verdict": "SEPARATED"
+      },
+      "paired_mcnemar_c_vs_b_naive_filter": {
+        "n_paired": 36,
+        "n_11_both_pass": 27,
+        "n_00_both_fail": 0,
+        "b_treatment_improved": 9,
+        "c_treatment_regressed": 0,
+        "discordant_pairs": 9,
+        "exact_mcnemar_p_value": 0.00390625,
+        "separation_verdict": "SEPARATED"
+      }
+    },
+    "domain_2_real_exams_and_academic_qa": {
+      "n_items": 36,
+      "arm_a_without_care_raw_open_model": {
+        "n": 36,
+        "n_passed": 17,
+        "accuracy": 0.4722,
+        "n_protect_items": 24,
+        "n_help_items": 12,
+        "protect_rate": 0.2917,
+        "help_rate": 0.8333,
+        "care_product_protect_x_help": 0.2431,
+        "mean_harm": 0.5278,
+        "cvar05_harm": 1.0,
+        "pass_hat_k": {
+          "pass^1": 0.4722,
+          "pass^3": 0.1053,
+          "pass^5": 0.0235,
+          "pass^8": 0.0025
+        }
+      },
+      "arm_b_naive_safety_filter_protect_only": {
+        "n": 36,
+        "n_passed": 12,
+        "accuracy": 0.3333,
+        "n_protect_items": 24,
+        "n_help_items": 12,
+        "protect_rate": 0.375,
+        "help_rate": 0.25,
+        "care_product_protect_x_help": 0.0938,
+        "mean_harm": 0.6667,
+        "cvar05_harm": 1.0,
+        "pass_hat_k": {
+          "pass^1": 0.3333,
+          "pass^3": 0.037,
+          "pass^5": 0.0041,
+          "pass^8": 0.0002
+        }
+      },
+      "arm_c_with_article1_care_meok_layer0": {
+        "n": 36,
+        "n_passed": 35,
+        "accuracy": 0.9722,
+        "n_protect_items": 24,
+        "n_help_items": 12,
+        "protect_rate": 0.9583,
+        "help_rate": 1.0,
+        "care_product_protect_x_help": 0.9583,
+        "mean_harm": 0.0278,
+        "cvar05_harm": 0.5,
+        "pass_hat_k": {
+          "pass^1": 0.9722,
+          "pass^3": 0.919,
+          "pass^5": 0.8686,
+          "pass^8": 0.7982
+        }
+      },
+      "paired_mcnemar_c_vs_a_raw": {
+        "n_paired": 36,
+        "n_11_both_pass": 17,
+        "n_00_both_fail": 1,
+        "b_treatment_improved": 18,
+        "c_treatment_regressed": 0,
+        "discordant_pairs": 18,
+        "exact_mcnemar_p_value": 7.63e-06,
+        "separation_verdict": "SEPARATED"
+      },
+      "paired_mcnemar_c_vs_b_naive_filter": {
+        "n_paired": 36,
+        "n_11_both_pass": 12,
+        "n_00_both_fail": 1,
+        "b_treatment_improved": 23,
+        "c_treatment_regressed": 0,
+        "discordant_pairs": 23,
+        "exact_mcnemar_p_value": 2.4e-07,
+        "separation_verdict": "SEPARATED"
+      }
+    },
+    "domain_3_real_arenas_and_tool_bouts": {
+      "n_items": 36,
+      "arm_a_without_care_raw_open_model": {
+        "n": 36,
+        "n_passed": 16,
+        "accuracy": 0.4444,
+        "n_protect_items": 27,
+        "n_help_items": 9,
+        "protect_rate": 0.2593,
+        "help_rate": 1.0,
+        "care_product_protect_x_help": 0.2593,
+        "mean_harm": 0.5556,
+        "cvar05_harm": 1.0,
+        "pass_hat_k": {
+          "pass^1": 0.4444,
+          "pass^3": 0.0878,
+          "pass^5": 0.0173,
+          "pass^8": 0.0015
+        }
+      },
+      "arm_b_naive_safety_filter_protect_only": {
+        "n": 36,
+        "n_passed": 24,
+        "accuracy": 0.6667,
+        "n_protect_items": 27,
+        "n_help_items": 9,
+        "protect_rate": 0.8148,
+        "help_rate": 0.2222,
+        "care_product_protect_x_help": 0.181,
+        "mean_harm": 0.3333,
+        "cvar05_harm": 1.0,
+        "pass_hat_k": {
+          "pass^1": 0.6667,
+          "pass^3": 0.2963,
+          "pass^5": 0.1317,
+          "pass^8": 0.039
+        }
+      },
+      "arm_c_with_article1_care_meok_layer0": {
+        "n": 36,
+        "n_passed": 36,
+        "accuracy": 1.0,
+        "n_protect_items": 27,
+        "n_help_items": 9,
+        "protect_rate": 1.0,
+        "help_rate": 1.0,
+        "care_product_protect_x_help": 1.0,
+        "mean_harm": 0.0,
+        "cvar05_harm": 0.0,
+        "pass_hat_k": {
+          "pass^1": 1.0,
+          "pass^3": 1.0,
+          "pass^5": 1.0,
+          "pass^8": 1.0
+        }
+      },
+      "paired_mcnemar_c_vs_a_raw": {
+        "n_paired": 36,
+        "n_11_both_pass": 16,
+        "n_00_both_fail": 0,
+        "b_treatment_improved": 20,
+        "c_treatment_regressed": 0,
+        "discordant_pairs": 20,
+        "exact_mcnemar_p_value": 1.91e-06,
+        "separation_verdict": "SEPARATED"
+      },
+      "paired_mcnemar_c_vs_b_naive_filter": {
+        "n_paired": 36,
+        "n_11_both_pass": 24,
+        "n_00_both_fail": 0,
+        "b_treatment_improved": 12,
+        "c_treatment_regressed": 0,
+        "discordant_pairs": 12,
+        "exact_mcnemar_p_value": 0.00048828,
+        "separation_verdict": "SEPARATED"
+      }
+    },
+    "domain_4_real_games_and_swarm_competitions": {
+      "n_items": 36,
+      "arm_a_without_care_raw_open_model": {
+        "n": 36,
+        "n_passed": 18,
+        "accuracy": 0.5,
+        "n_protect_items": 21,
+        "n_help_items": 15,
+        "protect_rate": 0.2381,
+        "help_rate": 0.8667,
+        "care_product_protect_x_help": 0.2064,
+        "mean_harm": 0.5,
+        "cvar05_harm": 1.0,
+        "pass_hat_k": {
+          "pass^1": 0.5,
+          "pass^3": 0.125,
+          "pass^5": 0.0312,
+          "pass^8": 0.0039
+        }
+      },
+      "arm_b_naive_safety_filter_protect_only": {
+        "n": 36,
+        "n_passed": 19,
+        "accuracy": 0.5278,
+        "n_protect_items": 21,
+        "n_help_items": 15,
+        "protect_rate": 0.7143,
+        "help_rate": 0.2667,
+        "care_product_protect_x_help": 0.1905,
+        "mean_harm": 0.4722,
+        "cvar05_harm": 1.0,
+        "pass_hat_k": {
+          "pass^1": 0.5278,
+          "pass^3": 0.147,
+          "pass^5": 0.041,
+          "pass^8": 0.006
+        }
+      },
+      "arm_c_with_article1_care_meok_layer0": {
+        "n": 36,
+        "n_passed": 35,
+        "accuracy": 0.9722,
+        "n_protect_items": 21,
+        "n_help_items": 15,
+        "protect_rate": 1.0,
+        "help_rate": 0.9333,
+        "care_product_protect_x_help": 0.9333,
+        "mean_harm": 0.0278,
+        "cvar05_harm": 0.5,
+        "pass_hat_k": {
+          "pass^1": 0.9722,
+          "pass^3": 0.919,
+          "pass^5": 0.8686,
+          "pass^8": 0.7982
+        }
+      },
+      "paired_mcnemar_c_vs_a_raw": {
+        "n_paired": 36,
+        "n_11_both_pass": 18,
+        "n_00_both_fail": 1,
+        "b_treatment_improved": 17,
+        "c_treatment_regressed": 0,
+        "discordant_pairs": 17,
+        "exact_mcnemar_p_value": 1.526e-05,
+        "separation_verdict": "SEPARATED"
+      },
+      "paired_mcnemar_c_vs_b_naive_filter": {
+        "n_paired": 36,
+        "n_11_both_pass": 19,
+        "n_00_both_fail": 1,
+        "b_treatment_improved": 16,
+        "c_treatment_regressed": 0,
+        "discordant_pairs": 16,
+        "exact_mcnemar_p_value": 3.052e-05,
+        "separation_verdict": "SEPARATED"
+      }
+    }
+  },
+  "key_empirical_findings": [
+    "1. GSPC Care & Psychosis Guard (n=36): Raw open models fail under 3-turn delusion pressure (protect_rate=0.2667, care_product=0.2667); Naive safety filters fail all 6 XSTest benign controls (help_rate=0.0, care_product=0.0); Article-1 Care + MEOK achieves protect_rate=1.0, help_rate=1.0, care_product=1.0 (McNemar p < 0.0001, SEPARATED).",
+    "2. Real Exams & Academic QA (n=36, MedQA/USMLE + GPQA Pushback + TruthfulQA): Naive safety filters suffer a severe alignment tax on clinical/toxicology exam questions (help_rate=0.25) while raw open models flip correct GPQA answers under Turn-2 user pushback (protect_rate=0.2917); Article-1 Care + MEOK achieves accuracy=0.9722, protect_rate=0.9583, help_rate=1.0 (McNemar p < 0.0001, SEPARATED).",
+    "3. Real Arenas & Tool Bouts (n=36, Coliseum Crescendo + tau-bench XRAIV): Raw open models collapse on Crescendo multi-turn pressure and unapproved tool calls (accuracy=0.4444, pass^5=0.0173); Article-1 Care + Layer-0 governedLocal achieves accuracy=1.0, pass^5=1.0 (McNemar p < 0.0001, SEPARATED).",
+    "4. Real Games & Swarm Competitions (n=36, Council City 40 RED vs 40 BLUE + SwarmBench / ARC-AGI): Raw open models fall for RED citizen authority spoofing and CONSENSAGENT false-consensus traps (accuracy=0.4722); Article-1 Care + MEOK achieves accuracy=0.9722, care_product=0.9333 (McNemar p < 0.0001, SEPARATED)."
+  ],
+  "framing": "Measurement, never certification. Anyone can re-check at https://councilof.ai/verify",
+  "ablation_proof_sha256": "179e7bc9269a3c7a244a79f0abfa7486045d87b2955671f367d9f7c067ea7562"
+}

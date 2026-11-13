@@ -1,0 +1,89 @@
+{
+  "state": "EXECUTED",
+  "platform": "KAGGLE",
+  "runtime": {
+    "python": "3.13.18 (main, Oct 26 2026, 15:28:15) [GCC 13.3.0]",
+    "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "sqlite": "3.45.1"
+  },
+  "checker": {
+    "discovered": 21,
+    "tests_run": 21,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0
+  },
+  "replay": {
+    "study": "csoai.measured-reuse.refresh-retain.20261110.r06",
+    "historical": {
+      "history_rows": 36,
+      "reconciled_totals": 12,
+      "historical_timing_unchanged": true,
+      "pinned_inputs": 10,
+      "candidate_sha256": "a0332c36471bf2b726ee00bdcac7733d7b98e2991954b6beb61b6b103e635e69"
+    },
+    "fresh_replay": {
+      "unit_suite": {
+        "discovered": 49,
+        "tests_run": 49,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0
+      },
+      "batches_checked": 1440,
+      "fixtures_checked": 192,
+      "replayed_history_assertions": 576,
+      "timing_result": "new host observation; historical timing values were not replaced",
+      "command_wall_seconds": {
+        "prepare": 0.08653877300002932,
+        "unit_tests": 1.7878246730000455,
+        "benchmark": 17.764993971000024
+      },
+      "model_calls": 0,
+      "training": false,
+      "gspc_admitted": false,
+      "production_authority": "NONE",
+      "cost": "UNKNOWN",
+      "energy": "UNKNOWN"
+    }
+  },
+  "process_exact_matches": 8,
+  "process_comparisons": 8,
+  "maximum_numeric_difference": 0.0,
+  "negative_controls": [
+    {
+      "case": "length",
+      "rejected": true
+    },
+    {
+      "case": "boolean",
+      "rejected": true
+    },
+    {
+      "case": "nonfinite",
+      "rejected": true
+    },
+    {
+      "case": "invalid_proportions",
+      "rejected": true
+    },
+    {
+      "case": "wrong_weight_digest",
+      "rejected": true
+    }
+  ],
+  "downloaded_files_hash_verified": [
+    "run-evidence.json",
+    "checker-result.json",
+    "reader-replay/acceptance.json"
+  ],
+  "runner_sha256": "43ec3956cc8ce931869c41448675316b3180693eb652e83adff39b5c2ef3df32",
+  "run_evidence_sha256": "3598f7b0eaf0060f1f698b34ef5559dac1fed2e3403d2bdbdb78554b1cc5e562",
+  "gpu_requested": false,
+  "training": false,
+  "gspc_admitted": false
+}

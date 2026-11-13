@@ -36,6 +36,8 @@
       <a href="#boards">Leaderboards</a>
       <a href="#hub-cells">Hub cells</a>
       <a href="#models">Models</a>
+      <a href="#universal-cohorts">Universal cohorts</a>
+      <a href="#agent-layer-safe-arena">SAFE &amp; Agent Layer</a>
       <a href="#tape-table">Board</a>
       <a href="https://councilof.ai/gspc-verify">Verify</a>
     </nav>
@@ -101,12 +103,15 @@
     <div class="head">
       <div>
         <p class="kicker">Hugging Face measured cells</p>
-        <h2 id="hub-h">Top nine published measurements by axis</h2>
+        <h2 id="hub-h">Published measurements by axis</h2>
       </div>
-      <label class="pick">
-        <span class="sr">Hugging Face axis</span>
-        <select id="hub-axis"></select>
-      </label>
+      <div class="pillars">
+        <label class="pick">
+          <span class="sr">Hugging Face axis</span>
+          <select id="hub-axis"></select>
+        </label>
+        <button type="button" id="hub-toggle-all" class="ghost">Show all on axis</button>
+      </div>
     </div>
     <p class="fine" id="hub-note">Reading the complete published Hub indexes…</p>
     <div class="tape" id="hub-tape" aria-live="polite"></div>
@@ -116,6 +121,7 @@
           <tr>
             <th>#</th>
             <th>Model</th>
+            <th>Axis</th>
             <th>Figure</th>
             <th>n</th>
             <th>Status</th>
@@ -123,7 +129,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="6">Loading published Hugging Face measurements…</td></tr>
+          <tr><td colspan="7">Loading published Hugging Face measurements…</td></tr>
         </tbody>
       </table>
     </div>
@@ -132,8 +138,16 @@
 
   <section id="models" class="block" aria-labelledby="mod-h">
     <div class="head">
-      <p class="kicker">Model directory</p>
-      <h2 id="mod-h">Names the signed board has already published</h2>
+      <div>
+        <p class="kicker">Model directory</p>
+        <h2 id="mod-h">Names the signed board and Hub indexes have already published</h2>
+      </div>
+      <div class="pillars" id="mod-cohorts">
+        <button type="button" data-cohort="all" class="on">All published</button>
+        <button type="button" data-cohort="hub">Hugging Face Hub</button>
+        <button type="button" data-cohort="registry">Measured registry</button>
+        <button type="button" data-cohort="board">Board leaders</button>
+      </div>
     </div>
     <p class="fine" id="mod-note"></p>
     <div class="scroll">
@@ -141,12 +155,86 @@
         <thead>
           <tr>
             <th>Model</th>
+            <th>Source</th>
             <th>Axes</th>
             <th>Best published figure</th>
             <th></th>
           </tr>
         </thead>
         <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="universal-cohorts" class="block" aria-labelledby="uc-h">
+    <div class="head">
+      <div>
+        <p class="kicker">Universal GSPC ledger · Busabase gspc (bsemvaekntqom40ksh)</p>
+        <h2 id="uc-h">Measures, Harnesses, Interop WGs, AI Labs, Humanoid Labs &amp; AI Companies</h2>
+      </div>
+      <div class="pillars" id="uc-cohorts">
+        <button type="button" data-uc="all" class="on">All 6 cohorts</button>
+        <button type="button" data-uc="measurers_and_harnesses">Measurers &amp; harnesses</button>
+        <button type="button" data-uc="agent_and_mcp_harnesses">Agent &amp; MCP harnesses</button>
+        <button type="button" data-uc="interop_working_groups">Interop WGs</button>
+        <button type="button" data-uc="ai_labs">Frontier AI labs</button>
+        <button type="button" data-uc="humanoid_labs_and_deployments">Humanoid labs &amp; deployments</button>
+        <button type="button" data-uc="ai_companies">AI companies notices</button>
+      </div>
+    </div>
+    <p class="fine" id="uc-note">Reading universal GSPC ledger…</p>
+    <p class="fine" id="uc-own"></p>
+    <div class="scroll">
+      <table class="sheet" id="uc-table">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Class</th>
+            <th>Measure group (never ranked across groups)</th>
+            <th>Lane</th>
+            <th>Observation / Verifiability checks</th>
+            <th>Record</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6">Loading universal GSPC cohorts…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="agent-layer-safe-arena" class="block" aria-labelledby="alsa-h">
+    <div class="head">
+      <div>
+        <p class="kicker">GSPC Agent Layer · MEOK + H.I.M. + AX / AG-UI / A2UI · OSAIA SAFE v0.2 · Arena Battles &amp; Academy HITL</p>
+        <h2 id="alsa-h">Work, measure, fix, and sign across all surfaces — with OSAIA SAFE re-verification &amp; claim maintenance</h2>
+      </div>
+      <div class="pillars" id="alsa-filters">
+        <button type="button" class="on" data-alsa="all">All (45)</button>
+        <button type="button" data-alsa="ax_him">AX / AG-UI / A2UI &amp; H.I.M. Loop (9)</button>
+        <button type="button" data-alsa="him_explorer">MEOK Verified Explorer &amp; H.I.M. Escalation (5)</button>
+        <button type="button" data-alsa="safe_staleness">OSAIA SAFE v0.2 &amp; Staleness (10)</button>
+        <button type="button" data-alsa="frozen_fluid_zernio">Frozen-to-Fluid · Zernio / Voice → Training → Exam → MOOC → RAS (10)</button>
+        <button type="button" data-alsa="arena_academy">Arena Battles, City &amp; Academy HITL (11)</button>
+      </div>
+    </div>
+    <p class="fine" id="alsa-note">Loading GSPC Agent Layer, OSAIA SAFE v0.2 re-verification pack, 417 frozen EU provisions, and Arena/Academy HITL telemetry…</p>
+    <p class="fine" id="alsa-staleness"></p>
+    <div class="scroll">
+      <table class="sheet" id="alsa-table">
+        <thead>
+          <tr>
+            <th>Surface / Record</th>
+            <th>Lane</th>
+            <th>Axis / Scope</th>
+            <th>State / Gate</th>
+            <th>Observation / Verification Detail</th>
+            <th>Evidence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6">Loading GSPC Agent Layer &amp; OSAIA SAFE records…</td></tr>
+        </tbody>
       </table>
     </div>
   </section>

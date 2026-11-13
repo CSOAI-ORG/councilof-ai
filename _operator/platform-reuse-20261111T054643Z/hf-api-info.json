@@ -1,0 +1,1993 @@
+{
+  "named_endpoints": {
+    "/chat_turn": {
+      "parameters": [
+        {
+          "label": "Message",
+          "parameter_name": "message",
+          "parameter_has_default": false,
+          "parameter_default": null,
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        },
+        {
+          "label": "Optional image for the next message",
+          "parameter_name": "image",
+          "parameter_has_default": false,
+          "parameter_default": null,
+          "type": {
+            "properties": {
+              "path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Path to a local file",
+                "title": "Path"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Publicly available url or base64 encoded image",
+                "title": "Url"
+              },
+              "size": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Size of image in bytes",
+                "title": "Size"
+              },
+              "orig_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Original filename",
+                "title": "Orig Name"
+              },
+              "mime_type": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "mime type of image",
+                "title": "Mime Type"
+              },
+              "is_stream": {
+                "default": false,
+                "description": "Can always be set to False",
+                "title": "Is Stream",
+                "type": "boolean"
+              },
+              "meta": {
+                "additionalProperties": true,
+                "default": {
+                  "_type": "gradio.FileData"
+                },
+                "title": "Meta",
+                "type": "object"
+              }
+            },
+            "title": "ImageData",
+            "type": "object",
+            "additional_description": "A local filepath or publicly available URL."
+          },
+          "python_type": {
+            "type": "filepath",
+            "description": "A local filepath or publicly available URL."
+          },
+          "component": "Image",
+          "example_input": {
+            "path": "https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png",
+            "meta": {
+              "_type": "gradio.FileData"
+            },
+            "orig_name": "bus.png",
+            "url": "https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png"
+          }
+        },
+        {
+          "label": "Conversation model",
+          "parameter_name": "provider",
+          "parameter_has_default": true,
+          "parameter_default": "Cosmos 3 Edge \u00b7 ZeroGPU",
+          "type": {
+            "type": "string",
+            "enum": [
+              "Cosmos 3 Edge \u00b7 ZeroGPU",
+              "Existing MEOK \u00b7 free CPU"
+            ]
+          },
+          "python_type": {
+            "type": "Literal['Cosmos 3 Edge \u00b7 ZeroGPU', 'Existing MEOK \u00b7 free CPU']",
+            "description": ""
+          },
+          "component": "Dropdown",
+          "example_input": "Cosmos 3 Edge \u00b7 ZeroGPU"
+        },
+        {
+          "label": "Send my messages, recent context and optional image to the selected hosted model, and run requested read-only tools.",
+          "parameter_name": "consent",
+          "parameter_has_default": true,
+          "parameter_default": false,
+          "type": {
+            "type": "boolean"
+          },
+          "python_type": {
+            "type": "bool",
+            "description": ""
+          },
+          "component": "Checkbox",
+          "example_input": true
+        },
+        {
+          "label": "Enable the listed read-only chat commands",
+          "parameter_name": "allow_tools",
+          "parameter_has_default": true,
+          "parameter_default": true,
+          "type": {
+            "type": "boolean"
+          },
+          "python_type": {
+            "type": "bool",
+            "description": ""
+          },
+          "component": "Checkbox",
+          "example_input": true
+        }
+      ],
+      "returns": [
+        {
+          "label": "Conversation",
+          "type": {
+            "$defs": {
+              "ComponentMessage": {
+                "properties": {
+                  "component": {
+                    "title": "Component",
+                    "type": "string"
+                  },
+                  "value": {
+                    "title": "Value"
+                  },
+                  "constructor_args": {
+                    "additionalProperties": true,
+                    "title": "Constructor Args",
+                    "type": "object"
+                  },
+                  "props": {
+                    "additionalProperties": true,
+                    "title": "Props",
+                    "type": "object"
+                  },
+                  "type": {
+                    "const": "component",
+                    "default": "component",
+                    "title": "Type",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "component",
+                  "value",
+                  "constructor_args",
+                  "props"
+                ],
+                "title": "ComponentMessage",
+                "type": "object"
+              },
+              "FileData": {
+                "description": "The FileData class is a subclass of the GradioModel class that represents a file object within a Gradio interface. It is used to store file data and metadata when a file is uploaded.\n\nAttributes:\n    path: The server file path where the file is stored.\n    url: The normalized server URL pointing to the file.\n    size: The size of the file in bytes.\n    orig_name: The original filename before upload.\n    mime_type: The MIME type of the file.\n    is_stream: Indicates whether the file is a stream.\n    meta: Additional metadata used internally (should not be changed).",
+                "properties": {
+                  "path": {
+                    "title": "Path",
+                    "type": "string"
+                  },
+                  "url": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Url"
+                  },
+                  "size": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Size"
+                  },
+                  "orig_name": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Orig Name"
+                  },
+                  "mime_type": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Mime Type"
+                  },
+                  "is_stream": {
+                    "default": false,
+                    "title": "Is Stream",
+                    "type": "boolean"
+                  },
+                  "meta": {
+                    "$ref": "#/$defs/FileDataMeta"
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "title": "FileData",
+                "type": "object"
+              },
+              "FileDataMeta": {
+                "properties": {
+                  "_type": {
+                    "const": "gradio.FileData",
+                    "title": "Type",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "_type"
+                ],
+                "title": "FileDataMeta",
+                "type": "object"
+              },
+              "FileMessage": {
+                "properties": {
+                  "file": {
+                    "$ref": "#/$defs/FileData"
+                  },
+                  "alt_text": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Alt Text"
+                  },
+                  "type": {
+                    "const": "file",
+                    "default": "file",
+                    "title": "Type",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "file"
+                ],
+                "title": "FileMessage",
+                "type": "object"
+              },
+              "Message": {
+                "properties": {
+                  "role": {
+                    "title": "Role",
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/MetadataDict"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "content": {
+                    "items": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/TextMessage"
+                        },
+                        {
+                          "$ref": "#/$defs/FileMessage"
+                        },
+                        {
+                          "$ref": "#/$defs/ComponentMessage"
+                        }
+                      ]
+                    },
+                    "title": "Content",
+                    "type": "array"
+                  },
+                  "options": {
+                    "anyOf": [
+                      {
+                        "items": {
+                          "$ref": "#/$defs/OptionDict"
+                        },
+                        "type": "array"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Options"
+                  }
+                },
+                "required": [
+                  "role",
+                  "content"
+                ],
+                "title": "Message",
+                "type": "object"
+              },
+              "MetadataDict": {
+                "description": "A typed dictionary to represent metadata for a message in the Chatbot component. An\ninstance of this dictionary is used for the `metadata` field in a ChatMessage when\nthe chat message should be displayed as a thought.\nParameters:\n    title: The title of the \"thought\" message. Required if the message is to be displayed as a thought.\n    id: The ID of the message. Only used for nested thoughts. Nested thoughts can be nested by setting the parent_id to the id of the parent thought.\n    parent_id: The ID of the parent message. Only used for nested thoughts.\n    log: A string message to display next to the thought title in a subdued font.\n    duration: The duration of the message in seconds. Appears next to the thought title in a subdued font inside a parentheses.\n    status: if set to `\"pending\"`, a spinner appears next to the thought title and the accordion is initialized open.  If `status` is `\"done\"`, the thought accordion is initialized closed. If `status` is not provided, the thought accordion is initialized open and no spinner is displayed.",
+                "properties": {
+                  "title": {
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "id": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "title": "Id"
+                  },
+                  "parent_id": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "title": "Parent Id"
+                  },
+                  "log": {
+                    "title": "Log",
+                    "type": "string"
+                  },
+                  "duration": {
+                    "title": "Duration",
+                    "type": "number"
+                  },
+                  "status": {
+                    "enum": [
+                      "pending",
+                      "done"
+                    ],
+                    "title": "Status",
+                    "type": "string"
+                  }
+                },
+                "title": "MetadataDict",
+                "type": "object"
+              },
+              "OptionDict": {
+                "description": "A typed dictionary to represent an option in a ChatMessage. A list of these\ndictionaries is used for the `options` field in a ChatMessage.\nParameters:\n    value: The value to return when the option is selected.\n    label: The text to display in the option, if different from the value.",
+                "properties": {
+                  "value": {
+                    "title": "Value",
+                    "type": "string"
+                  },
+                  "label": {
+                    "title": "Label",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value"
+                ],
+                "title": "OptionDict",
+                "type": "object"
+              },
+              "TextMessage": {
+                "properties": {
+                  "text": {
+                    "title": "Text",
+                    "type": "string"
+                  },
+                  "type": {
+                    "const": "text",
+                    "default": "text",
+                    "title": "Type",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "text"
+                ],
+                "title": "TextMessage",
+                "type": "object"
+              }
+            },
+            "items": {
+              "$ref": "#/$defs/Message"
+            },
+            "title": "ChatbotDataMessages",
+            "type": "array",
+            "additional_description": null
+          },
+          "python_type": {
+            "type": "list[dict(role: str, metadata: dict(title: str, id: int | str, parent_id: int | str, log: str, duration: float, status: Literal['pending', 'done']) | None, content: list[dict(text: str, type: Literal[text]) | dict(file: filepath, alt_text: str | None, type: Literal[file]) | dict(component: str, value: Any, constructor_args: dict(str, Any), props: dict(str, Any), type: Literal[component])], options: list[dict(value: str, label: str)] | None)]",
+            "description": ""
+          },
+          "component": "Chatbot"
+        },
+        {
+          "label": "Message",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox"
+        },
+        {
+          "label": "Runtime result",
+          "type": {
+            "type": {},
+            "description": "any valid json"
+          },
+          "python_type": {
+            "type": "str | float | bool | list | dict",
+            "description": "any valid json"
+          },
+          "component": "Json"
+        },
+        {
+          "label": "Bounded record / receipt",
+          "type": {
+            "type": {},
+            "description": "any valid json"
+          },
+          "python_type": {
+            "type": "str | float | bool | list | dict",
+            "description": "any valid json"
+          },
+          "component": "Json"
+        },
+        {
+          "label": "value_11",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Markdown"
+        },
+        {
+          "label": "value_50",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox"
+        },
+        {
+          "label": "Optional image for the next message",
+          "type": {
+            "properties": {
+              "path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Path to a local file",
+                "title": "Path"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Publicly available url or base64 encoded image",
+                "title": "Url"
+              },
+              "size": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Size of image in bytes",
+                "title": "Size"
+              },
+              "orig_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Original filename",
+                "title": "Orig Name"
+              },
+              "mime_type": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "mime type of image",
+                "title": "Mime Type"
+              },
+              "is_stream": {
+                "default": false,
+                "description": "Can always be set to False",
+                "title": "Is Stream",
+                "type": "boolean"
+              },
+              "meta": {
+                "additionalProperties": true,
+                "default": {
+                  "_type": "gradio.FileData"
+                },
+                "title": "Meta",
+                "type": "object"
+              }
+            },
+            "title": "ImageData",
+            "type": "object",
+            "additional_description": "A local filepath or publicly available URL."
+          },
+          "python_type": {
+            "type": "filepath",
+            "description": ""
+          },
+          "component": "Image"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "",
+      "code_snippets": {
+        "python": "from gradio_client import Client, handle_file\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tmessage=\"Hello!!\",\n\timage=handle_file('https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png'),\n\tprovider=\"Cosmos 3 Edge \u00b7 ZeroGPU\",\n\tconsent=False,\n\tallow_tools=True,\n\tapi_name=\"/chat_turn\",\n)\nprint(result)",
+        "javascript": "import { Client, handle_file } from \"@gradio/client\";\n\nconst response_0 = await fetch(\"https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png\");\nconst exampleImage = await response_0.blob();\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/chat_turn\", {\n\t\tmessage: \"Hello!!\",\n\t\timage: handle_file(exampleImage),\n\t\tprovider: \"Cosmos 3 Edge \u00b7 ZeroGPU\",\n\t\tconsent: false,\n\t\tallow_tools: true,\n});\n\nconsole.log(result.data);",
+        "bash": "FILE_PATH=$(curl -s -X POST http://localhost:7860/gradio_api/upload -F 'files=@/path/to/your/file' | tr -d '[]\" ')\n\ncurl -X POST http://localhost:7860/gradio_api/call/v2/chat_turn -s -H \"Content-Type: application/json\" \\\n  -d '{\"message\": \"Hello!!\", \"image\": {\"path\": \"'$FILE_PATH'\", \"meta\": {\"_type\": \"gradio.FileData\"}}, \"provider\": \"Cosmos 3 Edge \u00b7 ZeroGPU\", \"consent\": false, \"allow_tools\": true}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/chat_turn/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /chat_turn '{\n  \"message\": \"Hello!!\",\n  \"image\": {\n    \"path\": \"https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png\",\n    \"meta\": {\n      \"_type\": \"gradio.FileData\"\n    }\n  },\n  \"provider\": \"Cosmos 3 Edge \\u00b7 ZeroGPU\",\n  \"consent\": true,\n  \"allow_tools\": true\n}'\n"
+      }
+    },
+    "/reason": {
+      "parameters": [
+        {
+          "label": "What are we working towards?",
+          "parameter_name": "goal",
+          "parameter_has_default": false,
+          "parameter_default": null,
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        },
+        {
+          "label": "What is happening now?",
+          "parameter_name": "situation",
+          "parameter_has_default": false,
+          "parameter_default": null,
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        },
+        {
+          "label": "Optional image of the situation",
+          "parameter_name": "image",
+          "parameter_has_default": false,
+          "parameter_default": null,
+          "type": {
+            "properties": {
+              "path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Path to a local file",
+                "title": "Path"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Publicly available url or base64 encoded image",
+                "title": "Url"
+              },
+              "size": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Size of image in bytes",
+                "title": "Size"
+              },
+              "orig_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Original filename",
+                "title": "Orig Name"
+              },
+              "mime_type": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "mime type of image",
+                "title": "Mime Type"
+              },
+              "is_stream": {
+                "default": false,
+                "description": "Can always be set to False",
+                "title": "Is Stream",
+                "type": "boolean"
+              },
+              "meta": {
+                "additionalProperties": true,
+                "default": {
+                  "_type": "gradio.FileData"
+                },
+                "title": "Meta",
+                "type": "object"
+              }
+            },
+            "title": "ImageData",
+            "type": "object",
+            "additional_description": "A local filepath or publicly available URL."
+          },
+          "python_type": {
+            "type": "filepath",
+            "description": "A local filepath or publicly available URL."
+          },
+          "component": "Image",
+          "example_input": {
+            "path": "https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png",
+            "meta": {
+              "_type": "gradio.FileData"
+            },
+            "orig_name": "bus.png",
+            "url": "https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png"
+          }
+        },
+        {
+          "label": "Where reasoning runs",
+          "parameter_name": "provider",
+          "parameter_has_default": true,
+          "parameter_default": "Cosmos 3 Edge \u00b7 ZeroGPU",
+          "type": {
+            "type": "string",
+            "enum": [
+              "Cosmos 3 Edge \u00b7 ZeroGPU",
+              "Existing MEOK \u00b7 free CPU"
+            ]
+          },
+          "python_type": {
+            "type": "Literal['Cosmos 3 Edge \u00b7 ZeroGPU', 'Existing MEOK \u00b7 free CPU']",
+            "description": ""
+          },
+          "component": "Dropdown",
+          "example_input": "Cosmos 3 Edge \u00b7 ZeroGPU"
+        },
+        {
+          "label": "Send these inputs and recent session turns to the chosen HF model",
+          "parameter_name": "consent",
+          "parameter_has_default": true,
+          "parameter_default": false,
+          "type": {
+            "type": "boolean"
+          },
+          "python_type": {
+            "type": "bool",
+            "description": ""
+          },
+          "component": "Checkbox",
+          "example_input": true
+        }
+      ],
+      "returns": [
+        {
+          "label": "MEOK",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox"
+        },
+        {
+          "label": "Actual runtime events",
+          "type": {
+            "type": {},
+            "description": "any valid json"
+          },
+          "python_type": {
+            "type": "str | float | bool | list | dict",
+            "description": "any valid json"
+          },
+          "component": "Json"
+        },
+        {
+          "label": "3 KiB record",
+          "type": {
+            "type": {},
+            "description": "any valid json"
+          },
+          "python_type": {
+            "type": "str | float | bool | list | dict",
+            "description": "any valid json"
+          },
+          "component": "Json"
+        },
+        {
+          "label": "Outcome and review state",
+          "type": {
+            "type": {},
+            "description": "any valid json"
+          },
+          "python_type": {
+            "type": "str | float | bool | list | dict",
+            "description": "any valid json"
+          },
+          "component": "Json"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "",
+      "code_snippets": {
+        "python": "from gradio_client import Client, handle_file\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tgoal=\"Hello!!\",\n\tsituation=\"Hello!!\",\n\timage=handle_file('https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png'),\n\tprovider=\"Cosmos 3 Edge \u00b7 ZeroGPU\",\n\tconsent=False,\n\tapi_name=\"/reason\",\n)\nprint(result)",
+        "javascript": "import { Client, handle_file } from \"@gradio/client\";\n\nconst response_0 = await fetch(\"https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png\");\nconst exampleImage = await response_0.blob();\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/reason\", {\n\t\tgoal: \"Hello!!\",\n\t\tsituation: \"Hello!!\",\n\t\timage: handle_file(exampleImage),\n\t\tprovider: \"Cosmos 3 Edge \u00b7 ZeroGPU\",\n\t\tconsent: false,\n});\n\nconsole.log(result.data);",
+        "bash": "FILE_PATH=$(curl -s -X POST http://localhost:7860/gradio_api/upload -F 'files=@/path/to/your/file' | tr -d '[]\" ')\n\ncurl -X POST http://localhost:7860/gradio_api/call/v2/reason -s -H \"Content-Type: application/json\" \\\n  -d '{\"goal\": \"Hello!!\", \"situation\": \"Hello!!\", \"image\": {\"path\": \"'$FILE_PATH'\", \"meta\": {\"_type\": \"gradio.FileData\"}}, \"provider\": \"Cosmos 3 Edge \u00b7 ZeroGPU\", \"consent\": false}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/reason/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /reason '{\n  \"goal\": \"Hello!!\",\n  \"situation\": \"Hello!!\",\n  \"image\": {\n    \"path\": \"https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png\",\n    \"meta\": {\n      \"_type\": \"gradio.FileData\"\n    }\n  },\n  \"provider\": \"Cosmos 3 Edge \\u00b7 ZeroGPU\",\n  \"consent\": true\n}'\n"
+      }
+    },
+    "/record_outcome": {
+      "parameters": [
+        {
+          "label": "Observed outcome",
+          "parameter_name": "text",
+          "parameter_has_default": false,
+          "parameter_default": null,
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        },
+        {
+          "label": "Where this outcome came from",
+          "parameter_name": "source",
+          "parameter_has_default": false,
+          "parameter_default": null,
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        }
+      ],
+      "returns": [
+        {
+          "label": "Actual runtime events",
+          "type": {
+            "type": {},
+            "description": "any valid json"
+          },
+          "python_type": {
+            "type": "str | float | bool | list | dict",
+            "description": "any valid json"
+          },
+          "component": "Json"
+        },
+        {
+          "label": "Outcome and review state",
+          "type": {
+            "type": {},
+            "description": "any valid json"
+          },
+          "python_type": {
+            "type": "str | float | bool | list | dict",
+            "description": "any valid json"
+          },
+          "component": "Json"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\ttext=\"Hello!!\",\n\tsource=\"Hello!!\",\n\tapi_name=\"/record_outcome\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/record_outcome\", {\n\t\ttext: \"Hello!!\",\n\t\tsource: \"Hello!!\",\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/record_outcome -s -H \"Content-Type: application/json\" \\\n  -d '{\"text\": \"Hello!!\", \"source\": \"Hello!!\"}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/record_outcome/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /record_outcome '{\n  \"text\": \"Hello!!\",\n  \"source\": \"Hello!!\"\n}'\n"
+      }
+    },
+    "/lab_predict_process": {
+      "parameters": [
+        {
+          "label": "11 features in published model order",
+          "parameter_name": "features_json",
+          "parameter_has_default": true,
+          "parameter_default": "[0,0,0,1,0.3,0.4,0.3,0,1,1,0]",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        },
+        {
+          "label": "Apply known synthetic expiry and simplex constraints",
+          "parameter_name": "constrained",
+          "parameter_has_default": true,
+          "parameter_default": true,
+          "type": {
+            "type": "boolean"
+          },
+          "python_type": {
+            "type": "bool",
+            "description": ""
+          },
+          "component": "Checkbox",
+          "example_input": true
+        }
+      ],
+      "returns": [
+        {
+          "label": "Prediction and unsigned GSPC execution event",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Run the pinned 980-parameter MEOK process model on 11 synthetic state features.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tfeatures_json=\"[0,0,0,1,0.3,0.4,0.3,0,1,1,0]\",\n\tconstrained=True,\n\tapi_name=\"/lab_predict_process\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/lab_predict_process\", {\n\t\tfeatures_json: \"[0,0,0,1,0.3,0.4,0.3,0,1,1,0]\",\n\t\tconstrained: true,\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/lab_predict_process -s -H \"Content-Type: application/json\" \\\n  -d '{\"features_json\": \"[0,0,0,1,0.3,0.4,0.3,0,1,1,0]\", \"constrained\": true}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/lab_predict_process/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /lab_predict_process '{\n  \"features_json\": \"[0,0,0,1,0.3,0.4,0.3,0,1,1,0]\",\n  \"constrained\": true\n}'\n"
+      }
+    },
+    "/lab_image_moments": {
+      "parameters": [
+        {
+          "label": "Row-major pixels JSON",
+          "parameter_name": "pixels_json",
+          "parameter_has_default": true,
+          "parameter_default": "[1,1,1,1]",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        },
+        {
+          "label": "Width",
+          "parameter_name": "width",
+          "parameter_has_default": true,
+          "parameter_default": 2,
+          "type": {
+            "type": "integer"
+          },
+          "python_type": {
+            "type": "int",
+            "description": ""
+          },
+          "component": "Number",
+          "example_input": 1
+        },
+        {
+          "label": "Height",
+          "parameter_name": "height",
+          "parameter_has_default": true,
+          "parameter_default": 2,
+          "type": {
+            "type": "integer"
+          },
+          "python_type": {
+            "type": "int",
+            "description": ""
+          },
+          "component": "Number",
+          "example_input": 1
+        }
+      ],
+      "returns": [
+        {
+          "label": "Centroid, second moments and covariance",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Compute intensity-weighted image geometry, not intelligence or lossless compression.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tpixels_json=\"[1,1,1,1]\",\n\twidth=2,\n\theight=2,\n\tapi_name=\"/lab_image_moments\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/lab_image_moments\", {\n\t\tpixels_json: \"[1,1,1,1]\",\n\t\twidth: 2,\n\t\theight: 2,\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/lab_image_moments -s -H \"Content-Type: application/json\" \\\n  -d '{\"pixels_json\": \"[1,1,1,1]\", \"width\": 2, \"height\": 2}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/lab_image_moments/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /lab_image_moments '{\n  \"pixels_json\": \"[1,1,1,1]\",\n  \"width\": 2,\n  \"height\": 2\n}'\n"
+      }
+    },
+    "/lab_compact_root": {
+      "parameters": [
+        {
+          "label": "Typed records JSON",
+          "parameter_name": "records_json",
+          "parameter_has_default": true,
+          "parameter_default": "[{\"kind\":\"observation\",\"text\":\"A source was retrieved\"},{\"kind\":\"prediction\",\"text\":\"An unverified outcome was predicted\"}]",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        }
+      ],
+      "returns": [
+        {
+          "label": "Root and complete byte accounting",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Build a bounded content-addressed view without pretending it stores the referenced data.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\trecords_json=\"[{\"kind\":\"observation\",\"text\":\"A source was retrieved\"},{\"kind\":\"prediction\",\"text\":\"An unverified outcome was predicted\"}]\",\n\tapi_name=\"/lab_compact_root\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/lab_compact_root\", {\n\t\trecords_json: \"[{\"kind\":\"observation\",\"text\":\"A source was retrieved\"},{\"kind\":\"prediction\",\"text\":\"An unverified outcome was predicted\"}]\",\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/lab_compact_root -s -H \"Content-Type: application/json\" \\\n  -d '{\"records_json\": \"[{\"kind\":\"observation\",\"text\":\"A source was retrieved\"},{\"kind\":\"prediction\",\"text\":\"An unverified outcome was predicted\"}]\"}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/lab_compact_root/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /lab_compact_root '{\n  \"records_json\": \"[{\\\"kind\\\":\\\"observation\\\",\\\"text\\\":\\\"A source was retrieved\\\"},{\\\"kind\\\":\\\"prediction\\\",\\\"text\\\":\\\"An unverified outcome was predicted\\\"}]\"\n}'\n"
+      }
+    },
+    "/lab_axis_snapshot": {
+      "parameters": [
+        {
+          "label": "Published axis identifier, or all",
+          "parameter_name": "axis",
+          "parameter_has_default": true,
+          "parameter_default": "all",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        }
+      ],
+      "returns": [
+        {
+          "label": "Snapshot with source and freshness",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Read the retained canonical GSPC axis snapshot; this does not run an axis measurement.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\taxis=\"all\",\n\tapi_name=\"/lab_axis_snapshot\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/lab_axis_snapshot\", {\n\t\taxis: \"all\",\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/lab_axis_snapshot -s -H \"Content-Type: application/json\" \\\n  -d '{\"axis\": \"all\"}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/lab_axis_snapshot/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /lab_axis_snapshot '{\n  \"axis\": \"all\"\n}'\n"
+      }
+    },
+    "/lab_dependency_impact": {
+      "parameters": [
+        {
+          "label": "Directed dependency pairs",
+          "parameter_name": "edges_json",
+          "parameter_has_default": true,
+          "parameter_default": "[[\"source\",\"dataset\"],[\"dataset\",\"model\"],[\"model\",\"report\"],[\"other\",\"unrelated\"]]",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        },
+        {
+          "label": "Changed identifiers",
+          "parameter_name": "changed_json",
+          "parameter_has_default": true,
+          "parameter_default": "[\"source\"]",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        }
+      ],
+      "returns": [
+        {
+          "label": "Affected and unaffected components",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Find every descendant affected by changed sources in a bounded dependency DAG.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tedges_json=\"[[\"source\",\"dataset\"],[\"dataset\",\"model\"],[\"model\",\"report\"],[\"other\",\"unrelated\"]]\",\n\tchanged_json=\"[\"source\"]\",\n\tapi_name=\"/lab_dependency_impact\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/lab_dependency_impact\", {\n\t\tedges_json: \"[[\"source\",\"dataset\"],[\"dataset\",\"model\"],[\"model\",\"report\"],[\"other\",\"unrelated\"]]\",\n\t\tchanged_json: \"[\"source\"]\",\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/lab_dependency_impact -s -H \"Content-Type: application/json\" \\\n  -d '{\"edges_json\": \"[[\"source\",\"dataset\"],[\"dataset\",\"model\"],[\"model\",\"report\"],[\"other\",\"unrelated\"]]\", \"changed_json\": \"[\"source\"]\"}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/lab_dependency_impact/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /lab_dependency_impact '{\n  \"edges_json\": \"[[\\\"source\\\",\\\"dataset\\\"],[\\\"dataset\\\",\\\"model\\\"],[\\\"model\\\",\\\"report\\\"],[\\\"other\\\",\\\"unrelated\\\"]]\",\n  \"changed_json\": \"[\\\"source\\\"]\"\n}'\n"
+      }
+    },
+    "/lab_photonic_cpu_probe": {
+      "parameters": [
+        {
+          "label": "Probe seed",
+          "parameter_name": "seed",
+          "parameter_has_default": true,
+          "parameter_default": 17,
+          "type": {
+            "type": "integer"
+          },
+          "python_type": {
+            "type": "int",
+            "description": ""
+          },
+          "component": "Number",
+          "example_input": 0
+        }
+      ],
+      "returns": [
+        {
+          "label": "Numerical result and unsigned execution event",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Run bounded numerical checks through the official Q.ANT CPU backend, not optical hardware.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tseed=17,\n\tapi_name=\"/lab_photonic_cpu_probe\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/lab_photonic_cpu_probe\", {\n\t\tseed: 17,\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/lab_photonic_cpu_probe -s -H \"Content-Type: application/json\" \\\n  -d '{\"seed\": 17}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/lab_photonic_cpu_probe/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /lab_photonic_cpu_probe '{\n  \"seed\": 17\n}'\n"
+      }
+    },
+    "/lab_memory_venturi": {
+      "parameters": [
+        {
+          "label": "Synthetic trace seed",
+          "parameter_name": "seed",
+          "parameter_has_default": true,
+          "parameter_default": 17,
+          "type": {
+            "type": "integer"
+          },
+          "python_type": {
+            "type": "int",
+            "description": ""
+          },
+          "component": "Number",
+          "example_input": 0
+        },
+        {
+          "label": "Nominal repeat percentage",
+          "parameter_name": "reuse_percent",
+          "parameter_has_default": true,
+          "parameter_default": 80,
+          "type": {
+            "type": "integer"
+          },
+          "python_type": {
+            "type": "int",
+            "description": ""
+          },
+          "component": "Number",
+          "example_input": 50
+        }
+      ],
+      "returns": [
+        {
+          "label": "Correction-aware comparison and unsigned execution record",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Compare bounded memory policies and replay the existing trained process predictor.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tseed=17,\n\treuse_percent=80,\n\tapi_name=\"/lab_memory_venturi\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/lab_memory_venturi\", {\n\t\tseed: 17,\n\t\treuse_percent: 80,\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/lab_memory_venturi -s -H \"Content-Type: application/json\" \\\n  -d '{\"seed\": 17, \"reuse_percent\": 80}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/lab_memory_venturi/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /lab_memory_venturi '{\n  \"seed\": 17,\n  \"reuse_percent\": 80\n}'\n"
+      }
+    },
+    "/academy_attempt": {
+      "parameters": [
+        {
+          "label": "Canonical GSPC axis",
+          "parameter_name": "axis",
+          "parameter_has_default": true,
+          "parameter_default": "claim-maintenance",
+          "type": {
+            "type": "string",
+            "enum": [
+              "governance",
+              "safety",
+              "provenance",
+              "continuity",
+              "conformance",
+              "openness",
+              "machinery-conformity",
+              "care",
+              "cross-reality",
+              "detector-interop",
+              "art5-safeguard",
+              "swarm",
+              "affect",
+              "jail",
+              "effect-binding",
+              "provenance-controls",
+              "reserve-attestation",
+              "regulatory-framework",
+              "distribution-integrity",
+              "custody-disclosure",
+              "ai-adoption-components",
+              "labour-components",
+              "humanoid-labour-index",
+              "lab-practice",
+              "company-practice",
+              "measurer-integrity",
+              "harness-fidelity",
+              "interop-conformance",
+              "humanoid-deployment",
+              "regulator-transparency",
+              "interpretability-reproducibility",
+              "claim-maintenance",
+              "serving-fidelity",
+              "watchdog-ingest"
+            ]
+          },
+          "python_type": {
+            "type": "Literal['governance', 'safety', 'provenance', 'continuity', 'conformance', 'openness', 'machinery-conformity', 'care', 'cross-reality', 'detector-interop', 'art5-safeguard', 'swarm', 'affect', 'jail', 'effect-binding', 'provenance-controls', 'reserve-attestation', 'regulatory-framework', 'distribution-integrity', 'custody-disclosure', 'ai-adoption-components', 'labour-components', 'humanoid-labour-index', 'lab-practice', 'company-practice', 'measurer-integrity', 'harness-fidelity', 'interop-conformance', 'humanoid-deployment', 'regulator-transparency', 'interpretability-reproducibility', 'claim-maintenance', 'serving-fidelity', 'watchdog-ingest']",
+            "description": ""
+          },
+          "component": "Dropdown",
+          "example_input": "governance"
+        },
+        {
+          "label": "Proposed educational context",
+          "parameter_name": "industry",
+          "parameter_has_default": true,
+          "parameter_default": "ai-software",
+          "type": {
+            "type": "string",
+            "enum": [
+              "ai-software",
+              "critical-infrastructure",
+              "education-media",
+              "finance-legacy",
+              "hardware-research",
+              "health-care",
+              "public-oversight",
+              "robotics-industrial"
+            ]
+          },
+          "python_type": {
+            "type": "Literal['ai-software', 'critical-infrastructure', 'education-media', 'finance-legacy', 'hardware-research', 'health-care', 'public-oversight', 'robotics-industrial']",
+            "description": ""
+          },
+          "component": "Dropdown",
+          "example_input": "ai-software"
+        },
+        {
+          "label": "Original synthetic exercise",
+          "parameter_name": "case_id",
+          "parameter_has_default": true,
+          "parameter_default": "xp-not-authority",
+          "type": {
+            "type": "string",
+            "enum": [
+              "revision-change",
+              "majority-collapse",
+              "xp-not-authority",
+              "restricted-sharing",
+              "uncertain-request",
+              "scope-assumption",
+              "safeguard-drift",
+              "stop-observation"
+            ]
+          },
+          "python_type": {
+            "type": "Literal['revision-change', 'majority-collapse', 'xp-not-authority', 'restricted-sharing', 'uncertain-request', 'scope-assumption', 'safeguard-drift', 'stop-observation']",
+            "description": ""
+          },
+          "component": "Dropdown",
+          "example_input": "revision-change"
+        },
+        {
+          "label": "Your exercise answer",
+          "parameter_name": "answer",
+          "parameter_has_default": false,
+          "parameter_default": null,
+          "type": {
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ],
+            "title": "Radio",
+            "type": "string"
+          },
+          "python_type": {
+            "type": "Literal['A', 'B', 'C', 'D']",
+            "description": ""
+          },
+          "component": "Radio",
+          "example_input": "A"
+        },
+        {
+          "label": "Displayed scoped lesson revision",
+          "parameter_name": "registry_revision",
+          "parameter_has_default": true,
+          "parameter_default": "",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        }
+      ],
+      "returns": [
+        {
+          "label": "Practice feedback and unsigned execution record",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Evaluate one synthetic exercise. Points describe this attempt, not cumulative rank or authority.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\taxis=\"claim-maintenance\",\n\tindustry=\"ai-software\",\n\tcase_id=\"xp-not-authority\",\n\tanswer=\"A\",\n\tregistry_revision=\"\",\n\tapi_name=\"/academy_attempt\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/academy_attempt\", {\n\t\taxis: \"claim-maintenance\",\n\t\tindustry: \"ai-software\",\n\t\tcase_id: \"xp-not-authority\",\n\t\tanswer: \"A\",\n\t\tregistry_revision: \"\",\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/academy_attempt -s -H \"Content-Type: application/json\" \\\n  -d '{\"axis\": \"claim-maintenance\", \"industry\": \"ai-software\", \"case_id\": \"xp-not-authority\", \"answer\": \"A\", \"registry_revision\": \"\"}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/academy_attempt/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /academy_attempt '{\n  \"axis\": \"claim-maintenance\",\n  \"industry\": \"ai-software\",\n  \"case_id\": \"xp-not-authority\",\n  \"answer\": \"A\",\n  \"registry_revision\": \"Hello!!\"\n}'\n"
+      }
+    },
+    "/academy_reading": {
+      "parameters": [
+        {
+          "label": "Canonical GSPC axis",
+          "parameter_name": "axis",
+          "parameter_has_default": true,
+          "parameter_default": "claim-maintenance",
+          "type": {
+            "type": "string",
+            "enum": [
+              "governance",
+              "safety",
+              "provenance",
+              "continuity",
+              "conformance",
+              "openness",
+              "machinery-conformity",
+              "care",
+              "cross-reality",
+              "detector-interop",
+              "art5-safeguard",
+              "swarm",
+              "affect",
+              "jail",
+              "effect-binding",
+              "provenance-controls",
+              "reserve-attestation",
+              "regulatory-framework",
+              "distribution-integrity",
+              "custody-disclosure",
+              "ai-adoption-components",
+              "labour-components",
+              "humanoid-labour-index",
+              "lab-practice",
+              "company-practice",
+              "measurer-integrity",
+              "harness-fidelity",
+              "interop-conformance",
+              "humanoid-deployment",
+              "regulator-transparency",
+              "interpretability-reproducibility",
+              "claim-maintenance",
+              "serving-fidelity",
+              "watchdog-ingest"
+            ]
+          },
+          "python_type": {
+            "type": "Literal['governance', 'safety', 'provenance', 'continuity', 'conformance', 'openness', 'machinery-conformity', 'care', 'cross-reality', 'detector-interop', 'art5-safeguard', 'swarm', 'affect', 'jail', 'effect-binding', 'provenance-controls', 'reserve-attestation', 'regulatory-framework', 'distribution-integrity', 'custody-disclosure', 'ai-adoption-components', 'labour-components', 'humanoid-labour-index', 'lab-practice', 'company-practice', 'measurer-integrity', 'harness-fidelity', 'interop-conformance', 'humanoid-deployment', 'regulator-transparency', 'interpretability-reproducibility', 'claim-maintenance', 'serving-fidelity', 'watchdog-ingest']",
+            "description": ""
+          },
+          "component": "Dropdown",
+          "example_input": "governance"
+        },
+        {
+          "label": "Proposed educational context",
+          "parameter_name": "industry",
+          "parameter_has_default": true,
+          "parameter_default": "ai-software",
+          "type": {
+            "type": "string",
+            "enum": [
+              "ai-software",
+              "critical-infrastructure",
+              "education-media",
+              "finance-legacy",
+              "hardware-research",
+              "health-care",
+              "public-oversight",
+              "robotics-industrial"
+            ]
+          },
+          "python_type": {
+            "type": "Literal['ai-software', 'critical-infrastructure', 'education-media', 'finance-legacy', 'hardware-research', 'health-care', 'public-oversight', 'robotics-industrial']",
+            "description": ""
+          },
+          "component": "Dropdown",
+          "example_input": "ai-software"
+        },
+        {
+          "label": "Source-reading answer from the original module above",
+          "parameter_name": "answer",
+          "parameter_has_default": false,
+          "parameter_default": null,
+          "type": {
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ],
+            "title": "Radio",
+            "type": "string"
+          },
+          "python_type": {
+            "type": "Literal['A', 'B', 'C', 'D']",
+            "description": ""
+          },
+          "component": "Radio",
+          "example_input": "A"
+        },
+        {
+          "label": "Displayed scoped lesson revision",
+          "parameter_name": "registry_revision",
+          "parameter_has_default": true,
+          "parameter_default": "",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        }
+      ],
+      "returns": [
+        {
+          "label": "Practice feedback and unsigned execution record",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Check the displayed source-reading choice without recording a public HITL completion.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\taxis=\"claim-maintenance\",\n\tindustry=\"ai-software\",\n\tanswer=\"A\",\n\tregistry_revision=\"\",\n\tapi_name=\"/academy_reading\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/academy_reading\", {\n\t\taxis: \"claim-maintenance\",\n\t\tindustry: \"ai-software\",\n\t\tanswer: \"A\",\n\t\tregistry_revision: \"\",\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/academy_reading -s -H \"Content-Type: application/json\" \\\n  -d '{\"axis\": \"claim-maintenance\", \"industry\": \"ai-software\", \"answer\": \"A\", \"registry_revision\": \"\"}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/academy_reading/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /academy_reading '{\n  \"axis\": \"claim-maintenance\",\n  \"industry\": \"ai-software\",\n  \"answer\": \"A\",\n  \"registry_revision\": \"Hello!!\"\n}'\n"
+      }
+    },
+    "/academy_catalogue": {
+      "parameters": [],
+      "returns": [
+        {
+          "label": "Full dated roster and proposed industry mapping",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Inspect existing axis paths, five MOOC references and proposed industry contexts.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tapi_name=\"/academy_catalogue\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/academy_catalogue\", {\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/academy_catalogue -s -H \"Content-Type: application/json\" \\\n  -d '{}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/academy_catalogue/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /academy_catalogue '{}'\n"
+      }
+    },
+    "/academy_lesson": {
+      "parameters": [
+        {
+          "label": "Canonical GSPC axis",
+          "parameter_name": "axis",
+          "parameter_has_default": true,
+          "parameter_default": "claim-maintenance",
+          "type": {
+            "type": "string",
+            "enum": [
+              "governance",
+              "safety",
+              "provenance",
+              "continuity",
+              "conformance",
+              "openness",
+              "machinery-conformity",
+              "care",
+              "cross-reality",
+              "detector-interop",
+              "art5-safeguard",
+              "swarm",
+              "affect",
+              "jail",
+              "effect-binding",
+              "provenance-controls",
+              "reserve-attestation",
+              "regulatory-framework",
+              "distribution-integrity",
+              "custody-disclosure",
+              "ai-adoption-components",
+              "labour-components",
+              "humanoid-labour-index",
+              "lab-practice",
+              "company-practice",
+              "measurer-integrity",
+              "harness-fidelity",
+              "interop-conformance",
+              "humanoid-deployment",
+              "regulator-transparency",
+              "interpretability-reproducibility",
+              "claim-maintenance",
+              "serving-fidelity",
+              "watchdog-ingest"
+            ]
+          },
+          "python_type": {
+            "type": "Literal['governance', 'safety', 'provenance', 'continuity', 'conformance', 'openness', 'machinery-conformity', 'care', 'cross-reality', 'detector-interop', 'art5-safeguard', 'swarm', 'affect', 'jail', 'effect-binding', 'provenance-controls', 'reserve-attestation', 'regulatory-framework', 'distribution-integrity', 'custody-disclosure', 'ai-adoption-components', 'labour-components', 'humanoid-labour-index', 'lab-practice', 'company-practice', 'measurer-integrity', 'harness-fidelity', 'interop-conformance', 'humanoid-deployment', 'regulator-transparency', 'interpretability-reproducibility', 'claim-maintenance', 'serving-fidelity', 'watchdog-ingest']",
+            "description": ""
+          },
+          "component": "Dropdown",
+          "example_input": "governance"
+        },
+        {
+          "label": "Proposed educational context",
+          "parameter_name": "industry",
+          "parameter_has_default": true,
+          "parameter_default": "ai-software",
+          "type": {
+            "type": "string",
+            "enum": [
+              "ai-software",
+              "critical-infrastructure",
+              "education-media",
+              "finance-legacy",
+              "hardware-research",
+              "health-care",
+              "public-oversight",
+              "robotics-industrial"
+            ]
+          },
+          "python_type": {
+            "type": "Literal['ai-software', 'critical-infrastructure', 'education-media', 'finance-legacy', 'hardware-research', 'health-care', 'public-oversight', 'robotics-industrial']",
+            "description": ""
+          },
+          "component": "Dropdown",
+          "example_input": "ai-software"
+        }
+      ],
+      "returns": [
+        {
+          "label": "Full dated roster and proposed industry mapping",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Read the dated original five-stage path and linked synthetic exercises.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\taxis=\"claim-maintenance\",\n\tindustry=\"ai-software\",\n\tapi_name=\"/academy_lesson\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/academy_lesson\", {\n\t\taxis: \"claim-maintenance\",\n\t\tindustry: \"ai-software\",\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/academy_lesson -s -H \"Content-Type: application/json\" \\\n  -d '{\"axis\": \"claim-maintenance\", \"industry\": \"ai-software\"}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/academy_lesson/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /academy_lesson '{\n  \"axis\": \"claim-maintenance\",\n  \"industry\": \"ai-software\"\n}'\n"
+      }
+    },
+    "/academy_correction": {
+      "parameters": [
+        {
+          "label": "Canonical GSPC axis",
+          "parameter_name": "axis",
+          "parameter_has_default": true,
+          "parameter_default": "claim-maintenance",
+          "type": {
+            "type": "string",
+            "enum": [
+              "governance",
+              "safety",
+              "provenance",
+              "continuity",
+              "conformance",
+              "openness",
+              "machinery-conformity",
+              "care",
+              "cross-reality",
+              "detector-interop",
+              "art5-safeguard",
+              "swarm",
+              "affect",
+              "jail",
+              "effect-binding",
+              "provenance-controls",
+              "reserve-attestation",
+              "regulatory-framework",
+              "distribution-integrity",
+              "custody-disclosure",
+              "ai-adoption-components",
+              "labour-components",
+              "humanoid-labour-index",
+              "lab-practice",
+              "company-practice",
+              "measurer-integrity",
+              "harness-fidelity",
+              "interop-conformance",
+              "humanoid-deployment",
+              "regulator-transparency",
+              "interpretability-reproducibility",
+              "claim-maintenance",
+              "serving-fidelity",
+              "watchdog-ingest"
+            ]
+          },
+          "python_type": {
+            "type": "Literal['governance', 'safety', 'provenance', 'continuity', 'conformance', 'openness', 'machinery-conformity', 'care', 'cross-reality', 'detector-interop', 'art5-safeguard', 'swarm', 'affect', 'jail', 'effect-binding', 'provenance-controls', 'reserve-attestation', 'regulatory-framework', 'distribution-integrity', 'custody-disclosure', 'ai-adoption-components', 'labour-components', 'humanoid-labour-index', 'lab-practice', 'company-practice', 'measurer-integrity', 'harness-fidelity', 'interop-conformance', 'humanoid-deployment', 'regulator-transparency', 'interpretability-reproducibility', 'claim-maintenance', 'serving-fidelity', 'watchdog-ingest']",
+            "description": ""
+          },
+          "component": "Dropdown",
+          "example_input": "governance"
+        },
+        {
+          "label": "Proposed educational context",
+          "parameter_name": "industry",
+          "parameter_has_default": true,
+          "parameter_default": "ai-software",
+          "type": {
+            "type": "string",
+            "enum": [
+              "ai-software",
+              "critical-infrastructure",
+              "education-media",
+              "finance-legacy",
+              "hardware-research",
+              "health-care",
+              "public-oversight",
+              "robotics-industrial"
+            ]
+          },
+          "python_type": {
+            "type": "Literal['ai-software', 'critical-infrastructure', 'education-media', 'finance-legacy', 'hardware-research', 'health-care', 'public-oversight', 'robotics-industrial']",
+            "description": ""
+          },
+          "component": "Dropdown",
+          "example_input": "ai-software"
+        }
+      ],
+      "returns": [
+        {
+          "label": "Full dated roster and proposed industry mapping",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Run the bounded synthetic source-correction and held-training chain.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\taxis=\"claim-maintenance\",\n\tindustry=\"ai-software\",\n\tapi_name=\"/academy_correction\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/academy_correction\", {\n\t\taxis: \"claim-maintenance\",\n\t\tindustry: \"ai-software\",\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/academy_correction -s -H \"Content-Type: application/json\" \\\n  -d '{\"axis\": \"claim-maintenance\", \"industry\": \"ai-software\"}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/academy_correction/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /academy_correction '{\n  \"axis\": \"claim-maintenance\",\n  \"industry\": \"ai-software\"\n}'\n"
+      }
+    },
+    "/lab_review_specialist_artifacts": {
+      "parameters": [
+        {
+          "label": "Artifact review request JSON \u00b7 context, pins, artifact_json",
+          "parameter_name": "request_json",
+          "parameter_has_default": true,
+          "parameter_default": "",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        }
+      ],
+      "returns": [
+        {
+          "label": "value_174",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Check caller-supplied categorical artifact bytes using receiver UTC.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\trequest_json=\"\",\n\tapi_name=\"/lab_review_specialist_artifacts\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/lab_review_specialist_artifacts\", {\n\t\trequest_json: \"\",\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/lab_review_specialist_artifacts -s -H \"Content-Type: application/json\" \\\n  -d '{\"request_json\": \"\"}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/lab_review_specialist_artifacts/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /lab_review_specialist_artifacts '{\n  \"request_json\": \"Hello!!\"\n}'\n"
+      }
+    },
+    "/lab_specialist_review_status": {
+      "parameters": [],
+      "returns": [
+        {
+          "label": "Pinned receiver status",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Read installed receiver source pins and its non-authoritative research scope.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tapi_name=\"/lab_specialist_review_status\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/lab_specialist_review_status\", {\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/lab_specialist_review_status -s -H \"Content-Type: application/json\" \\\n  -d '{}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/lab_specialist_review_status/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /lab_specialist_review_status '{}'\n"
+      }
+    },
+    "/lab_calculate_exact": {
+      "parameters": [
+        {
+          "label": "Explicit arithmetic expression",
+          "parameter_name": "expression",
+          "parameter_has_default": true,
+          "parameter_default": "0.1 + 0.2",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        }
+      ],
+      "returns": [
+        {
+          "label": "Arithmetic execution response",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Evaluate a bounded arithmetic expression using exact rational numbers.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\texpression=\"0.1 + 0.2\",\n\tapi_name=\"/lab_calculate_exact\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/lab_calculate_exact\", {\n\t\texpression: \"0.1 + 0.2\",\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/lab_calculate_exact -s -H \"Content-Type: application/json\" \\\n  -d '{\"expression\": \"0.1 + 0.2\"}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/lab_calculate_exact/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /lab_calculate_exact '{\n  \"expression\": \"0.1 + 0.2\"\n}'\n"
+      }
+    },
+    "/lab_status": {
+      "parameters": [],
+      "returns": [
+        {
+          "label": "Model pins, boundaries and rejected adapter status",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Code"
+        }
+      ],
+      "api_visibility": "public",
+      "description": "Read the installed research model, geometry tools and observed axis snapshot status.",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tapi_name=\"/lab_status\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/lab_status\", {\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/lab_status -s -H \"Content-Type: application/json\" \\\n  -d '{}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/lab_status/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /lab_status '{}'\n"
+      }
+    },
+    "/fresh_session": {
+      "parameters": [],
+      "returns": [],
+      "api_visibility": "public",
+      "description": "",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tapi_name=\"/fresh_session\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/fresh_session\", {\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/fresh_session -s -H \"Content-Type: application/json\" \\\n  -d '{}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/fresh_session/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /fresh_session '{}'\n"
+      }
+    },
+    "/_check_login_status": {
+      "parameters": [],
+      "returns": [],
+      "api_visibility": "public",
+      "description": "",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tapi_name=\"/_check_login_status\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/_check_login_status\", {\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/_check_login_status -s -H \"Content-Type: application/json\" \\\n  -d '{}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/_check_login_status/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /_check_login_status '{}'\n"
+      }
+    },
+    "/fresh_session_1": {
+      "parameters": [],
+      "returns": [],
+      "api_visibility": "public",
+      "description": "",
+      "code_snippets": {
+        "python": "from gradio_client import Client\n\nclient = Client(\"Nicholastempleman/meok-hf-runtime\")\nresult = client.predict(\n\tapi_name=\"/fresh_session_1\",\n)\nprint(result)",
+        "javascript": "import { Client } from \"@gradio/client\";\n\nconst client = await Client.connect(\"Nicholastempleman/meok-hf-runtime\");\nconst result = await client.predict(\"/fresh_session_1\", {\n});\n\nconsole.log(result.data);",
+        "bash": "curl -X POST http://localhost:7860/gradio_api/call/v2/fresh_session_1 -s -H \"Content-Type: application/json\" \\\n  -d '{}' \\\n  | awk -F'\"' '{ print $4}' \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/fresh_session_1/$EVENT_ID",
+        "cli": "{command} predict Nicholastempleman/meok-hf-runtime /fresh_session_1 '{}'\n"
+      }
+    }
+  },
+  "unnamed_endpoints": {}
+}

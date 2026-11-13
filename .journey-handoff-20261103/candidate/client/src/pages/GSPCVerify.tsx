@@ -1,0 +1,668 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+import PublicRootCatalogue from "@/components/gspc/PublicRootCatalogue";
+import { ANCHORING_CLAIM, CURRENT_ROOT_OTS_CLAIM } from "../data/anchoringClaim";
+import { Link } from "wouter";
+import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
+import { setMetaDescription } from "@/lib/utils";
+import BoardAttestation from "@/components/board/BoardAttestation";
+import { CARD_PARAM_MAX_BYTES, resolveCardParam, verifyCardHref } from "@/lib/cardParam";
+import { GOVERNANCE_RETRIEVE, loadPublicCardExample } from "@/lib/publicCardExample";
+import { takeCheckerSeed } from "@/lib/myResults";
+import { artifactCitation } from "@/lib/artifactCite";
+
+/**
+ * /gspc-verify — verify published card bytes yourself.
+ *
+ * The estate-card mode verifies exact pasted card bytes against the published
+ * Ed25519 key. The public-root mode verifies the signed root envelope and
+ * checks inclusion without implying an individual leaf signature.
+ * A former local replay demo was removed because it generated both
+ * its bodies and expected hashes in the same bundle and therefore could not
+ * prove a published chain.
+ */
+
+type PublishedRef = { id: string; url: string };
+
+async function pickPublishedCard(signal?: AbortSignal): Promise<PublishedRef> {
+  // Prefer the signed chain links with a published body; fall back to card_index.
+  // Never invent a body — only URLs the estate actually lists.
+  try {
+    const r = await fetch("/signed/chain.json", { signal, headers: { accept: "application/json" } });
+    if (r.ok) {
+      const j = await r.json();
+      const body = j?.body && typeof j.body === "object" ? j.body : j;
+      const links = Array.isArray(body?.links) ? body.links : [];
+      const published = links.filter(
+        (pos: any) => pos?.body_published === true && typeof pos?.card_url === "string" && pos.card_url,
+      );
+      const pool = published.length ? published : links.filter((pos: any) => typeof pos?.card_url === "string" && pos.card_url);
+      if (pool.length) {
+        const pos = pool[Math.floor(Math.random() * pool.length)];
+        return { id: String(pos.id || pos.card_url), url: pos.card_url };
+      }
+    }
+  } catch {
+    /* fall through to index */
+  }
+  const r2 = await fetch("/signed/card_index.json", { signal, headers: { accept: "application/json" } });
+  if (!r2.ok) throw new Error(`card list unreachable (chain + index HTTP ${r2.status})`);
+  const idx = await r2.json();
+  const cards = Array.isArray(idx?.cards) ? idx.cards : Array.isArray(idx) ? idx : [];
+  const withUrl = cards.filter((c: any) => typeof (c?.card_url || c?.url) === "string");
+  if (!withUrl.length) throw new Error("no published card body listed");
+  const c = withUrl[Math.floor(Math.random() * withUrl.length)];
+  const url = c.card_url || c.url;
+  return { id: String(c.id || c.card || url), url };
+}
+
+/** Deep-link actions for a ?card= record: copy this page's link, download the exact bytes, re-run the check. */
+function DownloadRecord({ file, name }: { file: Blob; name: string }) {
+  const [failed, setFailed] = useState(false);
+  const save = () => {
+    let url: string | undefined;
+    let a: HTMLAnchorElement | undefined;
+    try {
+      url = URL.createObjectURL(file);
+      a = document.createElement("a"); a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); setFailed(false);
+    } catch { setFailed(true); }
+    finally { a?.remove(); if (url) { const captured = url; setTimeout(() => URL.revokeObjectURL(captured), 30_000); } }
+  };
+  return <><button type="button" data-testid="linked-download" onClick={save}
+    className="inline-flex min-h-[44px] items-center rounded-lg border border-emerald-400/40 px-3 py-2 font-semibold text-emerald-100 hover:bg-white/5">Save loaded JSON</button>
+    {failed && <span role="alert">Download unavailable. Your record is still in the box.</span>}</>;
+}
+
+export function LinkedCardActions({ href, file }: { href: string; file: Blob }) {
+  const [copied, setCopied] = useState<"" | "ok" | "fail">("");
+  const btn = "inline-flex min-h-[44px] items-center rounded-lg border border-emerald-400/40 px-3 py-2 font-semibold text-emerald-100 hover:bg-white/5";
+  const name = href.split("/").pop() || "card.json";
+  return (
+    <div className="mt-3 flex flex-wrap gap-2" data-testid="linked-card-actions">
+      <button type="button" className={btn} data-testid="linked-copy" onClick={() => {
+        navigator.clipboard?.writeText(window.location.href).then(() => setCopied("ok"), () => setCopied("fail"));
+      }}>
+        {copied === "ok" ? "Link copied" : copied === "fail" ? "Copy failed: use the address bar" : "Copy link"}
+      </button>
+      <DownloadRecord file={file} name={name} />
+      <a className={btn} href={verifyCardHref(href)} data-testid="linked-reverify">Verify again</a>
+    </div>
+  );
+}
+
+export default function GSPCVerify() {
+  const [boardData, setBoardData] = useState<any>(null);
+  const [mode, setMode] = useState<"estate" | "public-root">("estate");
+  const [seed, setSeed] = useState<string | undefined>(undefined);
+  const [seedNonce, setSeedNonce] = useState(0);
+  const [tryBusy, setTryBusy] = useState(false);
+  const [tryErr, setTryErr] = useState<string | null>(null);
+  const [autoVerify, setAutoVerify] = useState(false);
+  // ?card=<url>: the record a board row pointed at. Loaded unaltered and verified at once, so
+  // the reader never pastes JSON. Refusals and load failures are stated, never a silent pass.
+  const [linked, setLinked] = useState<
+    | { state: "loading"; href: string }
+    | { state: "loaded"; href: string; bytes: number; sha256?: string; file: Blob }
+    | { state: "refused" | "failed"; href: string; reason: string }
+    | null
+  >(null);
+  const [publicExample, setPublicExample] = useState<{ href: string; file: Blob } | null>(null);
+  const linkedRequest = useRef<AbortController | null>(null);
+  const clearLinkedSource = useCallback(() => {
+    linkedRequest.current?.abort();
+    linkedRequest.current = null;
+    setLinked(null);
+    setPublicExample(null);
+    setTryBusy(false);
+    setTryErr(null);
+  }, []);
+
+  useEffect(() => () => {
+    linkedRequest.current?.abort();
+    linkedRequest.current = null;
+  }, []);
+
+  useEffect(() => {
+    // ?seed=mine: a record handed over from My results or the pay page in this tab's sessionStorage
+    // (lib/myResults seedChecker). A paid art50 pack lives only in the buyer's browser, so it has no
+    // URL to pass as ?card=; it is read once, verified at once, and nothing is uploaded.
+    if (new URLSearchParams(window.location.search).get("seed") === "mine") {
+      const raw = takeCheckerSeed();
+      if (raw) {
+        setMode("estate");
+        setAutoVerify(true);
+        setSeed(raw);
+        setSeedNonce((n) => n + 1);
+        return;
+      }
+    }
+    const p = resolveCardParam(window.location.search, window.location.origin);
+    if (p.state === "none") return;
+    setMode("estate");
+    if (p.state === "refused") {
+      setLinked({ state: "refused", href: p.raw, reason: p.reason });
+      return;
+    }
+    const ac = new AbortController();
+    linkedRequest.current = ac;
+    setLinked({ state: "loading", href: p.href });
+    (async () => {
+      try {
+        const r = await fetch(p.url, { signal: ac.signal, headers: { accept: "application/json" } });
+        if (!r.ok) throw new Error(`GET ${p.href} → HTTP ${r.status}`);
+        const buf = await r.arrayBuffer();
+        if (buf.byteLength > CARD_PARAM_MAX_BYTES) throw new Error(`the record is ${buf.byteLength} bytes, over the ${CARD_PARAM_MAX_BYTES}-byte limit for a linked card`);
+        const raw = new TextDecoder("utf-8", {fatal: true}).decode(buf);
+        let digest: string | undefined;
+        try {
+          const d = await crypto.subtle.digest("SHA-256", buf);
+          digest = [...new Uint8Array(d)].map((x) => x.toString(16).padStart(2, "0")).join("");
+        } catch { /* no WebCrypto: the verifier below says UNCHECKABLE itself */ }
+        if (ac.signal.aborted) return;
+        setLinked({ state: "loaded", href: p.href, bytes: buf.byteLength, sha256: digest, file: new Blob([buf], {type: "application/json"}) });
+        setAutoVerify(true);
+        setSeed(raw);
+        setSeedNonce((n) => n + 1);
+      } catch (e: any) {
+        if (ac.signal.aborted) return;
+        setLinked({ state: "failed", href: p.href, reason: String(e?.message ?? e) });
+      }
+    })();
+    return () => {
+      ac.abort();
+      if (linkedRequest.current === ac) linkedRequest.current = null;
+    };
+  }, []);
+
+  const tryExample = useCallback(async (choose: (signal: AbortSignal) => Promise<string>) => {
+    clearLinkedSource();
+    const ac = new AbortController();
+    linkedRequest.current = ac;
+    setTryBusy(true);
+    try {
+      const ref = await choose(ac.signal);
+      const example = await loadPublicCardExample(ref, window.location.origin, ac.signal);
+      if (ac.signal.aborted || linkedRequest.current !== ac) return;
+      setPublicExample({href: example.href, file: example.file});
+      setAutoVerify(false);
+      setSeed(example.raw);
+      setSeedNonce((n) => n + 1);
+    } catch (e: any) {
+      if (!ac.signal.aborted && linkedRequest.current === ac) {
+        setTryErr(String(e?.message ?? e));
+      }
+    } finally {
+      if (linkedRequest.current === ac) {
+        linkedRequest.current = null;
+        setTryBusy(false);
+      }
+    }
+  }, [clearLinkedSource]);
+
+  const tryPublished = useCallback(
+    () => tryExample(async (signal) => (await pickPublishedCard(signal)).url),
+    [tryExample],
+  );
+
+  const tryGovernanceRetrieve = useCallback(
+    () => tryExample(async () => GOVERNANCE_RETRIEVE),
+    [tryExample],
+  );
+
+  useEffect(() => {
+    document.title = "Verify a signed card — client-side | Council of AI";
+    setMetaDescription("Verify a Council of AI measurement card client-side: recompute its payload hash and Ed25519 signature in your browser against the published public key.");
+  }, []);
+
+  useEffect(() => {
+    const ac = new AbortController();
+    fetch("/api/gspc", { signal: ac.signal, headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+      .then((d) => {
+        if (d && typeof d === "object" && Array.isArray(d.axes)) {
+          setBoardData(d);
+          // The board's rows link here as /gspc-verify/#board-stamp. The section renders only
+          // once the board has loaded, after the browser's own hash scroll, so scroll to it then.
+          if (typeof window !== "undefined" && window.location.hash === "#board-stamp") {
+            requestAnimationFrame(() => document.getElementById("board-stamp")?.scrollIntoView());
+          }
+        }
+      })
+      .catch(() => { /* verification page still works without the board data */ });
+    return () => ac.abort();
+  }, []);
+
+  return (
+    <div className="gspc-verify-page min-h-screen bg-[#03110b] text-emerald-50">
+      <style>{`
+        @media (forced-colors: active) {
+          .gspc-verify-page {
+            color: CanvasText !important;
+            background: Canvas !important;
+          }
+          .gspc-verify-page :where(section, div, p, span, h1, h2, h3, h4, ul, li, strong, code, label, details, summary) {
+            color: CanvasText !important;
+            background-color: Canvas !important;
+            border-color: CanvasText !important;
+          }
+          .gspc-verify-page a {
+            color: LinkText !important;
+            background-color: Canvas !important;
+            border-color: LinkText !important;
+          }
+          .gspc-verify-page button {
+            color: ButtonText !important;
+            background-color: ButtonFace !important;
+            border-color: ButtonText !important;
+          }
+          .gspc-verify-page :where(textarea, input, select) {
+            color: CanvasText !important;
+            background-color: Canvas !important;
+            border-color: CanvasText !important;
+          }
+          .gspc-verify-page :where([aria-disabled="true"], :disabled) {
+            color: GrayText !important;
+            border-color: GrayText !important;
+          }
+        }
+      `}</style>
+      {/* HERO */}
+      <section className="border-b border-emerald-500/15">
+        <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
+            Free verification · no account
+          </p>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
+            Check a signed measurement record.
+          </h1>
+          <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
+            Paste a signed card or try a published example below. The check runs in your browser;
+            your record is not uploaded. Your browser may read published records and public-key metadata.
+            A valid signature confirms the record's integrity. It does not certify a model's safety or compliance.
+          </p>
+          <p className="mt-3 max-w-3xl text-sm text-emerald-200/75 leading-relaxed">
+            Every check ends in one of three results: <strong>VALID</strong> (the completed record
+            checks passed), <strong>INVALID</strong> (a check failed, and it says which), or{" "}
+            <strong>UNCHECKABLE</strong> (the check could not be completed). Could-not-check is never
+            reported as a failure. Read the signature result separately: a hash-only VALID result is
+            labelled unsigned and does not prove who wrote the record.
+          </p>
+          <details className="mt-4 max-w-3xl rounded-xl border border-emerald-400/20 bg-white/[0.035] px-4 py-3">
+            <summary className="cursor-pointer text-sm font-semibold text-emerald-200">
+              Signing keys and root inclusion
+            </summary>
+            <p className="mt-3 text-sm leading-relaxed text-emerald-100/80">
+              Cards check Ed25519 against the key the card names: estate cards use
+              did:web:csoai.org#card-attestation-1, and mill and pod measurement cards use
+              did:web:csoai.org#board-attestation-1. Public-root mode loads GET /root.json,
+              verifies its Ed25519 envelope against the pinned board key, and binds inclusion
+              proofs to that root. Root membership does not individually sign a leaf.
+              This is not a certificate, and it is not a training record.
+            </p>
+          </details>
+          <p className="mt-3 max-w-3xl text-sm text-emerald-200/75 leading-relaxed">
+            <a
+              href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/public/independent-verifier-trial.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"
+            >
+              Try the verifier and report your result
+            </a>{" "}
+            (instructions on GitHub; opens a new tab).
+          </p>
+          <div className="mt-6 grid gap-2 sm:grid-cols-3" aria-label="What verification checks">
+            {[
+              ["01", "Hash", "Recompute the content identifier from the exact bytes."],
+              ["02", "Signature", "Check Ed25519 against the published key named by the record."],
+              ["03", "Inclusion", "Where applicable, bind the leaf proof to the published root."],
+            ].map(([n, label, copy]) => (
+              <div key={label} className="rounded-2xl border border-emerald-400/15 bg-white/[0.035] p-4">
+                <p className="font-mono text-[10px] font-bold tracking-[0.18em] text-emerald-400/70">{n}</p>
+                <p className="mt-2 text-sm font-bold text-emerald-50">{label}</p>
+                <p className="mt-1 text-xs leading-5 text-emerald-100/60">{copy}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Verify mode">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === "estate"}
+              onClick={() => setMode("estate")}
+              className={`min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold ${
+                mode === "estate"
+                  ? "bg-emerald-500 text-[#03110b]"
+                  : "border border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10"
+              }`}
+            >
+              Check one record
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === "public-root"}
+              onClick={() => setMode("public-root")}
+              className={`min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold ${
+                mode === "public-root"
+                  ? "bg-amber-400 text-[#03110b]"
+                  : "border border-amber-400/30 text-amber-200 hover:bg-amber-500/10"
+              }`}
+            >
+              Check collection membership
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-4xl px-6 py-12 space-y-16">
+        {mode === "public-root" && (
+          <section>
+            <h2 className="text-2xl font-bold text-amber-200">Record and proof of collection membership</h2>
+            <p className="mt-1 text-[13px] text-emerald-100/60">
+              Check the collection's signature here and read the displayed result. Individual records
+              may be signed or unsigned; collection membership alone never changes their signing status.
+            </p>
+            <div className="mt-4">
+              <PublicRootCatalogue variant="dark" />
+            </div>
+          </section>
+        )}
+
+        {mode === "estate" && (
+        <section>
+          <h2 className="text-2xl font-bold text-emerald-50">Check one measurement record</h2>
+          <p className="mt-1 text-[13px] text-emerald-100/60">
+            Paste any one estate record — hash and signature are recomputed here, in your browser,
+            against the published keys. This page does not save pasted records or their results.
+            Reloading clears them. A public-record link fetches the currently published record and
+            checks it again; it does not restore a saved verdict.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => void tryPublished()}
+              disabled={tryBusy}
+              data-testid="try-published-card"
+              className="min-h-[44px] rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 py-2 text-sm font-semibold text-emerald-100 hover:bg-emerald-500/25 disabled:opacity-40"
+            >
+              {tryBusy ? "Loading…" : "Try a published card"}
+            </button>
+            <button
+              type="button"
+              onClick={() => void tryGovernanceRetrieve()}
+              disabled={tryBusy}
+              data-testid="try-governance-retrieve"
+              className="min-h-[44px] rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 py-2 text-sm font-semibold text-emerald-100 hover:bg-emerald-500/25 disabled:opacity-40"
+            >
+              {tryBusy ? "Loading…" : "Try a governance card"}
+            </button>
+            <span className="text-[12px] text-emerald-100/65">
+              The first button reads a published card. The governance example is a fixed historical record, not a new measurement. Both are free.
+            </span>
+          </div>
+          {publicExample && (
+            <p className="mt-3 text-[13px] text-emerald-100/80">
+              <a
+                href={publicExample.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="public-card-reopen"
+                className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"
+              >
+                Reopen public record
+              </a>{" "}
+              in a new tab to check the current publication, or keep exactly what was loaded here. {" "}
+              <DownloadRecord file={publicExample.file} name="gspc-measurement-card.json" />
+            </p>
+          )}
+          {linked && (
+            <div
+              data-testid="linked-card"
+              data-state={linked.state}
+              role="status"
+              className={`mt-4 min-w-0 rounded-xl border p-4 text-[13px] leading-relaxed ${
+                linked.state === "refused" || linked.state === "failed"
+                  ? "border-amber-400/50 bg-amber-400/[0.08] text-amber-100"
+                  : "border-emerald-400/40 bg-emerald-500/[0.08] text-emerald-50"
+              }`}
+            >
+              <p className="font-semibold">
+                {linked.state === "loading" && "Loading the linked record…"}
+                {linked.state === "loaded" && "Linked record loaded. Read the verification result below."}
+                {linked.state === "refused" && "Linked record not loaded — nothing was checked."}
+                {linked.state === "failed" && "Linked record could not be loaded — nothing was checked."}
+              </p>
+              <p className="mt-1 break-all font-mono text-[12px]">{linked.href}</p>
+              {linked.state === "loaded" && (
+                <p className="mt-1 break-all font-mono text-[12px] text-emerald-100/80">
+                  {linked.bytes} bytes{linked.sha256 ? ` · sha256 ${linked.sha256}` : ""}
+                </p>
+              )}
+              {linked.state === "loaded" && <LinkedCardActions href={linked.href} file={linked.file} />}
+              {linked.state === "loaded" && (
+                <details className="mt-3" data-testid="linked-cite">
+                  <summary className="flex min-h-[44px] cursor-pointer items-center font-semibold">Cite this record</summary>
+                  <pre className="mt-1 whitespace-pre-wrap break-all font-mono text-[12px] text-emerald-100/90">{artifactCitation(linked, new Date())}</pre>
+                  <p className="mt-1 text-[12px] text-emerald-100/70">Built from <a className="underline" href="/CITATION.cff">CITATION.cff</a> and the bytes loaded here. A matching sha256 shows you hold the cited bytes, not that the result is good.</p>
+                </details>
+              )}
+              {(linked.state === "refused" || linked.state === "failed") && (
+                <p className="mt-1">Reason: {linked.reason}. No VALID or INVALID result has been established. Paste still works.</p>
+              )}
+            </div>
+          )}
+          {tryErr && (
+            <p className="mt-2 text-[13px] text-amber-200/90" role="status">
+              Could not load a published card — {tryErr}. Paste still works.
+            </p>
+          )}
+          <div className="mt-4 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
+            <RecordVerifyForm variant="dark" seed={seed} seedNonce={seedNonce} autoVerify={autoVerify} onInputChange={clearLinkedSource} />
+          </div>
+        </section>
+        )}
+
+        {mode === "estate" && (
+        <section aria-labelledby="worked-check-h" className="overflow-hidden rounded-3xl border border-emerald-400/25 bg-emerald-500/[0.055]" data-testid="worked-verification">
+          <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[1fr_0.85fr] lg:items-center">
+            <div>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-400/80">Worked example · tested 28 Oct 2026</p>
+              <h2 id="worked-check-h" className="mt-3 text-2xl font-bold tracking-tight text-emerald-50">A real check. A clear result. Explicit limits.</h2>
+              <p className="mt-4 text-sm leading-relaxed text-emerald-100/75">
+                We chose <strong className="font-semibold text-emerald-100">Try a published card</strong>, then <strong className="font-semibold text-emerald-100">Verify this record</strong>. The browser returned VALID with 6/6 checks passed: the card ID reproduced, the published trust anchor matched, and the Ed25519 signature verified.
+              </p>
+              <p className="mt-3 text-[13px] leading-relaxed text-emerald-100/60">
+                Historical example: llama3.2:3b · care-refusal-protect · recorded 19 Aug 2026. Run the same flow above to check the currently published record again.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-emerald-300/25 bg-[#03110b] p-6 shadow-[0_24px_60px_-35px_rgba(52,211,153,0.45)]">
+              <p className="font-mono text-3xl font-black tracking-tight text-emerald-300">VALID</p>
+              <p className="mt-1 text-sm font-semibold text-emerald-50">6/6 checks passed</p>
+              <ul className="mt-5 space-y-2 text-[13px] text-emerald-100/75">
+                <li>✓ Card ID reproduced</li>
+                <li>✓ Published key matched</li>
+                <li>✓ Signature verified</li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-emerald-400/20 px-6 py-5 text-[13px] leading-relaxed text-emerald-100/70 sm:px-8">
+            <p><strong className="font-semibold text-emerald-100">VALID means record integrity and signature verification.</strong> It is not certification, not a fresh measurement, and not proof of model safety or legal compliance. Current board admission, present quotability and chain replay are not claimed by this example.</p>
+          </div>
+        </section>
+        )}
+
+        {mode === "estate" && (
+        <section>
+          <h2 className="text-2xl font-bold text-amber-200">Chain replay is not claimed</h2>
+          <div className="mt-4 rounded-2xl border border-amber-400/30 bg-amber-400/[0.06] p-6 text-sm leading-relaxed text-amber-100/85">
+            A previous demo rehashed records and expected values generated by the same browser
+            bundle. That can demonstrate SHA-256 mechanics, but it cannot independently establish
+            a published chain or prove that a record was unchanged after signing. It is withdrawn
+            until exact published bytes, trusted reference hashes, and link continuity are bound
+            into one verifiable input. Use the estate-card verifier above for the capability that
+            is live today.
+          </div>
+        </section>
+        )}
+
+        {/* LIVING ATTESTATION TABLES — from GET /api/gspc */}
+        {boardData && (
+          <section id="board-stamp" className="scroll-mt-24">
+            <h2 className="text-2xl font-bold text-emerald-50">The board's published signature</h2>
+            <p className="mt-1 text-[13px] text-emerald-100/60">
+              This is the published board stamp. It is not a stamp on a card you just pasted.
+              Empty fields show exactly why they are empty.
+            </p>
+            <div className="mt-4">
+              <BoardAttestation
+                data={boardData}
+                variant="dark"
+                showProgress={true}
+                showInLane={true}
+                compact={false}
+              />
+            </div>
+          </section>
+        )}
+
+        {/* WHAT THIS DOES NOT DO */}
+        <section className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
+          <h2 className="text-2xl font-bold text-emerald-50">What this button does NOT do</h2>
+          <ul className="mt-4 space-y-3 text-[13px] text-emerald-100/80 leading-relaxed list-disc pl-5">
+            <li>
+              It does no more than recompute the record&apos;s hash and check its Ed25519 signature
+              against the key the record names. Authorship rests on that key: read it out of the{" "}
+              <a
+                href="/.well-known/did.json"
+                className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"
+              >
+                DID document
+              </a>{" "}
+              yourself (<code>did:web:csoai.org#card-attestation-1</code>, starting{" "}
+              <code className="text-emerald-300">d4cb0eaa16d5f50b…</code>) and compare it to the{" "}
+              <code>pubkey</code> on the card.
+            </li>
+            <li>
+              The record you paste is not sent to a server for verification. Your browser may
+              retrieve published public-key metadata; it runs the cryptographic check locally.
+            </li>
+            <li>
+              It does not assert that a model is &quot;safe&quot;, &quot;compliant&quot;, or
+              &quot;authentic&quot;. Those words are not in the button&apos;s vocabulary, on
+              purpose.
+            </li>
+          </ul>
+        </section>
+
+        {/* The paid door comes after the free verifier, never before it (audit 2026-09-28 #22). */}
+        {mode === "estate" && (
+        <section data-testid="governance-retrieve-raas">
+          <h2 className="text-2xl font-bold text-emerald-50">Optional paid service: a receipt for existing evidence</h2>
+          <div className="mt-4 rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.05] p-4 space-y-3">
+            <p className="text-[13px] text-emerald-100/80 leading-relaxed">
+              Everything above is free and stays free. This paid service issues a receipt
+              for a named subject and provides signed records already on file;
+              it does not run a new measurement. Before paying, check the payment challenge for the
+              signing status, evidence collection date and records available for your subject.
+            </p>
+            <p className="text-[13px] text-emerald-100/70 leading-relaxed">
+              The governance card the free button loads is{" "}
+              <a
+                href="/interop/mill-cards-signed/signed-governan-e9bc92b7b39b.json"
+                className="font-mono break-all underline underline-offset-2 hover:text-emerald-50"
+                data-testid="governance-retrieve-url"
+              >
+                /interop/mill-cards-signed/signed-governan-e9bc92b7b39b.json
+              </a>
+              , a historical signed card. Its current board admission and quotability are not
+              established by this example.
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                href="/dashboard?tab=tools&tool=commission_card"
+                className="min-h-[44px] inline-flex items-center rounded-lg border border-emerald-400/40 px-4 py-2 text-sm font-semibold text-emerald-100 hover:bg-emerald-500/15"
+                data-testid="governance-commission-cta"
+              >
+                Commission receipt · existing evidence
+              </Link>
+              <a
+                href="/pay"
+                className="min-h-[44px] inline-flex items-center rounded-lg border border-emerald-400/25 px-4 py-2 text-sm font-semibold text-emerald-200/90 hover:bg-emerald-500/10"
+                data-testid="governance-pay-cta"
+              >
+                Browse all metered doors
+              </a>
+            </div>
+          </div>
+        </section>
+        )}
+
+        {/* TECHNICAL NOTES — collapsed (audit 2026-09-28 #22): true, published, and not part of
+            the first check a stranger makes. */}
+        <details className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6" data-testid="verify-technical-notes">
+          <summary className="cursor-pointer text-lg font-bold text-emerald-50">Technical notes</summary>
+          <ul className="mt-4 space-y-3 text-[13px] text-emerald-100/80 leading-relaxed list-disc pl-5">
+            <li>
+              UNCHECKABLE covers, among other cases, the superseded v0.1 board stamp, a missing
+              post-quantum seal, and any verify path not wired yet. None of those is reported as
+              INVALID.
+            </li>
+            <li>
+              Current v0.1 signed cards are{" "}
+              <strong className="text-emerald-50">under 1KB</strong>; the envelope specification
+              allows a maximum of 3KB.{" "}
+              {ANCHORING_CLAIM}{" "}
+              <strong className="text-emerald-50">{CURRENT_ROOT_OTS_CLAIM}</strong>. This covers
+              the exact public-root bytes only, not an individual <code>content_id</code> or the
+              separate signed-card index. The post-quantum ML-DSA-65
+              (FIPS-204) path is <strong className="text-emerald-50">planned and scaffolded only</strong>;
+              no PQC signer/runtime is built or published.
+            </li>
+            <li>
+              The <strong className="text-emerald-50">3KB envelope ceiling is binding</strong>;
+              it is not the current card size. An ML-DSA-65 signature is ~3.3KB and cannot live
+              inside that ceiling. Hybrid, when it ships, is a
+              second receipt on the root / DID / inclusion bundle — never a PQC-signed card.
+              <code>#board-pqc-1</code> is <strong className="text-emerald-50">ABSENT</strong>.
+              No PQC verify helper is wired. Fail-closed: a missing PQC seal is UNCHECKABLE,
+              never VALID. PQCBench is the GSPC continuity arena (<code>csoai/gspc-asi</code>),
+              not a post-quantum signature on these cards.
+            </li>
+          </ul>
+        </details>
+        {/* CARD INVENTORY SNAPSHOT — dated, not live; see evidence/card-inventory-2026-10-14.md */}
+        <section data-testid="card-inventory-snapshot">
+          <h2 className="text-2xl font-bold text-emerald-50">Card inventory (14 Oct 2026)</h2>
+          <p className="mt-2 text-[13px] leading-relaxed text-emerald-100/75">
+            Dated snapshot, not a live count. A one-off scan of 8 of 9 storage locations on
+            14 Oct 2026 found <strong className="text-emerald-50">11,929</strong> unique signed
+            measurement cards, <strong className="text-emerald-50">7,994</strong> with a VALID
+            signature, and <strong className="text-emerald-50">335</strong> live and verifiable
+            here. The live count is always <code>/signed/card_index.json</code>.{" "}
+            <a
+              href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/evidence/card-inventory-2026-10-14.md"
+              className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"
+            >
+              Method and scope →
+            </a>
+          </p>
+        </section>
+
+
+        {/* LINKS */}
+        <div className="flex flex-wrap gap-x-4 gap-y-1 pb-4 text-[13px]">
+          <Link href="/gspc-arena" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
+            See the records in the arena →
+          </Link>
+          <Link href="/methodology" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
+            Read the methodology →
+          </Link>
+          <Link href="/refutation-ledger" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
+            Read the refutation ledger →
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}

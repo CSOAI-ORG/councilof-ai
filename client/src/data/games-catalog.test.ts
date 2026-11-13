@@ -30,7 +30,7 @@ import {
  * These are here for test assertions only; pages/hooks/components do not import this file.
  */
 const MDF_TEST_FIXTURE = {
-  localPath: "/Users/nicholas/munder-difflin-harness",
+  localPath: "/opt/csoai/munder-difflin-harness",
   healthEndpoint: ":4100",
   files: ["site/games.html", "site/governance-city.html", "visuals/arena-game.html"],
   missing: ["site/play.html"],

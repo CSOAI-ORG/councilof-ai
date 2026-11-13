@@ -42,7 +42,7 @@ const VERIFICATION_LINKS = [
   {
     label: "Corrections ledger",
     url: "/api/corrections",
-    desc: "Every correction appended, never edited. Including corrections about our own tooling.",
+    desc: "Every correction is source-maintained and dated (no append-only storage proof is claimed). Including corrections about our own tooling.",
   },
   {
     label: "Doctrine & refusals",
@@ -149,7 +149,7 @@ export default function Launch() {
           An independent measurement body publishes scoped, replayable
           evidence about AI systems and issued assets. Every number below is
           fetched live from a named endpoint. Every correction is public and
-          append-only. No grade is for sale.
+          source-maintained. No grade is for sale.
         </p>
 
         {/* Live numbers panel */}

@@ -10,22 +10,26 @@ Every governed action passes the CSOAI **Sovereign Gate** (policy/identity/human
 emits an **Ed25519‑signed attestation** you (or any auditor) can verify offline — and a signed
 **A2A envelope** other governed agents can trust.
 
-> **NOT PUBLISHED, AND NO GATEWAY ANSWERS.** Re-probed 2026-09-28 (first probed 2026-09-05):
-> `@csoai/layer0` returns **HTTP 404** on the npm registry; `api.csoai.org` (the default
-> `CSOAI_API_BASE`) has **no DNS record**; and `https://councilof.ai` answers **404** on all three
-> paths this client calls (`/api/gate`, `/api/a2a/route`, `/api/a2a/verify`). The install line
-> below cannot work today, and every method needs a gateway that is not publicly served. The
-> design below is unchanged; what is not real yet is that you can run it.
+> **THE GATEWAY IS SERVED AT `https://councilof.ai`.** The default `CSOAI_API_BASE` points
+> there. The three paths this client calls — `/api/gate`, `/api/a2a/route`, `/api/a2a/verify` —
+> are Cloudflare Pages Functions in the source repository, and the publish workflow refuses to
+> release this package until all three answer, so an install line that cannot work is never
+> published.
+>
+> `/api/a2a/route` signs its envelopes with the deployment's Layer-0 key, whose public half is
+> published at `GET /api/a2a/key` and pinned in the estate's DID document as
+> `did:web:csoai.org#layer0-attestation-1`. If that key is ever absent the route answers **503**
+> and says so: an unsigned artefact is honest and a fabricated signature is not. The gate and the
+> verify path work regardless.
 >
 > ```
-> curl -s -o /dev/null -w '%{http_code}\n' https://registry.npmjs.org/@csoai%2flayer0   # 404
-> host api.csoai.org                                                                    # no record
-> curl -s -o /dev/null -w '%{http_code}\n' -X POST https://councilof.ai/api/gate       # 404
+> curl -s -o /dev/null -w '%{http_code}\n' -X POST https://councilof.ai/api/gate -d '{}'   # 200
+> curl -s https://councilof.ai/api/a2a/key                                                   # the public key, if published
 > ```
 
 ```bash
-npm i @csoai/layer0                            # 404 today — see the note above
-export CSOAI_API_BASE=https://your-gateway     # api.csoai.org has no DNS record
+npm i @csoai/layer0
+export CSOAI_API_BASE=https://your-gateway     # optional; defaults to https://councilof.ai
 ```
 
 ```js
@@ -51,7 +55,11 @@ Conformance levels (see `CSOAI_Layer0_A2A_Protocol.md`): wrapping with `governed
 | `governed(action, inputs, run)` | gate → run → signed attestation (the common path) |
 | `verify(envelope, peerKey?)` | verify an inbound A2A envelope |
 
-Backend: `api-server/` (Express) + `api-server/a2a.js` in the source repository; it is not served publicly. Home: https://councilof.ai/layer0/
+Backend: the public gateway is `functions/api/gate.ts` + `functions/api/a2a/{route,verify,key}.ts` (Cloudflare Pages Functions) in the source repository, with the policy rule in `functions/_lib/layer0.ts` — checked against the canonical product's rule by `scripts/review/layer0-parity.mjs`. Home: https://councilof.ai/layer0/
+
+- Live GSPC board: https://councilof.ai/api/gspc
+- Corrections ledger: https://councilof.ai/corrections/ (JSON: https://councilof.ai/api/corrections)
+- Free card verification: https://councilof.ai/gspc-verify/
 
 ## Licence
 

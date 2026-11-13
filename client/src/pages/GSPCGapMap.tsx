@@ -278,21 +278,21 @@ export default function GSPCGapMap() {
             Different audiences see different value in the gap map. Here&apos;s how each stakeholder uses it.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* FOR INVESTORS */}
+            {/* FOR ENTERPRISE & INSTITUTIONAL ASSURANCE */}
             <div id="persona-investor" className="p-8 border border-primary/30 bg-gradient-to-br from-primary/5 to-transparent rounded-xl transition-all">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-2xl">📈</span>
-                <h3 className="text-xl font-bold">For Investors & VCs</h3>
+                <h3 className="text-xl font-bold">For Enterprise & Institutional Assurance</h3>
               </div>
               <p className="text-sm text-muted-foreground mb-4">
-                The 99.2% blind spot is the moat. Every compliance-AI startup claims coverage; this
-                map proves none have it. We are the only ones mapping the actual obligation space.
+                The 99.2% unmeasured space is the empirical gap. Where vendors assert broad coverage,
+                this map publishes what is actually measured versus unmeasured across the obligation space.
               </p>
               <ul className="text-sm space-y-2 text-muted-foreground">
-                <li className="flex gap-2"><span className="text-primary">→</span> 1,301 unmeasured cells = addressable market</li>
-                <li className="flex gap-2"><span className="text-primary">→</span> 99.2% blind = competitive vacuum</li>
-                <li className="flex gap-2"><span className="text-primary">→</span> Deterministic predicates, never a model judge = defensible</li>
-                <li className="flex gap-2"><span className="text-primary">→</span> Published refutations = trust signal</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> 1,301 unmeasured cells = explicitly mapped obligation gap</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> 99.2% unmeasured = documented baseline before claims</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> Deterministic predicates, never a model judge = reproducible</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> Published refutations = verifiable audit record</li>
               </ul>
             </div>
 
@@ -310,7 +310,7 @@ export default function GSPCGapMap() {
                 <li className="flex gap-2"><span className="text-primary">→</span> 6 live anchor registries (OGL, EU reuse, CC BY)</li>
                 <li className="flex gap-2"><span className="text-primary">→</span> Tamper-evident chain (sha256 → Ed25519)</li>
                 <li className="flex gap-2"><span className="text-primary">→</span> No LLM in the verdict (Law 1)</li>
-                <li className="flex gap-2"><span className="text-primary">→</span> Self-scoring disclosure (we measure ourselves)</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> Neutrality disclosure (we never rank our own models)</li>
               </ul>
             </div>
 
@@ -339,12 +339,12 @@ export default function GSPCGapMap() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h3 className="font-semibold mb-2 flex items-center gap-2">
-                <span className="text-lg">🔒</span> IP defensibility
+                <span className="text-lg">🔒</span> Method reproducibility
               </h3>
               <p className="text-sm text-muted-foreground">
-                The novelty is not the rule set — the rule set is public. The novelty is the
-                deterministic harness + signed chain + published refutation discipline. That
-                combination cannot be reverse-engineered from a competitor demo.
+                The rule set is public by design. The institutional discipline is the
+                deterministic harness + signed chain + published refutation ledger — every
+                result can be recomputed from the pinned method and receipt.
               </p>
             </div>
             <div>
@@ -362,9 +362,9 @@ export default function GSPCGapMap() {
                 <span className="text-lg">💼</span> Diligence-ready
               </h3>
               <p className="text-sm text-muted-foreground">
-                The 9 refutations are the diligence asset. A founder who publishes what killed
-                their own bets is a founder who cannot surprise an LP with a hidden failure.
-                This is the moat that ships with the team.
+                The 9 published refutations and the public corrections ledger provide a
+                transparent audit trail: when an instrument or count is superseded or
+                corrected, the retraction is signed and preserved alongside the live record.
               </p>
             </div>
           </div>

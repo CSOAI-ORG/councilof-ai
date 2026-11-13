@@ -78,6 +78,7 @@ import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
+import { AXES_D } from "./_gspc_axes_d";
 import { crosscheckBoardSnapshot } from "./_board_snapshot";
 import { axisCountLine } from "./_boardCounts";
 import { ledgersBlock } from "./_ledgers";
@@ -125,7 +126,7 @@ const SRC_RWA = "public/interop/rwa-registry.json";
 const SRC_MCP = "evidence/mcp-registry.json";
 const SRC_CENSUS = "public/signed/hub-census-baseline.json";
 const SRC_PUBLIC_ROOT = "public/root.json";
-const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin}.ts (the arrays /api/gspc derives from)";
+const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin,d}.ts (the arrays /api/gspc derives from)";
 
 const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? null;
 
@@ -135,7 +136,7 @@ const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? nul
 // number a lane quotes depends on which surface it happened to read — exactly the
 // failure this endpoint exists to end. So both are computed and compared here,
 // and the disagreement (if any) is published rather than resolved silently.
-const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
+const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
 const liveAxisSlots = LIVE_AXES.length;
 const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
 const liveUnmeasuredAxes = liveAxisSlots - liveMeasuredAxes;
@@ -153,7 +154,7 @@ const liveByFamily = {
   gspc: {
     axes: LIVE_AXES.filter((a) => a.family === "gspc").length,
     measured: LIVE_AXES.filter((a) => a.family === "gspc" && a.status === "MEASURED").length,
-    note: "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically.",
+    note: "The 14 behavioural model-comparison axes plus effect-binding (deterministic-facts server probe).",
   },
   financial: {
     axes: LIVE_AXES.filter((a) => a.family === "financial").length,
@@ -161,6 +162,14 @@ const liveByFamily = {
     note:
       "The 8 financial/domain axes (ADR-001), all MEASURED as deterministic-facts runs. " +
       "Measured is not scored. None has a leader, an accuracy or a separation determination.",
+  },
+  subject: {
+    axes: LIVE_AXES.filter((a) => a.family === "subject").length,
+    measured: LIVE_AXES.filter((a) => a.family === "subject" && a.status === "MEASURED").length,
+    note:
+      "The 10 subject-family declared slots (labs, companies, measurers, harnesses, interop groups, " +
+      "humanoid deployments, regulators, interpretability groups, claimed subjects, serving endpoints). " +
+      "An unmeasured slot is a published gap, not a zero.",
   },
 };
 const liveMeasuredOn: string = MEASURED_ON.date;

@@ -396,6 +396,45 @@ def append_jsonl(path: Path, row) -> None:
         os.fsync(stream.fileno())
 
 
+def sync_queue_jsonl(path: Path, jobs: list, newly_queued: list) -> None:
+    """Keep already-queued active jobs synchronized with latest.json receipts."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    jobs_by_cid = {
+        job["candidate_id"]: job
+        for job in jobs
+        if isinstance(job, dict) and isinstance(job.get("candidate_id"), str)
+    }
+    rows = []
+    seen_cids = set()
+    if path.exists():
+        with path.open("rb") as stream:
+            for raw in stream:
+                if not raw.strip():
+                    continue
+                row = json.loads(raw)
+                cid = row.get("candidate_id") if isinstance(row, dict) else None
+                if cid in jobs_by_cid:
+                    row = jobs_by_cid[cid]
+                    seen_cids.add(cid)
+                rows.append(row)
+    for candidate in newly_queued:
+        cid = candidate.get("candidate_id")
+        if cid not in seen_cids:
+            rows.append(candidate)
+            seen_cids.add(cid)
+    fd, tmp = tempfile.mkstemp(prefix=".queue-", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            for row in rows:
+                stream.write(json.dumps(row, sort_keys=True) + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(tmp, path)
+    finally:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+
+
 def next_observed_state(prior, receipt):
     """Retain the last good comparison baseline across inconclusive probes."""
     if receipt["state"] == "OBSERVED":
@@ -733,9 +772,12 @@ def main():
         }
         report["content_hash"] = sha(canonical(report))
 
-        # Existing lock + stable work IDs make partial appends replay-safe.
-        for candidate in candidates:
-            append_jsonl(args.state / "deep-candidates.jsonl", candidate)
+        # Existing lock + stable work IDs make queue synchronization replay-safe.
+        sync_queue_jsonl(
+            args.state / "deep-candidates.jsonl",
+            chain_review["jobs"],
+            candidates,
+        )
         # Persist deferred triggers before advancing comparison baselines.
         atomic_json(latest_path, report)
         atomic_json(args.state / "loop-state.json", current_state)

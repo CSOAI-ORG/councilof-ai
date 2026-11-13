@@ -21,9 +21,14 @@ import sys
 import cbor2
 import rfc8785
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
-from pycose.messages import Sign1Message
-from pycose.keys import OKPKey
-from pycose.keys.curves import Ed25519 as CoseEd25519
+try:
+    from pycose.messages import Sign1Message
+    from pycose.keys import OKPKey
+    from pycose.keys.curves import Ed25519 as CoseEd25519
+    HAS_PYCOSE = True
+except ImportError:
+    Sign1Message = OKPKey = CoseEd25519 = None
+    HAS_PYCOSE = False
 
 FORBIDDEN_NAMES = re.compile(r"^(decision|allow|allowed|allowlist|hold|reject|approve|approved|approval|admit|"
                              r"admission|authority|authorization|authorisation|permit|permission|grant|enforce|"

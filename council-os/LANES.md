@@ -3,6 +3,7 @@
 
 | lane | owner | files/territory | state |
 |---|---|---|---|
+| canary-safe-errors-20261023 | Codex Engineering, thread 01a166ab-0619-7b72-85fe-e6d6d34a2af8 | scripts/canary/canary_run.py, scripts/canary/test_canary.py, scripts/canary/README.md; one invocation in existing pr-gates.yml Python tests only. Branch codex/canary-safe-errors-20261023. Structured error output and synthetic-only regressions; existing canary schedule/artifacts/credentials untouched. MAIN confirmed no overlapping writer. | CLAIMED; source and offline tests only; designated owner merges |
 | home-films | grok (tui-2) | homepage films from NotebookLM Downloads + demo loop | RUNNING |
 | epic-home | grok (tui-2) | restore mega-menu + OS + HeroSlides + 9-product ToolStack + LivingStages on home | RUNNING |
 | weekend-must | grok (tui-2) | MUST 1–25 lean surface: OS FAB, products four lines, assess insurer, mcp four tools | RUNNING |

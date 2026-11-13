@@ -1,6 +1,20 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import { AXES_FIN } from "../../../functions/api/_gspc_axes_fin";
-import { AXIS_SETS, fetchPublishedSet, loadBoard } from "./axis-sets";
+import {
+  AXIS_SETS,
+  fetchPublishedSet,
+  loadAgentAndMcpHarnesses,
+  loadAgentLayerArenaAndAcademyHitl,
+  loadAiCompanies,
+  loadAiLabs,
+  loadBoard,
+  loadHumanoidLabsAndDeployments,
+  loadInteropWorkingGroups,
+  loadMeasurersAndHarnesses,
+  loadOsaiaSafeAndClaimMaintenance,
+} from "./axis-sets";
 
 const boardSet = AXIS_SETS.find((set) => set.id === "board");
 if (!boardSet) throw new Error("board set missing");
@@ -111,4 +125,73 @@ describe("measurement-board run and fallback truth", () => {
     expect(loaded.live).toBe(false);
     expect(loaded.provenance).toMatch(/signed snapshot whose status document marks it CURRENT/);
   });
+
+  it("loads all 6 universal GSPC cohorts from /interop/gspc-universal-ledger.json with own-entity self-exclusion", () => {
+    const ledgerPath = resolve(__dirname, "../../../public/interop/gspc-universal-ledger.json");
+    const raw = JSON.parse(readFileSync(ledgerPath, "utf8"));
+
+    const measurers = loadMeasurersAndHarnesses(raw);
+    expect(measurers.rows).toHaveLength(22); // 24 total minus 2 own-entity rows listed apart
+    expect(measurers.rows.some((r) => /csoai/i.test(r.name))).toBe(false);
+    expect(
+      measurers.aside.some((a) => /listed apart, never self-ranked/i.test(a.label)),
+    ).toBe(true);
+
+    const agents = loadAgentAndMcpHarnesses(raw);
+    expect(agents.rows).toHaveLength(14); // 17 total minus 3 own-entity rows (csoai.org, gspc, council-os)
+    expect(agents.rows.some((r) => r.name === "csoai.org" || r.name === "gspc" || r.name === "council-os")).toBe(false);
+
+    const wgs = loadInteropWorkingGroups(raw);
+    expect(wgs.rows).toHaveLength(12);
+
+    const labs = loadAiLabs(raw);
+    expect(labs.rows).toHaveLength(10);
+
+    const humanoids = loadHumanoidLabsAndDeployments(raw);
+    expect(humanoids.rows).toHaveLength(38); // 8 signed vendor probes + 30 named public deployments
+    expect(
+      humanoids.rows.filter((r) => r.runAttestation === "ED25519_SIGNED"),
+    ).toHaveLength(8);
+
+    const companies = loadAiCompanies(raw);
+    expect(companies.rows).toHaveLength(32);
+
+    const setIds = AXIS_SETS.map((s) => s.id);
+    expect(setIds).toEqual(
+      expect.arrayContaining([
+        "measurers-harnesses",
+        "agent-mcp-harnesses",
+        "interop-working-groups",
+        "ai-labs",
+        "humanoid-labs",
+        "ai-companies",
+        "osaia-safe-reverification",
+        "agent-layer-arena-hitl",
+      ]),
+    );
+  });
+
+  it("loads OSAIA SAFE v0.2 re-verification, 417 frozen EU provisions, and Agent Layer / Arena / Academy HITL from /interop/gspc-agent-layer-safe-arena.json", () => {
+    const alsaPath = resolve(__dirname, "../../../public/interop/gspc-agent-layer-safe-arena.json");
+    const raw = JSON.parse(readFileSync(alsaPath, "utf8"));
+
+    const safeSet = loadOsaiaSafeAndClaimMaintenance(raw);
+    expect(safeSet.rows).toHaveLength(10);
+    expect(safeSet.rows.filter((r) => r.status === "MEASURED")).toHaveLength(9);
+    expect(safeSet.rows.filter((r) => r.status === "UNMEASURED")).toHaveLength(1);
+    expect(
+      safeSet.aside.some((a) => /417 frozen provisions across 6 EU instruments/i.test(a.value)),
+    ).toBe(true);
+
+    const agentArenaSet = loadAgentLayerArenaAndAcademyHitl(raw);
+    // 5 AX protocols + 4 MEOK/H.I.M. loop actions + 1 Arena + 1 Council City + 9 Academy HITL exercises = 20 rows
+    expect(agentArenaSet.rows).toHaveLength(20);
+    expect(
+      agentArenaSet.rows.some((r) => r.id === "arena:head-to-head-scoreboard" && r.n === 4760),
+    ).toBe(true);
+    expect(
+      agentArenaSet.rows.some((r) => r.id === "city:red-vs-blue-simulation" && r.n === 400),
+    ).toBe(true);
+  });
 });
+

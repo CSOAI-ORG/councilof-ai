@@ -8,6 +8,8 @@ from oasf import build_record
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+if not os.path.isdir(os.path.join(ROOT, "docs", "standards")):
+    ROOT = os.path.join(os.path.expanduser("~"), "clawd", "councilof-ai-work")
 
 
 def garak_report(scores, eval_fails=None):

@@ -433,20 +433,27 @@ export function HubResultsBoard({
   data,
   error = null,
   loading = false,
+  initiallyExpanded = false,
 }: {
   data: HubCardsPayload | null;
   error?: string | null;
   loading?: boolean;
+  initiallyExpanded?: boolean;
 }) {
   const axes = hubAxes(data);
   const fallbackAxis = defaultHubAxis(data);
   const [selectedAxis, setSelectedAxis] = useState(fallbackAxis);
+  const [expanded, setExpanded] = useState(initiallyExpanded);
+  const [hubQuery, setHubQuery] = useState("");
 
   useEffect(() => {
     if (!selectedAxis || !axes.includes(selectedAxis)) setSelectedAxis(fallbackAxis);
   }, [axes, fallbackAxis, selectedAxis]);
 
-  const rows = hubModelObservations(data, selectedAxis);
+  const allAxisRows = hubModelObservations(data, selectedAxis, Number.MAX_SAFE_INTEGER).filter((cell) =>
+    !hubQuery.trim() || cell.model.toLowerCase().includes(hubQuery.trim().toLowerCase()),
+  );
+  const rows = expanded || hubQuery.trim() ? allAxisRows : allAxisRows.slice(0, STRIP_N);
   const cells = measuredHubCells(data);
   const modelCount = new Set(cells.map((cell) => cell.model)).size;
   const complete = data?.counts?.complete === true;
@@ -464,9 +471,14 @@ export function HubResultsBoard({
             Third-party Hub cells from <code>/api/hub-cards</code>. This is a separate benchmark instrument from the GSPC board above. Each signed card is an observation; deterministic fact axes do not score models.
           </p>
         </div>
-        <a href={HUB_CARDS_PAGE_URL} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
-          Open published Hub dataset
-        </a>
+        <div className="flex flex-wrap items-center gap-3">
+          <a href="/models-measured/" className="text-sm font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
+            All measured third-party models
+          </a>
+          <a href={HUB_CARDS_PAGE_URL} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
+            Open published Hub dataset
+          </a>
+        </div>
       </div>
 
       <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60" data-testid="hub-results-count">
@@ -485,23 +497,33 @@ export function HubResultsBoard({
 
       {data && axes.length > 0 ? (
         <>
-          <div className="mt-4 flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="Hugging Face measured model axes">
-            {axes.map((axis) => (
-              <button
-                key={axis}
-                type="button"
-                role="tab"
-                aria-selected={axis === selectedAxis}
-                onClick={() => setSelectedAxis(axis)}
-                className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
-                  axis === selectedAxis
-                    ? "border-emerald-700 bg-emerald-800 text-white dark:border-emerald-400 dark:bg-emerald-400 dark:text-[#04110b]"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-emerald-400 dark:border-emerald-900/50 dark:bg-white/5 dark:text-emerald-100"
-                }`}
-              >
-                {hubAxisLabel(axis)}
-              </button>
-            ))}
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+            <div className="flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="Hugging Face measured model axes">
+              {axes.map((axis) => (
+                <button
+                  key={axis}
+                  type="button"
+                  role="tab"
+                  aria-selected={axis === selectedAxis}
+                  onClick={() => setSelectedAxis(axis)}
+                  className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
+                    axis === selectedAxis
+                      ? "border-emerald-700 bg-emerald-800 text-white dark:border-emerald-400 dark:bg-emerald-400 dark:text-[#04110b]"
+                      : "border-slate-200 bg-white text-slate-700 hover:border-emerald-400 dark:border-emerald-900/50 dark:bg-white/5 dark:text-emerald-100"
+                  }`}
+                >
+                  {hubAxisLabel(axis)}
+                </button>
+              ))}
+            </div>
+            <input
+              type="search"
+              value={hubQuery}
+              onChange={(e) => setHubQuery(e.target.value)}
+              placeholder="Filter Hub model…"
+              aria-label="Filter Hugging Face measured models on this axis"
+              className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-800 dark:border-emerald-900/50 dark:bg-white/5 dark:text-emerald-100"
+            />
           </div>
 
           <p className="mt-2 text-xs text-amber-900 dark:text-amber-200">
@@ -539,8 +561,20 @@ export function HubResultsBoard({
               </tbody>
             </table>
           </div>
+          {allAxisRows.length > STRIP_N ? (
+            <div className="mt-2 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setExpanded((v) => !v)}
+                data-testid="hub-results-expand"
+                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-800 hover:border-emerald-500 dark:border-emerald-800 dark:bg-white/5 dark:text-emerald-100"
+              >
+                {expanded ? "Show first 9 models on axis" : `Show all ${allAxisRows.length} Hub models on this axis`}
+              </button>
+            </div>
+          ) : null}
           <p className="mt-2 text-xs text-slate-500 dark:text-emerald-100/60">
-            Showing up to nine model-name-sorted observations on this axis. The displayed subset is not a top-nine ranking, separation test, winner claim, compliance verdict, or certificate. Open each signed card to verify its own evidence.
+            Showing {expanded ? `all ${rows.length}` : "up to nine"} model-name-sorted observations on this axis. The displayed subset is not a top-nine ranking, separation test, winner claim, compliance verdict, or certificate. Open each signed card to verify its own evidence.
           </p>
         </>
       ) : null}

@@ -1,0 +1,49 @@
+{
+  "schema": "csoai.public-report-index/0.1",
+  "what": "The public report set. Every entry auto-updates from the live board; nothing here is a snapshot that can go stale quietly.",
+  "reports": [
+    {
+      "id": "gspc-board",
+      "name": "GSPC living board",
+      "url": "https://councilof.ai/api/gspc",
+      "human": "https://councilof.ai/board",
+      "auto_updates": true,
+      "what": "The living measurement board. Slot counts are derived from the payload, never typed."
+    },
+    {
+      "id": "gspc-state",
+      "name": "Estate state",
+      "url": "https://councilof.ai/api/state",
+      "auto_updates": true,
+      "what": "The estate's published state counters, derived the same way the board's are."
+    },
+    {
+      "id": "gspc-receipts",
+      "name": "Signed measurement receipts",
+      "url": "https://councilof.ai/api/receipts",
+      "auto_updates": true,
+      "what": "Signed receipts, each binding a run's bytes to a key and a moment."
+    },
+    {
+      "id": "gspc-card-index",
+      "name": "Signed card index",
+      "url": "https://councilof.ai/api/cards",
+      "auto_updates": true,
+      "what": "Every published measurement card, addressable by id and by URL."
+    },
+    {
+      "id": "agent-plugin-platforms",
+      "name": "Agent plugin platform matrix",
+      "url": "https://councilof.ai/api/plugin/platforms",
+      "auto_updates": true,
+      "what": "Every AI platform family the Council of AI plugin ships for, with its install target and state."
+    },
+    {
+      "id": "harness-fidelity",
+      "name": "Harness fidelity",
+      "url": "https://councilof.ai/api/gspc",
+      "auto_updates": true,
+      "what": "Whether the measurement instrument itself is honest and still running. Published against CSOAI's own interest."
+    }
+  ]
+}

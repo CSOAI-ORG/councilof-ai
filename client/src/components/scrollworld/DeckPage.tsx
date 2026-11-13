@@ -72,7 +72,7 @@ export function DeckPage({
             Coverage on this page is never typed by hand. <LiveBoardCount /> Corrections to anything
             we have published live in the{" "}
             <a href="/refutation-ledger" className="font-semibold text-emerald-700 underline underline-offset-2">refutation ledger</a>{" "}
-            — append-only, never a silent edit.
+            — source-maintained, never a silent edit (no append-only storage proof is claimed).
           </p>
 
           {related.length > 0 && (

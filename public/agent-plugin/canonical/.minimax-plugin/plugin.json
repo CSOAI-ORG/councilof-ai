@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "name": "council-of-ai",
+  "displayName": "Council of AI",
+  "version": "0.2.0",
+  "description": "Independent AI-behaviour measurement for MiniMax Code. Pull the live GSPC board, verify Ed25519 measurement cards offline, seal artifacts, and census the local harness. Measurement, never certification.",
+  "author": "CSOAI Ltd",
+  "icon": "icon.png",
+  "darkIcon": "icon-dark.png",
+  "category": "Code",
+  "exampleQueries": [
+    "Pull the live GSPC board and show what is measured right now.",
+    "Verify this Council of AI measurement card and give the three-state verdict.",
+    "Census the local harness lanes and tell me what is looping.",
+    "Seal this receipt with the Council of AI governance key."
+  ],
+  "apps": [],
+  "mcpServers": [
+    "council-of-ai.mcp.json"
+  ],
+  "skills": [
+    "skills/gspc/SKILL.md",
+    "skills/council/SKILL.md",
+    "skills/council-os/SKILL.md",
+    "skills/verify-card/SKILL.md",
+    "skills/sign-artifact/SKILL.md",
+    "skills/pack/SKILL.md",
+    "skills/platform-measure/SKILL.md"
+  ],
+  "hooks": [
+    "hooks/hooks.json"
+  ]
+}

@@ -15,7 +15,7 @@ const STEPS = [
   {
     step: "3",
     title: "Published correction",
-    body: "If we were wrong, the correction is published on the same surface the original was — superseded, never deleted. The refutation ledger and /api/corrections stay append-only.",
+    body: "If we were wrong, the correction is published on the same surface the original was — superseded, never deleted. The refutation ledger and /api/corrections stay source-maintained (no append-only storage proof is claimed).",
   },
   {
     step: "4",

@@ -1,6 +1,6 @@
 # components/ed25519-verify — offline Ed25519 verifier (ported from csoai-org-v2)
 
-Donor: `~/clawd/csoai-org-v2/src/app/verify/VerifyClient.tsx` (CONSOLIDATION.md surface #3:
+Donor: `csoai-org-v2/src/app/verify/VerifyClient.tsx` (CONSOLIDATION.md surface #3:
 "real Ed25519 verify"). Ported 2026-08-02. Theme: master wing (dark-emerald on `#03110b`).
 
 ## Files

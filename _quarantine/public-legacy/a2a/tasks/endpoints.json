@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "agent": "CSOAI Compliance Agent",
+  "endpoints": {
+    "send": "https://csoai.org/a2a/tasks/send",
+    "status": "https://csoai.org/a2a/tasks/{task_id}/status",
+    "artifacts": "https://csoai.org/a2a/tasks/{task_id}/artifacts",
+    "cancel": "https://csoai.org/a2a/tasks/{task_id}/cancel"
+  },
+  "supported_content_types": ["text", "json", "markdown", "pdf"],
+  "max_task_duration": "3600s",
+  "requires_auth": true,
+  "auth_header": "X-CSOAI-Key"
+}

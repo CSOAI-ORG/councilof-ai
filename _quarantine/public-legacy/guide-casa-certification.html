@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Get CASA Certified | Complete Certification Guide</title>
+    <meta name="description" content="Complete guide to CASA certification: 3 levels (Commercial $5-25K, Government $25-100K, Defense $100-500K), process, requirements, timeline, and post-certification support.">
+    <meta name="theme-color" content="#0D0B21">
+    <meta property="og:title" content="How to Get CASA Certified">
+    <meta property="og:description" content="Step-by-step guide to AI safety certification across all three CASA levels.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://csoai.org/guide-casa-certification.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="https://csoai.org/assets/og-image.png">
+    <link rel="canonical" href="https://csoai.org/guide-casa-certification.html">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --color-dark: #0D0B21;
+            --color-dark-light: #1A1145;
+            --color-accent: #D4A843;
+            --color-accent-bright: #E8B76D;
+            --color-text: #E8E4F0;
+            --color-white: #FFFFFF;
+            --color-glass-bg: rgba(255, 255, 255, 0.03);
+            --color-glass-border: rgba(255, 255, 255, 0.08);
+            --easing: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--color-dark) 0%, var(--color-dark-light) 100%);
+            color: var(--color-text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle, rgba(212, 168, 67, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+            animation: drift 20s ease-in-out infinite;
+        }
+
+        @keyframes drift {
+            0%, 100% { background-position: 0 0; }
+            50% { background-position: 20px 20px; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes particle-float {
+            0% { opacity: 0; transform: translateY(100px) translateX(0px); }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-100px) translateX(50px); }
+        }
+
+        /* Particle background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+
+        .particle:nth-child(1) { left: 10%; top: 20%; animation: particle-float 15s ease-in-out infinite; }
+        .particle:nth-child(2) { left: 20%; top: 60%; animation: particle-float 18s ease-in-out infinite; animation-delay: 2s; }
+        .particle:nth-child(3) { left: 30%; top: 30%; animation: particle-float 20s ease-in-out infinite; animation-delay: 4s; }
+        .particle:nth-child(4) { left: 50%; top: 50%; animation: particle-float 22s ease-in-out infinite; animation-delay: 1s; }
+        .particle:nth-child(5) { left: 70%; top: 40%; animation: particle-float 19s ease-in-out infinite; animation-delay: 3s; }
+        .particle:nth-child(6) { left: 80%; top: 70%; animation: particle-float 21s ease-in-out infinite; animation-delay: 0s; }
+        .particle:nth-child(7) { left: 15%; top: 80%; animation: particle-float 17s ease-in-out infinite; animation-delay: 5s; }
+        .particle:nth-child(8) { left: 85%; top: 20%; animation: particle-float 23s ease-in-out infinite; animation-delay: 2.5s; }
+        .particle:nth-child(9) { left: 40%; top: 15%; animation: particle-float 20s ease-in-out infinite; animation-delay: 3.5s; }
+        .particle:nth-child(10) { left: 60%; top: 75%; animation: particle-float 18s ease-in-out infinite; animation-delay: 1.5s; }
+
+        main { position: relative; z-index: 1; }
+
+        h1 { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; color: var(--color-white); margin-bottom: 1rem; }
+        h2 { font-size: 1.75rem; font-weight: 700; color: var(--color-white); margin-top: 2.5rem; margin-bottom: 1.5rem; }
+        h3 { font-size: 1.25rem; font-weight: 700; color: var(--color-white); margin-top: 1.75rem; margin-bottom: 1rem; }
+        p { font-size: 1rem; line-height: 1.8; color: var(--color-text); margin-bottom: 1.25rem; }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-bright) 100%);
+            z-index: 1000;
+            animation: progressBar linear forwards;
+        }
+
+        @keyframes progressBar {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        .breadcrumb {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--color-text);
+            position: relative;
+            z-index: 2;
+        }
+
+        .breadcrumb a {
+            color: var(--color-accent);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--color-accent-bright);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-bright) 100%);
+            color: var(--color-dark);
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(212, 168, 67, 0.25);
+            text-decoration: none;
+        }
+
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 15px 45px rgba(212, 168, 67, 0.4); }
+        .btn-small { padding: 0.75rem 1.5rem; font-size: 0.95rem; }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1.5rem 2rem;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 168, 67, 0.2);
+            background: rgba(13, 11, 33, 0.7);
+        }
+
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; font-weight: 800; color: var(--color-white); }
+        .logo-dot { width: 12px; height: 12px; background: var(--color-accent); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        nav a { color: var(--color-text); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        nav a:hover { color: var(--color-accent); }
+
+        .guide-container { max-width: 1200px; margin: 0 auto; padding: 80px 2rem; position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 300px; gap: 3rem; }
+        .guide-content {
+            background: var(--color-glass-bg);
+            border: 1px solid var(--color-glass-border);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 3rem;
+            animation: fadeUp 0.8s ease-out;
+        }
+
+        .step { margin-bottom: 3.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--color-glass-border); }
+        .step:last-child { border-bottom: none; }
+        .step-number {
+            display: inline-flex;
+            width: 50px;
+            height: 50px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-bright) 100%);
+            color: var(--color-dark);
+            border-radius: 50%;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 10px 30px rgba(212, 168, 67, 0.3);
+        }
+
+        ul { margin-left: 1.5rem; margin-bottom: 1.25rem; }
+        li { margin-bottom: 0.75rem; color: var(--color-text); }
+
+        .sidebar { position: sticky; top: 120px; height: fit-content; }
+        .certification-tiers {
+            background: var(--color-glass-bg);
+            border: 1px solid var(--color-glass-border);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tier-item {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: rgba(212, 168, 67, 0.08);
+            border-left: 3px solid var(--color-accent);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .tier-item:hover {
+            background: rgba(212, 168, 67, 0.12);
+            transform: translateX(4px);
+        }
+
+        .tier-item strong { color: var(--color-accent); }
+
+        .checklist { background: var(--color-glass-bg); border: 1px solid var(--color-glass-border); backdrop-filter: blur(20px); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; }
+        .checklist h4 { color: var(--color-accent); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; font-weight: 700; }
+        .checklist-item { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; font-size: 0.9rem; color: var(--color-text); }
+        .checklist-item input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--color-accent); }
+
+        .cta-section {
+            background: var(--color-glass-bg);
+            border: 2px solid var(--color-accent);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .cta-section h3 { margin-top: 0; }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-bright) 100%);
+            border: none;
+            border-radius: 50%;
+            color: var(--color-dark);
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(212, 168, 67, 0.4);
+            font-weight: 800;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(212, 168, 67, 0.5);
+        }
+
+        .sticky-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            padding: 1.5rem 2rem;
+            background: rgba(13, 11, 33, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(212, 168, 67, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .sticky-message { font-size: 1rem; font-weight: 500; color: var(--color-text); flex: 1; min-width: 200px; }
+
+        .cookie-banner {
+            position: fixed;
+            bottom: 80px;
+            left: 2rem;
+            z-index: 98;
+            background: var(--color-glass-bg);
+            border: 1px solid var(--color-glass-border);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            max-width: 300px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .cookie-text { font-size: 0.85rem; color: var(--color-text); margin-bottom: 1rem; }
+        .cookie-buttons { display: flex; gap: 0.75rem; flex-direction: column; }
+        .cookie-buttons button { padding: 0.5rem 1rem; border: none; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; }
+        .cookie-accept { background: var(--color-accent); color: var(--color-dark); }
+        .cookie-decline { background: transparent; color: var(--color-accent); border: 1px solid var(--color-accent); }
+
+        footer {
+            background: linear-gradient(135deg, #0A0820 0%, #0D0B21 100%);
+            padding: 4rem 2rem 2rem;
+            margin-top: 6rem;
+            border-top: 1px solid rgba(212, 168, 67, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-content { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
+        .footer-section h4 { color: var(--color-accent); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; font-weight: 700; }
+        .footer-section ul { list-style: none; }
+        .footer-section a { color: var(--color-text); text-decoration: none; font-size: 0.95rem; display: block; margin-bottom: 0.75rem; transition: color 0.3s ease; }
+        .footer-section a:hover { color: var(--color-accent); }
+
+        .footer-bottom { border-top: 1px solid rgba(212, 168, 67, 0.1); padding-top: 2rem; text-align: center; color: var(--color-text); font-size: 0.9rem; max-width: 1400px; margin: 0 auto; }
+
+        @media (max-width: 1024px) {
+            .guide-container { grid-template-columns: 1fr; }
+            .sidebar { position: static; }
+        }
+
+        @media (max-width: 768px) {
+            .guide-container { padding: 60px 1.5rem; }
+            .guide-content { padding: 1.5rem; }
+            .sticky-bar { bottom: 60px; }
+            .cookie-banner { left: 1rem; right: 1rem; max-width: none; bottom: 70px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="progress-bar" id="progressBar"></div>
+
+    <main>
+        
+<!-- ═══ MEGA NAV ═══ -->
+<header style="position:sticky;top:0;z-index:1000;background:rgba(13,11,33,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(212,168,67,.15);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center">
+  <a href="index.html" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+    <span style="font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#D4A843,#E8B76D);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CSOAI</span>
+    <span style="font-size:.7rem;color:rgba(232,228,240,.4);margin-left:.25rem">by MEOK AI Labs</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:.25rem" class="nav-links">
+    <!-- Standards -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Standards ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;left:-100px;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">Governance Frameworks</div>
+        <a href="article-50-kit.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:#EF4444;transition:background .2s;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);margin-bottom:.5rem" onmouseover="this.style.background='rgba(239,68,68,.15)'" onmouseout="this.style.background='rgba(239,68,68,.1)'"><span style="font-size:1.2rem">🚨</span><span><strong style="display:block;font-size:.9rem">Article 50 Emergency Kit</strong><small style="color:rgba(239,68,68,.8);font-size:.8rem">Secure EU AI Act compliance in 48hrs</small></span></a>
+        <a href="charter.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📜</span><span><strong style="display:block;font-size:.9rem">52-Article Charter</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Complete governance framework</small></span></a>
+        <a href="crosswalks.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🔄</span><span><strong style="display:block;font-size:.9rem">Framework Crosswalks</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">ISO 42001, NIST, EU AI Act, IEEE</small></span></a>
+        <a href="guides.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📖</span><span><strong style="display:block;font-size:.9rem">Implementation Guides</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">8 step-by-step modules</small></span></a>
+        <a href="glossary.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📚</span><span><strong style="display:block;font-size:.9rem">AI Safety Glossary</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">250+ terms defined</small></span></a>
+      </div>
+    </div>
+    <!-- Products -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Products ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;left:-100px;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">CSOAI Solutions</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <a href="mcp-packs.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📦</span><span><strong style="display:block;font-size:.9rem">Premium MCP Packs</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Curated server bundles</small></span></a>
+          <a href="finance.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">💳</span><span><strong style="display:block;font-size:.9rem">Agentic Finance</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Payment pre-checks</small></span></a>
+          <a href="legacy.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏛️</span><span><strong style="display:block;font-size:.9rem">Legacy Bridge</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">COBOL/Mainframe tunnels</small></span></a>
+          <a href="governance.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🌍</span><span><strong style="display:block;font-size:.9rem">Global Mesh</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Cross-regional handoff</small></span></a>
+          <a href="certification.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏅</span><span><strong style="display:block;font-size:.9rem">CASA Certification</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Standard AI safety cert</small></span></a>
+          <a href="enterprise.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏢</span><span><strong style="display:block;font-size:.9rem">Enterprise Governance</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Turnkey compliance for orgs</small></span></a>
+          <a href="advisory.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🎯</span><span><strong style="display:block;font-size:.9rem">Advisory Services</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Expert AI governance consultancy</small></span></a>
+          <a href="pricing.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">💰</span><span><strong style="display:block;font-size:.9rem">Pricing & Plans</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">From £1 to Enterprise</small></span></a>
+        </div>
+      </div>
+    </div>
+    <!-- Ecosystem -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Ecosystem ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;right:0;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">CSOAI Group Network</div>
+        <a href="https://meok.ai" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🧠</span><span><strong style="display:block;font-size:.9rem">MEOK.AI</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Sovereign AI OS &amp; agent marketplace</small></span></a>
+        <a href="https://cobolbridge.ai" target="_blank" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🔗</span><span><strong style="display:block;font-size:.9rem">CobolBridge</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Legacy COBOL migration platform</small></span></a>
+        <a href="mcp-infrastructure.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🛠</span><span><strong style="display:block;font-size:.9rem">207 MCP Servers</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">1,050+ tools across 30 frameworks</small></span></a>
+        <a href="https://github.com/csoai-org" target="_blank" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🐙</span><span><strong style="display:block;font-size:.9rem">GitHub</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">518 open-source repositories</small></span></a>
+      </div>
+    </div>
+    <a href="about.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">About</a>
+    <a href="blog.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">Blog</a>
+    <a href="contact.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">Contact</a>
+    <!-- Developer -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Developer ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;right:0;width:320px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">Developer Resources</div>
+        <a href="api-docs.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📚</span><span><strong style="display:block;font-size:.9rem">API Documentation</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">REST API reference</small></span></a>
+        <a href="status.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📊</span><span><strong style="display:block;font-size:.9rem">System Status</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Platform health monitoring</small></span></a>
+        <a href="verify.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">✓</span><span><strong style="display:block;font-size:.9rem">Certificate Verification</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Verify certifications</small></span></a>
+        <a href="layer0.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">⚡</span><span><strong style="display:block;font-size:.9rem">Layer 0 Protocol</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">The 8 trust layers</small></span></a>
+        <a href="mcp-distribution.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🌐</span><span><strong style="display:block;font-size:.9rem">MCP Distribution Map</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">AEO &amp; GEO fleet registry</small></span></a>
+      </div>
+    </div>
+    <a href="dashboard.html" style="background:linear-gradient(135deg,#D4A843,#E8B76D);color:#0D0B21;padding:.5rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:700;text-decoration:none;margin-left:.5rem;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 15px rgba(212,168,67,.3)" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(212,168,67,.5)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 15px rgba(212,168,67,.3)'">Dashboard</a>
+  </div>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('mobile-open');this.classList.toggle('active')" style="display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;z-index:1001"><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span></button>
+</header>
+<script>
+function toggleMega(btn){
+  const panel=btn.nextElementSibling;
+  const wasOpen=panel.style.display==='block';
+  document.querySelectorAll('.mega-panel').forEach(p=>p.style.display='none');
+  if(!wasOpen)panel.style.display='block';
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.mega-wrap'))document.querySelectorAll('.mega-panel').forEach(p=>p.style.display='none')});
+</script>
+        <div class="breadcrumb">
+            <a href="index.html">Home</a>
+            <span>/</span>
+            <a href="guides.html">Guides</a>
+            <span>/</span>
+            <span>CASA Certification</span>
+        </div>
+
+        <div class="guide-container">
+            <div class="guide-content">
+                <h1>How to Get CASA Certified</h1>
+                <p>CASA Certification provides institutional recognition of AI safety and governance compliance. This guide covers all three certification levels, the complete process, requirements, timelines, and ongoing support.</p>
+
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h2>Choose Your Certification Level</h2>
+                    <p>CASA offers three certification tiers designed for different organizational types and risk profiles:</p>
+                    <h3>Level 1: Commercial Certification ($5K-$25K annually)</h3>
+                    <p>Designed for commercial enterprises developing or deploying AI systems in non-critical applications. Requirements include standards compliance audit, quarterly security assessments, CASA certification badge, global registry inclusion, and community access. Timeline: 4-6 weeks.</p>
+
+                    <h3>Level 2: Government Certification ($25K-$100K annually)</h3>
+                    <p>For government agencies and sensitive systems. Includes everything in Level 1 plus monthly security reviews, government liaison access, priority support, advanced threat intelligence, and governance council seat. Timeline: 8-12 weeks.</p>
+
+                    <h3>Level 3: Defense Certification ($100K-$500K annually)</h3>
+                    <p>For defense, critical infrastructure, and highest-risk systems. Includes everything in Level 2 plus real-time monitoring, dedicated security team, custom infrastructure, Byzantine voting rights, and strategic partnership. Timeline: 12-16 weeks.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h2>Prepare Complete Documentation</h2>
+                    <p>Before applying, compile comprehensive documentation of your AI systems:</p>
+                    <ul>
+                        <li>System architecture and design documentation</li>
+                        <li>Data source and quality assessment</li>
+                        <li>Model training methodology and validation results</li>
+                        <li>Risk assessment and mitigation strategies</li>
+                        <li>Current security controls and testing results</li>
+                        <li>Governance structure and oversight mechanisms</li>
+                        <li>Bias testing and fairness evaluation reports</li>
+                        <li>Incident response procedures and history</li>
+                    </ul>
+                    <p>Strong documentation demonstrates organizational preparedness and typically accelerates the certification process. Engage your security, compliance, and engineering teams in document preparation.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h2>Submit Application and Assessment</h2>
+                    <p>Submit your completed application with supporting documentation. The CSOAI team will conduct a preliminary assessment to determine if your systems meet basic certification criteria. You'll be assigned a certification manager who guides you through the remaining process and identifies any additional requirements or remediation needs before security testing begins.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h2>Undergo Security Testing and Byzantine Review</h2>
+                    <p>AIdome conducts comprehensive red teaming and adversarial testing of your systems. Testing includes:</p>
+                    <ul>
+                        <li>Adversarial robustness evaluation</li>
+                        <li>Bias and fairness testing across demographics</li>
+                        <li>Security vulnerability assessment</li>
+                        <li>Hallucination and output quality testing</li>
+                        <li>Performance under edge cases and stress conditions</li>
+                    </ul>
+                    <p>Upon successful testing, your systems are reviewed by the Byzantine consensus council (33 AI agents using 22/33 voting). This decentralized governance ensures independent, objective evaluation free from conflicts of interest.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <h2>Receive Certification and Begin Monitoring</h2>
+                    <p>Upon Byzantine council approval, you receive official CASA certification badge, inclusion in the global registry, and access to Proof of AI tokenization for transparent verification. Ongoing monitoring begins immediately:</p>
+                    <ul>
+                        <li><strong>Level 1:</strong> Annual audit and continuous self-monitoring</li>
+                        <li><strong>Level 2:</strong> Quarterly reviews and monthly security updates</li>
+                        <li><strong>Level 3:</strong> Real-time monitoring with dedicated security team</li>
+                    </ul>
+                    <p>Certification remains valid as long as systems maintain compliance. We provide ongoing support, training, and access to governance communities throughout the certification period.</p>
+                </div>
+
+                <div class="cta-section">
+                    <h3>Start Your Certification Journey</h3>
+                    <p>Ready to achieve CASA certification? Our certification team can help you assess your current systems, identify any gaps, and guide you through the entire process to certification and beyond.</p>
+                    <a href="contact.html" class="btn">Begin Assessment</a>
+                </div>
+            </div>
+
+            <aside class="sidebar">
+                <div class="certification-tiers">
+                    <div style="font-weight: 700; margin-bottom: 1rem; color: var(--color-accent);">Certification Tiers</div>
+                    <div class="tier-item">
+                        <strong>Level 1: Commercial</strong><br>
+                        $5K-$25K/year<br>
+                        4-6 weeks
+                    </div>
+                    <div class="tier-item">
+                        <strong>Level 2: Government</strong><br>
+                        $25K-$100K/year<br>
+                        8-12 weeks
+                    </div>
+                    <div class="tier-item">
+                        <strong>Level 3: Defense</strong><br>
+                        $100K-$500K/year<br>
+                        12-16 weeks
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h4>Pre-Certification Checklist</h4>
+                    <div class="checklist-item"><input type="checkbox"><span>System documentation complete</span></div>
+                    <div class="checklist-item"><input type="checkbox"><span>Data governance documented</span></div>
+                    <div class="checklist-item"><input type="checkbox"><span>Risk assessment completed</span></div>
+                    <div class="checklist-item"><input type="checkbox"><span>Security testing done</span></div>
+                    <div class="checklist-item"><input type="checkbox"><span>Governance structure in place</span></div>
+                    <div class="checklist-item"><input type="checkbox"><span>Bias testing completed</span></div>
+                    <div class="checklist-item"><input type="checkbox"><span>Application submitted</span></div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <div class="sticky-bar">
+        <span class="sticky-message">Get CASA certified and demonstrate AI safety commitment.</span>
+        <a href="contact.html" class="btn">Start Now</a>
+    </div>
+
+    <div class="cookie-banner" id="cookieBanner">
+        <p class="cookie-text">We use cookies to enhance your experience.</p>
+        <div class="cookie-buttons">
+            <button class="cookie-accept" onclick="closeCookieBanner()">Accept</button>
+            <button class="cookie-decline" onclick="closeCookieBanner()">Decline</button>
+        </div>
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+
+    
+<footer style="background:var(--dark);border-top:3px solid var(--accent);padding:4rem 0 2rem;margin-top:4rem;position:relative;z-index:1">
+<div class="container">
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;gap:2rem;margin-bottom:3rem">
+    <div>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,#D4A843,#E8B76D);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CSOAI</span>
+      </div>
+      <p style="color:rgba(232,228,240,.6);font-size:.9rem;line-height:1.6;margin-bottom:1rem">The global standard for AI safety. Institutional governance through the 52-article charter and Byzantine consensus.</p>
+      <div style="display:flex;gap:.75rem"><a aria-label="CSOAI on X" href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">𝕏</a><a aria-label="CSOAI on LinkedIn" href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">in</a><a aria-label="CSOAI on YouTube" href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">▶</a></div>
+    </div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Standards</h4><a href="charter.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Charter</a><a href="crosswalks.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Crosswalks</a><a href="guides.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Guides</a><a href="glossary.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Glossary</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Products</h4>
+      <a href="mcp-packs.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Premium Packs</a>
+      <a href="finance.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Agentic Finance</a>
+      <a href="legacy.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Legacy Bridge</a>
+      <a href="governance.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Global Mesh</a>
+      <a href="certification.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">CASA Certification</a>
+      <a href="enterprise.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Enterprise</a>
+      <a href="advisory.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Advisory</a>
+      <a href="pricing.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Pricing</a>
+    </div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Ecosystem</h4><a href="https://meok.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">MEOK.AI</a><a href="https://cobolbridge.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">CobolBridge</a><a href="mcp-infrastructure.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">207 MCP Servers</a><a href="https://github.com/csoai-org" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">GitHub (518 repos)</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Company</h4><a href="about.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">About</a><a href="case-studies.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Case Studies</a><a href="blog.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Blog</a><a href="contact.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Contact</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Account</h4><a href="dashboard.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Dashboard</a><a href="faq.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">FAQ</a><a href="resources.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Resources</a><a href="api-docs.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">API Docs</a><a href="status.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">System Status</a></div>
+  </div>
+  <div style="border-top:1px solid rgba(212,168,67,.1);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+    <p style="color:rgba(232,228,240,.4);font-size:.8rem">&copy; 2026 CSOAI — The Global Standard for AI Safety. Powered by <a href="https://meok.ai" style="color:rgba(232,228,240,.4);text-decoration:none">MEOK AI Labs</a>. All rights reserved.</p>
+    <div style="display:flex;gap:1.5rem"><a href="privacy.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Privacy</a><a href="terms.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Terms</a><a href="cookies.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Cookies</a></div>
+  </div>
+</div>
+</footer>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "How to Get CASA Certified",
+        "step": [
+            {"@type": "HowToStep", "position": 1, "name": "Choose Certification Level"},
+            {"@type": "HowToStep", "position": 2, "name": "Prepare Documentation"},
+            {"@type": "HowToStep", "position": 3, "name": "Submit Application"},
+            {"@type": "HowToStep", "position": 4, "name": "Security Testing"},
+            {"@type": "HowToStep", "position": 5, "name": "Receive Certification"}
+        ]
+    }
+    </script>
+
+    <script>
+        // Progress bar
+        window.addEventListener('scroll', function() {
+            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (window.scrollY / windowHeight) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Back to top button
+        window.addEventListener('scroll', function() {
+            const backToTopBtn = document.getElementById('backToTop');
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function closeCookieBanner() {
+            document.getElementById('cookieBanner').style.animation = 'slideUp 0.5s ease forwards';
+            setTimeout(() => document.getElementById('cookieBanner').remove(), 500);
+            localStorage.setItem('csoai-cookie-consent', 'true');
+        }
+    </script>
+
+<script>
+    if (localStorage.getItem('csoai-cookie-consent') === 'true') {
+        const banner = document.getElementById('cookieBanner');
+        if (banner) banner.style.display = 'none';
+    }
+</script>
+</body>
+</html>

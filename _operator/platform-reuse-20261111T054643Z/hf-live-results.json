@@ -1,0 +1,1255 @@
+{
+  "at": "2026-11-11T05:48:38.677716+00:00",
+  "source_before": "afdb579fa778a2f967d975fb5235d656077b0dd7",
+  "source_after": "afdb579fa778a2f967d975fb5235d656077b0dd7",
+  "source_unchanged": true,
+  "results": [
+    {
+      "label": "hf-status-before",
+      "api": "lab_status",
+      "input": [],
+      "state": "complete",
+      "response": [
+        "{\n  \"cosmos_adapter\": {\n    \"actual_updates\": 12,\n    \"admission\": \"REJECTED_FOR_PROMOTION_CONSTANT_HOLD_OUTPUT\",\n    \"after_correct\": 5,\n    \"before_correct\": 3,\n    \"job\": \"csoai/6af283e79737d9a9e08ecbaa\",\n    \"loaded_into_serving_model\": false,\n    \"majority_count\": 5,\n    \"n\": 8\n  },\n  \"domain\": \"synthetic procurement transitions only\",\n  \"external_action_authority\": false,\n  \"gspc_snapshot\": {\n    \"count\": 34,\n    \"retrieved_at\": \"2026-11-10T02:56:55.790067+00:00\",\n    \"sha256\": \"e19300ad4f9f635c760aa3fd29260cfc833613d5b3972811db4dcdca90731e7c\",\n    \"source\": \"https://councilof.ai/api/gspc\"\n  },\n  \"memory_persistence\": \"none; export returned records explicitly\",\n  \"parameters\": 980,\n  \"photonic_hardware\": false,\n  \"process_model\": \"csoai/meok-process-world-v0\",\n  \"process_model_revision\": \"90d6aa6c87629b9f4296142ba2019247b51686c4\",\n  \"process_weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\",\n  \"proof_scope\": \"Research tools; not a general world model or whole-system certification\",\n  \"quantum_hardware\": false,\n  \"version\": \"2026-11-10.1\"\n}"
+      ],
+      "parsed": {
+        "cosmos_adapter": {
+          "actual_updates": 12,
+          "admission": "REJECTED_FOR_PROMOTION_CONSTANT_HOLD_OUTPUT",
+          "after_correct": 5,
+          "before_correct": 3,
+          "job": "csoai/6af283e79737d9a9e08ecbaa",
+          "loaded_into_serving_model": false,
+          "majority_count": 5,
+          "n": 8
+        },
+        "domain": "synthetic procurement transitions only",
+        "external_action_authority": false,
+        "gspc_snapshot": {
+          "count": 34,
+          "retrieved_at": "2026-11-10T02:56:55.790067+00:00",
+          "sha256": "e19300ad4f9f635c760aa3fd29260cfc833613d5b3972811db4dcdca90731e7c",
+          "source": "https://councilof.ai/api/gspc"
+        },
+        "memory_persistence": "none; export returned records explicitly",
+        "parameters": 980,
+        "photonic_hardware": false,
+        "process_model": "csoai/meok-process-world-v0",
+        "process_model_revision": "90d6aa6c87629b9f4296142ba2019247b51686c4",
+        "process_weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+        "proof_scope": "Research tools; not a general world model or whole-system certification",
+        "quantum_hardware": false,
+        "version": "2026-11-10.1"
+      },
+      "wall_seconds": 0.8349778329998117
+    },
+    {
+      "label": "hf-predict-0-1",
+      "api": "lab_predict_process",
+      "input": [
+        "[0, 0, 0, 1, 0.3, 0.4, 0.3, 0, 1, 1, 0]",
+        true
+      ],
+      "state": "complete",
+      "response": [
+        "{\n  \"authorises_execution\": false,\n  \"compute_seconds\": 0.0002011926844716072,\n  \"evidence_event\": {\n    \"anchors\": {\n      \"ots\": \"none\",\n      \"rekor\": {\n        \"log_index\": null,\n        \"uuid\": null\n      }\n    },\n    \"claim\": {\n      \"read_at\": \"2026-11-11T05:48:28.344619+00:00\",\n      \"source_sha256\": \"409be0dbaeddc57c0dd7f7afaec8eeba8ece80b8fc68492394fb919df68dcc54\",\n      \"text\": \"The named research function returned the hash-bound output for the supplied input.\"\n    },\n    \"declared\": {\n      \"input_sha256\": \"409be0dbaeddc57c0dd7f7afaec8eeba8ece80b8fc68492394fb919df68dcc54\"\n    },\n    \"event_id\": \"sha256:bea40641c30eb53c018e674166db60df72aa03cb2c401d3f648deb25f6bfc6b4\",\n    \"limits\": [\n      \"Unsigned execution record, not independent verification of prediction truth.\",\n      \"No production GSPC admission, action authorisation, signing or training occurs.\",\n      \"Response records are not durably archived by this research tool.\"\n    ],\n    \"maintenance\": null,\n    \"method\": {\n      \"code_sha256\": \"f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34\",\n      \"holder\": \"csoai\",\n      \"id\": \"meok-hf-research/predict_process\",\n      \"version\": \"2026-11-10.1\"\n    },\n    \"negative_control\": {\n      \"expected\": null,\n      \"got\": \"NOT_RUN\",\n      \"id\": null\n    },\n    \"observed\": {\n      \"output_sha256\": \"d7d613871c61f135f480d5f36cb641b3c494fe69802e2fdf0f2a363759bb83c2\"\n    },\n    \"schema\": \"csoai.evidence-event/0.1\",\n    \"signature\": null,\n    \"state\": \"PARTIAL\",\n    \"subject\": {\n      \"kind\": \"model_run\",\n      \"locator\": \"urn:meok:research-call:61442531-98c9-4c16-9420-019be2d3f77f\"\n    },\n    \"supersedes\": null,\n    \"value\": null\n  },\n  \"gspc_admitted\": false,\n  \"known_expiry_rule_applied\": false,\n  \"prediction\": [\n    0.2946643557481588,\n    0.399647985422912,\n    0.30568765882892907,\n    0.0\n  ],\n  \"raw_prediction\": [\n    0.2933720601730284,\n    0.3978952680918304,\n    0.3043470188730933,\n    -0.0008985360223439376\n  ],\n  \"state\": \"MODEL_PREDICTION_NOT_OBSERVED\",\n  \"synthetic_domain_only\": true,\n  \"weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\"\n}"
+      ],
+      "parsed": {
+        "authorises_execution": false,
+        "compute_seconds": 0.0002011926844716072,
+        "evidence_event": {
+          "anchors": {
+            "ots": "none",
+            "rekor": {
+              "log_index": null,
+              "uuid": null
+            }
+          },
+          "claim": {
+            "read_at": "2026-11-11T05:48:28.344619+00:00",
+            "source_sha256": "409be0dbaeddc57c0dd7f7afaec8eeba8ece80b8fc68492394fb919df68dcc54",
+            "text": "The named research function returned the hash-bound output for the supplied input."
+          },
+          "declared": {
+            "input_sha256": "409be0dbaeddc57c0dd7f7afaec8eeba8ece80b8fc68492394fb919df68dcc54"
+          },
+          "event_id": "sha256:bea40641c30eb53c018e674166db60df72aa03cb2c401d3f648deb25f6bfc6b4",
+          "limits": [
+            "Unsigned execution record, not independent verification of prediction truth.",
+            "No production GSPC admission, action authorisation, signing or training occurs.",
+            "Response records are not durably archived by this research tool."
+          ],
+          "maintenance": null,
+          "method": {
+            "code_sha256": "f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34",
+            "holder": "csoai",
+            "id": "meok-hf-research/predict_process",
+            "version": "2026-11-10.1"
+          },
+          "negative_control": {
+            "expected": null,
+            "got": "NOT_RUN",
+            "id": null
+          },
+          "observed": {
+            "output_sha256": "d7d613871c61f135f480d5f36cb641b3c494fe69802e2fdf0f2a363759bb83c2"
+          },
+          "schema": "csoai.evidence-event/0.1",
+          "signature": null,
+          "state": "PARTIAL",
+          "subject": {
+            "kind": "model_run",
+            "locator": "urn:meok:research-call:61442531-98c9-4c16-9420-019be2d3f77f"
+          },
+          "supersedes": null,
+          "value": null
+        },
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.2946643557481588,
+          0.399647985422912,
+          0.30568765882892907,
+          0.0
+        ],
+        "raw_prediction": [
+          0.2933720601730284,
+          0.3978952680918304,
+          0.3043470188730933,
+          -0.0008985360223439376
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      },
+      "wall_seconds": 0.7999843749998945
+    },
+    {
+      "label": "hf-predict-1-1",
+      "api": "lab_predict_process",
+      "input": [
+        "[0.3, 0.4, 0.3, 0, 0.3, 0.4, 0.3, 1, 0.5, 1, 0.25]",
+        true
+      ],
+      "state": "complete",
+      "response": [
+        "{\n  \"authorises_execution\": false,\n  \"compute_seconds\": 0.00017746584489941597,\n  \"evidence_event\": {\n    \"anchors\": {\n      \"ots\": \"none\",\n      \"rekor\": {\n        \"log_index\": null,\n        \"uuid\": null\n      }\n    },\n    \"claim\": {\n      \"read_at\": \"2026-11-11T05:48:29.139119+00:00\",\n      \"source_sha256\": \"312270f270ae91e5fd9fc9bb20c596e0164a4806a11e1c47b2b8639937edcb42\",\n      \"text\": \"The named research function returned the hash-bound output for the supplied input.\"\n    },\n    \"declared\": {\n      \"input_sha256\": \"312270f270ae91e5fd9fc9bb20c596e0164a4806a11e1c47b2b8639937edcb42\"\n    },\n    \"event_id\": \"sha256:34536f851dfc995adb53a290144d466d8e42b1f654e78d0e27f9fed4cae01879\",\n    \"limits\": [\n      \"Unsigned execution record, not independent verification of prediction truth.\",\n      \"No production GSPC admission, action authorisation, signing or training occurs.\",\n      \"Response records are not durably archived by this research tool.\"\n    ],\n    \"maintenance\": null,\n    \"method\": {\n      \"code_sha256\": \"f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34\",\n      \"holder\": \"csoai\",\n      \"id\": \"meok-hf-research/predict_process\",\n      \"version\": \"2026-11-10.1\"\n    },\n    \"negative_control\": {\n      \"expected\": null,\n      \"got\": \"NOT_RUN\",\n      \"id\": null\n    },\n    \"observed\": {\n      \"output_sha256\": \"1bbe7ef33109c1a423a6f75ce71e7f62439074d549a44bde063a8aac78a289cd\"\n    },\n    \"schema\": \"csoai.evidence-event/0.1\",\n    \"signature\": null,\n    \"state\": \"PARTIAL\",\n    \"subject\": {\n      \"kind\": \"model_run\",\n      \"locator\": \"urn:meok:research-call:f18debe0-af03-42db-b57d-9269592c0d01\"\n    },\n    \"supersedes\": null,\n    \"value\": null\n  },\n  \"gspc_admitted\": false,\n  \"known_expiry_rule_applied\": false,\n  \"prediction\": [\n    0.00985173032526002,\n    0.6833685528429794,\n    0.30677971683176064,\n    0.0\n  ],\n  \"raw_prediction\": [\n    0.009842302953029958,\n    0.6827146200306436,\n    0.30648615148966124,\n    -0.0005293465617385168\n  ],\n  \"state\": \"MODEL_PREDICTION_NOT_OBSERVED\",\n  \"synthetic_domain_only\": true,\n  \"weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\"\n}"
+      ],
+      "parsed": {
+        "authorises_execution": false,
+        "compute_seconds": 0.00017746584489941597,
+        "evidence_event": {
+          "anchors": {
+            "ots": "none",
+            "rekor": {
+              "log_index": null,
+              "uuid": null
+            }
+          },
+          "claim": {
+            "read_at": "2026-11-11T05:48:29.139119+00:00",
+            "source_sha256": "312270f270ae91e5fd9fc9bb20c596e0164a4806a11e1c47b2b8639937edcb42",
+            "text": "The named research function returned the hash-bound output for the supplied input."
+          },
+          "declared": {
+            "input_sha256": "312270f270ae91e5fd9fc9bb20c596e0164a4806a11e1c47b2b8639937edcb42"
+          },
+          "event_id": "sha256:34536f851dfc995adb53a290144d466d8e42b1f654e78d0e27f9fed4cae01879",
+          "limits": [
+            "Unsigned execution record, not independent verification of prediction truth.",
+            "No production GSPC admission, action authorisation, signing or training occurs.",
+            "Response records are not durably archived by this research tool."
+          ],
+          "maintenance": null,
+          "method": {
+            "code_sha256": "f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34",
+            "holder": "csoai",
+            "id": "meok-hf-research/predict_process",
+            "version": "2026-11-10.1"
+          },
+          "negative_control": {
+            "expected": null,
+            "got": "NOT_RUN",
+            "id": null
+          },
+          "observed": {
+            "output_sha256": "1bbe7ef33109c1a423a6f75ce71e7f62439074d549a44bde063a8aac78a289cd"
+          },
+          "schema": "csoai.evidence-event/0.1",
+          "signature": null,
+          "state": "PARTIAL",
+          "subject": {
+            "kind": "model_run",
+            "locator": "urn:meok:research-call:f18debe0-af03-42db-b57d-9269592c0d01"
+          },
+          "supersedes": null,
+          "value": null
+        },
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.00985173032526002,
+          0.6833685528429794,
+          0.30677971683176064,
+          0.0
+        ],
+        "raw_prediction": [
+          0.009842302953029958,
+          0.6827146200306436,
+          0.30648615148966124,
+          -0.0005293465617385168
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      },
+      "wall_seconds": 0.7919285419998232
+    },
+    {
+      "label": "hf-predict-2-1",
+      "api": "lab_predict_process",
+      "input": [
+        "[0.2, 0.5, 0.3, 0, 0.2, 0.5, 0.3, 0, 0, 1, 0.5]",
+        true
+      ],
+      "state": "complete",
+      "response": [
+        "{\n  \"authorises_execution\": false,\n  \"compute_seconds\": 0.00022245477885007858,\n  \"evidence_event\": {\n    \"anchors\": {\n      \"ots\": \"none\",\n      \"rekor\": {\n        \"log_index\": null,\n        \"uuid\": null\n      }\n    },\n    \"claim\": {\n      \"read_at\": \"2026-11-11T05:48:29.935152+00:00\",\n      \"source_sha256\": \"6707c5818fdd209bce192ef438d84900e8764461e9a5f8ae5185a513de74c5e2\",\n      \"text\": \"The named research function returned the hash-bound output for the supplied input.\"\n    },\n    \"declared\": {\n      \"input_sha256\": \"6707c5818fdd209bce192ef438d84900e8764461e9a5f8ae5185a513de74c5e2\"\n    },\n    \"event_id\": \"sha256:0a2c527ca28f218a14e098eea0f27e205b7e2224e269928bd310906c6e389ad2\",\n    \"limits\": [\n      \"Unsigned execution record, not independent verification of prediction truth.\",\n      \"No production GSPC admission, action authorisation, signing or training occurs.\",\n      \"Response records are not durably archived by this research tool.\"\n    ],\n    \"maintenance\": null,\n    \"method\": {\n      \"code_sha256\": \"f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34\",\n      \"holder\": \"csoai\",\n      \"id\": \"meok-hf-research/predict_process\",\n      \"version\": \"2026-11-10.1\"\n    },\n    \"negative_control\": {\n      \"expected\": null,\n      \"got\": \"NOT_RUN\",\n      \"id\": null\n    },\n    \"observed\": {\n      \"output_sha256\": \"427e30a3a4a8f3762ddf74a345cc991d3e0b7de876462bbe48c0c761c2135c96\"\n    },\n    \"schema\": \"csoai.evidence-event/0.1\",\n    \"signature\": null,\n    \"state\": \"PARTIAL\",\n    \"subject\": {\n      \"kind\": \"model_run\",\n      \"locator\": \"urn:meok:research-call:3896931c-1ac9-4a2e-b32e-73db84b0cfd8\"\n    },\n    \"supersedes\": null,\n    \"value\": null\n  },\n  \"gspc_admitted\": false,\n  \"known_expiry_rule_applied\": true,\n  \"prediction\": [\n    0.2,\n    0.5,\n    0.3,\n    0\n  ],\n  \"raw_prediction\": [\n    0.2092148848206153,\n    0.4893526199911915,\n    0.3005755418316313,\n    -0.002224502715848675\n  ],\n  \"state\": \"MODEL_PREDICTION_NOT_OBSERVED\",\n  \"synthetic_domain_only\": true,\n  \"weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\"\n}"
+      ],
+      "parsed": {
+        "authorises_execution": false,
+        "compute_seconds": 0.00022245477885007858,
+        "evidence_event": {
+          "anchors": {
+            "ots": "none",
+            "rekor": {
+              "log_index": null,
+              "uuid": null
+            }
+          },
+          "claim": {
+            "read_at": "2026-11-11T05:48:29.935152+00:00",
+            "source_sha256": "6707c5818fdd209bce192ef438d84900e8764461e9a5f8ae5185a513de74c5e2",
+            "text": "The named research function returned the hash-bound output for the supplied input."
+          },
+          "declared": {
+            "input_sha256": "6707c5818fdd209bce192ef438d84900e8764461e9a5f8ae5185a513de74c5e2"
+          },
+          "event_id": "sha256:0a2c527ca28f218a14e098eea0f27e205b7e2224e269928bd310906c6e389ad2",
+          "limits": [
+            "Unsigned execution record, not independent verification of prediction truth.",
+            "No production GSPC admission, action authorisation, signing or training occurs.",
+            "Response records are not durably archived by this research tool."
+          ],
+          "maintenance": null,
+          "method": {
+            "code_sha256": "f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34",
+            "holder": "csoai",
+            "id": "meok-hf-research/predict_process",
+            "version": "2026-11-10.1"
+          },
+          "negative_control": {
+            "expected": null,
+            "got": "NOT_RUN",
+            "id": null
+          },
+          "observed": {
+            "output_sha256": "427e30a3a4a8f3762ddf74a345cc991d3e0b7de876462bbe48c0c761c2135c96"
+          },
+          "schema": "csoai.evidence-event/0.1",
+          "signature": null,
+          "state": "PARTIAL",
+          "subject": {
+            "kind": "model_run",
+            "locator": "urn:meok:research-call:3896931c-1ac9-4a2e-b32e-73db84b0cfd8"
+          },
+          "supersedes": null,
+          "value": null
+        },
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": true,
+        "prediction": [
+          0.2,
+          0.5,
+          0.3,
+          0
+        ],
+        "raw_prediction": [
+          0.2092148848206153,
+          0.4893526199911915,
+          0.3005755418316313,
+          -0.002224502715848675
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      },
+      "wall_seconds": 0.7923490829998627
+    },
+    {
+      "label": "hf-predict-3-1",
+      "api": "lab_predict_process",
+      "input": [
+        "[0, 0, 0, 1, 0.3, 0.4, 0.3, 1, 0.125, 0, 0.75]",
+        true
+      ],
+      "state": "complete",
+      "response": [
+        "{\n  \"authorises_execution\": false,\n  \"compute_seconds\": 0.00015676673501729965,\n  \"evidence_event\": {\n    \"anchors\": {\n      \"ots\": \"none\",\n      \"rekor\": {\n        \"log_index\": null,\n        \"uuid\": null\n      }\n    },\n    \"claim\": {\n      \"read_at\": \"2026-11-11T05:48:30.721659+00:00\",\n      \"source_sha256\": \"34449df6ca6039d07a29ab030a3f6c6053a8a529cd2fa6cdbe0a2900c6b53e7f\",\n      \"text\": \"The named research function returned the hash-bound output for the supplied input.\"\n    },\n    \"declared\": {\n      \"input_sha256\": \"34449df6ca6039d07a29ab030a3f6c6053a8a529cd2fa6cdbe0a2900c6b53e7f\"\n    },\n    \"event_id\": \"sha256:82aa6da1d05c54fb0cf7fed2e6330e0f31b745fbcbb16162e286ba7a8ef5e953\",\n    \"limits\": [\n      \"Unsigned execution record, not independent verification of prediction truth.\",\n      \"No production GSPC admission, action authorisation, signing or training occurs.\",\n      \"Response records are not durably archived by this research tool.\"\n    ],\n    \"maintenance\": null,\n    \"method\": {\n      \"code_sha256\": \"f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34\",\n      \"holder\": \"csoai\",\n      \"id\": \"meok-hf-research/predict_process\",\n      \"version\": \"2026-11-10.1\"\n    },\n    \"negative_control\": {\n      \"expected\": null,\n      \"got\": \"NOT_RUN\",\n      \"id\": null\n    },\n    \"observed\": {\n      \"output_sha256\": \"8e6f8cf5af92f71a963b8276c4f0cff4d26177d173d7b6b4e4bf07755ad5b3f1\"\n    },\n    \"schema\": \"csoai.evidence-event/0.1\",\n    \"signature\": null,\n    \"state\": \"PARTIAL\",\n    \"subject\": {\n      \"kind\": \"model_run\",\n      \"locator\": \"urn:meok:research-call:f9a9c9ee-15e5-4b61-83e6-c8b024eb0c9b\"\n    },\n    \"supersedes\": null,\n    \"value\": null\n  },\n  \"gspc_admitted\": false,\n  \"known_expiry_rule_applied\": false,\n  \"prediction\": [\n    0.30660743980296223,\n    0.4274122612685315,\n    0.2538619575282646,\n    0.012118341400241556\n  ],\n  \"raw_prediction\": [\n    0.26346569700643274,\n    0.36727246213130293,\n    0.21814186122353668,\n    0.01041320871283602\n  ],\n  \"state\": \"MODEL_PREDICTION_NOT_OBSERVED\",\n  \"synthetic_domain_only\": true,\n  \"weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\"\n}"
+      ],
+      "parsed": {
+        "authorises_execution": false,
+        "compute_seconds": 0.00015676673501729965,
+        "evidence_event": {
+          "anchors": {
+            "ots": "none",
+            "rekor": {
+              "log_index": null,
+              "uuid": null
+            }
+          },
+          "claim": {
+            "read_at": "2026-11-11T05:48:30.721659+00:00",
+            "source_sha256": "34449df6ca6039d07a29ab030a3f6c6053a8a529cd2fa6cdbe0a2900c6b53e7f",
+            "text": "The named research function returned the hash-bound output for the supplied input."
+          },
+          "declared": {
+            "input_sha256": "34449df6ca6039d07a29ab030a3f6c6053a8a529cd2fa6cdbe0a2900c6b53e7f"
+          },
+          "event_id": "sha256:82aa6da1d05c54fb0cf7fed2e6330e0f31b745fbcbb16162e286ba7a8ef5e953",
+          "limits": [
+            "Unsigned execution record, not independent verification of prediction truth.",
+            "No production GSPC admission, action authorisation, signing or training occurs.",
+            "Response records are not durably archived by this research tool."
+          ],
+          "maintenance": null,
+          "method": {
+            "code_sha256": "f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34",
+            "holder": "csoai",
+            "id": "meok-hf-research/predict_process",
+            "version": "2026-11-10.1"
+          },
+          "negative_control": {
+            "expected": null,
+            "got": "NOT_RUN",
+            "id": null
+          },
+          "observed": {
+            "output_sha256": "8e6f8cf5af92f71a963b8276c4f0cff4d26177d173d7b6b4e4bf07755ad5b3f1"
+          },
+          "schema": "csoai.evidence-event/0.1",
+          "signature": null,
+          "state": "PARTIAL",
+          "subject": {
+            "kind": "model_run",
+            "locator": "urn:meok:research-call:f9a9c9ee-15e5-4b61-83e6-c8b024eb0c9b"
+          },
+          "supersedes": null,
+          "value": null
+        },
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.30660743980296223,
+          0.4274122612685315,
+          0.2538619575282646,
+          0.012118341400241556
+        ],
+        "raw_prediction": [
+          0.26346569700643274,
+          0.36727246213130293,
+          0.21814186122353668,
+          0.01041320871283602
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      },
+      "wall_seconds": 0.7946780000002036
+    },
+    {
+      "label": "hf-predict-0-0",
+      "api": "lab_predict_process",
+      "input": [
+        "[0, 0, 0, 1, 0.3, 0.4, 0.3, 0, 1, 1, 0]",
+        false
+      ],
+      "state": "complete",
+      "response": [
+        "{\n  \"authorises_execution\": false,\n  \"compute_seconds\": 0.0001579183153808117,\n  \"evidence_event\": {\n    \"anchors\": {\n      \"ots\": \"none\",\n      \"rekor\": {\n        \"log_index\": null,\n        \"uuid\": null\n      }\n    },\n    \"claim\": {\n      \"read_at\": \"2026-11-11T05:48:31.520076+00:00\",\n      \"source_sha256\": \"f5e173bfcf53bd99caa06497b91217223421caa0c23be0eb66f361d706ca8d72\",\n      \"text\": \"The named research function returned the hash-bound output for the supplied input.\"\n    },\n    \"declared\": {\n      \"input_sha256\": \"f5e173bfcf53bd99caa06497b91217223421caa0c23be0eb66f361d706ca8d72\"\n    },\n    \"event_id\": \"sha256:f89ff8c90006332571123919f5be3d9041f3066e7b966bc41f644778c9695b1b\",\n    \"limits\": [\n      \"Unsigned execution record, not independent verification of prediction truth.\",\n      \"No production GSPC admission, action authorisation, signing or training occurs.\",\n      \"Response records are not durably archived by this research tool.\"\n    ],\n    \"maintenance\": null,\n    \"method\": {\n      \"code_sha256\": \"f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34\",\n      \"holder\": \"csoai\",\n      \"id\": \"meok-hf-research/predict_process\",\n      \"version\": \"2026-11-10.1\"\n    },\n    \"negative_control\": {\n      \"expected\": null,\n      \"got\": \"NOT_RUN\",\n      \"id\": null\n    },\n    \"observed\": {\n      \"output_sha256\": \"5685a370bb9112bc219e63abae2f11e72f4930f094510647e7f29dac1c86113b\"\n    },\n    \"schema\": \"csoai.evidence-event/0.1\",\n    \"signature\": null,\n    \"state\": \"PARTIAL\",\n    \"subject\": {\n      \"kind\": \"model_run\",\n      \"locator\": \"urn:meok:research-call:6d002730-8fa5-45be-b080-105557e0eecb\"\n    },\n    \"supersedes\": null,\n    \"value\": null\n  },\n  \"gspc_admitted\": false,\n  \"known_expiry_rule_applied\": false,\n  \"prediction\": [\n    0.2933720601730284,\n    0.3978952680918304,\n    0.3043470188730933,\n    -0.0008985360223439376\n  ],\n  \"raw_prediction\": [\n    0.2933720601730284,\n    0.3978952680918304,\n    0.3043470188730933,\n    -0.0008985360223439376\n  ],\n  \"state\": \"MODEL_PREDICTION_NOT_OBSERVED\",\n  \"synthetic_domain_only\": true,\n  \"weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\"\n}"
+      ],
+      "parsed": {
+        "authorises_execution": false,
+        "compute_seconds": 0.0001579183153808117,
+        "evidence_event": {
+          "anchors": {
+            "ots": "none",
+            "rekor": {
+              "log_index": null,
+              "uuid": null
+            }
+          },
+          "claim": {
+            "read_at": "2026-11-11T05:48:31.520076+00:00",
+            "source_sha256": "f5e173bfcf53bd99caa06497b91217223421caa0c23be0eb66f361d706ca8d72",
+            "text": "The named research function returned the hash-bound output for the supplied input."
+          },
+          "declared": {
+            "input_sha256": "f5e173bfcf53bd99caa06497b91217223421caa0c23be0eb66f361d706ca8d72"
+          },
+          "event_id": "sha256:f89ff8c90006332571123919f5be3d9041f3066e7b966bc41f644778c9695b1b",
+          "limits": [
+            "Unsigned execution record, not independent verification of prediction truth.",
+            "No production GSPC admission, action authorisation, signing or training occurs.",
+            "Response records are not durably archived by this research tool."
+          ],
+          "maintenance": null,
+          "method": {
+            "code_sha256": "f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34",
+            "holder": "csoai",
+            "id": "meok-hf-research/predict_process",
+            "version": "2026-11-10.1"
+          },
+          "negative_control": {
+            "expected": null,
+            "got": "NOT_RUN",
+            "id": null
+          },
+          "observed": {
+            "output_sha256": "5685a370bb9112bc219e63abae2f11e72f4930f094510647e7f29dac1c86113b"
+          },
+          "schema": "csoai.evidence-event/0.1",
+          "signature": null,
+          "state": "PARTIAL",
+          "subject": {
+            "kind": "model_run",
+            "locator": "urn:meok:research-call:6d002730-8fa5-45be-b080-105557e0eecb"
+          },
+          "supersedes": null,
+          "value": null
+        },
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.2933720601730284,
+          0.3978952680918304,
+          0.3043470188730933,
+          -0.0008985360223439376
+        ],
+        "raw_prediction": [
+          0.2933720601730284,
+          0.3978952680918304,
+          0.3043470188730933,
+          -0.0008985360223439376
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      },
+      "wall_seconds": 0.8089114170002176
+    },
+    {
+      "label": "hf-predict-1-0",
+      "api": "lab_predict_process",
+      "input": [
+        "[0.3, 0.4, 0.3, 0, 0.3, 0.4, 0.3, 1, 0.5, 1, 0.25]",
+        false
+      ],
+      "state": "complete",
+      "response": [
+        "{\n  \"authorises_execution\": false,\n  \"compute_seconds\": 0.00014412915334105492,\n  \"evidence_event\": {\n    \"anchors\": {\n      \"ots\": \"none\",\n      \"rekor\": {\n        \"log_index\": null,\n        \"uuid\": null\n      }\n    },\n    \"claim\": {\n      \"read_at\": \"2026-11-11T05:48:32.352394+00:00\",\n      \"source_sha256\": \"15016ae6f19b439a49c48965b51215a6a40a4a9e356151af757e60ddd657a89c\",\n      \"text\": \"The named research function returned the hash-bound output for the supplied input.\"\n    },\n    \"declared\": {\n      \"input_sha256\": \"15016ae6f19b439a49c48965b51215a6a40a4a9e356151af757e60ddd657a89c\"\n    },\n    \"event_id\": \"sha256:1c850f4f56873a07f958edf625fdc63d38ca8d338d7cc22a49e6599841bca4aa\",\n    \"limits\": [\n      \"Unsigned execution record, not independent verification of prediction truth.\",\n      \"No production GSPC admission, action authorisation, signing or training occurs.\",\n      \"Response records are not durably archived by this research tool.\"\n    ],\n    \"maintenance\": null,\n    \"method\": {\n      \"code_sha256\": \"f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34\",\n      \"holder\": \"csoai\",\n      \"id\": \"meok-hf-research/predict_process\",\n      \"version\": \"2026-11-10.1\"\n    },\n    \"negative_control\": {\n      \"expected\": null,\n      \"got\": \"NOT_RUN\",\n      \"id\": null\n    },\n    \"observed\": {\n      \"output_sha256\": \"615707487ea39811ee0cda43eebcaa1570844dcbaf59f66c72ee698e940df910\"\n    },\n    \"schema\": \"csoai.evidence-event/0.1\",\n    \"signature\": null,\n    \"state\": \"PARTIAL\",\n    \"subject\": {\n      \"kind\": \"model_run\",\n      \"locator\": \"urn:meok:research-call:174ccef3-4710-4246-b502-5413de3b2c9e\"\n    },\n    \"supersedes\": null,\n    \"value\": null\n  },\n  \"gspc_admitted\": false,\n  \"known_expiry_rule_applied\": false,\n  \"prediction\": [\n    0.009842302953029958,\n    0.6827146200306436,\n    0.30648615148966124,\n    -0.0005293465617385168\n  ],\n  \"raw_prediction\": [\n    0.009842302953029958,\n    0.6827146200306436,\n    0.30648615148966124,\n    -0.0005293465617385168\n  ],\n  \"state\": \"MODEL_PREDICTION_NOT_OBSERVED\",\n  \"synthetic_domain_only\": true,\n  \"weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\"\n}"
+      ],
+      "parsed": {
+        "authorises_execution": false,
+        "compute_seconds": 0.00014412915334105492,
+        "evidence_event": {
+          "anchors": {
+            "ots": "none",
+            "rekor": {
+              "log_index": null,
+              "uuid": null
+            }
+          },
+          "claim": {
+            "read_at": "2026-11-11T05:48:32.352394+00:00",
+            "source_sha256": "15016ae6f19b439a49c48965b51215a6a40a4a9e356151af757e60ddd657a89c",
+            "text": "The named research function returned the hash-bound output for the supplied input."
+          },
+          "declared": {
+            "input_sha256": "15016ae6f19b439a49c48965b51215a6a40a4a9e356151af757e60ddd657a89c"
+          },
+          "event_id": "sha256:1c850f4f56873a07f958edf625fdc63d38ca8d338d7cc22a49e6599841bca4aa",
+          "limits": [
+            "Unsigned execution record, not independent verification of prediction truth.",
+            "No production GSPC admission, action authorisation, signing or training occurs.",
+            "Response records are not durably archived by this research tool."
+          ],
+          "maintenance": null,
+          "method": {
+            "code_sha256": "f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34",
+            "holder": "csoai",
+            "id": "meok-hf-research/predict_process",
+            "version": "2026-11-10.1"
+          },
+          "negative_control": {
+            "expected": null,
+            "got": "NOT_RUN",
+            "id": null
+          },
+          "observed": {
+            "output_sha256": "615707487ea39811ee0cda43eebcaa1570844dcbaf59f66c72ee698e940df910"
+          },
+          "schema": "csoai.evidence-event/0.1",
+          "signature": null,
+          "state": "PARTIAL",
+          "subject": {
+            "kind": "model_run",
+            "locator": "urn:meok:research-call:174ccef3-4710-4246-b502-5413de3b2c9e"
+          },
+          "supersedes": null,
+          "value": null
+        },
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.009842302953029958,
+          0.6827146200306436,
+          0.30648615148966124,
+          -0.0005293465617385168
+        ],
+        "raw_prediction": [
+          0.009842302953029958,
+          0.6827146200306436,
+          0.30648615148966124,
+          -0.0005293465617385168
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      },
+      "wall_seconds": 0.8244934580002337
+    },
+    {
+      "label": "hf-predict-2-0",
+      "api": "lab_predict_process",
+      "input": [
+        "[0.2, 0.5, 0.3, 0, 0.2, 0.5, 0.3, 0, 0, 1, 0.5]",
+        false
+      ],
+      "state": "complete",
+      "response": [
+        "{\n  \"authorises_execution\": false,\n  \"compute_seconds\": 0.00016521569341421127,\n  \"evidence_event\": {\n    \"anchors\": {\n      \"ots\": \"none\",\n      \"rekor\": {\n        \"log_index\": null,\n        \"uuid\": null\n      }\n    },\n    \"claim\": {\n      \"read_at\": \"2026-11-11T05:48:33.164571+00:00\",\n      \"source_sha256\": \"7540470aab5e004c8232ce3aca30fc48e3975988b82cffd175c70320165e01df\",\n      \"text\": \"The named research function returned the hash-bound output for the supplied input.\"\n    },\n    \"declared\": {\n      \"input_sha256\": \"7540470aab5e004c8232ce3aca30fc48e3975988b82cffd175c70320165e01df\"\n    },\n    \"event_id\": \"sha256:fd85790fa653c5ebb1fbf7e7a1059619b9d0a9c4cb2242e88c690a0d7806819b\",\n    \"limits\": [\n      \"Unsigned execution record, not independent verification of prediction truth.\",\n      \"No production GSPC admission, action authorisation, signing or training occurs.\",\n      \"Response records are not durably archived by this research tool.\"\n    ],\n    \"maintenance\": null,\n    \"method\": {\n      \"code_sha256\": \"f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34\",\n      \"holder\": \"csoai\",\n      \"id\": \"meok-hf-research/predict_process\",\n      \"version\": \"2026-11-10.1\"\n    },\n    \"negative_control\": {\n      \"expected\": null,\n      \"got\": \"NOT_RUN\",\n      \"id\": null\n    },\n    \"observed\": {\n      \"output_sha256\": \"519c7fc115cf3bda247c8b188fd3bf4457b89b202c1a2a137977a54a740060c3\"\n    },\n    \"schema\": \"csoai.evidence-event/0.1\",\n    \"signature\": null,\n    \"state\": \"PARTIAL\",\n    \"subject\": {\n      \"kind\": \"model_run\",\n      \"locator\": \"urn:meok:research-call:0471abc2-1441-441b-9b39-7837397a5f7a\"\n    },\n    \"supersedes\": null,\n    \"value\": null\n  },\n  \"gspc_admitted\": false,\n  \"known_expiry_rule_applied\": false,\n  \"prediction\": [\n    0.2092148848206153,\n    0.4893526199911915,\n    0.3005755418316313,\n    -0.002224502715848675\n  ],\n  \"raw_prediction\": [\n    0.2092148848206153,\n    0.4893526199911915,\n    0.3005755418316313,\n    -0.002224502715848675\n  ],\n  \"state\": \"MODEL_PREDICTION_NOT_OBSERVED\",\n  \"synthetic_domain_only\": true,\n  \"weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\"\n}"
+      ],
+      "parsed": {
+        "authorises_execution": false,
+        "compute_seconds": 0.00016521569341421127,
+        "evidence_event": {
+          "anchors": {
+            "ots": "none",
+            "rekor": {
+              "log_index": null,
+              "uuid": null
+            }
+          },
+          "claim": {
+            "read_at": "2026-11-11T05:48:33.164571+00:00",
+            "source_sha256": "7540470aab5e004c8232ce3aca30fc48e3975988b82cffd175c70320165e01df",
+            "text": "The named research function returned the hash-bound output for the supplied input."
+          },
+          "declared": {
+            "input_sha256": "7540470aab5e004c8232ce3aca30fc48e3975988b82cffd175c70320165e01df"
+          },
+          "event_id": "sha256:fd85790fa653c5ebb1fbf7e7a1059619b9d0a9c4cb2242e88c690a0d7806819b",
+          "limits": [
+            "Unsigned execution record, not independent verification of prediction truth.",
+            "No production GSPC admission, action authorisation, signing or training occurs.",
+            "Response records are not durably archived by this research tool."
+          ],
+          "maintenance": null,
+          "method": {
+            "code_sha256": "f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34",
+            "holder": "csoai",
+            "id": "meok-hf-research/predict_process",
+            "version": "2026-11-10.1"
+          },
+          "negative_control": {
+            "expected": null,
+            "got": "NOT_RUN",
+            "id": null
+          },
+          "observed": {
+            "output_sha256": "519c7fc115cf3bda247c8b188fd3bf4457b89b202c1a2a137977a54a740060c3"
+          },
+          "schema": "csoai.evidence-event/0.1",
+          "signature": null,
+          "state": "PARTIAL",
+          "subject": {
+            "kind": "model_run",
+            "locator": "urn:meok:research-call:0471abc2-1441-441b-9b39-7837397a5f7a"
+          },
+          "supersedes": null,
+          "value": null
+        },
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.2092148848206153,
+          0.4893526199911915,
+          0.3005755418316313,
+          -0.002224502715848675
+        ],
+        "raw_prediction": [
+          0.2092148848206153,
+          0.4893526199911915,
+          0.3005755418316313,
+          -0.002224502715848675
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      },
+      "wall_seconds": 0.8274426670000139
+    },
+    {
+      "label": "hf-predict-3-0",
+      "api": "lab_predict_process",
+      "input": [
+        "[0, 0, 0, 1, 0.3, 0.4, 0.3, 1, 0.125, 0, 0.75]",
+        false
+      ],
+      "state": "complete",
+      "response": [
+        "{\n  \"authorises_execution\": false,\n  \"compute_seconds\": 0.00014901673421263695,\n  \"evidence_event\": {\n    \"anchors\": {\n      \"ots\": \"none\",\n      \"rekor\": {\n        \"log_index\": null,\n        \"uuid\": null\n      }\n    },\n    \"claim\": {\n      \"read_at\": \"2026-11-11T05:48:33.998786+00:00\",\n      \"source_sha256\": \"e93187ec5f743ef55a79c016debf591d498bf7e59e294118d9e2997224eb3424\",\n      \"text\": \"The named research function returned the hash-bound output for the supplied input.\"\n    },\n    \"declared\": {\n      \"input_sha256\": \"e93187ec5f743ef55a79c016debf591d498bf7e59e294118d9e2997224eb3424\"\n    },\n    \"event_id\": \"sha256:527051b1dce79b7a88c3226644c8b4f713e4bb721eeca7a44927682d25e905e1\",\n    \"limits\": [\n      \"Unsigned execution record, not independent verification of prediction truth.\",\n      \"No production GSPC admission, action authorisation, signing or training occurs.\",\n      \"Response records are not durably archived by this research tool.\"\n    ],\n    \"maintenance\": null,\n    \"method\": {\n      \"code_sha256\": \"f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34\",\n      \"holder\": \"csoai\",\n      \"id\": \"meok-hf-research/predict_process\",\n      \"version\": \"2026-11-10.1\"\n    },\n    \"negative_control\": {\n      \"expected\": null,\n      \"got\": \"NOT_RUN\",\n      \"id\": null\n    },\n    \"observed\": {\n      \"output_sha256\": \"157710d41519d126def2fec9badb70b5fd201c1fa9e20ae31d81eccfcbb3cc76\"\n    },\n    \"schema\": \"csoai.evidence-event/0.1\",\n    \"signature\": null,\n    \"state\": \"PARTIAL\",\n    \"subject\": {\n      \"kind\": \"model_run\",\n      \"locator\": \"urn:meok:research-call:0c35f778-1d60-4f6c-91fe-6245ca681fc9\"\n    },\n    \"supersedes\": null,\n    \"value\": null\n  },\n  \"gspc_admitted\": false,\n  \"known_expiry_rule_applied\": false,\n  \"prediction\": [\n    0.26346569700643274,\n    0.36727246213130293,\n    0.21814186122353668,\n    0.01041320871283602\n  ],\n  \"raw_prediction\": [\n    0.26346569700643274,\n    0.36727246213130293,\n    0.21814186122353668,\n    0.01041320871283602\n  ],\n  \"state\": \"MODEL_PREDICTION_NOT_OBSERVED\",\n  \"synthetic_domain_only\": true,\n  \"weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\"\n}"
+      ],
+      "parsed": {
+        "authorises_execution": false,
+        "compute_seconds": 0.00014901673421263695,
+        "evidence_event": {
+          "anchors": {
+            "ots": "none",
+            "rekor": {
+              "log_index": null,
+              "uuid": null
+            }
+          },
+          "claim": {
+            "read_at": "2026-11-11T05:48:33.998786+00:00",
+            "source_sha256": "e93187ec5f743ef55a79c016debf591d498bf7e59e294118d9e2997224eb3424",
+            "text": "The named research function returned the hash-bound output for the supplied input."
+          },
+          "declared": {
+            "input_sha256": "e93187ec5f743ef55a79c016debf591d498bf7e59e294118d9e2997224eb3424"
+          },
+          "event_id": "sha256:527051b1dce79b7a88c3226644c8b4f713e4bb721eeca7a44927682d25e905e1",
+          "limits": [
+            "Unsigned execution record, not independent verification of prediction truth.",
+            "No production GSPC admission, action authorisation, signing or training occurs.",
+            "Response records are not durably archived by this research tool."
+          ],
+          "maintenance": null,
+          "method": {
+            "code_sha256": "f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34",
+            "holder": "csoai",
+            "id": "meok-hf-research/predict_process",
+            "version": "2026-11-10.1"
+          },
+          "negative_control": {
+            "expected": null,
+            "got": "NOT_RUN",
+            "id": null
+          },
+          "observed": {
+            "output_sha256": "157710d41519d126def2fec9badb70b5fd201c1fa9e20ae31d81eccfcbb3cc76"
+          },
+          "schema": "csoai.evidence-event/0.1",
+          "signature": null,
+          "state": "PARTIAL",
+          "subject": {
+            "kind": "model_run",
+            "locator": "urn:meok:research-call:0c35f778-1d60-4f6c-91fe-6245ca681fc9"
+          },
+          "supersedes": null,
+          "value": null
+        },
+        "gspc_admitted": false,
+        "known_expiry_rule_applied": false,
+        "prediction": [
+          0.26346569700643274,
+          0.36727246213130293,
+          0.21814186122353668,
+          0.01041320871283602
+        ],
+        "raw_prediction": [
+          0.26346569700643274,
+          0.36727246213130293,
+          0.21814186122353668,
+          0.01041320871283602
+        ],
+        "state": "MODEL_PREDICTION_NOT_OBSERVED",
+        "synthetic_domain_only": true,
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b"
+      },
+      "wall_seconds": 0.8085060000003068
+    },
+    {
+      "label": "hf-predict-invalid",
+      "api": "lab_predict_process",
+      "input": [
+        "[0]",
+        true
+      ],
+      "state": "error",
+      "response": {
+        "error": "Expected 11 finite numeric features",
+        "duration": 10,
+        "visible": true,
+        "title": "Error"
+      },
+      "wall_seconds": 0.7938638750001701
+    },
+    {
+      "label": "hf-memory-17",
+      "api": "lab_memory_venturi",
+      "input": [
+        17,
+        80
+      ],
+      "state": "complete",
+      "response": [
+        "{\n  \"cache_experiment\": {\n    \"actual_model_calls\": 0,\n    \"private_data_read\": false,\n    \"production_cache_changed\": false,\n    \"rows\": [\n      {\n        \"accepted\": 107,\n        \"cache_hits\": 0,\n        \"correct_accepted\": 107,\n        \"eager_invalidations\": 0,\n        \"p50_seconds\": 0.00018900539726018906,\n        \"p95_seconds\": 0.00021244166418910027,\n        \"provider_computations\": 107,\n        \"refused\": 13,\n        \"requests\": 120,\n        \"seconds_per_correct_accepted\": 0.0001937464558493311,\n        \"stale_or_forbidden_returns\": 0,\n        \"strategy\": \"always_fresh\",\n        \"wall_seconds\": 0.02073087077587843\n      },\n      {\n        \"accepted\": 116,\n        \"cache_hits\": 93,\n        \"correct_accepted\": 72,\n        \"eager_invalidations\": 0,\n        \"p50_seconds\": 1.4712568372488022e-06,\n        \"p95_seconds\": 0.0002022506669163704,\n        \"provider_computations\": 23,\n        \"refused\": 4,\n        \"requests\": 120,\n        \"seconds_per_correct_accepted\": 6.509907284958495e-05,\n        \"stale_or_forbidden_returns\": 44,\n        \"strategy\": \"query_only_unsafe\",\n        \"wall_seconds\": 0.004687133245170116\n      },\n      {\n        \"accepted\": 107,\n        \"cache_hits\": 73,\n        \"correct_accepted\": 107,\n        \"eager_invalidations\": 0,\n        \"p50_seconds\": 4.498381167650223e-05,\n        \"p95_seconds\": 0.0002816310152411461,\n        \"provider_computations\": 34,\n        \"refused\": 13,\n        \"requests\": 120,\n        \"seconds_per_correct_accepted\": 0.00011881754220089066,\n        \"stale_or_forbidden_returns\": 0,\n        \"strategy\": \"revision_lazy\",\n        \"wall_seconds\": 0.0127134770154953\n      },\n      {\n        \"accepted\": 107,\n        \"cache_hits\": 60,\n        \"correct_accepted\": 107,\n        \"eager_invalidations\": 31,\n        \"p50_seconds\": 6.056902930140495e-05,\n        \"p95_seconds\": 0.0003164769150316715,\n        \"provider_computations\": 47,\n        \"refused\": 13,\n        \"requests\": 120,\n        \"seconds_per_correct_accepted\": 0.00014911338286561387,\n        \"stale_or_forbidden_returns\": 0,\n        \"strategy\": \"revision_eager\",\n        \"wall_seconds\": 0.015955131966620684\n      }\n    ],\n    \"scope\": \"SYNTHETIC_CACHE_REHEARSAL\",\n    \"training\": false,\n    \"version\": \"0.1.0\",\n    \"warning\": \"A hit reuses output bytes, not authority. Callback authentication and source truth remain host responsibilities; timings are CPU fixtures, not Cosmos speedups.\"\n  },\n  \"canonical_gspc_admission\": false,\n  \"evidence_event\": {\n    \"anchors\": {\n      \"ots\": \"none\",\n      \"rekor\": {\n        \"log_index\": null,\n        \"uuid\": null\n      }\n    },\n    \"claim\": {\n      \"read_at\": \"2026-11-11T05:48:35.773096+00:00\",\n      \"source_sha256\": \"e0780b4d01e40a1ce29263d3f08256a412f732f4675bbfa8ed10bfeb5343385e\",\n      \"text\": \"The named research function returned the hash-bound output for the supplied input.\"\n    },\n    \"declared\": {\n      \"input_sha256\": \"e0780b4d01e40a1ce29263d3f08256a412f732f4675bbfa8ed10bfeb5343385e\"\n    },\n    \"event_id\": \"sha256:b380a15455b6519aad0897a782fd95d22c7a6c196d465149c24ef3f9b6ab5529\",\n    \"limits\": [\n      \"Unsigned execution record, not independent verification of prediction truth.\",\n      \"No production GSPC admission, action authorisation, signing or training occurs.\",\n      \"Response records are not durably archived by this research tool.\"\n    ],\n    \"maintenance\": null,\n    \"method\": {\n      \"code_sha256\": \"f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34\",\n      \"holder\": \"csoai\",\n      \"id\": \"meok-hf-research/memory_venturi_rehearsal\",\n      \"version\": \"2026-11-10.1\"\n    },\n    \"negative_control\": {\n      \"expected\": null,\n      \"got\": \"NOT_RUN\",\n      \"id\": null\n    },\n    \"observed\": {\n      \"output_sha256\": \"8eeada7d09bcf376acceb6bdbaa36521ee6b731b8f6005f5f00e15c6a30abbce\"\n    },\n    \"schema\": \"csoai.evidence-event/0.1\",\n    \"signature\": null,\n    \"state\": \"PARTIAL\",\n    \"subject\": {\n      \"kind\": \"sandbox_run\",\n      \"locator\": \"urn:meok:research-call:346f4d91-4eed-401e-bbcf-0aa7d13190fc\"\n    },\n    \"supersedes\": null,\n    \"value\": null\n  },\n  \"limitations\": [\n    \"Trusted callbacks are fixtures here, not real-user authentication.\",\n    \"Production adoption still needs the authoritative source/version and access adapter.\",\n    \"Cached output is not cached action permission, and a hash is not a correctness proof.\"\n  ],\n  \"llm_inference_calls\": 0,\n  \"memory_backend\": \"temporary derived SQLite, destroyed after this rehearsal\",\n  \"production_routes_changed\": false,\n  \"trained_process_replay\": {\n    \"access_revocation\": \"ACCESS_DENIED\",\n    \"actual_neural_evaluations\": 8,\n    \"cache_directory_deleted_after_run\": true,\n    \"cross_request_user_memory_retained\": false,\n    \"events\": [\n      {\n        \"fixture\": 0,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378\",\n        \"phase\": \"initial\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 1,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb\",\n        \"phase\": \"initial\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 2,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7\",\n        \"phase\": \"initial\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 3,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330\",\n        \"phase\": \"initial\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 0,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378\",\n        \"phase\": \"unchanged-repeat\",\n        \"state\": \"REUSED_RESULT\"\n      },\n      {\n        \"fixture\": 1,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb\",\n        \"phase\": \"unchanged-repeat\",\n        \"state\": \"REUSED_RESULT\"\n      },\n      {\n        \"fixture\": 2,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7\",\n        \"phase\": \"unchanged-repeat\",\n        \"state\": \"REUSED_RESULT\"\n      },\n      {\n        \"fixture\": 3,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330\",\n        \"phase\": \"unchanged-repeat\",\n        \"state\": \"REUSED_RESULT\"\n      },\n      {\n        \"fixture\": 0,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378\",\n        \"phase\": \"source-revision-changed\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 1,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb\",\n        \"phase\": \"source-revision-changed\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 2,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7\",\n        \"phase\": \"source-revision-changed\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 3,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330\",\n        \"phase\": \"source-revision-changed\",\n        \"state\": \"FRESH_RESULT\"\n      }\n    ],\n    \"exact_cache_hits\": 4,\n    \"model\": \"csoai/meok-process-world-v0\",\n    \"model_quality_remeasured\": false,\n    \"model_revision\": \"90d6aa6c87629b9f4296142ba2019247b51686c4\",\n    \"request_attempts\": 13,\n    \"scope\": \"Real small neural predictor on synthetic inputs; not Cosmos or physical dynamics.\",\n    \"weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\",\n    \"whole_loop_seconds\": 0.08378019696101546\n  },\n  \"training_performed\": false\n}"
+      ],
+      "parsed": {
+        "cache_experiment": {
+          "actual_model_calls": 0,
+          "private_data_read": false,
+          "production_cache_changed": false,
+          "rows": [
+            {
+              "accepted": 107,
+              "cache_hits": 0,
+              "correct_accepted": 107,
+              "eager_invalidations": 0,
+              "p50_seconds": 0.00018900539726018906,
+              "p95_seconds": 0.00021244166418910027,
+              "provider_computations": 107,
+              "refused": 13,
+              "requests": 120,
+              "seconds_per_correct_accepted": 0.0001937464558493311,
+              "stale_or_forbidden_returns": 0,
+              "strategy": "always_fresh",
+              "wall_seconds": 0.02073087077587843
+            },
+            {
+              "accepted": 116,
+              "cache_hits": 93,
+              "correct_accepted": 72,
+              "eager_invalidations": 0,
+              "p50_seconds": 1.4712568372488022e-06,
+              "p95_seconds": 0.0002022506669163704,
+              "provider_computations": 23,
+              "refused": 4,
+              "requests": 120,
+              "seconds_per_correct_accepted": 6.509907284958495e-05,
+              "stale_or_forbidden_returns": 44,
+              "strategy": "query_only_unsafe",
+              "wall_seconds": 0.004687133245170116
+            },
+            {
+              "accepted": 107,
+              "cache_hits": 73,
+              "correct_accepted": 107,
+              "eager_invalidations": 0,
+              "p50_seconds": 4.498381167650223e-05,
+              "p95_seconds": 0.0002816310152411461,
+              "provider_computations": 34,
+              "refused": 13,
+              "requests": 120,
+              "seconds_per_correct_accepted": 0.00011881754220089066,
+              "stale_or_forbidden_returns": 0,
+              "strategy": "revision_lazy",
+              "wall_seconds": 0.0127134770154953
+            },
+            {
+              "accepted": 107,
+              "cache_hits": 60,
+              "correct_accepted": 107,
+              "eager_invalidations": 31,
+              "p50_seconds": 6.056902930140495e-05,
+              "p95_seconds": 0.0003164769150316715,
+              "provider_computations": 47,
+              "refused": 13,
+              "requests": 120,
+              "seconds_per_correct_accepted": 0.00014911338286561387,
+              "stale_or_forbidden_returns": 0,
+              "strategy": "revision_eager",
+              "wall_seconds": 0.015955131966620684
+            }
+          ],
+          "scope": "SYNTHETIC_CACHE_REHEARSAL",
+          "training": false,
+          "version": "0.1.0",
+          "warning": "A hit reuses output bytes, not authority. Callback authentication and source truth remain host responsibilities; timings are CPU fixtures, not Cosmos speedups."
+        },
+        "canonical_gspc_admission": false,
+        "evidence_event": {
+          "anchors": {
+            "ots": "none",
+            "rekor": {
+              "log_index": null,
+              "uuid": null
+            }
+          },
+          "claim": {
+            "read_at": "2026-11-11T05:48:35.773096+00:00",
+            "source_sha256": "e0780b4d01e40a1ce29263d3f08256a412f732f4675bbfa8ed10bfeb5343385e",
+            "text": "The named research function returned the hash-bound output for the supplied input."
+          },
+          "declared": {
+            "input_sha256": "e0780b4d01e40a1ce29263d3f08256a412f732f4675bbfa8ed10bfeb5343385e"
+          },
+          "event_id": "sha256:b380a15455b6519aad0897a782fd95d22c7a6c196d465149c24ef3f9b6ab5529",
+          "limits": [
+            "Unsigned execution record, not independent verification of prediction truth.",
+            "No production GSPC admission, action authorisation, signing or training occurs.",
+            "Response records are not durably archived by this research tool."
+          ],
+          "maintenance": null,
+          "method": {
+            "code_sha256": "f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34",
+            "holder": "csoai",
+            "id": "meok-hf-research/memory_venturi_rehearsal",
+            "version": "2026-11-10.1"
+          },
+          "negative_control": {
+            "expected": null,
+            "got": "NOT_RUN",
+            "id": null
+          },
+          "observed": {
+            "output_sha256": "8eeada7d09bcf376acceb6bdbaa36521ee6b731b8f6005f5f00e15c6a30abbce"
+          },
+          "schema": "csoai.evidence-event/0.1",
+          "signature": null,
+          "state": "PARTIAL",
+          "subject": {
+            "kind": "sandbox_run",
+            "locator": "urn:meok:research-call:346f4d91-4eed-401e-bbcf-0aa7d13190fc"
+          },
+          "supersedes": null,
+          "value": null
+        },
+        "limitations": [
+          "Trusted callbacks are fixtures here, not real-user authentication.",
+          "Production adoption still needs the authoritative source/version and access adapter.",
+          "Cached output is not cached action permission, and a hash is not a correctness proof."
+        ],
+        "llm_inference_calls": 0,
+        "memory_backend": "temporary derived SQLite, destroyed after this rehearsal",
+        "production_routes_changed": false,
+        "trained_process_replay": {
+          "access_revocation": "ACCESS_DENIED",
+          "actual_neural_evaluations": 8,
+          "cache_directory_deleted_after_run": true,
+          "cross_request_user_memory_retained": false,
+          "events": [
+            {
+              "fixture": 0,
+              "output_equal_to_initial": true,
+              "output_sha256": "fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378",
+              "phase": "initial",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 1,
+              "output_equal_to_initial": true,
+              "output_sha256": "2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb",
+              "phase": "initial",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 2,
+              "output_equal_to_initial": true,
+              "output_sha256": "e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7",
+              "phase": "initial",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 3,
+              "output_equal_to_initial": true,
+              "output_sha256": "f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330",
+              "phase": "initial",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 0,
+              "output_equal_to_initial": true,
+              "output_sha256": "fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378",
+              "phase": "unchanged-repeat",
+              "state": "REUSED_RESULT"
+            },
+            {
+              "fixture": 1,
+              "output_equal_to_initial": true,
+              "output_sha256": "2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb",
+              "phase": "unchanged-repeat",
+              "state": "REUSED_RESULT"
+            },
+            {
+              "fixture": 2,
+              "output_equal_to_initial": true,
+              "output_sha256": "e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7",
+              "phase": "unchanged-repeat",
+              "state": "REUSED_RESULT"
+            },
+            {
+              "fixture": 3,
+              "output_equal_to_initial": true,
+              "output_sha256": "f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330",
+              "phase": "unchanged-repeat",
+              "state": "REUSED_RESULT"
+            },
+            {
+              "fixture": 0,
+              "output_equal_to_initial": true,
+              "output_sha256": "fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378",
+              "phase": "source-revision-changed",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 1,
+              "output_equal_to_initial": true,
+              "output_sha256": "2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb",
+              "phase": "source-revision-changed",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 2,
+              "output_equal_to_initial": true,
+              "output_sha256": "e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7",
+              "phase": "source-revision-changed",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 3,
+              "output_equal_to_initial": true,
+              "output_sha256": "f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330",
+              "phase": "source-revision-changed",
+              "state": "FRESH_RESULT"
+            }
+          ],
+          "exact_cache_hits": 4,
+          "model": "csoai/meok-process-world-v0",
+          "model_quality_remeasured": false,
+          "model_revision": "90d6aa6c87629b9f4296142ba2019247b51686c4",
+          "request_attempts": 13,
+          "scope": "Real small neural predictor on synthetic inputs; not Cosmos or physical dynamics.",
+          "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+          "whole_loop_seconds": 0.08378019696101546
+        },
+        "training_performed": false
+      },
+      "wall_seconds": 0.835563749999892
+    },
+    {
+      "label": "hf-memory-29",
+      "api": "lab_memory_venturi",
+      "input": [
+        29,
+        80
+      ],
+      "state": "complete",
+      "response": [
+        "{\n  \"cache_experiment\": {\n    \"actual_model_calls\": 0,\n    \"private_data_read\": false,\n    \"production_cache_changed\": false,\n    \"rows\": [\n      {\n        \"accepted\": 103,\n        \"cache_hits\": 0,\n        \"correct_accepted\": 103,\n        \"eager_invalidations\": 0,\n        \"p50_seconds\": 0.00018819794058799744,\n        \"p95_seconds\": 0.0002240869216620922,\n        \"provider_computations\": 103,\n        \"refused\": 17,\n        \"requests\": 120,\n        \"seconds_per_correct_accepted\": 0.0001961735927147194,\n        \"stale_or_forbidden_returns\": 0,\n        \"strategy\": \"always_fresh\",\n        \"wall_seconds\": 0.0202058800496161\n      },\n      {\n        \"accepted\": 116,\n        \"cache_hits\": 93,\n        \"correct_accepted\": 72,\n        \"eager_invalidations\": 0,\n        \"p50_seconds\": 1.400010660290718e-06,\n        \"p95_seconds\": 0.0001949039287865162,\n        \"provider_computations\": 23,\n        \"refused\": 4,\n        \"requests\": 120,\n        \"seconds_per_correct_accepted\": 6.430795959507425e-05,\n        \"stale_or_forbidden_returns\": 44,\n        \"strategy\": \"query_only_unsafe\",\n        \"wall_seconds\": 0.0046301730908453465\n      },\n      {\n        \"accepted\": 103,\n        \"cache_hits\": 69,\n        \"correct_accepted\": 103,\n        \"eager_invalidations\": 0,\n        \"p50_seconds\": 4.3809181079268456e-05,\n        \"p95_seconds\": 0.0002920352853834629,\n        \"provider_computations\": 34,\n        \"refused\": 17,\n        \"requests\": 120,\n        \"seconds_per_correct_accepted\": 0.00012218368067903426,\n        \"stale_or_forbidden_returns\": 0,\n        \"strategy\": \"revision_lazy\",\n        \"wall_seconds\": 0.012584919109940529\n      },\n      {\n        \"accepted\": 103,\n        \"cache_hits\": 61,\n        \"correct_accepted\": 103,\n        \"eager_invalidations\": 26,\n        \"p50_seconds\": 4.233513027429581e-05,\n        \"p95_seconds\": 0.000299608800560236,\n        \"provider_computations\": 42,\n        \"refused\": 17,\n        \"requests\": 120,\n        \"seconds_per_correct_accepted\": 0.0001390314145574292,\n        \"stale_or_forbidden_returns\": 0,\n        \"strategy\": \"revision_eager\",\n        \"wall_seconds\": 0.014320235699415207\n      }\n    ],\n    \"scope\": \"SYNTHETIC_CACHE_REHEARSAL\",\n    \"training\": false,\n    \"version\": \"0.1.0\",\n    \"warning\": \"A hit reuses output bytes, not authority. Callback authentication and source truth remain host responsibilities; timings are CPU fixtures, not Cosmos speedups.\"\n  },\n  \"canonical_gspc_admission\": false,\n  \"evidence_event\": {\n    \"anchors\": {\n      \"ots\": \"none\",\n      \"rekor\": {\n        \"log_index\": null,\n        \"uuid\": null\n      }\n    },\n    \"claim\": {\n      \"read_at\": \"2026-11-11T05:48:36.565713+00:00\",\n      \"source_sha256\": \"fe2b4447ac07fbdeec41e03ea2b0278d69abc75af22941d5517db2ecbad71b2f\",\n      \"text\": \"The named research function returned the hash-bound output for the supplied input.\"\n    },\n    \"declared\": {\n      \"input_sha256\": \"fe2b4447ac07fbdeec41e03ea2b0278d69abc75af22941d5517db2ecbad71b2f\"\n    },\n    \"event_id\": \"sha256:de02577050dc1c130a76514590b500647c2dc01c25a0c1b020110e9d965fbf10\",\n    \"limits\": [\n      \"Unsigned execution record, not independent verification of prediction truth.\",\n      \"No production GSPC admission, action authorisation, signing or training occurs.\",\n      \"Response records are not durably archived by this research tool.\"\n    ],\n    \"maintenance\": null,\n    \"method\": {\n      \"code_sha256\": \"f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34\",\n      \"holder\": \"csoai\",\n      \"id\": \"meok-hf-research/memory_venturi_rehearsal\",\n      \"version\": \"2026-11-10.1\"\n    },\n    \"negative_control\": {\n      \"expected\": null,\n      \"got\": \"NOT_RUN\",\n      \"id\": null\n    },\n    \"observed\": {\n      \"output_sha256\": \"970dac3d28cfdd00ae2917f7e71d168155473b88d16bd5ad24eee474adb0c5fd\"\n    },\n    \"schema\": \"csoai.evidence-event/0.1\",\n    \"signature\": null,\n    \"state\": \"PARTIAL\",\n    \"subject\": {\n      \"kind\": \"sandbox_run\",\n      \"locator\": \"urn:meok:research-call:b9cf37a4-a6b4-4768-90e5-08beb2453188\"\n    },\n    \"supersedes\": null,\n    \"value\": null\n  },\n  \"limitations\": [\n    \"Trusted callbacks are fixtures here, not real-user authentication.\",\n    \"Production adoption still needs the authoritative source/version and access adapter.\",\n    \"Cached output is not cached action permission, and a hash is not a correctness proof.\"\n  ],\n  \"llm_inference_calls\": 0,\n  \"memory_backend\": \"temporary derived SQLite, destroyed after this rehearsal\",\n  \"production_routes_changed\": false,\n  \"trained_process_replay\": {\n    \"access_revocation\": \"ACCESS_DENIED\",\n    \"actual_neural_evaluations\": 8,\n    \"cache_directory_deleted_after_run\": true,\n    \"cross_request_user_memory_retained\": false,\n    \"events\": [\n      {\n        \"fixture\": 0,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378\",\n        \"phase\": \"initial\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 1,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb\",\n        \"phase\": \"initial\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 2,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7\",\n        \"phase\": \"initial\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 3,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330\",\n        \"phase\": \"initial\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 0,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378\",\n        \"phase\": \"unchanged-repeat\",\n        \"state\": \"REUSED_RESULT\"\n      },\n      {\n        \"fixture\": 1,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb\",\n        \"phase\": \"unchanged-repeat\",\n        \"state\": \"REUSED_RESULT\"\n      },\n      {\n        \"fixture\": 2,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7\",\n        \"phase\": \"unchanged-repeat\",\n        \"state\": \"REUSED_RESULT\"\n      },\n      {\n        \"fixture\": 3,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330\",\n        \"phase\": \"unchanged-repeat\",\n        \"state\": \"REUSED_RESULT\"\n      },\n      {\n        \"fixture\": 0,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378\",\n        \"phase\": \"source-revision-changed\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 1,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb\",\n        \"phase\": \"source-revision-changed\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 2,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7\",\n        \"phase\": \"source-revision-changed\",\n        \"state\": \"FRESH_RESULT\"\n      },\n      {\n        \"fixture\": 3,\n        \"output_equal_to_initial\": true,\n        \"output_sha256\": \"f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330\",\n        \"phase\": \"source-revision-changed\",\n        \"state\": \"FRESH_RESULT\"\n      }\n    ],\n    \"exact_cache_hits\": 4,\n    \"model\": \"csoai/meok-process-world-v0\",\n    \"model_quality_remeasured\": false,\n    \"model_revision\": \"90d6aa6c87629b9f4296142ba2019247b51686c4\",\n    \"request_attempts\": 13,\n    \"scope\": \"Real small neural predictor on synthetic inputs; not Cosmos or physical dynamics.\",\n    \"weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\",\n    \"whole_loop_seconds\": 0.06493542995303869\n  },\n  \"training_performed\": false\n}"
+      ],
+      "parsed": {
+        "cache_experiment": {
+          "actual_model_calls": 0,
+          "private_data_read": false,
+          "production_cache_changed": false,
+          "rows": [
+            {
+              "accepted": 103,
+              "cache_hits": 0,
+              "correct_accepted": 103,
+              "eager_invalidations": 0,
+              "p50_seconds": 0.00018819794058799744,
+              "p95_seconds": 0.0002240869216620922,
+              "provider_computations": 103,
+              "refused": 17,
+              "requests": 120,
+              "seconds_per_correct_accepted": 0.0001961735927147194,
+              "stale_or_forbidden_returns": 0,
+              "strategy": "always_fresh",
+              "wall_seconds": 0.0202058800496161
+            },
+            {
+              "accepted": 116,
+              "cache_hits": 93,
+              "correct_accepted": 72,
+              "eager_invalidations": 0,
+              "p50_seconds": 1.400010660290718e-06,
+              "p95_seconds": 0.0001949039287865162,
+              "provider_computations": 23,
+              "refused": 4,
+              "requests": 120,
+              "seconds_per_correct_accepted": 6.430795959507425e-05,
+              "stale_or_forbidden_returns": 44,
+              "strategy": "query_only_unsafe",
+              "wall_seconds": 0.0046301730908453465
+            },
+            {
+              "accepted": 103,
+              "cache_hits": 69,
+              "correct_accepted": 103,
+              "eager_invalidations": 0,
+              "p50_seconds": 4.3809181079268456e-05,
+              "p95_seconds": 0.0002920352853834629,
+              "provider_computations": 34,
+              "refused": 17,
+              "requests": 120,
+              "seconds_per_correct_accepted": 0.00012218368067903426,
+              "stale_or_forbidden_returns": 0,
+              "strategy": "revision_lazy",
+              "wall_seconds": 0.012584919109940529
+            },
+            {
+              "accepted": 103,
+              "cache_hits": 61,
+              "correct_accepted": 103,
+              "eager_invalidations": 26,
+              "p50_seconds": 4.233513027429581e-05,
+              "p95_seconds": 0.000299608800560236,
+              "provider_computations": 42,
+              "refused": 17,
+              "requests": 120,
+              "seconds_per_correct_accepted": 0.0001390314145574292,
+              "stale_or_forbidden_returns": 0,
+              "strategy": "revision_eager",
+              "wall_seconds": 0.014320235699415207
+            }
+          ],
+          "scope": "SYNTHETIC_CACHE_REHEARSAL",
+          "training": false,
+          "version": "0.1.0",
+          "warning": "A hit reuses output bytes, not authority. Callback authentication and source truth remain host responsibilities; timings are CPU fixtures, not Cosmos speedups."
+        },
+        "canonical_gspc_admission": false,
+        "evidence_event": {
+          "anchors": {
+            "ots": "none",
+            "rekor": {
+              "log_index": null,
+              "uuid": null
+            }
+          },
+          "claim": {
+            "read_at": "2026-11-11T05:48:36.565713+00:00",
+            "source_sha256": "fe2b4447ac07fbdeec41e03ea2b0278d69abc75af22941d5517db2ecbad71b2f",
+            "text": "The named research function returned the hash-bound output for the supplied input."
+          },
+          "declared": {
+            "input_sha256": "fe2b4447ac07fbdeec41e03ea2b0278d69abc75af22941d5517db2ecbad71b2f"
+          },
+          "event_id": "sha256:de02577050dc1c130a76514590b500647c2dc01c25a0c1b020110e9d965fbf10",
+          "limits": [
+            "Unsigned execution record, not independent verification of prediction truth.",
+            "No production GSPC admission, action authorisation, signing or training occurs.",
+            "Response records are not durably archived by this research tool."
+          ],
+          "maintenance": null,
+          "method": {
+            "code_sha256": "f88b89ecdb5e8f4b88a7682bc0c95ef3f01b946ad62f0f9dd582e4f2e0b49e34",
+            "holder": "csoai",
+            "id": "meok-hf-research/memory_venturi_rehearsal",
+            "version": "2026-11-10.1"
+          },
+          "negative_control": {
+            "expected": null,
+            "got": "NOT_RUN",
+            "id": null
+          },
+          "observed": {
+            "output_sha256": "970dac3d28cfdd00ae2917f7e71d168155473b88d16bd5ad24eee474adb0c5fd"
+          },
+          "schema": "csoai.evidence-event/0.1",
+          "signature": null,
+          "state": "PARTIAL",
+          "subject": {
+            "kind": "sandbox_run",
+            "locator": "urn:meok:research-call:b9cf37a4-a6b4-4768-90e5-08beb2453188"
+          },
+          "supersedes": null,
+          "value": null
+        },
+        "limitations": [
+          "Trusted callbacks are fixtures here, not real-user authentication.",
+          "Production adoption still needs the authoritative source/version and access adapter.",
+          "Cached output is not cached action permission, and a hash is not a correctness proof."
+        ],
+        "llm_inference_calls": 0,
+        "memory_backend": "temporary derived SQLite, destroyed after this rehearsal",
+        "production_routes_changed": false,
+        "trained_process_replay": {
+          "access_revocation": "ACCESS_DENIED",
+          "actual_neural_evaluations": 8,
+          "cache_directory_deleted_after_run": true,
+          "cross_request_user_memory_retained": false,
+          "events": [
+            {
+              "fixture": 0,
+              "output_equal_to_initial": true,
+              "output_sha256": "fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378",
+              "phase": "initial",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 1,
+              "output_equal_to_initial": true,
+              "output_sha256": "2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb",
+              "phase": "initial",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 2,
+              "output_equal_to_initial": true,
+              "output_sha256": "e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7",
+              "phase": "initial",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 3,
+              "output_equal_to_initial": true,
+              "output_sha256": "f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330",
+              "phase": "initial",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 0,
+              "output_equal_to_initial": true,
+              "output_sha256": "fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378",
+              "phase": "unchanged-repeat",
+              "state": "REUSED_RESULT"
+            },
+            {
+              "fixture": 1,
+              "output_equal_to_initial": true,
+              "output_sha256": "2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb",
+              "phase": "unchanged-repeat",
+              "state": "REUSED_RESULT"
+            },
+            {
+              "fixture": 2,
+              "output_equal_to_initial": true,
+              "output_sha256": "e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7",
+              "phase": "unchanged-repeat",
+              "state": "REUSED_RESULT"
+            },
+            {
+              "fixture": 3,
+              "output_equal_to_initial": true,
+              "output_sha256": "f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330",
+              "phase": "unchanged-repeat",
+              "state": "REUSED_RESULT"
+            },
+            {
+              "fixture": 0,
+              "output_equal_to_initial": true,
+              "output_sha256": "fb912716d117183f3b765f6092c8e94ae980c6c67056b57778cb286834754378",
+              "phase": "source-revision-changed",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 1,
+              "output_equal_to_initial": true,
+              "output_sha256": "2bd8879ed177e5f8b841248496a7562c36cf685c2cd60effe37b1f032391a4fb",
+              "phase": "source-revision-changed",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 2,
+              "output_equal_to_initial": true,
+              "output_sha256": "e6f008e313df1b0d5745db870e9cb455e6219057d2b17f92c5f2b74530712af7",
+              "phase": "source-revision-changed",
+              "state": "FRESH_RESULT"
+            },
+            {
+              "fixture": 3,
+              "output_equal_to_initial": true,
+              "output_sha256": "f0d4eb118a24424d227e93825b113c12a220b4321b6b84f0116774be1cac4330",
+              "phase": "source-revision-changed",
+              "state": "FRESH_RESULT"
+            }
+          ],
+          "exact_cache_hits": 4,
+          "model": "csoai/meok-process-world-v0",
+          "model_quality_remeasured": false,
+          "model_revision": "90d6aa6c87629b9f4296142ba2019247b51686c4",
+          "request_attempts": 13,
+          "scope": "Real small neural predictor on synthetic inputs; not Cosmos or physical dynamics.",
+          "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+          "whole_loop_seconds": 0.06493542995303869
+        },
+        "training_performed": false
+      },
+      "wall_seconds": 0.803628375000244
+    },
+    {
+      "label": "hf-memory-invalid",
+      "api": "lab_memory_venturi",
+      "input": [
+        -1,
+        80
+      ],
+      "state": "error",
+      "response": {
+        "error": "Value -1 is less than minimum value 0.",
+        "duration": 10,
+        "visible": true,
+        "title": "Error"
+      },
+      "wall_seconds": 0.7930438749999666
+    },
+    {
+      "label": "hf-status-after",
+      "api": "lab_status",
+      "input": [],
+      "state": "complete",
+      "response": [
+        "{\n  \"cosmos_adapter\": {\n    \"actual_updates\": 12,\n    \"admission\": \"REJECTED_FOR_PROMOTION_CONSTANT_HOLD_OUTPUT\",\n    \"after_correct\": 5,\n    \"before_correct\": 3,\n    \"job\": \"csoai/6af283e79737d9a9e08ecbaa\",\n    \"loaded_into_serving_model\": false,\n    \"majority_count\": 5,\n    \"n\": 8\n  },\n  \"domain\": \"synthetic procurement transitions only\",\n  \"external_action_authority\": false,\n  \"gspc_snapshot\": {\n    \"count\": 34,\n    \"retrieved_at\": \"2026-11-10T02:56:55.790067+00:00\",\n    \"sha256\": \"e19300ad4f9f635c760aa3fd29260cfc833613d5b3972811db4dcdca90731e7c\",\n    \"source\": \"https://councilof.ai/api/gspc\"\n  },\n  \"memory_persistence\": \"none; export returned records explicitly\",\n  \"parameters\": 980,\n  \"photonic_hardware\": false,\n  \"process_model\": \"csoai/meok-process-world-v0\",\n  \"process_model_revision\": \"90d6aa6c87629b9f4296142ba2019247b51686c4\",\n  \"process_weights_sha256\": \"9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b\",\n  \"proof_scope\": \"Research tools; not a general world model or whole-system certification\",\n  \"quantum_hardware\": false,\n  \"version\": \"2026-11-10.1\"\n}"
+      ],
+      "parsed": {
+        "cosmos_adapter": {
+          "actual_updates": 12,
+          "admission": "REJECTED_FOR_PROMOTION_CONSTANT_HOLD_OUTPUT",
+          "after_correct": 5,
+          "before_correct": 3,
+          "job": "csoai/6af283e79737d9a9e08ecbaa",
+          "loaded_into_serving_model": false,
+          "majority_count": 5,
+          "n": 8
+        },
+        "domain": "synthetic procurement transitions only",
+        "external_action_authority": false,
+        "gspc_snapshot": {
+          "count": 34,
+          "retrieved_at": "2026-11-10T02:56:55.790067+00:00",
+          "sha256": "e19300ad4f9f635c760aa3fd29260cfc833613d5b3972811db4dcdca90731e7c",
+          "source": "https://councilof.ai/api/gspc"
+        },
+        "memory_persistence": "none; export returned records explicitly",
+        "parameters": 980,
+        "photonic_hardware": false,
+        "process_model": "csoai/meok-process-world-v0",
+        "process_model_revision": "90d6aa6c87629b9f4296142ba2019247b51686c4",
+        "process_weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+        "proof_scope": "Research tools; not a general world model or whole-system certification",
+        "quantum_hardware": false,
+        "version": "2026-11-10.1"
+      },
+      "wall_seconds": 0.8659537920002549
+    }
+  ],
+  "gpu_provisioned": false,
+  "training": false,
+  "gspc_admitted": false
+}

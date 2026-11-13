@@ -1,0 +1,128 @@
+[
+  {
+    "argv": [
+      "python3",
+      "-c",
+      "import cryptography,json,platform,sys;print(json.dumps({\"python\":sys.version,\"cryptography\":cryptography.__version__,\"platform\":platform.platform(),\"executable\":sys.executable},sort_keys=True))"
+    ],
+    "carried_stderr": {
+      "bytes": 0,
+      "path": "environment.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "carried_stdout": {
+      "bytes": 228,
+      "path": "environment.stdout.txt",
+      "sha256": "cb3db1a2d1741c24e1a121f663f676e5382e12b86ab933b21df13084bf2e9f13"
+    },
+    "command_record_note": "Portable display of the executed command; operator interpreter and directory paths omitted. Exact raw command record retained privately and digest-bound in PUBLIC-RECORD-MODIFICATIONS.json.",
+    "cwd": "selected environment",
+    "exit_code": 0,
+    "finished_at": "2026-10-14T09:16:39.389769+00:00",
+    "name": "environment",
+    "raw_stderr_digest": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "raw_stdout_digest": {
+      "bytes": 240,
+      "sha256": "60d147bc8b3cfcb9f9b724284d346cc69efc13093d32270ec9b8f3b0bcd27483"
+    },
+    "started_at": "2026-10-14T09:16:39.331766+00:00"
+  },
+  {
+    "argv": [
+      "python3",
+      "-m",
+      "pip",
+      "freeze"
+    ],
+    "carried_stderr": {
+      "bytes": 0,
+      "path": "installed-packages.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "carried_stdout": {
+      "bytes": 562,
+      "path": "installed-packages.stdout.txt",
+      "sha256": "7fa5a2a3589e9b3345323b5cbed2c54d242393319a767c3db6bc305cbe4d3253"
+    },
+    "command_record_note": "Portable display of the executed command; operator interpreter and directory paths omitted. Exact raw command record retained privately and digest-bound in PUBLIC-RECORD-MODIFICATIONS.json.",
+    "cwd": "selected environment",
+    "exit_code": 0,
+    "finished_at": "2026-10-14T09:16:39.793067+00:00",
+    "name": "installed-packages",
+    "raw_stderr_digest": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "raw_stdout_digest": {
+      "bytes": 562,
+      "sha256": "7fa5a2a3589e9b3345323b5cbed2c54d242393319a767c3db6bc305cbe4d3253"
+    },
+    "started_at": "2026-10-14T09:16:39.420860+00:00"
+  },
+  {
+    "argv": [
+      "python3",
+      "-B",
+      "run_control2.py"
+    ],
+    "carried_stderr": {
+      "bytes": 0,
+      "path": "retained-replay.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "carried_stdout": {
+      "bytes": 16285,
+      "path": "retained-replay.stdout.txt",
+      "sha256": "2a096fb50e3f40d5e541e3640a30e51a09dd21327bae7d3509119fd2bc497c26"
+    },
+    "command_record_note": "Portable display of the executed command; operator interpreter and directory paths omitted. Exact raw command record retained privately and digest-bound in PUBLIC-RECORD-MODIFICATIONS.json.",
+    "cwd": "fresh writable replay copy",
+    "exit_code": 0,
+    "finished_at": "2026-10-14T09:16:40.384079+00:00",
+    "name": "retained-replay",
+    "raw_stderr_digest": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "raw_stdout_digest": {
+      "bytes": 12767,
+      "sha256": "a2a34a32a3de05707e1d3f65eac1be4d8c8517e205deaca75ca5c11ebe9a8540"
+    },
+    "started_at": "2026-10-14T09:16:39.820141+00:00"
+  },
+  {
+    "argv": [
+      "python3",
+      "-B",
+      "packages/evidence-fabric/tests/test_w3c_control2_packet.py",
+      "-v"
+    ],
+    "carried_stderr": {
+      "bytes": 2368,
+      "path": "verification-tests.stderr.txt",
+      "sha256": "0d8a19ef56373f6ccf015c7b5c176c7aef819b2e551ef8ecfedbc51a1cffe4d8"
+    },
+    "carried_stdout": {
+      "bytes": 0,
+      "path": "verification-tests.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "command_record_note": "Portable display of the executed command; operator interpreter and directory paths omitted. Exact raw command record retained privately and digest-bound in PUBLIC-RECORD-MODIFICATIONS.json.",
+    "cwd": "repository root",
+    "exit_code": 0,
+    "finished_at": "2026-10-14T09:16:41.842210+00:00",
+    "name": "verification-tests",
+    "raw_stderr_digest": {
+      "bytes": 2368,
+      "sha256": "0d8a19ef56373f6ccf015c7b5c176c7aef819b2e551ef8ecfedbc51a1cffe4d8"
+    },
+    "raw_stdout_digest": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "started_at": "2026-10-14T09:16:40.449721+00:00"
+  }
+]

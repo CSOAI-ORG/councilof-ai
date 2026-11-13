@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenGrid · CSOAI Dome — Integrated UX SaaS</title>
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="OpenGrid: the unified UX SaaS for the entire CSOAI empire. All versions, all integrations, all council activity — one dashboard.">
+  <link rel="canonical" href="https://csoai.org/opengrid">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;overflow:hidden}
+    body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#000;color:#e2e8f0;line-height:1.5;font-feature-settings:"cv11","ss01"}
+    /* Layout */
+    .app{display:grid;grid-template-columns:320px 1fr;grid-template-rows:60px 1fr;height:100vh;width:100vw}
+    .topbar{grid-column:1/-1;display:flex;align-items:center;padding:0 1.5rem;background:rgba(13,13,20,.95);border-bottom:1px solid rgba(212,168,67,.15);backdrop-filter:blur(20px);gap:1rem;z-index:10}
+    .topbar .logo{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#22d3ee,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .topbar .logo span{font-size:.65rem;color:rgba(232,228,240,.4);margin-left:.4rem}
+    .topbar .search{flex:1;max-width:600px;margin:0 auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem}
+    .topbar .search input{flex:1;background:transparent;border:none;color:#fff;font-size:.85rem;outline:none}
+    .topbar .search input::placeholder{color:rgba(232,228,240,.4)}
+    .topbar .search-icon{color:rgba(232,228,240,.5);font-size:1rem}
+    .topbar .icon-btn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:rgba(232,228,240,.7);cursor:pointer;font-size:1rem;transition:all .15s}
+    .topbar .icon-btn:hover{background:rgba(255,255,255,.12);color:#fff}
+    /* Sidebar */
+    .sidebar{background:rgba(13,13,20,.92);border-right:1px solid rgba(212,168,67,.1);backdrop-filter:blur(20px);overflow-y:auto;padding:1rem}
+    .sidebar h3{font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(232,228,240,.4);margin-bottom:.6rem;font-weight:600}
+    .section{margin-bottom:1.5rem}
+    .section .item{display:flex;align-items:center;gap:.6rem;padding:.5rem .75rem;border-radius:6px;cursor:pointer;font-size:.85rem;color:rgba(232,228,240,.85);transition:background .12s;text-decoration:none}
+    .section .item:hover{background:rgba(255,255,255,.06)}
+    .section .item.active{background:rgba(212,168,67,.18);color:#fff}
+    .section .item .icon{width:18px;text-align:center;font-size:1rem}
+    .badge{margin-left:auto;font-size:.65rem;padding:.1rem .4rem;border-radius:3px;font-weight:600}
+    .badge-live{background:#10b981;color:#000}
+    .badge-new{background:#a855f7;color:#fff}
+    .badge-soon{background:rgba(255,255,255,.1);color:rgba(232,228,240,.5)}
+    /* Canvas */
+    .canvas{position:relative;overflow:hidden;background:radial-gradient(circle at 30% 40%,rgba(34,211,238,.06),transparent 50%),radial-gradient(circle at 70% 60%,rgba(168,85,247,.06),transparent 50%),#000}
+    .grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+    /* Floating panels */
+    .panel{position:absolute;background:rgba(13,13,20,.85);border:1px solid rgba(255,255,255,.1);border-radius:10px;backdrop-filter:blur(20px);box-shadow:0 10px 40px rgba(0,0,0,.5);z-index:5}
+    .panel-header{display:flex;align-items:center;padding:.65rem .9rem;border-bottom:1px solid rgba(255,255,255,.06);font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:600}
+    .panel-header .dot{width:8px;height:8px;border-radius:50%;margin-right:.5rem}
+    .panel-body{padding:.75rem .9rem}
+    /* Stat tiles */
+    .stat{display:flex;flex-direction:column;gap:.2rem}
+    .stat .label{font-size:.7rem;color:rgba(232,228,240,.5);text-transform:uppercase;letter-spacing:.08em}
+    .stat .value{font-size:1.6rem;font-weight:700;line-height:1}
+    .stat .delta{font-size:.7rem;color:#10b981}
+    /* Dome visualization (centerpiece) */
+    .dome-canvas{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+    .dome{position:relative;width:520px;height:520px}
+    .dome svg{width:100%;height:100%;animation:spin 60s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .dome-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+    .dome-center .label{font-size:.7rem;text-transform:uppercase;letter-spacing:.18em;color:rgba(232,228,240,.5);margin-bottom:.4rem}
+    .dome-center .name{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#22d3ee,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .dome-center .stat{display:flex;gap:1.5rem;margin-top:1rem;align-items:flex-start}
+    .dome-center .stat .value{font-size:1.3rem;font-weight:700}
+    .dome-center .stat .label{font-size:.65rem}
+    /* Layers panel */
+    .layers-panel{top:80px;left:340px;width:200px}
+    .layers-panel .item{display:flex;align-items:center;gap:.5rem;padding:.4rem .75rem;border-radius:6px;font-size:.78rem;cursor:pointer;color:rgba(232,228,240,.8);transition:background .12s}
+    .layers-panel .item:hover{background:rgba(255,255,255,.06)}
+    .layers-panel .item .toggle{width:14px;height:14px;border-radius:3px}
+    /* Product tiles around the dome */
+    .product-tile{position:absolute;padding:.65rem .85rem;background:rgba(20,20,30,.85);border:1px solid rgba(255,255,255,.1);border-radius:8px;backdrop-filter:blur(20px);font-size:.75rem;display:flex;flex-direction:column;gap:.25rem;text-decoration:none;color:inherit;transition:all .15s}
+    .product-tile:hover{transform:translateY(-2px);border-color:rgba(212,168,67,.5);background:rgba(30,30,45,.92)}
+    .product-tile .name{font-weight:600;color:#fff}
+    .product-tile .meta{color:rgba(232,228,240,.5);font-size:.65rem}
+    .product-tile .stat{display:flex;gap:.5rem;margin-top:.3rem}
+    .product-tile .pill{padding:.1rem .45rem;border-radius:3px;font-size:.6rem;font-weight:600}
+    /* Bottom panels */
+    .bottom-bar{position:absolute;bottom:1rem;left:340px;right:1rem;display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
+    .mini-panel{background:rgba(13,13,20,.85);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.75rem .9rem;backdrop-filter:blur(20px)}
+    .mini-panel h4{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(232,228,240,.4);font-weight:600;margin-bottom:.4rem}
+    .mini-panel .row{display:flex;justify-content:space-between;font-size:.78rem;padding:.15rem 0;color:rgba(232,228,240,.85)}
+    .mini-panel .row strong{color:#fff;font-weight:600}
+    .status-dot{width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block;margin-right:.4rem;box-shadow:0 0 6px #10b981}
+    /* Tooltip / hover */
+    .tooltip{position:fixed;background:rgba(13,13,20,.95);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:.75rem;backdrop-filter:blur(20px);font-size:.8rem;max-width:280px;z-index:100;pointer-events:none;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+    .tooltip h4{color:#fff;margin-bottom:.25rem}
+    .tooltip p{color:rgba(232,228,240,.7);font-size:.75rem}
+    /* Header buttons */
+    .header-actions{display:flex;align-items:center;gap:.5rem}
+    .header-actions a{padding:.4rem .85rem;background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.3);border-radius:6px;color:#fbbf24;text-decoration:none;font-size:.78rem;font-weight:600}
+    .header-actions a:hover{background:rgba(212,168,67,.3)}
+    /* Live dot */
+    .live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;animation:pulse 2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    /* Responsive */
+    @media (max-width:1100px){.product-tile .meta{display:none}.bottom-bar{grid-template-columns:repeat(2,1fr)}}
+    /* Hidden helper */
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <a href="/" class="logo">OpenGrid<span>CSOAI · v1.0</span></a>
+      <div class="search">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search 88 pages · 29 endpoints · 271 servers · 15 verticals · 278 prospects…" id="searchInput">
+      </div>
+      <div class="header-actions">
+        <span style="font-size:.78rem;color:#10b981"><span class="live-dot"></span>LIVE</span>
+        <a href="/certify">→ Certify</a>
+        <button class="icon-btn" title="Refresh">↻</button>
+        <button class="icon-btn" title="Layers">◫</button>
+        <button class="icon-btn" title="Settings">⚙</button>
+        <button class="icon-btn" title="Profile">👤</button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="section">
+        <h3>🌐 Surfaces</h3>
+        <a class="item" href="/">
+          <span class="icon">🏠</span>
+          <span>csoai.org (live)</span>
+          <span class="badge badge-live">LIVE</span>
+        </a>
+        <a class="item" href="/api/playground">
+          <span class="icon">⚡</span>
+          <span>csoai-mcp-monetization:3400</span>
+          <span class="badge badge-live">LIVE</span>
+        </a>
+        <a class="item" href="/dome.html">
+          <span class="icon">🌐</span>
+          <span>SOV3 substrate :3101</span>
+          <span class="badge badge-live">LIVE</span>
+        </a>
+        <a class="item" href="/api-docs">
+          <span class="icon">📚</span>
+          <span>API docs (29 endpoints)</span>
+          <span class="badge badge-new">v2</span>
+        </a>
+        <a class="item" href="/auditor">
+          <span class="icon">🔍</span>
+          <span>Auditor portal</span>
+          <span class="badge badge-new">NEW</span>
+        </a>
+      </div>
+
+      <div class="section">
+        <h3>🧠 Council (200 voters)</h3>
+        <a class="item" href="/charter.html">
+          <span class="icon">📜</span>
+          <span>52-Article Charter</span>
+        </a>
+        <a class="item" href="/crosswalks.html">
+          <span class="icon">🔄</span>
+          <span>Framework crosswalks</span>
+        </a>
+        <a class="item" href="/glossary">
+          <span class="icon">📚</span>
+          <span>Glossary (200+ terms)</span>
+        </a>
+        <a class="item" href="/regulators">
+          <span class="icon">🏛</span>
+          <span>Regulators (40+)</span>
+        </a>
+        <a class="item" href="/certification.html">
+          <span class="icon">🏅</span>
+          <span>CASA Certification</span>
+        </a>
+      </div>
+
+      <div class="section">
+        <h3>📦 Products</h3>
+        <a class="item" href="/certify">
+          <span class="icon">💰</span>
+          <span>8 Tier Pricing</span>
+          <span class="badge badge-live">LIVE</span>
+        </a>
+        <a class="item" href="/packs">
+          <span class="icon">📦</span>
+          <span>3 Packs</span>
+        </a>
+        <a class="item" href="/mcp-servers">
+          <span class="icon">🛠</span>
+          <span>271 MCP Servers</span>
+          <span class="badge badge-live">LIVE</span>
+        </a>
+        <a class="item" href="/partner">
+          <span class="icon">🤝</span>
+          <span>3 White-label Partners</span>
+        </a>
+        <a class="item" href="/enterprise">
+          <span class="icon">🏢</span>
+          <span>Enterprise</span>
+        </a>
+      </div>
+
+      <div class="section">
+        <h3>📚 Content</h3>
+        <a class="item" href="/sectors/">
+          <span class="icon">🏛</span>
+          <span>97 sector pages</span>
+        </a>
+        <a class="item" href="/industries/">
+          <span class="icon">🏭</span>
+          <span>12 industries</span>
+        </a>
+        <a class="item" href="/blog">
+          <span class="icon">📰</span>
+          <span>14 blog posts</span>
+        </a>
+        <a class="item" href="/case-studies">
+          <span class="icon">📈</span>
+          <span>3 case studies</span>
+        </a>
+        <a class="item" href="/onboarding">
+          <span class="icon">🚀</span>
+          <span>10-step onboarding</span>
+        </a>
+        <a class="item" href="/status">
+          <span class="icon">📊</span>
+          <span>Empire status</span>
+        </a>
+        <a class="item" href="/trust">
+          <span class="icon">🤝</span>
+          <span>Trust & promise</span>
+        </a>
+        <a class="item" href="/security">
+          <span class="icon">🔐</span>
+          <span>Security</span>
+        </a>
+        <a class="item" href="/evidence">
+          <span class="icon">📄</span>
+          <span>Per-cert evidence</span>
+        </a>
+      </div>
+
+      <div class="section">
+        <h3>🔌 Integrations</h3>
+        <a class="item" href="/api/discover">
+          <span class="icon">🔍</span>
+          <span>AI agent discovery</span>
+        </a>
+        <a class="item" href="/coupon">
+          <span class="icon">🎟</span>
+          <span>Coupon validation</span>
+        </a>
+        <a class="item" href="/customer">
+          <span class="icon">👤</span>
+          <span>Customer portal</span>
+        </a>
+        <a class="item" href="/partner">
+          <span class="icon">🤝</span>
+          <span>Reseller program</span>
+        </a>
+        <a class="item" href="/recommend">
+          <span class="icon">🧭</span>
+          <span>5 use cases</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- CANVAS (DOME) -->
+    <div class="canvas">
+      <div class="grid-overlay"></div>
+
+      <!-- Layers toggle -->
+      <div class="panel layers-panel">
+        <div class="panel-header"><span class="dot" style="background:#22d3ee"></span>Layers</div>
+        <div class="panel-body" style="padding:.4rem">
+          <div class="item"><div class="toggle" style="background:#22d3ee"></div>Council</div>
+          <div class="item"><div class="toggle" style="background:#a855f7"></div>Substrate</div>
+          <div class="item"><div class="toggle" style="background:#ec4899"></div>MCP Servers</div>
+          <div class="item"><div class="toggle" style="background:#fbbf24"></div>Prospects</div>
+          <div class="item"><div class="toggle" style="background:#10b981"></div>Sigils</div>
+          <div class="item"><div class="toggle" style="background:#ef4444"></div>Keystones</div>
+        </div>
+      </div>
+
+      <!-- The Dome visualization -->
+      <div class="dome-canvas">
+        <div class="dome">
+          <svg viewBox="-260 -260 520 520" fill="none">
+            <!-- Outer ring -->
+            <circle cx="0" cy="0" r="240" stroke="rgba(34,211,238,.3)" stroke-width="0.5" stroke-dasharray="2 4"/>
+            <!-- Middle ring -->
+            <circle cx="0" cy="0" r="180" stroke="rgba(168,85,247,.4)" stroke-width="0.5"/>
+            <!-- Inner ring -->
+            <circle cx="0" cy="0" r="120" stroke="rgba(236,72,153,.3)" stroke-width="0.5" stroke-dasharray="1 3"/>
+            <!-- Core -->
+            <circle cx="0" cy="0" r="60" fill="url(#coreGrad)" stroke="rgba(34,211,238,.6)" stroke-width="1"/>
+            <!-- Orbital dots (Council = 200 voters) -->
+            <g fill="#22d3ee">
+              <circle cx="240" cy="0" r="3"/><circle cx="-240" cy="0" r="3"/>
+              <circle cx="0" cy="240" r="3"/><circle cx="0" cy="-240" r="3"/>
+              <circle cx="170" cy="170" r="2"/><circle cx="-170" cy="-170" r="2"/>
+              <circle cx="170" cy="-170" r="2"/><circle cx="-170" cy="170" r="2"/>
+              <circle cx="220" cy="80" r="2.5"/><circle cx="-220" cy="80" r="2.5"/>
+              <circle cx="220" cy="-80" r="2.5"/><circle cx="-220" cy="-80" r="2.5"/>
+              <circle cx="80" cy="220" r="2.5"/><circle cx="-80" cy="220" r="2.5"/>
+              <circle cx="80" cy="-220" r="2.5"/><circle cx="-80" cy="-220" r="2.5"/>
+            </g>
+            <!-- Connection lines -->
+            <g stroke="rgba(168,85,247,.4)" stroke-width="0.3">
+              <line x1="60" y1="0" x2="220" y2="80"/>
+              <line x1="-60" y1="0" x2="-220" y2="-80"/>
+              <line x1="0" y1="60" x2="80" y2="220"/>
+              <line x1="0" y1="-60" x2="-80" y2="-220"/>
+              <line x1="60" y1="0" x2="220" y2="-80"/>
+              <line x1="-60" y1="0" x2="-220" y2="80"/>
+            </g>
+            <!-- Dots on middle ring (MCP servers = 271) -->
+            <g fill="#a855f7" opacity=".8">
+              <!-- 24 visible dots distributed -->
+              <circle cx="180" cy="0" r="1.5"/><circle cx="156" cy="90" r="1.5"/><circle cx="90" cy="156" r="1.5"/>
+              <circle cx="0" cy="180" r="1.5"/><circle cx="-90" cy="156" r="1.5"/><circle cx="-156" cy="90" r="1.5"/>
+              <circle cx="-180" cy="0" r="1.5"/><circle cx="-156" cy="-90" r="1.5"/><circle cx="-90" cy="-156" r="1.5"/>
+              <circle cx="0" cy="-180" r="1.5"/><circle cx="90" cy="-156" r="1.5"/><circle cx="156" cy="-90" r="1.5"/>
+              <circle cx="127" cy="127" r="1"/><circle cx="-127" cy="127" r="1"/>
+              <circle cx="127" cy="-127" r="1"/><circle cx="-127" cy="-127" r="1"/>
+              <circle cx="180" cy="40" r="1"/><circle cx="-180" cy="40" r="1"/>
+              <circle cx="180" cy="-40" r="1"/><circle cx="-180" cy="-40" r="1"/>
+              <circle cx="40" cy="180" r="1"/><circle cx="-40" cy="180" r="1"/>
+              <circle cx="40" cy="-180" r="1"/><circle cx="-40" cy="-180" r="1"/>
+            </g>
+            <defs>
+              <radialGradient id="coreGrad">
+                <stop offset="0%" stop-color="#22d3ee" stop-opacity=".4"/>
+                <stop offset="100%" stop-color="#a855f7" stop-opacity=".1"/>
+              </radialGradient>
+            </defs>
+          </svg>
+          <div class="dome-center">
+            <div class="label">CSOAI Dome</div>
+            <div class="name">v2.6.0-day11</div>
+            <div class="stat">
+              <div class="stat"><span class="value">610</span><span class="label">Sigils</span></div>
+              <div class="stat"><span class="value">19</span><span class="label">Keystones</span></div>
+              <div class="stat"><span class="value">271</span><span class="label">MCP</span></div>
+              <div class="stat"><span class="value">71/71</span><span class="label">E2E</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product tiles around the dome -->
+      <a href="/certify" class="product-tile" style="top:60px;left:340px">
+        <div class="name">💰 Pricing</div>
+        <div class="meta">8 canonical tiers · £9 → £4,950</div>
+        <div class="stat"><span class="pill badge-live">LIVE</span></div>
+      </a>
+      <a href="/mcp-servers" class="product-tile" style="top:60px;right:340px">
+        <div class="name">🛠 MCP Marketplace</div>
+        <div class="meta">271 servers · 12 sectors</div>
+        <div class="stat"><span class="pill badge-live">LIVE</span></div>
+      </a>
+      <a href="/packs" class="product-tile" style="bottom:200px;left:340px">
+        <div class="name">📦 Packs</div>
+        <div class="meta">3 packs · £499 → £1,499</div>
+        <div class="stat"><span class="pill badge-live">LIVE</span></div>
+      </a>
+      <a href="/charter" class="product-tile" style="bottom:200px;right:340px">
+        <div class="name">📜 Charter</div>
+        <div class="meta">52 articles · MEOK substrate</div>
+        <div class="stat"><span class="pill badge-live">LIVE</span></div>
+      </a>
+      <a href="/blog" class="product-tile" style="top:240px;left:340px">
+        <div class="name">📰 Blog</div>
+        <div class="meta">14 posts · AI safety + compliance</div>
+      </a>
+      <a href="/api-docs" class="product-tile" style="top:240px;right:340px">
+        <div class="name">📚 API Docs</div>
+        <div class="meta">29 endpoints · full reference</div>
+        <div class="stat"><span class="pill badge-new">v2</span></div>
+      </a>
+      <a href="/case-studies" class="product-tile" style="bottom:200px;left:50%;transform:translateX(-50%)">
+        <div class="name">📈 Case Studies</div>
+        <div class="meta">3 illustrative scenarios</div>
+      </a>
+      <a href="/onboarding" class="product-tile" style="top:50%;right:340px;transform:translateY(-50%)">
+        <div class="name">🚀 Onboarding</div>
+        <div class="meta">10 steps · 30-day plan</div>
+      </a>
+
+      <!-- Bottom panels: live metrics -->
+      <div class="bottom-bar">
+        <div class="mini-panel">
+          <h4>📊 Empire Metrics</h4>
+          <div class="row"><span>Pages</span><strong>88</strong></div>
+          <div class="row"><span>API endpoints</span><strong>29</strong></div>
+          <div class="row"><span>Sectors</span><strong>97</strong></div>
+          <div class="row"><span>Industries</span><strong>12</strong></div>
+          <div class="row"><span>Blog posts</span><strong>14</strong></div>
+        </div>
+        <div class="mini-panel">
+          <h4>🛡 Substrate</h4>
+          <div class="row"><span>SOV3 health</span><strong><span class="status-dot"></span>LIVE</strong></div>
+          <div class="row"><span>Council voters</span><strong>200</strong></div>
+          <div class="row"><span>Sigil chain</span><strong>610 records</strong></div>
+          <div class="row"><span>Consciousness</span><strong>0.787</strong></div>
+          <div class="row"><span>Keystones (24h)</span><strong>19</strong></div>
+        </div>
+        <div class="mini-panel">
+          <h4>💰 Revenue</h4>
+          <div class="row"><span>Total (test)</span><strong>£2,985</strong></div>
+          <div class="row"><span>ARR potential</span><strong>£35,820/yr</strong></div>
+          <div class="row"><span>Avg ticket</span><strong>£199</strong></div>
+          <div class="row"><span>Subscriptions</span><strong>0</strong></div>
+          <div class="row"><span>Stripe config</span><strong style="color:#ef4444">pending</strong></div>
+        </div>
+        <div class="mini-panel">
+          <h4>📨 Outreach</h4>
+          <div class="row"><span>Queue</span><strong>278</strong></div>
+          <div class="row"><span>Sent today</span><strong>0</strong></div>
+          <div class="row"><span>Strike counter</span><strong style="color:#10b981">1/9</strong></div>
+          <div class="row"><span>Verticals</span><strong>15</strong></div>
+          <div class="row"><span>Organisations</span><strong>95+</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating tooltip (initialised by JS) -->
+  <div class="tooltip hidden" id="tooltip"></div>
+
+  <script>
+    // Simple search that filters sidebar items
+    const input = document.getElementById("searchInput");
+    input.addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll(".sidebar .item").forEach((it) => {
+        const text = it.textContent.toLowerCase();
+        it.style.display = text.includes(q) || q === "" ? "flex" : "none";
+      });
+    });
+
+    // Tooltip on product tiles
+    const tooltip = document.getElementById("tooltip");
+    document.querySelectorAll(".product-tile").forEach((tile) => {
+      tile.addEventListener("mouseenter", () => {
+        const name = tile.querySelector(".name")?.textContent || "";
+        const meta = tile.querySelector(".meta")?.textContent || "";
+        tooltip.innerHTML = `<h4>${name}</h4><p>${meta}</p>`;
+        tooltip.classList.remove("hidden");
+      });
+      tile.addEventListener("mousemove", (e) => {
+        tooltip.style.left = (e.clientX + 16) + "px";
+        tooltip.style.top = (e.clientY + 16) + "px";
+      });
+      tile.addEventListener("mouseleave", () => {
+        tooltip.classList.add("hidden");
+      });
+    });
+
+    // Live pulse on the live dot
+    document.querySelectorAll(".live-dot").forEach((d) => {
+      d.style.animation = "pulse 2s ease-in-out infinite";
+    });
+  </script>
+</body>
+</html>

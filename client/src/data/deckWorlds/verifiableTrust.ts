@@ -126,7 +126,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
   },
   {
     kicker: "The refutation ledger",
-    title: "A public, append-only log of our own corrections",
+    title: "A public, source-maintained log of our own corrections",
     body:
       "A leaderboard wants permanent results and no retractions. We do the opposite: every correction we make to our own published work goes into a signed, append-only record with the root cause attached. Old entries are never edited away — they are superseded in public, so you can always see what we said, when, and what changed our mind.",
     points: [

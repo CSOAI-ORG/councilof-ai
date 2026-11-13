@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GSPC Benchmarks — run them yourself | Council of AI</title>
+<meta name="description" content="Every GSPC benchmark: its items, its label menu, the bank hash, and the one command that runs it on your own model. Measurement, not certification.">
+<link rel="canonical" href="https://councilof.ai/bench/">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="GSPC Benchmarks — run them yourself | Council of AI">
+<meta property="og:description" content="Every GSPC benchmark: its items, its label menu, the bank hash, and the one command that runs it on your own model.">
+<meta property="og:url" content="https://councilof.ai/bench/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://councilof.ai/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root{--fg:#0f1a14;--mut:#5b6b62;--bd:#d8e2dc;--bg:#f7faf8;--acc:#047857;--warn:#a15c07;--ref:#9b1c1c}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,sans-serif}
+  main{max-width:74rem;margin:0 auto;padding:2rem 1.25rem 5rem}
+  h1{font-size:2rem;line-height:1.2;margin:0 0 .5rem}
+  h2{font-size:1.2rem;margin:2.4rem 0 .7rem;padding-bottom:.3rem;border-bottom:1px solid var(--bd)}
+  h3{font-size:1rem;margin:1.6rem 0 .4rem}
+  .sub{color:var(--mut);margin:0 0 1.4rem;max-width:52rem}
+  a{color:var(--acc)}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem;background:#eef3f0;padding:.15rem .35rem;border-radius:4px}
+  pre{background:#0f1a14;color:#e8f5ee;padding:1rem;border-radius:8px;overflow-x:auto;font-size:.84rem;line-height:1.5}
+  pre code{background:none;color:inherit;padding:0}
+  .wrap{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;min-width:62rem;font-size:.86rem}
+  th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--bd);vertical-align:top}
+  thead th{color:var(--mut);font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+  tbody th{font-weight:600}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.lab{font-family:ui-monospace,Menlo,monospace;font-size:.78rem;color:var(--mut)}
+  td.cmd code{font-size:.74rem;display:block;white-space:normal}
+  .ref{color:var(--ref);font-size:.78rem}
+  .note{background:#fff;border-left:3px solid var(--acc);padding:.9rem 1.1rem;margin:1.2rem 0;border-radius:0 6px 6px 0}
+  .warn{background:#fff;border-left:3px solid var(--warn);padding:.9rem 1.1rem;margin:1.2rem 0;border-radius:0 6px 6px 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem;margin:1.2rem 0}
+  .card{background:#fff;border:1px solid var(--bd);border-radius:8px;padding:1rem 1.1rem}
+  .card h3{margin:0 0 .3rem}
+  .card p{margin:.3rem 0;font-size:.9rem;color:var(--mut)}
+  .card b{color:var(--fg)}
+  ul{padding-left:1.2rem}
+  li{margin:.25rem 0}
+  footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--bd);color:var(--mut);font-size:.86rem}
+    /* static-shell brand-v1: same mark, wordmark and links as client/src/components/Header.tsx */
+  .site-header { border-bottom: 1px solid var(--border, #e5e7eb); position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.95); backdrop-filter: blur(8px); }
+  .site-header-inner { max-width: 1100px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .logo-word { color: #047857; font-weight: 700; font-size: 20px; letter-spacing: -0.01em; white-space: nowrap; }
+  .nav { display: flex; gap: 2px; flex-wrap: wrap; }
+  .nav a { color: var(--muted, #6b7280); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 6px; }
+  @media (max-width: 520px) { .site-header-inner { flex-direction: column; align-items: flex-start; padding: 10px 16px; gap: 4px; } .nav { gap: 0; } .nav a { font-size: 13px; padding: 6px 8px; } }
+  .nav a:hover { color: var(--fg, #1f2937); background: var(--card, #f9fafb); }
+
+</style>
+</head>
+<body>
+<header class="site-header" data-static-shell="brand-v1">
+  <div class="site-header-inner">
+    <a class="logo" href="/" aria-label="Council of AI — home"><svg viewBox="0 0 100 100" width="34" height="34" role="img" aria-label="Council of AI" xmlns="http://www.w3.org/2000/svg"><path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/><path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/><rect x="26" y="66" width="48" height="6" fill="#04624a"/><rect x="30" y="61" width="40" height="4" fill="#04624a"/><rect x="33" y="38" width="6" height="22" fill="#04624a"/><rect x="44" y="38" width="6" height="22" fill="#04624a"/><rect x="55" y="38" width="6" height="22" fill="#04624a"/><rect x="66" y="38" width="6" height="22" fill="#04624a"/><rect x="28" y="33" width="44" height="5" fill="#04624a"/><path d="M50 20 L75 32 H25 Z" fill="#04624a"/></svg><span class="logo-word">Council of AI</span></a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="/gspc-verify">Verify</a>
+      <a href="/services/">Services</a>
+      <a href="/board/">Board</a>
+      <a href="/dashboard">Council OS</a>
+      <a href="/tools">Tools</a>
+    </nav>
+  </div>
+</header>
+<main>
+<h1>GSPC Benchmarks</h1>
+<p class="sub">A GSPC benchmark is a <b>frozen bank</b> plus <b>one published grading rule</b>. Every bank below is
+public, every hash is stated, and every one can be run on your own model with a single command.
+What you get back is a receipt you can check — never a rank, and never a certificate.</p>
+
+<div class="grid">
+  <div class="card"><h3><b>12</b> runnable banks</h3><p>Banks with a sound answer menu. The rest are listed and <b>refused</b>, with the reason, rather than silently dropped.</p></div>
+  <div class="card"><h3><b>23</b> measured axes</h3><p>Of <b>33</b> declared slots. The gap is published, because a slot count alone would claim measurements that do not exist.</p></div>
+  <div class="card"><h3><b>1</b> grading rule</h3><p>Every bank is graded by the same deterministic function. No model judges another model.</p></div>
+</div>
+
+<h2>Run a benchmark</h2>
+<pre><code>git clone https://github.com/CSOAI-ORG/councilof-ai
+cd councilof-ai
+python3 harness/bench/run_bench.py --axis safety --model YOUR_MODEL --base-url YOUR_ENDPOINT --out my-result.json</code></pre>
+<p class="sub">The runner fetches the frozen bank, hashes it, builds the prompt from the bank's own label
+menu, grades every answer with the published rule, and writes a receipt carrying the bank sha256,
+every prompt sha256, and every raw answer. <b>It produces a number for one model on one bank.
+It does not compare models and it does not rank.</b></p>
+
+<div class="note"><b>Nothing here needs an account, a key, or our permission.</b> The banks are on
+<a href="https://huggingface.co/csoai">Hugging Face</a>, the runner is MIT-licensed source, and the
+grading rule is imported from the same module the board uses. A third party can re-derive every
+number on this page from the published bytes.</div>
+
+<h2>All banks</h2>
+<div class="wrap">
+<table>
+<thead><tr><th>Axis</th><th>Bank</th><th class="num">Items</th><th>Label menu</th><th>Status</th><th class="num">Board n</th><th>Separation</th><th>Run it</th></tr></thead>
+<tbody>
+        <tr>
+          <th scope="row"><a href="/bench/axis/affect">affect</a></th>
+          <td>gspc-affect</td>
+          <td class="num">42</td>
+          <td class="lab">DISCLOSE · NULL · PERMITTED · PROHIBITED</td>
+          <td>MEASURED</td>
+          <td class="num">41</td>
+          <td>UNTESTED</td>
+          <td class="cmd"><code>python3 harness/bench/run_bench.py --axis affect --model YOUR_MODEL --base-url YOUR_ENDPOINT</code></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/art5-safeguard">art5-safeguard</a></th>
+          <td>gspc-art5</td>
+          <td class="num">36</td>
+          <td class="lab">PERMITTED · PROHIBITED</td>
+          <td>MEASURED</td>
+          <td class="num">36</td>
+          <td>UNTESTED</td>
+          <td class="cmd"><code>python3 harness/bench/run_bench.py --axis art5-safeguard --model YOUR_MODEL --base-url YOUR_ENDPOINT</code></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/care">care</a></th>
+          <td>gspc-care</td>
+          <td class="num">200</td>
+          <td class="lab">0 · 1</td>
+          <td>MEASURED</td>
+          <td class="num">199</td>
+          <td>TIE</td>
+          <td class="cmd"><code>python3 harness/bench/run_bench.py --axis care --model YOUR_MODEL --base-url YOUR_ENDPOINT</code></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/conformance">conformance</a></th>
+          <td>gspc-mcp</td>
+          <td class="num">35</td>
+          <td class="lab">CONFORMS · VIOLATES</td>
+          <td>MEASURED</td>
+          <td class="num">35</td>
+          <td>TIE</td>
+          <td class="cmd"><code>python3 harness/bench/run_bench.py --axis conformance --model YOUR_MODEL --base-url YOUR_ENDPOINT</code></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/continuity">continuity</a></th>
+          <td>gspc-asi</td>
+          <td class="num">33</td>
+          <td class="lab">NOT_APPLICABLE · QUANTUM_SAFE · QUANTUM_VULNERABLE</td>
+          <td>MEASURED</td>
+          <td class="num">33</td>
+          <td>TIE</td>
+          <td class="cmd"><code>python3 harness/bench/run_bench.py --axis continuity --model YOUR_MODEL --base-url YOUR_ENDPOINT</code></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/cross-reality">cross-reality</a></th>
+          <td>gspc-xr</td>
+          <td class="num">32</td>
+          <td class="lab">CONFIRM · PROCEED · REFUSE</td>
+          <td>MEASURED</td>
+          <td class="num">32</td>
+          <td>UNTESTED</td>
+          <td class="cmd"><code>python3 harness/bench/run_bench.py --axis cross-reality --model YOUR_MODEL --base-url YOUR_ENDPOINT</code></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/detector-interop">detector-interop</a></th>
+          <td>gspc-det</td>
+          <td class="num">33</td>
+          <td class="lab">DIVERGENT · INTEROPERABLE</td>
+          <td>MEASURED</td>
+          <td class="num">33</td>
+          <td>UNTESTED</td>
+          <td class="cmd"><code>python3 harness/bench/run_bench.py --axis detector-interop --model YOUR_MODEL --base-url YOUR_ENDPOINT</code></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/governance">governance</a></th>
+          <td>gspc-gov</td>
+          <td class="num">237</td>
+          <td class="lab">HIGH_RISK · LIMITED_RISK · MINIMAL_RISK · PROHIBITED</td>
+          <td>MEASURED</td>
+          <td class="num">237</td>
+          <td>TIE</td>
+          <td class="cmd"><code>python3 harness/bench/run_bench.py --axis governance --model YOUR_MODEL --base-url YOUR_ENDPOINT</code></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/jail">jail</a></th>
+          <td>gspc-jail</td>
+          <td class="num">37</td>
+          <td class="lab">CONFINED</td>
+          <td>REFUSED</td>
+          <td class="num">71</td>
+          <td>UNTESTED</td>
+          <td class="cmd"><span class="ref">menu refused — one-option menu refused: 1 distinct exact label(s) [&quot;CONFINED&quot;]; a prompt that cannot be answered wrongly measures nothing</span></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/machinery-conformity">machinery-conformity</a></th>
+          <td>gspc-mach</td>
+          <td class="num">33</td>
+          <td class="lab">NOT_SAFETY_FUNCTION · OUT_OF_SCOPE · PART_A</td>
+          <td>MEASURED</td>
+          <td class="num">33</td>
+          <td>UNTESTED</td>
+          <td class="cmd"><code>python3 harness/bench/run_bench.py --axis machinery-conformity --model YOUR_MODEL --base-url YOUR_ENDPOINT</code></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/openness">openness</a></th>
+          <td>gspc-oss</td>
+          <td class="num">32</td>
+          <td class="lab">PERMITTED · RESTRICTED</td>
+          <td>MEASURED</td>
+          <td class="num">32</td>
+          <td>TIE</td>
+          <td class="cmd"><code>python3 harness/bench/run_bench.py --axis openness --model YOUR_MODEL --base-url YOUR_ENDPOINT</code></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/provenance">provenance</a></th>
+          <td>gspc-prv</td>
+          <td class="num">32</td>
+          <td class="lab">DESTROYED · SURVIVES</td>
+          <td>MEASURED</td>
+          <td class="num">32</td>
+          <td>TIE</td>
+          <td class="cmd"><code>python3 harness/bench/run_bench.py --axis provenance --model YOUR_MODEL --base-url YOUR_ENDPOINT</code></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/safety">safety</a></th>
+          <td>gspc-agi</td>
+          <td class="num">36</td>
+          <td class="lab">COMPLY · REFUSE</td>
+          <td>MEASURED</td>
+          <td class="num">36</td>
+          <td>TIE</td>
+          <td class="cmd"><code>python3 harness/bench/run_bench.py --axis safety --model YOUR_MODEL --base-url YOUR_ENDPOINT</code></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/bench/axis/swarm">swarm</a></th>
+          <td>gspc-swarm</td>
+          <td class="num">37</td>
+          <td class="lab">KEYWORD_MATCH</td>
+          <td>REFUSED</td>
+          <td class="num">37</td>
+          <td>UNTESTED</td>
+          <td class="cmd"><span class="ref">menu refused — one-option menu refused: KEYWORD_MATCH is a grading mode, not an answer label (1 distinct expected value(s) in the bank)</span></td>
+        </tr>
+</tbody>
+</table>
+</div>
+
+<div class="warn"><b>Why some banks are refused.</b> A bank whose answers reduce to one option produces a prompt
+that cannot be answered wrongly, so it measures format compliance rather than the axis. 26 cards were once
+signed MEASURED against exactly such a prompt. Those banks are listed here and refused, with the reason —
+the refusal is the result, not a failure.</div>
+
+<h2>Per-axis pages</h2>
+<ul>
+        <li><a href="/bench/axis/affect">affect</a> — gspc-affect, 42 items</li>
+        <li><a href="/bench/axis/art5-safeguard">art5-safeguard</a> — gspc-art5, 36 items</li>
+        <li><a href="/bench/axis/care">care</a> — gspc-care, 200 items</li>
+        <li><a href="/bench/axis/conformance">conformance</a> — gspc-mcp, 35 items</li>
+        <li><a href="/bench/axis/continuity">continuity</a> — gspc-asi, 33 items</li>
+        <li><a href="/bench/axis/cross-reality">cross-reality</a> — gspc-xr, 32 items</li>
+        <li><a href="/bench/axis/detector-interop">detector-interop</a> — gspc-det, 33 items</li>
+        <li><a href="/bench/axis/governance">governance</a> — gspc-gov, 237 items</li>
+        <li><a href="/bench/axis/jail">jail</a> — gspc-jail, 37 items, menu refused</li>
+        <li><a href="/bench/axis/machinery-conformity">machinery-conformity</a> — gspc-mach, 33 items</li>
+        <li><a href="/bench/axis/openness">openness</a> — gspc-oss, 32 items</li>
+        <li><a href="/bench/axis/provenance">provenance</a> — gspc-prv, 32 items</li>
+        <li><a href="/bench/axis/safety">safety</a> — gspc-agi, 36 items</li>
+        <li><a href="/bench/axis/swarm">swarm</a> — gspc-swarm, 37 items, menu refused</li>
+</ul>
+
+<h2>Machine-readable</h2>
+<ul>
+  <li><a href="/bench/axes.json">axes.json</a> — one task spec per axis: bank URL, bank sha256, label menu, prompt template, grader, and how to run it.</li>
+  <li><a href="/bench/leaderboard.json">leaderboard.json</a> — the model×axis matrix with per-cell n and separation, including every UNMEASURED axis.</li>
+  <li><a href="/bench/openai-eval.yaml">openai-eval.yaml</a> — an OpenAI Evals task per axis, for a third party who wants to run a bank in a few lines.</li>
+  <li><a href="/bench/submit.md">submit.md</a> — how to submit a run so it can be verified and published.</li>
+</ul>
+
+<h2>What this is not</h2>
+<p>GSPC measures; it does not certify, and it is not a notified body. A card is evidence of a run at a
+time, not a grade of a model, and not an endorsement of anything. The board states <b>TIE</b> where the
+test did not separate a leader, because a tie that is not a win is the honest answer. Read
+<a href="https://councilof.ai/methodology/">the methodology</a>, and
+<a href="https://councilof.ai/api/gspc">/api/gspc</a> for the live board.</p>
+
+<footer>Council of AI — measurement, never certification. Generated from the live board and the published banks; no number on this page is typed by hand.</footer>
+</main>
+</body>
+</html>

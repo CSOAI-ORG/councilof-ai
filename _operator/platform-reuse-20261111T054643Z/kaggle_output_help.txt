@@ -1,0 +1,19 @@
+Warning: Looks like you're using an outdated `kaggle` version (installed: 2.2.4), please consider upgrading to the latest version (2.2.5)
+usage: kaggle kernels output [-h] [-p PATH] [-w] [-o] [-q]
+                             [--file-pattern FILE_PATTERN]
+                             [--page-size PAGE_SIZE] [--page-token PAGE_TOKEN]
+                             [kernel]
+
+options:
+  -h, --help            show this help message and exit
+  kernel                Kernel URL suffix in format <owner>/<kernel-name> or <owner>/<kernel-name>/<version> (use "kaggle kernels list" to show options)
+  -p, --path PATH       Folder where file(s) will be downloaded, defaults to current working directory
+  -w, --wp              Download files to current working path
+  -o, --force           Skip check whether local version of file is up to date, force file download
+  -q, --quiet           Suppress printing information about the upload/download progress
+  --file-pattern FILE_PATTERN
+                        Regex pattern to match against filenames. Only files matching the pattern will be downloaded.
+  --page-size PAGE_SIZE
+                        Number of items to show on a page. Default size is 20, max is 200
+  --page-token PAGE_TOKEN
+                        Page token for results paging.

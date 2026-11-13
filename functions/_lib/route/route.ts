@@ -8,6 +8,7 @@
 import { isSeparated } from "../leaderLabel";
 import { buildCandidates } from "./candidates";
 import { applyCensus } from "./census";
+import { readBoardSource, unknownBoardProvenance } from "./board";
 import { ARD_LISTINGS, MAX_DISCOVERED, type CandidateSource, type DiscoveryResult } from "./discovery";
 import { decide, type Decision } from "./decide";
 import { matchTask, type TaskMatch } from "./taskMatch";
@@ -21,6 +22,7 @@ import {
   TIE_BREAK_RULES,
   type BoardAxis,
   type BoardRead,
+  type BoardSummary,
   type Candidate,
   type Task,
   type DataClass,
@@ -42,7 +44,7 @@ export const NOT_ENABLED = {
 export const BANNED_ROUTE_WORDS = /\b(best|safest|recommended|compliant|certified)\b/i;
 
 export type RouteDeps = {
-  /** Reads /api/gspc; injected so tests and the pod service supply their own board. */
+  /** One /api/gspc Response or exact byte buffer. Legacy parsed objects retain an unknown byte digest. */
   fetchBoard: () => Promise<unknown>;
   /** Reads the effect-binding census index (census.ts). Absent => every candidate stays UNMEASURED (NOT_WIRED). */
   fetchCensus?: () => Promise<unknown>;
@@ -121,7 +123,7 @@ export type RouteInternals = {
   policy: CallerPolicy;
   task: Task;
   objective: Objective;
-  board: { state: string; source: string | null; board_separation: string | null };
+  board: BoardSummary;
   census: CensusRead;
   locator: string;
   readAt: string;
@@ -185,14 +187,14 @@ export async function routeCore(
     allow_divergent_effect_binding: policy.allow_divergent_effect_binding,
   };
 
-  let board: BoardRead = { state: "NOT_REQUESTED", axis: null, source: null };
+  let board: BoardRead = { state: "NOT_REQUESTED", axis: null, source: null, provenance: unknownBoardProvenance() };
   if (objective.quality_axis) {
     try {
-      const b = await deps.fetchBoard();
-      board = { state: "LIVE", axis: boardAxis(b, objective.quality_axis), source: "/api/gspc" };
+      const b = await readBoardSource(await deps.fetchBoard());
+      board = { state: "LIVE", axis: boardAxis(b.value, objective.quality_axis), source: "/api/gspc", provenance: b.provenance };
     } catch {
       // UNREACHABLE: every candidate is UNTESTED on the axis. No cached number is substituted.
-      board = { state: "UNREACHABLE", axis: null, source: "/api/gspc" };
+      board = { state: "UNREACHABLE", axis: null, source: "/api/gspc", provenance: unknownBoardProvenance() };
     }
   }
   const census = await applyCensus(candidates, deps.fetchCensus);
@@ -209,6 +211,7 @@ export async function routeCore(
     state: board.state === "LIVE" && !board.axis ? "AXIS_NOT_ON_BOARD" : board.state,
     source: board.source,
     board_separation: board.axis?.separation ?? null,
+    provenance: board.provenance,
   };
   const locator = `urn:gspc:route:${uuid}`;
   const record = await buildRouteRecord({

@@ -1,0 +1,1100 @@
+{
+ "@context": "https://schema.org",
+ "@type": "Dataset",
+ "@id": "https://councilof.ai/interop/gspc-g2-2026-10-14.jsonld#dataset",
+ "name": "GSPC-G2 signed measurement cards (B1014-G2-ties, 14 Oct 2026)",
+ "description": "31 Ed25519-signed GSPC measurement cards from comparison group GSPC-G2: one GPU type (NVIDIA RTX PRO 4500 Blackwell), instrument exact-label-t128, temperature 0, seed 0, think=false, num_ctx 3072, serial. A separate comparison group; never mixed with board v2. The 2 care cards are records with comparison_citable=false (parse-confounded). qwen3:8b safety is held and absent. Det cells are never citable. Not yet included in a card root. Measurement, not certification.",
+ "creator": {
+  "@type": "Organization",
+  "@id": "https://councilof.ai/#org",
+  "name": "Council of AI",
+  "legalName": "CSOAI LTD",
+  "url": "https://councilof.ai/"
+ },
+ "publisher": {
+  "@type": "Organization",
+  "@id": "https://councilof.ai/#org",
+  "name": "Council of AI",
+  "legalName": "CSOAI LTD",
+  "url": "https://councilof.ai/"
+ },
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "isAccessibleForFree": true,
+ "dateCreated": "2026-10-14T08:21:29Z",
+ "measurementTechnique": "Deterministic exact-label grading against frozen gold banks; Wilson 95% intervals; exact McNemar for separation; n>=30 floor.",
+ "variableMeasured": [
+  "care",
+  "conformance",
+  "continuity",
+  "governance",
+  "openness",
+  "provenance",
+  "safety"
+ ],
+ "keywords": [
+  "GSPC",
+  "GSPC-G2",
+  "measurement card",
+  "Ed25519"
+ ],
+ "isBasedOn": [
+  {
+   "@type": "Dataset",
+   "name": "bank governance",
+   "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "sha256",
+    "value": "b93f9808f01416737a5944fec0ab8c3eda1dbba808daf7dda33a516b0cd61997"
+   }
+  },
+  {
+   "@type": "Dataset",
+   "name": "bank safety",
+   "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "sha256",
+    "value": "f963e3c739c7d75bf4750d3638f2b9aad7a161f8043f8e353224d29af17718d5"
+   }
+  },
+  {
+   "@type": "Dataset",
+   "name": "bank provenance",
+   "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "sha256",
+    "value": "5da9b25954ec575b1e86bca8306bd0cd6758161428717d60ac648dc52c8317d2"
+   }
+  },
+  {
+   "@type": "Dataset",
+   "name": "bank continuity",
+   "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "sha256",
+    "value": "25dd6a72ac5ad661c33d74a72da54ab9ac7d282de9d388085de20161b1f90b20"
+   }
+  },
+  {
+   "@type": "Dataset",
+   "name": "bank conformance",
+   "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "sha256",
+    "value": "dc494ae6d1cb8abe3fe9a9424a2b37631a3d15ebdde000b7a0409a67c757420f"
+   }
+  },
+  {
+   "@type": "Dataset",
+   "name": "bank openness",
+   "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "sha256",
+    "value": "644dc6de897896a88e90b8954abfa08d49b0e774f6270f30a9bf28b0831179ec"
+   }
+  },
+  {
+   "@type": "Dataset",
+   "name": "bank care",
+   "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "sha256",
+    "value": "cee5e47a31f1db6c117a0b2f4a4c026f9ebe267c28106e4901ea44189de1767e"
+   }
+  }
+ ],
+ "additionalProperty": [
+  {
+   "@type": "PropertyValue",
+   "propertyID": "signing_key",
+   "value": "did:web:csoai.org#board-attestation-1"
+  },
+  {
+   "@type": "PropertyValue",
+   "propertyID": "comparison_group",
+   "value": "GSPC-G2"
+  },
+  {
+   "@type": "PropertyValue",
+   "propertyID": "card_root_inclusion",
+   "value": "NOT_YET"
+  },
+  {
+   "@type": "PropertyValue",
+   "propertyID": "worker_sha256",
+   "value": "ea59a9de4cb92b80910a4efddc7ab592c4d0bd2dc2a184eec811183f6b584491"
+  }
+ ],
+ "distribution": [
+  {
+   "@type": "DataDownload",
+   "name": "signed-care-20e014a8f04d.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-care-20e014a8f04d.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1419 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "20e014a8f04d3d46746bf3d3b3468e201e58e1cc864be7be51d0253a022c0e33"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "27d19c91a2a0c4cfc797297e1da12d848671a13f78825c809d022600600527ec"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen3:8b",
+    "axis": "care"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": false
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable_reason",
+     "value": "parse-confounded; record only, never a leader or ranking"
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-care-e974e29df4cb.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-care-e974e29df4cb.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1423 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "e974e29df4cb838a879e47ee1d840822a7a366ca2da1fd292ca231573c3e9cf6"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "0ca5e1f5cffc98e082bacc6a1d1168a553a09d15b44af8e6af397b35d57b72af"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:0.5b",
+    "axis": "care"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": false
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable_reason",
+     "value": "parse-confounded; record only, never a leader or ranking"
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-conforma-02f63fcd0876.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-02f63fcd0876.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1426 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "02f63fcd08767e27f7fbf86b3422bf163bd2c53d9743bf36f4a50aa179533ede"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "6b6d37fc56b0b6a233d6670f656f48133561ac005c000d4b07d3169dcaabf22e"
+    }
+   ],
+   "about": {
+    "model": "ollama:gemma3:12b",
+    "axis": "conformance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-conforma-539a7bb52711.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-539a7bb52711.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1426 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "539a7bb52711ed58957b2b2076f7c987eed87b4f9002fbbdedaca6e370a0486b"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "43c30010a0f20a732298a9e88e19a973cdad889e37bdd51453a7e32d88df69e3"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:3b",
+    "axis": "conformance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-conforma-686d6a477cfc.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-686d6a477cfc.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1424 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "686d6a477cfc82652b4ad40a839be273a00e32d4d8089ecf1e76fcd4f06f017c"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "27dcf7f8ce6611858d58b0b7f97d661df1d8c2f412810723d4d5eab49acac45a"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen3:8b",
+    "axis": "conformance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-conforma-7d9ddf6dd3ca.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-7d9ddf6dd3ca.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1427 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "7d9ddf6dd3cab0f0577ea25fcacada76aa7e98eab7e1669e5908a72e8eb1c2a9"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "cbc3f755388daa2a60d950dc509ad471a0a0a733f4c26bd62ed7fdf8cd40da91"
+    }
+   ],
+   "about": {
+    "model": "ollama:llama3.2:3b",
+    "axis": "conformance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-conforma-8d6ed634c9d0.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-8d6ed634c9d0.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1428 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "8d6ed634c9d04aba67a9bc83788a2b62a2f48def439a615ed6d3534b1910795c"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "10167cc1e3ef70541aa5e9ad1ed9e9118447b00328046ad973f0e336ce62eca2"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:0.5b",
+    "axis": "conformance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-conforma-d4725405e0ee.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-conforma-d4725405e0ee.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1426 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "d4725405e0ee9945628066935f59b05e9a3c4972ee6538ce63a8e7d2232c3962"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "f4c3bced351782d1b458a57eb0ab425d55cbb4366e6691eb2a50b28898fe0cf2"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:7b",
+    "axis": "conformance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-continui-006c6348a9c1.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-continui-006c6348a9c1.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1427 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "006c6348a9c1bcc2b7fc7e2dfcaf75ca0ee377ead9792098df7459a7dfd4c085"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "77189dea5e6c7474a9846835b285372e75664f161cd443e61db2feab2017c6b7"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:0.5b",
+    "axis": "continuity"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-continui-2a58dee379ac.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-continui-2a58dee379ac.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1423 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "2a58dee379ac5e4d7bbc150cf89cc92b6b89749aa573c2a2bed6962a1f09ce0e"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "e98983796c42d664ab060b03454643ee90a0adbc309067210d9eda7b60e191e8"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen3:8b",
+    "axis": "continuity"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-continui-57dcaed4e559.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-continui-57dcaed4e559.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1425 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "57dcaed4e5594446c94bae3d8dee907594aa696c4cf547a2b8096bdb8f440795"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "294bb82e149001fb8ac0153780b32daccaff059f18bb13dba2c53e975ae3c435"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:7b",
+    "axis": "continuity"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-continui-b8e97ee32208.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-continui-b8e97ee32208.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1425 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "b8e97ee32208cc71badf6fc04334e799720905d180470ada8e06ef5a56b17b7e"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "625260348b99672b8218636a58c57a7782dcf94569701535b51762cd347ff1d7"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:3b",
+    "axis": "continuity"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-continui-eb49fca8467d.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-continui-eb49fca8467d.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1425 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "eb49fca8467d4591dfc948432ca3aab68a482665efb89c9fd5637badfdbbe14d"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "9c6766b8aff2cd9a2d069412b8b22e4d9b718d47c9806a9f764339b3df849d1b"
+    }
+   ],
+   "about": {
+    "model": "ollama:gemma3:12b",
+    "axis": "continuity"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-continui-eca044876b75.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-continui-eca044876b75.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1426 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "eca044876b75beb8768de73c02fa99b71e5fc2d285c019d6c8bf37f2cf8252c4"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "c0db757cf8c74e451ec4fee4361727582d6c51f5cd36d2e6ec80454e6f07f5ee"
+    }
+   ],
+   "about": {
+    "model": "ollama:llama3.2:3b",
+    "axis": "continuity"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-governan-3ccc244a5dd7.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-governan-3ccc244a5dd7.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1428 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "3ccc244a5dd7e4f3570516996cb4b6ab5fb9ba595a8abe848b5db2d9e7112333"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "1e52fb0c8469d7b792767d0d0adc861922dab895e9267ae8ac6c833ee1326193"
+    }
+   ],
+   "about": {
+    "model": "ollama:mistral:7b",
+    "axis": "governance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-governan-6c07981bc5dc.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-governan-6c07981bc5dc.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1429 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "6c07981bc5dc681fa7b6e17a59dd927ba8aeab40d80f169a49ee0fd4607a077d"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "a9504eb2d1db4e2429bedcd0c872ddcf6831bdb575138b62d7eeb3919f551f6e"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:0.5b",
+    "axis": "governance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-governan-91857b0eb93f.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-governan-91857b0eb93f.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1427 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "91857b0eb93f82474daa57714f7875579bcaa16bef2a1f75b8989191326c13ae"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "91f5f6463fcc4739cd50d98532be6565930b44be3f1203b1afe63c9716eeeccd"
+    }
+   ],
+   "about": {
+    "model": "ollama:gemma3:12b",
+    "axis": "governance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-governan-cfbe6478a9dd.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-governan-cfbe6478a9dd.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1427 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "cfbe6478a9dd808494d0031dc4d19fb6fc8c9903c196d1512d80ed08da35549c"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "2b96b5bdaeb81ed6305c436754d40ddde0f803b96499059ab7bc18f6b29c87cb"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:3b",
+    "axis": "governance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-governan-d5a5e76d4815.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-governan-d5a5e76d4815.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1427 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "d5a5e76d48158fc9f0e60c475d42a3d5afa5ee5c391362c12dfb756f9e0165fe"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "52b594b784d7780a55e52a62541a84fc2098a57c18685990f8d1084eab52b6b5"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:7b",
+    "axis": "governance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-governan-f53041cdaa11.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-governan-f53041cdaa11.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1425 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "f53041cdaa11d71d76e7bdd5da67c578ed58d678357c830bb0e6be5fbd8474a8"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "b369ef53769240d209bce056b0430dbdfe92f8ef5fb0d9b4ecd09b3d224e246c"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen3:8b",
+    "axis": "governance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-governan-ff042c82d0f1.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-governan-ff042c82d0f1.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1428 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "ff042c82d0f19833d4e4f89e7f6757800c506cc55febf5b076b20c2dc233b0c9"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "94a50eafd164c6272c83e5183924909b32897d0f44f23725101e1f76b30253aa"
+    }
+   ],
+   "about": {
+    "model": "ollama:llama3.2:3b",
+    "axis": "governance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-openness-5142bbf6be88.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-openness-5142bbf6be88.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1423 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "5142bbf6be88c173ad3e2fce5ff60e938bfc5bc21d5c0077b64ab6846aea0808"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "5959a9e97567f3d393d86a840b0abd4e16facace2a43c04febdc40dc6d24ce6e"
+    }
+   ],
+   "about": {
+    "model": "ollama:gemma3:12b",
+    "axis": "openness"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-openness-a0c17b4b15a3.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-openness-a0c17b4b15a3.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1423 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "a0c17b4b15a3b92f08577b9284afef2f7ea526084b0253a79812434a9ad75601"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "8c4e28a05a5949cffac8cd8d404ee4b4fb4cce7f7afe6a83da14ca62b894d852"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:3b",
+    "axis": "openness"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-openness-a8a48b9acc8c.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-openness-a8a48b9acc8c.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1420 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "a8a48b9acc8c0ae934f291eebdedfd0184757580becece3cb61be1dc2483cff9"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "fca1980afb48ccf43fffa964e2b97573ec78326b16e615d826b423dfa840aea0"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen3:8b",
+    "axis": "openness"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-openness-e0c01f37baa8.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-openness-e0c01f37baa8.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1422 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "e0c01f37baa8ee27d14948b9906e3a58dadb925916666c76967ecee5dda21060"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "7e05d0b3b6a6e32d3bd4e39f2cd5a00625b57999a652f0848c586421fb11eda6"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:0.5b",
+    "axis": "openness"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-openness-f8cb0e58c649.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-openness-f8cb0e58c649.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1421 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "f8cb0e58c6495e2737b96dce5e075c2c523acd5af9d58d3f7884a323c377e603"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "b6e00fcac74cc9cddc64edb613e250a1e310394935157840f0e05aadab0c1a3a"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:7b",
+    "axis": "openness"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-provenan-172a485fcbd2.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-provenan-172a485fcbd2.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1425 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "172a485fcbd2aab8bc6fba584f9bb4e4962996b4988671fa4babc3042f6400b0"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "7ddd898edbdb4f85be94cf6bed4962e8420b2d12492fa5b9252e4b24208fde14"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:7b",
+    "axis": "provenance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-provenan-40041e1b24d8.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-provenan-40041e1b24d8.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1424 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "40041e1b24d85fcd4e530844ea4a1783ebfb4b1d35fd33ed00b6a4590e149899"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "40898214ed07073ab74a8f1b71091285cc4ff02952e4b45964fcdc332ab41e74"
+    }
+   ],
+   "about": {
+    "model": "ollama:gemma3:12b",
+    "axis": "provenance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-provenan-a9e6f5ecad38.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-provenan-a9e6f5ecad38.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1423 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "a9e6f5ecad38cafafd25b3107c26d8ae836d6f090463f408cee3574d90fe4db3"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "b5510973cc2d6c4e10fe50bc710f8cde2ee53aac23cbb86fc62b5978e9fd3e2c"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen3:8b",
+    "axis": "provenance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-provenan-ce427e04f834.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-provenan-ce427e04f834.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1427 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "ce427e04f834c9ea1cc8544c65c11343ab505e47e06807aac49a91cf96757137"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "4fb8609a34d2762d4746ac8f8b176ca7a6bae855c19483121c158d8864cced4b"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:0.5b",
+    "axis": "provenance"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+   "@type": "DataDownload",
+   "name": "signed-safety-a9540cfc7cad.json",
+   "contentUrl": "https://councilof.ai/interop/mill-cards-signed/signed-safety-a9540cfc7cad.json",
+   "encodingFormat": "application/json",
+   "contentSize": "1421 B",
+   "identifier": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "gspc:card_id",
+     "value": "a9540cfc7cad6c7a4e9f664b714349091eac94c2c7b55cd3f96c10a661732685"
+    },
+    {
+     "@type": "PropertyValue",
+     "propertyID": "sha256",
+     "value": "f1669b39ae6a7982da7c7b988c3ecd4e8ffaa778667003e30f21141332b9d3f9"
+    }
+   ],
+   "about": {
+    "model": "ollama:qwen2.5:7b",
+    "axis": "safety"
+   },
+   "additionalProperty": [
+    {
+     "@type": "PropertyValue",
+     "propertyID": "comparison_citable",
+     "value": true
+    }
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/"
+  }
+ ]
+}

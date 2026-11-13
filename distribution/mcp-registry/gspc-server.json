@@ -1,0 +1,27 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/modelcontextprotocol@latest/registry-schema.json",
+  "server": {
+    "name": "csoai/gspc",
+    "display_name": "GSPC — Global Safety & Provenance Council measurement server",
+    "description": "Live measurement and verification instruments for AI-safety and security surfaces: GSPC board totals (34 axes, measurement-not-endorsement doctrine), measurement-capsule index (11,529+ capsules, Merkle+signed), public root inclusion proofs, signed card verification under pinned Ed25519 keys, MCP handshake census, x402 catalog trust, DORA/CRA/AI-Act evidence bundles, and the frozen pulse series (hash-chained, Merkle-rooted, Ed25519-signed time series of global AI-safety state).",
+    "repository": {
+      "url": "https://github.com/CSOAI-ORG/clawd-workspace",
+      "source": "github"
+    },
+    "version_detail": {
+      "version": "0.5.0",
+      "is_latest": true
+    },
+    "remotes": [
+      {
+        "type": "streamable-http",
+        "url": "https://councilof.ai/mcp",
+        "headers": []
+      }
+    ],
+    "tags": ["ai-safety", "measurement", "verification", "transparency", "kev", "epss", "x402", "a2a", "evidence"],
+    "license": "CC-BY-4.0",
+    "authors": [{"name": "CSOAI / Council of AI", "url": "https://councilof.ai"}],
+    "packages": []
+  }
+}

@@ -1,6 +1,6 @@
 # components/evidence — per-record evidence package (ported from csoai-org-v2)
 
-Donor: `~/clawd/csoai-org-v2/src/app/evidence/page.tsx` (CONSOLIDATION.md surface #3).
+Donor: `csoai-org-v2/src/app/evidence/page.tsx` (CONSOLIDATION.md surface #3).
 Ported 2026-08-02. Theme: master wing (dark-emerald on `#03110b`).
 
 ## Files

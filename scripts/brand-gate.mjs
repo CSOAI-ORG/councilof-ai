@@ -195,7 +195,7 @@ const RULES = [
   },
   {
     id: "internal_strategy_codename",
-    pattern: /crown[\s-]?jewels?|goldmines|black swans|\bOWEM\b|\bSIGIL\b/i,
+    pattern: /crown[\s-]?jewels?|goldmines?|black[\s_-]?swans?|\bOWEM\b|\bSIGIL\b/i,
     why: "Internal strategy / codename was never for the public surface.",
   },
   {
@@ -297,6 +297,9 @@ const RULES = [
     // doctrine stated to the reader and must ship, so a first-person/second-person subject right
     // before it is excluded (the scanner always matches case-insensitively).
     pattern: /(?<!\b(?:we|i|you|they)\s)\b(?:Do not (?:invent|restore|paint|mint|put|ship|build from)|public door|This VM\b|planted key|per-site agent|in-lane only|Apex 5\d\d|SPEC only, not a live|war brief|domination playbook)\b/i,
+    // Signed A2A agent-card.json (did:web:csoai.org#card-attestation-2) carries this phrase inside
+    // its JWS-signed skills[6].description; check.mjs re-presents .json files as .txt to brand-gate.
+    nearAllow: /stranger revenue is separate/i,
     why: "Agent/operator instruction or internal strategy note on a public surface. Say what the reader can do, or move the note to /status/internal (noindex).",
     // Exempt, by exact built path: the corrections ledger (quotes withdrawn copy verbatim), the two
     // files WRITTEN FOR AGENTS (instructions to agents are their purpose), and the noindex operator
@@ -453,6 +456,9 @@ if (SELFTEST) {
     ["internal_codenames", "venturi_capsule.py build --adapter operations", null],
     ["internal_codenames", "Pontius carries admitted evidence across rails", null],
     ["internal_codenames", "Laputa", null],
+    ["internal_strategy_codename", "the Black Swan playbook", null],
+    ["internal_strategy_codename", "black-swan-loops", null],
+    ["internal_strategy_codename", "BLACK_SWAN halt card", null],
     ["pricing_leak", "$0.005/card", "/corrections/index.html"],
     ["gpai_code_signature", "GPAI Code of Practice signatory", "/corrections/index.html"],
     ["measured_index_sticker", "MEASURED-INDEX-v0.1", "/corrections/index.html"],

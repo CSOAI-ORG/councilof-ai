@@ -1064,9 +1064,53 @@ the control that names it and of no other vector.</t>
 </section>
 <section anchor="vocabularies"><name>State Vocabularies</name>
 
-<t>[GENERATED AT BUILD from the implementation's vocabulary file: for each
-kind, each state, its family and a one-line meaning. Not written by hand,
-so that the text and the implementation cannot drift apart.]</t>
+<t>Generated at build from <tt>packages/venturi-capsule/vocabularies.json</tt>
+(<tt>csoai.measurement-capsule-vocabularies/0.2</tt>) so that the text and the
+implementation cannot drift apart.</t>
+
+<table>
+<thead><tr><th>Kind</th><th>State</th><th>Family</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><tt>measurement.contract_parity</tt></td><td><tt>CONSISTENT</tt></td><td>agreement</td><td>Two or more speaking surfaces (registry, mcp.json, server card, payment manifest, live initialize/tools/list) agreed on the dimension.</td></tr>
+<tr><td><tt>measurement.contract_parity</tt></td><td><tt>INCONSISTENT</tt></td><td>agreement</td><td>Two or more speaking surfaces gave different values on the dimension; states that they disagree, not which surface is authoritative.</td></tr>
+<tr><td><tt>measurement.contract_parity</tt></td><td><tt>UNCHECKABLE</tt></td><td>absence_and_inability</td><td>At least two surfaces were declared or observed for the dimension, but the comparison could not be completed.</td></tr>
+<tr><td><tt>measurement.a2a_card_signature</tt></td><td><tt>VERIFIED</tt></td><td>verification</td><td>Every signature on the served card verified under the canonicalisation rule of its declared protocol version.</td></tr>
+<tr><td><tt>measurement.a2a_card_signature</tt></td><td><tt>FAILED</tt></td><td>verification</td><td>A cryptographic signature check on the served card did not pass under the canonicalisation rule of its declared protocol version.</td></tr>
+<tr><td><tt>measurement.a2a_card_signature</tt></td><td><tt>UNCHECKABLE</tt></td><td>absence_and_inability</td><td>The referenced key document or card bytes could not be retrieved or parsed.</td></tr>
+<tr><td><tt>measurement.cross_ledger_supply</tt></td><td><tt>STATE_PROOF_VERIFIED</tt></td><td>reading</td><td>A Merkle account and storage proof was verified against a block header state commitment.</td></tr>
+<tr><td><tt>measurement.cross_ledger_supply</tt></td><td><tt>STATE_PROOF_RECORDED</tt></td><td>reading</td><td>A state proof was returned and its digest recorded, but it did not verify locally; the supply figure is the operator's answer.</td></tr>
+<tr><td><tt>measurement.cross_ledger_supply</tt></td><td><tt>OPERATOR_API</tt></td><td>reading</td><td>The supply figure comes from an operator RPC/API response without a verified state proof.</td></tr>
+<tr><td><tt>measurement.cross_ledger_supply</tt></td><td><tt>CONSISTENT</tt></td><td>agreement</td><td>Compared operator reads or deployment supply figures agreed.</td></tr>
+<tr><td><tt>measurement.cross_ledger_supply</tt></td><td><tt>INCONSISTENT</tt></td><td>agreement</td><td>Compared operator reads or deployment supply figures disagreed.</td></tr>
+<tr><td><tt>measurement.cross_ledger_supply</tt></td><td><tt>TOTAL_COMPLETE</tt></td><td>reading</td><td>Every deployment on the issuer's list for the asset was read.</td></tr>
+<tr><td><tt>measurement.cross_ledger_supply</tt></td><td><tt>TOTAL_PARTIAL</tt></td><td>reading</td><td>Only a subset of deployments on the issuer's list for the asset could be read.</td></tr>
+<tr><td><tt>measurement.cross_ledger_supply</tt></td><td><tt>LISTED_NOT_READ</tt></td><td>absence_and_inability</td><td>The deployment is listed on the issuer's page but was not read by this probe; never treated as zero supply.</td></tr>
+<tr><td><tt>measurement.cross_ledger_supply</tt></td><td><tt>PERMISSIONED_NOT_READABLE</tt></td><td>absence_and_inability</td><td>The asset lives on a permissioned ledger that an unauthenticated third party cannot read.</td></tr>
+<tr><td><tt>measurement.cross_ledger_supply</tt></td><td><tt>ISSUER_LIST_UNAVAILABLE</tt></td><td>absence_and_inability</td><td>No public deployment list from the issuer could be retrieved.</td></tr>
+<tr><td><tt>measurement.cross_ledger_supply</tt></td><td><tt>REJECTED</tt></td><td>verification</td><td>An on-chain identity check did not pass; no supply is recorded against the asset.</td></tr>
+<tr><td><tt>measurement.cross_ledger_supply</tt></td><td><tt>UNCHECKABLE</tt></td><td>absence_and_inability</td><td>The ledger read did not complete; never recorded as zero or absent.</td></tr>
+<tr><td><tt>measurement.cross_runtime_reproduction</tt></td><td><tt>REPRODUCED_ITEMWISE</tt></td><td>reproduction</td><td>Every item grade on the second runtime equalled the baseline runtime's grade (grade_equal == n_items).</td></tr>
+<tr><td><tt>measurement.cross_runtime_reproduction</tt></td><td><tt>REPRODUCED_AGGREGATE_ONLY</tt></td><td>reproduction</td><td>Aggregate accuracy equalled the baseline runtime, while one or more per-item grades differed and cancelled out.</td></tr>
+<tr><td><tt>measurement.cross_runtime_reproduction</tt></td><td><tt>NOT_REPRODUCED</tt></td><td>reproduction</td><td>Aggregate accuracy on the second runtime differed from the baseline runtime.</td></tr>
+<tr><td><tt>measurement.public_signal</tt></td><td><tt>MEASURED</tt></td><td>reading</td><td>The public counter was read completely from its declared source URL.</td></tr>
+<tr><td><tt>measurement.public_signal</tt></td><td><tt>PARTIAL</tt></td><td>reading</td><td>Only part of the counter's underlying pages or items could be read.</td></tr>
+<tr><td><tt>measurement.public_signal</tt></td><td><tt>UNCHECKABLE</tt></td><td>absence_and_inability</td><td>The source could not be read; the observed value is null, never zero.</td></tr>
+<tr><td><tt>measurement.self_parity</tt></td><td><tt>CONSISTENT</tt></td><td>agreement</td><td>The external directory listing or own-surface declaration matched the live served bytes.</td></tr>
+<tr><td><tt>measurement.self_parity</tt></td><td><tt>INCONSISTENT</tt></td><td>agreement</td><td>One or more fields in the listing or declaration differed from the live served bytes.</td></tr>
+<tr><td><tt>measurement.self_parity</tt></td><td><tt>NOT_LISTED</tt></td><td>absence_and_inability</td><td>The offering was absent from a complete read of an open directory.</td></tr>
+<tr><td><tt>measurement.self_parity</tt></td><td><tt>NOT_DECLARED</tt></td><td>absence_and_inability</td><td>The compared field was not declared on the surface.</td></tr>
+<tr><td><tt>measurement.self_parity</tt></td><td><tt>UNCHECKABLE</tt></td><td>absence_and_inability</td><td>The directory read was incomplete or unreachable.</td></tr>
+<tr><td><tt>measurement.tool_drift</tt></td><td><tt>UNCHANGED</tt></td><td>agreement</td><td>Tool names, descriptions, and canonical input schemas were identical at T1 and T2 (per_tool_hashes recorded at both times).</td></tr>
+<tr><td><tt>measurement.tool_drift</tt></td><td><tt>UNCHANGED_AT_NAME_GRANULARITY</tt></td><td>agreement</td><td>Sorted tool-name multiset hash was identical at T1 and T2; per-tool description and schema hashes were not recorded on both sides.</td></tr>
+<tr><td><tt>measurement.tool_drift</tt></td><td><tt>TOOLS_ADDED</tt></td><td>agreement</td><td>One or more tool names were present in the T2 multiset that were not present at T1 (combinable with '+' when multiple dimensions changed).</td></tr>
+<tr><td><tt>measurement.tool_drift</tt></td><td><tt>TOOLS_REMOVED</tt></td><td>agreement</td><td>One or more tool names were present in the T1 multiset that were not present at T2 (combinable with '+').</td></tr>
+<tr><td><tt>measurement.tool_drift</tt></td><td><tt>NAME_SET_CHANGED</tt></td><td>agreement</td><td>The tool_names_sha256 digest changed between T1 and T2 where full name lists were not retained (combinable with '+').</td></tr>
+<tr><td><tt>measurement.tool_drift</tt></td><td><tt>DESCRIPTION_CHANGED</tt></td><td>agreement</td><td>One or more tools present at both times changed description content or presence (combinable with '+').</td></tr>
+<tr><td><tt>measurement.tool_drift</tt></td><td><tt>DESCRIPTION_CHANGED_WHITESPACE_ONLY</tt></td><td>agreement</td><td>Raw description bytes differed while whitespace-collapsed description bytes were equal (combinable with '+').</td></tr>
+<tr><td><tt>measurement.tool_drift</tt></td><td><tt>SCHEMA_CHANGED</tt></td><td>agreement</td><td>One or more tools present at both times changed canonical inputSchema digest (combinable with '+').</td></tr>
+<tr><td><tt>measurement.tool_drift</tt></td><td><tt>UNCHECKABLE</tt></td><td>absence_and_inability</td><td>The endpoint did not respond or tools/list was incomplete at T1 or T2.</td></tr>
+</tbody>
+</table>
 
 </section>
 <section anchor="changes"><name>Changes from -00</name>

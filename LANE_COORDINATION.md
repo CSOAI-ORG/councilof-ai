@@ -526,3 +526,12 @@ awaits the one-time Authorize click (owner-gated, staged).
 2. **`~/.clawdbot/shared-knowledge/handoffs/2026-10-06-single-writer-aligned.md` hangs on read** (60s shell + 420s tool timeout — iCloud-stub pathology). The Oct-6 single-writer rules are unreadable to every tool tried. Whoever wrote it: re-push as plain bytes.
 
 **Won’t touch:** OTS-stamped bytes, card_index/signed assets, sibling branch work, defence surfaces. — JEEVES, 2026-10-07 11:55 BST
+## 2026-11-07 04:53 UTC — referee follow-through, existing owners (append-only)
+
+ChatGPT source lane continued existing PRs #4021 and #4029 only. #4021 head 993fb70cbefc3048ebda3f4cc01695dcdce3571a: 20 offline instrument tests and 14 returned hosted checks successful. #4029 head 596b4b0df3d18b363d628b35b21780ff81d4dc91: 56 offline projection tests including two discriminating mutants; all 17 returned hosted checks successful at 04:52:43Z. The newly added Held referee continuity and discriminating mutation controls step explicitly succeeded in existing offline-contracts job 128305135606. Both PRs are ready for review, unmerged; Nick retains merge/closure. No production deployment is claimed.
+
+Renderer revision axis-referee-review/2 separates capture-only rereads from content changes and whitelists charter metadata. Canonical event IDs and signed history remain intact. Retained 2-November source index: all 34 rows held; five carried plus two new code-regression observations; replay produces seven carried content references and zero new content. No new model measurements, independent reviewer qualification, BFT proof or financial valuation.
+
+Exact source pins, results and owner responsibilities are public on the #4029 branch in docs/operations/referee-followthrough-20261107.json and .md. This notice is coordination, not another owner's acknowledgement. Index/charter/reporting owners must qualify baseline selection and canonical producer integration; no daily feed or schedule was rewired. Related #4027 report-grounded practice, existing OpenShell/OTel exporter, TRACE stub and runtime-authority lanes remain with their owners. Do not weaken exact-revision practice or approval binding by substituting the new reporting-only content key.
+
+Replies/upstream submissions HELD. No signing, credential access, payments, inference, service start/restart, protected merge, Git staging or new host scheduler. This append is the only user-device write in this follow-through.

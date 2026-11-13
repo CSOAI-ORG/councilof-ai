@@ -1,0 +1,1130 @@
+{
+ "checks_sha256": "da647f9e17190ef43479495f35ae4378955b8f6b60536d33966630abac3f4267",
+ "deviation_checks": [
+  "CompletionComplete",
+  "WireSchemaValid",
+  "DNSRebindingRejected",
+  "LocalhostHostAccepted",
+  "PromptsGetEmbeddedResource",
+  "PromptsGetSimple",
+  "PromptsGetWithArgs",
+  "PromptsGetWithImage",
+  "PromptsList",
+  "ResourcesList",
+  "ResourcesReadBinary",
+  "ResourcesReadText",
+  "ResourcesTemplateRead",
+  "ServerAcceptsMultiplePostStreams",
+  "ToolsCallAudio",
+  "ToolsCallEmbeddedResource",
+  "ToolsCallError",
+  "ToolsCallImage",
+  "ToolsCallMixedContent",
+  "ToolsCallSimpleText",
+  "ToolsCallWithProgress",
+  "ToolsList"
+ ],
+ "generated_at": "2026-10-26T02:12:31Z",
+ "instrument": "alpha-2026-07-28",
+ "instrument_channel": "alpha",
+ "not_a_grade": true,
+ "note": "",
+ "scenarios": [
+  {
+   "checks": [
+    {
+     "check": "CompletionComplete",
+     "description": "Server responds to completion requests",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "completion-complete",
+     "specReferences": [
+      {
+       "id": "MCP-Completion",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/completion"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'completion/complete'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'completion/complete' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "4a203baff8b5de49d3feeac83e5d88f57b3a6bb9b2cb59782ece288249ef5600",
+   "scenario": "completion-complete",
+   "scenario_run_id": "server-completion-complete-2026-10-26T02-12-52-061Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "DNSRebindingRejected",
+     "description": "Server rejects requests with non-localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://genosys.ae/mcp"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-rebinding-rejected",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "LocalhostHostAccepted",
+     "description": "Server accepts requests with valid localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://genosys.ae/mcp"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-valid-accepted",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "7424f1b97a21565c85b13cc6a42eaa87ecf4a4b5de1a1dd4701479418fbdd019",
+   "scenario": "dns-rebinding-protection",
+   "scenario_run_id": "server-dns-rebinding-protection-2026-10-26T02-12-53-902Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetEmbeddedResource",
+     "description": "Get prompt with embedded resource",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "prompts-get-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Embedded-Resources",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#embedded-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'prompts/get'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'prompts/get' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "b55e840e62e25ff1f29a7de07a265cd26461f97d2c4466e6ea156e66eba6c6bc",
+   "scenario": "prompts-get-embedded-resource",
+   "scenario_run_id": "server-prompts-get-embedded-resource-2026-10-26T02-12-53-710Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetSimple",
+     "description": "Get simple prompt successfully",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "prompts-get-simple",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'prompts/get'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'prompts/get' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "5d479007f6d737d36eeb9f5316f112e7cad019f63d522cc40b733848d81ac8ab",
+   "scenario": "prompts-get-simple",
+   "scenario_run_id": "server-prompts-get-simple-2026-10-26T02-12-53-537Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithArgs",
+     "description": "Get parameterized prompt with argument substitution",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "prompts-get-with-args",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'prompts/get'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'prompts/get' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "439d93959b49db35d7aab6cb3aa74c0a4e5b4b8fa67637fa2467b5ce77de0e8a",
+   "scenario": "prompts-get-with-args",
+   "scenario_run_id": "server-prompts-get-with-args-2026-10-26T02-12-53-640Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithImage",
+     "description": "Get prompt with image content",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "prompts-get-with-image",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Image",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#image-content"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'prompts/get'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'prompts/get' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "a012511b2159909b9c63f1ef6bb361acb942735e3ae49d4fa250eb294fb6c753",
+   "scenario": "prompts-get-with-image",
+   "scenario_run_id": "server-prompts-get-with-image-2026-10-26T02-12-53-790Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsList",
+     "description": "Server lists available prompts with valid structure",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "prompts-list",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#listing-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'prompts/list'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'prompts/list' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "e19cd3b5b7eaa056d83a0dba272db7b25721e98f7261872eac5e679d41109e5c",
+   "scenario": "prompts-list",
+   "scenario_run_id": "server-prompts-list-2026-10-26T02-12-53-464Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesList",
+     "description": "Server lists available resources with valid structure",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "resources-list",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#listing-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'resources/list'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'resources/list' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "6bf1ed95f4499e27bfcace6bc43203ba7b0e112279e8b116df73c208fd472c3e",
+   "scenario": "resources-list",
+   "scenario_run_id": "server-resources-list-2026-10-26T02-12-53-157Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadBinary",
+     "description": "Read binary resource successfully",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "resources-read-binary",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'resources/read'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'resources/read' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "4b15418d4e1517db023d3fe0db18c10b9a77c2c821eced005a1574df5d30e580",
+   "scenario": "resources-read-binary",
+   "scenario_run_id": "server-resources-read-binary-2026-10-26T02-12-53-277Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadText",
+     "description": "Read text resource successfully",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "resources-read-text",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'resources/read'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'resources/read' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "4864db992060cb2e15e0b4934529c7e563e0f87b6e2d4d620a7f2cef41c16f38",
+   "scenario": "resources-read-text",
+   "scenario_run_id": "server-resources-read-text-2026-10-26T02-12-53-218Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesTemplateRead",
+     "description": "Read resource from template with parameter substitution",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "resources-templates-read",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Templates",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-templates"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'resources/read'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'resources/read' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "7ce1cc60b76f82923f5f77db69e76f2267c0b33b3abeae67384b9be9b9cc4c83",
+   "scenario": "resources-templates-read",
+   "scenario_run_id": "server-resources-templates-read-2026-10-26T02-12-53-389Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerAcceptsMultiplePostStreams",
+     "description": "Server allows multiple concurrent POST requests (each may return SSE or JSON)",
+     "details": {
+      "contentTypes": [
+       "application/json",
+       "application/json",
+       "application/json"
+      ],
+      "numSseStreams": 0,
+      "numStreamsAccepted": 0,
+      "numStreamsAttempted": 3,
+      "statuses": [
+       400,
+       400,
+       400
+      ]
+     },
+     "errorMessage": "Server rejected some requests. Statuses: 400, 400, 400",
+     "id": "server-accepts-multiple-post-streams",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "ServerSSEStreamsFunctional",
+     "description": "Server returned JSON responses (SSE streams optional)",
+     "details": {
+      "message": "Server returned JSON for all requests - SSE streaming is optional",
+      "numSseStreams": 0,
+      "results": [
+       {
+        "index": 0,
+        "skipped": true,
+        "type": "json"
+       },
+       {
+        "index": 1,
+        "skipped": true,
+        "type": "json"
+       },
+       {
+        "index": 2,
+        "skipped": true,
+        "type": "json"
+       }
+      ]
+     },
+     "id": "server-sse-streams-functional",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "INFO"
+    }
+   ],
+   "checks_sha256": "78081d732bb501965654b0cda4386e0bf0c047394dd452a8d3bc2d945cd123d9",
+   "scenario": "server-sse-multiple-streams",
+   "scenario_run_id": "server-server-sse-multiple-streams-2026-10-26T02-12-53-025Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallAudio",
+     "description": "Tool returns audio content",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "tools-call-audio",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "9cc233223a003c5fdb1a3601096a27a59fa6c16468ad7be99007b761e8257478",
+   "scenario": "tools-call-audio",
+   "scenario_run_id": "server-tools-call-audio-2026-10-26T02-12-52-580Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallEmbeddedResource",
+     "description": "Tool returns embedded resource content",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "tools-call-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "1319d6479452b0a463dd0c1a0fede33c25dd9e345a87578f2880cf85c6fb3412",
+   "scenario": "tools-call-embedded-resource",
+   "scenario_run_id": "server-tools-call-embedded-resource-2026-10-26T02-12-52-650Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallError",
+     "description": "Tool returns error correctly",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "tools-call-error",
+     "specReferences": [
+      {
+       "id": "MCP-Error-Handling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "c5d977a1dc462c67579bf073803db39a40d0e692c9040ae51817e049137503fa",
+   "scenario": "tools-call-error",
+   "scenario_run_id": "server-tools-call-error-2026-10-26T02-12-52-865Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallImage",
+     "description": "Tool returns image content",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "tools-call-image",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "6f47192717e4989b7dc69f803bcbb2caf101e0b685f04e731c81070e2640a447",
+   "scenario": "tools-call-image",
+   "scenario_run_id": "server-tools-call-image-2026-10-26T02-12-52-515Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallMixedContent",
+     "description": "Tool returns multiple content types",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "tools-call-mixed-content",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "0a0743ae5baa57b9ee666371938958cfa162d0d5c860e460206a1e7d06fe8e23",
+   "scenario": "tools-call-mixed-content",
+   "scenario_run_id": "server-tools-call-mixed-content-2026-10-26T02-12-52-714Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSimpleText",
+     "description": "Tool returns simple text content",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "tools-call-simple-text",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "97073eb3eca3e9cf4ffef173c3afb6f284bf0f962ee737b28651bac413799aa1",
+   "scenario": "tools-call-simple-text",
+   "scenario_run_id": "server-tools-call-simple-text-2026-10-26T02-12-52-407Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithProgress",
+     "description": "Tool reports progress notifications",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "tools-call-with-progress",
+     "specReferences": [
+      {
+       "id": "MCP-Progress",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/progress"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/call'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/call' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "175ae6d1b90bdac8587ac396fafb8c2a517a1858a4871de267b1ba8b5c551211",
+   "scenario": "tools-call-with-progress",
+   "scenario_run_id": "server-tools-call-with-progress-2026-10-26T02-12-52-947Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsList",
+     "description": "Server lists available tools with valid structure",
+     "errorMessage": "Failed: Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+     "id": "tools-list",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#listing-tools"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "WireSchemaValid",
+     "description": "Every JSON-RPC message the implementation sent is valid per the spec JSON schema for the negotiated spec version",
+     "details": {
+      "messagesValidated": 2,
+      "violations": [
+       {
+        "context": "response to 'tools/list'",
+        "errors": [
+         "JSONRPCErrorResponse/id: must be string,integer"
+        ],
+        "message": {
+         "error": {
+          "code": -32000,
+          "message": "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)"
+         },
+         "id": null,
+         "jsonrpc": "2.0"
+        },
+        "origin": "implementation",
+        "specVersion": "2026-07-28"
+       }
+      ]
+     },
+     "errorMessage": "[implementation] response to 'tools/list' (spec 2026-07-28): JSONRPCErrorResponse/id: must be string,integer \u2014 message: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32000,\"message\":\"Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)\"},\"id\":null}",
+     "id": "wire-schema-valid",
+     "specReferences": [
+      {
+       "id": "MCP-Schema",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/draft/schema.json"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "bdbbd5736b33047c602a6654cd2c6adcee343d00856f94964e452886c9e84c6b",
+   "scenario": "tools-list",
+   "scenario_run_id": "server-tools-list-2026-10-26T02-12-52-335Z"
+  }
+ ],
+ "schema": "csoai.mcp-conformance-run/0.1",
+ "source": "mcp-registry",
+ "spec_version": "2026-07-28",
+ "subject_id": "ae.genosys/genosys@1.2.0",
+ "subject_record_url": "https://genosys.ae/mcp",
+ "subject_url": "https://genosys.ae/mcp",
+ "suite_version": "0.2.0-alpha.12"
+}

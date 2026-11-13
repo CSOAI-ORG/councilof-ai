@@ -86,4 +86,19 @@ class ReadbackTests(unittest.TestCase):
             p=Path(tmp);(p/'engine.lock').touch();(p/'latest.json').write_text('{}');(p/'deep-candidates.jsonl').write_text('');(p/'loops.json').write_text(json.dumps(self.m))
             with patch.object(sys,'argv',['audit','--state',str(p),'--manifest',str(p/'loops.json')]),contextlib.redirect_stdout(io.StringIO()) as output:code=a.main()
             self.assertEqual(code,2);self.assertEqual(json.loads(output.getvalue())['state'],'HOLD_UNCHECKABLE')
+    def test_already_queued_deferred_trigger_stays_in_sync_across_hours(self):
+        manifest=json.loads((HERE/'loops.json').read_text());loops=manifest['loops']
+        for loop in loops:
+            if loop['probes']:loop['probes']=[{'kind':'file','path':loop['id']}]
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);mf=root/'manifest.json';mf.write_text(json.dumps(manifest));state=root/'state'
+            for hour in [1,2,3]:
+                def probe(p,**kwargs):
+                    if p['path']=='H-37' and hour in (2,3):
+                        return {'state':'INCONCLUSIVE','source':p['path'],'reason':'simulated'}
+                    content=p['path']+('changed' if p['path']=='H-05' and hour in (2,3) else 'stable')
+                    return {'state':'OBSERVED','source':p['path'],'sha256':e.sha(content.encode())}
+                with patch.object(e,'run_probe',side_effect=probe),patch.object(e,'root_freshness_special'),patch.object(e,'axis_touch',return_value={'state':'FIXTURE'}),patch.object(e,'now',return_value=datetime(2026,9,28,hour,tzinfo=timezone.utc)),patch.object(sys,'argv',['e','--state',str(state),'--manifest',str(mf)]),contextlib.redirect_stdout(io.StringIO()):e.main()
+            result=a.audit_paths(state,mf)
+            self.assertEqual(result['state'],'LOCAL_HANDOFF_INTEGRITY_VALID')
 if __name__=='__main__':unittest.main()

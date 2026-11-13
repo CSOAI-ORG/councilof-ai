@@ -10,7 +10,10 @@ import sys
 import tempfile
 import unittest
 
+PACKAGE = Path(__file__).resolve().parents[1]
 ROOT = Path(__file__).resolve().parents[3]
+if not (ROOT / "docs/standards/osaia-safe-evidence-pack").exists():
+    ROOT = Path.home() / "clawd/councilof-ai-work"
 PACK = ROOT / "docs/standards/osaia-safe-evidence-pack"
 EXPECTED = {
     "FREEZE.json": "855164ee8402f81281ea214226e1e3bc2a5ba808d35430347d9ce4d8d128ecd9",
@@ -33,7 +36,9 @@ class SafeFreezeV2Regression(unittest.TestCase):
         for name, expected in EXPECTED.items():
             if hashlib.sha256(cls.raw[name]).hexdigest() != expected:
                 raise AssertionError("Frozen fixture changed: " + name)
-        path = ROOT / "packages/evidence-fabric/safe_freeze_v2.py"
+        path = PACKAGE / "safe_freeze_v2.py"
+        if not path.exists():
+            path = ROOT / "packages/evidence-fabric/safe_freeze_v2.py"
         spec = importlib.util.spec_from_file_location("safe_freeze_v2_regression", path)
         if spec is None or spec.loader is None:
             raise AssertionError("External consumer cannot be loaded")
