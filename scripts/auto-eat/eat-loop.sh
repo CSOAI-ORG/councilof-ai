@@ -28,7 +28,7 @@
 #   EAT_PROBE_WORKERS  concurrent probes (default 64)
 #   EAT_NO_PUSH=1  stage + commit locally, never push (for dry runs)
 # Public APIs — not a literal 1e6x of 40 probes/hour. This is the keyless ceiling.
-set -u
+set -uo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="${EAT_REPO:-$(git -C "$HERE" rev-parse --show-toplevel 2>/dev/null)}"
