@@ -1,6 +1,6 @@
 {
  "schema": "csoai.watchdog-charter-feed/0.1",
- "as_of": "2026-11-04T08:27:51Z",
+ "as_of": "2026-11-12T17:44:38Z",
  "producer": "scripts/watchdog_charter_feed.py",
  "measure": "A HUMAN ROUTING QUEUE derived from the daily public-watchdog signal index",
  "not_a": [
@@ -12,9 +12,9 @@
  ],
  "count_grammar": "rows count (SOURCE × OBLIGATION) pairs a human may need to look at. That is a routing count, not a measurement, and it is never pooled with an axis n. A row exists because the source's axis grid intersects the obligation's axis grid — a mechanical rule, so it cannot drift from the data.",
  "source_index": {
-  "run_id": "20261104T082746Z",
-  "as_of": "2026-11-04T08:27:46Z",
-  "run_artifact": "/interop/watchdog-intake/20261104T082746Z.json"
+  "run_id": "20261112T174434Z",
+  "as_of": "2026-11-12T17:44:34Z",
+  "run_artifact": "/interop/watchdog-intake/20261112T174434Z.json"
  },
  "obligations_tracked": [
   "article-50",
@@ -39,26 +39,42 @@
    "source_kind": "advisory-feed",
    "source_state": "REACHABLE",
    "obligation": "charter",
-   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "obligation_label": "Council of AI candidate profile — runtime enforcement and human oversight",
    "axis_touched": [
     "effect-binding"
    ],
-   "observed_count": 1767,
+   "observed_count": 1779,
    "observed_count_kind": "count",
-   "source_digest": "0e7e91681f2207c7920a338f0d2b14c67933473ecf9550153627efaaba8d2e4c",
+   "source_digest": "41c8091ad62d508d6f8906ad5cd26b20efe551f7d51b95ecc8a6981fa640b4ea",
    "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
     "an approval to act",
     "evidence that an obligation is satisfied or unsatisfied"
    ],
+   "obligation_source": {
+    "owner": "Council of AI",
+    "kind": "CANDIDATE_PROFILE",
+    "profile": "csoai.hitl-authority-effect/0.2",
+    "adoption": "NOT_ESTABLISHED",
+    "source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/b5cef696a1ae17d756bd73897d2e68293d05d94e/docs/standards/osaia-safe-reverification/HITL-AUTHORITY-EFFECT-PROFILE.md",
+    "git_blob_sha": "f7c9af51d7ab897c62e2fa46cb63998e0cea9719",
+    "external_reference": {
+     "name": "SAFE Working Group charter",
+     "relationship": "REFERENCE_ONLY",
+     "status_at_check": "UNDER_DEVELOPMENT",
+     "checked_on": "2026-11-11",
+     "source_url": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/3769437209edac11d745dd58c165b951ed474e27/CHARTER.md",
+     "git_blob_sha": "c74309c122a465a88731f3f7842beb812c89cac4"
+    }
+   },
    "routing_bucket": "B — the source answered with a count to read"
   },
   {
@@ -72,16 +88,16 @@
    "axis_touched": [
     "supply-chain"
    ],
-   "observed_count": 1767,
+   "observed_count": 1779,
    "observed_count_kind": "count",
-   "source_digest": "0e7e91681f2207c7920a338f0d2b14c67933473ecf9550153627efaaba8d2e4c",
+   "source_digest": "41c8091ad62d508d6f8906ad5cd26b20efe551f7d51b95ecc8a6981fa640b4ea",
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -102,16 +118,16 @@
     "effect-binding",
     "supply-chain"
    ],
-   "observed_count": 1767,
+   "observed_count": 1779,
    "observed_count_kind": "count",
-   "source_digest": "0e7e91681f2207c7920a338f0d2b14c67933473ecf9550153627efaaba8d2e4c",
+   "source_digest": "41c8091ad62d508d6f8906ad5cd26b20efe551f7d51b95ecc8a6981fa640b4ea",
    "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -127,26 +143,42 @@
    "source_kind": "advisory-feed",
    "source_state": "REACHABLE",
    "obligation": "charter",
-   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "obligation_label": "Council of AI candidate profile — runtime enforcement and human oversight",
    "axis_touched": [
     "effect-binding"
    ],
-   "observed_count": 419045,
+   "observed_count": 424784,
    "observed_count_kind": "count",
-   "source_digest": "3233edd51afaab96479b6116f3c29b0f4f77c8b7f413c7e730b3f4f6f6161349",
+   "source_digest": "ea0e855e84587e9d7c9e00fdc714734c894717d28385c8985bf6a3bc3bb76289",
    "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
     "an approval to act",
     "evidence that an obligation is satisfied or unsatisfied"
    ],
+   "obligation_source": {
+    "owner": "Council of AI",
+    "kind": "CANDIDATE_PROFILE",
+    "profile": "csoai.hitl-authority-effect/0.2",
+    "adoption": "NOT_ESTABLISHED",
+    "source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/b5cef696a1ae17d756bd73897d2e68293d05d94e/docs/standards/osaia-safe-reverification/HITL-AUTHORITY-EFFECT-PROFILE.md",
+    "git_blob_sha": "f7c9af51d7ab897c62e2fa46cb63998e0cea9719",
+    "external_reference": {
+     "name": "SAFE Working Group charter",
+     "relationship": "REFERENCE_ONLY",
+     "status_at_check": "UNDER_DEVELOPMENT",
+     "checked_on": "2026-11-11",
+     "source_url": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/3769437209edac11d745dd58c165b951ed474e27/CHARTER.md",
+     "git_blob_sha": "c74309c122a465a88731f3f7842beb812c89cac4"
+    }
+   },
    "routing_bucket": "B — the source answered with a count to read"
   },
   {
@@ -160,16 +192,16 @@
    "axis_touched": [
     "supply-chain"
    ],
-   "observed_count": 419045,
+   "observed_count": 424784,
    "observed_count_kind": "count",
-   "source_digest": "3233edd51afaab96479b6116f3c29b0f4f77c8b7f413c7e730b3f4f6f6161349",
+   "source_digest": "ea0e855e84587e9d7c9e00fdc714734c894717d28385c8985bf6a3bc3bb76289",
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -190,16 +222,16 @@
     "effect-binding",
     "supply-chain"
    ],
-   "observed_count": 419045,
+   "observed_count": 424784,
    "observed_count_kind": "count",
-   "source_digest": "3233edd51afaab96479b6116f3c29b0f4f77c8b7f413c7e730b3f4f6f6161349",
+   "source_digest": "ea0e855e84587e9d7c9e00fdc714734c894717d28385c8985bf6a3bc3bb76289",
    "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -215,26 +247,42 @@
    "source_kind": "advisory-feed",
    "source_state": "REACHABLE",
    "obligation": "charter",
-   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "obligation_label": "Council of AI candidate profile — runtime enforcement and human oversight",
    "axis_touched": [
     "effect-binding"
    ],
    "observed_count": 30,
    "observed_count_kind": "count",
-   "source_digest": "6d5c6a9a706f11a1a7f80d0061949c0010fab70c25797fd9f9233d7e6da07501",
+   "source_digest": "f88645dc69ee68165bfa6803471a4ad074cc1d53e657179fedd300cef12d1b16",
    "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
     "an approval to act",
     "evidence that an obligation is satisfied or unsatisfied"
    ],
+   "obligation_source": {
+    "owner": "Council of AI",
+    "kind": "CANDIDATE_PROFILE",
+    "profile": "csoai.hitl-authority-effect/0.2",
+    "adoption": "NOT_ESTABLISHED",
+    "source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/b5cef696a1ae17d756bd73897d2e68293d05d94e/docs/standards/osaia-safe-reverification/HITL-AUTHORITY-EFFECT-PROFILE.md",
+    "git_blob_sha": "f7c9af51d7ab897c62e2fa46cb63998e0cea9719",
+    "external_reference": {
+     "name": "SAFE Working Group charter",
+     "relationship": "REFERENCE_ONLY",
+     "status_at_check": "UNDER_DEVELOPMENT",
+     "checked_on": "2026-11-11",
+     "source_url": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/3769437209edac11d745dd58c165b951ed474e27/CHARTER.md",
+     "git_blob_sha": "c74309c122a465a88731f3f7842beb812c89cac4"
+    }
+   },
    "routing_bucket": "B — the source answered with a count to read"
   },
   {
@@ -250,14 +298,14 @@
    ],
    "observed_count": 30,
    "observed_count_kind": "count",
-   "source_digest": "6d5c6a9a706f11a1a7f80d0061949c0010fab70c25797fd9f9233d7e6da07501",
+   "source_digest": "f88645dc69ee68165bfa6803471a4ad074cc1d53e657179fedd300cef12d1b16",
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -280,14 +328,14 @@
    ],
    "observed_count": 30,
    "observed_count_kind": "count",
-   "source_digest": "6d5c6a9a706f11a1a7f80d0061949c0010fab70c25797fd9f9233d7e6da07501",
+   "source_digest": "f88645dc69ee68165bfa6803471a4ad074cc1d53e657179fedd300cef12d1b16",
    "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -303,26 +351,42 @@
    "source_kind": "advisory-feed",
    "source_state": "REACHABLE",
    "obligation": "charter",
-   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "obligation_label": "Council of AI candidate profile — runtime enforcement and human oversight",
    "axis_touched": [
     "effect-binding"
    ],
    "observed_count": 10,
    "observed_count_kind": "count",
-   "source_digest": "6ef6af6214dbf69d193d1ed0f3a9417b8e763d56f28243e2e0d5e49023ff0941",
+   "source_digest": "9d00eb8792dc3a24802749338ecb3ffab0a796fccfc08a6235fbe154fbc8c408",
    "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
     "an approval to act",
     "evidence that an obligation is satisfied or unsatisfied"
    ],
+   "obligation_source": {
+    "owner": "Council of AI",
+    "kind": "CANDIDATE_PROFILE",
+    "profile": "csoai.hitl-authority-effect/0.2",
+    "adoption": "NOT_ESTABLISHED",
+    "source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/b5cef696a1ae17d756bd73897d2e68293d05d94e/docs/standards/osaia-safe-reverification/HITL-AUTHORITY-EFFECT-PROFILE.md",
+    "git_blob_sha": "f7c9af51d7ab897c62e2fa46cb63998e0cea9719",
+    "external_reference": {
+     "name": "SAFE Working Group charter",
+     "relationship": "REFERENCE_ONLY",
+     "status_at_check": "UNDER_DEVELOPMENT",
+     "checked_on": "2026-11-11",
+     "source_url": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/3769437209edac11d745dd58c165b951ed474e27/CHARTER.md",
+     "git_blob_sha": "c74309c122a465a88731f3f7842beb812c89cac4"
+    }
+   },
    "routing_bucket": "B — the source answered with a count to read"
   },
   {
@@ -338,14 +402,14 @@
    ],
    "observed_count": 10,
    "observed_count_kind": "count",
-   "source_digest": "6ef6af6214dbf69d193d1ed0f3a9417b8e763d56f28243e2e0d5e49023ff0941",
+   "source_digest": "9d00eb8792dc3a24802749338ecb3ffab0a796fccfc08a6235fbe154fbc8c408",
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -368,14 +432,14 @@
    ],
    "observed_count": 10,
    "observed_count_kind": "count",
-   "source_digest": "6ef6af6214dbf69d193d1ed0f3a9417b8e763d56f28243e2e0d5e49023ff0941",
+   "source_digest": "9d00eb8792dc3a24802749338ecb3ffab0a796fccfc08a6235fbe154fbc8c408",
    "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -391,7 +455,7 @@
    "source_kind": "advisory-feed",
    "source_state": "REACHABLE",
    "obligation": "charter",
-   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "obligation_label": "Council of AI candidate profile — runtime enforcement and human oversight",
    "axis_touched": [
     "effect-binding"
    ],
@@ -404,13 +468,29 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
     "an approval to act",
     "evidence that an obligation is satisfied or unsatisfied"
    ],
+   "obligation_source": {
+    "owner": "Council of AI",
+    "kind": "CANDIDATE_PROFILE",
+    "profile": "csoai.hitl-authority-effect/0.2",
+    "adoption": "NOT_ESTABLISHED",
+    "source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/b5cef696a1ae17d756bd73897d2e68293d05d94e/docs/standards/osaia-safe-reverification/HITL-AUTHORITY-EFFECT-PROFILE.md",
+    "git_blob_sha": "f7c9af51d7ab897c62e2fa46cb63998e0cea9719",
+    "external_reference": {
+     "name": "SAFE Working Group charter",
+     "relationship": "REFERENCE_ONLY",
+     "status_at_check": "UNDER_DEVELOPMENT",
+     "checked_on": "2026-11-11",
+     "source_url": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/3769437209edac11d745dd58c165b951ed474e27/CHARTER.md",
+     "git_blob_sha": "c74309c122a465a88731f3f7842beb812c89cac4"
+    }
+   },
    "routing_bucket": "C — the source answered; read the digest if it matters"
   },
   {
@@ -433,7 +513,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -453,16 +533,16 @@
    "axis_touched": [
     "supply-chain"
    ],
-   "observed_count": 1444,
+   "observed_count": 1457,
    "observed_count_kind": "count",
-   "source_digest": "052060c04f9feb94c43e892073427c07cfea43e1c7860055087d03c74e6d781e",
+   "source_digest": "e1064477b87ca8e977447efeb9884de9bfc3bff13a96086368545047a06c35f8",
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -482,16 +562,16 @@
    "axis_touched": [
     "supply-chain"
    ],
-   "observed_count": 1444,
+   "observed_count": 1457,
    "observed_count_kind": "count",
-   "source_digest": "052060c04f9feb94c43e892073427c07cfea43e1c7860055087d03c74e6d781e",
+   "source_digest": "e1064477b87ca8e977447efeb9884de9bfc3bff13a96086368545047a06c35f8",
    "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -520,7 +600,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -549,7 +629,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -578,7 +658,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -607,7 +687,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -629,14 +709,14 @@
    ],
    "observed_count": 30,
    "observed_count_kind": "count",
-   "source_digest": "503cf4e34148d9c25ed78e8ff79c9164e1c69079e816652a16a78159f7ddbd4b",
+   "source_digest": "6a9ab629af43c2d3360f502a3c3637ce71f1d4640981a97a2bef75665d4de834",
    "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -659,14 +739,14 @@
    ],
    "observed_count": 30,
    "observed_count_kind": "count",
-   "source_digest": "503cf4e34148d9c25ed78e8ff79c9164e1c69079e816652a16a78159f7ddbd4b",
+   "source_digest": "6a9ab629af43c2d3360f502a3c3637ce71f1d4640981a97a2bef75665d4de834",
    "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -686,16 +766,16 @@
    "axis_touched": [
     "serving-fidelity"
    ],
-   "observed_count": 455,
+   "observed_count": 468,
    "observed_count_kind": "count",
-   "source_digest": "79bcf65f2d7259e163a7c103e8c6d16ade0c87650b1eb2b89846311967b6d3c6",
+   "source_digest": "c6d90bd38d8fea97f620e52d380de2a2c9d78c469c074beb956c3e2305133b66",
    "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -711,7 +791,7 @@
    "source_kind": "threat-framework",
    "source_state": "REACHABLE",
    "obligation": "charter",
-   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "obligation_label": "Council of AI candidate profile — runtime enforcement and human oversight",
    "axis_touched": [
     "effect-binding"
    ],
@@ -724,13 +804,29 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
     "an approval to act",
     "evidence that an obligation is satisfied or unsatisfied"
    ],
+   "obligation_source": {
+    "owner": "Council of AI",
+    "kind": "CANDIDATE_PROFILE",
+    "profile": "csoai.hitl-authority-effect/0.2",
+    "adoption": "NOT_ESTABLISHED",
+    "source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/b5cef696a1ae17d756bd73897d2e68293d05d94e/docs/standards/osaia-safe-reverification/HITL-AUTHORITY-EFFECT-PROFILE.md",
+    "git_blob_sha": "f7c9af51d7ab897c62e2fa46cb63998e0cea9719",
+    "external_reference": {
+     "name": "SAFE Working Group charter",
+     "relationship": "REFERENCE_ONLY",
+     "status_at_check": "UNDER_DEVELOPMENT",
+     "checked_on": "2026-11-11",
+     "source_url": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/3769437209edac11d745dd58c165b951ed474e27/CHARTER.md",
+     "git_blob_sha": "c74309c122a465a88731f3f7842beb812c89cac4"
+    }
+   },
    "routing_bucket": "B — the source answered with a count to read"
   },
   {
@@ -753,7 +849,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -782,7 +878,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -811,7 +907,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -827,7 +923,7 @@
    "source_kind": "threat-framework",
    "source_state": "REACHABLE",
    "obligation": "charter",
-   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "obligation_label": "Council of AI candidate profile — runtime enforcement and human oversight",
    "axis_touched": [
     "effect-binding"
    ],
@@ -840,13 +936,29 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
     "an approval to act",
     "evidence that an obligation is satisfied or unsatisfied"
    ],
+   "obligation_source": {
+    "owner": "Council of AI",
+    "kind": "CANDIDATE_PROFILE",
+    "profile": "csoai.hitl-authority-effect/0.2",
+    "adoption": "NOT_ESTABLISHED",
+    "source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/b5cef696a1ae17d756bd73897d2e68293d05d94e/docs/standards/osaia-safe-reverification/HITL-AUTHORITY-EFFECT-PROFILE.md",
+    "git_blob_sha": "f7c9af51d7ab897c62e2fa46cb63998e0cea9719",
+    "external_reference": {
+     "name": "SAFE Working Group charter",
+     "relationship": "REFERENCE_ONLY",
+     "status_at_check": "UNDER_DEVELOPMENT",
+     "checked_on": "2026-11-11",
+     "source_url": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/3769437209edac11d745dd58c165b951ed474e27/CHARTER.md",
+     "git_blob_sha": "c74309c122a465a88731f3f7842beb812c89cac4"
+    }
+   },
    "routing_bucket": "C — the source answered; read the digest if it matters"
   },
   {
@@ -869,7 +981,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -890,16 +1002,16 @@
     "provenance",
     "provenance-controls"
    ],
-   "observed_count": 3565473619,
+   "observed_count": 3715420653,
    "observed_count_kind": "count",
-   "source_digest": "1c2b4136b161d66c543fe0c8c35234ba2691bb2c75939265bd520f043fe1b39f",
+   "source_digest": "b824c4599b31758f9c735d8839afc8fdf1aea610080e4a12a68390b67fab7ae7",
    "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -920,16 +1032,16 @@
     "provenance",
     "provenance-controls"
    ],
-   "observed_count": 3565473619,
+   "observed_count": 3715420653,
    "observed_count_kind": "count",
-   "source_digest": "1c2b4136b161d66c543fe0c8c35234ba2691bb2c75939265bd520f043fe1b39f",
+   "source_digest": "b824c4599b31758f9c735d8839afc8fdf1aea610080e4a12a68390b67fab7ae7",
    "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -949,16 +1061,16 @@
    "axis_touched": [
     "provenance-controls"
    ],
-   "observed_count": 3565473619,
+   "observed_count": 3715420653,
    "observed_count_kind": "count",
-   "source_digest": "1c2b4136b161d66c543fe0c8c35234ba2691bb2c75939265bd520f043fe1b39f",
+   "source_digest": "b824c4599b31758f9c735d8839afc8fdf1aea610080e4a12a68390b67fab7ae7",
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -980,14 +1092,14 @@
    ],
    "observed_count": 18,
    "observed_count_kind": "count",
-   "source_digest": "e4fca35f5a30cd67a33b05b4cfbafe6d78c18ce39e31262634a9bf5a29ec5073",
+   "source_digest": "d93c861340b0d4d0063cd179351eca21f5cf00e1a57122b8cd45de29aec2cb34",
    "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -1009,14 +1121,14 @@
    ],
    "observed_count": 18,
    "observed_count_kind": "count",
-   "source_digest": "e4fca35f5a30cd67a33b05b4cfbafe6d78c18ce39e31262634a9bf5a29ec5073",
+   "source_digest": "d93c861340b0d4d0063cd179351eca21f5cf00e1a57122b8cd45de29aec2cb34",
    "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -1039,14 +1151,14 @@
    ],
    "observed_count": 18,
    "observed_count_kind": "count",
-   "source_digest": "e4fca35f5a30cd67a33b05b4cfbafe6d78c18ce39e31262634a9bf5a29ec5073",
+   "source_digest": "d93c861340b0d4d0063cd179351eca21f5cf00e1a57122b8cd45de29aec2cb34",
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -1068,14 +1180,14 @@
    ],
    "observed_count": 18,
    "observed_count_kind": "count",
-   "source_digest": "e4fca35f5a30cd67a33b05b4cfbafe6d78c18ce39e31262634a9bf5a29ec5073",
+   "source_digest": "d93c861340b0d4d0063cd179351eca21f5cf00e1a57122b8cd45de29aec2cb34",
    "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -1091,7 +1203,7 @@
    "source_kind": "standard-body",
    "source_state": "REACHABLE",
    "obligation": "charter",
-   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "obligation_label": "Council of AI candidate profile — runtime enforcement and human oversight",
    "axis_touched": [
     "hitl"
    ],
@@ -1104,13 +1216,29 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
     "an approval to act",
     "evidence that an obligation is satisfied or unsatisfied"
    ],
+   "obligation_source": {
+    "owner": "Council of AI",
+    "kind": "CANDIDATE_PROFILE",
+    "profile": "csoai.hitl-authority-effect/0.2",
+    "adoption": "NOT_ESTABLISHED",
+    "source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/b5cef696a1ae17d756bd73897d2e68293d05d94e/docs/standards/osaia-safe-reverification/HITL-AUTHORITY-EFFECT-PROFILE.md",
+    "git_blob_sha": "f7c9af51d7ab897c62e2fa46cb63998e0cea9719",
+    "external_reference": {
+     "name": "SAFE Working Group charter",
+     "relationship": "REFERENCE_ONLY",
+     "status_at_check": "UNDER_DEVELOPMENT",
+     "checked_on": "2026-11-11",
+     "source_url": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/3769437209edac11d745dd58c165b951ed474e27/CHARTER.md",
+     "git_blob_sha": "c74309c122a465a88731f3f7842beb812c89cac4"
+    }
+   },
    "routing_bucket": "C — the source answered; read the digest if it matters"
   },
   {
@@ -1134,7 +1262,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -1164,7 +1292,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -1193,7 +1321,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -1223,7 +1351,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -1253,7 +1381,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",
@@ -1282,7 +1410,7 @@
    "may_apply": false,
    "approval_may_be_inferred": false,
    "challenge_opened": false,
-   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "challenge_note": "No challenge is opened by this feed. A challenge is a proposal for review; recording it through /api/hitl does not establish human identity or execution authority. Scoped decisions and observed effects require the separate hitl-authority-effect-v0.2 path and its acceptance evidence.",
    "is_not": [
     "a determination of compliance or non-compliance",
     "a score, grade or ranking of the source",

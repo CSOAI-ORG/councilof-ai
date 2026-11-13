@@ -1,0 +1,69 @@
+{
+ "schema": "csoai.feed.axis/0.1",
+ "feed": "axis/swarm-candidates",
+ "as_of": "2026-08-19T09:24:39.174226+00:00",
+ "axis": "swarm-candidates",
+ "board_state": "MEASURED",
+ "cards": 7,
+ "models": [
+  "council-oowm:latest",
+  "council-safe:latest",
+  "mistral:7b",
+  "qwen2.5:0.5b-instruct",
+  "qwen2.5:1.5b",
+  "qwen2.5:7b",
+  "qwen3:4b"
+ ],
+ "measurements": [
+  {
+   "id": "31bcd0b2f21af1fb22cd4d74aeb392870bd068b0b507eb59dd366ae4d1504c5d",
+   "model": "mistral:7b",
+   "accuracy": 0.1481,
+   "created": "2026-08-19T09:24:39.159139+00:00",
+   "file": "signed/cards/31bcd0b2f21af1fb22cd4d74aeb392870bd068b0b507eb59dd366ae4d1504c5d.json"
+  },
+  {
+   "id": "4eb8ffdb407800ec5ff64bfdd8c5e3359ae06c2381190edb52bd543ab8c540c9",
+   "model": "council-safe:latest",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.156345+00:00",
+   "file": "signed/cards/4eb8ffdb407800ec5ff64bfdd8c5e3359ae06c2381190edb52bd543ab8c540c9.json"
+  },
+  {
+   "id": "688a30e266f0a1ae007e0ff1e23915e283ed6e10eed25a8f54db2b5bc25cb71e",
+   "model": "qwen2.5:1.5b",
+   "accuracy": 0.4,
+   "created": "2026-08-19T09:24:39.161168+00:00",
+   "file": "signed/cards/688a30e266f0a1ae007e0ff1e23915e283ed6e10eed25a8f54db2b5bc25cb71e.json"
+  },
+  {
+   "id": "8591fdc18b6b7cbd0513c3306d59bc6624f4e93bcafe2ce4326691a2a79ad891",
+   "model": "council-oowm:latest",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.156127+00:00",
+   "file": "signed/cards/8591fdc18b6b7cbd0513c3306d59bc6624f4e93bcafe2ce4326691a2a79ad891.json"
+  },
+  {
+   "id": "b44335819f7720966b41e2ee26f5798892b0eb8d2571c71e0c9090506f1ff823",
+   "model": "qwen2.5:7b",
+   "accuracy": 0.4444,
+   "created": "2026-08-19T09:24:39.162060+00:00",
+   "file": "signed/cards/b44335819f7720966b41e2ee26f5798892b0eb8d2571c71e0c9090506f1ff823.json"
+  },
+  {
+   "id": "eb9c45816edd670bc3aafeff001f983b1d503ccd0cec432ba19b3bbe936ace36",
+   "model": "qwen2.5:0.5b-instruct",
+   "accuracy": 0.148,
+   "created": "2026-08-19T09:24:39.160276+00:00",
+   "file": "signed/cards/eb9c45816edd670bc3aafeff001f983b1d503ccd0cec432ba19b3bbe936ace36.json"
+  },
+  {
+   "id": "f48e88bb336b76588334c694b1331b2e4de122e528baf6f00b8ebf65867a7fbf",
+   "model": "qwen3:4b",
+   "accuracy": 0.407,
+   "created": "2026-08-19T09:24:39.162677+00:00",
+   "file": "signed/cards/f48e88bb336b76588334c694b1331b2e4de122e528baf6f00b8ebf65867a7fbf.json"
+  }
+ ],
+ "verify": "https://councilof.ai/gspc-verify/"
+}

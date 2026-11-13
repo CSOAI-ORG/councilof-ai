@@ -17,11 +17,12 @@ import {
 } from "@modelcontextprotocol/server";
 import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/server/validators/cf-worker";
 import GSPC_TOOLS from "./gspc-tools.json";
+import { toolsListResult } from "./_tools_list";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
 import { doorInstallLine, npmReleaseState } from "../../scripts/harness-x/npm-release-state.mjs";
 import { sharedToolResult, verifyToolResult } from "./_handlers";
-import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
+import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult, type PaidCallerContext } from "./_paid";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
@@ -115,7 +116,7 @@ const CORS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, HEAD, POST, OPTIONS",
   "access-control-allow-headers":
-    "Content-Type, Accept, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Session-Id, Last-Event-ID",
+    "Authorization, Content-Type, Accept, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Session-Id, Last-Event-ID",
   "access-control-expose-headers":
     "MCP-Protocol-Version, Mcp-Session-Id, x-otel-trace-id",
 };
@@ -158,6 +159,7 @@ const compile = (defs: Tool[]) => defs.map((definition) => ({
 function buildMcp(
   definitions: Tool[],
   door: { instructions: string; paid: boolean },
+  caller?:PaidCallerContext,
 ) {
   const TOOLS = compile(definitions);
   return createMcpHandler(
@@ -169,7 +171,8 @@ function buildMcp(
       capabilities: { tools: { listChanged: false } },
       cacheHints: {
         "server/discover": { ttlMs: 300_000, cacheScope: "public" },
-        "tools/list": { ttlMs: 300_000, cacheScope: "public" },
+        // Named selections and the full catalogue must never share a cached result.
+        "tools/list": { ttlMs: 0, cacheScope: "public" },
       },
     });
     registerWorkingGroups(server);
@@ -191,7 +194,7 @@ function buildMcp(
           // door.paid guards the dispatch as well as the registry: the free door never reaches
           // the paid wrapper even if a paid definition were ever passed to it by mistake.
           door.paid && PAID_TOOL_NAMES.has(definition.name)
-            ? paidToolResult(definition.name, args, origin)
+            ? paidToolResult(definition.name,args,origin,caller)
             : MEASUREMENT_TOOL_NAMES.has(definition.name)
               ? measurementToolResult(definition.name, args, origin)
               : EVIDENCE_TOOL_NAMES.has(definition.name)
@@ -217,9 +220,7 @@ function buildMcp(
         },
         (args) => verifyToolResult(args, origin),
       );
-    server.server.setRequestHandler("tools/list", () => ({
-      tools: definitions,
-    }));
+    server.server.setRequestHandler("tools/list", (request) => toolsListResult(definitions, request.params));
     return server;
   },
   { legacy: "stateless", maxSubscriptions: 0 },
@@ -644,7 +645,9 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       body,
       signal: request.signal,
     });
-    const upstream = await (door === "free" ? mcpFree : mcp).fetch(boundedRequest);
+    const handler=door==="free"?mcpFree:request.headers.has("authorization")
+      ?buildMcp(DEFINITIONS,{instructions:INSTRUCTIONS,paid:true},{authorization:request.headers.get("authorization")||undefined,env:(env||{}) as PaidCallerContext["env"]}):mcp;
+    const upstream=await handler.fetch(boundedRequest);
     const response = withTraceHeader(
       withHeaders(wantsSse ? upstream : await sseToJson(upstream)),
       trace?.traceId ?? null,

@@ -104,7 +104,23 @@ export function benchmarkRows(value: unknown): BenchRow[] {
   return rows;
 }
 export function publicBoard(value: unknown) {
-  const obj = rec(value); const t = rec(obj?.totals) ?? obj;
+  const obj = rec(value);
+  // MCP board_totals returns named counts; AG-UI also accepts the raw totals.
+  // Read the declared fields only, never infer counts from prose or array order.
+  if (obj?.kind === 'live-board-totals') {
+    if (obj.state !== 'LIVE' || obj.reachable !== true || !Array.isArray(obj.counts)) return null;
+    const named = new Map<string, number>();
+    for (const item of obj.counts) {
+      const row = rec(item);
+      if (!row || !['axis_slots', 'measured', 'unmeasured'].includes(row.name)) continue;
+      const n = count(row.value);
+      if (n === null || named.has(row.name)) return null;
+      named.set(row.name, n);
+    }
+    const axes = named.get('axis_slots'), measured = named.get('measured'), unmeasured = named.get('unmeasured');
+    return axes !== undefined && measured !== undefined && unmeasured !== undefined && measured + unmeasured === axes ? { axes, measured, unmeasured } : null;
+  }
+  const t = rec(obj?.totals) ?? obj;
   if (!t) return null;
   const axes = count(t.axes), measured = count(t.measured_axes), unmeasured = count(t.unmeasured_axes);
   return axes !== null && measured !== null && unmeasured !== null ? { axes, measured, unmeasured } : null;

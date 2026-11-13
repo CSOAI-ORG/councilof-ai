@@ -3,6 +3,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { isLibraried, isPrimaryPath, libraryItems, WITHDRAWN_PATHS } from "./library-ia";
 import { ROUTE_MANIFEST } from "./route-manifest";
+import { axisHref } from "../lib/axisHref";
 import { buildDashboardCatalogue } from "../components/DashboardCataloguePane";
 
 const app = readFileSync(resolve(__dirname, "../App.tsx"), "utf8");
@@ -20,7 +21,14 @@ describe("current Public Watchdog route", () => {
 describe("live GSPC axis routes", () => {
   it("does not mark the board's promoted axis detail pages as archived", () => {
     expect(app).toContain('<Route path="/gspc/:axis" component={GspcScoreboard} />');
-    expect(homeBoard).toContain('href={`/gspc/${encodeURIComponent(a.axis)}/`}');
+    // The board links to an axis's own page. This used to be asserted as a
+    // literal in the component's source, which asserted the DEFECT: a
+    // measured-subject axis has no /gspc/<axis>/ page, so nine links on the
+    // homepage answered 404. The rule now lives in one place, so the test
+    // asks the rule where the route for a promoted axis actually is.
+    expect(homeBoard).toContain("axisHref(");
+    expect(axisHref({ axis: "governance", kind: "model-comparison" })).toBe("/gspc/governance/");
+    expect(axisHref({ axis: "lab-practice", kind: "measured-subject" })).toBe("/axis/lab-practice/");
     expect(isLibraried("/gspc/governance/")).toBe(false);
     expect(isLibraried("/gspc/safety/")).toBe(false);
     expect(isLibraried("/gspc/jail")).toBe(false);

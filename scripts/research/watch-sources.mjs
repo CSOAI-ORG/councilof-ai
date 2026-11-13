@@ -13,6 +13,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { assessFingerprint, fetchOk, EMPTY_SHA256 } from "../reg-watch-policy.mjs";
 import registry from "../../functions/api/_gspc_research_semantics.json" with { type: "json" };
+import { researchSourceMetadata } from "./source-metadata.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const sha = (value) => createHash("sha256").update(value).digest("hex");
@@ -22,8 +23,11 @@ export function watchlist(sourceRegistry = registry) {
   for (const axis of sourceRegistry.axes) {
     for (const sourceId of axis.source_ids) {
       const source = sourceRegistry.sources[sourceId];
-      if (!source?.watch) continue;
-      const current = bySource.get(sourceId) ?? { id: sourceId, ...source, axes: [] };
+      if (source?.watch !== true) continue;
+      const current = bySource.get(sourceId) ?? {
+        id: sourceId, publisher: source.publisher, title: source.title, url: source.url,
+        ...researchSourceMetadata(source), axes: [],
+      };
       if (!current.axes.includes(axis.axis)) current.axes.push(axis.axis);
       bySource.set(sourceId, current);
     }
@@ -58,7 +62,10 @@ export function reviewRequest({ axis, source, previous, current, assessment, obs
     state: "AWAITING_HUMAN_REVIEW",
     request: "ASSESS_SOURCE_IMPACT_AND_DECIDE_WHETHER_TO_REMEASURE",
     axis,
-    source: { id: source.id, publisher: source.publisher, title: source.title, url: source.url },
+    source: {
+      id: source.id, publisher: source.publisher, title: source.title, url: source.url,
+      ...researchSourceMetadata(source),
+    },
     observed_at: observedAt,
     previous: { body_sha256: previous.body_sha256, last_modified: previous.last_modified ?? null, checked: previous.checked ?? null },
     current: { body_sha256: current.body_sha256, last_modified: current.last_modified ?? null },

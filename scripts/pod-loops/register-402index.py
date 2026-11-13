@@ -6,12 +6,16 @@ review; 422 protocol verification failed; 429 rate limit (10/hour/IP). Domain al
 (.well-known/402index-verify.txt on councilof.ai). Idempotent: reads the index's own listing for the domain first
 and registers only what is absent. Receipts: /workspace/lanes/out/402index/REGISTER.jsonl. Absence of a line = did not run.
 Never types a price: price fields are left to the probe (the 402 challenge carries the amount).
+
+Explicit maintenance: --refresh-existing --only-url <exact owned route> --out <receipt-dir>
+plans metadata-only updates of existing records. Add --apply only for an authorised bounded
+refresh; omitted flags leave the existing missing-only loop unchanged. See index402_refresh.py.
 """
-import json, time, pathlib, urllib.request, urllib.parse, sys
+import json, time, pathlib, urllib.request, urllib.error, urllib.parse, sys
 
 MANIFEST = "https://councilof.ai/.well-known/x402.json"
 INDEX = "https://402index.io/api/v1"
-OUT = pathlib.Path("/workspace/lanes/out/402index"); OUT.mkdir(parents=True, exist_ok=True)
+OUT = pathlib.Path("/workspace/lanes/out/402index")
 UA = {"user-agent": "Mozilla/5.0 csoai-402index-register", "accept": "application/json"}
 
 def call(url, body=None):
@@ -33,6 +37,11 @@ def listed():
     return urls
 
 def main():
+    if "--refresh-existing" in sys.argv[1:]:
+        # Explicit selected-URL mode only; existing schedules keep missing-only behaviour.
+        from index402_refresh import main as refresh_existing
+        return refresh_existing(sys.argv[1:])
+    OUT.mkdir(parents=True, exist_ok=True)
     st, b = call(MANIFEST); man = json.loads(b)
     doors = man["resources"]; have = listed()
     missing = [r for r in doors if r["url"] not in have]

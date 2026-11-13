@@ -107,7 +107,29 @@ describe("Public Watchdog contribution path", () => {
     expect(doc.querySelectorAll('a[href*="stage=review"]')).toHaveLength(WORKING_GROUPS.length);
     expect(doc.querySelector(`a[href="${REVOCATION_REVIEW_PROTOCOL}"]`)).not.toBeNull();
     expect(doc.querySelector("#contribution-steps")).not.toBeNull();
-    expect(doc.querySelectorAll('a[href^="/gspc/"]')).toHaveLength(snapshot.axes.length);
+    // Every axis in the registry gets a link to a page that EXISTS.
+    //
+    // This assertion used to require `/gspc/` for all 34 axes. That encoded
+    // the defect: /gspc/<axis>/ is prerendered only for model-comparison axes,
+    // so 20 of these links were 404s, and the two owner-held axes were linked
+    // at all when they have no public page. The route is now derived from the
+    // axis's own kind: model-comparison keeps the /gspc/ deep dive, every
+    // other published axis goes to its own axis page, and an owner-held axis
+    // gets no link.
+    const ownerHeld = snapshot.axes.filter((a) => a.public_pages === "HIDDEN_PENDING_OWNER_GO");
+    const modelComparison = snapshot.axes.filter((a) => a.kind === "model-comparison");
+    const ownPage = snapshot.axes.filter(
+      (a) => a.kind !== "model-comparison" && a.public_pages !== "HIDDEN_PENDING_OWNER_GO",
+    );
+    expect(doc.querySelectorAll('a[href^="/gspc/"]')).toHaveLength(modelComparison.length);
+    expect(doc.querySelectorAll('a[href^="/axis/"]')).toHaveLength(ownPage.length);
+    expect(doc.querySelectorAll("a[data-axis-link]")).toHaveLength(
+      modelComparison.length + ownPage.length,
+    );
+    expect(snapshot.axes.length).toBe(34);
+    for (const a of ownerHeld) {
+      expect(doc.querySelector(`a[data-axis-link="${a.axis}"]`)).toBeNull();
+    }
     expect(doc.querySelector('a[href="/dispute/"]')).not.toBeNull();
     expect(doc.querySelector('a[href="/dashboard?tab=staff"]')).not.toBeNull();
     expect(doc.body.textContent).toContain("does not submit an application");
