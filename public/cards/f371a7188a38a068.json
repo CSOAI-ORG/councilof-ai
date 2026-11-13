@@ -1,0 +1,86 @@
+{
+  "card": {
+    "as_of": "2026-11-12T11:42:17Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "2",
+      "symbol": "USDC",
+      "attestation_page": "https://www.circle.com/en/transparency",
+      "auditor": "Deloitte",
+      "cadence_claimed": "daily",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "3ff404a1e9a8a16bd9c672babcc9187ca45b8938869651daf28288cf8178c2c4",
+      "excerpt": "on and redemption of our stablecoins, and to ensure USDC stability. Independently audited Deloitte & Touche LLP is Circle’s independent auditor and has audited ",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "staleness"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "f371a7188a38a068a1c6382932c42f121ec102d1a46969ca0689be638d1e019e",
+    "sig_ed25519": "e33cf0194fbc0a9f208aa774cddb3039449d62559dee02ea72bd80873d74f3af00437e68d40b9497d35e12c989cec4654be0ee4a1d7a15dac83f795e11864500",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://www.circle.com/en/transparency"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDC",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "staleness"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "2ca15180f764b944aab48cb4f000a84df2d1f0b0e2075aef0b8e7af3515e2b0f",
+    "ae01d80c14c3289728c5685bcc98da56b232d7915678087098f87baf74f5443f",
+    "bea006a82d6845d1e742cbead59f8177c597a7b1bee8d046a1c0deb99c63401e",
+    "4e7d902677f16a536636f3779640079ac7d400580994d61909b88b5bd770c365",
+    "74d892474201c0e5bfecfc1db10bb074d23ef66fba7181611d29eb09223d7d07",
+    "f9c5e320a90aec95aaca5a292b8e99af14fe8743b8573e23d18e0221131eef0f",
+    "cb7f5f71611a60bcf0b7cfde1e578aa2d9d6dab52fa52b216a3c04a6d093af04",
+    "704658a4a088c783956db63d7d28d713b5952700de06c3022edd599271f7a14c",
+    "565ba6a95cd6de9697b4fa080311f06fea3831a70b97350fd20b044219f3e0a0"
+  ]
+}
