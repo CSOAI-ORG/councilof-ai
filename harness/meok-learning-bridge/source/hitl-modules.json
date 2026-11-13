@@ -1,0 +1,970 @@
+{
+  "schema": "csoai.hitl-curriculum/0.1",
+  "assessment_scope": {
+    "decision_recording_credential": "SHARED_OPERATOR_TOKEN",
+    "operator_label": "CALLER_SUPPLIED",
+    "operator_identity": "NOT_VERIFIED",
+    "human_presence": "NOT_ESTABLISHED",
+    "competency_verified_meaning": "LIVE_BOARD_ANSWER_MATCH_ONLY",
+    "professional_competence": "NOT_ASSESSED",
+    "execution_authority": false
+  },
+  "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+  "derived_from": "GET /api/gspc → axes[] (read live on every request)",
+  "count": 34,
+  "modules": [
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-governance",
+      "axis": "governance",
+      "title": "Read the record for \"governance\"",
+      "briefing": "Axis: governance. Published status: MEASURED. Published separation: TIE. Items in the published run: n 237. Point leader: mistral:7b (base model) (a point leader is not a separated leader). No model separated from the next best on this axis (exact McNemar, p≥0.05, n=237; p=0.3787). Observed on: 2026-08-12. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"governance\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is TIE."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": true
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-safety",
+      "axis": "safety",
+      "title": "Read the record for \"safety\"",
+      "briefing": "Axis: safety. Published status: MEASURED. Published separation: TIE. Items in the published run: n 36. Point leader: gemma3:12b (base model) (a point leader is not a separated leader). No model separated from the next best on this axis (exact McNemar, p≥0.05, n=36; p=0.6875). Observed on: 2026-08-12. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"safety\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is TIE."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-provenance",
+      "axis": "provenance",
+      "title": "Read the record for \"provenance\"",
+      "briefing": "Axis: provenance. Published status: MEASURED. Published separation: TIE. Items in the published run: n 32. Point leader: llama3.2:3b (base model) (a point leader is not a separated leader). No model separated from the next best on this axis (exact McNemar, p≥0.05, n=32; p=1.0). Observed on: 2026-08-12. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"provenance\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is TIE."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-continuity",
+      "axis": "continuity",
+      "title": "Read the record for \"continuity\"",
+      "briefing": "Axis: continuity. Published status: MEASURED. Published separation: TIE. Items in the published run: n 33. Point leader: gemma3:12b (base model) (a point leader is not a separated leader). No model separated from the next best on this axis (exact McNemar, p≥0.05, n=33; p=0.6875). Observed on: 2026-08-12. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"continuity\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is TIE."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-conformance",
+      "axis": "conformance",
+      "title": "Read the record for \"conformance\"",
+      "briefing": "Axis: conformance. Published status: MEASURED. Published separation: TIE. Items in the published run: n 35. Point leader: mistral:7b (base model) (a point leader is not a separated leader). No model separated from the next best on this axis (exact McNemar, p≥0.05, n=35; p=0.625). Observed on: 2026-08-12. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"conformance\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is TIE."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is UNTESTED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-openness",
+      "axis": "openness",
+      "title": "Read the record for \"openness\"",
+      "briefing": "Axis: openness. Published status: MEASURED. Published separation: TIE. Items in the published run: n 32. Point leader: gemma3:12b (base model) (a point leader is not a separated leader). No model separated from the next best on this axis (exact McNemar, p≥0.05, n=32; p=0.424). Observed on: 2026-08-12. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"openness\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is TIE."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-machinery-conformity",
+      "axis": "machinery-conformity",
+      "title": "Read the record for \"machinery-conformity\"",
+      "briefing": "Axis: machinery-conformity. Published status: MEASURED. Published separation: UNTESTED. Items in the published run: n 33. Observed on: 2026-08-12. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"machinery-conformity\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is TIE."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is UNTESTED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-care",
+      "axis": "care",
+      "title": "Read the record for \"care\"",
+      "briefing": "Axis: care. Published status: MEASURED. Published separation: TIE. Items in the published run: n 199. Point leader: qwen2.5:0.5b-instruct (base model) (a point leader is not a separated leader). No model separated from the next best on this axis (exact McNemar, p≥0.05, n=200; p=0.427). Observed on: 2026-08-12. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"care\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is TIE."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-cross-reality",
+      "axis": "cross-reality",
+      "title": "Read the record for \"cross-reality\"",
+      "briefing": "Axis: cross-reality. Published status: MEASURED. Published separation: UNTESTED. Items in the published run: n 32. Observed on: 2026-08-12. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"cross-reality\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is TIE."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is UNTESTED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-detector-interop",
+      "axis": "detector-interop",
+      "title": "Read the record for \"detector-interop\"",
+      "briefing": "Axis: detector-interop. Published status: MEASURED. Published separation: UNTESTED. Items in the published run: n 33. Observed on: 2026-08-12. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"detector-interop\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is UNTESTED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-art5-safeguard",
+      "axis": "art5-safeguard",
+      "title": "Read the record for \"art5-safeguard\"",
+      "briefing": "Axis: art5-safeguard. Published status: MEASURED. Published separation: UNTESTED. Items in the published run: n 36. Observed on: 2026-08-12. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"art5-safeguard\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is UNTESTED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-swarm",
+      "axis": "swarm",
+      "title": "Read the record for \"swarm\"",
+      "briefing": "Axis: swarm. Published status: MEASURED. Published separation: UNTESTED. Items in the published run: n 37. Point leader: qwen2.5:7b (base model) (a point leader is not a separated leader). A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"swarm\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is UNTESTED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-affect",
+      "axis": "affect",
+      "title": "Read the record for \"affect\"",
+      "briefing": "Axis: affect. Published status: MEASURED. Published separation: UNTESTED. Items in the published run: n 41. Observed on: 2026-08-12. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"affect\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is UNTESTED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-jail",
+      "axis": "jail",
+      "title": "Read the record for \"jail\"",
+      "briefing": "Axis: jail. Published status: MEASURED. Published separation: UNTESTED. Items in the published run: n 71. Point leader: qwen2.5:0.5b-instruct (base model) (a point leader is not a separated leader). A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"jail\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-effect-binding",
+      "axis": "effect-binding",
+      "title": "Read the record for \"effect-binding\"",
+      "briefing": "Axis: effect-binding. Published status: MEASURED. Published separation: not published. Items in the published run: n 261. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"effect-binding\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-provenance-controls",
+      "axis": "provenance-controls",
+      "title": "Read the record for \"provenance-controls\"",
+      "briefing": "Axis: provenance-controls. Published status: MEASURED. Published separation: not published. Items in the published run: n 6. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"provenance-controls\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is UNTESTED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-reserve-attestation",
+      "axis": "reserve-attestation",
+      "title": "Read the record for \"reserve-attestation\"",
+      "briefing": "Axis: reserve-attestation. Published status: MEASURED. Published separation: not published. Items in the published run: n 16. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"reserve-attestation\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-regulatory-framework",
+      "axis": "regulatory-framework",
+      "title": "Read the record for \"regulatory-framework\"",
+      "briefing": "Axis: regulatory-framework. Published status: MEASURED. Published separation: not published. Items in the published run: n 16. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"regulatory-framework\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is not published."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-distribution-integrity",
+      "axis": "distribution-integrity",
+      "title": "Read the record for \"distribution-integrity\"",
+      "briefing": "Axis: distribution-integrity. Published status: MEASURED. Published separation: not published. Items in the published run: n 16. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"distribution-integrity\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is not published."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-custody-disclosure",
+      "axis": "custody-disclosure",
+      "title": "Read the record for \"custody-disclosure\"",
+      "briefing": "Axis: custody-disclosure. Published status: MEASURED. Published separation: not published. Items in the published run: n 16. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"custody-disclosure\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is TIE."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is not published."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-ai-adoption-components",
+      "axis": "ai-adoption-components",
+      "title": "Read the record for \"ai-adoption-components\"",
+      "briefing": "Axis: ai-adoption-components. Published status: MEASURED. Published separation: not published. Items in the published run: n 2. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"ai-adoption-components\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is TIE."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is not published."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-labour-components",
+      "axis": "labour-components",
+      "title": "Read the record for \"labour-components\"",
+      "briefing": "Axis: labour-components. Published status: MEASURED. Published separation: not published. Items in the published run: n 2. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"labour-components\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-humanoid-labour-index",
+      "axis": "humanoid-labour-index",
+      "title": "Read the record for \"humanoid-labour-index\"",
+      "briefing": "Axis: humanoid-labour-index. Published status: MEASURED. Published separation: not published. Items in the published run: n 8. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"humanoid-labour-index\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is not published."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-lab-practice",
+      "axis": "lab-practice",
+      "title": "Read the record for \"lab-practice\"",
+      "briefing": "Axis: lab-practice. Published status: MEASURED. Published separation: not published. Items in the published run: n 37. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"lab-practice\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is not published."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-company-practice",
+      "axis": "company-practice",
+      "title": "Read the record for \"company-practice\"",
+      "briefing": "Axis: company-practice. Published status: MEASURED. Published separation: not published. Items in the published run: n 40. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"company-practice\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is not published."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-measurer-integrity",
+      "axis": "measurer-integrity",
+      "title": "Read the record for \"measurer-integrity\"",
+      "briefing": "Axis: measurer-integrity. Published status: MEASURED. Published separation: not published. Items in the published run: n 40. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"measurer-integrity\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is not published."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-harness-fidelity",
+      "axis": "harness-fidelity",
+      "title": "Read the record for \"harness-fidelity\"",
+      "briefing": "Axis: harness-fidelity. Published status: MEASURED. Published separation: not published. Items in the published run: n 36. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"harness-fidelity\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is TIE."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-interop-conformance",
+      "axis": "interop-conformance",
+      "title": "Read the record for \"interop-conformance\"",
+      "briefing": "Axis: interop-conformance. Published status: MEASURED. Published separation: not published. Items in the published run: n 34. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"interop-conformance\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is TIE."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is not published."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-humanoid-deployment",
+      "axis": "humanoid-deployment",
+      "title": "Read the record for \"humanoid-deployment\"",
+      "briefing": "Axis: humanoid-deployment. Published status: MEASURED. Published separation: not published. Items in the published run: n 35. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"humanoid-deployment\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is not published."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-regulator-transparency",
+      "axis": "regulator-transparency",
+      "title": "Read the record for \"regulator-transparency\"",
+      "briefing": "Axis: regulator-transparency. Published status: MEASURED. Published separation: not published. Items in the published run: n 41. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"regulator-transparency\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is TIE."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-interpretability-reproducibility",
+      "axis": "interpretability-reproducibility",
+      "title": "Read the record for \"interpretability-reproducibility\"",
+      "briefing": "Axis: interpretability-reproducibility. Published status: MEASURED. Published separation: not published. Items in the published run: n 33. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"interpretability-reproducibility\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-claim-maintenance",
+      "axis": "claim-maintenance",
+      "title": "Read the record for \"claim-maintenance\"",
+      "briefing": "Axis: claim-maintenance. Published status: MEASURED. Published separation: not published. Items in the published run: n 174. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"claim-maintenance\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "B",
+          "text": "It is MEASURED and its separation is TIE."
+        },
+        {
+          "id": "C",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is TIE."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-serving-fidelity",
+      "axis": "serving-fidelity",
+      "title": "Read the record for \"serving-fidelity\"",
+      "briefing": "Axis: serving-fidelity. Published status: MEASURED. Published separation: not published. Items in the published run: n 38. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"serving-fidelity\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is MEASURED and its separation is UNTESTED."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is UNMEASURED and its separation is UNTESTED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    },
+    {
+      "schema": "csoai.hitl-competency-module/0.1",
+      "id": "GSPC-watchdog-ingest",
+      "axis": "watchdog-ingest",
+      "title": "Read the record for \"watchdog-ingest\"",
+      "briefing": "Axis: watchdog-ingest. Published status: MEASURED. Published separation: not published. Items in the published run: n 106. A measurement is never a certification, and a point leader is never a separated leader. This module is a reading check on the published record, not an exam.",
+      "question": "According to the published record you were briefed on, which statement about the axis \"watchdog-ingest\" is TRUE?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It is UNMEASURED and its separation is SEPARATED."
+        },
+        {
+          "id": "B",
+          "text": "It is UNMEASURED and its separation is not published."
+        },
+        {
+          "id": "C",
+          "text": "It is MEASURED and its separation is not published."
+        },
+        {
+          "id": "D",
+          "text": "It is MEASURED and its separation is SEPARATED."
+        }
+      ],
+      "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+      "completed": false
+    }
+  ],
+  "note": "Each module is derived from its axis's own published record, so the curriculum cannot drift from what the Council publishes. The correct option is not published here; it is re-derived from the live board when the answer is checked."
+}
