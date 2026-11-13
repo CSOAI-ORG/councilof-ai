@@ -222,6 +222,13 @@ def main() -> int:
     test_mcp_cursor_pages()
     test_run_probes_parallel_unsigned()
     test_pidfile_lock_in_eat_loop()
+    # The existing eval-CI entry also exercises status input integrity.
+    import unittest
+    import test_gen_status
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(test_gen_status.StatusTests)
+    result = unittest.TextTestRunner(verbosity=1).run(suite)
+    if not result.wasSuccessful():
+        return 1
     print(
         "selftest OK: staged atom unsigned; ERC-8004 43114 not missing-RPC; "
         "hf-space+npm DISCOVERED; hf pagination; parallel probes; pidfile lock"

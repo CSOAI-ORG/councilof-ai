@@ -1040,16 +1040,16 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-06T04:24:35Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-07T23:24:56Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 695. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 698. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 693.
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 696.
 - Still calendar-pending: 2. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
-- Proofs whose subject is not served beside them: 86 — an anchor a reader cannot check
+- Proofs whose subject is not served beside them: 89 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
 - This producer does not check block headers against a Bitcoin node. `ots verify` against your own
   node does that, and an .ots is not a proof because of its file extension.
@@ -1088,7 +1088,7 @@ Each record below is a dated account of what public sources state, with its sour
 ## 10d. PUBLISHED INTEROP FILES — every file under /interop/, with its digest (except the index itself)
 
 Derived at generation from https://councilof.ai/interop/file-index.json (same bytes on disk at
-public/interop/file-index.json, schema csoai.interop-file-index/0.2, artifact as_of 2026-11-07T08:26:03Z). It is a
+public/interop/file-index.json, schema csoai.interop-file-index/0.2, artifact as_of 2026-11-12T07:40:27Z). It is a
 MEASUREMENT of the published tree, not a list of intentions: each row carries the path, the size,
 the SHA-256 of the bytes and how the file is served.
 
@@ -1096,12 +1096,12 @@ The index does not list itself. A file cannot carry its own digest — hashing t
 gives a digest that depends on the digest — so a row claiming one would be wrong the moment it was
 written. Every OTHER file under /interop/ is listed.
 
-- Files indexed: 16,341. Bytes indexed: 258,838,721.
-- By how they are served: 13,240 hf-mirror; 3,095 pages; 6 retired-bytes.
-- hf-mirror: routed by a 302 redirect to the HuggingFace evidence mirror (scripts/deploy-exclusions.json); the sha256 is of the canonical tree bytes, which are the bytes the mirror holds
+- Files indexed: 16,382. Bytes indexed: 259,583,374.
+- By how they are served: 13,240 hf-mirror; 3,136 pages; 6 retired-bytes.
+- hf-mirror: routed by a 302 redirect to the HuggingFace evidence mirror (scripts/deploy-exclusions.json); the sha256 is of the canonical tree bytes, which are the bytes the mirror holds. THE MIRROR IS A SEPARATE HOST AND ITS MEMBERSHIP IS NOT RECORDED HERE, so this row's claim is true UNDER THE CONDITION THAT THE MIRROR STILL HOLDS THE FILE. MEASURED 2026-11-07: all five mirror classes (mill-cards-signed, mill-cards-unsigned, mill-evidence, the file-kind exclusions and the ots/*.invalid records) resolved ANONYMOUSLY with HTTP 200 and an exact digest match. If the mirror ever stops holding a path, the reader gets HUGGINGFACE's 'Entry not found' — a 404 and a 15-byte body from the mirror, NOT from this site — so a mismatch on one of these rows is a statement about the mirror's membership until it is shown otherwise
 - pages: served by the site build
 - retired-bytes: a retired .invalid record. The estate's Function intercepts every .invalid path and serves it from the retired-bytes archive when that archive holds these exact bytes (200, x-evidence-state: retired-or-invalid-historical-bytes), and answers 404 BY DESIGN when it does not. The sha256 is of the canonical tree bytes, which are the bytes the archive copies verbatim. Which case applies is decided by the archive in force, published at /archive/retired-proof-bytes-v1.json
-- By how the served bytes compare with the published bytes: 16,340 as-published; 1 edge-transformed-per-request.
+- By how the served bytes compare with the published bytes: 16,381 as-published; 1 edge-transformed-per-request.
 - as-published: the bytes the site serves for this path are the bytes the estate published here; the sha256 is checkable against a fetch
 - edge-transformed-per-request: the edge rewrites this markup and the rewrite is randomised per request, so the bytes the site serves differ on EVERY fetch; no digest of them can be reproduced, by a reader or by the estate
 - To check one file: fetch its path and hash it. On a row whose served_bytes reads "as-published", a
