@@ -29,5 +29,3 @@ class PredictTests(unittest.TestCase):
         f=[0,0,0,1,0,0,0,1,0,1,1,0]
         self.assertEqual(predict(f,MODEL),predict(f,MODEL))
 if __name__=="__main__":unittest.main(verbosity=2)
-
-[executed on device: sov33-owem-micro2 (b4b647b8-0a67-4b8f-9b25-2981363e9bd0)]
