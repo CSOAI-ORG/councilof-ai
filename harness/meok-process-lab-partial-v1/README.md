@@ -15,5 +15,3 @@ The generated internal episode file contains privileged simulator features solel
 ## Important boundary
 
 All episodes are synthetic procurement-rehearsal output. This is not a physical world model, a general-purpose MEOK agent, a Cosmos fine-tune, an action-authorising model, or a GSPC score. The exact simulator remains authoritative.
-
-[executed on device: sov33-owem-micro2 (b4b647b8-0a67-4b8f-9b25-2981363e9bd0)]
