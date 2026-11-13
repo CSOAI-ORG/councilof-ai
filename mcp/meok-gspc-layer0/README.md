@@ -40,7 +40,7 @@ current. Current-task applicability, issuer authentication, independent reproduc
 human review and authority remain unestablished. The output creates no canonical
 event, case store, model-weight update, durable memory admission or legal finding.
 The tool is available in this source candidate, not automatically in an installed
-MEOK runtime. Existing chat routing is unchanged; no model provider receives data
+MEOK runtime. Default chat routing is unchanged; no model provider receives data
 as a side effect of reading this tool.
 
 Run its dependency-free fixtures with:
@@ -56,3 +56,118 @@ and complete the existing runtime acceptance process.
 
 Measurement, not certification.
 
+## Optional Cosmos chat provider
+
+`meok_route_to_clan` can now use an explicitly configured Cosmos-compatible
+endpoint through `chat-provider.mjs`. H.I.M. remains the default. `him_say` and
+work-step telemetry continue to use the coordinator even when Cosmos chat is
+enabled. A Cosmos bearer is never sent to that coordinator by this adapter.
+
+Set `MEOK_CHAT_BACKEND=cosmos`, `MEOK_CHAT_BASE_URL` and `MEOK_CHAT_MODEL` to
+activate the candidate after qualifying its endpoint. Supply the application
+bearer through `MEOK_CHAT_API_KEY` in the host's secret store. Optional limits are
+`MEOK_CHAT_TIMEOUT_MS` (default 30000, maximum 90000) and
+`MEOK_CHAT_MAX_TOKENS` (default 1024, maximum 4096).
+
+The adapter makes one bounded request, refuses redirects, accepts HTTPS or
+loopback HTTP for Cosmos, caps prompts at 64,000 UTF-8 bytes and responses at two
+MiB, and preserves a deadline while reading the body. It does not retry or
+switch paid providers after an uncertain result. Cosmos nonempty text is reported
+as `ANSWER_RECEIVED` with request/response hashes and provider observations;
+this is neither task completion nor verified model identity. H.I.M. retains
+its exact legacy `{answer, provenance}` envelope, including a deliberately
+empty string, and its existing malformed-JSON error code. Provider provenance
+remains an unverified assertion. Native tool-call proposals
+are rejected as unsupported; this first integration is text inference.
+
+The [Cosmos Space profile](cosmos-space/README.md) contains the pinned model,
+runtime, hardware estimate, secret configuration, storage mapping and activation
+checks. It is a source candidate until the GPU runtime and actual MEOK tasks
+have been exercised. This change does not enroll other agents automatically or
+start model training.
+
+Run the bounded provider and actual stdio routing fixtures with:
+
+```sh
+node --test mcp/meok-gspc-layer0/chat-provider.node-test.mjs mcp/meok-gspc-layer0/chat-routing.node-test.mjs
+```
+
+`chat-provider.test.ts` invokes those same fixtures in the monorepo Vitest gate.
+They use mocked fetches and temporary loopback servers, with no external model,
+GPU, payment, coordinator or telemetry call.
+
+## Optional existing Hugging Face situation worker
+
+`hf-situation.mjs` adds `meok_reason_situation` to this same stdio bridge only
+when `MEOK_HF_ENABLED=1`. This is a review candidate, not an installed route.
+It adapts the existing private Gradio Cosmos3-Edge worker; it does not create
+another model server, Space, memory store, decision store or event schema.
+
+The input is one text-only `goal`, `situation`, and explicit
+`consent_to_send=true`. This pass-through flag is not authenticated human
+identity, source-rights clearance or approval for an external action. The host
+must qualify those separately before sending real information. Use fictional
+inputs during deployment acceptance. The tool consumes ZeroGPU quota and
+creates temporary remote session state, so its annotations are non-read-only
+and non-idempotent.
+
+The operator must configure these through the host's approved configuration
+and secret mechanism, never through a model's tool arguments:
+
+```dotenv
+MEOK_HF_ENABLED=1
+MEOK_HF_SPACE_ID=OWNER/QUALIFIED_PRIVATE_SPACE
+MEOK_HF_ORIGIN=https://QUALIFIED-SUBDOMAIN.hf.space
+MEOK_HF_SPACE_SHA=EXACT_40_HEX_SERVING_SOURCE_REVISION
+MEOK_HF_MODEL_SHA=EXACT_40_HEX_MODEL_REVISION
+MEOK_HF_TOKEN=SET_IN_YOUR_SECRET_STORE
+MEOK_HF_TIMEOUT_MS=60000
+MEOK_HF_CALL_LIMIT=1
+```
+
+Use a least-privilege token able to read only the intended private worker where
+available. Its application inputs and recent session content remain subject to
+the Space's own access and retention behaviour; this adapter does not make a
+private service public.
+
+The adapter verifies the declared Space identity, private status, exact source
+revision, runtime source revision, running state and existing ZeroGPU hardware;
+it checks the pinned model-lock document before submitting. The lock must name
+Cosmos3-Edge, the expected model revision, reasoner-only mode, no paid upgrades,
+at most 192 generated tokens and at most 45 GPU seconds per request. These are
+metadata checks, not attestation of the actual GPU's loaded weights.
+
+One POST is followed by a bounded result stream and a source-metadata recheck.
+Redirects, oversized data, unexpected messages, changed source/hardware,
+unsupported outputs and grants of execution/training authority are refused.
+Hugging Face raw JSON source files may use `text/plain`; this exception is
+limited to the exact pinned model-lock URL and still requires valid JSON.
+The raw Gradio Blocks result includes its leading null State output; it is not
+the Python client's four-value view. Non-null state or an unexpected output
+shape is rejected, never forwarded. The reaction record must remain at most
+3,072 UTF-8 bytes with synthetic-hypothesis and HOLD states retained.
+
+The result hashes bind received input/output bytes. Neither receipt, schema
+validation, hash nor the text `ANSWER_RECEIVED` establishes answer correctness,
+card-content-ID verification, independent measurement or model improvement.
+No automatic retry, provider fallback, tool execution, payment, durable memory
+admission, training or GSPC write is added. A timeout after submission is
+`MAY_HAVE_RUN`, not proof of cancellation. The per-process call cap defaults to
+one and is not a durable quota or spending ledger. Restarting the bridge resets
+that counter; production budgets require the existing authoritative controls.
+
+Run offline checks:
+
+```sh
+node --test mcp/meok-gspc-layer0/hf-situation.node-test.mjs
+```
+
+The Vitest wrapper includes these fixtures in the existing bridge directory
+gate. The adapter's live candidate reached a worker but rejected its output;
+the source-informed raw-State-slot correction is covered offline. A successful
+post-correction live roundtrip, runtime installation, session lifecycle and
+actual task quality remain activation requirements. This change does not
+repair the previously observed model judgement error by itself.
+
+See [the process consolidation research](../../docs/integrations/meok-process-consolidation-20261109.md)
+for protocol boundaries, reuse targets and the measured-improvement experiment.
