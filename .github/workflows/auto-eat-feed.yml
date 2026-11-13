@@ -1,0 +1,82 @@
+name: auto-eat-feed
+
+# Keyless discovery and unsigned staging ONLY. No OIDC/signing or deployment.
+# Public feed branch is the only writable target; master remains reviewed.
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '43 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: auto-eat-feed-canonical
+  cancel-in-progress: false
+
+jobs:
+  discover-probe-stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      EAT_BRANCH: auto-eat-feed
+      EAT_NO_PUSH: '0'
+      EAT_PER_SOURCE: '25'
+      EAT_MAX_PROBE: '40'
+      EAT_PROBE_WORKERS: '4'
+      EAT_PUSH_CHECKOUT_CREDENTIALS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+          persist-credentials: true
+          sparse-checkout: |
+            scripts/auto-eat
+            public/interop/auto-eat
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Fail before any network discovery if the historical-feed migration
+      # and integrity tests fail. No signing inputs or credentials here.
+      - name: Validate EAT recovery and staged-source invariants
+        run: |
+          set -euo pipefail
+          python scripts/auto-eat/test_sync_feed_branch.py
+          python scripts/auto-eat/test_fold_auto_eat.py
+          python scripts/auto-eat/test_honesty.py
+          python scripts/auto-eat/test_g2_gate.py
+
+      - name: Prepare an isolated canonical feed worktree
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin auto-eat-feed:refs/remotes/origin/auto-eat-feed
+          git worktree add -b auto-eat-feed "$RUNNER_TEMP/auto-eat-feed-worktree" origin/auto-eat-feed
+
+      - name: One bounded keyless EAT discovery and probe cycle
+        env:
+          EAT_REPO: ${{ runner.temp }}/auto-eat-feed-worktree
+          EAT_LOG: ${{ runner.temp }}/auto-eat-feed-run.log
+        run: |
+          set -euo pipefail
+          bash scripts/auto-eat/eat-loop.sh once
+
+      - name: Confirm public feed was actually updated
+        env:
+          EAT_REPO: ${{ runner.temp }}/auto-eat-feed-worktree
+        run: |
+          set -euo pipefail
+          cd "$EAT_REPO"
+          local_head=$(git rev-parse HEAD)
+          remote_head=$(git ls-remote origin refs/heads/auto-eat-feed | cut -f1)
+          test -n "$remote_head"
+          test "$local_head" = "$remote_head" || {
+            echo "FAIL: staged output is not the public canonical feed"; exit 1
+          }
+          for path in public/interop/auto-eat/queue.jsonl public/interop/auto-eat/probed.json public/interop/auto-eat/cards-compact.json scripts/auto-eat/STATUS.md; do
+            test -s "$path" || { echo "FAIL: missing public feed record $path"; exit 1; }
+          done
+          echo "FEED_PUBLISHED sha=$remote_head"
+          echo 'NOTE: staged, unsigned evidence only. This run signs and measures nothing.'

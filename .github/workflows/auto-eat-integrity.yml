@@ -32,6 +32,8 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Fold/check integrity and refusal regressions
         run: python scripts/auto-eat/test_fold_auto_eat.py
+      - name: Legacy feed ancestry migration and ownership boundaries
+        run: python scripts/auto-eat/test_sync_feed_branch.py
       - name: Existing discovery and unsigned-stage invariants
         run: python scripts/auto-eat/test_honesty.py
       - name: Existing G2 gate controls
