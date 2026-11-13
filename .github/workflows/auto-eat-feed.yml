@@ -1,0 +1,73 @@
+name: auto-eat-feed
+
+# Hourly, keyless discovery and bounded read-only probing.
+# This workflow writes ONLY the auto-eat-feed branch. It has no signing,
+# deployment, OIDC, ledger or GSPC measurement authority.
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: auto-eat-feed
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  feed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      EAT_PER_SOURCE: "10"
+      EAT_MAX_PROBE: "100"
+      EAT_PROBE_WORKERS: "8"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: fetch the isolated feed and sync only its operator code
+        run: |
+          set -euo pipefail
+          git fetch origin master auto-eat-feed
+          git checkout -B auto-eat-feed origin/auto-eat-feed
+          # Do not merge master wholesale: master has unrelated legacy auto-eat
+          # atoms in this directory. Sync only the operator code.
+          git restore --source=origin/master -- scripts/auto-eat
+
+      - name: discover bounded public candidates
+        run: timeout 180s python3 scripts/auto-eat/discover.py --per-source "$EAT_PER_SOURCE"
+
+      - name: probe a bounded round-robin batch (read-only)
+        run: timeout 240s python3 scripts/auto-eat/probe.py --max "$EAT_MAX_PROBE"
+
+      - name: regenerate the timestamped, non-authoritative status
+        run: python3 scripts/auto-eat/gen_status.py
+
+      - name: verify unsigned and refusal invariants
+        run: |
+          python3 scripts/auto-eat/test_fold_auto_eat.py
+          python3 scripts/auto-eat/test_honesty.py
+          python3 scripts/auto-eat/test_g2_gate.py
+
+      - name: commit and push only the feed branch
+        run: |
+          set -euo pipefail
+          git diff --check
+          git config user.name "csoai-auto-eat"
+          git config user.email "board@csoai.org"
+          git add public/interop/auto-eat scripts/auto-eat
+          if git diff --cached --quiet; then
+            echo "AUTO_EAT_NO_CHANGE — no new discovery, probe or code change"
+            exit 0
+          fi
+          git commit -m "auto-eat: scheduled discovery and probe feed"
+          git push origin HEAD:refs/heads/auto-eat-feed
