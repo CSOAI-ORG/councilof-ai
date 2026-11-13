@@ -75,6 +75,7 @@ export const NODE_TEST_FILES = [
   'scripts/surface/prerender-io.test.mjs',
   'scripts/surface/render-board-reference.test.mjs',
   'scripts/surface/public-copy.node-test.mjs',
+  'scripts/surface/home-report-copy.node-test.mjs',
   // The live persona gauntlet demands page markers that must exist in the page source. This
   // node:test file catches that drift at pull-request time instead of on a two-hourly
   // schedule, and it proves the retired copy has not come back.

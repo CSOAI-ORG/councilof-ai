@@ -1,0 +1,91 @@
+{
+  "state": "HF_COMPOSED_ADOPTION_QUALIFIED",
+  "base_space_revision": "1887656611c1fb3a7010c77a2c6ca3599a5f9aed",
+  "source_commit": "bd3d6424e7591c63477049c09f5811fe10d70e27",
+  "baseline": {
+    "label": "BASE_COMPOSED",
+    "returncode": 0,
+    "methods": 340,
+    "wall_seconds": 12.547243545006495,
+    "output_sha256": "280652cd550370c4873ca5900bc2b1a26c928cece32406c84afa78468b966272"
+  },
+  "composed": {
+    "label": "CANDIDATE_COMPOSED",
+    "returncode": 0,
+    "methods": 359,
+    "wall_seconds": 14.202475362981204,
+    "output_sha256": "67fc7e20f4ca1368193034aa8aa124368cca18515ab7c33613718e57b87c10f6"
+  },
+  "retained_join": {
+    "label": "PRESERVED_JOIN",
+    "returncode": 0,
+    "methods": 87,
+    "wall_seconds": 0.4730422269785777,
+    "output_sha256": "c08ea0cba64fe67e7ea13fb372bd94f860b73e6e8b57db5fff45fbd31fd49e74"
+  },
+  "new_methods": 19,
+  "source_sha256": {
+    "memory_venturi.py": "fee33861233dec6b7e89dbbf91582c0016c9538dd257f796ab9cef493fe1bebc",
+    "memory_ui_tools.py": "4a528b5813307a450bf1b52bcfb5b7b07f79f48887b7a57aecb12635cd9f2944",
+    "test_targeted_invalidation.py": "80bf5fd89722190f70d5462bd5e758a7e06846dc6ae2198ac956f81b57174a3a",
+    "test_memory_adoption.py": "0cf042457141c06879cf501ebf7e13146ed6d761434d3b3fed5e3e5920d0430d"
+  },
+  "original_api_name_retained": "/lab_memory_venturi",
+  "five_targeted_controls": {
+    "state": "DECLARED_CONTROLS_PASSED",
+    "cases": [
+      {
+        "case": "during-compute",
+        "expected": "INVALIDATED_DURING_COMPUTE",
+        "observed": "INVALIDATED_DURING_COMPUTE",
+        "stored_results": 0,
+        "passed": true
+      },
+      {
+        "case": "during-hit",
+        "expected": "INVALIDATED_DURING_LOOKUP",
+        "observed": "INVALIDATED_DURING_LOOKUP",
+        "stored_results": 0,
+        "passed": true
+      },
+      {
+        "case": "unrelated-source",
+        "expected": "REUSED_RESULT",
+        "observed": "REUSED_RESULT",
+        "stored_results": 1,
+        "passed": true
+      },
+      {
+        "case": "other-tenant",
+        "expected": "REUSED_RESULT",
+        "observed": "REUSED_RESULT",
+        "stored_results": 1,
+        "passed": true
+      },
+      {
+        "case": "fresh-after-invalidation",
+        "expected": "FRESH_RESULT",
+        "observed": "FRESH_RESULT",
+        "stored_results": 1,
+        "passed": true
+      }
+    ],
+    "cache_source_sha256": "fee33861233dec6b7e89dbbf91582c0016c9538dd257f796ab9cef493fe1bebc",
+    "source_revision_changes": 0,
+    "real_user_authorisation": false,
+    "temporary_directory_removed": true,
+    "provider_calls": 0,
+    "cross_process_atomicity_claimed": false,
+    "scope": "Explicit invalidation before the final check; no guarantee about events after that check."
+  },
+  "original_predictor_evaluations": 8,
+  "original_reuse_hits": 4,
+  "event_schema_and_RFC8785_output_hash_verified": true,
+  "event_signed": false,
+  "GPU_or_large_model_calls": 0,
+  "new_training": false,
+  "durable_memory_activated": false,
+  "real_source_authorizer_qualified": false,
+  "whole_job_speedup_claimed": false,
+  "gradio": "6.31.0"
+}
