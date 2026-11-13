@@ -162,39 +162,11 @@ export function Footer() {
       // this also used to clear was removed on 27 Sep 2026.)
       style={{ paddingBottom: "calc(1rem + var(--cookie-banner-h, 0px))" }}
     >
-      <div className={homepage ? "section-shell py-10 sm:py-12" : "section-shell py-12 sm:py-14"}>
+      <div className={homepage ? "section-shell py-10 sm:py-12" : "section-shell py-8 sm:py-10"}>
         {/* Brand + socials */}
-        <div className={homepage ? "mb-7 flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8" : "mb-10 flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-6"}>
+        <div className={homepage ? "mb-7 flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8" : "mb-7 flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-6"}>
           <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            {homepage ? <CouncilBrand size="sm" /> : <>
-            <svg viewBox="0 0 100 100" className="h-9 w-9" aria-hidden="true">
-              <defs>
-                <linearGradient id="footerShieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#10b981" />
-                  <stop offset="100%" stopColor="#047857" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M50 5 L90 20 L90 50 C90 75 50 95 50 95 C50 95 10 75 10 50 L10 20 Z"
-                fill="url(#footerShieldGradient)"
-              />
-              <g stroke="#fff" strokeWidth="3" fill="none" opacity="0.9">
-                <line x1="25" y1="30" x2="25" y2="70"/>
-                <line x1="25" y1="40" x2="40" y2="40"/>
-                <line x1="25" y1="55" x2="35" y2="55"/>
-                <circle cx="25" cy="30" r="4" fill="#fff"/>
-                <circle cx="40" cy="40" r="4" fill="#fff"/>
-                <circle cx="35" cy="55" r="4" fill="#fff"/>
-                <circle cx="25" cy="70" r="4" fill="#fff"/>
-              </g>
-              <g stroke="#fff" strokeWidth="3" fill="none" opacity="0.9">
-                <path d="M55 35 Q70 30 72 45 Q82 45 78 58 Q85 65 70 72 Q65 80 55 72"/>
-                <circle cx="62" cy="45" r="5" fill="#fff"/>
-                <circle cx="72" cy="60" r="5" fill="#fff"/>
-              </g>
-            </svg>
-            <span className="text-xl font-bold">CSOAI</span>
-            </>}
+            <CouncilBrand size="sm" />
           </Link>
           <p className="text-muted-foreground text-sm max-w-md">
             An operating UK AI measurement and evidence organisation run by CSOAI Ltd. We publish records you can check. Measurement is not certification.

@@ -25,7 +25,17 @@ export default function AskHost() {
   const [askOpen, setAskOpen] = useState(false);
   const [question, setQuestion] = useState<{ text: string; n: number } | null>(null);
   const [entryRoute, setEntryRoute] = useState(false);
+  const [dashboardShell, setDashboardShell] = useState(false);
   const launcherRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const syncDashboardShell = () => {
+      setDashboardShell(document.documentElement.hasAttribute("data-coai-dashboard-shell"));
+    };
+    syncDashboardShell();
+    window.addEventListener("coai:dashboard-shell", syncDashboardShell);
+    return () => window.removeEventListener("coai:dashboard-shell", syncDashboardShell);
+  }, []);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const enteredRoute = useRef<string | null>(null);
 
@@ -117,7 +127,7 @@ export default function AskHost() {
           />
         </Suspense>
       ) : null}
-      {entryRoute && !askOpen ? (
+      {entryRoute && !askOpen && !dashboardShell ? (
         <button
           ref={launcherRef}
           type="button"
@@ -129,7 +139,7 @@ export default function AskHost() {
           aria-label="Open Council of AI chat"
           title="Open Council of AI chat"
           data-testid="ask-fab"
-          className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-[70] inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-800 text-white shadow-lg hover:bg-emerald-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+          className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom)+var(--cookie-banner-h,0px))] right-4 z-[70] inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-800 text-white shadow-lg hover:bg-emerald-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
         >
           <MessageSquareText className="h-6 w-6" aria-hidden="true" />
         </button>

@@ -1,60 +1,41 @@
 /**
- * HomeMine — the living board strip + the daily-report/newsletter band, restored
- * into the rebuilt homepage journey (2026-11-09).
- *
- * WHY THIS EXISTS. The #3969 homepage rebuild recomposed the front door into
- * Hero → Results → Products → Evidence → Developers → Updates and dropped two
- * owner-verified sections on the floor: the compact live board strip and the
- * daily-report band with the working signup (NewsletterSignup now stores via
- * LEADS — verified end-to-end 2026-11-04). This component restores both, using
- * the exact markup that shipped on 1 Nov and rendered until the rebuild.
- *
- * FAILURE BEHAVIOUR: LivingBoardStrip renders NOTHING when the board read
- * fails — a missing board never draws a broken homepage. The band is static
- * and always renders.
+ * HomeMine — direct bridge from the live board results to the daily report
+ * archive and independent card verification (avoiding duplicate board strips
+ * or duplicate email forms on the landing flow).
  */
-import LivingBoardStrip from "@/components/home/LivingBoardStrip";
-import NewsletterSignup from "@/components/NewsletterSignup";
-
 export default function HomeMine() {
   return (
-    <>
-      {/* The compact LIVE board (owner, 1 Nov 2026): under the results, above
-          every commercial band. Renders nothing at all when the read fails. */}
-      <div className="section-shell pt-6 sm:pt-8" data-testid="home-living-strip">
-        <LivingBoardStrip />
-      </div>
-
-      {/* Link to the report archive without fixing its axis count, cadence or
-          signature state in homepage copy. Each report carries its own scope.
-          NewsletterSignup and the existing subscription handler are unchanged. */}
-      <div className="section-shell pt-10" data-testid="home-report-archive-band">
-        <div className="surface-raised border border-border rounded-lg p-6 sm:p-8">
-          <h2 className="text-xl font-bold mb-2">
+    <div className="section-shell py-8" data-testid="home-report-archive-band">
+      <div className="rounded-xl border border-[#bbcbbd] bg-[#f4f7f4] px-6 py-5 sm:flex sm:items-center sm:justify-between sm:gap-8">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#35634b]">
+            Daily report archive
+          </p>
+          <h2 className="mt-1 text-lg font-bold tracking-tight text-[#0c1a12]">
             Published measurement reports
           </h2>
-          <p className="text-muted-foreground text-sm mb-4 max-w-2xl">
-            Browse dated reports and read each report&apos;s scope, sources and
-            evidence status. Check the publication date before relying on a result.
+          <p className="mt-1 max-w-2xl text-sm text-[#3c5043]">
+            Browse dated run summaries alongside their sample sizes, sources and
+            publication stamps before relying on a result.
           </p>
-          <div className="flex flex-wrap gap-3 items-center">
-            <a
-              href="https://huggingface.co/datasets/csoai/gspc-daily-reports"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold hover:opacity-90 transition"
-            >
-              Browse published reports
-            </a>
-            <a href="/board/" className="text-sm underline underline-offset-4 hover:text-primary">
-              or go straight to the board
-            </a>
-          </div>
-          <div className="mt-5 max-w-md">
-            <NewsletterSignup />
-          </div>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-4 sm:mt-0 sm:shrink-0">
+          <a
+            href="https://huggingface.co/datasets/csoai/gspc-daily-reports"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-[42px] items-center rounded-md bg-[#04624a] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#034d3a]"
+          >
+            Browse published reports
+          </a>
+          <a
+            href="/board/"
+            className="text-xs font-semibold text-[#04624a] underline underline-offset-4 hover:text-[#034d3a]"
+          >
+            Open the full board
+          </a>
         </div>
       </div>
-    </>
+    </div>
   );
 }

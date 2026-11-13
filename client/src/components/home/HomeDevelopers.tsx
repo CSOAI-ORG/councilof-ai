@@ -62,7 +62,7 @@ export default function HomeDevelopers() {
     >
       <div className="section-shell hp-developer-grid">
         <div>
-          <p className="hp-eyebrow">04 / For developers and agents</p>
+          <p className="hp-eyebrow">06 / For developers and agents</p>
           <h2 id="home-developers-h">
             The same evidence.
             <br />

@@ -39,7 +39,7 @@ export default function HomeEvidence() {
       >
         <div className="section-shell hp-method-grid">
           <div className="hp-method-intro">
-            <p className="hp-eyebrow">03 / Built to be checked</p>
+            <p className="hp-eyebrow">05 / Built to be checked</p>
             <h2 id="home-method-h">
               A result is the start.
               <br />
@@ -55,8 +55,9 @@ export default function HomeEvidence() {
                 alt="Illustration of a measurement record held up for inspection"
                 width={800}
                 height={450}
-                loading="lazy"
+                loading="eager"
                 decoding="async"
+                className="bg-[#e8efe9]"
               />
               <figcaption>
                 Illustration. A signature binds a record to its signer. It does

@@ -82,7 +82,7 @@ export default function HomeProducts() {
       <div className="section-shell">
         <div className="hp-section-heading">
           <div>
-            <p className="hp-eyebrow">02 / Put evidence to work</p>
+            <p className="hp-eyebrow">03 / Put evidence to work</p>
             <h2 id="home-products-h">
               Start with a question.
               <br />

@@ -3,16 +3,33 @@
  * Shields reads npm's monthly download API when the browser requests the image. npm download
  * counts include automated installs and are not people, users or customers.
  */
+import { useState } from "react";
+
 export const NPM_MCP_BADGE_PACKAGE = "csoai-gspc-mcp";
 export const NPM_MCP_BADGE_SRC = `https://img.shields.io/npm/dm/${NPM_MCP_BADGE_PACKAGE}?label=npm%2FMCP%20downloads%2C%20last%20month`;
 export const NPM_MCP_BADGE_HREF = `https://www.npmjs.com/package/${NPM_MCP_BADGE_PACKAGE}`;
 export const NPM_MCP_BADGE_ALT = `Reported monthly npm downloads of the ${NPM_MCP_BADGE_PACKAGE} MCP package, including automated installs, via Shields.io and npm`;
 
 export default function NpmMcpLiveBadge({ className = "" }: { className?: string }) {
+  const [imgUnavailable, setImgUnavailable] = useState(false);
   return (
     <p className={`flex flex-wrap items-center gap-2 text-xs text-muted-foreground ${className}`} data-testid="npm-mcp-live-badge">
       <a href={NPM_MCP_BADGE_HREF} rel="noopener noreferrer" className="inline-flex min-h-11 items-center">
-        <img src={NPM_MCP_BADGE_SRC} alt={NPM_MCP_BADGE_ALT} height={20} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
+        {imgUnavailable ? (
+          <span className="inline-flex items-center rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[11px] font-semibold text-foreground hover:border-emerald-600/50">
+            npm · {NPM_MCP_BADGE_PACKAGE} ↗
+          </span>
+        ) : (
+          <img
+            src={NPM_MCP_BADGE_SRC}
+            alt={NPM_MCP_BADGE_ALT}
+            height={20}
+            loading="lazy"
+            decoding="async"
+            referrerPolicy="no-referrer"
+            onError={() => setImgUnavailable(true)}
+          />
+        )}
       </a>
       <span>{NPM_MCP_BADGE_PACKAGE} package on npm · MCP downloads, last month, including automated installs · reported downloads, not unique users</span>
     </p>

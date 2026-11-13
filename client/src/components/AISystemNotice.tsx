@@ -49,7 +49,7 @@ export default function AISystemNotice({ route }: { route: string }) {
         <span>
           {isAI ? "You are interacting with an AI system." : "Deterministic — not an AI system."}
         </span>
-        <span className="ml-auto text-emerald-100/40">details</span>
+        <span className="ml-auto text-emerald-100/75">details</span>
       </button>
     );
   }
@@ -72,7 +72,7 @@ export default function AISystemNotice({ route }: { route: string }) {
           : "This is not an AI system. It is a deterministic rule-based tool."}
       </p>
       <p className="mt-2">{surface.mechanism}</p>
-      <p className="mt-2 text-[11px] text-emerald-100/50">
+      <p className="mt-2 text-[11px] text-emerald-100/80">
         {isAI ? (
           <>Disclosed under EU AI Act Article 50(1).</>
         ) : (
@@ -89,7 +89,7 @@ export default function AISystemNotice({ route }: { route: string }) {
       <button
         type="button"
         onClick={() => setCollapsed(true)}
-        className="mt-3 text-[11px] text-emerald-100/50 underline decoration-dotted hover:text-emerald-50"
+        className="mt-3 text-[11px] text-emerald-100/80 underline decoration-dotted hover:text-emerald-50"
       >
         Collapse — the marker stays visible
       </button>

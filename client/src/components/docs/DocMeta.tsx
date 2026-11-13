@@ -86,7 +86,15 @@ function useCopy() {
   return { done, copy };
 }
 
-export default function DocMeta({ updated, slug }: { updated: string; slug: string }) {
+export default function DocMeta({
+  updated,
+  slug,
+  tone = "dark",
+}: {
+  updated: string;
+  slug: string;
+  tone?: "dark" | "light";
+}) {
   const { done, copy } = useCopy();
   const key = `coai:helpful:${slug}`;
   const [vote, setVote] = useState<"yes" | "no" | null>(() => {
@@ -107,13 +115,20 @@ export default function DocMeta({ updated, slug }: { updated: string; slug: stri
   };
   const d = new Date(`${updated}T00:00:00Z`);
   const human = Number.isNaN(d.getTime()) ? updated : d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
-  const btn =
-    "inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-900 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700";
+  const dark = tone === "dark";
+  const shell = dark
+    ? "my-5 rounded-xl border border-emerald-400/20 bg-emerald-950/60 p-3.5 text-emerald-50 shadow-sm"
+    : "my-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-900";
+  const mutedText = dark ? "text-emerald-100/75" : "text-slate-700";
+  const divider = dark ? "border-emerald-400/15" : "border-slate-200";
+  const btn = dark
+    ? "inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-emerald-300/25 bg-emerald-900/50 px-3 text-xs font-semibold text-emerald-50 hover:bg-emerald-800/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 sm:text-sm"
+    : "inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-900 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700";
 
   return (
-    <div data-doc-meta="" className="my-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-900" data-testid="doc-meta">
+    <div data-doc-meta="" className={shell} data-testid="doc-meta">
       <div className="flex flex-wrap items-center gap-2">
-        <p className="mr-auto text-sm text-slate-700">
+        <p className={`mr-auto text-sm ${mutedText}`}>
           Last updated <time dateTime={updated}>{human}</time>
         </p>
         <button
@@ -132,12 +147,12 @@ export default function DocMeta({ updated, slug }: { updated: string; slug: stri
           {done === "agent" ? "Copied" : "Set up your agent"}
         </button>
       </div>
-      <p id={`${slug}-agent-hint`} className="mt-1 text-xs text-slate-700">
+      <p id={`${slug}-agent-hint`} className={`mt-1.5 text-xs ${mutedText}`}>
         &ldquo;Set up your agent&rdquo; copies a prompt for Claude, Cursor, Codex or any MCP client: it adds the free MCP door and runs one
         verify.
       </p>
-      <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-slate-200 pt-2" role="group" aria-label="Was this page helpful?">
-        <span className="text-sm font-semibold">Was this helpful?</span>
+      <div className={`mt-2.5 flex flex-wrap items-center gap-2 border-t ${divider} pt-2.5`} role="group" aria-label="Was this page helpful?">
+        <span className="text-xs font-semibold sm:text-sm">Was this page helpful?</span>
         <button type="button" className={btn} aria-pressed={vote === "yes"} onClick={() => cast("yes")}>
           <ThumbsUp className="h-4 w-4" aria-hidden="true" /> Yes
         </button>
@@ -145,7 +160,7 @@ export default function DocMeta({ updated, slug }: { updated: string; slug: stri
           <ThumbsDown className="h-4 w-4" aria-hidden="true" /> No
         </button>
         {vote ? (
-          <span className="text-xs text-slate-700" aria-live="polite">
+          <span className={`text-xs ${mutedText}`} aria-live="polite">
             Thank you. Your answer stays in this browser; nothing is sent. To tell us something specific,{" "}
             <a href="/dispute/" className="font-medium underline underline-offset-2">
               ask for a correction
