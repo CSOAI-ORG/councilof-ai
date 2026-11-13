@@ -1,0 +1,116 @@
+{
+  "state": "POST_PUBLICATION_READBACK_PASSED",
+  "at": "2026-11-12T01:28:10.290978+00:00",
+  "source_commit": "6991da2dc4b6fb4304d516460a0789f1b2652b6d",
+  "HF_revision_verified": "87f1fe8c6a9eed544f9bf110d9b408da07288270",
+  "current_revision_observed": "87f1fe8c6a9eed544f9bf110d9b408da07288270",
+  "pinned_artifacts_verified": 20,
+  "served_artifacts_verified": [
+    {
+      "path": "adoption-20261112/RESULT.json",
+      "sha256": "e9ba05ed70e37ee0fc3dc8a975e78697016caadef0a810f98c946a3b9c7742cf",
+      "exact_bytes": true
+    },
+    {
+      "path": "adoption-20261112/REPORT.md",
+      "sha256": "c8b5432463a09a8481d92b37ccd81abfd0dc35f78b4ba0ff33d51cc479ca9936",
+      "exact_bytes": true
+    },
+    {
+      "path": "adoption-20261112/LIVE-MCP.json",
+      "sha256": "2faa6caa03b73c8058349dca323a9f2dbde960562046702e03afc8a5eaf65c29",
+      "exact_bytes": true
+    },
+    {
+      "path": "adoption-20261112/CLOUDFLARE-EXPIRY.json",
+      "sha256": "765e3eb2c73eff43042348f7f51523eea3046ece133f77b72674784665514d4b",
+      "exact_bytes": true
+    },
+    {
+      "path": "SOURCE.json",
+      "sha256": "e6ddc3fac8412e3be2d28eb213df2e2c8a894c14734b9806c5c18d45f1674e2d",
+      "exact_bytes": true
+    },
+    {
+      "path": "BUNDLE-CHECK.json",
+      "sha256": "970141ed1de520f6725ebc79732d6a5f0d1a09f5c697188bd0ded69fac84e309",
+      "exact_bytes": true
+    },
+    {
+      "path": "MEOK-Memory-Invalidation-Adoption.zip",
+      "sha256": "0254888f3e182e2f3b729278bfe6618a237fd33afe742b21d1e137afb08add0a",
+      "exact_bytes": true
+    }
+  ],
+  "HTML_scope": "Rendered markers, not raw-byte equivalence; host additions are not stripped or mislabelled",
+  "other_manifest_entries_preserved": 229,
+  "bundle_sha256": "0254888f3e182e2f3b729278bfe6618a237fd33afe742b21d1e137afb08add0a",
+  "private_source_or_credentials_published": false,
+  "public_browser_check": {
+    "state": "ANONYMOUS_NAVIGATION_COMPLETED",
+    "run_id": "9c8a87f7-0f04-4bfe-9f83-3ed14973c3c8",
+    "opened": [
+      "landing page",
+      "structured result",
+      "live MCP record",
+      "report",
+      "source pins",
+      "clean archive result",
+      "expiry readback"
+    ],
+    "download": "Archive initiation reported, bytes verified separately by the explicit seven-artifact readback",
+    "limitations": [
+      "Browser navigation did not rerun code or validate numerical results.",
+      "No private-account browser journey or actual professional review occurred."
+    ],
+    "wording_correction": "The navigation report used no GPU/model calls as shorthand; actual retained small-network evaluations were32. No large-model/GPU inference was requested."
+  },
+  "repository_checks": {
+    "source_head": "6991da2dc4b6fb4304d516460a0789f1b2652b6d",
+    "runs": [
+      {
+        "id": 43134162417,
+        "name": "eval-ci",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 43134162428,
+        "name": "lane-guard",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 43134162491,
+        "name": "CI",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 43134162523,
+        "name": "MEOK memory invalidation contracts",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 43134162524,
+        "name": "conflict-guard",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 43134162399,
+        "name": "crawler-view-gate",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 43134162471,
+        "name": "pr-gates",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "scope": "All seven workflows on the recorded result/source head; later documentation-only commits are separate."
+  }
+}
