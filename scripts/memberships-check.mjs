@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 /**
  * memberships-check — re-fetches every PUBLIC evidence URL in public/interop/memberships.json
- * and fails when any answers non-200 or no longer names us.
+ * and fails when any answers non-200 or no longer names us. It also rejects a manifest older
+ * than 14 days, row evidence dates older than 60 days, and HTML/JSON register date disagreement.
+ * Stale snapshots do not suppress live checks of public evidence URLs.
  *
  * WHY. The membership strip on the home page and the footer is read from a committed manifest,
  * and every entry links to the page that is supposed to prove it. A roster can drop us, a
