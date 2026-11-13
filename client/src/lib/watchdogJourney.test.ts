@@ -9,6 +9,7 @@ import {
   claimHref,
   claimState,
   claimsFromRegistry,
+  filterWatchdogClaims,
   conclusionResult,
   evidenceLinkState,
   parseJourney,
@@ -134,5 +135,36 @@ describe("watchdog — stable re-fetch URL", () => {
     const p = parseJourney("?registry=../../secret&claim=%3Cscript%3E&view=library");
     expect(p).toEqual({ view: "library", registry: null, claim: null });
     expect(registryPath("../x")).toBeNull();
+  });
+});
+
+
+describe("watchdog — read-only claim discovery", () => {
+  const items = claimsFromRegistry({
+    registry_id: "fixture",
+    claims: [
+      { claim_id: "AX-1", subject: { name: "Alpha Tools" }, claim_verbatim: "Independent proof of provenance", state: "CLAIM_CAPTURED", source_url: "https://alpha.example/proof" },
+      { claim_id: "BY-2", subject: { name: "Beta Systems" }, claim_verbatim: "AI governance attestation", state: "UNMEASURED", source_url: "https://beta.example/audit" },
+    ],
+  });
+
+  it("finds subject, claim text, source URL and ID without case dependence", () => {
+    for (const search of ["  ALPHA  ", "provenance", "alpha.example", "ax-1"]) {
+      expect(filterWatchdogClaims(items, search).map((c) => c.claimId)).toEqual(["AX-1"]);
+    }
+    expect(filterWatchdogClaims(items, " beta ").map((c) => c.claimId)).toEqual(["BY-2"]);
+  });
+
+  it("filters only by recorded state, never an inferred verdict", () => {
+    expect(filterWatchdogClaims(items, "", "UNMEASURED").map((c) => c.claimId)).toEqual(["BY-2"]);
+    expect(filterWatchdogClaims(items, "governance", "CLAIM_CAPTURED")).toEqual([]);
+    expect(filterWatchdogClaims(items, "", "ALL").length).toBe(items.length);
+  });
+
+  it("preserves original evidence, order and published claim data", () => {
+    const before = JSON.stringify(items);
+    expect(filterWatchdogClaims(items, "not a real match")).toEqual([]);
+    expect(filterWatchdogClaims(items, "   ")).toEqual(items);
+    expect(JSON.stringify(items)).toBe(before);
   });
 });
