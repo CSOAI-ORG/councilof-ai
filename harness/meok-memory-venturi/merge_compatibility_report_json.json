@@ -1,0 +1,46 @@
+{
+  "scope": "Function-preservation controls on the actual trained 980-parameter MEOK network; 1000 synthetic feature vectors; not new task accuracy or a Cosmos/Mamba merge",
+  "seed": 47,
+  "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+  "variants": [
+    {
+      "variant": "permuted-identical-function",
+      "mae_vs_original_function": 5.597085295239168e-17,
+      "max_error_vs_original_function": 5.551115123125783e-16,
+      "scope": "Same trained network with hidden units reordered"
+    },
+    {
+      "variant": "unaligned-weight-mean",
+      "mae_vs_original_function": 0.2605894458439817,
+      "max_error_vs_original_function": 2.290901951015278,
+      "scope": "Matching tensor shapes alone do not preserve meaning"
+    },
+    {
+      "variant": "output-mean",
+      "mae_vs_original_function": 2.796807924143607e-17,
+      "max_error_vs_original_function": 3.3306690738754696e-16,
+      "scope": "Combines outputs of two equivalent functions, not distinct specialist skills"
+    },
+    {
+      "variant": "exact-permutation-aligned-weight-mean",
+      "mae_vs_original_function": 0.0,
+      "max_error_vs_original_function": 0.0,
+      "scope": "Only exact hidden-unit permutation alignment was solved"
+    },
+    {
+      "variant": "int8-rounded-dequantised",
+      "mae_vs_original_function": 0.0076106278377306305,
+      "max_error_vs_original_function": 0.08685279470892526,
+      "scope": "Numerical perturbation only; inference still uses FP64 here; no speed/energy claim"
+    },
+    {
+      "variant": "ten-percent-per-matrix-magnitude-pruning",
+      "mae_vs_original_function": 0.00679805526697428,
+      "max_error_vs_original_function": 0.07659213402597398,
+      "scope": "Perturbation control, not a qualified efficiency upgrade"
+    }
+  ],
+  "mergekit_executed": false,
+  "new_model_training": false,
+  "gspc_admitted": false
+}
