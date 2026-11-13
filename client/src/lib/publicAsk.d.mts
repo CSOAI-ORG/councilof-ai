@@ -3,7 +3,7 @@ export type PublicAskEvent = { event: string | null; data: Json };
 export type PublicToolCard = { id: string; name: string; argsText: string; status: 'running' | 'done'; label?: string | null; summary?: string | null; citation?: { tool: string | null; record_id: string | null; url: string | null } | null; output?: unknown };
 export type PublicRun = { question: string; threadId: string | null; runId: string | null; status: 'streaming' | 'done' | 'held' | 'error'; tools: PublicToolCard[]; text: string; confirm: Json | null; consentRequired: Json | null; result: Json | null; error: string | null };
 export type PublicTranscript = { schema: 'csoai.public-ask-transcript/1'; question: string; source: { url: string; method: 'POST'; received_at_utc: string; http_status: 200; content_type: 'text/event-stream'; bytes: number; sha256: string; raw_base64: string }; receipt: { unsigned: true; scope: string }; run: PublicRun; events: PublicAskEvent[] };
-export type PublicAskOptions = { question: string; fetchImpl?: typeof fetch; cryptoImpl?: Crypto; signal?: AbortSignal; now?: () => string; timeoutMs?: number };
+export type PublicAskOptions = { question: string; enabledTools?: string[] | null; fetchImpl?: typeof fetch; cryptoImpl?: Crypto; signal?: AbortSignal; now?: () => string; timeoutMs?: number };
 export type PublicAskState = { state: 'loading' | 'ready' | 'held' | 'error' | 'cancelled'; transcript?: PublicTranscript; message?: string | null };
 export const PUBLIC_ASK_URL: 'https://councilof.ai/api/agui/run';
 export const MAX_SSE_BYTES: number;
@@ -15,4 +15,4 @@ export function streamPublicAsk(options: PublicAskOptions): Promise<PublicTransc
 export function makePublicTranscript(question: string, raw: Uint8Array, receivedAt: string, cryptoImpl?: Crypto): Promise<PublicTranscript>;
 export function reopenPublicTranscript(fileText: string, cryptoImpl?: Crypto, currentTime?: string): Promise<PublicTranscript>;
 export function serializePublicTranscript(value: PublicTranscript): string;
-export function createPublicAskController(options?: Omit<PublicAskOptions, 'question' | 'signal'> & { onState?: (state: PublicAskState) => void }): { ask(question: string): Promise<PublicTranscript | null>; cancel(): void; isBusy(): boolean };
+export function createPublicAskController(options?: Omit<PublicAskOptions, 'question' | 'signal'> & { onState?: (state: PublicAskState) => void }): { ask(question: string, enabledTools?: string[] | null): Promise<PublicTranscript | null>; cancel(): void; isBusy(): boolean };
