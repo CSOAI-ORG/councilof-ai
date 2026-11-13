@@ -1,0 +1,86 @@
+{
+  "card": {
+    "as_of": "2026-11-12T11:42:17Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-summary/0.1",
+      "status": "PROBED",
+      "release_id": "stablecoin-deep-2026-09",
+      "top_n": 20,
+      "n_rows": 20,
+      "n_deep_probed": 17,
+      "n_unmeasured_rows": 3,
+      "n_with_attestation_page": 17,
+      "n_with_auditor": 3,
+      "n_with_staleness": 1,
+      "median_staleness_days": 2,
+      "free_surface": "index total + staleness_days",
+      "paid_surface": "per-chain splits + gap basis points (PROOF door; price lives at the 402 challenge)",
+      "not_a_certification": true,
+      "truth_rules": [
+        "DEEP_PROBED means the issuer page was fetched and its served bytes inspected; it is not a certification.",
+        "A date counts only when attestation vocabulary appears near it in the served bytes.",
+        "JS-rendered figures not present in served bytes are UNMEASURED, never guessed."
+      ],
+      "unmeasured": []
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "7a0fa11d78e72593b72797a992092147b62eb2962c9de978b089fb4e1862a723",
+    "sig_ed25519": "b4ee883bfc482379a844ad8562a8213e167890e11e1b5e7c0923fd2a3267a25a22b62e5c514f9ee05bb8634796131441f2b894ae4d453059b453cffd9f90fe05",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json"
+    ],
+    "subject": "Stablecoin top-20 attestation deep-measurement: summary",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "ad838439eddd6552751f8b5fb97ce314ae3e3d3d7bc47310bdd82ba4cf95e9ab",
+    "451bc7cf062f801041394f223ceba65184f1c3088afb6f1cb40f26adbd940c48",
+    "8e8e616e7f79403f998266434327346bd2d7a33042bf705872154233a8c49016",
+    "4e7d902677f16a536636f3779640079ac7d400580994d61909b88b5bd770c365",
+    "74d892474201c0e5bfecfc1db10bb074d23ef66fba7181611d29eb09223d7d07",
+    "f9c5e320a90aec95aaca5a292b8e99af14fe8743b8573e23d18e0221131eef0f",
+    "cb7f5f71611a60bcf0b7cfde1e578aa2d9d6dab52fa52b216a3c04a6d093af04",
+    "704658a4a088c783956db63d7d28d713b5952700de06c3022edd599271f7a14c",
+    "565ba6a95cd6de9697b4fa080311f06fea3831a70b97350fd20b044219f3e0a0"
+  ]
+}
