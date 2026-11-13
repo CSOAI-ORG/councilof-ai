@@ -1,9 +1,9 @@
 name: nemotron-fj-probe
 
 # GSPC probe 3 — privacy-leak pattern scan over a declared sample of
-# nvidia/Nemotron-Personas-Finance-Japan (CC-BY-4.0). Lands the result card
-# (schema csoai.bank-probe-result/0.1) into public/interop/nemotron-fj-probe/.
-# Dispatch for the first run; weekly cadence after.
+# nvidia/Nemotron-Personas-Finance-Japan (CC-BY-4.0). Runs the scan, lands the
+# result card (schema csoai.bank-probe-result/0.1) on a dated branch, and opens
+# a PR (master is protected — direct GHA push is refused).
 
 on:
   workflow_dispatch:
@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: nemotron-fj-probe
@@ -39,18 +40,25 @@ jobs:
             --sample ${{ github.event.inputs.sample || '50000' }} \
             --out /tmp/result.json
           cat /tmp/result.json
-      - name: Land the result card (dated + latest)
+      - name: Land the result card on a dated branch and open the PR
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           DATE=$(date -u +%F)
+          BRANCH="probe/nemotron-fj-$DATE"
           mkdir -p public/interop/nemotron-fj-probe
           cp /tmp/result.json "public/interop/nemotron-fj-probe/result-${DATE}.json"
           cp /tmp/result.json "public/interop/nemotron-fj-probe/latest.json"
           git config user.name "CSOAI"
           git config user.email "nicholas@csoai.org"
+          git checkout -b "$BRANCH"
           git add public/interop/nemotron-fj-probe/
           if git diff --cached --quiet; then
-            echo "UNCHANGED — result identical to the landed card; nothing to commit"
-          else
-            git commit -m "nemotron-fj probe: privacy-leak scan landed (${DATE}, sample ${{ github.event.inputs.sample || '50000' }})"
-            git push origin HEAD:master
+            echo "UNCHANGED — result identical to the landed card; nothing to submit"
+            exit 0
           fi
+          git commit -m "nemotron-fj probe: privacy-leak scan landed (${DATE}, sample ${{ github.event.inputs.sample || '50000' }})"
+          git push origin "$BRANCH"
+          gh pr create --base master --head "$BRANCH" \
+            --title "nemotron-fj probe result: privacy-leak scan (${DATE})" \
+            --body "Result card for probe 3 (bank proposal #4250). Schema csoai.bank-probe-result/0.1. Pattern-level indicative scan of a declared sample — not a proof of privacy. Measurement, never certification. Auto-merge lands it."
