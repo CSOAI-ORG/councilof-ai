@@ -45,6 +45,7 @@ import {
 import { prepSpeech, speakVoice, stopVoice } from "@/lib/councilVoice";
 import { LISTEN_PRIVACY_NOTE, isListenSupported, isListening } from "@/lib/councilListen";
 import { crumbFor } from "@/components/ask/paletteIndex";
+import { ASK_RUN_SETTLED, ASK_RUN_STARTED } from "@/components/ask/askBus";
 
 const FOCUS = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
@@ -135,7 +136,7 @@ export function askHere(location: string, search: string): string {
   return here ? `${here.crumb} › ${here.title}` : location;
 }
 
-export default function AskPane({ open, onClose, question }: { open: boolean; onClose: () => void; question?: { text: string; n: number } | null }) {
+export default function AskPane({ open, onClose, question, threadId }: { open: boolean; onClose: () => void; question?: { text: string; n: number; threadId?: string | null } | null; threadId?: string | null }) {
   const [location] = useLocation();
   const search = useSearch();
   const talk = useRef<TalkPanelHandle>(null);
@@ -169,12 +170,16 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
     if (agents) installAgentBridge();
   }, [agents]);
 
-  // Ask the question the launcher or the palette handed over.
+  useEffect(() => {
+    talk.current?.setThreadId?.(threadId ?? null);
+  }, [threadId]);
+
+  // Ask the question the launcher, composer or history selection handed over.
   useEffect(() => {
     if (!question?.text) return;
     setTab("ask");
     setCollapsed(false);
-    talk.current?.ask(question.text);
+    talk.current?.ask(question.text, question.threadId ?? null);
   }, [question]);
 
   // Esc closes (and stops a running watch); focus lands in the pane when it opens.
@@ -460,6 +465,8 @@ export default function AskPane({ open, onClose, question }: { open: boolean; on
             declareUi
             watch={prefs.watch}
             onRunDone={onRunDone}
+            onRunStarted={(text, remoteThreadId) => window.dispatchEvent(new CustomEvent(ASK_RUN_STARTED, { detail: { question: text, threadId: remoteThreadId } }))}
+            onRunSettled={(run, remoteThreadId) => window.dispatchEvent(new CustomEvent(ASK_RUN_SETTLED, { detail: { question: run.question, threadId: remoteThreadId, text: run.text || run.error || `No answer returned (${run.status}).`, status: run.status, error: run.error } }))}
             onEnableWatch={enableWatchAndAsk}
             listen={voiceActive}
             onCaseVerified={onCaseVerified}

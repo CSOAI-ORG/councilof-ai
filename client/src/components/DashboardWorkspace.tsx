@@ -8,8 +8,7 @@ import LobbyComposer, {
   type ComposerTool,
 } from "@/components/lobby/LobbyComposer";
 import LobbyThread from "@/components/lobby/LobbyThread";
-import { openAsk } from "@/components/ask/askBus";
-import TalkPanel, { type TalkPanelHandle } from "@/components/talk/TalkPanel";
+import { ASK_RUN_SETTLED, ASK_RUN_STARTED, ASK_THREAD_SELECT, openAsk } from "@/components/ask/askBus";
 import GspcWorkspaceHome from "@/components/gspc/GspcWorkspaceHome";
 import {
   isExplicitNavigationCommand,
@@ -71,6 +70,20 @@ export function askOnHome(
   (ctx.record ?? recordActivity)({ kind: "ask", label: question });
   ctx.keepInChat?.(question);
   ctx.talk.ask(question);
+  return true;
+}
+
+/** Route every ordinary Council OS question through the single AskHost instance. */
+export function askInUnifiedPane(
+  text: string,
+  threadId: string | null,
+  open: typeof openAsk = openAsk,
+  record: typeof recordActivity = recordActivity,
+): boolean {
+  const question = text.trim();
+  if (!question || (isExplicitNavigationCommand(question) && (matchTab(question) || matchRoute(question)))) return false;
+  record({ kind: "ask", label: question });
+  open(question, threadId);
   return true;
 }
 
@@ -218,29 +231,42 @@ export default function DashboardWorkspace({
   // recorded in session history (so History/Chats can reach it), but it must not swap the home
   // canvas for LobbyThread: that unmounted the TalkPanel and aborted its /api/agui/run ~8 ms
   // after sending (6 Oct 2026, the first question never got an answer).
-  const [talkOwnsHome, setTalkOwnsHome] = useState(false);
-  const hasConversation = Boolean(chat.active?.turns.length) && !talkOwnsHome;
-  const talkRef = useRef<TalkPanelHandle>(null);
-  // On the home surface a typed question goes to the AG-UI TalkPanel (tool cards + citations).
-  // An explicit pane command ("show the board") still navigates through the lobby chat.
-  // The question is kept in History twice (see askOnHome): as an "ask" activity entry, and as a
-  // session-history turn that talkOwnsHome keeps from swapping the canvas and aborting the run.
+  const hasConversation = Boolean(chat.active?.turns.length);
   const askTalk = useCallback(
-    (text: string) =>
-      askOnHome(text, {
-        activePane: Boolean(activePane),
-        hasConversation,
-        talk: talkRef.current,
-        // #2834: the question is also a turn in session history (Chats › History). talkOwnsHome is
-        // set first, in the same batch, so that turn never flips hasConversation and the home
-        // canvas (and the TalkPanel's run) stays mounted.
-        keepInChat: (question) => {
-          setTalkOwnsHome(true);
-          chat.recordUserMessage(question);
-        },
-      }),
-    [activePane, hasConversation, chat],
+    (text: string) => askInUnifiedPane(text, chat.active?.remoteThreadId ?? null),
+    [chat.active?.remoteThreadId],
   );
+
+  // AskHost owns the only public TalkPanel. Its real run lifecycle is mirrored into the
+  // Council OS session history, so the bottom composer, header and floating bubble share a thread.
+  useEffect(() => {
+    const started = (event: Event) => {
+      const detail = (event as CustomEvent<{ question: string; threadId: string }>).detail;
+      chat.recordUserMessage(detail.question, detail.threadId);
+    };
+    const settled = (event: Event) => {
+      const detail = (event as CustomEvent<{ text: string; status: string; threadId: string }>).detail;
+      chat.recordCouncilMessage(detail.text, detail.status, detail.threadId);
+    };
+    window.addEventListener(ASK_RUN_STARTED, started);
+    window.addEventListener(ASK_RUN_SETTLED, settled);
+    return () => {
+      window.removeEventListener(ASK_RUN_STARTED, started);
+      window.removeEventListener(ASK_RUN_SETTLED, settled);
+    };
+  }, [chat.recordUserMessage, chat.recordCouncilMessage]);
+
+  const selectedThread = useRef<{ id: string | null; remoteThreadId?: string } | null>(null);
+  useEffect(() => {
+    const previous = selectedThread.current;
+    const next = { id: chat.activeId, remoteThreadId: chat.active?.remoteThreadId };
+    if (!previous || previous.id !== next.id || previous.remoteThreadId !== next.remoteThreadId) {
+      selectedThread.current = next;
+      // Dispatch on first mount too: header Ask must resume a restored history thread even
+      // when no navigation event occurs after the dashboard is rendered.
+      window.dispatchEvent(new CustomEvent(ASK_THREAD_SELECT, { detail: { threadId: next.remoteThreadId ?? null } }));
+    }
+  }, [chat.activeId, chat.active?.remoteThreadId]);
   const activity = useActivity();
   // The side rail only exists when it has something to hold: a conversation that
   // continues beside a tool pane. An empty "Open a pane or start a task" column cost
@@ -322,15 +348,8 @@ export default function DashboardWorkspace({
             <LobbyThread chat={chat} endRef={threadEndRef} />
           ) : (
             <GspcWorkspaceHome
-              onAsk={(q) => talkRef.current?.ask(q)}
-              talk={({ onRunDone }) => (
-                <TalkPanel
-                  ref={talkRef}
-                  variant="dock"
-                  onRunDone={onRunDone}
-                  className="mt-4 rounded-3xl border border-emerald-950/10 bg-card p-4 shadow-[0_1px_2px_rgba(6,21,15,0.04)] sm:p-5"
-                />
-              )}
+              onAsk={(q) => openAsk(q, chat.active?.remoteThreadId ?? null)}
+              talk={null}
             />
           )}
         </div>
@@ -356,7 +375,7 @@ export default function DashboardWorkspace({
           onFreeQuestion={
             activePane
               ? (q) => {
-                  openAsk(q);
+                  openAsk(q, chat.active?.remoteThreadId ?? null);
                   return true;
                 }
               : undefined

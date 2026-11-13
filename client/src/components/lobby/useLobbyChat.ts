@@ -64,6 +64,8 @@ export type Thread = {
   /** First question asked, trimmed — the thread's name in the Chats rail. */
   title: string;
   startedAt: string;
+  /** Server AG-UI thread id used to resume this exact conversation. */
+  remoteThreadId?: string;
   turns: Turn[];
 };
 
@@ -79,6 +81,42 @@ export const STATE_LABEL: Record<string, string> = {
 };
 
 const now = () => new Date().toISOString();
+
+/** Pure session-history reducer used by the Ask event bridge and its regression tests. */
+export function appendAskUserTurn(
+  threads: Thread[], activeId: string | null, question: string, remoteThreadId?: string, at = now(), newThreadId?: string,
+): { threads: Thread[]; activeId: string } {
+  const text = question.trim();
+  if (!text) return { threads, activeId: activeId ?? "" };
+  if (activeId && threads.some((t) => t.id === activeId)) {
+    return {
+      activeId,
+      threads: threads.map((t) => t.id === activeId
+        ? { ...t, remoteThreadId: remoteThreadId ?? t.remoteThreadId, turns: [...t.turns, { role: "user" as const, text, at }] }
+        : t),
+    };
+  }
+  const fresh: Thread = {
+    id: newThreadId ?? `t${Date.now().toString(36)}${threads.length}`,
+    title: text.length > 64 ? text.slice(0, 63).trimEnd() + "…" : text,
+    startedAt: at,
+    ...(remoteThreadId ? { remoteThreadId } : {}),
+    turns: [{ role: "user" as const, text, at }],
+  };
+  return { activeId: fresh.id, threads: [...threads, fresh] };
+}
+
+export function appendAskCouncilTurn(
+  threads: Thread[], text: string, state: string, remoteThreadId: string, at = now(),
+): Thread[] {
+  const reply = text.trim();
+  if (!reply) return threads;
+  const target = threads.find((t) => t.remoteThreadId === remoteThreadId);
+  if (!target) return threads;
+  return threads.map((t) => t.id === target.id
+    ? { ...t, turns: [...t.turns, { role: "council" as const, text: reply, state, signature: `AG-UI /api/agui/run · ${state}`, provenance: remoteThreadId, at }] }
+    : t);
+}
 
 /** The offline help text. Deterministic, and it says so on its face. */
 function offlineHelp(reason: string): string {
@@ -324,7 +362,9 @@ export interface LobbyChat {
   active: Thread | null;
   busy: boolean;
   /** Record a user message without processing — for TalkPanel questions that need session history. */
-  recordUserMessage: (text: string) => void;
+  recordUserMessage: (text: string, remoteThreadId?: string) => void;
+  /** Append the real Ask result to the same session thread; no synthetic answer is created. */
+  recordCouncilMessage: (text: string, state: string, remoteThreadId: string) => void;
   send: (
     question: string,
     onNavigate: (t: LobbyTab) => void,
@@ -359,33 +399,21 @@ export function useLobbyChat(): LobbyChat {
   const selectThread = useCallback((id: string) => setActiveId(id), []);
 
   const recordUserMessage = useCallback(
-    (text: string) => {
+    (text: string, remoteThreadId?: string) => {
       const question = text.trim();
       if (!question) return;
-      let id = activeId;
-      const userTurn: Turn = { role: "user", text: question, at: now() };
-      setThreads((prev) => {
-        if (id && prev.some((t) => t.id === id)) {
-          return prev.map((t) =>
-            t.id === id ? { ...t, turns: [...t.turns, userTurn] } : t,
-          );
-        }
-        const fresh: Thread = {
-          id: `t${Date.now().toString(36)}${prev.length}`,
-          title:
-            question.length > 64
-              ? question.slice(0, 63).trimEnd() + "…"
-              : question,
-          startedAt: now(),
-          turns: [userTurn],
-        };
-        id = fresh.id;
-        return [...prev, fresh];
-      });
-      setActiveId(id!);
+      // Compute the new session id outside the state updater: React may defer or replay
+      // updater functions, so mutating a closure inside setThreads cannot safely return an id.
+      const nextId = activeId ?? `t${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+      setThreads((prev) => appendAskUserTurn(prev, activeId, question, remoteThreadId, now(), nextId).threads);
+      setActiveId(nextId);
     },
     [activeId],
   );
+
+  const recordCouncilMessage = useCallback((text: string, state: string, remoteThreadId: string) => {
+    setThreads((prev) => appendAskCouncilTurn(prev, text, state, remoteThreadId));
+  }, []);
 
   const send = useCallback(
     async (
@@ -658,6 +686,7 @@ export function useLobbyChat(): LobbyChat {
     active,
     busy,
     recordUserMessage,
+    recordCouncilMessage,
     send,
     startThread,
     selectThread,

@@ -42,7 +42,7 @@ import {
   type Tone,
 } from "@/lib/aguiTalk";
 
-export type TalkPanelHandle = { ask: (question: string) => void };
+export type TalkPanelHandle = { ask: (question: string, threadId?: string | null) => void; setThreadId?: (threadId: string | null) => void };
 
 const FOCUS = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
@@ -382,8 +382,12 @@ type Props = {
   declareUi?: boolean;
   /** The viewer switched watch on in this tab: send watch consent. */
   watch?: boolean;
-  /** Called once per run when it finishes (the watch executor takes its ui steps from here). */
+  /** Called once per successful run (the watch executor takes its ui steps from here). */
   onRunDone?: (run: TalkRun) => void;
+  /** Shared Ask lifecycle: record the exact thread before its request begins. */
+  onRunStarted?: (question: string, threadId: string) => void;
+  /** Shared Ask lifecycle: record success, refusal, interruption or failure in the same thread. */
+  onRunSettled?: (run: TalkRun, threadId: string) => void;
   /** Offered when a run would have moved the page but watch was off. */
   onEnableWatch?: (run: TalkRun) => void;
   /** Show the push-to-talk mic (opt-in voice input). */
@@ -397,7 +401,7 @@ type Props = {
 };
 
 const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPanel(
-  { variant = "standalone", labelledBy, className = "", page, declareUi, watch, onRunDone, onEnableWatch, listen, hideSuggestions },
+  { variant = "standalone", labelledBy, className = "", page, declareUi, watch, onRunDone, onRunStarted, onRunSettled, onEnableWatch, listen, hideSuggestions },
   ref,
 ) {
   const [runs, setRuns] = useState<TalkRun[]>([]);
@@ -413,8 +417,8 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   const micActive = useRef(false);
   const micAllowed = useRef(listen === true);
   micAllowed.current = listen === true;
-  const opts = useRef({ page, declareUi, watch, onRunDone });
-  opts.current = { page, declareUi, watch, onRunDone };
+  const opts = useRef({ page, declareUi, watch, onRunDone, onRunStarted, onRunSettled });
+  opts.current = { page, declareUi, watch, onRunDone, onRunStarted, onRunSettled };
   useEffect(() => {
     if (!listen) {
       const microphone = micRef.current;
@@ -451,7 +455,7 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   }, []);
 
   const start = useCallback(
-    (question: string, confirmTool?: string[], threadId?: string) => {
+    (question: string, confirmTool?: string[], threadId?: string | null) => {
       const text = question.trim();
       if (!text) return;
       const microphone = micRef.current;
@@ -463,12 +467,13 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
       const ctl = new AbortController();
       abortRef.current = ctl;
       const id = `run-${++seq.current}`;
-      const sessionThread = threadId ?? threadRef.current ?? "web-" + crypto.randomUUID();
+      const sessionThread = threadId === null ? "web-" + crypto.randomUUID() : threadId ?? threadRef.current ?? "web-" + crypto.randomUUID();
       threadRef.current = sessionThread;
       setRuns((all) => [...all.slice(-9).map(run => run.status === "streaming" ? interruptRun(run, "stop_requested") : run), newRun(text, id)]);
       setAnnounce(`Asking: ${text}`);
       let final: TalkRun = newRun(text, id);
       const o = opts.current;
+      o.onRunStarted?.(text, sessionThread);
       streamRun({
         question: text,
         threadId: sessionThread,
@@ -488,7 +493,8 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
           if (ctl.signal.aborted || id !== "run-" + seq.current) return;
           // A stream that closed without RUN_FINISHED is reported as such, not as success.
           if (final.status === "streaming") {
-            update(id, (r) => interruptRun(r, "interrupted", "the stream closed before the run finished"));
+            final = interruptRun(final, "interrupted", "the stream closed before the run finished");
+            update(id, () => final);
             setAnnounce("The answer stream closed early.");
             return;
           }
@@ -503,10 +509,13 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
         .catch((e: unknown) => {
           if (ctl.signal.aborted) return;
           const msg = e instanceof Error ? e.message : String(e);
-          update(id, (r) => interruptRun(r, "interrupted", msg));
+          final = interruptRun(final, "interrupted", msg);
+          update(id, () => final);
           if (id === "run-" + seq.current) setAnnounce("The answer stream was interrupted. Executor state is unknown.");
         })
         .finally(() => {
+          if (ctl.signal.aborted && final.status === "streaming") final = interruptRun(final, "stop_requested");
+          opts.current.onRunSettled?.(final, sessionThread);
           // The run has ended: the request is no longer in flight, so it must not be abortable.
           // Only clear it if it is still THIS run's controller — a newer run may have taken over.
           if (abortRef.current === ctl) abortRef.current = null;
@@ -515,7 +524,7 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
     [update],
   );
 
-  useImperativeHandle(ref, () => ({ ask: (question: string) => start(question) }), [start]);
+  useImperativeHandle(ref, () => ({ ask: (question: string, threadId?: string | null) => start(question, undefined, threadId), setThreadId: (threadId: string | null) => { threadRef.current = threadId; } }), [start]);
 
   const mic = () => {
     if (!micAllowed.current) return;

@@ -29,6 +29,7 @@ function chatFixture(): LobbyChat {
     active: thread,
     busy: false,
     recordUserMessage: () => {},
+    recordCouncilMessage: () => {},
     send: async () => {},
     startThread: () => {},
     selectThread: () => {},
