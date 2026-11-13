@@ -203,6 +203,32 @@ def test_run_probes_parallel_unsigned() -> None:
     assert by["hf-model"]["LIVE"] == 2 and by["hf-model"]["n"] == 2
 
 
+def test_discover_skip_a2a_flag() -> None:
+    """The bounded keeper can explicitly hold the stalled A2A source without losing other lanes."""
+    from unittest.mock import patch
+
+    called = {"a2a": False}
+
+    def a2a(_n):
+        called["a2a"] = True
+        return []
+
+    with (
+        patch.object(c, "load_queue", return_value=[]),
+        patch.object(c, "carded_ids", return_value=set()),
+        patch.object(discover, "discover_hf", return_value=[]),
+        patch.object(discover, "discover_hf_space", return_value=[]),
+        patch.object(discover, "discover_npm", return_value=[]),
+        patch.object(discover, "discover_mcp", return_value=[]),
+        patch.object(discover, "discover_erc8004", return_value=[]),
+        patch.object(discover, "discover_xrpl", return_value=[]),
+        patch.object(discover, "discover_a2a", side_effect=a2a),
+        patch.object(sys, "argv", ["discover.py", "--per-source", "1", "--skip-a2a"]),
+    ):
+        assert discover.main() == 0
+    assert called["a2a"] is False
+
+
 def test_pidfile_lock_in_eat_loop() -> None:
     text = (HERE / "eat-loop.sh").read_text(encoding="utf-8")
     assert "EAT_PIDFILE" in text
@@ -220,6 +246,7 @@ def main() -> int:
     test_discover_hf_space_and_npm_from_fixture()
     test_hf_pagination_two_pages()
     test_mcp_cursor_pages()
+    test_discover_skip_a2a_flag()
     test_run_probes_parallel_unsigned()
     test_pidfile_lock_in_eat_loop()
     # The existing eval-CI entry also exercises status input integrity.
