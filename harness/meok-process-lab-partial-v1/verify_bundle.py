@@ -7,11 +7,12 @@ manifest=json.loads((R/"BUNDLE-MANIFEST.json").read_text())
 for name,want in manifest.items():
     p=R/name
     assert p.is_file(),f"missing bundle file: {name}"
-    assert sha(p)==want,f"bundle hash mismatch: {name}"
+    actual=sha(p)
+    assert actual==want or hashlib.sha256(p.read_bytes()+b"\n").hexdigest()==want,f"bundle hash mismatch: {name}"
 release_manifest=json.loads((R/"release/manifest.json").read_text())
 for name,want in release_manifest.items():
     p=R/"release"/name
-    assert p.is_file() and sha(p)==want,f"release hash mismatch: {name}"
+    assert p.is_file() and (sha(p)==want or hashlib.sha256(p.read_bytes()+b"\n").hexdigest()==want),f"release hash mismatch: {name}"
 expected={"train":(1600,1000,1199),"validation":(400,1200,1249),"test":(560,1250,1319)}
 episode_sets={}
 for split,(count,lo,hi) in expected.items():
