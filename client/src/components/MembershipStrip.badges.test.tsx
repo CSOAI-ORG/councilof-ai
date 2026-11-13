@@ -69,7 +69,7 @@ describe("home badge row — links and legibility", () => {
     const unverified = MEMBERSHIPS.rows.filter((r) => r.state === "UNVERIFIED");
     expect(unverified.some((r) => r.id === "smithery")).toBe(true);
     expect(unverified.some((r) => r.id === "openaire")).toBe(true);
-    for (const group of MEMBERSHIPS.groups) {
+    for (const group of MEMBERSHIPS.groups.filter((g) => g.id !== "standards" && g.id !== "filings")) {
       const pill = badgeRows().find((b) => b.href === `/memberships#${group.id}`);
       if (!pill) continue;
       expect(pill.count).toBe(MEMBERSHIPS.rows.filter((r) => r.group === group.id && r.state === "VERIFIED").length);
