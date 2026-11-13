@@ -1,0 +1,82 @@
+{
+  "checked_at": "2026-11-12T01:30:53.734159+00:00",
+  "active_updated_records": [
+    {
+      "checked_at": "2026-11-12T01:30:51.818302+00:00",
+      "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+      "listing_id": "83d8c070-6171-4171-a3b0-ae2163cebfd0",
+      "http_status": 200,
+      "body_sha256": "927c9cf6590bf324d5c27139af2b6a161ec77a0fd29f62c3124d38b931d8b9f4",
+      "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
+      "cached_directory_price_usd": 0.01,
+      "domain_verified": 0,
+      "same_listing_identity": true,
+      "metadata_matches": true,
+      "directory_state": "active",
+      "active_listing_confirmed": true
+    },
+    {
+      "checked_at": "2026-11-12T01:30:51.920752+00:00",
+      "url": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+      "listing_id": "fc9f48dc-a981-4bb5-ac79-530c0a2df16f",
+      "http_status": 200,
+      "body_sha256": "24374268d6133e5ce0b09ada667bf6322f76ee4d5bfcd85342898c81ac6a16ff",
+      "description": "Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.",
+      "cached_directory_price_usd": 0.01,
+      "domain_verified": 0,
+      "same_listing_identity": true,
+      "metadata_matches": true,
+      "directory_state": "active",
+      "active_listing_confirmed": true
+    },
+    {
+      "checked_at": "2026-11-12T01:30:52.012054+00:00",
+      "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+      "listing_id": "48c5d974-e29e-4a08-b08c-b18ca5309a37",
+      "http_status": 200,
+      "body_sha256": "ee10946eff6450c0d42d5d90e16576955ae00047b03843d683949f6c12caf859",
+      "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+      "cached_directory_price_usd": 0.01,
+      "domain_verified": 0,
+      "same_listing_identity": true,
+      "metadata_matches": true,
+      "directory_state": "active",
+      "active_listing_confirmed": true
+    },
+    {
+      "checked_at": "2026-11-12T01:30:52.123246+00:00",
+      "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+      "listing_id": "fab34d13-9f34-43a7-8c73-498cfcaa03ec",
+      "http_status": 200,
+      "body_sha256": "eb9404eed37fd8483bf691b550c280d06f8aff1efd860769cc69e7169a96e4da",
+      "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free.",
+      "cached_directory_price_usd": 0.01,
+      "domain_verified": 0,
+      "same_listing_identity": true,
+      "metadata_matches": true,
+      "directory_state": "active",
+      "active_listing_confirmed": true
+    },
+    {
+      "checked_at": "2026-11-12T01:30:52.227533+00:00",
+      "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+      "listing_id": "a4864ccc-5d7e-4db1-839a-4fd3faa8bc86",
+      "http_status": 200,
+      "body_sha256": "5208b574cb551cd96eaa52801af8b3d162d1069800c33e7fedb79cea6bbf43b3",
+      "description": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Detects C2PA and IPTC metadata only (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark is read. States: DETECTED, NOT_DETECTED (not proof the output is unmarked) or UNCHECKABLE; never a legal determination. CSOAI is a C2PA member. Free unsigned preview; verification is free.",
+      "cached_directory_price_usd": 0.01,
+      "domain_verified": 0,
+      "same_listing_identity": true,
+      "metadata_matches": true,
+      "directory_state": "active",
+      "active_listing_confirmed": true
+    }
+  ],
+  "remaining_expired_description_rows": [
+    {
+      "id": "0005f41e-4b2d-40e1-a02a-9da1bf4b6a4c",
+      "url": "https://councilof.ai/api/eunomia-data?feed=1"
+    }
+  ],
+  "payments_attempted": 0
+}

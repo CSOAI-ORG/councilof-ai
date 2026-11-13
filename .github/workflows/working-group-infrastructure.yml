@@ -21,6 +21,10 @@ on:
       - 'package-lock.json'
       - '.github/workflows/working-group-infrastructure.yml'
   workflow_dispatch:
+concurrency:
+  group: working-group-infrastructure-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:
