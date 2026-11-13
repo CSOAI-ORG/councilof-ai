@@ -68,6 +68,9 @@ describe("memberships-check: it can fail", () => {
   it("a bogus row planted in the REAL manifest turns the whole run red", async () => {
     const planted = {
       ...manifest,
+      // The source manifest has one row verified the day after its own as_of date. Advance this
+      // isolated fixture snapshot by one day so this test isolates the planted bogus URL failure.
+      as_of: "2026-10-08",
       rows: [
         ...manifest.rows,
         {
@@ -77,7 +80,7 @@ describe("memberships-check: it can fail", () => {
           group: manifest.groups[0].id,
           kind: "member",
           since: "2026-01-01",
-          verified_on: manifest.as_of,
+          verified_on: planted.as_of,
           evidence: "https://example.test/roster",
           evidence_kind: "public_url",
           public_evidence: true,
@@ -99,13 +102,13 @@ describe("memberships-check: it can fail", () => {
     ].join(" ");
     const fetcher = async (url: string) =>
       url === "https://councilof.ai/memberships"
-        ? { status: 200, body: `Machine-readable: /interop/memberships.json (schema csoai.memberships/0.1, as of ${manifest.as_of}, unsigned)` }
+        ? { status: 200, body: `Machine-readable: /interop/memberships.json (schema csoai.memberships/0.1, as of ${planted.as_of}, unsigned)` }
         : recordedGone.has(url)
         ? { status: 410, body: "User was blocked" }
         : url === "https://example.test/roster"
         ? { status: 200, body: "Members: Somebody Else" }
         : { status: 200, body: JSON.stringify({ pagination: { total: 1 }, items: [ourNames] }) };
-    const out = await runChecks(planted, fetcher, undefined, new Date(`${manifest.as_of}T00:00:00.000Z`));
+    const out = await runChecks(planted, fetcher, undefined, new Date(`${planted.as_of}T00:00:00.000Z`));
     expect(out.failures.map((f) => f.id)).toEqual(["bogus-roster"]);
     expect(out.exitCode).toBe(1);
   });
