@@ -699,7 +699,7 @@ jobs:
       - name: Council OS first question — desktop and mobile
         id: council_os_first_question
         if: steps.scope.outputs.gated == 'true'
-        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation starts minimized and remains usable across layout boundaries|workflow entry and header remain usable at (375|894|1024|1280|1440|1536)px$|Boss.s Chair resume|Munder live|GSPC quests are a styled in-workspace game and never promote play into measurement$|the home header carries a booking door to /assess/ within one click$|ordinary signup has one composed main before and after reload at (1440|390)px$'
+        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation opens on desktop and remains usable across layout boundaries|workflow entry and header remain usable at (375|894|1024|1280|1440|1536)px$|Boss.s Chair resume|Munder live|GSPC quests are a styled in-workspace game and never promote play into measurement$|the home header carries a booking door to /assess/ within one click$|ordinary signup has one composed main before and after reload at (1440|390)px$'
 
       - name: Retain Council OS first-question premerge evidence
         if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.council_os_first_question.outcome == 'success' || steps.council_os_first_question.outcome == 'failure') }}
@@ -1039,7 +1039,10 @@ jobs:
           python3 -m pytest -q scripts/surface/test_lm_eval_parity.py
           python3 -m pytest -q scripts/hf/test_product_cards.py scripts/hf/test_polish_frontdoors.py scripts/hf/test_catalogue_publication.py harness/bench/test_comparison_integrity.py harness/bench/test_paired_comparison.py harness/bench/test_run_bench.py
           # Source custody and the derived learning-review report stay distinct from learner outcomes.
-          python3 -m pytest -q scripts/hf/test_academy_review_assets.py packages/evidence-fabric/render/test_learning_review_report.py
+          python3 -m pytest -q scripts/hf/test_academy_review_assets.py packages/evidence-fabric/render/test_learning_review_report.py packages/evidence-fabric/render/test_academy_learning_import.py
+          # Reproduce the existing exercises and keep unsigned self-study events and source-bound progress honest.
+          node --test scripts/academy/*.node-test.mjs
+          node scripts/academy/module-inventory.mjs --check
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
           # The pre-send mail check: no address but the one being checked may ever be put to a mail server.

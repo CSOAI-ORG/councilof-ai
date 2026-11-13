@@ -11,6 +11,10 @@ on:
       - 'harness/interop/key-evidence-profile/**'
       - 'public/interop/key-evidence-profile/**'
       - '.github/workflows/key-evidence-profile.yml'
+concurrency:
+  group: key-evidence-profile-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:

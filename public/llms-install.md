@@ -48,9 +48,10 @@ csoai-gspc-mcp@latest`, extract `gspc-tools.json` and `paid-tools.json`, diff
 against the door's `tools/list` — whenever either side moves, and treat the diff,
 not npm's deprecation flag, as the signal.
 
-The repository source version `0.2.7` is the published release identified by this dated capture.
-Recheck `npm view csoai-gspc-mcp@0.2.7 version` before relying on its availability.
-Name parity does not establish runtime or behavioural equivalence with the remote.
+The repository currently prepares `0.2.8`, but that source version is **not a
+published npm release** until `npm view csoai-gspc-mcp@0.2.8 version` confirms that
+exact version. Do not install or advertise any published release as the contract
+before that independent check.
 <!-- mcp-npm-facts:end -->
 
 ## Exact reviewed tool catalog

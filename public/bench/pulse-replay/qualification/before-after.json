@@ -1,0 +1,28 @@
+{
+  "observed_at": "2026-11-11T05:59:33.020106+00:00",
+  "original_notebook_cells_sha256": "345a7befebb043f0067af775d6edfeba2eaa05c1d1d8a7be0abbc12665f368ce",
+  "legacy_check_cell_sha256": "22cf6df6f8dad2b7d1e1890c9a203b3e7164100dde59dbfaabe0262a14b5accb",
+  "original_checker": [
+    {
+      "case": "original",
+      "chain_ok": true,
+      "merkle_ok": true,
+      "checked_feed_rows": false,
+      "output": "chain: ok | merkle: ok | key fp: 3bab58b52e8370a2\n(Ed25519 signature check: pip install cryptography, or run verify_remote.py)\n"
+    },
+    {
+      "case": "altered_feed",
+      "chain_ok": true,
+      "merkle_ok": true,
+      "checked_feed_rows": false,
+      "output": "chain: ok | merkle: ok | key fp: 3bab58b52e8370a2\n(Ed25519 signature check: pip install cryptography, or run verify_remote.py)\n"
+    }
+  ],
+  "repaired_rows_verified": 23,
+  "repaired_negative_control": {
+    "id": "pulse-feed-row-alteration",
+    "expected": "FEED_ROW_DIGEST",
+    "got": "FEED_ROW_DIGEST"
+  },
+  "limit": "Only in-memory copies were altered; no historical record tampering is asserted."
+}
