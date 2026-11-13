@@ -52,7 +52,7 @@ describe("memberships-check: the committed manifest", () => {
 
 describe("memberships-check: it can fail", () => {
   it("goes red on a 404 and on a 200 that no longer names us; green on a good row and a reachable PENDING docket", async () => {
-    const out = await runChecks(selftestManifest(), selftestFetcher);
+    const out = await runChecks(selftestManifest(), selftestFetcher, undefined, new Date("2026-09-22T00:00:00.000Z"));
     expect(out.schemaProblems).toEqual([]);
     expect(out.failures.map((f) => f.id).sort()).toEqual(["gone", "renamed"]);
     expect(out.results.find((r) => r.id === "good")?.ok).toBe(true);
@@ -68,6 +68,8 @@ describe("memberships-check: it can fail", () => {
   it("a bogus row planted in the REAL manifest turns the whole run red", async () => {
     const planted = {
       ...manifest,
+      // The refreshed source manifest and all public verification dates are current for this snapshot.
+      as_of: manifest.as_of,
       rows: [
         ...manifest.rows,
         {
@@ -77,6 +79,7 @@ describe("memberships-check: it can fail", () => {
           group: manifest.groups[0].id,
           kind: "member",
           since: "2026-01-01",
+          verified_on: "2026-10-08",
           evidence: "https://example.test/roster",
           evidence_kind: "public_url",
           public_evidence: true,
@@ -97,12 +100,16 @@ describe("memberships-check: it can fail", () => {
       ...manifest.rows.flatMap((r: { check?: { expect?: string[] } }) => r.check?.expect ?? []),
     ].join(" ");
     const fetcher = async (url: string) =>
-      recordedGone.has(url)
+      url === "https://councilof.ai/memberships"
+        ? { status: 200, body: `Machine-readable: /interop/memberships.json (schema csoai.memberships/0.1, as of ${planted.as_of}, unsigned)` }
+        : url === manifest.rows.find((r: { id: string; check?: { url?: string } }) => r.id === "openaire")?.check?.url
+        ? { status: 200, body: JSON.stringify({ header: { numFound: 0 }, results: [] }) }
+        : recordedGone.has(url)
         ? { status: 410, body: "User was blocked" }
         : url === "https://example.test/roster"
         ? { status: 200, body: "Members: Somebody Else" }
         : { status: 200, body: JSON.stringify({ pagination: { total: 1 }, items: [ourNames] }) };
-    const out = await runChecks(planted, fetcher);
+    const out = await runChecks(planted, fetcher, undefined, new Date(`${planted.as_of}T00:00:00.000Z`));
     expect(out.failures.map((f) => f.id)).toEqual(["bogus-roster"]);
     expect(out.exitCode).toBe(1);
   });
