@@ -1,0 +1,118 @@
+{
+  "$ref": "#/components/schemas/CreateScoresRequest",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "components": {
+    "schemas": {
+      "CreateScoreBatchRequest": {
+        "items": {
+          "$ref": "#/components/schemas/CreateScoreRequest"
+        },
+        "title": "CreateScoreBatchRequest",
+        "type": "array"
+      },
+      "CreateScoreRequest": {
+        "properties": {
+          "comment": {
+            "nullable": true,
+            "type": "string"
+          },
+          "configId": {
+            "description": "Reference a score config on a score. When set, the score name must equal the config name and scores must comply with the config's range and data type. For categorical scores, the value must map to a config category. Numeric scores might be constrained by the score config's max and min values",
+            "nullable": true,
+            "type": "string"
+          },
+          "dataType": {
+            "$ref": "#/components/schemas/ScoreDataType",
+            "description": "When set, must match the score value's type. If not set, will be inferred from the score value or config",
+            "nullable": true
+          },
+          "datasetRunId": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "metadata": {
+            "nullable": true
+          },
+          "name": {
+            "description": "The name of the score. Always overrides \"output\" for correction scores.",
+            "type": "string"
+          },
+          "observationId": {
+            "nullable": true,
+            "type": "string"
+          },
+          "sessionId": {
+            "nullable": true,
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/CreateScoreSource",
+            "description": "The source of the score. Defaults to API. Set to ANNOTATION to prefill scores (e.g. from an LLM) for a human reviewer to verify in an annotation queue. When source is ANNOTATION, a configId is required unless dataType is CORRECTION. EVAL is reserved for internal evaluator outputs and is not accepted on this endpoint.",
+            "nullable": true
+          },
+          "traceId": {
+            "nullable": true,
+            "type": "string"
+          },
+          "value": {
+            "$ref": "#/components/schemas/CreateScoreValue",
+            "description": "The value of the score. Must be passed as string for categorical scores, and numeric for boolean and numeric scores. Boolean score values must equal either 1 or 0 (true or false)"
+          }
+        },
+        "required": [
+          "name",
+          "value"
+        ],
+        "title": "CreateScoreRequest",
+        "type": "object"
+      },
+      "CreateScoreSource": {
+        "description": "Source values accepted when creating a score via the public API.\nEVAL is reserved for internal evaluator outputs and is intentionally not\nexposed here.",
+        "enum": [
+          "API",
+          "ANNOTATION"
+        ],
+        "title": "CreateScoreSource",
+        "type": "string"
+      },
+      "CreateScoreValue": {
+        "description": "The value of the score. Must be passed as string for categorical scores, and numeric for boolean and numeric scores. For corrections pass value as string and set data type to CORRECTION",
+        "oneOf": [
+          {
+            "format": "double",
+            "type": "number"
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "title": "CreateScoreValue"
+      },
+      "CreateScoresRequest": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/CreateScoreRequest"
+          },
+          {
+            "$ref": "#/components/schemas/CreateScoreBatchRequest"
+          }
+        ],
+        "title": "CreateScoresRequest"
+      },
+      "ScoreDataType": {
+        "enum": [
+          "NUMERIC",
+          "CATEGORICAL",
+          "BOOLEAN",
+          "CORRECTION"
+        ],
+        "title": "ScoreDataType",
+        "type": "string"
+      }
+    }
+  }
+}
