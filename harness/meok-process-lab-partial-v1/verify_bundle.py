@@ -35,5 +35,3 @@ assert report["selected_model"]=="top3_output_ensemble"
 assert report["metrics"]["top3_output_ensemble"]["test_hybrid"]["mae"] < report["metrics"]["partial_best"]["test_hybrid"]["mae"]
 assert report["gspc_admitted"] is False and report["cosmos_weights_changed"] is False
 print(json.dumps({"state":"PACKAGE_INTEGRITY_AND_NO_PRIVILEGED_INPUT_LEAKAGE_PASSED","bundle_files":len(manifest),"release_files":len(release_manifest),"split_rows":{k:v[0] for k,v in expected.items()},"episode_disjoint":True,"public_features":12,"privileged_inputs_excluded":True,"ensemble_members":3,"selected_model":report["selected_model"],"test_prediction_rows":len(pred)},separators=(",",":")))
-
-[executed on device: sov33-owem-micro2 (b4b647b8-0a67-4b8f-9b25-2981363e9bd0)]
