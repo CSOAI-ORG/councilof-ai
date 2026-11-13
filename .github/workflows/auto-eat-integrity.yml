@@ -1,0 +1,38 @@
+name: auto-eat-integrity
+
+# No scheduler, signing permission, live probes or ledger writes.
+# Tests use isolated synthetic fixtures and existing fake network responses.
+on:
+  pull_request:
+    paths:
+      - 'scripts/auto-eat/**'
+      - '.github/workflows/auto-eat-integrity.yml'
+      - '.github/workflows/auto-eat-sign.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: auto-eat-integrity-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fold-and-stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Fold/check integrity and refusal regressions
+        run: python scripts/auto-eat/test_fold_auto_eat.py
+      - name: Existing discovery and unsigned-stage invariants
+        run: python scripts/auto-eat/test_honesty.py
+      - name: Existing G2 gate controls
+        run: python scripts/auto-eat/test_g2_gate.py

@@ -104,6 +104,22 @@ Do not publish private catalogues or generated packets as repository fixtures.
 Generated private evidence remains separate from this generic source contribution.
 No daemon, cron entry, provider dispatch or public deployment is installed.
 
+### Input-read boundary
+
+The build command preflights both catalogue and observation inputs as regular
+files before reading, rejects a final symlink, opens nonblocking so a FIFO
+cannot stall the consumer, and reads at most the per-input limit plus one byte.
+An oversized declared length is refused before a data read; growth after that
+check is still bounded. The verify-packet CLI applies the separate aggregate
+packet limit through the same reader. Parent directories must remain trusted;
+this is not a sandbox for arbitrary caller-selected paths.
+
+The input-I/O-only predecessor
+`e7be9b704c40a64cfdcb1bfef636b318da75c16994342bdd6738c4d37db48bb4`
+is explicitly requalified with unchanged event and renderer pins. Existing
+events, counts and carriers are rederived, never rewritten. A different event
+module, renderer or unknown reader hash still fails closed.
+
 ## Validation
 
 ```sh

@@ -10,6 +10,10 @@ on:
     paths:
       - 'packages/otel/**'
       - '.github/workflows/otel-route-receipts.yml'
+concurrency:
+  group: otel-route-receipts-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:
