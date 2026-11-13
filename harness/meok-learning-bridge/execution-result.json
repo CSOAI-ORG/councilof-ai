@@ -1,0 +1,146 @@
+{
+  "state": "SOURCE_TESTED_AND_LIVE_PRIVATE_RESEARCH_ROUTE",
+  "source_commit": "17da8f7c8e5fb5b16ddba58f49da7ceca650d3bc",
+  "source_path": "harness/meok-learning-bridge",
+  "pr": 4176,
+  "deployed_by_this_lane": "be8615a6e3efe86d8b4e99171446cab8e537ec23",
+  "composed_serving_revision": "9d6ea388ceb1793dae9426495a95c795d3c91cfb",
+  "conversation_reset_change_preserved": true,
+  "initial_hf_tests": 146,
+  "composed_hf_tests": 147,
+  "new_learning_tests": 38,
+  "retained_composed_tests": 109,
+  "hf_qualification_jobs": [
+    "csoai/6af2b0d8ab34849891aa5e50",
+    "csoai/6af2b282ab34849891aa604d"
+  ],
+  "original_builder_checks": {
+    "axes": 34,
+    "stages": 170,
+    "answer_checks": 136,
+    "progress_checks": 68,
+    "public_module_equivalence": true
+  },
+  "coverage": {
+    "canonical_axes": 34,
+    "model_comparison": 14,
+    "deterministic_facts": 9,
+    "measured_subjects": 11,
+    "proposed_contexts": 8,
+    "pairs_examined": 272,
+    "pairs_mapped": 107,
+    "original_synthetic_cases": 5,
+    "existing_orb_datasets": 5,
+    "safe_layers_referenced": 11,
+    "safe_layers_with_specific_case": 8,
+    "safe_layers_without_specific_case": [
+      "Instructions",
+      "Safeguards",
+      "Monitoring"
+    ]
+  },
+  "live_checks": [
+    {
+      "case": "catalogue",
+      "returned": true,
+      "seconds": 0.612622875,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "lesson",
+      "returned": true,
+      "seconds": 0.6717652920000003,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "reading",
+      "returned": true,
+      "seconds": 0.5219206660000002,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "wrong-practice",
+      "returned": true,
+      "seconds": 0.5198516250000003,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "correct-practice",
+      "returned": true,
+      "seconds": 0.5239388329999999,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "repeat-practice",
+      "returned": true,
+      "seconds": 0.5242396249999999,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "stale-revision",
+      "expected_refusal": true,
+      "refused": true,
+      "seconds": 0.5727174589999997
+    },
+    {
+      "case": "unmapped-context",
+      "expected_refusal": true,
+      "refused": true,
+      "seconds": 0.4873930419999999
+    },
+    {
+      "case": "unknown-axis",
+      "expected_refusal": true,
+      "refused": true,
+      "seconds": 0.5102924589999995
+    },
+    {
+      "case": "correction",
+      "returned": true,
+      "seconds": 0.5362632500000002,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "retained-runtime-status",
+      "returned": true,
+      "seconds": 0.5119423330000004
+    }
+  ],
+  "live_tool_protocol": "2025-03-26",
+  "source_pinned_lesson_revision": "e0ae61b53b0ccfb07bc046e5ee9dc987ccc2be599555d8538719ab2ab6c67162",
+  "real_learner_count": 0,
+  "public_hitl_posts": 0,
+  "new_model_training": false,
+  "new_gpu_requests": 0,
+  "named_reviewers_appointed": 0,
+  "industry_partners_inferred": 0,
+  "safe_submission_sent": false,
+  "ras_order_created": false,
+  "production_master_merged": false,
+  "limitations": [
+    "Automated tests do not establish human learning gain, professional qualification or reviewer identity.",
+    "All industry mappings are proposed educational context; domain expert approval is not recorded.",
+    "Five original practice cases are pending human editorial review; not 34 full courses.",
+    "No persistent learner ledger, automatic training admission, private incident intake or staffed review service was enabled.",
+    "Live account authentication is real; no human-in-the-loop action authority was demonstrated.",
+    "Initial live discovery sent an unsupported catalogue parameter; corrected client used the discovered empty-argument contract.",
+    "The current renderer was not independently inspected in a real browser in this pass.",
+    "Current lesson binding invalidates at registry granularity, not selective per-source lesson refresh."
+  ],
+  "source_and_output_hashes_verified": true,
+  "signatures_verified": false
+}
