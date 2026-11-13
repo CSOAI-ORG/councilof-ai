@@ -1,0 +1,36 @@
+{
+  "space": "Nicholastempleman/meok-hf-runtime",
+  "revision": "afdb579fa778a2f967d975fb5235d656077b0dd7",
+  "hardware": "zero-a10g",
+  "protocol": "2025-03-26",
+  "selected_tool_contracts": [
+    {
+      "name": "meok_hf_runtime_predict_process",
+      "description": "Run the pinned 980-parameter MEOK process model on 11 synthetic state features.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "features_json": {
+            "type": "string",
+            "description": "JSON list in the feature order provided by the published model card.",
+            "default": "[0,0,0,1,0.3,0.4,0.3,0,1,1,0]"
+          },
+          "constrained": {
+            "type": "boolean",
+            "description": "Apply the existing simplex and synthetic-expiry constraints.",
+            "default": true
+          }
+        }
+      }
+    },
+    {
+      "name": "meok_hf_runtime_lab_status",
+      "description": "Read the installed research model, geometry tools and observed axis snapshot status.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  ],
+  "inference_submitted": false
+}

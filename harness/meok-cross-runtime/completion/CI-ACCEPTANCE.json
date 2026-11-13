@@ -1,0 +1,56 @@
+{
+  "state": "ACTUAL_GITHUB_CONTRACT_JOB_PASSED",
+  "run_id": 42972692338,
+  "job_id": 130364603860,
+  "head_sha": "122476aba28fe086b39e2ffea65baf9be3a753b5",
+  "workflow_name": "MEOK cross-runtime contracts",
+  "actual_runner_result": {
+    "state": "FRESH_OFFLINE_QUALIFICATION_PASSED",
+    "node_contracts": 25,
+    "response_rejections": 40,
+    "retained_rows": 560,
+    "legacy_false_pass_reproduced": true,
+    "fresh_output_files_required": true,
+    "preexisting_PASS_records_copied": false,
+    "network_requests_requested": 0,
+    "model_training": false,
+    "elapsed_seconds": 0.510597403999995,
+    "source_sha256": {
+      "worker.mjs": "0519223dad210c565f5f8103eedb58a16fd31b91be642ad4e63aad63a028c0b8",
+      "weights-text.mjs": "1ad61eb35d8e09679372ee0b1b61ce25401bab8950e0e4300f0af4fdd987389b",
+      "replay.py": "a1f8f74fe3f7a52db111c874b740668998ae672d7a4a159f41aeec2daf287be3",
+      "response_contract.py": "66280a99580113bda59531e78a980496253a4897a16021e1182fdd7369cd11e7",
+      "test-worker.mjs": "f21222237bbcf9b0413856f081a07a5525730b8e3b9c91bf72d028115cb0d4d6",
+      "test_response_contract.py": "9a04b32b3a85d8e7ea8a000363640dbdba452a8cbfdc62c5a9ca7a28dfe53bc2",
+      "source-lock.json": "442d0563cad67a60eb9e78611ff9ead144d10610c2e165afcb0822d051eb70cc",
+      "vendor/core.mjs": "06b2a56de6e29cd4f11a36b69002ae4eccd1fb01ae3d88a88a62119adf8d2133",
+      "vendor/predict.py": "8ff377179cbb897eea88a590036ba906b449a17a3f936d389835090dd58836e6",
+      "vendor/weights.json": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+      "vendor/test.jsonl": "6349f1e13d5e1952566110d52494d8da3dd4bde7b01bbaffecc28fdb8b66aa9c",
+      "vendor/LICENSE": "d1c9de1ba9d7b4cdb5b2ba02270b92522a40be9a947864a2bb4311bc93f58fa9",
+      "vendor/NOTICE": "00eee7ae1c7522fb08fe20db48b66d462ebb2d075548eda261e264a9319a4a02",
+      "completion/legacy-replay.py": "25310a41e5db8701354adb02992c153536c634e746d4b5fce31a42c59e9dd01e",
+      "completion/legacy_false_pass_probe.py": "886eed8bef56cc8255f882bc073cb32507c00baf065668d4c4e1e23d4a08e205"
+    },
+    "commands": [
+      {
+        "command": "test-worker.mjs",
+        "exit": 0,
+        "output_sha256": "628e4fd656032884e9a8175e5ce2a638afd38f403e7ee41eb1e736736bbc77af"
+      },
+      {
+        "command": "test_response_contract.py",
+        "exit": 0,
+        "output_sha256": "a871d17374e105da8e4e76957066cfa230fbc2382e56d3a1882ded8029ea84aa"
+      },
+      {
+        "command": "completion/legacy_false_pass_probe.py",
+        "exit": 0,
+        "output_sha256": "4a549dc4f14571e7f0edf182955dd20f4075c96f5db5013e6082f41850e9ac11"
+      }
+    ],
+    "no_op_runner_rejected": true
+  },
+  "whole_log_sha256": "385aa5898aff6f1345f8e1ca6ac2e03348891e4647afb04048edd320966e7c2c",
+  "source_basis": "Job log and terminal run metadata, not just a checked-in PASS file."
+}
