@@ -101,6 +101,21 @@ export type WatchClaim = {
   inclusion: Inclusion;
 };
 
+/** Client-only discovery; filters never modify records or claim states. */
+export function filterWatchdogClaims(
+  claims: readonly WatchClaim[],
+  query: string,
+  state: ClaimState | "ALL" = "ALL",
+): WatchClaim[] {
+  const term = query.trim().toLowerCase();
+  return claims.filter((claim) => {
+    if (state !== "ALL" && claim.state !== state) return false;
+    if (!term) return true;
+    return [claim.subject, claim.claimId, claim.text, claim.sourceUrl ?? ""]
+      .some((value) => value.toLowerCase().includes(term));
+  });
+}
+
 function auditFor(merkle: Record<string, unknown> | null, claimId: string, preimage: unknown): Inclusion {
   if (!merkle || !str(merkle.root)) return { kind: "none", reason: "The registry publishes no Merkle root." };
   const root = merkle.root as string;
