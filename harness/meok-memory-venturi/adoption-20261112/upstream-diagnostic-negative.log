@@ -1,0 +1,17 @@
+test_no_stale_result_retained_in_race_controls (test_memory_adoption.MemoryAdoptionTests) ... FAIL
+
+======================================================================
+FAIL: test_no_stale_result_retained_in_race_controls (test_memory_adoption.MemoryAdoptionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iokfarm/workspace_for_ai/clawd-workspace/CODEX_eat_cache_adoption_20261112/baseline-negative-cdijja4i/test_memory_adoption.py", line 17, in test_no_stale_result_retained_in_race_controls
+    self.assertEqual(rows['during-compute']['observed'],'INVALIDATED_DURING_COMPUTE')
+AssertionError: 'FRESH_RESULT' != 'INVALIDATED_DURING_COMPUTE'
+- FRESH_RESULT
++ INVALIDATED_DURING_COMPUTE
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.025s
+
+FAILED (failures=1)
