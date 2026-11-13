@@ -1,0 +1,127 @@
+{
+  "state": "DEPLOYED_AND_LIVE_API_TESTED",
+  "source_commit": "7d9fd8052684f2d9d8826a4589ddb6ae3b37cf90",
+  "source_path": "harness/meok-learning-bridge",
+  "pr": 4176,
+  "space_revision": "130aba7caf5f8d9044e56b4e0fca3059e4f2878f",
+  "base_space_revision": "a8734612fc5b3d10f295ee45cd99e4ccf2b9b11f",
+  "preserved_other_lane": "PR4180 specialist receiver at a8734612fc5b3d10f295ee45cd99e4ccf2b9b11f",
+  "untouched_manifest_entries": 66,
+  "private": true,
+  "hardware_changed": false,
+  "model_weights_changed": false,
+  "tests": {
+    "baseline_composed_methods": 173,
+    "new_composed_methods": 193,
+    "new_scope_methods": 20,
+    "legacy_test_expectations_updated": 2,
+    "separate_retained_join_methods": 87,
+    "separate_authority_controls": 47,
+    "synthetic_correction_decisions": 535,
+    "live_mcp_calls": 19,
+    "live_expected_refusals": 4,
+    "live_event_output_hashes_verified": 13
+  },
+  "correction_summary": [
+    {
+      "mutation": "SAFE-source-revised",
+      "pairs": 107,
+      "global_rejections": 107,
+      "scoped_rejections": 107,
+      "unchanged_lesson_bindings_preserved": 0,
+      "missed_relevant_invalidations": 0
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "pairs": 107,
+      "global_rejections": 107,
+      "scoped_rejections": 15,
+      "unchanged_lesson_bindings_preserved": 92,
+      "missed_relevant_invalidations": 0
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "pairs": 107,
+      "global_rejections": 107,
+      "scoped_rejections": 28,
+      "unchanged_lesson_bindings_preserved": 79,
+      "missed_relevant_invalidations": 0
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "pairs": 107,
+      "global_rejections": 107,
+      "scoped_rejections": 0,
+      "unchanged_lesson_bindings_preserved": 107,
+      "missed_relevant_invalidations": 0
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "pairs": 107,
+      "global_rejections": 107,
+      "scoped_rejections": 6,
+      "unchanged_lesson_bindings_preserved": 101,
+      "missed_relevant_invalidations": 0
+    }
+  ],
+  "content": {
+    "canonical_axes": 34,
+    "original_path_stages": 170,
+    "proposed_contexts": 8,
+    "mapped_axis_context_pairs": 107,
+    "draft_practice_cases_before": 5,
+    "draft_practice_cases_now": 8,
+    "SAFE_layers_with_draft_case": 11,
+    "human_editor_approval": false,
+    "new_case_ids": [
+      "scope-assumption",
+      "safeguard-drift",
+      "stop-observation"
+    ]
+  },
+  "authority": {
+    "profile": "csoai.hitl-authority-effect/0.2",
+    "source_pin": "ca5ff304cf1766ee73d84c49fc684631deaae113",
+    "scope": "Unchanged synthetic reference checker, not deployed authority enforcement or reviewer authentication",
+    "must_pass": 3,
+    "must_fail": 29,
+    "negative_controls_against_v1": 4,
+    "temporal": 11
+  },
+  "browser_acceptance": {
+    "state": "AWAITING_USER_REVIEW_OF_CLIENT_BLOCKED_CALL",
+    "job_started": false,
+    "review_panel_displayed": true,
+    "alternative_bypass_attempted": false
+  },
+  "earlier_job_failures": [
+    {
+      "job_id": "6af2c1b9ab34849891aa930b",
+      "state": "ERROR",
+      "cause": "Test driver import-path error after component suites; no deployment"
+    },
+    {
+      "job_id": "6af2c22aab34849891aa947b",
+      "state": "ERROR",
+      "cause": "Exact-source guard stopped the job after another lane added the specialist receiver; no deployment"
+    }
+  ],
+  "human_trials": 0,
+  "named_reviewer_appointments": 0,
+  "public_hitl_posts": 0,
+  "new_large_model_inference_requested": 0,
+  "new_weight_training": false,
+  "retained_cpu_predictor_test_evaluations": "NOT_SEPARATELY_COUNTED",
+  "model_count_note": "The driver field model_inference_calls=0 denotes no requested external language-model call; retained CPU predictor calculations are part of existing tests.",
+  "automatic_upstream_source_refresh_added": false,
+  "GSPC_new_axis_score": false,
+  "signature_verified": false,
+  "study_gate": "No human understanding, retention or transfer study was performed; prospective protocol remains draft.",
+  "scope_limits": [
+    "Current source truth is the installed pinned snapshot; no continuous source ingestion is enabled.",
+    "Scoped content bindings are not credentials; identity, access and action authority remain separate.",
+    "All eight teaching fixtures remain pending a human editor; layer coverage is not SAFE conformance.",
+    "535 decisions use five declared mutations on 107 mapped pairs; not a universal dependency proof or latency benchmark.",
+    "No private learner ledger, staffed review service, production authority or training consent is created."
+  ]
+}

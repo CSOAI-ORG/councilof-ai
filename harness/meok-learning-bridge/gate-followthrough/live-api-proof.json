@@ -1,0 +1,167 @@
+{
+  "state": "LIVE_MCP_GATE_FOLLOWTHROUGH_PASSED",
+  "revision_before": "130aba7caf5f8d9044e56b4e0fca3059e4f2878f",
+  "revision_after": "130aba7caf5f8d9044e56b4e0fca3059e4f2878f",
+  "started_at": "2026-11-10T07:10:49.854836+00:00",
+  "finished_at": "2026-11-10T07:11:02.969712+00:00",
+  "protocol": "2025-03-26",
+  "calls": [
+    {
+      "case": "catalogue",
+      "tool": "meok_hf_runtime_academy_catalogue",
+      "returned": true,
+      "seconds": 0.9210038750000002,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "lesson",
+      "tool": "meok_hf_runtime_academy_lesson",
+      "returned": true,
+      "seconds": 0.8027782919999993,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "reading",
+      "tool": "meok_hf_runtime_academy_reading",
+      "returned": true,
+      "seconds": 0.6921217500000001,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "wrong-practice",
+      "tool": "meok_hf_runtime_academy_attempt",
+      "returned": true,
+      "seconds": 0.6776772919999994,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "correct-practice",
+      "tool": "meok_hf_runtime_academy_attempt",
+      "returned": true,
+      "seconds": 0.6025307090000007,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "repeat-practice",
+      "tool": "meok_hf_runtime_academy_attempt",
+      "returned": true,
+      "seconds": 0.49674716699999966,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "stale-revision",
+      "tool": "meok_hf_runtime_academy_attempt",
+      "expected_refusal": true,
+      "refused": true,
+      "seconds": 0.4875981249999999
+    },
+    {
+      "case": "unmapped-context",
+      "tool": "meok_hf_runtime_academy_attempt",
+      "expected_refusal": true,
+      "refused": true,
+      "seconds": 0.5023000409999998
+    },
+    {
+      "case": "unknown-axis",
+      "tool": "meok_hf_runtime_academy_lesson",
+      "expected_refusal": true,
+      "refused": true,
+      "seconds": 0.5209514580000008
+    },
+    {
+      "case": "correction",
+      "tool": "meok_hf_runtime_academy_correction",
+      "returned": true,
+      "seconds": 0.5913500420000002,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "cross-axis-scoped-replay",
+      "tool": "meok_hf_runtime_academy_attempt",
+      "expected_refusal": true,
+      "refused": true,
+      "seconds": 0.49890891599999954
+    },
+    {
+      "case": "new-lesson-governance",
+      "tool": "meok_hf_runtime_academy_lesson",
+      "returned": true,
+      "seconds": 0.510921999999999,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "new-case-scope-assumption",
+      "tool": "meok_hf_runtime_academy_attempt",
+      "returned": true,
+      "seconds": 0.49980741699999953,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "new-lesson-safety",
+      "tool": "meok_hf_runtime_academy_lesson",
+      "returned": true,
+      "seconds": 0.5107096660000003,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "new-case-safeguard-drift",
+      "tool": "meok_hf_runtime_academy_attempt",
+      "returned": true,
+      "seconds": 0.5193832499999989,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "new-lesson-claim-maintenance",
+      "tool": "meok_hf_runtime_academy_lesson",
+      "returned": true,
+      "seconds": 0.5851402920000002,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "new-case-stop-observation",
+      "tool": "meok_hf_runtime_academy_attempt",
+      "returned": true,
+      "seconds": 0.5184570419999996,
+      "event_schema_valid": true,
+      "event_output_hash_verified": true,
+      "signature_present": false
+    },
+    {
+      "case": "retained-specialist-status",
+      "tool": "meok_hf_runtime_specialist_review_status",
+      "returned": true,
+      "seconds": 0.49342624999999884
+    },
+    {
+      "case": "retained-runtime-status",
+      "tool": "meok_hf_runtime_lab_status",
+      "returned": true,
+      "seconds": 0.5298242919999989
+    }
+  ]
+}
