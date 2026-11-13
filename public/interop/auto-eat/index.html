@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ASI AUTO-EAT discovery and evidence staging: inspect source snapshots, probe scope and signing boundaries.">
+<title>ASI AUTO-EAT — discovery and evidence staging | Council of AI</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#121d30;--line:#2a3b55;--ink:#edf3fb;--muted:#a9b8cb;--blue:#82b7ff;--amber:#f2c46d;--green:#83d6b0}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#101d32 0,#0b1220 28rem);color:var(--ink);font:16px/1.65 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:980px;margin:0 auto;padding:48px 24px 80px}.eyebrow{color:var(--blue);font-size:.78rem;font-weight:750;letter-spacing:.14em;text-transform:uppercase}
+h1{font-size:clamp(2.1rem,6vw,3.8rem);line-height:1.04;letter-spacing:-.04em;margin:.7rem 0 1rem}h2{font-size:1.2rem;margin:0 0 .6rem}
+p{margin:.45rem 0 1rem}.lead{font-size:1.12rem;color:#d5e0ef;max-width:760px}
+.panel{background:rgba(18,29,48,.92);border:1px solid var(--line);border-radius:16px;padding:22px;margin:20px 0}
+.notice{border-left:4px solid var(--amber)}.notice strong{color:var(--amber)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+a{color:var(--blue);text-underline-offset:3px}.link{display:block;border:1px solid var(--line);border-radius:12px;padding:15px;text-decoration:none;height:100%}.link:hover{background:#1a2b45}.link b{display:block;color:var(--ink);margin-bottom:4px}.link span{display:block;color:var(--muted);font-size:.92rem}
+ul{padding-left:1.3rem;color:#d5e0ef}code{background:#09111e;border:1px solid var(--line);border-radius:5px;padding:.12rem .35rem;font-size:.9em}
+footer{border-top:1px solid var(--line);margin-top:32px;padding-top:18px;color:var(--muted);font-size:.9rem}
+@media(max-width:560px){main{padding:32px 16px 56px}.panel{padding:17px}}
+</style>
+</head>
+<body>
+<main>
+<div class="eyebrow">Council of AI · Evidence infrastructure</div>
+<h1>ASI AUTO-EAT</h1>
+<p class="lead">A discovery and evidence-staging pipeline for public AI models, agents, MCP servers and related registries. It records what was discovered, what was probed and what remains unmeasured.</p>
+<section class="panel notice" aria-labelledby="freshness">
+<h2 id="freshness">Read the timestamp before using the numbers</h2>
+<p>The Pages-served <code>status.json</code> route still contains the retained <strong>12 September 2026, 06:49:50 UTC</strong> snapshot. The authoritative <code>auto-eat-feed</code> branch was refreshed on <strong>13 November 2026 at 02:21:24 UTC</strong> after a bounded discovery/probe cycle: 13,186 queue rows, 13,186 recorded probe identities and eight retained unsigned surfaces.</p>
+<p>The new branch snapshot explicitly records <code>loop_liveness: NOT_ESTABLISHED_BY_SAVED_FILES</code> and <code>signature_verification: NOT_PERFORMED</code>. It is not yet deployed to the Pages-served status route. Read the <a href="https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/auto-eat-feed/public/interop/auto-eat/status.json">latest feed status JSON</a> and inspect <code>as_of</code>. Reachability is not a score, signature verification or proof that the keeper is continuously running.</p>
+</section>
+<section class="panel" aria-labelledby="workflow">
+<h2 id="workflow">How the pipeline works</h2>
+<ul>
+<li><strong>Discover:</strong> append genuinely new identifiers to the frozen queue as <code>DISCOVERED</code>.</li>
+<li><strong>Probe:</strong> perform bounded, read-only reachability checks and classify outcomes without treating HTTP reachability as model quality.</li>
+<li><strong>Stage:</strong> retain small unsigned evidence atoms for review. Staging is not measurement.</li>
+<li><strong>Review and sign:</strong> the existing owner-controlled OIDC workflow and human release gate remain separate. Nothing is <code>MEASURED</code> merely because it was discovered, reachable or staged.</li>
+</ul>
+</section>
+<section class="panel" aria-labelledby="records">
+<h2 id="records">Primary records and methods</h2>
+<div class="grid">
+<a class="link" href="https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/auto-eat-feed/public/interop/auto-eat/status.json"><b>Latest feed status · 13 Nov</b><span>Current retained feed snapshot, timestamps, probe scope and unsigned/signature boundaries.</span></a>
+<a class="link" href="./status.json"><b>Pages-served historical status</b><span>The deployed route still holds the 12 September snapshot; it is not the latest feed.</span></a>
+<a class="link" href="https://github.com/CSOAI-ORG/councilof-ai/blob/auto-eat-feed/public/interop/auto-eat/queue.jsonl"><b>Discovery queue · feed branch</b><span>Append-only identifiers in the authoritative feed branch.</span></a>
+<a class="link" href="https://github.com/CSOAI-ORG/councilof-ai/blob/auto-eat-feed/public/interop/auto-eat/probed.json"><b>Probe identity set · feed branch</b><span>Retained probe identifiers; not a live availability guarantee.</span></a>
+<a class="link" href="https://github.com/CSOAI-ORG/councilof-ai/blob/auto-eat-feed/public/interop/auto-eat/cards-compact.json"><b>Compact staged payloads · feed branch</b><span>Retained payload representation for staged surfaces.</span></a>
+<a class="link" href="../auto-eat-root-leaf-list.json"><b>Root leaf list</b><span>Root-linked inventory and evidence boundaries.</span></a>
+<a class="link" href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/auto-eat/README.md"><b>Operator runbook</b><span>Discovery, probe, keeper, fold and human/signing boundaries.</span></a>
+</div>
+</section>
+<section class="panel" aria-labelledby="states">
+<h2 id="states">Interpretation rules</h2>
+<ul>
+<li><strong>DISCOVERED</strong> means an identifier entered the queue.</li>
+<li><strong>LIVE</strong> means the specific probe observed a reachable/resolvable endpoint at its observation time—not that the model works or is safe.</li>
+<li><strong>UNMEASURED</strong> remains the default until the applicable evidence, approval, signature and verification requirements are satisfied.</li>
+<li>A signature field, historical signed-batch reference or valid hash is not, by itself, proof that the current record is signed and verified.</li>
+</ul>
+</section>
+<footer>Published as a navigational index only. It does not start the keeper, dispatch signing, alter the feed, issue approvals, certify models or admit GSPC measurements. For methodology, see <a href="/methodology/">Council of AI methodology</a>.</footer>
+</main>
+</body>
+</html>
