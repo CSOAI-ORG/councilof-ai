@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import FaqBlock from "@/components/FaqBlock";
@@ -43,11 +43,18 @@ const EXCLUDED_REASON_LABEL: Record<string, string> = {
 
 export default function Memberships() {
   const m = MEMBERSHIPS;
+  const [nowMs, setNowMs] = useState<number | null>(null);
+  const manifestDateMs = Date.parse(`${m.as_of}T00:00:00.000Z`);
+  const manifestAgeDays = nowMs === null || !Number.isFinite(manifestDateMs)
+    ? null
+    : Math.floor((nowMs - manifestDateMs) / 86_400_000);
+  const manifestIsStale = nowMs !== null && (manifestAgeDays === null || manifestAgeDays < 0 || manifestAgeDays > 14);
   const groups = groupedRows(m);
   const faq = m.rows.filter((r) => r.question && r.answer).map((r) => ({ q: r.question as string, a: r.answer as string }));
   const excluded = (m.excluded ?? []) as ExcludedEntry[];
 
   useEffect(() => {
+    setNowMs(Date.now());
     document.title = "Where Council of AI takes part, and what each listing does not mean";
     setMetaDescription(
       "Every standards body, registry, scholarly identifier and regulatory filing Council of AI takes part in, each with a link to its evidence, the date, what it proves and what it does not. Participation is not endorsement; a listing is not adoption.",
@@ -81,13 +88,24 @@ export default function Memberships() {
         <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-700" data-testid="memberships-answer">
           Council of AI (CSOAI Ltd) takes part in standards bodies as a participant or member, publishes into open
           registries and archives, holds scholarly identifiers, and files comments with regulators. Each entry below
-          links to the page that proves it, or names the dated mailbox record when that is the only evidence, and
-          says in its own row what it does not prove. {HONESTY_LINE}
+          links to the evidence checked, or carries a dated status note when the cited evidence cannot currently be reproduced. Each row says what the evidence does and does not prove. {HONESTY_LINE}
         </p>
         <p className="mt-3 max-w-3xl text-sm text-slate-600">
           Machine-readable: <a className="underline underline-offset-4" href="/interop/memberships.json">/interop/memberships.json</a>{" "}
           (schema {m.schema}, as of <time dateTime={m.as_of}>{m.as_of}</time>, {m.signed ? "signed" : "unsigned — it says so in the file"}).
-          Re-checked by <code>scripts/memberships-check.mjs</code>, which fails when any public evidence URL stops answering with our name.
+          Re-checked by <code>scripts/memberships-check.mjs</code>, which re-fetches public evidence URLs, checks evidence-date freshness, and verifies that this page agrees with the JSON manifest.
+        </p>
+        <p
+          data-testid="memberships-freshness"
+          role={manifestIsStale ? "alert" : "status"}
+          aria-live="polite"
+          className={`mt-3 max-w-3xl rounded-lg border px-3 py-2 text-sm ${manifestIsStale ? "border-amber-300 bg-amber-50 text-amber-950" : "border-slate-200 bg-slate-50 text-slate-700"}`}
+        >
+          {nowMs === null
+            ? "Checking the age of this evidence snapshot…"
+            : manifestIsStale
+              ? `STALE EVIDENCE SNAPSHOT — dated ${m.as_of}${manifestAgeDays === null ? "" : ` (${manifestAgeDays} days old)`}. The freshness target is 14 days. This is a dated record, not confirmation that every standing remains current; check the linked evidence before relying on a current-status claim.`
+              : `Evidence snapshot dated ${m.as_of} (${manifestAgeDays} day(s) old; 14-day freshness target). A listing is not endorsement or adoption.`}
         </p>
       </section>
 
@@ -164,8 +182,9 @@ export default function Memberships() {
         ))}
         <p className="mt-6 max-w-3xl text-sm text-slate-600">
           States follow the evidence. VERIFIED means the public URL answered with our name on the day checked, or a dated
-          mailbox record exists and the row says the evidence is private. PENDING means an application or filing that
-          has not been granted or submitted; it claims nothing. Rows with a link marked private evidence point at{" "}
+          mailbox record exists and the row says the evidence is private. UNVERIFIED means the current cited evidence
+          could not be reproduced; its dated status note records what was observed and does not prove deletion or absence.
+          PENDING means an application or filing that has not been granted or submitted; it claims nothing. Rows with a link marked private evidence point at{" "}
           <Link href="/memberships" className="underline underline-offset-4">this page</Link>, not at a third party, because there is no third-party page to point at.
         </p>
       </section>
