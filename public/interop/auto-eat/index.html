@@ -27,8 +27,8 @@ footer{border-top:1px solid var(--line);margin-top:32px;padding-top:18px;color:v
 <p class="lead">A discovery and evidence-staging pipeline for public AI models, agents, MCP servers and related registries. It records what was discovered, what was probed and what remains unmeasured.</p>
 <section class="panel notice" aria-labelledby="freshness">
 <h2 id="freshness">Read the timestamp before using the numbers</h2>
-<p>At the 13 November 2026 publication check, the public <code>status.json</code> endpoint returned a retained snapshot dated <strong>12 September 2026, 06:49:50 UTC</strong>. That is historical evidence, not proof that the discovery/probe keeper is running now or that the listed resources remain reachable.</p>
-<p>Open the status document directly and inspect its <code>as_of</code> field. Do not interpret a successful HTTP response or a report-generation time as a fresh probe.</p>
+<p>The Pages-served <code>status.json</code> route still contains the retained <strong>12 September 2026, 06:49:50 UTC</strong> snapshot. The authoritative <code>auto-eat-feed</code> branch was refreshed on <strong>13 November 2026 at 02:21:24 UTC</strong> after a bounded discovery/probe cycle: 13,186 queue rows, 13,186 recorded probe identities and eight retained unsigned surfaces.</p>
+<p>The new branch snapshot explicitly records <code>loop_liveness: NOT_ESTABLISHED_BY_SAVED_FILES</code> and <code>signature_verification: NOT_PERFORMED</code>. It is not yet deployed to the Pages-served status route. Read the <a href="https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/auto-eat-feed/public/interop/auto-eat/status.json">latest feed status JSON</a> and inspect <code>as_of</code>. Reachability is not a score, signature verification or proof that the keeper is continuously running.</p>
 </section>
 <section class="panel" aria-labelledby="workflow">
 <h2 id="workflow">How the pipeline works</h2>
@@ -42,7 +42,8 @@ footer{border-top:1px solid var(--line);margin-top:32px;padding-top:18px;color:v
 <section class="panel" aria-labelledby="records">
 <h2 id="records">Primary records and methods</h2>
 <div class="grid">
-<a class="link" href="./status.json"><b>Retained status snapshot</b><span>Counts, probe sample, source timestamp and historical signature reference.</span></a>
+<a class="link" href="https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/auto-eat-feed/public/interop/auto-eat/status.json"><b>Latest feed status · 13 Nov</b><span>Current retained feed snapshot, timestamps, probe scope and unsigned/signature boundaries.</span></a>
+<a class="link" href="./status.json"><b>Pages-served historical status</b><span>The deployed route still holds the 12 September snapshot; it is not the latest feed.</span></a>
 <a class="link" href="https://github.com/CSOAI-ORG/councilof-ai/blob/auto-eat-feed/public/interop/auto-eat/queue.jsonl"><b>Discovery queue · feed branch</b><span>Append-only identifiers in the authoritative feed branch.</span></a>
 <a class="link" href="https://github.com/CSOAI-ORG/councilof-ai/blob/auto-eat-feed/public/interop/auto-eat/probed.json"><b>Probe identity set · feed branch</b><span>Retained probe identifiers; not a live availability guarantee.</span></a>
 <a class="link" href="https://github.com/CSOAI-ORG/councilof-ai/blob/auto-eat-feed/public/interop/auto-eat/cards-compact.json"><b>Compact staged payloads · feed branch</b><span>Retained payload representation for staged surfaces.</span></a>
