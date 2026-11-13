@@ -37,6 +37,10 @@ on:
       - '.github/workflows/safe-companion.yml'
   merge_group:
   workflow_dispatch:
+concurrency:
+  group: safe-companion-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:

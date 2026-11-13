@@ -112,6 +112,7 @@ export const ACTIONS = Object.freeze({
  * @param {string[]} state.required.inFlight        required contexts queued or running.
  * @param {string[]} state.required.unreported      required contexts that have not reported at all.
  * @param {boolean}  state.anyRunInFlight          is any workflow run on this head still going?
+ * @param {string[]} state.runsAwaitingApproval    workflow runs on this head held for approval.
  * @returns {{action: string, reason: string, detail: object}}
  */
 export function decide(state) {
@@ -120,6 +121,7 @@ export function decide(state) {
   const failed = list(required.failed);
   const inFlight = list(required.inFlight);
   const unreported = list(required.unreported);
+  const awaitingApproval = list(state?.runsAwaitingApproval);
   const behind = Number.isFinite(state?.behind) ? Math.max(0, Math.trunc(state.behind)) : 0;
 
   // A read that did not complete is not a reading. Reporting `behind = 0` from a failed compare
@@ -133,10 +135,24 @@ export function decide(state) {
     };
   }
 
-  if (state?.prState === "merged" || state?.prState === "closed") {
+  // MERGED AND CLOSED ARE TWO STATES, AND THE RECEIPT MUST TELL THEM APART. A pull request that
+  // merged and one that was closed without merging are both `state: "closed"` in the REST API, so
+  // a receipt that only carries the API's `state` cannot say whether the change LANDED or was
+  // DROPPED. MEASURED 2026-11-09: PR #4148 merged as 1d53df3cf and this instrument's receipt
+  // said "the pull request is closed" — true of the API field, and useless to a reader who has to
+  // know whether the work reached master. The two reasons below say which one happened.
+  if (state?.prState === "merged") {
     return {
       action: ACTIONS.DONE,
-      reason: `the pull request is ${state.prState}`,
+      reason: "the pull request is merged — the change landed",
+      detail: { behind },
+    };
+  }
+
+  if (state?.prState === "closed") {
+    return {
+      action: ACTIONS.DONE,
+      reason: "the pull request is closed and was NOT merged — the change did not land",
       detail: { behind },
     };
   }
@@ -192,6 +208,21 @@ export function decide(state) {
         detail: { behind, unreported },
       };
     }
+    if (awaitingApproval.length > 0) {
+      // A RUN HELD FOR APPROVAL IS A STATE, AND IT NAMES ITS REMEDY. MEASURED 2026-11-08 on the
+      // catalogue's own edition: the schedule pushes its branch with the workflow's GITHUB_TOKEN,
+      // so GitHub does not start the runs it triggers — it holds them as `action_required`. The
+      // required contexts therefore never report, no run is in flight, and a reader that only
+      // knows "unreported and nothing running" would call this BROKEN. It is not broken: it is
+      // waiting for an approval, and the approval is a POST to
+      // /repos/{owner}/{repo}/actions/runs/{id}/approve. So the verdict is WAIT, and the reason
+      // says what is holding it and what releases it.
+      return {
+        action: ACTIONS.WAIT_FOR_CHECKS,
+        reason: `${unreported.length} required context(s) have not reported because ${awaitingApproval.length} workflow run(s) on this head are held for approval (${awaitingApproval.join(", ")}) — a workflow that pushes with GITHUB_TOKEN does not start the runs it triggers`,
+        detail: { behind, unreported, runsAwaitingApproval: awaitingApproval },
+      };
+    }
     if (Number.isFinite(age) && age < HEAD_GRACE_SECONDS) {
       return {
         action: ACTIONS.WAIT_FOR_CHECKS,
@@ -234,6 +265,56 @@ function list(value) {
 }
 
 /**
+ * MAY THIS PULL REQUEST BE MERGED RIGHT NOW?
+ *
+ * WHY THIS EXISTS. GitHub refuses to arm an auto-merge on a pull request that is ALREADY
+ * mergeable. MEASURED 2026-11-09 on PR #4150, whose four required contexts were all green and
+ * whose head was up to date: the GraphQL mutation answered UNPROCESSABLE with
+ *
+ *   "Pull request Pull request is in clean status"
+ *
+ * An auto-merge on a pull request that can be merged immediately is unnecessary — the merge is
+ * available NOW. But an instrument that only knows how to ARM would report a failed arming and
+ * stop, leaving the change unlanded: the estate's landing tool could not land a ready pull
+ * request. MEASURED, two different refusals from the same mutation on the same instrument:
+ *
+ *   "Pull request is in unstable status"  — a non-required check was still running; WAIT.
+ *   "Pull request is in clean status"     — everything required was green; MERGE.
+ *
+ * The message is the difference and only one of the two is an obstacle. This predicate answers
+ * the question the arming step cannot: given the state that was READ, is a merge right now the
+ * correct outcome? It is deliberately conservative — every one of these must hold:
+ *
+ *   - the pull request is open and not a draft;
+ *   - the read completed (absence is a state, not a reading);
+ *   - the head is up to date with the base branch (behind === 0);
+ *   - EVERY required context has PASSED — none failed, none in flight, none unreported;
+ *   - no run is being held for approval (a held run has not reported at all).
+ *
+ * The platform still enforces the branch policy on the merge itself, so this predicate can only
+ * ever authorise a merge the platform would have allowed; it cannot widen what the required
+ * checks permit.
+ *
+ * @param {object} state the state the instrument read.
+ * @returns {boolean} true when merging right now is the correct outcome.
+ */
+export function mayMergeNow(state) {
+  if (!state) return false;
+  if (state.prState !== "open") return false;
+  if (state.draft) return false;
+  if (state.readComplete === false) return false;
+  if (state.behind !== 0) return false;
+  const required = state.required || {};
+  if (list(required.failed).length) return false;
+  if (list(required.inFlight).length) return false;
+  if (list(required.unreported).length) return false;
+  const passed = new Set(list(required.passed));
+  if (!REQUIRED_CONTEXTS.every((context) => passed.has(context))) return false;
+  if (list(state.runsAwaitingApproval).length) return false;
+  return true;
+}
+
+/**
  * The fixtures. Every case is a state that has actually been observed on this repository, and
  * the assertions include the two invariants that make the rule work.
  *
@@ -246,11 +327,16 @@ export function fixtures() {
       name: "a merged pull request is done",
       state: { prState: "merged", draft: false, armed: true, behind: 0, readComplete: true, required: green },
       action: ACTIONS.DONE,
+      reason: /merged/,
     },
     {
       name: "a closed pull request is done",
       state: { prState: "closed", draft: false, armed: false, behind: 4, readComplete: true, required: green },
       action: ACTIONS.DONE,
+      // The receipt must say the change DID NOT LAND. A closed pull request that was never merged
+      // is a dropped change, and a receipt that reads only "closed" is indistinguishable from one
+      // that read "merged".
+      reason: /NOT merged.*did not land/,
     },
     {
       name: "a draft must be made ready before anything else",
@@ -282,6 +368,16 @@ export function fixtures() {
       },
       action: ACTIONS.BLOCKED,
       reason: /a sync does not fix a failure/,
+    },
+    {
+      name: "runs HELD FOR APPROVAL wait, and name the remedy",
+      state: {
+        prState: "open", draft: false, armed: false, behind: 0, readComplete: true, headAgeSeconds: 200,
+        runsAwaitingApproval: ["pr-gates", "CI"],
+        required: { passed: [], failed: [], inFlight: [], unreported: [...REQUIRED_CONTEXTS] },
+      },
+      action: ACTIONS.WAIT_FOR_CHECKS,
+      reason: /held for approval/,
     },
     {
       name: "a FRESH head with no checks yet waits, it does not block",
@@ -380,8 +476,25 @@ export function sweep() {
                 };
                 const got = decide(state);
                 swept++;
-                if (inFlight.length === 0) continue;
                 const where = `prState=${prState} draft=${draft} behind=${behind} inFlight=${inFlight.join("+")} failed=${fail.join("+")} armed=${isArmed} readComplete=${readComplete}`;
+                // INVARIANT: a merge is authorised EXACTLY when the pull request is open, not a
+                // draft, up to date, the read completed, and every required context has passed.
+                // This one is checked over the WHOLE space rather than only over the states with
+                // a check in flight, because the defect it guards against is a predicate that is
+                // true in one state too many — and a sweep that skipped half the space would not
+                // see it. The expected value is derived from the sweep's own construction, so an
+                // inverted condition in the predicate is caught here.
+                const expectedMayMerge =
+                  prState === "open" && !draft && behind === 0 && readComplete &&
+                  inFlight.length === 0 && fail.length === 0;
+                if (mayMergeNow(state) !== expectedMayMerge) {
+                  failed.push({
+                    name: `INVARIANT (may merge now <=> open, up to date, not draft, complete read, every required context green): ${where}`,
+                    expected: String(expectedMayMerge),
+                    got: String(mayMergeNow(state)),
+                  });
+                }
+                if (inFlight.length === 0) continue;
                 if (got.action === ACTIONS.SYNC) {
                   failed.push({
                     name: `INVARIANT (never SYNC while a check is in flight): ${where}`,

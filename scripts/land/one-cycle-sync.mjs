@@ -42,7 +42,7 @@
  * The token is read from GITHUB_TOKEN. On a laptop: `export GITHUB_TOKEN=$(gh auth token)`.
  */
 
-import { decide, REQUIRED_CONTEXTS } from "./one-cycle-decide.mjs";
+import { decide, mayMergeNow, REQUIRED_CONTEXTS } from "./one-cycle-decide.mjs";
 
 const argv = process.argv.slice(2);
 const flag = (name, fallback = undefined) => {
@@ -199,16 +199,30 @@ async function readState() {
     }
   }
   const anyRunInFlight = runs.some((r) => r.status === "queued" || r.status === "in_progress");
+  // A run held for approval has `status: completed` and `conclusion: action_required` — it is
+  // NOT in flight, because it has not started. MEASURED 2026-11-08 on the catalogue's own
+  // edition: the schedule pushes its branch with the workflow's GITHUB_TOKEN, so GitHub does not
+  // start the runs it triggers — it holds all six of them as `action_required`, and the four
+  // required contexts therefore never report. A reader that only asks "is anything running?"
+  // sees nothing running and calls it broken.
+  const runsAwaitingApproval = runs
+    .filter((r) => r.conclusion === "action_required" || r.status === "action_required")
+    .map((r) => r.name);
 
   return {
     note: receiptNote,
     state: {
-      prState: pr ? pr.state : "open",
+      // The API's `state` is "closed" for a MERGED pull request too, so it cannot say whether the
+      // change landed or was dropped. `merged` is the field that tells them apart. MEASURED
+      // 2026-11-09: this read passed the raw `state` through, so PR #4148's receipt said "the pull
+      // request is closed" for a pull request that had merged as 1d53df3cf.
+      prState: pr ? (pr.merged ? "merged" : pr.state) : "open",
       draft: Boolean(pr && pr.draft),
       armed: Boolean(pr && pr.auto_merge),
       behind,
       readComplete: problems.length === 0,
       anyRunInFlight,
+      runsAwaitingApproval,
       headAgeSeconds,
       required: { passed, failed, inFlight, unreported },
     },
@@ -246,6 +260,35 @@ async function armAutoMerge(pr) {
     by: back.auto_merge && back.auto_merge.enabled_by ? back.auto_merge.enabled_by.login : null,
     method: back.auto_merge ? back.auto_merge.merge_method : null,
   };
+}
+
+/**
+ * MERGE NOW — the fallback for the one refusal that is not an obstacle.
+ *
+ * WHY. GitHub refuses to arm an auto-merge on a pull request that is ALREADY mergeable
+ * ("Pull request is in clean status"). MEASURED 2026-11-09 on PR #4150. An auto-merge there
+ * would have merged it a second later, so the arming is unnecessary and the merge is the
+ * outcome. The other refusal — "Pull request is in unstable status" — means a non-required
+ * check is still running: that one IS an obstacle, and the instrument waits.
+ *
+ * THE VERB IS PUT, NOT POST. GitHub's merge endpoint is a PUT route; a POST to it answers
+ * 404, which is a very convincing way to look like a pull request that does not exist.
+ *
+ * The platform still enforces the branch policy here: this call fails if a required context
+ * has not passed, and the required checks are the estate's, not this tool's.
+ */
+async function mergeNow() {
+  try {
+    const res = await api(`/pulls/${prNumber}/merge`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ merge_method: "squash" }),
+    });
+    return { merged: true, result: res };
+  } catch (error) {
+    const message = JSON.stringify(error.body || "").slice(0, 300);
+    return { merged: false, error: `${error.message} ${message}` };
+  }
 }
 
 async function cycle() {
@@ -315,10 +358,29 @@ async function cycle() {
       }
       const pr = await api(`/pulls/${prNumber}`);
       const arm = await armAutoMerge(pr);
-      receipt.executed = arm.armed
-        ? `auto-merge armed by ${arm.by} (${arm.method}) — read back from the pull request`
-        : `auto-merge was NOT armed: ${arm.error || "the read-back shows no auto_merge"}`;
       receipt.armed = arm.armed;
+      if (arm.armed) {
+        receipt.executed = `auto-merge armed by ${arm.by} (${arm.method}) — read back from the pull request`;
+        break;
+      }
+      // The arming was refused. ONE of the two refusals means "you do not need an auto-merge,
+      // the merge is available now" — and an instrument that stops there leaves a READY pull
+      // request unlanded, which is exactly what happened to PR #4150 on 2026-11-09.
+      const refusal = arm.error || "";
+      const mergeableNow = /clean status/i.test(refusal);
+      if (mergeableNow && mayMergeNow(state)) {
+        const merged = await mergeNow();
+        receipt.executed = merged.merged
+          ? `merged (squash) — the auto-merge could not be armed because the pull request was already mergeable (${refusal.slice(0, 120)})`
+          : `the merge was refused: ${merged.error}`;
+        receipt.merged = Boolean(merged.merged);
+        if (!merged.merged) receipt.error = true;
+        break;
+      }
+      receipt.executed = `auto-merge was NOT armed: ${refusal || "the read-back shows no auto_merge"}`;
+      if (mergeableNow && !mayMergeNow(state)) {
+        receipt.executed += " — and a merge right now was NOT authorised by the state that was read";
+      }
       break;
     }
     case "BLOCKED":
@@ -346,6 +408,7 @@ function print(receipt) {
       `behind=${receipt.behind}`,
       `required[passed=${req.passed?.length || 0} inFlight=${req.inFlight?.length || 0} failed=${req.failed?.length || 0} unreported=${req.unreported?.length || 0}]`,
       receipt.headAgeSeconds !== undefined ? `head_age=${Math.round(receipt.headAgeSeconds)}s` : "",
+      receipt.runsAwaitingApproval && receipt.runsAwaitingApproval.length ? `held_for_approval=${receipt.runsAwaitingApproval.join("+")}` : "",
       `-> ${receipt.decision}`,
       receipt.reason,
       receipt.note ? `   (${receipt.note})` : "",

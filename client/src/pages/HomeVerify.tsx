@@ -1,6 +1,8 @@
 /** Council of AI front door: one proposition, one results surface, distinct next steps. */
+import { HomeWatchdog, HomeLearningJourney, HomeJourneyQuestions } from "@/components/home/HomePublicJourney";
 import HomeHero from "@/components/home/HomeHero";
 import HomeResults from "@/components/home/HomeResults";
+import HomeMine from "@/components/home/HomeMine";
 import HomeProducts from "@/components/home/HomeProducts";
 import HomeEvidence from "@/components/home/HomeEvidence";
 import HomeDevelopers from "@/components/home/HomeDevelopers";
@@ -44,10 +46,16 @@ export default function HomeVerify() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }}
       />
       <HomeHero />
+      <HomeWatchdog />
       <HomeResults />
+      {/* The live board strip + daily-report/newsletter band (owner-verified 1 Nov;
+          restored 2026-11-09 after the journey rebuild dropped them). */}
+      <HomeMine />
       <HomeProducts />
+      <HomeLearningJourney />
       <HomeEvidence />
       <HomeDevelopers />
+      <HomeJourneyQuestions />
       <HomeUpdates />
     </div>
   );

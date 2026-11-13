@@ -127,6 +127,7 @@ const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
 const MotionLab = lazy(() => import("./pages/MotionLab"));
 const RemediationPartners = lazy(() => import("./pages/RemediationPartners"));
 const Login = lazy(() => import("./pages/Login"));
+const AccountSignup = lazy(() => import("./pages/AccountSignup"));
 const FrameworkHive = lazy(() => import("./pages/FrameworkHive"));
 const CouncilModelCard = lazy(() => import("./pages/CouncilModelCard"));
 const CouncilSystemCard = lazy(() => import("./pages/CouncilSystemCard"));
@@ -162,7 +163,6 @@ const ConformityRoute = lazy(() => import("./pages/ConformityRoute"));
 const Contact = lazy(() => import("./pages/Contact"));
 const CouncilDetail = lazy(() => import("./pages/CouncilDetail"));
 const CouncilLicensingLanding = lazy(() => import("./pages/CouncilLicensingLanding"));
-const CourseDetail = lazy(() => import("./pages/CourseDetail"));
 const EarlyAccessLanding = lazy(() => import("./pages/EarlyAccessLanding"));
 const EI3 = lazy(() => import("./pages/EI3"));
 const EUAIActClassifier = lazy(() => import("./pages/EUAIActClassifier"));
@@ -641,7 +641,7 @@ function AppShell() {
                   <Route path="/motion-lab" component={MotionLab} />
                   <Route path="/remediation-partners" component={RemediationPartners} />
                   <Route path="/login" component={Login} />
-                  <Route path="/signup" component={ContentReviewNotice} />
+                  <Route path="/signup" component={AccountSignup} />
                   <Route path="/welcome" component={ContentReviewNotice} />
                   <Route path="/hive/:slug" component={FrameworkHive} />
                   <Route path="/hive" component={FrameworkHive} />
@@ -676,7 +676,7 @@ function AppShell() {
                   <Route path="/contact" component={Contact} />
                   <Route path="/council-detail" component={CouncilDetail} />
                   <Route path="/council-licensing" component={CouncilLicensingLanding} />
-                  <Route path="/courses/:id" component={CourseDetail} />
+                  <Route path="/courses/:id" component={ContentReviewNotice} />
                   <Route path="/docs" component={DocsHub} />
                   <Route path="/brand" component={Brand} />
                   <Route path="/metered" component={X402Catalog} />
