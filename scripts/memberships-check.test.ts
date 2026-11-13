@@ -68,9 +68,8 @@ describe("memberships-check: it can fail", () => {
   it("a bogus row planted in the REAL manifest turns the whole run red", async () => {
     const planted = {
       ...manifest,
-      // The source manifest has one row verified the day after its own as_of date. Advance this
-      // isolated fixture snapshot by one day so this test isolates the planted bogus URL failure.
-      as_of: "2026-10-08",
+      // The refreshed source manifest and all public verification dates are current for this snapshot.
+      as_of: manifest.as_of,
       rows: [
         ...manifest.rows,
         {
@@ -103,6 +102,8 @@ describe("memberships-check: it can fail", () => {
     const fetcher = async (url: string) =>
       url === "https://councilof.ai/memberships"
         ? { status: 200, body: `Machine-readable: /interop/memberships.json (schema csoai.memberships/0.1, as of ${planted.as_of}, unsigned)` }
+        : url === manifest.rows.find((r: { id: string; check?: { url?: string } }) => r.id === "openaire")?.check?.url
+        ? { status: 200, body: JSON.stringify({ header: { numFound: 0 }, results: [] }) }
         : recordedGone.has(url)
         ? { status: 410, body: "User was blocked" }
         : url === "https://example.test/roster"
