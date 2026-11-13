@@ -1,7 +1,7 @@
 {
  "schema": "csoai.interop-file-index/0.2",
- "as_of": "2026-11-09T03:53:21Z",
- "source_commit": "1d53df3cf6ffef7f0e2929e600d6d6e7d782b376",
+ "as_of": "2026-11-12T07:40:27Z",
+ "source_commit": "6f654490e28d3e4cebb17a532a453b17a9a501ca",
  "what_this_is": "Every file the estate's committed tree publishes under /interop/, with its size, its sha256 and how it is served. Built by reading the tree, so it is a measurement, not a list of intentions. Three served states occur, because there are three \u2014 a path routed to the mirror is not the same path as one the estate serves from its retired-bytes archive, and a fourth state (retired-bytes-absent) is reserved for a retired record the archive does not hold, which is not emitted because the archive is a deploy-time artefact and naming its membership here would make this index stale on every deploy.",
  "how_to_verify": "sha256 is the digest of the file's bytes as published. Fetch the path and hash it; on a row whose served_bytes reads 'as-published', a match means you hold what the estate published. Three things to know when it does not match: the digest is of the bytes at THIS index's source_commit, and the live site serves the bytes of the currently DEPLOYED commit, so the two agree once that commit is deployed; for pages-served HTML the digest is over the BUILT file, which carries the workspace-launcher script the build injects; and the EDGE rewrites some HTML in transit, so on a row whose served_bytes reads 'edge-transformed' or 'edge-transformed-per-request' the bytes the site serves are NOT the bytes published here, and on a 'per-request' row they differ on every fetch, so no digest of them can be reproduced by anyone, including us. A row whose served state is hf-mirror is a different case again: the bytes come from the HuggingFace evidence mirror, which is a SEPARATE HOST whose membership this index does not record, so the row's digest is checkable only while the mirror still holds the file. For retired-bytes paths the digest is of the canonical bytes, which the archive copies verbatim.",
  "retired": "A retired record is HISTORICAL evidence of a past measurement, never current proof. The estate's server marks these with the response header x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE SAME AS BEING UNREACHABLE: a retired path that is served answers 200 and its bytes verify against the sha256 below; a retired path that is not served answers 404. The `served` field says which.",
@@ -17,20 +17,20 @@
   "edge-transformed-per-request": "the edge rewrites this markup and the rewrite is randomised per request, so the bytes the site serves differ on EVERY fetch; no digest of them can be reproduced, by a reader or by the estate"
  },
  "counts": {
-  "files": 16370,
-  "bytes": 259363218,
+  "files": 16382,
+  "bytes": 259583374,
   "by_served": {
-   "pages": 3124,
+   "pages": 3136,
    "retired-bytes": 6,
    "hf-mirror": 13240
   },
   "by_served_bytes": {
-   "as-published": 16369,
+   "as-published": 16381,
    "edge-transformed-per-request": 1
   },
   "digests_taken_from_the_built_tree": 0,
   "digests_taken_from_the_injectors_transform": 53,
-  "digests_taken_from_the_tree_bytes": 3071,
+  "digests_taken_from_the_tree_bytes": 3083,
   "digests_not_comparable_no_built_tree": 0,
   "excluded_the_index_itself": 1,
   "excluded_not_present_in_the_tree": 0
@@ -6868,14 +6868,14 @@
   {
    "path": "/interop/hf-census/SUMMARY.json",
    "bytes": 690,
-   "sha256": "822aa723f955ac849185893022acbc1f553d0e14944f424e6327b067d9fc8fb5",
+   "sha256": "a8151343b0f073fc038ba8dd95664e6a8f4d85567059fa5d048be44466851d53",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/hf-census/axis-sources.json",
-   "bytes": 5539,
-   "sha256": "170c4361d5323f5d8a4bdb113e58d21f3aa8ee96b9c60a28ca4c3ad395dbf75e",
+   "bytes": 5543,
+   "sha256": "06dbfa61d9c0a09f0e1c5ab93c5391f8922886fb5dadd3042564d6b1673abb98",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -6888,8 +6888,8 @@
   },
   {
    "path": "/interop/hf-census/org-register.json",
-   "bytes": 842057,
-   "sha256": "3e864f1aeff3475c55357f6bdbef35faa6cbcb9ad57659f4636b80896834ea5b",
+   "bytes": 1003366,
+   "sha256": "6f593394bddd9f6f5462122510bd45e94a129db6315785c43b915b24440fc00c",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -10137,6 +10137,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/mcp-trust/2026-11-09.json",
+   "bytes": 2854,
+   "sha256": "944a2d15db6dbadacf65d8c3246fec02e87126a62d14b9e06be9d7184950ab63",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/mcp-trust/diff-2026-09-12.json",
    "bytes": 1306,
    "sha256": "36b290ec21d7fc213e724c15a726f4b3e8a86437a6f4d4040cc17903fbf1c602",
@@ -10186,9 +10193,16 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/mcp-trust/diff-2026-11-09.json",
+   "bytes": 1518,
+   "sha256": "145f61d4446cfa4abdf01a859c739c9662b83ba9039e4bf14cc593b44c294ba4",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/mcp-trust/latest.json",
-   "bytes": 2867,
-   "sha256": "2c8d266bdb9cb74210afdeae3b27ef8accf6a761de87b35bcf261b3b668c1fc2",
+   "bytes": 2854,
+   "sha256": "944a2d15db6dbadacf65d8c3246fec02e87126a62d14b9e06be9d7184950ab63",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -10231,6 +10245,13 @@
    "path": "/interop/mcp-trust/unsigned/unsigned-mcp-trust-4564503fcb71.json",
    "bytes": 1757,
    "sha256": "b1b04795e19687e191930b4b39ff58bdc2e86a59b530a55dff6bb0f7b6ab0e9b",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/mcp-trust/unsigned/unsigned-mcp-trust-4ca37fd871ce.json",
+   "bytes": 1757,
+   "sha256": "9995cf3ca2d8fbad58ce4664de3bd682d7595195abf8b45c9959ce97668ba582",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -109872,8 +109893,8 @@
   },
   {
    "path": "/interop/silent-route-canary-2026-09/baseline.jsonl",
-   "bytes": 30250,
-   "sha256": "b53a2cd5315003f936699b1c3b67f61e9b5643ac8c8e42051e3377aba7b9c4b1",
+   "bytes": 36305,
+   "sha256": "6ac1ef1522cabe26442b4c0b6f18f005b995067500c8ea72848e3387150c924d",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110132,63 +110153,63 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/artefact-manifest.json",
    "bytes": 6509,
-   "sha256": "df4caa7f356f080eda8d75d075e77baac704e25d6e7147253f09c2f0942bdb3b",
+   "sha256": "89d85260934a843cac9dfaf74b3b3635511bd00c4b4efb3bb5daf7aa0719bf41",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/deep.json",
    "bytes": 15335,
-   "sha256": "a8e56fb6b266a87865e7114ddd7069a856d9491cc93e35b4047a1ad5d05f461a",
+   "sha256": "8e8b2ba2ae0dea9c9908d0f75b36e1bebb0611a61eca2972d9fad59eb6294b52",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/1.html",
-   "bytes": 48918,
-   "sha256": "35955286fb798eb6c4bd03ccd625df3d9e9192c9d18868ab279f46d9ef138032",
+   "bytes": 48926,
+   "sha256": "1485466dc6afd2a465beb92df5a31d13e95d34e8d07e7e72ea1ccd2f2004178e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/1.meta.json",
    "bytes": 253,
-   "sha256": "e223d853533a117d171f5cdc2f1e9b6dbc810e255cfa0cbc63d1a679ca8bf4ea",
+   "sha256": "d2aefe92a7811d5ba55aae81b3e8f77dd7956b2196d9d9941107bdd8bfa42c5c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/118.html",
-   "bytes": 439741,
-   "sha256": "324e5cf190ba8e4fa064edbd959793fd80710ac9ef9194a9f845ac5055682051",
+   "bytes": 439743,
+   "sha256": "234634bad31b96c0cb69db24c637aa3dc03370ab537bb9c24afee1790dfe7c13",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/118.meta.json",
    "bytes": 238,
-   "sha256": "35ce66dd253c161db6d05cc63e6fe2ff693a3e3aca459d44247b8004cc9db18c",
+   "sha256": "31441f75b12f199b4362d241c878d978338938f4a831b6779a6c62ec3225722e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/120.html",
    "bytes": 435696,
-   "sha256": "73c2374daf5b1fcc772f407958306c235fbb45da054400fe972095f3937d3f44",
+   "sha256": "49090b5edd9c72005659304aa323317ddb67fcf94a18f79771be5c4f0d5f5306",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/120.meta.json",
    "bytes": 259,
-   "sha256": "6f7e09706f9d9384519d9ac58fdda6ac750cd702d72309bf2bac385eda3e6cd7",
+   "sha256": "f23d42dc5d03871c2e62121bb94b35f7740aa94b7eea5a9f15b2d61913d2db1f",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/129.html",
-   "bytes": 1422946,
-   "sha256": "7d2fb1009e51f909a27a45e8923ec2f46e6568007a3c95b74fa6fbec51d4fd89",
+   "bytes": 1423293,
+   "sha256": "e60822e52ba2c375dd48019dfbb2159736b52d2c0a3c21cd5493e7359e3157e6",
    "served": "pages",
    "served_bytes": "edge-transformed-per-request",
    "served_bytes_note": "the edge rewrites this markup (email-obfuscation, https-rewrite) and the rewrite is randomised per request, so the bytes served differ on every fetch and no digest of them can be reproduced; the sha256 here is of the bytes the estate published"
@@ -110196,49 +110217,49 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/129.meta.json",
    "bytes": 248,
-   "sha256": "9d8100dc5e7e324d57c02c14d1459ded8adb500d1078b483e566365921d261b5",
+   "sha256": "4bcd3024986954b94b180ec5ae05cc93a03fdf48fe19eeaec9f569c017f122c7",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/14.html",
    "bytes": 37051,
-   "sha256": "9897296fcef7bd36ab7b37164ea2d9afab0962b1894507efd4820a09676b8369",
+   "sha256": "ed56556df4abb69f5d828b351b9807ad247f63c58d947c71d55903745586064d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/14.meta.json",
    "bytes": 236,
-   "sha256": "60a288528df8d3f73c02f59943254c377c6b3306b86ffdd3a4b1a2a759abea74",
+   "sha256": "9b3412138f648921dd5b386a94ff77cda50c4ccbbbb30a86871e30cb0b1620e4",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/146.html",
-   "bytes": 45064,
-   "sha256": "73e6868a8caa4f43d0ddb074f689aef9a1c03035d6e0611480289b85bdd5e0dd",
+   "bytes": 45183,
+   "sha256": "b268c9a41cfefbce0fc4be757eac88fb2e09fe6bd0813e80ce46a2e8c763c6ec",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/146.meta.json",
    "bytes": 266,
-   "sha256": "1797270d2ecfc25ef1f6f9e150f69242a02726ad0501bb4536b7f46c4ac61042",
+   "sha256": "929e307655e7afac3bfdfca1da798141193ed5a510fb755025ea68cfda93a624",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/173.html",
    "bytes": 3038,
-   "sha256": "3fcd8e4c060774cb844a299965043e9240122dfb29de894f19e7193faf182746",
+   "sha256": "ab6b47b7f0aa239cf122aad0321a986e4fac3a5a18befb875f621d1fabd69235",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/173.meta.json",
    "bytes": 242,
-   "sha256": "dbcc9a85f1757b4c9ae811929ec5c20a7dd5d929e3e4ebba90dcf15a85a30015",
+   "sha256": "9f6f92fdca0974b26777831705f82891a673979f14e0eddd570cc948b2de5c9c",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110252,35 +110273,35 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/195.meta.json",
    "bytes": 243,
-   "sha256": "97cbc1d60f2fbdeedfd46a3b278b8e4ffbcd9281147a403102c05ce14e361ae3",
+   "sha256": "bd96ab5c8030e5efb4cb0a0c902d563a958508c8f44d36bf5cd3e64e4b212343",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/2.html",
    "bytes": 422079,
-   "sha256": "286404fa5c9ae51d7e7552d01b08e4f7e6cd0e9fdc8d4751eeca2f9d8fed7937",
+   "sha256": "e70eaf0eedd8910573cdf8870661205704b32a775435659517458426673df427",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/2.meta.json",
    "bytes": 258,
-   "sha256": "3103a2a9debc900662f37928d5f99f911ac549420ab9d39fdc3a8fdba8933782",
+   "sha256": "4518e3a7ffbb6f0effa836a2937cb70d931634e5072a24e86e3acab964546b9c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/221.html",
    "bytes": 64537,
-   "sha256": "de5bfab7c1486040d5b1cdedd954448fb0749cdad1373f0748dbeefdc05cd65d",
+   "sha256": "c4ba0d471c4ec11863a45294d384a024eeaff7442b355d748d593b3cc3c7a243",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/221.meta.json",
    "bytes": 241,
-   "sha256": "ba1cabcc9f871cbdaf21b5ea273a68818d5bd1c63752c033474e4b60396aafb7",
+   "sha256": "0c940e0b615101ebbc513320be16373aa772b9ca79f425c9e058066ce9cf6940",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110294,49 +110315,49 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/237.meta.json",
    "bytes": 247,
-   "sha256": "f9ff68fc71743c018fd3efee913d54a76e33c912639240c12b60a51fec628257",
+   "sha256": "1a4d2a8d69447aca27f9902c2282f5c483b14681442bb7b7a490582ca11daa6e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/246.html",
    "bytes": 77496,
-   "sha256": "76e60d158d197209e65ed56a6d1b3520e3dbffe84ffe97b5bf74e1fdee041e52",
+   "sha256": "5d0331c156f8d473bfb06e0a1f0c06123bab3e2612412c9afbd38a13bdc1abed",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/246.meta.json",
    "bytes": 244,
-   "sha256": "225029d3913430d735551d61f589325cf08ca9ac2d28feac3daf4c7666798563",
+   "sha256": "b1468ddd7e24b1d9e3a9ebded803d46e7a99ab9f34d3464ef7d238a38addb703",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/250.html",
-   "bytes": 283468,
-   "sha256": "3553b279c2ce0245c105f2659545dc620478e1d099fe1f98442a28580b866736",
+   "bytes": 283970,
+   "sha256": "8f84be6bebd9cc359ef6c86b1bdfcc68ff8d295e9c63a5e14b6e44c06f59b5c9",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/250.meta.json",
    "bytes": 252,
-   "sha256": "4fee3540a829d1e9c968be045c9bcfc873a3f45a3602b823f03b0c52552edf76",
+   "sha256": "075d806bfa517b050e405700de75f369f5c40aedefbd11feadd00978ada7f3f3",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/262.html",
-   "bytes": 135298,
-   "sha256": "b42bcbddc33c0c84307d152a8a089050aab2493263a7220cfb67344a531d9d5b",
+   "bytes": 105662,
+   "sha256": "d22f4b26d8a447ea726dbc617bc45689e7bec3b4e7c13ba02410fbad2dd22c53",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/262.meta.json",
    "bytes": 260,
-   "sha256": "b108081f3ab66bf11c0f765067febc9031680e88155609a0c7d16066f0715bb0",
+   "sha256": "f6e8716646f386410beb172babcf54a2bc9a7481bfd15b601d293b982035476a",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110357,14 +110378,14 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/286.html",
    "bytes": 420669,
-   "sha256": "566e2a5abcd62701612ee7f71b1545a73504b171a41ac7a8b2e14e13abc9d55d",
+   "sha256": "0e360bfca108298195a5f39dbebbd64164d524b2a196b6d39b69858c4cc2ccc2",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/286.meta.json",
    "bytes": 258,
-   "sha256": "cae388328862d3a3840e4d8a35ff69c8fc11983529328f668cb3c83b4256945b",
+   "sha256": "bb2431a4f1a56a9d723b99d82ab64f806cfb0c40ea1de94879330f101f96dc2f",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110378,35 +110399,35 @@
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/336.meta.json",
    "bytes": 189,
-   "sha256": "3114cc9e2de0e1fa2204cbea2788005f46fe02d84178f7d8df869ccd989a3edf",
+   "sha256": "eda33564aa2c97d592c4aa1be21f37e154bf30ff2e2f55bbf76542599bbb5dc4",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/347.html",
-   "bytes": 198808,
-   "sha256": "2cfe95d1aa84d4cc324969910da366bb39de7c2ecddb8e7084b0e3b1f25ea038",
+   "bytes": 199016,
+   "sha256": "5284483cdadbbcc66781ae0ad046b2d208232e48c424326d0bd1e08851a2cc5a",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/347.meta.json",
    "bytes": 240,
-   "sha256": "d40390f0b986d7db7441cf096433f90f3cfa90959500b60beb02c1709fcb0ba7",
+   "sha256": "c392e04b68ffbe16dd8e49bfc77b3b09bd3985244557e493b3902f544d24637d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/5.html",
    "bytes": 127930,
-   "sha256": "7873f2577a62a10419b4f621022d078643cd424b30a9c872cced89def2a7bd36",
+   "sha256": "fa7c567149dd84cfd3586daf8cfd3c7948f60ea02dc858c765ca3c5010b5e024",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/stablecoin-deep-2026-09/mirrors/5.meta.json",
    "bytes": 244,
-   "sha256": "d28c01c3f9735662bfd9622f7495b034caba5517861c9c5e413553984a0ab04f",
+   "sha256": "4451a40bfd7f0f3ae6dee987d04bbac7551e9226009f7bb80cde355a354e4b10",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110490,7 +110511,7 @@
   {
    "path": "/interop/stablecoin-universe-2026-09/promotion-queue.json",
    "bytes": 990021,
-   "sha256": "ddcf095c421294fb72f41ce8adf791b7daeac7ec0d7845da49ea56be643e9bf0",
+   "sha256": "419ad034c3a4c8f16eeb1a47df820449061e362b80a1e0383f126b93ef787b1e",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -111979,23 +112000,44 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/watchdog-intake/20261109T200419Z.json",
+   "bytes": 18780,
+   "sha256": "50653a17ea89bd55d641e1c8318800060a10cb17bf5f48795330f04a58906b42",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/watchdog-intake/20261110T171651Z.json",
+   "bytes": 18780,
+   "sha256": "9959a5d63ec8e595bcf57bed6c8bae408792f558881d779fe90060ab01034dd3",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/watchdog-intake/20261111T172724Z.json",
+   "bytes": 18780,
+   "sha256": "64096747105539554925b11f83ccee70aebd1205f96930e6f5bc075b30b2f3a6",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/watchdog-intake/_index.json",
    "bytes": 10670,
-   "sha256": "eba84364bdc086a9acdcafa7f62e43ecbf453abc20e835642cf6ffa267205d6a",
+   "sha256": "2870ee8492cc22acc9d3352d56dec2cda57b9e38f81aa7dadc540ce1c89f1e38",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/watchdog-intake/charter-feed.json",
-   "bytes": 67324,
-   "sha256": "97572f91e7d98062ee95c336d2aa9018eb90395cfacf4860cd6ee2702a8c9e1d",
+   "bytes": 73561,
+   "sha256": "116be645d2c9faf0661750646f049eafb3dbc35da3f1e0c53a6899f506928ac6",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/watchdog-intake/latest.json",
    "bytes": 318,
-   "sha256": "6ef00442eb034b555686398f5315f1e1ab4427581bcc622032e1f5a0cfc35455",
+   "sha256": "ac89fadcd7a379d94769b1101320b2e6ffb1c9421ac912675ee15fa3c97d4db4",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -113236,14 +113278,14 @@
   {
    "path": "/interop/x402-door-conformance-2026-09/artefact-manifest.json",
    "bytes": 10748,
-   "sha256": "e623dc0080896362b336279a5558cc50084c3587401137c837d33f7040ee4bfc",
+   "sha256": "872fb465bbc99f141d1deef3316b60daa8ac912f0fb385edda82de472b9168e6",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/card-x402-door-10-unsigned.json",
    "bytes": 822,
-   "sha256": "77c8e44c1f94edd41787571a7dc2608e6075f27d4d874c6aa64c054c66107275",
+   "sha256": "cd1b1a772764c027c83ef8ee21f5d637f4ba3ab051773ac7be6f892270c68b97",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -113264,301 +113306,301 @@
   {
    "path": "/interop/x402-door-conformance-2026-09/card-x402-door-conformance-summary-unsigned.json",
    "bytes": 908,
-   "sha256": "e5c1fcc328bec30f101efc9737f2500f8cad267306fbf2c989a53fe0b581ee3e",
+   "sha256": "dd38a8d64611dd25928cdd21c3ef1ba906e3e42c7e830afd3f1c242a16b832ce",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-0-challenge.json",
    "bytes": 5444,
-   "sha256": "4ceb48c03fff949b43bee838d9ca43806e4ca09f9929978b2e67b887f5f6eef1",
+   "sha256": "8d7944a659c5c252b4845781c673fce43eb008d4e1a9897a30aadde81fdb49bc",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-0-challenge.json.meta.json",
    "bytes": 290,
-   "sha256": "e919947f308156fb4b894836cf795f1082958e41bde9905ad0face9193a3bdf3",
+   "sha256": "1f88992c25d46cc3174ad240b491645205e7d0fbf39f49f4375d458028528a2d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-1-challenge.json",
    "bytes": 5279,
-   "sha256": "b360686eae61d77dc49dc3024df67126c72c61d580d45797b7b80f381e957fcd",
+   "sha256": "7e1dd9d43fb89ef21c6b1f81ce4ab770a0027f7b090029ec1020383179ccb639",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-1-challenge.json.meta.json",
    "bytes": 269,
-   "sha256": "e6c7bcaca9d1cff5695cbf6dac6a339daaa3ada988048649bdd3e733e9fadb97",
+   "sha256": "1e9c2b1d5d3be1067a1f6f33aa5f04ab3d42792bd1fad01fca248f5b7a70db13",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-10-challenge.json",
-   "bytes": 3787,
-   "sha256": "80c44b0475c6860a0fad238e81a1fc9880b718fe03c55aeffefcd41431c6379d",
+   "bytes": 5976,
+   "sha256": "9948272b91fbf85bb02b99df996bc7f1cac9de4e3655a5677363037b8782cc31",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-10-challenge.json.meta.json",
    "bytes": 287,
-   "sha256": "5f9a8b72ee5989898f6e9685bc72983c451786836cc17e853b33f5d5ea7d428a",
+   "sha256": "45dd9a738d01cea99aac0d33ac957bec7c66d4251b0cfbb91f86373165a0e27d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-11-challenge.json",
    "bytes": 5171,
-   "sha256": "f0e70bb31d205ce6b007acc1ffd8f7c9a53f3db1f94eb4ce04de3b58a318b902",
+   "sha256": "05737e73c0da783dff95965ed48c8ecb176599cc511be0fbe54f1c773ced3aef",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-11-challenge.json.meta.json",
    "bytes": 295,
-   "sha256": "be797ef34eff9321fd2b1a75e466c8d69487c10bd982c9ee2d24b29d2d3280e0",
+   "sha256": "ada851310f007eba802b3e4e22eca32fe254ddafa2c8f9b5850c1bcc328ac65a",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-12-challenge.json",
-   "bytes": 5791,
-   "sha256": "9f1fbfeb29e75eec5a8e1cf9528ac271a7caeff4bee1b81704d8621107749c16",
+   "bytes": 5962,
+   "sha256": "5eef80b75c86e160a1747b0eb1f15b2dd8a57ea9d82afe8609889d4579c483bb",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-12-challenge.json.meta.json",
    "bytes": 279,
-   "sha256": "675ff7ee2eb3d2e01fd7038f6c17bb80ed12c375a18aea03f8c91685daffee4f",
+   "sha256": "c6c75c9d60aa39fd8883e8124693a7bd534e8bd92eb1b6fe423fea335f6955f4",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-13-challenge.json",
-   "bytes": 5737,
-   "sha256": "a0d846f03d4fbb95cef533329ddf19eba591875cbf909ae64ec2e6cfe128917c",
+   "bytes": 5931,
+   "sha256": "d10bb3f1e243a9afe9c217176950a3ee5459ebe2cac8d89bfed30411a7af5f8b",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-13-challenge.json.meta.json",
    "bytes": 279,
-   "sha256": "6b22df0569f1433257ef5549d0f84814e51dbeed323f3c27f780423db21a4b4c",
+   "sha256": "cf2dea4a4d1cccd3d84bfdccf526a84a9271cd42819a43816b05889caf05ee83",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-14-challenge.json",
-   "bytes": 5676,
-   "sha256": "db5fd82d568e06d8773b5efdb37c198290b881e1db47121a0229c7c70d130598",
+   "bytes": 5879,
+   "sha256": "7c886b2e19a0bced2a6a38e1eaa8b3187f4155cdf7bd6aa5b3d6ec53cf3b7cf0",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-14-challenge.json.meta.json",
    "bytes": 278,
-   "sha256": "6aa1bea701c3b00f5e44c69cd3627cedc6ce5e75288e20c1f2547bf924f807b0",
+   "sha256": "079f5438b083a1342e2a0a8d1512d31ec9f6c08e8b4504b7639e3f98b00af341",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-15-challenge.json",
    "bytes": 9603,
-   "sha256": "28919fcb422d903484b52176ff7f239467ac4ad19a74dc06abc3e071c69330f4",
+   "sha256": "544340eeace26acc550655d12f3596073d4b453d165c17e22d692c4498f2bcf3",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-15-challenge.json.meta.json",
    "bytes": 321,
-   "sha256": "9c44b2bb6a7da7cceeba87e2ff3aa92dfa5dfab094e87b65a7e2a001b3c4739e",
+   "sha256": "c9fe5c049c5c93bffb54fdf71116e1af034f3505ace94eec1d57f34ea9b2b6ef",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-16-challenge.json",
    "bytes": 5822,
-   "sha256": "d4f19156d3bf741de03efcc55fdff476c6c17bccac18be0497381d5a87cf0bfd",
+   "sha256": "870cbd722d3ac211c7c00aae374fc0a5f88eb3f0cf49de2f57559068c8f0d5f3",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-16-challenge.json.meta.json",
    "bytes": 290,
-   "sha256": "bad1112c90ac8625c7a9237e0cbe968a39004c577475f545d47816074aa06195",
+   "sha256": "98f78dc803193cf8ab6fee4636e3e36b3addd3b28938776a3e45807ff92fe7a2",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-17-challenge.json",
    "bytes": 7824,
-   "sha256": "2f77a309eb7521a504d07692c82b9e0f774ffea7cefaf2ba566bde6c7fd6484f",
+   "sha256": "712154e7a3e08f77a97eaef9f941c75508c1c0a9e2f6e5a355e1f9447b1a9ac3",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-17-challenge.json.meta.json",
    "bytes": 301,
-   "sha256": "4ac058a8e153d952461ddc02ff1184d4cc3459ad7de8ac14ce0a5fc104a97c60",
+   "sha256": "a2c1679228215bca3909c79b28dec3350d6a86462e99fe9c3dc6c39f6a1b21b4",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-18-challenge.json",
    "bytes": 5712,
-   "sha256": "4d4824c6d22c74461b311e0e46dd97f6af03f52a7bc50645be3246d0e79ed3a3",
+   "sha256": "1d6af375c6f439d3764d3213da5c379a9cda94f52186cf5fc50cc4f5829e3aed",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-18-challenge.json.meta.json",
    "bytes": 286,
-   "sha256": "3d64e7de74779d6b5c532f31699ae032817919d37a11b5eb77ac62cf12068b5e",
+   "sha256": "6ea1d55ef1f808c03e8605a01e5d3cb5528f56b4bf789f39baf33066f23ebce9",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-19-challenge.json",
    "bytes": 6210,
-   "sha256": "e52edc28d12d8e28a3f9d6e73c5394ce01c865bcd8f02a2711f741899cefbbc2",
+   "sha256": "00a981554d456810c4363c0474eab4ea1f9ea07c2182f5901b95d1bf6aa8862f",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-19-challenge.json.meta.json",
    "bytes": 276,
-   "sha256": "d967bcb5d8c4a37d3a413404b9fb8468a2d851b6c67c89f5fac0a8bdf550e645",
+   "sha256": "8c6ae285763b663c1878c9e15bf88930421ce5207abe6a06910d1a4fb8e70581",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-2-challenge.json",
    "bytes": 4713,
-   "sha256": "124ab0941fbe1ad36e0b7d140b6f5283695ea1fc7acacc1750cf77fa4e4291be",
+   "sha256": "aca2b8097cdb155351a4fae64b3122b0b36e71ec799bd80878964c331c3eca2c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-2-challenge.json.meta.json",
    "bytes": 278,
-   "sha256": "d4050d8b4409ec4c6337b9fae30f43f9d8965e16f427ef0ef7940a45e2fbd860",
+   "sha256": "27b96c653fd95d3ccc3a1880ebe72f38ccb30bca206b9fe09809e4a0c93b25ff",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-20-challenge.json",
    "bytes": 6086,
-   "sha256": "31e71d82474d1a124b5c09857af76ec6a1f83535a51941e6643c950a1d4d783f",
+   "sha256": "af04515f6a3b1eafbc02e0497ccf68637bf9d1998c877e380dc95556027aecf5",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-20-challenge.json.meta.json",
    "bytes": 270,
-   "sha256": "a91fd6210233761a1cb8caca92209bb3101c8c82fc466f3b0005fa6cde629e08",
+   "sha256": "d9b866a5451dc1f8572cc413afc9c4b54d758ba847ab2efd281b534095eab463",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-21-challenge.json",
    "bytes": 6141,
-   "sha256": "a5e68189c2d40f9c295910e431d2f2313aeeb1e4a16750487d0fe8dba8fc51c9",
+   "sha256": "e0f7c9bafde89c1e5865b0f8ad4bdc6e973dff614a37342898fa13447b759208",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-21-challenge.json.meta.json",
    "bytes": 269,
-   "sha256": "89661af85cb3deebf70d464c51997249a3dac2baeabe82afe608a6adda1b172f",
+   "sha256": "4f3e95f198f4a63f2b3331fb253fb26d13cb72a605c69db5bd1258562642c757",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-22-challenge.json",
    "bytes": 6559,
-   "sha256": "b95749a3aa1e5d2d59c8830f5569f3174486b66c17976063588ecdfb7f03ebce",
+   "sha256": "9c5c9792bd02d69901581070289642ee56dca07afe8bcab7938dfa438a8a949f",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-22-challenge.json.meta.json",
    "bytes": 276,
-   "sha256": "8dd9054b98e14f6fdd1065932e5063ac69460dcc10c1b3524f07280d48c0f76f",
+   "sha256": "c40517cfbcd3ea23b38431362eaed358eade1cadf284a16b32fd07eed68efc9d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-23-challenge.json",
    "bytes": 6362,
-   "sha256": "8a4c51e409e7de9ec09ccd96bafbdf44f6a7c719d220a0ba66745f08465028c6",
+   "sha256": "1a2e09c2efed552464a74a56da418edc8c64818f3769adddc3a213e476ff21f4",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-23-challenge.json.meta.json",
    "bytes": 277,
-   "sha256": "cd30dca6ba45079262058bf8c0ce504d2f8e7d8c7de25e83f86572d16599f866",
+   "sha256": "23f260aa6bbf42d398105ce9b2bc5c26c964da9bec9d7d07c05f13f81f62cc09",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-24-challenge.json",
    "bytes": 6289,
-   "sha256": "51f5995462741ae4173b9ca954c14f3860b6bc35c4312cc0de88caa01cb491f8",
+   "sha256": "b06b66fed6c6e4e2e2c20b1edf5453cf7748dba23f39a630ce6f8d46493261bc",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-24-challenge.json.meta.json",
    "bytes": 268,
-   "sha256": "4b8a9a2f6cec60a00a54793494aff4ae06123fd4417f011a38373a1bd2d35b50",
+   "sha256": "b17d0864a5b54bc23eccf668b90af5e17397615e20a4c7606046117723e98d60",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-25-challenge.json",
    "bytes": 6042,
-   "sha256": "10d603f3cd7f124a2e1ca2f1e4008cb0e96a3dfd90a461a3a79bf317b7f3a03a",
+   "sha256": "df582b1ddea2f032152db03209082f946578eaad3fbe293b54116289cee5e29d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-25-challenge.json.meta.json",
    "bytes": 275,
-   "sha256": "1607b6f683e96232672ab18c45568718f685d09a994870a2d13c5129519d55d3",
+   "sha256": "618db36c28bb221fcefac60661e8fb75f449c980f39005e4b0e100b3f8ad5419",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-26-challenge.json",
    "bytes": 6262,
-   "sha256": "72aae97d1d85291de7c2e703548e62cf8da5c5ff21c9a67bcdd9e51948d699be",
+   "sha256": "4d6964e361740d30559b2c1f982f7d1790fd8f7f43165c9d36f5e1ce6e850415",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-26-challenge.json.meta.json",
    "bytes": 271,
-   "sha256": "ca4c1eb3d14bd40bae442544ef3b5562fb2ac72cd3a2fe610debce34c2e3e16d",
+   "sha256": "2b1015bf3bb7eec0e81db13bfedb1c33ca78ed1b583b36e27ebef2ce066ed8e9",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-27-challenge.json",
    "bytes": 6226,
-   "sha256": "8f6067aa6c10a9d1f3b4871d96e265feeaf7603216b1bf5639a20d8a233cb0b0",
+   "sha256": "8b7174a577f301ac1891dbdb4fb34e07af0ef0615b01f800169000aa0f20e461",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-27-challenge.json.meta.json",
    "bytes": 276,
-   "sha256": "27b13626df26026eefa3107c8edec407ead896aa5e0de0c6d267e640a209539b",
+   "sha256": "70803997ee708f5e3b0276c0e18a7075d02f36ae9fbc238860b5be86d616ec97",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -113572,147 +113614,147 @@
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-28-challenge.json.meta.json",
    "bytes": 276,
-   "sha256": "f7a2862eba056a9076b7315d031460ae8645a5ed8600f0f64fca62c8ad70f967",
+   "sha256": "6e00cb68dda5737b8ac28480686aa009091c58a5caccce7cc42f9ca61f48d94a",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-29-challenge.json",
    "bytes": 6309,
-   "sha256": "5376f741273d3efed2383bd7cf9950e9f79ce87f26e05638e008dea69d249155",
+   "sha256": "a2825e005e5f86ce03d03e4042b7dc0bcca23c709a460b153754a539f2feb8f6",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-29-challenge.json.meta.json",
    "bytes": 303,
-   "sha256": "9e02476f4c1ceb388b4a38af3daa5d65aad878676c483ac99fdcb4274331cb62",
+   "sha256": "9a9c84fd8cd3fc5feef5eb952743a8ec4a4923bffe13ced64fd97106e0c1c828",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-3-challenge.json",
    "bytes": 4715,
-   "sha256": "a1e7c9488ccaeebe4372aa4ff94290014918abd120c3de77d9742e39b6a9c05a",
+   "sha256": "60a8dfc4388397f05bfc95b0f47dbc8e40ad9f0fa3f76b87dcfd42f0632195ee",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-3-challenge.json.meta.json",
    "bytes": 273,
-   "sha256": "9844922dfacc56130ae0ad09301e27550469829161af1d180119b890756e03f3",
+   "sha256": "135d8199562fdb5aa94efcd8a4c0cbeaeaa3d1f2e91eddb030312396235bbbde",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-30-challenge.json",
    "bytes": 6203,
-   "sha256": "e03d5a39eee6c132ad88f684ed2844f0b242c44b10d4f70e019316018322c40d",
+   "sha256": "39f504849334132fa30f9552d5b03f9564555030b23bb4fe9ddc33bd8cd84c57",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-30-challenge.json.meta.json",
    "bytes": 314,
-   "sha256": "85f7f207da1467720d6e5ed18efde82b5426768ca9415bad7ba94b4548912648",
+   "sha256": "63a9aa54cb5a8d6e0ae4d034107c1f0a9478e48499e19816fc937b84cc6ad2a3",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-31-challenge.json",
    "bytes": 6448,
-   "sha256": "9c0c43b622494bba9433c246c2298c0e36606947a388ee9b3a9cc0f798482cc1",
+   "sha256": "8ad58e88a8929ff6235b141fa1f07e3d3827124012f7f736125cd6c22cac93e9",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-31-challenge.json.meta.json",
    "bytes": 298,
-   "sha256": "d78ef56128c3950a6ced486189a2236b1274269aae9a3bc4a465d24f7b51f15a",
+   "sha256": "05b6d918b5df13d897d02431127307d0a863fd47c3ed29833bbd3b74c49d1335",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-4-challenge.json",
    "bytes": 4838,
-   "sha256": "013a2dfbe7e0352ccfaa84a00b2b0be76299ee373b80f2acc284da241bf03fbb",
+   "sha256": "1aeb5e40a5f4404e4cd25c2eb990fa58bc22cb0e7407470ff61b0b30cee08c8d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-4-challenge.json.meta.json",
    "bytes": 278,
-   "sha256": "dfdc67348c67c362017ee9e374cefab793f410feed41a1221e083c36d99de525",
+   "sha256": "14e2ec9cba155f30b3b673ddb7af88973992fbc9ec91c1375ff7905670ca3426",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-5-challenge.json",
    "bytes": 7704,
-   "sha256": "dd1a0bb99ad4195001693c5cc72a53a04310ab839e2c838eb48e9fcbb8460200",
+   "sha256": "e248c0cff8309234764087afba99f969417560af89dff1f05572dde34206646e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-5-challenge.json.meta.json",
    "bytes": 307,
-   "sha256": "d11e662c50d6814656ac10463d6569109c069dd66806ff8d654f248992b9f9f1",
+   "sha256": "098e786f0ec062e1487b9e8104b4aecffb9a486c5756e0a95e464cd877177b15",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-6-challenge.json",
    "bytes": 12130,
-   "sha256": "4c884da7c2a5caa029b7be7ef9564e047b0e00fdf5fe5cf43c0d487e0f482c68",
+   "sha256": "531eb538203b7df13808ca90347ee7acaa361d8aa073019019e75dd7f0c70326",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-6-challenge.json.meta.json",
    "bytes": 307,
-   "sha256": "5036b25f0147a53e0eb2ea9ea452c17a1084a645c21df2121cefd19725f0c2d6",
+   "sha256": "4e08cbda27cdfb6bcdda14721b8ad99232c6489d113a32259d560c6248a7cd30",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-7-challenge.json",
    "bytes": 8772,
-   "sha256": "f078a8cee6932b5a3ae74c22af0f7e9a57f3683093cb2359fadbfd1c852a528b",
+   "sha256": "8d0b48d504a4ccad73bf26b419a72829dc2ab99f51ce500e8de2f7035c13b7b6",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-7-challenge.json.meta.json",
    "bytes": 283,
-   "sha256": "fe5d2a04072dadfee74df5349852d0f8285dd7712a19ad82799be5be8f44796a",
+   "sha256": "3fb793e540d052a7f5368190a2c25addf8b21c9614a7b8fd5abb6d4c8d9b453d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-8-challenge.json",
    "bytes": 5414,
-   "sha256": "f9a0b0f6c6780864a6ec3fc7c8c406995dbaa0e0f5beb371c42196caf6378db9",
+   "sha256": "8ea5f2c650be709d19e22b92af3fc48ca3fb8e7cf598b5913264fe242b55ecb9",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-8-challenge.json.meta.json",
    "bytes": 274,
-   "sha256": "4f79da95cbbc7f8b0bcb6812bc3a46ab832081d424fd492f4ef9375aebcd5ee3",
+   "sha256": "b48f4b42dd10c0d8b7d2eb124538715a89f27d3a5093c2c83647155a53ff0b9f",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-9-challenge.json",
    "bytes": 5544,
-   "sha256": "ed2223ed5fabd2a352dacb6e3783c3a40a36a3fca84e0ca42623cec6637d3722",
+   "sha256": "cb031ef4c314df1ec3fdaad491ceb5d27652a51e4924c19e09c42b66f77febc7",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-9-challenge.json.meta.json",
    "bytes": 284,
-   "sha256": "d5ea5a15ec02f91d9592949710954fb5f9228aef7a82e2cee546c0581cd1fce6",
+   "sha256": "eb5869f6730503b18976482ea839a0ddfeb801ccbfdea0850392e26373a4c9c9",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -113726,14 +113768,14 @@
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/well-known-x402.json.meta.json",
    "bytes": 274,
-   "sha256": "490239e6322998723facaeca5cd91083810f1d3326aadd0f3c3ab54a14d07535",
+   "sha256": "5b1b279f6073649db80e653f7cad107e53daadb384b72f57881652da2b3f8c55",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/report.json",
-   "bytes": 19932,
-   "sha256": "b93747bd33e4fd49a27eaae6726a9515a1d1e49ca1e785d281e7945526d1a4a6",
+   "bytes": 20211,
+   "sha256": "80e5801554155cd2f3f2121e9ac9af2bcad3b3bdb0f59b2d8dace59354bd486b",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -114109,6 +114151,48 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/x402-trust/20261109T070038Z.json",
+   "bytes": 1586,
+   "sha256": "accabf1529dbdb6d181993b55d3cee5ef5dc1f9f60056457ffef2e0154da63c9",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/x402-trust/20261109T223748Z.json",
+   "bytes": 1585,
+   "sha256": "81a58f2558857e2c98552550f2eae536fa8c853f1a83c2b8d16ec66633ab4f48",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/x402-trust/20261110T073806Z.json",
+   "bytes": 1586,
+   "sha256": "bb3cfb5790e680acba77e9b3fb93655f84bf0dc6d22db1b1c1dc57ce39ee7958",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/x402-trust/20261110T195510Z.json",
+   "bytes": 1584,
+   "sha256": "c731a15d543d84be06d3c244b79747df0f3a439acdf81d9d97164779308e3bd7",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/x402-trust/20261111T065630Z.json",
+   "bytes": 1584,
+   "sha256": "4636b6f2ebc65058d13341703f6e5c8a1f0ea07d8cd7bd7719996750bac54402",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/x402-trust/20261111T194749Z.json",
+   "bytes": 1584,
+   "sha256": "b74027679e280a23872e9c6fbd261e3daf1c78edc9752f5c2862e87ce396ce1f",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/x402-trust/index.html",
    "bytes": 1940,
    "sha256": "3a025483c48fcb19b7d57ce87378d0f5234af085789ed8ecbf8b7756d681a1cd",
@@ -114118,7 +114202,7 @@
   {
    "path": "/interop/x402-trust/latest.json",
    "bytes": 1584,
-   "sha256": "3d60701397a04e76b11802ad4205f3a178c3fea9192a6cd52a48bda79bd693aa",
+   "sha256": "b74027679e280a23872e9c6fbd261e3daf1c78edc9752f5c2862e87ce396ce1f",
    "served": "pages",
    "served_bytes": "as-published"
   },
