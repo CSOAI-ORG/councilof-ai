@@ -189,6 +189,7 @@ export function validateRow(row, groupIds = null) {
     if (!/\d{4}-\d{2}-\d{2}/.test(row.evidence)) p.push("private evidence must carry a date");
   }
   if (row.check && typeof row.check.url === "string" && !/^https:\/\//.test(row.check.url)) p.push("check.url must be https://");
+  if (row.check?.mode && !["paged", "openaire_empty"].includes(row.check.mode)) p.push("check.mode must be paged or openaire_empty");
   if ((row.question && !row.answer) || (row.answer && !row.question)) p.push("question and answer travel together");
   return p;
 }
@@ -237,6 +238,23 @@ export function expectedNames(row) {
 export function namesUs(body, names) {
   const hay = String(body ?? "").toLowerCase();
   return names.some((n) => hay.includes(String(n).toLowerCase()));
+}
+
+/** OpenAIRE Graph API can return HTTP 200 for a DOI query with no indexed record. */
+export function evaluateOpenAireEmpty(res) {
+  if (!res || typeof res.status !== "number") return { ok: false, reason: "no response" };
+  if (res.status !== 200) return { ok: false, reason: `HTTP ${res.status}` };
+  try {
+    const payload = JSON.parse(res.body);
+    const count = payload?.header?.numFound;
+    const results = payload?.results;
+    if (count === 0 && Array.isArray(results) && results.length === 0) {
+      return { ok: true, reason: "OpenAIRE Graph API confirms zero indexed records for this DOI" };
+    }
+    return { ok: false, reason: `OpenAIRE record state changed: numFound=${String(count)}, results=${Array.isArray(results) ? results.length : "invalid"}; owner re-verification required` };
+  } catch {
+    return { ok: false, reason: "OpenAIRE Graph API response is not valid JSON" };
+  }
 }
 
 /** One fetched response against one row: ok, or the reason it is not. */
@@ -296,6 +314,11 @@ async function checkPaged(row, fetcher) {
 
 export async function checkRow(row, fetcher = defaultFetcher) {
   if (row.evidence_kind !== "public_url") return { id: row.id, ok: true, skipped: true, reason: `${row.evidence_kind}: not fetchable`, url: null };
+  if (row.check?.mode === "openaire_empty") {
+    const url = row.check.url ?? row.evidence;
+    const result = evaluateOpenAireEmpty(await fetcher(url));
+    return { id: row.id, ok: result.ok, reason: result.reason, url };
+  }
   if (row.check?.mode === "paged") {
     const r = await checkPaged(row, fetcher);
     return { id: row.id, ok: r.ok, reason: r.reason, url: r.url };
