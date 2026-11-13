@@ -45,8 +45,26 @@ import { resolve, dirname } from "node:path";
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const CAPTURE = "distribution/npm/npm-publish-check.json";
 const GUIDES = ["llms-install.md", "public/llms-install.md"];
+const SUBMISSION = "docs/operations/submissions/mcp-so-submission.md";
 const START = "<!-- mcp-npm-facts:start -->";
 const END = "<!-- mcp-npm-facts:end -->";
+
+export function applySubmission(text, capture) {
+  const pub = capture.published;
+  return text
+    .replace(
+      /^- \*\*npm package:\*\* csoai-gspc-mcp \(v[^)]+\)$/m,
+      `- **npm package:** csoai-gspc-mcp (v${pub.version})`,
+    )
+    .replace(
+      /^- \*\*stdio:\*\* npx -y csoai-gspc-mcp@[^\s]+$/m,
+      `- **stdio:** npx -y csoai-gspc-mcp@${pub.version}`,
+    )
+    .replace(
+      /checked \*\*[^*]+\*\*, records published `[^`]+` \(published [^)]+\)/,
+      `checked **${capture.checked_at}**, records published \`${pub.version}\` (published ${pub.published_at})`,
+    );
+}
 
 /** The capture's date, as the day the tarball was measured. Never typed. */
 const measuredDay = (iso) => String(iso).slice(0, 10);
@@ -219,6 +237,15 @@ function main(argv) {
     if (block.includes("is the contract") && !block.includes("Do not install or advertise")) {
       throw new Error("selftest: the block advertises a published release as the contract");
     }
+    // 5. the staged mcp.so submission pin is updated deterministically
+    const subSample = read(SUBMISSION);
+    const bumpedCapture = JSON.parse(JSON.stringify(capture));
+    bumpedCapture.published.version = "9.9.9";
+    bumpedCapture.checked_at = "2099-01-01T00:00:00.000Z";
+    const bumpedSub = applySubmission(subSample, bumpedCapture);
+    if (!bumpedSub.includes("csoai-gspc-mcp (v9.9.9)") || !bumpedSub.includes("npx -y csoai-gspc-mcp@9.9.9") || !bumpedSub.includes("2099-01-01T00:00:00.000Z")) {
+      throw new Error("selftest: applySubmission failed to update mcp-so-submission.md pins");
+    }
     console.log("✓ npm-guide-facts selftest: drift is detected, parity is conditional, the contract is never advertised");
     return 0;
   }
@@ -250,6 +277,20 @@ function main(argv) {
       console.error(`      committed: ${digest(text)}`);
       console.error(`      derived : ${digest(current)}`);
       console.error(`      run: node scripts/harness-x/npm-guide-facts.mjs --write`);
+    }
+  }
+
+  const subText = read(SUBMISSION);
+  const nextSub = applySubmission(subText, capture);
+  if (nextSub === subText) {
+    console.log(`  ✓ ${SUBMISSION}: the npm facts match the capture (${capture.checked_at})`);
+  } else {
+    drifted = 1;
+    if (mode === "--write") {
+      writeFileSync(resolve(REPO, SUBMISSION), nextSub);
+      console.log(`  ↻ ${SUBMISSION}: rewritten from the capture (${capture.checked_at})`);
+    } else {
+      console.error(`  ✖ ${SUBMISSION}: the npm facts have DRIFTED from the capture (${capture.checked_at})`);
     }
   }
 
