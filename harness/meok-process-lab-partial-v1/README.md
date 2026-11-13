@@ -15,3 +15,10 @@ The generated internal episode file contains privileged simulator features solel
 ## Important boundary
 
 All episodes are synthetic procurement-rehearsal output. This is not a physical world model, a general-purpose MEOK agent, a Cosmos fine-tune, an action-authorising model, or a GSPC score. The exact simulator remains authoritative.
+## Published Hugging Face artifacts
+
+- Interactive browser demo: https://csoai-meok-oowm-hybrid-lab.static.hf.space/partial-observation-v1/index.html
+- Model and portable inference: https://huggingface.co/csoai/meok-process-world-partial-v1
+- Fresh train/validation/test dataset: https://huggingface.co/datasets/csoai/meok-process-world-partial-transitions-v1
+
+The public browser demo was tested anonymously: weights loaded, a held-out test row loaded, prediction ran locally, and raw/constrained/target outputs rendered. It explicitly labels predictions as unobserved and authority as none.
