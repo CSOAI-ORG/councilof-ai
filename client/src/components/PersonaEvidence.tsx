@@ -20,6 +20,7 @@
  * because a reader who mistakes one for the other has been misled by us.
  */
 import { useGspcBoard, countLine, type GspcAxis } from "./board/useGspcBoard";
+import { axisHref } from "@/lib/axisHref";
 
 /** Read-only view of the fields this strip renders. All optional — see the header note. */
 type Row = {
@@ -55,7 +56,7 @@ function AxisRow({ row }: { row: Row }) {
     <li className="rounded-2xl border border-gray-200 p-5">
       <div className="flex flex-wrap items-center gap-2">
         <a
-          href={`/gspc/${row.slug}`}
+          href={axisHref({ axis: row.slug, kind: a?.kind }) ?? undefined}
           className="font-mono text-sm font-bold text-emerald-700 underline decoration-emerald-300 underline-offset-2 hover:text-emerald-900"
         >
           {row.slug}
@@ -127,7 +128,7 @@ function AxisRow({ row }: { row: Row }) {
         <p className="mt-3 text-sm text-gray-500">
           The board did not answer on this render, so no figure is shown for this axis here.
           Read the row itself at{" "}
-          <a className="text-emerald-700 underline" href={`/gspc/${row.slug}`}>
+          <a className="text-emerald-700 underline" href={axisHref({ axis: row.slug, kind: a?.kind }) ?? undefined}>
             /gspc/{row.slug}
           </a>
           .

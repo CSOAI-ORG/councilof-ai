@@ -1,0 +1,33 @@
+{
+  "evidence_kind": "LIVE_PUBLIC_PROJECTION_CAPTURE_REFORMATTED",
+  "capture_date_utc": "2026-11-07",
+  "capture_time_precision": "day",
+  "url": "https://councilof.ai/api/claims/reactions",
+  "original_response_source_verification": "VERIFIES",
+  "verification_boundary": "An upstream API assertion, not independent feed or signed-head authentication by this scheduler. Capture reformatted as JSON; it is not original HTTP bytes.",
+  "input_source": "https://github.com/CSOAI-ORG/councilof-ai",
+  "files": [
+    {
+      "path": "functions/_lib/claimReactions.ts",
+      "git_blob": "ea97193d1ce93db59a3f68216e79be30a062e07d"
+    },
+    {
+      "path": "public/claims/events/v0.1/events.jsonl",
+      "git_blob": "e0938fcfe02e64a35268d30d60e87230fb2cbb09"
+    },
+    {
+      "path": "public/claims/events/v0.1/head.json",
+      "git_blob": "2271a8c6a47e9a5cdda52b0d87f24aa20e77f796"
+    }
+  ],
+  "source_projection_counts": {
+    "n_events": 9,
+    "by_state": {
+      "NO_CHANGE": 7,
+      "BASELINE_ONLY": 1,
+      "DELIVERY_RECEIPT": 1
+    },
+    "n_counter_reaction_required": 0
+  },
+  "policy_boundary": "example-policy.json is illustrative caller metadata, not observed costs, successful checks, coverage, impact or a production policy. All last_success_at fields are unknown. retained-head.json is not authenticated by the scheduler."
+}

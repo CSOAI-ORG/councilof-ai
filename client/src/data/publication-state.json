@@ -1,13 +1,12 @@
 {
   "schema": "csoai.publication-state/0.1",
-  "reviewed": "2026-11-02",
+  "reviewed": "2026-11-11",
   "purpose": "The reviewed publication manifest behind every recommendation picker. A route listed here renders the withdrawal notice (ContentReviewNotice) and must never be promoted as ready reading. The list is bound to client/src/App.tsx by scripts/content-promise-gate.mjs: every <Route … component={ContentReviewNotice}> must appear here, and nothing may appear here that App.tsx does not withdraw.",
   "withdrawal_notice_component": "ContentReviewNotice",
   "withdrawal_record": "/blog",
   "withdrawn_routes": [
     "/home-v2",
     "/feed",
-    "/signup",
     "/welcome",
     "/system-card",
     "/assurance",
@@ -56,6 +55,7 @@
     "/training-hub",
     "/training",
     "/courses",
+    "/courses/:id",
     "/my-courses",
     "/dashboard/progress",
     "/courses/:id/learn",
@@ -88,5 +88,5 @@
     "/charter/article/:id",
     "/system"
   ],
-  "review_note": "2026-11-02: /docs un-withdrawn — the tombstone was replaced by DocsHub.tsx (a links-only hub over live surfaces) in the same change that removed the ContentReviewNotice route."
+  "review_note": "2026-11-02: /docs un-withdrawn — the tombstone was replaced by DocsHub.tsx (a links-only hub over live surfaces) in the same change that removed the ContentReviewNotice route. 2026-11-08: /signup replaced by a minimal ordinary account form using the existing verified Council session controller, under the scoped end-user improvement review. This publishes no plans, credits, private Company workspace access or provisioning grant. 2026-11-11: /courses/:id now shares the existing course withdrawal state; the legacy detail route previously called the unavailable enrollment backend while its catalog and player were held. Current Academy tracks and reproducibility exercises remain available separately; legacy enrollment and issuance remain closed."
 }

@@ -20,6 +20,7 @@ import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcB
 import { boardRunDates } from "@/lib/boardRunDates";
 import ModelCountKey from "@/components/ModelCountKey";
 import { isOwnerGated } from "@/lib/ownerGated";
+import { axisHref } from "@/lib/axisHref";
 
 export interface SeparationRead {
   comparison: number;
@@ -48,6 +49,13 @@ export interface Tile {
   group: "comparison" | "facts";
   state: TileState;
   n: number | null;
+  /**
+   * The board's own measurement kind for this axis. Carried so the link can be
+   * derived from the payload: `group` says only "not a model comparison", which
+   * cannot tell a deterministic fact (own page at /axis/<slug>/) from a measured
+   * subject axis (also /axis/<slug>/) from a model comparison (/gspc/<slug>/).
+   */
+  kind?: string;
 }
 
 /** One tile per published axis, in the board's own order. The state is read, never inferred upward. */
@@ -70,6 +78,7 @@ export function boardTiles(data: GspcPayload | null): Tile[] {
         group: comparison ? "comparison" : "facts",
         state,
         n: measured && typeof a.n === "number" && Number.isFinite(a.n) ? a.n : null,
+        kind: typeof a.kind === "string" ? a.kind : undefined,
       };
     });
 }
@@ -147,7 +156,7 @@ function TileItem({ t }: { t: Tile }) {
             the reader back into the whole board and makes them find the row again.
             The axis name now links straight to that axis, keeping the axis with it. */}
         <a
-          href={`/gspc/${encodeURIComponent(t.axis)}/`}
+          href={axisHref({ axis: t.axis, kind: t.kind }) ?? undefined}
           className="block truncate text-[13px] font-bold leading-tight text-foreground underline-offset-2 hover:underline"
           title={t.axis}
           data-axis-link={t.axis}

@@ -11,7 +11,7 @@
  *
  * Verifies:
  *   - All 9 moat files exist in the repository tree.
- *   - MEOK H.I.M. enforces the 4-gate human review contract (/dashboard?tab=staff, evidence-delivery, axis-specialists, research) and non-autonomy disclaimer.
+ *   - MEOK H.I.M. preserves the 4-gate review links and discloses the limits of decision recording, human identity, authorization and executed effects.
  *   - Agent Plugin endpoint derives counts from public/agent-plugin/platform-matrix.json and carries no price on the public surface.
  *   - Evidence Bundle enforces the 5 Hard Honesty Rules (REUSE, RELEVANT-TO, DETERMINISTIC, COUNSEL GATE, EMPTY IS EMPTY).
  *   - x402 Discovery & Listing separate free verification (/api/gspc, /verify) from metered assembly rails.
@@ -66,16 +66,23 @@ export function verifyMoatSurfaces({ repoRoot = REPO_ROOT } = {}) {
     detail: `present=${MOAT_FILES.length - missingFiles.length}/${MOAT_FILES.length}`,
   });
 
-  // 2. MEOK H.I.M. 4-gate human review contract & non-autonomy rules
+  // 2. Source-copy contract only: this does not authenticate a human or prove an effect.
   const himText = contents["client/src/pages/Him.tsx"] || "";
+  const himCopy = himText.replace(/\s+/g, " ");
   const missingHimLinks = HIM_REQUIRED_LINKS.filter((l) => !himText.includes(l));
-  const himNonAutonomous =
-    himText.includes("AI proposes. A named human decides.") &&
-    himText.includes("Not autonomous");
+  const himReviewRecording = himCopy.includes("AI proposes. Review and record the decision.");
+  const himNonAutonomous = himCopy.includes("Not autonomous");
+  const himRecordingBoundary = himCopy.includes("the operator token controls access to decision recording");
+  const himIdentityBoundary = himCopy.includes(
+    "Recording a decision does not establish the person's identity or authorize the proposed action."
+  );
+  const himExecutionBoundary = himCopy.includes(
+    "Not an execution grant: a recorded review is separate from the acting system's authorization checks and any observed effect."
+  );
   checks.push({
     id: "2_him_human_in_the_loop_contract",
-    status: missingHimLinks.length === 0 && himNonAutonomous ? "PASS" : "FAIL",
-    detail: `gates=${HIM_REQUIRED_LINKS.length - missingHimLinks.length}/${HIM_REQUIRED_LINKS.length}, non_autonomous=${himNonAutonomous}`,
+    status: missingHimLinks.length === 0 && himReviewRecording && himNonAutonomous && himRecordingBoundary && himIdentityBoundary && himExecutionBoundary ? "PASS" : "FAIL",
+    detail: `gates=${HIM_REQUIRED_LINKS.length - missingHimLinks.length}/${HIM_REQUIRED_LINKS.length}, review_recording=${himReviewRecording}, non_autonomous=${himNonAutonomous}, recording_boundary=${himRecordingBoundary}, identity_authority_boundary=${himIdentityBoundary}, execution_effect_boundary=${himExecutionBoundary}`,
   });
 
   // 3. Agent Plugin Hub free-forever & derived-count contract
@@ -135,3 +142,4 @@ function main() {
 if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
+

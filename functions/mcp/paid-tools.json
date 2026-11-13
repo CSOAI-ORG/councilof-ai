@@ -6,76 +6,535 @@
     {
       "name": "commission_card",
       "title": "Commission a measurement card (paid, x402)",
-      "annotations": {"title": "Commission a measurement card (paid, x402)", "readOnlyHint": false, "destructiveHint": false, "idempotentHint": false, "openWorldHint": true},
-      "outputSchema": {"type": "object", "description": "The wrapper's status fields. On PAYMENT_REQUIRED (isError:true) the route's x402 PaymentRequired object (x402Version, resource, accepts, extensions) is spread at the top level too, per the x402 MCP transport.", "properties": {"status": {"type": "string", "description": "PAYMENT_REQUIRED, DELIVERED, NOT_DEPLOYED, UNREACHABLE, UNREADABLE_RESPONSE, BAD_ARGUMENTS or HTTP_<code>"}, "tool": {"type": "string"}, "route": {"type": "string"}, "http_status": {"type": "integer"}, "payment_presented": {"type": "boolean"}, "delivery_state": {"type": "string"}, "settlement_state": {"type": "string"}, "x402Version": {"type": "integer"}, "accepts": {"type": "array"}, "resource": {"type": "object"}, "deliverable": {}, "not_a_certification": {"type": "boolean"}}, "required": ["status"]},
+      "annotations": {
+        "title": "Commission a measurement card (paid, x402)",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "The wrapper's status fields. On PAYMENT_REQUIRED (isError:true) the route's x402 PaymentRequired object (x402Version, resource, accepts, extensions) is spread at the top level too, per the x402 MCP transport.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "PAYMENT_REQUIRED, DELIVERED, NOT_DEPLOYED, UNREACHABLE, UNREADABLE_RESPONSE, BAD_ARGUMENTS or HTTP_<code>"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "route": {
+            "type": "string"
+          },
+          "http_status": {
+            "type": "integer"
+          },
+          "payment_presented": {
+            "type": "boolean"
+          },
+          "delivery_state": {
+            "type": "string"
+          },
+          "settlement_state": {
+            "type": "string"
+          },
+          "x402Version": {
+            "type": "integer"
+          },
+          "accepts": {
+            "type": "array"
+          },
+          "resource": {
+            "type": "object"
+          },
+          "deliverable": {},
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
       "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "subject": { "type": "string", "description": "Subject to commission: a model id, instrument id or card sha (1-120 chars of [A-Za-z0-9._:/@+-])." },
-          "axis": { "type": "string", "description": "Optional axis slug; omit for the subject-level commission." },
-          "x_payment": { "type": "string", "description": "The X-PAYMENT header value (base64 x402 payload) signed by your wallet against accepts[] from the previous 402. Omit to receive the challenge." }
+          "subject": {
+            "type": "string",
+            "description": "Subject to commission: a model id, instrument id or card sha (1-120 chars of [A-Za-z0-9._:/@+-])."
+          },
+          "axis": {
+            "type": "string",
+            "description": "Optional axis slug; omit for the subject-level commission."
+          },
+          "x_payment": {
+            "type": "string",
+            "description": "The X-PAYMENT header value (base64 x402 payload) signed by your wallet against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
+          }
         },
-        "required": ["subject"],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "subject"
+            ]
+          },
+          {
+            "required": [
+              "purchase_action"
+            ]
+          }
+        ]
       },
-      "csoai": { "paid": true, "rail": "x402", "route": "/api/request-attestation", "sku": "request_attestation", "sells": "issuance", "free_preview": "the 402 body (csoai.preview)", "deliverable": "one card-v0 leaf, surface ras.commission, Ed25519 when the Pages key is present" }
+      "csoai": {
+        "paid": true,
+        "rail": "x402",
+        "route": "/api/request-attestation",
+        "sku": "request_attestation",
+        "sells": "issuance",
+        "free_preview": "the 402 body (csoai.preview)",
+        "deliverable": "one card-v0 leaf, surface ras.commission, Ed25519 when the Pages key is present"
+      }
     },
     {
       "name": "art50_marking_evidence",
       "title": "Article 50 marking evidence (paid, x402; preview free)",
-      "annotations": {"title": "Article 50 marking evidence (paid, x402; preview free)", "readOnlyHint": false, "destructiveHint": false, "idempotentHint": false, "openWorldHint": true},
-      "outputSchema": {"type": "object", "description": "The wrapper's status fields. On PAYMENT_REQUIRED (isError:true) the route's x402 PaymentRequired object (x402Version, resource, accepts, extensions) is spread at the top level too, per the x402 MCP transport.", "properties": {"status": {"type": "string", "description": "PAYMENT_REQUIRED, DELIVERED, NOT_DEPLOYED, UNREACHABLE, UNREADABLE_RESPONSE, BAD_ARGUMENTS or HTTP_<code>"}, "tool": {"type": "string"}, "route": {"type": "string"}, "http_status": {"type": "integer"}, "payment_presented": {"type": "boolean"}, "delivery_state": {"type": "string"}, "settlement_state": {"type": "string"}, "x402Version": {"type": "integer"}, "accepts": {"type": "array"}, "resource": {"type": "object"}, "deliverable": {}, "not_a_certification": {"type": "boolean"}}, "required": ["status"]},
+      "annotations": {
+        "title": "Article 50 marking evidence (paid, x402; preview free)",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "The wrapper's status fields. On PAYMENT_REQUIRED (isError:true) the route's x402 PaymentRequired object (x402Version, resource, accepts, extensions) is spread at the top level too, per the x402 MCP transport.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "PAYMENT_REQUIRED, DELIVERED, NOT_DEPLOYED, UNREACHABLE, UNREADABLE_RESPONSE, BAD_ARGUMENTS or HTTP_<code>"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "route": {
+            "type": "string"
+          },
+          "http_status": {
+            "type": "integer"
+          },
+          "payment_presented": {
+            "type": "boolean"
+          },
+          "delivery_state": {
+            "type": "string"
+          },
+          "settlement_state": {
+            "type": "string"
+          },
+          "x402Version": {
+            "type": "integer"
+          },
+          "accepts": {
+            "type": "array"
+          },
+          "resource": {
+            "type": "object"
+          },
+          "deliverable": {},
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
       "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: which machine-readable marks the named methods DETECT in these bytes right now. Scope: C2PA and IPTC metadata only (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark, fingerprint or other kind of mark is read. NOT_DETECTED is not unmarked: Article 50(2) is technology-neutral, so a mark this pack cannot read may be present, and metadata is often stripped on re-save. Disclosure: CSOAI is a member of the C2PA, whose specification is one of the two methods read. The pack carries the verbatim Art 50(2) text hash and the dates it turns on. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Public HTTP(S) URL of the generative output to measure (≤20 MiB). The server fetches only this declared measurement subject." },
-          "bytes_b64": { "type": "string", "description": "Alternatively the output bytes, base64 (≤20 MiB decoded)." },
-          "manifest_b64": { "type": "string", "description": "Alternatively a detached C2PA manifest store, base64 (manifest-only mode)." },
-          "preview": { "type": "boolean", "description": "true = free unsigned measurement (no card sha, no signature)." },
-          "x_payment": { "type": "string", "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge." }
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://",
+            "maxLength": 2048,
+            "description": "Public HTTP(S) URL of the generative output to measure (≤20 MiB). The server fetches only this declared measurement subject."
+          },
+          "bytes_b64": {
+            "type": "string",
+            "description": "Alternatively the output bytes, base64 (≤20 MiB decoded)."
+          },
+          "manifest_b64": {
+            "type": "string",
+            "description": "Alternatively a detached C2PA manifest store, base64 (manifest-only mode)."
+          },
+          "preview": {
+            "type": "boolean",
+            "description": "true = free unsigned measurement (no card sha, no signature)."
+          },
+          "x_payment": {
+            "type": "string",
+            "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
+          }
         },
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/art50/marking-evidence", "sku": "art50_marking_evidence", "sells": "issuance", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
+      "csoai": {
+        "paid": true,
+        "rail": "x402-or-invoice",
+        "route": "/api/art50/marking-evidence",
+        "sku": "art50_marking_evidence",
+        "sells": "issuance",
+        "free_preview": "preview=true",
+        "deliverable": "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1",
+        "deployed_by": "live on councilof.ai (verified 2026-09-03)"
+      }
     },
     {
       "name": "rwa_evidence",
       "title": "RWA asset evidence (paid, x402; preview free)",
-      "annotations": {"title": "RWA asset evidence (paid, x402; preview free)", "readOnlyHint": false, "destructiveHint": false, "idempotentHint": false, "openWorldHint": true},
-      "outputSchema": {"type": "object", "description": "The wrapper's status fields. On PAYMENT_REQUIRED (isError:true) the route's x402 PaymentRequired object (x402Version, resource, accepts, extensions) is spread at the top level too, per the x402 MCP transport.", "properties": {"status": {"type": "string", "description": "PAYMENT_REQUIRED, DELIVERED, NOT_DEPLOYED, UNREACHABLE, UNREADABLE_RESPONSE, BAD_ARGUMENTS or HTTP_<code>"}, "tool": {"type": "string"}, "route": {"type": "string"}, "http_status": {"type": "integer"}, "payment_presented": {"type": "boolean"}, "delivery_state": {"type": "string"}, "settlement_state": {"type": "string"}, "x402Version": {"type": "integer"}, "accepts": {"type": "array"}, "resource": {"type": "object"}, "deliverable": {}, "not_a_certification": {"type": "boolean"}}, "required": ["status"]},
+      "annotations": {
+        "title": "RWA asset evidence (paid, x402; preview free)",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "The wrapper's status fields. On PAYMENT_REQUIRED (isError:true) the route's x402 PaymentRequired object (x402Version, resource, accepts, extensions) is spread at the top level too, per the x402 MCP transport.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "PAYMENT_REQUIRED, DELIVERED, NOT_DEPLOYED, UNREACHABLE, UNREADABLE_RESPONSE, BAD_ARGUMENTS or HTTP_<code>"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "route": {
+            "type": "string"
+          },
+          "http_status": {
+            "type": "integer"
+          },
+          "payment_presented": {
+            "type": "boolean"
+          },
+          "delivery_state": {
+            "type": "string"
+          },
+          "settlement_state": {
+            "type": "string"
+          },
+          "x402Version": {
+            "type": "integer"
+          },
+          "accepts": {
+            "type": "array"
+          },
+          "resource": {
+            "type": "object"
+          },
+          "deliverable": {},
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
       "description": "PAID (x402). Per-request signed evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE — unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd. preview=true is free (unsigned state). Historical state at fetched_at — not a rating, not a guarantee, not a conformity mark; /api/xrpl and /root.json stay free. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED.",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "asset": { "type": "string", "description": "Symbol (as listed by https://councilof.ai/api/xrpl) or issuer r-address." },
-          "preview": { "type": "boolean", "description": "true = free unsigned state." },
-          "x_payment": { "type": "string", "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge." }
+          "asset": {
+            "type": "string",
+            "description": "Symbol (as listed by https://councilof.ai/api/xrpl) or issuer r-address."
+          },
+          "preview": {
+            "type": "boolean",
+            "description": "true = free unsigned state."
+          },
+          "x_payment": {
+            "type": "string",
+            "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
+          }
         },
-        "required": ["asset"],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "asset"
+            ]
+          },
+          {
+            "required": [
+              "purchase_action"
+            ]
+          }
+        ]
       },
-      "csoai": { "paid": true, "rail": "x402", "route": "/api/rwa/evidence", "sku": "rwa_evidence", "sells": "issuance", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface public.notice, kind csoai.eater.xrpl-issuer/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
+      "csoai": {
+        "paid": true,
+        "rail": "x402",
+        "route": "/api/rwa/evidence",
+        "sku": "rwa_evidence",
+        "sells": "issuance",
+        "free_preview": "preview=true",
+        "deliverable": "one card-v0 leaf, surface public.notice, kind csoai.eater.xrpl-issuer/0.1",
+        "deployed_by": "live on councilof.ai (verified 2026-09-03)"
+      }
     },
     {
       "name": "receipts_batch",
       "title": "Receipts batch (paid, x402; preview free)",
-      "annotations": {"title": "Receipts batch (paid, x402; preview free)", "readOnlyHint": false, "destructiveHint": false, "idempotentHint": false, "openWorldHint": true},
-      "outputSchema": {"type": "object", "description": "The wrapper's status fields. On PAYMENT_REQUIRED (isError:true) the route's x402 PaymentRequired object (x402Version, resource, accepts, extensions) is spread at the top level too, per the x402 MCP transport.", "properties": {"status": {"type": "string", "description": "PAYMENT_REQUIRED, DELIVERED, NOT_DEPLOYED, UNREACHABLE, UNREADABLE_RESPONSE, BAD_ARGUMENTS or HTTP_<code>"}, "tool": {"type": "string"}, "route": {"type": "string"}, "http_status": {"type": "integer"}, "payment_presented": {"type": "boolean"}, "delivery_state": {"type": "string"}, "settlement_state": {"type": "string"}, "x402Version": {"type": "integer"}, "accepts": {"type": "array"}, "resource": {"type": "object"}, "deliverable": {}, "not_a_certification": {"type": "boolean"}}, "required": ["status"]},
+      "annotations": {
+        "title": "Receipts batch (paid, x402; preview free)",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "The wrapper's status fields. On PAYMENT_REQUIRED (isError:true) the route's x402 PaymentRequired object (x402Version, resource, accepts, extensions) is spread at the top level too, per the x402 MCP transport.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "PAYMENT_REQUIRED, DELIVERED, NOT_DEPLOYED, UNREACHABLE, UNREADABLE_RESPONSE, BAD_ARGUMENTS or HTTP_<code>"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "route": {
+            "type": "string"
+          },
+          "http_status": {
+            "type": "integer"
+          },
+          "payment_presented": {
+            "type": "boolean"
+          },
+          "delivery_state": {
+            "type": "string"
+          },
+          "settlement_state": {
+            "type": "string"
+          },
+          "x402Version": {
+            "type": "integer"
+          },
+          "accepts": {
+            "type": "array"
+          },
+          "resource": {
+            "type": "object"
+          },
+          "deliverable": {},
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
       "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one manifest card citing the batch sha256. Manifest signing is conditional: a returned unsigned manifest declares manifest_card.sig_ed25519:null and unsigned_reason, with signature unmeasured. Manifest root inclusion remains unmeasured. If signing throws after settlement, the route returns PAID_NOT_DELIVERED with no batch or manifest delivered; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. This tool returns historical measurement leaves, not payment receipts. /api/receipts/latest reports aggregate receipt-store state when available; its counts do not verify a particular payment, delivery or buyer acceptance. Without x_payment the tool returns the 402 challenge.",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "from": { "type": "string", "description": "Window start, ISO-8601. Required." },
-          "to": { "type": "string", "description": "Window end, ISO-8601. Defaults to now." },
-          "preview": { "type": "boolean", "description": "true = free: count, span, roots and batch sha256 without the leaves." },
-          "x_payment": { "type": "string", "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge." }
+          "from": {
+            "type": "string",
+            "description": "Window start, ISO-8601. Required."
+          },
+          "to": {
+            "type": "string",
+            "description": "Window end, ISO-8601. Defaults to now."
+          },
+          "preview": {
+            "type": "boolean",
+            "description": "true = free: count, span, roots and batch sha256 without the leaves."
+          },
+          "x_payment": {
+            "type": "string",
+            "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
+          }
         },
-        "required": ["from"],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "from"
+            ]
+          },
+          {
+            "required": [
+              "purchase_action"
+            ]
+          }
+        ]
       },
-      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/receipts/batch", "sku": "receipts_batch", "sells": "assembly", "free_preview": "preview=true", "deliverable": "on delivery, csoai.receipts.batch/0.1 + one manifest card-v0 (surface receipts.batch); a returned unsigned manifest declares manifest_card.sig_ed25519:null and unsigned_reason, with signature unmeasured; manifest root inclusion remains unmeasured; a thrown signing failure returns PAID_NOT_DELIVERED without a delivered batch or manifest; reconcile the settlement before reissue and do not automatically retry or pay again" }
+      "csoai": {
+        "paid": true,
+        "rail": "x402-or-invoice",
+        "route": "/api/receipts/batch",
+        "sku": "receipts_batch",
+        "sells": "assembly",
+        "free_preview": "preview=true",
+        "deliverable": "on delivery, csoai.receipts.batch/0.1 + one manifest card-v0 (surface receipts.batch); a returned unsigned manifest declares manifest_card.sig_ed25519:null and unsigned_reason, with signature unmeasured; manifest root inclusion remains unmeasured; a thrown signing failure returns PAID_NOT_DELIVERED without a delivered batch or manifest; reconcile the settlement before reissue and do not automatically retry or pay again"
+      }
     },
     {
       "name": "evidence_bundle",
@@ -157,12 +616,58 @@
           "x_payment": {
             "type": "string",
             "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
           }
         },
-        "required": [
-          "obligation"
-        ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "obligation"
+            ]
+          },
+          {
+            "required": [
+              "purchase_action"
+            ]
+          }
+        ]
       },
       "csoai": {
         "paid": true,

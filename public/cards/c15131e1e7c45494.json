@@ -1,0 +1,88 @@
+{
+  "card": {
+    "as_of": "2026-11-07T10:36:22Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "286",
+      "symbol": "USDG",
+      "attestation_page": "https://paxos.com/usdg-transparency/",
+      "auditor": "KPMG",
+      "cadence_claimed": null,
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "566e2a5abcd62701612ee7f71b1545a73504b171a41ac7a8b2e14e13abc9d55d",
+      "excerpt": "rough verification Attestation reports posted on or after February 27, 2026 are issued by KPMG LLP, an independent third-party accounting firm. KPMG LLP’s exami",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "cadence_claimed",
+        "staleness"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c15131e1e7c4549402107acf732a647019c96f5042d1a52197d92864bc3dd593",
+    "sig_ed25519": "ca92c539e739538995ee8c3eae9c1d4008195741da5950cdc0db7298e9147a25f6d250a2e637fa0a7c9c50e5d74ed8df483d98ad079bce3801e009f552108f07",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://paxos.com/usdg-transparency/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDG",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "cadence_claimed",
+      "staleness"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "4703a666c333aa9879c2ac45b72b1fd7a979c4bd0288c4dd1710d8e3cb2b8d4d",
+    "22ac24641f9dcb78adcdf5f9c7fe975c70be531d3de119ec8b9669295ddb03d0",
+    "5a9d55a5e90313591813413e6058a5e770682fe465e04078b27cce19e70fcdeb",
+    "812a8a6dd9920ce776f9f85831927603187fe9283734a6ea3b380665671b0d3c",
+    "786f4068356928fccb57275b702359e9f01f09e23f8f003be7c50a9f8ce53e74",
+    "8ea7afe95125650af0ab3b96cc4509d62abac68529a7772aa4b56df2b34ba505",
+    "3bcf10b8f97700497fffc6bfd3f88a47a6b1fa80602f2ec2d524c59a32b08fce",
+    "7e77d1fcb1a770dfaf9c237ef819063da211dd6547b4e29db8a395bd8f5a154b",
+    "cec0ade3e6b95e387d4590c7411922e54d1c7cb7d959942770cbd04c2fa90f66"
+  ]
+}

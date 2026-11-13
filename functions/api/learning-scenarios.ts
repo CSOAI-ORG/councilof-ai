@@ -10,6 +10,7 @@
 // a published measurement is not silently called independent admission or a regulatory determination, and regulation
 // context is not a finding. No write, training, repair, or board-promotion path exists here.
 import { headFromGet } from "./_head";
+import { DAILY_INDEX_PATH, dailyBriefing } from "../../public/evidence-learning/daily-briefing.mjs";
 
 type JsonObject = Record<string, unknown>;
 
@@ -51,17 +52,27 @@ const finite = (value: unknown): value is number =>
 async function fetchObject(
   request: Request,
   path: string,
+  timeoutMs?: number,
 ): Promise<JsonObject | null> {
+  const controller = timeoutMs ? new AbortController() : null;
+  const timer = controller ? setTimeout(() => controller.abort(), timeoutMs) : null;
   try {
     const response = await fetch(new URL(path, request.url), {
       method: "GET",
       headers: { accept: "application/json" },
+      credentials: "omit",
+      // Workers supports manual/follow, not Fetch's error mode. Manual keeps
+      // redirects visible so the non-2xx check below rejects them before parsing.
+      redirect: "manual",
+      ...(controller ? { signal: controller.signal } : {}),
     });
     if (!response.ok) return null;
     const value: unknown = await response.json();
     return isObject(value) ? value : null;
   } catch {
     return null;
+  } finally {
+    if (timer !== null) clearTimeout(timer);
   }
 }
 
@@ -347,6 +358,7 @@ function boardContext(axis: BoardAxis) {
     "carrier",
     "note",
     "public_leader_state",
+    "measurement_time",
   ];
   const measured: JsonObject = {
     classification: "BOARD_MEASUREMENT_CONTEXT",
@@ -387,10 +399,12 @@ function unavailable(errors: string[]) {
 }
 
 export async function onRequestGet({ request }: { request: Request }) {
-  const [board, index, regulation] = await Promise.all([
+  const [board, index, regulation, dailyIndex] = await Promise.all([
     fetchObject(request, "/api/gspc"),
     fetchObject(request, "/signed/findings_index.json"),
     fetchObject(request, "/api/regulation"),
+    // Optional metadata only: no report body, incident text or private source is read.
+    fetchObject(request, DAILY_INDEX_PATH, 2000),
   ]);
 
   const axes = board ? boardAxes(board) : null;
@@ -608,6 +622,7 @@ export async function onRequestGet({ request }: { request: Request }) {
           regulation_deadlines: regulationContext.length,
         },
         regulation_context: regulationContext,
+        daily_briefing: dailyBriefing(dailyIndex),
         scenarios: selected,
       },
       null,
@@ -624,3 +639,4 @@ export const boardAxesForTest = boardAxes;
 // HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls
 // through to a 404. Ratchet: functions/api/_head.coverage.test.ts.
 export const onRequestHead = headFromGet(onRequestGet);
+

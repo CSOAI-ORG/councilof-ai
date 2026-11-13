@@ -21,6 +21,7 @@
 import { Link } from "wouter";
 import { useGspcBoard, pct, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
 import { isOwnerGated } from "@/lib/ownerGated";
+import { axisHref } from "@/lib/axisHref";
 
 /** A finite number, or null — a count that is not carried is never rendered as zero. */
 function finiteNumber(v: unknown): number | null {
@@ -75,24 +76,44 @@ function Row({ a }: { a: GspcAxis }) {
   const hasFigure = a.status === "MEASURED" && typeof a.accuracy === "number" && Number.isFinite(a.accuracy);
   const chip = chipOf(a);
   const n = a.status === "MEASURED" ? finiteNumber(a.n) : null;
+  // The route comes from the board's own payload, never from a list of slugs
+  // typed here: nine measured-subject axes were linked to a /gspc/ route that
+  // is not prerendered, and the homepage sent readers to a 404.
+  const href = axisHref(a);
   return (
     <li
       className="min-w-0 rounded-md border border-[#04624a]/50 bg-white/[0.03] px-2.5 py-2 transition hover:border-[#10b981]/60 hover:bg-white/[0.06] motion-reduce:transition-none"
       data-axis={a.axis}
       data-separation={chip}
     >
-      <Link
-        href={`/gspc/${encodeURIComponent(a.axis)}/`}
-        className="flex items-baseline justify-between gap-2"
-        title={typeof a.bench === "string" && a.bench ? `${a.axis} · ${a.bench}` : a.axis}
-      >
-        <span className="min-w-0 truncate text-[12px] font-semibold leading-tight text-white/90">
-          {a.axis}
+      {href ? (
+        <Link
+          href={href}
+          className="flex items-baseline justify-between gap-2"
+          title={typeof a.bench === "string" && a.bench ? `${a.axis} · ${a.bench}` : a.axis}
+          data-axis-link={a.axis}
+        >
+          <span className="min-w-0 line-clamp-2 text-[11px] font-semibold leading-tight text-white/90">
+            {a.axis}
+          </span>
+          <span className="shrink-0 font-mono text-[12px] font-bold tabular-nums text-[#6ee7b7]">
+            {hasFigure ? pct(a.accuracy as number) : "—"}
+          </span>
+        </Link>
+      ) : (
+        <span
+          className="flex items-baseline justify-between gap-2"
+          title={typeof a.bench === "string" && a.bench ? `${a.axis} · ${a.bench}` : a.axis}
+          data-axis-link={a.axis}
+        >
+          <span className="min-w-0 line-clamp-2 text-[11px] font-semibold leading-tight text-white/90">
+            {a.axis}
+          </span>
+          <span className="shrink-0 font-mono text-[12px] font-bold tabular-nums text-[#6ee7b7]">
+            {hasFigure ? pct(a.accuracy as number) : "—"}
+          </span>
         </span>
-        <span className="shrink-0 font-mono text-[12px] font-bold tabular-nums text-[#6ee7b7]">
-          {hasFigure ? pct(a.accuracy as number) : "—"}
-        </span>
-      </Link>
+      )}
       <span className="mt-1.5 flex items-center justify-between gap-2">
         <span className={`inline-flex rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase leading-none tracking-wide ${CHIP_CLASS[chip]}`}>
           {chip}

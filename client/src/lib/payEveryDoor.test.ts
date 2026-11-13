@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { challengeFromResult } from "@/components/ToolRunner";
 import { buildTypedData, type EIP1193Provider, type X402Challenge } from "./x402Wallet";
 import {
@@ -18,6 +18,8 @@ import {
   explorerTxUrl,
   listingFor,
   payDoor,
+  paidOutputBlob,
+  reportedSuccessfulSettlement,
   quoteDoor,
   relayedFetch,
   remainingDoors,
@@ -93,8 +95,10 @@ function provider(opts: { chain?: string; onSign?: (params: unknown[]) => unknow
 
 const door = (): Door => doorsFromManifest(MANIFEST)[2];
 
+beforeEach(() => { vi.stubGlobal("location", { origin: ORIGIN }); });
 afterEach(() => {
   vi.useRealTimers();
+  vi.unstubAllGlobals();
 });
 
 describe("the door list is the manifest, never a typed list", () => {
@@ -247,7 +251,7 @@ describe("three outcomes and no fourth", () => {
 
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock).toHaveBeenCalledWith(d.url, {
-        method: d.method,
+        method: d.method, redirect: "manual", credentials: "omit",
         headers: { accept: "application/json", "x-payment": "fixture-payment" },
       });
       expect(out.kind).toBe("maybe-settled");
@@ -337,6 +341,7 @@ describe("three outcomes and no fourth", () => {
     if (out.kind === "maybe-settled") {
       expect(out.paymentResponse).toBe("opaque-route-echo");
       expect(out.settlement).toBeNull();
+      expect(reportedSuccessfulSettlement({kind:"delivered",paymentResponse:null,settlement:null})).toBeNull();
       expect(out.body).toEqual(failureBody);
     }
   });
@@ -401,11 +406,12 @@ describe("three outcomes and no fourth", () => {
     if (s.kind === "maybe-settled") expect(s.detail).toMatch(/did not complete \(Failed to fetch\)/);
   });
 
-  it("UNSETTLED when the door answers 402 again, with the facilitator's reason verbatim", async () => {
+  it("HTTP402 after signed dispatch leaves the payment effect unconfirmed", async () => {
     const reason = "facilitator rejected receipt: invalid_exact_evm_insufficient_balance";
     const fetchImpl = vi.fn(async () => jsonResponse(402, { ...PAYMENT_REQUIRED, csoai: { not_paid_reason: reason } })) as unknown as typeof fetch;
     const s = await payDoor({ door: door(), challenge: challengeFromPaymentRequired(PAYMENT_REQUIRED)!, provider: provider(), walletName: "w", fetchImpl });
-    expect(s).toEqual({ kind: "unsettled", reason });
+    expect(s.kind).toBe("maybe-settled");
+    if (s.kind === "maybe-settled") expect(s.detail).toContain(reason);
   });
 
   it("reads the reason from the three places a door may relay it, and says when there is none", () => {
@@ -629,5 +635,335 @@ describe("the Settle-all tally reads the door states and counts each door once",
     expect(walkTally([], {})).toEqual({ queued: 0, delivered: 0, unsettled: 0, maybe_settled: 0, rejected: 0, failed: 0, pending: 0 });
     // a door that may have settled is its own count, never "pending" (pending reads as "still to pay")
     expect(walkTally(["m"], { m: { kind: "maybe-settled", detail: "the paid retry answered HTTP 500", settlement: null, refund: null } }).maybe_settled).toBe(1);
+  });
+});
+
+describe("paid response byte and uncertainty custody", () => {
+  it("preserves observed settlement when the response stream fails", async () => {
+    const receipt={success:true,transaction:"0x"+"ef".repeat(32),network:"eip155:8453",payer:SIGNER};
+    const r=jsonResponse(200,{},{"x-payment-response":btoa(JSON.stringify(receipt))});
+    vi.spyOn(r,"arrayBuffer").mockRejectedValue(new TypeError("stream lost after settle"));
+    const fetchImpl=vi.fn(async()=>r) as unknown as typeof fetch;
+    const state=await payDoor({door:door(),challenge:challengeFromPaymentRequired(PAYMENT_REQUIRED)!,
+      provider:provider(),walletName:"fixture",fetchImpl});
+    expect(state.kind).toBe("maybe-settled");
+    if(state.kind==="maybe-settled") {
+      expect(state.settlement?.transaction).toBe(receipt.transaction);
+      expect(reportedSuccessfulSettlement(state)?.transaction).toBe(receipt.transaction);
+      expect(state.paymentResponse).toBe(btoa(JSON.stringify(receipt)));
+    }
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+  it("keeps exact whitespace and UTF8 bytes for the original download", async () => {
+    const text=' { "text": "é", "count": 1 }' + String.fromCharCode(10);
+    const state=await retryDoorWithPayment(door(),"fixture",vi.fn(async()=>new Response(text,{
+      headers:{"content-type":"application/json"}})) as unknown as typeof fetch);
+    expect(state.kind).toBe("delivered");
+    if(state.kind==="delivered") {
+      expect(state.body).toEqual({text:"é",count:1});
+      expect(new Uint8Array(await paidOutputBlob(state.output).arrayBuffer())).toEqual(new TextEncoder().encode(text));
+    }
+  });
+  it("does not label malformed JSON as delivered and keeps its received bytes", async () => {
+    const state=await retryDoorWithPayment(door(),"fixture",vi.fn(async()=>new Response("not JSON",{
+      headers:{"content-type":"application/json","payment-response":btoa(JSON.stringify({transaction:"0x"+"ab".repeat(32)}))}})) as unknown as typeof fetch);
+    expect(state.kind).toBe("maybe-settled");
+    if(state.kind==="maybe-settled") {
+      expect(state.settlement?.transaction).toBe("0x"+"ab".repeat(32));
+      expect(new TextDecoder().decode(state.output?.bytes)).toBe("not JSON");
+    }
+  });
+  it("sends once with manual redirects and no ambient credentials", async () => {
+    const f=vi.fn(async()=>jsonResponse(302,{redirect:true})) as unknown as typeof fetch;
+    const state=await retryDoorWithPayment(door(),"fixture",f);
+    expect(state.kind).toBe("maybe-settled");
+    expect(f).toHaveBeenCalledTimes(1);
+    expect((f as ReturnType<typeof vi.fn>).mock.calls[0][1]).toMatchObject({redirect:"manual",credentials:"omit"});
+  });
+  it("rejects an external payment URL before the wallet or network", async () => {
+    const p=provider();const f=vi.fn() as unknown as typeof fetch;
+    const state=await payDoor({door:{...door(),url:"https://external.invalid/api/paid"},
+      challenge:challengeFromPaymentRequired(PAYMENT_REQUIRED)!,provider:p,walletName:"fixture",fetchImpl:f});
+    expect(state.kind).toBe("error");expect(p.calls).toEqual([]);expect(f).not.toHaveBeenCalled();
+  });
+  it("rechecks page origin after a wallet await without dispatching payment", async () => {
+    const p=provider({onSign:()=>{vi.stubGlobal("location",{origin:"https://external.invalid"});return SIGNATURE;}});
+    const f=vi.fn() as unknown as typeof fetch;
+    const state=await payDoor({door:door(),challenge:challengeFromPaymentRequired(PAYMENT_REQUIRED)!,
+      provider:p,walletName:"fixture",fetchImpl:f});
+    expect(state.kind).toBe("error");expect(f).not.toHaveBeenCalled();
+  });
+});
+
+
+describe("pay-all keeps an arriving paid result within its captured buyer session", () => {
+  it.each(["unchanged", "headers", "body"] as const)("qualifies the session at the %s boundary without another paid request", async boundary => {
+    const { buyerNonce } = await import("../../../shared/buyerPurchase");
+    let token = "synthetic-owner-a";
+    vi.stubGlobal("window", { localStorage: { getItem: (key: string) => key === "csoai_token" ? token : null } });
+    const owner = "a".repeat(64), seed = "b".repeat(64);
+    const privateBody = { value: "synthetic-original-owner-a-output" };
+    const routeReceipt = btoa(JSON.stringify({ success: true, transaction: "0x" + "ef".repeat(32), network: "eip155:8453", payer: SIGNER }));
+    let reached!: () => void;
+    const atBoundary = new Promise<void>(resolve => { reached = resolve; });
+    let release!: () => void;
+    let paidCalls = 0;
+    const p = provider();
+    const fetchImpl = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+      const headers = new Headers(init?.headers);
+      expect(headers.get("authorization")).toBe("Bearer synthetic-owner-a");
+      if (String(input) === "/api/purchases/prepare") {
+        const request = JSON.parse(String(init?.body));
+        expect(headers.has("x-payment")).toBe(false);
+        return jsonResponse(200, { schema: "csoai.purchase-preparation/1", owner_hash: owner, seed, request, nonce: await buyerNonce(owner, request, seed) });
+      }
+      expect(String(input)).toBe(door().url);
+      expect(headers.get("x-payment")).toBeTruthy();
+      paidCalls++;
+      const response = jsonResponse(200, privateBody, { "x-payment-response": routeReceipt });
+      if (boundary === "body") {
+        const raw = new TextEncoder().encode(JSON.stringify(privateBody)).buffer;
+        vi.spyOn(response, "arrayBuffer").mockImplementation(() => new Promise<ArrayBuffer>(resolve => {
+          release = () => resolve(raw); reached();
+        }));
+        return response;
+      }
+      return new Promise<Response>(resolve => { release = () => resolve(response); reached(); });
+    }) as unknown as typeof fetch;
+    const pending = payDoor({ door: door(), challenge: challengeFromPaymentRequired(PAYMENT_REQUIRED)!, provider: p, walletName: "synthetic", fetchImpl });
+    await atBoundary;
+    if (boundary !== "unchanged") token = "synthetic-owner-b";
+    release();
+    const state = await pending;
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+    expect(paidCalls).toBe(1);
+    expect(p.calls.filter(call => call.method === "eth_signTypedData_v4")).toHaveLength(1);
+    if (boundary === "unchanged") {
+      expect(state.kind).toBe("delivered");
+      if (state.kind === "delivered") { expect(state.body).toEqual(privateBody); expect(state.paymentResponse).toBe(routeReceipt); }
+    } else {
+      expect(state.kind).toBe("maybe-settled");
+      expect(JSON.stringify(state)).not.toContain(privateBody.value);
+      expect(JSON.stringify(state)).not.toContain(routeReceipt);
+      expect(state).not.toHaveProperty("output"); expect(state).not.toHaveProperty("body");
+      if (state.kind === "maybe-settled") expect(state.detail).toMatch(/session changed/i);
+    }
+  });
+});
+
+describe("an explicit guest snapshot stays isolated while a paid response is pending", () => {
+  it.each(["unchanged","headers","body"] as const)("%s guest response preserves one-dispatch uncertainty", async boundary => {
+    let token:string|null=null;
+    vi.stubGlobal("window",{localStorage:{getItem:(key:string)=>key==="csoai_token"?token:null}});
+    let reached!:()=>void,release!:()=>void;
+    const atBoundary=new Promise<void>(resolve=>{reached=resolve;});
+    const secret="synthetic-guest-delivery";
+    const receipt=btoa(JSON.stringify({transaction:"0x"+"ac".repeat(32),success:true}));
+    const f=vi.fn(async (_input:unknown,init?:RequestInit)=>{
+      expect(new Headers(init?.headers).has("authorization")).toBe(false);
+      const response=jsonResponse(200,{value:secret},{"x-payment-response":receipt});
+      if(boundary==="body"){
+        vi.spyOn(response,"arrayBuffer").mockImplementation(()=>new Promise<ArrayBuffer>(resolve=>{
+          release=()=>resolve(new TextEncoder().encode(JSON.stringify({value:secret})).buffer);reached();
+        }));return response;
+      }
+      return new Promise<Response>(resolve=>{release=()=>resolve(response);reached();});
+    }) as unknown as typeof fetch;
+    const pending=retryDoorWithPayment(door(),"synthetic-payment",f,ORIGIN,null);
+    await atBoundary;if(boundary!=="unchanged")token="synthetic-new-signed-in-owner";release();
+    const result=await pending;expect(f).toHaveBeenCalledTimes(1);
+    if(boundary==="unchanged"){
+      expect(result.kind).toBe("delivered");
+      if(result.kind!=="delivered")throw new Error("unchanged guest delivery was not returned");
+      expect(result.body).toEqual({value:secret});
+    }
+    else{
+      expect(result.kind).toBe("maybe-settled");
+      if(result.kind!=="maybe-settled")throw new Error("changed guest session was not held");
+      expect(result.body).toBeNull();
+      expect(JSON.stringify(result)).not.toContain(secret);expect(JSON.stringify(result)).not.toContain(receipt);
+      expect(result).not.toHaveProperty("output");
+      if(result.kind==="maybe-settled")expect(result.detail).toMatch(/may have settled/i);
+    }
+  });
+});
+
+describe("path-scoped payment quotes retain the exact requested URL", () => {
+  const requested = ORIGIN + "/api/coverage-evidence?asset=tether";
+  const pathResource = ORIGIN + "/api/coverage-evidence";
+  const scopedDoor = (url = requested): Door => ({ ...door(), url, routeKey: routeKey(url) });
+  const scopedChallenge = (resource = pathResource): X402Challenge => ({
+    ...challengeFromPaymentRequired(PAYMENT_REQUIRED)!,
+    resource,
+    accepted: { ...ACCEPTED, extra: { ...ACCEPTED.extra }, resource },
+    resourceInfo: { ...PAYMENT_REQUIRED.resource, url: resource },
+  });
+  beforeEach(() => {
+    vi.stubGlobal("window", { localStorage: { getItem: () => null } });
+  });
+
+  it("lets a guest approve a path quote and sends one signed request with its original query", async () => {
+    const fetchImpl = vi.fn(async (input: unknown, init?: RequestInit) => {
+      expect(String(input)).toBe(requested);
+      const headers = new Headers(init?.headers);
+      expect(headers.has("authorization")).toBe(false);
+      const payment = JSON.parse(atob(headers.get("x-payment")!));
+      expect(payment.resource.url).toBe(pathResource);
+      expect(payment.accepted.resource).toBe(pathResource);
+      return jsonResponse(200, { synthetic: "original request output" });
+    }) as unknown as typeof fetch;
+    const p = provider();
+    const state = await payDoor({ door: scopedDoor(), challenge: scopedChallenge(),
+      provider: p, walletName: "synthetic", fetchImpl });
+    expect(state.kind).toBe("delivered");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect(p.calls.filter(call => call.method === "eth_signTypedData_v4")).toHaveLength(1);
+  });
+
+  it("binds the full query URL and distinct quoted path in a signed-in purchase commitment", async () => {
+    const { buyerNonce, purchaseSha256 } = await import("../../../shared/buyerPurchase");
+    vi.stubGlobal("window", { localStorage: { getItem: () => "synthetic-owner" } });
+    const owner = "a".repeat(64), seed = "b".repeat(64);
+    const expected = { url: requested, resource: pathResource, method: "GET",
+      body_sha256: await purchaseSha256(new Uint8Array()) };
+    const fetchImpl = vi.fn(async (input: unknown, init?: RequestInit) => {
+      const headers = new Headers(init?.headers);
+      expect(headers.get("authorization")).toBe("Bearer synthetic-owner");
+      if (String(input) === "/api/purchases/prepare") {
+        expect(headers.has("x-payment")).toBe(false);
+        const identity = JSON.parse(String(init?.body));
+        expect(identity).toEqual(expected);
+        return jsonResponse(200, { schema: "csoai.purchase-preparation/1", owner_hash: owner,
+          seed, request: identity, nonce: await buyerNonce(owner, identity, seed) });
+      }
+      expect(String(input)).toBe(requested);
+      const payment = JSON.parse(atob(headers.get("x-payment")!));
+      expect(payment.resource.url).toBe(pathResource);
+      expect(payment.csoaiPurchase.seed).toBe(seed);
+      expect(payment.payload.authorization.nonce).toBe(await buyerNonce(owner, expected, seed));
+      return jsonResponse(200, { synthetic: "owned original output" });
+    }) as unknown as typeof fetch;
+    const state = await payDoor({ door: scopedDoor(), challenge: scopedChallenge(),
+      provider: provider(), walletName: "synthetic", fetchImpl });
+    expect(state.kind).toBe("delivered");
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+  });
+
+  it("accepts an explicit matching query in another entry order without changing either URL", async () => {
+    const url = requested + "&axis=safety";
+    const resource = pathResource + "?axis=safety&asset=tether";
+    const fetchImpl = vi.fn(async (input: unknown) => {
+      expect(String(input)).toBe(url);
+      return jsonResponse(200, { synthetic: true });
+    }) as unknown as typeof fetch;
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: provider(), walletName: "synthetic", fetchImpl })).kind).toBe("delivered");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    "https://external.invalid/api/coverage-evidence",
+    ORIGIN + "/api/different",
+    pathResource + "?asset=other",
+    pathResource + "?asset=tether&asset=tether",
+    "https://user:pass@councilof.ai/api/coverage-evidence",
+    pathResource + "#not-part-of-an-http-request",
+  ])("refuses a conflicting quote before the wallet or network: %s", async resource => {
+    const p = provider(), fetchImpl = vi.fn() as unknown as typeof fetch;
+    expect((await payDoor({ door: scopedDoor(), challenge: scopedChallenge(resource),
+      provider: p, walletName: "synthetic", fetchImpl })).kind).toBe("error");
+    expect(p.calls).toEqual([]);
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("keeps ignored request tracking outside a canonical attestation quote without changing the actual URL", async () => {
+    const url = ORIGIN + "/api/request-attestation?subject=org%2Fmodel-name&axis=safety&utm_source=test";
+    const resource = ORIGIN + "/api/request-attestation?subject=org%2Fmodel-name&axis=safety";
+    const fetchImpl = vi.fn(async (input: unknown, init?: RequestInit) => {
+      expect(String(input)).toBe(url);
+      expect(JSON.parse(atob(new Headers(init?.headers).get("x-payment")!)).resource.url).toBe(resource);
+      return jsonResponse(200, { synthetic: true });
+    }) as unknown as typeof fetch;
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: provider(), walletName: "synthetic", fetchImpl })).kind).toBe("delivered");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
+  it("accepts the attestation producer's subject trimming and axis normalization", async () => {
+    const url = ORIGIN + "/api/request-attestation?subject=%20org%2Fmodel-name%20&axis=%20SAFETY%20&ignored=1";
+    const resource = ORIGIN + "/api/request-attestation?subject=org%2Fmodel-name&axis=safety";
+    const fetchImpl = vi.fn(async (input: unknown) => {
+      expect(String(input)).toBe(url);
+      return jsonResponse(200, { synthetic: true });
+    }) as unknown as typeof fetch;
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: provider(), walletName: "synthetic", fetchImpl })).kind).toBe("delivered");
+  });
+
+  it.each([
+    "?subject=org%2Fother-model&axis=safety",
+    "?subject=org%2Fmodel-name&axis=alignment",
+    "?subject=org%2Fmodel-name",
+  ])("refuses an attestation quote that changes or drops a meaningful target field: %s", async query => {
+    const url = ORIGIN + "/api/request-attestation?subject=org%2Fmodel-name&axis=safety&utm_source=test";
+    const resource = ORIGIN + "/api/request-attestation" + query;
+    const p = provider(), fetchImpl = vi.fn() as unknown as typeof fetch;
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: p, walletName: "synthetic", fetchImpl })).kind).toBe("error");
+    expect(p.calls).toEqual([]);
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("refuses swapped repeated query values that select a different first asset", async () => {
+    const p = provider(), fetchImpl = vi.fn() as unknown as typeof fetch;
+    const url = pathResource + "?asset=tether&asset=usd-coin";
+    const resource = pathResource + "?asset=usd-coin&asset=tether";
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: p, walletName: "synthetic", fetchImpl })).kind).toBe("error");
+    expect(p.calls).toEqual([]);
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("preserves repeated-value order while allowing a different order of distinct query keys", async () => {
+    const url = pathResource + "?asset=tether&axis=safety&asset=usd-coin";
+    const resource = pathResource + "?axis=safety&asset=tether&asset=usd-coin";
+    const fetchImpl = vi.fn(async (input: unknown) => {
+      expect(String(input)).toBe(url);
+      return jsonResponse(200, { synthetic: true });
+    }) as unknown as typeof fetch;
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: provider(), walletName: "synthetic", fetchImpl })).kind).toBe("delivered");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not conflate a query key containing '=' with an equal-looking value", async () => {
+    const p = provider(), fetchImpl = vi.fn() as unknown as typeof fetch;
+    const url = pathResource + "?a%3Db=c", resource = pathResource + "?a=b%3Dc";
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: p, walletName: "synthetic", fetchImpl })).kind).toBe("error");
+    expect(p.calls).toEqual([]);
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("keeps the original request and nested payment terms when caller objects change during approval", async () => {
+    const selected = scopedDoor(), challenge = scopedChallenge();
+    const p = provider({ onSign: () => {
+      selected.url = "https://external.invalid/api/changed";
+      challenge.resource = "https://external.invalid/api/changed";
+      challenge.accepted!.amount = "999999";
+      challenge.accepted!.extra!.name = "changed after approval";
+      return SIGNATURE;
+    } });
+    const fetchImpl = vi.fn(async (input: unknown, init?: RequestInit) => {
+      expect(String(input)).toBe(requested);
+      const payment = JSON.parse(atob(new Headers(init?.headers).get("x-payment")!));
+      expect(payment.resource.url).toBe(pathResource);
+      expect(payment.accepted.amount).toBe(ACCEPTED.amount);
+      expect(payment.accepted.extra.name).toBe(ACCEPTED.extra.name);
+      return jsonResponse(200, { synthetic: true });
+    }) as unknown as typeof fetch;
+    expect((await payDoor({ door: selected, challenge, provider: p,
+      walletName: "synthetic", fetchImpl })).kind).toBe("delivered");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
   });
 });

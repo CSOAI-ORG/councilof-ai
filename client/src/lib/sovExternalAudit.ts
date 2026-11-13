@@ -10,6 +10,7 @@
  */
 
 import { BOARD_COUNT_OBSERVED, BOARD_OBSERVATION, BOARD_OBSERVED_AT } from "./boardCount";
+import { toolSummary } from "./mcpTools";
 
 export type AuditVerdict = "keep" | "stale" | "false" | "forbidden";
 
@@ -51,7 +52,7 @@ export const LIVE_PIN = {
   board_dataset: "csoai/gspc-board",
   boards_alias_note:
     "csoai/gspc-boards exists as a separate benchmark-register tree. It is not the living board mirror.",
-  mcp_planted: "board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion",
+  mcp_planted: toolSummary(7),
   x402: "csoai.x402/0.1 — pay for pack assembly. The board stays free. Public card does not carry a payTo.",
 } as const;
 
