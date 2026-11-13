@@ -38,6 +38,108 @@ export const UPDATE_EVIDENCE_KINDS = ["public_url", "private_email", "command"];
 export const DEFAULT_EXPECT = ["Council of AI", "CSOAI", "Templeman", "councilof.ai"];
 const UA = "Mozilla/5.0 (compatible; csoai-memberships-check/0.1; +https://councilof.ai/memberships)";
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+export const MANIFEST_MAX_AGE_DAYS = 14;
+export const ROW_EVIDENCE_MAX_AGE_DAYS = 60;
+export const MEMBERSHIPS_PAGE_URL = "https://councilof.ai/memberships";
+
+function parseDate(value) {
+  if (typeof value !== "string" || !DATE_RE.test(value)) return null;
+  const date = new Date(`${value}T00:00:00.000Z`);
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value ? date : null;
+}
+
+function wholeUtcDaysSince(date, now) {
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  return Math.floor((today - date.getTime()) / 86_400_000);
+}
+
+/** Freshness is separate from schema validity: stale manifests must still fetch all public rows. */
+export function evaluateFreshness(manifest, updates = undefined, now = new Date()) {
+  const issues = [];
+  const asOf = parseDate(manifest?.as_of);
+  const rows = Array.isArray(manifest?.rows) ? manifest.rows : [];
+  const publicRows = rows.filter((row) => row?.public_evidence === true).length;
+  const privateRows = rows.filter((row) => row?.public_evidence === false).length;
+  let ageDays = null;
+  if (!asOf) {
+    issues.push("manifest as_of is missing or is not a real YYYY-MM-DD date");
+  } else {
+    ageDays = wholeUtcDaysSince(asOf, now);
+    if (ageDays < 0) issues.push(`manifest as_of is ${Math.abs(ageDays)} day(s) in the future`);
+    else if (ageDays > MANIFEST_MAX_AGE_DAYS) issues.push(`manifest as_of is stale: ${ageDays} days old (maximum ${MANIFEST_MAX_AGE_DAYS})`);
+  }
+
+  const staleRows = [];
+  const missingDates = [];
+  const futureDates = [];
+  for (const row of rows) {
+    const label = String(row?.id ?? "?");
+    const raw = row?.verified_on;
+    if (raw == null && row?.state === "UNVERIFIED") continue;
+    const verifiedOn = parseDate(raw);
+    if (!verifiedOn) {
+      missingDates.push(label);
+      issues.push(`row ${label}: verified_on is missing or invalid`);
+      continue;
+    }
+    if (asOf && verifiedOn > asOf) {
+      futureDates.push(label);
+      issues.push(`row ${label}: verified_on is later than manifest as_of`);
+    }
+    const rowAge = wholeUtcDaysSince(verifiedOn, now);
+    if (rowAge < 0) {
+      futureDates.push(label);
+      issues.push(`row ${label}: verified_on is in the future`);
+    } else if (rowAge > ROW_EVIDENCE_MAX_AGE_DAYS) {
+      staleRows.push({ id: label, verified_on: raw, age_days: rowAge });
+      issues.push(`row ${label}: evidence date is stale (${rowAge} days; maximum ${ROW_EVIDENCE_MAX_AGE_DAYS})`);
+    }
+  }
+
+  if (updates !== undefined && updates?.as_of !== manifest?.as_of) {
+    issues.push(`updates log as_of (${updates?.as_of ?? "missing"}) does not match manifest as_of (${manifest?.as_of ?? "missing"})`);
+  }
+
+  return {
+    ok: issues.length === 0,
+    as_of: manifest?.as_of ?? null,
+    age_days: ageDays,
+    max_age_days: MANIFEST_MAX_AGE_DAYS,
+    row_evidence_max_age_days: ROW_EVIDENCE_MAX_AGE_DAYS,
+    row_count: rows.length,
+    public_rows: publicRows,
+    private_rows: privateRows,
+    rows_missing_verified_on: missingDates,
+    rows_with_future_dates: [...new Set(futureDates)],
+    stale_rows: staleRows,
+    issues,
+  };
+}
+
+/** Compare the human-facing HTML register with the machine-readable manifest. */
+export function evaluateRegisterPage(response, manifest) {
+  if (!response || response.status !== 200 || typeof response.body !== "string") {
+    return { ok: false, status: response?.status ?? 0, as_of: null, reason: "public /memberships page did not return readable HTTP 200 content" };
+  }
+  const visible = response.body
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/\s+/g, " ");
+  const match = visible.match(/machine-readable.{0,400}?\bas of\s+(\d{4}-\d{2}-\d{2})/i);
+  if (!match) return { ok: false, status: response.status, as_of: null, reason: "HTML register does not expose its machine-readable manifest as_of date" };
+  const pageDate = match[1];
+  if (pageDate !== manifest?.as_of) {
+    return { ok: false, status: response.status, as_of: pageDate, reason: `HTML register date ${pageDate} does not match JSON manifest date ${manifest?.as_of ?? "missing"}` };
+  }
+  if (manifest?.signed === false && !/\bunsigned\b/i.test(visible)) {
+    return { ok: false, status: response.status, as_of: pageDate, reason: "JSON manifest is unsigned but HTML register does not disclose that status" };
+  }
+  return { ok: true, status: response.status, as_of: pageDate, reason: "HTML date and unsigned status match the JSON manifest" };
+}
 /** A private-evidence row must cite a mailbox record by folder + id and carry a date. */
 const MAILBOX_RE = /\b(INBOX|Sent)\s+\d+\b/;
 
@@ -47,7 +149,7 @@ export function validateManifest(m) {
   const problems = [];
   if (!m || typeof m !== "object") return ["manifest is not an object"];
   if (m.schema !== SCHEMA) problems.push(`schema must be ${SCHEMA}`);
-  if (!DATE_RE.test(String(m.as_of ?? ""))) problems.push("as_of must be YYYY-MM-DD");
+  if (!parseDate(m.as_of)) problems.push("as_of must be a real YYYY-MM-DD date");
   if (m.signed !== false) problems.push("signed must be false (this manifest carries no signature; say so)");
   if (!Array.isArray(m.groups) || m.groups.length === 0) problems.push("groups[] missing");
   if (!Array.isArray(m.rows) || m.rows.length === 0) problems.push("rows[] missing");
@@ -74,6 +176,8 @@ export function validateRow(row, groupIds = null) {
   if (typeof row.public_evidence !== "boolean") p.push("public_evidence must be boolean");
   if (row.since !== null && !DATE_RE.test(String(row.since))) p.push("since must be YYYY-MM-DD or null");
   if (row.since === null && row.state !== "PENDING") p.push("since may be null only for PENDING rows");
+  if (row.verified_on == null && row.state !== "UNVERIFIED") p.push("verified_on is required unless state is UNVERIFIED");
+  if (row.verified_on != null && !parseDate(row.verified_on)) p.push("verified_on must be a real YYYY-MM-DD date or null");
   if (row.evidence_kind === "public_url") {
     if (!/^https:\/\//.test(row.evidence)) p.push("public_url evidence must be https://");
     if (row.public_evidence !== true) p.push("public_url rows must set public_evidence: true");
@@ -212,16 +316,25 @@ export async function checkRow(row, fetcher = defaultFetcher) {
   return { id: row.id, ok: v.ok, reason: res?.error ? `${v.reason} (${res.error})` : v.reason, url };
 }
 
-export async function runChecks(manifest, fetcher = defaultFetcher, updates = undefined) {
+export async function runChecks(manifest, fetcher = defaultFetcher, updates = undefined, now = new Date()) {
   const schema = validateManifest(manifest);
   if (updates !== undefined) for (const p of validateUpdates(updates, manifest)) schema.push(`updates: ${p}`);
+  const freshness = evaluateFreshness(manifest, updates, now);
   const results = [];
+  let pageCheck = null;
   if (schema.length === 0) {
+    // Do not let an old manifest suppress the live checks: fetch every public row anyway.
     for (const row of manifest.rows) results.push(await checkRow(row, fetcher));
+    const page = await fetcher(MEMBERSHIPS_PAGE_URL);
+    pageCheck = evaluateRegisterPage(page, manifest);
   }
   const failures = results.filter((r) => !r.ok);
+  if (!freshness.ok) failures.push({ id: "manifest-freshness", ok: false, reason: freshness.issues.join("; ") });
+  if (pageCheck && !pageCheck.ok) failures.push({ id: "memberships-html-parity", ok: false, reason: pageCheck.reason });
   return {
     schemaProblems: schema,
+    freshness,
+    pageCheck,
     results,
     failures,
     checked: results.filter((r) => !r.skipped).length,
@@ -237,6 +350,7 @@ export function selftestManifest() {
     group: "registries",
     kind: "listed",
     since: "2026-09-22",
+    verified_on: "2026-09-22",
     evidence_kind: "public_url",
     public_evidence: true,
     state: "VERIFIED",
@@ -258,6 +372,7 @@ export function selftestManifest() {
 }
 
 export async function selftestFetcher(url) {
+  if (url === MEMBERSHIPS_PAGE_URL) return { status: 200, body: '<main>Machine-readable: /interop/memberships.json (schema csoai.memberships/0.1, as of 2026-09-22, unsigned — it says so in the file).</main>' };
   if (url.endsWith("/good")) return { status: 200, body: "<html>Members: Council of AI (CSOAI Ltd)</html>" };
   if (url.endsWith("/gone")) return { status: 404, body: "not found" };
   if (url.endsWith("/silent")) return { status: 200, body: "<html>Members: Someone Else</html>" };
@@ -266,7 +381,7 @@ export async function selftestFetcher(url) {
 }
 
 export async function selftest() {
-  const out = await runChecks(selftestManifest(), selftestFetcher);
+  const out = await runChecks(selftestManifest(), selftestFetcher, undefined, new Date("2026-09-22T00:00:00.000Z"));
   const failedIds = out.failures.map((f) => f.id).sort();
   const ok =
     out.schemaProblems.length === 0 &&
@@ -304,13 +419,17 @@ if (isMain) {
   if (args.includes("--schema-only")) {
     const problems = validateManifest(manifest);
     for (const p of validateUpdates(updates, manifest)) problems.push(`updates: ${p}`);
+    const freshness = evaluateFreshness(manifest, updates);
     for (const p of problems) console.error(`[memberships-check] schema: ${p}`);
-    console.log(`[memberships-check] schema ${problems.length ? "FAIL" : "OK"} — ${manifest.rows?.length ?? 0} rows, ${updates.entries?.length ?? 0} update(s)`);
-    process.exit(problems.length ? 1 : 0);
+    for (const p of freshness.issues) console.error(`[memberships-check] freshness: ${p}`);
+    console.log(`[memberships-check] schema ${problems.length ? "FAIL" : "OK"} · freshness ${freshness.ok ? "FRESH" : "STALE"} — as_of ${freshness.as_of}, age ${freshness.age_days ?? "unknown"} day(s), ${freshness.row_count} rows (${freshness.public_rows} public / ${freshness.private_rows} private)`);
+    process.exit(problems.length || !freshness.ok ? 1 : 0);
   }
   const out = await runChecks(manifest, defaultFetcher, updates);
   for (const p of out.schemaProblems) console.error(`[memberships-check] schema: ${p}`);
+  for (const p of out.freshness.issues) console.error(`[memberships-check] freshness: ${p}`);
+  if (out.pageCheck) console.log(`[memberships-check] HTML register ${out.pageCheck.ok ? "OK" : "FAIL"} — ${out.pageCheck.reason}`);
   for (const r of out.results) console.log(`${r.ok ? (r.skipped ? "skip" : " ok ") : "FAIL"} ${r.id.padEnd(22)} ${r.reason}${r.url ? `  ${r.url}` : ""}`);
-  console.log(`[memberships-check] checked ${out.checked} public URL(s), skipped ${out.skipped} private row(s), ${out.failures.length} failure(s)`);
+  console.log(`[memberships-check] checked ${out.checked} public URL(s), skipped ${out.skipped} private row(s), manifest age ${out.freshness.age_days ?? "unknown"} day(s) (max ${out.freshness.max_age_days}), ${out.failures.length} failure(s)`);
   process.exit(out.exitCode);
 }
