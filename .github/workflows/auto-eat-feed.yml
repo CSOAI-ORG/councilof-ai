@@ -44,7 +44,7 @@ jobs:
           git restore --source=origin/master -- scripts/auto-eat
 
       - name: discover bounded public candidates
-        run: timeout 180s python3 scripts/auto-eat/discover.py --per-source "$EAT_PER_SOURCE" --skip-a2a
+        run: timeout 180s python3 scripts/auto-eat/discover.py --per-source "$EAT_PER_SOURCE"
 
       - name: probe a bounded round-robin batch (read-only)
         run: timeout 240s python3 scripts/auto-eat/probe.py --max "$EAT_MAX_PROBE"
