@@ -52,7 +52,7 @@ export default function HeroEvidenceConsole() {
           <strong>Public evidence feed</strong>
           <small>GSPC · live board</small>
         </span>
-        <span className="hp-console-live">{unavailable ? "UNAVAILABLE" : stale ? "STALE" : loading && !data ? "CONNECTING" : "LIVE"}</span>
+        <span className={`hp-console-live ${unavailable ? "is-unavailable" : stale ? "is-stale" : ""}`}>{unavailable ? "UNAVAILABLE" : stale ? "STALE" : loading && !data ? "CONNECTING" : "LIVE"}</span>
       </div>
       {tiles.length > 0 ? (
         <ul className="hp-console-list" aria-label="Visible measurement axes">
