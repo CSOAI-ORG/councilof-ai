@@ -606,12 +606,13 @@ for (const vp of VIEWPORTS) {
       await composer.fill(QUESTION);
       await page.getByRole("button", { name: "Ask", exact: true }).click();
   
-      const answered = page.getByTestId("talk-tool-card").or(page.getByTestId("talk-answer")).first();
+      // Dashboard questions use the same singleton AskPane as the header and floating bubble.
+      // The home canvas stays mounted; the answer is visible in Ask, not a second home TalkPanel.
+      await expect(entryAsk).toBeVisible({ timeout: 10_000 });
+      const answered = entryAsk.getByTestId("talk-tool-card").or(entryAsk.getByTestId("talk-answer")).first();
       await expect(answered).toBeVisible({ timeout: 10_000 });
-      await expect(page.getByTestId("gspc-workspace-home").getByTestId("talk-live")).toHaveText(/^Answer ready\./);
-      // The answer stays on the start screen; the question did not swap the canvas to the chat log.
+      await expect(entryAsk.getByTestId("talk-live")).toHaveText(/^Answer ready\./);
       await expect(page.getByTestId("gspc-workspace-home")).toBeVisible();
-      await expect(page.getByRole("log", { name: "Council of AI conversation" })).toHaveCount(0);
       // One server question, one card: no census card about other hosts beside it.
       await expect(page.getByTestId("talk-tool-card")).toHaveCount(1);
       await expect(page.getByTestId("talk-tool-card").getByTestId("talk-state")).toHaveText(/NOT.MEASURED/);
@@ -1117,7 +1118,11 @@ for (const vp of VIEWPORTS) {
     await expect(page.getByTestId("dashboard-shell")).toBeVisible({ timeout: 60_000 });
     await expect(page.getByTestId("ask-pane")).toHaveCount(0);
     const composer = page.getByLabel("Ask the Council, or name a pane to open");
-    const ask = async (text: string) => { await composer.fill(text); await page.getByRole("button", { name: "Ask", exact: true }).click(); };
+    const ask = async (text: string) => {
+      await composer.fill(text);
+      await page.getByTestId("dashboard-workspace").getByRole("button", { name: "Ask", exact: true }).click();
+      await expect(page.getByTestId("ask-pane")).toBeVisible();
+    };
 
     const result = {
       tool: "verify_card", args: {}, label: "UNCHECKABLE", summary: "Local fixture: signature not checked.",
