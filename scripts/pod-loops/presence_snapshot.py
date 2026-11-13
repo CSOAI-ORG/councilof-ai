@@ -38,8 +38,15 @@ import sys
 from pathlib import Path
 
 
-def resolve_lanes() -> Path:
-    """The lanes root, resolved the way lib.sh and hf_upload.py resolve it."""
+def resolve_lanes() -> Path | None:
+    """The lanes root, resolved the way lib.sh and hf_upload.py resolve it.
+
+    Returns None when there is none. It does NOT raise, and that is load-bearing: this module
+    is imported by anything that wants to read the publisher without running it, and a raise
+    here killed the module at import time on any host that has no lanes root - which is every
+    host that is not the pod. The refusal to publish without a lanes root moved to main(),
+    where it belongs.
+    """
     env = os.environ.get("LANES", "").strip()
     if env:
         return Path(env)
@@ -51,15 +58,30 @@ def resolve_lanes() -> Path:
     for cand in candidates:
         if cand.is_dir():
             return cand
-    raise SystemExit(
-        "presence_snapshot: LANES is unset and no lanes root was found "
-        "(looked for /workspace/lanes and $HOME/lanes); nothing was published."
-    )
+    return None
 
 
-LANES = resolve_lanes()
-SOURCE = LANES / "presence" / "census.jsonl"
-UPLOADER = LANES / "loops" / "hf_upload.py"
+# None is allowed at import; lanes_root(), source_path() and uploader_path() refuse to act on it.
+LANES: Path | None = resolve_lanes()
+
+
+def lanes_root() -> Path:
+    if LANES is None:
+        raise SystemExit(
+            "presence_snapshot: LANES is unset and no lanes root was found "
+            "(looked for /workspace/lanes and $HOME/lanes); nothing was published."
+        )
+    return LANES
+
+
+def source_path() -> Path:
+    return lanes_root() / "presence" / "census.jsonl"
+
+
+def uploader_path() -> Path:
+    return lanes_root() / "loops" / "hf_upload.py"
+
+
 REPO = "csoai/index-presence"
 
 SURFACES = [
@@ -88,9 +110,10 @@ def declared_cron() -> list[str]:
 
 
 def build(date: str) -> tuple[dict, list[dict], list[dict]]:
-    if not SOURCE.is_file():
-        raise SystemExit(f"presence_snapshot: {SOURCE} is missing — the rail has not written a reading.")
-    raw = SOURCE.read_bytes()
+    source = source_path()
+    if not source.is_file():
+        raise SystemExit(f"presence_snapshot: {source} is missing — the rail has not written a reading.")
+    raw = source.read_bytes()
     all_rows: list[dict] = []
     for line in raw.decode("utf-8", "replace").splitlines():
         line = line.strip()
@@ -228,7 +251,7 @@ def build(date: str) -> tuple[dict, list[dict], list[dict]]:
             "note": "A change row records that a surface's answer changed between two readings.",
         },
         "provenance": {
-            "source": str(SOURCE),
+            "source": str(source_path()),
             "source_sha256": hashlib.sha256(raw).hexdigest(),
             "source_bytes": len(raw),
             "source_rows_total": len(all_rows),
@@ -309,7 +332,7 @@ def board(snapshot: dict, date: str) -> str:
 def upload(local: Path, path_in_repo: str, config_name: str | None = None) -> None:
     cmd = [
         sys.executable,
-        str(UPLOADER),
+        str(uploader_path()),
         "--repo",
         REPO,
         "--file",
@@ -332,10 +355,14 @@ def main() -> int:
     ap.add_argument("--no-upload", action="store_true")
     args = ap.parse_args()
 
+    # Refuse to publish for real without a lanes root. The check lives here, not at import,
+    # so that importing this module on a host that has no lanes root is not fatal.
+    lanes_root()
+
     date = args.date or __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y-%m-%d")
     snapshot, day_rows, all_rows = build(date)
 
-    outdir = LANES / "out" / "presence" / date
+    outdir = lanes_root() / "out" / "presence" / date
     outdir.mkdir(parents=True, exist_ok=True)
     rows_path = outdir / f"estate-presence-{date}.jsonl"
     series_path = outdir / "presence-series.jsonl"
