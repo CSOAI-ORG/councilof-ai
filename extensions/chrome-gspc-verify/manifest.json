@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GSPC Verify — Council of AI",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Shows the live GSPC measurement board (councilof.ai/api/gspc), a signed-card badge on Hugging Face model pages, and verifies a pasted card offline. Measurement, not certification. Verify is free.",
   "homepage_url": "https://councilof.ai",
   "action": {
@@ -27,6 +27,16 @@
         "content/hf-badge.js"
       ],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://councilof.ai/*",
+        "https://meok.ai/*"
+      ],
+      "js": [
+        "content/ai-bridge.js"
+      ],
+      "run_at": "document_start"
     }
   ],
   "web_accessible_resources": [
@@ -54,5 +64,15 @@
     "32": "icons/icon-32.png",
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png"
-  }
+  },
+  "minimum_chrome_version": "116",
+  "optional_host_permissions": [
+    "http://127.0.0.1/*",
+    "https://nicholastempleman-meok-sov6-abstraction-overlay.hf.space/*",
+    "https://api.openai.com/*",
+    "https://api.groq.com/*",
+    "https://api.anthropic.com/*",
+    "https://router.huggingface.co/*",
+    "https://integrate.api.nvidia.com/*"
+  ]
 }
