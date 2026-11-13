@@ -101,7 +101,7 @@ export function evidenceHref(row: MembershipRow): string {
  * row says what it is.
  */
 export function badgeRows(m: MembershipsManifest = MEMBERSHIPS): { label: string; kind: MembershipKind; href: string; count?: number }[] {
-  const std = m.rows.filter((r) => r.group === "standards");
+  const std = m.rows.filter((r) => r.group === "standards" && r.state === "VERIFIED");
   const one = (re: RegExp, label: string) => {
     const r = std.find((x) => re.test(x.org));
     return r ? [{ label, kind: r.kind, href: evidenceHref(r) }] : [];
@@ -110,7 +110,7 @@ export function badgeRows(m: MembershipsManifest = MEMBERSHIPS): { label: string
   const ietf = std.filter((x) => /^IETF /.test(x.org));
   /** One pill for a whole group, labelled by the group and standing by its commonest kind. */
   const group = (id: string, label: string) => {
-    const rows = m.rows.filter((r) => r.group === id);
+    const rows = m.rows.filter((r) => r.group === id && r.state === "VERIFIED");
     if (!rows.length) return [];
     const tally = new Map<MembershipKind, number>();
     for (const r of rows) tally.set(r.kind, (tally.get(r.kind) ?? 0) + 1);
@@ -205,6 +205,11 @@ function Pill({ row }: { row: MembershipRow }) {
           <span aria-hidden="true" className="text-slate-400">·</span>
           <time dateTime={row.since}>{row.since}</time>
         </>
+      )}
+      {row.state === "UNVERIFIED" && (
+        <span className="rounded bg-amber-100 px-1 font-semibold uppercase tracking-wide text-amber-900" title="The current cited evidence could not be reproduced; see the dated status note.">
+          unverified
+        </span>
       )}
       {row.state === "PENDING" && (
         <span className="rounded bg-amber-100 px-1 font-semibold uppercase tracking-wide text-amber-900" title="Not yet filed or not yet granted. Claims nothing.">
