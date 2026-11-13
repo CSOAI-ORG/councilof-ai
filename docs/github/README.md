@@ -1,8 +1,11 @@
 # docs/github — the GitHub face of the estate
 
-Everything in this directory is **derived**, not typed. Regenerate with:
+Generated profiles and inventories in this directory come from the source generator. Regenerate with:
 
 ```bash
+python3 scripts/github/org-readme.py --repository-profile sovereign-wiki > docs/github/sovereign-wiki-README.md
+python3 scripts/github/org-readme.py --repository-profile csoai-org-v2 > docs/github/csoai-org-v2-README.md
+python3 scripts/github/org-readme.py --account-profile > docs/github/ACCOUNT-PROFILE.md # concise account introduction; live metrics remain linked
 python3 scripts/github/org-readme.py --profile > docs/github/PROFILE-README.md       # account / org profile (also pushed to CSOAI-ORG/.github/profile)
 python3 scripts/github/org-readme.py --personal docs/github/PERSONAL-PROFILE-DRAFT.md  # draft for the repo named after the login — never pushed by a lane
 python3 scripts/github/org-readme.py --councilof README.md                           # top block of this repo's README (between the org-readme markers)
@@ -11,10 +14,29 @@ python3 scripts/github/social-preview.py docs/github/social-preview.png         
 python3 scripts/github/repo-metadata.py --plan plan.json && python3 scripts/github/repo-metadata.py --diff plan.json
 ```
 
-Brand, in the owner's words (2026-09-05): *branded CSOAI, not tacky*. White ground, one green `#16a34a`, the lid wordmark
-`CS<strong>O</strong>AI`, one badge row that links only to things that exist, tables derived from live endpoints, plain sentences.
+Current public naming direction (30 October 2026): **Council of AI** leads. Use **Council of AI – Council for the Safety of Artificial Intelligence** where a full introduction is useful. **CSOAI Ltd** remains the legal operator; this wording is not a company rename or a representation that it owns every referenced asset. Keep repository names, package identifiers, domains and signed historical evidence stable.
+
+The three compact README modes and reviewed description candidates follow this direction. The live-derived profile modes and social-preview assets still carry the earlier CSOAI wordmark and need their own producer review before a wider naming rollout. A candidate in this directory is not a live account-profile update.
+
+Retained visual direction from 5 September 2026: white ground, one green `#16a34a`, one badge row that links only to things that exist, tables derived from live endpoints, plain sentences.
 No animated anything, no trophies, no gradients, no emoji storms. The generator refuses to emit a page that carries
 "certified", "BFT", "sovereign" or a price.
+
+## Apply a reviewed description scope
+
+For wording changes, use the description-only path instead of the legacy bulk apply mode:
+
+```bash
+python3 scripts/github/repo-metadata.py --apply-descriptions plan.json --repos councilof-ai sovereign-wiki csoai-org-v2
+```
+
+The plan must identify `CSOAI-ORG`, include each explicitly selected repository once, and record its before/after description and archived state. Review the plan first. The command validates the entire selected scope and reads current descriptions before its first write; it rechecks each repository immediately before editing and reads it back afterwards. Unknown or stale values abort. Already-correct descriptions and archived repositories are left alone. It sends only a description field, even if the plan also contains topic or licence proposals.
+
+This is a best-effort preflight and readback, not an atomic GitHub compare-and-swap. A failure after a write can leave a partial result; inspect the live state before retrying. The legacy `--apply` path still includes other metadata operations and should not be used for a wording-only task. New plans no longer infer MIT from a missing manifest declaration; compound and unsupported declarations require explicit review. No existing licence is changed by this source update.
+
+The three reviewed descriptions are kept in the generator's `HAND` table. They link current measurement evidence without embedding a mutable board count. The 30 October Council-first wording is a source candidate, not a new live metadata application. Two older, already corrected live descriptions remain recorded separately. Their README bodies remain separate surfaces to reconcile through their producers.
+
+Offline control suite: `python3 -I -B scripts/github/test_repo_metadata.py`. The path-scoped workflow has read-only repository permissions and exercises mocked API calls; it never applies a metadata plan.
 
 ## A fact that changes what renders where
 
@@ -53,11 +75,9 @@ production-ready). `stale-count:` — a board count in a description that `GET /
 (compared, not eyeballed). `homepage-<code>` — the repo's homepage URL did not answer 200 on GET.
 Plus the plain ones: no-description, no-topics, no-licence, stale-<days>d, no-readme, archived, fork.
 
-## OWNER-ASKS (need the browser or a decision; nothing here needs a password we hold or a payment)
+## Earlier owner handoff — 5 September 2026 inventory, not a current state check
 
-1. **Profile:** copy [`PERSONAL-PROFILE-DRAFT.md`](PERSONAL-PROFILE-DRAFT.md) into
-   `CSOAI-ORG/csoai-org/README.md` (strip the HTML comment at the top), or say the word and a lane pushes it.
-   What renders today is the hand-written "Nicholas Templeman — Founder" page.
+1. **Profile:** the current count-free replacement is [`ACCOUNT-PROFILE.md`](ACCOUNT-PROFILE.md), generated with `--account-profile`. Its exact-blob update was denied by the connected integration on 29 October. Apply it only through a permitted publishing route and retain readback; do not treat the older count-bearing draft as the preferred replacement.
 2. **Pins (browser only — github.com/CSOAI-ORG → Customize your pins):** replace the six MEOK MCP repos
    currently pinned (`dora-compliance-mcp`, `eu-ai-act-compliance-mcp`, `csoai-cra-annex-iv-classifier-mcp`,
    `csoai-governance-engine-mcp`, `csoai-mcp-injection-scan-mcp`, `csoai-watermark-attest-mcp` — their READMEs

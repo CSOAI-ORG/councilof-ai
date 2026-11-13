@@ -1,3 +1,4 @@
+import { postObservationState } from "../../_bookkeeping_budget";
 import { recordPaidResponse } from "../../_x402_delivery_record";
 /**
  * GET /api/wrapper/asset/<asset> — the per-asset wrapper doors (plan: asset_specific_x402_doors was 0).
@@ -252,7 +253,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
       },
     },
-  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+  ), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 export const onRequestPost = onRequestGet;

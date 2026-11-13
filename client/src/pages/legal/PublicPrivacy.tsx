@@ -12,10 +12,16 @@ const controller = {
 
 const rows: { data: string; where: string; basis: string; kept: string }[] = [
   {
-    data: "x402 payment and delivery records: the settlement transaction hash, the payer wallet address, network, amount, the resource URL paid for (including any query parameters), and time. When a delivery record is written, it also stores the response SHA-256 digest, byte count, content type, server timestamp and transaction-linked resource. The delivery record does not retain the response body.",
-    where: "functions/api/_x402.ts, _x402_receipt.ts and _x402_delivery_record.ts write these records to our Cloudflare KV store (settled:tx:*, receipts by transaction and by payer, and delivery:tx:*). /api/receipts?payer= is a public lookup: anyone who supplies a valid payer address can read the receipts indexed under it, with delivery metadata where joined. It does not authenticate ownership of that address. This unsigned delivery metadata does not show whether the buyer received or accepted the response.",
+    data: "x402 payment and delivery records: the settlement transaction hash, the payer wallet address, network, amount, the resource URL paid for (including any query parameters), and time. When a delivery record is written, it also stores the response SHA-256 digest, byte count, content type, server timestamp and transaction-linked resource. The delivery metadata record does not retain the response body. Separately, prepared paid outputs may be retained as private original response bytes, with their response headers and the echoed payment reference, so that an authorized operator can recover the original output without purchasing it again.",
+    where: "functions/api/_x402.ts, _x402_receipt.ts and _x402_delivery_record.ts write these records to our Cloudflare KV store (settled:tx:*, receipts by transaction and by payer, and delivery:tx:*). /api/receipts?payer= is a public lookup: anyone who supplies a valid payer address can read the receipts indexed under it, with delivery metadata where joined. It does not authenticate ownership of that address. Private original outputs use separate delivery:body:v1:tx:* keys in the same KV store, with a maximum response body of 1 MiB and headers of 8 KiB. They are not returned by the public payer receipt lookup. The private copy is a bounded recovery record, not a guarantee of successful storage or permanent availability. This unsigned delivery metadata does not show whether the buyer received or accepted the response.",
     basis: "Contract (supplying what was paid for); legal obligation (accounting records); legitimate interests (preventing a payment being replayed).",
-    kept: "No automatic expiry. We keep records for the applicable contract, dispute and accounting period. UK company-tax records are normally kept for six years after the end of the accounting period and may need to be kept longer. An erasure request does not override a legal duty to retain a record.",
+    kept: "No automatic expiry is configured for these records, including private retained outputs. We keep records for the applicable contract, dispute and accounting period. UK company-tax records are normally kept for six years after the end of the accounting period and may need to be kept longer. An erasure request does not override a legal duty to retain a record.",
+  },
+  {
+    data: "Account-bound paid purchase history and result decisions: a hash derived from the authenticated account and its lifecycle identifier, transaction and payer, exact request URL and paid resource, request method and body digest, purchase nonce, and time. The private original output is linked to that purchase. If you explicitly accept, reject or request a correction, we also retain that action, the original result digest and version, your request identifier, optional reason and time.",
+    where: "functions/api/_buyer_purchase.ts and purchases/[[path]].ts use the existing REVENUE_KV store under private:purchase:v1:* keys. Recovery and decisions require the current signed account session and matching ownership. A public transaction or payer address does not grant this access. Reading or downloading an output does not record acceptance. Legacy guest payments are not retrospectively assigned to an account. Request bodies and sign-in tokens are not stored in these purchase records. Your browser keeps an opaque pending-decision request identifier under account and transaction hashes until its saved result is reconciled or the browser data is cleared. That reminder contains no sign-in token, original output, receipt or decision note and does not record acceptance.",
+    basis: "Contract (providing purchase recovery and recording the buyer's result decision); legitimate interests (resolving delivery disputes).",
+    kept: "No automatic expiry is configured. We retain these records for the applicable contract and dispute period, subject to valid rights requests and any applicable legal retention duty.",
   },
   {
     data: "Contact and lead submissions, and newsletter signups: the email address, name, subject, message, any report or service reference you enter, and (for signups) the page that captured the address.",
@@ -30,7 +36,7 @@ const rows: { data: string; where: string; basis: string; kept: string }[] = [
     kept: "Until the conversation is finished and any follow-on record is no longer needed.",
   },
   {
-    data: "Workspace accounts, if you register: email, name, a salted password hash, and when the account was made.",
+    data: "Workspace accounts, if you register: email, name, a salted password hash, when the account was made, and a random account lifecycle identifier used to distinguish a current account from a later account created with the same email.",
     where: "functions/api/auth writes them to KV (SOV_ARENA_STATE). No password is stored in readable form.",
     basis: "Contract (providing the account).",
     kept: "For the life of the account; deleted on a valid erasure request where no exemption applies.",
@@ -52,7 +58,7 @@ export default function PublicPrivacy() {
     <section className="min-h-screen bg-slate-50 px-5 py-14 text-slate-950">
       <article className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
-          Operative notice · version 1.4 · 14 October 2026
+          Operative notice · version 1.6 · 7 November 2026
         </p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">Privacy notice</h1>
         <p className="mt-5 leading-7 text-slate-700">
@@ -99,7 +105,7 @@ export default function PublicPrivacy() {
               https://councilof.ai/mcp and https://councilof.ai/mcp/free are Model Context Protocol
               servers that AI clients such as Claude call on your behalf. /mcp/free carries only the
               free read-only tools. /mcp carries those plus the x402-metered tools its tools/list names. Both are handled by
-              functions/mcp/[[path]].ts. No account, sign-in, key or cookie is used on either.
+              functions/mcp/[[path]].ts. Public reads and verification need no account. On /mcp, an optional Council authorization header binds new paid requests to the signed-in account and authorizes that account's purchase history, original-output recovery and explicit result decisions. It is not a tool argument and is not forwarded to the payment facilitator. /mcp/free does not provide these private purchase operations.
             </p>
             <ul className="mt-3 list-disc space-y-2 pl-6 leading-7 text-slate-700">
               <li>
@@ -112,7 +118,7 @@ export default function PublicPrivacy() {
                 <span className="font-semibold">How it is used:</span> the arguments are processed in
                 memory to produce the answer. The free tools read public files on councilof.ai and
                 csoai.org only; they do not contact an endpoint URL you name. Our MCP code does not
-                write tool calls, arguments or answers to storage.
+                keep a separate log of tool calls or arguments. Paid routes may retain the original output and purchase or decision records described above.
               </li>
               <li>
                 <span className="font-semibold">Payments (/mcp only):</span> if a paid tool on /mcp is

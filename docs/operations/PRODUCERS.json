@@ -6,6 +6,17 @@
   "extending": "Add an entry, run `node scripts/producers-check.mjs` locally, and only set gated:true once it passes on a clean tree. Never set gated:true on a producer that stamps a timestamp or a random id into its output, and never on one that signs.",
   "producers": [
     {
+      "id": "card-feed-index",
+      "command": "node scripts/generate-cards-bundle.mjs --feed-index-only",
+      "check": "node scripts/generate-cards-bundle.mjs --check-feed-index",
+      "outputs": [
+        "public/card-feed-index.json"
+      ],
+      "mode": "delegate-to-check-committed",
+      "gated": true,
+      "note": "The existing bundle producer writes the complete root-ordered metadata index for /feed. The root publisher stages it, and root-candidate reconciliation rebuilds and stages it after merging. build:client also regenerates it, so this gate checks committed bytes even after a build. The check is offline, deterministic, read-only and compares only this index; it does not claim parity for cards-bundle.json. Tier records published card/proof metadata, not mirror availability or cryptographic verification."
+    },
+    {
       "id": "evidence-event-spec",
       "command": "node scripts/build-evidence-event-spec.mjs",
       "check": "node scripts/build-evidence-event-spec.mjs --check",

@@ -1,19 +1,19 @@
-# CSOAI — CONSUMER-READY COMPLETION AUDIT (measured) — 2026-11-07T11:44:18Z
+# CSOAI — CONSUMER-READY COMPLETION AUDIT (measured) — 2026-11-12T13:45:42Z
 
 Every LIVE line below was **probed against the live surface** and carries the measured value and the receipt. An item is LIVE only if a probe saw it; an item whose probe could not run is OPEN with the reason, never LIVE. Owner-gated items are named as owner-gated rather than counted as done.
 
-**27 items — 11 LIVE, 7 OPEN, 3 STAGED, 6 OWNER.**
+**27 items — 9 LIVE, 9 OPEN, 3 STAGED, 6 OWNER.**
 
 This is a measurement of completion, not a claim of a market outcome. "Unicorn status" is a trajectory, not a claim, and this artefact does not make it one.
 
 | # | Item | Lane | State | Measured | Receipt |
 | --- | --- | --- | --- | --- | --- |
-| U-1 | Product live end to end (discover -> identify -> pay -> verify) | agent | **LIVE** | 6/6 surfaces answered 200: board=200, root=200, corrections=200, x402=200, mcp=200, verify=200 | [https://councilof.ai/](https://councilof.ai/) |
-| U-2 | Flagship public (claim maintenance) | agent | **LIVE** | GET / -> HTTP 200 | [https://councilof.ai/](https://councilof.ai/) |
+| U-1 | Product live end to end (discover -> identify -> pay -> verify) | agent | **OPEN** | availability=LIVE; 6/6 surfaces answered 200: board=200, root=200, corrections=200, x402=200, mcp=200, verify=200; completion not verified: this GET-only audit does not consume a qualified non-fixture discover/identify/pay/deliver/verify receipt | [https://councilof.ai/](https://councilof.ai/) |
+| U-2 | Flagship public (claim maintenance) | agent | **OPEN** | availability=LIVE; GET / -> HTTP 200; completion not verified: this GET-only audit does not consume qualified claim-maintenance acceptance linking the claim, supporting evidence, correction history and independent readback | [https://councilof.ai/](https://councilof.ai/) |
 | U-3 | Heartbeat board public | agent | **LIVE** | GET /board/ -> HTTP 200 | [https://councilof.ai/board/](https://councilof.ai/board/) |
-| U-4 | Root advancing + axes + corrections counter | agent | **LIVE** | root as_of=2026-11-01T15:09:42Z, 428 leaves; board public_count=34 axes · 34 measured; corrections=93, signature_state=VALID | [https://councilof.ai/root.json](https://councilof.ai/root.json) |
+| U-4 | Root advancing + axes + corrections counter | agent | **LIVE** | root as_of=2026-11-07T20:54:37Z, 442 leaves; board public_count=34 axes · 34 measured; corrections=93, signature_state=VALID | [https://councilof.ai/root.json](https://councilof.ai/root.json) |
 | U-13a | Agent skills published | agent | **LIVE** | 15 skill(s) in the published index | [https://councilof.ai/.well-known/agent-skills/index.json](https://councilof.ai/.well-known/agent-skills/index.json) |
-| U-21 | OpenTimestamps: every published proof Bitcoin-attested | agent | **OPEN** | 693/695 proofs Bitcoin-attested, 2 pending | [https://councilof.ai/interop/ots/manifest.json](https://councilof.ai/interop/ots/manifest.json) |
+| U-21 | OpenTimestamps: every published proof Bitcoin-attested | agent | **OPEN** | 697/699 proofs Bitcoin-attested, 2 pending | [https://councilof.ai/interop/ots/manifest.json](https://councilof.ai/interop/ots/manifest.json) |
 | U-9a | Corrections published and signed | agent | **LIVE** | 44 verified, 5 blockers, 8 not_claimed; no unamended 'Public root stale' blocker | [https://councilof.ai/completion.json](https://councilof.ai/completion.json) |
 | U-10a | Namespace consolidation: the com.councilof/* DNS TXT claim | agent | **OPEN** | no namespace TXT is published (com.councilof.ai -> the name does not exist; _namespace.com.councilof.ai -> the name does not exist; _mcp.com.councilof.ai -> the name does not exist) - publishing it needs DNS authority for the domain, which is the owner's | dns:com.councilof.ai _namespace.com.councilof.ai _mcp.com.councilof.ai |
 | U-10c | No published artefact still claims a com.councilof.* identifier | agent | **LIVE** | 0 published file(s) still claim an identifier in the com.councilof.* space | repo:public/ (measured at build time) |
@@ -48,5 +48,5 @@ This is a measurement of completion, not a claim of a market outcome. "Unicorn s
 - an attestation for any third-party evaluation result
 - an endorsement by any person or institution quoted in a checklist
 
-Measured at 2026-11-07T11:44:18Z by `scripts/completion_audit.py`.
+Measured at 2026-11-12T13:45:42Z by `scripts/completion_audit.py`.
 Measurement, not certification.
