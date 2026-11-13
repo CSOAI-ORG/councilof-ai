@@ -65,10 +65,20 @@ one_pass() {
   if [ "$rc" -ne 0 ]; then
     log "FAIL fetch origin/master rc=$rc — refuse stale-source cycle"; return 1
   fi
-  if git rev-parse --verify --quiet "$BRANCH" >/dev/null; then
+  # Never create a replacement feed from master if remote feed history exists.
+  # Fetch the feed ref explicitly; fresh GitHub Actions clones may not track it.
+  git fetch --quiet origin "$BRANCH:refs/remotes/origin/$BRANCH" 2>>"$LOG" || {
+    log "FAIL fetch canonical feed branch $BRANCH"; return 1
+  }
+  if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
     git checkout --quiet "$BRANCH" 2>>"$LOG" || { log "FAIL checkout $BRANCH"; return 1; }
+    git merge-base --is-ancestor "origin/$BRANCH" HEAD || {
+      log "FAIL local feed history diverged from canonical remote"; return 1
+    }
   else
-    git checkout --quiet -B "$BRANCH" origin/master 2>>"$LOG" || { log "FAIL initialise $BRANCH"; return 1; }
+    git checkout --quiet -b "$BRANCH" "origin/$BRANCH" 2>>"$LOG" || {
+      log "FAIL checkout canonical feed branch $BRANCH"; return 1
+    }
   fi
   # The legacy feed branch may have unrelated history. In that case build a
   # two-parent merge commit whose tree is current master plus ONLY the feed-owned
@@ -137,16 +147,25 @@ one_pass() {
   if [ "${EAT_NO_PUSH:-0}" = "1" ]; then
     log "OK committed (EAT_NO_PUSH=1, not pushed)"; return 0
   fi
-  if [ ! -f "$DEPLOY_KEY" ]; then
-    log "HELD committed but NOT pushed — deploy key absent ($DEPLOY_KEY)"; return 1
+  # GitHub Actions has a scoped checkout credential with contents:write on
+  # this feed branch only. No signing key, ID token or production deployment.
+  if [ "${EAT_PUSH_CHECKOUT_CREDENTIALS:-0}" = "1" ]; then
+    if [ "${GITHUB_ACTIONS:-}" != "true" ]; then
+      log "FAIL checkout-credential push requested outside GitHub Actions"; return 1
+    fi
+    git push --quiet origin "HEAD:refs/heads/$BRANCH" >>"$LOG" 2>&1; rc=$?
+  else
+    if [ ! -f "$DEPLOY_KEY" ]; then
+      log "HELD committed but NOT pushed — deploy key absent ($DEPLOY_KEY)"; return 1
+    fi
+    GIT_SSH_COMMAND="ssh -i $DEPLOY_KEY -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new" \
+      git -c remote.origin.pushurl=git@github.com:CSOAI-ORG/councilof-ai.git \
+        push --quiet origin "HEAD:refs/heads/$BRANCH" >>"$LOG" 2>&1; rc=$?
   fi
-  GIT_SSH_COMMAND="ssh -i $DEPLOY_KEY -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new" \
-    git -c remote.origin.pushurl=git@github.com:CSOAI-ORG/councilof-ai.git \
-      push --quiet origin "HEAD:refs/heads/$BRANCH" >>"$LOG" 2>&1; rc=$?
   if [ "$rc" -eq 0 ]; then
     log "OK pushed $BRANCH"
   else
-    log "FAIL push rc=$rc — deploy key not authorized on CSOAI-ORG/councilof-ai (owner action)"
+    log "FAIL push rc=$rc — no canonical feed revision published"
     return 1
   fi
   return 0
