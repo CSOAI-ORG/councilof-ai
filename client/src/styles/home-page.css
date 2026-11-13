@@ -1963,3 +1963,58 @@
   border-color: rgba(236, 139, 123, .3);
   background: rgba(150, 55, 45, .22);
 }
+
+
+/* Evidence journey: a connected, scannable sequence rather than four isolated paragraphs. */
+.home-page .hp-method-steps li {
+  position: relative;
+  gap: 22px;
+  padding: 25px 0 22px;
+}
+.home-page .hp-method-steps li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 68px;
+  bottom: -8px;
+  left: 19px;
+  width: 1px;
+  background: linear-gradient(var(--hp-green), var(--hp-line));
+  opacity: .48;
+}
+.home-page .hp-step-number {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--hp-green) 28%, var(--hp-line));
+  border-radius: 13px;
+  color: var(--hp-green);
+  background: var(--hp-paper);
+  box-shadow: 0 4px 12px rgba(5, 37, 22, .06);
+  font-size: 10px;
+  font-weight: 800;
+}
+.home-page .hp-method-steps li > div {
+  min-width: 0;
+  padding-top: 2px;
+}
+.home-page .hp-method-steps li:hover .hp-step-number {
+  border-color: var(--hp-green);
+  background: var(--hp-soft);
+}
+.home-page .hp-method-steps h3 {
+  transition: color .18s ease;
+}
+.home-page .hp-method-steps li:hover h3 {
+  color: var(--hp-green);
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-page .hp-method-steps h3 {
+    transition: none;
+  }
+}
