@@ -118,6 +118,15 @@ describe("HomeHero", () => {
     for (const re of BANNED) expect(html).not.toMatch(re);
   });
 
+  it("previews the real public evidence feed without embedding placeholder figures", () => {
+    const html = render(<HomeHero />);
+    expect(html).toContain('data-testid="hero-evidence-console"');
+    expect(html).toContain("Public evidence feed");
+    expect(html).toContain("CONNECTING");
+    expect(html).not.toMatch(/\\b\\d+(?:\\.\\d+)?%/);
+    expect(html).not.toContain("sample data");
+  });
+
   it("offers the board, a verification door and a machine door", () => {
     const html = render(<HomeHero />);
     expect(html).toContain('data-testid="hero-cta-board"');
