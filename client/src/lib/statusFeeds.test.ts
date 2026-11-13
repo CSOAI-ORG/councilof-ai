@@ -127,12 +127,14 @@ describe("status feeds: live values", () => {
 
 describe("/status wiring", () => {
   const page = readFileSync(new URL("../pages/YieldStatus.tsx", import.meta.url), "utf8");
+  const readers = readFileSync(new URL("./statusReads.ts", import.meta.url), "utf8");
   it("reads every new source with no-store and renders the UNMEASURED state", () => {
     expect(page).toContain("FLEET_STATUS_URL");
     expect(page).toContain("EVIDENCE_MANIFEST_URL");
     expect(page).toContain("SITE_OTS_MANIFEST_URL");
-    expect(page).toContain('cache: "no-store"');
+    expect(page).toContain('from "../lib/statusReads"');
+    expect(readers).toContain('cache: "no-store"');
     expect(page).toContain('"UNMEASURED"');
-    expect(page).not.toMatch(/localStorage|sessionStorage/);
+    expect(page + readers).not.toMatch(/localStorage|sessionStorage/);
   });
 });
