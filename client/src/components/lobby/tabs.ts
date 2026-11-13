@@ -1081,7 +1081,7 @@ const DASHBOARD_NAV_DEFINITION: {
     id: "staff",
     label: "Staff & human review",
     description:
-      "Escalate an AI staff proposal to a named human, check competence against the live record, and inspect decision, signing and persistence gates.",
+      "Escalate an AI staff proposal to a named human, check understanding of the published record, and inspect decision, signing and persistence gates.",
     tabs: [
       { id: "staff", label: "Staff & human review" },
       { id: "him", label: "H.I.M. review" },

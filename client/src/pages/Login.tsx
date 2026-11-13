@@ -208,7 +208,7 @@ export default function Login() {
               variant="outline"
               size="lg"
               className="w-full"
-              onClick={() => setLocation('/signup')}
+              onClick={() => setLocation('/signup/?' + new URLSearchParams({ next: returnTo }).toString())}
               disabled={isSubmitting}
             >
               Create Free Account

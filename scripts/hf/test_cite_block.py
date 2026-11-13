@@ -27,10 +27,12 @@ import datetime as dt
 import hashlib
 import importlib.util
 import json
+import os
 import re
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -67,6 +69,7 @@ PRODUCERS = {
     "scripts/pod-loops/gspc-estate-spray.sh": "via-uploader",  # hf_upload.py --folder
     "scripts/pod-loops/revenue-snapshot.sh": "via-uploader",   # hf_upload.py --readme-if-absent
     "scripts/pod-loops/trust-chain.sh": "via-uploader",        # hf_upload.py --readme-if-absent
+    "scripts/retire-superseded-datasets.py": "via-uploader", # retirement notice on live README, through hf_upload.py
     "scripts/census/build-mcp-remote-census-record.py": "wired",
     "scripts/census/contract-parity.py": "wired",
     "scripts/census/correct-a2a-card-census.py": "edits-live",
@@ -77,6 +80,7 @@ PRODUCERS = {
     "scripts/hf/polish_frontdoors.py": "template",           # reviewed product templates; content/hash guards
     "scripts/claims/maintenance_due.py": "not-a-card",       # README below the claim-maintenance archive subfolder
     "scripts/measurements/publish-fact-table.py": "template", # dedicated fact-table product card
+    "scripts/surface/publish-hf-evaluation.py": "template",   # pinned evaluation pack/results cards and Space template
     "scripts/hf/hf-scrub-daily.py": "edits-live",        # hf-org-card.py scrub_legacy line-edits, commit against the revision read
     "scripts/spray/gspc-spray.py": "edits-live",             # hf_dataset_companions() line-edits the live card
     "scripts/pod-loops/gspc-spray.py": "edits-live",
@@ -85,6 +89,7 @@ PRODUCERS = {
     "scripts/pod-loops/corrections-watch.py": "not-a-card",  # sub-folder README (public/interop/corrections-watch/) in csoai/councilof-ai-evidence, not a dataset card
     "scripts/pod-loops/drift-draft.py": "private",           # csoai/corrections-watch, created --private
     "scripts/sync_hf_gspc.py": "not-a-card",                 # the gspc-board Space shell
+    "scripts/sync_hf_coliseum.py": "not-a-card",             # council-coliseum Space, not a dataset card
     "scripts/harness-x/render.mjs": "not-a-card",            # package and Space READMEs
     "scripts/export-benchmark-quality.mjs": "not-a-card",    # csoai/benchmark-quality-register, not public
 }
@@ -280,6 +285,53 @@ class TheProducers(unittest.TestCase):
             (Path(d) / "README.md").write_text(CARD, encoding="utf-8")
             self.assertEqual(up.card_folder_readme(d, "csoai/example-census"), "HELD")
             self.assertEqual((Path(d) / "README.md").read_text(encoding="utf-8"), CARD)
+
+
+class TheUploaderRuntime(unittest.TestCase):
+    def test_import_and_local_card_helper_need_no_lanes_runtime(self):
+        with patch.dict(os.environ, {}, clear=True), patch.object(Path, "is_dir", return_value=False):
+            up = load("hf_upload_offline", REPO / "scripts/pod-loops/hf_upload.py")
+        self.assertIsNone(up.LANES)
+        self.assertIsNone(up.QUEUE)
+        with patch.object(up, "resolve_lanes", side_effect=AssertionError("offline helper resolved runtime")):
+            self.assertTrue(cb.has_block(up.carded(CARD, "csoai/example-census")))
+
+    def test_missing_producer_and_runtime_leave_the_card_held(self):
+        up = load("hf_upload_no_producer", REPO / "scripts/pod-loops/hf_upload.py")
+        with patch.dict(os.environ, {}, clear=True), patch.object(Path, "is_file", return_value=False), \
+                patch.object(up, "resolve_lanes", side_effect=SystemExit("no lanes root")):
+            self.assertIsNone(up.carded(CARD, "csoai/example-census"))
+
+    def test_no_token_still_queues_and_flush_preserves_pending_work(self):
+        up = load("hf_upload_queue_control", REPO / "scripts/pod-loops/hf_upload.py")
+        with tempfile.TemporaryDirectory() as d, patch.dict(os.environ, {"LANES": d}, clear=True), \
+                patch.object(up, "do_upload", side_effect=AssertionError("unexpected upload")), \
+                patch.object(up, "do_upload_folder", side_effect=AssertionError("unexpected upload")):
+            source = Path(d) / "fixture.jsonl"; source.write_text('{}\n')
+            with patch.object(sys, "argv", ["hf_upload", "--repo", "csoai/example-census", "--file", str(source),
+                    "--path-in-repo", "fixture.jsonl"]):
+                self.assertEqual(up.main(), 3)
+            queue_path = Path(d) / "out" / "pending-upload.jsonl"
+            queued = queue_path.read_text()
+            job = json.loads(queued)
+            self.assertEqual(job["repo"], "csoai/example-census")
+            self.assertEqual(job["path_in_repo"], "fixture.jsonl")
+            self.assertEqual(job["file"], str(source.resolve()))
+            with patch.object(sys, "argv", ["hf_upload", "--flush"]):
+                self.assertEqual(up.main(), 3)
+            self.assertEqual(queue_path.read_text(), queued)
+
+    def test_missing_runtime_refuses_before_upload_or_queue(self):
+        up = load("hf_upload_missing_runtime", REPO / "scripts/pod-loops/hf_upload.py")
+        with patch.dict(os.environ, {}, clear=True), patch.object(Path, "is_dir", return_value=False), \
+                patch.object(up, "do_upload") as upload, patch.object(up, "queue") as queue, \
+                patch.object(sys, "argv", ["hf_upload", "--repo", "csoai/example-census", "--file", "fixture.jsonl",
+                    "--path-in-repo", "fixture.jsonl"]):
+            with self.assertRaisesRegex(SystemExit, "LANES is unset"):
+                up.main()
+            upload.assert_not_called()
+            queue.assert_not_called()
+            self.assertIsNone(up.QUEUE)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,29 @@
+--- a/harness/meok-memory-venturi/memory_venturi.py
++++ b/harness/meok-memory-venturi/memory_venturi.py
+@@ -130,7 +130,15 @@
+             result[source] = s.revision
+         return dict(sorted(result.items()))
+ 
+-    def run(self, ctx: HostContext, req: Request, *, compute: Callable, verify: Callable) -> dict:
++    def run(self, ctx: HostContext, req: Request, *, compute: Callable, verify: Callable,
++            force_refresh: bool = False) -> dict:
++        """Refresh is a host execution preference, never an authority grant.
++
++        True skips result lookup but preserves the existing compute, validation,
++        source/access recheck and cache-population path. Default behaviour is unchanged.
++        """
++        if type(force_refresh) is not bool:
++            raise Refused('INVALID_REFRESH_MODE')
+         start = time.perf_counter()
+         with self.lock:
+             if self.closed: raise Refused('CACHE_CLOSED')
+@@ -142,7 +150,8 @@
+                           'max_reuse_seconds':float(req.ttl_seconds),
+                           'worker':vars(req.worker), 'source_revisions':pins}
+             key = digest(canonical(descriptor))
+-            row = self.db.execute('SELECT payload,payload_sha,expires FROM result_cache WHERE key=?', (key,)).fetchone()
++            row = (None if force_refresh else self.db.execute(
++                'SELECT payload,payload_sha,expires FROM result_cache WHERE key=?', (key,)).fetchone())
+             now = self.clock(); hit = False; corruption_rejected = False
+             if row:
+                 payload = bytes(row[0])

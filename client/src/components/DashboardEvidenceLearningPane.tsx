@@ -21,7 +21,8 @@ export default function DashboardEvidenceLearningPane() {
     if (!script) {
       script = document.createElement("script");
       script.type = "module";
-      script.src = "/evidence-learning/element.js?v=0.2.0";
+      // Asset revision follows rendered bytes; v tracks the compatible local-state protocol.
+      script.src = "/evidence-learning/element.js?v=0.3.0&rev=d86d5307e36e";
       script.dataset.councilEvidenceLearning = "1";
     }
     script.addEventListener("load", loaded);
