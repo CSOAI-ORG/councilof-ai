@@ -1,0 +1,51 @@
+{
+  "schema": "csoai.cross-runtime-replay/1",
+  "label": "M4-to-Cloudflare-remote-development",
+  "state": "CROSS_RUNTIME_PARITY_PASSED",
+  "at": "2026-11-11T05:57:35.476839+00:00",
+  "python": "3.14.7",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "model_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+  "input_sha256": "6349f1e13d5e1952566110d52494d8da3dd4bde7b01bbaffecc28fdb8b66aa9c",
+  "source_space_revision": "1c2395b61d8d45955b28f05f971e759ddc799b49",
+  "rows": 560,
+  "episodes": 70,
+  "local_model_evaluations": 560,
+  "local_compute_seconds": 0.033410874999844964,
+  "local_constrained_mae": 0.0028797331109599016,
+  "local_worst_component_error": 0.7499076603275624,
+  "edge": {
+    "state": "CLOUDFLARE_REMOTE_DEV_PARITY_PASSED",
+    "transport_mode": "WRANGLER_REMOTE_DEVELOPMENT_PROXY",
+    "url": "http://127.0.0.1:9191",
+    "rows_compared": 560,
+    "raw_and_constrained_values_compared": 4480,
+    "requests": 78,
+    "max_absolute_difference": 5.551115123125783e-16,
+    "tolerance": 1e-12,
+    "negative_controls": [
+      "wrong_pin",
+      "bad_json",
+      "boolean",
+      "empty_batch",
+      "too_many",
+      "over_size"
+    ],
+    "recovery_after_refusal": true,
+    "end_to_end_request_wall_seconds": 1.6802950000001147,
+    "response_digest_checks": 78,
+    "cf_ray_present_count": 78,
+    "preview_expires_at": "2026-11-12T00:00:00Z",
+    "remote_GSPC_admission": false,
+    "timing_scope": "Sequential HTTP wall-time including transport/verification, not a provider-kernel latency or throughput benchmark."
+  },
+  "signed": false,
+  "new_training": false,
+  "GSPC_admitted": false,
+  "limitations": [
+    "Public synthetic test-bank replay, not a new blind benchmark.",
+    "Runtime parity is not real-world correctness or general intelligence.",
+    "No energy measurement, quantum/photonic execution or large-language-model training."
+  ],
+  "finished_at": "2026-11-11T05:57:37.277912+00:00"
+}
