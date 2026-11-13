@@ -1,0 +1,213 @@
+{
+  "state": "STRICT_RESPONSE_CONTRACT_PASSED",
+  "negative_cases": 40,
+  "cases": [
+    {
+      "case": "empty_outputs_with_claimed_rows",
+      "state": "REFUSED",
+      "reason": "ACTUAL_OUTPUT_COUNT"
+    },
+    {
+      "case": "short_outputs",
+      "state": "REFUSED",
+      "reason": "ACTUAL_OUTPUT_COUNT"
+    },
+    {
+      "case": "extra_outputs",
+      "state": "REFUSED",
+      "reason": "ACTUAL_OUTPUT_COUNT"
+    },
+    {
+      "case": "wrong_declared_rows",
+      "state": "REFUSED",
+      "reason": "DECLARED_ROW_COUNT"
+    },
+    {
+      "case": "float_row_count",
+      "state": "REFUSED",
+      "reason": "DECLARED_ROW_COUNT"
+    },
+    {
+      "case": "missing_schema",
+      "state": "REFUSED",
+      "reason": "RESPONSE_FIELDS"
+    },
+    {
+      "case": "wrong_schema",
+      "state": "REFUSED",
+      "reason": "RESPONSE_IDENTITY"
+    },
+    {
+      "case": "wrong_state",
+      "state": "REFUSED",
+      "reason": "RESPONSE_IDENTITY"
+    },
+    {
+      "case": "wrong_model_pin",
+      "state": "REFUSED",
+      "reason": "REQUEST_OR_MODEL_BINDING"
+    },
+    {
+      "case": "wrong_request_pin",
+      "state": "REFUSED",
+      "reason": "REQUEST_OR_MODEL_BINDING"
+    },
+    {
+      "case": "signed_true",
+      "state": "REFUSED",
+      "reason": "RESEARCH_BOUNDARY"
+    },
+    {
+      "case": "signed_zero_is_not_false",
+      "state": "REFUSED",
+      "reason": "RESEARCH_BOUNDARY"
+    },
+    {
+      "case": "persisted_true",
+      "state": "REFUSED",
+      "reason": "RESEARCH_BOUNDARY"
+    },
+    {
+      "case": "persisted_zero_is_not_false",
+      "state": "REFUSED",
+      "reason": "RESEARCH_BOUNDARY"
+    },
+    {
+      "case": "authorises_execution_true",
+      "state": "REFUSED",
+      "reason": "RESEARCH_BOUNDARY"
+    },
+    {
+      "case": "authorises_execution_zero_is_not_false",
+      "state": "REFUSED",
+      "reason": "RESEARCH_BOUNDARY"
+    },
+    {
+      "case": "gspc_admitted_true",
+      "state": "REFUSED",
+      "reason": "RESEARCH_BOUNDARY"
+    },
+    {
+      "case": "gspc_admitted_zero_is_not_false",
+      "state": "REFUSED",
+      "reason": "RESEARCH_BOUNDARY"
+    },
+    {
+      "case": "cosmos_loaded_true",
+      "state": "REFUSED",
+      "reason": "RESEARCH_BOUNDARY"
+    },
+    {
+      "case": "cosmos_loaded_zero_is_not_false",
+      "state": "REFUSED",
+      "reason": "RESEARCH_BOUNDARY"
+    },
+    {
+      "case": "missing_output_field",
+      "state": "REFUSED",
+      "reason": "OUTPUT_FIELDS"
+    },
+    {
+      "case": "false_extra_authority",
+      "state": "REFUSED",
+      "reason": "RESPONSE_FIELDS"
+    },
+    {
+      "case": "missing_vector_value",
+      "state": "REFUSED",
+      "reason": "OUTPUT_VECTOR"
+    },
+    {
+      "case": "boolean_output",
+      "state": "REFUSED",
+      "reason": "OUTPUT_VECTOR"
+    },
+    {
+      "case": "nan_output",
+      "state": "REFUSED",
+      "reason": "OUTPUT_VECTOR"
+    },
+    {
+      "case": "infinite_output",
+      "state": "REFUSED",
+      "reason": "OUTPUT_VECTOR"
+    },
+    {
+      "case": "wrong_output_value",
+      "state": "REFUSED",
+      "reason": "NUMERICAL_MISMATCH"
+    },
+    {
+      "case": "wrong_expiry_rule",
+      "state": "REFUSED",
+      "reason": "EXPIRY_RULE_BINDING"
+    },
+    {
+      "case": "integer_expiry_rule",
+      "state": "REFUSED",
+      "reason": "EXPIRY_RULE_BINDING"
+    },
+    {
+      "case": "wrong_rule_output",
+      "state": "REFUSED",
+      "reason": "NUMERICAL_MISMATCH"
+    },
+    {
+      "case": "wrong_expiry_limit",
+      "state": "REFUSED",
+      "reason": "LIMIT_VALUES"
+    },
+    {
+      "case": "relaxed_batch_limit",
+      "state": "REFUSED",
+      "reason": "LIMIT_VALUES"
+    },
+    {
+      "case": "boolean_batch_limit",
+      "state": "REFUSED",
+      "reason": "LIMIT_VALUES"
+    },
+    {
+      "case": "duplicate_key",
+      "state": "REFUSED",
+      "reason": "DUPLICATE_JSON_KEY"
+    },
+    {
+      "case": "invalid_utf8",
+      "state": "REFUSED",
+      "reason": "INVALID_JSON_ENCODING"
+    },
+    {
+      "case": "nonfinite_constant",
+      "state": "REFUSED",
+      "reason": "NONFINITE_JSON_CONSTANT"
+    },
+    {
+      "case": "bad_json",
+      "state": "REFUSED",
+      "reason": "INVALID_JSON_ENCODING"
+    },
+    {
+      "case": "oversize",
+      "state": "REFUSED",
+      "reason": "RESPONSE_BYTE_BOUND"
+    },
+    {
+      "case": "self_hashed_empty_result_still_rejected",
+      "state": "REFUSED",
+      "reason": "ACTUAL_OUTPUT_COUNT"
+    },
+    {
+      "case": "boolean_single_row_count",
+      "state": "REFUSED",
+      "reason": "DECLARED_ROW_COUNT"
+    }
+  ],
+  "valid_batch_control": true,
+  "retained_rows_verified": 560,
+  "scalar_values_verified": 6720,
+  "max_absolute_difference": 0.0,
+  "real_network_requests": 0,
+  "model_weights_changed": false,
+  "scope": "Semantic response validation against actual pinned-model references; not a new model-quality evaluation."
+}
