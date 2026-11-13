@@ -9,7 +9,7 @@ describe("home badge row", () => {
     expect(rows.length).toBeGreaterThan(0);
     for (const b of rows) expect(b.href.length).toBeGreaterThan(1);
     const w3c = rows.find((b) => b.label === "W3C Community Groups");
-    if (w3c) expect(w3c.count).toBe(MEMBERSHIPS.rows.filter((r) => r.group === "standards" && /^W3C /.test(r.org)).length);
+    if (w3c) expect(w3c.count).toBe(MEMBERSHIPS.rows.filter((r) => r.group === "standards" && r.state === "VERIFIED" && /^W3C /.test(r.org)).length);
   });
   it("drops a body when it leaves the manifest", () => {
     const m = { ...MEMBERSHIPS, rows: MEMBERSHIPS.rows.filter((r) => !/^C2PA/.test(r.org)) };
@@ -53,16 +53,27 @@ describe("home badge row — links and legibility", () => {
   it("gives every non-standards, non-filings group a pill whose count is derived, never typed", () => {
     // Derived from m.groups, so a group added to the manifest reaches the hero with no code
     // change — and this test walks the manifest rather than a list someone has to remember.
-    const expected = MEMBERSHIPS.groups.filter((g) => g.id !== "standards" && g.id !== "filings" && MEMBERSHIPS.rows.some((r) => r.group === g.id));
+    const expected = MEMBERSHIPS.groups.filter((g) => g.id !== "standards" && g.id !== "filings" && MEMBERSHIPS.rows.some((r) => r.group === g.id && r.state === "VERIFIED"));
     expect(expected.length).toBeGreaterThan(1);
     for (const g of expected) {
       const pill = badgeRows().find((b) => b.href === `/memberships#${g.id}`);
       expect(pill, `group pill for ${g.id}`).toBeTruthy();
-      expect(pill!.count).toBe(MEMBERSHIPS.rows.filter((r) => r.group === g.id).length);
+      expect(pill!.count).toBe(MEMBERSHIPS.rows.filter((r) => r.group === g.id && r.state === "VERIFIED").length);
       expect(badges, `pill label ${g.label}`).toContain(esc(g.label));
     }
     // A filing is a submission, not a standing: it gets no hero pill.
     expect(badgeRows().some((b) => b.href === "/memberships#filings")).toBe(false);
+  });
+
+  it("does not count UNVERIFIED rows in verified homepage group totals", () => {
+    const unverified = MEMBERSHIPS.rows.filter((r) => r.state === "UNVERIFIED");
+    expect(unverified.some((r) => r.id === "smithery")).toBe(true);
+    expect(unverified.some((r) => r.id === "openaire")).toBe(true);
+    for (const group of MEMBERSHIPS.groups) {
+      const pill = badgeRows().find((b) => b.href === `/memberships#${group.id}`);
+      if (!pill) continue;
+      expect(pill.count).toBe(MEMBERSHIPS.rows.filter((r) => r.group === group.id && r.state === "VERIFIED").length);
+    }
   });
 
   it("keeps each pill on one line so the row stays legible when it wraps at 390px", () => {
