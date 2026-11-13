@@ -1,6 +1,6 @@
 {
   "schema": "csoai.memberships-updates/0.1",
-  "as_of": "2026-10-07",
+  "as_of": "2026-11-13",
   "signed": false,
   "purpose": "The dated record of what changed in public/interop/memberships.json and why. One entry per change, newest first. Every entry names the manifest row it touches (or null when it touches the manifest as a whole) and carries the same kind of evidence the rows do: a public URL a stranger can open, or a dated mailbox record when the only evidence is private. This file exists so a reader can see that a row moved, when, and on what basis — a table that only ever shows its current state cannot be audited. scripts/memberships-check.mjs validates it and fails when an entry names a row that does not exist.",
   "honesty_line": "An update is a record of a change, not an announcement of an achievement. Nothing here upgrades a row; the rows say what they prove.",
@@ -23,6 +23,24 @@
     }
   ],
   "entries": [
+    {
+      "date": "2026-11-13",
+      "kind": "corrected",
+      "row": "smithery",
+      "headline": "Smithery listing marked UNVERIFIED after the cited server-detail route returned HTTP 404",
+      "detail": "A live check on 13 November 2026 followed the apex URL redirect to the canonical www detail route, which returned HTTP 404. The public search page was inconclusive and unauthenticated registry API probes did not produce usable results. The row is now UNVERIFIED. A missing route is not proof that the server was deleted or that no alternate listing exists; owner-side registry verification is still required.",
+      "evidence": "https://www.smithery.ai/servers/csoai/gspc",
+      "evidence_kind": "public_url"
+    },
+    {
+      "date": "2026-11-13",
+      "kind": "corrected",
+      "row": "openaire",
+      "headline": "OpenAIRE research-product listing marked UNVERIFIED after Graph API returned zero records for the DOI",
+      "detail": "On 13 November 2026 the OpenAIRE Graph v4 API returned HTTP 200 with header.numFound=0 and results=[]. The previously cited OpenAIRE record could not be reproduced. The row is now UNVERIFIED. This does not establish that the underlying Zenodo deposit was deleted or permanently removed from OpenAIRE; the scholarly-record owner must investigate reindexing, withdrawal or temporary absence before any stronger conclusion.",
+      "evidence": "https://api.openaire.eu/graph/v4/research-products?filter=ids.doi%3A10.5281%2Fzenodo.21991105&page_size=10",
+      "evidence_kind": "public_url"
+    },
     {
       "date": "2026-09-26",
       "kind": "corrected",
