@@ -1,5 +1,4 @@
 import { useGspcBoard } from "@/components/board/useGspcBoard";
-import { boardAxisLabel } from "./HomeGspcBoard";
 import {
   boardTiles,
   type Tile,
@@ -23,8 +22,13 @@ const STATE_CLASS: Record<TileState, string> = {
   UNMEASURED: "is-unmeasured",
 };
 
+function formatAxisName(axis: string): string {
+  return axis.replace(/[-_]/g, " ").replace(/\\b\\w/g, (character) => character.toUpperCase());
+}
+
 function AxisRow({ tile }: { tile: Tile }) {
   const href = axisHref({ axis: tile.axis, kind: tile.kind });
+  const label = formatAxisName(tile.axis);
 
   return (
     <li
@@ -34,9 +38,9 @@ function AxisRow({ tile }: { tile: Tile }) {
     >
       <span className="hp-console-axis">
         {href ? (
-          <a href={href}>{boardAxisLabel(tile.axis)}</a>
+          <a href={href}>{label}</a>
         ) : (
-          <span>{boardAxisLabel(tile.axis)}</span>
+          <span>{label}</span>
         )}
         {tile.bench ? <small>{tile.bench}</small> : null}
       </span>
