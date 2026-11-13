@@ -5,8 +5,20 @@
  * The receipts are note-taking, not evidence: the tests hold the honesty shape
  * (not_signed_evidence on every record, args hashed and never stored) and the
  * mechanics (ring buffer cap, clear, export shape, stable argument hashing).
+ *
+ * THE STORE IS SUPPLIED, NOT INHERITED (2026-11-06). Node 22 ships a Web Storage global of its own
+ * and Node 24+ enables it by default. Vitest's jsdom environment only fills in globals the runtime
+ * does not already own, and in that environment `window` IS the global object - so on a newer Node
+ * `localStorage` was the Node runtime's, and it was undefined. This suite then read an empty store
+ * and wrote nowhere, and it went red on a developer's desk while CI, pinned to Node 20, stayed
+ * green: the desk and the gate were running different programs.
+ *
+ * So the suite now SUPPLIES the store it asserts against, and asserts against that store rather
+ * than against whatever the runtime happened to provide. Every assertion here is then about the
+ * module and this test sharing ONE store, on every runtime - and the defect becomes visible to a
+ * gate that cannot run the developer's Node.
  */
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   RECEIPTS_CAP,
   RECEIPTS_KEY,
@@ -19,8 +31,37 @@ import {
   stableArgsString,
 } from "./toolReceipts";
 
-beforeEach(() => localStorage.clear());
-afterEach(() => localStorage.clear());
+/** The slice of the Storage interface the module uses, backed by a Map. */
+type TestStore = {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+};
+
+function makeStore(): TestStore {
+  const map = new Map<string, string>();
+  return {
+    getItem: (key) => (map.has(key) ? (map.get(key) as string) : null),
+    setItem: (key, value) => {
+      map.set(key, String(value));
+    },
+    removeItem: (key) => {
+      map.delete(key);
+    },
+  };
+}
+
+let store: TestStore;
+
+beforeEach(() => {
+  store = makeStore();
+  // The suite owns the store. See the header for why it may not inherit one.
+  vi.stubGlobal("localStorage", store);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("toolReceipts", () => {
   it("records a receipt with the honesty field and no raw arguments", async () => {
@@ -74,7 +115,7 @@ describe("toolReceipts", () => {
     expect(listToolReceipts()).toHaveLength(1);
     clearToolReceipts();
     expect(listToolReceipts()).toHaveLength(0);
-    expect(localStorage.getItem(RECEIPTS_KEY)).toBeNull();
+    expect(store.getItem(RECEIPTS_KEY)).toBeNull();
   });
 
   it("export carries the schema, the not-evidence note and every receipt", () => {
@@ -88,7 +129,7 @@ describe("toolReceipts", () => {
   });
 
   it("a corrupted store reads as empty rather than throwing", () => {
-    localStorage.setItem(RECEIPTS_KEY, "{not json");
+    store.setItem(RECEIPTS_KEY, "{not json");
     expect(listToolReceipts()).toHaveLength(0);
     expect(recordToolReceipt({ tool: "t", argsHash: "x", outcome: "OK" })).not.toBeNull();
   });
@@ -97,5 +138,17 @@ describe("toolReceipts", () => {
     expect(fnv1aHex("abc")).toBe(fnv1aHex("abc"));
     expect(fnv1aHex("abc").startsWith("fnv1a:")).toBe(true);
     expect(fnv1aHex("abc")).not.toBe(fnv1aHex("abd"));
+  });
+
+  it("writes into the store this suite supplied, not into one the runtime owns", () => {
+    // THE PIN. The module and this test must share ONE store, on every runtime. If the module
+    // reached a store this test cannot see - the Node runtime's own, on a newer Node - the
+    // receipt would be written somewhere else and this assertion would fail HERE, on Node 20 in
+    // CI, where the runtime happens not to own the name and the defect was invisible.
+    expect(store.getItem(RECEIPTS_KEY)).toBeNull();
+    const receipt = recordToolReceipt({ tool: "shared", argsHash: "h", outcome: "OK" });
+    expect(receipt?.not_signed_evidence).toBe(true);
+    expect(store.getItem(RECEIPTS_KEY)).toContain("shared");
+    expect(listToolReceipts().map((r) => r.tool)).toEqual(["shared"]);
   });
 });

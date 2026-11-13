@@ -32,6 +32,10 @@ on:
       - "scripts/build-interop-file-index.py"
       - ".github/workflows/interop-index-drift.yml"
 
+concurrency:
+  group: interop-index-drift-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   issues: write

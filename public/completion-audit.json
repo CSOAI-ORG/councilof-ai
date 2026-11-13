@@ -1,6 +1,6 @@
 {
  "schema": "csoai.completion-audit/0.1",
- "measured_at": "2026-11-08T03:38:31Z",
+ "measured_at": "2026-11-12T13:45:42Z",
  "note": "Every LIVE line was probed against the live surface and carries the measured value and the receipt URL. An item is LIVE only if a probe saw it. Owner-gated items are named as owner-gated, never as done. This is a measurement of completion, not a claim of a market outcome: 'unicorn status' is a trajectory, not a claim, and nothing here asserts it.",
  "not_claimed": [
   "a customer",
@@ -27,7 +27,7 @@
    "lane": "agent",
    "closer": "probe",
    "state": "OPEN",
-   "measured": "6/6 surfaces answered 200: board=200, root=200, corrections=200, x402=200, mcp=200, verify=200",
+   "measured": "availability=LIVE; 6/6 surfaces answered 200: board=200, root=200, corrections=200, x402=200, mcp=200, verify=200; completion not verified: this GET-only audit does not consume a qualified non-fixture discover/identify/pay/deliver/verify receipt",
    "receipt": "https://councilof.ai/"
   },
   {
@@ -36,7 +36,7 @@
    "lane": "agent",
    "closer": "probe",
    "state": "OPEN",
-   "measured": "GET / -> HTTP 200",
+   "measured": "availability=LIVE; GET / -> HTTP 200; completion not verified: this GET-only audit does not consume qualified claim-maintenance acceptance linking the claim, supporting evidence, correction history and independent readback",
    "receipt": "https://councilof.ai/"
   },
   {
@@ -72,7 +72,7 @@
    "lane": "agent",
    "closer": "probe",
    "state": "OPEN",
-   "measured": "696/698 proofs Bitcoin-attested, 2 pending",
+   "measured": "697/699 proofs Bitcoin-attested, 2 pending",
    "receipt": "https://councilof.ai/interop/ots/manifest.json"
   },
   {
@@ -264,92 +264,5 @@
    "measured": "not yet closed by a probe; the work is in the agent lane",
    "receipt": ""
   }
- ],
- "classification_correction": {
-  "schema": "csoai.completion-audit-classification-correction/0.1",
-  "prepared_at": "2026-11-08T10:26:28Z",
-  "author": "Codex",
-  "measurement_repeated": false,
-  "original_measured_at": "2026-11-08T03:38:31Z",
-  "reason": "U-1 and U-2 recorded HTTP availability only; those observations do not establish completed product delivery or claim-maintenance acceptance.",
-  "criteria_source": {
-   "source_blob": "ead040005b7951c911b8fe1c27cef5e4c7580014",
-   "source_pr": 4126,
-   "source_head": "8c609e4e7b5f690f5866e7cf7abed5f36438f1b4"
-  },
-  "original_report": {
-   "commit": "06a04d1f63c13cd2691bd032b248c5e44599556c",
-   "files": [
-    {
-     "path": "public/completion-audit.json",
-     "oid": "5ed556ebabcf2a67bdf81de404be13c5cbc6eed5",
-     "bytes": 8701,
-     "sha256": "61d982bea00a79d6247a6733d8b2356d01ded47ca2398ceb62125452666f5031"
-    },
-    {
-     "path": "docs/measurement/CONSUMER-READY-COMPLETION-AUDIT.md",
-     "oid": "adafc3c1a93c9b241fc675323923de878ebb1290",
-     "bytes": 6332,
-     "sha256": "c408df651ba00df8e37df7531aa2086c4cd07da39c565ccc80eb07f3de141758"
-    }
-   ],
-   "counts": {
-    "total": 27,
-    "live": 11,
-    "open": 7,
-    "staged": 3,
-    "owner": 6
-   }
-  },
-  "changes": [
-   {
-    "id": "U-1",
-    "previous_state": "LIVE",
-    "corrected_state": "OPEN",
-    "missing_completion_evidence": "Qualified non-fixture discover/identify/pay/deliver/verify receipt."
-   },
-   {
-    "id": "U-2",
-    "previous_state": "LIVE",
-    "corrected_state": "OPEN",
-    "missing_completion_evidence": "Qualified claim-maintenance acceptance linking claim, supporting evidence, correction history and independent readback."
-   }
-  ],
-  "preserved": {
-   "item_ids": [
-    "U-1",
-    "U-2",
-    "U-3",
-    "U-4",
-    "U-13a",
-    "U-21",
-    "U-9a",
-    "U-10a",
-    "U-10c",
-    "U-14a",
-    "U-14b",
-    "U-15a",
-    "U-9b",
-    "U-13b",
-    "U-18a",
-    "U-19a",
-    "U-22",
-    "U-5",
-    "U-6",
-    "U-7",
-    "U-8",
-    "U-10b",
-    "U-11",
-    "U-12",
-    "U-16",
-    "U-17",
-    "U-20"
-   ],
-   "denominator": 27,
-   "other_item_bodies": 25,
-   "all_observation_values_and_receipts": true,
-   "measured_at": true
-  },
-  "scope": "Unsigned classification-only source correction to retained observations; no fresh measurement, signature, customer outcome or re-verification of the other 25 items."
- }
+ ]
 }
