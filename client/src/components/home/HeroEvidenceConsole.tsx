@@ -42,6 +42,7 @@ export default function HeroEvidenceConsole() {
   const { data, error, loading } = useGspcBoard();
   const tiles = boardTiles(data).slice(0, 3);
   const unavailable = Boolean(error && !data);
+  const stale = Boolean(error && data);
 
   return (
     <aside className="hp-evidence-console" aria-label="Live public evidence preview" data-testid="hero-evidence-console">
@@ -51,10 +52,10 @@ export default function HeroEvidenceConsole() {
           <strong>Public evidence feed</strong>
           <small>GSPC · live board</small>
         </span>
-        <span className="hp-console-live">{unavailable ? "UNAVAILABLE" : loading && !data ? "CONNECTING" : "LIVE"}</span>
+        <span className="hp-console-live">{unavailable ? "UNAVAILABLE" : stale ? "STALE" : loading && !data ? "CONNECTING" : "LIVE"}</span>
       </div>
       {tiles.length > 0 ? (
-        <ul className="hp-console-list" aria-label="Latest visible measurement axes">
+        <ul className="hp-console-list" aria-label="Visible measurement axes">
           {tiles.map((tile) => <AxisRow key={tile.axis} tile={tile} />)}
         </ul>
       ) : (
