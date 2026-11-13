@@ -1,7 +1,8 @@
 name: Claims E2E (live truth check)
 
-# Verifies every claim on the live site is functionally true — tools execute,
-# seals are real Ed25519, counts match copy. Fails if any claim fails.
+# Checks the enumerated live-site assertions and historical backend contract.
+# An unqualified backend is UNCHECKABLE; either FAIL or UNCHECKABLE exits 1.
+# Signature-field checks do not independently verify an Ed25519 signature.
 #
 # TRIGGER CHANGED 2026-08-26 (push -> workflow_run). This used to fire on EVERY push
 # to master, and it was wrong on its own terms as well as expensive:
@@ -15,7 +16,7 @@ name: Claims E2E (live truth check)
 # Running it when deploy.yml actually COMPLETES makes it both cheaper and true.
 on:
   workflow_run:
-    workflows: ["Build + deploy site (gated production branch)"]
+    workflows: ["Build \\+ deploy site (gated production branch)"]
     types: [completed]
   schedule:
     - cron: "0 6 * * *" # daily 06:00 UTC
@@ -33,7 +34,48 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      # workflow_run's github.sha is the receiver's default-branch revision.
+      # Validate the successful canonical deploy before checking out its source.
+      - name: Validate triggering deployment identity
+        if: github.event_name == 'workflow_run'
+        env:
+          UPSTREAM_SHA: ${{ github.event.workflow_run.head_sha }}
+          UPSTREAM_RUN_ID: ${{ github.event.workflow_run.id }}
+          UPSTREAM_RUN_URL: ${{ github.event.workflow_run.html_url }}
+          UPSTREAM_REPOSITORY: ${{ github.event.workflow_run.head_repository.full_name }}
+          UPSTREAM_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          UPSTREAM_PATH: ${{ github.event.workflow_run.path }}
+          UPSTREAM_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$UPSTREAM_SHA" =~ ^[0-9a-f]{40}$ ||
+                ! "$UPSTREAM_RUN_ID" =~ ^[1-9][0-9]*$ ||
+                "$UPSTREAM_REPOSITORY" != "$GITHUB_REPOSITORY" ||
+                "$UPSTREAM_BRANCH" != master ||
+                "$UPSTREAM_PATH" != .github/workflows/deploy.yml ||
+                "$UPSTREAM_CONCLUSION" != success ||
+                "$UPSTREAM_RUN_URL" != "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$UPSTREAM_RUN_ID" ]]; then
+            echo "::error::Missing or noncanonical successful deployment identity"
+            exit 1
+          fi
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      # This binds the verifier source; it does not identify the current live alias.
+      - name: Record and verify checkout identity
+        env:
+          EXPECTED_CHECKOUT_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          DEPLOY_SHA: ${{ github.event.workflow_run.head_sha }}
+          DEPLOY_RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: |
+          set -euo pipefail
+          CHECKOUT_SHA="$(git rev-parse HEAD)"
+          printf 'VERIFICATION_EVENT=%s\nEXPECTED_CHECKOUT_SHA=%s\nCHECKOUT_SHA=%s\n' "$GITHUB_EVENT_NAME" "$EXPECTED_CHECKOUT_SHA" "$CHECKOUT_SHA"
+          printf 'DEPLOY_SHA=%s\nDEPLOY_RUN_URL=%s\n' "${DEPLOY_SHA:-not-applicable}" "${DEPLOY_RUN_URL:-not-applicable}"
+          if [ "$CHECKOUT_SHA" != "$EXPECTED_CHECKOUT_SHA" ]; then
+            echo "::error::Checkout does not match the selected verification source"
+            exit 1
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: "20"

@@ -166,12 +166,17 @@ jobs:
           # has the mechanism (TUI-1, 2026-09-13, in hub-queue-land.yml): pr-gates.yml already
           # accepts workflow_dispatch, so the gates are dispatched at this branch and attach
           # to the pull request's head. Branch protection is untouched, and nothing is faked.
-          if ! gh workflow run pr-gates.yml --ref "$BRANCH" 2>/dev/null; then
-            echo "::error::OPERATOR ACTION REQUIRED: PR #$pr was created but its protected checks could not be dispatched"
-            echo "::error::run: gh workflow run pr-gates.yml --ref $BRANCH"
-          else
-            echo "the required gates are dispatched at $BRANCH"
+          # Both workflows are needed: pr-gates does not publish the required CI/build check.
+          # Dispatch failures leave the PR available but fail this producer visibly.
+          if ! gh workflow run pr-gates.yml --repo "$REPO" --ref "$BRANCH" -f "pr=$pr"; then
+            echo "::error::PR #$pr was created but pr-gates could not be dispatched"
+            exit 1
           fi
+          if ! gh workflow run ci.yml --repo "$REPO" --ref "$BRANCH"; then
+            echo "::error::PR #$pr was created but the required CI/build check could not be dispatched"
+            exit 1
+          fi
+          echo "pr-gates and CI/build dispatched at $BRANCH; protected checks remain required"
           # NO SILENT NO-OP. The old line was `... --auto || true`, which swallowed every
           # failure - including "auto-merge is not enabled on this repository" - and left a
           # day's reading sitting on an open pull request with nothing to show for it.

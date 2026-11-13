@@ -1,0 +1,159 @@
+{
+ "schema": "csoai.model-lifecycle-upstream/0.1",
+ "record_type": "reported-vendor-statement",
+ "title": "Upstream availability of one vendor's model families, read on one date",
+ "as_of": "2026-11-03",
+ "what": "What the vendor itself says about which of its model families are available on its API, which are retired, and which have not been released. Read from the vendor's own documentation on the date in as_of, and kept as bytes so the claim can be re-read.",
+ "not_this": [
+  "Not a measurement by us. Every row here is the vendor's own statement about its own surface, read on one date, exactly as the enforcement corpus carries regulator actions as REPORTED rather than MEASURED.",
+  "Not a ranking, an endorsement or a judgement of any model. Availability says a model can still be called; it says nothing about how a model behaves.",
+  "Not a freshness claim. as_of is the date the vendor's pages were read, never the time this file was served, and it never moves on its own.",
+  "Not a statement that a model is good, safe, compliant or approved. Verification of a signed measurement is free and separate; see /gspc-verify/."
+ ],
+ "vendor": "MiniMax",
+ "sources": [
+  {
+   "id": "model-list",
+   "url": "https://platform.minimax.io/docs/faq/models",
+   "read_on": "2026-11-03",
+   "last_modified_at_source": "2026-11-03T12:45:55Z",
+   "carries": [
+    "Available Models (LLM, Video, Speech, Image)",
+    "Retired Models",
+    "MiniMax M2.5 and M2.7 Model Retirement Notice"
+   ]
+  },
+  {
+   "id": "release-notes",
+   "url": "https://platform.minimax.io/docs/release-notes/models",
+   "read_on": "2026-11-03",
+   "carries": [
+    "the release date of each family"
+   ]
+  }
+ ],
+ "status_vocabulary": {
+  "AVAILABLE": "The vendor lists the family under Available Models on the date read.",
+  "RETIRED": "The vendor lists the family under Retired Models on the date read.",
+  "NOT_RELEASED": "No identifier, no release date and no release entry. Nothing is known about this family beyond a public commitment to a future generation, so no number is published for it here."
+ },
+ "release_date_precision": {
+  "day": "A specific date the vendor's release notes give.",
+  "month": "The vendor's release notes give a month and no day for this entry."
+ },
+ "retirement_notice": {
+  "families": [
+   "MiniMax-M2.5",
+   "MiniMax-M2.7"
+  ],
+  "quote": "As we roll out newer models, we'll be retiring the MiniMax M2.5 and M2.7 model families.",
+  "schedule": [
+   {
+    "date": "2026-10-19",
+    "what": "These models are no longer available to new users. M Plan and Token Plan requests are routed to M3.1 Flash from this date; the old model names keep working for backward compatibility."
+   },
+   {
+    "date": "2026-11-18",
+    "what": "These models are retired. Pay-as-you-go API requests to them stop working."
+   }
+  ],
+  "read_on": "2026-11-03",
+  "note": "The vendor's Retired Models table lists both families as Retired on the date read, and the notice above sets 2026-11-18 as the date pay-as-you-go access ends. Both facts are recorded; neither is resolved here."
+ },
+ "families": [
+  {
+   "model": "MiniMax-M2",
+   "kind": "llm",
+   "released": "2025-10-27",
+   "release_date_precision": "day",
+   "upstream_status": "RETIRED",
+   "source": "model-list",
+   "release_source": "release-notes"
+  },
+  {
+   "model": "MiniMax-M2.1",
+   "kind": "llm",
+   "released": "2025-12-22",
+   "release_date_precision": "day",
+   "upstream_status": "RETIRED",
+   "source": "model-list",
+   "release_source": "release-notes"
+  },
+  {
+   "model": "M2-her",
+   "kind": "llm",
+   "released": null,
+   "release_date_precision": "unknown",
+   "upstream_status": "RETIRED",
+   "source": "model-list",
+   "release_source": null,
+   "release_note": "The vendor's release notes carry no entry for this family, so no release date is recorded. Unknown is not zero and not a guess."
+  },
+  {
+   "model": "MiniMax-M2.5",
+   "kind": "llm",
+   "released": "2026-02",
+   "release_date_precision": "month",
+   "upstream_status": "RETIRED",
+   "source": "model-list",
+   "release_source": "release-notes",
+   "payg_access_ends": "2026-11-18"
+  },
+  {
+   "model": "MiniMax-M2.7",
+   "kind": "llm",
+   "released": "2026-03-18",
+   "release_date_precision": "day",
+   "upstream_status": "RETIRED",
+   "source": "model-list",
+   "release_source": "release-notes",
+   "payg_access_ends": "2026-11-18"
+  },
+  {
+   "model": "MiniMax-M3",
+   "kind": "llm",
+   "released": "2026-06-01",
+   "release_date_precision": "day",
+   "upstream_status": "AVAILABLE",
+   "source": "model-list",
+   "release_source": "release-notes"
+  },
+  {
+   "model": "MiniMax-M3.1-Flash",
+   "kind": "llm",
+   "released": "2026-10-19",
+   "release_date_precision": "day",
+   "upstream_status": "AVAILABLE",
+   "source": "model-list",
+   "release_source": "release-notes"
+  },
+  {
+   "model": "MiniMax-M4",
+   "kind": "llm",
+   "released": null,
+   "release_date_precision": "unknown",
+   "upstream_status": "NOT_RELEASED",
+   "source": null,
+   "release_source": null,
+   "note": "No identifier, no release date, no release entry, and no mention in the vendor's model list, release notes or retirement notice on the date read. The only public trace is a commitment to a future generation of the series. This estate publishes no number for it, and does not list it as a gap it has measured."
+  }
+ ],
+ "other_families_on_the_vendor_surface": {
+  "note": "The vendor's model list also covers video, speech, image and music families. This estate's signed model corpus measures language models on frozen banks, so those families are named here and carry no measurement.",
+  "families": [
+   "MiniMax-H3",
+   "MiniMax-H3-Max",
+   "MiniMax-Hailuo-2.3",
+   "MiniMax-Hailuo-2.3-Fast",
+   "MiniMax-Hailuo-02",
+   "speech-2.8-hd",
+   "speech-2.8-turbo",
+   "speech-2.6-hd",
+   "speech-2.6-turbo",
+   "speech-02-hd",
+   "speech-02-turbo",
+   "image-01",
+   "image-01-live"
+  ]
+ }
+}

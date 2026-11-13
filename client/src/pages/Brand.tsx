@@ -13,8 +13,8 @@ import { BadgeCheck, ShieldAlert, Mail } from "lucide-react";
 const SURFACES = [
   { label: "councilof.ai", note: "this site — the board, the evidence, the APIs" },
   { label: "csoai.org", note: "redirects to councilof.ai" },
-  { label: "meok.ai", note: "MEOK — measured on the same public board as everyone else" },
-  { label: "Hugging Face: csoai", note: "datasets and models (145+ datasets; hourly fleet updates)" },
+  { label: "meok.ai", note: "related MEOK project; assess its ownership and evidence separately from CSOAI Ltd" },
+  { label: "Hugging Face: csoai", note: "published datasets, models and Spaces; each repository carries its own content and update history" },
   { label: "GitHub: CSOAI-ORG", note: "councilof-ai source, gspc-board mirror" },
   { label: "PyPI: csoai", note: "csoai, csoai-gspc, csoai-evidence-fabric and sibling packages" },
   { label: "npm: csoai / @meok-labs", note: "csoai-gspc-mcp, @csoai/gspc-cli, x402 rail client" },
@@ -27,8 +27,8 @@ export default function Brand() {
     <div className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="text-3xl font-semibold tracking-tight">Canonical surfaces</h1>
       <p className="mt-2 text-muted-foreground">
-        Council of AI (CSOAI Ltd, UK Companies House 16939677) operates the
-        surfaces below — anything else using the name is not us.
+        Council of AI is operated by CSOAI Ltd (UK Companies House 16939677).
+        {" "}These are Council publishing locations and related MEOK channels. Check each asset's publisher and licence before attributing it to a legal entity.
       </p>
 
       <Card className="mt-6">
@@ -48,6 +48,12 @@ export default function Brand() {
           </ul>
         </CardContent>
       </Card>
+
+      <p className="mt-5 text-sm text-muted-foreground">
+        A listing or mention does not establish endorsement or customer use. Read the{" "}
+        <a href="/traction/#external-use" className="font-semibold underline underline-offset-4">dated evidence of outside use</a>{" "}
+        and the separate commercial position.
+      </p>
 
       <Card className="mt-4">
         <CardHeader>

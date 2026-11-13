@@ -48,6 +48,9 @@ export const PRIMARY_PATHS = new Set<string>([
   "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/verify-leaderboard", "/assess",
   "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
   "/models", "/tools", "/plugin", "/watchdog-hub",
+  // The current Public Watchdog dashboard, linked from the public site; keep its live route out
+  // of archive classification while the separate incident service remains unstaffed.
+  "/watchdog",
   // The GSPC console moved from a static file into the site shell (27 Sep 2026).
   "/gspc-console",
   // Connect GSPC to your AI — the per-platform install matrix + registry funnel.

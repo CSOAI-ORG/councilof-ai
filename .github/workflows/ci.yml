@@ -1,6 +1,8 @@
 name: CI
 
 on:
+  # Bot-created daily-index PRs dispatch the real required build without bypassing protection.
+  workflow_dispatch:
   push:
     branches: [main, master]
   pull_request:
@@ -10,6 +12,10 @@ on:
   # tree, not of the pull request head. The job reads no pull_request context beyond CANDIDATE_HEAD,
   # which falls back to github.sha (the merge_group commit) when there is no pull request.
   merge_group:
+
+concurrency:
+  group: ci-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

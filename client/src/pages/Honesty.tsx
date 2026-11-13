@@ -38,14 +38,14 @@ interface EloRow {
 const ARTICLE_LD = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "The honesty gate — what Council of AI publishes against itself",
+  headline: "Measurement scope, limitations and corrections | Council of AI",
   datePublished: "2026-08-18",
   dateModified: "2026-08-26",
   url: "https://councilof.ai/honesty",
   publisher: { "@type": "Organization", name: "CSOAI Ltd", url: "https://councilof.ai", identifier: "UK Companies House 16939677" },
   author: { "@type": "Organization", name: "CSOAI Ltd", url: "https://councilof.ai" },
   description:
-    "Council of AI publishes the results that embarrass it: its own fine-tunes below base models in its own signed arena reference, the cards it withholds and the exact limit of what the chain proves about them, the board slots it has not measured, and a corrections ledger that includes a verification of its own that could not observe failure.",
+    "Review measurement coverage, in-house model results, signature limitations and documented corrections. Published evidence includes negative findings and distinguishes unmeasured subjects from measured results.",
 };
 
 
@@ -53,7 +53,7 @@ const ARTICLE_LD = {
 const HONESTY_FAQ = [
   {
     q: "Do Council of AI's own models beat the bases they started from?",
-    a: "No. On the signed arena reference at /arena/elo_reference.json, our own council models sit below the bases we started from. That finding is read from the published artifact at load time — not typed — and it is the most credible thing we can publish because it contradicts our own product narrative.",
+    a: "No. In the published signed arena reference at /arena/elo_reference.json, the evaluated in-house council models score below their base models. The table reads that dated reference at load time. This is a finding about the tested configurations, not every model or deployment.",
   },
   {
     q: "What does the cryptographic chain prove — and where does it stop?",
@@ -61,15 +61,15 @@ const HONESTY_FAQ = [
   },
   {
     q: "What board slots have you not measured?",
-    a: "UNMEASURED slots are published so the gap is visible. A slot stays UNMEASURED when the sample is too small (nothing below thirty usable graded items), when the instrument is not frozen and published, or when legal gold labels are still with counsel. UNMEASURED is a disclosure about us, not a failing grade for anyone else's AI system. Live counts: GET /api/gspc.",
+    a: "UNMEASURED means no qualifying result is published for the stated scope. Qualification depends on the applicable method, sample requirements, frozen test instrument and required review. The declared subject-axis roster has its own thirty-valid-observation admission requirement; that is not a universal sufficiency rule. UNMEASURED is not a failing grade or a zero score. Current counts: GET /api/gspc.",
   },
   {
-    q: "Where do you publish what you got wrong?",
+    q: "Where are corrections published?",
     a: "The corrections ledger at GET /api/corrections records what was wrong, how it was caught, and what changed. Entries are appended; none is edited or deleted. Most were caught by our own instrument turned on its owner — including a verifier that could not observe failure and a card-store verification that returned zero.",
   },
   {
     q: "What is the difference between MEASURED, UNMEASURED, and REPORTED?",
-    a: "MEASURED means a completed run under a published method; read its separate attestation state. UNMEASURED is honestly empty, published so the gap is visible. REPORTED is a figure published by someone else, cited and dated, carried for context and left unsigned. A REPORTED number never enters our board and is never averaged with a MEASURED one. Machine-readable set: GET /api/reported.",
+    a: "MEASURED means a completed run under a published method; read its separate attestation state. UNMEASURED means a qualifying result is not published for the stated scope. REPORTED is a figure published by someone else, cited and dated, carried for context and left unsigned. A REPORTED number never enters our board and is never averaged with a MEASURED one. Machine-readable set: GET /api/reported.",
   },
 ] as const;
 
@@ -183,9 +183,9 @@ export default function Honesty() {
   const facts = useEstateFacts();
 
   useEffect(() => {
-    document.title = "The honesty gate — what we publish against ourselves | Council of AI";
+    document.title = "Measurement scope, limitations and corrections | Council of AI";
     setMetaDescription(
-      "The honesty gate: our own fine-tunes below base models in our own signed arena reference, the cards we withhold and the exact limit of what the chain proves, the board slots we have not measured, and our public corrections ledger. Live counts: GET /api/gspc and GET /api/state.",
+      "Review our measurement scope, in-house model comparisons, signature limitations and public corrections. Results remain linked to their published evidence, dates and qualification requirements.",
     );
   }, []);
 
@@ -194,41 +194,40 @@ export default function Honesty() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_LD) }} />
       <div className="mx-auto max-w-3xl px-5 py-14">
         <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700">
-          The honesty gate
+          Measurement transparency
         </p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-          What we publish against ourselves.
+          Measurement scope, limitations and corrections.
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-slate-700">
-          An instrument that will say anything measures nothing. So this page collects the results
-          that embarrass us, the gaps we have not closed, and the exact points where our own
-          cryptography stops proving things. Every number on it is read from a published artifact
-          at load time; none is typed.
+          Understand what the published evidence establishes and where its limits apply.
+          This page brings together in-house model results, coverage information, signature
+          boundaries and documented corrections. The displayed results are read from their
+          published records, including negative findings.
         </p>
 
         {/* ── 1. our own fine-tunes lose ─────────────────────────────── */}
-        <h2 id="council-inhouse-ft" className="mt-12 text-xl font-bold">1. Our own models lose our own arena</h2>
+        <h2 id="council-inhouse-ft" className="mt-12 text-xl font-bold">1. In-house model comparison results</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
-          We built council models on small base models. They are beaten by the bases we started
-          from. This is the most credible thing we can publish, because it contradicts our own
-          product narrative — and because you can fetch the artifact and check it without us.
+          In the published arena reference below, the evaluated in-house council models score
+          below the base models used to build them. These results remain available for
+          independent inspection, with the reference date and method shown alongside the table.
         </p>
         <OurFineTunes />
         <p className="mt-4 leading-relaxed text-slate-700">
-          <strong>What it does mean:</strong> adapter-souping weak bases does not beat the base, and
-          the measurement rail works — it caught us.{" "}
-          <strong>What it does not mean:</strong> that the instruments are broken. The instrument
-          that shows us losing is the same one we publish. The honest next step is base model plus
-          statute retrieval, not weight-merging weak specialists.
+          <strong>What the result establishes:</strong> the tested in-house configurations did
+          not outperform their base models on this published reference.{" "}
+          <strong>What it does not establish:</strong> a conclusion about all fine-tuning methods,
+          other test sets or future configurations. Any improvement requires a separate evaluation.
         </p>
         <p className="mt-3 leading-relaxed text-slate-700">
-          One ceiling, stated before anyone else states it for us: this instrument governs
-          provenance, not correctness. An attested answer is attested, never verified. Our own
-          fine-tunes are the proof — they are signed, and they still lose.
+          A signature establishes the integrity and provenance of a record, not the correctness
+          of an answer or the quality of a model. The signed in-house results illustrate that
+          distinction: verified record integrity does not imply superior measured performance.
         </p>
 
         {/* ── 2. what the chain does not prove ───────────────────────── */}
-        <h2 className="mt-12 text-xl font-bold">2. Where our cryptography stops</h2>
+        <h2 className="mt-12 text-xl font-bold">2. Signature and evidence limitations</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
           {facts.verifiedSentence}
           {facts.provenanceNote}
@@ -237,9 +236,8 @@ export default function Honesty() {
           <p className="font-semibold">The limit, stated precisely.</p>
           <p className="mt-2">{facts.withheldSentence}</p>
           <p className="mt-2">
-            We publish that distinction because the alternative is letting a complete-looking
-            manifest do work a signature has not done — which is the exact class of defect this
-            estate keeps finding in itself. The full position manifest is published at{" "}
+            A position manifest and a verified signature establish different facts.
+            The full position manifest is published at{" "}
             <code>/signed/chain.json</code> as a card-shaped, Ed25519-signed envelope — verify
             it yourself with <code>/signed/verify-card.mjs</code>, unchanged, under the same
             pinned key as every card. The derived counts are at{" "}
@@ -255,18 +253,19 @@ export default function Honesty() {
         </p>
 
         {/* ── 3. what we have not measured ───────────────────────────── */}
-        <h2 className="mt-12 text-xl font-bold">3. What we have not measured</h2>
+        <h2 className="mt-12 text-xl font-bold">3. Coverage and unmeasured results</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
-          {board.count_grammar} Those slots are published precisely so the gap is visible. A slot is
-          not a measurement and we will not let the larger number stand alone.
+          {board.count_grammar} Declared coverage and completed measurements are reported
+          separately. A declared slot is not a completed measurement.
           {board.live ? "" : " (Showing the last recorded observation of the board; the endpoint wins.)"}
         </p>
         <p className="mt-3 leading-relaxed text-slate-700">
-          A slot stays UNMEASURED when the sample is too small to quote — nothing goes on the board
-          below thirty usable graded items, and a wave queued at twenty-four returned UNMEASURED
-          across every job rather than being quoted — or when the instrument is not frozen and
-          published, or when the legal gold labels are still with counsel. UNMEASURED is not a
-          failing grade for anyone&apos;s AI system; it is a disclosure about us.
+          A slot remains UNMEASURED until it meets its applicable published method and review
+          requirements. The declared subject-axis roster requires at least thirty valid observations,
+          a frozen instrument and owner approval; that threshold is specific to the roster, not
+          a universal statistical sufficiency rule. In the recorded twenty-four-item wave, the
+          jobs remained UNMEASURED. Unreviewed legal labels or an unpublished instrument also
+          prevent qualification. UNMEASURED is not a failing grade or a zero score.
         </p>
         <p className="mt-3 leading-relaxed text-slate-700">
           The largest single one: comparative coverage of the evaluation landscape. We have measured{" "}
@@ -281,7 +280,7 @@ export default function Honesty() {
         </p>
 
         {/* ── 4. the corrections ledger ──────────────────────────────── */}
-        <h2 className="mt-12 text-xl font-bold">4. Where we were wrong, appended and never edited</h2>
+        <h2 className="mt-12 text-xl font-bold">4. Documented corrections and preserved history</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
           The corrections ledger at <code>GET councilof.ai/api/corrections</code> records what was
           wrong, how it was caught, and what changed. Entries are appended; none is edited or
@@ -300,7 +299,7 @@ export default function Honesty() {
             we ran the ruling&apos;s own test — every card hash must resolve to signed bytes that
             recompute — across eight candidate stores on pods and Hugging Face. It resolved{" "}
             <strong>none of them</strong>, and we published that result at{" "}
-            <code>/interop/card-store-verification.json</code> with the honest note that zero
+            <code>/interop/card-store-verification.json</code> with the qualification that zero
             verified is a fact about the reachable record, not a claim that the cards do not exist.
             Today the bodies published under <code>/signed/cards/</code> do verify, against the
             pinned key, with the verifier we ship — the count is at the top of this section. Both
@@ -331,7 +330,7 @@ export default function Honesty() {
         </ul>
         <p className="mt-4 text-sm">
           <Link href="/refutation-ledger" className="text-emerald-700 underline">
-            The refutation ledger — claims we published, tested, and killed
+            The refutation ledger — tested and withdrawn claims
           </Link>
         </p>
 
@@ -339,8 +338,8 @@ export default function Honesty() {
         <h2 className="mt-12 text-xl font-bold">5. REPORTED — figures by others, never mixed with ours</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
           Three data states run this estate. <strong>MEASURED</strong> — a completed run under a published method;
-          read its separate attestation state. <strong>UNMEASURED</strong> — honestly empty, published so the gap is
-          visible. <strong>REPORTED</strong> — a figure published by someone else, cited and dated,
+          read its separate attestation state. <strong>UNMEASURED</strong> — no qualifying result published
+          for the stated scope. <strong>REPORTED</strong> — a figure published by someone else, cited and dated,
           carried for context and left unsigned. A REPORTED number never enters our board and is
           never averaged with a MEASURED one; the human-performance baselines beside our AI figures
           are REPORTED aggregates from other people&apos;s studies. The machine-readable set, each

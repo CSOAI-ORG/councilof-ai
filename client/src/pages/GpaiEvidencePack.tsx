@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
+import { GpaiEvidencePreview } from "@/components/GpaiEvidencePreview";
 
 /**
  * /gpai-evidence — the GPAI Evidence Pack product page.
@@ -132,6 +133,8 @@ export default function GpaiEvidencePack() {
           that determination stays with the authorities.
         </p>
 
+        <GpaiEvidencePreview />
+
         {/* Section: the enforcement reality */}
         <section className="mb-10">
           <h2 className="text-xl font-semibold mb-2">The enforcement reality</h2>
@@ -232,17 +235,17 @@ export default function GpaiEvidencePack() {
         {/* CTA */}
         <section className="mb-12">
           <div className="flex flex-wrap gap-3">
-            <Link
-              href="/assess"
-              className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-emerald-400"
+            <a
+              href="#existing-gpai-evidence"
+              className="inline-flex min-h-11 items-center rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-emerald-400"
             >
-              Start a signed assessment →
-            </Link>
+              Preview existing Article 53 evidence →
+            </a>
             <Link
-              href="/contact"
+              href="/contact/?arm=run"
               className="rounded-lg border border-zinc-700 px-5 py-2.5 text-sm font-semibold text-zinc-200 hover:bg-white/5"
             >
-              Enterprise pack — talk to us →
+              Discuss a scoped evidence pack →
             </Link>
             <Link
               href="/gspc"
@@ -252,8 +255,9 @@ export default function GpaiEvidencePack() {
             </Link>
           </div>
           <p className="text-zinc-500 text-xs mt-3">
-            No public prices. A grade is never sold — pricing for the enterprise pack lives behind the
-            enterprise door, and it never changes a verdict.
+            The preview shows the existing Article 53 selection and its source dates before you
+            inspect the current x402 terms. A fresh model measurement or bespoke GPAI evidence scope
+            must be confirmed by email. Opening either route does not book a run or place an order.
           </p>
         </section>
 

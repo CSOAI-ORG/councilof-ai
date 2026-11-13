@@ -1,7 +1,7 @@
 # Per-Axis `fleet_id` & Cohort Provenance Index (2026-11-04)
 
 **Schema:** `csoai.axis-fleet-cohorts/1.0` · **Status:** `MEASURED` · **Closes:** `M3` / `C7`
-**Source Authority:** [`functions/api/gspc.ts`](../../functions/api/gspc.ts) & `functions/api/_gspc_axes_{a,b,c,fin,d}.ts` (`sha256: 6de48334ed6226da…`, `public_count: 34 axes · 34 measured`)
+**Source Authority:** [`functions/api/gspc.ts`](../../functions/api/gspc.ts) & `functions/api/_gspc_axes_{a,b,c,fin,d}.ts` (`sha256: c2150aa81ffa3988…`, `public_count: 34 axes · 34 measured`)
 **Doctrine Rule #8:** CSOAI's own models (`MEOK`, `sov-gemma`, `council-*`) are removed from the fleet before comparison (`EXCLUDED_OWN_MODEL`) and are never ranked against third-party vendors.
 
 ## 1. Cohort Summary (`34` Live Board Axes)

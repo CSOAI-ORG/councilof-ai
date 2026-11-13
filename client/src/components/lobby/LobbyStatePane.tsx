@@ -260,10 +260,10 @@ export default function LobbyStatePane({
             </button>
             <button
               type="button"
-              onClick={() => onOpenRoute("/honesty", "Honesty gate")}
+              onClick={() => onOpenRoute("/honesty", "Measurement scope")}
               className={`rounded-xl border border-slate-900/12 bg-white px-3.5 py-2 text-[12.5px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}
             >
-              What we got wrong
+              Measurement scope and limitations
             </button>
           </div>
         </>

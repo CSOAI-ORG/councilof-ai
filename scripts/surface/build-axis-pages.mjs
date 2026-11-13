@@ -333,6 +333,37 @@ export function renderAll(boardIn) {
     out[`axis/${row.axis}.html`] = renderAxisPage(row, board);
   }
   out["axes.html"] = renderAxesIndex(board);
+  // THE ROUTE MAP. Where each axis's public page lives, and which axes have no
+  // public page at all. Published next to the pages it describes, from the same
+  // payload, so a surface that must not fetch can still link a real URL.
+  //
+  // WHY. The working-groups registry renders statically (no network call) and
+  // lists all 34 axes. It used to link every one of them to /gspc/<axis>/,
+  // which is prerendered only for model-comparison axes — so 20 of its links
+  // were 404s, and the 2 owner-held axes were linked at all when they have no
+  // public page. Typing the route per axis is the thing that rots: the board
+  // grows an axis and the link breaks. This map is regenerated on every build
+  // from the payload the pages were rendered from, so it cannot disagree with
+  // them.
+  out["interop/axis-routes.json"] =
+    JSON.stringify(
+      {
+        schema: "csoai.axis-routes/0.1",
+        source: "GET /api/gspc",
+        // The board's own words, not a date this script invented: the payload
+        // carries no single as_of, so the stamp and the published count are
+        // quoted and the field stays null when the board does not supply one.
+        as_of: boardIn?.measured_on?.living_stamp?.updated ?? null,
+        board_public_count: boardIn?.totals?.public_count ?? null,
+        axes: allAxes.map((a) => ({
+          axis: a?.axis,
+          kind: a?.kind,
+          ...(a?.public_pages ? { public_pages: a.public_pages } : {}),
+        })),
+      },
+      null,
+      2,
+    ) + "\n";
   return out;
 }
 
@@ -419,6 +450,6 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   console.log(
     check
       ? `✓ axis pages: ${Object.keys(files).length} files match this commit's /api/gspc`
-      : `✓ axis pages: ${Object.keys(files).length - 1} axes + axes.html rendered into ${relative(ROOT, outDir) || "."}`,
+      : `✓ axis pages: ${Object.keys(files).length - 2} axes + axes.html + interop/axis-routes.json rendered into ${relative(ROOT, outDir) || "."}`,
   );
 }

@@ -18,8 +18,9 @@ name: gspc-spray
 #                       (the default GITHUB_TOKEN cannot push to another repository)
 #   ZENODO_TOKEN        personal token, deposit:write + deposit:actions → --zenodo
 #   PYPI_API_TOKEN      project-scoped token for csoai-gspc            → --pypi
-#   NPM_TOKEN           granular token WITH "Bypass 2FA"               → (npm stays BLOCKED until then;
-#                       the account is WebAuthn, so --otp can never work)
+# npm package publication belongs to .github/workflows/npm-gspc-release.yml (trusted OIDC).
+# --npm reports only that this spray does not publish npm; release state requires that workflow
+# run and an npm registry readback.
 #
 # Measurement, not certification. No prices. A TIE is never a win.
 
@@ -39,7 +40,7 @@ on:
     # The `name:` string below is deploy.yml's — a rename there would silently stop this trigger, so
     # scripts/spray/test_gspc_spray_skip.py pins the coupling.
     workflows:
-      - "Build + deploy site (gated production branch)"
+      - "Build \\+ deploy site (gated production branch)"
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -164,8 +165,8 @@ jobs:
             if [ "$EVENT" = "workflow_run" ]; then note "follow-the-deploy run: Zenodo stays on the daily clock (no DOI minted here)"; else flags="$flags --zenodo"; fi
           else note "ZENODO_TOKEN missing — Zenodo skipped"; fi
           if [ "$HAS_PYPI" = "true" ];   then flags="$flags --pypi";   else note "PYPI_API_TOKEN missing — PyPI skipped"; fi
-          if [ "$HAS_NPM" = "true" ];    then note "NPM_TOKEN present but npm publishing is not wired in this workflow yet — report only"; else note "NPM_TOKEN missing — npm BLOCKED (WebAuthn account needs a Bypass-2FA token)"; fi
-          flags="$flags --npm"   # always reports the npm blocker in the table
+          if [ "$HAS_NPM" = "true" ];    then note "npm report only — this workflow does not publish npm, even with a legacy token present; npm-gspc-release.yml owns trusted OIDC publication. Inspect that run and registry readback for release state."; else note "npm report only — this workflow does not publish npm; npm-gspc-release.yml owns trusted OIDC publication. Inspect that run and registry readback for release state."; fi
+          flags="$flags --npm"   # report only; BLOCKED is local to this spray, not registry state
           echo "flags=$flags" >> "$GITHUB_OUTPUT"
           if [ "$HAS_HF" = "true" ] && [ "$HAS_KAGGLE" = "true" ]; then echo "parity=true" >> "$GITHUB_OUTPUT"; else echo "parity=false" >> "$GITHUB_OUTPUT"; fi
           echo "surfaces:$flags"

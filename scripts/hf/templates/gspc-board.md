@@ -2,6 +2,8 @@
 
 A dated, machine-readable export of the Council of AI public measurement board. **One row represents one declared axis**, with its evidence type, measurement status, sample count and source dataset.
 
+Council of AI is an operating AI measurement and evidence organisation run by CSOAI Ltd. Its [external-use and distribution records](https://councilof.ai/traction/) distinguish documented technical reuse from download counters.
+
 [Explore the interactive board](https://huggingface.co/spaces/csoai/gspc-board) · [Read the live JSON](https://councilof.ai/api/gspc) · [Verify a signed record](https://councilof.ai/gspc-verify) · [Methodology](https://councilof.ai/methodology/)
 
 ## Load the dataset

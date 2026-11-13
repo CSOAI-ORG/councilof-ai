@@ -8,7 +8,7 @@
 
 | Population ID | Surface / Endpoint | Source Artifact | Count | SHA-256 Digest | Verification State |
 |---|---|---|---:|---|---|
-| **P1 — Public-Root Merkle Leaves** | `GET /root.json` | `public/root.json` (`as_of: 2026-11-01T15:09:42Z`) | **`428`** | `a1309620f50b1b45…` (Merkle `4e57607854bea401…`) | `SIGNED` (`did:web:csoai.org#board-attestation-1`) |
+| **P1 — Public-Root Merkle Leaves** | `GET /root.json` | `public/root.json` (`as_of: 2026-11-07T20:54:37Z`) | **`442`** | `735f78b96888ade0…` (Merkle `bc2b1b4e6ecda0b2…`) | `SIGNED` (`did:web:csoai.org#board-attestation-1`) |
 | **P2 — Signed Card Chain Index** | `GET /signed/card_index.json` | `public/signed/card_index.json` | **`335`** | `4ff54c78dba0b15b…` | **`335/335 VALID`** (`#card-attestation-1`) |
 | **P3 — `/api/cards` Composite View** | `GET /api/cards` | `card_index.json` (`335`) + `cross-border-card.signed.json` (`1`) | **`336`** | `a7cf8b473ab63230…` (East-West card) | `335` DID-anchored + `1` `UNANCHORED` inline key |
 | **P4 — Hub Mill Signed Corpus** | `GET /api/hub-cards` | `public/interop/mill-cards-signed/signed-*.json` + `csoai/gspc-hub-cards` | **`3193`** signed files (`3193` unique IDs · `1682` superseded · `58` withdrawn) | `f7e12e711d0aaf7a…` | Signed under `#board-attestation-1` / `#card-attestation-1`; filtered by `SUPERSEDED.jsonl` & `WITHDRAWN.jsonl` |

@@ -2,7 +2,7 @@
 """GSPC batch runner for a Kaggle GPU kernel (Measure's G3-Kaggle method).
 
 Runs inside the kernel. Compute only: it never signs, never writes a board, and
-never contacts anything except registry.ollama.ai (pull) and loopback Ollama.
+contacts registry.ollama.ai (ollama pulls), huggingface.co (hf:-sourced weights, commit+sha256 pinned, SKIPPED on move) and loopback Ollama.
 For each batch model: pull, re-check the full manifest sha256 against the batch
 pin (a moved digest is SKIPPED, never re-pinned), generate pinned configs with
 the frozen playlist generator, run every axis with the serial worker, and gate
@@ -45,7 +45,7 @@ ALL_BANK_SHA = {**BANK_SHA, **UNTESTED_BANK_SHA}
 MT, KMT, TO, MAX_ATTEMPTS = 128, 1024, 225, 3
 LABEL = "GSPC-G3-Kaggle"
 HF_GGUF_RE = re.compile(
-    r"^hf:([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{40})/([A-Za-z0-9_.-]+\.gguf)$"
+    r"^hf:([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{40})[:/]([A-Za-z0-9_.-]+\.gguf)$"
 )
 
 

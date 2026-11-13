@@ -238,6 +238,12 @@ class T(unittest.TestCase):
         self.assertEqual([r["tag"] for p in parts for r in p], [r["tag"] for r in allr])
         for r in allr:
             self.assertIsNotNone(runner.parse_hf_gguf_tag(r["tag"]))
+        for extra_batch in ("G3-KAGGLE-HF.tsv", "CENSUS-BATCH-001-DRAFT.tsv"):
+            extra_path = f"{HERE}/batches/{extra_batch}"
+            if os.path.isfile(extra_path):
+                self.assertEqual(dedup_guard.check(extra_path), [])
+                for r in runner.read_batch(extra_path, "all", 3):
+                    self.assertIsNotNone(runner.parse_hf_gguf_tag(r["tag"]))
         d = tempfile.mkdtemp()
         subprocess.check_call([
             sys.executable, f"{HERE}/build_kernel.py",

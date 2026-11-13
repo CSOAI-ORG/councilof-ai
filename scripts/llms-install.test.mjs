@@ -27,11 +27,8 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     (match) => JSON.parse(match[1]),
   );
   const configs = examples.filter((example) => example.mcpServers);
-  // One remote configuration only: the published npm release does not carry the door's tool set
-  // and the release this repository prepares is not on npm yet, so the guide offers no local stdio
-  // configuration. Both facts are MEASURED (distribution/npm/npm-publish-check.json) — the reason
-  // used to be typed as "every published npm release is marked deprecated on npm", which was false
-  // from 2 Nov 2026 on: npm deprecates 0.1.0-0.2.2, and 0.2.5 is not deprecated.
+  // Keep one canonical remote configuration. Published/source versions and name parity
+  // come from the dated capture; a matching name set is not runtime acceptance.
   assert.equal(configs.length, 1, "one remote configuration, no local stdio configuration");
   assert.deepEqual(configs[0], {
     mcpServers: {
@@ -102,11 +99,6 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
   const published = capture.published;
   const diff = capture.diff;
   const pubTotal = published.free_tools + published.metered_tools;
-  assert.notEqual(
-    published.version,
-    packageJson.version,
-    "the prepared version must differ from the published one: a published version cannot be re-published",
-  );
   assert.ok(
     pubTotal <= catalogTotal,
     "a published release cannot carry more names than the live fleet",
@@ -180,10 +172,16 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     }
   }
   assert.doesNotMatch(guide, /"args":\s*\[\s*"-y",\s*"csoai-gspc-mcp/);
+  if (published.version !== packageJson.version) {
   assert.match(
     guide,
     new RegExp(`repository currently prepares \`${v}\`, but that source version is\\s+\\*\\*not a\\s+published npm release\\*\\*`),
   );
+  } else {
+    assert.match(guide, /is the published release identified by this dated capture/);
+    assert.doesNotMatch(guide, /source version is\s+\*\*not a\s+published npm release/);
+  }
+
   assert.match(
     guide,
     /A challenge is \*\*not\*\* a payment, settlement, delivery/,
@@ -200,4 +198,16 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
   assert.match(guide, new RegExp(`npm view csoai-gspc-mcp@${v} version`));
   assert.match(guide, /npm view csoai-gspc-mcp@latest deprecated/);
   assert.match(guide, /https:\/\/github\.com\/CSOAI-ORG\/councilof-ai/);
+});
+
+
+test("source and served guides retain one capture-derived publication record", async () => {
+  const [source, served] = await Promise.all([
+    readFile(new URL("llms-install.md", root), "utf8"),
+    readFile(new URL("public/llms-install.md", root), "utf8"),
+  ]);
+  assert.equal(source, served, "the source and served installation guide must match");
+  assert.equal((source.match(/<!-- mcp-npm-facts:start -->/g) || []).length, 1);
+  assert.equal((source.match(/<!-- mcp-npm-facts:end -->/g) || []).length, 1);
+  assert.doesNotMatch(source, /Every release published to npm so far carries fewer tools/);
 });

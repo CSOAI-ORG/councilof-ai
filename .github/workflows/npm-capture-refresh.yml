@@ -49,6 +49,7 @@ jobs:
   npm-capture-refresh:
     runs-on: ubuntu-latest
     permissions:
+      actions: write # dispatch the existing required PR gates for the bot branch
       contents: write
       pull-requests: write
     steps:
@@ -97,6 +98,12 @@ jobs:
       # The derivation lives in ONE place (scripts/harness-x/npm-release-state.mjs): the guide's
       # block, llms.txt's two sentences, the discovery documents' note and the live door's install
       # line all read the same capture.
+      # llms-txt derives this commit's board through esbuild; setup-node alone
+      # does not install the lockfile dependencies needed by that generator.
+      - name: Install generator dependencies
+        if: steps.produce.outcome == 'success'
+        run: npm ci --no-audit --no-fund
+
       - name: Regenerate the other derived npm surfaces
         if: steps.produce.outcome == 'success'
         run: |
@@ -129,6 +136,7 @@ jobs:
           git add distribution/npm/npm-publish-check.json llms-install.md public/llms-install.md \
                   public/llms.txt public/llms-full.txt \
                   public/.well-known/mcp.json public/.well-known/mcp/server-card.json \
+                  distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json \
                   distribution/MANIFEST.json
           git commit -m "npm-capture: re-derive the npm facts from a fresh capture (${STAMP})"
           git push origin "HEAD:$BR"

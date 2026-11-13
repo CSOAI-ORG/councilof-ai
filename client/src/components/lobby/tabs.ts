@@ -69,6 +69,7 @@ export type LobbyTabId =
   | "workbench"
   | "software"
   | "learn"
+  | "evidence-learning"
   | "academy"
   | "ruler"
   | "him"
@@ -142,6 +143,14 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(my results?|my requests?|my orders?|my jobs?|status of my|receipt status)\b/i,
+  },
+  {
+    id: "evidence-learning",
+    label: "Evidence & learning",
+    blurb: "Read public GSPC evidence, practise source-scope decisions and prepare a local human-review draft. No external action.",
+    path: "",
+    kind: "native",
+    cues: /\b(evidence learning|evidence and learning|evidence literacy|learning bridge)\b/i,
   },
   {
     id: "learn",
@@ -347,7 +356,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     id: "corrections",
     label: "Corrections",
     blurb:
-      "The public corrections ledger: what we got wrong, how it was caught and what changed, newest first, read live from GET /api/corrections.",
+      "The public corrections ledger: dated changes, their causes and supporting evidence, newest first, read from GET /api/corrections.",
     path: "",
     kind: "native",
     cues: /\b(corrections|what (?:did )?you get wrong|withdrawals?|errata)\b/i,
@@ -477,9 +486,9 @@ export const LOBBY_TABS: LobbyTab[] = [
   },
   {
     id: "claimguard",
-    label: "Honesty gate",
+    label: "Measurement scope",
     blurb:
-      "Where our own systems lose our own arena — the ladder, published. Measurement, never a badge.",
+      "Published internal model results, measurement coverage and verification limits.",
     path: "/honesty",
     cues: /\b(honesty|honest|claimguard|claim.?guard|claim check|verify claim|ladder)\b/i,
   },
@@ -650,7 +659,7 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
   },
   {
     label: "Refutation ledger",
-    blurb: "Killed hypotheses, with the artefacts that killed them.",
+    blurb: "Reviewed research claims, experimental findings and supporting records.",
     path: "/refutation-ledger",
     group: "receipts",
     cues: /\b(refutation(?:s)? ledger|killed hypotheses)\b/i,
@@ -1060,6 +1069,7 @@ const DASHBOARD_NAV_DEFINITION: {
       "Learn how each test works, replay recorded model rounds, practise, and inspect continuous research.",
     tabs: [
       { id: "learn", label: "Learning" },
+      { id: "evidence-learning", label: "Evidence & learning" },
       { id: "academy", label: "Academy" },
       { id: "play", label: "Games" },
       { id: "ruler", label: "The Ruler" },
@@ -1071,7 +1081,7 @@ const DASHBOARD_NAV_DEFINITION: {
     id: "staff",
     label: "Staff & human review",
     description:
-      "Escalate an AI staff proposal to a named human, check competence against the live record, and inspect decision, signing and persistence gates.",
+      "Escalate an AI staff proposal to a named human, check understanding of the published record, and inspect decision, signing and persistence gates.",
     tabs: [
       { id: "staff", label: "Staff & human review" },
       { id: "him", label: "H.I.M. review" },

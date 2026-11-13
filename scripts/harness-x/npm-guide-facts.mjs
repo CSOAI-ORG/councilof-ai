@@ -70,10 +70,10 @@ export function buildBlock(capture, preparedVersion) {
     "The package identity is `csoai-gspc-mcp` (not the stale scoped name previously",
     "shown here). " +
       (differs
-        ? "Every release published to npm so far carries fewer tools than the"
-        : "The latest published release now carries the same tool names as the remote, so") +
-      "\nremote, so this guide no longer gives a local configuration: use the remote above,",
-    "or the free read-only door https://councilof.ai/mcp/free.",
+        ? "The latest measured release has different tool names from the remote."
+        : "The latest measured release carries the same tool names as the remote.") +
+      "\nThis guide gives the remote configuration above; alternatively use",
+    "the free read-only door https://councilof.ai/mcp/free.",
   );
   lines.push("");
 
@@ -94,8 +94,8 @@ export function buildBlock(capture, preparedVersion) {
   // 3. The comparison with the live door. This is the sentence that was false three times.
   if (!differs) {
     lines.push(
-      `That release carries the same ${pubTotal} tool names as the live door`,
-      `(${door.total_tools} names) at the same moment. Re-run the comparison — \`npm pack`,
+      `That release carries the same ${pubTotal} tool names as the live door. The live door`,
+      `served ${door.total_tools} names at the same moment. Re-run the comparison — \`npm pack`,
       "csoai-gspc-mcp@latest`, extract `gspc-tools.json` and `paid-tools.json`, diff",
       "against the door's `tools/list` — whenever either side moves, and treat the diff,",
       "not npm's deprecation flag, as the signal.",
@@ -130,14 +130,21 @@ export function buildBlock(capture, preparedVersion) {
   }
   lines.push("");
 
-  // 4. The version the repository PREPARES. It is not a published release: a published
-  //    version cannot be re-published, and the estate's own test holds prepared != published.
-  lines.push(
-    `The repository currently prepares \`${preparedVersion}\`, but that source version is **not a`,
-    `published npm release** until \`npm view csoai-gspc-mcp@${preparedVersion} version\` confirms that`,
-    "exact version. Do not install or advertise any published release as the contract",
-    "before that independent check.",
-  );
+  // 4. Distinguish a prepared version from one present in the dated registry capture.
+  if (preparedVersion === pub.version) {
+    lines.push(
+      `The repository source version \`${preparedVersion}\` is the published release identified by this dated capture.`,
+      `Recheck \`npm view csoai-gspc-mcp@${preparedVersion} version\` before relying on its availability.`,
+      "Name parity does not establish runtime or behavioural equivalence with the remote.",
+    );
+  } else {
+    lines.push(
+      `The repository currently prepares \`${preparedVersion}\`, but that source version is **not a`,
+      `published npm release** until \`npm view csoai-gspc-mcp@${preparedVersion} version\` confirms that`,
+      "exact version. Do not install or advertise any published release as the contract",
+      "before that independent check.",
+    );
+  }
 
   return [START, ...lines, END].join("\n");
 }
@@ -203,6 +210,10 @@ function main(argv) {
     }
     if (/carries the same \d+ tool names as the live door/.test(block) && capture.diff.live_only.length + capture.diff.published_only.length > 0) {
       throw new Error("selftest: the block claims parity while the capture records a difference");
+    }
+    const publishedBlock = buildBlock(parity, parity.published.version);
+    if (publishedBlock.includes("not a\npublished npm release") || !publishedBlock.includes("is the published release identified")) {
+      throw new Error("selftest: a captured published version must not be described as unpublished");
     }
     // 4. the block must never claim a published release is the contract
     if (block.includes("is the contract") && !block.includes("Do not install or advertise")) {

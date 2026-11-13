@@ -5,6 +5,8 @@ import { onRequest } from "./[[path]]";
 import { PAID_TOOL_NAMES, buildPaidRequest } from "./_paid";
 import PAID from "./paid-tools.json";
 import FREE from "./gspc-tools.json";
+import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
+import NPM_PREPARED from "../../mcp/gspc-server/package.json";
 
 const ORIGIN = "https://councilof.ai";
 const LEGACY_PROTOCOL = "2025-03-26";
@@ -738,13 +740,17 @@ describe("GET /mcp — the one-command install is at the point of discovery", ()
     expect(installCommands.filter((v) => /\/mcp\/free\b/.test(String(v)))).toHaveLength(1);
     // The npm stdio package is labelled as the lighter, separately versioned implementation, and
     // the label is DERIVED from the dated capture: the published release's version, its tool count
-    // against the door's, and npm's deprecation flag. The old wording ("deprecated on npm") was
-    // FALSE from 2 Nov 2026 on — npm deprecates 0.1.0-0.2.2, and 0.2.5 is not deprecated.
-    expect(g.install.stdio_lite).toMatch(
-      /^npm csoai-gspc-mcp@0\.2\.5 \(stdio-lite 0\.2\.x\): it carries 53 tool names against the 54 the door serves/,
-    );
-    expect(g.install.stdio_lite).toContain("is not marked deprecated on npm");
-    expect(g.install.stdio_lite).toContain("The prepared release 0.2.6 is not on npm yet");
+    // against the door's, and npm's deprecation flag. Prepared source is not a published release.
+    expect(g.install.stdio_lite).toContain(`npm csoai-gspc-mcp@${NPM_CAPTURE.published.version} (stdio-lite `);
+    expect(g.install.stdio_lite).toContain(`${NPM_CAPTURE.published.total_tools} tool names`);
+    expect(g.install.stdio_lite).toContain(NPM_CAPTURE.published.deprecated ? "is marked deprecated on npm" : "is not marked deprecated on npm");
+    expect(g.install.stdio_lite).toContain(`measured ${NPM_CAPTURE.checked_at.slice(0, 10)}`);
+    if (NPM_PREPARED.version !== NPM_CAPTURE.published.version) {
+      expect(g.install.stdio_lite).toContain(`The prepared release ${NPM_PREPARED.version} is not on npm yet`);
+      expect(g.install.stdio_lite).not.toContain(`npm csoai-gspc-mcp@${NPM_PREPARED.version} (stdio-lite `);
+    } else {
+      expect(g.install.stdio_lite).not.toContain("The prepared release");
+    }
     expect(g.install.claude_code).toBeUndefined();
     expect(g.install.any_client).toBeUndefined();
     expect(g.install.no_install_at_all).toMatch(/api\/gspc/);

@@ -67,6 +67,8 @@ describe("stale copy honesty", () => {
     const j = JSON.parse(mcp);
     const lock = JSON.parse(readFileSync(resolve(__dirname, "../../../functions/mcp/tool-fleet.lock.json"), "utf8"));
     const registry = JSON.parse(readFileSync(resolve(__dirname, "../../../mcp/gspc-server/server.json"), "utf8"));
+    const capture = JSON.parse(readFileSync(resolve(__dirname, "../../../distribution/npm/npm-publish-check.json"), "utf8"));
+    const prepared = JSON.parse(readFileSync(resolve(__dirname, "../../../mcp/gspc-server/package.json"), "utf8"));
     const fleet = [...lock.free, ...lock.paid];
     expect(j.planted.tools).toEqual(fleet);
     expect(j.measured.tools).toEqual(fleet);
@@ -81,19 +83,26 @@ describe("stale copy honesty", () => {
     expect(card.capabilities.tools).toEqual(fleet);
     expect(card.description).toContain(`server ${registry.version}`);
     // The card withholds the stdio pin while the published release is not the contract, and the
-    // note is DERIVED from the dated capture (scripts/harness-x/npm-release-state.mjs). The old
-    // gate matched the words "deprecated on npm" — a claim that was FALSE from 2 Nov 2026 on,
-    // because npm deprecates 0.1.0-0.2.2 and the estate's 0.2.5 is not deprecated.
+    // note is DERIVED from the dated capture (scripts/harness-x/npm-release-state.mjs). Check
+    // the captured publication separately from prepared source, without freezing an old release.
+    if (prepared.version !== capture.published.version) {
+      expect(card.endpoints.mcp.stdio).toBeNull();
+    }
     if (card.endpoints.mcp.stdio === null) {
-      expect(card.endpoints.mcp.stdio_note).toMatch(
-        /^npm csoai-gspc-mcp: the latest published release is 0\.2\.5 .*is not marked deprecated on npm;/,
-      );
       expect(card.endpoints.mcp.stdio_note).toContain(
-        "the prepared release 0.2.6 is not on npm yet (npm's latest published release is 0.2.5)",
+        `npm csoai-gspc-mcp: the latest published release is ${capture.published.version} `,
       );
+      expect(card.endpoints.mcp.stdio_note).toContain(capture.published.deprecated ? "is marked deprecated on npm" : "is not marked deprecated on npm");
+      expect(card.endpoints.mcp.stdio_note).toContain(`measured ${capture.checked_at.slice(0, 10)}`);
+      if (prepared.version !== capture.published.version) {
+        expect(card.endpoints.mcp.stdio_note).toContain(
+          `the prepared release ${prepared.version} is not on npm yet (npm's latest published release is ${capture.published.version})`,
+        );
+      }
       expect(card.endpoints.mcp.stdio_note).toMatch(/[Uu]se the free door https:\/\/councilof\.ai\/mcp\/free/);
       expect(card.endpoints.mcp.free).toBe("https://councilof.ai/mcp/free");
     } else {
+      expect(registry.packages[0].version).toBe(capture.published.version);
       expect(card.endpoints.mcp.stdio).toBe(
         `npx -y ${registry.packages[0].identifier}@${registry.packages[0].version}`,
       );

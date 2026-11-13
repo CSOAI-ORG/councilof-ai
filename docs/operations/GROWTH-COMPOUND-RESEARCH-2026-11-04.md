@@ -60,9 +60,10 @@ rank → downloads. That loop is the compounding; the gates keep it honest.
 - [x] external windows researched (section 2)
 - [x] HF top-5 dataset-card audit done (cards sound; C1 is the gap)
 - [x] this doc landed on master
-- [ ] C1 notebook + card update (next lane run)
-- [ ] C2 server.json schema audit (next lane run)
-- [ ] C3 receipts surface PR (next lane run)
+- [x] C1 done 2026-11-08: verify-first-run sections LIVE on all 5 top datasets (gspc-gov, -boards, -swarm, -mcp, -care); daily survey re-run 18/18 PASS same day (rerun artefact beside this file)
+- [x] C2 server.json schema audit done 2026-11-04: **already schema-compliant** (all required fields, zero unknown keys); optional icons/_meta deferred
+- [x] C3 re-scoped 2026-11-04: the receipts flywheel surface already exists (/receipts + free /api/receipt-status + verify links) — the doc's "invisible" assumption was wrong; corrected
+- [ ] C4 Aug-2026 readiness journey page (queued)
 
 ## 6. What this document is not
 

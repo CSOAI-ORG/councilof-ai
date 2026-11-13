@@ -7,7 +7,8 @@
 # runs elsewhere.
 #
 # Landing pattern follows census-delta.yml: branch -> PR -> dispatch pr-gates on
-# the branch -> auto-merge. No direct push to master, no gate weakening.
+# the branch -> main Claude session on M4 reviews and merges. No direct push to
+# master, automatic merge, or gate weakening.
 name: x402 door conformance (daily, DRY)
 
 on:
@@ -31,8 +32,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Probe the nine doors (read-only)
         run: python3 scripts/probes/x402_door_conformance.py
+
+      - name: Refresh the crosswalk derived from the probe
+        run: |
+          node scripts/crosswalks/build-owasp-asi.mjs
+          node scripts/crosswalks/build-owasp-asi.mjs --check
 
       - name: Never-spent guard
         run: |
@@ -42,14 +52,14 @@ jobs:
           fi
           echo "read-only held"
 
-      - name: Land the pack (branch -> PR -> gates -> auto-merge)
+      - name: Propose the pack (branch -> PR -> gates -> M4 review)
         env:
           GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}  # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
         run: |
           set -euo pipefail
           git config user.name "csoai-x402-conformance"
           git config user.email "board@csoai.org"
-          git add public/interop/x402-door-conformance-2026-09
+          git add public/interop/x402-door-conformance-2026-09 public/crosswalks/owasp-asi.json
           if git diff --cached --quiet; then
             echo "NO_CHANGE"
             exit 0
@@ -63,4 +73,4 @@ jobs:
             --title "x402-door-conformance: daily probe (${STAMP})" \
             --body "Read-only 402 challenge conformance round for the nine first-party doors. Never spends. Atoms staged for the publisher intake; fulfillment stays UNMEASURED. See public/interop/x402-door-conformance-2026-09/report.json.")
           gh workflow run pr-gates.yml --ref "$BR"
-          gh pr merge "$URL" --squash --auto || echo "auto-merge unavailable; $URL needs a human merge"
+          echo "Review required: the main Claude session on M4 merges $URL after the required gates pass."

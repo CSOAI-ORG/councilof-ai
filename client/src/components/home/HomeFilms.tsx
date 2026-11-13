@@ -30,7 +30,7 @@ const FILMS: {
     caption: "Board, verify, get measured. The same living board on / and in /os.",
     takeaways: [
       { kind: "tick", text: "One workspace. No second login." },
-      { kind: "tick", text: "Empty cells stay empty. A dash is honest emptiness, never a dressed-up zero." },
+      { kind: "tick", text: "A dash indicates no measurement; it is never presented as a score of zero." },
       { kind: "usp", text: "A rank is never sold. Layout is not a purchase." },
     ],
   },

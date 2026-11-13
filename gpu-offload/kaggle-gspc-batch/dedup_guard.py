@@ -17,7 +17,7 @@ EXCLUDED = {
 EXCLUDED_FAMILIES = ("lfm2.5", "ternary-bonsai", "bonsai", "mimo", "deepseek-v4")
 MOVING_ALIASES = (":latest",)
 HF_PINNED_RE = re.compile(
-    r"^hf:([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{40})/([A-Za-z0-9_.-]+\.gguf)$"
+    r"^hf:([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{40})[:/]([A-Za-z0-9_.-]+\.gguf)$"
 )
 
 
