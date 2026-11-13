@@ -35,6 +35,3 @@ From the bundle root: install requirements.txt, run generate_episodes.py, then t
 ## Limits
 
 The engine is a deterministic synthetic lookup simulation. These data do not represent real procurement behaviour, humans, markets or physical dynamics. Even a lower average error does not qualify the model for actions. The exact simulator remains authoritative. No Cosmos weights were changed, no GSPC score was admitted, and no human approval or real-world effect is implied.
-
-
-[executed on device: sov33-owem-micro2 (b4b647b8-0a67-4b8f-9b25-2981363e9bd0)]
