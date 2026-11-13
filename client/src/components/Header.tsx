@@ -126,6 +126,8 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
               {homepage ? (
                 [
                   { name: "Results", href: "/board/" },
+                  { name: "Watchdog", href: "/#watchdog" },
+                  { name: "Academy", href: "/#learning" },
                   { name: "How it works", href: "/#how-it-works" },
                   { name: "Developers", href: "/connect/" },
                   { name: "About", href: "/about/" },
@@ -285,7 +287,9 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
                 <a href={BOOK_MEASUREMENT_LINK.href} onClick={() => setMobileMenuOpen(false)} data-testid="mobile-book-measurement" className="flex min-h-11 items-center rounded-lg px-4 py-2 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600">{BOOK_MEASUREMENT_LINK.name}</a>
                 {[
                   { name: "Results", href: "/#board" },
+                  { name: "Watchdog", href: "/#watchdog" },
                   { name: "Services", href: "/#products" },
+                  { name: "Academy", href: "/#learning" },
                   { name: "How it works", href: "/#how-it-works" },
                   { name: "Developers", href: "/#developers" },
                   { name: "Verify a record", href: "/gspc-verify" },
