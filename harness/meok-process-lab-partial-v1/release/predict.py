@@ -22,5 +22,3 @@ def predict(features,model):
 if __name__=="__main__":
     p=argparse.ArgumentParser();p.add_argument("--weights",default="weights.json");p.add_argument("--features",required=True);a=p.parse_args()
     print(json.dumps(predict(json.loads(a.features),json.load(open(a.weights))),allow_nan=False))
-
-[executed on device: sov33-owem-micro2 (b4b647b8-0a67-4b8f-9b25-2981363e9bd0)]
