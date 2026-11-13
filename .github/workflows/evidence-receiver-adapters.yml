@@ -1,0 +1,55 @@
+name: Evidence receiver adapters
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [master]
+    paths:
+      - .github/workflows/evidence-receiver-adapters.yml
+      - packages/evidence-fabric/receiver_adapters.py
+      - packages/evidence-fabric/receiver_adapters_examples.py
+      - packages/evidence-fabric/receiver-contracts/**
+      - packages/evidence-fabric/tests/test_receiver_adapters.py
+      - packages/evidence-fabric/RECEIVER-ADAPTERS.md
+      - packages/evidence-fabric/event.py
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-adapters:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install bounded schema validator
+        run: python -m pip install --disable-pip-version-check 'jsonschema==4.26.0' 'rfc3339-validator==0.1.4' 'rfc3986-validator==0.1.1'
+      - name: Require every native carrier control
+        run: |
+          python -B - <<'PY'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'packages/evidence-fabric/tests', pattern='test_receiver_adapters.py')
+          count = suite.countTestCases()
+          if count < 26:
+              raise SystemExit('Missing adapter controls: ' + str(count))
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if (not result.wasSuccessful() or result.testsRun != count
+                  or result.skipped or result.expectedFailures or result.unexpectedSuccesses):
+              raise SystemExit('Adapter controls incomplete or unsuccessful')
+          PY
+      - name: Execute offline native contract examples
+        run: python -B packages/evidence-fabric/receiver_adapters_examples.py --out "${RUNNER_TEMP}/evidence-receiver-adapters"
+      - name: Retain offline contract examples
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-receiver-adapters-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/evidence-receiver-adapters/
+          if-no-files-found: error
+          retention-days: 14
