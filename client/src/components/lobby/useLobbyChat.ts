@@ -84,7 +84,7 @@ const now = () => new Date().toISOString();
 
 /** Pure session-history reducer used by the Ask event bridge and its regression tests. */
 export function appendAskUserTurn(
-  threads: Thread[], activeId: string | null, question: string, remoteThreadId?: string, at = now(),
+  threads: Thread[], activeId: string | null, question: string, remoteThreadId?: string, at = now(), newThreadId?: string,
 ): { threads: Thread[]; activeId: string } {
   const text = question.trim();
   if (!text) return { threads, activeId: activeId ?? "" };
@@ -97,7 +97,7 @@ export function appendAskUserTurn(
     };
   }
   const fresh: Thread = {
-    id: `t${Date.now().toString(36)}${threads.length}`,
+    id: newThreadId ?? `t${Date.now().toString(36)}${threads.length}`,
     title: text.length > 64 ? text.slice(0, 63).trimEnd() + "…" : text,
     startedAt: at,
     ...(remoteThreadId ? { remoteThreadId } : {}),
@@ -402,13 +402,11 @@ export function useLobbyChat(): LobbyChat {
     (text: string, remoteThreadId?: string) => {
       const question = text.trim();
       if (!question) return;
-      let id = activeId;
-      setThreads((prev) => {
-        const next = appendAskUserTurn(prev, id, question, remoteThreadId);
-        id = next.activeId;
-        return next.threads;
-      });
-      setActiveId(id!);
+      // Compute the new session id outside the state updater: React may defer or replay
+      // updater functions, so mutating a closure inside setThreads cannot safely return an id.
+      const nextId = activeId ?? `t${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+      setThreads((prev) => appendAskUserTurn(prev, activeId, question, remoteThreadId, now(), nextId).threads);
+      setActiveId(nextId);
     },
     [activeId],
   );
