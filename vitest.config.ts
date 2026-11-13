@@ -91,6 +91,8 @@ export const NODE_TEST_FILES = [
   // "No test suite found" in the orphan-coverage step (`npx vitest run council-os ...`).
   'council-os/gspc-pontius-boundary.test.mjs',
   'scripts/watchdog/source-status.test.mjs',
+  // This bounded synthetic approval demo uses node:test; the same source list is executed by pr-gates.
+  'harness/hitl/approval-effect-demo.test.mjs',
   // 2026-11-02: seven more node:test files that no gate ran. mcp/gspc-server/wired-tools was
   // already excluded from vitest but was never executed anywhere; the other six were collected
   // by a bare vitest run and reported as failed suites. Two of them were also RED: the
