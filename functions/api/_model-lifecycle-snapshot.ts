@@ -20,8 +20,8 @@ export const MODEL_LIFECYCLE_SNAPSHOT = {
         "last_modified_at_source": null
       }
     ],
-    "estate_measurement_as_of": "2026-11-08T00:36:07Z",
-    "estate_measurement_version": "2026-11-08",
+    "estate_measurement_as_of": "2026-11-13T07:59:04Z",
+    "estate_measurement_version": "2026-11-13",
     "rule": "as_of is the date the vendor's pages were read, carried by the corpus; it is never the time this request was served"
   },
   "what": "What the vendor itself says about which of its model families are available on its API, which are retired, and which have not been released. Read from the vendor's own documentation on the date in as_of, and kept as bytes so the claim can be re-read.",
@@ -103,8 +103,8 @@ export const MODEL_LIFECYCLE_SNAPSHOT = {
       "upstream_sha256": "723ca47205b3ffff09c6c9b4ddfa3798ab4a8e72d195b0dae4afcbf0fe2a207d",
       "models_measured_sha256": "13112e115af3f5df0a28d6195e419d35c3fc4efe8c88464a2236d1ac9dcf41e0",
       "models_measured_inputs_sha256": "3d08e661b6f0b218ae7943c922f42e090873c0b54bb7ef7635bd582a301f9476",
-      "estate_measurement_as_of": "2026-11-08T00:36:07Z",
-      "estate_measurement_version": "2026-11-08",
+      "estate_measurement_as_of": "2026-11-13T07:59:04Z",
+      "estate_measurement_version": "2026-11-13",
       "estate_measurement_as_of_note": null
     }
   },
