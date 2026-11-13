@@ -256,15 +256,15 @@ export default function DashboardWorkspace({
     };
   }, [chat.recordUserMessage, chat.recordCouncilMessage]);
 
-  const selectedThread = useRef({ id: chat.activeId, remoteThreadId: chat.active?.remoteThreadId });
+  const selectedThread = useRef<{ id: string | null; remoteThreadId?: string } | null>(null);
   useEffect(() => {
     const previous = selectedThread.current;
     const next = { id: chat.activeId, remoteThreadId: chat.active?.remoteThreadId };
-    if (previous.id !== next.id || previous.remoteThreadId !== next.remoteThreadId) {
+    if (!previous || previous.id !== next.id || previous.remoteThreadId !== next.remoteThreadId) {
       selectedThread.current = next;
-      if (next.id !== null || previous.id !== null) {
-        window.dispatchEvent(new CustomEvent(ASK_THREAD_SELECT, { detail: { threadId: next.remoteThreadId ?? null } }));
-      }
+      // Dispatch on first mount too: header Ask must resume a restored history thread even
+      // when no navigation event occurs after the dashboard is rendered.
+      window.dispatchEvent(new CustomEvent(ASK_THREAD_SELECT, { detail: { threadId: next.remoteThreadId ?? null } }));
     }
   }, [chat.activeId, chat.active?.remoteThreadId]);
   const activity = useActivity();
