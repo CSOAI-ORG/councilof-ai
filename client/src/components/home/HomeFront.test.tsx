@@ -123,7 +123,7 @@ describe("HomeHero", () => {
     expect(html).toContain('data-testid="hero-evidence-console"');
     expect(html).toContain("Public evidence feed");
     expect(html).toContain("CONNECTING");
-    expect(html).not.toMatch(/\\b\\d+(?:\\.\\d+)?%/);
+    expect(html).not.toContain("%");
     expect(html).not.toContain("sample data");
   });
 
