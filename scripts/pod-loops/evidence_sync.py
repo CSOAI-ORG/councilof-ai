@@ -282,6 +282,17 @@ def main():
     prefixes = {rel.split("/")[0] for rel in files}
     token = os.environ.get("HF_TOKEN") if a.apply else None
     tree = remote_tree(prefixes, token)
+    # Ephemeral missing-only publisher: never modify any already-present HF path.
+    # The preflight manifest is intentionally not a deploy-exclusions file for master.
+    # Fail closed if any selected path became present between stage and dispatch.
+    if manifest.get("note", "").startswith("EPHEMERAL SYNC INPUT ONLY"):
+        already = sorted(set(files) & set(tree))
+        if already:
+            print(f"evidence-sync: REFUSED: {len(already)} staged missing-only paths already exist on HF; no upload attempted")
+            rec = {"state": "MISSING_ONLY_LOCK_REFUSED", "already_present": len(already), "target_files": len(files)}
+            _w(a.receipt, rec)
+            sys.exit(9)
+        print(f"evidence-sync: missing-only lock verified for {len(files)} absent paths; no existing paths can be replaced")
     d = diff(files, tree)
     # The ORPHANS the mirror holds and this build does not. A plan grants no
     # permission to prune them, so they accumulate and they consume the
