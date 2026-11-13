@@ -83,3 +83,6 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   })().catch((e) => sendResponse({ error: String(e?.message ?? e) }));
   return true; // async sendResponse
 });
+
+import {installAIBroker} from "./lib/ai-broker.mjs";
+installAIBroker();
