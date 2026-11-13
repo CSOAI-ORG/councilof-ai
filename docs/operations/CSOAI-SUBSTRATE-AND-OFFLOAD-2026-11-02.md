@@ -232,3 +232,34 @@ is safe.
 filesystem HOST, but they are different volumes with different quotas and different contents: a
 marker file written on one is invisible on the other, in both directions. "Same MooseFS mount" is
 not "same volume", and "same volume" is not "has room".
+
+## 2026-11-07 · POST-POD REALIGNMENT — all RunPod pods terminated; Busabase serves M4-local (append)
+
+Measured 2026-11-07 (runpodctl pod list): **zero pods**. All five previously-running pods
+(estate-scratch, council-os-benchmark-live, csoai-build-cpu-writer, csoai-bulk-transfer,
+meok-him-production) are terminated. What still holds, what changed, and what this lane did:
+
+1. **Busabase serves M4-local, and it is healthy.** The 15430 listener is now a local node
+   process on the M4 (PID checked live; `GET /api/v1/bases` → 200; 2 bases: `csoai`, `sites`).
+   With the pods gone, the pod layer of the three-layer defence is gone; the M4-local serving
+   is what production actually answers on. The data lives in the M4-local store.
+2. **The tunnel job is a zombie.** `ai.csoai.busabase-tunnel` (KeepAlive) keeps relaunching and
+   retrying pod endpoints that no longer exist. It is harmless but pointless; stopped-and-
+   unloaded is the clean state, left to the owner because launchd plists are owner files.
+3. **Everything the fence incident built is safe on master**: `busabase-instance.sh` (v1-cgroup
+   fallback + UNMEASURABLE state), `pre-push-pod.sh`, `volume-audit.sh` — all versioned here,
+   verified on 2026-11-07 re-clone.
+4. **The pod network volumes persist on RunPod's side** (MooseFS host euro-2); any future pod
+   that mounts them sees the old trees (`/workspace/lanes/*`, `/workspace/busabase/*`, the
+   dc-agent). Nothing needs rescuing today; the HF-first migration (owner word 2026-11-04)
+   replaces this substrate for new work.
+5. **The OWEM hosts are not a Busabase home.** `sov33-owem-micro` (oracle-micro, 145.241.232.16)
+   is DEAD — verified unreachable 2026-08-26, ssh entry commented with the note that the
+   assumed always-free ARM 24GB was never provisioned. Its listed successor `oracle-micro-2`
+   (uk-london-1, x86, 2 vCPU, 956MB) plans against a RAM floor the Busabase runtime's own
+   fence (900MB headroom minimum) leaves almost no room on. Do not realign Busabase onto it.
+
+**Forward path (per the HF-first runbook revision):** a hosted Busabase belongs on Hugging
+Face infrastructure (Space or persistent-storage-backed endpoint) when the owner wants it off
+the M4 — not on the dead OWEM hosts, and not on a new pod. Until then, M4-local serving is the
+production truth, and the M4 disk reclaim rows (B14/B15) remain the real constraint on it.
