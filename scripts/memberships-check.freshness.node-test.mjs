@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   evaluateFreshness,
+  evaluateOpenAireEmpty,
   evaluateRegisterPage,
+  checkRow,
   runChecks,
 } from "./memberships-check.mjs";
 
@@ -110,4 +112,37 @@ test("stale manifest still causes every public row to be fetched", async () => {
   assert.ok(result.failures.some((failure) => failure.id === "manifest-freshness"));
   assert.equal(result.pageCheck.ok, true);
   assert.equal(result.exitCode, 1);
+});
+
+test("OpenAIRE UNVERIFIED row passes only while the DOI query remains empty", async () => {
+  const empty = { status: 200, body: JSON.stringify({ header: { numFound: 0 }, results: [] }) };
+  const reappeared = { status: 200, body: JSON.stringify({ header: { numFound: 1 }, results: [{ id: "record" }] }) };
+  assert.equal(evaluateOpenAireEmpty(empty).ok, true);
+  assert.equal(evaluateOpenAireEmpty(reappeared).ok, false);
+  assert.equal(evaluateOpenAireEmpty({ status: 404, body: "" }).ok, false);
+  assert.equal(evaluateOpenAireEmpty({ status: 200, body: "not json" }).ok, false);
+  let requested = "";
+  const row = {
+    id: "openaire",
+    state: "UNVERIFIED",
+    evidence_kind: "public_url",
+    evidence: "https://api.openaire.eu/graph/v4/research-products?filter=ids.doi%3A10.5281%2Fzenodo.21991105&page_size=10",
+    check: { mode: "openaire_empty" },
+    status_note: "The DOI is not currently indexed.",
+  };
+  const result = await checkRow(row, async (url) => { requested = url; return empty; });
+  assert.equal(requested, row.evidence);
+  assert.equal(result.ok, true);
+});
+
+test("Smithery UNVERIFIED row passes only while the cited detail route remains unavailable", async () => {
+  const row = {
+    id: "smithery",
+    state: "UNVERIFIED",
+    evidence_kind: "public_url",
+    evidence: "https://www.smithery.ai/servers/csoai/gspc",
+    status_note: "The cited detail route returned HTTP 404.",
+  };
+  assert.equal((await checkRow(row, async () => ({ status: 404, body: "not found" }))).ok, true);
+  assert.equal((await checkRow(row, async () => ({ status: 200, body: "csoai gspc" }))).ok, false);
 });
