@@ -46,8 +46,6 @@ export default function HomeDemoPreview() {
               alt="Preview of the Council of AI evidence workspace"
               loading="lazy"
               decoding="async"
-              width={1280}
-              height={720}
             />
             <span className="hp-demo-play"><Play size={17} fill="currentColor" aria-hidden="true" /> Play the walkthrough</span>
             <span className="hp-demo-corner">COUNCIL OS · PRODUCT TOUR</span>
