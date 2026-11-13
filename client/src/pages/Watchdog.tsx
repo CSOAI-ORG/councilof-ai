@@ -4,6 +4,7 @@ import { verifyRecord } from "@/lib/recordVerify";
 import WorkingGroups from "@/components/WorkingGroups";
 import { readWatchdogJson as getJson } from "@/lib/watchdogRead";
 import {
+  CLAIM_STATES,
   CORRECTIONS_URL,
   REGISTER_URL,
   claimHref,
@@ -11,6 +12,7 @@ import {
   conclusionResult,
   correctionsFor,
   evidenceLinkState,
+  filterWatchdogClaims,
   libraryHref,
   parseJourney,
   registryPath,
@@ -22,6 +24,7 @@ import {
   type Retrieval,
   type ThreeResults,
   type WatchClaim,
+  type ClaimState,
 } from "@/lib/watchdogJourney";
 import { NLM_CHECKED_ON, NLM_IDS, NLM_NAMED, NLM_SOURCE, ZENODO_REDIRECTED, ZENODO_TOMBSTONED } from "@/data/nlmCrosswalk";
 
@@ -98,6 +101,8 @@ export default function Watchdog() {
 function Claims({ params, go }: { params: ReturnType<typeof parseJourney>; go: (h: string) => void }) {
   const [register, setRegister] = useState<Retrieval<{ json: unknown; text: string }> | null>(null);
   const [registries, setRegistries] = useState<Record<string, Retrieval<{ json: unknown; text: string }>>>({});
+  const [query, setQuery] = useState("");
+  const [stateFilter, setStateFilter] = useState<ClaimState | "ALL">("ALL");
 
   useEffect(() => {
     let off = false;
@@ -122,11 +127,12 @@ function Claims({ params, go }: { params: ReturnType<typeof parseJourney>; go: (
     [registries],
   );
   const failed = Object.entries(registries).filter(([, r]) => r.state !== "OK") as [string, Extract<Retrieval<unknown>, { state: "UNCHECKABLE" }>][];
+  const filteredClaims = useMemo(() => filterWatchdogClaims(claims, query, stateFilter), [claims, query, stateFilter]);
   const bySubject = useMemo(() => {
     const m = new Map<string, WatchClaim[]>();
-    for (const c of claims) m.set(c.subject, [...(m.get(c.subject) ?? []), c]);
+    for (const c of filteredClaims) m.set(c.subject, [...(m.get(c.subject) ?? []), c]);
     return [...m.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-  }, [claims]);
+  }, [filteredClaims]);
 
   if (params.registry && params.claim) return <ClaimDetail key={params.registry + ":" + params.claim} registryId={params.registry} claimId={params.claim} go={go} />;
 
@@ -146,9 +152,34 @@ function Claims({ params, go }: { params: ReturnType<typeof parseJourney>; go: (
       {failed.map(([id, r]) => (
         <Unreadable key={id} what={`Registry ${id}`} r={r} />
       ))}
+      <div role="search" aria-label="Search loaded Watchdog claims" className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_12rem]">
+        <div>
+          <label htmlFor="watchdog-claim-search" className="mb-1 block text-sm font-semibold">Search published claims</label>
+          <input id="watchdog-claim-search" type="search" data-testid="watchdog-search" value={query}
+            onChange={(event) => setQuery(event.target.value)} maxLength={160}
+            placeholder="Organisation, claim, source or ID"
+            className="min-h-11 w-full rounded-lg border border-border bg-background px-3 text-foreground" />
+        </div>
+        <div>
+          <label htmlFor="watchdog-state-filter" className="mb-1 block text-sm font-semibold">Claim state</label>
+          <select id="watchdog-state-filter" data-testid="watchdog-state-filter"
+            value={stateFilter} onChange={(event) => setStateFilter(event.target.value as ClaimState | "ALL")}
+            className="min-h-11 w-full rounded-lg border border-border bg-background px-3 text-foreground">
+            <option value="ALL">All states</option>
+            {CLAIM_STATES.map((state) => <option key={state} value={state}>{state.replaceAll("_", " ")}</option>)}
+          </select>
+        </div>
+      </div>
+      <p role="status" aria-live="polite" className="mt-2 text-sm text-muted-foreground" data-testid="watchdog-filter-summary">
+        Showing {filteredClaims.length} of {claims.length} loaded claims.
+        {failed.length ? " " + failed.length + " registries could not be read; search results may be incomplete." : ""}
+      </p>
+      {claims.length > 0 && filteredClaims.length === 0 && (
+        <p className="mt-3 text-sm" data-testid="watchdog-no-search-results">No matching claims among the records currently loaded. Clear your search or change the state filter. This is not a finding about an organisation.</p>
+      )}
       <div className="mt-4 space-y-4">
         {bySubject.map(([subject, list]) => (
-          <details key={subject} className="rounded-xl border border-border bg-card p-3">
+          <details key={subject} data-testid="watchdog-subject" className="rounded-xl border border-border bg-card p-3">
             <summary className={`cursor-pointer font-semibold ${FOCUS}`}>
               {subject} <span className="text-sm font-normal text-muted-foreground">({list.length})</span>
             </summary>
