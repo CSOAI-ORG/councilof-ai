@@ -118,8 +118,9 @@ describe("lobby chat MCP read routing", () => {
 
 describe("unified Ask history bridge", () => {
   it("creates a named session thread bound to the AG-UI server thread id", () => {
-    const result = appendAskUserTurn([], null, "  What does the board show?  ", "server-thread-1", "2026-11-12T02:00:00.000Z");
+    const result = appendAskUserTurn([], null, "  What does the board show?  ", "server-thread-1", "2026-11-12T02:00:00.000Z", "session-thread-1");
     expect(result.threads).toHaveLength(1);
+    expect(result.threads[0].id).toBe("session-thread-1");
     expect(result.threads[0].title).toBe("What does the board show?");
     expect(result.threads[0].remoteThreadId).toBe("server-thread-1");
     expect(result.threads[0].turns).toEqual([{ role: "user", text: "What does the board show?", at: "2026-11-12T02:00:00.000Z" }]);
