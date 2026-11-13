@@ -88,8 +88,7 @@ export default function Memberships() {
         <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-700" data-testid="memberships-answer">
           Council of AI (CSOAI Ltd) takes part in standards bodies as a participant or member, publishes into open
           registries and archives, holds scholarly identifiers, and files comments with regulators. Each entry below
-          links to the page that proves it, or names the dated mailbox record when that is the only evidence, and
-          says in its own row what it does not prove. {HONESTY_LINE}
+          links to the evidence checked, or carries a dated status note when the cited evidence cannot currently be reproduced. Each row says what the evidence does and does not prove. {HONESTY_LINE}
         </p>
         <p className="mt-3 max-w-3xl text-sm text-slate-600">
           Machine-readable: <a className="underline underline-offset-4" href="/interop/memberships.json">/interop/memberships.json</a>{" "}
@@ -183,8 +182,9 @@ export default function Memberships() {
         ))}
         <p className="mt-6 max-w-3xl text-sm text-slate-600">
           States follow the evidence. VERIFIED means the public URL answered with our name on the day checked, or a dated
-          mailbox record exists and the row says the evidence is private. PENDING means an application or filing that
-          has not been granted or submitted; it claims nothing. Rows with a link marked private evidence point at{" "}
+          mailbox record exists and the row says the evidence is private. UNVERIFIED means the current cited evidence
+          could not be reproduced; its dated status note records what was observed and does not prove deletion or absence.
+          PENDING means an application or filing that has not been granted or submitted; it claims nothing. Rows with a link marked private evidence point at{" "}
           <Link href="/memberships" className="underline underline-offset-4">this page</Link>, not at a third party, because there is no third-party page to point at.
         </p>
       </section>
