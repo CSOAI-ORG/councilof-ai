@@ -230,5 +230,3 @@ with zipfile.ZipFile(ROOT/"MEOK-PARTIAL-OBSERVATION-V1.zip","w",zipfile.ZIP_DEFL
     for p in bundle_files:z.write(p,p.relative_to(ROOT).as_posix())
     z.write(ROOT/"BUNDLE-MANIFEST.json","BUNDLE-MANIFEST.json")
 print(json.dumps({"state":report["status"],"episodes":320,"rows":2560,"test_rows":560,"selected_model":"top3_output_ensemble","selected_members":[v["name"] for v in top3],"metrics":metrics,"portable_inference_max_abs_difference":portable_error,"archive":str(ROOT/"MEOK-PARTIAL-OBSERVATION-V1.zip"),"archive_sha256":hashlib.sha256((ROOT/"MEOK-PARTIAL-OBSERVATION-V1.zip").read_bytes()).hexdigest()},separators=(",",":")),flush=True)
-
-[executed on device: sov33-owem-micro2 (b4b647b8-0a67-4b8f-9b25-2981363e9bd0)]
