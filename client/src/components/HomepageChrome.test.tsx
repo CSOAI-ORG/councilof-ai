@@ -44,9 +44,11 @@ describe("homepage site chrome", () => {
 
   it("offers direct homepage destinations while retaining the existing ask, search and workspace controls", () => {
     const html = renderAt("/", <Header />);
+    expect(html).toContain('href="/#board"');
+    expect(html).toContain('href="/#watchdog"');
+    expect(html).toContain('href="/#learning"');
     expect(html).toContain('href="/#how-it-works"');
-    expect(html).toContain('href="/board/"');
-    expect(html).toContain('href="/connect/"');
+    expect(html).toContain('href="/#developers"');
     expect(html).toContain('data-testid="ask-launcher"');
     expect(html).toContain('data-testid="palette-launcher"');
     expect(html).toContain('data-testid="header-council-os"');
