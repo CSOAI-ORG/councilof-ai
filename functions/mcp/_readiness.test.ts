@@ -69,4 +69,29 @@ describe("framework_readiness", () => {
     expect(text).toContain("does not certify compliance");
     expect(text).toContain("never a determination");
   });
+
+  it("estate_links name only routes the router actually serves (P8 follow-up, 2026-11-03)", async () => {
+    // The links point at this estate's own pages; a link to a page nobody serves is a broken
+    // promise. The router's route strings are the arbiter, read straight from App.tsx.
+    const { readFileSync } = await import("node:fs");
+    const app = readFileSync(new URL("../../client/src/App.tsx", import.meta.url), "utf8");
+    const served = new Set(
+      [...app.matchAll(/path=["']([^"']+)["']/g)]
+        .map((m) => m[1])
+        .filter((p) => p.startsWith("/") && !p.includes(":") && !p.includes("*")),
+    );
+    for (const fw of FRAMEWORK_IDS) {
+      const r = readinessResult({ framework: fw });
+      const links = (r.payload as Record<string, unknown>).estate_links as Array<Record<string, string>>;
+      expect(links.length, `${fw} carries at least one estate link`).toBeGreaterThanOrEqual(1);
+      for (const l of links) {
+        expect(l.href.startsWith("/"), `${fw} ${l.href} is origin-relative`).toBe(true);
+        expect(served.has(l.href), `${fw} links ${l.href} — route must exist in App.tsx`).toBe(true);
+        expect(l.label).toBeTruthy();
+        expect(l.what).toBeTruthy();
+        // Guidance, not evidence: the wording may not imply a measurement happened.
+        expect(l.what).not.toMatch(/\bmeasured\b|\bverified\b|\bsigned\b/i);
+      }
+    }
+  });
 });

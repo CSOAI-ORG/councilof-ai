@@ -73,28 +73,45 @@
 <main>
 <h1>GSPC Benchmarks</h1>
 <p class="sub">A GSPC benchmark is a <b>frozen bank</b> plus <b>one published grading rule</b>. Every bank below is
-public, every hash is stated, and every one can be run on your own model with a single command.
+public and every hash is stated. Banks with a sound answer menu can be run on your own model; refused menus are identified explicitly.
 What you get back is a receipt you can check — never a rank, and never a certificate.</p>
 
 <div class="grid">
   <div class="card"><h3><b>12</b> runnable banks</h3><p>Banks with a sound answer menu. The rest are listed and <b>refused</b>, with the reason, rather than silently dropped.</p></div>
-  <div class="card"><h3><b>34</b> measured axes</h3><p>Of <b>34</b> declared slots. The gap is published, because a slot count alone would claim measurements that do not exist.</p></div>
+  <div class="card"><h3><b>34</b> board axes with recorded runs</h3><p>Of <b>34</b> declared board slots, across all measurement kinds. This is not the runnable-bank count or a count of separated model leaders.</p></div>
   <div class="card"><h3><b>1</b> grading rule</h3><p>Every bank is graded by the same deterministic function. No model judges another model.</p></div>
 </div>
+<p class="sub">Board-wide scope in this build: 14 model-comparison; 9 deterministic-facts; 11 measured-subject. The table below covers only the published model banks listed by this runner.</p>
 
 <h2>Run a benchmark</h2>
 <pre><code>git clone https://github.com/CSOAI-ORG/councilof-ai
 cd councilof-ai
 python3 harness/bench/run_bench.py --axis safety --model YOUR_MODEL --base-url YOUR_ENDPOINT --out my-result.json</code></pre>
-<p class="sub">The runner fetches the frozen bank, hashes it, builds the prompt from the bank's own label
+<p class="sub">The runner fetches the published bank, records its hash, builds the prompt from the bank's own label
 menu, grades every answer with the published rule, and writes a receipt carrying the bank sha256,
 every prompt sha256, and every raw answer. <b>It produces a number for one model on one bank.
 It does not compare models and it does not rank.</b></p>
 
-<div class="note"><b>Nothing here needs an account, a key, or our permission.</b> The banks are on
+<div class="note"><b>The public banks and runner source are available without our permission.</b> The banks are on
 <a href="https://huggingface.co/csoai">Hugging Face</a>, the runner is MIT-licensed source, and the
-grading rule is imported from the same module the board uses. A third party can re-derive every
-number on this page from the published bytes.</div>
+grading rule is imported from the same module the board uses. Your chosen model service may require
+an account, credentials and paid usage. For reproducible runs, retain the bank bytes and supply
+<code>--bank-path</code> with <code>--bank-sha256</code>; see the <a href="/bench/submit/">submission guide</a>.</div>
+
+<h2 id="execution-context">Record execution conditions</h2>
+<p>For a paired comparison, retain the model provider, a non-sensitive route alias, the declared
+cyber-access programme and tier, the application/system/tool policy profile, and the generation settings. Pass these
+declarations to the runner with <code>--execution-context context.json</code>. The receipt records
+the context and its SHA-256 alongside the bank, grader and original answers.</p>
+<p>The paired comparator checks these conditions before calculating a comparison. Missing,
+unknown, changed or incompatible context is reported explicitly. Model comparisons require
+matching access and generation conditions; different providers and model identities remain
+visible as the systems being compared.</p>
+<p>To study the same declared model under different cyber-access conditions, use the explicit
+<code>--comparison-mode access-treatment</code> option. Its result describes a configuration
+difference. Context digests protect the recorded bytes; provider approval must be verified
+separately. Keep credentials and private account or workspace identifiers out of these records.</p>
+<p><a href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/harness/bench/README.md">Execution-context template and comparison guide</a></p>
 
 <h2>All banks</h2>
 <div class="wrap">
@@ -273,7 +290,7 @@ the refusal is the result, not a failure.</div>
   <li><a href="/bench/axes.json">axes.json</a> — one task spec per axis: bank URL, bank sha256, label menu, prompt template, grader, and how to run it.</li>
   <li><a href="/bench/leaderboard.json">leaderboard.json</a> — the model×axis matrix with per-cell n and separation, including every UNMEASURED axis.</li>
   <li><a href="/bench/openai-eval.yaml">openai-eval.yaml</a> — an OpenAI Evals task per axis, for a third party who wants to run a bank in a few lines.</li>
-  <li><a href="/bench/submit.md">submit.md</a> — how to submit a run so it can be verified and published.</li>
+  <li><a href="/bench/submit/">Submission guide</a> — how to prepare and submit a verifiable run; also available as <a href="/bench/submit.md">Markdown</a>.</li>
 </ul>
 
 <h2>What this is not</h2>
@@ -283,7 +300,7 @@ test did not separate a leader, because a tie that is not a win is the honest an
 <a href="https://councilof.ai/methodology/">the methodology</a>, and
 <a href="https://councilof.ai/api/gspc">/api/gspc</a> for the live board.</p>
 
-<footer>Council of AI — measurement, never certification. Generated from the live board and the published banks; no number on this page is typed by hand.</footer>
+<footer>Council of AI — measurement, never certification. Build-time snapshot derived from this source commit's board and the published bank bytes.</footer>
 </main>
 </body>
 </html>
