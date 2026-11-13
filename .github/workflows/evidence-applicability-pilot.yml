@@ -1,0 +1,78 @@
+name: Evidence applicability pilot
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [master]
+    paths:
+      - .github/workflows/evidence-applicability-pilot.yml
+      - packages/evidence-fabric/evidence_applicability.py
+      - packages/evidence-fabric/tests/test_evidence_applicability.py
+      - packages/evidence-fabric/EVIDENCE-APPLICABILITY-PILOT.md
+      - packages/evidence-fabric/event.py
+      - packages/evidence-fabric/render/**
+      - packages/evidence-fabric/schema/evidence-event-0.1.schema.json
+      - packages/venturi-capsule/venturi_capsule.py
+      - docs/standards/osaia-safe-reverification/hitl-authority-effect-v0.*.schema.json
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  local-fixture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install bounded test dependencies
+        run: python -m pip install --disable-pip-version-check --only-binary=cryptography 'cryptography==50.0.2' 'jsonschema==4.26.0'
+      - name: Require and run all local effect controls
+        run: |
+          python -B - <<'PY'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'packages/evidence-fabric/tests', pattern='test_evidence_applicability.py')
+          count = suite.countTestCases()
+          if count < 18:
+              raise SystemExit('Missing fixture controls: ' + str(count))
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if (not result.wasSuccessful() or result.testsRun != count
+                  or result.skipped or result.expectedFailures or result.unexpectedSuccesses):
+              raise SystemExit('Fixture controls incomplete or unsuccessful')
+          PY
+      - name: Retain a fresh hosted local fixture and verify its files
+        env:
+          CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python -B - <<'PY'
+          import hashlib, json, os, pathlib, subprocess, sys
+          out = pathlib.Path(os.environ['RUNNER_TEMP']) / 'evidence-applicability'
+          script = 'packages/evidence-fabric/evidence_applicability.py'
+          checkout_sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          subprocess.run([sys.executable, '-B', script, 'run', '--out', str(out),
+                          '--source-revision', checkout_sha], check=True)
+          digest = hashlib.sha256((out / 'manifest.json').read_bytes()).hexdigest()
+          subprocess.run([sys.executable, '-B', script, 'verify', '--out', str(out),
+                          '--expected-manifest-sha256', digest], check=True)
+          receipt = {'status': 'HOSTED_LOCAL_SYNTHETIC_FIXTURE', 'manifest_sha256': digest,
+                     'candidate_head': os.environ['CANDIDATE_HEAD'],
+                     'checkout_sha': checkout_sha,
+                     'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+                     'independent_executor': None, 'measurement_admission': 'NOT_ESTABLISHED',
+                     'external_acceptance': 'NOT_ESTABLISHED'}
+          (out / 'hosted-run-receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          print(json.dumps(receipt, sort_keys=True))
+          PY
+      - name: Retain local fixture artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-applicability-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/evidence-applicability/
+          if-no-files-found: error
+          retention-days: 14
