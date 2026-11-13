@@ -35,6 +35,25 @@ export default function HomeMine() {
             <a href="/board/" className="text-sm underline underline-offset-4 hover:text-primary">
               or go straight to the board
             </a>
+            <a href="/gspc-verify/" className="text-sm underline underline-offset-4 hover:text-primary">
+              Verify a measurement record
+            </a>
+          </div>
+          <div className="mt-6 border-t border-border pt-6" data-testid="home-derived-report-links">
+            <h3 className="text-lg font-semibold mb-2">
+              Evidence reports and source downloads
+            </h3>
+            <p className="text-muted-foreground text-sm mb-4 max-w-2xl">
+              Read retained regulatory-clock reports, source snapshots and mapping
+              gaps. These reports are unsigned derived summaries, not signed
+              measurement records or legal advice.
+            </p>
+            <a
+              href="/reports/daily-signal/"
+              className="inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-semibold hover:bg-muted transition"
+            >
+              Browse evidence reports
+            </a>
           </div>
           <div className="mt-5 max-w-md">
             <NewsletterSignup />

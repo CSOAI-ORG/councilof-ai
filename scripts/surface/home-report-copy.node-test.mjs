@@ -45,3 +45,53 @@ test("restored archive band does not reuse the HomeUpdates test selector", () =>
   assert.match(source, /data-testid="home-report-archive-band"/);
   assert.doesNotMatch(source, /data-testid="home-daily-report-band"/);
 });
+
+// These assertions guard the report discovery path in the actual component source.
+// They do not claim that a destination was fetched or that an artifact was verified.
+function anchors(input) {
+  const uncommented = input.replace(/\/\*[\s\S]*?\*\//g, "");
+  return [...uncommented.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].map(([, attributes, body]) => ({
+    attributes,
+    href: attributes.match(/\bhref="([^"]+)"/)?.[1],
+    label: body.replace(/\s+/g, " ").trim(),
+  }));
+}
+function archiveLink(input) {
+  return anchors(input).find((link) => link.href === "/reports/daily-signal/");
+}
+function verifierLink(input) {
+  return anchors(input).find((link) => link.href === "/gspc-verify/");
+}
+
+test("first-party evidence archive has a descriptive ordinary link", () => {
+  const link = archiveLink(source);
+  assert.ok(link, "retained evidence archive must be discoverable from the report band");
+  assert.equal(link.label, "Browse evidence reports");
+  assert.doesNotMatch(link.attributes, /\b(?:target|onClick|download)=/);
+});
+test("measurement verification remains a separate descriptive link", () => {
+  const link = verifierLink(source);
+  assert.ok(link, "measurement records need their existing free verification route");
+  assert.equal(link.label, "Verify a measurement record");
+  assert.doesNotMatch(link.attributes, /\b(?:target|onClick|download)=/);
+});
+test("derived report copy does not present the archive as signed measurements", () => {
+  const block = source.split('data-testid="home-derived-report-links"')[1];
+  assert.ok(block, "derived reports need a separately labelled block");
+  assert.match(block, /Evidence reports and source downloads/);
+  assert.match(block, /unsigned derived summaries/);
+  assert.match(block, /not signed\s+measurement records or legal advice/);
+  assert.doesNotMatch(block, /href="\/gspc-verify\/"/);
+});
+test("negative control: removing the report anchor cannot pass as discoverable", () => {
+  assert.equal(archiveLink(source.replace(/<a\b[^>]*href="\/reports\/daily-signal\/"[^>]*>[\s\S]*?<\/a>/g, "")), undefined);
+});
+test("negative control: a gated dashboard is not the free report archive", () => {
+  assert.equal(archiveLink(source.replace('href="/reports/daily-signal/"', 'href="/dashboard"')), undefined);
+});
+test("negative control: a comment-only report link is not navigation", () => {
+  assert.equal(archiveLink('{/* <a href="/reports/daily-signal/">Browse evidence reports</a> */}'), undefined);
+});
+test("negative control: changing the verifier destination loses that route", () => {
+  assert.equal(verifierLink(source.replace('href="/gspc-verify/"', 'href="/board/"')), undefined);
+});
