@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "checks": 18,
+  "assertions": [
+    "startup actual inference returned receipt",
+    "edit clears successful result and export",
+    "edit clears prediction cells",
+    "malformed input cannot retain success",
+    "malformed input reports error",
+    "valid input recovers after refusal",
+    "blank row is refused rather than row zero",
+    "out of range row refuses",
+    "valid row recovers",
+    "delayed receipt cannot overwrite edited input",
+    "delayed completion preserves changed-input status",
+    "current valid receipt can be exported",
+    "invalidated receipt cannot be exported",
+    "invalid dimensions clear old display",
+    "full replay still returns 560 rows",
+    "replay keeps unsigned boundary",
+    "row selector change clears current export",
+    "tampered weights refuse at startup"
+  ],
+  "scope": "actual UI module with deterministic DOM adapter and real inference; not rendered browser acceptance",
+  "model_weights_changed": false
+}
