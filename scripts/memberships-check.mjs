@@ -318,6 +318,20 @@ export async function checkRow(row, fetcher = defaultFetcher) {
   return { id: row.id, ok: v.ok, reason: res?.error ? `${v.reason} (${res.error})` : v.reason, url };
 }
 
+async function mapLimit(items, limit, mapper) {
+  const output = new Array(items.length);
+  let cursor = 0;
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (true) {
+      const index = cursor++;
+      if (index >= items.length) return;
+      output[index] = await mapper(items[index], index);
+    }
+  });
+  await Promise.all(workers);
+  return output;
+}
+
 export async function runChecks(manifest, fetcher = defaultFetcher, updates = undefined, now = new Date()) {
   const schema = validateManifest(manifest);
   if (updates !== undefined) for (const p of validateUpdates(updates, manifest)) schema.push(`updates: ${p}`);
@@ -326,7 +340,8 @@ export async function runChecks(manifest, fetcher = defaultFetcher, updates = un
   let pageCheck = null;
   if (schema.length === 0) {
     // Do not let an old manifest suppress the live checks: fetch every public row anyway.
-    for (const row of manifest.rows) results.push(await checkRow(row, fetcher));
+    const checkedRows = await mapLimit(manifest.rows, 4, (row) => checkRow(row, fetcher));
+    results.push(...checkedRows);
     const page = await fetcher(MEMBERSHIPS_PAGE_URL);
     pageCheck = evaluateRegisterPage(page, manifest);
   }
