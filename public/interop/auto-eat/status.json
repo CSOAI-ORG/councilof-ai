@@ -1,21 +1,19 @@
 {
  "loop": "asi-auto-eat",
- "as_of": "2026-09-12T06:49:50Z",
- "queue_discovered_total": 13166,
+ "as_of": "2026-11-13T02:22:55Z",
+ "report_generated_at": "2026-11-13T02:22:55Z",
+ "input_integrity": "VALIDATED_LOCAL_SNAPSHOT",
+ "loop_liveness": "NOT_ESTABLISHED_BY_SAVED_FILES",
+ "queue_discovered_total": 13186,
  "discovered_by_kind": {
-  "hf-model": 4081,
-  "mcp-server": 666,
-  "erc8004": 1729,
-  "xrpl-account": 223,
-  "hf-space": 4059,
+  "hf-model": 4086,
+  "mcp-server": 667,
+  "erc8004": 1734,
+  "xrpl-account": 227,
+  "hf-space": 4064,
   "npm-registry": 2408
  },
- "probed_total": 13166,
- "staged_live_of_probed": {
-  "live": 1131,
-  "probed": 4700,
-  "fraction": 0.2406
- },
+ "probed_total": 13186,
  "atoms_staged": 8,
  "surfaces_staged": [
   "autoeat.erc8004.newagents",
@@ -27,10 +25,67 @@
   "autoeat.xrpl.accounts",
   "autoeat.xrpl.twoway"
  ],
- "last_signed_batch": {
-  "surface": "autoeat.xrpl.accounts",
-  "as_of": "2026-09-01T13:08:24Z",
-  "sha256": "9f9b6ef8c585b8dfe28558a607f1860d3ccf133a7e0793726ed4468ecf417e91"
+ "staged_live_of_probed": {
+  "live": 503,
+  "probed": 650,
+  "fraction": 0.7738
  },
- "invariant": "atoms carry sig_ed25519=null; nothing is MEASURED until a card signs green via GHA OIDC and verifies"
+ "probe_fraction_scope": {
+  "included_surfaces": [
+   "autoeat.erc8004.newagents",
+   "autoeat.hf.newmodels",
+   "autoeat.hf.spaces",
+   "autoeat.mcp.registry",
+   "autoeat.npm.registry",
+   "autoeat.xrpl.accounts"
+  ],
+  "excluded_non_probe_surfaces": [
+   "autoeat.swift.census",
+   "autoeat.xrpl.twoway"
+  ],
+  "meaning": "Retained reachability probes only; not scores or current availability."
+ },
+ "staged_source_times": {
+  "earliest": "2026-09-01",
+  "latest": "2026-11-13T02:21:23Z",
+  "date_only_values_preserve_day_precision": true
+ },
+ "last_signed_batch": null,
+ "signature_verification": "NOT_PERFORMED",
+ "signature_present_candidates": 8,
+ "last_signature_present_batch": {
+  "surface": "autoeat.hf.newmodels",
+  "as_of": "2026-09-01T13:08:24Z",
+  "sha256": "4b3b9c542e27c21c34d804d53b69d5bef4cd8b6b7991db04cd605c20a4662fa1"
+ },
+ "input_sha256": {
+  "queue.jsonl": "d42653a1e9d522e721725e18d0bc2feaef279dbf56d410b89d66adf85bb206e7",
+  "probed.json": "ac2eff4f63dd9d71bfdaf030395a011d954721bb048b5eed11bd748826161b15",
+  "cards-compact.json": "741a50707c33fdd6835204c1dc2d023d9d9e1acfe2c2cc4489bfa5a2c8ed8035",
+  "card-autoeat-hf-newmodels-unsigned.json": "88315b02b52d6c79f9bf105b6c27740c80451d656e568cd3fa1a7b513ef01004",
+  "card-autoeat-mcp-registry-unsigned.json": "6b7fb070f2ddca800aada8b2c6bae3fb7be513734d338c6f857c6916feb5da42",
+  "card-autoeat-erc8004-newagents-unsigned.json": "344d6df388d1ffe5bee07677cbf9b2b5040d907522585681a770bc511409b14a",
+  "card-autoeat-xrpl-accounts-unsigned.json": "bcee56fa81b549a1510c8991641f679720bb0024d18b4d8e3f686c72b5e0b26b",
+  "card-autoeat-hf-spaces-unsigned.json": "7dc8e1616625e33875489974c2e788246ed7fead8c4d38e53fd9f94530b73659",
+  "card-autoeat-npm-registry-unsigned.json": "34813a1d2454f6f910f178d471b07027608bcbde77af161dc93559dfd8ec1fe1",
+  "card-autoeat-xrpl-twoway-unsigned.json": "96bb63902e7cc0592758f1452179aee6921dcef49711354cae2e4f99de497e40",
+  "card-autoeat-swift-census-unsigned.json": "ab4a3ad238a9f6bc9f9d22429d44a35472e8799bd37b9c758d86c72638c80a14",
+  "ledger/ledger-card-autoeat-erc8004-newagents-unsigned.json": "cda7777678782bdf7949d5081847f8e9d00d273ecf38556145d16ef4baee3798",
+  "ledger/ledger-card-autoeat-erc8004-newagents.json": "27125fe7dc16f29def9e1a48f81e026ac51fca7a9488f8413666e7131ced7de0",
+  "ledger/ledger-card-autoeat-hf-newmodels-unsigned.json": "e87341db7961c576328a37b7beb9c15965a14e80ef2dbcff51a84b0283073231",
+  "ledger/ledger-card-autoeat-hf-newmodels.json": "0f1c603631a10d1b8976fa2e239fdd0a0d3bbf429b2f40e54a18c98152cc6d26",
+  "ledger/ledger-card-autoeat-hf-spaces-unsigned.json": "5a7717009455adc017e46393191574019513a6b9efccfa4343281dd967b64dd8",
+  "ledger/ledger-card-autoeat-hf-spaces.json": "c5316acb2dda31b7bfb0dfd34155d7d3a4b93c8935aea1cda6bcdc629516dceb",
+  "ledger/ledger-card-autoeat-mcp-registry-unsigned.json": "fdf1a94052fd5c4e8fd0a1eb8dacc1f03b2866c7c366ae6582203a83ec3e42e9",
+  "ledger/ledger-card-autoeat-mcp-registry.json": "394323038929643a431a62d179aab5e0e490f1960f4e5c7276c34b733fb52200",
+  "ledger/ledger-card-autoeat-npm-registry-unsigned.json": "b5d7151baf80b1ddebbb24f915f887410b5a88d23f55adad0f8dc3ee0d8b79b1",
+  "ledger/ledger-card-autoeat-npm-registry.json": "8052f55ae6a87a876398227b4c6580c6fdd088814cf8a7926006082027abd97a",
+  "ledger/ledger-card-autoeat-swift-census-unsigned.json": "ab4a3ad238a9f6bc9f9d22429d44a35472e8799bd37b9c758d86c72638c80a14",
+  "ledger/ledger-card-autoeat-swift-census.json": "dfc388c90a822cd35987f9b5c868c209a8acb3c6f603be6a34659a22ffe949ec",
+  "ledger/ledger-card-autoeat-xrpl-accounts-unsigned.json": "414eb06ff12549d599dfb58f36aff22a8144395a7436e0a6cae1f47bc76b14fd",
+  "ledger/ledger-card-autoeat-xrpl-accounts.json": "bd366e81909d1b743dcb4b558e1e66456231352071aa857fd04dd965705cd2db",
+  "ledger/ledger-card-autoeat-xrpl-twoway-unsigned.json": "96bb63902e7cc0592758f1452179aee6921dcef49711354cae2e4f99de497e40",
+  "ledger/ledger-card-autoeat-xrpl-twoway.json": "1a7f8b13ca2b5097f7a4e40f68f9f7269ca518e49400bc985634e5f614c02b99"
+ },
+ "invariant": "Signature presence is not verification; reachability is not a GSPC score, human approval or training permission."
 }

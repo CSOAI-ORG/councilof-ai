@@ -11,25 +11,24 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 1913,
-   "live": 247,
+   "n_probed": 5,
+   "live": 5,
    "placeholder": 0,
-   "held": 1,
+   "held": 0,
    "dead": 0,
-   "uncheckable": 1665,
-   "live_fraction_of_probed": 0.1291,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "Raivatv24/suzuki-m1-gpt (200)",
-    "asdafee34/my-awesome-model-best-checkpoint (200)",
-    "glory-hyeok/wam-dit4dit-robocasa-kitchen-wan22-v2vstudent-ibot1818-tf025-mimonly-g001-effg",
-    "RyanYr/asyncrl-math_grpo_s40_be4_tn1_ws3-gs1600 (200)",
-    "mradermacher/Angry-Claudius-9B-GGUF (200)",
-    "DASDBCXBC/MyAwesomeModel-TestRepo (200)"
+    "sabbirbhai420/ghggh (200)",
+    "gradients-io-tournaments/pc-replay-38b39dc7-v3-rc1-pc_sxm (200)",
+    "nyleeaa0503/MyAwesomeModel-TestRepo (200)",
+    "woodr/A2_ROS_HS_pick_and_place_261111_sim (200)",
+    "n24q02m/fr-cross-encoder-ms-marco-MiniLM-L6-v2 (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-12T06:49:50Z",
+  "as_of": "2026-11-13T02:21:23Z",
   "unmeasured": [
    "gspc_score",
    "weights_integrity",
@@ -49,25 +48,20 @@
   },
   "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 139,
-   "live": 135,
-   "placeholder": 3,
+   "n_probed": 1,
+   "live": 1,
+   "placeholder": 0,
    "held": 0,
-   "dead": 1,
+   "dead": 0,
    "uncheckable": 0,
-   "live_fraction_of_probed": 0.9712,
+   "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "agency.ottobot/business-contact-finder (405)",
-    "agency.ottobot/contractor-license-changes (405)",
-    "ai.atako/mcp (401)",
-    "ai.akkrudata/akkrudata (401)",
-    "ai.balancos/mcp (401)",
-    "ai.cnpj/mcp (401)"
+    "ac.mizan/registry (405)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-12T06:49:50Z",
+  "as_of": "2026-11-13T02:21:23Z",
   "unmeasured": [
    "tool_behavior",
    "capability_claims",
@@ -124,25 +118,23 @@
   },
   "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 13,
-   "live": 13,
+   "n_probed": 4,
+   "live": 4,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "rXUMMaPpZqPutoRszR29jtC8amWq3APkx (exists)",
-    "rKv5WDWnXoZobskTdhKkZf5KZqy8PdSxLZ (exists)",
-    "rHxyQGMkssTKyf6F4sTik7gyJDHve5jSgY (exists)",
-    "rJfFEy3ZYwsadinHJsyTwveH1hHpsmBk5R (exists)",
-    "rUY6QvosDnP83WMKRcyj96kC3qCSttVoyz (exists)",
-    "rEPrn4DbXvHNBDJghQWUf92NzLU3MURFC3 (exists)"
+    "r3ZarBbu3irgUKV1CY8p2jAQfVEknDz45n (exists)",
+    "rB1q8i6QaAJgSQdvbxGsP4pxsUv6QeTEWm (exists)",
+    "rDEDD1ZR1kc11P8SknvKFDsM2oYofytPkU (exists)",
+    "r3hriyZocf5w3F5dHKaQxPVDA2zKLFM1pm (exists)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-12T06:49:50Z",
+  "as_of": "2026-11-13T02:21:23Z",
   "unmeasured": [
    "issuer_identity",
    "reserve_attestation",
@@ -161,25 +153,24 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 2000,
-   "live": 248,
+   "n_probed": 5,
+   "live": 5,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 1752,
-   "live_fraction_of_probed": 0.124,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "mightygus/unleashed-high-school-band-competition (200)",
-    "Harshavardhan1703/aegis-ai-demo (200)",
-    "EgoisticCoder/Qifu-v1 (200)",
-    "huappp/pphh (200)",
-    "rijal028/securepixel-engine (200)",
-    "hetchyy/quran-ts-job (200)"
+    "Caskiajarvis/CaskiSound (200)",
+    "allanzinho09/animaforge-ia (200)",
+    "jimmychiang/employee-data-extractor (200)",
+    "Silbird/test (200)",
+    "munikzad/Qwen-Image-Edit-2511-LoRAs-Fast (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-12T06:49:50Z",
+  "as_of": "2026-11-13T02:21:23Z",
   "unmeasured": [
    "runtime_behavior",
    "hardware_claim",

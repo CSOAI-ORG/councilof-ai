@@ -1,32 +1,33 @@
-# ASI AUTO-EAT — STATUS
+# EAT — retained input status
 
-_regenerated 2026-09-12T06:49:50Z — every number counted, none invented_
+Report generated 2026-11-13T02:22:55Z; saved-source liveness is not established.
 
-| field | value |
+| Field | Value |
 |---|---|
-| queue DISCOVERED total | 13166 |
-| probed total | 13166 |
-| atoms staged (unsigned) | 8 |
-| staged LIVE fraction of probed | 0.2406 (1131/4700) |
-| surfaces staged | autoeat.erc8004.newagents, autoeat.hf.newmodels, autoeat.hf.spaces, autoeat.mcp.registry, autoeat.npm.registry, autoeat.swift.census, autoeat.xrpl.accounts, autoeat.xrpl.twoway |
-| last signed batch | autoeat.xrpl.accounts @ 2026-09-01T13:08:24Z (9f9b6ef8c585b8df) |
+| Discovered queue rows | 13186 |
+| Probed identities | 13186 |
+| Validated unsigned staged atoms | 8 |
+| Retained LIVE/probed sample | 503/650 (0.7738) |
+| Earliest retained staged observation | 2026-09-01 |
+| Latest retained staged observation | 2026-11-13T02:21:23Z |
+| Signature verification | NOT PERFORMED |
+| Files with signature text | 8 (not verified signatures) |
 
-## DISCOVERED by kind
+## Discovered by kind
 
-| kind | count |
+| Kind | Count |
 |---|---|
-| erc8004 | 1729 |
-| hf-model | 4081 |
-| hf-space | 4059 |
-| mcp-server | 666 |
+| erc8004 | 1734 |
+| hf-model | 4086 |
+| hf-space | 4064 |
+| mcp-server | 667 |
 | npm-registry | 2408 |
-| xrpl-account | 223 |
+| xrpl-account | 227 |
 
-## Three-state invariant (structural)
+## Scope
 
-- **DISCOVERED / UNMEASURED are first-class** — appearing here is not a score.
-- Atoms are staged with `sig_ed25519: null`. This path holds no keys and cannot sign.
-- A subject is **MEASURED only** once a card signs green through the GHA OIDC
-  board-sign path and verifies. Until then it stays DISCOVERED/probed-LIVE.
-- See `scripts/auto-eat/README.md` for the one dispatch that signs a feed batch.
-
+- A report timestamp is not evidence that the loop ran a fresh probe.
+- Non-probe legacy samples are excluded from the reachability denominator: autoeat.swift.census, autoeat.xrpl.twoway.
+- `last_signed_batch` stays null: this generator does not verify signatures. Signature-bearing candidates remain explicitly unverified.
+- Discovery, reachability, signature verification, model measurement, human approval and training permission remain separate.
+- This generator performs no network requests, signing, training or execution approval.
