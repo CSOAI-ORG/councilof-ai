@@ -7,18 +7,30 @@ export default function HomeDemoPreview() {
   const [failed, setFailed] = useState(false);
 
   return (
-    <section className="hp-demo-band" aria-labelledby="home-demo-heading" data-testid="home-demo-preview">
+    <section
+      className="hp-demo-band"
+      aria-labelledby="home-demo-heading"
+      data-testid="home-demo-preview"
+    >
       <div className="hp-demo-copy">
         <p className="hp-eyebrow">See the instrument</p>
-        <h3 id="home-demo-heading">From a public result to a record you can verify.</h3>
+        <h3 id="home-demo-heading">
+          From a public result to a record you can verify.
+        </h3>
         <p>
-          Take a short guided look at the working evidence experience. Then open the live board
-          and inspect the source records yourself.
+          Take a short guided look at the working evidence experience. Then
+          open the live board and inspect the source records yourself.
         </p>
         <a href="/board/" className="hp-demo-link">
-          Explore the live instrument <ArrowUpRight size={16} aria-hidden="true" />
+          Explore the live instrument
+          <ArrowUpRight size={16} aria-hidden="true" />
         </a>
-        {failed ? <p className="hp-demo-error" role="status">The walkthrough could not be loaded. The live board remains available.</p> : null}
+        {failed ? (
+          <p className="hp-demo-error" role="status">
+            The walkthrough could not be loaded. The live board remains
+            available.
+          </p>
+        ) : null}
       </div>
       <div className="hp-demo-frame">
         {playing && !failed ? (
@@ -38,7 +50,10 @@ export default function HomeDemoPreview() {
           <button
             type="button"
             className="hp-demo-trigger"
-            onClick={() => { setFailed(false); setPlaying(true); }}
+            onClick={() => {
+              setFailed(false);
+              setPlaying(true);
+            }}
             aria-label="Play the Council of AI product walkthrough"
           >
             <img
@@ -47,7 +62,10 @@ export default function HomeDemoPreview() {
               loading="lazy"
               decoding="async"
             />
-            <span className="hp-demo-play"><Play size={17} fill="currentColor" aria-hidden="true" /> Play the walkthrough</span>
+            <span className="hp-demo-play">
+              <Play size={17} fill="currentColor" aria-hidden="true" />
+              Play the walkthrough
+            </span>
             <span className="hp-demo-corner">COUNCIL OS · PRODUCT TOUR</span>
           </button>
         )}
