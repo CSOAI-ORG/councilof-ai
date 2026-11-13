@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en-GB"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Submit a GSPC run | Council of AI</title>
+<meta name="description" content="Prepare a reproducible GSPC receipt: retain bank bytes, declare execution conditions, inspect results and submit for review.">
+<link rel="canonical" href="https://councilof.ai/bench/submit/">
+<style>
+  :root{--fg:#0f1a14;--mut:#5b6b62;--bd:#d8e2dc;--bg:#f7faf8;--acc:#047857}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,sans-serif}
+  main{max-width:62rem;margin:0 auto;padding:2rem 1.25rem 5rem} h1{font-size:2rem;line-height:1.2} h2{font-size:1.25rem;margin-top:2.4rem}
+  a{color:var(--acc)} code{font: .85em ui-monospace,Menlo,monospace;overflow-wrap:anywhere}
+  pre{background:#0f1a14;color:#e8f5ee;padding:1rem;border-radius:8px;overflow-x:auto;line-height:1.5} pre code{overflow-wrap:normal}
+  .wrap{overflow-x:auto} table{width:100%;border-collapse:collapse;font-size:.9rem} th,td{text-align:left;padding:.6rem;border-bottom:1px solid var(--bd);vertical-align:top}
+  li{margin:.6rem 0} footer{margin-top:3rem;color:var(--mut)}   /* static-shell brand-v1: same mark, wordmark and links as client/src/components/Header.tsx */
+  .site-header { border-bottom: 1px solid var(--border, #e5e7eb); position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.95); backdrop-filter: blur(8px); }
+  .site-header-inner { max-width: 1100px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .logo-word { color: #047857; font-weight: 700; font-size: 20px; letter-spacing: -0.01em; white-space: nowrap; }
+  .nav { display: flex; gap: 2px; flex-wrap: wrap; }
+  .nav a { color: var(--muted, #6b7280); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 6px; }
+  @media (max-width: 520px) { .site-header-inner { flex-direction: column; align-items: flex-start; padding: 10px 16px; gap: 4px; } .nav { gap: 0; } .nav a { font-size: 13px; padding: 6px 8px; } }
+  .nav a:hover { color: var(--fg, #1f2937); background: var(--card, #f9fafb); }
+
+</style></head><body><header class="site-header" data-static-shell="brand-v1">
+  <div class="site-header-inner">
+    <a class="logo" href="/" aria-label="Council of AI — home"><svg viewBox="0 0 100 100" width="34" height="34" role="img" aria-label="Council of AI" xmlns="http://www.w3.org/2000/svg"><path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/><path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/><rect x="26" y="66" width="48" height="6" fill="#04624a"/><rect x="30" y="61" width="40" height="4" fill="#04624a"/><rect x="33" y="38" width="6" height="22" fill="#04624a"/><rect x="44" y="38" width="6" height="22" fill="#04624a"/><rect x="55" y="38" width="6" height="22" fill="#04624a"/><rect x="66" y="38" width="6" height="22" fill="#04624a"/><rect x="28" y="33" width="44" height="5" fill="#04624a"/><path d="M50 20 L75 32 H25 Z" fill="#04624a"/></svg><span class="logo-word">Council of AI</span></a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="/gspc-verify">Verify</a>
+      <a href="/services/">Services</a>
+      <a href="/board/">Board</a>
+      <a href="/dashboard">Council OS</a>
+      <a href="/tools">Tools</a>
+    </nav>
+  </div>
+</header><main>
+<p><a href="/bench/">← GSPC benchmarks</a> · <a href="/bench/submit.md">Download this guide as Markdown</a></p>
+<h1>Submit a GSPC run</h1>
+
+<p>Prepare a reproducible receipt for review. Running the harness does not submit a result, admit it to the board or establish a ranking.</p>
+
+<h2>1. Retain the instrument and declare the conditions</h2>
+
+<p>Keep the source checkout revision, original bank JSONL and its expected SHA-256. Prefer a fixed dataset commit; a download from a moving URL must still match the digest you intended. The example below uses <code>affect</code> and the bank hash recorded when this guide was built.</p>
+
+<p>Create <code>context.json</code> from the <a href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/harness/bench/README.md">execution-context template</a> using facts you can support: provider/model/route, cyber programme and tier, non-treatment application policy, generation limits and provenance. Keep credentials and private account/workspace identifiers out of it. Missing or unknown conditions remain readable but cannot qualify a paired comparison; a declaration is not provider approval.</p>
+
+<pre><code>git clone https://github.com/CSOAI-ORG/councilof-ai
+cd councilof-ai
+git rev-parse HEAD
+curl --fail --location --output bank-items.jsonl https://huggingface.co/datasets/csoai/gspc-affect/resolve/main/items.jsonl</code></pre>
+
+<p>The public bank and source are available without our permission. Your chosen model service may require its own account, credentials and paid usage.</p>
+
+<h2>2. Run the model or replay retained replies</h2>
+
+<p>For live calls, choose an OpenAI-compatible base URL accepting <code>/chat/completions</code>, your model, <code>temperature</code> and <code>max_tokens</code>, and returning <code>choices[0].message.content</code>; confirm your budget. If authentication is required, set <code>GSPC_RUN_BENCH_API_KEY</code> or the fallback <code>OPENAI_API_KEY</code> in your environment. Scripts reading Council Pages endpoints should send a descriptive application <code>User-Agent</code> as <a href="https://developers.cloudflare.com/pages/platform/known-issues/#browser-integrity-check-on-pages">Cloudflare recommends</a>; the runner and comparator already do this, but arbitrary library defaults are not guaranteed to work.</p>
+
+<pre><code>python3 harness/bench/run_bench.py --axis affect --model YOUR_MODEL \
+  --bank-path bank-items.jsonl --bank-sha256 5ce11c084a6e968cc49314cfec2898725fb7b01513dc117f869be17b4a263bc7 \
+  --base-url YOUR_ENDPOINT --execution-context context.json \
+  --temperature 0 --max-tokens 1024 --out result.json</code></pre>
+
+<p>Match <code>YOUR_MODEL</code> and generation limits to your context. A bank-hash mismatch or inconsistent live context stops before model calls. Do not use <code>--limit</code> for a complete-bank submission.</p>
+
+<p>To score retained replies without network or model calls, replace <code>--base-url YOUR_ENDPOINT</code> with <code>--answers answers.jsonl</code>. Each JSONL row must contain a unique zero-based <code>index</code> and the exact original string <code>answer</code>. Preserve malformed replies and evidence of the original conditions; do not reconstruct missing history. Local replay records <code>bank_source: local_file</code>, a null bank URL and <code>generation_parameters_source: supplied_context</code>; the digest binds bytes, not their origin.</p>
+
+<h2>3. Inspect the complete receipt</h2>
+
+<p>The runner writes <code>result.json</code>. Exit 0 means all replies parsed; exit 3 still writes the ledger with unparsed replies; exit 2 refuses the run and must not be treated as a zero score.</p>
+
+<div class="wrap"><table><thead><tr><th>Field</th><th>What it records</th></tr></thead><tbody><tr><td><code>bank_sha256</code></td><td>Digest of the exact loaded bank bytes; retain their fixed dataset reference separately.</td></tr><tr><td><code>bank_repo, bank_source, bank_url</code></td><td>Declared bank mapping and source type; local paths are never published.</td></tr><tr><td><code>grader, grader_source_sha256</code></td><td>Canonical mill rule and digest of the grader source used.</td></tr><tr><td><code>bank_items_total, items_total, evaluation_scope</code></td><td>Full bank size, evaluated size and full/partial scope.</td></tr><tr><td><code>items_graded, items_unparsed, hits</code></td><td>Parsed coverage, unparsed replies and correct replies.</td></tr><tr><td><code>accuracy, wilson95, accuracy_over_all_items, wilson95_over_all_items</code></td><td>Both parsed-only and all-item denominators and intervals.</td></tr><tr><td><code>rows[].answer, rows[].answer_sha256, rows[].prompt_sha256</code></td><td>Original reply, reply digest and exact prompt digest for every item.</td></tr><tr><td><code>execution_context, execution_context_sha256</code></td><td>Declared conditions and integrity digest; neither authenticates provider approval.</td></tr><tr><td><code>generation_parameters_source</code></td><td>Live requested parameters versus supplied original-run metadata.</td></tr></tbody></table></div>
+
+<h2>4. Review comparability and submission evidence</h2>
+
+<ol>
+<li>Verify the receipt's <code>bank_sha256</code> against its retained original bytes, even if the current Hub bank has changed. Review the fixed dataset/source references; a digest alone does not authenticate provenance or qualify a historical bank for the current board.</li>
+<li>Re-run the original replies through the declared grader and bank, reproducing prompt hashes, per-item grades, counts and intervals. Do not replace raw replies with expected labels.</li>
+<li>Require complete-bank coverage and inspect unparsed replies. <code>items_graded &lt; 30</code> remains below the board's quotation threshold; a small or incomplete receipt is not made quotable by the comparison tool.</li>
+<li>Retain the resolvable model identity and pinned revision where available. Reused provider aliases do not prove unchanged weights; record that limitation.</li>
+<li>Exclude the bank's canary row; it is a contamination tripwire, never a task.</li>
+<li>Before paired inference, require complete, compatible execution context and matching bank, grader, prompt hashes and item coverage. Historical missing conditions must not be filled by guessing.</li>
+</ol>
+
+<pre><code>python3 harness/bench/paired_comparison.py \
+  --frontier baseline.json --meok candidate.json --out comparison.json</code></pre>
+
+<p>The legacy <code>--meok</code> flag names the second arm; it does not assert a product identity. Default mode compares deployments with matched access and recorded generation conditions. Use <code>--comparison-mode access-treatment</code> only for an intentional same-declared-model/route cyber-access experiment; it reports a configuration difference, not model superiority. See the <a href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/harness/bench/README.md">full comparison and retained-answer guide</a>.</p>
+
+<h2>5. Submit for review</h2>
+
+<p><a href="https://github.com/CSOAI-ORG/councilof-ai/compare">Open a pull request</a> using your GitHub account, adding your receipt under <code>submissions/</code> with fixed bank/source references, derivation notes and any paired report. Retain the original answers and evidence behind public context labels. Review the contents for sensitive data before publication. Do not edit generated board files by hand.</p>
+
+<p>Submission is a request for review, not automatic publication or board admission. A receipt remains a measurement, not certification or a rank. The board's fixed test determines separation; TIE does not establish a winning model.</p>
+
+<p><a href="https://councilof.ai/api/gspc">Current board</a> · <a href="https://councilof.ai/methodology/">Methodology</a></p>
+
+<h2>Banks available to run</h2>
+
+<ul>
+<li><code>affect</code> — <code>gspc-affect</code>, 42 items — DISCLOSE | NULL | PERMITTED | PROHIBITED</li>
+<li><code>art5-safeguard</code> — <code>gspc-art5</code>, 36 items — PERMITTED | PROHIBITED</li>
+<li><code>care</code> — <code>gspc-care</code>, 200 items — 0 | 1</li>
+<li><code>conformance</code> — <code>gspc-mcp</code>, 35 items — CONFORMS | VIOLATES</li>
+<li><code>continuity</code> — <code>gspc-asi</code>, 33 items — NOT_APPLICABLE | QUANTUM_SAFE | QUANTUM_VULNERABLE</li>
+<li><code>cross-reality</code> — <code>gspc-xr</code>, 32 items — CONFIRM | PROCEED | REFUSE</li>
+<li><code>detector-interop</code> — <code>gspc-det</code>, 33 items — DIVERGENT | INTEROPERABLE</li>
+<li><code>governance</code> — <code>gspc-gov</code>, 237 items — HIGH_RISK | LIMITED_RISK | MINIMAL_RISK | PROHIBITED</li>
+<li><code>machinery-conformity</code> — <code>gspc-mach</code>, 33 items — NOT_SAFETY_FUNCTION | OUT_OF_SCOPE | PART_A</li>
+<li><code>openness</code> — <code>gspc-oss</code>, 32 items — PERMITTED | RESTRICTED</li>
+<li><code>provenance</code> — <code>gspc-prv</code>, 32 items — DESTROYED | SURVIVES</li>
+<li><code>safety</code> — <code>gspc-agi</code>, 36 items — COMPLY | REFUSE</li>
+</ul>
+
+<footer>Council of AI — measurement, never certification. This guide and its Markdown version share one content source.</footer>
+</main></body></html>
