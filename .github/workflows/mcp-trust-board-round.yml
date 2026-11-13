@@ -31,7 +31,7 @@ jobs:
           ref: master
       - name: DRY round — handshake census, counts only
         run: |
-          python3 scripts/mcp-trust-round.py --cap "${{ github.event.inputs.cap || '500' }}" \
+          python3 scripts/mcp-trust-round.py --cap "${{ github.event.inputs.cap || '2459' }}" \
             --out-dir public/interop/mcp-trust
       - name: land the artefact (via PR — master is GH006-protected)
         env:

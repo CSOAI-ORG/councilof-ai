@@ -594,7 +594,7 @@ def selftest() -> int:
 
 def main() -> int:
     p = argparse.ArgumentParser()
-    p.add_argument("--cap", type=int, default=500,
+    p.add_argument("--cap", type=int, default=2459,
                    help="max unique hosts per round (census #1 = 500)")
     p.add_argument("--out-dir", default="public/interop/mcp-trust")
     p.add_argument("--rows-out", default=None,
