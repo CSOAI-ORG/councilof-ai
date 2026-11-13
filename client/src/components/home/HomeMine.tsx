@@ -1,30 +1,16 @@
 /**
- * HomeMine — the living board strip + the daily-report/newsletter band, restored
- * into the rebuilt homepage journey (2026-11-09).
+ * HomeMine — the published-report archive and newsletter band.
  *
- * WHY THIS EXISTS. The #3969 homepage rebuild recomposed the front door into
- * Hero → Results → Products → Evidence → Developers → Updates and dropped two
- * owner-verified sections on the floor: the compact live board strip and the
- * daily-report band with the working signup (NewsletterSignup now stores via
- * LEADS — verified end-to-end 2026-11-04). This component restores both, using
- * the exact markup that shipped on 1 Nov and rendered until the rebuild.
- *
- * FAILURE BEHAVIOUR: LivingBoardStrip renders NOTHING when the board read
- * fails — a missing board never draws a broken homepage. The band is static
- * and always renders.
+ * The live board already appears in HomeResults. Keep one authoritative board
+ * surface on the homepage; repeating its strip here added a second copy without
+ * giving readers new evidence. The report archive and working newsletter signup
+ * remain here, with publication dates and scope kept on the linked reports.
  */
-import LivingBoardStrip from "@/components/home/LivingBoardStrip";
 import NewsletterSignup from "@/components/NewsletterSignup";
 
 export default function HomeMine() {
   return (
     <>
-      {/* The compact LIVE board (owner, 1 Nov 2026): under the results, above
-          every commercial band. Renders nothing at all when the read fails. */}
-      <div className="section-shell pt-6 sm:pt-8" data-testid="home-living-strip">
-        <LivingBoardStrip />
-      </div>
-
       {/* Link to the report archive without fixing its axis count, cadence or
           signature state in homepage copy. Each report carries its own scope.
           NewsletterSignup and the existing subscription handler are unchanged. */}
