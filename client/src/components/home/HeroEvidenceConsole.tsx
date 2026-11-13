@@ -23,7 +23,7 @@ const STATE_CLASS: Record<TileState, string> = {
 };
 
 function formatAxisName(axis: string): string {
-  return axis.replace(/[-_]/g, " ").replace(/\\b\\w/g, (character) => character.toUpperCase());
+  return axis.split(/[-_]/g).map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ");
 }
 
 function AxisRow({ tile }: { tile: Tile }) {
