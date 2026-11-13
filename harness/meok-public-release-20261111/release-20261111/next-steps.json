@@ -1,0 +1,71 @@
+{
+  "schema": "meok.release-next-steps/1",
+  "automatic_scheduler_created": false,
+  "steps": [
+    {
+      "id": "public-release",
+      "status": "COMPLETED_FOR_DECLARED_PUBLIC_JOURNEYS",
+      "depends_on": [],
+      "acceptance": "Anonymous page replay, refused-input clearing, recovery, navigation and immutable artifact readback.",
+      "evidence": "POST-PUBLICATION.json"
+    },
+    {
+      "id": "trusted-current-source",
+      "status": "OWNER_GATE_OPEN",
+      "depends_on": [
+        "public-release"
+      ],
+      "acceptance": "Authenticated host supplies expected artifact identities and current access/source generations; substitute, expiry and revocation controls reject."
+    },
+    {
+      "id": "human-editor-and-reviewer",
+      "status": "HUMAN_ACCEPTANCE_NOT_RECORDED",
+      "depends_on": [
+        "public-release"
+      ],
+      "acceptance": "Named reviewer/editor accepts scope and conflicts; original exercises and industry mappings reviewed. No invented appointments."
+    },
+    {
+      "id": "approval-to-effect",
+      "status": "NOT_DEMONSTRATED_END_TO_END",
+      "depends_on": [
+        "trusted-current-source",
+        "human-editor-and-reviewer"
+      ],
+      "acceptance": "One authenticated scoped harmless approval, current expiry/revocation/replay checks, independent observed effect and reproducible receipt."
+    },
+    {
+      "id": "storage-hosted-acceptance",
+      "status": "SEPARATE_OWNER_ACCEPTANCE_PENDING",
+      "depends_on": [
+        "trusted-current-source"
+      ],
+      "acceptance": "Current authenticated save/list/restore/remove, direct readback and restart recovery of permitted synthetic text; no assumption from unit tests."
+    },
+    {
+      "id": "capability-promotion",
+      "status": "RESEARCH_CANDIDATES_HELD",
+      "depends_on": [
+        "trusted-current-source"
+      ],
+      "acceptance": "Frozen candidate, separately held evaluation data, failures and denominators retained; whole-job quality/cost improvement. No promotion from fixture tests."
+    },
+    {
+      "id": "human-learning-outcomes",
+      "status": "NOT_MEASURED",
+      "depends_on": [
+        "human-editor-and-reviewer"
+      ],
+      "acceptance": "Consented study, unseen transfer items, blinded rubric and retention measurement, not automated quiz replay."
+    },
+    {
+      "id": "measurement-admission",
+      "status": "NOT_GRANTED",
+      "depends_on": [
+        "approval-to-effect",
+        "capability-promotion"
+      ],
+      "acceptance": "Existing axis owner admits a scoped measurement under its method; software test counts do not become model scores."
+    }
+  ]
+}
