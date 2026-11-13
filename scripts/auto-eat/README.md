@@ -62,18 +62,24 @@ allowlist, signs each folded `autoeat.*` surface via `/api/board-sign`, and
 commits `ledger-card-autoeat-*.json` with a real Ed25519 signature. Only then is
 the subject MEASURED. Verify with `csoai_verify` / the `/verify` surface.
 
-## Going fully autonomous (deliberate, two flips)
+## Optional automated signer (manual by default)
 
-`auto-eat-sign.yml` can do fold+sign+PR on a schedule so the only human action
-is the PR merge. It is intentionally inert until the owner makes **two**
-deliberate changes (see the header of that workflow):
+`.github/workflows/auto-eat-sign.yml` is present and has `workflow_dispatch`
+enabled. Its hourly `schedule:` remains commented. A manual run checks out
+`auto-eat-feed`, folds the staged atoms, requests signatures through the
+existing OIDC `board-sign` endpoint, and opens a separate PR to `master`.
+The signed branch is not the public master ledger; the human merge remains the
+publication gate.
 
-1. add `"auto-eat"` to `allowedWf` in `functions/api/board-sign.ts` and redeploy
-   Pages — otherwise `board-sign` refuses this workflow's OIDC token and it signs
-   nothing (halts loud);
-2. uncomment the `schedule:` block in `.github/workflows/auto-eat-sign.yml`.
+The current `master` source allowlist in `functions/api/board-sign.ts` includes
+`auto-eat-sign` alongside `public-root`, `hf-fin-shells` and
+`hf-inference-mill`. Verify the deployed Pages version before relying on that
+source state. If OIDC refuses the workflow, stop and investigate the deployed
+allowlist; do not bypass OIDC or introduce another signing route.
 
-Leave either undone and a human stays in the loop.
+Do not enable the schedule as part of a repair. Moving from manual dispatch to
+automatic signing requires a separate explicit governance decision, monitoring
+and rollback plan.
 
 ## Running the keeper (sink pod)
 
@@ -88,6 +94,27 @@ nohup env EAT_INTERVAL=3600 EAT_PIDFILE=/workspace/auto-eat/eat-loop.pid \
   bash scripts/auto-eat/eat-loop.sh loop >> scripts/auto-eat/eat.log 2>&1 &
 ```
 
+### Legacy feed branch ancestry recovery
+
+The public `auto-eat-feed` branch may predate the current master history. A
+plain `git merge origin/master` then fails with `refusing to merge unrelated
+histories`; the keeper must not loop on that failure or use a force push.
+
+`sync_feed_branch.py` handles only that legacy case. It creates a two-parent
+commit with the feed branch as first parent and current master as second. Its
+tree is current master overlaid with the feed's exact entries under
+`public/interop/auto-eat/**` and `scripts/auto-eat/STATUS.md`.
+Newer master-only evidence files are retained; stale copies of unrelated
+repository files are not carried forward. The update is
+therefore a normal fast-forward to the existing feed branch; no force push and
+no master write. The helper refuses dirty worktrees, incomplete feed snapshots
+and unexpected tree changes. Once the histories are connected, normal master
+merges resume. Fetch failure now fails closed rather than running on stale code.
+
+The keeper's default interval is one hour (3600 seconds); set it explicitly
+when installing the loop. A one-shot run is a real discovery/probe cycle, so
+use `EAT_NO_PUSH=1` and an isolated worktree for qualification.
+
 ## Fold integrity gate — 12 November 2026 candidate
 
 `fold_auto_eat.py --check` now checks both the ledger payload and the complete unsigned destination atom against the matching staged source. A malformed/missing compact source, duplicate/nonfinite JSON, mismatched source payload or identity, unsafe file/path, filename collision, signed/nonqueued evidence or ambiguous legacy atom is a nonzero refusal. Only an explicitly parsed empty object is an empty successful no-op.
@@ -98,6 +125,7 @@ An unchanged valid batch does not rewrite files. Rows with no staged atom but an
 
 ```sh
 python3 scripts/auto-eat/test_fold_auto_eat.py
+python3 scripts/auto-eat/test_sync_feed_branch.py
 python3 scripts/auto-eat/test_honesty.py
 python3 scripts/auto-eat/test_g2_gate.py
 ```
