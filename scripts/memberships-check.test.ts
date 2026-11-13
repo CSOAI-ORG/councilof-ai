@@ -80,7 +80,7 @@ describe("memberships-check: it can fail", () => {
           group: manifest.groups[0].id,
           kind: "member",
           since: "2026-01-01",
-          verified_on: planted.as_of,
+          verified_on: "2026-10-08",
           evidence: "https://example.test/roster",
           evidence_kind: "public_url",
           public_evidence: true,
