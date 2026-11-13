@@ -20,6 +20,10 @@ import CompanyCasePanel, { type CompanyCaseVerifiedCallback } from "./CompanyCas
 import ConnectedCompanyCasePanel from "./ConnectedCompanyCasePanel";
 import { companyWorkspaceSelection, type CompanyCaseConnection } from "./companyCaseModel";
 import ResultCard from "@/components/talk/ResultCard";
+import AIAndToolsControl from "./AIAndToolsControl";
+import AIModelControl from "./AIModelControl";
+import {askModel,type ModelSelection} from "../../lib/modelConnection.mjs";
+import { DEFAULT_AI_EXECUTION, restrictAITools, type AIExecutionSelection } from "../../../../functions/_lib/aiExecutionSelection";
 import ResultFollowUp from "@/components/talk/ResultFollowUp";
 import Inline from "@/components/talk/TalkInline";
 import { answerSections, checkedLine, chipFor, firstSentence, plainAnswer, statTiles, toolTitle, verifyLink } from "@/lib/resultCard";
@@ -293,6 +297,7 @@ function RunView({
         {run.question}
       </p>
       <RunTrace run={run} onStop={onStop} />
+      {run.route === "ai_text" ? <p className="text-xs">AI generated · {String(run.result?.provider ?? "")} · {String(run.result?.modelLabel ?? run.result?.model ?? "")} · {run.result?.offline ? "offline AI" : "online AI"} · not a GSPC measurement or signed evidence</p> : null}
       {run.tools.length ? (
         <ul className="space-y-2" aria-label="Tools called">
           {run.tools.map((t, i) => (
@@ -344,7 +349,7 @@ function RunView({
         // "Details and raw output" expander (owner brief: no field dump after an answer).
         <div className="rounded-xl border border-border bg-card p-3" data-testid="talk-answer">
           <p className="text-sm leading-relaxed text-foreground [overflow-wrap:anywhere]">
-            {faceSentence(run)}
+            {run.route === "ai_text" ? run.text : faceSentence(run)}
           </p>
           {run.tools.length ? null : (
             <details className="mt-2 text-sm">
@@ -401,6 +406,14 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   ref,
 ) {
   const [runs, setRuns] = useState<TalkRun[]>([]);
+  const [modelChoice,setModelChoice] = useState<ModelSelection|null>(null);
+  const modelRef=useRef(modelChoice); modelRef.current=modelChoice;
+  const modelHistory=useRef<{role:"user"|"assistant";content:string}[]>([]);
+  useEffect(()=>{if(modelChoice?.offline){micRef.current?.abort();stopVoice();setHearing(false);}},[modelChoice?.offline]);
+  const [execution, setExecution] = useState<AIExecutionSelection>(DEFAULT_AI_EXECUTION);
+  const executionRef = useRef(execution);
+  executionRef.current = execution;
+  const taskExecutions = useRef(new Map<string, AIExecutionSelection>());
   const [q, setQ] = useState("");
   const [announce, setAnnounce] = useState("");
   const abortRef = useRef<AbortController | null>(null);
@@ -451,9 +464,10 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   }, []);
 
   const start = useCallback(
-    (question: string, confirmTool?: string[], threadId?: string) => {
+    (question: string, confirmTool?: string[], threadId?: string, originalExecution?: AIExecutionSelection) => {
       const text = question.trim();
       if (!text) return;
+      if (confirmTool && modelRef.current) { setAnnounce("Return to Council tools before confirming this tool request."); return; }
       const microphone = micRef.current;
       micRef.current = null;
       micActive.current = false;
@@ -469,7 +483,29 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
       setAnnounce(`Asking: ${text}`);
       let final: TalkRun = newRun(text, id);
       const o = opts.current;
+      const selected = originalExecution ? restrictAITools(originalExecution, executionRef.current) : executionRef.current;
+      taskExecutions.current.set(id, { ...selected, enabledTools: selected.enabledTools === null ? null : [...selected.enabledTools] });
+      if (taskExecutions.current.size > 10) taskExecutions.current.delete(taskExecutions.current.keys().next().value!);
+      if(modelRef.current){
+        const choice={...modelRef.current};
+        const timer=setTimeout(()=>ctl.abort(),120000);
+        let partial="";
+        update(id,r=>({...r,route:"ai_text",result:{kind:"ai_text",grounded:false,provider:choice.provider,model:choice.model,offline:choice.offline}}));
+        void askModel(choice,text,{history:modelHistory.current.slice(-10),signal:ctl.signal,onDelta:delta=>{
+          if(ctl.signal.aborted||id!=="run-"+seq.current)return; partial+=delta;update(id,r=>({...r,text:partial}));
+        }}).then(result=>{
+          if(ctl.signal.aborted||id!=="run-"+seq.current)return;
+          update(id,r=>({...r,status:"done",terminal:true,text:result.content,result:{kind:"ai_text",grounded:false,...result}}));
+          modelHistory.current=[...modelHistory.current,{role:"user",content:text},{role:"assistant",content:result.content}].slice(-10) as typeof modelHistory.current;
+          setAnnounce("AI answer ready from "+result.provider+" · "+result.modelLabel+". Not a GSPC measurement.");
+        }).catch(error=>{
+          if(ctl.signal.aborted)return;
+          update(id,r=>({...r,status:"error",error:error instanceof Error?error.message:"The selected model did not answer."}));
+        }).finally(()=>{clearTimeout(timer);if(abortRef.current===ctl)abortRef.current=null;});
+        return;
+      }
       streamRun({
+        execution: selected,
         question: text,
         threadId: sessionThread,
         confirmTool,
@@ -518,7 +554,7 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   useImperativeHandle(ref, () => ({ ask: (question: string) => start(question) }), [start]);
 
   const mic = () => {
-    if (!micAllowed.current) return;
+    if (!micAllowed.current || modelRef.current?.offline) return;
     if (micRef.current && micActive.current) {
       stopListening({ signal: micRef.current.signal });
       return;
@@ -557,7 +593,7 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   const confirm = (run: TalkRun) => {
     const tools = run.confirm?.tools.map((t) => t.tool) ?? [];
     update(run.id, (r) => ({ ...r, status: "approved", confirm: null }));
-    start(run.question, tools, run.threadId ?? undefined);
+    start(run.question, tools, run.threadId ?? undefined, taskExecutions.current.get(run.id) ?? DEFAULT_AI_EXECUTION);
   };
   const cancel = (run: TalkRun) => {
     if (run.status !== "awaiting_confirmation") return;
@@ -585,6 +621,9 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
           ))}
         </div>
       ) : null}
+
+      <AIModelControl onChange={setModelChoice} disabled={busy} />
+      {modelChoice ? <p className="text-sm">AI text mode · tool execution is off. Choose published Council tools to use tool and plugin controls.</p> : <AIAndToolsControl value={execution} onChange={setExecution} disabled={busy} />}
 
       <div className={`${runs.length ? "mt-6" : ""} ${hideSuggestions ? "hidden" : ""}`}>
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground" id="talk-suggest-h">
@@ -633,7 +672,7 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
             autoComplete="off"
             className={`min-h-11 min-w-0 flex-1 rounded-xl border border-border bg-background px-3 text-base text-foreground placeholder:text-muted-foreground sm:text-sm ${FOCUS}`}
           />
-          {listen && isListenSupported() ? (
+          {listen && !modelChoice?.offline && isListenSupported() ? (
             <button
               type="button"
               onClick={mic}
@@ -666,8 +705,7 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
         className="mt-3 text-xs text-muted-foreground"
         title="Each answer quotes fields of the named tool's output: the same tools POST /mcp serves to agents."
       >
-        Every answer quotes a published record or a live read, and names its source. No AI writes them. A measurement, not a certificate;
-        nothing paid runs without your click, and this panel never pays.
+        {modelChoice ? "AI text uses your chosen provider and model. It can be wrong and is not a GSPC measurement, signed evidence or human approval. No tools run in AI text mode." : "Every tool answer quotes a published record or a live read, and names its source. No AI writes tool answers. A measurement, not a certificate; nothing paid runs without your click, and this panel never pays."}
       </p>
     </section>
   );
