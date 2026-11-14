@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "xAI — pricing: bytes changed 2026-11-05",
+ "as_of": "2026-11-05T13:19:26Z",
+ "source_urls": [
+  "https://x.ai/api"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "xai",
+  "surface": "pricing",
+  "url": "https://x.ai/api",
+  "prev_sha256": "8807683bf50772e7f7ed3abc074d2203d2a07617fe915011e804106ba54955e4",
+  "new_sha256": "9b4eec3a50dca6a76ccfcdf01b63bdd07b32b0b6209769ebc853b357c71014f2",
+  "prev_bytes_sha256": "1909c58cb03d43c2fe343b188ef5b13e9b3050e7b9434deb5a1b3168b170e764",
+  "new_bytes_sha256": "cc257133e2ba45bd1c076c7e6abc3e9bf1e81e11ae83a6851f153596725a122a",
+  "prev_fetched_at": "2026-11-03T12:53:01Z",
+  "fetched_at": "2026-11-05T13:19:26Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 307130,
+   "new": 304681
+  },
+  "etag": {
+   "prev": null,
+   "new": null
+  },
+  "last_modified": {
+   "prev": null,
+   "new": null
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "e879adedb7fc2a976bffa94ddb947ac7db05b0927659f8845c3201d96f89851a",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:xai",
+  "surface:pricing",
+  "hash-only"
+ ]
+}
