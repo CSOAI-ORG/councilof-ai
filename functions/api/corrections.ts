@@ -44,6 +44,27 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-1103-01",
+      "date": "2026-11-03",
+      "detected_at": "2026-11-01",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "A name-for-name audit on 2026-11-01 extracted the published 0.2.4 tarball's own manifests (gspc-tools.json, paid-tools.json) and diffed them against the live door's tools/list; the drift was re-measured on 2026-11-03",
+        "published_at is UNRECORDED: the deploy that first serves this corrected guide had not happened when this entry was written"
+      ],
+      "what_was_wrong": "public/llms-install.md — the agent-facing installation guide — typed tool counts as if they were stable facts: it advertised the npm release at '52 tool names' while the live door it installs against served 53 names from 2026-10-30 (axis_watchdog-ingest) and 54 names from 2026-11-02 (framework_readiness). An agent following the guide compared the door against a stale count and could conclude the deployment was wrong, when the typed number was. The same typed-count defect had already bitten the axes index (a lid saying 23 beside an h1 saying 22) and the tools-match-door test (expecting 47 free names the week the door reached 48).",
+      "how_caught": "An internal audit that ran the guide's own publication test: npm pack csoai-gspc-mcp@latest, extract the tarball's manifests, diff name-for-name against the live door's tools/list. The diff was empty on 2026-11-01 and the door grew two names by 2026-11-03, which made the typed '52' wrong twice in three days.",
+      "what_changed": "The guide no longer types tool counts at all. It points at the two sources of truth — the live door's tools/list and the published tarball's own manifests diffed name-for-name — and keeps the measured values only as dated history, explicitly marked as not the contract. The same de-typing landed in tools-match-door's test (counts derived; only the permanent facts pinned: disjoint banks, free-forever anchors, mill-tool phantoms absent) and in the axes-index generator (counts derived from the board, with a LID_COUNT_MISMATCH guard that refuses to render a totals row the page cannot explain).",
+      "status": "CORRECTED - at the producers",
+      "reached_the_public": true,
+      "evidence": [
+        "https://councilof.ai/mcp (tools/list, request time)",
+        "https://registry.npmjs.org/csoai-gspc-mcp (0.2.4, published 2026-10-28T16:48:34.768Z)",
+        "public/llms-install.md; scripts/derive-fin-run-attestation.mjs; scripts/surface/build-axis-pages.mjs; mcp/gspc-server/tools-match-door.test.ts"
+      ]
+    },
+    {
       "id": "C-2026-1006-13",
       "date": "2026-10-06",
       "detected_at": "2026-10-06",
@@ -1992,20 +2013,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "b04c8d07014b1c0c9497e889481e5e3ededf76736427bac3d814bfd2b3d3f34a",
+    id: "75375feadd13f390f0e5a41c92e5bddffd37b79584962b0bb5c98d57607ae12e",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "a699fbc4d89fbc49e6b06dc618f4445bbef59e18b74dc05ac33d0b8cc0b3917e7793c5430fbcf4304ba6456b6fd80d3b2fee7e498943ae1563e896b48f697206",
+    signature: "0ac33a64b006a50ec14cdbb9716dfc9cf0d66660dce87569ded2b7b8a7e15c3534352ae0f3b15f1999bfdc0d97165bbd3e685d820cb570434cb82998a84e0a0e",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "b04c8d07014b1c0c9497e889481e5e3ededf76736427bac3d814bfd2b3d3f34a",
+          "content_id": "75375feadd13f390f0e5a41c92e5bddffd37b79584962b0bb5c98d57607ae12e",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 93,
-          "latest_entry_id": "C-2026-1006-13",
-          "ledger_canonical_bytes": 229171,
+          "entries": 94,
+          "latest_entry_id": "C-2026-1103-01",
+          "ledger_canonical_bytes": 231645,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-10-06T13:51:47Z"
+          "signed_at": "2026-11-12T02:08:01Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
