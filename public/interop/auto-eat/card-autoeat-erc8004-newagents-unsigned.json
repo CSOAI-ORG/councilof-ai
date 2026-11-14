@@ -1,8 +1,8 @@
 {
  "schema": "https://councilof.ai/schema/card-v0.json",
  "surface": "autoeat.erc8004.newagents",
- "subject": "auto-eat erc8004: 80 LIVE of 227 probed (read-only, ungraded)",
- "as_of": "2026-09-12T06:49:50Z",
+ "subject": "auto-eat erc8004: 7 LIVE of 10 probed (read-only, ungraded)",
+ "as_of": "2026-11-14T21:31:51Z",
  "source_urls": [
   "https://api.8004scan.io/api/v1/agents",
   "https://base-rpc.publicnode.com"
@@ -19,25 +19,25 @@
   },
   "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 227,
-   "live": 80,
+   "n_probed": 10,
+   "live": 7,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 147,
-   "live_fraction_of_probed": 0.3524,
+   "uncheckable": 3,
+   "live_fraction_of_probed": 0.7,
    "live_examples": [
-    "42161:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:1486 (tokenURI resolvable)",
-    "1:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:50773 (tokenURI resolvable)",
-    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:10238 (tokenURI resolvable)",
-    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:10230 (tokenURI resolvable)",
-    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:10229 (tokenURI resolvable)",
-    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:9216 (tokenURI resolvable)"
+    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:11426 (tokenURI resolvable)",
+    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:10708 (tokenURI resolvable)",
+    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:11425 (tokenURI resolvable)",
+    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:11423 (tokenURI resolvable)",
+    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:10700 (tokenURI resolvable)",
+    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:10699 (tokenURI resolvable)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-12T06:49:50Z",
+  "as_of": "2026-11-14T21:31:51Z",
   "unmeasured": [
    "reputation_validity",
    "validation_registry_mainnet",

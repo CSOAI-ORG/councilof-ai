@@ -315,6 +315,11 @@ def discover_xrpl(n: int) -> list[dict]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--per-source", type=int, default=2000)
+    ap.add_argument(
+        "--skip-a2a",
+        action="store_true",
+        help="Skip the A2A/8004scan URI discovery lane when that endpoint is stalled",
+    )
     args = ap.parse_args()
     n = args.per_source
 
@@ -331,6 +336,9 @@ def main() -> int:
         ("erc8004", discover_erc8004),
         ("xrpl-account", discover_xrpl),
     )
+    if args.skip_a2a:
+        sources = tuple((name, fn) for name, fn in sources if name != "a2a-agent")
+        print("  a2a-agent SKIPPED (operator flag; endpoint health not established)")
     found: list[dict] = []
     with ThreadPoolExecutor(max_workers=len(sources)) as ex:
         futs = {ex.submit(fn, n): name for name, fn in sources}
