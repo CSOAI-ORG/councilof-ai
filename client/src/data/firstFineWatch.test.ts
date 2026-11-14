@@ -42,8 +42,12 @@ describe("First-Fine Watch headline freshness", () => {
   it("a feed without the figure or its dates is not read (the page keeps the dated built-in figure)", () => {
     expect(readFineWatch({}, OCT7)).toBeNull();
     expect(readFineWatch({ ...FEED, as_of: "recently", freshness: {} }, OCT7)).toBeNull();
-    const b = builtInFineWatch(OCT7);
-    expect(b).toMatchObject({ from: "built-in", asOf: "2026-08-24", stale: true });
+    // The built-in figure IS the feed's figure, so it carries the feed's review date. It was
+    // re-reviewed on 7 Nov 2026, so it is current on a day three days later — and it goes stale
+    // on its own terms once it is older than FRESH_DAYS, never by a typed count.
+    expect(builtInFineWatch(new Date("2026-11-10T03:30:00Z")))
+      .toMatchObject({ from: "built-in", asOf: "2026-11-07", ageDays: 3, stale: false });
+    expect(builtInFineWatch(new Date("2026-12-01T00:00:00Z")).stale).toBe(true);
   });
 
   it("the built-in figure is the feed's: same date as functions/api/fines.ts AS_OF, no typed day count", () => {
