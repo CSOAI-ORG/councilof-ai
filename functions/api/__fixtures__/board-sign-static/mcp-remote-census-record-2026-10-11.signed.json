@@ -1,0 +1,62 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "artifact": {
+   "path": "datasets/csoai/mcp-remote-census/record.2026-10-11.json",
+   "sha256": "4605a05574913d2572de8829a9c844193f442cec9c73e20ee8de85b4d4943ccc",
+   "schema": "csoai.mcp-remote-census/weekly-0.1",
+   "as_of": "2026-10-11T03:17:14Z"
+  },
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own instruments measured.",
+  "read_state": "PARTIAL",
+  "n_planned": 15218,
+  "n_attempted": 14305,
+  "states": {
+   "RESPONDED": 7131,
+   "AUTH_REQUIRED": 5352,
+   "UNREACHABLE": 842,
+   "NOT_MCP": 756,
+   "TIMEOUT": 115,
+   "SSE_ENDPOINT_ONLY": 93,
+   "MCP_ERROR": 16
+  },
+  "changes": {
+   "added": 1617,
+   "dropped": 57,
+   "state_changed": 370,
+   "out_of_plan": 1,
+   "not_compared": 114,
+   "unchanged": 13117
+  },
+  "published_files": {
+   "CHANGES.2026-10-11.json": "f263582b57dc961097d4ec1a06249d3cde00cb0da2561d9fd864b5c8e2dca1bb",
+   "probe/not_attempted.2026-10-11.jsonl.gz": "0c637c95bfedefde06f07399a2695fb82b423d01c75f8f88ced6269cecad1b14",
+   "probe/results.public.2026-10-11.jsonl.gz": "02cea2c836f9c95ae75f42fba43141ca861f8d35d613a58f9dc63babe648bb12",
+   "run/2026-10-11/frame-summary.json": "d707b059c9aa790aa8abdca5f2575f5ca48c73f212935019d322d597b1eb8f30",
+   "run/2026-10-11/plan-firstparty.json": "c99dc96bab5711b8dc7b9a3c7ceee9710a1c598837f0be870793dfa41997bae9",
+   "run/2026-10-11/plan-union.json": "7369dc5568575779ef0f63880321763612b86d8e9f5e55ab1c8ba655da6c2c6d",
+   "run/2026-10-11/probe-summary.json": "ec64e288cdf2a0e72ef41384b6c76c503492afde4d3cc689f962b675d764766e",
+   "run/2026-10-11/rights-gate-summary.json": "d802b5a20f0205aa85a68ac23e828de7c83e81360444aeff8423bf882b33e296"
+  }
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "67f33cbde82d83c8d5fe11f8b1e549c835b9fd5f0c5f66276a014761a3cb039c5297a1e4b6aa01afd5946228513d36e0da0378494db445ad685d72f4d211f200",
+  "payload_sha256": "250d45c938d89c27bc3bdc49bfe187d4674ccfb5615429dd8c99e64a13a5c2a9",
+  "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+  "signer_auth": "pod-token",
+  "signed_at": "2026-10-11T03:59:05.587Z"
+ },
+ "local_verification": {
+  "did_document": "https://csoai.org/.well-known/did.json",
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte appended": "rejected (control holds)",
+   "artifact sha256 altered": "rejected (control holds)"
+  }
+ },
+ "verify": "canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the artifact; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}
