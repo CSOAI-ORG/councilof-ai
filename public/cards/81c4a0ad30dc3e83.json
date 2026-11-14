@@ -1,0 +1,146 @@
+{
+  "card": {
+    "as_of": "2026-11-14T17:57:38Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:bIB01:arbitrum",
+      "symbol": "bIB01",
+      "product": "Backed IB01 $ Treasury Bond 0-1yr",
+      "chain": "arbitrum",
+      "chain_id": 42161,
+      "address": "0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "block": 524225976,
+      "block_hash": "0x3e55ea516ac949431bdb09ae861e59c7ec952c7f6e602c925c0492d1dcfa05a0",
+      "block_time": "2026-11-14T17:57:38Z",
+      "rpc": "arbitrum-one-rpc.publicnode.com",
+      "checked": {
+        "name": "Backed IB01 $ Treasury Bond 0-1yr",
+        "symbol": "bIB01",
+        "decimals": 18,
+        "totalSupply": "60000000000000000000000",
+        "isPaused": false,
+        "owner": "0x49754062e35f7591b93cc4f9915965be89643a65",
+        "sanctionsList": "0x40c57923924b5c5c5455c48d93317139addac8fb",
+        "pauser": "0x8768cda7a463dae1baa6b2500efb025ebd7ffc50",
+        "terms": "https://www.backedassets.fi/legal-documentation",
+        "eip1967_implementation": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+        "eip1967_admin": "0xf2057bdff8439dbffce073e14a9854945d5e5644"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "dc7f1f7dc4267594d167d92b2f89fbc5f834baa22113e950ee283b8c21ae3688",
+        "bytes": 10205,
+        "url": "/archive/proofs/eip1186/dc7f1f7dc4267594.json",
+        "rpc": "arbitrum-one-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xd269697b4279ac0c88e8e9dca3ba6baaab8990de21a857ce85cd68efaac706f4",
+          "storageHash": "0x8098b805738bbbf878eb08fbafb3be8b64962bb787d1dad13683f4f9b636ba5b",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0xf2057bdff8439dbffce073e14a9854945d5e5644",
+            "nodes": 3
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 524225976 on arbitrum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "81c4a0ad30dc3e838400a8cff77997cf71f841cae959ced19e19ad388b40706f",
+    "sig_ed25519": "89aa5b22b14e0c6d4198481077a3305c2d0e8565a4c82fe81d2f7d4b16e012314efdb250bd1f72786bacc71235f2e390d10e6269a147f34b5490559ba6f4e600",
+    "source_urls": [
+      "https://arbitrum-one-rpc.publicnode.com",
+      "https://arbiscan.io/token/0xca30c93b02514f86d5c86a6e375e3a330b435fb5"
+    ],
+    "subject": "evm:bIB01:arbitrum permission state at block 524225976",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:arbitrum",
+      "coverage:permission-state",
+      "subject:bIB01"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "3b8ae85c4f293d16311237dd0c128fc971ab68a613830f96c05f266c1b69190f",
+    "ae2936b8f1ba55d4348716f34e9dd018fd5820367cba50b32eff395025667e4b",
+    "906dcbd4c258760699d6a23a347080db440086ca0b632b2926d51d14375a384f",
+    "393de428c131c901a590117a0b3eb9eb9b6beedc662243650ee8b96782e35f2e",
+    "61e201e1255ea92639059b1c23163bded99fac001f0637628cb227682fddf5b0",
+    "fb19cebe664608d7dd5210e82b3ae116a7b689d60fe8f7e754541d02029c4304",
+    "108f7e1a98d7024f458d9edf3b7340227a2675ac0b4bd9ae2943b0c735730e1a",
+    "8b49c2f2c5d874fa3e7085f4bbbd82d217b76c3a54ab5c643acffab2f5496e3f",
+    "d00c5d5502b04511a66a95cc06dadf4e61de543a693e6e81dfefd7954913a33b"
+  ]
+}
