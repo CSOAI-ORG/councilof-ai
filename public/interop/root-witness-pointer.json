@@ -1,6 +1,6 @@
 {
  "kind": "csoai.root-witness-pointer/v0",
- "as_of": "2026-11-14T18:01:55Z",
+ "as_of": "2026-11-14T21:42:20Z",
  "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
  "live_root": {
   "url": "https://councilof.ai/root.json",
@@ -28,21 +28,21 @@
  },
  "drift": {
   "status": "DRIFTED",
-  "checked_at": "2026-11-14T18:01:57Z",
+  "checked_at": "2026-11-14T21:42:21Z",
   "checked_against": "https://councilof.ai/root.json",
   "witness_artifact_sha256": "2b93e8e392c200435ff0b5e5f38c967d4509511886af56a54abcaba1d9e7bb7d",
-  "live_root_sha256": "a2485948117cdacdc2cd89667834db6398ca5057cbad5fcf37c9f861fcca7563",
+  "live_root_sha256": "0c9ae00194faeffff6e9d93325e0676fa8359bba7d9f7b5bd70d1f6f93066557",
   "witness_artifact_merkle_root": "730061079e466d04bc6d47bb425bbfea6210aab1e7016a0a04d8c8fabdec94b2",
-  "live_root_merkle_root": "37e32bbbd9984045478237286c1414b517bf924bdd5fc628624b7edba419c973",
-  "live_root_bytes": 35161,
+  "live_root_merkle_root": "3102df0344c79903751ab85ccc942ea479252c6eb6da29da26edac03695f423d",
+  "live_root_bytes": 35089,
   "match_sha256": false,
   "match_merkle_root": false,
   "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
  },
- "witness_status_observed_at": "2026-11-14T18:01:15Z",
+ "witness_status_observed_at": "2026-11-14T21:42:18Z",
  "witnesses": {
   "rekor": "WITNESSED",
-  "ots": "STAMPED_PENDING_BITCOIN",
+  "ots": "CONFIRMED_BITCOIN",
   "eas_base": "NOT_YET",
   "xrpl_memo": "NOT_YET"
  },
