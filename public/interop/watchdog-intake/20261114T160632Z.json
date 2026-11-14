@@ -1,0 +1,514 @@
+{
+ "schema": "csoai.watchdog-intake/0.1",
+ "run_id": "20261114T160632Z",
+ "as_of": "2026-11-14T16:06:32Z",
+ "producer": "scripts/watchdog_intake.py",
+ "measure": "PUBLIC SOURCE REACHABILITY AND PARSEABILITY — a count of sources probed",
+ "not_a": [
+  "a certification",
+  "a compliance determination",
+  "a vendor score",
+  "a ranking",
+  "an incident count for the world",
+  "a grade"
+ ],
+ "count_grammar": "n counts SOURCES PROBED, the same grammar as effect-binding's 'tool-call servers probed'. It is never pooled with bank-item n and never appears in a mean. REACHABLE means the source answered 200 with a documented shape; UNCHECKABLE means it answered but the body was not the documented shape; UNREACHABLE means it did not answer. These are DIFFERENT facts and are never summed into a single figure that would read like a score.",
+ "totals": {
+  "sources_pinned": 18,
+  "sources_probed": 18,
+  "reachable": 18,
+  "unreachable": 0,
+  "uncheckable": 0,
+  "grid_hits": 12
+ },
+ "grid_coverage": {
+  "article-50": [
+   "safe-repo"
+  ],
+  "article-53": [
+   "safe-repo"
+  ],
+  "charter": [
+   "safe-repo"
+  ],
+  "effect-binding": [
+   "atlas-current",
+   "cisa-kev",
+   "ghsa-api",
+   "mitre-cve",
+   "nvd-cve-api",
+   "osv-query",
+   "owasp-asvs"
+  ],
+  "hitl": [
+   "safe-repo"
+  ],
+  "jail": [
+   "atlas-current",
+   "atlas-manifest",
+   "owasp-llm-top10"
+  ],
+  "provenance": [
+   "depsdev",
+   "hf-models",
+   "in-toto",
+   "owasp-llm-top10",
+   "rekor-log",
+   "slsa"
+  ],
+  "provenance-controls": [
+   "in-toto",
+   "openssf-scorecard",
+   "rekor-log",
+   "slsa"
+  ],
+  "safety": [
+   "atlas-current",
+   "atlas-manifest",
+   "owasp-asvs",
+   "owasp-llm-top10"
+  ],
+  "serving-fidelity": [
+   "hf-models",
+   "openrouter"
+  ],
+  "supply-chain": [
+   "cisa-kev",
+   "depsdev",
+   "ghsa-api",
+   "go-vuln",
+   "nvd-cve-api",
+   "openssf-scorecard",
+   "osv-query"
+  ],
+  "swarm": [
+   "atlas-current",
+   "atlas-manifest"
+  ]
+ },
+ "sources": [
+  {
+   "id": "cisa-kev",
+   "name": "CISA Known Exploited Vulnerabilities catalog",
+   "kind": "advisory-feed",
+   "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+   "method": "GET",
+   "grid": [
+    "effect-binding",
+    "supply-chain"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "application/json",
+   "bytes": 1854379,
+   "body_sha256": "4028ec035856331a717d3305e87e45be37d400fc500da34a5464f05fc2773764",
+   "count": 1781,
+   "count_kind": "count",
+   "note": "Known-exploited CVE catalog. Authoritative US list; a CISA KEV entry means exploitation is observed in the wild, not that a product is unsafe in general."
+  },
+  {
+   "id": "nvd-cve-api",
+   "name": "NIST National Vulnerability Database CVE API 2.0",
+   "kind": "advisory-feed",
+   "url": "https://services.nvd.nist.gov/rest/json/cves/2.0?resultsPerPage=1&startIndex=0",
+   "method": "GET",
+   "grid": [
+    "effect-binding",
+    "supply-chain"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "application/json",
+   "bytes": 2517,
+   "body_sha256": "ed8b06c94b5a3057a6ca0f5eaa1dbf89dcc8e056f79a2aeb7e1ab2ee5bfb7e5f",
+   "count": 425743,
+   "count_kind": "count",
+   "note": "totalResults is the catalog's own count of CVE records; it is a catalog size, not a measurement of this estate."
+  },
+  {
+   "id": "ghsa-api",
+   "name": "GitHub Security Advisory Database API",
+   "kind": "advisory-feed",
+   "url": "https://api.github.com/advisories?per_page=30",
+   "method": "GET",
+   "grid": [
+    "effect-binding",
+    "supply-chain"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "application/json",
+   "bytes": 234843,
+   "body_sha256": "ee292707f0a3373b30aa6e65ed1723166540c8ec1c4f102e6960aa3f2180216d",
+   "count": 30,
+   "count_kind": "count",
+   "note": "GHSA advisories, newest first. Anonymous rate-limited; the count is the page size actually served, not the catalog total."
+  },
+  {
+   "id": "osv-query",
+   "name": "OSV.dev vulnerability query (npm ecosystem)",
+   "kind": "advisory-feed",
+   "url": "https://api.osv.dev/v1/query",
+   "method": "POST",
+   "grid": [
+    "effect-binding",
+    "supply-chain"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "application/json",
+   "bytes": 43381,
+   "body_sha256": "a1a3da6f1e4229d4243bb43c04977b8a546a02eb2aafc556871a38fb8fab54ad",
+   "count": 10,
+   "count_kind": "count",
+   "note": "POST query for one named package. A package's advisory count is a fact about that package, not a score for anything."
+  },
+  {
+   "id": "mitre-cve",
+   "name": "MITRE CVE Services API (single record)",
+   "kind": "advisory-feed",
+   "url": "https://cveawg.mitre.org/api/cve/CVE-2021-44228",
+   "method": "GET",
+   "grid": [
+    "effect-binding"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "application/json",
+   "bytes": 18335,
+   "body_sha256": "cae2ad45ea2739a59680c360555a538019b8f46199c797aed96fba49c073aa89",
+   "count": "CVE-2021-44228",
+   "count_kind": "value",
+   "note": "Record-level probe: proves the CVE Services API answers a named record. It says nothing about the catalog's completeness."
+  },
+  {
+   "id": "go-vuln",
+   "name": "Go vulnerability database index",
+   "kind": "advisory-feed",
+   "url": "https://vuln.go.dev/index/modules.json",
+   "method": "GET",
+   "grid": [
+    "supply-chain"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "application/json",
+   "bytes": 556873,
+   "body_sha256": "e1064477b87ca8e977447efeb9884de9bfc3bff13a96086368545047a06c35f8",
+   "count": 1457,
+   "count_kind": "count",
+   "note": "Module index, not advisory records. Counted as a source that answered, not as an advisory count."
+  },
+  {
+   "id": "depsdev",
+   "name": "deps.dev package API",
+   "kind": "advisory-feed",
+   "url": "https://api.deps.dev/v3alpha/systems/npm/packages/left-pad",
+   "method": "GET",
+   "grid": [
+    "supply-chain",
+    "provenance"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "application/json",
+   "bytes": 3507,
+   "body_sha256": "528fd78b0b433653ef0c4ddcc3d86a6f144cfcbf3b3c0e9452098932745ed3ab",
+   "count": 15,
+   "count_kind": "count",
+   "note": "Supply-chain dependency facts for one named package."
+  },
+  {
+   "id": "hf-models",
+   "name": "Hugging Face model registry API",
+   "kind": "model-registry",
+   "url": "https://huggingface.co/api/models?limit=30",
+   "method": "GET",
+   "grid": [
+    "serving-fidelity",
+    "provenance"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "application/json",
+   "bytes": 16858,
+   "body_sha256": "1711742bab58d6a8a9021419af32aeea4e836218ecdc1875c59c8ee0d0d8b372",
+   "count": 30,
+   "count_kind": "count",
+   "note": "Public model registry. A listing is not a grade."
+  },
+  {
+   "id": "openrouter",
+   "name": "OpenRouter model catalog API",
+   "kind": "model-registry",
+   "url": "https://openrouter.ai/api/v1/models",
+   "method": "GET",
+   "grid": [
+    "serving-fidelity"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "application/json",
+   "bytes": 852525,
+   "body_sha256": "d8591d0edf470d04a9ce24f89f29522fa0f55dff7ba286977a3bd731d5328d76",
+   "count": 471,
+   "count_kind": "count",
+   "note": "Public serving catalog. Catalog size is not a measurement of serving fidelity."
+  },
+  {
+   "id": "atlas-current",
+   "name": "MITRE ATLAS (adversarial ML threat matrix, current release)",
+   "kind": "threat-framework",
+   "url": "https://raw.githubusercontent.com/mitre-atlas/atlas-data/main/dist/v6/ATLAS-2026.10.yaml",
+   "method": "GET",
+   "grid": [
+    "swarm",
+    "jail",
+    "safety",
+    "effect-binding"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "text/plain",
+   "bytes": 1154660,
+   "body_sha256": "ac41ee9f99a47084ba5fdfc77ae83a28687e12390240fffeb37df7914ffe142d",
+   "count": 221,
+   "count_kind": "count",
+   "note": "ATLAS release 2026.10. The versioned path is taken from dist/manifest.yaml, which names the current release; the legacy dist/ATLAS.yaml is DEPRECATED and self-declares so."
+  },
+  {
+   "id": "atlas-manifest",
+   "name": "MITRE ATLAS release manifest",
+   "kind": "threat-framework",
+   "url": "https://raw.githubusercontent.com/mitre-atlas/atlas-data/main/dist/manifest.yaml",
+   "method": "GET",
+   "grid": [
+    "swarm",
+    "jail",
+    "safety"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "text/plain",
+   "bytes": 6486,
+   "body_sha256": "f8a72a0beecfa9e6f3e1aa2ee4c22899046037ed71328c5d01528709e8d6d820",
+   "count": 38,
+   "count_kind": "count",
+   "note": "Names each ATLAS release and its path. This is how the harness discovers the current release instead of hardcoding a date."
+  },
+  {
+   "id": "owasp-llm-top10",
+   "name": "OWASP Top 10 for LLM Applications",
+   "kind": "threat-framework",
+   "url": "https://raw.githubusercontent.com/OWASP/www-project-top-10-for-large-language-model-applications/refs/heads/main/README.md",
+   "method": "GET",
+   "grid": [
+    "safety",
+    "jail",
+    "provenance"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "text/plain",
+   "bytes": 3960,
+   "body_sha256": "3119793148239835dadf3dfd89060b4643799cc17a024a831cc15f6965458366",
+   "count": null,
+   "count_kind": "digest",
+   "count_note": "no row count readable in this format; the content digest is the observable",
+   "note": "Threat-framework prose. Counted by content digest — there is no row count to read, and pretending otherwise would invent one."
+  },
+  {
+   "id": "owasp-asvs",
+   "name": "OWASP Application Security Verification Standard",
+   "kind": "threat-framework",
+   "url": "https://raw.githubusercontent.com/OWASP/ASVS/master/README.md",
+   "method": "GET",
+   "grid": [
+    "safety",
+    "effect-binding"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "text/plain",
+   "bytes": 11286,
+   "body_sha256": "0140389ca679b4e5c677862f75c3377b643194a94cd26da3fd88f6d0f5b96770",
+   "count": null,
+   "count_kind": "digest",
+   "count_note": "no row count readable in this format; the content digest is the observable",
+   "note": "Verification-standard prose, counted by content digest."
+  },
+  {
+   "id": "rekor-log",
+   "name": "Sigstore Rekor transparency log",
+   "kind": "transparency-log",
+   "url": "https://rekor.sigstore.dev/api/v1/log",
+   "method": "GET",
+   "grid": [
+    "provenance",
+    "provenance-controls"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "application/json",
+   "bytes": 1155,
+   "body_sha256": "e951967816190096ac5c9344ddf6c8306a8d10d6a0aa739424860d0e3098f1ae",
+   "count": 3759814942,
+   "count_kind": "count",
+   "note": "Public transparency log. treeSize is the log's own entry count — evidence the log is live and moving, not a score for anything."
+  },
+  {
+   "id": "openssf-scorecard",
+   "name": "OpenSSF Scorecard API (one repository)",
+   "kind": "supply-chain",
+   "url": "https://api.securityscorecards.dev/projects/github.com/ossf/scorecard",
+   "method": "GET",
+   "grid": [
+    "supply-chain",
+    "provenance-controls"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "application/json",
+   "bytes": 13616,
+   "body_sha256": "e2feb446211f3080481c3082d41b7702bc8f4f0d4c51a94026ecefc252f698e4",
+   "count": 18,
+   "count_kind": "count",
+   "note": "Named-repository check set. Counted by checks, and the count is the source's check taxonomy size — not a grade for the repository."
+  },
+  {
+   "id": "safe-repo",
+   "name": "OpenSecureAI Alliance wg-safe (SAFE) reference",
+   "kind": "standard-body",
+   "url": "https://raw.githubusercontent.com/OpenSecureAIAlliance/wg-safe/main/README.md",
+   "method": "GET",
+   "grid": [
+    "charter",
+    "article-50",
+    "article-53",
+    "hitl"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "text/plain",
+   "bytes": 4242,
+   "body_sha256": "75e7b6e0ac150224843b78a7562a66157c95e5957fa6dcb9113a0a50abcf8a1a",
+   "count": null,
+   "count_kind": "digest",
+   "count_note": "no row count readable in this format; the content digest is the observable",
+   "note": "The upstream SAFE reference this estate's charter feed tracks."
+  },
+  {
+   "id": "slsa",
+   "name": "SLSA provenance framework reference",
+   "kind": "standard-body",
+   "url": "https://raw.githubusercontent.com/slsa-framework/slsa/main/README.md",
+   "method": "GET",
+   "grid": [
+    "provenance",
+    "provenance-controls"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "text/plain",
+   "bytes": 3699,
+   "body_sha256": "aeff12d58ae18e38178775a9514cba2bcc6f244f4d0d724a099531ca99118952",
+   "count": null,
+   "count_kind": "digest",
+   "count_note": "no row count readable in this format; the content digest is the observable",
+   "note": "Supply-chain provenance framework reference."
+  },
+  {
+   "id": "in-toto",
+   "name": "in-toto attestation framework reference",
+   "kind": "standard-body",
+   "url": "https://raw.githubusercontent.com/in-toto/attestation/main/README.md",
+   "method": "GET",
+   "grid": [
+    "provenance",
+    "provenance-controls"
+   ],
+   "state": "REACHABLE",
+   "http_status": 200,
+   "content_type": "text/plain",
+   "bytes": 3310,
+   "body_sha256": "af4afaeb45178ead52df28e3d867d64fddf1626ef4f2a0b256430a55c2375c2e",
+   "count": null,
+   "count_kind": "digest",
+   "count_note": "no row count readable in this format; the content digest is the observable",
+   "note": "Attestation framework reference."
+  }
+ ],
+ "unpinned_findings": [
+  {
+   "id": "aiid",
+   "name": "AI Incident Database",
+   "kind": "ai-incident-db",
+   "probe": "https://incidentdatabase.ai/api/graphql",
+   "observed": "403 from an unauthenticated read ('Forbidden - Invalid origin'); the project's own README states the endpoint answers a session-less request with HTTP 401 and extensions.code API_LOGIN_REQUIRED",
+   "reason": "NO PUBLIC UNAUTHENTICATED MACHINE-READABLE API. AIID DOES publish a read-only GraphQL endpoint at /api/graphql, but it requires a logged-in account by policy: their README says the endpoint answers a session-less request with 401 API_LOGIN_REQUIRED, and the site's incident pages are static pages, not a feed. The repository publishes a weekly Excel export pipeline (site/excel-export-pipeline) whose output is uploaded by CI to a Cloudflare R2 bucket, not to a public URL. Every site route probed (/api/incidents, /graphql, /api/graphql, /download, /dataset, /robots.txt, /sitemap.xml) returns the same 322,936-byte SPA shell.",
+   "consequence": "AI incident coverage CANNOT be measured continuously from a public unauthenticated endpoint today. It is a real gap, and it is a gap in the SOURCE, not in our reader. A gap that is visible is a gap; a source that answers 200 with a body nobody can read is worse, because it reads as coverage.",
+   "next": "Ask the AIID maintainers for a public incident JSON/CSV export path or an integration account — their README names that route explicitly ('if you maintain a research or product integration and need a higher volume than a normal account, please get in touch'). Until then this row stays a published gap."
+  },
+  {
+   "id": "nvd-cve-feed",
+   "name": "NVD CVE 2.0 annual JSON feed",
+   "kind": "advisory-feed",
+   "probe": "https://nvd.nist.gov/feeds/json/cve/2.0/nvdcve-2.0-2026.json.gz",
+   "observed": "200 but ~42 MB gzipped per year, and the probe timed out mid-transfer",
+   "reason": "ANSWERS, but is too large for a daily poll and too coarse for one (annual file). The API endpoint is pinned instead.",
+   "consequence": "Covered by the nvd-cve-api row. Not a gap; a scale mismatch, resolved by pinning the API.",
+   "next": "None. If a daily n is wanted, use the NVD API with a date window."
+  },
+  {
+   "id": "atlas-legacy",
+   "name": "MITRE ATLAS legacy dist/ATLAS.yaml",
+   "kind": "threat-framework",
+   "probe": "https://raw.githubusercontent.com/mitre-atlas/atlas-data/main/dist/ATLAS.yaml",
+   "observed": "200 but the file's own first line says it is deprecated and no longer updated",
+   "reason": "Answers, but is a DEPRECATED release. Pinning it would measure a corpus that no longer moves.",
+   "consequence": "Superseded by the atlas-current row, which is resolved from the release manifest.",
+   "next": "None."
+  },
+  {
+   "id": "npm-audit",
+   "name": "npm registry bulk advisories",
+   "kind": "advisory-feed",
+   "probe": "https://registry.npmjs.org/-/npm/v1/security/advisories/bulk",
+   "observed": "405 Method Not Allowed (requires POST)",
+   "reason": "Answers to POST with an advisory list body. Not a GET endpoint.",
+   "consequence": "Not pinned as a GET source. npm advisories are already reachable through the pinned OSV and GHSA rows.",
+   "next": "Add as a POST source only if npm-specific coverage is ever required."
+  },
+  {
+   "id": "sigstore-tlog",
+   "name": "Sigstore transparency log (api.sigstore.dev)",
+   "kind": "transparency-log",
+   "probe": "https://api.sigstore.dev/api/v1/log",
+   "observed": "DNS resolution failed on the probing host",
+   "reason": "Host did not resolve from this machine at probe time. The Rekor log IS reachable and is pinned.",
+   "consequence": "One transparency log is covered. The second host was not reachable here, so it is not claimed as covered.",
+   "next": "Re-probe from the scheduled host; a DNS failure at one machine is not proof the source is gone."
+  },
+  {
+   "id": "cert-eu",
+   "name": "ENISA/CERT-EU security advisories",
+   "kind": "advisory-feed",
+   "probe": "https://cert.europa.eu/publications/security-advisories",
+   "observed": "200 text/html",
+   "reason": "Serves HTML, not a documented machine-readable feed. Counting its HTML byte length as an advisory count would be inventing a number.",
+   "consequence": "NOT covered. A real, named gap in EU-level advisory coverage.",
+   "next": "Look for a documented RSS/JSON feed from CERT-EU; until then, publish the gap."
+  },
+  {
+   "id": "eclipse-kev",
+   "name": "Eclipse Foundation security advisories",
+   "kind": "advisory-feed",
+   "probe": "https://eclipse.dev/security/advisories/",
+   "observed": "200 text/html",
+   "reason": "HTML listing page, no documented machine-readable feed at this URL.",
+   "consequence": "NOT covered as a feed. Named gap.",
+   "next": "Check for a JSON/CSV export of the advisory list."
+  }
+ ],
+ "method_note": "Every row is derived from the fetched bytes by a fixed rule; body_sha256 lets a later reader recompute the row from the same bytes. No row is scored, weighted or ranked. A source that answers 200 with a shape we cannot read is UNCHECKABLE, never 0 and never 'clean'. unpinned_findings records sources that were probed and did NOT qualify for a pinned URL — the gap stays visible instead of vanishing from the registry."
+}
