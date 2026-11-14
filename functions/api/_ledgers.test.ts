@@ -11,7 +11,8 @@
  */
 import { describe, expect, it } from "vitest";
 import { LEDGER } from "./corrections";
-import { LEDGER_META, ledgerRow, ledgersBlock, parseChecks, rootInclusionOf } from "./_ledgers";
+import { LEDGER_META, ledgerRow, ledgersBlock, otsEvidence, parseChecks, rootInclusionOf } from "./_ledgers";
+import rootWitness from "../../public/interop/root-witness-latest.json";
 import { onRequestGet as stateGet } from "./state";
 import publicRoot from "../../public/root.json";
 import rootInclusion from "../../public/interop/ledger-heads-2026-09/root-inclusion.json";
@@ -113,6 +114,43 @@ describe("rootInclusionOf (planted controls)", () => {
     expect(rootInclusionOf("q", "A", inc, leaves, "2026-09-30T05:00:00Z", "M").state).toBe("PENDING_NEXT_ROOT");
     expect(rootInclusionOf("z", "A", inc, leaves, "2026-09-30T06:00:00Z", "M").state).toBe("PENDING_NEXT_ROOT");
     expect(rootInclusionOf("z", "A", inc, leaves, "2026-09-30T04:00:00Z", "M").state).toBe("NOT_IN_ROOT");
+  });
+});
+
+describe("OTS evidence states speak the witness producers' vocabulary", () => {
+  // scripts/witness_public_root.py, scripts/witness/witness-root.py and scripts/root-witness-release-gate.py
+  // write exactly CONFIRMED_BITCOIN (proof carries Bitcoin block attestations), STAMPED_PENDING_BITCOIN
+  // (calendar fragment only) or NO_ATTESTATION. Until 2026-11-14 the row derived bitcoin_verified from
+  // strings no producer emits, so a head in a Bitcoin-confirmed root read "Bitcoin verified: no" on /corrections.
+  it("a head in a CONFIRMED_BITCOIN root is Bitcoin-verified and not calendar-pending", () => {
+    expect(otsEvidence("CONFIRMED_BITCOIN", true)).toEqual({ ots_calendar_pending: false, bitcoin_verified: true });
+  });
+
+  it("a calendar fragment is pending, never verified", () => {
+    expect(otsEvidence("STAMPED_PENDING_BITCOIN", true)).toEqual({ ots_calendar_pending: true, bitcoin_verified: false });
+  });
+
+  it("no attestation, an unknown word or a missing status is neither pending nor verified", () => {
+    for (const s of ["NO_ATTESTATION", "PENDING", "UNCHECKABLE", "", null, undefined]) {
+      expect(otsEvidence(s, true)).toEqual({ ots_calendar_pending: false, bitcoin_verified: false });
+    }
+  });
+
+  it("a head that is not in the root states nothing about OTS or Bitcoin", () => {
+    expect(otsEvidence("CONFIRMED_BITCOIN", false)).toEqual({ ots_calendar_pending: null, bitcoin_verified: null });
+  });
+
+  it("every IN_ROOT row agrees with the committed witness file's own status", () => {
+    const b = ledgersBlock();
+    const status = (rootWitness as { witnesses?: { ots?: { status?: string } } }).witnesses?.ots?.status ?? null;
+    expect(b.root.ots).toBe(status);
+    const inRoot = b.ledgers.filter((r) => r.evidence_state.root_inclusion === "IN_ROOT");
+    for (const r of inRoot) {
+      expect(r.evidence_state.bitcoin_verified).toBe(status === "CONFIRMED_BITCOIN");
+      expect(r.evidence_state.ots_calendar_pending).toBe(status === "STAMPED_PENDING_BITCOIN");
+      // the two states are different questions and are never both true
+      expect(r.evidence_state.bitcoin_verified && r.evidence_state.ots_calendar_pending).toBe(false);
+    }
   });
 });
 
