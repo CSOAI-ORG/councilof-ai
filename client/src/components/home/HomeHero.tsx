@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
+import HeroEvidenceConsole from "./HeroEvidenceConsole";
 
 /** A stable first screen. Service discovery belongs in the page, not a rotating headline. */
 export const HOME_HERO = {
@@ -74,6 +75,11 @@ export default function HomeHero() {
             fetchPriority="high"
             decoding="async"
           />
+          <div className="hp-hero-art-label" aria-hidden="true">
+            <span>THE MEASUREMENT ARENA</span>
+            <span>Evidence · method · human judgement</span>
+          </div>
+          <HeroEvidenceConsole />
           <figcaption>
             <span>THE COUNCIL OF AI</span>
             <span>Evidence in the open.</span>

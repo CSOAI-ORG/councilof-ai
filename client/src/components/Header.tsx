@@ -125,9 +125,11 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
               <div className={homepage ? "flex items-center gap-1" : "hidden 2xl:flex items-center gap-1 2xl:gap-3"}>
               {homepage ? (
                 [
-                  { name: "Results", href: "/board/" },
+                  { name: "Results", href: "/#board" },
+                  { name: "Watchdog", href: "/#watchdog" },
+                  { name: "Academy", href: "/#learning" },
                   { name: "How it works", href: "/#how-it-works" },
-                  { name: "Developers", href: "/connect/" },
+                  { name: "Developers", href: "/#developers" },
                   { name: "About", href: "/about/" },
                 ].map((item) => (
                   <a key={item.href} href={item.href} className="inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600">
@@ -285,7 +287,9 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
                 <a href={BOOK_MEASUREMENT_LINK.href} onClick={() => setMobileMenuOpen(false)} data-testid="mobile-book-measurement" className="flex min-h-11 items-center rounded-lg px-4 py-2 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600">{BOOK_MEASUREMENT_LINK.name}</a>
                 {[
                   { name: "Results", href: "/#board" },
+                  { name: "Watchdog", href: "/#watchdog" },
                   { name: "Services", href: "/#products" },
+                  { name: "Academy", href: "/#learning" },
                   { name: "How it works", href: "/#how-it-works" },
                   { name: "Developers", href: "/#developers" },
                   { name: "Verify a record", href: "/gspc-verify" },

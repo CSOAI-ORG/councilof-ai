@@ -7,6 +7,7 @@ import {
   ScanLine,
   Telescope,
 } from "lucide-react";
+import HomeDemoPreview from "./HomeDemoPreview";
 
 export const PRODUCTS = [
   {
@@ -129,6 +130,7 @@ export default function HomeProducts() {
             );
           })}
         </div>
+        <HomeDemoPreview />
         <div
           className="hp-resource-row"
           aria-label="More ways to use the evidence"
