@@ -1,0 +1,2132 @@
+{
+  "component-definition": {
+    "uuid": "3dcf79a7-5267-4532-8ef1-5deaa40adabc",
+    "metadata": {
+      "title": "Council of AI Full 6-Plane Estate (34 GSPC Axes + 16 Charter Controls + Layer 0 + Harness X + MEOK = 53 Components) NIST OSCAL 1.1.2 Component Definition",
+      "last-modified": "2026-11-13T01:20:00Z",
+      "version": "1.0.0",
+      "oscal-version": "1.1.2",
+      "remarks": "Measurement, never certification. Runnable probe: python3 -c \"import json,sys; d=json.load(open(sys.argv[1])); print(len(d['component-definition']['components']))\" <path>"
+    },
+    "components": [
+      {
+        "uuid": "00000000-0000-4000-8000-000000000001",
+        "type": "validation",
+        "title": "GSPC Axis: governance",
+        "description": "Council of AI GSPC measurement axis 'governance' (family=gspc, kind=model-comparison, status=MEASURED, n=237). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "governance"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "237"
+          },
+          {
+            "name": "separation-state",
+            "value": "TIE"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000001",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'governance'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000001",
+                "control-id": "GSPC-GOVERNANCE",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#governance."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000002",
+        "type": "validation",
+        "title": "GSPC Axis: safety",
+        "description": "Council of AI GSPC measurement axis 'safety' (family=gspc, kind=model-comparison, status=MEASURED, n=36). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "safety"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "36"
+          },
+          {
+            "name": "separation-state",
+            "value": "TIE"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000002",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'safety'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000002",
+                "control-id": "GSPC-SAFETY",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#safety."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000003",
+        "type": "validation",
+        "title": "GSPC Axis: provenance",
+        "description": "Council of AI GSPC measurement axis 'provenance' (family=gspc, kind=model-comparison, status=MEASURED, n=32). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "provenance"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "32"
+          },
+          {
+            "name": "separation-state",
+            "value": "TIE"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000003",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'provenance'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000003",
+                "control-id": "GSPC-PROVENANCE",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#provenance."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000004",
+        "type": "validation",
+        "title": "GSPC Axis: continuity",
+        "description": "Council of AI GSPC measurement axis 'continuity' (family=gspc, kind=model-comparison, status=MEASURED, n=33). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "continuity"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "33"
+          },
+          {
+            "name": "separation-state",
+            "value": "TIE"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000004",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'continuity'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000004",
+                "control-id": "GSPC-CONTINUITY",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#continuity."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000005",
+        "type": "validation",
+        "title": "GSPC Axis: conformance",
+        "description": "Council of AI GSPC measurement axis 'conformance' (family=gspc, kind=model-comparison, status=MEASURED, n=35). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "conformance"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "35"
+          },
+          {
+            "name": "separation-state",
+            "value": "TIE"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000005",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'conformance'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000005",
+                "control-id": "GSPC-CONFORMANCE",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#conformance."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000006",
+        "type": "validation",
+        "title": "GSPC Axis: openness",
+        "description": "Council of AI GSPC measurement axis 'openness' (family=gspc, kind=model-comparison, status=MEASURED, n=32). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "openness"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "32"
+          },
+          {
+            "name": "separation-state",
+            "value": "TIE"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000006",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'openness'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000006",
+                "control-id": "GSPC-OPENNESS",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#openness."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000007",
+        "type": "validation",
+        "title": "GSPC Axis: machinery-conformity",
+        "description": "Council of AI GSPC measurement axis 'machinery-conformity' (family=gspc, kind=model-comparison, status=MEASURED, n=33). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "machinery-conformity"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "33"
+          },
+          {
+            "name": "separation-state",
+            "value": "UNTESTED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000007",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'machinery-conformity'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000007",
+                "control-id": "GSPC-MACHINERY-CONFORMITY",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#machinery-conformity."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000008",
+        "type": "validation",
+        "title": "GSPC Axis: care",
+        "description": "Council of AI GSPC measurement axis 'care' (family=gspc, kind=model-comparison, status=MEASURED, n=199). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "care"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "199"
+          },
+          {
+            "name": "separation-state",
+            "value": "TIE"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000008",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'care'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000008",
+                "control-id": "GSPC-CARE",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#care."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000009",
+        "type": "validation",
+        "title": "GSPC Axis: cross-reality",
+        "description": "Council of AI GSPC measurement axis 'cross-reality' (family=gspc, kind=model-comparison, status=MEASURED, n=32). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "cross-reality"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "32"
+          },
+          {
+            "name": "separation-state",
+            "value": "UNTESTED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000009",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'cross-reality'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000009",
+                "control-id": "GSPC-CROSS-REALITY",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#cross-reality."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000010",
+        "type": "validation",
+        "title": "GSPC Axis: detector-interop",
+        "description": "Council of AI GSPC measurement axis 'detector-interop' (family=gspc, kind=model-comparison, status=MEASURED, n=33). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "detector-interop"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "33"
+          },
+          {
+            "name": "separation-state",
+            "value": "UNTESTED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000010",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'detector-interop'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000010",
+                "control-id": "GSPC-DETECTOR-INTEROP",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#detector-interop."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000011",
+        "type": "validation",
+        "title": "GSPC Axis: art5-safeguard",
+        "description": "Council of AI GSPC measurement axis 'art5-safeguard' (family=gspc, kind=model-comparison, status=MEASURED, n=36). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "art5-safeguard"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "36"
+          },
+          {
+            "name": "separation-state",
+            "value": "UNTESTED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000011",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'art5-safeguard'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000011",
+                "control-id": "GSPC-ART5-SAFEGUARD",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#art5-safeguard."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000012",
+        "type": "validation",
+        "title": "GSPC Axis: swarm",
+        "description": "Council of AI GSPC measurement axis 'swarm' (family=gspc, kind=model-comparison, status=MEASURED, n=37). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "swarm"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "37"
+          },
+          {
+            "name": "separation-state",
+            "value": "UNTESTED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000012",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'swarm'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000012",
+                "control-id": "GSPC-SWARM",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#swarm."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000013",
+        "type": "validation",
+        "title": "GSPC Axis: affect",
+        "description": "Council of AI GSPC measurement axis 'affect' (family=gspc, kind=model-comparison, status=MEASURED, n=41). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "affect"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "41"
+          },
+          {
+            "name": "separation-state",
+            "value": "UNTESTED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000013",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'affect'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000013",
+                "control-id": "GSPC-AFFECT",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#affect."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000014",
+        "type": "validation",
+        "title": "GSPC Axis: jail",
+        "description": "Council of AI GSPC measurement axis 'jail' (family=gspc, kind=model-comparison, status=MEASURED, n=71). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "jail"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "model-comparison"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "71"
+          },
+          {
+            "name": "separation-state",
+            "value": "UNTESTED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000014",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'jail'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000014",
+                "control-id": "GSPC-JAIL",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#jail."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000015",
+        "type": "validation",
+        "title": "GSPC Axis: effect-binding",
+        "description": "Council of AI GSPC measurement axis 'effect-binding' (family=gspc, kind=deterministic-facts, status=MEASURED, n=261). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "effect-binding"
+          },
+          {
+            "name": "gspc-family",
+            "value": "gspc"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "deterministic-facts"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "261"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000015",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'effect-binding'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000015",
+                "control-id": "GSPC-EFFECT-BINDING",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#effect-binding."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000016",
+        "type": "validation",
+        "title": "GSPC Axis: provenance-controls",
+        "description": "Council of AI GSPC measurement axis 'provenance-controls' (family=financial, kind=deterministic-facts, status=MEASURED, n=6). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "provenance-controls"
+          },
+          {
+            "name": "gspc-family",
+            "value": "financial"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "deterministic-facts"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "6"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000016",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'provenance-controls'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000016",
+                "control-id": "GSPC-PROVENANCE-CONTROLS",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#provenance-controls."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000017",
+        "type": "validation",
+        "title": "GSPC Axis: reserve-attestation",
+        "description": "Council of AI GSPC measurement axis 'reserve-attestation' (family=financial, kind=deterministic-facts, status=MEASURED, n=16). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "reserve-attestation"
+          },
+          {
+            "name": "gspc-family",
+            "value": "financial"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "deterministic-facts"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "16"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000017",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'reserve-attestation'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000017",
+                "control-id": "GSPC-RESERVE-ATTESTATION",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#reserve-attestation."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000018",
+        "type": "validation",
+        "title": "GSPC Axis: regulatory-framework",
+        "description": "Council of AI GSPC measurement axis 'regulatory-framework' (family=financial, kind=deterministic-facts, status=MEASURED, n=16). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "regulatory-framework"
+          },
+          {
+            "name": "gspc-family",
+            "value": "financial"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "deterministic-facts"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "16"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000018",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'regulatory-framework'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000018",
+                "control-id": "GSPC-REGULATORY-FRAMEWORK",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#regulatory-framework."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000019",
+        "type": "validation",
+        "title": "GSPC Axis: distribution-integrity",
+        "description": "Council of AI GSPC measurement axis 'distribution-integrity' (family=financial, kind=deterministic-facts, status=MEASURED, n=16). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "distribution-integrity"
+          },
+          {
+            "name": "gspc-family",
+            "value": "financial"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "deterministic-facts"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "16"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000019",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'distribution-integrity'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000019",
+                "control-id": "GSPC-DISTRIBUTION-INTEGRITY",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#distribution-integrity."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000020",
+        "type": "validation",
+        "title": "GSPC Axis: custody-disclosure",
+        "description": "Council of AI GSPC measurement axis 'custody-disclosure' (family=financial, kind=deterministic-facts, status=MEASURED, n=16). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "custody-disclosure"
+          },
+          {
+            "name": "gspc-family",
+            "value": "financial"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "deterministic-facts"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "16"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000020",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'custody-disclosure'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000020",
+                "control-id": "GSPC-CUSTODY-DISCLOSURE",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#custody-disclosure."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000021",
+        "type": "validation",
+        "title": "GSPC Axis: ai-adoption-components",
+        "description": "Council of AI GSPC measurement axis 'ai-adoption-components' (family=financial, kind=deterministic-facts, status=MEASURED, n=2). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "ai-adoption-components"
+          },
+          {
+            "name": "gspc-family",
+            "value": "financial"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "deterministic-facts"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "2"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000021",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'ai-adoption-components'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000021",
+                "control-id": "GSPC-AI-ADOPTION-COMPONENTS",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#ai-adoption-components."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000022",
+        "type": "validation",
+        "title": "GSPC Axis: labour-components",
+        "description": "Council of AI GSPC measurement axis 'labour-components' (family=financial, kind=deterministic-facts, status=MEASURED, n=2). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "labour-components"
+          },
+          {
+            "name": "gspc-family",
+            "value": "financial"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "deterministic-facts"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "2"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000022",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'labour-components'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000022",
+                "control-id": "GSPC-LABOUR-COMPONENTS",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#labour-components."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000023",
+        "type": "validation",
+        "title": "GSPC Axis: humanoid-labour-index",
+        "description": "Council of AI GSPC measurement axis 'humanoid-labour-index' (family=financial, kind=deterministic-facts, status=MEASURED, n=8). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "humanoid-labour-index"
+          },
+          {
+            "name": "gspc-family",
+            "value": "financial"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "deterministic-facts"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "8"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000023",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'humanoid-labour-index'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000023",
+                "control-id": "GSPC-HUMANOID-LABOUR-INDEX",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#humanoid-labour-index."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000024",
+        "type": "validation",
+        "title": "GSPC Axis: lab-practice",
+        "description": "Council of AI GSPC measurement axis 'lab-practice' (family=subject, kind=measured-subject, status=MEASURED, n=37). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "lab-practice"
+          },
+          {
+            "name": "gspc-family",
+            "value": "subject"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "measured-subject"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "37"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000024",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'lab-practice'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000024",
+                "control-id": "GSPC-LAB-PRACTICE",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#lab-practice."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000025",
+        "type": "validation",
+        "title": "GSPC Axis: company-practice",
+        "description": "Council of AI GSPC measurement axis 'company-practice' (family=subject, kind=measured-subject, status=MEASURED, n=40). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "company-practice"
+          },
+          {
+            "name": "gspc-family",
+            "value": "subject"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "measured-subject"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "40"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000025",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'company-practice'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000025",
+                "control-id": "GSPC-COMPANY-PRACTICE",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#company-practice."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000026",
+        "type": "validation",
+        "title": "GSPC Axis: measurer-integrity",
+        "description": "Council of AI GSPC measurement axis 'measurer-integrity' (family=subject, kind=measured-subject, status=MEASURED, n=40). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "measurer-integrity"
+          },
+          {
+            "name": "gspc-family",
+            "value": "subject"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "measured-subject"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "40"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000026",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'measurer-integrity'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000026",
+                "control-id": "GSPC-MEASURER-INTEGRITY",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#measurer-integrity."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000027",
+        "type": "validation",
+        "title": "GSPC Axis: harness-fidelity",
+        "description": "Council of AI GSPC measurement axis 'harness-fidelity' (family=subject, kind=measured-subject, status=MEASURED, n=36). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "harness-fidelity"
+          },
+          {
+            "name": "gspc-family",
+            "value": "subject"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "measured-subject"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "36"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000027",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'harness-fidelity'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000027",
+                "control-id": "GSPC-HARNESS-FIDELITY",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#harness-fidelity."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000028",
+        "type": "validation",
+        "title": "GSPC Axis: interop-conformance",
+        "description": "Council of AI GSPC measurement axis 'interop-conformance' (family=subject, kind=measured-subject, status=MEASURED, n=34). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "interop-conformance"
+          },
+          {
+            "name": "gspc-family",
+            "value": "subject"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "measured-subject"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "34"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000028",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'interop-conformance'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000028",
+                "control-id": "GSPC-INTEROP-CONFORMANCE",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#interop-conformance."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000029",
+        "type": "validation",
+        "title": "GSPC Axis: humanoid-deployment",
+        "description": "Council of AI GSPC measurement axis 'humanoid-deployment' (family=subject, kind=measured-subject, status=MEASURED, n=35). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "humanoid-deployment"
+          },
+          {
+            "name": "gspc-family",
+            "value": "subject"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "measured-subject"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "35"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000029",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'humanoid-deployment'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000029",
+                "control-id": "GSPC-HUMANOID-DEPLOYMENT",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#humanoid-deployment."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000030",
+        "type": "validation",
+        "title": "GSPC Axis: regulator-transparency",
+        "description": "Council of AI GSPC measurement axis 'regulator-transparency' (family=subject, kind=measured-subject, status=MEASURED, n=41). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "regulator-transparency"
+          },
+          {
+            "name": "gspc-family",
+            "value": "subject"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "measured-subject"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "41"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000030",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'regulator-transparency'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000030",
+                "control-id": "GSPC-REGULATOR-TRANSPARENCY",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#regulator-transparency."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000031",
+        "type": "validation",
+        "title": "GSPC Axis: interpretability-reproducibility",
+        "description": "Council of AI GSPC measurement axis 'interpretability-reproducibility' (family=subject, kind=measured-subject, status=MEASURED, n=33). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "interpretability-reproducibility"
+          },
+          {
+            "name": "gspc-family",
+            "value": "subject"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "measured-subject"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "33"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000031",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'interpretability-reproducibility'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000031",
+                "control-id": "GSPC-INTERPRETABILITY-REPRODUCIBILITY",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#interpretability-reproducibility."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000032",
+        "type": "validation",
+        "title": "GSPC Axis: claim-maintenance",
+        "description": "Council of AI GSPC measurement axis 'claim-maintenance' (family=subject, kind=measured-subject, status=MEASURED, n=174). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "claim-maintenance"
+          },
+          {
+            "name": "gspc-family",
+            "value": "subject"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "measured-subject"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "174"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000032",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'claim-maintenance'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000032",
+                "control-id": "GSPC-CLAIM-MAINTENANCE",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#claim-maintenance."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000033",
+        "type": "validation",
+        "title": "GSPC Axis: serving-fidelity",
+        "description": "Council of AI GSPC measurement axis 'serving-fidelity' (family=subject, kind=measured-subject, status=MEASURED, n=38). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "serving-fidelity"
+          },
+          {
+            "name": "gspc-family",
+            "value": "subject"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "measured-subject"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "38"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000033",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'serving-fidelity'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000033",
+                "control-id": "GSPC-SERVING-FIDELITY",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#serving-fidelity."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000034",
+        "type": "validation",
+        "title": "GSPC Axis: watchdog-ingest",
+        "description": "Council of AI GSPC measurement axis 'watchdog-ingest' (family=subject, kind=measured-subject, status=MEASURED, n=106). Measurement, never certification.",
+        "props": [
+          {
+            "name": "gspc-axis-slug",
+            "value": "watchdog-ingest"
+          },
+          {
+            "name": "gspc-family",
+            "value": "subject"
+          },
+          {
+            "name": "gspc-kind",
+            "value": "measured-subject"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          },
+          {
+            "name": "n-valid",
+            "value": "106"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000034",
+            "source": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+            "description": "Constitutional Charter, Layer 0, Harness X, and Global Regulatory binding for GSPC axis 'watchdog-ingest'.",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000034",
+                "control-id": "GSPC-WATCHDOG-INGEST",
+                "description": "Deterministic measurement run and Ed25519 receipt verification on https://councilof.ai/api/gspc#watchdog-ingest."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000101",
+        "type": "policy",
+        "title": "Constitutional Control CH-01: CH-01",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-01 (CH-01), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['governance', 'provenance', 'provenance-controls', 'interop-conformance'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-01"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000101",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-01",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000101",
+                "control-id": "ch-01",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['governance', 'provenance', 'provenance-controls', 'interop-conformance']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000102",
+        "type": "policy",
+        "title": "Constitutional Control CH-02: CH-02",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-02 (CH-02), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['safety', 'care', 'affect', 'jail'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-02"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000102",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-02",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000102",
+                "control-id": "ch-02",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['safety', 'care', 'affect', 'jail']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000103",
+        "type": "policy",
+        "title": "Constitutional Control CH-03: CH-03",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-03 (CH-03), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['continuity', 'swarm', 'harness-fidelity', 'serving-fidelity'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-03"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000103",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-03",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000103",
+                "control-id": "ch-03",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['continuity', 'swarm', 'harness-fidelity', 'serving-fidelity']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000104",
+        "type": "policy",
+        "title": "Constitutional Control CH-04: CH-04",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-04 (CH-04), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['cross-reality', 'effect-binding', 'machinery-conformity', 'humanoid-deployment'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-04"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000104",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-04",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000104",
+                "control-id": "ch-04",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['cross-reality', 'effect-binding', 'machinery-conformity', 'humanoid-deployment']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000105",
+        "type": "policy",
+        "title": "Constitutional Control CH-05: CH-05",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-05 (CH-05), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['continuity', 'art5-safeguard', 'harness-fidelity'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-05"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000105",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-05",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000105",
+                "control-id": "ch-05",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['continuity', 'art5-safeguard', 'harness-fidelity']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000106",
+        "type": "policy",
+        "title": "Constitutional Control CH-06: CH-06",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-06 (CH-06), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['measurer-integrity', 'interpretability-reproducibility', 'conformance', 'openness'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-06"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000106",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-06",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000106",
+                "control-id": "ch-06",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['measurer-integrity', 'interpretability-reproducibility', 'conformance', 'openness']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000107",
+        "type": "policy",
+        "title": "Constitutional Control CH-07: CH-07",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-07 (CH-07), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['provenance', 'detector-interop', 'distribution-integrity', 'regulator-transparency'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-07"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000107",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-07",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000107",
+                "control-id": "ch-07",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['provenance', 'detector-interop', 'distribution-integrity', 'regulator-transparency']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000108",
+        "type": "policy",
+        "title": "Constitutional Control CH-08: CH-08",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-08 (CH-08), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['reserve-attestation', 'custody-disclosure', 'ai-adoption-components', 'labour-components', 'humanoid-labour-index'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-08"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000108",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-08",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000108",
+                "control-id": "ch-08",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['reserve-attestation', 'custody-disclosure', 'ai-adoption-components', 'labour-components', 'humanoid-labour-index']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000109",
+        "type": "policy",
+        "title": "Constitutional Control CH-09: CH-09",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-09 (CH-09), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['governance', 'openness', 'care', 'company-practice'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-09"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000109",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-09",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000109",
+                "control-id": "ch-09",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['governance', 'openness', 'care', 'company-practice']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000110",
+        "type": "policy",
+        "title": "Constitutional Control CH-10: CH-10",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-10 (CH-10), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['safety', 'jail', 'effect-binding', 'serving-fidelity'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-10"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000110",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-10",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000110",
+                "control-id": "ch-10",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['safety', 'jail', 'effect-binding', 'serving-fidelity']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000111",
+        "type": "policy",
+        "title": "Constitutional Control CH-11: CH-11",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-11 (CH-11), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['care', 'affect', 'claim-maintenance', 'regulator-transparency'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-11"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000111",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-11",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000111",
+                "control-id": "ch-11",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['care', 'affect', 'claim-maintenance', 'regulator-transparency']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000112",
+        "type": "policy",
+        "title": "Constitutional Control CH-12: CH-12",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-12 (CH-12), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['lab-practice', 'company-practice', 'measurer-integrity'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-12"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000112",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-12",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000112",
+                "control-id": "ch-12",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['lab-practice', 'company-practice', 'measurer-integrity']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000113",
+        "type": "policy",
+        "title": "Constitutional Control CH-13: CH-13",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-13 (CH-13), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['regulatory-framework', 'machinery-conformity', 'art5-safeguard'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-13"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000113",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-13",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000113",
+                "control-id": "ch-13",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['regulatory-framework', 'machinery-conformity', 'art5-safeguard']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000114",
+        "type": "policy",
+        "title": "Constitutional Control CH-14: CH-14",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-14 (CH-14), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['claim-maintenance', 'provenance', 'measurer-integrity'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-14"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000114",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-14",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000114",
+                "control-id": "ch-14",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['claim-maintenance', 'provenance', 'measurer-integrity']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000115",
+        "type": "policy",
+        "title": "Constitutional Control CH-15: CH-15",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-15 (CH-15), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['continuity', 'harness-fidelity', 'humanoid-deployment'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-15"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000115",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-15",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000115",
+                "control-id": "ch-15",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['continuity', 'harness-fidelity', 'humanoid-deployment']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000116",
+        "type": "policy",
+        "title": "Constitutional Control CH-16: CH-16",
+        "description": "Operational Constitutional Harness Charter v0.1.0 control CH-16 (CH-16), bound to Layer 0 prechecks, Harness X XRAIV gate, and GSPC axes ['governance', 'claim-maintenance', 'provenance-controls'].",
+        "props": [
+          {
+            "name": "control-id",
+            "value": "CH-16"
+          },
+          {
+            "name": "layer0-primitive",
+            "value": "localConstitutionalPrecheck"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000116",
+            "source": "https://councilof.ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+            "description": "Operational Constitutional Control CH-16",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000116",
+                "control-id": "ch-16",
+                "description": "Enforced via gspc_policy.py and verified by GSPC axes ['governance', 'claim-maintenance', 'provenance-controls']."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000201",
+        "type": "software",
+        "title": "Plane 2: @csoai/layer0 Cryptographic & Wire Substrate",
+        "description": "Layer 0 pre-inference and post-inference governance library (localConstitutionalPrecheck, governedLocal, verifyLocalReceipt, csoai_sign, csoai_verify, csoai_govern, csoai_catalog) across 11 wire protocols and 6 multi-witness anchors.",
+        "props": [
+          {
+            "name": "plane-id",
+            "value": "201"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000201",
+            "source": "https://github.com/CSOAI-ORG/SOVEREIGN-LAYER-ZERO-CHARTER",
+            "description": "Plane 2: @csoai/layer0 Cryptographic & Wire Substrate",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000201",
+                "control-id": "PLANE-201",
+                "description": "Layer 0 pre-inference and post-inference governance library (localConstitutionalPrecheck, governedLocal, verifyLocalReceipt, csoai_sign, csoai_verify, csoai_govern, csoai_catalog) across 11 wire protocols and 6 multi-witness anchors."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000202",
+        "type": "service",
+        "title": "Plane 3: Harness X (XRAIV Pre-Action Gate & Pinned Engines)",
+        "description": "Harness X runtime enforcement and measurement plane: XRAIV (REFUSE|CONFIRM|PROCEED), gspc_policy.py, gspc_authority_state.py, gspc_effect_receipt.py, gspc_constitutional_flow.py, openshell_authority_adapter.py, instrument_guard.py (26/26 tests), hitl_probe.py.",
+        "props": [
+          {
+            "name": "plane-id",
+            "value": "202"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000202",
+            "source": "https://github.com/CSOAI-ORG/SOVEREIGN-LAYER-ZERO-CHARTER",
+            "description": "Plane 3: Harness X (XRAIV Pre-Action Gate & Pinned Engines)",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000202",
+                "control-id": "PLANE-202",
+                "description": "Harness X runtime enforcement and measurement plane: XRAIV (REFUSE|CONFIRM|PROCEED), gspc_policy.py, gspc_authority_state.py, gspc_effect_receipt.py, gspc_constitutional_flow.py, openshell_authority_adapter.py, instrument_guard.py (26/26 tests), hitl_probe.py."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "00000000-0000-4000-8000-000000000203",
+        "type": "service",
+        "title": "Plane 5: MEOK (SovSpace, 13-Member BFT Referees, CARE-PSY-v1, H.I.M.)",
+        "description": "MEOK cognitive governance plane: SovSpace 16-branch counterfactual simulator (reaction_sim.py, three_kb.py <=3072B cards, evolve.py self_promotion_blocked:true), 13-Member BFT Council of Referees (f=4, quorum=9/13, CARE_FLOOR=0.95), 4-Perspective Care Router (CARE-PSY-v1), and H.I.M. (csoai.him-attestation-pack/0.1).",
+        "props": [
+          {
+            "name": "plane-id",
+            "value": "203"
+          },
+          {
+            "name": "evidence-state",
+            "value": "MEASURED"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "00000000-0000-4000-9000-000000000203",
+            "source": "https://github.com/CSOAI-ORG/SOVEREIGN-LAYER-ZERO-CHARTER",
+            "description": "Plane 5: MEOK (SovSpace, 13-Member BFT Referees, CARE-PSY-v1, H.I.M.)",
+            "implemented-requirements": [
+              {
+                "uuid": "00000000-0000-4000-a000-000000000203",
+                "control-id": "PLANE-203",
+                "description": "MEOK cognitive governance plane: SovSpace 16-branch counterfactual simulator (reaction_sim.py, three_kb.py <=3072B cards, evolve.py self_promotion_blocked:true), 13-Member BFT Council of Referees (f=4, quorum=9/13, CARE_FLOOR=0.95), 4-Perspective Care Router (CARE-PSY-v1), and H.I.M. (csoai.him-attestation-pack/0.1)."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
