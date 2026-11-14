@@ -38,7 +38,7 @@ the free read-only door https://councilof.ai/mcp/free.
 
 The latest published release is `0.2.8` (published 2026-11-12T03:39:35.351Z). Its published tarball carries
 54 tool names — 49 free + 5 metered — measured from the tarball's own manifests
-on 2026-11-13, not from this repository. It is **not** marked deprecated on npm, which is why
+on 2026-11-14, not from this repository. It is **not** marked deprecated on npm, which is why
 `npm view csoai-gspc-mcp@latest deprecated` prints nothing: deprecation is not the
 signal here, the name comparison is.
 
