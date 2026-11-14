@@ -1,6 +1,6 @@
 {
  "kind": "csoai.root-witness-pointer/v0",
- "as_of": "2026-11-13T22:38:36Z",
+ "as_of": "2026-11-14T03:09:26Z",
  "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
  "live_root": {
   "url": "https://councilof.ai/root.json",
@@ -24,11 +24,11 @@
   "url": "https://councilof.ai/interop/root-witness-latest.json",
   "path": "public/interop/root-witness-latest.json",
   "status": "PUBLISHED",
-  "dated_copy": "public/interop/root-witness-2026-11-13-a2485948.json"
+  "dated_copy": "public/interop/root-witness-2026-11-14-a2485948.json"
  },
  "drift": {
   "status": "DRIFTED",
-  "checked_at": "2026-11-13T22:38:38Z",
+  "checked_at": "2026-11-14T03:09:27Z",
   "checked_against": "https://councilof.ai/root.json",
   "witness_artifact_sha256": "a2485948117cdacdc2cd89667834db6398ca5057cbad5fcf37c9f861fcca7563",
   "live_root_sha256": "d585909fe5b5589b36760de4d483805c05d896e7fdd586fea45075894ab02f8f",
@@ -39,10 +39,10 @@
   "match_merkle_root": false,
   "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
  },
- "witness_status_observed_at": "2026-11-13T22:37:51Z",
+ "witness_status_observed_at": "2026-11-14T03:09:24Z",
  "witnesses": {
   "rekor": "WITNESSED",
-  "ots": "STAMPED_PENDING_BITCOIN",
+  "ots": "CONFIRMED_BITCOIN",
   "eas_base": "NOT_YET",
   "xrpl_memo": "NOT_YET"
  },
@@ -57,7 +57,7 @@
   "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
   "as_of": "2026-11-13T22:37:46Z",
   "merkle_root": "37e32bbbd9984045478237286c1414b517bf924bdd5fc628624b7edba419c973",
-  "sidecars_scanned": 96,
+  "sidecars_scanned": 97,
   "conflicts": [],
   "byte_variants": [],
   "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"
