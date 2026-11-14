@@ -1,0 +1,51 @@
+{
+  "schema": "csoai.token-evidence-twin-canary/0.1",
+  "as_of": "2026-09-19T00:00:00Z",
+  "purpose": "Three-subject evidence-factory canary. This is a measurement register, not an asset rating, trading signal, custody record, or compliance conclusion.",
+  "subjects": [
+    {
+      "subject_id": "token:ethereum",
+      "display_name": "Ether",
+      "network": "Ethereum mainnet",
+      "asset_model": "native asset; no ERC-20 contract address",
+      "source_families": ["Ethereum public chain state", "Ethereum Foundation documentation", "public market observation"],
+      "measurement_contract": "token-network-evidence/v0.1",
+      "evidence_state": "PENDING_COLLECTION",
+      "proof_state": {"canonical_sha256": "PENDING", "ed25519": "PENDING", "merkle_root": "PENDING", "rekor": "UNCHECKABLE", "ots": "UNCHECKABLE"},
+      "distribution_state": "LOCAL_DRAFT_ONLY",
+      "seat_roles": {"m4": "collect and canonicalise", "runpod_3090": "replay and validate", "m2": "independent readback when reachable"}
+    },
+    {
+      "subject_id": "token:link",
+      "display_name": "Chainlink (LINK)",
+      "network": "Ethereum mainnet",
+      "contract_address": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+      "contract_address_state": "PENDING_OFFICIAL_AND_CHAIN_READBACK",
+      "source_families": ["Ethereum public chain state", "Chainlink official documentation", "official release announcements", "public market observation"],
+      "measurement_contract": "token-network-evidence/v0.1",
+      "evidence_state": "PENDING_COLLECTION",
+      "proof_state": {"canonical_sha256": "PENDING", "ed25519": "PENDING", "merkle_root": "PENDING", "rekor": "UNCHECKABLE", "ots": "UNCHECKABLE"},
+      "distribution_state": "LOCAL_DRAFT_ONLY",
+      "seat_roles": {"m4": "collect and canonicalise", "runpod_3090": "replay and validate", "m2": "independent readback when reachable"}
+    },
+    {
+      "subject_id": "token:ondo",
+      "display_name": "Ondo (ONDO)",
+      "network": "Ethereum mainnet",
+      "contract_address": null,
+      "contract_address_state": "UNCHECKABLE_UNTIL_OFFICIAL_SOURCE_AND_CHAIN_READBACK_AGREE",
+      "source_families": ["Ethereum public chain state", "Ondo official documentation", "official disclosures", "public market observation"],
+      "measurement_contract": "token-network-evidence/v0.1",
+      "evidence_state": "BLOCKED_IDENTITY_PIN",
+      "proof_state": {"canonical_sha256": "PENDING", "ed25519": "PENDING", "merkle_root": "PENDING", "rekor": "UNCHECKABLE", "ots": "UNCHECKABLE"},
+      "distribution_state": "LOCAL_DRAFT_ONLY",
+      "seat_roles": {"m4": "collect and canonicalise", "runpod_3090": "replay and validate", "m2": "independent readback when reachable"}
+    }
+  ],
+  "promotion_rules": [
+    "No subject is signed until the canonical evidence object and its raw-source hashes are present.",
+    "No Rekor, OTS, SCITT, root, or distribution state may be inferred from a local file or planned command.",
+    "No public distribution occurs until served-byte readback succeeds.",
+    "Proof of a record is not proof that every statement in it is true."
+  ]
+}

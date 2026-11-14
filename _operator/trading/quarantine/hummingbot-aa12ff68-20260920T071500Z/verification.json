@@ -1,0 +1,54 @@
+{
+  "anchor": "NOT_PERFORMED",
+  "candidate_id": "bt_validate_30d_ondo_macd_bb_v1",
+  "checks": {
+    "net_pnl_quote": true,
+    "total_fees_quote": true,
+    "total_positions": true,
+    "total_volume": true
+  },
+  "cost_model": {
+    "leverage": 1,
+    "quote_budget": "100",
+    "trade_cost": 0.0006
+  },
+  "counts": {
+    "executors": 8,
+    "minimum_required": 20
+  },
+  "directional_authority": "none",
+  "execution": "disabled",
+  "gspc_admission": "NOT_PERFORMED",
+  "instrument": {
+    "comparison_semantics": "all listed predicates required",
+    "gate": {
+      "max_drawdown_pct": ">= -0.02",
+      "net_pnl_quote": "> 0",
+      "profit_factor": ">= 1.10",
+      "sharpe_ratio": "> 0",
+      "total_positions": ">= 20"
+    },
+    "id": "condor-hummingbot-paper-promotion-gate",
+    "version": "2026-09-20T06:39:48.533925+00:00"
+  },
+  "instrument_sha256": "88b963d245993435c405524f10886fdbab168a7a8d4778de7a414cefe22f57d3",
+  "reason": "minimum-position gate not met",
+  "recomputed": {
+    "net_pnl_quote": "5.954575495929198665490122977",
+    "total_fees_quote": "0.9599999999999999367172875964",
+    "total_positions": 8,
+    "total_volume": "1599.999999999999971578290570"
+  },
+  "schema": "csoai.condor-hummingbot-candidate-freeze/0.1",
+  "signature": "NOT_PERFORMED",
+  "source_sha256": "f2288e840fe7cdbd540de4033aec913d78b32088e41f1d2d9c131cc257241b60",
+  "state": "MEASURED_REJECTED",
+  "strategy_config_sha256": "0f5e27891bb35742d1dd613dcd85b13f8cb78220d1c98221dd57cbb48f5f0521",
+  "task_id": "aa12ff68",
+  "tournament_sha256": "c343e8ba018b2d8802aeb4dad880c9cf5aeacc9722ede1cd1d8551dccb563f95",
+  "window": {
+    "end_time": 1789884768,
+    "resolution": "15m",
+    "start_time": 1787292768
+  }
+}

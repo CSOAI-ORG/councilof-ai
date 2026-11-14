@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M2 / M4 Research</title>
+<style>
+body{font:17px/1.5 system-ui,sans-serif;max-width:1120px;margin:30px auto;padding:24px;background:#f7f8fb;color:#182234}
+a{color:#164fa3}.bar,section{background:white;border:1px solid #d9dfe8;border-radius:12px;padding:22px;margin:20px 0}
+h1{font-size:34px;line-height:1.15;margin:0 0 12px}h2{font-size:24px}table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:12px 8px;border-bottom:1px solid #d9dfe8}th{font-size:14px}code{overflow-wrap:anywhere}
+.small{font-size:14px;color:#48546a}.notice{border-left:5px solid #e9b345}button{font:inherit;padding:10px 16px;cursor:pointer}
+@media(max-width:750px){body{padding:12px}table{font-size:13px}th,td{padding:9px 4px}}
+</style></head><body>
+<header><h1>M2 / M4 Research</h1><p>One view of two different experiments. Not a live-trading console.</p>
+<a href="http://127.0.0.1:8088/" target="_blank" rel="noopener">Open the existing Condor dashboard</a></header>
+<div class="bar notice"><b>Research only.</b> This reporter cannot fund accounts, place orders or promote a strategy.
+The M2 study uses virtual results; M4 account balances and live executors are not queried.</div>
+<p id="health">Checking the two Macs...</p><button id="refresh">Refresh readout</button>
+<section><h2>M2 fixed-window paper replay</h2><p id="m2status">Waiting for the latest verified receipt.</p>
+<div style="overflow-x:auto"><table><thead><tr><th>Strategy</th><th>Covered cases</th><th>Virtual capital total</th>
+<th>Virtual P/L total</th><th>Simulated fills</th></tr></thead><tbody id="m2rows"></tbody></table></div>
+<p class="small">Each covered case is normalized to $10 virtual-equivalent. Costs are illustrative. No exchange wallets are funded.</p></section>
+<section><h2>M4 paper-outcome ledger</h2><p id="m4status">Waiting for the M4 readout.</p><p id="m4metrics"></p>
+<p class="small">These are reported 15-minute directional outcomes, not the same test as M2. Basis-point sums are not dollar profit.</p></section>
+<section><h2>Evidence and limits</h2><p id="time"></p><p id="hash" class="small"></p>
+<p>Refresh reads existing data. M2 captures remain on the existing hourly schedule; refreshing does not run a new trading strategy.</p>
+<p>Do not select a winner from unmatched markets, different time windows or a short sample. No automatic allocation is enabled.</p></section>
+<script>
+const byId=id=>document.getElementById(id);
+const number=(x,n=4)=>typeof x==='number'&&Number.isFinite(x)?x.toFixed(n):'Unknown';
+async function refresh(){
+ try{
+  const response=await fetch('/api/report',{cache:'no-store'});
+  if(!response.ok)throw Error('Readout unavailable');
+  const data=await response.json(),m2=data.m2||{},m4=data.m4||{},out=m4.paper_outcomes||{},score=out.recomputed_score||{};
+  byId('health').textContent='Condor via M2: '+(data.m2_condor_tunnel?.http_status||'unverified')+
+   ' | M4 Condor: '+(m4.condor?.http_status||'unverified')+' | M4 Hummingbot: '+(m4.hummingbot?.http_status||'unverified');
+  byId('m2status').textContent=m2.status==='VERIFIED_REPLAY'?
+   m2.input_rows+' observations. Receipt: '+m2.as_of+' ('+number(m2.receipt_age_seconds,0)+' seconds old). '+m2.phase:
+   'M2 evidence is uncheckable. No fresh score is claimed.';
+  byId('m2rows').replaceChildren();
+  for(const [strategy,group] of Object.entries(m2.strategy_groups||{})){
+   const tr=document.createElement('tr');
+   for(const text of [strategy,group.usable_cases+'/'+group.expected_cases,number(group.normalized_virtual_start_total,2),
+    number(group.normalized_virtual_pnl_total),String(group.simulated_fills)]){
+    const td=document.createElement('td');td.textContent=text;tr.append(td);
+   }byId('m2rows').append(tr);
+  }
+  byId('m4status').textContent=out.status==='OBSERVED'?
+   'Last resolved outcome: '+(out.latest_resolved_at||'unknown')+'. Malformed lines: '+out.malformed_json_lines:
+   'M4 evidence is uncheckable. A disconnected Mac is not an empty portfolio.';
+  byId('m4metrics').textContent='Valid outcomes: '+(score.settled_outcomes??'unknown')+' | Net bps sum: '+number(score.net_bps_total,3)+
+   ' | Win rate: '+(typeof score.cost_adjusted_win_rate==='number'?number(100*score.cost_adjusted_win_rate,2)+'%':'unknown');
+  byId('time').textContent='Readout generated: '+data.generated_at+' | View refreshed: '+new Date().toISOString();
+  byId('hash').textContent='M2 receipt SHA-256: '+(m2.receipt_sha256||'unverified');
+ }catch(error){byId('health').textContent='Refresh failed. Any displayed results are historical, not a current check.';}
+}
+byId('refresh').onclick=refresh;refresh();setInterval(refresh,60000);
+</script></body></html>

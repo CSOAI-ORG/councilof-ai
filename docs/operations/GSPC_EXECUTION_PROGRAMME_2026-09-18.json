@@ -1,0 +1,1844 @@
+{
+  "schema": "csoai.execution-programme/1",
+  "version": "2026-09-18.1",
+  "classification": "PRIVATE_EXECUTION_SUPPLEMENT",
+  "authority_document": "docs/blueprints/MASTER_CONSOLIDATION_AND_EXECUTION_2026-09-04.md",
+  "claim_ledger": "docs/handoff/HERMES_CLAIM_EVIDENCE_LEDGER_2026-09-04.md",
+  "not_a_new_lifecycle_or_scheduler": true,
+  "objective": "One consequential claim becomes scoped, reproducible, correctable evidence and a useful delivered outcome; expansion follows measured demand and reliability.",
+  "phases": [
+    {
+      "id": "P0",
+      "title": "Control, baseline and consolidation",
+      "exit_intent": "One evidence ledger, one lifecycle, explicit scope, rights and ownership."
+    },
+    {
+      "id": "P1",
+      "title": "Release closure",
+      "exit_intent": "A reproducible candidate, correct runtime, complete route audit and authorised production readback."
+    },
+    {
+      "id": "P2",
+      "title": "Inspector and user journeys",
+      "exit_intent": "A stranger can find, understand, inspect, verify, challenge and retrieve scoped evidence."
+    },
+    {
+      "id": "P3",
+      "title": "Living measurement",
+      "exit_intent": "Material changes create bounded, authorised work with independent review and preserved history."
+    },
+    {
+      "id": "P4",
+      "title": "CARE, human evidence and improvement",
+      "exit_intent": "Consent, human evidence and model-change review without fabricated trust or self-promotion."
+    },
+    {
+      "id": "P5",
+      "title": "Commercial RAS delivery",
+      "exit_intent": "An external buyer purchases a defined deliverable, receives it and can verify its scope."
+    },
+    {
+      "id": "P6",
+      "title": "Public distribution and engagement",
+      "exit_intent": "Useful approved evidence earns discovery, qualified enquiries and repeat use."
+    },
+    {
+      "id": "P7",
+      "title": "Expansion and continuous improvement",
+      "exit_intent": "Expand only after reliability, reproducibility, demand and unit economics are evidenced."
+    }
+  ],
+  "lanes": [
+    {
+      "id": "release",
+      "title": "Release/integration",
+      "rule": "One writer for a given checkout; isolated tests; no release without approval."
+    },
+    {
+      "id": "evidence",
+      "title": "Measurement/inspection",
+      "rule": "Pinned inputs; reviewer separation; no grade from a disclosure or signature alone."
+    },
+    {
+      "id": "experience",
+      "title": "Inspector/user/agent experience",
+      "rule": "One canonical Dashboard and request identity across surfaces."
+    },
+    {
+      "id": "operations",
+      "title": "Operations/data",
+      "rule": "Reuse existing observer, queue, STOP, budgets and private fleet entrypoint."
+    },
+    {
+      "id": "commercial",
+      "title": "Commercial delivery",
+      "rule": "No public prices; free verification; owner-issued quote/invoice; no agent wallets."
+    },
+    {
+      "id": "research",
+      "title": "Research/distribution",
+      "rule": "Primary sources; rights review; approved email batches only; no publication until release gates."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "C01",
+      "phase": "P0",
+      "lane": "release",
+      "title": "Freeze the release input set",
+      "deliverable": "Revision and dirty-file digest manifest, including source and producer versions",
+      "acceptance": "The selected source bytes can be reproduced; concurrent changes are detected before acceptance or release",
+      "reuse": "Existing v4 recovery manifest and master consolidation blueprint",
+      "depends_on": [],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "release",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "C02",
+      "phase": "P0",
+      "lane": "operations",
+      "title": "Reconcile execution authority",
+      "deliverable": "Dated current-state supplement in the existing claim-to-evidence ledger",
+      "acceptance": "Older quantities remain historical; latest receipts do not claim production or grant authority",
+      "reuse": "Existing master blueprint, claim ledger and private fleet registry",
+      "depends_on": [],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "operations",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "C03",
+      "phase": "P0",
+      "lane": "research",
+      "title": "Mine reusable assets and rights",
+      "deliverable": "Reuse map with source, licence, dataset rights, public/private classification and disposition",
+      "acceptance": "No secret, raw personal data or unlicensed dataset enters a public pack",
+      "reuse": "Existing Inspect adoption decision, growth blueprint, licensed code and retained artefacts",
+      "depends_on": [],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "research",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "C04",
+      "phase": "P0",
+      "lane": "operations",
+      "title": "Bind resource and action budgets",
+      "deliverable": "Per-task compute, subrequest, concurrency and escalation limits",
+      "acceptance": "No duplicate scheduler, unbounded re-fetch, model spend or privileged action; STOP remains effective",
+      "reuse": "Existing hourly observer, six-hour fetch gate, source pin, queue and fleet entrypoint",
+      "depends_on": [
+        "C02"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "operations",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "C05",
+      "phase": "P0",
+      "lane": "release",
+      "title": "Verify selected-change recovery",
+      "deliverable": "Readback report of the selected release archive on both hosts",
+      "acceptance": "Digest-check every selected member; record that this is not a full estate backup",
+      "reuse": "Existing v4 package and two-host verification",
+      "depends_on": [
+        "C01"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "release",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "R01",
+      "phase": "P1",
+      "lane": "release",
+      "title": "Reproduce clean dependencies",
+      "deliverable": "Isolated clean lockfile installation and dependency provenance receipt",
+      "acceptance": "Install succeeds without changing shared runtime; lifecycle scripts and licences reviewed",
+      "reuse": "Existing package-lock.json and isolated pod candidate",
+      "depends_on": [
+        "C01",
+        "C04"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "release",
+      "evidence": [
+        {
+          "path": "v6/clean-install-final.json",
+          "sha256": "de144b92517791aba18a182e6a530a2c222a5f7444f41f35ba42d5c088f17dd3",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "exit_code"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "initial_node_modules_present"
+              ],
+              "equals": false
+            },
+            {
+              "path": [
+                "lifecycle_scripts"
+              ],
+              "equals": "DISABLED"
+            }
+          ],
+          "scope_note": "Fresh isolated lockfile installation only. Native install hooks were disabled; a dependency licence inventory is retained, not legal clearance."
+        }
+      ],
+      "status": "EVIDENCED_LOCAL_SCOPE"
+    },
+    {
+      "id": "R02",
+      "phase": "P1",
+      "lane": "release",
+      "title": "Bind full tests to final source",
+      "deliverable": "Types, API/client suite and build receipts for the frozen source set",
+      "acceptance": "Zero new errors; retained failures not hidden; counts tied to exact input manifest",
+      "reuse": "Existing 1,043 API and 1,324 client tests, type checks, build scripts",
+      "depends_on": [
+        "R01"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "release",
+      "evidence": [
+        {
+          "path": "v11-type-closure/closure-acceptance.json",
+          "sha256": "90c854cdcf7a6718f0155b664f99fa80e8f859cdf93f6e97e732ececd2951316",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "tests",
+                "numPassedTests"
+              ],
+              "equals": 2573
+            },
+            {
+              "path": [
+                "tests",
+                "numFailedTests"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "changed_during_run"
+              ],
+              "equals": []
+            },
+            {
+              "path": [
+                "client_errors"
+              ],
+              "equals": 134
+            }
+          ],
+          "scope_note": "Exact private source-bound suite. Test count includes24 batches replacing one historical-corpus check; all2377cards still tested by both implementations. Whole-client compile still has134legacy diagnostics; no types suppressed or source files excluded."
+        }
+      ],
+      "status": "EVIDENCED_LOCAL_SCOPE",
+      "previous_evidence": [
+        {
+          "path": "v6/closure-reproduction.json",
+          "sha256": "6b13c1d9246df72489ee0221c2d08fe8e1cbfe9395b3de57379e57cf67e9a5d1",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "tests",
+                "numPassedTests"
+              ],
+              "equals": 2370
+            },
+            {
+              "path": [
+                "tests",
+                "numFailedTests"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "frontend_asset_changes_since_render_input"
+              ],
+              "equals": []
+            }
+          ],
+          "scope_note": "Fresh-lockfile API/client suites, types and client/server builds passed; exact source manifest retained. No production release implied."
+        },
+        {
+          "path": "v7/final-source-bound-acceptance.json",
+          "sha256": "9280333b3eef6800604fa1672b9045d001e9b1cdb90f55cea703a875333687ab",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "tests",
+                "numPassedTests"
+              ],
+              "equals": 2413
+            },
+            {
+              "path": [
+                "tests",
+                "numFailedTests"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "files_changed_during_tests"
+              ],
+              "equals": []
+            }
+          ],
+          "scope_note": "Final source-bound API/client run in the fresh-lockfile candidate. Earlier scheduling-sensitive parity failure is retained; no validity assertions or timeout were removed."
+        },
+        {
+          "path": "v8/source-bound-acceptance.json",
+          "sha256": "c45e87136deda3bdf132546621af1d496a0660afeb8e1dd956c78b2d0a5f6d61",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "tests",
+                "numPassedTests"
+              ],
+              "equals": 2425
+            },
+            {
+              "path": [
+                "tests",
+                "numFailedTests"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "changed_during_run"
+              ],
+              "equals": []
+            }
+          ],
+          "scope_note": "Exact private source manifest, full API/client suite with no edits during run. It is not production execution."
+        },
+        {
+          "path": "v10/closure-source-acceptance.json",
+          "sha256": "a6bbf2af4e71558f3fa80f814753a389f9627149318f9083d287d146fe7754d7",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            }
+          ],
+          "scope_note": "Full API/client suite:2497 passed, no source changes during the run. Full client type debt remains203; the ceiling was tightened, not bypassed."
+        }
+      ]
+    },
+    {
+      "id": "R03",
+      "phase": "P1",
+      "lane": "release",
+      "title": "Compile the actual Pages Worker",
+      "deliverable": "Wrangler-compiled JavaScript/Wasm and digest manifest",
+      "acceptance": "Installed Pages compiler exits zero; dependencies resolved; no remote deployment",
+      "reuse": "Existing Pages Functions and Wrangler compiler",
+      "depends_on": [],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "release",
+      "evidence": [
+        {
+          "path": "v8/platform-compile.json",
+          "sha256": "a7c5818c926b1d407323b67206bea83f175f363e71be4a59010262c6442e3681",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "exit_code"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "public_deployment"
+              ],
+              "equals": false
+            }
+          ],
+          "scope_note": "Current Functions source compiles with actual installed Wrangler in isolated no-network/no-credential scope."
+        }
+      ],
+      "status": "EVIDENCED_LOCAL_SCOPE",
+      "previous_evidence": [
+        {
+          "path": "v5/functions-platform-compile-final.json",
+          "sha256": "a44788745509a2e569190fdc9d80a3d4482f0ea4a9d35b38e20b3f0bbc2ac0dd",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "exit_code"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "public_deployment"
+              ],
+              "equals": false
+            }
+          ],
+          "scope_note": "Actual installed Wrangler Pages compiler, isolated source tree with source dependencies, no network or deployment."
+        }
+      ]
+    },
+    {
+      "id": "R04",
+      "phase": "P1",
+      "lane": "release",
+      "title": "Exercise compiled Worker locally",
+      "deliverable": "Local workerd acceptance report against actual compiled bytes",
+      "acceptance": "Board, cache, missing axes, regulatory view, lab asset, MCP and missing-secret rejection behave as specified",
+      "reuse": "Actual compiled Worker, installed Miniflare/workerd",
+      "depends_on": [
+        "R03"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "release",
+      "evidence": [
+        {
+          "path": "v10/native-storage-final-run/native-storage-acceptance.json",
+          "sha256": "4077b486d125360aedb9fdd2ff3a1209980b38592bea28f036030f9378987482",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            }
+          ],
+          "scope_note": "Current compiled Worker with synthetic local Workers KV:12 checks, including restart and conflicts. This does not establish global consistency, actual customer acceptance or production settlement."
+        }
+      ],
+      "status": "EVIDENCED_LOCAL_SCOPE",
+      "previous_evidence": [
+        {
+          "path": "v5/workerd-acceptance.json",
+          "sha256": "218bbabe5ccb387edc246b6647c7393ba5aa28a54e908b1e3682de3914e22b9d",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "network_requests_sent"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "public_deployment"
+              ],
+              "equals": false
+            },
+            {
+              "path": [
+                "production_runtime_verified"
+              ],
+              "equals": false
+            }
+          ],
+          "scope_note": "Nine local workerd checks against the compiled Pages worker; fixture asset/subrequest bindings, no production resources or credentials."
+        },
+        {
+          "path": "v8/workerd-acceptance.json",
+          "sha256": "a12d018e97bb96d73cea3784c1ceb3e6a14a654b261d879b33b8a30640f7e8de",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "network_requests_sent"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "production_runtime_verified"
+              ],
+              "equals": false
+            }
+          ],
+          "scope_note": "Fourteen local compiled-Worker checks, including truthful discovery and legacy-route behaviour. No production bindings or live external services."
+        }
+      ]
+    },
+    {
+      "id": "R05",
+      "phase": "P1",
+      "lane": "experience",
+      "title": "Complete route prerender",
+      "deliverable": "One fresh route report and snapshots from the exact release build",
+      "acceptance": "All intended routes covered; thin/error/client-only paths correctly classified; real query strings retained",
+      "reuse": "Existing prerender-run and check-prerender scripts",
+      "depends_on": [
+        "R02",
+        "R04"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "experience",
+      "evidence": [
+        {
+          "path": "v11-type-closure/packaged-gates.json",
+          "sha256": "0514cdd142ab67274d9e9ffee79e0507b9f825a989e9ce85190bd1323b5601b7",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "routes"
+              ],
+              "equals": 663
+            },
+            {
+              "path": [
+                "errors"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "thin"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "physical_files"
+              ],
+              "equals": 19916
+            }
+          ],
+          "scope_note": "Full private render and final alias/launcher packaging. Thirteen selected post-packaging gates pass; no production availability or independent user acceptance implied."
+        }
+      ],
+      "status": "EVIDENCED_LOCAL_SCOPE",
+      "previous_evidence": [
+        {
+          "path": "v6/release-gates-closure.json",
+          "sha256": "747753766319da5f7a46f9a54dd8d53850a5ecb0c926f0c3547ec9fbdbfa97bb",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "routes_discovered"
+              ],
+              "equals": 663
+            },
+            {
+              "path": [
+                "render_errors"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "thin"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "public_deployment"
+              ],
+              "equals": false
+            }
+          ],
+          "scope_note": "Complete private offline render:640 content snapshots,14 client-only shells,9 honest404 strings. Sources requiring external service access remained explicitly unavailable; production acceptance is separate."
+        },
+        {
+          "path": "v7/release-checks-final.json",
+          "sha256": "fe7cbd4d023702bffdd10a5d879822940248fb2796bf2c503b6eb0b68ab96bfd",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "routes"
+              ],
+              "equals": 663
+            },
+            {
+              "path": [
+                "errors"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "thin"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "public_deployment"
+              ],
+              "equals": false
+            }
+          ],
+          "scope_note": "Complete v7 private render:640 content snapshots,14 client-only shells,9 honest404 strings. Local workerd data bindings; public availability is not established."
+        },
+        {
+          "path": "v8/release-gates.json",
+          "sha256": "a255f13d254dc2794d107e878e0e126497769a1ad8b957dd39ea8c4d3d04cbae",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            },
+            {
+              "path": [
+                "routes"
+              ],
+              "equals": 663
+            },
+            {
+              "path": [
+                "errors"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "thin"
+              ],
+              "equals": 0
+            },
+            {
+              "path": [
+                "public_deployment"
+              ],
+              "equals": false
+            }
+          ],
+          "scope_note": "Full rendered candidate:640 content snapshots,14 client-only shells and9 honest nonroutes. Current private data binding; public availability is not established."
+        },
+        {
+          "path": "v10/packaged-gates.json",
+          "sha256": "959d1cf4b9266ce67e31f4fab12871b3cb28eaf65e3a72f2bb4c404e962123e4",
+          "assertions": [
+            {
+              "path": [
+                "state"
+              ],
+              "equals": "PASS"
+            }
+          ],
+          "scope_note": "Completed private render and actual alias/launcher packaging:663 route records,19916files,13 final checks. Not anonymous production acceptance."
+        }
+      ]
+    },
+    {
+      "id": "R06",
+      "phase": "P1",
+      "lane": "release",
+      "title": "Check final asset and route capacity",
+      "deliverable": "Post-prerender physical inventory, links, structured-data and canonical URL report",
+      "acceptance": "Final physical limits pass; old archived URLs restore exact bytes; no stale snapshot or private page indexed",
+      "reuse": "Existing physical file guard, historical archive route, link and metadata gates",
+      "depends_on": [
+        "R05"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "release",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED",
+      "progress_note": "Final packaged v11 tree remains19,916files:84headroom under20,000. Capacity did not grow but headroom is still narrow. Current zero-exception machine-reference, content, facts, root and artifact checks pass in private; this is not all-URL live HTTP acceptance."
+    },
+    {
+      "id": "R07",
+      "phase": "P1",
+      "lane": "evidence",
+      "title": "Exercise production-shaped storage contracts",
+      "deliverable": "Local bindings contract tests plus authorised production configuration review",
+      "acceptance": "Missing/late/duplicate storage and settlement states cannot report success; exact scope survives retries",
+      "reuse": "RAS tests, payment boundaries, compiled Worker",
+      "depends_on": [
+        "R04"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED",
+      "progress_note": "The existing contact and report-enquiry routes were exercised in local native KV and the real browser, including lost-response retry. This is one storage-contract slice, not paid settlement, global exactly-once behaviour or customer fulfilment."
+    },
+    {
+      "id": "R08",
+      "phase": "P1",
+      "lane": "experience",
+      "title": "Review anonymous inspector and accessibility journeys",
+      "deliverable": "Desktop/mobile, keyboard and screen-reader findings with resolution record",
+      "acceptance": "Critical paths operable; no data hidden behind colour alone; no invented WCAG certification",
+      "reuse": "Existing Dashboard, 18 built-app checks and accessibility statement",
+      "depends_on": [
+        "R05"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "experience",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED",
+      "progress_note": "v11 component acceptance: disabled Slot links reject pointer and keyboard activation; practice quizzes count one answer per question and reject missing inputs. Twelve synthetic browser checks pass. Retired course and regulator routes remain under ContentReviewNotice; no new learner credential, independent human acceptance or certification is inferred. Ten existing packaged verifier/history journey checks also pass."
+    },
+    {
+      "id": "R09",
+      "phase": "P1",
+      "lane": "release",
+      "title": "Prepare rollback and release manifest",
+      "deliverable": "One candidate release manifest and rollback rehearsal",
+      "acceptance": "Previous served revision and evidence remain recoverable; no unsigned candidate masquerades as published",
+      "reuse": "Existing single-writer release path and root gates",
+      "depends_on": [
+        "R06",
+        "R07",
+        "R08",
+        "C05"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "release",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED",
+      "progress_note": "Private content-addressed selector rehearsal restored exact v6 bytes after selecting v7 and simulated an interrupted write. This is not production rollback, live traffic switching or release approval."
+    },
+    {
+      "id": "R10",
+      "phase": "P1",
+      "lane": "release",
+      "title": "Obtain explicit release authority",
+      "deliverable": "Owner approval bound to candidate manifest and action scope",
+      "acceptance": "17 September hold explicitly lifted for the specified GitHub/publication actions; no implied consent",
+      "reuse": "Existing owner-controlled release policy",
+      "depends_on": [
+        "R09"
+      ],
+      "required_approvals": [
+        "publish",
+        "push_github"
+      ],
+      "priority": "P0",
+      "completion_scope": "PUBLIC",
+      "collision_group": "release",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "R11",
+      "phase": "P1",
+      "lane": "release",
+      "title": "Publish and independently read back",
+      "deliverable": "One authorised release with anonymous external readback",
+      "acceptance": "Served revision, critical routes, lab census, original proof URLs and API/MCP match candidate; failure rolls back",
+      "reuse": "GHA on master only; approved mirror paths",
+      "depends_on": [
+        "R10"
+      ],
+      "required_approvals": [
+        "publish",
+        "push_github"
+      ],
+      "priority": "P0",
+      "completion_scope": "PUBLIC",
+      "collision_group": "release",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "I01",
+      "phase": "P2",
+      "lane": "experience",
+      "title": "Define the three role journeys",
+      "deliverable": "Inspector, subject owner and public-reader acceptance scripts",
+      "acceptance": "Each role understands what is measured, unavailable, disputed and outside scope without assistance",
+      "reuse": "Canonical Dashboard board and evidence workspace",
+      "depends_on": [],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "experience",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "I02",
+      "phase": "P2",
+      "lane": "evidence",
+      "title": "Bind subject and deployment identity",
+      "deliverable": "Entity-model-system-deployment-instrument relationship contract",
+      "acceptance": "Model version, provider, bank version and deployment context remain distinct; aliases do not double-count",
+      "reuse": "Axis registry, lab census, disclosure registry, RAS request scope",
+      "depends_on": [
+        "C03"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "I03",
+      "phase": "P2",
+      "lane": "evidence",
+      "title": "Extend control evidence mapping",
+      "deliverable": "Versioned partial crosswalk with evidence requirements and reviewer qualification",
+      "acceptance": "Mapping is not a compliance verdict; applicability has a qualified accountable owner",
+      "reuse": "One shared NIST/EU/CARE map under functions/_lib",
+      "depends_on": [
+        "I02"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "I04",
+      "phase": "P2",
+      "lane": "experience",
+      "title": "Expose inspection trace",
+      "deliverable": "Source-to-claim-to-run-to-card path with exact versions and missing evidence",
+      "acceptance": "Inspector reaches original evidence, sample denominator and exclusions; no signature implies truth",
+      "reuse": "Existing card verifiers, evidence panel, signed/raw artefact families",
+      "depends_on": [
+        "I01",
+        "I02"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "experience",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "I05",
+      "phase": "P2",
+      "lane": "evidence",
+      "title": "Verify replay and evidence bundle",
+      "deliverable": "Portable, versioned inspector bundle with offline integrity and reproducibility checks",
+      "acceptance": "Tampered/missing/expired evidence is rejected; private inputs are permissioned or redacted",
+      "reuse": "Existing Inspect adoption, verifier, RAS bundle and retained raw evidence",
+      "depends_on": [
+        "I04",
+        "C03"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED",
+      "progress_note": "Twelve existing unsigned source packets now also verify in the real browser UI and standalone offline HTML. Python/browser counts and digests agree; 43 boundary tests pass. This establishes internal consistency, not publisher authentication, live freshness or independent human acceptance."
+    },
+    {
+      "id": "I06",
+      "phase": "P2",
+      "lane": "experience",
+      "title": "Add challenge and correction workflow",
+      "deliverable": "Submission, response, independent review and supersession history",
+      "acceptance": "Original observation preserved; corrections visible; conflict declarations and response deadlines recorded",
+      "reuse": "Existing correction records and evidence intake",
+      "depends_on": [
+        "I04"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "experience",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "I07",
+      "phase": "P2",
+      "lane": "experience",
+      "title": "Unify web and agent semantics",
+      "deliverable": "REST/MCP/SDK response parity tests and failure examples",
+      "acceptance": "One request ID and evidence grammar; authentication, permission and status differences explicit",
+      "reuse": "Existing 13-tool public MCP and private operations tools",
+      "depends_on": [
+        "I02",
+        "R04"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "experience",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "I08",
+      "phase": "P2",
+      "lane": "experience",
+      "title": "Polish interaction and accessibility",
+      "deliverable": "Ten practical UX-rule checks plus three role-based observed tests",
+      "acceptance": "No duplicate controls, keyboard traps or blocked mobile actions; progress and recovery visible",
+      "reuse": "Existing shared workspace, responsive shell and tests",
+      "depends_on": [
+        "I01",
+        "I04",
+        "R08"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "experience",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "I09",
+      "phase": "P2",
+      "lane": "evidence",
+      "title": "Record inspector acceptance",
+      "deliverable": "Scoped acceptance evidence from an independent reviewer or actual target user",
+      "acceptance": "An actual person can replay a relevant claim and identify its limits; no internal click-through treated as customer validation",
+      "reuse": "I01–I08 scripts and bundle",
+      "depends_on": [
+        "I05",
+        "I06",
+        "I07",
+        "I08"
+      ],
+      "required_approvals": [
+        "independent_reviewer"
+      ],
+      "priority": "P1",
+      "completion_scope": "HUMAN",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "M01",
+      "phase": "P3",
+      "lane": "operations",
+      "title": "Make cohort coverage explicit",
+      "deliverable": "Typed coverage manifest for 23 axes and actual finance/organisation cohorts",
+      "acceptance": "16 XRPL receipt rows, 26 SWIFT names, 425 index/supply identities and all denominators remain separately labelled",
+      "reuse": "Existing observer and source coverage records",
+      "depends_on": [
+        "C02"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "operations",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "M02",
+      "phase": "P3",
+      "lane": "evidence",
+      "title": "Inspect organisation claims systematically",
+      "deliverable": "Dated evidence matrix for labs, AI vendors, humanoid organisations and papers",
+      "acceptance": "Distinguish claimed policy, public implementation evidence, independently tested effectiveness and unknowns",
+      "reuse": "Existing ten-provider census and public disclosures",
+      "depends_on": [
+        "I02",
+        "C03"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "M03",
+      "phase": "P3",
+      "lane": "operations",
+      "title": "Harden ingestion and materiality triage",
+      "deliverable": "Versioned normalisation, source trust and change-review record",
+      "acceptance": "Untrusted page instructions never control agents; dynamic bytes not confused with policy changes",
+      "reuse": "Existing immutable blobs, normalised diff and review queue",
+      "depends_on": [
+        "M01",
+        "C04"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "operations",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "M04",
+      "phase": "P3",
+      "lane": "operations",
+      "title": "Connect reviewed changes to scoped RAS requests",
+      "deliverable": "Idempotent change-to-request dispatcher with approvals and cost ceilings",
+      "acceptance": "Same source change does not create duplicate paid runs; request retains its trigger and method",
+      "reuse": "Existing observer and source-evidence delivery; extend, do not add scheduler",
+      "depends_on": [
+        "M03",
+        "I07"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "operations",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "M05",
+      "phase": "P3",
+      "lane": "evidence",
+      "title": "Finish the existing Inspect adoption gate",
+      "deliverable": "Ten-fixture cross-verification against the existing gold pipeline",
+      "acceptance": "Same inputs, configuration and scoring produce explained equivalent outputs; disagreement retained",
+      "reuse": "28 August Inspect adoption decision, existing benchmark runners",
+      "depends_on": [
+        "C03",
+        "I02"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "M06",
+      "phase": "P3",
+      "lane": "evidence",
+      "title": "Run a bounded real measurement pilot",
+      "deliverable": "One approved model/system/instrument run and reproducibility report",
+      "acceptance": "Frozen bank, model/provider version, raw attempts and exclusions preserved; sample size not inflated by retries",
+      "reuse": "Inspect plus approved existing 3090 executor",
+      "depends_on": [
+        "M04",
+        "M05"
+      ],
+      "required_approvals": [
+        "measurement_execution"
+      ],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "M07",
+      "phase": "P3",
+      "lane": "evidence",
+      "title": "Admit comparable results",
+      "deliverable": "Independent replay, uncertainty, contamination and conflict assessment",
+      "acceptance": "No aggregate score across incompatible instruments; point ordering not a statistically separated winner",
+      "reuse": "Existing comparison rules, reviewer and correction records",
+      "depends_on": [
+        "M06"
+      ],
+      "required_approvals": [
+        "independent_reviewer"
+      ],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "M08",
+      "phase": "P3",
+      "lane": "operations",
+      "title": "Version living results without rewriting history",
+      "deliverable": "Freshness, expiry and supersession projections",
+      "acceptance": "Fetched-at does not reset measured-at; old revisions remain inspectable; stale views labelled",
+      "reuse": "Existing cards, source dates, proofs and current-state projection",
+      "depends_on": [
+        "M07"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "operations",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "M09",
+      "phase": "P3",
+      "lane": "evidence",
+      "title": "Complete optional credential/witness chain",
+      "deliverable": "Admitted result with separately verified signature, root and optional timestamp",
+      "acceptance": "Each state independently checked; signing a record does not confer validity or legal approval",
+      "reuse": "Existing isolated signer, root and witness gates",
+      "depends_on": [
+        "M07"
+      ],
+      "required_approvals": [
+        "sign"
+      ],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "H01",
+      "phase": "P4",
+      "lane": "evidence",
+      "title": "Operationalise the Covenant and Charter",
+      "deliverable": "Principle-to-risk-to-test-to-human-decision matrix",
+      "acceptance": "No new article or moral guarantee invented; agency, useful help, care and proportionality separately observable",
+      "reuse": "Maternal Covenant, Charter, CARE controls and articles",
+      "depends_on": [
+        "I02",
+        "C03"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "H02",
+      "phase": "P4",
+      "lane": "evidence",
+      "title": "Approve the human study",
+      "deliverable": "Protocol, consent, recruitment, independence and retention plan",
+      "acceptance": "Qualified protocol and participants exist; purpose/withdrawal/retention understood; no synthetic approvals",
+      "reuse": "Existing offline review-admission validator",
+      "depends_on": [
+        "H01"
+      ],
+      "required_approvals": [
+        "human_protocol"
+      ],
+      "priority": "P1",
+      "completion_scope": "HUMAN",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "H03",
+      "phase": "P4",
+      "lane": "experience",
+      "title": "Connect admitted human evidence to cups",
+      "deliverable": "Scoped participant/evaluator receipt projection",
+      "acceptance": "Only eligible non-duplicate observations count; failures/expiry/revocations remain visible; no universal trust score",
+      "reuse": "Existing cup UI and signed-consent validator",
+      "depends_on": [
+        "H02"
+      ],
+      "required_approvals": [
+        "participant_consent",
+        "independent_reviewer"
+      ],
+      "priority": "P1",
+      "completion_scope": "HUMAN",
+      "collision_group": "experience",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "H04",
+      "phase": "P4",
+      "lane": "experience",
+      "title": "Connect change-driven training",
+      "deliverable": "Versioned lesson and assessment linked to a relevant change",
+      "acceptance": "Practice and completion never imply legal compliance or certification; assessments expire or require revision",
+      "reuse": "Existing gamification and learning panes",
+      "depends_on": [
+        "H01",
+        "M03"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "experience",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "H05",
+      "phase": "P4",
+      "lane": "evidence",
+      "title": "Gate model-improvement candidates",
+      "deliverable": "Shadow comparison, held-out set, regression criteria and rollback package",
+      "acceptance": "No training/test overlap or self-grading promotion; losses and costs visible; independent acceptance required",
+      "reuse": "Existing evolve/fix code and promotion validator",
+      "depends_on": [
+        "M05",
+        "H01"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "H06",
+      "phase": "P4",
+      "lane": "operations",
+      "title": "Rehearse controlled promotion and rollback",
+      "deliverable": "Dry-run promotion plan, resource limits and rollback acceptance",
+      "acceptance": "Experiment cannot alter authority, change policy, access secrets or replace primary worker without approval",
+      "reuse": "Existing 3090 capacity and owner-controlled worker route",
+      "depends_on": [
+        "H05"
+      ],
+      "required_approvals": [
+        "model_promotion"
+      ],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "operations",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "B01",
+      "phase": "P5",
+      "lane": "commercial",
+      "title": "Package one narrow paid deliverable",
+      "deliverable": "Private scope sheet: buyer problem, inputs, output, exclusions and acceptance",
+      "acceptance": "A buyer can understand what is purchased; verification remains free; no public price or favourable-score promise",
+      "reuse": "Existing RAS, evidence bundle, private invoice handoff",
+      "depends_on": [],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "commercial",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "B02",
+      "phase": "P5",
+      "lane": "commercial",
+      "title": "Define the first buyer profile",
+      "deliverable": "Prioritised target roles and written discovery questions",
+      "acceptance": "Known relevant enquiry or permissioned lead, clear decision/use and budget owner; no invented customer",
+      "reuse": "Existing qualified inbound and owner-approved commercial records",
+      "depends_on": [
+        "B01"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "commercial",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "B03",
+      "phase": "P5",
+      "lane": "commercial",
+      "title": "Model real delivery economics",
+      "deliverable": "Private effort/compute/review/storage quotation worksheet",
+      "acceptance": "Owner sets price privately; contribution margin measured using actual costs; no guessed revenue",
+      "reuse": "Existing SKU and invoice policy",
+      "depends_on": [
+        "B01",
+        "C04"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "commercial",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "B04",
+      "phase": "P5",
+      "lane": "commercial",
+      "title": "Prepare three acceptance-led examples",
+      "deliverable": "An organisational-evidence review, one system test and one change-monitoring renewal example",
+      "acceptance": "Each example states which components exist, are pilot-only or need permission; not offered as completed work",
+      "reuse": "Existing inspector journey and source snapshots",
+      "depends_on": [
+        "B01",
+        "I04"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "commercial",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "B05",
+      "phase": "P5",
+      "lane": "commercial",
+      "title": "Qualify a real pilot in writing",
+      "deliverable": "Named legal entity, narrow scope, authority and acceptance agreement",
+      "acceptance": "Written qualification rather than calls; permanent suppressions checked; no spam or invented demand",
+      "reuse": "Existing email-only owner workflow",
+      "depends_on": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "required_approvals": [
+        "email"
+      ],
+      "priority": "P0",
+      "completion_scope": "COMMERCIAL",
+      "collision_group": "commercial",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "B06",
+      "phase": "P5",
+      "lane": "commercial",
+      "title": "Separate contracting, payment and evidence",
+      "deliverable": "Contract/quote/settlement/entitlement records bound to the same request",
+      "acceptance": "Owner executes invoice or approved rail; internal transfers excluded from outside revenue; no agent wallet",
+      "reuse": "Existing RAS, Paddle/x402 tests and revenue classification",
+      "depends_on": [
+        "B05",
+        "R07"
+      ],
+      "required_approvals": [
+        "commercial_contract"
+      ],
+      "priority": "P1",
+      "completion_scope": "COMMERCIAL",
+      "collision_group": "commercial",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "B07",
+      "phase": "P5",
+      "lane": "evidence",
+      "title": "Deliver the paid pilot",
+      "deliverable": "Scope-locked execution, independent review and retrievable evidence",
+      "acceptance": "Output matches request; recipient can retrieve and verify; payment never changes assessment",
+      "reuse": "Existing queue, Inspect adoption, card/receipt infrastructure",
+      "depends_on": [
+        "B06",
+        "M07",
+        "I05"
+      ],
+      "required_approvals": [
+        "subject_access",
+        "independent_reviewer"
+      ],
+      "priority": "P0",
+      "completion_scope": "COMMERCIAL",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "B08",
+      "phase": "P5",
+      "lane": "commercial",
+      "title": "Verify cash, acceptance and margin",
+      "deliverable": "External payment, delivery acknowledgement, cost and refund reconciliation",
+      "acceptance": "Distinct external payer and collected cash evidenced; no test/self-funded settlement counted as a sale",
+      "reuse": "Existing revenue ledger and actual invoices/delivery receipts",
+      "depends_on": [
+        "B07"
+      ],
+      "required_approvals": [
+        "commercial_records"
+      ],
+      "priority": "P0",
+      "completion_scope": "COMMERCIAL",
+      "collision_group": "commercial",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "B09",
+      "phase": "P5",
+      "lane": "commercial",
+      "title": "Offer evidence-led renewal",
+      "deliverable": "Ongoing scoped monitoring and review agreement",
+      "acceptance": "Renewal delivers material changes within agreed service limits; source polling alone is not billed as remeasurement",
+      "reuse": "Existing observer plus reviewed-change dispatch",
+      "depends_on": [
+        "B08",
+        "M08"
+      ],
+      "required_approvals": [
+        "commercial_contract"
+      ],
+      "priority": "P1",
+      "completion_scope": "COMMERCIAL",
+      "collision_group": "commercial",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "D01",
+      "phase": "P6",
+      "lane": "research",
+      "title": "Prepare the first three evidence releases",
+      "deliverable": "Three useful briefs with source tables, method, limitations and one relevant action",
+      "acceptance": "One canonical artefact per finding; no rewritten competitor marketing, thin SEO variants or inflated counts",
+      "reuse": "Existing notes, lab census, baseline/missing-data lessons",
+      "depends_on": [
+        "C03",
+        "I04"
+      ],
+      "required_approvals": [],
+      "priority": "P0",
+      "completion_scope": "PRIVATE",
+      "collision_group": "research",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "D02",
+      "phase": "P6",
+      "lane": "experience",
+      "title": "Validate discovery metadata",
+      "deliverable": "Canonical URL, Dataset/DataCatalog, method, licence, dates and corrections links",
+      "acceptance": "Structured metadata matches visible data; no fabricated DOI, author, rating or regulator endorsement",
+      "reuse": "Existing structured-data, sitemap and canonical URL producers",
+      "depends_on": [
+        "D01",
+        "R06"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "experience",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "D03",
+      "phase": "P6",
+      "lane": "research",
+      "title": "Publish a small approved evidence batch",
+      "deliverable": "Reviewed releases on canonical public pages",
+      "acceptance": "Release hold lifted, rights cleared, facts linked to evidence and public routes actually work",
+      "reuse": "Existing single publication path",
+      "depends_on": [
+        "D01",
+        "D02",
+        "R11"
+      ],
+      "required_approvals": [
+        "publish"
+      ],
+      "priority": "P1",
+      "completion_scope": "PUBLIC",
+      "collision_group": "research",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "D04",
+      "phase": "P6",
+      "lane": "research",
+      "title": "Submit discovery notifications and read back",
+      "deliverable": "Sitemap/IndexNow submission and directory reconciliation receipts",
+      "acceptance": "Only owned verified URLs submitted after publication; indexed status checked separately from submission",
+      "reuse": "Existing domain/metadata paths; IndexNow host verification",
+      "depends_on": [
+        "D03"
+      ],
+      "required_approvals": [
+        "publish"
+      ],
+      "priority": "P1",
+      "completion_scope": "PUBLIC",
+      "collision_group": "research",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "D05",
+      "phase": "P6",
+      "lane": "operations",
+      "title": "Reconcile mirrors and machine distribution",
+      "deliverable": "Canonical-to-mirror manifest, versions and real tool/endpoint readback",
+      "acceptance": "HF/MCP/API/SDK docs agree with source; directory listing not counted as adoption",
+      "reuse": "Existing authorised mirror routes and API/tool registries",
+      "depends_on": [
+        "D03",
+        "I07"
+      ],
+      "required_approvals": [
+        "publish"
+      ],
+      "priority": "P1",
+      "completion_scope": "PUBLIC",
+      "collision_group": "operations",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "D06",
+      "phase": "P6",
+      "lane": "commercial",
+      "title": "Run a bounded approved email experiment",
+      "deliverable": "Small named-recipient batch, suppression check, rationale and outcome",
+      "acceptance": "Email only; no calls/LinkedIn; permanent do-not-contact honoured; no duplicate or automatic follow-up",
+      "reuse": "Existing owner-approved outreach ledger",
+      "depends_on": [
+        "D03",
+        "B02"
+      ],
+      "required_approvals": [
+        "email"
+      ],
+      "priority": "P1",
+      "completion_scope": "COMMERCIAL",
+      "collision_group": "commercial",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "D07",
+      "phase": "P6",
+      "lane": "operations",
+      "title": "Measure qualified use and conversions",
+      "deliverable": "Privacy-conscious events for evidence read, verify, scope request, acceptance and renewal",
+      "acceptance": "Filter internal/test traffic; distinguish views, verified retrieval, qualified demand and external payment",
+      "reuse": "Existing consent settings, analytics and request IDs",
+      "depends_on": [
+        "I07",
+        "B01"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "operations",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "D08",
+      "phase": "P6",
+      "lane": "research",
+      "title": "Review distribution experiments",
+      "deliverable": "Weekly ranked decisions to stop, improve or expand each channel",
+      "acceptance": "Citations/enquiries/repeat usage determine next batch; no promise of search ranking or virality",
+      "reuse": "D04–D07 outcomes and source-backed briefs",
+      "depends_on": [
+        "D04",
+        "D05",
+        "D06",
+        "D07"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "research",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "E01",
+      "phase": "P7",
+      "lane": "evidence",
+      "title": "Inspect benchmark quality",
+      "deliverable": "Versioned construct/provenance/contamination/reproducibility/conflict protocol",
+      "acceptance": "Evaluate each method fairly; separate CSOAI interpretation from reproduced results; right of response",
+      "reuse": "Existing benchmark-the-benchmarkers blueprint and primary methodology research",
+      "depends_on": [
+        "M07",
+        "I06"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "E02",
+      "phase": "P7",
+      "lane": "commercial",
+      "title": "Expand enterprise coverage by demand",
+      "deliverable": "Prioritised cohorts with explicit inclusion/exclusion and buyer need",
+      "acceptance": "Fortune lists, SMEs and public reports not treated as customers or audited entities by inclusion",
+      "reuse": "Existing entity registry and customer evidence",
+      "depends_on": [
+        "B08",
+        "M08"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "commercial",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "E03",
+      "phase": "P7",
+      "lane": "evidence",
+      "title": "Expand financial readers safely",
+      "deliverable": "Asset-chain-issuer identity and finality-specific reader acceptance",
+      "acceptance": "No double-counted supply, unsupported reserve claim or SWIFT membership-as-assurance; per-rail semantics preserved",
+      "reuse": "Existing 16 XRPL receipts, 26 SWIFT names, 425 asset registers",
+      "depends_on": [
+        "M01",
+        "M07"
+      ],
+      "required_approvals": [
+        "finance_reader_execution"
+      ],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "E04",
+      "phase": "P7",
+      "lane": "evidence",
+      "title": "Inspect humanoid deployments in context",
+      "deliverable": "Authorised safety-case review and controlled deployment test plan",
+      "acceptance": "Public announcements separated from tested interlocks, operator procedures and deployment evidence",
+      "reuse": "Existing 30 disclosure rows and machinery topic view",
+      "depends_on": [
+        "M02",
+        "M07"
+      ],
+      "required_approvals": [
+        "subject_access",
+        "qualified_safety_review"
+      ],
+      "priority": "P1",
+      "completion_scope": "HUMAN",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "E05",
+      "phase": "P7",
+      "lane": "experience",
+      "title": "Expand languages and jurisdiction packs",
+      "deliverable": "Translated UX and culturally/legally reviewed instruments",
+      "acceptance": "Translation quality and relevance tested; English benchmark accuracy not marketed as multilingual capability",
+      "reuse": "Existing UI and versioned policy packs",
+      "depends_on": [
+        "I09",
+        "M07"
+      ],
+      "required_approvals": [
+        "qualified_local_review"
+      ],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "experience",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "E06",
+      "phase": "P7",
+      "lane": "evidence",
+      "title": "Operate a public watchdog responsibly",
+      "deliverable": "Reports, provenance checks, privacy review, subject response and correction path",
+      "acceptance": "Allegations stay allegations until substantiated; safe submission; no unreviewed company safety ranking",
+      "reuse": "Existing watchdog, evidence intake and appeal workflow",
+      "depends_on": [
+        "I06",
+        "D03"
+      ],
+      "required_approvals": [
+        "publish"
+      ],
+      "priority": "P1",
+      "completion_scope": "PUBLIC",
+      "collision_group": "evidence",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "E07",
+      "phase": "P7",
+      "lane": "operations",
+      "title": "Operate recurring improvement review",
+      "deliverable": "Reliability, costs, relevance and failure-budget review",
+      "acceptance": "Retention/replay success, reviewer load and external value determine throughput; no perpetual unchecked loop",
+      "reuse": "Existing fleet status, observer and commercial evidence",
+      "depends_on": [
+        "B08",
+        "D07",
+        "M08"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "operations",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    },
+    {
+      "id": "E08",
+      "phase": "P7",
+      "lane": "research",
+      "title": "Refresh competitive research and roadmap",
+      "deliverable": "Dated primary-source capability map and small comparison experiments",
+      "acceptance": "Marketing claims labelled; unknown capabilities remain unknown; observations change priorities",
+      "reuse": "Research register and existing architecture supplement",
+      "depends_on": [
+        "D08",
+        "E01"
+      ],
+      "required_approvals": [],
+      "priority": "P1",
+      "completion_scope": "PRIVATE",
+      "collision_group": "research",
+      "evidence": [],
+      "status": "PLANNED_NOT_EXECUTED"
+    }
+  ],
+  "operating_rules": {
+    "max_active_task_per_lane": 1,
+    "one_writer_per_collision_group": true,
+    "verification_free": true,
+    "public_prices": false,
+    "email_only": true,
+    "calls": false,
+    "linkedin_outreach": false,
+    "agent_wallet": false,
+    "publication_hold_date": "2026-09-17",
+    "reviewed_scope_not_global_compliance": true
+  },
+  "milestone_targets_not_forecasts": {
+    "first_cycle": "One clearly scoped pilot acceptance, not a broad finished enterprise assurance claim",
+    "discovery_experiment": "Five relevant written conversations, three qualified scopes and one paid pilot are proposed test goals, not revenue predictions.",
+    "scale_condition": "Repeatable delivery, independent replay, positive contribution margin and demonstrated demand."
+  },
+  "known_baseline_scope": "v4 reports 2,367 API/client tests and full local builds. These are retained evidence, not rerun results for arbitrary future edits.",
+  "receipt_binding": {
+    "bound_at": "2026-09-18T10:33:19.919275+00:00",
+    "evidence_root_hint": "existing living-observatory operations directory",
+    "note": "R02/R05 now reference v11-type-closure scoped private evidence. Earlier evidence retained. Publishing, signing, wallet, email, human-admission and production authority remain unchanged.",
+    "updated_at": "2026-09-18T17:03:58.552351+00:00"
+  }
+}

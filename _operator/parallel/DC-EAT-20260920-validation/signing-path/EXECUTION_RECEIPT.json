@@ -1,0 +1,66 @@
+{
+  "schema": "csoai.measurement-signing-execution/1",
+  "recorded_at": "2026-09-20T03:33:27.907909+00:00",
+  "measurement_time": "2026-09-20T03:24:54Z",
+  "measurement_scope": "16 XRPL issuer-obligation rows; not model evaluations or reserve verification",
+  "measurement_replay": {
+    "status": "PASS",
+    "source_readbacks_matched": 16,
+    "merkle_proofs_verified": 31,
+    "tampered_leaf_controls_rejected": 31,
+    "source_negative_controls_rejected": 64,
+    "merkle_root": "0c6ad5c1083c48639db1df4df36ca12cbf6aea31d5e9f814b29a62b34264226c",
+    "network_used": false,
+    "private_keys_used": 0,
+    "official_board_signature_present": false,
+    "scope": "Exact captured issuer-obligation results and bytes only; no reserve assurance, model score or release approval"
+  },
+  "both_macs_same_replay": true,
+  "signing_request": {
+    "prepared_at": "2026-09-20T03:29:35.078260+00:00",
+    "measurement": "COMPLETE_FOR_DECLARED_SCOPE",
+    "source_evidence": "RETAINED_AND_REPLAYED",
+    "signing_preimage_sha256": "3a3efc05c15b7911fa9abffe84fd400c6086b5758bc53bc08bf28d1dc4cdda7d",
+    "signing_preimage_bytes": 1097,
+    "expected_signer": "did:web:csoai.org#board-attestation-1",
+    "signature": "ABSENT",
+    "sign_request_submitted": false,
+    "publisher_state": "BLOCKED_CALLER_AUTHORIZATION_AND_DEPLOYMENT",
+    "missing": "Authorized non-GitHub caller path to existing Cloudflare-held board signer; no replacement key created",
+    "public_root_modified": false
+  },
+  "published_signature_checks": [
+    {
+      "url": "https://councilof.ai/api/methodology",
+      "state": "VALID",
+      "sha256": "be46baca47b6f3e1d69075f21c5d29fd1090454571f35dc088fdc418442fdc6b"
+    },
+    {
+      "url": "https://councilof.ai/api/cross",
+      "state": "INVALID",
+      "sha256": "0888bd4ec1eca4a4e190fbe05c21500393a2e31ebb18791e681e9e2b7d0d1eb0"
+    },
+    {
+      "url": "https://councilof.ai/api/benchmark-quality",
+      "state": "VALID",
+      "sha256": "aa68300156d4bc0190feda3759e6c6a943fd052c7a085ffec58324392e65bed9"
+    },
+    {
+      "url": "https://councilof.ai/api/gspc",
+      "state": "INVALID",
+      "sha256": "9699081c10c4106fbded54618c3e5ffbd85616f850448b025649fff5bb7bf631"
+    }
+  ],
+  "cross_failure_cause": {
+    "served_json_valid": false,
+    "original_signature_matches_reconstructed_undefined_preimage": true,
+    "code_patch_applied": false,
+    "patch_preparation_tool_blocked": true
+  },
+  "cloudflare_account": "existing OAuth session confirmed with Workers/Pages write scopes; no new login or permissions",
+  "new_measurement_signed": false,
+  "production_deployed": false,
+  "wallet_actions": 0,
+  "m4_duplicate_archive_removed_bytes": 682857195,
+  "m2_identical_archive_verified_before_removal": true
+}

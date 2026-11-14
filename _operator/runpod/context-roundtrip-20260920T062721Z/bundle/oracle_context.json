@@ -1,0 +1,285 @@
+{
+  "directional_authority": "none",
+  "execution": "disabled",
+  "generated_at": "2026-09-20T06:26:40.685361+00:00",
+  "measurement_not_certification": true,
+  "schema": "csoai.gspc-context-snapshot/0.1",
+  "snapshot_sha256": "e18a471f66bf886f7b87b4671953481fba92a8e96ce1811ba17d7320e3843573",
+  "sources": {
+    "chainlink": {
+      "BTC": {
+        "derived_sha256": "e6ccfa712c80963596020b031665d59ff9283af946da589b4ca280e36d89db78",
+        "effective_at": "2026-09-20T06:04:35+00:00",
+        "limitations": "Ethereum mainnet feed read at one pinned block",
+        "metric": "price_usd",
+        "published_at": "2026-09-20T06:04:35+00:00",
+        "raw_sha256": "2ca3d372763b63579fb9233891bed46faa01c240683edd489d8f35002b0cfb62",
+        "release_id": "26016920",
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": "0xb3be9f62c4adb98abcc3be0a081d13ae89281ee9dd8a020e5e75a21cf100c339",
+        "source_id": "chainlink-ethereum",
+        "state": "OBSERVED",
+        "subject": "BTC",
+        "unit": "USD",
+        "valid_time": "2026-09-20T06:04:35+00:00",
+        "value": 80426.09
+      },
+      "ETH": {
+        "derived_sha256": "5be7de298838d067ce3f3936fcbdebfe60aeea0d192a6aad41990489bcd81241",
+        "effective_at": "2026-09-20T06:21:23+00:00",
+        "limitations": "Ethereum mainnet feed read at one pinned block",
+        "metric": "price_usd",
+        "published_at": "2026-09-20T06:21:23+00:00",
+        "raw_sha256": "35ad91377d2bde8f4fddfd37279910c186ffcfe7df699f96e97e64c22b36dc5f",
+        "release_id": "26016920",
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": "0xb3be9f62c4adb98abcc3be0a081d13ae89281ee9dd8a020e5e75a21cf100c339",
+        "source_id": "chainlink-ethereum",
+        "state": "OBSERVED",
+        "subject": "ETH",
+        "unit": "USD",
+        "valid_time": "2026-09-20T06:21:23+00:00",
+        "value": 2579.96
+      },
+      "LINK": {
+        "derived_sha256": "e283894d6e2c5305502b278b105f8b8dd22bfd43508d822049e4458f7b502631",
+        "effective_at": "2026-09-20T06:21:59+00:00",
+        "limitations": "Ethereum mainnet feed read at one pinned block",
+        "metric": "price_usd",
+        "published_at": "2026-09-20T06:21:59+00:00",
+        "raw_sha256": "e430a0e37ee50e334b390be6865910f93990438fcaa1d7cc19882518821ec811",
+        "release_id": "26016920",
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": "0xb3be9f62c4adb98abcc3be0a081d13ae89281ee9dd8a020e5e75a21cf100c339",
+        "source_id": "chainlink-ethereum",
+        "state": "OBSERVED",
+        "subject": "LINK",
+        "unit": "USD",
+        "valid_time": "2026-09-20T06:21:59+00:00",
+        "value": 12.00888
+      },
+      "_pin": {
+        "block": 26016920,
+        "block_hash": "0xb3be9f62c4adb98abcc3be0a081d13ae89281ee9dd8a020e5e75a21cf100c339",
+        "block_number_raw_sha256": "e924ce832edeeadd1bb383026406411f52eade508fdf5213930ba446f67cf9a8",
+        "block_raw_sha256": "3bcd72b058ed3b103abadbfe6b33006afd19bbaee9f1d4af2cedc20d22f45d2f"
+      }
+    },
+    "exchange": {
+      "BTC": {
+        "derived_sha256": "3130525a4aad68d4c0c471e5b9cdd8888084b0c36f9241d6fb61bb7444dad390",
+        "effective_at": "2026-09-20T06:26:40.685361+00:00",
+        "limitations": "Public last-price endpoint; USDT is not assumed identical to USD",
+        "metric": "price_usdt",
+        "published_at": null,
+        "raw_sha256": "f05070a0e3b2f11bd1a41aab9608a28f7d5b41d5135da90e85ec8d5852dbc8ea",
+        "release_id": null,
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": null,
+        "source_id": "binance-public",
+        "state": "OBSERVED",
+        "subject": "BTC",
+        "unit": "USDT",
+        "valid_time": "2026-09-20T06:26:40.685361+00:00",
+        "value": 80482.01
+      },
+      "ETH": {
+        "derived_sha256": "f51187f26cdf626851008cdb1defb5e5bd6003949f4b166f434b91db7700df75",
+        "effective_at": "2026-09-20T06:26:40.685361+00:00",
+        "limitations": "Public last-price endpoint; USDT is not assumed identical to USD",
+        "metric": "price_usdt",
+        "published_at": null,
+        "raw_sha256": "64bdadb6e3c792bc70841bab783a868027629afc341cb5db08ef0b76dbd5444b",
+        "release_id": null,
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": null,
+        "source_id": "binance-public",
+        "state": "OBSERVED",
+        "subject": "ETH",
+        "unit": "USDT",
+        "valid_time": "2026-09-20T06:26:40.685361+00:00",
+        "value": 2581.19
+      },
+      "LINK": {
+        "derived_sha256": "e787d18aecc066c0f2e5bd947543dd7ef00b286cf3fe354f12ec5d2d374b8e82",
+        "effective_at": "2026-09-20T06:26:40.685361+00:00",
+        "limitations": "Public last-price endpoint; USDT is not assumed identical to USD",
+        "metric": "price_usdt",
+        "published_at": null,
+        "raw_sha256": "2ccf85c3f9b7bf0dfaaf41343df62c92212afa3ef6778b2f33b85caf8ebac09f",
+        "release_id": null,
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": null,
+        "source_id": "binance-public",
+        "state": "OBSERVED",
+        "subject": "LINK",
+        "unit": "USDT",
+        "valid_time": "2026-09-20T06:26:40.685361+00:00",
+        "value": 12.01
+      },
+      "ONDO": {
+        "derived_sha256": "097d72df800f966399c178274c38bf6a46d95ef758ca0565d4de56941b0ed31d",
+        "effective_at": "2026-09-20T06:26:40.685361+00:00",
+        "limitations": "Public last-price endpoint; USDT is not assumed identical to USD",
+        "metric": "price_usdt",
+        "published_at": null,
+        "raw_sha256": "d3c0e7ab4776819e92734ca5e20e6283ad3dbee2d66cbb0584c3be60f646e403",
+        "release_id": null,
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": null,
+        "source_id": "binance-public",
+        "state": "OBSERVED",
+        "subject": "ONDO",
+        "unit": "USDT",
+        "valid_time": "2026-09-20T06:26:40.685361+00:00",
+        "value": 0.4096
+      },
+      "SOL": {
+        "derived_sha256": "3ff3e94e8000296442bb2f6fe98b6f0107fafbf1a6474f9505e06eccecd02156",
+        "effective_at": "2026-09-20T06:26:40.685361+00:00",
+        "limitations": "Public last-price endpoint; USDT is not assumed identical to USD",
+        "metric": "price_usdt",
+        "published_at": null,
+        "raw_sha256": "f77b4c2229660908b3ccdf9203613aa3965b776783cb804c278c6407c0bee3be",
+        "release_id": null,
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": null,
+        "source_id": "binance-public",
+        "state": "OBSERVED",
+        "subject": "SOL",
+        "unit": "USDT",
+        "valid_time": "2026-09-20T06:26:40.685361+00:00",
+        "value": 108.58
+      }
+    },
+    "pyth": {
+      "BTC": {
+        "derived_sha256": null,
+        "limitations": "Pyth Core price updates require PYTH_HERMES_API_KEY; feed discovery succeeded",
+        "metric": "price_usd",
+        "raw_sha256": null,
+        "release_id": "e62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": null,
+        "source_id": "pyth-hermes",
+        "state": "UNCHECKABLE_AUTH_REQUIRED",
+        "subject": "BTC",
+        "unit": "USD",
+        "value": null
+      },
+      "ETH": {
+        "derived_sha256": null,
+        "limitations": "Pyth Core price updates require PYTH_HERMES_API_KEY; feed discovery succeeded",
+        "metric": "price_usd",
+        "raw_sha256": null,
+        "release_id": "ff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": null,
+        "source_id": "pyth-hermes",
+        "state": "UNCHECKABLE_AUTH_REQUIRED",
+        "subject": "ETH",
+        "unit": "USD",
+        "value": null
+      },
+      "LINK": {
+        "derived_sha256": null,
+        "limitations": "Pyth Core price updates require PYTH_HERMES_API_KEY; feed discovery succeeded",
+        "metric": "price_usd",
+        "raw_sha256": null,
+        "release_id": "8ac0c70fff57e9aefdf5edf44b51d62c2d433653cbb2cf5cc06bb115af04d221",
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": null,
+        "source_id": "pyth-hermes",
+        "state": "UNCHECKABLE_AUTH_REQUIRED",
+        "subject": "LINK",
+        "unit": "USD",
+        "value": null
+      },
+      "ONDO": {
+        "derived_sha256": null,
+        "limitations": "Pyth Core price updates require PYTH_HERMES_API_KEY; feed discovery succeeded",
+        "metric": "price_usd",
+        "raw_sha256": null,
+        "release_id": "d40472610abe56d36d065a0cf889fc8f1dd9f3b7f2a478231a5fc6df07ea5ce3",
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": null,
+        "source_id": "pyth-hermes",
+        "state": "UNCHECKABLE_AUTH_REQUIRED",
+        "subject": "ONDO",
+        "unit": "USD",
+        "value": null
+      },
+      "SOL": {
+        "derived_sha256": null,
+        "limitations": "Pyth Core price updates require PYTH_HERMES_API_KEY; feed discovery succeeded",
+        "metric": "price_usd",
+        "raw_sha256": null,
+        "release_id": "ef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d",
+        "retrieved_at": "2026-09-20T06:26:40.685361+00:00",
+        "revision_id": null,
+        "source_id": "pyth-hermes",
+        "state": "UNCHECKABLE_AUTH_REQUIRED",
+        "subject": "SOL",
+        "unit": "USD",
+        "value": null
+      }
+    }
+  },
+  "wedges": [
+    {
+      "asset": "BTC",
+      "max_wedge_bps": 6.952967625306448,
+      "observed_provider_count": 2,
+      "providers": {
+        "binance_usdt": 80482.01,
+        "chainlink_usd": 80426.09,
+        "pyth_usd": null
+      },
+      "state": "MEASURED_PARTIAL"
+    },
+    {
+      "asset": "ETH",
+      "max_wedge_bps": 4.767515775438449,
+      "observed_provider_count": 2,
+      "providers": {
+        "binance_usdt": 2581.19,
+        "chainlink_usd": 2579.96,
+        "pyth_usd": null
+      },
+      "state": "MEASURED_PARTIAL"
+    },
+    {
+      "asset": "LINK",
+      "max_wedge_bps": 0.9326431773822638,
+      "observed_provider_count": 2,
+      "providers": {
+        "binance_usdt": 12.01,
+        "chainlink_usd": 12.00888,
+        "pyth_usd": null
+      },
+      "state": "MEASURED_PARTIAL"
+    },
+    {
+      "asset": "SOL",
+      "max_wedge_bps": null,
+      "observed_provider_count": 1,
+      "providers": {
+        "binance_usdt": 108.58,
+        "chainlink_usd": null,
+        "pyth_usd": null
+      },
+      "state": "UNCHECKABLE_COMPARISON"
+    },
+    {
+      "asset": "ONDO",
+      "max_wedge_bps": null,
+      "observed_provider_count": 1,
+      "providers": {
+        "binance_usdt": 0.4096,
+        "chainlink_usd": null,
+        "pyth_usd": null
+      },
+      "state": "UNCHECKABLE_COMPARISON"
+    }
+  ]
+}

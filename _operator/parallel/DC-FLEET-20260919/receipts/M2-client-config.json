@@ -1,0 +1,25 @@
+{
+  "name": "csoai-readonly-observer",
+  "enabled": true,
+  "disabled_reason": null,
+  "transport": {
+    "type": "stdio",
+    "command": "/Users/iokfarm/condor/.venv/bin/python",
+    "args": [
+      "-B",
+      "/Users/iokfarm/workspace_for_ai/csoai-fleet-observer-20260919/observer.py",
+      "mcp"
+    ],
+    "env": null,
+    "env_vars": [],
+    "cwd": null
+  },
+  "enabled_tools": [
+    "fleet_status",
+    "shadow_evidence",
+    "coordination_handoff"
+  ],
+  "disabled_tools": null,
+  "startup_timeout_sec": 20.0,
+  "tool_timeout_sec": 40.0
+}

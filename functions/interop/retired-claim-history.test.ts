@@ -1,0 +1,10 @@
+import {describe,it,expect} from 'vitest';import {readFileSync} from 'node:fs';import {resolve} from 'node:path';import {createHash} from 'node:crypto';
+import locations from '../../public/interop/retired-claim-proof-locations.json';import {onRequest} from './[[path]]';
+const sha=(b:Uint8Array)=>createHash('sha256').update(b).digest('hex');
+describe('withdrawn claim timestamp continuity',()=>{
+ it.each(locations.records)('preserves old proof URL $old_url as an explicit history redirect',async row=>{const r=await onRequest({request:new Request('https://councilof.ai'+row.old_url)} as never);expect(r.status).toBe(308);expect(r.headers.get('location')).toBe(row.new_url);expect(r.headers.get('x-csoai-evidence-state')).toBe('HISTORICAL_WITHDRAWN_CLAIM_ONLY');});
+ it('keeps both proof payloads byte-identical',()=>{for(const r of locations.records)expect(sha(readFileSync(resolve(__dirname,'../../public'+r.new_url)))).toBe(r.proof_sha256);});
+ it('retained old body is exact and not the new correction JSON',()=>{const raw=readFileSync(resolve(__dirname,'../../public'+locations.payload_path));expect(sha(raw)).toBe(locations.payload_sha256);const current=readFileSync(resolve(__dirname,'../../public/interop/master-consolidation-rollup-v0.1.json'));expect(sha(current)).not.toBe(locations.payload_sha256);});
+ it('historical body is served only as an attachment',async()=>{const r=await onRequest({request:new Request('https://councilof.ai'+locations.payload_path),next:async()=>new Response('fixture historical body',{headers:{'content-type':'application/json'}})} as never);expect(r.status).toBe(200);expect(r.headers.get('content-type')).toBe('application/octet-stream');expect(r.headers.get('content-disposition')).toContain('attachment');expect(r.headers.get('x-content-type-options')).toBe('nosniff');});
+ it('no write method is admitted by the historical alias',async()=>{const r=await onRequest({request:new Request('https://councilof.ai'+locations.records[0].old_url,{method:'POST',body:'{}'})} as never);expect(r.status).toBe(405);expect(r.headers.get('location')).toBeNull();});
+});

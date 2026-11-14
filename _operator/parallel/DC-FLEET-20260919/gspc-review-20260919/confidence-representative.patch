@@ -1,0 +1,52 @@
+--- reviewed/scoring.py
++++ candidate/scoring.py
+@@ -30,14 +30,14 @@
+ 
+ def _group_representatives(
+     intents: Iterable[TradeIntent], sigma_floor_bps: float
+-) -> list[tuple[str, Side, float, float, str]]:
++) -> list[tuple[str, Side, float, float, str, float]]:
+     """Collapse correlated agents so clones cannot manufacture consensus."""
+     grouped: dict[str, list[TradeIntent]] = defaultdict(list)
+     for intent in intents:
+         if intent.side is not Side.HOLD:
+             grouped[intent.correlation_group].append(intent)
+ 
+-    reps: list[tuple[str, Side, float, float, str]] = []
++    reps: list[tuple[str, Side, float, float, str, float]] = []
+     for group, rows in grouped.items():
+         best = max(
+             rows,
+@@ -51,6 +51,7 @@
+                 best.expected_gross_edge_bps,
+                 precision,
+                 best.source,
++                best.confidence,
+             )
+         )
+     return reps
+@@ -100,7 +101,7 @@
+     winners = [r for r in reps if r[1] is side]
+     win_precision = sum(r[3] for r in winners)
+     gross_edge = (
+-        sum(edge * precision for _, _, edge, precision, _ in winners)
++        sum(edge * precision for _, _, edge, precision, _, _ in winners)
+         / win_precision
+         if win_precision
+         else 0.0
+@@ -110,14 +111,7 @@
+     # uncertainty of the independent winning groups.
+     mean_conf = 0.0
+     if winners:
+-        mean_conf = sum(
+-            next(
+-                i.confidence
+-                for i in intents
+-                if i.source == source and i.correlation_group == group
+-            )
+-            for group, _, _, _, source in winners
+-        ) / len(winners)
++        mean_conf = sum(row[5] for row in winners) / len(winners)
+     calibrated_confidence = min(1.0, consensus * mean_conf)
+     net_edge = gross_edge - costs.total_bps
+ 

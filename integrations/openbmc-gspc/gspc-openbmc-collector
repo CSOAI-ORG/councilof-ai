@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+"""Read-only OpenBMC Redfish evidence collector for GSPC interoperability."""
+from __future__ import annotations
+import argparse, base64, datetime as dt, hashlib, json, os, ssl
+import urllib.error, urllib.parse, urllib.request
+
+DEFAULT_PATHS=["/redfish/v1/","/redfish/v1/Managers/bmc","/redfish/v1/Systems/system","/redfish/v1/Chassis/chassis","/redfish/v1/UpdateService"]
+SAFE_FIELDS=("@odata.id","@odata.type","Id","Name","Model","Manufacturer","FirmwareVersion","UUID","PowerState","Status","DateTime","DateTimeLocalOffset","ServiceEnabled")
+MAX_BYTES=1024*1024
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Do not forward a BMC request, or its credentials, to another URL."""
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+def normalize_base(base, allow_http_loopback=False):
+    p=urllib.parse.urlsplit(base)
+    if p.username or p.password:
+        raise ValueError("credentials must not be embedded in URL")
+    if p.path not in {"", "/"} or p.query or p.fragment:
+        raise ValueError("base URL must be an origin without path, query or fragment")
+    if p.scheme=="https" and p.hostname:
+        return base.rstrip("/")
+    if allow_http_loopback and p.scheme=="http" and p.hostname in {"127.0.0.1","localhost","::1"}:
+        return base.rstrip("/")
+    raise ValueError("base URL must be https")
+
+def open_request(url, username, password, cafile, timeout):
+    headers={"Accept":"application/json","User-Agent":"csoai-gspc-openbmc/0.1"}
+    if username is not None or password is not None:
+        if not username or password is None:
+            raise ValueError("both username and password are required")
+        token=base64.b64encode((username+":"+password).encode()).decode()
+        headers["Authorization"]="Basic "+token
+    context=ssl.create_default_context(cafile=cafile) if url.startswith("https://") else None
+    req=urllib.request.Request(url,headers=headers,method="GET")
+    handlers=[NoRedirect()]
+    if context is not None:
+        handlers.append(urllib.request.HTTPSHandler(context=context))
+    return urllib.request.build_opener(*handlers).open(req,timeout=timeout)
+
+def collect(base, paths, username=None, password=None, cafile=None, timeout=8.0, allow_http_loopback=False):
+    base=normalize_base(base,allow_http_loopback)
+    rows=[]
+    for path in paths:
+        if not path.startswith("/") or ".." in path:
+            raise ValueError("unsafe Redfish path: "+path)
+        url=base+path
+        row={"path":path,"url":url,"method":"GET"}
+        try:
+            with open_request(url,username,password,cafile,timeout) as res:
+                raw=res.read(MAX_BYTES+1)
+                if len(raw)>MAX_BYTES:
+                    row.update(measurement_state="UNCHECKABLE",reason="response_too_large",http_status=res.status)
+                    rows.append(row); continue
+                row.update(http_status=res.status,content_type=res.headers.get("Content-Type"),sha256=hashlib.sha256(raw).hexdigest(),bytes=len(raw))
+                try:
+                    obj=json.loads(raw)
+                    row["measurement_state"]="MEASURED"
+                    row["selected"]={k:obj[k] for k in SAFE_FIELDS if k in obj}
+                except (UnicodeDecodeError,json.JSONDecodeError):
+                    row.update(measurement_state="UNCHECKABLE",reason="invalid_json")
+        except urllib.error.HTTPError as exc:
+            row.update(measurement_state="UNMEASURED" if exc.code==404 else "UNCHECKABLE",http_status=exc.code,reason="not_found" if exc.code==404 else "http_error")
+        except Exception as exc:
+            row.update(measurement_state="UNREACHABLE",reason=type(exc).__name__)
+        rows.append(row)
+    return {"schema":"csoai.openbmc-redfish-evidence/0.1","observed_at":dt.datetime.now(dt.timezone.utc).isoformat(),"base_url":base,"authority":"read-only Redfish observation; not OpenBMC certification or firmware attestation","records":rows}
+
+def main():
+    ap=argparse.ArgumentParser()
+    ap.add_argument("--base-url",required=True); ap.add_argument("--path",action="append",dest="paths")
+    ap.add_argument("--ca-file"); ap.add_argument("--timeout",type=float,default=8.0)
+    ap.add_argument("--allow-http-loopback",action="store_true",help=argparse.SUPPRESS)
+    args=ap.parse_args()
+    result=collect(args.base_url,args.paths or DEFAULT_PATHS,os.environ.get("OPENBMC_USERNAME"),os.environ.get("OPENBMC_PASSWORD"),args.ca_file,args.timeout,args.allow_http_loopback)
+    print(json.dumps(result,sort_keys=True,separators=(",",":")))
+
+if __name__=="__main__":
+    main()

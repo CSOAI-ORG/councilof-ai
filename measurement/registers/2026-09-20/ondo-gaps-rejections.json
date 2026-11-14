@@ -1,0 +1,120 @@
+{
+  "schema": "csoai.ondo-gaps-rejections/0.1",
+  "as_of": "2026-09-20",
+  "subject_id": "issuer:ondo",
+  "gaps": [
+    {
+      "gap_id": "GAP-01",
+      "category": "reserves",
+      "status": "ADVANCED_STILL_OPEN",
+      "what_is_missing": "PARTIALLY RESOLVED on 2026-09-20 (third pass): the USDY (Ondo USDY LLC) daily and monthly attestation series ARE now pinned — 744 daily files (2023-09-28..2026-09-15) and 36 monthly files (2023-09..2026-08), full per-file sha256 inventory, earliest+latest documents byte-pinned, key fields extracted (ONDO-EV-038..044). STILL OPEN: (a) no cryptographic signature exists in the pinned PDFs — they are borrower-prepared Excel exports carrying attestation TEXT, so attestor authenticity is UNCHECKABLE from bytes (ONDO-EV-040); (b) the OGM (BVI) USDY series referenced in the report footnote is not located (GAP-09); (c) OUSG NAV financials remain behind a Google sign-in wall (ONDO-EV-037); (d) Ondo Stocks Ankura viewer URL is absent from official bytes (GAP-08).",
+      "blocking": "reserve-attestation instrument INST-ONDO-001",
+      "next_action": "Locate the OGM (BVI) daily-reports surface and the Ondo Stocks Ankura viewer from official Ondo properties; for signature-level assurance, ask whether Ankura publishes signed attestations anywhere. The daily/monthly per-file inventory is already rerun-reproducible."
+    },
+    {
+      "gap_id": "GAP-02",
+      "category": "contracts",
+      "what_is_missing": "Audit PDFs linked from docs.ondo.finance/audits (ONDO-EV-028) are not fetched or hash-pinned; auditor identity and scope are unverified.",
+      "blocking": "provenance-controls instrument INST-ONDO-002 (audit-evidence leg)",
+      "next_action": "Fetch and hash-pin each linked audit PDF; record auditor, date, scope."
+    },
+    {
+      "gap_id": "GAP-03",
+      "category": "incident-handling",
+      "what_is_missing": "status.ondo.finance serves a JavaScript shell with a BetterStack embed; incident history and current status content are not in the served bytes (ONDO-EV-025). No incident feed, postmortem index, or security-incident disclosure page was found in fetched primary sources.",
+      "blocking": "any incident-handling evidence row beyond page existence",
+      "next_action": "Identify the BetterStack status backend endpoint used by the embed; fetch and pin it as a separate source with its own provenance class."
+    },
+    {
+      "gap_id": "GAP-04",
+      "category": "governance",
+      "what_is_missing": "No governance-process documentation (ONDO token governance, Ondo Foundation process, DAO/forum records, upgrade-authority description) was found in the fetched primary sources. docs llms.txt contains no governance entry; ondo.finance/governance returns 404.",
+      "blocking": "any governance-category measurement",
+      "next_action": "Extend intake to ondo.foundation and any official governance forum only if confirmed as official via the official-domains page."
+    },
+    {
+      "gap_id": "GAP-05",
+      "category": "supported-chains",
+      "what_is_missing": "Docs-claimed deployments on Polygon, BNB Chain, Mantle, Solana, Sui, Aptos, Noble, Arbitrum, Plume, Sei and Tempo (ONDO-EV-003) have no chain readback in this pack; only Ethereum OUSG was read back.",
+      "blocking": "distribution-integrity chain-coverage claims",
+      "next_action": "Per-chain read-only readback at each docs-claimed address with per-block pins."
+    },
+    {
+      "gap_id": "GAP-06",
+      "category": "contracts",
+      "what_is_missing": "USDY/rUSDY Ethereum contracts (ONDO-EV-002) and all oracle contracts (ONDO-EV-004, ONDO-EV-005) have no executed readback; readback was executed only for OUSG Ethereum.",
+      "blocking": "identity pin for USDY; oracle-boundary work belongs to a separate oracle-focused pack",
+      "next_action": "Repeat the rpc-ousg-* readback pattern for USDY, rUSDY, OndoOracle, USDYOracleWrapper."
+    },
+    {
+      "gap_id": "gap-07",
+      "category": "correction-history",
+      "what_is_missing": "No changelog, errata, docs-correction feed, or token-holder notice archive was found in fetched primary sources; the only correction-class evidence located is legacy-contract deprecation dates (ONDO-EV-027).",
+      "blocking": "correction-history measurement",
+      "next_action": "Check docs git history (if public via github.com/ondoprotocol) for a docs repository with commit history."
+    },
+    {
+      "gap_id": "GAP-08",
+      "category": "reserves",
+      "status": "ADVANCED_STILL_OPEN",
+      "what_is_missing": "The Ondo Stocks trust-and-transparency page says Ankura Trust Company daily attestations 'can be viewed online beginning October 1, 2025' but the fetched page bytes contain no URL for that viewer (ONDO-EV-034). ADVANCED on 2026-09-20 (fourth pass): Ankura's dual role (Verification Agent + Security Agent, first-priority security interest) is now fully documented from pinned docs (ONDO-EV-047), and the app UI confirms GM BVI report series exist (ONDO-EV-045) — but the viewer URL remains absent from all served bytes.",
+      "blocking": "reserve-attestation instrument INST-ONDO-001 (Ondo Stocks leg)",
+      "next_action": "Same runtime-config hypothesis as GAP-09: observe rendered app traffic or request the URL from Ondo; third-party search results alone are not sufficient provenance."
+    },
+    {
+      "gap_id": "GAP-09",
+      "category": "reserves",
+      "status": "ADVANCED_STILL_OPEN",
+      "what_is_missing": "The pinned USDY daily report footnote (ONDO-EV-042) states the report covers only Ondo USDY LLC and not USDY issued by Ondo Global Markets (BVI) Limited, referencing separate 'OGM Daily reports'. ADVANCED on 2026-09-20 (fourth pass): the official app shell (app.ondo.finance, pinned) confirms from an official source that 'Daily/Monthly Attestation Reports - Ondo Global Markets (BVI) Limited' series EXIST (ONDO-EV-045). STILL MISSING: the series URLs — they are runtime-loaded and absent from all served bytes (app root HTML and all 50 static JS chunks were searched; assets API carries no attestation links). The pinned attestation inventory remains a PARTIAL denominator for USDY as a whole.",
+      "blocking": "reserve-attestation instrument INST-ONDO-001 (complete denominator)",
+      "next_action": "The GM BVI links likely load from a runtime config or CMS behind the app. Either observe them in rendered app traffic (browser session, out of this pack's fetch-only doctrine) or ask Ondo directly for the public folder URL. Until then every USDY reserve claim must carry the Ondo-USDY-LLC-only scope qualifier."
+    }
+  ],
+  "rejections": [
+    {
+      "rejection_id": "REJ-01",
+      "item": "OUSG 'Value of Underlying Assets $326.85M' and 'Current TVL $326.75M' (site-ousg); USDY 'Current TVL $2.20B' (site-usdy)",
+      "reason": "TIME_VARIANT_RENDERED_FIGURE: rendered issuer figures, not recomputable from public bytes; retained only as time-stamped issuer assertions (e.g. ONDO-EV-014), rejected as instrument denominators."
+    },
+    {
+      "rejection_id": "REJ-02",
+      "item": "Yield figures on product pages (e.g. OUSG '7-Day Yield 3.48%', USDY APY displays)",
+      "reason": "ASSET_PERFORMANCE_NOT_GOVERNANCE_QUALITY: performance numbers are excluded from every axis mapping per intake doctrine."
+    },
+    {
+      "rejection_id": "REJ-03",
+      "item": "https://status.ondo.finance/history (HTTP 404), https://ondo.finance/governance, /security, /ondo, /ondo-token (all HTTP 404 on 2026-09-20)",
+      "reason": "DEAD_ROUTE: probed and retained as failures, not silently dropped."
+    },
+    {
+      "rejection_id": "REJ-04",
+      "item": "Etherscan/PolygonScan/BscScan and other explorer pages as evidence sources",
+      "reason": "OUT_OF_SCOPE_THIRD_PARTY: this pack is restricted to public, primary ONDO sources plus read-only public-RPC state reads; explorers are linked by Ondo but are third-party surfaces."
+    },
+    {
+      "rejection_id": "REJ-05",
+      "item": "ONDO governance-token contract address for subject token:ondo",
+      "reason": "IDENTITY_NOT_PINNED: docs.ondo.finance/addresses lists no ONDO governance-token contract; the 2026-09-19 canary state BLOCKED_IDENTITY_PIN stands. No address is asserted anywhere in this pack."
+    },
+    {
+      "rejection_id": "REJ-07",
+      "item": "Treating the Dropbox/Google Drive folder landings (pinned in ondo-attestation-manifest.json) as attestation evidence",
+      "reason": "SHELL_NOT_CONTENT: the pinned bytes are a JavaScript shell (Dropbox) and a sign-in redirect (Drive); neither contains attestation content. Host possession of bytes would not establish attestor authorship in any case."
+    },
+    {
+      "rejection_id": "REJ-06",
+      "item": "Any claim that code-exists or name()/symbol() readback proves the OUSG contract is the authentic Ondo issuance contract",
+      "reason": "OVERCLAIM: readback agrees with the docs-claimed address on 4 of 4 selectors, but authenticity (deployer, upgrade authority, registry binding) is unmeasured; pin_state remains DOCS_CLAIMED_PENDING_INDEPENDENT_AGREEMENT."
+    }
+  ],
+  "uncheckable_as_fetched": [
+    "USDY Dropbox attestation folder contents (ONDO-EV-036) — JavaScript shell, no file listing extractable",
+    "OUSG NAV financials Drive folder contents (ONDO-EV-037) — anonymous fetch redirected to Google sign-in",
+    "Ankura daily attestation documents (ONDO-EV-034) — viewer URL absent from fetched official bytes",
+    "USDY bankruptcy-remote legal-structure claim (ONDO-EV-018) — legal documents required",
+    "Ondo Stocks proprietary quote method (ONDO-EV-022) — not disclosed by design",
+    "Coinbase Prime custodian-account attribution (ONDO-EV-006) — not checkable from public bytes",
+    "Incident history behind status.ondo.finance (ONDO-EV-025) — client-rendered, backend not pinned",
+    "All redemption-behaviour claims (ONDO-EV-019/020/021) — would require transactions, excluded by doctrine"
+  ]
+}
