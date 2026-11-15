@@ -13,6 +13,7 @@
 // business-metric SLAs, not benchmark scores; the pack supplies the baseline data
 // those SLAs need).
 import { headFromGet } from "./_head";
+import { CURRENT_ROOT_OTS_SENTENCE } from "./_otsClaim";
 interface Env {
   KV?: unknown;
 }
@@ -39,7 +40,8 @@ export const onRequestGet: PagesFunction<Env> = async () => {
     },
     // CLASS 3: ACTIVE CONTROLS — the estate's own evidence-generation is instrumented
     active_controls: {
-      signing_chain: "The current public-root envelope is Ed25519-signed and its separate OpenTimestamps receipt is STAMPED_PENDING_BITCOIN. That does not make every cited card time-anchored.",
+      // Derived from public/interop/root-witness-latest.json (functions/api/_otsClaim.ts); typed until 2026-11-15.
+      signing_chain: `${CURRENT_ROOT_OTS_SENTENCE} That does not make every cited card time-anchored.`,
       watchdog: "external dead-man's switch (10-min) — chain death/env-wipe/key-loss self-heals; boot-time fail-fast assertions",
       corrections_ledger: "GET /api/corrections — a public, source-maintained corrections record. It is not backed by append-only storage proof.",
       drift_detection: "daily reg-watch detects source changes; automated re-measurement and delta-card issuance are not yet implemented",
