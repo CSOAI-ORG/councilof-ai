@@ -1,6 +1,6 @@
 {
  "schema": "csoai.watchdog-charter-feed/0.1",
- "as_of": "2026-11-13T17:23:19Z",
+ "as_of": "2026-11-15T16:35:53Z",
  "producer": "scripts/watchdog_charter_feed.py",
  "measure": "A HUMAN ROUTING QUEUE derived from the daily public-watchdog signal index",
  "not_a": [
@@ -12,9 +12,9 @@
  ],
  "count_grammar": "rows count (SOURCE × OBLIGATION) pairs a human may need to look at. That is a routing count, not a measurement, and it is never pooled with an axis n. A row exists because the source's axis grid intersects the obligation's axis grid — a mechanical rule, so it cannot drift from the data.",
  "source_index": {
-  "run_id": "20261113T172253Z",
-  "as_of": "2026-11-13T17:22:53Z",
-  "run_artifact": "/interop/watchdog-intake/20261113T172253Z.json"
+  "run_id": "20261115T163548Z",
+  "as_of": "2026-11-15T16:35:48Z",
+  "run_artifact": "/interop/watchdog-intake/20261115T163548Z.json"
  },
  "obligations_tracked": [
   "article-50",
@@ -27,7 +27,8 @@
   "rows": 43,
   "sources_considered": 18,
   "by_bucket": {
-   "B — the source answered with a count to read": 30,
+   "B — the source answered with a count to read": 27,
+   "A — the watchdog itself is not answering": 3,
    "C — the source answered; read the digest if it matters": 13
   }
  },
@@ -43,9 +44,9 @@
    "axis_touched": [
     "effect-binding"
    ],
-   "observed_count": 1779,
+   "observed_count": 1781,
    "observed_count_kind": "count",
-   "source_digest": "41c8091ad62d508d6f8906ad5cd26b20efe551f7d51b95ecc8a6981fa640b4ea",
+   "source_digest": "4028ec035856331a717d3305e87e45be37d400fc500da34a5464f05fc2773764",
    "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -88,9 +89,9 @@
    "axis_touched": [
     "supply-chain"
    ],
-   "observed_count": 1779,
+   "observed_count": 1781,
    "observed_count_kind": "count",
-   "source_digest": "41c8091ad62d508d6f8906ad5cd26b20efe551f7d51b95ecc8a6981fa640b4ea",
+   "source_digest": "4028ec035856331a717d3305e87e45be37d400fc500da34a5464f05fc2773764",
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -118,9 +119,9 @@
     "effect-binding",
     "supply-chain"
    ],
-   "observed_count": 1779,
+   "observed_count": 1781,
    "observed_count_kind": "count",
-   "source_digest": "41c8091ad62d508d6f8906ad5cd26b20efe551f7d51b95ecc8a6981fa640b4ea",
+   "source_digest": "4028ec035856331a717d3305e87e45be37d400fc500da34a5464f05fc2773764",
    "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -141,17 +142,17 @@
    "source_id": "nvd-cve-api",
    "source_name": "NIST National Vulnerability Database CVE API 2.0",
    "source_kind": "advisory-feed",
-   "source_state": "REACHABLE",
+   "source_state": "UNREACHABLE",
    "obligation": "charter",
    "obligation_label": "Council of AI candidate profile — runtime enforcement and human oversight",
    "axis_touched": [
     "effect-binding"
    ],
-   "observed_count": 425542,
-   "observed_count_kind": "count",
-   "source_digest": "466e9103226ff8922af7463079a8bf1785626ae547abf01ab836a6a1c625f57d",
+   "observed_count": null,
+   "observed_count_kind": "absent",
+   "source_digest": null,
    "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
-   "routing_reason": "the source answered and its grid touches this obligation",
+   "routing_reason": "the source did not answer (UNREACHABLE), so it cannot bear on the obligation today — a human must decide whether that silence matters",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
@@ -179,24 +180,24 @@
      "git_blob_sha": "c74309c122a465a88731f3f7842beb812c89cac4"
     }
    },
-   "routing_bucket": "B — the source answered with a count to read"
+   "routing_bucket": "A — the watchdog itself is not answering"
   },
   {
    "row_id": "nvd-cve-api::dora",
    "source_id": "nvd-cve-api",
    "source_name": "NIST National Vulnerability Database CVE API 2.0",
    "source_kind": "advisory-feed",
-   "source_state": "REACHABLE",
+   "source_state": "UNREACHABLE",
    "obligation": "dora",
    "obligation_label": "DORA — ICT third-party oversight",
    "axis_touched": [
     "supply-chain"
    ],
-   "observed_count": 425542,
-   "observed_count_kind": "count",
-   "source_digest": "466e9103226ff8922af7463079a8bf1785626ae547abf01ab836a6a1c625f57d",
+   "observed_count": null,
+   "observed_count_kind": "absent",
+   "source_digest": null,
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
-   "routing_reason": "the source answered and its grid touches this obligation",
+   "routing_reason": "the source did not answer (UNREACHABLE), so it cannot bear on the obligation today — a human must decide whether that silence matters",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
@@ -208,25 +209,25 @@
     "an approval to act",
     "evidence that an obligation is satisfied or unsatisfied"
    ],
-   "routing_bucket": "B — the source answered with a count to read"
+   "routing_bucket": "A — the watchdog itself is not answering"
   },
   {
    "row_id": "nvd-cve-api::cra",
    "source_id": "nvd-cve-api",
    "source_name": "NIST National Vulnerability Database CVE API 2.0",
    "source_kind": "advisory-feed",
-   "source_state": "REACHABLE",
+   "source_state": "UNREACHABLE",
    "obligation": "cra",
    "obligation_label": "Cyber Resilience Act — products with digital elements",
    "axis_touched": [
     "effect-binding",
     "supply-chain"
    ],
-   "observed_count": 425542,
-   "observed_count_kind": "count",
-   "source_digest": "466e9103226ff8922af7463079a8bf1785626ae547abf01ab836a6a1c625f57d",
+   "observed_count": null,
+   "observed_count_kind": "absent",
+   "source_digest": null,
    "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
-   "routing_reason": "the source answered and its grid touches this obligation",
+   "routing_reason": "the source did not answer (UNREACHABLE), so it cannot bear on the obligation today — a human must decide whether that silence matters",
    "human_decision": "HOLD",
    "may_apply": false,
    "approval_may_be_inferred": false,
@@ -238,7 +239,7 @@
     "an approval to act",
     "evidence that an obligation is satisfied or unsatisfied"
    ],
-   "routing_bucket": "B — the source answered with a count to read"
+   "routing_bucket": "A — the watchdog itself is not answering"
   },
   {
    "row_id": "ghsa-api::charter",
@@ -253,7 +254,7 @@
    ],
    "observed_count": 30,
    "observed_count_kind": "count",
-   "source_digest": "9028d09aa86a82ea441a9815040fd0353f046126fbfafbba11aacc76e4ea690b",
+   "source_digest": "cfb43fdafb4c002427b222b1ed712dd58c7ae02f40759ea2e1be9ee2251d17b8",
    "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -298,7 +299,7 @@
    ],
    "observed_count": 30,
    "observed_count_kind": "count",
-   "source_digest": "9028d09aa86a82ea441a9815040fd0353f046126fbfafbba11aacc76e4ea690b",
+   "source_digest": "cfb43fdafb4c002427b222b1ed712dd58c7ae02f40759ea2e1be9ee2251d17b8",
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -328,7 +329,7 @@
    ],
    "observed_count": 30,
    "observed_count_kind": "count",
-   "source_digest": "9028d09aa86a82ea441a9815040fd0353f046126fbfafbba11aacc76e4ea690b",
+   "source_digest": "cfb43fdafb4c002427b222b1ed712dd58c7ae02f40759ea2e1be9ee2251d17b8",
    "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -357,7 +358,7 @@
    ],
    "observed_count": 10,
    "observed_count_kind": "count",
-   "source_digest": "a31f794e2a4e63f9209480347a6f89a08b7e7955a2dd5e10ddf2b844650a1a6c",
+   "source_digest": "bdb8ed2b584e1922775033b53afb718af7b3ad8a1932768de90a492aa2714707",
    "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -402,7 +403,7 @@
    ],
    "observed_count": 10,
    "observed_count_kind": "count",
-   "source_digest": "a31f794e2a4e63f9209480347a6f89a08b7e7955a2dd5e10ddf2b844650a1a6c",
+   "source_digest": "bdb8ed2b584e1922775033b53afb718af7b3ad8a1932768de90a492aa2714707",
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -432,7 +433,7 @@
    ],
    "observed_count": 10,
    "observed_count_kind": "count",
-   "source_digest": "a31f794e2a4e63f9209480347a6f89a08b7e7955a2dd5e10ddf2b844650a1a6c",
+   "source_digest": "bdb8ed2b584e1922775033b53afb718af7b3ad8a1932768de90a492aa2714707",
    "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -709,7 +710,7 @@
    ],
    "observed_count": 30,
    "observed_count_kind": "count",
-   "source_digest": "ddb99bbb2b59dbd30c8d409e60ba3f2d3ee5f11a96e288f59648d64d3c622d06",
+   "source_digest": "0c74255227983a62b235b04255722404f81423b77ee4915199074081dd01c8ed",
    "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -739,7 +740,7 @@
    ],
    "observed_count": 30,
    "observed_count_kind": "count",
-   "source_digest": "ddb99bbb2b59dbd30c8d409e60ba3f2d3ee5f11a96e288f59648d64d3c622d06",
+   "source_digest": "0c74255227983a62b235b04255722404f81423b77ee4915199074081dd01c8ed",
    "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -766,9 +767,9 @@
    "axis_touched": [
     "serving-fidelity"
    ],
-   "observed_count": 470,
+   "observed_count": 467,
    "observed_count_kind": "count",
-   "source_digest": "bf9547c2076a7d94230810fcb7292aa903a70b85c5b8cebdb271a9b6ff004d7c",
+   "source_digest": "23a838e5b29efc8a11fe8954f6dcb955f5f38118cd0b0ce83ee1c6e010c19565",
    "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -1002,9 +1003,9 @@
     "provenance",
     "provenance-controls"
    ],
-   "observed_count": 3736892785,
+   "observed_count": 3784103541,
    "observed_count_kind": "count",
-   "source_digest": "f10a237db20706d8291000b5b179ddc64512e3c652f0dd52f446bdb24f336ced",
+   "source_digest": "4c515ae2ef8aa01e7cb2925fbe2fc0e57ac9062db2fb7e6e262749505856fb19",
    "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -1032,9 +1033,9 @@
     "provenance",
     "provenance-controls"
    ],
-   "observed_count": 3736892785,
+   "observed_count": 3784103541,
    "observed_count_kind": "count",
-   "source_digest": "f10a237db20706d8291000b5b179ddc64512e3c652f0dd52f446bdb24f336ced",
+   "source_digest": "4c515ae2ef8aa01e7cb2925fbe2fc0e57ac9062db2fb7e6e262749505856fb19",
    "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -1061,9 +1062,9 @@
    "axis_touched": [
     "provenance-controls"
    ],
-   "observed_count": 3736892785,
+   "observed_count": 3784103541,
    "observed_count_kind": "count",
-   "source_digest": "f10a237db20706d8291000b5b179ddc64512e3c652f0dd52f446bdb24f336ced",
+   "source_digest": "4c515ae2ef8aa01e7cb2925fbe2fc0e57ac9062db2fb7e6e262749505856fb19",
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -1092,7 +1093,7 @@
    ],
    "observed_count": 18,
    "observed_count_kind": "count",
-   "source_digest": "d93c861340b0d4d0063cd179351eca21f5cf00e1a57122b8cd45de29aec2cb34",
+   "source_digest": "e2feb446211f3080481c3082d41b7702bc8f4f0d4c51a94026ecefc252f698e4",
    "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -1121,7 +1122,7 @@
    ],
    "observed_count": 18,
    "observed_count_kind": "count",
-   "source_digest": "d93c861340b0d4d0063cd179351eca21f5cf00e1a57122b8cd45de29aec2cb34",
+   "source_digest": "e2feb446211f3080481c3082d41b7702bc8f4f0d4c51a94026ecefc252f698e4",
    "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -1151,7 +1152,7 @@
    ],
    "observed_count": 18,
    "observed_count_kind": "count",
-   "source_digest": "d93c861340b0d4d0063cd179351eca21f5cf00e1a57122b8cd45de29aec2cb34",
+   "source_digest": "e2feb446211f3080481c3082d41b7702bc8f4f0d4c51a94026ecefc252f698e4",
    "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
@@ -1180,7 +1181,7 @@
    ],
    "observed_count": 18,
    "observed_count_kind": "count",
-   "source_digest": "d93c861340b0d4d0063cd179351eca21f5cf00e1a57122b8cd45de29aec2cb34",
+   "source_digest": "e2feb446211f3080481c3082d41b7702bc8f4f0d4c51a94026ecefc252f698e4",
    "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
    "routing_reason": "the source answered and its grid touches this obligation",
    "human_decision": "HOLD",
