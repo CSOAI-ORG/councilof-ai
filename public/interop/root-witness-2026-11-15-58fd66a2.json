@@ -1,6 +1,6 @@
 {
  "kind": "csoai.root-witness/v1",
- "as_of": "2026-11-15T02:41:04Z",
+ "as_of": "2026-11-15T08:09:58Z",
  "note": "Witnesses for the live signed public root — existence/time of these exact bytes. Not certification, not endorsement, not a rank sale. Never mint a token. ONE root anchor, never N leaves.",
  "artifact": {
   "url": "https://councilof.ai/root.json",
@@ -43,7 +43,7 @@
    "logIndex": 3892102672,
    "integratedTime": 1794710411,
    "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
-   "new": true,
+   "new": false,
    "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=3892102672",
    "type": "rekord/x509 over the preimage bytes with the board signature",
    "entry_file": "https://councilof.ai/interop/rekor-root-58fd66a2.json"
@@ -51,13 +51,30 @@
   "ots": {
    "path": "public/interop/root-58fd66a2.json.ots",
    "url": "https://councilof.ai/interop/root-58fd66a2.json.ots",
-   "proof_sha256": "35942bc9279f7b8b39007f68d44fd80b6e166b701128389a2533d2835ce14f06",
+   "proof_sha256": "d00717394ca6902804ce2eb1faef0f380f947da6d0167d42b8d381748b5580f3",
    "subject_sha256": "58fd66a22408f5597a159c3289ad59334099b070abda06357a8cff19e33757e1",
-   "bitcoin_blocks": [],
-   "observed_at": "2026-11-15T02:40:13Z",
+   "bitcoin_blocks": [
+    975886,
+    975913
+   ],
+   "observed_at": "2026-11-15T08:09:57Z",
    "scope": "PUBLIC_ROOT_BYTES_ONLY",
-   "status": "STAMPED_PENDING_BITCOIN",
-   "note": "Status is derived from the proof bytes. Pending is not a Bitcoin timestamp."
+   "status": "CONFIRMED_BITCOIN",
+   "bitcoin_header": {
+    "height": 975886,
+    "block_hash": "000000000000000000004024fea6de1ad37a8f857b8ff2cbb302cd154464ed2e",
+    "hex": "00000020e5aabe93c664b96f9bac14f8a3c93ee8e71dce1837030200000000000000000044d95a4b719ed15e24f20b508d0884ad319774e014adcc647b0c3f6f709ecaa1cc26f96a731602177759d70a",
+    "header_sha256": "156220d6bccbdfa31f616bc2aedf384ccc981004296b34fd4b891ef9c6978081",
+    "block_time_unix": 1794713292,
+    "block_time": "2026-11-15T03:28:12Z",
+    "verified_at": "2026-11-15T08:09:57Z",
+    "source_agreement": "BLOCKSTREAM_MEMPOOL_BYTE_IDENTICAL",
+    "sources": [
+     "https://blockstream.info/api/block/000000000000000000004024fea6de1ad37a8f857b8ff2cbb302cd154464ed2e/header",
+     "https://mempool.space/api/block/000000000000000000004024fea6de1ad37a8f857b8ff2cbb302cd154464ed2e/header"
+    ]
+   },
+   "note": "Status is derived from the proof bytes. The Bitcoin timestamp proves these exact root.json bytes existed no later than the named block; it does not prove correctness, completeness, compliance, certification, or coverage of the separate signed-card corpus."
   },
   "eas_base": {
    "status": "NOT_YET",
@@ -77,7 +94,7 @@
   "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
   "as_of": "2026-11-15T02:40:05Z",
   "merkle_root": "ae8c75d7ad64f87f7dccbbcc743fe8ffd7329595c6c3f38087d3057192daebb1",
-  "sidecars_scanned": 101,
+  "sidecars_scanned": 102,
   "conflicts": [],
   "byte_variants": [],
   "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"
