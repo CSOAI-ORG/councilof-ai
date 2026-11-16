@@ -6,6 +6,9 @@
  * SHA-256 the CALLER supplies. That digest is never read from the fixture folder. Before
  * 2026-11-16 the trusted key was read from the same folder as the approval it checked, so
  * replacing the key and re-signing the approval executed and passed readback.
+ * Each fixture file is read ONCE per operation: the bytes that are hashed are the bytes that are
+ * parsed and used. Hashing a second read let a folder writer serve one record to the parser and
+ * another to the digest (review of #4370, 2026-11-16).
  * No network, payment, remote action, real customer files or GSPC measurement.
  */
 import { createHash, generateKeyPairSync, sign, verify, createPublicKey } from 'node:crypto';
@@ -25,7 +28,8 @@ const validHex = x => typeof x === 'string' && /^[a-f0-9]{64}$/.test(x);
 const deny = (...reasons) => ({ state: 'DENIED', reasons, effect_written: false });
 const CONTROL = 'COUNCIL_OWNED_EFFECT_FIXTURE_V1';
 const authorityDigest = dir => sha256(readFileSync(file(dir, 'authority.json')));
-const pinned = (dir, pin) => validHex(pin) && authorityDigest(dir) === pin;
+// One read: the digest and the parsed value come from the same buffer.
+const loadOnce = (dir, name) => { const bytes = readFileSync(file(dir, name)); return { digest: sha256(bytes), value: JSON.parse(bytes.toString('utf8')) }; };
 
 export function prepare(dir, at = Date.now()) {
   if (existsSync(file(dir, '.owned-fixture'))) throw Error('Refuse to overwrite fixture');
@@ -55,19 +59,21 @@ function checkSignature(approval, authority) {
 }
 export function checkAuthorization(dir, at = Date.now(), authorityPin) {
   guard(dir);
-  const request = read(file(dir, 'request.json'));
+  const requestFile = loadOnce(dir, 'request.json');
+  const request = requestFile.value;
   const approval = read(file(dir, 'approval.json'));
-  const authority = read(file(dir, 'authority.json'));
+  const authorityFile = loadOnce(dir, 'authority.json');
+  const authority = authorityFile.value;
   const s = approval.statement ?? {};
   const reasons = [];
-  if (!pinned(dir, authorityPin)) reasons.push('AUTHORITY_RECORD_NOT_PINNED_OR_CHANGED');
+  if (!validHex(authorityPin) || authorityFile.digest !== authorityPin) reasons.push('AUTHORITY_RECORD_NOT_PINNED_OR_CHANGED');
   if (!checkSignature(approval, authority)) reasons.push('INVALID_SIGNATURE_OR_UNKNOWN_KEY');
   if (authority.role !== 'SYNTHETIC_TEST_PRINCIPAL_NOT_A_HUMAN') reasons.push('UNSUPPORTED_ROLE');
   if (authority.revoked !== false) reasons.push('REVOKED_OR_UNKNOWN_AUTHORITY');
   if (authority.watch_state !== 'CURRENT') reasons.push('NON_CURRENT_WATCH_STATE');
   if (authority.principal_ref !== s.principal_ref || authority.authority_epoch !== s.authority_epoch) reasons.push('AUTHORITY_EPOCH_OR_PRINCIPAL_MISMATCH');
   if (s.decision !== 'APPROVE') reasons.push('NO_APPROVAL');
-  if (!validHex(s.request_sha256) || sha256(readFileSync(file(dir, 'request.json'))) !== s.request_sha256) reasons.push('REQUEST_BYTES_CHANGED');
+  if (!validHex(s.request_sha256) || requestFile.digest !== s.request_sha256) reasons.push('REQUEST_BYTES_CHANGED');
   if (request.id !== 'demo-request-001' || request.tenant !== 'synthetic-demo-tenant') reasons.push('REQUEST_ID_OR_TENANT_MISMATCH');
   if (request.action !== 'append_bounded_marker' || request.resource !== 'local:effects.jsonl' || request.marker !== 'APPROVAL_EFFECT_VISIBLE') reasons.push('OUTSIDE_DEMO_ACTION');
   if (request.action !== authority.allowed_action || request.resource !== authority.allowed_resource || s.scope?.action !== request.action || s.scope?.resource !== request.resource) reasons.push('SCOPE_MISMATCH');
@@ -90,11 +96,11 @@ export function execute(dir, at = Date.now(), authorityPin) {
 export function observe(dir, authorityPin) {
   guard(dir);
   if (!existsSync(file(dir, 'effect-receipt.json')) || !existsSync(file(dir, 'effects.jsonl'))) return { state: 'NO_EFFECT', verified: false };
-  let receipt, body, approval, authority, request;
-  try { receipt = read(file(dir, 'effect-receipt.json')); body = readFileSync(file(dir, 'effects.jsonl'), 'utf8'); approval = read(file(dir, 'approval.json')); authority = read(file(dir, 'authority.json')); request = read(file(dir, 'request.json')); }
+  let receipt, body, approval, authority, request, authorityFile, requestFile;
+  try { receipt = read(file(dir, 'effect-receipt.json')); body = readFileSync(file(dir, 'effects.jsonl'), 'utf8'); approval = read(file(dir, 'approval.json')); authorityFile = loadOnce(dir, 'authority.json'); authority = authorityFile.value; requestFile = loadOnce(dir, 'request.json'); request = requestFile.value; }
   catch { return { state: 'UNCHECKABLE', verified: false }; }
   const row = body.endsWith('\n') && body.split('\n').length === 2 ? (() => { try { return JSON.parse(body.slice(0,-1)); } catch { return null; } })() : null;
-  const ok = pinned(dir, authorityPin) && receipt.authority_sha256 === authorityPin && receipt.schema === 'csoai.demo-effect-receipt/1' && receipt.state === 'EFFECT_OBSERVED_BY_LOCAL_EXECUTOR' && receipt.effect_file === 'effects.jsonl' && validHex(receipt.effect_sha256) && receipt.effect_sha256 === sha256(body) && checkSignature(approval, authority) && approval.statement.decision === 'APPROVE' && receipt.approval_id === approval.statement.id && receipt.authority_epoch === approval.statement.authority_epoch && receipt.request_sha256 === sha256(readFileSync(file(dir, 'request.json'))) && receipt.request_sha256 === approval.statement.request_sha256 && Number.isFinite(receipt.observed_at_ms) && receipt.observed_at_ms >= approval.statement.decided_at_ms && receipt.observed_at_ms >= approval.statement.not_before_ms && receipt.observed_at_ms < approval.statement.expires_at_ms && receipt.scope.action === request.action && receipt.scope.resource === request.resource && row?.approval_id === receipt.approval_id && row?.request_id === request.id && row?.marker === request.marker && row?.action === request.action;
+  const ok = validHex(authorityPin) && authorityFile.digest === authorityPin && receipt.authority_sha256 === authorityPin && receipt.schema === 'csoai.demo-effect-receipt/1' && receipt.state === 'EFFECT_OBSERVED_BY_LOCAL_EXECUTOR' && receipt.effect_file === 'effects.jsonl' && validHex(receipt.effect_sha256) && receipt.effect_sha256 === sha256(body) && checkSignature(approval, authority) && approval.statement.decision === 'APPROVE' && receipt.approval_id === approval.statement.id && receipt.authority_epoch === approval.statement.authority_epoch && receipt.request_sha256 === requestFile.digest && receipt.request_sha256 === approval.statement.request_sha256 && Number.isFinite(receipt.observed_at_ms) && receipt.observed_at_ms >= approval.statement.decided_at_ms && receipt.observed_at_ms >= approval.statement.not_before_ms && receipt.observed_at_ms < approval.statement.expires_at_ms && receipt.scope.action === request.action && receipt.scope.resource === request.resource && row?.approval_id === receipt.approval_id && row?.request_id === request.id && row?.marker === request.marker && row?.action === request.action;
   return { state: ok ? 'EFFECT_READBACK_MATCHED' : 'EFFECT_READBACK_MISMATCH', verified: ok, effects_count: row ? 1 : null, effect_sha256: sha256(body), external_observer: false, observation_process: 'separate-local-process' };
 }
 

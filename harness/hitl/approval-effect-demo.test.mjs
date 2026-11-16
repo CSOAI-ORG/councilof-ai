@@ -1,8 +1,11 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, rmSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { spawn, spawnSync } from 'node:child_process';
+import { generateKeyPairSync, sign } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 import { runFixture, runTrial, prepare, execute, observe } from './approval-effect-demo.mjs';
 
 describe('bounded approval-to-effect demonstration', () => {
@@ -44,6 +47,43 @@ describe('bounded approval-to-effect demonstration', () => {
       assert.equal(observe(dir, 'f'.repeat(64)).state, 'EFFECT_READBACK_MISMATCH');
       assert.equal(observe(dir).state, 'EFFECT_READBACK_MISMATCH');
     } finally { rmSync(dir, { recursive: true, force: true }); }
+  });
+  // Review of #4370: the first pinned version hashed a SECOND read of authority.json. A file that
+  // answers two reads differently (a FIFO) then gave the parser an attacker-key record and the
+  // digest the original one, and the effect was written. One read per operation closes it.
+  it('hashes the authority bytes it parses: a file that answers two reads differently is refused', (t) => {
+    const dir = mkdtempSync(join(tmpdir(), 'csoai-approval-effect-'));
+    const side = mkdtempSync(join(tmpdir(), 'csoai-approval-effect-side-'));
+    let writer;
+    try {
+      const at = Date.now();
+      const pin = prepare(dir, at).authority_sha256;
+      const authorityPath = join(dir, 'authority.json');
+      const original = readFileSync(authorityPath);
+      const attacker = generateKeyPairSync('ed25519');
+      const forged = { ...JSON.parse(original.toString('utf8')), trust: attacker.publicKey.export({ type: 'spki', format: 'pem' }).toString() };
+      writeFileSync(join(side, 'forged.json'), JSON.stringify(forged, null, 2) + '\n');
+      writeFileSync(join(side, 'original.json'), original);
+      const approval = JSON.parse(readFileSync(join(dir, 'approval.json'), 'utf8'));
+      approval.signature = sign(null, Buffer.from(JSON.stringify(approval.statement)), attacker.privateKey).toString('base64');
+      writeFileSync(join(dir, 'approval.json'), JSON.stringify(approval, null, 2) + '\n');
+      rmSync(authorityPath);
+      if (process.platform === 'win32' || spawnSync('mkfifo', [authorityPath]).status !== 0) { t.skip('no mkfifo on this host'); return; }
+      // First open gets the forged record, second open gets the original bytes the pin matches.
+      const feed = "const fs=require('node:fs');const [a,b,f]=process.argv.slice(1);fs.writeFileSync(f,fs.readFileSync(a));fs.writeFileSync(f,fs.readFileSync(b));";
+      writer = spawn(process.execPath, ['-e', feed, join(side, 'forged.json'), join(side, 'original.json'), authorityPath], { stdio: 'ignore' });
+      const harness = fileURLToPath(new URL('./approval-effect-demo.mjs', import.meta.url));
+      const run = spawnSync(process.execPath, [harness, '--execute', dir, String(at), pin], { encoding: 'utf8', timeout: 10000 });
+      assert.equal(run.status, 0, run.stderr);
+      const result = JSON.parse(run.stdout);
+      assert.equal(result.state, 'DENIED');
+      assert.deepEqual(result.reasons, ['AUTHORITY_RECORD_NOT_PINNED_OR_CHANGED']);
+      assert.equal(existsSync(join(dir, 'effects.jsonl')), false);
+    } finally {
+      writer?.kill('SIGKILL');
+      rmSync(dir, { recursive: true, force: true });
+      rmSync(side, { recursive: true, force: true });
+    }
   });
   it('labels the trial scope and institutional-review state without promotional inference', () => {
     const t = runTrial();
