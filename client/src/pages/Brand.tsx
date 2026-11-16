@@ -80,7 +80,7 @@ export default function Brand() {
       </Card>
 
       <p className="mt-6 flex items-center gap-2 text-xs text-muted-foreground">
-        <Mail className="h-3 w-3" /> nicholas@csoai.org — the one mailbox, Mon–Fri 09:00–18:00 Europe/London
+        <Mail className="h-3 w-3" /> contact@csoai.org — the one mailbox, Mon–Fri 09:00–18:00 Europe/London
       </p>
     </div>
   );

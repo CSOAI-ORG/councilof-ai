@@ -225,7 +225,7 @@ export default function Careers() {
                           </span>
                         </div>
                       </div>
-                      <a href="mailto:nicholas@csoai.org?subject=CSOAI%20collaboration%20proposal">
+                      <a href="mailto:contact@csoai.org?subject=CSOAI%20collaboration%20proposal">
                         Start a conversation
                         <Send className="ml-2 h-4 w-4" />
                       </a>

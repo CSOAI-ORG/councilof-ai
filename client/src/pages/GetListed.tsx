@@ -185,8 +185,8 @@ export default function GetListed() {
         </p>
         <p className="mt-3 text-emerald-100/80 leading-relaxed">
           Write to{" "}
-          <a className="text-emerald-300 underline" href="mailto:nicholas@csoai.org">
-            nicholas@csoai.org
+          <a className="text-emerald-300 underline" href="mailto:contact@csoai.org">
+            contact@csoai.org
           </a>{" "}
           with the model id, or open an issue on the GitHub org. We never open
           unsolicited PRs against your repository and we rate-limit everything we

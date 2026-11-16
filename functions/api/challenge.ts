@@ -12,7 +12,7 @@ const NAMED = ["card", "crosswalk", "board", "findings"];
 
 // Said in every response while stored is false. Exported so the test holds the words.
 export const NOT_RECORDED =
-  "Not yet recorded: this endpoint issues a receipt and stores nothing. To have a challenge recorded and reviewed, email nicholas@csoai.org with the content_id.";
+  "Not yet recorded: this endpoint issues a receipt and stores nothing. To have a challenge recorded and reviewed, email contact@csoai.org with the content_id.";
 
 function canonical(obj: Record<string, unknown>): string {
   return JSON.stringify(obj, Object.keys(obj).sort());

@@ -193,10 +193,10 @@ describe("paid and then not signed is never a bare 500", () => {
     expect(b.payment).toMatchObject({ mode: "x402", transaction: TX, payer: SELF });
     expect(b.measurement.checked.length).toBeGreaterThan(0);
     expect(b.scope.detects).toMatch(/^C2PA and IPTC metadata only/);
-    expect(b.refund.contact).toBe("nicholas@csoai.org");
+    expect(b.refund.contact).toBe("contact@csoai.org");
     expect(b.refund.reference).toBe(TX);
     expect(b.refund.how).toMatch(/refunds the payment or re-issues the signed pack/);
-    expect(b.refund.mailto).toMatch(/^mailto:nicholas@csoai\.org\?subject=/);
+    expect(b.refund.mailto).toMatch(/^mailto:contact@csoai\.org\?subject=/);
     expect(b.note).toMatch(/may have settled/);
     expect(b.failure_recorded).toBe(true);
     const rec = JSON.parse(store.store.get(`art50-undelivered:${TX}`) ?? "null");
@@ -209,6 +209,6 @@ describe("paid and then not signed is never a bare 500", () => {
     expect(r.status).toBe(500);
     const b = await r.json();
     expect(b).toMatchObject({ error: "paid_not_delivered", failure_recorded: false, failure_record: null });
-    expect(b.refund.contact).toBe("nicholas@csoai.org");
+    expect(b.refund.contact).toBe("contact@csoai.org");
   });
 });

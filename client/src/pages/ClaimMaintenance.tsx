@@ -201,7 +201,7 @@ export default function ClaimMaintenance() {
             <a className="rounded-lg bg-emerald-400 px-4 py-2.5 text-slate-950 hover:bg-emerald-300" href={SPEC}>Read the specification (v0.1)</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={REGISTER}>Claim register (JSON)</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={IMPL}>View the reference code</a>
-            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href="mailto:nicholas@csoai.org?subject=Claim%20maintenance%20enquiry">Discuss a use case</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href="mailto:contact@csoai.org?subject=Claim%20maintenance%20enquiry">Discuss a use case</a>
           </div>
           <p className="mt-4 max-w-3xl text-sm text-slate-400">
             Tell us which public claim and source you want to follow. A monitoring scope and cadence would be agreed separately; being listed in this public register does not mean a service has been commissioned.
@@ -449,7 +449,7 @@ node claim-capture.mjs --verify artifact.json`}</Code>
         </p>
         <p className="mt-4 leading-7 text-slate-700">
           Scope, cadence and price are agreed in writing per engagement; nothing here is a public price list. To discuss
-          one, write to <a className="underline" href="mailto:nicholas@csoai.org?subject=Claim%20maintenance%20engagement">nicholas@csoai.org</a>{" "}
+          one, write to <a className="underline" href="mailto:contact@csoai.org?subject=Claim%20maintenance%20engagement">contact@csoai.org</a>{" "}
           with the claims you want followed and the source you would accept as authoritative.
         </p>
         <p className="mt-4 leading-7 text-slate-700">
@@ -484,7 +484,7 @@ node claim-capture.mjs --verify artifact.json`}</Code>
         </ul>
         <p className="mt-8 rounded-lg border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-700">
           If a record here does not match what you can check, that is a defect and we want it. Write to{" "}
-          <a className="underline" href="mailto:nicholas@csoai.org">nicholas@csoai.org</a>; corrections are published at{" "}
+          <a className="underline" href="mailto:contact@csoai.org">contact@csoai.org</a>; corrections are published at{" "}
           <a className="underline" href={CORRECTIONS}>{CORRECTIONS}</a>, where anyone can read them.
         </p>
       </section>

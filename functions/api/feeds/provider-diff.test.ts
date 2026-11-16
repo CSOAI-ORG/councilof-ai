@@ -127,7 +127,7 @@ describe("paid doors", () => {
     expect(b.kind).toBe("invoice-required");
     expect(b.currency).toBe("GBP");
     expect(b.issuer).toContain("16939677");
-    expect(b.contact).toBe("nicholas@csoai.org");
+    expect(b.contact).toBe("contact@csoai.org");
     expect(b.commissioned_by).toBe("Acme-Insurance-Ltd");
     expect(b.reference).toBe("provider-diff/Acme-Insurance-Ltd/2026-09-05");
     expect(b.amount).toMatch(/stated on the invoice/);

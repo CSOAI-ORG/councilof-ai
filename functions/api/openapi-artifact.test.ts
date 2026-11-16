@@ -42,7 +42,7 @@ describe("public/openapi.json is OpenAPI 3.1 with what x402scan reads", () => {
     expect(spec.info.version).toMatch(/^0\.\d+\+[0-9a-f]{12}$/);
     expect(Object.keys(spec.paths).length).toBeGreaterThan(9);
     expect(typeof spec.info["x-guidance"]).toBe("string");
-    expect(spec.info.contact.email).toBe("nicholas@csoai.org");
+    expect(spec.info.contact.email).toBe("contact@csoai.org");
     expect(spec.servers).toEqual([{ url: "https://councilof.ai" }]);
   });
 

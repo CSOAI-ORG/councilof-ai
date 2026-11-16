@@ -434,7 +434,7 @@ describe("a paid retry that fails after sending reads 'may have settled', never 
     kind: "maybe-settled" as const,
     detail: "the paid retry answered HTTP 500: paid_not_delivered",
     settlement: { transaction: `0x${"ab".repeat(32)}`, network: "eip155:8453", payer: null, success: true },
-    refund: "Email nicholas@csoai.org with the transaction or reference below.",
+    refund: "Email contact@csoai.org with the transaction or reference below.",
   };
   it("/pay-all: PAYMENT MAY HAVE SETTLED, the transaction and the refund path; no NOT SETTLED", () => {
     const html = renderToStaticMarkup(<OutcomeLine state={state} />);

@@ -16,12 +16,14 @@
  */
 
 /**
- * The monitored mailbox. It is the address in the JSON-LD, security.txt, the invoice handoff and
- * CLAUDE.md. Switch every surface to another address (including functions/api/_invoice_handoff.ts
- * and functions/api/feeds/provider-diff.ts) only after the owner confirms that address reaches
- * the monitored inbox.
+ * The monitored mailbox. It is the address in the JSON-LD, security.txt and the invoice handoff.
+ * Owner, 16 Nov 2026: the site names contact@csoai.org, not the owner's own address. Mail sent to
+ * contact@ already lands in the monitored inbox (IMAP search, 12 Oct to 1 Nov 2026). Switch every
+ * surface to another address (including functions/api/_invoice_handoff.ts and
+ * functions/api/feeds/provider-diff.ts) only after the owner confirms that address reaches the
+ * monitored inbox.
  */
-export const CONTACT_MAILBOX = "nicholas@csoai.org";
+export const CONTACT_MAILBOX = "contact@csoai.org";
 
 export const BUYING_FAQ_URL = "/faq/#buying";
 

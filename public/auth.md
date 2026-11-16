@@ -52,4 +52,4 @@ nicholas@csoai.org)`). They do not yet sign requests with Web Bot Auth (HTTP Mes
 
 ## Contact
 
-nicholas@csoai.org. Corrections: https://councilof.ai/corrections/. Measurement, never certification.
+contact@csoai.org. Corrections: https://councilof.ai/corrections/. Measurement, never certification.

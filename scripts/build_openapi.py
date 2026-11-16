@@ -75,7 +75,7 @@ FIX = HERE / "fixtures" / "x402scan"
 OUT = REPO / "public" / "openapi.json"
 BASE = "https://councilof.ai"
 USER_AGENT = "csoai-openapi-builder/0.1 (+https://councilof.ai; nicholas@csoai.org)"
-CONTACT = {"name": "CSOAI Ltd", "url": "https://councilof.ai/", "email": "nicholas@csoai.org"}
+CONTACT = {"name": "CSOAI Ltd", "url": "https://councilof.ai/", "email": "contact@csoai.org"}
 
 CATALOG_FIXTURES = {
     "well_known_x402.json": "/.well-known/x402.json",

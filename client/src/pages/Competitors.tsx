@@ -76,7 +76,7 @@ export default function Competitors() {
           not affiliated with, endorsed by, or partnered with any of them. Comparisons below describe
           published product scope and are sourced where cited; where a company does not publish its
           pricing we say so rather than repeat an unverified figure. Anything here that is wrong is a
-          defect — tell us at nicholas@csoai.org and the correction is published in our ledger.
+          defect — tell us at contact@csoai.org and the correction is published in our ledger.
         </p>
         <div className="mt-6 grid gap-5 lg:grid-cols-3">{BATTLECARDS.map((b) => <Card key={b.slug} b={b} />)}</div>
 
