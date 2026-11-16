@@ -38,6 +38,7 @@
         "merkle"
       ],
       "examples": [
+        "SendMessage with Part.data {\"skill\":\"verify_capsule\",\"input\":{\"capsule_json\":\"<the capsule's JSON text, byte-exact>\"}}",
         "SendMessage with Part.data {\"skill\":\"measurement-capsules\",\"input\":{\"op\":\"verify\",\"capsule_json\":\"<the capsule's JSON text>\"}}",
         "POST https://councilof.ai/mcp tools/call {\"name\":\"verify_capsule\",\"arguments\":{\"capsule_json\":\"<the capsule's JSON text>\"}}",
         "https://councilof.ai/verify-server/ (in the browser)"
