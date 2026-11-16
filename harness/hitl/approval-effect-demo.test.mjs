@@ -70,7 +70,11 @@ describe('bounded approval-to-effect demonstration', () => {
       rmSync(authorityPath);
       if (process.platform === 'win32' || spawnSync('mkfifo', [authorityPath]).status !== 0) { t.skip('no mkfifo on this host'); return; }
       // First open gets the forged record, second open gets the original bytes the pin matches.
-      const feed = "const fs=require('node:fs');const [a,b,f]=process.argv.slice(1);fs.writeFileSync(f,fs.readFileSync(a));fs.writeFileSync(f,fs.readFileSync(b));";
+      // Serialize the two FIFO writes 400ms apart: under CI load a back-to-back write pair
+// can land inside the demo's first read (concatenated JSON, parse throws at the forged
+// record's length). The sleep lets read 1 see EOF on the forged bytes before the second
+// writer opens, keeping the two-reads-differ property deterministic. (#4377)
+const feed = "const fs=require('node:fs');const [a,b,f]=process.argv.slice(1);fs.writeFileSync(f,fs.readFileSync(a));setTimeout(()=>{fs.writeFileSync(f,fs.readFileSync(b));},400);";
       writer = spawn(process.execPath, ['-e', feed, join(side, 'forged.json'), join(side, 'original.json'), authorityPath], { stdio: 'ignore' });
       const harness = fileURLToPath(new URL('./approval-effect-demo.mjs', import.meta.url));
       const run = spawnSync(process.execPath, [harness, '--execute', dir, String(at), pin], { encoding: 'utf8', timeout: 10000 });
