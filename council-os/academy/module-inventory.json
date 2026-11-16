@@ -10,7 +10,7 @@
     "modules_with_exercise": 10,
     "exercises": 9,
     "findings": {
-      "boundary": 2,
+      "boundary": 3,
       "certificate_negated": 9,
       "typed_count": 3,
       "price": 22,
@@ -21,7 +21,7 @@
       "learn/practice"
     ],
     "findings_in_served_copy": {
-      "boundary": 2,
+      "boundary": 3,
       "certificate_negated": 4,
       "typed_count": 1
     }
@@ -400,7 +400,7 @@
               "href": "/gspc-verify/"
             },
             {
-              "title": "H.I.M. — where a named human decides",
+              "title": "H.I.M. — how an authorised human decision is established",
               "href": "/him"
             }
           ],
@@ -432,6 +432,12 @@
           "line": 61,
           "match": "MEOK",
           "context": "<p className=\"font-mono text-[11px] uppercase tracking-[2px] text-amber-700\">MEOK H.I.M. · the last door on every path</p>"
+        },
+        {
+          "kind": "boundary",
+          "line": 64,
+          "match": "MEOK",
+          "context": "The live Council HITL service holds challenges and decision records, but its shared operator token does not verify a person or grant execution authority. Thi…"
         },
         {
           "kind": "certificate",
@@ -1756,7 +1762,7 @@
     },
     {
       "path": "client/src/pages/CouncilAcademy.tsx",
-      "sha256": "7ec79569718ad6fef5695b2e93a96f4b5394fdb8ccec6c885abea30bca7c3494"
+      "sha256": "94ddca0ed593d4ff31277d01078422faac17c46998ca5958acb15fc3d4b031c1"
     }
   ]
 }
