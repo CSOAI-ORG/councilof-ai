@@ -1,5 +1,5 @@
 /** Dated examples of external use. These are not an estate-wide adoption census. */
-export const EXTERNAL_USE_REVIEWED = "2026-11-04";
+export const EXTERNAL_USE_REVIEWED = "2026-11-16";
 
 export const OPERATING_ORGANISATION_SUMMARY =
   "Council of AI is an operating UK AI measurement and evidence organisation run by CSOAI Ltd. It publishes test instruments, software, datasets, signed records and free verification tools.";
@@ -27,10 +27,10 @@ export const EXTERNAL_USE_EXAMPLES = [
     id: "evidence-state-implementation",
     category: "Outside implementation",
     title: "A proposal developed into runnable fixtures",
-    event: "Status: open and unmerged on 4 November 2026",
-    summary: "Kenne Ives' key and evidence-state fixtures explicitly build on Nicholas Templeman's published proposal.",
-    detail: "The contribution includes executable synthetic cases and mutation controls for key validity, unavailable evidence and related verification states.",
-    boundary: "This is a participant's contribution to a W3C Community Group repository. It does not establish W3C adoption or endorsement.",
+    event: "Merged into the W3C AIKR Community Group repository: 8 November 2026",
+    summary: "Kenne Ives' runnable key and evidence-state fixtures, based on Nicholas Templeman's published proposal, were merged as W3C AIKR Community Group repository PR #25.",
+    detail: "The merged contribution contains ten synthetic, deterministic cases covering key validity, stale lookups, successor lineage, revocation and unavailable evidence, plus eleven mutation controls. The PR explicitly credits Templeman\'s October fixture-table proposal.",
+    boundary: "A participant's code contribution was merged in a W3C Community Group repository. That does not establish W3C Recommendation status, standards adoption, endorsement or production deployment.",
     revision: "47e389d415a645ebcc8b4abc446f442aae41462c",
     sources: [
       { label: "Implementation and discussion: PR 25", href: "https://github.com/w3c-cg/aikr/pull/25" },
