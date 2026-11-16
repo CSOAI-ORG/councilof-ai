@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import { EXPOSURE_LABELS_URL, PLAIN_LANGUAGE, exposureLine, type ExposureLine } from "@/lib/bankExposure";
+import { CARD_INDEX_URL, EXPOSURE_LABELS_URL, PLAIN_LANGUAGE, exposureLine, type ExposureLine } from "@/lib/bankExposure";
+import { dayLabel } from "@/components/gspc/claimChecks";
 
 /**
  * One plain-language line under an axis: was the bank behind these cards public?
  * Reads the board-signed label record's payload. Renders nothing when the record is absent:
  * an unread label is not a clean one, so no line is better than a guessed one.
+ * The card count is dated with the record's own as_of and named as the signed mill cards, a set
+ * separate from the signed card index this page links elsewhere (E2E 2026-11-16: an undated
+ * "105 live signed cards" next to a "335 signed cards" strip read as one corpus; it is not).
  */
 export default function BankExposureNote({ axis }: { axis: string }) {
   const [line, setLine] = useState<ExposureLine | null>(null);
@@ -27,9 +31,14 @@ export default function BankExposureNote({ axis }: { axis: string }) {
             (PLAIN_LANGUAGE.PUBLIC_BANK && line.counts.some(([k]) => k === "PUBLIC_BANK") ? PLAIN_LANGUAGE.PUBLIC_BANK : "")}
       </p>
       <p className="mt-1 text-xs text-amber-800">
-        {line.liveCards} live signed cards on this axis ·{" "}
+        {line.liveCards} live signed cards on this axis
+        {line.asOf ? ` as of ${dayLabel(line.asOf)}` : " (the record states no read time)"} ·{" "}
         <a className="underline" href="/interop/instrument-guard/bank-exposure-labels.json">per-card labels</a> ·{" "}
         <a className="underline" href={EXPOSURE_LABELS_URL}>signed record</a> · the label changes no score.
+      </p>
+      <p className="mt-1 text-xs text-amber-800" data-testid="bank-exposure-corpus">
+        These are the signed mill cards the label record covers: a set separate from the{" "}
+        <a className="underline" href={CARD_INDEX_URL}>signed card index</a>, sharing no identifier with it. The two counts are never added.
       </p>
     </div>
   );

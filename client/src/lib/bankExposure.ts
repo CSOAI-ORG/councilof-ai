@@ -9,6 +9,10 @@
  * bankExposure.test.ts fails if the two ever differ. No count is typed here.
  */
 export const EXPOSURE_LABELS_URL = "/interop/instrument-guard/bank-exposure-labels.signed.json";
+/** The signed card index (corpus 3 in council-os/CARD-CORPORA.md). The cards the label record covers
+ *  are the signed mill cards under public/interop/mill-cards-signed: a separate set that shares no
+ *  identifier with this index (bankExposure.test.ts checks the bytes), so the two counts are never added. */
+export const CARD_INDEX_URL = "/signed/card_index.json";
 
 export const PLAIN_LANGUAGE: Record<string, string> = {
   PUBLIC_BANK:
@@ -31,11 +35,13 @@ export interface ExposureLine {
   sentence: string | null;
   counts: [string, number][];
   liveCards: number;
+  /** The record's own as_of (ISO), or null when the payload does not state one. Never today's date. */
+  asOf: string | null;
 }
 
 /** Read one axis out of the signed labels payload. Absent is null, never a clean result. */
 export function exposureLine(signed: unknown, axis: string): ExposureLine | null {
-  const payload = (signed as { payload?: { schema?: string; by_axis?: Record<string, AxisExposure> } })?.payload;
+  const payload = (signed as { payload?: { schema?: string; as_of?: unknown; by_axis?: Record<string, AxisExposure> } })?.payload;
   if (!payload || payload.schema !== "csoai.bank-exposure-labels-signed/0.1") return null;
   const row = payload.by_axis?.[axis];
   if (!row || typeof row.live_cards !== "number" || row.live_cards <= 0) return null;
@@ -43,5 +49,6 @@ export function exposureLine(signed: unknown, axis: string): ExposureLine | null
     .filter(([k, v]) => k !== "live_cards" && typeof v === "number" && v > 0)
     .sort((a, b) => b[1] - a[1]) as [string, number][];
   const label = counts.length === 1 && counts[0][1] === row.live_cards ? counts[0][0] : null;
-  return { label, sentence: label ? PLAIN_LANGUAGE[label] ?? null : null, counts, liveCards: row.live_cards };
+  const asOf = typeof payload.as_of === "string" && Number.isFinite(Date.parse(payload.as_of)) ? payload.as_of : null;
+  return { label, sentence: label ? PLAIN_LANGUAGE[label] ?? null : null, counts, liveCards: row.live_cards, asOf };
 }
