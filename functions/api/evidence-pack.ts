@@ -49,7 +49,7 @@ export const onRequestGet: PagesFunction<Env> = async () => {
       measurement_director: "Nicholas Templeman, Founder — CSOAI Ltd (UK Companies House 16939677)",
       signing_key: "estate-chain-1 (did:web:csoai.org#estate-chain-1) — key custody documented, verified against live did.json",
       professional_indemnity: "UNVERIFIED on this surface — owner confirmation and policy evidence are required before relying on any coverage claim",
-      contact: "nicholas@csoai.org (right-of-reply within 14 days; corrections appended, never hidden)",
+      contact: "contact@csoai.org (right-of-reply within 14 days; corrections appended, never hidden)",
     },
     // THE TEMPLATE — what an underwriter could assemble and verify
     bundle: [
