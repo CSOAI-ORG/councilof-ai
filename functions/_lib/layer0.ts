@@ -291,6 +291,8 @@ export type Envelope = {
   from?: unknown;
   to?: unknown;
   intent: string;
+  /** What the signature covers, in words. Signed with the rest of the envelope when present. */
+  scope?: string;
   action?: unknown;
   payload?: unknown;
   policy: {
@@ -323,6 +325,7 @@ export async function makeEnvelope(
     action?: unknown;
     payload?: unknown;
     decision: GateDecision;
+    scope?: string;
     privateKey: CryptoKey;
     signKid: string;
     episodeAnchor: string;
@@ -338,6 +341,7 @@ export async function makeEnvelope(
     from,
     to,
     intent,
+    ...(args.scope ? { scope: args.scope } : {}),
     action,
     payload,
     policy: {

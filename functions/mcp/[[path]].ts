@@ -21,17 +21,14 @@ import { toolsListResult } from "./_tools_list";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
 import { doorInstallLine, npmReleaseState } from "../../scripts/harness-x/npm-release-state.mjs";
-import { sharedToolResult, verifyToolResult } from "./_handlers";
-import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult, type PaidCallerContext } from "./_paid";
+import { verifyToolResult } from "./_handlers";
+import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, type PaidCallerContext } from "./_paid";
+import { dispatchTool, FREE_TOOL_DEFINITIONS, TOOL_DEFINITIONS } from "./_dispatch";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
-import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
-import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
-import { ROUTE_TOOL_NAMES, routeToolResult } from "./_route";
-import { READINESS_TOOL_NAMES, readinessToolResult } from "./_readiness";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
 import { recordUsage } from "../_lib/usage";
 import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
-import { registerCouncilPanel, withCouncilPanel } from "./_panel";
+import { registerCouncilPanel } from "./_panel";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
 export const MCP_HTTP_SERVER_VERSION = "1.4.4";
@@ -137,9 +134,10 @@ const BROWSER_ORIGINS = [...HOSTS, "chatgpt.com", "claude.ai"];
 // The measurement-capsule readers (measurement_index, verify_capsule, server_evidence) are ordinary
 // free tools in gspc-tools.json since 2026-09-26, when /measurement-capsules/ was published; the
 // MEASUREMENT_CAPSULE_TOOLS env gate that held them back is gone. One list, one fleet (the lock).
-const DEFINITIONS = ([...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[]).map(withCouncilPanel);
-// The free door's registry: the same definitions, filtered. Never a second catalog.
-export const FREE_DEFINITIONS = DEFINITIONS.filter((d) => !PAID_TOOL_NAMES.has(d.name));
+// The registry and the dispatch live in ./_dispatch.ts since 2026-11-16, so POST /api/a2a runs a tool
+// through exactly what this door runs. The free door's registry is the same definitions, filtered.
+const DEFINITIONS = TOOL_DEFINITIONS;
+export const FREE_DEFINITIONS = FREE_TOOL_DEFINITIONS;
 // The SDK's no-eval adapter retains the canonical JSON Schema. No parallel catalog.
 const validator = new CfWorkerJsonSchemaValidator();
 type JsonSchema = Parameters<typeof fromJsonSchema>[0];
@@ -194,17 +192,7 @@ function buildMcp(
         (args) =>
           // door.paid guards the dispatch as well as the registry: the free door never reaches
           // the paid wrapper even if a paid definition were ever passed to it by mistake.
-          door.paid && PAID_TOOL_NAMES.has(definition.name)
-            ? paidToolResult(definition.name,args,origin,caller)
-            : MEASUREMENT_TOOL_NAMES.has(definition.name)
-              ? measurementToolResult(definition.name, args, origin)
-              : EVIDENCE_TOOL_NAMES.has(definition.name)
-                ? evidenceToolResult(definition.name, args, origin)
-                : ROUTE_TOOL_NAMES.has(definition.name)
-                  ? routeToolResult(args, origin)
-                  : READINESS_TOOL_NAMES.has(definition.name)
-                    ? readinessToolResult(args)
-                    : sharedToolResult(definition.name, args, origin),
+          dispatchTool(definition.name, args, origin, door, caller),
       );
     }
     // Historical unlisted alias; it is not in tools/list and does not inflate the canonical count.

@@ -8,13 +8,16 @@ from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 
 DOOR = "https://councilof.ai/mcp/free"
+USER_AGENT = "csoai-gspc-dify (+https://councilof.ai/connect/)"
 
 
 class AxisArt5SafeguardTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
         args = {k: v for k, v in tool_parameters.items() if v not in (None, "")}
         body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "axis_art5-safeguard", "arguments": args}}).encode()
-        req = urllib.request.Request(DOOR, data=body, headers={"content-type": "application/json", "accept": "application/json, text/event-stream"})
+        # An identifying User-Agent. urllib's default ("Python-urllib/3.x") is refused at the edge
+        # with HTTP 403 "error code: 1010" before the request reaches the door (measured 2026-11-16).
+        req = urllib.request.Request(DOOR, data=body, headers={"content-type": "application/json", "accept": "application/json, text/event-stream", "user-agent": USER_AGENT})
         with urllib.request.urlopen(req, timeout=60) as r:
             text = r.read().decode("utf-8")
         frames = [line[5:].strip() for line in text.splitlines() if line.startswith("data:")]
