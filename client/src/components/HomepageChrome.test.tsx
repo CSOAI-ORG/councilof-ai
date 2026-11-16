@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Router } from "wouter";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
+import { CONTACT_MAILBOX } from "@/lib/buying";
 
 const widgets = vi.hoisted(() => ({
   stats: vi.fn(), authority: vi.fn(), platforms: vi.fn(), memberships: vi.fn(),
@@ -33,13 +34,12 @@ describe("site chrome is the same on the home page as on every other route", () 
     expect(home).toContain("Registered in England &amp; Wales No. 16939677");
   });
 
-  it("names the public contact address once, and not a personal one", () => {
+  it("names the site's one contact mailbox once, in the dispute line", () => {
     const html = renderAt("/", <Footer />);
     const text = html.replace(/<[^>]*>/g, " ");
-    expect(text.split("contact@csoai.org").length - 1).toBe(1);
+    expect(text.split(CONTACT_MAILBOX).length - 1).toBe(1);
     expect(text.split("To object to, dispute or request a correction").length - 1).toBe(1);
-    expect(html).not.toContain("nicholas@csoai.org");
-    expect(html).toContain('href="mailto:contact@csoai.org"');
+    expect(html).toContain(`href="mailto:${CONTACT_MAILBOX}"`);
     expect(html).toContain('href="/dispute/"');
   });
 

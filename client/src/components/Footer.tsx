@@ -3,7 +3,7 @@
  * rendered a shorter footer (three "essentials" groups, the directory folded into a disclosure,
  * and none of the evidence rows), so it was the one page without the full footer and the trust
  * row. Owner, 2026-11-16: the home page carries the same footer as /about/. The bottom bar names
- * the public contact address once.
+ * the site's one contact mailbox (CONTACT_MAILBOX, lib/buying) once.
  */
 
 import { Link } from 'wouter';
@@ -15,10 +15,7 @@ import AuthoritySignals from './AuthoritySignals';
 import MembershipStrip from './MembershipStrip';
 import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
 import { useSiteChromeHidden } from '@/lib/osChrome';
-
-// The public contact address, printed once in the bottom bar. CONTACT_MAILBOX (lib/buying) stays
-// the address for invoices and buying; this is the address for everything else, disputes included.
-const PUBLIC_CONTACT = 'contact@csoai.org';
+import { CONTACT_MAILBOX } from '@/lib/buying';
 
 interface FooterLink {
   name: string;
@@ -136,7 +133,7 @@ export function Footer() {
     { name: 'Source snapshot (archived)', icon: BookOpen, href: 'https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai' },
     // linkedin.com/company/csoai is a 404 (no page exists yet, 2026-11-02 audit).
     // Re-add here the day the company page goes live.
-    { name: 'Email', icon: Mail, href: `mailto:${PUBLIC_CONTACT}` },
+    { name: 'Email', icon: Mail, href: `mailto:${CONTACT_MAILBOX}` },
   ];
 
   return (
@@ -426,7 +423,7 @@ export function Footer() {
             © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE
           </p>
           <p className="text-muted-foreground text-xs">
-            To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href={`mailto:${PUBLIC_CONTACT}`} className="underline"><EmailOff text={PUBLIC_CONTACT} /></a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
+            To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href={`mailto:${CONTACT_MAILBOX}`} className="underline"><EmailOff text={CONTACT_MAILBOX} /></a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
           </p>
           <p className="text-muted-foreground text-xs text-center md:text-right max-w-md">
             Who runs and funds us, and where we have an interest:{" "}
