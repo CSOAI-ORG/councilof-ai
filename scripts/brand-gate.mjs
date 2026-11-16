@@ -442,20 +442,59 @@ const DISPLAY_KEYS = /^(name|title|label|headline|criteria|tagline|cta|heading|d
 const REGISTRY_IDENTIFIER = /^io\.github\.[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+$/;
 // One immutable external observation contains a real token named BLACK SWAN. It is not
 // our strategy/brand. Preserve the evidence bytes; do not create a mirror-folder exemption.
-// The exception is bound to the complete raw artifact, exact field, exact value and one rule.
-// A changed observation, a copied claim or an absent raw-byte witness receives normal checks.
+// Because public-root refreshes XRPSCAN's live ranking page (mutable updatedAt/supply/metrics
+// and array rank), bind the exception to:
+//   1. the exact mirror path + verified .meta.json fetch receipt (source_url, bytes, sha256),
+//   2. unmodified compact raw JSON matching the parsed array,
+//   3. the single immutable XRPL ledger token record (id, currency, issuer, createdAt), and
+//   4. its exact [i].meta.token.name value under internal_strategy_codename only.
 const OBSERVED_TOKEN_NAME = Object.freeze({
   path: "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-6400.json",
-  sha256: "62a6f8c94b0b294def2e1d71ab5c6fd149efd16344e4cbf6300f87c579a5473b",
-  field: "[21].meta.token.name",
+  metaId: "xrpscan-tokens-6400.json",
+  metaRole: "token-ranking-page-with-hits",
+  sourceUrl: "https://api.xrpscan.com/api/v1/tokens?limit=100&offset=6400",
+  tokenId: "424C41434B5357414E0000000000000000000000.rNhbPUzxcpjNzevvKZd2BzUJp5keth7Y77",
+  currency: "424C41434B5357414E0000000000000000000000",
+  issuer: "rNhbPUzxcpjNzevvKZd2BzUJp5keth7Y77",
+  createdAt: "2025-02-03T23:38:19.937Z",
   value: "BLACK SWAN",
   rule: "internal_strategy_codename",
 });
-function jsonDisplayHits(obj, rel, raw = null) {
+function resolveObservedTokenExemptField(obj, rel, raw, meta) {
+  if (rel !== OBSERVED_TOKEN_NAME.path) return null;
+  if (typeof raw !== "string" || !raw.length || raw.trim() !== raw) return null;
+  if (!meta || typeof meta !== "object") return null;
+  if (meta.id !== OBSERVED_TOKEN_NAME.metaId ||
+      meta.role !== OBSERVED_TOKEN_NAME.metaRole ||
+      meta.source_url !== OBSERVED_TOKEN_NAME.sourceUrl ||
+      meta.http !== 200 ||
+      meta.bytes !== Buffer.byteLength(raw, "utf8") ||
+      createHash("sha256").update(raw).digest("hex") !== meta.sha256) {
+    return null;
+  }
+  if (!Array.isArray(obj)) return null;
+  let parsedRaw;
+  try { parsedRaw = JSON.parse(raw); } catch { return null; }
+  if (!Array.isArray(parsedRaw) || JSON.stringify(parsedRaw) !== JSON.stringify(obj)) return null;
+  let matchIndex = -1;
+  for (let i = 0; i < obj.length; i++) {
+    const entry = obj[i];
+    if (!entry || typeof entry !== "object") continue;
+    if (entry.id === OBSERVED_TOKEN_NAME.tokenId) {
+      if (matchIndex !== -1) return null; // duplicate record smuggling fails closed
+      if (entry.currency !== OBSERVED_TOKEN_NAME.currency ||
+          entry.issuer !== OBSERVED_TOKEN_NAME.issuer ||
+          entry.createdAt !== OBSERVED_TOKEN_NAME.createdAt) {
+        return null;
+      }
+      matchIndex = i;
+    }
+  }
+  return matchIndex >= 0 ? `[${matchIndex}].meta.token.name` : null;
+}
+function jsonDisplayHits(obj, rel, raw = null, meta = null) {
   const hits = [];
-  const preservedExternalObservation = rel === OBSERVED_TOKEN_NAME.path &&
-    typeof raw === "string" &&
-    createHash("sha256").update(raw).digest("hex") === OBSERVED_TOKEN_NAME.sha256;
+  const exemptField = resolveObservedTokenExemptField(obj, rel, raw, meta);
 
   (function rec(node, at, key) {
     if (typeof node === "string") {
@@ -466,8 +505,8 @@ function jsonDisplayHits(obj, rel, raw = null) {
       if (REGISTRY_IDENTIFIER.test(node.trim())) return;
       const text = decodeEntities(node); // what a consumer that renders the field shows
       for (const rule of RULES) {
-        if (preservedExternalObservation && rule.id === OBSERVED_TOKEN_NAME.rule &&
-            at === OBSERVED_TOKEN_NAME.field && node === OBSERVED_TOKEN_NAME.value) continue;
+        if (exemptField !== null && rule.id === OBSERVED_TOKEN_NAME.rule &&
+            at === exemptField && node === OBSERVED_TOKEN_NAME.value) continue;
         if (rule.pagesOnly) continue; // see the rule: pages and text files only
         if (rule.allowOn && rule.allowOn.test(rel)) continue;
         const re = new RegExp(rule.pattern.source, "gi");
@@ -685,30 +724,87 @@ if (SELFTEST) {
     console.error("\u2716 selftest: catalogue display copy no longer gated"); bad++;
   }
   // Recorded third-party name: positive/negative controls bind the narrow exception to
-  // its evidence, not a filename convention. Original raw bytes are never rewritten.
+  // its fetch receipt + immutable on-ledger token identity, not a filename convention.
   {
     const fixturePath = path.join(REPO, "public", OBSERVED_TOKEN_NAME.path.slice(1));
     const raw = fs.readFileSync(fixturePath, "utf8");
+    const meta = JSON.parse(fs.readFileSync(fixturePath + ".meta.json", "utf8"));
     const observed = JSON.parse(raw);
-    const hit = (obj, rel, bytes) => jsonDisplayHits(obj, rel, bytes)
+    const makeMeta = (bytes) => ({
+      ...meta,
+      id: OBSERVED_TOKEN_NAME.metaId,
+      role: OBSERVED_TOKEN_NAME.metaRole,
+      source_url: OBSERVED_TOKEN_NAME.sourceUrl,
+      http: 200,
+      bytes: Buffer.byteLength(bytes, "utf8"),
+      sha256: createHash("sha256").update(bytes).digest("hex"),
+    });
+    const hit = (obj, rel, bytes, m = null) => jsonDisplayHits(obj, rel, bytes, m)
       .some((h) => h.rule === OBSERVED_TOKEN_NAME.rule);
     const assertControl = (condition, label) => {
       if (!condition) { console.error(`✖ selftest: external-name boundary ${label}`); bad++; }
     };
-    assertControl(createHash("sha256").update(raw).digest("hex") === OBSERVED_TOKEN_NAME.sha256,
-      "fixture is not the pinned external observation");
-    assertControl(!hit(observed, OBSERVED_TOKEN_NAME.path, raw), "blocks the unchanged named observation");
-    assertControl(hit(observed, OBSERVED_TOKEN_NAME.path, null), "accepts without raw-byte evidence");
-    assertControl(hit(observed, "/products/catalog.json", raw), "leaks into another path");
-    assertControl(hit(observed, OBSERVED_TOKEN_NAME.path, raw + "\n"), "accepts modified artifact bytes");
-    const changedName = structuredClone(observed);
-    changedName[21].meta.token.name = "Black Swan Predictor";
-    assertControl(hit(changedName, OBSERVED_TOKEN_NAME.path, JSON.stringify(changedName)),
+    assertControl(createHash("sha256").update(raw).digest("hex") === meta.sha256 &&
+      Buffer.byteLength(raw, "utf8") === meta.bytes,
+      "committed mirror fixture does not match its .meta.json fetch receipt");
+    assertControl(!hit(observed, OBSERVED_TOKEN_NAME.path, raw, meta), "blocks the committed external observation");
+    const liveIdx = observed.findIndex((e) => e && e.id === OBSERVED_TOKEN_NAME.tokenId);
+    const witness = liveIdx >= 0 ? structuredClone(observed) : [
+      { id: "other.rOther", meta: { token: { name: "OTHER" } } },
+      {
+        id: OBSERVED_TOKEN_NAME.tokenId,
+        currency: OBSERVED_TOKEN_NAME.currency,
+        issuer: OBSERVED_TOKEN_NAME.issuer,
+        createdAt: OBSERVED_TOKEN_NAME.createdAt,
+        updatedAt: "2026-11-08T00:13:07.235Z",
+        meta: { token: { name: OBSERVED_TOKEN_NAME.value } },
+      },
+    ];
+    const idx = witness.findIndex((e) => e && e.id === OBSERVED_TOKEN_NAME.tokenId);
+    // Live public-root refresh control: mutable XRPSCAN market fields & rank may advance when .meta.json matches.
+    const refreshed = structuredClone(witness);
+    refreshed[idx].updatedAt = "2026-11-08T00:13:07.235Z";
+    refreshed[idx].holders = (refreshed[idx].holders || 0) + 1;
+    const refreshedRaw = JSON.stringify(refreshed);
+    assertControl(!hit(refreshed, OBSERVED_TOKEN_NAME.path, refreshedRaw, makeMeta(refreshedRaw)),
+      "blocks a receipt-matched XRPSCAN refresh of mutable metrics");
+    const shifted = structuredClone(refreshed);
+    const swapIdx = idx === 0 ? 1 : 0;
+    [shifted[idx], shifted[swapIdx]] = [shifted[swapIdx], shifted[idx]];
+    const shiftedRaw = JSON.stringify(shifted);
+    assertControl(!hit(shifted, OBSERVED_TOKEN_NAME.path, shiftedRaw, makeMeta(shiftedRaw)),
+      "blocks a receipt-matched ranking-slot shift of the same XRPL token");
+    // Negative controls: every tampered, receiptless, forged, duplicated or copied variant MUST fail.
+    assertControl(hit(refreshed, OBSERVED_TOKEN_NAME.path, refreshedRaw, meta),
+      "accepts refreshed bytes whose sha256 disagrees with .meta.json");
+    assertControl(hit(refreshed, OBSERVED_TOKEN_NAME.path, null, makeMeta(refreshedRaw)),
+      "accepts without raw-byte evidence");
+    assertControl(hit(refreshed, OBSERVED_TOKEN_NAME.path, refreshedRaw, null),
+      "accepts without .meta.json fetch receipt");
+    assertControl(hit(refreshed, "/products/catalog.json", refreshedRaw, makeMeta(refreshedRaw)),
+      "leaks into another path");
+    assertControl(hit(refreshed, OBSERVED_TOKEN_NAME.path, refreshedRaw + "\n", makeMeta(refreshedRaw + "\n")),
+      "accepts modified trailing-whitespace artifact bytes");
+    const changedName = structuredClone(refreshed);
+    changedName[idx].meta.token.name = "Black Swan Predictor";
+    const changedNameRaw = JSON.stringify(changedName);
+    assertControl(hit(changedName, OBSERVED_TOKEN_NAME.path, changedNameRaw, makeMeta(changedNameRaw)),
       "accepts changed token-name copy");
-    const addedCopy = structuredClone(observed);
-    addedCopy[0].title = "Black Swan Predictor";
-    assertControl(jsonDisplayHits(addedCopy, OBSERVED_TOKEN_NAME.path, JSON.stringify(addedCopy))
-      .some((h) => h.rule === OBSERVED_TOKEN_NAME.rule && h.at === "[0].title"),
+    const forgedIssuer = structuredClone(refreshed);
+    forgedIssuer[idx].issuer = "rForgedIssuer111111111111111111111";
+    const forgedRaw = JSON.stringify(forgedIssuer);
+    assertControl(hit(forgedIssuer, OBSERVED_TOKEN_NAME.path, forgedRaw, makeMeta(forgedRaw)),
+      "accepts a forged XRPL issuer");
+    const duplicated = structuredClone(refreshed);
+    duplicated[swapIdx] = structuredClone(duplicated[idx]);
+    const duplicatedRaw = JSON.stringify(duplicated);
+    assertControl(hit(duplicated, OBSERVED_TOKEN_NAME.path, duplicatedRaw, makeMeta(duplicatedRaw)),
+      "accepts duplicated tokenId smuggling");
+    const addedCopy = structuredClone(refreshed);
+    addedCopy[swapIdx].title = "Black Swan Predictor";
+    const addedCopyRaw = JSON.stringify(addedCopy);
+    assertControl(jsonDisplayHits(addedCopy, OBSERVED_TOKEN_NAME.path, addedCopyRaw, makeMeta(addedCopyRaw))
+      .some((h) => h.rule === OBSERVED_TOKEN_NAME.rule && h.at === `[${swapIdx}].title`),
       "allows our added display claim inside the observation file");
     assertControl(hit({ title: "BLACK SWAN" }, "/products/catalog.json", '{"title":"BLACK SWAN"}'),
       "no longer catches the standalone phrase in our catalogue");
@@ -1016,9 +1112,12 @@ for (const jf of walkAll(DIST)) {
   if (!jf.endsWith(".json")) continue;
   const jrel = "/" + path.relative(DIST, jf);
   if (/^\/signed\//.test(jrel)) continue; // signed evidence carries the real model id — same carve-out
-  let parsed, raw;
+  let parsed, raw, meta = null;
   try { raw = fs.readFileSync(jf, "utf8"); parsed = JSON.parse(raw); } catch { continue; }
-  for (const h of jsonDisplayHits(parsed, jrel, raw)) {
+  if (jrel === OBSERVED_TOKEN_NAME.path) {
+    try { meta = JSON.parse(fs.readFileSync(jf + ".meta.json", "utf8")); } catch { meta = {}; }
+  }
+  for (const h of jsonDisplayHits(parsed, jrel, raw, meta)) {
     const held = RULES.find((r) => r.id === h.rule)?.held && !ENFORCE_HELD;
     (held ? heldHits : failures).push({ rel: jrel + " -> " + h.at, rule: h.rule, why: h.why, hit: h.hit, ctx: h.ctx });
   }
