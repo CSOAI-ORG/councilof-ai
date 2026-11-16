@@ -126,6 +126,7 @@ const BODY_TIMEOUT_MS = 10_000;
 const HOSTS = [
   "councilof.ai",
   "www.councilof.ai",
+  "mcp.meok.ai",
   "csoai.org",
   "www.csoai.org",
   "localhost",
