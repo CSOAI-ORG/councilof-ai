@@ -30,7 +30,54 @@ export const ENVELOPE_SCOPE =
   "The signer attests the gate decision in `policy` for the stated action, at `ts`. `from`, `to`, `action` and " +
   "`payload` are caller-supplied and were not verified. Not a certification.";
 
+// A BURST LIMIT, PER CLIENT AND PER EDGE INSTANCE (2026-11-16). Every request here can cost an Ed25519
+// signature under the deployment's key, and until this date nothing limited how fast one client could
+// ask. This counts requests per CF-Connecting-IP inside one Workers isolate: it stops one client
+// hammering one edge instance. It is NOT a global quota - isolates do not share the count, so a client
+// spread over many edges is not limited by it; a global quota is a Cloudflare rate-limiting rule on
+// this path. A request without CF-Connecting-IP did not come through the Cloudflare edge (tests, local
+// dev) and is not counted.
+export const ROUTE_BURST_LIMIT = 60;
+export const ROUTE_BURST_WINDOW_MS = 60_000;
+const ROUTE_BURST_MAX_CLIENTS = 2_000;
+const routeRecent = new Map<string, number[]>();
+
+/** Seconds until this client may ask again, or null when the request is within the limit (and is counted). */
+export function routeBurstRetryAfter(client: string | null, now: number = Date.now()): number | null {
+  if (!client) return null;
+  const stamps = (routeRecent.get(client) ?? []).filter((t) => t > now - ROUTE_BURST_WINDOW_MS);
+  routeRecent.delete(client);
+  if (stamps.length >= ROUTE_BURST_LIMIT) {
+    routeRecent.set(client, stamps);
+    return Math.max(1, Math.ceil((stamps[0] + ROUTE_BURST_WINDOW_MS - now) / 1000));
+  }
+  stamps.push(now);
+  routeRecent.set(client, stamps);
+  if (routeRecent.size > ROUTE_BURST_MAX_CLIENTS) routeRecent.delete(routeRecent.keys().next().value as string);
+  return null;
+}
+
+/** Tests only: forget every client. */
+export function resetRouteBurst(): void {
+  routeRecent.clear();
+}
+
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+  const retryAfter = routeBurstRetryAfter(request.headers.get("cf-connecting-ip"));
+  if (retryAfter !== null) {
+    return Response.json(
+      {
+        error: "too many requests from this client",
+        retry_after_seconds: retryAfter,
+        limit: {
+          requests: ROUTE_BURST_LIMIT,
+          window_seconds: ROUTE_BURST_WINDOW_MS / 1000,
+          scope: "per client IP, per edge instance; not a global quota",
+        },
+      },
+      { status: 429, headers: { "retry-after": String(retryAfter) } },
+    );
+  }
   const tooLarge = () =>
     Response.json({ error: `the request body exceeds ${MAX_ROUTE_BODY_BYTES} bytes` }, { status: 413 });
   const declared = Number(request.headers.get("content-length"));

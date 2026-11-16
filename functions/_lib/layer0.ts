@@ -32,8 +32,8 @@
 
 /**
  * The kid names the key that signed an envelope, so it must resolve to a PUBLISHED place.
- * did:web:csoai.org#layer0-attestation-1 is pinned in the DID document beside the six keys
- * already published there, so a verifier reading an envelope from the public gateway has
+ * did:web:csoai.org#layer0-attestation-1 is pinned in the DID document (public/.well-known/did.json, since
+ * 2026-11-16) beside the estate's other published keys, so a verifier reading an envelope from the public gateway has
  * exactly one place to look for the key. The estate's internal router key is not published
  * anywhere, so it cannot name a public signature.
  */
