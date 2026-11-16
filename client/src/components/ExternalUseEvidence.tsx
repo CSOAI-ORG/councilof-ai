@@ -9,11 +9,11 @@ export default function ExternalUseEvidence({ compact = false, inverted = false,
     <section aria-labelledby={`${id}-heading`} data-testid="external-use-evidence">
       <h2 id={`${id}-heading`} className="text-2xl font-bold tracking-tight">Public evidence of outside use</h2>
       <p className={`mt-3 max-w-3xl text-base leading-7 ${muted}`}>
-        Other developers have run a specific Council artifact, implemented a published proposal and cited its research.
+        Public records show external execution, outside implementation, reviewed reproduction of another contributor's tests and technical citation.
         Each example has its own scope and primary source.
       </p>
       <p className={`mt-2 text-sm ${muted}`}>Sources reviewed <time dateTime={EXTERNAL_USE_REVIEWED}>{reviewedLabel}</time>.</p>
-      <div className="mt-6 grid gap-5 lg:grid-cols-3">
+      <div className="mt-6 grid gap-5 lg:grid-cols-2">
         {EXTERNAL_USE_EXAMPLES.map((example) => (
           <article key={example.id} className={`min-w-0 rounded-2xl border p-5 ${inverted ? "border-slate-700 bg-slate-900" : "border-border bg-card"}`}>
             <p className={`text-xs font-bold uppercase tracking-wider ${link}`}>{example.category}</p>
