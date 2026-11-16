@@ -253,3 +253,9 @@ Why: measured 2026-11-16 — Cloudflare answers HTTP 403 `error code: 1010` to t
 The comment line: `functions/api/hitl/decision.ts` named the operator-token variable `COUNCIL_HITL_DECIDE_TOKEN`; the code reads `HITL_DECIDE_TOKEN` (`functions/api/_hitl.ts`). Comment corrected, no behaviour change.
 Not fixed here, owner-side: the edge rule itself. `post-deploy-verify.yml` deliberately keeps the default-urllib probe as a required failure until the edge stops refusing it; this lane does not touch that workflow.
 Other lanes: this lane owns the files above and this row.
+
+## lane/interop-drift-report-quote-20261116 — Claude (agent, GitHub-side via the Git Data API, 16 Nov 2026) — Interop Index Drift never filed its report: one misplaced quote
+Writer: Claude (one writer; no local clone or worktree). Files: `.github/workflows/interop-index-drift.yml` (one line of the report step, plus a comment) and this lane row. No measurement, index, corpus or gate change.
+Why: the workflow has failed on every scheduled run since it was added on 2026-11-07. Its report step closed its quotes in the wrong order, so bash refused the whole step ("line 19: unexpected EOF while looking for matching `)'", exit 2) before it could open or refresh the drift issue. The measurement step worked; only the reporting did not. The step extracted from the committed file reproduces that exact error under `bash -n`; with the quote moved it parses and, run against a stand-in `gh`, builds the title and body.
+Not fixed here: the drift itself. The committed `public/interop/file-index.json` is behind its corpus; repairing that is the producer's job under the owner's open ruling, which is what the workflow's own header says. After this lane the workflow reports that drift into its issue instead of failing silently.
+Other lanes: this lane owns that one workflow file and this row.
