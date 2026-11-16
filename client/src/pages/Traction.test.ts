@@ -70,7 +70,7 @@ describe("traction public-truth contract", () => {
       expect(html).toMatch(/datetime="2026-11-16"/i);
       expect(html).toContain("16 November 2026");
       expect(html).toContain("Merged into the W3C AIKR Community Group repository: 8 November 2026");
-      expect(html).toContain("SAFE template author reviewed Council\'s checker");
+      expect(html).toMatch(/SAFE template author reviewed Council(?:&#x27;|&#39;|')s checker/);
       expect(html).toContain("upstream PR #60 remains open");
       expect(html).not.toContain("open and unmerged on 4 November 2026");
       expect(html).toContain("does not establish production deployment, customer acceptance");
