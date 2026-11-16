@@ -42,7 +42,9 @@ export const ROUTE_BURST_WINDOW_MS = 60_000;
 const ROUTE_BURST_MAX_CLIENTS = 2_000;
 const routeRecent = new Map<string, number[]>();
 
-/** Seconds until this client may ask again, or null when the request is within the limit (and is counted). */
+// Seconds until this client may ask again, or null when the request is within the limit (and is counted).
+// Plain comments on purpose: scripts/build_openapi.py takes this route's description from the file's
+// first JSDoc block, and a helper's JSDoc there would become the door's published description.
 export function routeBurstRetryAfter(client: string | null, now: number = Date.now()): number | null {
   if (!client) return null;
   const stamps = (routeRecent.get(client) ?? []).filter((t) => t > now - ROUTE_BURST_WINDOW_MS);
@@ -57,7 +59,7 @@ export function routeBurstRetryAfter(client: string | null, now: number = Date.n
   return null;
 }
 
-/** Tests only: forget every client. */
+// Tests only: forget every client.
 export function resetRouteBurst(): void {
   routeRecent.clear();
 }
