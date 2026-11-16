@@ -54,6 +54,18 @@ export default function HomeUpdates() {
                 </div>
                 <ArrowUpRight size={20} aria-hidden="true" />
               </a>
+              <a
+                href="https://huggingface.co/datasets/csoai/evidence-weekly"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>04</span>
+                <div>
+                  <strong>Weekly evidence digest</strong>
+                  <p>Signed, machine-generated adoption and board state, every week.</p>
+                </div>
+                <ArrowUpRight size={20} aria-hidden="true" />
+              </a>
             </div>
           </div>
           <div className="hp-newsletter">
