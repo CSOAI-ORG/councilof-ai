@@ -17,21 +17,30 @@ vi.mock("@/contexts/AuthContext", () => ({ useAuth: () => ({ user: null, logout:
 const renderAt = (path: string, element: ReactNode) => renderToStaticMarkup(<Router ssrPath={path}>{element}</Router>);
 beforeEach(() => { Object.values(widgets).forEach((spy) => spy.mockClear()); });
 
-describe("homepage site chrome", () => {
-  it("keeps the full directory in a native, initially collapsed disclosure without mounting duplicate live widgets", () => {
+describe("site chrome is the same on the home page as on every other route", () => {
+  // Owner, 2026-11-16: the home page carries the same footer as /about/ and every other public page.
+  // Until then "/" rendered a shorter footer: three essentials groups, the directory folded into a
+  // <details>, and none of the evidence rows or the trust row.
+  it("renders the home page footer exactly as on every other public page", () => {
+    const home = renderAt("/", <Footer />);
+    expect(home).toBe(renderAt("/methodology/", <Footer />));
+    expect(home).not.toContain("<details");
+    expect(home).toContain("Reference frameworks");
+    expect(home).toContain('data-testid="footer-trust-row"');
+    for (const href of ["/root.json", "/feeds/records.xml", "/.well-known/did.json", "/corrections/", "/.well-known/security.txt", "/terms-of-service/"]) {
+      expect(home).toContain(`href="${href}"`);
+    }
+    expect(home).toContain("Registered in England &amp; Wales No. 16939677");
+  });
+
+  it("names the public contact address once, and not a personal one", () => {
     const html = renderAt("/", <Footer />);
-    expect(html).toMatch(/<details\b[^>]*>/);
-    expect(html).not.toMatch(/<details\b[^>]*\bopen(?:=|\s|>)/);
-    expect(html).toContain('href="/root.json"');
-    expect(html).toContain('href="/feeds/records.xml"');
-    expect(html).toContain('href="/.well-known/did.json"');
-    expect(html).toContain('href="/corrections/"');
-    expect(html).toContain('href="/.well-known/security.txt"');
-    expect(html).toContain("Registered in England &amp; Wales No. 16939677");
-    Object.values(widgets).forEach((spy) => expect(spy).not.toHaveBeenCalled());
-    const hrefs = [...html.matchAll(/href="([^"]+)"/g)].map((match) => match[1]);
-    expect(hrefs.filter((href) => href === "/api/gspc")).toHaveLength(1);
-    expect(hrefs.filter((href) => href === "/.well-known/did.json")).toHaveLength(1);
+    const text = html.replace(/<[^>]*>/g, " ");
+    expect(text.split("contact@csoai.org").length - 1).toBe(1);
+    expect(text.split("To object to, dispute or request a correction").length - 1).toBe(1);
+    expect(html).not.toContain("nicholas@csoai.org");
+    expect(html).toContain('href="mailto:contact@csoai.org"');
+    expect(html).toContain('href="/dispute/"');
   });
 
   it("preserves the existing footer widgets and directory on other public pages", () => {
@@ -42,15 +51,15 @@ describe("homepage site chrome", () => {
     expect(html).toContain('href="/terms-of-service/"');
   });
 
-  it("offers direct homepage destinations while retaining the existing ask, search and workspace controls", () => {
+  it("carries the master menu on the home page, with the same groups as other routes", () => {
     const html = renderAt("/", <Header />);
-    expect(html).toContain('href="/#how-it-works"');
-    expect(html).toContain('href="/board/"');
-    expect(html).toContain('href="/connect/"');
+    const groups = (markup: string) => [...markup.matchAll(/data-nav-trigger="([^"]+)"/g)].map((m) => m[1]);
+    expect(groups(html).length).toBeGreaterThan(0);
+    expect(groups(html)).toEqual(groups(renderAt("/methodology/", <Header />)));
+    expect(html).not.toContain('href="/#how-it-works"');
     expect(html).toContain('data-testid="ask-launcher"');
     expect(html).toContain('data-testid="palette-launcher"');
     expect(html).toContain('data-testid="header-council-os"');
-    expect(html).not.toContain("data-nav-trigger=");
     expect(html.match(/data-testid="header-book-measurement"/g)).toHaveLength(1);
     expect(html).toMatch(/<a[^>]*href="\/assess\/"[^>]*data-testid="header-book-measurement"/);
   });

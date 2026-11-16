@@ -35,7 +35,6 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
   const mobileTriggerRef = useRef<HTMLButtonElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hideChrome = useSiteChromeHidden();
-  const homepage = location === "/" && !inApp;
 
   const isActive = (href: string) => {
     const path = href.split(/[?#]/)[0];
@@ -120,21 +119,10 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             <span className="whitespace-nowrap text-lg font-black tracking-tight text-emerald-800 sm:text-xl 2xl:text-2xl">Council of AI</span>
           </a>
 
-          <div className={homepage ? "hidden xl:flex items-center" : "hidden 2xl:flex items-center"} ref={dropdownRef}>
+          <div className="hidden 2xl:flex items-center" ref={dropdownRef}>
             <div className="flex items-center gap-1 2xl:gap-3">
-              <div className={homepage ? "flex items-center gap-1" : "hidden 2xl:flex items-center gap-1 2xl:gap-3"}>
-              {homepage ? (
-                [
-                  { name: "Results", href: "/board/" },
-                  { name: "How it works", href: "/#how-it-works" },
-                  { name: "Developers", href: "/connect/" },
-                  { name: "About", href: "/about/" },
-                ].map((item) => (
-                  <a key={item.href} href={item.href} className="inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600">
-                    {item.name}
-                  </a>
-                ))
-              ) : navigation.map((item) => (
+              <div className="hidden 2xl:flex items-center gap-1 2xl:gap-3">
+              {navigation.map((item) => (
                 <div
                   key={item.name}
                   className="relative"
@@ -218,8 +206,8 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             </div>
           </div>
 
-          <div className={homepage ? "hidden xl:flex flex-nowrap items-center gap-2" : "hidden 2xl:flex flex-nowrap items-center gap-2 2xl:gap-3"}>
-            {!homepage && (<Button asChild variant="ghost" size="sm" className="hidden rounded-xl font-semibold text-emerald-800 hover:bg-emerald-50 lg:inline-flex"><Link href="/dashboard?tab=verify">Verify</Link></Button>)}
+          <div className="hidden 2xl:flex flex-nowrap items-center gap-2 2xl:gap-3">
+            <Button asChild variant="ghost" size="sm" className="hidden rounded-xl font-semibold text-emerald-800 hover:bg-emerald-50 lg:inline-flex"><Link href="/dashboard?tab=verify">Verify</Link></Button>
             <button
               type="button"
               onClick={() => openAsk()}
@@ -269,7 +257,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             )}
           </div>
 
-          <div className={homepage ? "xl:hidden flex shrink-0 items-center gap-2" : "2xl:hidden flex shrink-0 items-center gap-2"}>
+          <div className="2xl:hidden flex shrink-0 items-center gap-2">
             <button type="button" onClick={() => openAsk()} className="inline-flex min-h-10 items-center gap-1 rounded-lg px-2 text-sm font-semibold text-emerald-900 hover:bg-muted" aria-label="Ask about the results" data-testid="ask-launcher-mobile"><MessageSquareText className="h-5 w-5" aria-hidden="true" /><span className="sr-only sm:not-sr-only">Ask</span></button>
             <button type="button" onClick={() => openPalette()} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label="Search pages and ask"><Search className="h-5 w-5" aria-hidden="true" /></button>
             <button ref={mobileTriggerRef} type="button" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 text-muted-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600" aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'} aria-expanded={mobileMenuOpen} aria-controls="mobile-site-navigation">
@@ -279,25 +267,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
         </div>
 
         {mobileMenuOpen && (
-          <div id="mobile-site-navigation" className={homepage ? "xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto" : "2xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto"}>
-            {homepage ? (
-              <div data-testid="homepage-mobile-navigation" className="grid gap-1">
-                <a href={BOOK_MEASUREMENT_LINK.href} onClick={() => setMobileMenuOpen(false)} data-testid="mobile-book-measurement" className="flex min-h-11 items-center rounded-lg px-4 py-2 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600">{BOOK_MEASUREMENT_LINK.name}</a>
-                {[
-                  { name: "Results", href: "/#board" },
-                  { name: "Services", href: "/#products" },
-                  { name: "How it works", href: "/#how-it-works" },
-                  { name: "Developers", href: "/#developers" },
-                  { name: "Verify a record", href: "/gspc-verify" },
-                  { name: "About", href: "/about" },
-                  { name: "Enquire", href: "/contact?arm=run" },
-                  { name: "Council OS", href: "/dashboard" },
-                  { name: "Full library", href: "/library" },
-                ].map((item) => (
-                  <a key={item.href} href={item.href} onClick={() => setMobileMenuOpen(false)} className="flex min-h-11 items-center rounded-lg px-4 py-2 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600">{item.name}</a>
-                ))}
-              </div>
-            ) : (
+          <div id="mobile-site-navigation" className="2xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="space-y-1">
               <a href="/" className={`block px-4 py-3 rounded-lg font-medium ${
                 location === '/' ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
@@ -360,7 +330,6 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
                 )}
               </div>
             </div>
-            )}
           </div>
         )}
       </nav>
