@@ -16,6 +16,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { METERED_TOOL_SKILL_IDS, SKILL_IDS, TOOL_SKILL_IDS, onRequestGet, onRequestPost } from "./a2a";
+import { toolInputError } from "../mcp/_dispatch";
 import { onRequest as mcpOnRequest } from "../mcp/[[path]]";
 import PAID from "../mcp/paid-tools.json";
 import FREE from "../mcp/gspc-tools.json";
@@ -26,7 +27,11 @@ const ORIGIN = "https://councilof.ai";
 
 afterEach(() => vi.unstubAllGlobals());
 
-type Card = { mcp_tool?: string; supportedInterfaces?: Array<{ url: string }>; skills?: Array<{ id: string }> };
+type Card = {
+  mcp_tool?: string;
+  supportedInterfaces?: Array<{ url: string }>;
+  skills?: Array<{ id: string; examples?: string[] }>;
+};
 const cards = (): Array<{ file: string; card: Card }> =>
   readdirSync(CARDS)
     .filter((f) => f.endsWith(".json") && f !== "index.json")
@@ -118,6 +123,44 @@ describe("the per-tool cards and the router are one set", () => {
 
   it("no per-tool skill shadows a main-card skill", () => {
     expect(TOOL_SKILL_IDS.filter((id) => (SKILL_IDS as readonly string[]).includes(id))).toEqual([]);
+  });
+});
+
+/** The {skill,input} selector after "Part.data " in an example string (balanced braces), or null. */
+const selectorIn = (example: string): { skill?: unknown; input?: unknown } | null => {
+  const at = example.indexOf("Part.data {");
+  if (at < 0) return null;
+  const start = example.indexOf("{", at);
+  for (let depth = 0, i = start; i < example.length; i++) {
+    if (example[i] === "{") depth++;
+    if (example[i] === "}" && --depth === 0) return JSON.parse(example.slice(start, i + 1));
+  }
+  return null;
+};
+
+/**
+ * A card example is an instruction a stranger copies. Until 2026-11-16 seven cards gave an example
+ * for their own skill with input {} although the tool requires an argument, so the door refused the
+ * card's own example as INVALID_SKILL_INPUT, and three cards gave none for their own skill at all.
+ */
+describe("every per-tool card's own example runs on this door", () => {
+  it("each card gives a SendMessage example for its own skill whose input passes the tool's validation", async () => {
+    for (const { file, card } of cards()) {
+      const own = (card.skills?.[0]?.examples ?? []).map(selectorIn).filter((s) => s?.skill === card.mcp_tool);
+      expect(own.length, `${file} has no SendMessage example for its own skill`).toBeGreaterThan(0);
+      for (const selector of own) {
+        expect(await toolInputError(String(selector!.skill), (selector!.input ?? {}) as Record<string, unknown>), `${file}: ${JSON.stringify(selector)}`).toBeNull();
+      }
+    }
+  });
+
+  it("an example that names another skill names one this router accepts", () => {
+    for (const { file, card } of cards()) {
+      for (const selector of (card.skills?.[0]?.examples ?? []).map(selectorIn).filter(Boolean)) {
+        const skill = String(selector!.skill);
+        expect(TOOL_SKILL_IDS.includes(skill) || (SKILL_IDS as readonly string[]).includes(skill), `${file} names ${skill}`).toBe(true);
+      }
+    }
   });
 });
 
