@@ -29,7 +29,7 @@ export const EXTERNAL_USE_EXAMPLES = [
     title: "A proposal developed into runnable fixtures",
     event: "Merged into the W3C AIKR Community Group repository: 8 November 2026",
     summary: "Kenne Ives' runnable key and evidence-state fixtures, based on Nicholas Templeman's published proposal, were merged as W3C AIKR Community Group repository PR #25.",
-    detail: "The merged contribution contains ten synthetic, deterministic cases covering key validity, stale lookups, successor lineage, revocation and unavailable evidence, plus eleven mutation controls. The PR explicitly credits Templeman\'s October fixture-table proposal.",
+    detail: "The merged contribution contains ten synthetic, deterministic cases covering key validity, stale lookups, successor lineage, revocation and unavailable evidence, plus eleven mutation controls. The PR explicitly credits Templeman's October fixture-table proposal.",
     boundary: "A participant's code contribution was merged in a W3C Community Group repository. That does not establish W3C Recommendation status, standards adoption, endorsement or production deployment.",
     revision: "47e389d415a645ebcc8b4abc446f442aae41462c",
     sources: [
