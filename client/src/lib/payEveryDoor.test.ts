@@ -380,7 +380,7 @@ describe("three outcomes and no fourth", () => {
 
   it("MAYBE-SETTLED, never 'not paid', when the paid retry answers 5xx: the door may have settled before it failed", async () => {
     const receipt = { success: true, transaction: `0x${"ef".repeat(32)}`, network: "eip155:8453", payer: SIGNER };
-    const body = { error: "paid_not_delivered", refund: { how: "Email nicholas@csoai.org with the transaction below." } };
+    const body = { error: "paid_not_delivered", refund: { how: "Email contact@csoai.org with the transaction below." } };
     const fetchImpl = vi.fn(async () => jsonResponse(500, body, { "x-payment-response": btoa(JSON.stringify(receipt)) })) as unknown as typeof fetch;
     const s = await payDoor({ door: door(), challenge: challengeFromPaymentRequired(PAYMENT_REQUIRED)!, provider: provider(), walletName: "w", fetchImpl });
     expect(s.kind).toBe("maybe-settled");

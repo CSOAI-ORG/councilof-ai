@@ -108,7 +108,7 @@ export default function EvaluatorAccess() {
           <p className="mt-2 leading-7 text-slate-700">
             A new version gets a new version number and date on this page. An evaluation is held to the
             version in force when its access was agreed. Questions go to{" "}
-            <a className="text-emerald-800 underline" href="mailto:nicholas@csoai.org">nicholas@csoai.org</a>.
+            <a className="text-emerald-800 underline" href="mailto:contact@csoai.org">contact@csoai.org</a>.
           </p>
           <p className="mt-4 text-sm text-slate-600">
             Measurement, not certification. <Link className="underline" href="/methodology">Methodology</Link>

@@ -64,13 +64,13 @@ export default function NewsletterSignup() {
         setErrorMessage(
           String(data.reason || "subscription is unavailable right now") +
             ". Your address was NOT saved — " +
-            String(data.fallback || "email nicholas@csoai.org") +
+            String(data.fallback || "email contact@csoai.org") +
             " for help.",
         );
       } else {
         setStatus("error");
         setErrorMessage(
-          "Your subscription could not be confirmed. Your email is still here so you can try again, or email nicholas@csoai.org.",
+          "Your subscription could not be confirmed. Your email is still here so you can try again, or email contact@csoai.org.",
         );
       }
     } catch {
@@ -78,7 +78,7 @@ export default function NewsletterSignup() {
       // Keep the draft and the recovery message; never invent a local subscription.
       setStatus("error");
       setErrorMessage(
-        "Your subscription could not be confirmed. Your email is still here so you can try again, or email nicholas@csoai.org.",
+        "Your subscription could not be confirmed. Your email is still here so you can try again, or email contact@csoai.org.",
       );
     }
   };

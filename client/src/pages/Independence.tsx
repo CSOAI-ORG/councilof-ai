@@ -17,7 +17,7 @@ import { Link } from "wouter";
 // the register and deliberately left off this page: they say nothing about independence.
 
 const CH = "https://find-and-update.company-information.service.gov.uk/company/16939677";
-const CONTACT = "nicholas@csoai.org";
+const CONTACT = "contact@csoai.org";
 
 type Load<T> = { state: "loading" } | { state: "ok"; data: T } | { state: "error" };
 

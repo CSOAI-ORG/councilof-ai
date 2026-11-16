@@ -711,7 +711,7 @@ test("a cold /assess door lands on the measured pane with the RAS booking link",
   await expect(cta).toBeVisible({ timeout: 30_000 });
   const href = (await cta.getAttribute("href")) || "";
   expect(
-    href.startsWith("mailto:nicholas@csoai.org?subject=RAS%20booking%20request") ||
+    href.startsWith("mailto:contact@csoai.org?subject=RAS%20booking%20request") ||
       (/^https:\/\//.test(href) && !/stripe/i.test(href)),
     href,
   ).toBe(true);

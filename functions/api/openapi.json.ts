@@ -29,7 +29,7 @@ export const OPENAPI_SPEC = {
       "Verify is free; a rank is never sold. GET /api/state joins the existing public authorities; " +
       "GET /api/claims/register is maintained-claim state; GET /api/claims/events is append-only recheck event history; GET /api/corrections is append history. " +
       "Signature checks are not Actions: use /signed/HOW-TO-VERIFY.md.",
-    contact: { name: "CSOAI Ltd", url: "https://councilof.ai", email: "nicholas@csoai.org" },
+    contact: { name: "CSOAI Ltd", url: "https://councilof.ai", email: "contact@csoai.org" },
     license: { name: "Apache-2.0", url: "https://www.apache.org/licenses/LICENSE-2.0" },
   },
   servers: [{ url: "https://councilof.ai" }],

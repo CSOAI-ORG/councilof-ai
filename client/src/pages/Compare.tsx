@@ -252,7 +252,7 @@ export default function Compare({ focus }: { focus?: string }) {
           as the subject of any finding. <strong>We have not assessed any of their products</strong>,
           we publish no measurement of them, and nothing on this page should be read as a statement
           about what their products do or do not do; read that from them. If anything here is wrong
-          it is a defect: tell us at nicholas@csoai.org and the correction is published in our ledger.
+          it is a defect: tell us at contact@csoai.org and the correction is published in our ledger.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">

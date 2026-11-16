@@ -275,7 +275,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const resourceUrl = `${origin}/api/receipts/batch?from=${encodeURIComponent(batch.window.from)}&to=${encodeURIComponent(batch.window.to)}`;
 
   if (preview) {
-    return json({ schema: SCHEMA, kind: "preview", ...previewBody, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT; the paid bytes hash to batch_sha256", invoice: "or quote batch_sha256 to nicholas@csoai.org for a CSOAI LTD invoice (owner-decision; nothing is granted on a claim)", catalog: `${origin}/api/x402` }, rail: railMode(env), lid: CSOAI_LID });
+    return json({ schema: SCHEMA, kind: "preview", ...previewBody, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT; the paid bytes hash to batch_sha256", invoice: "or quote batch_sha256 to contact@csoai.org for a CSOAI LTD invoice (owner-decision; nothing is granted on a claim)", catalog: `${origin}/api/x402` }, rail: railMode(env), lid: CSOAI_LID });
   }
 
   const description = RECEIPTS_BATCH_DESCRIPTION;

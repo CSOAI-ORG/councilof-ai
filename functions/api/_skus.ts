@@ -292,7 +292,7 @@ export const SKUS: Record<string, Sku> = {
       "Free preview (?preview=1) returns count, span, root count and the sha256 of the exact batch bytes " +
       "the paid path returns — so a buyer can verify the deliverable against the preview. Every leaf is " +
       "individually free (/cards/<sha16>.json, /api/proof?sha=); the batch sells assembly across history, " +
-      "never a conclusion about any leaf. Invoice path: quote the preview sha256 to nicholas@csoai.org.",
+      "never a conclusion about any leaf. Invoice path: quote the preview sha256 to contact@csoai.org.",
   },
 
   // SKU-3 — Enterprise Rail Licence. Metered per issuance/bundle, or annual band + overage.

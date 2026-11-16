@@ -32,7 +32,7 @@ describe("invoice handoff — a quotation that stores nothing must say so", () =
   });
 
   it("routes to the estate address and no other", () => {
-    expect(INVOICE_CONTACT).toBe("nicholas@csoai.org");
+    expect(INVOICE_CONTACT).toBe("contact@csoai.org");
     expect(h.contact).toBe(INVOICE_CONTACT);
   });
 });

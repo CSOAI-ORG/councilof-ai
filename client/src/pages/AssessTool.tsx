@@ -82,7 +82,7 @@ export default function AssessTool() {
       const j = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(`Could not save (${res.status})`);
       if (j && j.stored === false) {
-        setLeadError(j.fallback || "No datastore bound — email nicholas@csoai.org with your report_id.");
+        setLeadError(j.fallback || "No datastore bound — email contact@csoai.org with your report_id.");
         return;
       }
       setLeadSent(true);
