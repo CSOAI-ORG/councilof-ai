@@ -18,3 +18,80 @@
 @media (max-width: 1000px) { .home-page .hp-hero-index[data-journey-index] { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 800px) { .home-page .hp-journey-grid { grid-template-columns: 1fr; } .home-page .hp-journey-card { padding: 24px; } }
 @media (max-width: 520px) { .home-page .hp-hero-index[data-journey-index] { grid-template-columns: repeat(2, minmax(0, 1fr)); } .home-page .hp-journey-disclosure { padding: 0 18px; } }
+
+
+/* Enterprise-grade journey cards: clear hierarchy, tactile affordances, no fake logos. */
+.home-page .hp-journey-grid {
+  gap: 18px;
+}
+.home-page .hp-journey-card {
+  position: relative;
+  min-height: 292px;
+  padding: 27px;
+  overflow: hidden;
+  border-radius: 17px;
+  border-color: color-mix(in srgb, var(--hp-line) 82%, transparent);
+  background:
+    radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--hp-soft) 88%, white) 0%, transparent 55%),
+    var(--hp-paper);
+  box-shadow: 0 16px 38px -32px rgba(5, 37, 22, .32);
+  transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+}
+.home-page .hp-journey-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0;
+  background: var(--hp-green);
+  transition: height .24s ease;
+}
+.home-page .hp-journey-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--hp-green) 38%, var(--hp-line));
+  box-shadow: 0 24px 48px -32px rgba(5, 37, 22, .42);
+}
+.home-page .hp-journey-card:hover::after {
+  height: 100%;
+}
+.home-page .hp-journey-card > svg {
+  box-sizing: content-box;
+  width: 25px;
+  height: 25px;
+  padding: 11px;
+  border: 1px solid var(--hp-line);
+  border-radius: 13px;
+  color: var(--hp-green);
+  background: var(--hp-soft);
+}
+.home-page .hp-journey-card h3 {
+  margin-top: 19px;
+  font-size: clamp(19px, 1.65vw, 23px);
+  letter-spacing: -.035em;
+}
+.home-page .hp-journey-card p {
+  font-size: 14px;
+  line-height: 1.75;
+}
+.home-page .hp-journey-card a {
+  font-size: 12px;
+  font-weight: 750;
+}
+.dark .home-page .hp-journey-card {
+  box-shadow: 0 16px 38px -32px rgba(0, 0, 0, .8);
+}
+@media (max-width: 800px) {
+  .home-page .hp-journey-card {
+    min-height: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-page .hp-journey-card,
+  .home-page .hp-journey-card::after {
+    transition: none;
+  }
+  .home-page .hp-journey-card:hover {
+    transform: none;
+  }
+}

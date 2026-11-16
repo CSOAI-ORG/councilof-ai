@@ -34,7 +34,7 @@ describe("homepage mobile navigation", () => {
     mount();
     const menu = container.querySelector("#mobile-site-navigation")!;
     expect([...menu.querySelectorAll("a")].map((link) => link.getAttribute("href"))).toEqual([
-      "/assess/", "/#board", "/#products", "/#how-it-works", "/#developers", "/gspc-verify",
+      "/assess/", "/#board", "/#watchdog", "/#products", "/#learning", "/#how-it-works", "/#developers", "/gspc-verify",
       "/about", "/contact?arm=run", "/dashboard", "/library",
     ]);
     expect(menu.querySelectorAll("button")).toHaveLength(0);
