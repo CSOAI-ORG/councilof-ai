@@ -22,12 +22,28 @@ import { decideGate, anchor, kid, loadKey, makeEnvelope, type L0Env } from "../.
 
 interface Env extends L0Env {}
 
+// An envelope describes one exchange; it is not a document store. Without a cap this door signed
+// whatever it was sent (a 300 KiB body was signed and echoed on 2026-11-16).
+export const MAX_ROUTE_BODY_BYTES = 64 * 1024;
+// Signed into every envelope, so the signature cannot be read as vouching for what the caller typed.
+export const ENVELOPE_SCOPE =
+  "The signer attests the gate decision in `policy` for the stated action, at `ts`. `from`, `to`, `action` and " +
+  "`payload` are caller-supplied and were not verified. Not a certification.";
+
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+  const tooLarge = () =>
+    Response.json({ error: `the request body exceeds ${MAX_ROUTE_BODY_BYTES} bytes` }, { status: 413 });
+  const declared = Number(request.headers.get("content-length"));
+  if (Number.isFinite(declared) && declared > MAX_ROUTE_BODY_BYTES) return tooLarge();
   let body: Record<string, unknown>;
   try {
-    body = (await request.json()) as Record<string, unknown>;
+    const text = await request.text();
+    if (new TextEncoder().encode(text).byteLength > MAX_ROUTE_BODY_BYTES) return tooLarge();
+    const parsed: unknown = JSON.parse(text);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("not an object");
+    body = parsed as Record<string, unknown>;
   } catch {
-    return Response.json({ error: "the request body is not JSON" }, { status: 400 });
+    return Response.json({ error: "the request body is not a JSON object" }, { status: 400 });
   }
 
   const from = body.from as { party?: string; endpoint?: string } | undefined;
@@ -72,6 +88,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     action: body.action,
     payload: body.payload,
     decision,
+    scope: ENVELOPE_SCOPE,
     privateKey: loaded.keys!.privateKey,
     signKid: kid(env),
     episodeAnchor: anchor(env),
