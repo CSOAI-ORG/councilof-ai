@@ -48,9 +48,41 @@ describe('bounded approval-to-effect demonstration', () => {
       assert.equal(observe(dir).state, 'EFFECT_READBACK_MISMATCH');
     } finally { rmSync(dir, { recursive: true, force: true }); }
   });
+  // The digest is checked before the record is parsed, so bytes that are not the pinned record are
+  // refused the same way whatever they are. Deterministic: no second process, no timing.
+  for (const [label, bytes] of [
+    ['is not JSON', 'not json at all\n'],
+    ['is two records back to back', null],
+    ['is empty', ''],
+  ]) {
+    it(`refuses an authority file that ${label} without parsing it, and exits cleanly`, () => {
+      const dir = mkdtempSync(join(tmpdir(), 'csoai-approval-effect-'));
+      try {
+        const at = Date.now();
+        const pin = prepare(dir, at).authority_sha256;
+        const authorityPath = join(dir, 'authority.json');
+        const original = readFileSync(authorityPath, 'utf8');
+        writeFileSync(authorityPath, bytes === null ? original + original : bytes);
+        const harness = fileURLToPath(new URL('./approval-effect-demo.mjs', import.meta.url));
+        const run = spawnSync(process.execPath, [harness, '--execute', dir, String(at), pin], { encoding: 'utf8', timeout: 10000 });
+        assert.equal(run.status, 0, run.stderr);
+        const result = JSON.parse(run.stdout);
+        assert.equal(result.state, 'DENIED');
+        assert.deepEqual(result.reasons, ['AUTHORITY_RECORD_NOT_PINNED_OR_CHANGED']);
+        assert.equal(existsSync(join(dir, 'effects.jsonl')), false);
+        assert.equal(execute(dir, at, pin).state, 'DENIED');
+        assert.equal(observe(dir, pin).state, 'NO_EFFECT');
+      } finally { rmSync(dir, { recursive: true, force: true }); }
+    });
+  }
   // Review of #4370: the first pinned version hashed a SECOND read of authority.json. A file that
   // answers two reads differently (a FIFO) then gave the parser an attacker-key record and the
   // digest the original one, and the effect was written. One read per operation closes it.
+  // This test was timing-dependent as first written (found 2026-11-16 on run 43820988799): when the
+  // feeder's second write landed before the reader saw end-of-file, the single read returned both
+  // records back to back, the parse threw and the process exited 2 instead of reporting DENIED.
+  // The effect was never written, but the test failed. With the digest checked before the parse,
+  // every interleaving is the same refusal.
   it('hashes the authority bytes it parses: a file that answers two reads differently is refused', (t) => {
     const dir = mkdtempSync(join(tmpdir(), 'csoai-approval-effect-'));
     const side = mkdtempSync(join(tmpdir(), 'csoai-approval-effect-side-'));
