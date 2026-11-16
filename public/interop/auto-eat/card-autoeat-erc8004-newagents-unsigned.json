@@ -1,8 +1,8 @@
 {
  "schema": "https://councilof.ai/schema/card-v0.json",
  "surface": "autoeat.erc8004.newagents",
- "subject": "auto-eat erc8004: 7 LIVE of 10 probed (read-only, ungraded)",
- "as_of": "2026-11-14T21:31:51Z",
+ "subject": "auto-eat erc8004: 4 LIVE of 9 probed (read-only, ungraded)",
+ "as_of": "2026-11-16T02:07:55Z",
  "source_urls": [
   "https://api.8004scan.io/api/v1/agents",
   "https://base-rpc.publicnode.com"
@@ -19,25 +19,23 @@
   },
   "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 10,
-   "live": 7,
+   "n_probed": 9,
+   "live": 4,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 3,
-   "live_fraction_of_probed": 0.7,
+   "uncheckable": 5,
+   "live_fraction_of_probed": 0.4444,
    "live_examples": [
-    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:11426 (tokenURI resolvable)",
-    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:10708 (tokenURI resolvable)",
-    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:11425 (tokenURI resolvable)",
-    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:11423 (tokenURI resolvable)",
-    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:10700 (tokenURI resolvable)",
-    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:10699 (tokenURI resolvable)"
+    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:10726 (tokenURI resolvable)",
+    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:10724 (tokenURI resolvable)",
+    "1:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:56519 (tokenURI resolvable)",
+    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:10710 (tokenURI resolvable)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-11-14T21:31:51Z",
+  "as_of": "2026-11-16T02:07:55Z",
   "unmeasured": [
    "reputation_validity",
    "validation_registry_mainnet",
