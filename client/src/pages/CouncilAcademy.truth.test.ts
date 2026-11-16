@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
@@ -12,6 +13,9 @@ describe("Academy HITL public-authority boundary", () => {
     expect(html).toContain('href="/api/hitl/record"');
     expect(html).toContain('href="/him"');
     expect(html).not.toContain("a named human decides");
+    const nav = readFileSync(new URL("../components/HeaderNav.tsx", import.meta.url), "utf8");
+    expect(nav).toContain("a shared token does not verify a human or grant execution authority");
+    expect(nav).not.toContain("a named human decides");
     expect(html).toContain("issuance is not open yet");
   });
 });
