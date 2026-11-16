@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import AxisLink from "@/components/AxisLink";
 import { axisRoute } from "@/lib/axisRoutes";
 import type { AxisRow } from "@/data/axis-sets";
 
@@ -111,13 +112,13 @@ export default function BoardField({ rows, setId }: { rows: AxisRow[]; setId: st
           const chip = r.separation ?? r.status;
           return (
             <li key={r.id} className="grid grid-cols-[minmax(8rem,14rem)_3.5rem_1fr_5.5rem] items-center gap-2">
-              <Link
-                href={axisRoute(r.id) ?? undefined}
+              <AxisLink
+                href={axisRoute(r.id)}
                 className="truncate font-mono text-xs font-semibold text-gray-900 underline decoration-gray-300 underline-offset-2 hover:decoration-gray-900"
                 title={r.what}
               >
                 {r.name}
-              </Link>
+              </AxisLink>
               <span className="text-right font-mono text-[11px] text-gray-600">
                 {r.n === null ? "—" : r.n}
               </span>

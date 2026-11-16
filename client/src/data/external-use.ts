@@ -1,11 +1,11 @@
 /** Dated examples of external use. These are not an estate-wide adoption census. */
-export const EXTERNAL_USE_REVIEWED = "2026-11-04";
+export const EXTERNAL_USE_REVIEWED = "2026-11-16";
 
 export const OPERATING_ORGANISATION_SUMMARY =
   "Council of AI is an operating UK AI measurement and evidence organisation run by CSOAI Ltd. It publishes test instruments, software, datasets, signed records and free verification tools.";
 
 export const EXTERNAL_USE_SUMMARY =
-  "Public records document an externally operated rerun of Council code, another developer's implementation of its evidence-state proposal, and use of its research in a technical draft.";
+  "Public records document an externally operated rerun of Council code, a contributor's independently implemented proposal, author-reviewed reproduction of SAFE template controls, and research cited in an individual Internet-Draft.";
 
 export const EXTERNAL_USE_EXAMPLES = [
   {
@@ -27,13 +27,28 @@ export const EXTERNAL_USE_EXAMPLES = [
     id: "evidence-state-implementation",
     category: "Outside implementation",
     title: "A proposal developed into runnable fixtures",
-    event: "Status: open and unmerged on 4 November 2026",
-    summary: "Kenne Ives' key and evidence-state fixtures explicitly build on Nicholas Templeman's published proposal.",
-    detail: "The contribution includes executable synthetic cases and mutation controls for key validity, unavailable evidence and related verification states.",
-    boundary: "This is a participant's contribution to a W3C Community Group repository. It does not establish W3C adoption or endorsement.",
+    event: "Merged into the W3C AIKR Community Group repository: 8 November 2026",
+    summary: "Kenne Ives' runnable key and evidence-state fixtures, based on Nicholas Templeman's published proposal, were merged as W3C AIKR Community Group repository PR #25.",
+    detail: "The merged contribution contains ten synthetic, deterministic cases covering key validity, stale lookups, successor lineage, revocation and unavailable evidence, plus eleven mutation controls. The PR explicitly credits Templeman's October fixture-table proposal.",
+    boundary: "A participant's code contribution was merged in a W3C Community Group repository. That does not establish W3C Recommendation status, standards adoption, endorsement or production deployment.",
     revision: "47e389d415a645ebcc8b4abc446f442aae41462c",
     sources: [
       { label: "Implementation and discussion: PR 25", href: "https://github.com/w3c-cg/aikr/pull/25" },
+    ],
+  },
+  {
+    id: "safe-template-reproduction",
+    category: "Independent reproduction reviewed",
+    title: "SAFE template author reviewed Council's checker",
+    event: "Author credited CSOAI Ltd in candidate PR #60: 18 October 2026",
+    summary: "CSOAI independently reproduced another contributor's SAFE evidence-template example and controls. The template author read the checker, clarified four ambiguous rules and credited CSOAI Ltd in his candidate template.",
+    detail: "The original synthetic example's manifest digest and both test-key signatures matched. Five required negative controls and five additional variants reproduced after the author pinned the ambiguous rules. Erik Newton reviewed both checker scripts and incorporated the dated, pinned credit at commit b640a90.",
+    boundary: "The checker was authored by CSOAI, independently of the template author, and the author reviewed it. This is not an unrelated third party running Council's product, an approved SAFE specification, certification, endorsement or customer deployment; upstream PR #60 remains open.",
+    revision: "b640a9045730a07e72ad5d90a62fde906ca99b80",
+    sources: [
+      { label: "Author review and credit", href: "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60#issuecomment-6251270225" },
+      { label: "Checker reproduction and controls", href: "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60#issuecomment-6038806039" },
+      { label: "Candidate evidence template PR", href: "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60" },
     ],
   },
   {

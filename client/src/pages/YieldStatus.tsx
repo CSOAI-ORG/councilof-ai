@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
+import { readBytes, readJson, statusReadError, type Read } from "../lib/statusReads";
 import {
   FEED_GROUPS,
   FLEET_STATUS_URL,
@@ -59,34 +60,6 @@ type Row = {
   observedFrom: string;
   href: string;
 };
-
-type Read<T> = { ok: true; body: T; readAt: string } | { ok: false; error: string; readAt: string };
-
-async function readBytes(url: string): Promise<Read<Uint8Array>> {
-  const readAt = new Date().toISOString();
-  try {
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) return { ok: false, error: `HTTP ${response.status}`, readAt };
-    return { ok: true, body: new Uint8Array(await response.arrayBuffer()), readAt };
-  } catch (error) {
-    return { ok: false, error: error instanceof Error ? error.message : "unreachable", readAt };
-  }
-}
-
-async function readJson<T>(path: string, init?: RequestInit): Promise<Read<T>> {
-  const readAt = new Date().toISOString();
-  try {
-    const response = await fetch(path, {
-      cache: "no-store",
-      headers: { accept: "application/json" },
-      ...init,
-    });
-    if (!response.ok) return { ok: false, error: `HTTP ${response.status}`, readAt };
-    return { ok: true, body: (await response.json()) as T, readAt };
-  } catch (error) {
-    return { ok: false, error: error instanceof Error ? error.message : "unreachable", readAt };
-  }
-}
 
 /** The failure text of a Read, narrowed explicitly so a ternary branch never has to. */
 function readError(r: Read<unknown>): string {
@@ -175,7 +148,7 @@ export default function YieldStatus() {
       const settled = <T,>(entry: PromiseSettledResult<Read<T>>): Read<T> =>
         entry.status === "fulfilled"
           ? entry.value
-          : { ok: false, error: entry.reason instanceof Error ? entry.reason.message : "unreachable", readAt: new Date().toISOString() };
+          : { ok: false, error: statusReadError(entry.reason), readAt: new Date().toISOString() };
 
       const next: Row[] = [];
 

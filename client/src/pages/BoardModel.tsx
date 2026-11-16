@@ -8,6 +8,7 @@
  */
 import { useEffect, useMemo } from "react";
 import { axisHref } from "@/lib/axisHref";
+import AxisLink from "@/components/AxisLink";
 import { Link, useSearch } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { useLiveJson } from "@/components/gspc/useLiveJson";
@@ -186,9 +187,9 @@ export default function BoardModel() {
                   data-testid={`model-cell-${c.kind}`}
                 >
                   <div>
-                    <Link href={axisHref(a) ?? undefined} className="text-sm font-semibold text-gray-900 underline">
+                    <AxisLink href={axisHref(a)} className="text-sm font-semibold text-gray-900 underline">
                       {c.axis}
-                    </Link>
+                    </AxisLink>
                     {a?.task && <span className="block text-xs text-gray-600">{a.task}</span>}
                   </div>
                   <Result c={c} axis={a} />

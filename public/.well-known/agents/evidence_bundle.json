@@ -40,7 +40,7 @@
       "examples": [
         "POST https://councilof.ai/mcp tools/call {\"name\":\"evidence_bundle\",\"arguments\":{\"obligation\":\"article-50\"}} (answers with the x402 challenge; call again with x_payment)",
         "POST https://councilof.ai/mcp tools/call {\"name\":\"evidence_bundle\",\"arguments\":{\"obligation\":\"article-50\",\"preview\":true}} (free)",
-        "The free A2A skill is evidence-bundle; this paid tool is served on MCP only"
+        "SendMessage to https://councilof.ai/api/a2a with Part.data {\"skill\":\"evidence_bundle\",\"input\":{\"obligation\":\"article-50\"}} (answers with the x402 challenge; send again with input.x_payment). The free preview is \"preview\":true, or the main card's skill evidence-bundle"
       ]
     }
   ],

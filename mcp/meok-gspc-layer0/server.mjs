@@ -5,6 +5,8 @@
 
 import { submitWorkStep, readCapabilitySnapshot } from './core.mjs';
 import { readGspcEvidence } from './evidence-context.mjs';
+import { submitChat } from './chat-provider.mjs';
+import { HF_SITUATION_TOOL, reasonHfSituation } from './hf-situation.mjs';
 import path from 'node:path';
 import os from 'node:os';
 import readline from 'node:readline';
@@ -15,6 +17,7 @@ const CAP_DIR = process.env.MEOK_CAPABILITY_DIR || path.join(WS, 'meok-router', 
 const HIM_BASE = process.env.HIM_URL || 'http://127.0.0.1:8787';
 
 const TOOLS = [
+  ...(process.env.MEOK_HF_ENABLED === '1' ? [HF_SITUATION_TOOL] : []),
   {
     name: 'meok_read_gspc_evidence',
     description: 'Read a selected axis from the fixed public GSPC board and retained daily report metadata. Returns source hashes, dates, coverage and limits. No private report ingestion, model training, human approval or execution.',
@@ -37,7 +40,7 @@ const TOOLS = [
   },
   {
     name: 'meok_route_to_clan',
-    description: 'Submit a prompt to the configured H.I.M. chat endpoint. Returned provenance is provider-reported and is not verified by this bridge.',
+    description: 'Submit a prompt through the configured MEOK chat provider. H.I.M. remains the default; an operator-configured Cosmos endpoint can supply text inference. Provider claims are unverified; this tool grants no execution authority or model training.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -87,6 +90,9 @@ const TOOLS = [
 ];
 
 async function handleToolCall(name, args = {}) {
+  if (name === 'meok_reason_situation') {
+    return JSON.stringify(await reasonHfSituation(args), null, 2);
+  }
   if (name === 'meok_read_gspc_evidence') {
     return JSON.stringify(await readGspcEvidence(args), null, 2);
   }
@@ -138,32 +144,12 @@ async function handleToolCall(name, args = {}) {
 
   if (name === 'meok_route_to_clan' || name === 'him_say') {
     const content = args.prompt || args.text || '';
-    try {
-      const res = await fetch(`${HIM_BASE}/v1/chat/completions`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          model: 'meok-canonical-v1',
-          mode: args.mode || 'auto',
-          messages: [{ role: 'user', content }],
-        }),
-        signal: AbortSignal.timeout(30000),
-      });
-      if (!res.ok) {
-        await res.body?.cancel().catch(() => {});
-        return JSON.stringify({ state: 'UNCHECKABLE', reason: 'HIM_HTTP_ERROR', http_status: res.status });
-      }
-      const data = await res.json();
-      const answer = data?.choices?.[0]?.message?.content;
-      if (data?.error || typeof answer !== 'string') {
-        return JSON.stringify({ state: 'UNCHECKABLE', reason: 'HIM_RESPONSE_INVALID' });
-      }
-      return JSON.stringify({ answer, provenance: data?.meok_provenance ?? null }, null, 2);
-    } catch {
-      // Transport and parsing failures are execution errors, never successful empty answers.
-      // Do not return exception text that may disclose a credential-bearing endpoint.
-      return JSON.stringify({ state: 'UNCHECKABLE', reason: 'HIM_REQUEST_FAILED' });
-    }
+    // A Cosmos model endpoint never replaces the coordinator's governed-message route.
+    // Work-step telemetry above also remains on HIM_BASE.
+    const env = name === 'him_say'
+      ? { ...process.env, MEOK_CHAT_BACKEND: 'him' }
+      : process.env;
+    return JSON.stringify(await submitChat({ prompt: content, mode: args.mode }, { env }), null, 2);
   }
 
   const snapshots = {
