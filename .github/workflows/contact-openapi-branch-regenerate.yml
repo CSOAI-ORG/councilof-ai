@@ -25,6 +25,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Install pinned package dependencies needed by manifest generator
+        run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Rebuild derived OpenAPI without network or secrets
         run: python3 scripts/build_openapi.py
       - name: Commit only the known generated artefacts to this PR branch
