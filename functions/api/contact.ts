@@ -47,7 +47,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     await env.LEADS.put("contact:" + at + ":" + id, JSON.stringify({
       kind: "contact", ...fields, at, id, source: "councilof.ai/contact",
       notification_state: "NOT_CONFIGURED",
-    }));
+    }), { expirationTtl: 30 * 24 * 60 * 60 }); // explicit 30-day expiry, not indefinite personal-data retention
   } catch {
     return reply({ stored: false, code: "STORAGE_FAILED", fallback: "contact@csoai.org" }, 503);
   }
