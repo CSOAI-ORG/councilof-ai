@@ -15,6 +15,8 @@ export default function Contact() {
     message: '',
   });
   const [copyFeedback, setCopyFeedback] = useState("");
+  const [submitFeedback, setSubmitFeedback] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const copyRevision = useRef(0);
 
   useEffect(() => {
@@ -34,9 +36,25 @@ export default function Contact() {
   };
 
   const emailDraft = prepareContactEmail(formData);
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (emailDraft.mailto) window.location.href = emailDraft.mailto;
+    if (submitting) return;
+    setSubmitting(true);
+    setSubmitFeedback("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ ...formData, website: "" }),
+      });
+      const data = await res.json() as { stored?: boolean; receipt_id?: string; code?: string };
+      if (!res.ok || data.stored !== true || !data.receipt_id) throw Error(data.code || "INTAKE_UNAVAILABLE");
+      setSubmitFeedback("Stored with reference " + data.receipt_id + ". No email notification was sent. For time-sensitive requests, email " + CONTACT_MAILBOX + " directly.");
+    } catch {
+      setSubmitFeedback("Storage was not confirmed and nothing was sent. Please use the email draft or copy option to contact " + CONTACT_MAILBOX + ".");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const copyEnquiry = async () => {
@@ -201,18 +219,20 @@ export default function Contact() {
                     data-testid="contact-message-input"
                   />
                 </div>
-                <Button type="submit" size="lg" className="w-full bg-primary hover:bg-brand-institutional" data-testid="contact-submit-button">
+                <Button type="submit" disabled={submitting} size="lg" className="w-full bg-primary hover:bg-brand-institutional" data-testid="contact-submit-button">
                   <Send className="h-4 w-4 mr-2" />
-                  {emailDraft.mailto ? "Open email draft" : "Copy draft below"}
+                  {submitting ? "Submitting…" : "Submit enquiry"}
                 </Button>
+                {submitFeedback ? <p role="status" aria-live="polite" className="rounded-lg border border-border p-3 text-sm text-foreground" data-testid="contact-submission-status">{submitFeedback}</p> : null}
                 <div className="flex flex-wrap items-center gap-3">
+                  {emailDraft.mailto ? <a href={emailDraft.mailto} className="inline-flex min-h-11 items-center rounded-lg border border-input px-4 py-2 text-sm font-medium">Open email draft instead</a> : null}
                   <Button type="button" variant="outline" onClick={() => void copyEnquiry()} data-testid="contact-copy-button">
                     Copy enquiry text
                   </Button>
                   {copyFeedback ? <p role="status" aria-live="polite" className="text-sm text-muted-foreground">{copyFeedback}</p> : null}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  This form opens your email client when the draft fits safely in an email link. There is no silent backend, and nothing you type here is stored by this site.
+                  A successful submission stores the enquiry in the Council intake database; it does not automatically notify the team, book a service or take payment. Only a receipt reference confirms storage. Do not submit confidential files or credentials.
                 </p>
                 {!emailDraft.mailto && <p role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">This draft is too long or cannot be encoded safely for an email link. Copy the full text below into your email app.</p>}
                 <details open={!emailDraft.mailto} className="rounded-lg border border-border bg-card p-4">
