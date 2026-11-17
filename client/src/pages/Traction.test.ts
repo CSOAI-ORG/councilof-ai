@@ -54,6 +54,14 @@ describe("traction public-truth contract", () => {
     }
   });
 
+  it("records the outside Kaggle notebook as dated data reuse, within scope", () => {
+    expect(source).toContain("https://www.kaggle.com/code/hosseinbadrnezhad/csoai-gspc-living-board-etl-eda-visualize-model");
+    expect(source).toContain("https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board");
+    expect(source).toContain("last run to 14 November 2026");
+    expect(source).toContain("not a review of the measurement method, a validation of any result or a customer deployment");
+    expect(source).toContain("Sources reviewed 17 November 2026");
+  });
+
   it("keeps distribution attribution, adoption census and commercial records separate", () => {
     expect(source).toContain("Council, MEOK and shared material");
     expect(source).toContain("do not identify unique users or customers");
