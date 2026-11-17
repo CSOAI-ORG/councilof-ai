@@ -1,3 +1,5 @@
+> **Licensing boundary (proposed, pending owner review):** The repository root is MIT; this GSPC plugin directory declares Apache-2.0 in `plugin.json` and now carries its own `LICENSE` text. The separately packaged `mcp/gspc-server` also declares Apache-2.0 and includes a package-local `LICENSE`. Do not infer the licence for all sibling directories from the plugin manifest. An owner licence decision is still required before publishing further packages.
+
 # gspc — Council OS inside the tool you already use
 
 A pointer to the GSPC MCP server at `https://councilof.ai/mcp` (streamable HTTP, no key).
