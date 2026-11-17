@@ -139,8 +139,25 @@ jobs:
           path: canon
           sparse-checkout: |
             scripts/verify_agent_card_jws.py
+            scripts/custody-wording-guard.mjs
           sparse-checkout-cone-mode: false
           persist-credentials: false
+      - name: The DID this deploy ships makes no uncorrected split-custody claim (C-2026-0925-01)
+        run: |
+          # This repo's custody wording guard covers public/.well-known/did.json. Nothing covered
+          # the apex copy, so csoai.org kept the "3-party cb-mpc" wording for six weeks after the
+          # correction. Same rule and same code (scanText), applied to the DID this deploy ships.
+          node --input-type=module - <<'JS'
+          import { readFileSync } from 'node:fs';
+          const { scanText } = await import(`file://${process.cwd()}/canon/scripts/custody-wording-guard.mjs`);
+          const hits = scanText(readFileSync('src/_site/.well-known/did.json', 'utf8'));
+          for (const h of hits) console.error(`did.json:${h.line}: "${h.match}" with no correction context: ${h.excerpt}`);
+          if (hits.length) {
+            console.error('::error::the DID this deploy ships makes the split-custody claim C-2026-0925-01 withdrew; correct .well-known/did.json in csoai-static-deploy2');
+            process.exit(1);
+          }
+          console.log('did.json: no uncorrected split-custody claim');
+          JS
       - name: Twin the agent card from councilof.ai (bytes, verified against the DID this deploy ships)
         run: |
           # One producer, two origins. Overwrites the 0.1.0 card that build_site.py copied
