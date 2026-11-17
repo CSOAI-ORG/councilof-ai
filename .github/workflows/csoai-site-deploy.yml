@@ -45,6 +45,23 @@ name: csoai-site deploy — full static site from csoai-static-deploy2 main
 # (the 14 Sep run did not), and what these runs upload is served there and not on
 # csoai.org or csoai-site.pages.dev. That is what a PREVIEW deployment looks like. The
 # Pages project's production-branch setting was not read; it is the first thing to check.
+#
+# 2026-11-17: read through the Pages API. csoai-site's production branch is `master`, so every
+# `--branch=main` run since early October made a preview (main.csoai-site.pages.dev), and
+# csoai.org kept serving a hand upload from 3 Oct (deployment 8c45f262). This workflow now
+# deploys to `master`. Before the switch the build was compared with that deployment, file by
+# file: every /.well-known file and the fallback page are the same bytes, except four on
+# purpose. did.json adds #layer0-attestation-1, the key councilof.ai /api/a2a/route signs with.
+# agent-card.json and agent.json are twinned from councilof.ai, because the 0.1.0 card live
+# there fails its own #site-release-1 signature. scitt-keys is twinned because live has none.
+# Two defects were fixed on the way:
+# - The middleware built its target with new URL(path, 'https://councilof.ai'). That resolves
+#   //evil.com to https://evil.com/, an open redirect, and the main preview served it. Now the
+#   target is the fixed origin plus the path, joined as strings, as in the 28 Sep live fix,
+#   and a probe refuses to deploy a middleware that sends any path off-site.
+# - Cards and proofs are no longer twinned. The middleware 308s /cards and /proofs, so those
+#   files were never served. Fetching about 600 of them reset the connection and stopped
+#   every run before the deploy step.
 
 on:
   workflow_dispatch: {}
@@ -82,6 +99,7 @@ jobs:
               'did:web:csoai.org#site-release-1',
               'did:web:csoai.org#estate-chain-1',
               'did:web:csoai.org#card-attestation-1',
+              'did:web:csoai.org#layer0-attestation-1',
           ]
           missing = [k for k in required if k not in kids]
           assert not missing, ('missing kids', missing, kids)
@@ -90,21 +108,17 @@ jobs:
           print('did.json kids OK:', kids)
           print('did.json services OK:', types)
           PY
-      - name: Twin living cards+proofs from councilof.ai (not SPA)
+      - name: Twin scitt-keys from councilof.ai (key discovery, bytes)
         working-directory: src
         run: |
           python3 - <<'PY'
-          import json, pathlib, subprocess
-          root = json.loads(pathlib.Path('_site/root.json').read_text())
-          print('twin as_of', root.get('as_of'), 'merkle', root.get('merkle_root'), 'n', root.get('card_count'))
-          for dname in ('cards', 'proofs'):
-              pathlib.Path('_site', dname).mkdir(parents=True, exist_ok=True)
-          # 2026-09-11: twin the SCITT key-discovery doc as well (public key
-          # material only — never a transparency-service claim). Retry: this
-          # workflow races the main deploy when both fire off the same merge.
+          import json, pathlib, subprocess, time
+          # 2026-09-11: twin the SCITT key-discovery doc (public key material only, never a
+          # transparency-service claim). Retry: this workflow races the main deploy when both
+          # fire off the same merge. Cards and proofs are not twinned: the middleware 308s
+          # /cards and /proofs to councilof.ai, so those files were never served (2026-11-17).
           sk = pathlib.Path('_site/.well-known')
           sk.mkdir(parents=True, exist_ok=True)
-          import time as _time
           for _try in range(1, 7):
               rc = subprocess.call(['curl', '-sS', '-f', '--max-time', '25', '-A', 'csoai-site-deploy',
                                     '-o', str(sk / 'scitt-keys'),
@@ -112,18 +126,12 @@ jobs:
               if rc == 0:
                   break
               print(f'scitt-keys fetch attempt {_try} failed (rc={rc}); waiting for the main deploy')
-              _time.sleep(20)
+              time.sleep(20)
           else:
               raise SystemExit('scitt-keys never became fetchable on councilof.ai')
-          print('twinned scitt-keys', (sk / 'scitt-keys').stat().st_size)
-          for sha in root['card_sha256']:
-              s16 = sha[:16]
-              for kind in ('cards', 'proofs'):
-                  url = f'https://councilof.ai/{kind}/{s16}.json'
-                  dest = pathlib.Path('_site') / kind / f'{s16}.json'
-                  subprocess.check_call(['curl', '-sS', '-f', '--max-time', '25', '-A', 'csoai-site-deploy', '-o', str(dest), url])
-                  print(kind, s16, dest.stat().st_size)
-          print('twinned cards+proofs only; no SPA')
+          jsk = json.loads((sk / 'scitt-keys').read_text())
+          assert jsk.get('we_operate_a_ts') is False and jsk.get('keys'), 'scitt-keys malformed'
+          print('twinned scitt-keys', (sk / 'scitt-keys').stat().st_size, 'bytes,', len(jsk['keys']), 'keys')
           PY
       - name: Fetch the independent agent-card verifier (this repository)
         uses: actions/checkout@v4
@@ -173,15 +181,36 @@ jobs:
             // discovery — slow-moving, safe to twin as bytes). The hourly-moving
             // trust surface (root.json, cards, proofs, schema) redirects to the
             // canonical host; verifiers follow the 308 to identical bytes.
-            if (p === '/.well-known' || p.startsWith('/.well-known/')) {
+            if (p.startsWith('/.well-known/')) {
               return context.next();
             }
-            const dest = new URL(url.pathname + url.search + url.hash, 'https://councilof.ai');
-            return Response.redirect(dest.toString(), 308);
+            // The target is the fixed origin plus the path, joined as strings. Never
+            // new URL(path, base): a path such as //evil.com resolves against any base
+            // to https://evil.com/, an open redirect. Leading / and \ are stripped too,
+            // so councilof.ai never receives a path a browser could read as a host.
+            const rest = (p + url.search).replace(/^[\/\\]+/, '');
+            return Response.redirect('https://councilof.ai/' + rest, 308);
           }
           JS
           test -f functions/_middleware.js
           test -f _site/.well-known/did.json
+          # Probe the middleware before it ships: /.well-known/* is served, everything else
+          # 308s to councilof.ai, and no path (//x, /\x, ///x) may leave councilof.ai.
+          cp functions/_middleware.js "$RUNNER_TEMP/csoai-middleware.mjs"
+          node --input-type=module - <<'JS'
+          const { onRequest } = await import(`file://${process.env.RUNNER_TEMP}/csoai-middleware.mjs`);
+          const wrong = [];
+          for (const p of ['/', '/x?y=1', '//evil.com', '//evil.com/x', '/\\evil.com', '///evil.com',
+                           '/\\/evil.com', '/.well-known', '/.well-known/did.json', '/.well-known/../root.json']) {
+            const r = await onRequest({ request: new Request('https://csoai.org' + p), next: async () => new Response('static') });
+            const loc = r.headers.get('location');
+            const served = new URL('https://csoai.org' + p).pathname.startsWith('/.well-known/');
+            const ok = served ? r.status === 200 && !loc : r.status === 308 && new URL(loc).host === 'councilof.ai';
+            console.log(JSON.stringify(p), r.status, loc || '(served)', ok ? 'ok' : 'WRONG');
+            if (!ok) wrong.push(p);
+          }
+          if (wrong.length) { console.error('::error::the middleware misroutes', wrong); process.exit(1); }
+          JS
           echo "redirect-only middleware ready"
       - name: Deploy to csoai-site production
         id: deploy
@@ -189,13 +218,13 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
           CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
-        run: npx wrangler pages deploy _site --project-name=csoai-site --branch=main --commit-dirty=true
+        run: npx wrangler pages deploy _site --project-name=csoai-site --branch=master --commit-dirty=true
       - name: Verify trust root live on the apex
         run: |
           # www lags apex by up to ~a minute of edge propagation — retry before failing
           python3 - <<'PY'
           import json, subprocess, sys, time
-          required = {'site-release-1', 'estate-chain-1', 'card-attestation-1'}
+          required = {'site-release-1', 'estate-chain-1', 'card-attestation-1', 'layer0-attestation-1'}
           # Apex is the DID. www HTTPS is a known ghost (HTTP 302 only) —
           # a TLS timeout there is PARTIAL, not a failed apex.
           for host, must in (('csoai.org', True), ('www.csoai.org', False)):
@@ -266,6 +295,38 @@ jobs:
           echo "$code" | grep -q '^308$' || { echo "FAIL: expected 308 on /"; exit 1; }
           echo "$loc" | grep -q 'councilof.ai' || { echo "FAIL: Location must be councilof.ai"; exit 1; }
           curl -s -o /dev/null -w "redirect-path: %{http_code} -> %{redirect_url}\n" https://csoai.org/some-page
+          # No open redirect: a path that starts with // or /\ stays on councilof.ai.
+          for p in '//evil.com' '/\evil.com' '///evil.com'; do
+            loc=$(curl -sS -o /dev/null -w "%{redirect_url}" --max-time 20 --path-as-is "https://csoai.org$p")
+            echo "apex $p -> $loc"
+            case "$loc" in https://councilof.ai/*) ;; *) echo "FAIL: $p redirects off councilof.ai ($loc)"; exit 1 ;; esac
+          done
+          # The key councilof.ai /api/a2a/route signs with must be the one this DID publishes,
+          # so a stranger can verify a route envelope from published bytes alone.
+          python3 - <<'PY'
+          import base64, json, subprocess, sys, time
+          def get(url):
+              return json.loads(subprocess.check_output(
+                  ['curl', '-sS', '-f', '--max-time', '20', '-H', 'Cache-Control: no-cache', url]))
+          for i in range(1, 7):
+              try:
+                  did = get('https://csoai.org/.well-known/did.json')
+                  key = get('https://councilof.ai/api/a2a/key')
+                  der = base64.b64decode(key['publicKey'])
+                  assert der[:12].hex() == '302a300506032b6570032100', 'not an Ed25519 SPKI'
+                  x = base64.urlsafe_b64encode(der[12:]).rstrip(b'=').decode()
+                  vm = {m['id']: m for m in did['verificationMethod']}.get(key['kid'])
+                  assert vm, f"the DID does not list {key['kid']}"
+                  assert vm['publicKeyJwk']['x'] == x, f"DID x {vm['publicKeyJwk']['x']} != /api/a2a/key x {x}"
+                  assert key['kid'] in did.get('assertionMethod', []), f"{key['kid']} is not an assertionMethod"
+                  print(f"{key['kid']} published in the DID: x {x}")
+                  sys.exit(0)
+              except Exception as e:
+                  print(f'layer0 key attempt {i}: {type(e).__name__} {e}')
+                  time.sleep(10)
+          print('FAIL: the live DID does not publish the key /api/a2a/route signs with')
+          sys.exit(1)
+          PY
       - name: Verify the agent card on the apex (the bytes this run twinned)
         # Reports whether or not the step above passed, so each red step names its own fact.
         if: ${{ !cancelled() && steps.deploy.outcome == 'success' }}
