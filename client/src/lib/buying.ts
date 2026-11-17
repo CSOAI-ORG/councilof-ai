@@ -57,4 +57,4 @@ export const INVOICE_NEXT_STEP = `We do not send the invoice automatically. Afte
 export const BUYING_FAQ_ANSWER =
   `Checking a result is free; a grade is never sold. Agents pay per call by wallet at the x402 doors listed at GET /api/x402. ` +
   `The Article 50 pack, evidence bundle and provider-diff feed can be invoiced in GBP: email your requirements to ${CONTACT_MAILBOX} ` +
-  `(the site records nothing). VAT details are confirmed on the invoice. Fresh-run booking is not live.`;
+  `(the form retains an enquiry only after confirming storage; sending email is an alternative). VAT details are confirmed on the invoice. Fresh-run booking is not live.`;
