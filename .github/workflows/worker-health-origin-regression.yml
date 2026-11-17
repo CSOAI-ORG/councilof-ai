@@ -4,6 +4,7 @@ on:
     paths:
       - "functions/api/worker.ts"
       - "functions/api/worker.test.ts"
+      - "functions/api/worker-proxy.test.ts"
       - ".github/workflows/worker-health-origin-regression.yml"
   workflow_dispatch:
 permissions:
@@ -19,4 +20,4 @@ jobs:
           node-version: "22"
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Verify historic RunPod endpoint is never used by default
-        run: npx vitest run functions/api/worker.test.ts
+        run: npx vitest run functions/api/worker.test.ts functions/api/worker-proxy.test.ts
