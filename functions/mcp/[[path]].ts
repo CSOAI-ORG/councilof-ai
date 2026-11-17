@@ -167,7 +167,9 @@ function buildMcp(
     const origin = new URL(requestInfo.url).origin;
     const server = new McpServer(SERVER_INFO, {
       instructions: door.instructions,
-      capabilities: { tools: { listChanged: false } },
+      // No subscriptions are served here (maxSubscriptions: 0), so no list_changed is ever sent.
+      // SDK 2 defaults an undeclared bit to true once a resource or prompt is registered.
+      capabilities: { tools: { listChanged: false }, resources: { listChanged: false }, prompts: { listChanged: false } },
       cacheHints: {
         "server/discover": { ttlMs: 300_000, cacheScope: "public" },
         // Named selections and the full catalogue must never share a cached result.
