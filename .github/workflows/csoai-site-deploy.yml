@@ -242,18 +242,23 @@ jobs:
           python3 - <<'PY'
           import json, subprocess, sys, time
           required = {'site-release-1', 'estate-chain-1', 'card-attestation-1', 'layer0-attestation-1'}
-          # Apex is the DID. www HTTPS is a known ghost (HTTP 302 only) —
-          # a TLS timeout there is PARTIAL, not a failed apex.
+          APEX_DID = 'https://csoai.org/.well-known/did.json'
+          # Apex is the DID: it must answer 200 itself, with no redirect. www may redirect, but
+          # only to the apex DID. It is fetched with -L, and the final URL must be APEX_DID with
+          # the same key set. Since 17 Nov 2026, www answers 308 to APEX_DID; reading that empty
+          # 308 body as "not JSON" failed run 44006964706 after a good deploy. A TLS failure on
+          # www is still PARTIAL (the old HTTPS ghost), not a failed apex.
           for host, must in (('csoai.org', True), ('www.csoai.org', False)):
               ok = False
               last = ''
               for i in range(1, 7):
                   time.sleep(10)
+                  cmd = ['curl', '-sS', '--max-time', '20', '-H', 'Cache-Control: no-cache',
+                         '-w', '\n%{http_code} %{url_effective}', f'https://{host}/.well-known/did.json']
+                  if not must:
+                      cmd.insert(1, '-L')
                   try:
-                      raw = subprocess.check_output(
-                          ['curl', '-sS', '--max-time', '20', f'https://{host}/.well-known/did.json', '-H', 'Cache-Control: no-cache'],
-                          text=True,
-                      )
+                      out = subprocess.check_output(cmd, text=True)
                   except subprocess.CalledProcessError as e:
                       last = f'curl exit {e.returncode}'
                       print(f'{host} attempt {i}: {last}')
@@ -261,6 +266,12 @@ jobs:
                           print(f'PARTIAL: {host} HTTPS ghost — apex is the DID')
                           ok = True
                           break
+                      continue
+                  raw, _, status = out.rpartition('\n')
+                  code, _, final = status.partition(' ')
+                  if code != '200' or final != APEX_DID:
+                      last = f'HTTP {code} at {final}'
+                      print(f'{host} attempt {i}: {last}; want 200 at {APEX_DID}')
                       continue
                   try:
                       d = json.loads(raw)
