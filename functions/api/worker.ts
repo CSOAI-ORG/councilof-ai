@@ -54,6 +54,24 @@ export async function buildWorker(env: Env, fetcher: typeof fetch = fetch) {
       worker_state: "UNKNOWN", diagnostic_code: "HEALTH_URL_NOT_CONFIGURED",
       note: "No active worker URL is configured. The historical RunPod 3090 was decommissioned; this API is not proof of running compute. Set RUNPOD_WORKER_HEALTH_URL only after verifying a replacement worker and its /health schema." };
   }
+  // A Cloudflare environment variable can outlive the pod it named. The 7 Nov
+  // estate inventory records the old RunPod pod terminated, so do not use even
+  // an explicit stale binding to advertise or attempt a retired origin.
+  let parsedUrl: URL;
+  try { parsedUrl = new URL(url); }
+  catch { return { ...base, status: "OFFLINE", http: null, worker: null,
+    worker_state: "UNKNOWN", diagnostic_code: "INVALID_WORKER_ORIGIN",
+    note: "Configured worker URL is malformed; no health request was made." }; }
+  if (parsedUrl.protocol !== "https:") {
+    return { ...base, status: "OFFLINE", http: null, worker: null,
+      worker_state: "UNKNOWN", diagnostic_code: "INSECURE_WORKER_ORIGIN",
+      note: "The worker health URL must use HTTPS; no health request was made." };
+  }
+  if (parsedUrl.hostname.toLowerCase() === "fpowppss5ngtkw-8888.proxy.runpod.net") {
+    return { ...base, status: "OFFLINE", http: null, worker: null,
+      worker_state: "UNKNOWN", diagnostic_code: "RETIRED_WORKER_ORIGIN",
+      note: "The configured RunPod worker URL belongs to the retired pod; a verified replacement must be configured before reporting compute health." };
+  }
   let http: number | null = null;
   try {
     const r = await fetcher(url, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(8000) });
