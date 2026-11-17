@@ -89,6 +89,18 @@
         "kid": "csoai-route-attestation-1",
         "use": "sig"
       }
+    },
+    {
+      "id": "did:web:csoai.org#layer0-attestation-1",
+      "type": "JsonWebKey2020",
+      "controller": "did:web:csoai.org",
+      "publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "gs2psvuuhDlOSnblKiN7WbkzZFOn08odbWr2-Z9nFCI",
+        "kid": "csoai-layer0-attestation-1",
+        "use": "sig"
+      }
     }
   ],
   "assertionMethod": [
@@ -98,7 +110,8 @@
     "did:web:csoai.org#card-attestation-1",
     "did:web:csoai.org#gspc-board-22axis-2026",
     "did:web:csoai.org#card-attestation-2",
-    "did:web:csoai.org#route-attestation-1"
+    "did:web:csoai.org#route-attestation-1",
+    "did:web:csoai.org#layer0-attestation-1"
   ],
   "authentication": [
     "did:web:csoai.org#site-release-1"
