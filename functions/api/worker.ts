@@ -53,7 +53,7 @@ export async function buildWorker(env: Env, fetcher: typeof fetch = fetch) {
     if (!r.ok) {
       const stale = await readStale(env.WORKER_STATE_KV);
       if (stale) return { ...stale, status: "STALE", stale: true, stale_reason: `pod health answered HTTP ${r.status}`, stale_age_seconds: staleAge(stale.read_at) };
-      return { ...base, status: "OFFLINE", http, worker: null, note: `pod health answered HTTP ${r.status} — state unknown, not zero` };
+      return { ...base, status: "OFFLINE", http, worker: null, worker_state: "UNKNOWN", diagnostic_code: r.status === 404 ? "HEALTH_ROUTE_NOT_FOUND" : "HEALTH_HTTP_ERROR", note: `pod health answered HTTP ${r.status} — this checks a URL, not proof the compute process stopped; verify RUNPOD_WORKER_HEALTH_URL and the pod health route` };
     }
     const h = (await r.json()) as Record<string, unknown>;
     if (!h || typeof h !== "object" || typeof h.state !== "string") {
