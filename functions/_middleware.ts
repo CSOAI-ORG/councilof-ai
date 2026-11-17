@@ -1,10 +1,11 @@
 /**
  * Root Pages Functions middleware. Runs before every route on every host.
  *
- * First the www -> apex host redirect (see ./_lib/wwwRedirect.ts). Then Markdown content negotiation
- * (./_lib/markdownNegotiation.ts): only a GET/HEAD whose Accept prefers text/markdown is looked at, and only an
- * HTML 200 is rewritten; every other request and response falls straight through unchanged. Keep anything added
- * here after the www check, so the redirect stays first.
+ * First the www -> apex host redirect (see ./_lib/wwwRedirect.ts). Then the bare origin of mcp.meok.ai is
+ * handed to the /mcp door (./_lib/mcpDoorRoot.ts); every other host and path skips that step. Then Markdown
+ * content negotiation (./_lib/markdownNegotiation.ts): only a GET/HEAD whose Accept prefers text/markdown is
+ * looked at, and only an HTML 200 is rewritten; every other request and response falls straight through
+ * unchanged. Keep anything added here after the www check, so the redirect stays first.
  *
  * Cost note: wrangler already generates `_routes.json` with include ["/*"] for this
  * project (414 function files collapse past the 100-rule limit), so every request,
@@ -17,11 +18,14 @@ import { serveDashboardSnapshot, snapshotDirectVisit } from "./_lib/dashboardTab
 import { hasPaymentHeader, paymentlessProbe402, type X402Env } from "./api/_x402";
 import { isEmptyProbeBody } from "./api/_x402_discovery";
 import { offerFor } from "./.well-known/x402.json";
+import { mcpDoorRootRequest } from "./_lib/mcpDoorRoot";
+import { onRequest as mcpDoor } from "./mcp/[[path]]";
 
 type Ctx = {
   request: Request;
   next: () => Promise<Response>;
   env?: { ASSETS?: { fetch: (input: Request | URL | string, init?: RequestInit) => Promise<Response> } };
+  waitUntil?: (promise: Promise<unknown>) => void;
 };
 
 export const onRequest = async (context: Ctx): Promise<Response> => {
@@ -31,6 +35,13 @@ export const onRequest = async (context: Ctx): Promise<Response> => {
   // security headers, which is the defect being fixed.
   const redirect = wwwToApex(context.request);
   if (redirect) return withApiSecurityHeaders(context.request, redirect);
+  // mcp.meok.ai/ is the MCP door itself, not a second homepage (./_lib/mcpDoorRoot.ts).
+  const mcpRoot = mcpDoorRootRequest(context.request);
+  if (mcpRoot)
+    return withApiSecurityHeaders(
+      context.request,
+      await mcpDoor({ request: mcpRoot, env: context.env, waitUntil: context.waitUntil }),
+    );
   if (prefersMarkdown(context.request))
     return withApiSecurityHeaders(
       context.request,
