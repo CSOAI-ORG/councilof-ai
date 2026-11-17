@@ -1365,7 +1365,7 @@
     },
     "/api/contact": {
       "post": {
-        "description": "POST /api/contact \u2014 the contact form. Fields stored verbatim when KV (LEADS) is bound; honest `stored:false` + fallback address when not. Nothing inferred, nothing forwarded to third parties.",
+        "description": "POST /api/contact \u2014 durable enquiry intake. A stored record is not an email notification, a confirmed commission, or a booking.",
         "operationId": "post__api_contact",
         "responses": {
           "200": {
@@ -1376,7 +1376,7 @@
           }
         },
         "security": [],
-        "summary": "POST /api/contact \u2014 the contact form. Fields stored verbatim when KV (LEADS) is bound; honest `stored:false` + fallback address when not. Nothing inferred, nothing forwarded to third parties."
+        "summary": "POST /api/contact \u2014 durable enquiry intake. A stored record is not an email notification, a confirmed commission, or a booking."
       }
     },
     "/api/corpus-watch": {
