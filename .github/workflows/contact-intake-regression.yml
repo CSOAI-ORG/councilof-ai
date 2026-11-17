@@ -1,0 +1,27 @@
+name: contact-intake-regression
+on:
+  pull_request:
+    paths:
+      - "functions/api/contact.ts"
+      - "functions/api/contact.test.ts"
+      - "client/src/pages/Contact.tsx"
+      - "client/src/pages/Services.tsx"
+      - ".github/workflows/contact-intake-regression.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install locked dev dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Exercise happy path, nonstorage, invalid and cross-origin cases
+        run: npx vitest run functions/api/contact.test.ts
