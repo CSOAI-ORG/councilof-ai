@@ -40,6 +40,24 @@ describe("/api/worker — the pod's own health, proxied, never remembered", () =
     expect(result.diagnostic_code).toBe("HEALTH_URL_NOT_CONFIGURED");
   });
 
+  it("refuses a retired worker origin even when a stale Cloudflare binding explicitly supplies it", async () => {
+    let fetched = false;
+    const fetcher = (async () => { fetched = true; return Response.json(health); }) as unknown as typeof fetch;
+    const out = await buildWorker({ RUNPOD_WORKER_HEALTH_URL: "https://fpowppss5ngtkw-8888.proxy.runpod.net/health" }, fetcher);
+    expect(fetched).toBe(false);
+    expect(out.status).toBe("OFFLINE");
+    expect(out.diagnostic_code).toBe("RETIRED_WORKER_ORIGIN");
+    expect(out.worker).toBeNull();
+  });
+
+  it("refuses malformed or insecure worker origins without network calls", async () => {
+    let fetched = false;
+    const fetcher = (async () => { fetched = true; return Response.json(health); }) as unknown as typeof fetch;
+    expect((await buildWorker({ RUNPOD_WORKER_HEALTH_URL: ":/" }, fetcher)).diagnostic_code).toBe("INVALID_WORKER_ORIGIN");
+    expect((await buildWorker({ RUNPOD_WORKER_HEALTH_URL: "http://worker.example.test/health" }, fetcher)).diagnostic_code).toBe("INSECURE_WORKER_ORIGIN");
+    expect(fetched).toBe(false);
+  });
+
   it("reads the live health into a LIVE summary and copies only the known worker fields", async () => {
     const out = await buildWorker(env, fetcherWith(200, health));
     expect(out.status).toBe("LIVE");
