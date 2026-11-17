@@ -83,6 +83,14 @@ describe("/api/worker — the pod's own health, proxied, never remembered", () =
     expect(off.worker).toBeNull();
   });
 
+  it("does not mistake a missing health route for proof that the worker process stopped", async () => {
+    const missing = await buildWorker({}, fetcherWith(404, { error: "not found" }));
+    expect(missing.status).toBe("OFFLINE"); // compatibility: existing consumers use LIVE/STALE/OFFLINE
+    expect(missing.worker_state).toBe("UNKNOWN");
+    expect(missing.diagnostic_code).toBe("HEALTH_ROUTE_NOT_FOUND");
+    expect(missing.note).toContain("not proof");
+  });
+
   it("refuses a body that is not in the worker schema", async () => {
     const odd = await buildWorker({ RUNPOD_WORKER_HEALTH_URL: "https://example.test/health" }, fetcherWith(200, { hello: "world" }));
     expect(odd.status).toBe("OFFLINE");
