@@ -167,6 +167,87 @@ function boardDateOf(measuredOn) {
   }
   return null;
 }
+// Measurement age — the same rules as functions/mcp/_board.ts (stdio-board-parity.test.ts holds the
+// two to one shape). Age runs from each axis's measurement_time evidence date to the UTC day of this
+// read, in whole days; fetch, build and deploy times never refresh it. The board sets no maximum
+// age, so this reports age only and never calls a row CURRENT or STALE. NOT_AFTER ages are minimums.
+function utcDayOf(value) {
+  if (typeof value !== "string")
+    return null;
+  const text = value.trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text))
+    return text;
+  if (!/^\d{4}-\d{2}-\d{2}T/.test(text))
+    return null;
+  const ms = Date.parse(text);
+  return Number.isNaN(ms) ? null : new Date(ms).toISOString().slice(0, 10);
+}
+function daysBetween(fromDay, toDay) {
+  return Math.round((Date.parse(`${toDay}T00:00:00Z`) - Date.parse(`${fromDay}T00:00:00Z`)) / 86_400_000);
+}
+function measurementAge(measurementTime, asOfDay) {
+  let day = null;
+  let precision = "AS_PUBLISHED";
+  let minimum = false;
+  if (typeof measurementTime === "string") {
+    day = utcDayOf(measurementTime);
+  } else if (measurementTime && typeof measurementTime === "object" && !Array.isArray(measurementTime)) {
+    precision = typeof measurementTime.state === "string" ? measurementTime.state : "UNKNOWN";
+    if (measurementTime.state === "EXACT")
+      day = utcDayOf(measurementTime.observed_at);
+    else if (measurementTime.state === "DAY")
+      day = utcDayOf(measurementTime.observed_on);
+    else if (measurementTime.state === "NOT_AFTER") {
+      day = utcDayOf(measurementTime.not_after);
+      minimum = true;
+    }
+  }
+  if (!day)
+    return null;
+  return { evidence_date: day, precision, age_days: daysBetween(day, asOfDay), age_is_minimum: minimum };
+}
+const AGE_BASIS = "each axis's measurement_time; fetch time never refreshes it";
+function boardMeasurementAge(d, fetchedAt, detail) {
+  const asOfDay = fetchedAt.slice(0, 10);
+  const rows = Array.isArray(d.axes) ? d.axes : [];
+  const bands = { "0-30": 0, "31-90": 0, "91+": 0 };
+  const perAxis = [];
+  let noDate = 0;
+  let oldest = null;
+  let newest = null;
+  for (const r of rows) {
+    if (String(r.status ?? "").toUpperCase() !== "MEASURED")
+      continue;
+    const age = measurementAge(r.measurement_time, asOfDay);
+    if (!age) {
+      noDate += 1;
+      perAxis.push({ axis: r.axis ?? null, evidence_date: null, precision: null, age_days: null, age_is_minimum: null });
+      continue;
+    }
+    bands[age.age_days <= 30 ? "0-30" : age.age_days <= 90 ? "31-90" : "91+"] += 1;
+    if (oldest === null || age.evidence_date < oldest)
+      oldest = age.evidence_date;
+    if (newest === null || age.evidence_date > newest)
+      newest = age.evidence_date;
+    perAxis.push({ axis: r.axis ?? null, ...age });
+  }
+  const contract = d.measurement_time_contract ?? null;
+  return {
+    oldest,
+    newest,
+    axes_by_age_days: bands,
+    no_evidence_date: noDate,
+    basis: AGE_BASIS,
+    ...(detail === "full"
+      ? {
+          age_as_of_day: asOfDay,
+          max_age_policy: contract?.global_freshness_policy ?? null,
+          note: "Age only, in whole UTC days from each axis's evidence date to the day of this read. The board sets no maximum age, so no row is called CURRENT or STALE here. A NOT_AFTER date is an upper bound on when the run happened, so its age is a minimum (age_is_minimum).",
+          per_axis: perAxis,
+        }
+      : {}),
+  };
+}
 async function boardTotals(args = {}) {
   let d;
   try {
@@ -211,7 +292,8 @@ async function boardTotals(args = {}) {
         untested: t.untested_separations ?? null,
         note: "A measured axis is not a separated leader: separation is a separate determination, and TIE and UNTESTED are not folded into it.",
       },
-      more: 'Call again with detail: "full" for count_grammar, by_family and the board\'s full measured_on block.',
+      measurement_age: boardMeasurementAge(d, fetched_at, "summary"),
+      more: 'Call again with detail: "full" for count_grammar, by_family, the full measured_on block and per-axis ages.',
       not_a_certification: true,
     };
   }
@@ -226,6 +308,7 @@ async function boardTotals(args = {}) {
     count_grammar: t.count_grammar ?? null,
     public_count: t.public_count ?? null,
     by_family: t.by_family ?? null,
+    measurement_age: boardMeasurementAge(d, fetched_at, "full"),
     not_a_certification: true,
   };
 }
@@ -258,6 +341,7 @@ async function getAxis(args) {
   // name and `leader` stays null. separation is copied so a caller can see why.
   const topName = typeof row.leader === "string" && row.leader.trim() ? row.leader : null;
   const separated = isSeparated(row.separation);
+  const fetched_at = new Date().toISOString();
   return {
     state: "LIVE",
     axis: row.axis,
@@ -289,7 +373,10 @@ async function getAxis(args) {
     // Preserve per-axis measurement provenance; board/retrieval dates do not refresh it.
     facts_as_of: row.facts_as_of ?? null,
     measurement_time: row.measurement_time ?? null,
-    as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
+    // How old that evidence is on the day of this read. Null for an unmeasured slot (nothing to
+    // age) and for a measured row whose evidence carries no readable date (never invented).
+    measurement_age: measured ? measurementAge(row.measurement_time, fetched_at.slice(0, 10)) : null,
+    as_of: { board_measured_on: d.measured_on ?? null, fetched_at },
     source: `${ORIGIN}/api/gspc`,
     not_a_certification: true,
   };
@@ -947,16 +1034,42 @@ function replyError(id, code, message) {
   send({ jsonrpc: "2.0", id, error: { code, message } });
 }
 
+// "today", "1 day ago", "97 days ago" — whole UTC days, as measurement_age counts them.
+function daysAgo(days) {
+  return days === 0 ? "today" : days === 1 ? "1 day ago" : `${String(days)} days ago`;
+}
+// One clause on how old the board's measurements are; empty when the board carries no evidence dates.
+function boardAgeClause(age) {
+  const a = age ?? {};
+  if (typeof a.oldest !== "string" || typeof a.newest !== "string")
+    return "";
+  const bands = a.axes_by_age_days ?? {};
+  const over = typeof bands["91+"] === "number" ? bands["91+"] : 0;
+  return ` Measurement dates run from ${a.oldest} to ${a.newest}; ${over} measured ${over === 1 ? "axis is" : "axes are"} over 90 days old.`;
+}
+function axisSummaryLine(payload) {
+  if (payload.state === "NOT_ON_BOARD")
+    return `NOT ON BOARD — "${payload.axis}" is not a row the live board carries.`;
+  const age = payload.measurement_age ?? null;
+  const when =
+    age && typeof age.evidence_date === "string"
+      ? age.age_is_minimum === true
+        ? `; measured no later than ${age.evidence_date}, at least ${String(age.age_days)} day${age.age_days === 1 ? "" : "s"} ago`
+        : `; measured ${age.evidence_date}, ${daysAgo(age.age_days)}`
+      : "";
+  return `${payload.status ?? "?"} — axis "${payload.axis}" (${payload.measured ? "a real run stands behind this row" : "declared slot, no run behind it"}${when}).`;
+}
 function summaryLine(name, payload) {
   if (payload.state === "UNREACHABLE" || payload.index?.state === "UNREACHABLE")
     return `UNREACHABLE — the live source could not be fetched; no cached number is substituted.`;
+  // Every generated axis tool answers with get_axis's payload, so it gets get_axis's summary, not its own name.
+  if (String(name).startsWith("axis_"))
+    return axisSummaryLine(payload);
   switch (name) {
     case "board_totals":
-      return `LIVE board totals — ${payload.public_count ?? "see counts"} (slots and measurements are different kinds; never summed).`;
+      return `LIVE board totals — ${payload.public_count ?? "see counts"} (slots and measurements are different kinds; never summed).${boardAgeClause(payload.measurement_age)}`;
     case "get_axis":
-      return payload.state === "NOT_ON_BOARD"
-        ? `NOT ON BOARD — "${payload.axis}" is not a row the live board carries.`
-        : `${payload.status ?? "?"} — axis "${payload.axis}" (${payload.measured ? "a real run stands behind this row" : "declared slot, no run behind it"}).`;
+      return axisSummaryLine(payload);
     case "verify_card":
       return `${payload.state}${payload.reason ? " — " + payload.reason : ""}${payload.state === "VALID" ? ` — ${String(payload.id).slice(0, 16)}… verifies under the published key.` : ""}`;
     case "list_cards": {
