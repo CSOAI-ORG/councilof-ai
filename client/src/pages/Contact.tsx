@@ -232,7 +232,7 @@ export default function Contact() {
                   {copyFeedback ? <p role="status" aria-live="polite" className="text-sm text-muted-foreground">{copyFeedback}</p> : null}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  A successful submission stores the enquiry in the Council intake database; it does not automatically notify the team, book a service or take payment. Only a receipt reference confirms storage. Do not submit confidential files or credentials.
+                  A successful submission stores your enquiry for up to 30 days in Council intake storage; it does not automatically notify the team, book a service or take payment. Only a receipt reference confirms storage. Do not submit confidential files or credentials.
                 </p>
                 {!emailDraft.mailto && <p role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">This draft is too long or cannot be encoded safely for an email link. Copy the full text below into your email app.</p>}
                 <details open={!emailDraft.mailto} className="rounded-lg border border-border bg-card p-4">
