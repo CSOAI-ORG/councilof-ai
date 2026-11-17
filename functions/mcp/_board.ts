@@ -486,6 +486,112 @@ export async function getCardTool(origin: string, args: Record<string, unknown>)
   };
 }
 
+const HEX64 = /^[0-9a-f]{64}$/;
+
+function hexBytes(hex: string): Uint8Array {
+  const out = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.slice(2 * i, 2 * i + 2), 16);
+  return out;
+}
+
+function bytesHex(bytes: Uint8Array): string {
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/** root.json node_definition: parent = sha256(left || right) over RAW 32-byte digests, no prefix. */
+async function parentOf(left: Uint8Array, right: Uint8Array): Promise<Uint8Array> {
+  const both = new Uint8Array(64);
+  both.set(left, 0);
+  both.set(right, 32);
+  return new Uint8Array(await crypto.subtle.digest("SHA-256", both));
+}
+
+/** Walk an inclusion path bottom-up: an even index is the left child, an odd one the right. */
+export async function rootFromPath(leaf: string, index: number, path: string[]): Promise<string> {
+  let node = hexBytes(leaf);
+  let at = index;
+  for (const sibling of path) {
+    const s = hexBytes(sibling);
+    node = at % 2 === 0 ? await parentOf(node, s) : await parentOf(s, node);
+    at = Math.floor(at / 2);
+  }
+  return bytesHex(node);
+}
+
+/** The same tree from the whole leaf list: an odd node at any level is paired WITH ITSELF. */
+export async function rootFromLeaves(leaves: string[]): Promise<string | null> {
+  if (leaves.length === 0) return null;
+  let level = leaves.map(hexBytes);
+  while (level.length > 1) {
+    if (level.length % 2 === 1) level.push(level[level.length - 1]);
+    const next: Uint8Array[] = [];
+    for (let i = 0; i < level.length; i += 2) next.push(await parentOf(level[i], level[i + 1]));
+    level = next;
+  }
+  return bytesHex(level[0]);
+}
+
+/**
+ * An inclusion answer counts only if it reaches the merkle_root published in /root.json, the root
+ * get_root reads. Until 17 Nov 2026 this tool said VALID whenever /api/proof answered
+ * kind:"inclusion", without walking the path. /proofs/* redirects to a Hugging Face mirror that
+ * still held the previous root's paths, so 59 of 76 sampled leaves were VALID against a root that
+ * nothing publishes, and the Academy inclusion exercise failed for learners. A served path that
+ * does not reach the published root is set aside, and the published leaf list decides instead.
+ */
+async function publishedRootInclusion(origin: string, sha: string, d: Record<string, unknown>) {
+  let root: Record<string, unknown>;
+  try {
+    root = (await fetchOriginJson(origin, "/root.json")) as Record<string, unknown>;
+  } catch (e) {
+    return {
+      ...unreachablePayload(origin, "/root.json", e),
+      state: "UNCHECKABLE",
+      sha256: sha,
+      reason: "the proof endpoint answered, but /root.json could not be read, so the path was not checked against the published root. Could not check is not VALID.",
+    };
+  }
+  const published = String(root.merkle_root ?? "").toLowerCase();
+  const count = typeof root.card_count === "number" ? root.card_count : 0;
+  const base = { sha256: sha, merkle_root: HEX64.test(published) ? published : null, card_count: count || null, as_of: root.as_of ?? null };
+  if (!HEX64.test(published) || count < 1) {
+    return { ...base, state: "UNCHECKABLE", reason: "/root.json carries no 64-hex merkle_root and positive card_count to check a path against.", not_a_certification: true };
+  }
+  const index = Number.isInteger(d.index) && (d.index as number) >= 0 ? (d.index as number) : null;
+  const path = Array.isArray(d.proof) && d.proof.every((p) => HEX64.test(String(p).toLowerCase())) ? d.proof.map((p) => String(p).toLowerCase()) : null;
+  const reaches = index !== null && path !== null && (await rootFromPath(sha, index, path)) === published;
+  // The signed card_count bounds the tree: a path at or past it points into the duplicated tail.
+  const inBound = index !== null && index < count;
+  if (reaches && inBound) {
+    return { ...base, state: "VALID", index, checked: "the served path recomputes to the merkle_root in /root.json, at an index below its card_count", not_a_certification: true };
+  }
+  const served_proof = {
+    index,
+    merkle_root: typeof d.merkle_root === "string" ? d.merkle_root : null,
+    reaches_published_root: reaches,
+    index_below_card_count: inBound,
+    note: reaches
+      ? "GET /api/proof served an index at or past card_count, the duplicated tail of an odd-paired tree, so its path proves nothing. This answer does not rely on it."
+      : "GET /api/proof served a path that does not recompute to the merkle_root in /root.json. This answer does not rely on it.",
+  };
+  const leaves = Array.isArray(root.card_sha256) ? root.card_sha256.map((x) => String(x).toLowerCase()) : null;
+  if (!leaves || leaves.length !== count || !leaves.every((l) => HEX64.test(l)) || (await rootFromLeaves(leaves)) !== published) {
+    return {
+      ...base,
+      state: "UNCHECKABLE",
+      reason: "the served path does not reach the published root, and the leaf list in /root.json is absent or does not recompute to its merkle_root, so inclusion could not be checked.",
+      served_proof,
+      not_a_certification: true,
+    };
+  }
+  const at = leaves.indexOf(sha);
+  if (at >= 0) {
+    return { ...base, state: "VALID", index: at, checked: "recomputed from the leaf list in /root.json, which hashes to its merkle_root", served_proof, not_a_certification: true };
+  }
+  const note = await corpusNote(sha, (p) => fetch(`${origin}${p}`), { card_count: count, as_of: typeof root.as_of === "string" ? root.as_of : null });
+  return { ...base, state: "INVALID", reason: "not in the leaf list of /root.json", served_proof, ...note, not_a_certification: true };
+}
+
 export async function verifyInclusionTool(origin: string, args: Record<string, unknown>) {
   const sha = String(args.sha256 || "").trim().toLowerCase();
   if (!/^[0-9a-f]{64}$/.test(sha)) {
@@ -507,7 +613,7 @@ export async function verifyInclusionTool(origin: string, args: Record<string, u
     return { ...unreachablePayload(origin, path, e), state: "UNCHECKABLE", sha256: sha };
   }
   if (status === 200 && d?.kind === "inclusion") {
-    return { state: "VALID", sha256: sha, merkle_root: d.merkle_root ?? null, not_a_certification: true };
+    return publishedRootInclusion(origin, sha, d);
   }
   if (status === 404 || d?.error === "not_found") {
     // INVALID stays INVALID (the enum is fixed). The corpus note says what it means: not a leaf of

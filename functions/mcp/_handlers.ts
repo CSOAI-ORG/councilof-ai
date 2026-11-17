@@ -126,7 +126,7 @@ function sharedToolSummary(
       // A not-a-leaf answer leads with the corpus note, so "INVALID" is never read as "forged".
       return typeof payload.corpus_note === "string"
         ? `${payload.state ?? "?"} — ${payload.corpus_note}`
-        : `${payload.state ?? "?"} — inclusion against live merkle.`;
+        : inclusionSummary(payload);
     case "x402_trust":
       return `${payload.state ?? "?"} — ${(payload.headline as string) || "catalog trust counts"}.`;
     case "mcp_trust":
@@ -134,6 +134,18 @@ function sharedToolSummary(
     default:
       return name;
   }
+}
+
+/** VALID names the published root it reached and how; any other state leads with its reason. */
+function inclusionSummary(payload: Record<string, unknown>): string {
+  const root = String(payload.merkle_root || "").slice(0, 16);
+  if (payload.state === "VALID") {
+    return payload.served_proof
+      ? `VALID — leaf ${payload.index} of ${payload.card_count} in the published root ${root}, recomputed from the leaf list in /root.json; the path GET /api/proof served was set aside (served_proof says why).`
+      : `VALID — the path recomputes to the published root ${root} (leaf ${payload.index} of ${payload.card_count}).`;
+  }
+  const reason = typeof payload.reason === "string" ? payload.reason.replace(/\.$/, "") : "inclusion was not checked against the published root";
+  return `${payload.state ?? "?"} — ${reason}.`;
 }
 
 export const SHARED_TOOL_NAMES = new Set(
