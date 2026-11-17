@@ -11,7 +11,10 @@
 import { headFromGet } from "./_head";
 type Env = { RUNPOD_WORKER_HEALTH_URL?: string; WORKER_STATE_KV?: KVNamespace };
 
-export const DEFAULT_HEALTH_URL = "https://fpowppss5ngtkw-8888.proxy.runpod.net/health";
+// Historical pod fpowppss5ngtkw was decommissioned. The 7 Nov 2026 inventory reported
+// zero RunPod pods. Never silently probe its obsolete URL as if it were the active worker.
+// Production must declare an authenticated, reviewed RUNPOD_WORKER_HEALTH_URL.
+export const DEFAULT_HEALTH_URL: string | null = null;
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -39,13 +42,18 @@ async function readStale(kv: KVNamespace | undefined): Promise<Record<string, un
 }
 
 export async function buildWorker(env: Env, fetcher: typeof fetch = fetch) {
-  const url = env.RUNPOD_WORKER_HEALTH_URL || DEFAULT_HEALTH_URL;
+  const url = env.RUNPOD_WORKER_HEALTH_URL?.trim() || DEFAULT_HEALTH_URL;
   const base = {
     schema: "csoai.worker-state/0.1",
     endpoint: "/api/worker",
     source: url,
     what: "The RunPod GSPC compute worker's own /health, read at request time. Compute state only: no counter here is a signed measurement or publication receipt. Staged outputs require separate admission and guarded release; unadmitted or withdrawn rows do not reach the board.",
   };
+  if (!url) {
+    return { ...base, status: "OFFLINE", http: null, worker: null,
+      worker_state: "UNKNOWN", diagnostic_code: "HEALTH_URL_NOT_CONFIGURED",
+      note: "No active worker URL is configured. The historical RunPod 3090 was decommissioned; this API is not proof of running compute. Set RUNPOD_WORKER_HEALTH_URL only after verifying a replacement worker and its /health schema." };
+  }
   let http: number | null = null;
   try {
     const r = await fetcher(url, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(8000) });
