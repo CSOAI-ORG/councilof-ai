@@ -20,6 +20,7 @@ describe("POST /api/contact", () => {
     expect(data.receipt_id).toMatch(/^[0-9a-f-]{36}$/);
     expect(data.notification_state).toBe("NOT_SENT");
     expect(writes).toHaveLength(1);
+    expect(writes[0][2]).toEqual({ expirationTtl: 30 * 24 * 60 * 60 });
     const stored = JSON.parse(writes[0][1]);
     expect(stored.email).toBe(valid.email);
     expect(stored.notification_state).toBe("NOT_CONFIGURED");
