@@ -50,9 +50,31 @@ const STALE_MS = 48 * 3600 * 1000;
 const short = (s: string | null | undefined, n = 16) => (s ? (s.length > n ? `${s.slice(0, n)}…` : s) : "not recorded");
 const yn = (v: boolean | null) => (v === null ? "not stated (head not in the root yet)" : v ? "yes" : "no");
 
-function isStale(iso: string | null | undefined, now: number): boolean {
+export function isStale(iso: string | null | undefined, now: number): boolean {
   const t = iso ? Date.parse(iso) : NaN;
   return Number.isFinite(t) && now - t > STALE_MS;
+}
+
+/**
+ * The public-root line. The stale marker is a statement about the root's own as_of, so it sits
+ * right after that time and names what it is about. It never follows the Rekor or OTS state: a
+ * Bitcoin confirmation or a Rekor entry is a fact about these bytes and does not age, and a marker
+ * placed after "OTS CONFIRMED_BITCOIN" read as if the proof itself had gone stale (2026-11-17).
+ */
+export function RootLine({ root, now }: { root: Ledgers["root"]; now: number }) {
+  return (
+    <p className="mt-4 text-sm text-slate-700" data-testid="ledgers-root">
+      Public root <code className="break-all">{short(root.merkle_root)}</code> as of{" "}
+      <time dateTime={root.as_of ?? undefined}>{root.as_of ?? "not recorded"}</time>
+      {isStale(root.as_of, now) ? (
+        <strong className="ml-1 text-amber-800" data-testid="ledgers-root-stale">
+          (stale: this root is older than 48 hours; the witness states that follow are about these bytes and do not age)
+        </strong>
+      ) : null}
+      , {String(root.card_count ?? "?")} leaves · Rekor <code>{root.rekor ?? "not recorded"}</code> · OTS{" "}
+      <code>{root.ots ?? "not recorded"}</code>
+    </p>
+  );
 }
 
 function CopyCommand({ label, command }: { label: string; command: string }) {
@@ -121,12 +143,7 @@ export default function LedgersPanel() {
 
       {load.state === "ok" ? (
         <>
-          <p className="mt-4 text-sm text-slate-700" data-testid="ledgers-root">
-            Public root <code className="break-all">{short(load.doc.root.merkle_root)}</code> as of{" "}
-            <time dateTime={load.doc.root.as_of ?? undefined}>{load.doc.root.as_of ?? "not recorded"}</time>, {String(load.doc.root.card_count ?? "?")} leaves ·
-            Rekor <code>{load.doc.root.rekor ?? "not recorded"}</code> · OTS <code>{load.doc.root.ots ?? "not recorded"}</code>
-            {isStale(load.doc.root.as_of, now) ? <strong className="ml-1 text-amber-800">(stale: older than 48 hours)</strong> : null}
-          </p>
+          <RootLine root={load.doc.root} now={now} />
 
           <ul className="mt-4 grid gap-3 sm:grid-cols-2" aria-label="Ledgers">
             {load.doc.ledgers.map((r) => (
