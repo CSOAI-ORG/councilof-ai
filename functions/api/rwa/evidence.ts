@@ -312,8 +312,14 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   if (hasPaymentHeader(request) && !valid) {
     return json({ schema: "csoai.rwa-evidence/0.1", error: "bad_request", reason: "pass asset=<XRPL symbol from /api/xrpl or an r-address> before presenting payment", free_reader: `${origin}/api/xrpl`, preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` }, 400);
   }
+  // An asset that was named but cannot be read is a bad request, paid or not, and one the free reader
+  // does not list is a 404: a challenge must never offer a card nobody can deliver. Only a request
+  // that names no asset gets the discovery 402.
+  if (asset && !valid) {
+    return json({ schema: "csoai.rwa-evidence/0.1", error: "bad_request", reason: "pass asset=<XRPL symbol from /api/xrpl or an r-address>", free_reader: `${origin}/api/xrpl`, preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` }, 400);
+  }
   let found: Awaited<ReturnType<typeof resolveAsset>> | null = null;
-  if (hasPaymentHeader(request) && valid) {
+  if (valid && !preview) {
     found = await resolveAsset(origin, asset);
     if (!found.row || !found.row.issuer_address) {
       return json({ schema: "csoai.rwa-evidence/0.1", error: "not_found", reason: `asset ${asset} is not in the public reader`, known_symbols: found.known, read_from: found.source, note: "Buyer-led: only assets the free reader already lists are evidenced. No payment was taken for a 404." }, 404);

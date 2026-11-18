@@ -178,3 +178,15 @@ describe("/api/rwa/evidence — doors", () => {
     expect(JSON.stringify(pv)).not.toMatch(/"sha256":|"inputs_sha256":|"sig_ed25519":/);
   });
 });
+
+describe("/api/rwa/evidence — a challenge never offers a card nobody can deliver", () => {
+  it("an unknown asset is 404 even unpaid, a malformed one is 400, and naming none is still the discovery 402", async () => {
+    stub();
+    const unknown = await evidence(ctx("/api/rwa/evidence?asset=NOPE"));
+    expect(unknown.status).toBe(404);
+    expect((await unknown.json()).known_symbols).toEqual(["BBRL"]);
+    expect((await evidence(ctx("/api/rwa/evidence?asset=" + encodeURIComponent("bad asset!")))).status).toBe(400);
+    expect((await evidence(ctx("/api/rwa/evidence"))).status).toBe(402);
+    expect((await evidence(ctx("/api/rwa/evidence?asset=BBRL"))).status).toBe(402);
+  });
+});
