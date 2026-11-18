@@ -15,7 +15,7 @@ describe("/wrappers public ledger page", () => {
     expect(app).toContain('const Wrappers = lazy(() => import("./pages/Wrappers"))');
     expect(app).toContain('<Route path="/wrappers" component={Wrappers} />');
     // Titles live in client/src/data/seo-head.json since 2026-09-16 (one producer, see lib/seoHead.ts).
-    expect(head.routes["/wrappers"]?.title).toMatch(/^Wrapped-asset parity ledger/);
+    expect(head.routes["/wrappers"]?.title).toMatch(/^SovX wrapped-asset parity/);
     expect(prerender).toContain('"/wrappers"');
     expect(library).toContain('"/wrappers"');
     expect(nav).toContain("href: '/wrappers'");
@@ -32,7 +32,9 @@ describe("/wrappers public ledger page", () => {
   });
 
   it("uses the route title as the single title authority", () => {
-    expect(head.routes["/wrappers"]?.title).toBe("Wrapped-asset parity ledger — read, not rated | Council of AI");
+    // SovX is the public name for the wrapper measurements (owner ruling 28 Sep 2026; docs/BRAND-GUIDELINES.md).
+    // The page's Helmet og:title carried it until #4458 left titles to seo-head.json, so the one title carries it now.
+    expect(head.routes["/wrappers"]?.title).toBe("SovX wrapped-asset parity — read, not rated | Council of AI");
     expect(app).not.toMatch(/const ROUTE_TITLES/);
     expect(page).not.toContain("<title>");
   });
