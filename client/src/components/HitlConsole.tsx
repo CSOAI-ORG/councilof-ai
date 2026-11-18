@@ -546,7 +546,7 @@ export default function HitlConsole({
             data-testid="hitl-submit-module"
             disabled={busy || !picked}
             onClick={() => void submitModule()}
-            className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold disabled:opacity-50"
+            className="rounded-lg bg-sky-700 px-4 py-2 text-sm font-semibold disabled:opacity-50"
           >
             {busy ? "Checking…" : "Check my answer against the record"}
           </button>
@@ -620,9 +620,9 @@ export default function HitlConsole({
               onClick={() => void decide(d)}
               className={`rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-40 ${
                 d === "APPROVED"
-                  ? "bg-emerald-600"
+                  ? "bg-emerald-700"
                   : d === "HOLD"
-                    ? "bg-amber-600"
+                    ? "bg-amber-700"
                     : "bg-rose-700"
               }`}
             >
