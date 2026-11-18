@@ -12,7 +12,7 @@ name: Layer 0 attestation key — one-time setup
 # caller registry is published anywhere, so a third party reading an envelope from the
 # public gateway would have no published place to find the key that signed it. This key's
 # public half is pinned in the DID document as did:web:csoai.org#layer0-attestation-1,
-# beside the six keys already published there, so a verifier has exactly one place to look.
+# beside the other keys published there, so a verifier has exactly one place to look.
 #
 # SCOPE HONESTY: this key attests "this envelope was signed by the Layer 0 gateway". It
 # makes no claim that a human re-ran any measurement behind it.
@@ -53,7 +53,15 @@ jobs:
             echo ""
             echo "publicKeyJwk.x (base64url, Ed25519): \`$PUB\`"
             echo ""
-            echo "Add to public/.well-known/did.json as \`did:web:csoai.org#layer0-attestation-1\`, then merge:"
+            echo "This run replaced the Layer 0 signing key. Until the DID publishes the new x, /api/a2a/route envelopes signed with it do not verify."
+            echo ""
+            echo "Publish it as \`did:web:csoai.org#layer0-attestation-1\` (replace that entry's x), in this order:"
+            echo ""
+            echo "1. Council-of-AI-CSOAI-org/csoai-static-deploy2 \`.well-known/did.json\`, the DID source. Merge to main."
+            echo "2. Run \`csoai-site-deploy.yml\`. Its last check passes once the live DID's x equals what \`/api/a2a/key\` serves."
+            echo "3. Copy the same did.json bytes into \`public/.well-known/did.json\` here. The gates --did-drift check fails until step 2 is live."
+            echo ""
+            echo "The entry:"
             echo ""
             echo '```json'
             echo '{'
