@@ -1,27 +1,25 @@
 import { useEffect, type ReactNode } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useParams } from "wouter";
+import { Link, useLocation, useParams } from "wouter";
 import {
   NOTES_FEED_PATH,
-  NOTES_INDEX_URL,
   ORIGIN,
   VERIFY_URL,
   articleLd,
   findNote,
   indexLd,
-  noteUrl,
   notePath,
   notesNewestFirst,
 } from "@/data/evidence-notes";
+import { applyHead, resolveHead } from "@/lib/seoHead";
 
 // /notes and /notes/:slug — one canonical, citable page per evidence note. Everything a note says
 // is read from client/src/data/evidence-notes.json; the chrome below adds no numbers and no claims.
-// The canonical <link> is owned by the central writer (RouteTitle + the prerender rewrite), so this
-// page states the served URL in og:url and JSON-LD only.
+// Title, meta description, their OG/Twitter copies and the canonical come from the central writer
+// (RouteHead, lib/seoHead.ts); a note page refines that one head with its own title and summary.
+// Neither page repeats those tags in <Helmet>, and the JSON-LD states the served URL.
 export const NOTES_PAGE_COPY = {
   indexTitle: "Evidence notes",
-  indexDescription:
-    "Dated evidence notes from Council of AI, one citable page per note. Each note names the signed cards, receipts, ledgers or endpoints behind it, and a reader can fetch every one. Measurement, not certification.",
   indexIntro:
     "One page per note. Each note names the signed cards, receipts, ledgers or endpoints behind it, and a reader can fetch every one. Measurement, not certification: a gap without a separation test is not a ranking, and an UNMEASURED card has no quotable accuracy.",
   verify:
@@ -58,15 +56,9 @@ export default function EvidenceNotesIndex() {
   return (
     <section className="mx-auto max-w-3xl px-6 py-14">
       <Helmet>
-        <meta name="description" content={NOTES_PAGE_COPY.indexDescription} />
         <meta name="robots" content="index,follow" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Evidence notes | Council of AI" />
-        <meta property="og:description" content={NOTES_PAGE_COPY.indexDescription} />
-        <meta property="og:url" content={NOTES_INDEX_URL} />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="Evidence notes | Council of AI" />
-        <meta name="twitter:description" content={NOTES_PAGE_COPY.indexDescription} />
         <link rel="alternate" type="application/rss+xml" title="Council of AI — evidence notes" href={FEED_URL} />
         <script type="application/ld+json">{JSON.stringify(indexLd(notes))}</script>
       </Helmet>
@@ -94,10 +86,19 @@ export default function EvidenceNotesIndex() {
 
 export function EvidenceNotePage() {
   const params = useParams<{ slug: string }>();
+  const [location] = useLocation();
   const note = findNote(params.slug);
   useEffect(() => {
-    document.title = note ? `${note.title} | Council of AI` : "Evidence note not found | Council of AI";
-  }, [note]);
+    if (!note) {
+      document.title = "Evidence note not found | Council of AI";
+      return;
+    }
+    // Refine the ONE head RouteHead wrote for this route with the note's own title and summary.
+    // A <Helmet> meta here added a second description tag instead (live 2026-11-18). `location`
+    // is a dependency because RouteHead re-applies the family fallback on every navigation.
+    const title = `${note.title} | Council of AI`;
+    applyHead({ ...resolveHead(notePath(note.id)), title, ogTitle: title, description: note.summary, ogDescription: note.summary });
+  }, [note, location]);
 
   if (!note) {
     return (
@@ -108,20 +109,13 @@ export function EvidenceNotePage() {
     );
   }
 
-  const url = noteUrl(note.id);
   return (
     <section className="mx-auto max-w-3xl px-6 py-14">
       <Helmet>
-        <meta name="description" content={note.summary} />
         <meta name="robots" content="index,follow" />
         <meta property="og:type" content="article" />
-        <meta property="og:title" content={`${note.title} | Council of AI`} />
-        <meta property="og:description" content={note.summary} />
-        <meta property="og:url" content={url} />
         <meta property="article:published_time" content={note.date} />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content={`${note.title} | Council of AI`} />
-        <meta name="twitter:description" content={note.summary} />
         <link rel="alternate" type="application/rss+xml" title="Council of AI — evidence notes" href={FEED_URL} />
         <script type="application/ld+json">{JSON.stringify(articleLd(note))}</script>
       </Helmet>

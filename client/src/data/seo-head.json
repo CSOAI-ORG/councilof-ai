@@ -33,7 +33,7 @@
     },
     "/evaluator-access": {
       "title": "Conditions for Independent Evaluator Access | Council of AI",
-      "description": "The published conditions under which an independent evaluator can access CSOAI instruments, frozen banks and signed records, with version and date stated."
+      "description": "The conditions CSOAI sets before it accepts access to an AI system for evaluation: no money from the developer being evaluated and no gag clauses."
     },
     "/products": {
       "title": "Council OS — the SKUs, one workspace | Council of AI",
@@ -57,7 +57,7 @@
     },
     "/frameworks": {
       "title": "Frontier framework presence register | Council of AI",
-      "description": "Which frontier-safety frameworks each AI developer has published, read from the documents themselves on a stated date. Presence recorded, not judged."
+      "description": "A presence register of published frontier-safety frameworks at major AI labs. Empty chairs record a bounded absence search, never a safety verdict."
     },
     "/licence-manifest": {
       "title": "Licence manifest — request evidence, not a rank | Council of AI",
@@ -400,7 +400,7 @@
     },
     "/status": {
       "title": "Service status | Council of AI",
-      "description": "Live service status for Council of AI public endpoints, feeds and signing: each row is read from the service itself and never typed into the page by hand."
+      "description": "Current observations for the public site, evidence API, verification resources, measurement queue and publication mirrors, each with its observed-at time."
     },
     "/status/internal": {
       "title": "Weekly yield template | Council of AI",
@@ -408,7 +408,7 @@
     },
     "/yield": {
       "title": "Yield Dashboard | Council of AI",
-      "description": "The yield dashboard reads settled x402 receipts and published measurements to show what the rail earned and measured. Derived from settlements, never typed."
+      "description": "One number per family per week: yield = proofs sold + feed subs + attributed inbound. Derived from settlement data, never typed."
     },
     "/countdown": {
       "title": "Regulatory countdown | Council of AI",
@@ -416,7 +416,7 @@
     },
     "/art50": {
       "title": "Article 50 verification services | Council of AI",
-      "description": "Article 50 verification services from CSOAI: check whether AI-generated content carries a durable, machine-readable marking, with the method and limits stated."
+      "description": "Marking-presence census, detector-interop bench and specimen ledger for EU AI Act Article 50 transparency. Dates derived live from /api/regulation."
     },
     "/rlusd": {
       "title": "RLUSD supply on XRPL and Ethereum | Council of AI",
@@ -424,11 +424,11 @@
     },
     "/receipt": {
       "title": "Inclusion receipt | Council of AI",
-      "description": "A free inclusion check: give the hash of a signed card and see whether it is in the public root, with the Merkle path returned so the proof can be recomputed."
+      "description": "Hash bytes locally, then GET /api/proof?sha= against the last published public root. Nothing is uploaded. Free. Not a grade."
     },
     "/custody": {
       "title": "Custody disclosure | Council of AI",
-      "description": "CSOAI's published custody disclosure for the custody axis: how keys and records are held, what is single-key today and what the disclosure does not claim."
+      "description": "Which public keys sign which CSOAI artifacts, how to verify each signature, and the limits of the publication checks. Not a SOC 2 report."
     },
     "/specimens/clarity": {
       "title": "CLARITY pre-commit specimen (unsigned) | Council of AI",
@@ -512,7 +512,7 @@
     },
     "/proof-receipt": {
       "title": "Proof of receipt — latest issuance status | Council of AI",
-      "description": "The latest proof-of-receipt issuance status: whether a receipt was issued, for which root, and how to verify it. Measurement, not certification."
+      "description": "Latest receipt issued by the estate, aggregate counts, and verification links: check a receipt against the published key, offline or via API."
     },
     "/stablewatch": {
       "title": "Council of AI — Stablewatch Feed",
@@ -1049,6 +1049,14 @@
     "/brand": {
       "title": "Brand & canonical surfaces — Council of AI",
       "description": "Council publishing locations, related MEOK channels and guidance on attribution. Check each asset's publisher and licence; measurement is not certification."
+    },
+    "/gpai": {
+      "title": "GPAI evidence matrix | Council of AI",
+      "description": "Explore published evidence and tool references for EU AI Act provisions, with GPAI coverage, source dates and measurement limits."
+    },
+    "/him": {
+      "title": "MEOK H.I.M. — the human in the loop · Council of AI",
+      "description": "Inspect an AI proposal, check your understanding of its record and retain a decision receipt. Human identity, authority and effects need separate verification."
     }
   },
   "components": {
@@ -1590,7 +1598,7 @@
     },
     "YieldStatus": {
       "title": "Service status | Council of AI",
-      "description": "Live service status for Council of AI public endpoints, feeds and signing: each row is read from the service itself and never typed into the page by hand."
+      "description": "Current observations for the public site, evidence API, verification resources, measurement queue and publication mirrors, each with its observed-at time."
     },
     "YieldInternal": {
       "title": "Weekly yield template | Council of AI",
@@ -1650,7 +1658,7 @@
     },
     "YieldDashboard": {
       "title": "Yield Dashboard | Council of AI",
-      "description": "The yield dashboard reads settled x402 receipts and published measurements to show what the rail earned and measured. Derived from settlements, never typed."
+      "description": "One number per family per week: yield = proofs sold + feed subs + attributed inbound. Derived from settlement data, never typed."
     },
     "CourseDetail": {
       "title": "Course | Council of AI",

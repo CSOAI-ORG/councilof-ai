@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 import { readBytes, readClock, readJson, statusReadError, type Read } from "../lib/statusReads";
 import {
@@ -374,13 +373,6 @@ export default function YieldStatus() {
 
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100" data-testid="service-status">
-      <Helmet>
-        <title>Service status | Council of AI</title>
-        <meta
-          name="description"
-          content="Current observations for the public site, evidence API, verification resources, measurement queue and publication mirrors, each with its observed-at time. An unavailable check is never reported as healthy."
-        />
-      </Helmet>
       <section className="mx-auto max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-300">Service status · read live · never typed</p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">Service status</h1>
