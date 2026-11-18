@@ -32,6 +32,10 @@ describe("A2A axis-specialist", () => {
     expect(new Set(data.payload.specialists.map((s: { axis: string }) => s.axis)).size).toBe(
       data.payload.specialists.length,
     );
+    // The text part names every axis. On 16 Nov 2026 AgentPeering graded this call 0/8 because the
+    // text named none ("does not list GSPC axes or describe their missions and evidence checks").
+    const text: string = body.result.message.parts[0].text;
+    for (const s of data.payload.specialists as Array<{ axis: string }>) expect(text).toContain(`- ${s.axis}: `);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 

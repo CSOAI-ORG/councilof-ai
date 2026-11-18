@@ -58,11 +58,119 @@ export function boardDateOf(measuredOn: unknown): string | null {
 }
 
 /**
+ * How old one measurement is, read from the board's own per-axis `measurement_time`
+ * (functions/api/_gspc_measurement_time.ts): an EXACT instant, a DAY, or a NOT_AFTER upper bound;
+ * a plain string is read as published. Fetch, build and deploy times never refresh a measurement,
+ * so age runs from the evidence date to the UTC day of this read, in whole days, and two reads on
+ * the same UTC day agree. The board sets no maximum age (measurement_time_contract), so this
+ * reports age only and never calls a row CURRENT or STALE. A NOT_AFTER date bounds when the run
+ * happened from above, so its age is a minimum.
+ */
+export type MeasurementAge = {
+  evidence_date: string;
+  precision: string;
+  age_days: number;
+  age_is_minimum: boolean;
+};
+
+/** The UTC calendar day of an ISO instant or of a bare YYYY-MM-DD; null when it is neither. */
+export function utcDayOf(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const text = value.trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  if (!/^\d{4}-\d{2}-\d{2}T/.test(text)) return null;
+  const ms = Date.parse(text);
+  return Number.isNaN(ms) ? null : new Date(ms).toISOString().slice(0, 10);
+}
+
+function daysBetween(fromDay: string, toDay: string): number {
+  return Math.round((Date.parse(`${toDay}T00:00:00Z`) - Date.parse(`${fromDay}T00:00:00Z`)) / 86_400_000);
+}
+
+export function measurementAge(measurementTime: unknown, asOfDay: string): MeasurementAge | null {
+  let day: string | null = null;
+  let precision = "AS_PUBLISHED";
+  let minimum = false;
+  if (typeof measurementTime === "string") {
+    day = utcDayOf(measurementTime);
+  } else if (measurementTime && typeof measurementTime === "object" && !Array.isArray(measurementTime)) {
+    const mt = measurementTime as Record<string, unknown>;
+    precision = typeof mt.state === "string" ? mt.state : "UNKNOWN";
+    if (mt.state === "EXACT") day = utcDayOf(mt.observed_at);
+    else if (mt.state === "DAY") day = utcDayOf(mt.observed_on);
+    else if (mt.state === "NOT_AFTER") {
+      day = utcDayOf(mt.not_after);
+      minimum = true;
+    }
+  }
+  if (!day) return null;
+  return { evidence_date: day, precision, age_days: daysBetween(day, asOfDay), age_is_minimum: minimum };
+}
+
+/** Reporting bands only: the board publishes no maximum age, so none of these is a verdict. */
+export const AGE_BANDS = ["0-30", "31-90", "91+"] as const;
+
+function ageBand(days: number): (typeof AGE_BANDS)[number] {
+  return days <= 30 ? "0-30" : days <= 90 ? "31-90" : "91+";
+}
+
+export const AGE_BASIS = "each axis's measurement_time; fetch time never refreshes it";
+
+/**
+ * The board's measurement ages: the oldest and newest evidence dates, and how many measured axes
+ * fall in each age band. MEASURED rows only: an unmeasured slot has no measurement to age and is
+ * already counted as unmeasured. A measured row whose evidence carries no readable date is counted
+ * in no_evidence_date and is never given one. The summary stays short (board_totals' default answer
+ * is kept under 2,000 characters); `full` adds the read day, the board's age policy and one line
+ * per measured axis.
+ */
+export function boardMeasurementAge(d: Record<string, unknown>, fetchedAt: string, detail: "summary" | "full") {
+  const asOfDay = fetchedAt.slice(0, 10);
+  const rows = (Array.isArray(d.axes) ? d.axes : []) as Record<string, unknown>[];
+  const bands: Record<string, number> = { "0-30": 0, "31-90": 0, "91+": 0 };
+  const perAxis: Record<string, unknown>[] = [];
+  let noDate = 0;
+  let oldest: string | null = null;
+  let newest: string | null = null;
+  for (const r of rows) {
+    if (String(r.status ?? "").toUpperCase() !== "MEASURED") continue;
+    const age = measurementAge(r.measurement_time, asOfDay);
+    if (!age) {
+      noDate += 1;
+      perAxis.push({ axis: r.axis ?? null, evidence_date: null, precision: null, age_days: null, age_is_minimum: null });
+      continue;
+    }
+    bands[ageBand(age.age_days)] += 1;
+    if (oldest === null || age.evidence_date < oldest) oldest = age.evidence_date;
+    if (newest === null || age.evidence_date > newest) newest = age.evidence_date;
+    perAxis.push({ axis: r.axis ?? null, ...age });
+  }
+  const contract = (d.measurement_time_contract ?? null) as Record<string, unknown> | null;
+  return {
+    oldest,
+    newest,
+    axes_by_age_days: bands,
+    no_evidence_date: noDate,
+    basis: AGE_BASIS,
+    ...(detail === "full"
+      ? {
+          age_as_of_day: asOfDay,
+          max_age_policy: contract?.global_freshness_policy ?? null,
+          note:
+            "Age only, in whole UTC days from each axis's evidence date to the day of this read. The board sets no maximum age, so no row is called CURRENT or STALE here. A NOT_AFTER date is an upper bound on when the run happened, so its age is a minimum (age_is_minimum).",
+          per_axis: perAxis,
+        }
+      : {}),
+  };
+}
+
+/**
  * board_totals. The default answer is the SUMMARY: the three labelled counts, the board's own
- * public_count and separation line, the dates and the source — about 1,500 characters. It used to
- * return about 15,000 to answer two numbers, nearly all of it the board's measured_on block copied
- * into as_of (Anthropic Software Directory Policy 5.B: token use roughly commensurate with the
- * task). `detail: "full"` returns the previous payload unchanged, so no reader loses a field.
+ * public_count and separation line, the dates, how old the measurements are (measurement_age) and
+ * the source — under 2,000 characters. It used to return about 15,000 to answer two numbers, nearly
+ * all of it the board's measured_on block copied into as_of (Anthropic Software Directory Policy
+ * 5.B: token use roughly commensurate with the task). `detail: "full"` returns the previous payload
+ * plus measurement_age with one line per measured axis, so no reader loses a field.
  */
 export async function boardTotalsTool(origin: string, args: Record<string, unknown> = {}) {
   let d: Record<string, unknown>;
@@ -108,7 +216,8 @@ export async function boardTotalsTool(origin: string, args: Record<string, unkno
         untested: t.untested_separations ?? null,
         note: "A measured axis is not a separated leader: separation is a separate determination, and TIE and UNTESTED are not folded into it.",
       },
-      more: 'Call again with detail: "full" for count_grammar, by_family and the board\'s full measured_on block.',
+      measurement_age: boardMeasurementAge(d, fetched_at, "summary"),
+      more: 'Call again with detail: "full" for count_grammar, by_family, the full measured_on block and per-axis ages.',
       not_a_certification: true,
     };
   }
@@ -123,6 +232,7 @@ export async function boardTotalsTool(origin: string, args: Record<string, unkno
     count_grammar: t.count_grammar ?? null,
     public_count: t.public_count ?? null,
     by_family: t.by_family ?? null,
+    measurement_age: boardMeasurementAge(d, fetched_at, "full"),
     not_a_certification: true,
   };
 }
@@ -155,6 +265,7 @@ export async function getAxisTool(origin: string, args: Record<string, unknown>)
   // name and `leader` stays null. separation is copied so a caller can see why.
   const topName = typeof row.leader === "string" && row.leader.trim() ? row.leader : null;
   const separated = isSeparated(row.separation);
+  const fetched_at = new Date().toISOString();
   return {
     state: "LIVE",
     axis: row.axis,
@@ -186,7 +297,10 @@ export async function getAxisTool(origin: string, args: Record<string, unknown>)
     // Preserve per-axis measurement provenance; board/retrieval dates do not refresh it.
     facts_as_of: row.facts_as_of ?? null,
     measurement_time: row.measurement_time ?? null,
-    as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
+    // How old that evidence is on the day of this read. Null for an unmeasured slot (nothing to
+    // age) and for a measured row whose evidence carries no readable date (never invented).
+    measurement_age: measured ? measurementAge(row.measurement_time, fetched_at.slice(0, 10)) : null,
+    as_of: { board_measured_on: d.measured_on ?? null, fetched_at },
     source: `${origin}/api/gspc`,
     not_a_certification: true,
   };
@@ -486,6 +600,112 @@ export async function getCardTool(origin: string, args: Record<string, unknown>)
   };
 }
 
+const HEX64 = /^[0-9a-f]{64}$/;
+
+function hexBytes(hex: string): Uint8Array {
+  const out = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.slice(2 * i, 2 * i + 2), 16);
+  return out;
+}
+
+function bytesHex(bytes: Uint8Array): string {
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/** root.json node_definition: parent = sha256(left || right) over RAW 32-byte digests, no prefix. */
+async function parentOf(left: Uint8Array, right: Uint8Array): Promise<Uint8Array> {
+  const both = new Uint8Array(64);
+  both.set(left, 0);
+  both.set(right, 32);
+  return new Uint8Array(await crypto.subtle.digest("SHA-256", both));
+}
+
+/** Walk an inclusion path bottom-up: an even index is the left child, an odd one the right. */
+export async function rootFromPath(leaf: string, index: number, path: string[]): Promise<string> {
+  let node = hexBytes(leaf);
+  let at = index;
+  for (const sibling of path) {
+    const s = hexBytes(sibling);
+    node = at % 2 === 0 ? await parentOf(node, s) : await parentOf(s, node);
+    at = Math.floor(at / 2);
+  }
+  return bytesHex(node);
+}
+
+/** The same tree from the whole leaf list: an odd node at any level is paired WITH ITSELF. */
+export async function rootFromLeaves(leaves: string[]): Promise<string | null> {
+  if (leaves.length === 0) return null;
+  let level = leaves.map(hexBytes);
+  while (level.length > 1) {
+    if (level.length % 2 === 1) level.push(level[level.length - 1]);
+    const next: Uint8Array[] = [];
+    for (let i = 0; i < level.length; i += 2) next.push(await parentOf(level[i], level[i + 1]));
+    level = next;
+  }
+  return bytesHex(level[0]);
+}
+
+/**
+ * An inclusion answer counts only if it reaches the merkle_root published in /root.json, the root
+ * get_root reads. Until 17 Nov 2026 this tool said VALID whenever /api/proof answered
+ * kind:"inclusion", without walking the path. /proofs/* redirects to a Hugging Face mirror that
+ * still held the previous root's paths, so 59 of 76 sampled leaves were VALID against a root that
+ * nothing publishes, and the Academy inclusion exercise failed for learners. A served path that
+ * does not reach the published root is set aside, and the published leaf list decides instead.
+ */
+async function publishedRootInclusion(origin: string, sha: string, d: Record<string, unknown>) {
+  let root: Record<string, unknown>;
+  try {
+    root = (await fetchOriginJson(origin, "/root.json")) as Record<string, unknown>;
+  } catch (e) {
+    return {
+      ...unreachablePayload(origin, "/root.json", e),
+      state: "UNCHECKABLE",
+      sha256: sha,
+      reason: "the proof endpoint answered, but /root.json could not be read, so the path was not checked against the published root. Could not check is not VALID.",
+    };
+  }
+  const published = String(root.merkle_root ?? "").toLowerCase();
+  const count = typeof root.card_count === "number" ? root.card_count : 0;
+  const base = { sha256: sha, merkle_root: HEX64.test(published) ? published : null, card_count: count || null, as_of: root.as_of ?? null };
+  if (!HEX64.test(published) || count < 1) {
+    return { ...base, state: "UNCHECKABLE", reason: "/root.json carries no 64-hex merkle_root and positive card_count to check a path against.", not_a_certification: true };
+  }
+  const index = Number.isInteger(d.index) && (d.index as number) >= 0 ? (d.index as number) : null;
+  const path = Array.isArray(d.proof) && d.proof.every((p) => HEX64.test(String(p).toLowerCase())) ? d.proof.map((p) => String(p).toLowerCase()) : null;
+  const reaches = index !== null && path !== null && (await rootFromPath(sha, index, path)) === published;
+  // The signed card_count bounds the tree: a path at or past it points into the duplicated tail.
+  const inBound = index !== null && index < count;
+  if (reaches && inBound) {
+    return { ...base, state: "VALID", index, checked: "the served path recomputes to the merkle_root in /root.json, at an index below its card_count", not_a_certification: true };
+  }
+  const served_proof = {
+    index,
+    merkle_root: typeof d.merkle_root === "string" ? d.merkle_root : null,
+    reaches_published_root: reaches,
+    index_below_card_count: inBound,
+    note: reaches
+      ? "GET /api/proof served an index at or past card_count, the duplicated tail of an odd-paired tree, so its path proves nothing. This answer does not rely on it."
+      : "GET /api/proof served a path that does not recompute to the merkle_root in /root.json. This answer does not rely on it.",
+  };
+  const leaves = Array.isArray(root.card_sha256) ? root.card_sha256.map((x) => String(x).toLowerCase()) : null;
+  if (!leaves || leaves.length !== count || !leaves.every((l) => HEX64.test(l)) || (await rootFromLeaves(leaves)) !== published) {
+    return {
+      ...base,
+      state: "UNCHECKABLE",
+      reason: "the served path does not reach the published root, and the leaf list in /root.json is absent or does not recompute to its merkle_root, so inclusion could not be checked.",
+      served_proof,
+      not_a_certification: true,
+    };
+  }
+  const at = leaves.indexOf(sha);
+  if (at >= 0) {
+    return { ...base, state: "VALID", index: at, checked: "recomputed from the leaf list in /root.json, which hashes to its merkle_root", served_proof, not_a_certification: true };
+  }
+  const note = await corpusNote(sha, (p) => fetch(`${origin}${p}`), { card_count: count, as_of: typeof root.as_of === "string" ? root.as_of : null });
+  return { ...base, state: "INVALID", reason: "not in the leaf list of /root.json", served_proof, ...note, not_a_certification: true };
+}
+
 export async function verifyInclusionTool(origin: string, args: Record<string, unknown>) {
   const sha = String(args.sha256 || "").trim().toLowerCase();
   if (!/^[0-9a-f]{64}$/.test(sha)) {
@@ -507,7 +727,7 @@ export async function verifyInclusionTool(origin: string, args: Record<string, u
     return { ...unreachablePayload(origin, path, e), state: "UNCHECKABLE", sha256: sha };
   }
   if (status === 200 && d?.kind === "inclusion") {
-    return { state: "VALID", sha256: sha, merkle_root: d.merkle_root ?? null, not_a_certification: true };
+    return publishedRootInclusion(origin, sha, d);
   }
   if (status === 404 || d?.error === "not_found") {
     // INVALID stays INVALID (the enum is fixed). The corpus note says what it means: not a leaf of
