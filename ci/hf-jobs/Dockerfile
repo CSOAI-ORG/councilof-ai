@@ -10,7 +10,7 @@
 #
 # The tag MUST match the playwright version in package-lock.json —
 # ci/hf-jobs/steps-drift.test.mjs asserts it.
-FROM mcr.microsoft.com/playwright:v1.61.1-noble
+FROM mcr.microsoft.com/playwright:v1.65.1-noble
 
 COPY bootstrap.sh /opt/ci-runner/bootstrap.sh
 RUN bash /opt/ci-runner/bootstrap.sh
