@@ -497,10 +497,21 @@ const funcOwnsPath = (p) => {
 // Stubs whose `from` a hand rule already claims are skipped here (first rule wins and
 // a duplicated `from` is exactly the drift this file exists to prevent); the rest are
 // emitted as real static rules so the hop happens at the edge, not after a 5 MB bundle.
-const REDIRECT_RULES = [...REDIRECT_STUBS.entries()]
+//
+// Each stub also gets its trailing-slash form, to the same target. The SPA's <Redirect> answers
+// only the slashless path, and so did this rule: on 18 Nov 2026, 17 of the 26 derived stubs
+// answered 404 with a trailing slash (/lookup/, /world/, /sovereign/ ...) while the slashless form
+// 308'd. The slash form is left alone wherever something already answers it: a page in public/
+// (/governance/), a Pages Function (functions/<p>.ts, e.g. /sovereign-pricing/), or a
+// retired-codename stub owned by its 308 Function.
+const stubSlashIsFree = (p) => !RETIRED_CODENAME.test(p) && !publicOwnsPath(p) && !funcOwnsPath(p);
+const STUB_ENTRIES = [...REDIRECT_STUBS.entries()]
   .filter(([p]) => !CLAIMED_FROM.has(normFrom(p)))
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([p, to]) => `${p}  ${to}  308`);
+  .sort(([a], [b]) => a.localeCompare(b));
+const REDIRECT_RULES = STUB_ENTRIES.flatMap(([p, to]) => [
+  `${p}  ${to}  308`,
+  ...(stubSlashIsFree(p) ? [`${normFrom(p)}/  ${to}  308`] : []),
+]);
 
 const ROUTE_SLASH = routes
   .map(normFrom)
@@ -557,7 +568,7 @@ const STATIC_RULES = [
   ...PERSONA_SLASH.flatMap((p) => [`/${p}  /${p}/  308`]),
   ...PERSONA_FOR_SLASH.map((p) => `/for/${p}  /for/${p}/  308`),
   "",
-  `# --- client <Redirect> stub routes: hop at the edge, not in the bundle (${REDIRECT_RULES.length}) ---`,
+  `# --- client <Redirect> stub routes: hop at the edge, not in the bundle (${STUB_ENTRIES.length} stubs, ${REDIRECT_RULES.length} rules) ---`,
   ...REDIRECT_RULES,
   "",
   `# --- every other concrete <Route> bare path → its prerendered trailing-slash (${ROUTE_SLASH.length}) ---`,

@@ -11,7 +11,7 @@
  * pack.councilof.ai still serves the old mock and is owner-gated to retire.
  * is 404. A2A agent-card is live; task service is not. npm csoai-gspc-mcp
  * HTTP /mcp lists free tools and x402-metered ones (tools/list is the count); witness_hash is
- * quarantined and is not advertised. Official MCP id io.github.CSOAI-ORG/gspc. Evidence pack
+ * quarantined and is not advertised. Official MCP id ai.councilof/gspc. Evidence pack
  * csoai.insurability-evidence-pack/0.1 is 200. 100 free calls/day is the
  * typed allowance. Machine-access pricing is pending a published ruling.
  */
@@ -38,7 +38,7 @@ export const EARN_WEDGE =
 export const OPEN_SDKS = [
   { id: "mcp-http", href: "https://councilof.ai/mcp", eats: `${TOOL_COUNT_SENTENCE} Works in Claude, Cursor, Kimi, Grok.` },
   { id: "npm", href: "https://www.npmjs.com/package/csoai-gspc-mcp", eats: "stdio SDK. Verify its live package version and tool list before quoting either; the HTTP authority is POST /mcp tools/list." },
-  { id: "registry", href: "https://registry.modelcontextprotocol.io", eats: "Official id ai.councilof/gspc (domain-verified, no GitHub login), server 1.4.4. The older io.github.CSOAI-ORG/gspc entry awaits deprecation." },
+  { id: "registry", href: "https://registry.modelcontextprotocol.io", eats: "Official id ai.councilof/gspc (domain-verified, no GitHub login), server 1.4.4. The older io.github.CSOAI-ORG/gspc entry is marked deprecated in the registry." },
   { id: "plugin", href: "https://councilof.ai/.claude-plugin/plugin.json", eats: "Grok / Cursor plugin. Consent first." },
   { id: "embed", href: "https://councilof.ai/embed.js", eats: "Partner pages read the live count. Never says certified." },
   { id: "badge", href: "https://councilof.ai/hf-badge.html", eats: "README board link or subject-bound signed-cell status. The global board is never a model score." },

@@ -28,3 +28,31 @@ describe("/leaderboard answers in both forms", () => {
     expect(rules.indexOf(own[0])).toBeLessThan(catchAll);
   });
 });
+
+// Every <Redirect> stub answers its trailing-slash form too. Measured 18 Nov 2026: 17 of the 26
+// stub rules answered 404 with a trailing slash while the slashless form 308'd, because the derived
+// rule carried the slashless form only (scripts/generate-redirects.mjs, STUB_ENTRIES).
+const STUB_SLASH_404_20261118 = [
+  "/a2ui", "/attestation-network", "/catalog", "/ceremony", "/lookup", "/map-regions", "/mcp-tools",
+  "/public-dashboard", "/real-world", "/regions", "/relevance-map", "/risk-heatmap", "/sovereign",
+  "/sovereign-network", "/sovereign-twin", "/world", "/world-3d",
+];
+
+describe("each <Redirect> stub answers its trailing-slash form", () => {
+  it.each(STUB_SLASH_404_20261118)("%s/ goes where its slashless form goes, once, above the catch-all", (path) => {
+    const bare = rules.filter(([from]) => from === path);
+    const slash = rules.filter(([from]) => from === `${path}/`);
+    expect(bare).toHaveLength(1);
+    expect(slash).toEqual([[`${path}/`, bare[0][1], "308"]]);
+    expect(rules.indexOf(slash[0])).toBeLessThan(catchAll);
+  });
+
+  // Something already answers these slash forms: the /governance/ page in public/, and Pages
+  // Functions for the others (each answered 308 itself on 18 Nov 2026). No rule may shadow them.
+  it.each(["/governance/", "/gspc-scoreboard/", "/sovereign-pricing/", "/about-ceasai/", "/ceasai-training/", "/sov3/"])(
+    "%s is left to what already serves it",
+    (path) => {
+      expect(rules.filter(([from]) => from === path)).toEqual([]);
+    },
+  );
+});
