@@ -44,6 +44,40 @@ export function nodesIn(html, onBadBlock = () => {}) {
 const typesOf = (n) => (Array.isArray(n["@type"]) ? n["@type"] : [n["@type"]]).filter(Boolean);
 export const hasType = (nodes, t) => nodes.filter((n) => typesOf(n).includes(t));
 
+const ORIGIN = "https://councilof.ai";
+
+/** Exact-source 3xx rules of a _redirects file: source path -> target. Splat rules are skipped. */
+export function redirectSources(text) {
+  const out = new Map();
+  for (const raw of String(text).split("\n")) {
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) continue;
+    const [from, to, code] = line.split(/\s+/);
+    if (!from || !to || !from.startsWith("/") || from.includes("*") || from.includes(":")) continue;
+    const c = Number(code || 302);
+    if (c >= 300 && c < 400) out.set(from, to);
+  }
+  return out;
+}
+
+/**
+ * Why the Dataset's `url` is not a page this site serves, or null when it is. The url must be a
+ * councilof.ai page present in the built tree, and no 3xx rule may send that exact path elsewhere.
+ * Measured 2026-11-17: the home-page Dataset named /gspc-scoreboard, which public/_redirects 308s
+ * to /dashboard?tab=board — the header above promised "must point at a URL that 200s" and nothing
+ * checked it.
+ */
+export function datasetUrlProblem(url, redirects, pageExists) {
+  let u;
+  try { u = new URL(url); } catch { return `Dataset url is not a URL: ${JSON.stringify(url)}`; }
+  if (u.origin !== ORIGIN) return `Dataset url ${url} is not a ${ORIGIN} page`;
+  const p = u.pathname;
+  const to = redirects.get(p);
+  if (to) return `Dataset url ${url} is redirected (${p} -> ${to}) by _redirects`;
+  if (!pageExists(p)) return `Dataset url ${url} names no page in the built tree`;
+  return null;
+}
+
 if (SELFTEST) {
   let bad = 0;
   const must = (label, cond) => { if (!cond) { console.error(`✖ selftest: ${label}`); bad++; } };
@@ -55,8 +89,17 @@ if (SELFTEST) {
   let reported = 0;
   nodesIn(`<script type="application/ld+json">{ not json </script>`, () => reported++);
   must("REPORTS an unparseable block instead of swallowing it", reported === 1);
+  const rules = redirectSources("/gspc-scoreboard  /dashboard?tab=board  308\n/board  /board/  308\n/x/*  /y/:splat  301\n");
+  const exists = (p) => p === "/board/" || p === "/gspc-scoreboard";
+  must("refuses a Dataset url that a _redirects rule sends elsewhere",
+    /redirected/.test(datasetUrlProblem("https://councilof.ai/gspc-scoreboard", rules, exists) || ""));
+  must("accepts the served slash form of a page whose bare form 308s to it",
+    datasetUrlProblem("https://councilof.ai/board/", rules, exists) === null);
+  must("refuses a Dataset url on another host or with no built page",
+    datasetUrlProblem("https://example.org/board/", rules, exists) !== null &&
+    datasetUrlProblem("https://councilof.ai/nope/", rules, exists) !== null);
   if (bad) { console.error(`✖ structured-data-gate selftest FAILED (${bad})`); process.exit(1); }
-  console.log("✓ structured-data-gate selftest: 5/5 — it can find, can refuse, and can report");
+  console.log("✓ structured-data-gate selftest: 8/8 — it can find, can refuse, and can report");
   process.exit(0);
 }
 
@@ -92,8 +135,34 @@ else {
     const urls = JSON.stringify(ds).match(/https?:\/\/[^"\\ ]+/g) || [];
     if (!urls.some((u) => /\/(root\.json|api\/gspc)/.test(u)))
       fail("/", "Dataset points at neither /root.json nor /api/gspc — it cites no machine-readable board");
+    const redirectsFile = [join(DIR, "_redirects"), join(REPO, "public/_redirects")].find((f) => existsSync(f));
+    const redirects = redirectsFile ? redirectSources(readFileSync(redirectsFile, "utf8")) : new Map();
+    const problem = datasetUrlProblem(ds.url, redirects, (p) => read(p.replace(/^\/+|\/+$/g, "")) !== null);
+    if (problem) fail("/", problem);
   }
 }
+
+// --- /board/ : Dataset, /connect/ : WebAPI — REPORTED, not yet armed ----------
+// Emitted by client/src/components/PageSchema.tsx from 2026-11-17: /board/ is the page the board
+// Dataset names as its url, and /connect/ documents the free MCP door (client/src/lib/
+// mcpServerSchema.ts). As with /honesty/ before 2026-09-05, these are reported rather than failed
+// until a real prerender has been seen to carry them; then move them to fail().
+const reports = [];
+const board = read("board");
+if (!board) reports.push("/board/: not present in the built tree");
+else {
+  const ds = hasType(nodesIn(board, (m) => fail("/board/", `unparseable ld+json block (${m})`)), "Dataset")[0];
+  if (!ds) reports.push("/board/: no Dataset node");
+  else if (ds.url !== `${ORIGIN}/board/`) reports.push(`/board/: Dataset url is ${ds.url}, not ${ORIGIN}/board/`);
+}
+const connect = read("connect");
+if (!connect) reports.push("/connect/: not present in the built tree");
+else {
+  const api = hasType(nodesIn(connect, (m) => fail("/connect/", `unparseable ld+json block (${m})`)), "WebAPI")[0];
+  if (!api) reports.push("/connect/: no WebAPI node for the MCP door");
+  else if (api.url !== `${ORIGIN}/mcp/free`) reports.push(`/connect/: WebAPI url is ${api.url}, not ${ORIGIN}/mcp/free`);
+}
+for (const r of reports) console.warn(`⚠ structured-data-gate (reported, not armed): ${r}`);
 
 // --- /honesty/ : FAQPage -----------------------------------------------------
 const honesty = read("honesty");
@@ -127,4 +196,4 @@ if (failures.length) {
 // Say what was actually checked. The earlier wording claimed "FAQPage on /honesty/ — present"
 // even on runs where the FAQ was absent and only warned, which is a success line asserting
 // something the run did not establish.
-console.log(`✓ structured-data-gate: Organization + Dataset on / present, parseable, and citing a real board; FAQPage on /honesty/ ${faqSeen ? `present (${faqSeen} question(s))` : "ABSENT — reported, not verified"}`);
+console.log(`✓ structured-data-gate: Organization + Dataset on / present, parseable, citing a real board, and naming a page this tree serves; FAQPage on /honesty/ ${faqSeen ? `present (${faqSeen} question(s))` : "ABSENT — reported, not verified"}; /board/ Dataset and /connect/ WebAPI ${reports.length ? `${reports.length} reported problem(s), not armed` : "present"}`);

@@ -166,6 +166,14 @@ export const PRIMARY_PATHS = new Set<string>([
   // archive" banner until 2026-09-27, which reads as a stale policy to anyone checking it (the Claude
   // connector directory requires a current privacy policy link).
   "/privacy-policy", "/privacy", "/legal/privacy",
+  // Current pages a primary surface links to, which shipped under the "Reference / archive" banner
+  // until 18 Nov 2026: /careers (footer "Careers"), /open-source (home "Explore open source and
+  // data"), /team (header nav "Team") and /metered (footer "Metered evidence catalog (live
+  // quotes)"; each of its 27 live-quote links answered that day, and each resource behind them
+  // returned an x402 challenge). Left libraried: /pressroom (the owner is choosing the canonical
+  // press room), /refund-policy (owner-pending refund and booking terms), /cookie-policy (its
+  // wording is with the owner), /challenge and /learn (no header, footer, home or menu link).
+  "/careers", "/open-source", "/team", "/metered",
   "/faq", "/traction",
   // #148 — /dispute is a live Charter Article 18 page, not an archive.
   // Without this entry it shipped under the "Reference / archive" banner.
