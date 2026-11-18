@@ -84,16 +84,16 @@ export async function liveAnchors(origin: string, fetchImpl: typeof fetch = fetc
 }
 
 /** Accept a card object, a JSON string, or a councilof.ai / csoai.org URL to one. */
-async function coerceCard(raw: unknown): Promise<{ card?: unknown; error?: string }> {
+async function coerceCard(raw: unknown, origin: string): Promise<{ card?: unknown; error?: string }> {
   if (raw && typeof raw === "object") return { card: raw };
   if (typeof raw !== "string" || !raw.trim()) {
     return { error: "pass the card as a JSON object, a JSON string, or a councilof.ai / csoai.org URL" };
   }
-  const s = raw.trim();
+  const s = resolveEstateRecordUrl(raw.trim(), origin);
   if (s.startsWith("{")) {
     try { return { card: JSON.parse(s) }; } catch { return { error: "the string is not valid JSON" }; }
   }
-  if (/^https:\/\/(councilof\.ai|csoai\.org|www\.csoai\.org)\//.test(s)) {
+  if (RECORD_URL_RE.test(s)) {
     try {
       const r = await fetch(s, { headers: { accept: "application/json" } });
       if (!r.ok) return { error: `fetching the card returned HTTP ${r.status}` };
@@ -258,6 +258,23 @@ function noteFor(state: PublicState, v: { status?: string | null }) {
 
 const RECORD_URL_RE = /^https:\/\/(councilof\.ai|csoai\.org|www\.csoai\.org)\//;
 const RECORD_MAX_BYTES = 5 * 1024 * 1024;
+const ESTATE_DEFAULT_ORIGIN = "https://councilof.ai";
+
+/**
+ * The estate's own indexes name their records root-relative: every `card_url` in
+ * /signed/card_index.json reads "/signed/cards/<sha>.json" (335 of 335, read 2026-11-18), and
+ * GET /api/verify's own `record_url` field echoes the same form. A buyer who posts that value
+ * verbatim was answered UNCHECKABLE "only https://councilof.ai/ … records are fetched", so the
+ * door refused the very string the estate handed out. A root-relative path (one leading slash,
+ * not a scheme-relative "//host") is resolved against the request origin when that origin is on
+ * the allowlist, else against councilof.ai. Anything else is returned as given and still has to
+ * pass RECORD_URL_RE, so the host allowlist — the SSRF guard — is unchanged.
+ */
+export function resolveEstateRecordUrl(recordUrl: string, origin: string): string {
+  if (!/^\/(?!\/)/.test(recordUrl)) return recordUrl;
+  const base = RECORD_URL_RE.test(origin + "/") ? origin : ESTATE_DEFAULT_ORIGIN;
+  try { return new URL(recordUrl, base).href; } catch { return recordUrl; }
+}
 
 /**
  * GET /api/verify?record_url=<https://councilof.ai/… or https://csoai.org/…> — re-fetch a published
@@ -266,8 +283,9 @@ const RECORD_MAX_BYTES = 5 * 1024 * 1024;
  * origins are fetched (the host allowlist is the SSRF guard here); a record that redirects off
  * them is not read.
  */
-async function verifyRecordUrl(recordUrl: string, origin: string): Promise<Response> {
-  const base = { schema: "csoai.verify/0.1", record_url: recordUrl, free: true, not_a_certification: true };
+async function verifyRecordUrl(givenUrl: string, origin: string): Promise<Response> {
+  const recordUrl = resolveEstateRecordUrl(givenUrl, origin);
+  const base = { schema: "csoai.verify/0.1", record_url: recordUrl, ...(recordUrl !== givenUrl ? { record_url_as_given: givenUrl } : {}), free: true, not_a_certification: true };
   if (!RECORD_URL_RE.test(recordUrl)) {
     return json({ ...base, state: "UNCHECKABLE", reason: "only https://councilof.ai/ and https://csoai.org/ records are fetched by this endpoint; POST other records as JSON", fetched: null }, 400);
   }
@@ -359,7 +377,7 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
   const b = (body ?? {}) as Record<string, unknown>;
   if (typeof b.record_url === "string") return verifyRecordUrl(b.record_url.trim(), origin);
   const raw = b.card ?? b.record ?? b.json ?? b.url ?? b.input ?? body;
-  const { card, error } = await coerceCard(raw);
+  const { card, error } = await coerceCard(raw, origin);
   if (error) {
     return json({
       schema: "csoai.verify/0.1",
