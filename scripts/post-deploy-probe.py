@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """One bounded public HTTP probe; emit only allowlisted transport diagnostics.
 
-The urllib application User-Agent is a separate control. It never retries or
-replaces the default-client observation. No response body, header, exception
-message or full effective URL is emitted.
+urllib sends either the application User-Agent (the required observation) or
+Python's real default User-Agent (recorded as a diagnostic), one per call; neither
+retries or replaces the other. No response body, header, exception message or
+full effective URL is emitted.
 """
 from __future__ import annotations
 
@@ -16,7 +17,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-CONTROL_USER_AGENT = "csoai-post-deploy-control/1.0"
+APPLICATION_USER_AGENT = "csoai-post-deploy-verify/1.0"
 
 
 def http_status(value):
@@ -65,14 +66,14 @@ def curl_probe(url, *, method="GET", timeout=20, accepted_statuses=(200,)):
     return result
 
 
-def urllib_probe(url, *, application_control=False, timeout=20):
+def urllib_probe(url, *, application_user_agent=False, timeout=20):
     result = {
         "client": "urllib", "method": "GET", "ok": False,
-        "user_agent_mode": "application-control" if application_control else "default",
+        "user_agent_mode": "application" if application_user_agent else "default",
         "exception": None, "http_status": None, "final_host": None,
     }
     # Passing the URL directly retains Python's real default User-Agent.
-    request = urllib.request.Request(url, headers={"User-Agent": CONTROL_USER_AGENT}) if application_control else url
+    request = urllib.request.Request(url, headers={"User-Agent": APPLICATION_USER_AGENT}) if application_user_agent else url
     try:
         with urllib.request.urlopen(request, timeout=timeout) as response:
             status = http_status(response.status)
@@ -100,17 +101,17 @@ def main():
     parser.add_argument("--method", choices=("GET", "HEAD"), default="GET")
     parser.add_argument("--timeout", type=positive_timeout, default=20)
     parser.add_argument("--accept-status", type=int, action="append")
-    parser.add_argument("--application-control", action="store_true")
+    parser.add_argument("--application-user-agent", action="store_true")
     parser.add_argument("url")
     args = parser.parse_args()
     if args.client == "curl":
-        if args.application_control:
-            parser.error("application-control requires urllib")
+        if args.application_user_agent:
+            parser.error("application-user-agent requires urllib")
         result = curl_probe(args.url, method=args.method, timeout=args.timeout, accepted_statuses=args.accept_status or (200,))
     else:
         if args.method != "GET" or args.accept_status:
             parser.error("urllib retains the existing GET response contract")
-        result = urllib_probe(args.url, application_control=args.application_control, timeout=args.timeout)
+        result = urllib_probe(args.url, application_user_agent=args.application_user_agent, timeout=args.timeout)
     print(json.dumps(result, sort_keys=True))
     return 0 if result["ok"] else 1
 

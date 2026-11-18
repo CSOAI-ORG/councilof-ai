@@ -132,23 +132,25 @@ async function fetchRaw(url: string, accept = "*/*"): Promise<Fetched> {
 type ReaderAsset = { symbol: string | null; issuer: string | null; issuer_address: string | null; holders: number | null; supply: number | null; verified_via: string | null; unmeasured: string[]; sig_ed25519: string | null };
 
 /** Resolve asset → reader row via the free /api/xrpl (never paywalled), falling back to the cards bundle. */
-async function resolveAsset(origin: string, asset: string): Promise<{ row: ReaderAsset | null; reader_as_of: string | null; known: string[]; source: string }> {
+/** `answered` is true only when a reader returned a non-empty list. Absence needs a list to be absent
+ *  from: a miss against an unreachable reader, or an empty one, is not a "not listed". */
+async function resolveAsset(origin: string, asset: string): Promise<{ row: ReaderAsset | null; reader_as_of: string | null; known: string[]; source: string; answered: boolean }> {
   const isAddr = ADDR_RE.test(asset);
   const match = (a: ReaderAsset) => (isAddr ? a.issuer_address === asset : String(a.symbol || "").toLowerCase() === asset.toLowerCase());
   const r = await fetch(`${origin}/api/xrpl`);
   if (r.ok) {
     const d = (await r.json()) as { as_of?: string; assets?: ReaderAsset[] };
     const assets = d.assets || [];
-    return { row: assets.find(match) || null, reader_as_of: d.as_of || null, known: assets.map((a) => String(a.symbol)), source: `${origin}/api/xrpl` };
+    return { row: assets.find(match) || null, reader_as_of: d.as_of || null, known: assets.map((a) => String(a.symbol)), source: `${origin}/api/xrpl`, answered: Array.isArray(d.assets) && assets.length > 0 };
   }
   const b = await fetch(`${origin}/cards-bundle.json`);
-  if (!b.ok) return { row: null, reader_as_of: null, known: [], source: `${origin}/api/xrpl HTTP ${r.status}; cards-bundle HTTP ${b.status}` };
+  if (!b.ok) return { row: null, reader_as_of: null, known: [], source: `${origin}/api/xrpl HTTP ${r.status}; cards-bundle HTTP ${b.status}`, answered: false };
   const bundle = (await b.json()) as { as_of?: string; cards?: Record<string, { card?: { surface?: string; sig_ed25519?: string | null; unmeasured?: string[]; payload?: Record<string, unknown> } }> };
   const rows: ReaderAsset[] = Object.values(bundle.cards || {})
     .map((w) => w.card)
     .filter((c) => c && c.surface === "xrpl.asset.state")
     .map((c) => ({ symbol: (c!.payload?.symbol as string) || null, issuer: (c!.payload?.issuer as string) || null, issuer_address: (c!.payload?.issuer_address as string) || null, holders: (c!.payload?.holders as number) ?? null, supply: (c!.payload?.supply as number) ?? null, verified_via: (c!.payload?.verified_via as string) || null, unmeasured: c!.unmeasured || [], sig_ed25519: c!.sig_ed25519 ?? null }));
-  return { row: rows.find(match) || null, reader_as_of: bundle.as_of || null, known: rows.map((a) => String(a.symbol)), source: `${origin}/cards-bundle.json (xrpl.asset.state leaves; /api/xrpl HTTP ${r.status})` };
+  return { row: rows.find(match) || null, reader_as_of: bundle.as_of || null, known: rows.map((a) => String(a.symbol)), source: `${origin}/cards-bundle.json (xrpl.asset.state leaves; /api/xrpl HTTP ${r.status})`, answered: rows.length > 0 };
 }
 
 /** Build the eater-shaped payload from live reads. Deterministic facts only; three-state checks. */
@@ -313,15 +315,23 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: "csoai.rwa-evidence/0.1", error: "bad_request", reason: "pass asset=<XRPL symbol from /api/xrpl or an r-address> before presenting payment", free_reader: `${origin}/api/xrpl`, preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` }, 400);
   }
   // An asset that was named but cannot be read is a bad request, paid or not, and one the free reader
-  // does not list is a 404: a challenge must never offer a card nobody can deliver. Only a request
+  // answers without is a 404: a challenge must never offer a card nobody can deliver. Only a request
   // that names no asset gets the discovery 402.
   if (asset && !valid) {
     return json({ schema: "csoai.rwa-evidence/0.1", error: "bad_request", reason: "pass asset=<XRPL symbol from /api/xrpl or an r-address>", free_reader: `${origin}/api/xrpl`, preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` }, 400);
   }
   let found: Awaited<ReturnType<typeof resolveAsset>> | null = null;
   if (valid && !preview) {
-    found = await resolveAsset(origin, asset);
-    if (!found.row || !found.row.issuer_address) {
+    const paid = hasPaymentHeader(request);
+    // A presented payment never settles unless the reader lists the asset, so a paid request is
+    // refused on any miss, as before. Unpaid, the 404 needs the reader's own non-empty list: an
+    // unreachable or empty reader proves nothing about the asset, so the discovery 402 stands.
+    try {
+      found = await resolveAsset(origin, asset);
+    } catch (e) {
+      if (paid) throw e;
+    }
+    if (found && (!found.row || !found.row.issuer_address) && (paid || found.answered)) {
       return json({ schema: "csoai.rwa-evidence/0.1", error: "not_found", reason: `asset ${asset} is not in the public reader`, known_symbols: found.known, read_from: found.source, note: "Buyer-led: only assets the free reader already lists are evidenced. No payment was taken for a 404." }, 404);
     }
   }

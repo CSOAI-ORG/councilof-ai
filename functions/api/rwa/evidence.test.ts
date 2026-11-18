@@ -189,4 +189,22 @@ describe("/api/rwa/evidence — a challenge never offers a card nobody can deliv
     expect((await evidence(ctx("/api/rwa/evidence"))).status).toBe(402);
     expect((await evidence(ctx("/api/rwa/evidence?asset=BBRL"))).status).toBe(402);
   });
+
+  it("an unreachable or empty reader proves nothing: unpaid, a named asset keeps the discovery 402", async () => {
+    // /.well-known/x402.json lists /api/rwa/evidence?asset=RLUSD. When no reader returns a list to be
+    // absent from, the asset is unknown, not absent, so the listed challenge still answers 402.
+    for (const down of [503, "throw", "empty"] as const) {
+      vi.stubGlobal("fetch", async (u: string | URL | Request) => {
+        if (down === "throw") throw new TypeError("fetch failed");
+        if (down === "empty") {
+          const path = new URL(String(u instanceof Request ? u.url : u)).pathname;
+          return new Response(JSON.stringify(path === "/api/xrpl" ? { assets: [] } : { cards: {} }), { status: 200 });
+        }
+        return new Response("unavailable", { status: down });
+      });
+      const r = await evidence(ctx("/api/rwa/evidence?asset=RLUSD"));
+      expect(r.status, String(down)).toBe(402);
+      expect(JSON.stringify(await r.json()), String(down)).toContain("asset=RLUSD");
+    }
+  });
 });

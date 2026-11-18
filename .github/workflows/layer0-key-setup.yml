@@ -5,7 +5,15 @@ name: Layer 0 attestation key — one-time setup
 # project), and PRINTS ONLY the public half to the run summary.
 #
 # The private key is born and dies inside this runner + Cloudflare: it is never committed,
-# never logged, never leaves. Re-runnable (rotates the key).
+# never logged, never leaves.
+#
+# ONE-TIME UNLESS YOU MEAN IT. Every run makes a new key and overwrites the secret. Once a key
+# is in use, that is a REPLACEMENT: new /api/a2a/route envelopes stop verifying against the
+# published DID until both did.json copies carry the new x. So the first step reads the live
+# state and lets the run go ahead only when it can show no Layer 0 key exists: /api/a2a/key
+# answers 404 published:false AND the DID lists no #layer0-attestation-1. Anything else,
+# including a host it cannot read, needs the replace_published_key input set to
+# replace-published-layer0-key.
 #
 # WHY A DEDICATED KEY AND NOT THE ROUTER KEY. The estate already holds an Ed25519 key
 # for its own A2A egress (did:csoai:meok-canonical-v1#ed25519-1), but neither it nor the
@@ -18,7 +26,16 @@ name: Layer 0 attestation key — one-time setup
 # makes no claim that a human re-ran any measurement behind it.
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      replace_published_key:
+        description: >-
+          Leave empty for first-time setup. If a Layer 0 key is already in use, this run
+          REPLACES it and new /api/a2a/route envelopes stop verifying until both did.json
+          copies carry the new x. To replace it on purpose, type replace-published-layer0-key
+        type: string
+        required: false
+        default: ''
 
 concurrency: { group: layer0-key-setup, cancel-in-progress: false }
 
@@ -27,6 +44,104 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Refuse to replace a Layer 0 key in use unless asked to
+        id: guard
+        env:
+          CONFIRM: ${{ inputs.replace_published_key }}
+          KEY_URL: https://councilof.ai/api/a2a/key
+          DID_URL: https://csoai.org/.well-known/did.json
+        run: |
+          python3 - <<'PY'
+          import base64, json, os, re, sys, time, urllib.error, urllib.request
+
+          PHRASE = "replace-published-layer0-key"
+          KID = "did:web:csoai.org#layer0-attestation-1"
+          ED25519_SPKI_PREFIX = "302a300506032b6570032100"
+
+
+          def esc(s):
+              """Workflow-command message escaping, so a remote error text cannot break the annotation."""
+              return s.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+
+
+          def get(url):
+              """(HTTP status, JSON body). Raises when the host cannot be read or the body is not JSON."""
+              req = urllib.request.Request(url, headers={"Cache-Control": "no-cache", "User-Agent": "layer0-key-setup-guard"})
+              try:
+                  with urllib.request.urlopen(req, timeout=20) as r:
+                      return r.status, json.loads(r.read())
+              except urllib.error.HTTPError as e:
+                  return e.code, json.loads(e.read())
+
+
+          def signer(_kids):
+              """What /api/a2a/key says: in_use (x), absent, or unknown (why). Third item: the kid it names."""
+              status, body = get(os.environ["KEY_URL"])
+              if not isinstance(body, dict):
+                  return "unknown", f"HTTP {status}, the body is not a JSON object", None
+              if status == 200 and body.get("published") is True:
+                  der = base64.b64decode(body["publicKey"])
+                  if len(der) != 44 or der[:12].hex() != ED25519_SPKI_PREFIX:
+                      return "unknown", "it serves a key that is not an Ed25519 SPKI", None
+                  return "in_use", base64.urlsafe_b64encode(der[12:]).rstrip(b"=").decode(), body.get("kid")
+              if status == 404 and body.get("published") is False:
+                  return "absent", None, body.get("kid")
+              return "unknown", f"HTTP {status}, published={body.get('published')!r}", None
+
+
+          def did(kids):
+              """What the DID says: published (x), absent, or unknown (why)."""
+              status, body = get(os.environ["DID_URL"])
+              vms = body.get("verificationMethod") if isinstance(body, dict) else None
+              if status != 200 or not isinstance(vms, list):
+                  return "unknown", f"HTTP {status}, no verificationMethod list", None
+              for vm in vms:
+                  if isinstance(vm, dict) and vm.get("id") in kids:
+                      return "published", (vm.get("publicKeyJwk") or {}).get("x"), None
+              return "absent", None, None
+
+
+          def settle(fn, kids):
+              """Ask up to 3 times. A failure to read is 'unknown', never 'absent'."""
+              for i in range(3):
+                  try:
+                      result = fn(kids)
+                  except Exception as e:
+                      result = ("unknown", f"{type(e).__name__}: {e}", None)
+                  if result[0] != "unknown" or i == 2:
+                      return result
+                  time.sleep(5)
+
+
+          s_state, s_detail, s_kid = settle(signer, None)
+          kids = {KID} | ({s_kid} if s_kid else set())
+          d_state, d_detail, _ = settle(did, kids)
+          print(f"signer {os.environ['KEY_URL']}: {s_state} {s_detail or ''}")
+          print(f"DID    {os.environ['DID_URL']}: {d_state} {d_detail or ''}")
+
+          first_time = s_state == "absent" and d_state == "absent"
+          old_x = s_detail if s_state == "in_use" else d_detail if d_state == "published" else ""
+          # old_x reaches GITHUB_OUTPUT and the summary, so only a base64url value passes through.
+          old_x = old_x if isinstance(old_x, str) and re.fullmatch(r"[A-Za-z0-9_-]{1,128}", old_x) else ""
+          if first_time:
+              print("No Layer 0 key is in use or published, so this is a first-time setup.")
+          elif os.environ.get("CONFIRM", "").strip() == PHRASE:
+              print(f"::warning title=Replacing the Layer 0 key::replace_published_key was confirmed, so this run replaces the key in use (x {old_x or 'unknown'}).")
+          else:
+              why = (f"signer {s_state}{' (' + s_detail + ')' if s_state == 'unknown' else ''}, "
+                     f"DID {d_state}{' (' + d_detail + ')' if d_state == 'unknown' else ''}")
+              print(f"::error title=Refused because a Layer 0 key may be in use::{esc(why)}. This run would replace the key, and new "
+                    "/api/a2a/route envelopes would stop verifying against the published DID until both did.json copies "
+                    f"carry the new x. To replace it on purpose, run again with replace_published_key set to {PHRASE}.")
+              with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+                  f.write(f"## Refused: no key was generated\n\nLive state: {why}.\n\n"
+                          "A run replaces the Layer 0 key, so it goes ahead without confirmation only when /api/a2a/key "
+                          "answers 404 published:false and the DID lists no #layer0-attestation-1.\n\n"
+                          f"To replace the key on purpose, run again with `replace_published_key` set to `{PHRASE}`.\n")
+              sys.exit(1)
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"replacing={'false' if first_time else 'true'}\nold_x={old_x}\n")
+          PY
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
@@ -34,6 +149,8 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
           CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
+          REPLACING: ${{ steps.guard.outputs.replacing }}
+          OLD_X: ${{ steps.guard.outputs.old_x }}
         run: |
           node -e '
             const { generateKeyPairSync } = require("crypto");
@@ -53,9 +170,13 @@ jobs:
             echo ""
             echo "publicKeyJwk.x (base64url, Ed25519): \`$PUB\`"
             echo ""
-            echo "This run replaced the Layer 0 signing key. Until the DID publishes the new x, /api/a2a/route envelopes signed with it do not verify."
+            if [ "$REPLACING" = "true" ]; then
+              echo "This run replaced the Layer 0 signing key that was in use (old x: \`${OLD_X:-unknown}\`). Until the DID publishes the new x, /api/a2a/route envelopes signed with it do not verify."
+            else
+              echo "This run installed the first Layer 0 signing key. /api/a2a/route envelopes signed with it verify once the DID publishes this x."
+            fi
             echo ""
-            echo "Publish it as \`did:web:csoai.org#layer0-attestation-1\` (replace that entry's x), in this order:"
+            echo "Publish it as \`did:web:csoai.org#layer0-attestation-1\` (add the entry, or replace its x if it is already there), in this order:"
             echo ""
             echo "1. Council-of-AI-CSOAI-org/csoai-static-deploy2 \`.well-known/did.json\`, the DID source. Merge to main."
             echo "2. Run \`csoai-site-deploy.yml\`. Its last check passes once the live DID's x equals what \`/api/a2a/key\` serves."

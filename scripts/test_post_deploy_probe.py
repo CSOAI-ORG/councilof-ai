@@ -90,24 +90,25 @@ class TransportTests(unittest.TestCase):
         self.assertEqual(result.stderr, "")
         return result.returncode, json.loads(result.stdout)
 
-    def test_real_default_urllib_403_is_not_replaced_by_the_application_control(self):
+    def test_default_and_application_user_agents_are_separate_observations(self):
         default_exit, default = self.cli("--client", "urllib", self.origin + "/ua")
-        control_exit, control = self.cli("--client", "urllib", "--application-control", self.origin + "/ua")
+        application_exit, application = self.cli("--client", "urllib", "--application-user-agent", self.origin + "/ua")
         self.assertEqual(default_exit, 1)
         self.assertEqual(default["http_status"], 403)
         self.assertEqual(default["exception"], "HTTPError")
         self.assertFalse(default["ok"])
         self.assertEqual(default["user_agent_mode"], "default")
-        self.assertEqual(control_exit, 0)
-        self.assertEqual(control["http_status"], 200)
-        self.assertTrue(control["ok"])
-        self.assertEqual(control["user_agent_mode"], "application-control")
+        self.assertEqual(application_exit, 0)
+        self.assertEqual(application["http_status"], 200)
+        self.assertTrue(application["ok"])
+        self.assertEqual(application["user_agent_mode"], "application")
         seen = [ua for path, method, ua in Handler.seen if path == "/ua" and method == "GET"]
         self.assertTrue(seen[-2].startswith("Python-urllib/"))
-        self.assertEqual(seen[-1], probe.CONTROL_USER_AGENT)
+        self.assertEqual(seen[-1], probe.APPLICATION_USER_AGENT)
+        self.assertFalse(probe.APPLICATION_USER_AGENT.lower().startswith("python-urllib"))
 
-    def test_application_control_can_fail_independently(self):
-        status, result = self.cli("--client", "urllib", "--application-control", self.origin + "/secret")
+    def test_application_user_agent_can_fail(self):
+        status, result = self.cli("--client", "urllib", "--application-user-agent", self.origin + "/secret")
         self.assertEqual(status, 1)
         self.assertEqual(result["http_status"], 403)
         self.assertFalse(result["ok"])
