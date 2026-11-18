@@ -121,12 +121,7 @@ export default function MergeMe() {
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
-        <title>Merge-me — the train | Council of AI</title>
         <meta name="robots" content="noindex" />
-        <meta
-          name="description"
-          content="Open PRs, check state, done-when curls, bake order. Derived live from the GitHub API. Not a merge authorization."
-        />
       </Helmet>
       <section className="mx-auto max-w-4xl">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-300">
