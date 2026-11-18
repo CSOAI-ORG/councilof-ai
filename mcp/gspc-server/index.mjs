@@ -28,6 +28,7 @@
  *     copy as fallback.
  */
 
+import { createHash } from "node:crypto";
 import { createInterface } from "node:readline";
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -605,6 +606,104 @@ async function getCard(args) {
   return { ...base, state: "INVALID", reason: "not a leaf of the live root, and not in the signed card index" };
 }
 
+const HEX64 = /^[0-9a-f]{64}$/;
+const parentOf = (left, right) => createHash("sha256").update(Buffer.concat([left, right])).digest();
+
+/** Mirrors rootFromPath in functions/mcp/_board.ts: an even index is the left child, an odd one the right. */
+function rootFromPath(leaf, index, path) {
+  let node = Buffer.from(leaf, "hex");
+  let at = index;
+  for (const sibling of path) {
+    const s = Buffer.from(sibling, "hex");
+    node = at % 2 === 0 ? parentOf(node, s) : parentOf(s, node);
+    at = Math.floor(at / 2);
+  }
+  return node.toString("hex");
+}
+
+/** Mirrors rootFromLeaves: an odd node at any level is paired WITH ITSELF (root.json node_definition). */
+function rootFromLeaves(leaves) {
+  if (leaves.length === 0) return null;
+  let level = leaves.map((l) => Buffer.from(l, "hex"));
+  while (level.length > 1) {
+    if (level.length % 2 === 1) level.push(level[level.length - 1]);
+    const next = [];
+    for (let i = 0; i < level.length; i += 2) next.push(parentOf(level[i], level[i + 1]));
+    level = next;
+  }
+  return level[0].toString("hex");
+}
+
+/**
+ * Mirrors publishedRootInclusion in functions/mcp/_board.ts: an inclusion answer counts only if it
+ * reaches the merkle_root published in /root.json. A served path that does not is set aside and the
+ * published leaf list decides instead. (This package has no corpus-note helper, as before.)
+ */
+async function publishedRootInclusion(sha, d) {
+  let root;
+  try {
+    root = await fetchJson("/root.json");
+  } catch (e) {
+    return {
+      ...unreachable("/root.json", e),
+      state: "UNCHECKABLE",
+      sha256: sha,
+      reason: "the proof endpoint answered, but /root.json could not be read, so the path was not checked against the published root. Could not check is not VALID.",
+    };
+  }
+  const published = String(root.merkle_root ?? "").toLowerCase();
+  const count = typeof root.card_count === "number" ? root.card_count : 0;
+  const base = { sha256: sha, merkle_root: HEX64.test(published) ? published : null, card_count: count || null, as_of: root.as_of ?? null };
+  if (!HEX64.test(published) || count < 1) {
+    return { ...base, state: "UNCHECKABLE", reason: "/root.json carries no 64-hex merkle_root and positive card_count to check a path against.", not_a_certification: true };
+  }
+  const index = Number.isInteger(d.index) && d.index >= 0 ? d.index : null;
+  const path = Array.isArray(d.proof) && d.proof.every((p) => HEX64.test(String(p).toLowerCase())) ? d.proof.map((p) => String(p).toLowerCase()) : null;
+  const reaches = index !== null && path !== null && rootFromPath(sha, index, path) === published;
+  // The signed card_count bounds the tree: a path at or past it points into the duplicated tail.
+  const inBound = index !== null && index < count;
+  if (reaches && inBound) {
+    return { ...base, state: "VALID", index, checked: "the served path recomputes to the merkle_root in /root.json, at an index below its card_count", not_a_certification: true };
+  }
+  const served_proof = {
+    index,
+    merkle_root: typeof d.merkle_root === "string" ? d.merkle_root : null,
+    reaches_published_root: reaches,
+    index_below_card_count: inBound,
+    note: reaches
+      ? "GET /api/proof served an index at or past card_count, the duplicated tail of an odd-paired tree, so its path proves nothing. This answer does not rely on it."
+      : "GET /api/proof served a path that does not recompute to the merkle_root in /root.json. This answer does not rely on it.",
+  };
+  const leaves = Array.isArray(root.card_sha256) ? root.card_sha256.map((x) => String(x).toLowerCase()) : null;
+  if (!leaves || leaves.length !== count || !leaves.every((l) => HEX64.test(l)) || rootFromLeaves(leaves) !== published) {
+    return {
+      ...base,
+      state: "UNCHECKABLE",
+      reason: "the served path does not reach the published root, and the leaf list in /root.json is absent or does not recompute to its merkle_root, so inclusion could not be checked.",
+      served_proof,
+      not_a_certification: true,
+    };
+  }
+  const at = leaves.indexOf(sha);
+  if (at >= 0) {
+    return { ...base, state: "VALID", index: at, checked: "recomputed from the leaf list in /root.json, which hashes to its merkle_root", served_proof, not_a_certification: true };
+  }
+  return { ...base, state: "INVALID", reason: "not in the leaf list of /root.json", served_proof, not_a_certification: true };
+}
+
+/** Mirrors inclusionSummary in functions/mcp/_handlers.ts. */
+function inclusionSummary(payload) {
+  if (typeof payload.corpus_note === "string") return `${payload.state ?? "?"} — ${payload.corpus_note}`;
+  const root = String(payload.merkle_root || "").slice(0, 16);
+  if (payload.state === "VALID") {
+    return payload.served_proof
+      ? `VALID — leaf ${payload.index} of ${payload.card_count} in the published root ${root}, recomputed from the leaf list in /root.json; the path GET /api/proof served was set aside (served_proof says why).`
+      : `VALID — the path recomputes to the published root ${root} (leaf ${payload.index} of ${payload.card_count}).`;
+  }
+  const reason = typeof payload.reason === "string" ? payload.reason.replace(/\.$/, "") : "inclusion was not checked against the published root";
+  return `${payload.state ?? "?"} — ${reason}.`;
+}
+
 async function verifyInclusion(args) {
   const sha = String(args.sha256 || "").trim().toLowerCase();
   if (!/^[0-9a-f]{64}$/.test(sha)) {
@@ -613,7 +712,7 @@ async function verifyInclusion(args) {
   try {
     const d = await fetchJson(`/api/proof?sha=${sha}`);
     if (d.kind === "inclusion") {
-      return { state: "VALID", sha256: sha, merkle_root: d.merkle_root ?? null, not_a_certification: true };
+      return await publishedRootInclusion(sha, d);
     }
     if (d.error === "not_found") {
       return { state: "INVALID", sha256: sha, reason: d.reason ?? "not a leaf", not_a_certification: true };
@@ -1084,7 +1183,7 @@ function summaryLine(name, payload) {
         ? `${payload.state ?? "?"} — ${payload.reason}`
         : `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
     case "verify_inclusion":
-      return `${payload.state ?? "?"} — inclusion against live merkle.`;
+      return inclusionSummary(payload);
     case "x402_trust":
       return `${payload.state ?? "?"} — ${payload.headline || "catalog trust counts"}.`;
     case "mcp_trust":
