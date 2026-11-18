@@ -5,7 +5,6 @@ export default function YieldInternal() {
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
-        <title>Reference withdrawn | Council of AI</title>
         <meta name="robots" content="noindex,nofollow,noarchive" />
       </Helmet>
       <section className="mx-auto max-w-3xl" aria-labelledby="withdrawn-reference-h">
