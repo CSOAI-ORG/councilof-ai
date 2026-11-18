@@ -45,6 +45,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import os
 import random
 import sys
 import time
@@ -54,7 +55,8 @@ import urllib.request
 from pathlib import Path
 
 SCHEMA = "csoai.distribution/0.1"
-UA = "councilof.ai distribution-measure (nicholas@csoai.org)"
+# A run started off the pod can name its client without a personal address; unset, the pod's UA stands.
+UA = os.environ.get("DISTRIBUTION_MEASURE_UA") or "councilof.ai distribution-measure (nicholas@csoai.org)"
 # How old this artifact may be before a reader should treat it as stale. The loop runs daily;
 # two days gives one missed run of slack before /api/footprint starts saying STALE.
 MAX_AGE_HOURS = 48
@@ -497,7 +499,8 @@ def main() -> int:
         "max_age_hours": MAX_AGE_HOURS,
         "stale_after": iso(utcnow() + dt.timedelta(hours=MAX_AGE_HOURS)),
         "generator": "scripts/distribution-measure.py (runs as /workspace/lanes/loops/distribution-measure.py)",
-        "host": "rp-3090-now",
+        # A run off the pod must say where it ran; unset, this is the pod that runs the daily loop.
+        "host": os.environ.get("DISTRIBUTION_MEASURE_HOST") or "rp-3090-now",
         "package_list": {
             "path": "/interop/footprint-packages.json",
             "schema": listing.get("schema"),
