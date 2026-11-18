@@ -13,6 +13,8 @@
  *   · Evidence records are evidence linked from the board, never board totals.
  */
 
+import { readClock } from "./statusReads";
+
 export type FeedState = "OK" | "DEGRADED" | "UNAVAILABLE" | "UNKNOWN" | "UNMEASURED";
 
 export type FeedRow = {
@@ -70,7 +72,7 @@ export function unmeasured(group: string, label: string, error: string, readAt: 
     state: "UNMEASURED",
     observation: `This page could not read the source (${error}). No figure is shown: a cached or earlier value is never substituted.`,
     observedAt: null,
-    observedFrom: `read attempted at ${readAt} (this browser's clock)`,
+    observedFrom: `read attempted at ${readAt} (${readClock()})`,
     href,
   };
 }
@@ -102,7 +104,7 @@ export function fleetView(r: Read<FleetStatusPublic>): { rows: FeedRow[]; jobs: 
         state: bad > 0 ? "DEGRADED" : "OK",
         observation: `${jobs.length} job(s) in this read: ${fmtCounts(counts)}. UNMEASURED means the supervisor could not read that job's signal, not that it failed.`,
         observedAt: typeof b.published_at === "string" ? b.published_at : null,
-        observedFrom: typeof b.published_at === "string" ? "fleet_status.public.json → published_at (the supervisor pass)" : `read at ${r.readAt} (this browser's clock)`,
+        observedFrom: typeof b.published_at === "string" ? "fleet_status.public.json → published_at (the supervisor pass)" : `read at ${r.readAt} (${readClock()})`,
         href: FLEET_STATUS_PAGE,
       },
     ],
@@ -129,7 +131,7 @@ export function fundingRow(r: Read<FleetStatusPublic>): FeedRow {
     badge: s,
     observation: "A colour, not an amount: GREEN / AMBER / RED from the watchdog's runway thresholds. No balance is published.",
     observedAt: typeof asOf === "string" ? asOf : null,
-    observedFrom: typeof asOf === "string" ? "fleet_status.public.json → funding.as_of" : `read at ${r.readAt} (this browser's clock)`,
+    observedFrom: typeof asOf === "string" ? "fleet_status.public.json → funding.as_of" : `read at ${r.readAt} (${readClock()})`,
     href: FLEET_STATUS_PAGE,
   };
 }
@@ -156,7 +158,7 @@ export function evidenceRows(r: Read<EvidenceManifest>, nowMs: number): FeedRow[
       group: g,
       label: rec.title,
       state: cur.signature?.state === "VERIFIED" ? "OK" : "DEGRADED",
-      observation: `record as_of ${cur.as_of}${age === null ? "" : ` (${age} h before this read, by this browser's clock)`} · read_state ${cur.read_state ?? "not stated"} · signature ${cur.signature?.state ?? "not stated"} · timestamp ${cur.ots?.state ?? "not stated"} · ${rec.versions.length} version(s) published.`,
+      observation: `record as_of ${cur.as_of}${age === null ? "" : ` (${age} h before this read, by ${readClock()})`} · read_state ${cur.read_state ?? "not stated"} · signature ${cur.signature?.state ?? "not stated"} · timestamp ${cur.ots?.state ?? "not stated"} · ${rec.versions.length} version(s) published.`,
       observedAt: cur.as_of,
       observedFrom: "the record's own as_of",
       href: cur.page,
@@ -174,7 +176,7 @@ export function evidenceRows(r: Read<EvidenceManifest>, nowMs: number): FeedRow[
       href: `https://huggingface.co/datasets/csoai/${x.dataset}`,
     });
   }
-  if (!rows.length) rows.push({ group: g, label, state: "UNAVAILABLE", observation: "The manifest lists no record yet.", observedAt: null, observedFrom: `read at ${r.readAt} (this browser's clock)`, href: EVIDENCE_MANIFEST_URL });
+  if (!rows.length) rows.push({ group: g, label, state: "UNAVAILABLE", observation: "The manifest lists no record yet.", observedAt: null, observedFrom: `read at ${r.readAt} (${readClock()})`, href: EVIDENCE_MANIFEST_URL });
   return rows;
 }
 
@@ -198,7 +200,7 @@ export function censusRows(r: Read<EvidenceManifest>): FeedRow[] {
       href: cur.page,
     });
   }
-  if (!out.length) out.push({ group: g, label, state: "UNAVAILABLE", observation: "No census record is published in the manifest.", observedAt: null, observedFrom: `read at ${r.readAt} (this browser's clock)`, href: EVIDENCE_MANIFEST_URL });
+  if (!out.length) out.push({ group: g, label, state: "UNAVAILABLE", observation: "No census record is published in the manifest.", observedAt: null, observedFrom: `read at ${r.readAt} (${readClock()})`, href: EVIDENCE_MANIFEST_URL });
   return out;
 }
 
@@ -253,7 +255,7 @@ export function timestampRows(site: Read<SiteOtsManifest>, proofs: Array<Read<Ui
             state: "OK",
             observation: `${c.proofs} proof(s) that parse: ${c.bitcoin_attested} Bitcoin-attested, ${c.calendar_pending} calendar-pending. Pending is a submitted request, not an anchor.`,
             observedAt: typeof site.body.as_of === "string" ? site.body.as_of : null,
-            observedFrom: typeof site.body.as_of === "string" ? "/interop/ots/manifest.json → as_of" : `read at ${site.readAt} (this browser's clock)`,
+            observedFrom: typeof site.body.as_of === "string" ? "/interop/ots/manifest.json → as_of" : `read at ${site.readAt} (${readClock()})`,
             href: SITE_OTS_MANIFEST_URL,
           }
         : unmeasured(g, siteLabel, "answered, but counts.proofs / bitcoin_attested / calendar_pending are missing", site.readAt, SITE_OTS_MANIFEST_URL),
@@ -265,7 +267,7 @@ export function timestampRows(site: Read<SiteOtsManifest>, proofs: Array<Read<Ui
     return rows;
   }
   if (!proofs.length) {
-    rows.push({ group: g, label: evLabel, state: "UNAVAILABLE", observation: "No evidence record publishes a proof.", observedAt: null, observedFrom: `read at ${manifest.readAt} (this browser's clock)`, href: EVIDENCE_MANIFEST_URL });
+    rows.push({ group: g, label: evLabel, state: "UNAVAILABLE", observation: "No evidence record publishes a proof.", observedAt: null, observedFrom: `read at ${manifest.readAt} (${readClock()})`, href: EVIDENCE_MANIFEST_URL });
     return rows;
   }
   const read = proofs.filter((p): p is Extract<Read<Uint8Array>, { ok: true }> => p.ok);
@@ -281,7 +283,7 @@ export function timestampRows(site: Read<SiteOtsManifest>, proofs: Array<Read<Ui
     state: partial ? "DEGRADED" : "OK",
     observation: `${read.length} of ${proofs.length} proof(s) read: ${fmtCounts(counts)}.${partial ? " The rest could not be read and are not counted either way." : ""} A Bitcoin tag in the bytes is not a block-header check.`,
     observedAt: null,
-    observedFrom: `read at ${read[0].readAt} (this browser's clock)`,
+    observedFrom: `read at ${read[0].readAt} (${readClock()})`,
     href: EVIDENCE_MANIFEST_URL,
   });
   return rows;

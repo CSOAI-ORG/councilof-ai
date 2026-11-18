@@ -17,6 +17,17 @@ export function statusReadError(error: unknown): string {
     : "source request unavailable";
 }
 
+/**
+ * Whose clock stamped a read. The build saves /status as static HTML by running the page in a
+ * prerender (scripts/prerender.mjs sets window.__CSOAI_PRERENDER__), so the saved rows were read
+ * at build time; a visitor's browser reads every source again on load. Live /status/, 18 Nov 2026:
+ * the saved HTML said "this browser's clock" 21 times about reads the build had made.
+ */
+export function readClock(): string {
+  const w = typeof window === "undefined" ? undefined : (window as Window & { __CSOAI_PRERENDER__?: boolean });
+  return w?.__CSOAI_PRERENDER__ ? "the site build's clock, at build time" : "this browser's clock";
+}
+
 export async function readBytes(url: string): Promise<Read<Uint8Array>> {
   const readAt = new Date().toISOString();
   try {

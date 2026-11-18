@@ -9,6 +9,9 @@
  * free-tool count stays on the home card that cites its own source. When the door cannot be asked,
  * the strip says so plainly instead of leaving a permanently "connecting" badge (the same rule the
  * tools audit of 2026-08-26 set for ToolRunner).
+ *
+ * 2026-11-18: the build's prerender does not ask the door (readToolsDoor), so the saved HTML keeps
+ * the neutral "asking" state instead of a "not answering" the build itself caused.
  */
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
@@ -17,6 +20,24 @@ import { boardRunDates } from "@/lib/boardRunDates";
 import { listTools } from "@/lib/sovTools";
 
 type DoorState = "asking" | "answering" | "not-answering";
+
+/**
+ * The tools-door state to show. The build saves this strip into static HTML by running the page
+ * in a prerender (scripts/prerender.mjs sets window.__CSOAI_PRERENDER__), where mcpRpc refuses
+ * every MCP request. Asking there saved "tools door not answering (retry shortly)" into /assess/
+ * and /dashboard/?tab=verify while /mcp/free answered with 49 tools (live, 18 Nov 2026). So the
+ * prerender does not ask: the saved HTML keeps "asking", and the visitor's browser asks on load.
+ */
+export async function readToolsDoor(
+  list: (door: "/mcp/free") => Promise<{ state: string }> = listTools,
+  w: { __CSOAI_PRERENDER__?: boolean } | undefined = typeof window === "undefined"
+    ? undefined
+    : (window as Window & { __CSOAI_PRERENDER__?: boolean }),
+): Promise<DoorState> {
+  if (w?.__CSOAI_PRERENDER__) return "asking";
+  const reply = await list("/mcp/free");
+  return reply.state === "ok" ? "answering" : "not-answering";
+}
 
 export default function BoardStatusStrip() {
   const { data, error } = useGspcBoard();
@@ -27,8 +48,8 @@ export default function BoardStatusStrip() {
   const [door, setDoor] = useState<DoorState>("asking");
   useEffect(() => {
     let cancelled = false;
-    listTools("/mcp/free").then((reply) => {
-      if (!cancelled) setDoor(reply.state === "ok" ? "answering" : "not-answering");
+    readToolsDoor().then((state) => {
+      if (!cancelled) setDoor(state);
     });
     return () => {
       cancelled = true;
