@@ -1,5 +1,4 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 import { parseGpaiMatrix, safeToolHref, type Matrix, type ProvisionRow } from "@/lib/gpaiMatrix";
 
@@ -89,13 +88,6 @@ export default function GpaiMatrix() {
 
   return (
     <section className="min-h-screen bg-stone-50 px-5 py-16 text-stone-800">
-      <Helmet>
-        <title>GPAI evidence matrix | Council of AI — Global Regulation Atlas</title>
-        <meta
-          name="description"
-          content="Explore published evidence and tool references for EU AI Act provisions, with GPAI coverage, source dates and measurement limits."
-        />
-      </Helmet>
       <section className="mx-auto min-w-0 max-w-4xl [overflow-wrap:anywhere]">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-amber-700">
           {matrix?.layer ?? "Council of AI — Global Regulation Atlas"} · evidence snapshot{" "}
