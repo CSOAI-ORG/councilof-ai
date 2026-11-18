@@ -17,6 +17,15 @@ import { ASK_MOBILE_QUERY, ASK_OPEN, PALETTE_OPEN, isAskEntryRoute, recordRecent
 const AskPane = lazy(() => import("@/components/ask/AskPane"));
 const CommandPalette = lazy(() => import("@/components/ask/CommandPalette"));
 
+/**
+ * The launcher's distance from the bottom edge. The cookie notice is fixed there too, and it
+ * publishes its measured height as --cookie-banner-h so that launchers can clear it (CookieConsent).
+ * Measured on 17 Nov 2026 at 390 px: fixed 1rem from the bottom, this launcher covered the notice's
+ * "Accept analytics" button on / and with the menu open; at 1440 px it overlapped the notice bar.
+ * The variable falls back to 0px, so with the notice dismissed the launcher sits where it did.
+ */
+const LAUNCHER_BOTTOM = "calc(1rem + env(safe-area-inset-bottom, 0px) + var(--cookie-banner-h, 0px))";
+
 export default function AskHost() {
   const [location] = useLocation();
   const search = useSearch();
@@ -129,7 +138,8 @@ export default function AskHost() {
           aria-label="Open Council of AI chat"
           title="Open Council of AI chat"
           data-testid="ask-fab"
-          className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-[70] inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-800 text-white shadow-lg hover:bg-emerald-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+          style={{ bottom: LAUNCHER_BOTTOM }}
+          className="fixed right-4 z-[70] inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-800 text-white shadow-lg hover:bg-emerald-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
         >
           <MessageSquareText className="h-6 w-6" aria-hidden="true" />
         </button>
