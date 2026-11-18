@@ -162,7 +162,7 @@ export default function PalAskPanel({
             placeholder={`Ask ${d.name} about ${d.role.toLowerCase()}`}
             className="flex-1 rounded-lg border border-emerald-500/30 bg-black/40 px-3 py-2 text-sm"
           />
-          <button type="submit" data-testid="pal-ask-send" disabled={busy} className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold disabled:opacity-50">
+          <button type="submit" data-testid="pal-ask-send" disabled={busy} className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold disabled:opacity-50">
             {busy ? "…" : "Ask"}
           </button>
         </form>
