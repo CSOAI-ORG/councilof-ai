@@ -79,6 +79,18 @@ export function verifyTiles(
   return t;
 }
 
+/**
+ * How a tile lays out its value. Live /gspc-verify/ at 390 px, 18 Nov 2026: each value sat in a
+ * 101 px cell as text-lg with [overflow-wrap:anywhere], so "qwen2.5-0.5b-mined:latest" broke over
+ * 4 lines, "sov6-relationality-v3-light:latest" over 5 and "2026-08-19" over 2. Model and test ids
+ * now take the full row and break only where a word may break; a date never wraps.
+ */
+export function tileLayout(label: string): { tile: string; value: string } {
+  if (label === "Model" || label === "Test") return { tile: "col-span-full", value: "[overflow-wrap:break-word]" };
+  if (label === "Recorded") return { tile: "", value: "whitespace-nowrap" };
+  return { tile: "", value: "[overflow-wrap:break-word]" };
+}
+
 function readTally(value: unknown): Tally | null {
   if (!value || typeof value !== "object") return null;
   const { ok, fail } = value as Partial<Tally>;
@@ -331,12 +343,15 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
             return tiles.length ? (
               <>
                 <dl data-testid="record-tiles" className="grid grid-cols-[repeat(auto-fit,minmax(7.5rem,1fr))] gap-2">
-                  {tiles.map((t) => (
-                    <div key={t.label} className={`min-w-0 rounded-xl px-3 py-2 ${light ? "bg-white" : "bg-emerald-500/10"}`}>
-                      <dt className={`text-xs font-medium [overflow-wrap:anywhere] ${muted}`}>{t.label}</dt>
-                      <dd className={`font-mono text-lg font-bold leading-tight [overflow-wrap:anywhere] ${light ? "text-slate-900" : "text-emerald-50"}`}>{t.value}</dd>
-                    </div>
-                  ))}
+                  {tiles.map((t) => {
+                    const fit = tileLayout(t.label);
+                    return (
+                      <div key={t.label} className={`min-w-0 rounded-xl px-3 py-2 ${fit.tile} ${light ? "bg-white" : "bg-emerald-500/10"}`}>
+                        <dt className={`text-xs font-medium [overflow-wrap:anywhere] ${muted}`}>{t.label}</dt>
+                        <dd className={`font-mono text-base font-bold leading-tight ${fit.value} ${light ? "text-slate-900" : "text-emerald-50"}`}>{t.value}</dd>
+                      </div>
+                    );
+                  })}
                 </dl>
                 {says?.own ? (
                   <p data-testid="record-says" className={`text-sm leading-relaxed ${muted}`}>

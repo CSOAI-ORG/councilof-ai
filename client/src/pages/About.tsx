@@ -721,14 +721,13 @@ export default function About() {
             </Card>
 
             <Card className="p-6 bg-white border-l-4 border-emerald-500 hover:shadow-lg transition-shadow">
-              <h3 className="text-xl font-bold mb-3">How long does the attestation exam take?</h3>
+              <h3 className="text-xl font-bold mb-3">Is there an attestation exam?</h3>
               <p className="text-gray-600 leading-relaxed">
-                The exam is 50 questions in 90 minutes with a 70% passing threshold, and you can
-                retake it as often as you need. We have not published completion times or a
-                first-attempt pass rate, so we are not going to quote either — there is no cohort
-                record behind those figures. Use the Academy exercises to practise and check the
-                material. Completion-record issuance is not currently open. Learning progress is
-                not a certification or accreditation and gives no regulatory status.
+                No. The attestation exam has been retracted, and its old address now redirects to
+                /honesty/, so there is no exam length, question count or pass mark to quote. Use the
+                Academy exercises to practise and check the material.
+                Completion-record issuance is not currently open. Learning progress is not a
+                certification or accreditation and gives no regulatory status.
               </p>
             </Card>
 

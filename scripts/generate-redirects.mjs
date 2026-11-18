@@ -276,6 +276,12 @@ const EXISTING = [
   "/widget/*               /dashboard?tab=learn         308",
   "/rankings               /dashboard?tab=board         308",
   "/rankings/              /dashboard?tab=board         308",
+  // /leaderboard got its edge rule from App.tsx's <Redirect> stub, and REDIRECT_RULES derives only
+  // the slashless form, so /leaderboard/ was a 404 (measured 18 Nov 2026) while /leaderboard 308'd.
+  // Both forms are held here. A hand rule claims the path, so the derived stub rule is skipped, not
+  // duplicated. The target is unchanged: the Leaderboard pane (DashboardPane `leaderboard`).
+  "/leaderboard            /dashboard?tab=leaderboard   308",
+  "/leaderboard/           /dashboard?tab=leaderboard   308",
   "/benchmarkers           /dashboard?tab=verify        308",
   "/benchmarkers/          /dashboard?tab=verify        308",
   "/mcp-registry           /mcps/                       308",
