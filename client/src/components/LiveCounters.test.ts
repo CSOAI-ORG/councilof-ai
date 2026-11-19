@@ -136,6 +136,18 @@ describe("toPill / pillsFor", () => {
       expect(p.title).toContain("measured 73.4 h ago");
     });
 
+    it("carries the scope the row states on its label and tooltip, and never one it did not state", () => {
+      // /api/footprint heads gross_distribution with CSOAI's own figures and says so in `scope`
+      // (19 Nov 2026). The pill must say whose packages its figure counts.
+      const scoped = toPill("gross_distribution", { ...measured, scope: "CSOAI packages" });
+      expect(scoped.label).toBe("Downloads, CSOAI packages");
+      expect(scoped.title.startsWith("Downloads, CSOAI packages · ")).toBe(true);
+      expect(`${scoped.label} ${scoped.text} ${scoped.window ?? ""}`).not.toMatch(/gross|cumulative/i);
+      // A row that states no scope, or a blank one, keeps the bare stage name: no scope is assumed.
+      expect(toPill("gross_distribution", measured).label).toBe(FUNNEL_LABELS.gross_distribution);
+      expect(toPill("gross_distribution", { ...measured, scope: "  " }).label).toBe(FUNNEL_LABELS.gross_distribution);
+    });
+
     it("names no window and no evidence when the row carries none — never a guessed one", () => {
       expect(rowWindow({ state: "READ", value: 1 })).toBeNull();
       expect(rowWindow({ state: "READ", value: 1, window: "  " })).toBeNull();

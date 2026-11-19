@@ -480,6 +480,7 @@ describe("/mcp tools/call — paid tools", () => {
         name: "receipts_batch",
         arguments: {
           from: "2026-08-31T00:00:00Z",
+          to: "2026-09-01T00:00:00Z",
           x_payment: token,
         },
       }),
@@ -529,6 +530,7 @@ describe("/mcp tools/call — paid tools", () => {
           name: "receipts_batch",
           arguments: {
             from: "2026-08-31T00:00:00Z",
+            to: "2026-09-01T00:00:00Z",
             x_payment: token,
           },
         }),
@@ -828,5 +830,93 @@ describe("a dated amount is said in the 402 human line, built from the challenge
     const line = await summaryFor(undefined);
     expect(line).toMatch(/^PAYMENT_REQUIRED/);
     expect(line).not.toMatch(/launch amount/i);
+  });
+});
+
+describe("/mcp paid tools — a call that delivered nothing is an error, in the route's own words", () => {
+  const routeNotFound = () =>
+    vi.stubGlobal(
+      "fetch",
+      async () =>
+        new Response(
+          JSON.stringify({
+            schema: "csoai.rwa-evidence/0.1",
+            error: "not_found",
+            reason: "asset ZZZ is not in the public reader",
+            note: "No payment was taken for a 404.",
+          }),
+          { status: 404 },
+        ),
+    );
+
+  it("a deployed route's own JSON 404 is HTTP_404 with its reason, never NOT_DEPLOYED", async () => {
+    routeNotFound();
+    const r = await call(rpc("tools/call", { name: "rwa_evidence", arguments: { asset: "ZZZ", preview: true } }));
+    const sc = r.result.structuredContent;
+    expect(sc.status).toBe("HTTP_404");
+    expect(sc.reason).toBe("asset ZZZ is not in the public reader");
+    expect(sc.delivery_state).toBe("NOT_DELIVERED");
+    expect(r.result.isError).toBe(true);
+    expect(r.result.content[0].text).not.toMatch(/not deployed/i);
+  });
+
+  it("after x_payment, a refusal says the route reported no settlement instead of asking for a wallet inspection first", async () => {
+    routeNotFound();
+    const token = "eyJ0ZXN0Ijoibm90LWZvdW5kIn0";
+    const r = await call(rpc("tools/call", { name: "rwa_evidence", arguments: { asset: "ZZZ", x_payment: token } }));
+    const sc = r.result.structuredContent;
+    expect(sc.status).toBe("HTTP_404");
+    expect(sc.payment_presented).toBe(true);
+    expect(sc.settlement_state).toBe("UNCONFIRMED");
+    expect(r.result.isError).toBe(true);
+    expect(r.result.content[0].text).toMatch(/refused the request and reported no settlement/);
+    expect(JSON.stringify(r)).not.toContain(token);
+  });
+
+  it("every 4xx from a route is a failed call, with the route's body passed through", async () => {
+    stubOrigin({ deployed: ["/api/request-attestation"], errorStatus: 400 });
+    const r = await call(rpc("tools/call", { name: "commission_card", arguments: { subject: "bad subject with spaces!" } }));
+    expect(r.result.structuredContent.status).toBe("HTTP_400");
+    expect(r.result.structuredContent.body).toEqual({ error: "upstream_error" });
+    expect(r.result.isError).toBe(true);
+  });
+
+  it("preview and x_payment together are refused before any request, so no authorization is forwarded", async () => {
+    const seen = stubOrigin({
+      deployed: ["/api/rwa/evidence", "/api/receipts/batch", "/api/art50/marking-evidence", "/api/evidence-bundle"],
+    });
+    for (const [name, args] of [
+      ["rwa_evidence", { asset: "RLUSD" }],
+      ["receipts_batch", { from: "2026-08-31T00:00:00Z", to: "2026-09-01T00:00:00Z" }],
+      ["art50_marking_evidence", { url: "https://example.org/a.jpg" }],
+      ["evidence_bundle", { obligation: "dora" }],
+    ] as const) {
+      const r = await call(
+        rpc("tools/call", { name, arguments: { ...args, preview: true, x_payment: "eyJ0ZXN0IjoicHJldmlldyJ9" } }),
+      );
+      expect(r.result.structuredContent.status, name).toBe("BAD_ARGUMENTS");
+      expect(r.result.structuredContent.reason, name).toMatch(/preview is free/);
+      expect(r.result.isError, name).toBe(true);
+    }
+    expect(seen).toHaveLength(0);
+  });
+
+  it("a paid receipts_batch names its window end, so the paid bytes can hash to the preview's batch_sha256", async () => {
+    const seen = stubOrigin({ deployed: ["/api/receipts/batch"] });
+    const r = await call(
+      rpc("tools/call", {
+        name: "receipts_batch",
+        arguments: { from: "2026-08-31T00:00:00Z", x_payment: "eyJ0ZXN0Ijoibm8tdG8ifQ" },
+      }),
+    );
+    expect(r.result.structuredContent.status).toBe("BAD_ARGUMENTS");
+    expect(r.result.structuredContent.reason).toMatch(/to is required when paying/);
+    expect(r.result.isError).toBe(true);
+    expect(seen).toHaveLength(0);
+    // Unpaid, `to` may still default to now: that call costs nothing and its answer names the window.
+    const preview = await call(
+      rpc("tools/call", { name: "receipts_batch", arguments: { from: "2026-08-31T00:00:00Z", preview: true } }),
+    );
+    expect(preview.result.structuredContent.status).toBe("DELIVERED");
   });
 });
