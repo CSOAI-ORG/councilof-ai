@@ -1,0 +1,81 @@
+# loops-distribution — the estate's daily distribution measurement, re-homed after RunPod retirement.
+#
+# WHY THIS EXISTS. scripts/distribution-measure.sh ran on the pod as
+# /workspace/lanes/loops/distribution-measure.sh (07:00Z daily). The pod was retired (owner,
+# 2026-11-18) and the loop died with it: /api/footprint → gross_distribution went STALE past its
+# own 48 h policy for the first time on 2026-11-18. This workflow runs the SAME producer
+# (scripts/distribution-measure.py) on a runner, lands the dated + latest artifacts on a branch,
+# opens the PR, dispatches pr-gates on that branch, and leaves the merge to the same gated
+# auto-merge the census-delta lane uses. The pod wrapper's contract is kept: measure → artifact →
+# branch → PR → gates → gated merge; this loop never pushes master directly.
+#
+# WHAT IT IS NOT. Gross download events, package by package, including mirrors, CI installs and
+# crawlers. Not unique people, not users, not customers. /api/footprint carries the honesty
+# labels; this workflow invents nothing and stages nothing but the two artifact files.
+
+name: loops-distribution
+
+on:
+  schedule:
+    - cron: "0 7 * * *" # 07:00Z daily — the hour the pod loop kept
+  workflow_dispatch: {}
+
+permissions:
+  actions: write # dispatches pr-gates for the bot branch (GITHUB_TOKEN pushes emit no pull_request event)
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: loops-distribution
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: measure every package, package by package
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          set -euo pipefail
+          mkdir -p out/distribution
+          python3 scripts/distribution-measure.py --now \
+            --list public/interop/footprint-packages.json \
+            --out-dir out/distribution
+      - name: land dated + latest artifacts on a branch, PR, gates, gated merge
+        id: land
+        env:
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }} # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          DATED="distribution-$(date -u +%Y-%m-%d).json"
+          test -s "out/distribution/$DATED" || { echo "HALT: no dated artifact" >&2; exit 3; }
+          test -s "out/distribution/distribution-latest.json" || { echo "HALT: no latest artifact" >&2; exit 3; }
+          cp "out/distribution/$DATED" "out/distribution/distribution-latest.json" public/interop/
+          git add "public/interop/$DATED" public/interop/distribution-latest.json
+          if git diff --cached --quiet; then
+            echo "measured, artifact byte-identical to master; nothing to land"
+            echo "landed=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
+          BR="distribution/auto-${STAMP}"
+          git checkout -b "$BR"
+          git commit -m "distribution: measured 30-day and cumulative windows, gross events per package (${STAMP})"
+          git push origin "HEAD:$BR"
+          URL=$(gh pr create --base master --head "$BR" \
+            --title "distribution: gross download census, per package (${STAMP})" \
+            --body "Re-homed daily loop (RunPod retired 2026-11-18). Gross registry download events, package by package, over each registry's own 30-day window plus cumulative — mirrors, CI installs and crawlers are inside both; neither is a count of people. Lower bounds where a counter did not answer; missing counters are not treated as zero. The dated and latest artifacts are the only staged bytes; /api/footprint carries the honesty labels and never adds stages together.")
+          gh workflow run pr-gates.yml --ref "$BR"
+          gh pr merge "$URL" --squash --auto || echo "auto-merge unavailable; $URL needs a human merge"
+          echo "landed=1" >> "$GITHUB_OUTPUT"
+          echo "branch=$BR" >> "$GITHUB_OUTPUT"
