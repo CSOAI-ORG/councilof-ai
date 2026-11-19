@@ -35,11 +35,13 @@ import {
 } from "./footprint";
 import packages from "../../public/interop/footprint-packages.json";
 import distribution from "../../public/interop/distribution-latest.json";
-import registryCensus from "../../public/interop/mcp-registry-2026-09-23/census.json";
+import registryCensus from "../../public/interop/mcp-registry-2026-11-18/census.json";
 import registryLatest from "../../public/interop/mcp-registry-latest.json";
 
 const ORIGIN = "https://councilof.ai";
 const NOW = "2026-09-23T10:00:00.000Z";
+// Fresh relative to the 2026-11-18 registry census (inside the pointer's 48 h policy); only the registry_listings stage runs on this clock.
+const REGISTRY_NOW = "2026-11-18T04:30:00.000Z";
 
 type Route = (url: string) => Response | Promise<Response>;
 
@@ -67,9 +69,9 @@ const healthy = (): Record<string, Route> => ({
   "api.github.com": () => Response.json({ stargazers_count: 4 }),
 });
 
-const deps = (routes: Record<string, Route>, calls: string[] = []): Deps => ({
+const deps = (routes: Record<string, Route>, calls: string[] = [], now: () => string = () => NOW): Deps => ({
   fetch: fakeFetch(routes, calls),
-  now: () => NOW,
+  now,
   origin: ORIGIN,
 });
 
@@ -115,7 +117,7 @@ describe("gross_distribution — read out of the measured artifact, never fanned
   it("carries the artifact's as_of, not the request's, and names the evidence artifact", () => {
     const row = grossDistribution(NOW, artifact());
     expect(row.as_of).toBe("2026-09-22T11:00:00Z");
-    expect(row.as_of).not.toBe(NOW);
+    expect(row.as_of).not.toBe(REGISTRY_NOW);
     expect(row.evidence_url).toBe(DISTRIBUTION_PATH);
     expect(row.measured_by).toContain("distribution-measure.py");
   });
@@ -245,7 +247,7 @@ describe("the committed artifact on disk", () => {
 
 describe("registry_listings — read a dated, complete off-edge census", () => {
   it("reads the pointer's distinct names and version rows with the source measurement's timestamp", () => {
-    const row = registryListings(NOW);
+    const row = registryListings(REGISTRY_NOW);
     expect(row).toMatchObject({
       state: "READ",
       value: registryLatest.servers,
@@ -256,8 +258,8 @@ describe("registry_listings — read a dated, complete off-edge census", () => {
       upstream_url: expect.stringContaining("registry.modelcontextprotocol.io"),
     });
     expect(row.value).toBe(354);
-    expect(row.versions).toBe(1342);
-    expect(row.as_of).not.toBe(NOW);
+    expect(row.versions).toBe(1344);
+    expect(row.as_of).not.toBe(REGISTRY_NOW);
   });
 
   it("committed latest pointer matches the immutable source's exact bytes and measured fields", () => {
@@ -282,7 +284,7 @@ describe("registry_listings — read a dated, complete off-edge census", () => {
   it("shows an old census as STALE without discarding its measured count", () => {
     const staleAt = new Date(Date.parse(registryLatest.completed_utc) + (REGISTRY_CENSUS_MAX_AGE_HOURS + 1) * 3_600_000).toISOString();
     const row = registryListings(staleAt);
-    expect(row).toMatchObject({ state: "STALE", value: 354, versions: 1342, as_of: registryLatest.completed_utc });
+    expect(row).toMatchObject({ state: "STALE", value: 354, versions: 1344, as_of: registryLatest.completed_utc });
     expect(String(row.reason)).toContain("freshness policy");
   });
 
@@ -302,19 +304,19 @@ describe("registry_listings — read a dated, complete off-edge census", () => {
       { ...registryLatest, completed_utc: "not-a-date" },
       null,
     ]) {
-      expect(registryListings(NOW, bad)).toMatchObject({ state: "UNCHECKABLE", value: null, source_url: REGISTRY_CENSUS_PATH });
+      expect(registryListings(REGISTRY_NOW, bad)).toMatchObject({ state: "UNCHECKABLE", value: null, source_url: REGISTRY_CENSUS_PATH });
     }
   });
 
   it("keeps a complete server count but withholds incomplete version totals", () => {
-    const row = registryListings(NOW, { ...registryLatest, version_rows: null, version_read_failures: ["one-server"] });
+    const row = registryListings(REGISTRY_NOW, { ...registryLatest, version_rows: null, version_read_failures: ["one-server"] });
     expect(row).toMatchObject({ state: "READ", value: 354, versions: null, versions_state: "UNCHECKABLE" });
   });
 });
 
 describe("/api/footprint — the same-origin rows", () => {
   it("reads each stage from its own source and never derives one from another", async () => {
-    const p = await buildFootprint(deps(healthy()));
+    const p = await buildFootprint(deps(healthy(), [], () => REGISTRY_NOW));
     expect(p.registry_listings).toMatchObject({ state: "READ", value: 354 });
     expect(p.economic_use).toMatchObject({ state: "READ", value: 2 });
     expect(p.board).toMatchObject({ state: "READ", value: "23 axis · 23 measured" });

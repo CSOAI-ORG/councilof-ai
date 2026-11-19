@@ -23,7 +23,7 @@ describe("GET /api/worker", () => {
     vi.unstubAllGlobals();
   });
 
-  it("delegates the bare route to the live pod proxy (worker-state schema, only known fields)", async () => {
+  it("delegates the bare route to the live engine proxy (worker-state schema, only known fields)", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () =>
@@ -36,7 +36,7 @@ describe("GET /api/worker", () => {
     });
     expect(res.status).toBe(200);
     const body = (await res.json()) as Record<string, any>;
-    expect(body.schema).toBe("csoai.worker-state/0.1");
+    expect(body.schema).toBe("csoai.worker-state/0.2");
     expect(body.endpoint).toBe("/api/worker");
     expect(body.status).toBe("LIVE");
     expect(body.worker.jobs_total).toBe(182);
