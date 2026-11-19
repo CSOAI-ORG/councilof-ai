@@ -197,7 +197,7 @@ board moves, so treat this as a copy and re-fetch for current values.
     "mean_unparsed_rate": 0.0541,
     "mean_note": "Means are over MEASURED MODEL-COMPARISON axes that carry the field. mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy hides; it exists only for the measured board-v2 axes. No financial axis enters any of these means: an axis with no accuracy contributes nothing rather than a zero."
   },
-  "axes_count": 32,
+  "axes_count": 34,
   "axes": [
     {
       "axis": "governance",
@@ -461,6 +461,15 @@ board moves, so treat this as a copy and re-fetch for current values.
       "separation": null
     },
     {
+      "axis": "regulator-transparency",
+      "status": "MEASURED",
+      "family": "subject",
+      "kind": "measured-subject",
+      "n": 41,
+      "accuracy": null,
+      "separation": null
+    },
+    {
       "axis": "interpretability-reproducibility",
       "status": "MEASURED",
       "family": "subject",
@@ -484,6 +493,15 @@ board moves, so treat this as a copy and re-fetch for current values.
       "family": "subject",
       "kind": "measured-subject",
       "n": 38,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "watchdog-ingest",
+      "status": "MEASURED",
+      "family": "subject",
+      "kind": "measured-subject",
+      "n": 106,
       "accuracy": null,
       "separation": null
     }
@@ -778,6 +796,15 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
 - page: https://councilof.ai/axis/humanoid-deployment
 - evidence: https://councilof.ai/interop/axis-banks/humanoid-deployment-20261102.json
 
+### regulator-transparency
+- family: `subject`
+- kind: `measured-subject`
+- status: `MEASURED`
+- n: 41 (subjects in the frozen frame)
+- row: https://councilof.ai/api/gspc?axis=regulator-transparency
+- page: https://councilof.ai/axis/regulator-transparency
+- evidence: https://councilof.ai/interop/axis-banks/regulator-transparency-20261102.json
+
 ### interpretability-reproducibility
 - family: `subject`
 - kind: `measured-subject`
@@ -804,6 +831,15 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
 - row: https://councilof.ai/api/gspc?axis=serving-fidelity
 - page: https://councilof.ai/axis/serving-fidelity
 - evidence: https://councilof.ai/interop/axis-banks/serving-fidelity-20261102.json
+
+### watchdog-ingest
+- family: `subject`
+- kind: `measured-subject`
+- status: `MEASURED`
+- n: 106 (subjects in the frozen frame)
+- row: https://councilof.ai/api/gspc?axis=watchdog-ingest
+- page: https://councilof.ai/axis/watchdog-ingest
+- evidence: https://councilof.ai/interop/axis-banks/watchdog-ingest-20261102.json
 
 ## 3a. DATED EFFECT-BINDING PROBE ACCOUNT
 

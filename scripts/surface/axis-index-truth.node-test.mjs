@@ -228,10 +228,12 @@ test("the commit board renders exactly its public canonical axes without promoti
     .map((row) => row.axis)
     .sort();
   // The owner-held count is whatever the board says it is. Typing "1" here froze the
-  // public count at 32 and broke the moment a second slot was held back.
-  assert.ok(gatedIds.length > 0, "the owner is still holding at least one slot");
+  // public count at 32 and broke the moment a second slot was held back; asserting
+  // that a slot IS held broke the moment the owner released them (2026-11-18,
+  // "Release both"). Which slots are held is the owner's live decision, so this test
+  // follows the commit board either way. The fixture tests above hold slot-8 by
+  // default, so the hold itself stays exercised when the live board holds nothing.
   assert.equal(publicIds.length, allIds.length - gatedIds.length);
-  assert.ok(!publicIds.includes("regulator-transparency"));
 
   const out = renderAll(live);
   const renderedIds = Object.keys(out)
@@ -239,11 +241,19 @@ test("the commit board renders exactly its public canonical axes without promoti
     .map((path) => path.slice("axis/".length, -".html".length))
     .sort();
   assert.deepEqual(renderedIds, publicIds);
-  assert.equal(out["axis/regulator-transparency.html"], undefined);
+  // regulator-transparency has a page exactly when the board does not hold it.
+  assert.equal(
+    out["axis/regulator-transparency.html"] === undefined,
+    gatedIds.includes("regulator-transparency"),
+  );
   // Every owner-held slot gets no page and no row in the index — named, not counted.
   for (const id of gatedIds) {
     assert.equal(out[`axis/${id}.html`], undefined);
     assert.doesNotMatch(out["axes.html"], new RegExp(`data-axis="${id}"`));
+  }
+  // And every public axis gets its row, so a released slot cannot go missing either.
+  for (const id of publicIds) {
+    assert.match(out["axes.html"], new RegExp(`data-axis="${id}"`));
   }
   // The headings count the PUBLIC axes, so they are derived from the board too.
   const publicSlots = live.axes.filter(

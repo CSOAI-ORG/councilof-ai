@@ -3,10 +3,11 @@
  * *.pages.dev host (production alias and per-deploy previews) must fall through untouched.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { onRequest } from "./_middleware";
+import { onRequest, PROBE_BODY_CAP_BYTES } from "./_middleware";
 import { wwwToApex } from "./_lib/wwwRedirect";
 import { mcpDoorRootRequest } from "./_lib/mcpDoorRoot";
 import { onRequest as mcpDoor } from "./mcp/[[path]]";
+import { onRequestGet as x402Listing } from "./.well-known/x402.json";
 
 function run(url: string, method = "GET") {
   const passthrough = new Response("next", { status: 200 });
@@ -276,5 +277,201 @@ describe("root middleware: mcp.meok.ai/ is the MCP door, not the homepage", () =
     expect(await rewritten?.text()).toBe('{"jsonrpc":"2.0"}');
     expect(mcpDoorRootRequest(new Request("https://mcp.meok.ai/mcp"))).toBeNull();
     expect(mcpDoorRootRequest(new Request("https://councilof.ai/"))).toBeNull();
+  });
+});
+
+/**
+ * THE PAYMENTLESS-PROBE GATE: an indexer's empty-body POST to an x402 door gets the 402 envelope
+ * before any handler runs (x402-foundation/x402#2156). Two defects in it, found 2026-11-19:
+ *
+ * 1. It never asked what the query selected. POST /api/proof?sha=<64-hex> with no body got an
+ *    issuance:reserve challenge for one inclusion proof, which is free (proof.ts answers POST as it
+ *    answers GET), and every door's free preview was challenged the same way.
+ * 2. It read every paymentless POST body in full, with no size limit, before it asked whether the
+ *    path was a door at all — so every POST to /mcp and /api/a2a was buffered by the middleware.
+ */
+describe("root middleware: the paymentless probe gate", () => {
+  const ORIGIN = "https://councilof.ai";
+  const SHA = "a".repeat(64);
+  const CHUNK = 256;
+
+  async function gate(request: Request) {
+    const next = vi.fn(async () => new Response("route", { status: 200 }));
+    const res = await onRequest({ request, next });
+    return { res, next };
+  }
+  const emptyPost = (url: string) =>
+    new Request(url, { method: "POST", headers: { "content-type": "application/json" }, body: "" });
+
+  /** What /.well-known/x402.json lists, read from its own handler, never retyped here. */
+  async function listing() {
+    const res = await (x402Listing as unknown as (c: unknown) => Promise<Response>)({
+      request: new Request(`${ORIGIN}/.well-known/x402.json`),
+      env: {},
+    });
+    return (await res.json()) as { resources: { url: string; free_preview?: string }[]; free_doors: { url: string }[] };
+  }
+
+  /** A streamed body that counts every byte anyone pulls from it, pulled only on demand. */
+  function countedBody(chunks: number) {
+    let pulled = 0;
+    const total = chunks * CHUNK;
+    const stream = new ReadableStream<Uint8Array>(
+      {
+        pull(controller) {
+          if (pulled >= total) return controller.close();
+          pulled += CHUNK;
+          controller.enqueue(new Uint8Array(CHUNK).fill(0x78)); // "x": never an empty probe
+        },
+      },
+      { highWaterMark: 0 },
+    );
+    return { stream, total, pulled: () => pulled };
+  }
+  const streamedPost = (url: string, stream: ReadableStream<Uint8Array>, headers: Record<string, string> = {}) =>
+    new Request(url, {
+      method: "POST",
+      headers: { "content-type": "application/json", ...headers },
+      body: stream,
+      duplex: "half",
+    } as RequestInit);
+
+  it("every resource the listing sells still answers a paymentless empty POST with 402", async () => {
+    const { resources } = await listing();
+    expect(resources.length).toBeGreaterThan(20);
+    for (const { url } of resources) {
+      const { res, next } = await gate(emptyPost(url));
+      expect(res.status, url).toBe(402);
+      expect(next, url).not.toHaveBeenCalled();
+    }
+  });
+
+  it("every free preview and free door the listing names passes through to the route", async () => {
+    const { resources, free_doors } = await listing();
+    const previews = resources.flatMap((r) => (r.free_preview ? [r.free_preview] : []));
+    expect(previews.length).toBeGreaterThan(10);
+    for (const url of [...previews, ...free_doors.map((d) => d.url)]) {
+      const { res, next } = await gate(emptyPost(url));
+      expect(res.status, url).toBe(200);
+      expect(next, url).toHaveBeenCalledOnce();
+    }
+  });
+
+  it("a query that asks only for a door's free part passes through, as each handler defines it", async () => {
+    for (const url of [
+      `${ORIGIN}/api/proof?sha=${SHA}`, // proof.ts: one inclusion is free
+      `${ORIGIN}/api/evidence-bundle?obligation=dora`, // the obligation preview
+      `${ORIGIN}/api/evidence-bundle?obligation=article-53&format=procurement`,
+      `${ORIGIN}/api/rwa/evidence?asset=RLUSD&preview=1`,
+      `${ORIGIN}/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1`,
+      `${ORIGIN}/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=true`,
+      `${ORIGIN}/api/signed-data-feed`, // the bare path is the free preview
+      `${ORIGIN}/api/signed-data-feed?manifest=1`,
+      `${ORIGIN}/api/feeds/provider-diff`, // the bare path is the free recent feed
+      `${ORIGIN}/api/feeds/provider-diff?provider=openai`,
+      `${ORIGIN}/api/pop/xrpl?manifest=1`,
+      `${ORIGIN}/api/wrapper/asset/usdc?preview=1`,
+    ]) {
+      const { res, next } = await gate(emptyPost(url));
+      expect(res.status, url).toBe(200);
+      expect(next, url).toHaveBeenCalledOnce();
+    }
+  });
+
+  it("the paid part, and a query that selects no free part, still get the probe's 402", async () => {
+    for (const url of [
+      `${ORIGIN}/api/proof?bundle=1`,
+      `${ORIGIN}/api/proof?bundle=1&sha=${SHA}`, // bundle=1 wins in proof.ts
+      `${ORIGIN}/api/proof`, // proof.ts redirects the bare path to bundle=1
+      `${ORIGIN}/api/evidence-bundle?obligation=dora&bundle=1`,
+      `${ORIGIN}/api/evidence-bundle`,
+      `${ORIGIN}/api/evidence-bundle?obligation=dora&invoice=gbp&commissioned_by=Acme`,
+      `${ORIGIN}/api/rwa/evidence?asset=RLUSD`,
+      `${ORIGIN}/api/receipts/batch?from=2026-01-01T00:00:00Z`,
+      `${ORIGIN}/api/signed-data-feed?feed=1`,
+      `${ORIGIN}/api/signed-data-feed?x402=1`,
+      `${ORIGIN}/api/feeds/provider-diff?history=1`,
+      `${ORIGIN}/api/feeds/provider-diff?invoice=gbp`,
+      `${ORIGIN}/api/pop/xrpl`,
+      `${ORIGIN}/api/wrapper/asset/usdc`,
+      `${ORIGIN}/api/free-door?preview=1`, // no free part a query can select
+      `${ORIGIN}/api/request-attestation?subject=qwen3&preview=1`,
+    ]) {
+      const { res, next } = await gate(emptyPost(url));
+      expect(res.status, url).toBe(402);
+      expect(next, url).not.toHaveBeenCalled();
+      const body = (await res.json()) as {
+        resource: { url: string };
+        extensions: { bazaar: { info: { input: { method: string } } } };
+      };
+      expect(body.resource.url, url).toContain(new URL(url).pathname);
+      expect(body.extensions.bazaar.info.input.method, url).toBe("POST");
+    }
+  });
+
+  it("POSTs to /mcp and /api/a2a are never read by the middleware", async () => {
+    for (const url of [`${ORIGIN}/mcp`, "https://mcp.meok.ai/mcp", `${ORIGIN}/api/a2a`]) {
+      const body = countedBody(4096);
+      const request = streamedPost(url, body.stream);
+      let pulledBeforeRoute = -1;
+      const next = vi.fn(async () => {
+        pulledBeforeRoute = body.pulled();
+        return new Response("route", { status: 200 });
+      });
+      const res = await onRequest({ request, next });
+      expect(res.status, url).toBe(200);
+      expect(next, url).toHaveBeenCalledOnce();
+      expect(pulledBeforeRoute, url).toBe(0);
+      expect(body.pulled(), url).toBe(0);
+      expect(request.bodyUsed, url).toBe(false);
+    }
+  });
+
+  it("a door's body is read only up to the cap, and the route still receives every byte", async () => {
+    const body = countedBody(4096); // 1 MiB
+    const request = streamedPost(`${ORIGIN}/api/art50/marking-evidence`, body.stream);
+    let pulledBeforeRoute = -1;
+    let routeBytes = -1;
+    const next = vi.fn(async () => {
+      pulledBeforeRoute = body.pulled();
+      routeBytes = (await request.arrayBuffer()).byteLength;
+      return new Response("route", { status: 200 });
+    });
+    const res = await onRequest({ request, next });
+    expect(res.status).toBe(200);
+    expect(next).toHaveBeenCalledOnce();
+    expect(pulledBeforeRoute).toBeGreaterThan(PROBE_BODY_CAP_BYTES);
+    // The clone is read until it crosses the cap; the tee may pull a chunk or two ahead of it.
+    expect(pulledBeforeRoute).toBeLessThanOrEqual(PROBE_BODY_CAP_BYTES + 4 * CHUNK);
+    expect(routeBytes).toBe(body.total);
+  });
+
+  it("a declared content-length past the cap is not read at all", async () => {
+    const body = countedBody(4096);
+    const request = streamedPost(`${ORIGIN}/api/proof?bundle=1`, body.stream, { "content-length": String(body.total) });
+    let pulledBeforeRoute = -1;
+    const next = vi.fn(async () => {
+      pulledBeforeRoute = body.pulled();
+      return new Response("route", { status: 200 });
+    });
+    const res = await onRequest({ request, next });
+    expect(res.status).toBe(200);
+    expect(next).toHaveBeenCalledOnce();
+    expect(pulledBeforeRoute).toBe(0);
+  });
+
+  it("an empty probe up to the cap is still a probe; one byte past it is a real request", async () => {
+    const door = `${ORIGIN}/api/proof?bundle=1`;
+    const padded = (bytes: number) => `{${" ".repeat(bytes - 2)}}`;
+    for (const body of ["", "{}", "[]", " { } ", padded(PROBE_BODY_CAP_BYTES)]) {
+      const { res, next } = await gate(new Request(door, { method: "POST", body }));
+      expect(res.status, `${body.length} bytes`).toBe(402);
+      expect(next).not.toHaveBeenCalled();
+    }
+    const { res: noBody } = await gate(new Request(door, { method: "POST" }));
+    expect(noBody.status).toBe(402);
+    const { res, next } = await gate(new Request(door, { method: "POST", body: padded(PROBE_BODY_CAP_BYTES + 1) }));
+    expect(res.status).toBe(200);
+    expect(next).toHaveBeenCalledOnce();
   });
 });
