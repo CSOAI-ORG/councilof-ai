@@ -12,6 +12,12 @@
  * complete UTC days it covers, or "cumulative, all time"). Two windows are never added, so the
  * pill names the one it is showing instead of letting a reader assume.
  *
+ * A row that states whose packages it counts (`scope` on the row) carries that scope on its label.
+ * The downloads row counts CSOAI packages only (19 Nov 2026): CSOAI Ltd and MEOK AI Labs publish
+ * from one account, /api/footprint heads with CSOAI's own figures, and MEOK AI Labs' are a separate
+ * figure that is never added. The scope comes off the row, so a label never claims a scope the
+ * payload did not state.
+ *
  * No number in this file, or in LiveCounters.tsx, is typed. Every figure comes from the payload.
  */
 
@@ -34,6 +40,8 @@ export interface FootprintRow {
   /** Where the per-package evidence lives, when the row was read out of a measured artifact. */
   evidence_url?: string;
   age_hours?: number | null;
+  /** Whose packages the figure counts, when the row says (e.g. "CSOAI packages"). */
+  scope?: string;
   [extra: string]: unknown;
 }
 
@@ -199,8 +207,15 @@ export function evidenceHref(row: FootprintRow | undefined): string | null {
   return typeof e === "string" && e.trim() !== "" ? e : null;
 }
 
+/** The stage's label, with the scope its row states ("Downloads, CSOAI packages"), or the bare
+ *  label when the row states none. Never a scope the row did not carry. */
+export function stageLabel(key: StageKey, row: FootprintRow | undefined): string {
+  const scope = typeof row?.scope === "string" ? row.scope.trim() : "";
+  return scope ? `${FUNNEL_LABELS[key]}, ${scope}` : FUNNEL_LABELS[key];
+}
+
 export function rowTitle(key: StageKey, row: FootprintRow | undefined): string {
-  const parts: string[] = [FUNNEL_LABELS[key]];
+  const parts: string[] = [stageLabel(key, row)];
   if (row?.unit) parts.push(String(row.unit));
   const w = rowWindow(row);
   if (w) parts.push(`window ${w}`);
@@ -219,7 +234,7 @@ export function toPill(key: StageKey, row: FootprintRow | undefined): Pill {
   const { text, tone } = formatRow(row);
   return {
     key,
-    label: FUNNEL_LABELS[key],
+    label: stageLabel(key, row),
     text,
     tone,
     href: firstSource(row),
