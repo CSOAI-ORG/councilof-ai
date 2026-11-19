@@ -15,6 +15,10 @@ on:
       - 'public/signed/cards/**'
       - 'scripts/signed-json-guard.mjs'
   workflow_dispatch:
+concurrency:
+  group: honest-board-floor-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:

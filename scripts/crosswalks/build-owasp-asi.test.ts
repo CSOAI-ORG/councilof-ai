@@ -20,6 +20,34 @@ const out = readJson(OUTPUT);
 const src = readJson(SOURCE);
 const LIVE = process.env.CROSSWALK_LIVE === "1";
 
+describe("daily x402 probe keeps its derived crosswalk in the same proposal", () => {
+  const workflow = read(".github/workflows/x402-door-conformance.yml").toString("utf8");
+  const commands = workflow.split("\n").filter((line) => !/^\s*#/.test(line)).join("\n");
+
+  it("regenerates and checks the crosswalk after probing and before staging", () => {
+    const probe = commands.indexOf("python3 scripts/probes/x402_door_conformance.py");
+    const build = commands.indexOf("node scripts/crosswalks/build-owasp-asi.mjs\n");
+    const check = commands.indexOf("node scripts/crosswalks/build-owasp-asi.mjs --check");
+    const stage = commands.indexOf("git add ");
+    expect(probe).toBeGreaterThan(0);
+    expect(build).toBeGreaterThan(probe);
+    expect(check).toBeGreaterThan(build);
+    expect(stage).toBeGreaterThan(check);
+  });
+
+  it("stages the generated view with its payment-door source", () => {
+    const stage = commands.split("\n").find((line) => line.trim().startsWith("git add "));
+    expect(stage).toContain("public/interop/x402-door-conformance-2026-09");
+    expect(stage).toContain(OUTPUT);
+  });
+
+  it("dispatches the required gates and leaves merging to the M4 review lane", () => {
+    expect(commands).toContain('gh workflow run pr-gates.yml --ref "$BR"');
+    expect(commands).not.toMatch(/gh\s+pr\s+merge\b/);
+    expect(commands).not.toMatch(/git\s+push[^\n]*HEAD:master/);
+  });
+});
+
 const BOARD_AXES = new Set([...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN].map((a: { axis: string }) => a.axis));
 const APP = read("client/src/App.tsx").toString("utf8");
 const REDIRECT_SOURCES = new Set(

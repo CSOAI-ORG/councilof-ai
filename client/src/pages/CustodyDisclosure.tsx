@@ -1,5 +1,3 @@
-import { Helmet } from "react-helmet-async";
-
 const KEYS: Array<{ kid: string; alg: string; signs: string }> = [
   { kid: "did:web:csoai.org#board-attestation-1", alg: "Ed25519 (single key)", signs: "Public-root envelope (/root.json) and the dated board freezes of 2026-09-25 and 2026-09-29 (/signed/gspc-board.2026-09-29.signed.json is current)" },
   { kid: "did:web:csoai.org#card-attestation-1", alg: "Ed25519", signs: "Measurement cards (card-v0 sig_ed25519; shape-A chain cards, Aug 2026)" },
@@ -17,13 +15,6 @@ const GUARDS: Array<{ name: string; what: string }> = [
 export default function CustodyDisclosure() {
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
-      <Helmet>
-        <title>Custody disclosure | Council of AI</title>
-        <meta
-          name="description"
-          content="Which public keys sign which CSOAI artifacts, how to verify each signature, and the limits of the publication checks. Not a SOC 2 report."
-        />
-      </Helmet>
       <section className="mx-auto max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-300">
           Custody · public-key and release disclosure

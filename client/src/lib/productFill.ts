@@ -7,6 +7,8 @@
  * XRPL may later anchor a digest. None of those writes MEASURED.
  */
 
+import { toolSummary } from "./mcpTools";
+
 export type FillLayer =
   | "cell"
   | "pack"
@@ -109,7 +111,7 @@ export const FILL_ROWS: FillRow[] = [
     id: "corrections",
     layer: "ledger",
     title: "Corrections ledger",
-    fills: "What we got wrong, how it was caught, the dated fix. The uncopyable honesty asset.",
+    fills: "Dated corrections, their causes and supporting evidence for changes to published findings.",
     never: "A GSPC score. An XRPL product. A highlight reel.",
     href: "/api/corrections",
     status: "live",
@@ -145,7 +147,7 @@ export const FILL_ROWS: FillRow[] = [
     id: "plugin",
     layer: "cell",
     title: "GSPC plugin / MCP",
-    fills: "Reads the public board: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion.",
+    fills: `Reads the public board: ${toolSummary(7)}.`,
     never: "A 23rd axis. Chat harvest. A feed of new scores into the coverage index.",
     href: "/tools",
     status: "live",

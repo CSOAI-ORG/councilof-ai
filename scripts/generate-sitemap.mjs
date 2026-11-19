@@ -12,6 +12,8 @@
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { SUBMISSION_GUIDE_ROUTE } from "./surface/build-bench-suite.mjs";
+import { noindexPatterns, noindexRuleFor } from "./surface/headers-noindex.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const APP_TSX = join(ROOT, "client/src/App.tsx");
@@ -25,6 +27,13 @@ const FUNCTIONS_DIR = join(ROOT, "functions");
 // omits them cannot generate a truthful sitemap, so fail closed instead of
 // silently advertising those retired routes.
 if (!existsSync(FUNCTIONS_DIR)) {
+  // In --check mode a missing input is UNCHECKABLE, not a finding about the file: the
+  // store could not answer, so it makes no claim. A sparse checkout that omits
+  // functions/ cannot generate a truthful sitemap either way.
+  if (process.argv.includes("--check")) {
+    console.error("? sitemap: UNCHECKABLE — functions/ is absent, so no generation is possible");
+    process.exit(2);
+  }
   throw new Error("[sitemap] functions/ is required to reconcile Pages Function redirects");
 }
 
@@ -49,6 +58,13 @@ try {
     if (Number(code) >= 300 && Number(code) < 400) redirectRules.set(from, to);
   }
 } catch {
+  // Without _redirects the generator cannot know which paths the edge rewrites, so its output
+  // would be a guess that differs from the build for reasons that have nothing to do with the
+  // committed file. In --check mode that is UNCHECKABLE — the store could not answer.
+  if (process.argv.includes("--check")) {
+    console.error("? sitemap: UNCHECKABLE — public/_redirects is absent, so reconciliation is impossible");
+    process.exit(2);
+  }
   console.warn("[sitemap] no public/_redirects to reconcile against");
 }
 
@@ -395,12 +411,15 @@ const FOR_PATHS = PERSONA_KEYS.map((k) => `/for/${k}`);
 // /industries/:slug — the canonical industry pages, from the data module IndustryTemplate reads.
 const INDUSTRY_PATHS = derived("industry", INDUSTRIES_TS, /^\s*slug:\s*"([a-z0-9-]+)"/gm, "/industries/");
 
-// /vs/:slug — one canonical page per named competitor. Compare.tsx's FOCUS map carries an
-// ALIAS ("credo" and "credo-ai" both resolve to Credo AI); listing both would put two URLs
-// with identical content in the sitemap, so only canonical slugs are emitted.
-const VS_PATHS = ["/vs/vanta", "/vs/drata", "/vs/credo-ai", "/vs/onetrust"];
+// /vs/:slug is NOT listed (2026-11-17). Measured live with a full sitemap crawl: each of
+// /vs/vanta/, /vs/drata/, /vs/credo-ai/ and /vs/onetrust/ is served with the title and
+// description of /compare/ and a canonical naming https://councilof.ai/compare/, so listing
+// them asked crawlers to index four URLs whose own HTML names another page as the original.
+// The indexable comparison pages are /compare/ and the /<competitor>-alternative/ pages.
+// If the /vs/ pages are ever given their own title, description and self-canonical, list
+// them again here.
 
-for (const p of [...FOR_PATHS, ...INDUSTRY_PATHS, ...VS_PATHS]) {
+for (const p of [...FOR_PATHS, ...INDUSTRY_PATHS]) {
   if (!seen.has(p) && !isJunk(p)) { seen.add(p); paths.push(p); }
 }
 paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
@@ -437,6 +456,8 @@ const DELISTED = new Map([
   ["/grants/nlnet-ngi0-entrust", "noindex"],
   ["/grants/sloan-foundation", "noindex"],
   ["/gspc-leaderboard", "noindex"],
+  ["/health-inventory", "noindex: public page reviewed 2026-11-04"],
+  ["/stablewatch", "noindex: public page reviewed 2026-11-04"],
   ["/livecam", "noindex"],
   ["/mcpbench", "noindex"],
   ["/ossbench", "noindex"],
@@ -534,26 +555,49 @@ const DELISTED = new Map([
   ["/real-world", "canonical: /world-3d/"],
   ["/regulator-atlas", "canonical: /regulators/"],
   ["/x402-leaderboard", "canonical: /x402-board/"],
+  // Full sitemap crawl 2026-11-17 (browser user agent, no JavaScript): served pages whose own
+  // <link rel="canonical"> names another page.
+  ["/assess", "canonical: /dashboard/"],
+  ["/assessment", "canonical: /dashboard/"],
+  ["/library/axes", "canonical: /library/"],
 ]);
-// These captured copies self-canonicalise to third-party owners. Other
-// /mirrors/ pages are original CSOAI evidence and must stay listed.
-const CROSS_CANONICAL_MIRRORS = new Set(
-  ["118", "120", "129", "14", "195", "2", "246", "250", "262", "286", "347"]
-    .map((id) => `/interop/stablecoin-deep-2026-09/mirrors/${id}`),
-);
-// Only captured copies that self-canonicalise to third-party owners leave the
-// sitemap. Other /mirrors/ pages are original CSOAI evidence and stay listed.
+// Exact served forms whose twin at the other slash form is the canonical one. DELISTED above
+// matches with the trailing slash stripped, so it cannot hold a slash-form-only entry.
+// /measure/ (public/measure/index.html) declares <link rel="canonical" href=".../measure">,
+// and /measure is itself a 200 page in this sitemap: listing both advertised a duplicate.
+const DELISTED_SERVED_FORM = new Map([
+  ["/measure/", "canonical: /measure"],
+]);
+// Edge noindex: every path pattern that public/_headers answers with `X-Robots-Tag: noindex`.
+// It covers /interop/:report/mirrors/* — captured copies of third-party pages kept as evidence,
+// which the edge has served noindex since 2026-09-24. Until 2026-11-17 this generator excluded a
+// hand-kept list of mirror ids and kept 13 others listed (Tether, Franklin Templeton, Circle and
+// other owners' pages); every one of them answered `X-Robots-Tag: noindex, nofollow`. Reading the
+// rule the edge applies keeps the sitemap and the edge from disagreeing again.
+const HEADERS_FILE = join(ROOT, "public/_headers");
+let NOINDEX_RULES = [];
+try {
+  NOINDEX_RULES = noindexPatterns(readFileSync(HEADERS_FILE, "utf8"));
+} catch {
+  // Without _headers the generator cannot know which paths the edge marks noindex. In --check
+  // mode that is UNCHECKABLE, as for _redirects above.
+  if (process.argv.includes("--check")) {
+    console.error("? sitemap: UNCHECKABLE — public/_headers is absent, so edge noindex rules are unknown");
+    process.exit(2);
+  }
+  console.warn("[sitemap] no public/_headers to read noindex rules from");
+}
 const isDelisted = (p) => DELISTED.has(p.replace(/\/+$/, "") || "/") ||
-  CROSS_CANONICAL_MIRRORS.has(p.replace(/\/+$/, "")) ||
-  p.startsWith("/interop/rwa-reconciliation-2026-09/mirrors/rwa-xyz-");
+  DELISTED_SERVED_FORM.has(p) ||
+  noindexRuleFor(NOINDEX_RULES, p) !== null;
 
 // Prerendered as <path>/index.html with no bare->slash rule in _redirects, so Pages answers the
 // bare form with a 308. Emit the served form.
 const SLASH_FAMILIES = [/^\/library\/[a-z0-9-]+$/, /^\/vs\/[a-z0-9-]+$/];
 const servedForm = (p) => (SLASH_FAMILIES.some((re) => re.test(p)) ? `${p}/` : p);
 
-// --- Machine contracts (audit rec 5, lane d971a38) — not App.tsx routes, but
-// prime agent/AEO citation surface. Kept here so regeneration never drops them.
+// --- Machine contracts and source-owned generated discovery pages — not
+// App.tsx routes, but kept here so generation works before their HTML exists.
 const MACHINE_PATHS = [
   ["/api/gspc", "daily", "0.8"],
   ["/api/feed.xml", "daily", "0.7"],
@@ -585,6 +629,10 @@ const MACHINE_PATHS = [
   // sitemap-built held every deploy until it was listed. If the page is ever withdrawn, remove this
   // line in the same change (a sitemap lists what the edge serves).
   ["/extension/", "weekly", "0.5"],
+  // The canonical bench producer owns this route. Its HTML is generated during
+  // build:client; relying only on static-file discovery made pre/post-build
+  // sitemap parity contradictory. The shared declaration also deduplicates it.
+  [SUBMISSION_GUIDE_ROUTE, "weekly", "0.6"],
 ];
 for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
@@ -770,6 +818,49 @@ const xml = `<?xml version="1.0" encoding="UTF-8"?>
 ${urls}
 </urlset>
 `;
+
+// WHY A --check MODE. This file is COMMITTED, and the build regenerates it on every deploy.
+// Nothing compared the two, so a committed sitemap could describe a site that no longer exists
+// and every deploy would silently overwrite the committed bytes. That is not hypothetical:
+// on 2026-11-06 the committed sitemap listed 536 URLs while the build produced 535 — the
+// extra one being https://councilof.ai/mcp/, left behind by #3847 (857a6cc02), which moved
+// /mcp from an App.tsx route to a Pages Function and regenerated neither this file nor
+// public/_redirects. The live site was CORRECT (535, set-identical to the build) and the
+// committed artefact was the fiction. sitemap-truth-gate.mjs cannot see this: it only asks
+// whether every LISTED url is served, so a stale EXTRA entry passes and a missing entry
+// passes. --check asks the other question — does the committed file equal what the build
+// produces — and answers it in one run.
+//
+// Exit codes: 0 = committed bytes match a fresh generation. 1 = they differ (a finding).
+// 2 = the inputs needed to generate are absent (UNCHECKABLE — not a finding about the file).
+const CHECK_MODE = process.argv.includes("--check");
+
+if (CHECK_MODE) {
+  const current = existsSync(OUT) ? readFileSync(OUT, "utf8") : null;
+  if (current === xml) {
+    console.log(`✓ sitemap: up to date — ${finalPaths.length} URLs match a fresh generation`);
+    process.exit(0);
+  }
+  const locs = (t) => (t ? [...t.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]) : []);
+  const have = new Set(locs(current));
+  const want = new Set(locs(xml));
+  const stale = [...have].filter((u) => !want.has(u));
+  const absent = [...want].filter((u) => !have.has(u));
+  console.error(`✗ sitemap: STALE — public/sitemap.xml does not match a fresh generation.`);
+  console.error(`    committed ${have.size} URLs · fresh ${want.size} URLs`);
+  if (stale.length) {
+    console.error(`    listed but no longer generated (${stale.length}):`);
+    for (const u of stale.slice(0, 12)) console.error(`      - ${u}`);
+    if (stale.length > 12) console.error(`      … and ${stale.length - 12} more`);
+  }
+  if (absent.length) {
+    console.error(`    generated but not listed (${absent.length}):`);
+    for (const u of absent.slice(0, 12)) console.error(`      + ${u}`);
+    if (absent.length > 12) console.error(`      … and ${absent.length - 12} more`);
+  }
+  console.error(`    fix: node scripts/generate-sitemap.mjs && git add public/sitemap.xml`);
+  process.exit(1);
+}
 
 writeFileSync(OUT, xml);
 console.log(

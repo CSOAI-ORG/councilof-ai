@@ -20,6 +20,7 @@ import { dirname, join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { fileViolations, distributionFiles } from "./doctrine-lint.mjs";
+import { CAPTURE_PATH, cardNote, npmReleaseState } from "./npm-release-state.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OFFLINE = process.argv.includes("--offline");
@@ -349,10 +350,19 @@ assert a["state"]=="LIVE" and b["state"]=="ABSENT" and a["doctrine_sha256"]=="${
   const scText = JSON.stringify(sc);
   const versions = [...scText.matchAll(/server (\d+\.\d+\.\d+)/g)].map((m) => m[1]);
   rec("well-known-server-card", "every stated registry server version == live", versions.length > 0 && versions.every((v) => v === WANT_VERSION), versions.join(", "));
-  // Either the stdio pin is the published npm version, or (while every published release is deprecated
-  // on npm, render.mjs NPM_STDIO_ADVERTISED) both documents carry stdio: null with a stdio_note.
+  // Either the stdio pin is the published npm version, or both documents carry stdio: null with a
+  // stdio_note. The note is DERIVED from the dated capture (scripts/harness-x/npm-release-state.mjs),
+  // so this compares the rendered note with the derived one instead of matching a phrase: a gate that
+  // matched the words "deprecated on npm" was asserting a claim that was false from 2 Nov 2026 on.
   const pinned = (m) => typeof m.stdio === "string" && m.stdio.endsWith("@" + npmV);
-  const withheld = (m) => m.stdio === null && /deprecated on npm/.test(m.stdio_note || "");
+  const npmId = readJson("mcp/gspc-server/server.json").packages[0].identifier;
+  const expectedNote = cardNote(npmReleaseState(readJson(CAPTURE_PATH)), {
+    npmId,
+    freeDoor: `${DOOR}/free`,
+    doorTools: EXPECT_TOOLS.length,
+    preparedVersion: npmV,
+  });
+  const withheld = (m) => m.stdio === null && (m.stdio_note || "") === expectedNote;
   rec("well-known-server-card", "stdio pin == npm package version, or withheld with a note",
     (pinned(sc.endpoints.mcp) && pinned(mj.servers[0])) || (withheld(sc.endpoints.mcp) && withheld(mj.servers[0])),
     String(sc.endpoints.mcp.stdio ?? sc.endpoints.mcp.stdio_note));

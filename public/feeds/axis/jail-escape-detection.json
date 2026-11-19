@@ -1,0 +1,77 @@
+{
+ "schema": "csoai.feed.axis/0.1",
+ "feed": "axis/jail-escape-detection",
+ "as_of": "2026-08-19T09:24:39.174226+00:00",
+ "axis": "jail-escape-detection",
+ "board_state": "MEASURED",
+ "cards": 8,
+ "models": [
+  "council-oowm:latest",
+  "council-safe:latest",
+  "mistral:7b",
+  "muse-glimmer:latest",
+  "qwen2.5:0.5b-instruct",
+  "qwen2.5:1.5b",
+  "qwen2.5:7b",
+  "qwen3:4b"
+ ],
+ "measurements": [
+  {
+   "id": "0f3255b855d40813456bf6a73a430a2fd9132dfb0192c3dc6310d81943e23e39",
+   "model": "qwen3:4b",
+   "accuracy": 0.4648,
+   "created": "2026-08-19T09:24:39.162739+00:00",
+   "file": "signed/cards/0f3255b855d40813456bf6a73a430a2fd9132dfb0192c3dc6310d81943e23e39.json"
+  },
+  {
+   "id": "3cc7a3caa1a9cb2f04efe93d8ab966ed8ab648309743d0466dbf60ceb709aa23",
+   "model": "qwen2.5:7b",
+   "accuracy": 0.5493,
+   "created": "2026-08-19T09:24:39.162120+00:00",
+   "file": "signed/cards/3cc7a3caa1a9cb2f04efe93d8ab966ed8ab648309743d0466dbf60ceb709aa23.json"
+  },
+  {
+   "id": "4297a8b47e3c4a9b4644a2d90dadc7bc36ed92d3380e9c0c68eb95bd7af4890c",
+   "model": "muse-glimmer:latest",
+   "accuracy": 0.4648,
+   "created": "2026-08-19T09:24:39.159220+00:00",
+   "file": "signed/cards/4297a8b47e3c4a9b4644a2d90dadc7bc36ed92d3380e9c0c68eb95bd7af4890c.json"
+  },
+  {
+   "id": "522a12e784470ccc91b778317a796781660688e5e325c82187894c03dd4ea9af",
+   "model": "qwen2.5:1.5b",
+   "accuracy": 0.5634,
+   "created": "2026-08-19T09:24:39.161227+00:00",
+   "file": "signed/cards/522a12e784470ccc91b778317a796781660688e5e325c82187894c03dd4ea9af.json"
+  },
+  {
+   "id": "acec0ee7b86c1385e0455660ea1f2f23bfccc904a1b68308263a5e2eb982fa57",
+   "model": "council-oowm:latest",
+   "accuracy": 0.4648,
+   "created": "2026-08-19T09:24:39.156203+00:00",
+   "file": "signed/cards/acec0ee7b86c1385e0455660ea1f2f23bfccc904a1b68308263a5e2eb982fa57.json"
+  },
+  {
+   "id": "c42bda59a7df7627956f385401f5f94c8e71046c6eee11a1d9573d478f7d0a37",
+   "model": "mistral:7b",
+   "accuracy": 0.5211,
+   "created": "2026-08-19T09:24:39.159179+00:00",
+   "file": "signed/cards/c42bda59a7df7627956f385401f5f94c8e71046c6eee11a1d9573d478f7d0a37.json"
+  },
+  {
+   "id": "cff1aaf070acb97c224177809856bc20310f4958eb44bdffab7d4b04836535f4",
+   "model": "council-safe:latest",
+   "accuracy": 0.4789,
+   "created": "2026-08-19T09:24:39.156415+00:00",
+   "file": "signed/cards/cff1aaf070acb97c224177809856bc20310f4958eb44bdffab7d4b04836535f4.json"
+  },
+  {
+   "id": "d353007a873ad527cb39e99ef2ac8a77e0fe917f1affe124b0aa379c51c427e0",
+   "model": "qwen2.5:0.5b-instruct",
+   "accuracy": 0.5352,
+   "created": "2026-08-19T09:24:39.160314+00:00",
+   "file": "signed/cards/d353007a873ad527cb39e99ef2ac8a77e0fe917f1affe124b0aa379c51c427e0.json"
+  }
+ ],
+ "verify": "https://councilof.ai/gspc-verify/"
+}

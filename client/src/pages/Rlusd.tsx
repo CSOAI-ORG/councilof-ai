@@ -1,5 +1,4 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 import {
   readEthRlusdSupply,
@@ -163,14 +162,6 @@ export default function Rlusd() {
 
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
-      <Helmet>
-        <title>RLUSD supply on XRPL and Ethereum | Council of AI</title>
-        <meta
-          name="description"
-          content="RLUSD supply on XRPL and Ethereum, read live from public keyless endpoints with a labeled fallback snapshot. This is scoped measurement, not total supply across every RLUSD deployment."
-        />
-      </Helmet>
-
       <div className="mx-auto max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-300">
           Live on-chain measurement · data free, proofs paid

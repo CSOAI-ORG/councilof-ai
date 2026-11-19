@@ -21,26 +21,27 @@
 <body>
 <main>
 <h1>Measurement capsules v0.2: published files</h1>
-<p class="sub">Current index dated <strong>2026-10-28</strong> (<code>as_of 2026-10-28T08:30:40Z</code>): 11,529 capsules in 12 batches. The files describe declared and observed measurements; they grant no authority.</p>
+<p class="sub">Current index dated <strong>2026-11-01</strong> (<code>as_of 2026-11-01T08:30:40Z</code>): 11,529 capsules in 12 batches. The files describe declared and observed measurements; they grant no authority.</p>
 
 <p class="rule"><strong>If this page and <code>index.json</code> ever disagree, <code>index.json</code> is the signed record and wins.</strong> This page is a readable directory derived from the published index and anchor record. Check those files directly for the authoritative values; their timestamps may differ.</p>
 
 <h2>Index</h2>
 <ul>
- <li><a href="index.json">index.json</a>: schema <code>csoai.measurement-capsule-index/0.3</code>, dated <code>2026-10-28T08:30:40Z</code>, 11,529 capsules in 12 batches; root <code>bf58e87656139fe46ad5816930c1a1abb866477302e31f8c8c8f49067dd4de7d</code>.</li>
- <li><a href="index.signed.json">index.signed.json</a>: Ed25519 signed envelope, signed <code>2026-10-28T08:30:41.285Z</code> by <code>did:web:csoai.org#board-attestation-1</code>; artifact SHA-256 <code>241c5673d1afcd6a320e795facb8a7964dbfeda2c02af74705a1fa49d602d688</code>, signed-payload SHA-256 <code>249fae68e2682eda234ce61172dc8f24274adb0e98d0fb0be0cf89d29e0c659b</code>. The published envelope reports local verification <code>VERIFIES</code>. A valid signature binds bytes and signer; it does not prove that a measurement is correct.</li>
- <li><a href="index.json.ots">index.json.ots</a>: proof SHA-256 <code>30e9826eb7ee35eac599c056f50fe77f27d14de58066c41384ad5ae9643940f2</code>; status <strong>PENDING_CALENDAR_COMMITMENT</strong>. No Bitcoin block height is recorded in this anchor snapshot; a calendar commitment alone dates nothing.</li>
- <li><a href="anchors.json">anchors.json</a>: anchor states read from the published anchor record at <code>2026-10-28T08:53:00Z</code>.</li>
+ <li><a href="index.json">index.json</a>: schema <code>csoai.measurement-capsule-index/0.3</code>, dated <code>2026-11-01T08:30:40Z</code>, 11,529 capsules in 12 batches; root <code>bf58e87656139fe46ad5816930c1a1abb866477302e31f8c8c8f49067dd4de7d</code>; SHA-256 <code>e9bc0ddfaf5347723e4e4f2b15248d26802e88d16c4a48fd4c063b94f3974012</code>.</li>
+ <li><a href="index.signed.json">index.signed.json</a>: Ed25519 signed envelope, signed <code>2026-11-01T08:30:41.403Z</code> by <code>did:web:csoai.org#board-attestation-1</code>; artifact SHA-256 <code>e9bc0ddfaf5347723e4e4f2b15248d26802e88d16c4a48fd4c063b94f3974012</code>, signed-payload SHA-256 <code>11363659645fc02530364e3977e17ac4278c77813bdb6f197442488cb46453f2</code>. Independent Ed25519 verification: <code>VERIFIED</code>. A valid signature binds bytes and signer; it does not prove that a measurement is correct.</li>
+ <li><a href="index.json.ots">index.json.ots</a>: upgraded OpenTimestamps proof, SHA-256 <code>54a59deb1909f96ebe244b0f539a9cdb5fcbd1cbda87ecb290da3974d0cd7680</code>; its timestamp path is for the exact index SHA above and lists a <code>BitcoinBlockHeaderAttestation</code> at height <strong>974107</strong>. Use <code>ots verify index.json.ots</code> to check the proof against the index bytes.</li>
+ <li><a href="anchors.json">anchors.json</a>: historical anchor snapshot read at <code>2026-10-28T08:53:00Z</code>; it predates this index. See the <a href="https://huggingface.co/datasets/csoai/evidence-index/tree/main/measurement-index/2026-11-01">1 November Hugging Face index bundle</a> for the signed chain-head and current index records.</li>
+ <li><a href="index.rekor-receipt.json">index.rekor-receipt.json</a>: Rekor receipt for the 1 November index; inclusion proof <code>VERIFIES</code>, log index <code>3624464275</code>, checked <code>2026-11-01T08:31:05Z</code>.</li>
  <li><a href="../latest.json">../latest.json</a>: current published version pointer.</li>
 </ul>
 
 <h2>Chain position</h2>
-<p>Index date <code>2026-10-28</code>, chain sequence <code>not stated</code>, previous index date <code>not stated</code>; gap days <code>not stated</code>. Previous index SHA-256: <code>not stated</code>.</p>
+<p>Index date <code>2026-11-01</code>, chain sequence <code>26</code>, previous index date <code>2026-10-30</code>; one declared gap day (<code>2026-10-31</code>). Previous index SHA-256: <code>2bc5fa2625092128be5310be09a5b9abb29bd7ae6cfa27da63e2e1e15afb9709</code>. The <a href="https://huggingface.co/datasets/csoai/evidence-index/resolve/main/measurement-index/2026-11-01/measurement-index-chain-head-2026-11-01.json">signed chain-head record</a> reports 27 indexed days from <code>2026-09-26</code>, 10 declared gap dates, and <code>CHAIN_INTACT</code> at <code>2026-11-01T08:30:57Z</code>. Its OTS summary is a snapshot from before the upgraded proof above.</p>
 
 <h2>External anchors and publication</h2>
 <ul>
- <li>Rekor: INCLUDED (inclusion proof verifies); log index <code>3535235263</code>; subject SHA-256 <code>241c5673d1afcd6a320e795facb8a7964dbfeda2c02af74705a1fa49d602d688</code>.</li>
- <li>XRP Ledger: <strong>PREPARED_NOT_SUBMITTED</strong> — memo drafts exist; nothing has been submitted to the XRP Ledger</li>
+ <li>Rekor: <strong>INCLUDED</strong> (receipt says inclusion proof <code>VERIFIES</code>); log index <code>3624464275</code>; subject SHA-256 <code>e9bc0ddfaf5347723e4e4f2b15248d26802e88d16c4a48fd4c063b94f3974012</code>. The raw entry is <a href="index.rekor-entry.json">available here</a>.</li>
+ <li>XRP Ledger: the prior 28 October snapshot says <strong>PREPARED_NOT_SUBMITTED</strong>; the 1 November index and chain-head do not establish a later XRP submission state.</li>
  <li>Publication: <strong>PUBLIC</strong>, approved <code>2026-09-26</code>; publication record is listed below.</li>
 </ul>
 <ul>

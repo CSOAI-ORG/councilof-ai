@@ -1,0 +1,86 @@
+{
+  "state": "COMPLETION_PUBLISHED_AND_READ_BACK",
+  "at": "2026-11-11T06:31:29.127088+00:00",
+  "hf_revision_checked": "3dd48d5613e05389da3ba35f961b079ac52d9f7c",
+  "current_hf_revision_observed": "3dd48d5613e05389da3ba35f961b079ac52d9f7c",
+  "pinned_repo_files_verified": 34,
+  "served_exact_artifacts": [
+    {
+      "path": "completion/RESULT.json",
+      "sha256": "fa3fab2e981d9acad6b2b9cbaa827a0cd7800a95ac4be45df58222d9b4289aee",
+      "exact_bytes": true
+    },
+    {
+      "path": "completion/REPORT.md",
+      "sha256": "ea9cbdff08dffdaca1b60f464c4a103826dcf50939035baf99ab64ce66fe9a3d",
+      "exact_bytes": true
+    },
+    {
+      "path": "completion/READINESS.json",
+      "sha256": "060493a527202f075fc82c782e5abdc7956526db1b5934c83945f1a499229f19",
+      "exact_bytes": true
+    },
+    {
+      "path": "completion/kaggle-public-report.json",
+      "sha256": "2fe7d3d0f4ff698375ecc0833013f2fb9549e3e37a01ad83802dbd8e7dd7f262",
+      "exact_bytes": true
+    },
+    {
+      "path": "completion/SOURCE.json",
+      "sha256": "6b07ed9ca706d72658be7f6cd43ae56d3422339ae77f4dda75786604375b5db6",
+      "exact_bytes": true
+    },
+    {
+      "path": "completion/bundle-check.json",
+      "sha256": "986b02788cbf2717596f143576bd5273a4b138dc39e648daaa318f027d0f18b6",
+      "exact_bytes": true
+    },
+    {
+      "path": "completion/MEOK-Cross-Runtime-Completion.zip",
+      "sha256": "acf8a1b0d58bb1514fbf4935a3ab7517de738cb3bdd6d5e392531e2f91f4564c",
+      "exact_bytes": true
+    },
+    {
+      "path": "kaggle/cross-runtime-replay.ipynb",
+      "sha256": "238df93d5f38515141dad88f09aa0097d9f69ff30fb9a17354d277178c2f352f",
+      "exact_bytes": true
+    }
+  ],
+  "authored_HTML": "Rendered presence/expiry markers checked, not raw byte equality; host adds metadata.",
+  "public_preview_recheck": [
+    {
+      "url": "https://0e29bc3e-csoai-process-replay.nicholastempleman.workers.dev/health",
+      "status": 200,
+      "body_sha256": "a9efa4e7f9eada079f029618d41fd45ecc3e7e99ec8f5e3ba66fbd8346eb9cf8",
+      "application_digest_matches": true
+    },
+    {
+      "url": "https://csoai-process-replay.nicholastempleman.workers.dev/health",
+      "status": 404,
+      "body_sha256": "a4daf148dd64d1a3e8e8101040915e50d12df29153c5936d377cf2260ccc8ba0",
+      "application_digest_matches": false
+    }
+  ],
+  "original_immutable_bundle_preserved": true,
+  "other_manifest_entries_preserved": 168,
+  "private_runtime_modified": false,
+  "source_head": "122476aba28fe086b39e2ffea65baf9be3a753b5",
+  "browser_navigation": {
+    "run_id": "de9a0151-d8aa-491e-b096-3d797e054957",
+    "mode": "Anonymous read-only browser",
+    "checked": [
+      "Completion report and structured outcome/readiness pages",
+      "Kaggle version3 visible without login",
+      "Public preview health application JSON",
+      "Archive download initiation"
+    ],
+    "not_established_by_browser": [
+      "Archive byte integrity or source-code execution",
+      "Full navigation of historical page",
+      "Independent rerun of numerical tests"
+    ]
+  },
+  "separate_integrity_check": "Eight served artifact hashes verified separately, including the archive and notebook; all34 changed pinned-repository files checked.",
+  "CI_contract_run": 42972692338,
+  "CI_release_source": "122476aba28fe086b39e2ffea65baf9be3a753b5"
+}

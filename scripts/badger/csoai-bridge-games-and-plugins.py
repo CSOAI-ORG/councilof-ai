@@ -240,7 +240,7 @@ def build_plugin_manifests() -> dict:
             "github": "https://github.com/CSOAI-ORG/councilof-ai",
             "npm": "gspc-card-verifier",
             "pypi": "csoai",
-            "agent_card": "https://councilof.ai/agents/csoai-agent.json",
+            "agent_card": "https://councilof.ai/.well-known/agent-card.json",
         },
     }
 

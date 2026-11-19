@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Router } from "wouter";
 import { describe, expect, it } from "vitest";
-import HomeHero, { HERO_SLIDES } from "./HomeHero";
+import HomeHero, { HOME_HERO } from "./HomeHero";
 import HomeProducts, { PRODUCTS } from "./HomeProducts";
 import HomeProofPoints, { PROOF_POINTS } from "./HomeProofPoints";
 import HomeHumanReview, { HUMAN_REVIEW_STEPS } from "./HomeHumanReview";
@@ -16,40 +16,32 @@ function render(node: React.ReactNode): string {
 const UNSUPPORTED = /first in market|first-to-market|most advanced|industry-leading|world-leading|get certified|we certify/i;
 
 describe("image-led homepage upgrade", () => {
-  it("offers six distinct, working hero stories with accessible controls", () => {
-    expect(HERO_SLIDES).toHaveLength(6);
-    expect(new Set(HERO_SLIDES.map((slide) => slide.id)).size).toBe(6);
-    for (const slide of HERO_SLIDES) {
-      expect(slide.href).toMatch(/^\/[a-z0-9]/i);
-      expect(slide.image).toMatch(/^\/images\//);
-      expect(slide.alt.length).toBeGreaterThan(20);
-      expect(slide.cta.length).toBeGreaterThan(3);
-      expect(`${slide.title} ${slide.body}`).not.toMatch(UNSUPPORTED);
-    }
+  it("keeps one stable proposition and the approved image without rotating content", () => {
     const html = render(<HomeHero />);
-    expect(html.match(/data-hero-dot=/g)).toHaveLength(6);
-    expect(html).toContain('aria-label="Previous slide"');
-    expect(html).toContain('aria-label="Next slide"');
-    expect(html).toContain("Pause rotation");
-    expect(html).toContain('aria-label="Council of AI services and benefits"');
+    expect(html.match(/<h1\b/g)).toHaveLength(1);
+    expect(html).toContain(HOME_HERO.image);
+    expect(html).toContain(HOME_HERO.alt);
+    expect(html).toContain('href="#board"');
+    expect(html).toContain('href="/gspc-verify"');
+    expect(html).toContain("Verification is free, forever.");
+    expect(html).not.toContain('aria-roledescription="carousel"');
+    expect(html).not.toContain("Pause rotation");
+    expect(html).not.toMatch(UNSUPPORTED);
   });
 
-  it("presents exactly nine concise product cards, each with an image and a real route", () => {
-    expect(PRODUCTS).toHaveLength(9);
-    expect(new Set(PRODUCTS.map((product) => product.id)).size).toBe(9);
+  it("gives each service a distinct task, bounded description and working route", () => {
+    expect(new Set(PRODUCTS.map((product) => product.id)).size).toBe(PRODUCTS.length);
     for (const product of PRODUCTS) {
       expect(product.href).toMatch(/^\/[a-z0-9]/i);
       expect(product.href).not.toBe("#");
-      expect(product.image).toMatch(/^\/images\//);
-      expect(product.body.length).toBeLessThan(180);
+      expect(product.body.length).toBeLessThan(200);
       expect(`${product.title} ${product.body}`).not.toMatch(UNSUPPORTED);
     }
     const html = render(<HomeProducts />);
-    expect(html.match(/data-product=/g)).toHaveLength(9);
-    expect(html.match(/<img\b/g)).toHaveLength(9);
-    for (const href of ["/board", "/gspc-verify", "/dashboard", "/contact?arm=run", "/connect/", "/board/#board-download", "/claim-maintenance/", "/embed", "/registers"]) {
+    for (const href of ["/dashboard", "/dashboard?tab=art50", "/contact?arm=run", "/services/", "/claim-maintenance/", "/open-source/", "/registers", "/regulators", "/working-groups/"]) {
       expect(html).toContain(`href="${href}"`);
     }
+    expect(html).toContain("Terms before any paid request");
   });
 
   it("makes nine linked, proof-backed USPs without unsupported market claims", () => {
@@ -75,7 +67,7 @@ describe("image-led homepage upgrade", () => {
     }
   });
 
-  it("links the real human-review workflow and states its gates without overclaiming", () => {
+  it("links decision recording while keeping identity, authority and effects separate", () => {
     expect(HUMAN_REVIEW_STEPS.map((step) => step.id)).toEqual([
       "challenge",
       "competency",
@@ -85,24 +77,21 @@ describe("image-led homepage upgrade", () => {
     const html = render(<HomeHumanReview />);
     expect(html.match(/data-human-review-step=/g)).toHaveLength(4);
     expect(html).toContain('href="/dashboard?tab=staff"');
-    expect(html).toContain("AI can propose. A named human decides.");
-    expect(html).toContain("configured operator authority");
+    expect(html).toContain("AI proposes. Review and record the decision.");
+    expect(html).toContain("An operator records the decision");
     expect(html).toContain("again before a decision");
-    expect(html).toContain("signed only when the signing key is configured");
-    expect(html).toContain("persisted only when the decision store is bound");
-    expect(html).toContain("does not certify that the decision was right");
+    expect(html).toContain("does not verify the person");
+    expect(html).toContain("does not authorize or perform the proposed action");
+    expect(html).toContain("does not prove the proposed action happened");
     expect(html).not.toMatch(UNSUPPORTED);
   });
 
-  it("composes products, human review, board and proof points without repeating the old story band", () => {
+  it("mounts one results section and keeps the deeper resources discoverable", () => {
     const home = readFileSync(resolve(__dirname, "../../pages/HomeVerify.tsx"), "utf8");
-    expect(home).not.toContain("<HomeSteps");
-    for (const component of ["<HomeHero", "<HomeProducts", "<HomeHumanReview", "<LiveBoardGlance", "<HomeProofPoints", "<HomeWaysIn"]) {
-      expect(home).toContain(component);
-    }
-    expect(home.indexOf("<HomeHero")).toBeLessThan(home.indexOf("<HomeProducts"));
-    expect(home.indexOf("<HomeProducts")).toBeLessThan(home.indexOf("<HomeHumanReview"));
-    expect(home.indexOf("<HomeHumanReview")).toBeLessThan(home.indexOf("<LiveBoardGlance"));
-    expect(home.indexOf("<LiveBoardGlance")).toBeLessThan(home.indexOf("<HomeProofPoints"));
+    expect(home.match(/<HomeResults\s*\//g)).toHaveLength(1);
+    for (const retired of ["<LivingBoardStrip", "<LiveBoardGlance", "<HomeWaysIn", "<HomeProofPoints", "<MomentumStrip", "<HomeLast30Days"]) expect(home).not.toContain(retired);
+    for (const component of ["<HomeHero", "<HomeResults", "<HomeProducts", "<HomeEvidence", "<HomeDevelopers", "<HomeUpdates"]) expect(home).toContain(component);
+    expect(home.indexOf("<HomeHero")).toBeLessThan(home.indexOf("<HomeResults"));
+    expect(home.indexOf("<HomeResults")).toBeLessThan(home.indexOf("<HomeProducts"));
   });
 });

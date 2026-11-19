@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
+import { readBytes, readClock, readJson, statusReadError, type Read } from "../lib/statusReads";
 import {
   FEED_GROUPS,
   FLEET_STATUS_URL,
@@ -32,7 +32,8 @@ import {
  *   · A row is OK only when its own source answered with the field this page
  *     names. A site that loaded does not make any other component OK.
  *   · "Observed at" is the source's own timestamp when it publishes one; when it
- *     does not, the row says "read at" and shows this browser's clock, labelled.
+ *     does not, the row says "read at" and names the clock: this browser's, or the site
+ *     build's when the prerender saved the page at build time (readClock).
  *   · UNKNOWN means this page could not read the source (network, CORS, shape).
  *     It is evidence of nothing either way. UNAVAILABLE means the source
  *     answered that the component is not up, or answered with an error.
@@ -59,34 +60,6 @@ type Row = {
   observedFrom: string;
   href: string;
 };
-
-type Read<T> = { ok: true; body: T; readAt: string } | { ok: false; error: string; readAt: string };
-
-async function readBytes(url: string): Promise<Read<Uint8Array>> {
-  const readAt = new Date().toISOString();
-  try {
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) return { ok: false, error: `HTTP ${response.status}`, readAt };
-    return { ok: true, body: new Uint8Array(await response.arrayBuffer()), readAt };
-  } catch (error) {
-    return { ok: false, error: error instanceof Error ? error.message : "unreachable", readAt };
-  }
-}
-
-async function readJson<T>(path: string, init?: RequestInit): Promise<Read<T>> {
-  const readAt = new Date().toISOString();
-  try {
-    const response = await fetch(path, {
-      cache: "no-store",
-      headers: { accept: "application/json" },
-      ...init,
-    });
-    if (!response.ok) return { ok: false, error: `HTTP ${response.status}`, readAt };
-    return { ok: true, body: (await response.json()) as T, readAt };
-  } catch (error) {
-    return { ok: false, error: error instanceof Error ? error.message : "unreachable", readAt };
-  }
-}
 
 /** The failure text of a Read, narrowed explicitly so a ternary branch never has to. */
 function readError(r: Read<unknown>): string {
@@ -118,7 +91,7 @@ function unknownRow(group: string, label: string, error: string, readAt: string,
     state: "UNKNOWN",
     observation: `This page could not read the source (${error}). Not evidence either way.`,
     observedAt: null,
-    observedFrom: `read attempted at ${readAt} (this browser's clock)`,
+    observedFrom: `read attempted at ${readAt} (${readClock()})`,
     href,
   };
 }
@@ -175,7 +148,7 @@ export default function YieldStatus() {
       const settled = <T,>(entry: PromiseSettledResult<Read<T>>): Read<T> =>
         entry.status === "fulfilled"
           ? entry.value
-          : { ok: false, error: entry.reason instanceof Error ? entry.reason.message : "unreachable", readAt: new Date().toISOString() };
+          : { ok: false, error: statusReadError(entry.reason), readAt: new Date().toISOString() };
 
       const next: Row[] = [];
 
@@ -190,7 +163,7 @@ export default function YieldStatus() {
                 state: r.body.status === "ok" ? "OK" : "DEGRADED",
                 observation: `status "${r.body.status ?? "not published"}" — one request from this browser; not uptime history.`,
                 observedAt: typeof r.body.timestamp === "string" ? r.body.timestamp : null,
-                observedFrom: typeof r.body.timestamp === "string" ? "/api/health → timestamp" : `read at ${r.readAt} (this browser's clock)`,
+                observedFrom: typeof r.body.timestamp === "string" ? "/api/health → timestamp" : `read at ${r.readAt} (${readClock()})`,
                 href: "/api/health",
               }
             : unknownRow("Public website", "Pages deployment answers /api/health", readError(r), r.readAt, "/api/health"),
@@ -209,7 +182,7 @@ export default function YieldStatus() {
                 state: typeof count === "string" && count.trim() ? "OK" : "DEGRADED",
                 observation: typeof count === "string" ? `totals.public_count "${count}" (derived by the API, never typed here).` : "answered, but totals.public_count is missing.",
                 observedAt: null,
-                observedFrom: `read at ${r.readAt} (this browser's clock; the board publishes no single as_of)`,
+                observedFrom: `read at ${r.readAt} (${readClock()}; the board publishes no single as_of)`,
                 href: "/api/gspc",
               }
             : unknownRow("Evidence API", "GET /api/gspc — the living board", readError(r), r.readAt, "/api/gspc"),
@@ -225,7 +198,7 @@ export default function YieldStatus() {
                 state: typeof rootCount?.value === "number" ? "OK" : "DEGRADED",
                 observation: `public_root.card_count ${rootCount?.value ?? "not published"} · card_chain verified ${verified?.value ?? "not published"}. Three corpora, never added.`,
                 observedAt: typeof rootCount?.as_of === "string" ? rootCount.as_of : null,
-                observedFrom: typeof rootCount?.as_of === "string" ? "/api/state → public_root.card_count.as_of" : `read at ${s.readAt} (this browser's clock)`,
+                observedFrom: typeof rootCount?.as_of === "string" ? "/api/state → public_root.card_count.as_of" : `read at ${s.readAt} (${readClock()})`,
                 href: "/api/state",
               }
             : unknownRow("Evidence API", "GET /api/state — corpus counts and their kinds", readError(s), s.readAt, "/api/state"),
@@ -243,7 +216,7 @@ export default function YieldStatus() {
                 state: typeof r.body.merkle_root === "string" && typeof r.body.card_count === "number" ? "OK" : "DEGRADED",
                 observation: `card_count ${r.body.card_count ?? "not published"} · merkle_root ${typeof r.body.merkle_root === "string" ? r.body.merkle_root.slice(0, 12) + "…" : "not published"}.`,
                 observedAt: typeof r.body.as_of === "string" ? r.body.as_of : null,
-                observedFrom: typeof r.body.as_of === "string" ? "/root.json → as_of" : `read at ${r.readAt} (this browser's clock)`,
+                observedFrom: typeof r.body.as_of === "string" ? "/root.json → as_of" : `read at ${r.readAt} (${readClock()})`,
                 href: "/root.json",
               }
             : unknownRow("Verification resources", "/root.json — the signed public root", readError(r), r.readAt, "/root.json"),
@@ -257,7 +230,7 @@ export default function YieldStatus() {
                 state: Array.isArray(d.body.verificationMethod) && d.body.verificationMethod.length > 0 ? "OK" : "DEGRADED",
                 observation: `${d.body.id ?? "id not published"} · ${Array.isArray(d.body.verificationMethod) ? d.body.verificationMethod.length : 0} verification method(s).`,
                 observedAt: null,
-                observedFrom: `read at ${d.readAt} (this browser's clock; the DID document carries no timestamp)`,
+                observedFrom: `read at ${d.readAt} (${readClock()}; the DID document carries no timestamp)`,
                 href: "/.well-known/did.json",
               }
             : unknownRow("Verification resources", "/.well-known/did.json — the published keys", readError(d), d.readAt, "/.well-known/did.json"),
@@ -271,7 +244,7 @@ export default function YieldStatus() {
                 state: typeof c.body.head === "string" ? "OK" : "DEGRADED",
                 observation: `head ${typeof c.body.head === "string" ? c.body.head.slice(0, 12) + "…" : "not published"} · ${typeof c.body.n_cards === "number" ? c.body.n_cards : Array.isArray(c.body.cards) ? c.body.cards.length : "n not published"} card(s) indexed. Verifier: /signed/verify-card.mjs.`,
                 observedAt: null,
-                observedFrom: `read at ${c.readAt} (this browser's clock)`,
+                observedFrom: `read at ${c.readAt} (${readClock()})`,
                 href: "/signed/chain.json",
               }
             : unknownRow("Verification resources", "/signed/chain.json — the signed card chain manifest", readError(c), c.readAt, "/signed/chain.json"),
@@ -286,7 +259,7 @@ export default function YieldStatus() {
                 state: "OK",
                 observation: `${assets.filter((asset) => typeof asset.sig_ed25519 === "string" && asset.sig_ed25519.length > 0).length} of ${assets.length} leaves carry an Ed25519 signature.`,
                 observedAt: null,
-                observedFrom: `read at ${x.readAt} (this browser's clock)`,
+                observedFrom: `read at ${x.readAt} (${readClock()})`,
                 href: "/api/xrpl",
               }
             : unknownRow("Verification resources", "/api/xrpl — signed asset leaves", x.ok ? "malformed XRPL response" : readError(x), x.readAt, "/api/xrpl"),
@@ -304,7 +277,7 @@ export default function YieldStatus() {
                 state: w.body.status === "LIVE" ? "OK" : w.body.status === "OFFLINE" ? "UNAVAILABLE" : "DEGRADED",
                 observation: `status ${w.body.status ?? "not published"} · worker state ${w.body.worker?.state ?? "not published"}. A compute lane, not an authority lane: nothing here is signed or MEASURED.`,
                 observedAt: typeof w.body.read_at === "string" ? w.body.read_at : null,
-                observedFrom: typeof w.body.read_at === "string" ? "/api/worker → read_at" : `read at ${w.readAt} (this browser's clock)`,
+                observedFrom: typeof w.body.read_at === "string" ? "/api/worker → read_at" : `read at ${w.readAt} (${readClock()})`,
                 href: "/api/worker",
               }
             : unknownRow("Measurement queue", "/api/worker — the GPU compute worker's own /health", readError(w), w.readAt, "/api/worker"),
@@ -318,7 +291,7 @@ export default function YieldStatus() {
                 state: typeof q.body.queued === "number" ? "OK" : "DEGRADED",
                 observation: `${q.body.queued ?? "queued not published"} queued of ${q.body.count ?? "count not published"}. Never a measurement.`,
                 observedAt: typeof q.body.as_of === "string" ? q.body.as_of : null,
-                observedFrom: typeof q.body.as_of === "string" ? "/api/commission-queue → as_of" : `read at ${q.readAt} (this browser's clock)`,
+                observedFrom: typeof q.body.as_of === "string" ? "/api/commission-queue → as_of" : `read at ${q.readAt} (${readClock()})`,
                 href: "/api/commission-queue",
               }
             : unknownRow("Measurement queue", "/api/commission-queue — commissioned intents waiting for the mill", readError(q), q.readAt, "/api/commission-queue"),
@@ -334,7 +307,7 @@ export default function YieldStatus() {
                 state: typeof payers === "number" ? "OK" : "DEGRADED",
                 observation: typeof payers === "number" ? `${payers} payer(s) · ${settles ?? "settlements not published"} settlement(s). Zero is a measured zero.` : "answered, but one_number.all_time is not a number.",
                 observedAt: null,
-                observedFrom: `read at ${rv.readAt} (this browser's clock)`,
+                observedFrom: `read at ${rv.readAt} (${readClock()})`,
                 href: "/api/revenue",
               }
             : unknownRow("Measurement queue", "/api/revenue — settled non-self payers (derived)", readError(rv), rv.readAt, "/api/revenue"),
@@ -352,7 +325,7 @@ export default function YieldStatus() {
                 state: typeof h.body.id === "string" && h.body.private !== true ? "OK" : "DEGRADED",
                 observation: `${h.body.id ?? "id not published"} answered the Hub API. A mirror, never the authority.`,
                 observedAt: typeof h.body.lastModified === "string" ? h.body.lastModified : null,
-                observedFrom: typeof h.body.lastModified === "string" ? "Hub API → lastModified" : `read at ${h.readAt} (this browser's clock)`,
+                observedFrom: typeof h.body.lastModified === "string" ? "Hub API → lastModified" : `read at ${h.readAt} (${readClock()})`,
                 href: "https://huggingface.co/datasets/csoai/gspc-hub-cards",
               }
             : unknownRow("Publication mirrors", "Hugging Face — csoai/gspc-hub-cards dataset", `${readError(h)}; a browser read of a third-party API can fail for reasons unrelated to the mirror`, h.readAt, "https://huggingface.co/datasets/csoai/gspc-hub-cards"),
@@ -366,7 +339,7 @@ export default function YieldStatus() {
                 state: typeof g.body.full_name === "string" ? "OK" : "DEGRADED",
                 observation: `${g.body.full_name ?? "repository not published"} answered the GitHub API.`,
                 observedAt: typeof g.body.pushed_at === "string" ? g.body.pushed_at : null,
-                observedFrom: typeof g.body.pushed_at === "string" ? "GitHub API → pushed_at" : `read at ${g.readAt} (this browser's clock)`,
+                observedFrom: typeof g.body.pushed_at === "string" ? "GitHub API → pushed_at" : `read at ${g.readAt} (${readClock()})`,
                 href: "https://github.com/CSOAI-ORG/councilof-ai",
               }
             : unknownRow("Publication mirrors", "GitHub — CSOAI-ORG/councilof-ai source", `${readError(g)}; a browser read of a third-party API can fail for reasons unrelated to the mirror`, g.readAt, "https://github.com/CSOAI-ORG/councilof-ai"),
@@ -400,13 +373,6 @@ export default function YieldStatus() {
 
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100" data-testid="service-status">
-      <Helmet>
-        <title>Service status | Council of AI</title>
-        <meta
-          name="description"
-          content="Current observations for the public site, evidence API, verification resources, measurement queue and publication mirrors, each with its observed-at time. An unavailable check is never reported as healthy."
-        />
-      </Helmet>
       <section className="mx-auto max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-300">Service status · read live · never typed</p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">Service status</h1>
@@ -424,7 +390,7 @@ export default function YieldStatus() {
           <div><dt className="inline font-bold text-slate-200">UNMEASURED</dt> — <dd className="inline">the source could not be read, so no figure is shown; a cached value is never substituted.</dd></div>
         </dl>
         <p className="mt-3 font-mono text-[11px] text-slate-500">
-          {loadedAt ? `page read completed at ${loadedAt} (this browser's clock)` : "reading…"}
+          {loadedAt ? `page read completed at ${loadedAt} (${readClock()})` : "reading…"}
         </p>
 
         {GROUPS.map((group) => {

@@ -12,7 +12,7 @@ export const onRequestPost: PagesFunction = async () => {
       configured: false,
       public_prices: false,
       message:
-        "No public prices. A grade is never sold. Verify is free at /gspc-verify. Get measured at /assess. Email nicholas@csoai.org.",
+        "No public prices. A grade is never sold. Verify is free at /gspc-verify. Get measured at /assess. Email contact@csoai.org.",
     },
     { status: 404 },
   );

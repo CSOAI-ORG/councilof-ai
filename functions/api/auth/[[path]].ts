@@ -18,11 +18,13 @@ import {
   type StoredUser,
   RESERVED_EMAILS,
   canonical,
+  currentAccountGeneration,
   hashPassword,
   issueToken,
   verifyToken,
   userKey,
 } from "../_authCrypto";
+import { validGeneration, purchaseSeed } from "../../../shared/buyerPurchase";
 
 async function findUser(env: AuthEnv, email: string): Promise<StoredUser | null> {
   if (!env.SOV_ARENA_STATE) return null;
@@ -44,10 +46,10 @@ function json(data: unknown, status = 200): Response {
 
 async function authenticatedSession(
   env: AuthEnv,
-  user: { email: string; name: string },
+  user: { email: string; name: string; account_generation?: string },
 ): Promise<Response> {
   const token = await signedSession(env, user);
-  return token ? json({ token, user }) : signingUnavailable();
+  return token ? json({ token, user: { email:user.email, name:user.name } }) : signingUnavailable();
 }
 
 function signingUnavailable(): Response {
@@ -57,7 +59,7 @@ function signingUnavailable(): Response {
 /** Missing, malformed, or throwing signing material all mean: no session. */
 async function signedSession(
   env: AuthEnv,
-  user: { email: string; name: string },
+  user: { email: string; name: string; account_generation?: string },
 ): Promise<string | null> {
   try {
     return await issueToken(env, user);
@@ -97,6 +99,7 @@ function storedAccount(raw: string | null, subject: string): StoredAccount | nul
       !/^[a-f0-9]{64}$/i.test(row.pw) ||
       typeof row.created_at !== "string" ||
       !Number.isFinite(Date.parse(row.created_at)) ||
+      (row.account_generation !== undefined && !validGeneration(row.account_generation)) ||
       !isJsonValue(row)
     ) return null;
     return row as StoredAccount;
@@ -105,11 +108,13 @@ function storedAccount(raw: string | null, subject: string): StoredAccount | nul
   }
 }
 
-async function signedSubject(env: AuthEnv, request: Request): Promise<string | Response> {
+async function signedSubject(env: AuthEnv, request: Request): Promise<{sub:string;account_generation:string} | Response> {
   const h = request.headers.get("authorization") || "";
   const token = h.startsWith("Bearer ") ? h.slice(7) : "";
   const body = await verifyToken(env, token);
-  return body ? body.sub : json({ error: "invalid or expired token" }, 401);
+  return body && validGeneration(body.account_generation)
+    ? {sub:body.sub,account_generation:body.account_generation}
+    : json({ error: "sign in again to qualify the current account lifecycle" }, 401);
 }
 
 /** The only lookup key comes from the verified token, never the request body. */
@@ -224,10 +229,14 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
     if (!stored || (await hashPassword(password, stored.salt)) !== stored.pw) {
       return json({ error: "invalid credentials" }, 401);
     }
-    return authenticatedSession(ctx.env, {
-      email: stored.email,
-      name: stored.name,
-    });
+    // Reauthentication qualifies this incarnation without a stale full-record KV write.
+    // Overlapping legacy logins derive the same lifecycle and cannot restore a deleted account.
+    const generation = await currentAccountGeneration(stored, email);
+    if (!generation) return json({error:"account lifecycle could not be qualified"},503);
+    const sessionUser = { email: stored.email, name: stored.name, account_generation:generation };
+    const token = await signedSession(ctx.env, sessionUser);
+    if (!token) return signingUnavailable();
+    return json({token,user:{email:stored.email,name:stored.name}});
   }
 
   if (method === "POST" && action === "register") {
@@ -254,9 +263,10 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
       salt,
       pw: await hashPassword(password, salt),
       created_at: new Date().toISOString(),
+      account_generation: purchaseSeed(),
     };
     if (!ctx.env.SOV_ARENA_STATE) return json({ error: "store unavailable" }, 503);
-    const sessionUser = { email: user.email, name: user.name };
+    const sessionUser = { email: user.email, name: user.name, account_generation:user.account_generation };
     // Sign first: if no valid session can be issued, nothing is written.
     const token = await signedSession(ctx.env, sessionUser);
     if (!token) return signingUnavailable();
@@ -264,23 +274,31 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
     // there is no rollback. A failed write returns no token and no success.
     try {
       await ctx.env.SOV_ARENA_STATE.put(userKey(user.email), JSON.stringify(user));
+      const observed=storedAccount(await ctx.env.SOV_ARENA_STATE.get(userKey(user.email)),user.email);
+      if(!observed || canonical(observed)!==canonical(user))
+        return json({error:"account creation unconfirmed; no session returned"},503);
     } catch {
       return json({ error: "account store write could not be confirmed; no session was returned" }, 503);
     }
-    return json({ token, user: sessionUser });
+    return json({ token, user: { email:user.email,name:user.name } });
   }
 
   if (
     (method === "GET" && (action === "me" || action === "profile")) ||
     (method === "PUT" && action === "profile")
   ) {
-    const subject = await signedSubject(ctx.env, ctx.request);
-    if (subject instanceof Response) return subject;
+    const identity = await signedSubject(ctx.env, ctx.request);
+    if (identity instanceof Response) return identity;
+    const subject = identity.sub;
 
     const input = method === "PUT" ? await profileName(ctx.request) : null;
     if (input && "response" in input) return input.response;
     const owner = await currentOwner(ctx.env, subject);
     if ("response" in owner) return owner.response;
+    const generation = await currentAccountGeneration(owner.account, subject);
+    if (!generation) return json({error:"account lifecycle could not be qualified"},503);
+    if (generation !== identity.account_generation)
+      return json({error:"account lifecycle changed; sign in again"},401);
     const user = { email: owner.account.email, name: owner.account.name };
 
     if (method === "GET") {
@@ -288,6 +306,7 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
         ? json({ user, visibility: "private" })
         : json({
             user,
+            account_generation: generation,
             entitlements: { paid: false, products: [] as string[], count: 0 },
           });
     }

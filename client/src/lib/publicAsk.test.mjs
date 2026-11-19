@@ -90,3 +90,32 @@ test('deadline during uncooperative fetch, body and digest restores nonbusy erro
     assert.equal(await desk.ask(question), null); assert.equal(last.state, 'error'); assert.match(last.message, /timed out/); assert.equal(desk.isBusy(), false);
   }
 });
+
+test('optional tool restriction sends only the fixed public execution envelope', async () => {
+  const selected = ['board_totals'];
+  await api.streamPublicAsk({ question, enabledTools: selected, cryptoImpl: webcrypto, now: () => now,
+    forwardedProps: { private: 'ignored' }, fetchImpl: async (_, options) => {
+      selected.push('get_axis');
+      assert.deepEqual(JSON.parse(options.body).forwardedProps, { execution: {
+        version: 1, host: 'cloud', provider: 'council-tools', connectivity: 'online', enabledTools: ['board_totals'],
+      } });
+      assert.equal(options.credentials, 'omit'); return response();
+    } });
+});
+test('None is retained and invalid tool choices never send a request', async () => {
+  let calls = 0;
+  const fetchImpl = async (_, options) => { calls++; assert.deepEqual(JSON.parse(options.body).forwardedProps.execution.enabledTools, []); return response(); };
+  await api.streamPublicAsk({ question, enabledTools: [], cryptoImpl: webcrypto, now: () => now, fetchImpl });
+  for (const enabledTools of [['../../escape'], ['board_totals','board_totals'], true, {}]) {
+    await assert.rejects(() => api.streamPublicAsk({ question, enabledTools, cryptoImpl: webcrypto, fetchImpl }), /Invalid public Ask tool/);
+  }
+  assert.equal(calls, 1);
+});
+test('controller snapshots each selection before notifying its loading state', async () => {
+  const selected = ['board_totals']; let sent;
+  const desk = api.createPublicAskController({ cryptoImpl: webcrypto, now: () => now,
+    onState: state => { if (state.state === 'loading') selected.push('get_axis'); },
+    fetchImpl: async (_, options) => { sent = JSON.parse(options.body); return response(); } });
+  await desk.ask(question, selected);
+  assert.deepEqual(sent.forwardedProps.execution.enabledTools, ['board_totals']);
+});

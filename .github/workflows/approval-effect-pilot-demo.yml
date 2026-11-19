@@ -1,0 +1,35 @@
+name: approval-effect-pilot-demo
+on:
+  pull_request:
+    paths:
+      - "harness/hitl/approval-effect-demo.mjs"
+      - "harness/hitl/approval-effect-demo.test.mjs"
+      - "scripts/pilot/approval-effect-replay.mjs"
+      - "docs/commercial/APPROVAL-EFFECT-PILOT.md"
+      - ".github/workflows/approval-effect-pilot-demo.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Original regression suite
+        run: node --test harness/hitl/approval-effect-demo.test.mjs
+      - name: Create synthetic pilot receipt
+        run: node scripts/pilot/approval-effect-replay.mjs --out pilot-demo-result.json
+      - name: Fail if trial or scope labels are wrong
+        run: |
+          node --input-type=module -e "import fs from 'node:fs'; const r=JSON.parse(fs.readFileSync('pilot-demo-result.json')); if(r.outcome!=='PASS'||r.fixture_count!==14||r.production_authority!==false||r.independent_review!=='NOT_CONDUCTED'||Object.values(r.results).some(v=>v!==true))process.exit(1)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-approval-effect-demo
+          path: pilot-demo-result.json
+          retention-days: 30

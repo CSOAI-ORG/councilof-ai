@@ -351,6 +351,7 @@ export const UNCHECKABLE_REASONS = new Set([
   "key_not_pinned",
   "preimage_uncomputable",
   "ed25519_unsupported",
+  "unsigned",
 ]);
 
 /** Derive the public three-state verdict from the boolean and the reason codes. */
@@ -695,7 +696,8 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
 
   /* ---- 3. does the signature verify over those exact bytes? ---- */
   if (!sigRaw) {
-    checks.push({ label: "Signature", ok: null, code: "unsigned", detail: "UNSIGNED — hash only." });
+    fail("unsigned");
+    checks.push({ label: "Signature", ok: null, code: "unsigned", detail: "UNSIGNED — hash only; no signature was available to verify." });
   } else {
     const sigBytes = decodeSig(sigRaw);
     if (!sigBytes || !keyBytes) {
@@ -742,7 +744,10 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
   }
 
   // Advisory rows (the live-anchor cross-check) report a result but never decide the verdict.
-  const valid = reasons.length === 0 && checks.every((c) => c.ok !== false || c.advisory === true);
+  // A matching digest and a pinned key are not authentication. A VALID result
+  // requires Ed25519 to have actually verified, even when other rows are unknown.
+  const signatureVerified = checks.some((c) => c.code === "signature_valid" && c.ok === true);
+  const valid = signatureVerified && reasons.length === 0 && checks.every((c) => c.ok !== false || c.advisory === true);
   const framing = (rec as { body?: { public_framing?: unknown } })?.body?.public_framing;
   if (typeof framing === "string") {
     checks.push({

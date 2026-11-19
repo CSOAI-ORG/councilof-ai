@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { WORKING_GROUPS, WORKING_GROUPS_AS_OF, WORKING_GROUPS_CHARTER, REVOCATION_REVIEW_PROTOCOL, workingGroupBrief, workingGroupEnquiryHref } from "@/lib/workingGroups";
+import { axisRoute } from "@/lib/axisRoutes";
 
 import WorkingGroupTracker from "./WorkingGroupTracker";
 
@@ -7,6 +8,17 @@ const LINK = "underline underline-offset-4 focus-visible:outline focus-visible:o
 
 export default function WorkingGroups() {
   const [view, setView] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("groupview") === "tracker" ? "tracker" : "tasks");
+  /**
+   * The route each axis row links to comes from the build-time route map the
+   * axis-page generator publishes, not from a list of slugs typed here. This
+   * registry lists all 34 axes; twenty of them (nine measured subject axes,
+   * nine deterministic facts, two the owner is holding) have no /gspc/<axis>/
+   * page, so a typed /gspc/ link sent readers to a 404. The registry renders
+   * statically and fetches nothing, so the map is the right source.
+   */
+  function hrefForAxis(axis: string): string | null {
+    return axisRoute(axis);
+  }
   function changeView(next: string) {
     setView(next);
     const url = new URL(window.location.href);
@@ -52,7 +64,18 @@ export default function WorkingGroups() {
             <details className="mt-3">
               <summary className="cursor-pointer font-medium focus-visible:outline focus-visible:outline-2">Axes in this group</summary>
               <ul className="mt-2 list-disc space-y-1 pl-5">
-                {group.axes.map(axis => <li key={axis}><a className={LINK} href={`/gspc/${axis}/`}>{axis}</a></li>)}
+                {group.axes.map(axis => {
+                  const href = hrefForAxis(axis);
+                  return (
+                    <li key={axis}>
+                      {href ? (
+                        <a className={LINK} href={href} data-axis-link={axis}>{axis}</a>
+                      ) : (
+                        <span data-axis-link={axis}>{axis}</span>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </details>
             <div className="mt-4 flex flex-col items-start gap-1">

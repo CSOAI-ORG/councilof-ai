@@ -101,6 +101,16 @@ jobs:
           python3 scripts/land_mill_cards.py --staged staged --run-id "$RUN_ID" --require-evidence --pr-body staged/PR-BODY.md --manifest "public/interop/mill-land-manifests/land-${{ github.run_id }}.json" --github-output "$GITHUB_OUTPUT"
           echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
 
+      # A landing changes the per-cell evidence corpus: rebuild the joined TABLE before
+      # opening the PR. This is a data projection, not a new MEASURED admission or signing.
+      # Leaving yesterday's table in the branch makes the producer-manifest gate red.
+      - name: regenerate joined fact table from landed cell evidence
+        if: steps.land.outputs.landed != '0'
+        run: |
+          set -euo pipefail
+          node scripts/measurements/build-gspc-fact-table.mjs --out public/interop/gspc-fact-table
+          node scripts/measurements/build-gspc-fact-table.mjs --check --out public/interop/gspc-fact-table
+
       - name: branch, push, PR, dispatch the OIDC signer for the branch (on master; the branch is data)
         id: pr
         if: steps.land.outputs.landed != '0'
@@ -113,7 +123,7 @@ jobs:
           git config user.name "csoai-mill-jobs-land"
           git config user.email "board@csoai.org"
           git checkout -b "$BR"
-          git add public/interop/mill-cards-unsigned public/interop/mill-evidence public/interop/mill-land-manifests
+          git add public/interop/mill-cards-unsigned public/interop/mill-evidence public/interop/mill-land-manifests public/interop/gspc-fact-table
           git commit -m "mill: land ${{ steps.land.outputs.landed }} UNSIGNED cards from HF Jobs (mill-jobs-land run ${{ github.run_id }}) — sign pending; nothing MEASURED"
           git push origin "HEAD:$BR"
           gh pr create --base master --head "$BR" \

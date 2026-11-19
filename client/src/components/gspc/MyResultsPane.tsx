@@ -1,3 +1,4 @@
+import OwnedPurchases from "@/components/OwnedPurchases";
 /**
  * My results — status of a request, the signed results when delivered, and a free check.
  *
@@ -209,6 +210,8 @@ export default function MyResultsPane() {
         Where a request stands, the signed results once they are delivered, and a free check that they are genuine. No account:
         look up a receipt, or use the list this browser keeps.
       </p>
+
+      <OwnedPurchases />
 
       <form
         className="mt-4 flex flex-col gap-2 sm:flex-row"

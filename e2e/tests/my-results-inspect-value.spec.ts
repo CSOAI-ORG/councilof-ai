@@ -25,13 +25,21 @@ for (const [width, height, viewportLabel] of [
     page.on("pageerror", (err) => pageErrors.push(err.message));
 
     await page.setViewportSize({ width, height });
-    const response = await page.goto("/my-results/", { waitUntil: "domcontentloaded" });
+    const response = await page.goto("/my-results/", {
+      waitUntil: "domcontentloaded",
+    });
     expect(response?.status()).toBe(200);
 
     // 1. Check 7 tabs & JSON-LD structured evidence
     await expect(page.locator(".tab-btn")).toHaveCount(7);
-    await expect(page.locator("#csoai-structured-evidence-jsonld")).toHaveCount(1);
-    await expect(page.getByText("Live Hugging Face Router 14-Axis Canonical Model-Comparison Matrix")).toBeVisible();
+    await expect(page.locator("#csoai-structured-evidence-jsonld")).toHaveCount(
+      1,
+    );
+    await expect(
+      page.getByText(
+        "Live Hugging Face Router 14-Axis Canonical Model-Comparison Matrix",
+      ),
+    ).toBeVisible();
 
     // 2. Exercise Step 1 model filter
     await page.locator("#model-search-input").fill("Qwen");
@@ -40,9 +48,13 @@ for (const [width, height, viewportLabel] of [
 
     // 3. Exercise Step 2 Free Pack Preview
     await page.locator('[data-tab="step-2-preview"]').click();
-    await page.locator("#preview-door-select").selectOption("/interop/universal-watchdog-incident-harness-v1.json");
+    await page
+      .locator("#preview-door-select")
+      .selectOption("/interop/universal-watchdog-incident-harness-v1.json");
     await page.locator("#run-preview-btn").click();
-    await expect(page.locator("#preview-output-box")).toContainText("public-incident-vigilance");
+    await expect(page.locator("#preview-output-box")).toContainText(
+      "public-incident-vigilance",
+    );
 
     // 4. Exercise Step 6 Article-1 Care & Layer-0 Sandbox
     await page.locator('[data-tab="step-6-care-sandbox"]').click();
@@ -56,16 +68,42 @@ for (const [width, height, viewportLabel] of [
       await page.locator("#sandbox-scenario-select").selectOption(scenario);
       await page.locator("#run-sandbox-btn").click();
     }
-    await expect(page.locator("#sandbox-output-box")).toContainText("DENY_REGULATORY_DETERMINATION");
+    await expect(page.locator("#sandbox-output-box")).toContainText(
+      "DENY_REGULATORY_DETERMINATION",
+    );
 
-    // 5. Exercise Step 7 HITL Dispatcher, 12-DB Watchdog Harness, and Live Inspector
+    // 5. The referral and Watchdog previews must remain local and must not imply human acceptance.
     await page.locator('[data-tab="step-7-automation"]').click();
+    const previewWrites: string[] = [];
+    const recordPreviewWrite = (
+      request: import("@playwright/test").Request,
+    ) => {
+      if (!["GET", "HEAD", "OPTIONS"].includes(request.method()))
+        previewWrites.push(request.method() + " " + request.url());
+    };
+    page.on("request", recordPreviewWrite);
     await page.locator("#run-hitl-dispatch-btn").click();
-    await expect(page.locator("#hitl-dispatch-output")).toContainText("AWAITING_OPERATOR_REVIEW");
+    await expect(page.locator("#hitl-dispatch-output")).toContainText(
+      "LOCAL_EXAMPLE_ONLY",
+    );
 
-    await page.locator("#watchdog-db-select").selectOption("sec-edgar-8k-10k-ai-cyber");
+    await page
+      .locator("#watchdog-db-select")
+      .selectOption("sec-edgar-8k-10k-ai-cyber");
     await page.locator("#run-watchdog-harness-btn").click();
-    await expect(page.locator("#watchdog-harness-output")).toContainText("public-incident-vigilance");
+    await expect(page.locator("#watchdog-harness-output")).toContainText(
+      "public-incident-vigilance",
+    );
+    for (const selector of [
+      "#hitl-dispatch-output",
+      "#watchdog-harness-output",
+    ]) {
+      const preview = JSON.parse(await page.locator(selector).innerText());
+      expect(preview.dispatch_performed).toBe(false);
+      expect(preview.human_acceptance).toBe("NOT_RECORDED");
+    }
+    page.off("request", recordPreviewWrite);
+    expect(previewWrites).toEqual([]);
 
     for (const surf of [
       "dom_a11y_e2e",
@@ -78,7 +116,9 @@ for (const [width, height, viewportLabel] of [
       await page.locator("#inspect-surface-select").selectOption(surf);
       await page.locator("#run-live-inspect-btn").click();
     }
-    await expect(page.locator("#live-inspect-output")).toContainText("inspect_task.py");
+    await expect(page.locator("#live-inspect-output")).toContainText(
+      "inspect_task.py",
+    );
 
     // 6. Verify window.CSOAI_INSPECT in Browser DevTools context & responsive overflow
     const inspectResult = await page.evaluate(() => {
@@ -87,7 +127,9 @@ for (const [width, height, viewportLabel] of [
         hasApi: !!api,
         summary: api ? api.summary() : null,
         audit: api ? api.auditDomAndA11y() : null,
-        overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        overflow:
+          document.documentElement.scrollWidth >
+          document.documentElement.clientWidth + 1,
       };
     });
 
@@ -112,7 +154,9 @@ for (const [width, height, viewportLabel] of [
       const metrics = await page.evaluate(() => ({
         textLen: (document.body?.innerText || "").trim().length,
         hasPrice: /[£$]\s?\d/.test(document.body?.innerText || ""),
-        overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        overflow:
+          document.documentElement.scrollWidth >
+          document.documentElement.clientWidth + 1,
       }));
       expect(metrics.textLen).toBeGreaterThan(100);
       expect(metrics.hasPrice).toBe(false);

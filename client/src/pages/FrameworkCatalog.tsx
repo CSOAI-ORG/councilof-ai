@@ -136,7 +136,7 @@ export default function FrameworkCatalog() {
               <span key={g} className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-500">{g}</span>
             ))}
           </div>
-          <a href="mailto:nicholas@csoai.org?subject=CSOAI%20framework%20partner" className="mt-5 inline-block rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800">
+          <a href="mailto:contact@csoai.org?subject=CSOAI%20framework%20partner" className="mt-5 inline-block rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800">
             Discuss a framework contribution →
           </a>
         </div>

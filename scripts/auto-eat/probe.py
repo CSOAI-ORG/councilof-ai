@@ -11,7 +11,7 @@ Probes:
   hf-space     GET huggingface.co/api/spaces/{id}      200=LIVE 404=DEAD 401/403=HELD
   npm-registry GET registry.npmjs.org/{name}           200=LIVE 404=DEAD
   mcp-server   GET remote url (reachability)           2xx/4xx=LIVE conn-fail=DEAD none=PLACEHOLDER
-  a2a-agent    GET /.well-known/agent-card.json        200 json=LIVE 404=DEAD none=PLACEHOLDER
+  a2a-agent    bounded GET of configured card/base   typed metadata=LIVE, gated=HELD, else unknown/missing
   erc8004      eth_call tokenURI(token_id) on chain RPC non-empty=LIVE 0x=PLACEHOLDER err=DEAD
   xrpl-account account_info                            exists=LIVE not_found=DEAD
 
@@ -28,6 +28,7 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import common as c
+from a2a_card_probe import probe_agent_card
 
 CHAIN_RPC = {
     1: "https://ethereum-rpc.publicnode.com",
@@ -109,21 +110,8 @@ def probe_npm(entry: dict) -> tuple[str, str]:
 
 
 def probe_a2a(entry: dict) -> tuple[str, str]:
-    meta = entry.get("meta") or {}
-    base = (meta.get("card_url") or entry.get("id") or "").rstrip("/")
-    name = str(entry["id"])
-    if not base.startswith("http"):
-        return "PLACEHOLDER", f"{name} (no agent-card URL)"
-    for path in ("/.well-known/agent-card.json", "/.well-known/agent.json", "/agent-card.json"):
-        st, body = c.http_get(base + path, timeout=12)
-        if st == 200 and body:
-            return "LIVE", f"{name} ({path} 200)"
-        if st in (401, 403):
-            return "HELD", f"{name} (gated {st})"
-    st, _ = c.http_get(base, timeout=12)
-    if st >= 0:
-        return "PLACEHOLDER", f"{name} (host {st}, no agent-card)"
-    return "DEAD", f"{name} (unreachable)"
+    """Read bounded typed card metadata; never qualify its publisher or skills."""
+    return probe_agent_card(entry, user_agent=c.UA)
 
 
 def probe_mcp(entry: dict) -> tuple[str, str]:
@@ -222,7 +210,7 @@ METHOD = {
     "hf-space": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
     "npm-registry": "keyless HTTPS GET registry.npmjs.org/{name}; three-state LIVE/DEAD",
     "mcp-server": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
-    "a2a-agent": "keyless HTTPS GET /.well-known/agent-card.json; three-state LIVE/PLACEHOLDER/DEAD",
+    "a2a-agent": "keyless bounded GET; typed discovery metadata only, not full A2A conformance; LIVE/HELD/PLACEHOLDER/UNCHECKABLE",
     "erc8004": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
     "xrpl-account": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
 }
@@ -232,7 +220,7 @@ UNMEASURED = {
     "hf-space": ["runtime_behavior", "hardware_claim", "lineage"],
     "npm-registry": ["install_integrity", "malware", "maintainer_identity"],
     "mcp-server": ["tool_behavior", "capability_claims", "auth_scope", "service_quality"],
-    "a2a-agent": ["skill_execution_correctness", "auth_gated_agents", "streaming_actual"],
+    "a2a-agent": ["skill_execution_correctness", "auth_gated_agents", "streaming_actual", "full_protocol_conformance", "card_signature_and_identity"],
     "erc8004": ["reputation_validity", "validation_registry_mainnet", "service_quality"],
     "xrpl-account": ["issuer_identity", "reserve_attestation", "off_ledger_backing"],
 }

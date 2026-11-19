@@ -7,15 +7,10 @@ PRACTICE_ONLY concepts from working play, and these pages issue no signed card.
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
-from datetime import datetime, timezone
 
-ROOT = Path(".")
-PUBLIC = ROOT / "public"
-
-
-def now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+ROOT = Path(__file__).resolve().parents[2]
 
 
 # Current public concept pages. Use their exact filenames.
@@ -33,6 +28,8 @@ GAMES = [
 
 def build_game_page(slug: str) -> str:
     """Build an informational concept page."""
+    if slug not in GAMES:
+        raise ValueError("unknown concept page")
     title = slug.removeprefix("games-").replace("-", " ").title()
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -40,18 +37,22 @@ def build_game_page(slug: str) -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title} — Council of AI</title>
+<meta name="description" content="{title} is a Council of AI game concept: no playable turn, no signed card and no live measurement yet. Kept readable; not offered for search.">
 <link rel="canonical" href="https://councilof.ai/{slug}">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, follow">
 <meta property="og:title" content="{title} — Council of AI">
 <meta property="og:url" content="https://councilof.ai/{slug}">
 <link rel="icon" href="https://councilof.ai/csoai-icon.svg">
 <style>
-body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #ffffff; color: #1f2937; margin: 0; padding: 0; }}
+* {{ box-sizing: border-box; }}
+body {{ line-height: 1.6; overflow-wrap: anywhere; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #ffffff; color: #1f2937; margin: 0; padding: 0; }}
 main {{ max-width: 1200px; margin: 0 auto; padding: 32px 16px 64px; }}
-h1 {{ color: #16a34a; font-size: 36px; margin-bottom: 16px; }}
+a {{ color: #166534; }}
+a:focus-visible {{ outline: 3px solid #0f172a; outline-offset: 4px; }}
+h1 {{ color: #166534; font-size: 36px; margin-bottom: 16px; }}
 .card {{ border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 16px; background: #fafafa; }}
 .lede {{ font-size: 18px; color: #4b5563; }}
-.btn {{ display: inline-block; padding: 12px 24px; background: #16a34a; color: white; border-radius: 8px; text-decoration: none; font-weight: 600; }}
+.btn {{ display: inline-block; min-height: 44px; padding: 12px 24px; background: #166534; color: #ffffff; border-radius: 8px; text-decoration: none; font-weight: 600; }}
 </style>
 </head>
 <body>
@@ -65,11 +66,11 @@ h1 {{ color: #16a34a; font-size: 36px; margin-bottom: 16px; }}
 <div class="card">
 <h2>What you can use now</h2>
 <p>Read the <a href="https://councilof.ai/api/gspc">living GSPC board</a> for current axis counts, measurements and evidence states. This concept page does not write to that board.</p>
-<a class="btn" href="https://councilof.ai/dashboard">Open Council OS →</a>
+<a class="btn" href="https://councilof.ai/dashboard/">Open Council OS →</a>
 </div>
 <div class="card">
 <h2>Verification</h2>
-<p><a href="https://councilof.ai/gspc-verify">Verify an existing measurement card</a> independently. Card verification does not validate this game concept.</p>
+<p><a href="https://councilof.ai/gspc-verify/">Verify an existing measurement card</a> independently. Card verification does not validate this game concept.</p>
 </div>
 </main>
 </body>
@@ -77,17 +78,51 @@ h1 {{ color: #16a34a; font-size: 36px; margin-bottom: 16px; }}
 """
 
 
-def main() -> None:
-    print("=== FIX GAME PAGES ===")
-    print()
+def generate(root: Path, *, check: bool = False) -> list[str]:
+    """Check or regenerate only these eight unsigned pages.
+
+    Preflight the complete write set before changing any page. Refuse symbolic
+    links and a companion timestamp proof; never replace signed evidence.
+    """
+    root = Path(root).absolute()
+    public = root / "public"
+    if any(path.is_symlink() for path in [public, *public.parents]):
+        raise ValueError("symlink output directory refused")
+    if not public.is_dir():
+        raise ValueError("existing public directory required")
+    outputs = []
     for slug in GAMES:
-        path = PUBLIC / f"{slug}.html"
-        path.write_text(build_game_page(slug))
-        print(f"  ✓ {slug}.html")
-    print()
-    print("=== SUMMARY ===")
-    print(f"  pages built: {len(GAMES)}")
+        path = public / f"{slug}.html"
+        proof = path.with_suffix(path.suffix + ".ots")
+        if path.is_symlink() or proof.exists() or proof.is_symlink():
+            raise ValueError(f"protected page refused: {slug}")
+        if path.exists() and not path.is_file():
+            raise ValueError(f"regular page required: {slug}")
+        outputs.append((path, build_game_page(slug).encode("utf-8")))
+    stale = [path.name for path, expected in outputs
+             if not path.exists() or path.read_bytes() != expected]
+    if not check:
+        for path, expected in outputs:
+            if path.name in stale:
+                path.write_bytes(expected)
+    return stale
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, default=ROOT)
+    parser.add_argument("--check", action="store_true", help="verify generated bytes without writing")
+    args = parser.parse_args()
+    try:
+        stale = generate(args.root, check=args.check)
+    except (OSError, ValueError) as error:
+        parser.exit(2, f"concept pages refused: {error}\n")
+    if args.check and stale:
+        print("STALE: " + ", ".join(stale))
+        return 1
+    print(f"concept pages {'current' if args.check else 'generated'}: {len(GAMES)}; changed: {len(stale)}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

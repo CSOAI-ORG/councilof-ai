@@ -1,0 +1,81 @@
+{
+  "observedAt": "2026-11-04T08:05:57.422235+00:00",
+  "baseHead": "df02a4d419d2c77c5042afb66d5548e58888752b",
+  "state": "REVIEW_FINDINGS_FIXED_AND_RETESTED_NOT_DEPLOYED",
+  "reviewFindings": [
+    4464682899,
+    4464682908,
+    4464682918,
+    4464682924
+  ],
+  "changes": [
+    "Exact free-door metadata expectations extended without changing executable tools, scopes or counts.",
+    "Prior-task board context cleared; host-provided reference kept separate.",
+    "Evaluated model identity retained; backend adapter displayed separately.",
+    "No silent first-50 truncation; the 200-metric budget rejects the whole oversized import.",
+    "In-flight state reset before history-cache restore; no automatic task retry."
+  ],
+  "tests": {
+    "unitAndMcpSdk": 57,
+    "browser": {
+      "observedAt": "2026-11-04T08:00:57.625Z",
+      "passed": true,
+      "checks": [
+        "open-does-not-start-monitoring-or-contact-service",
+        "suggestion-prepares-draft-without-dispatch",
+        "observed-tool-result-and-terminal-projected",
+        "task-result-recommends-existing-Academy-lesson",
+        "service-output-is-inert-text",
+        "saved-observation-bound-to-one-task-not-signature",
+        "source-links-and-board-context-are-task-scoped",
+        "prior-task-board-counts-cleared-not-reattributed",
+        "benchmark-import-is-local-retains-zero-and-provenance",
+        "unsupported-benchmark-clears-old-results-not-guessed",
+        "contextual-practice-reuses-source-without-issuing-credential",
+        "learning-source-digest-checked-explicitly",
+        "source-change-holds-further-practice-no-silent-upgrade",
+        "practice-export-is-dated-noncertifying",
+        "finding-draft-no-auto-notification-no-answer-text",
+        "second-screen-shares-only-status-and-tool-names",
+        "screen-revocation-clears-receiver",
+        "bfcache-lifecycle-clears-busy-without-retry",
+        "explicit-new-question-works-after-history-restoration",
+        "truncated-stream-not-completed-no-automatic-retry",
+        "wrong-task-identity-rejected",
+        "paid-decision-visible-without-confirmation-or-payment",
+        "narrow-panel-no-horizontal-overflow",
+        "actual-MCP-Apps-SDK-initializes-with-owned-host-fixture",
+        "HIM-explanation-uses-host-message-only-after-user-click",
+        "native-export-uses-host-download-capability",
+        "native-sandbox-does-not-pretend-TV-pairing",
+        "no-browser-script-errors"
+      ],
+      "count": 28,
+      "pageErrors": [],
+      "requestCount": 10,
+      "scope": "Actual bundled UI and MCP Apps SDK in Chrome. Owned host fixture and controlled service events, not ChatGPT or Claude native account installation."
+    },
+    "negativeControls": {
+      "scope": "Deliberately broken temporary copies; no shipped source changed.",
+      "results": [
+        {
+          "control": "task-binding-bypass",
+          "detectedByAssertion": true,
+          "status": 1
+        },
+        {
+          "control": "source-freshness-bypass",
+          "detectedByAssertion": true,
+          "status": 1
+        }
+      ]
+    }
+  },
+  "htmlSha256": "74e35303567f7d4698184089235b4d7d3282a96b2b674a844b9c5502df40089c",
+  "bfcacheTestBoundary": "Browser lifecycle-event regression, not an outside user acceptance or all-browser cache test.",
+  "productionChanged": false,
+  "nativeSignedInHostAccepted": false,
+  "reviewCorrectionHead": "e6625a71d984e6b3ba41bf17340a69ca69ec1f36",
+  "singleMainLandmark": true,
+  "releaseGateCorrection": "Use one main landmark with mutually exclusive workspace/display regions; gate unchanged."
+}

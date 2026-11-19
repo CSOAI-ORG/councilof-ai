@@ -1,0 +1,32 @@
+{
+  "id": "csoai.saved-memory-readiness.20261111.v1",
+  "state": "CANDIDATE_TESTED_HOSTED_STORAGE_BLOCKED",
+  "observed_date": "2026-11-11",
+  "hosted_source_revision": "afdb579fa778a2f967d975fb5235d656077b0dd7",
+  "hosted_checks": {
+    "authenticated_memory_list": {"transport_event": "complete", "operation": "refused", "reason": "Saved copies are unavailable: persistent storage is not configured."},
+    "anonymous_memory_list": {"http_status": 404, "interpretation": "Private endpoint was not accessible to the unauthenticated probe; backend refusal semantics were not exercised."},
+    "memory_root_configured": false,
+    "source_revision_unchanged_during_preflight": true,
+    "existing_private_working_bucket_present": true,
+    "native_private_bucket_write": {"status": "DENIED", "http_status": 403, "endpoint_kind": "bucket-xet-write-token", "created_probe_objects_observed": 0, "alternate_credentials_or_route_used": false}
+  },
+  "candidate": {
+    "readiness_source_sha256": "448ee58a59d22b083000ea956fca1de50b0b0bd999cb32014cf1d0f597f3c389",
+    "baseline_ui_sha256": "f4f2db5f5e03937ede2157183a1bc61e391a19c977fc633f957f0ebd7c14a7f8",
+    "candidate_ui_sha256": "2758cd0943ef9a2052946e59ef0f5441103b8a5b172ffa13e53cae3026f6816a",
+    "readiness_unit_tests": 19,
+    "readiness_unit_replay": "The same 19 methods passed in Linux scratch and on the coordination Mac; counted once, not as 38 distinct tests.",
+    "gradio_controller_tests": 12,
+    "gradio_version": "6.31.0",
+    "controller_python": "3.12.12",
+    "controller_failures": 0,
+    "controller_skips": 0,
+    "patch_negative_controls": 2,
+    "protected_original_function_asts_equal": 8,
+    "existing_auth_store_and_chat_source_changed": false,
+    "live_deployed": false
+  },
+  "not_qualified": ["real user save/list/restore/remove persistence", "mounted bucket filesystem operations", "survival across Space restart", "second real-user isolation", "real token revocation", "browser end-to-end acceptance of the candidate", "multi-replica coordination"],
+  "scope": {"model_calls": 0, "training": false, "gspc_admitted": false, "execution_authority": "NONE", "new_paid_compute": false, "bucket_permissions_changed": false, "runtime_restarted": false, "new_bucket_created": false, "cost": "UNKNOWN", "energy": "UNKNOWN"}
+}

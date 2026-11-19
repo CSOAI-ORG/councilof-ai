@@ -77,7 +77,7 @@ describe("resolveHead — every layer of the fallback chain", () => {
   });
 
   it("parametrised families derive from the URL and stay inside the length bands", () => {
-    for (const p of ["/gspc/provenance", "/for/regulator", "/vs/vanta", "/model/gpt-5", "/mcp/some-server", "/library/regulation", "/answers/iso42001-vs-etsi304223"]) {
+    for (const p of ["/gspc/provenance", "/for/regulator", "/vs/vanta", "/model/gpt-5", "/mcps/some-server", "/library/regulation", "/answers/iso42001-vs-etsi304223"]) {
       const h = resolveHead(p);
       expect(h.source, p).toBe("family");
       expect(GENERIC_TITLES.has(h.title)).toBe(false);
@@ -250,5 +250,20 @@ describe("applyHead writes title, description, OG and canonical into a document"
       expect(observer).not.toHaveBeenCalled();
       expect(doc.title).toContain("loaded headline");
     } finally { vi.unstubAllGlobals(); }
+  });
+});
+
+
+describe("reviewed blog titles remain distinct from archived routes", () => {
+  it("an approved article gets its own head before the component mounts", () => {
+    const h = resolveHead("/blog/how-to-verify-an-ai-measurement/?from=index");
+    expect(h.source).toBe("family");
+    expect(h.title).not.toMatch(/withdrawn/i);
+    expect(h.description).not.toMatch(/withdrawn from/);
+    expect(h.canonical).toBe("https://councilof.ai/blog/how-to-verify-an-ai-measurement/");
+  });
+  it("the archive index and unreviewed articles retain their withdrawal", () => {
+    for (const p of ["/blog", "/blog/proof-of-ai", "/blog/not-an-approved-post"])
+      expect(resolveHead(p).source, p).toBe("withdrawn");
   });
 });

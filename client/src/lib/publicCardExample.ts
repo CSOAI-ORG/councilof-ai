@@ -1,3 +1,4 @@
+import governanceExample from "./fixtures/governance-e9bc92b7.json.txt?raw";
 import { CARD_PARAM_MAX_BYTES, verifyCardHref } from "./cardParam";
 
 export const GOVERNANCE_RETRIEVE =
@@ -45,9 +46,15 @@ export async function loadPublicCardExample(
   origin: string,
   signal: AbortSignal,
   fetchImpl: typeof fetch = fetch,
-): Promise<{ raw: string; href: string }> {
+): Promise<{ raw: string; href: string; file: Blob }> {
   signal.throwIfAborted();
   const source = publicCardExampleSource(reference, origin);
+  // This deliberately historical teaching specimen is shipped byte-for-byte.
+  // The live publication may move to a mirror. Do not follow an arbitrary
+  // redirect for user input, or present a saved specimen as a new observation.
+  if (new URL(source.url).pathname === GOVERNANCE_RETRIEVE) {
+    return { raw: governanceExample, href: source.href, file: new Blob([governanceExample], {type: "application/json"}) };
+  }
   const response = await fetchImpl(source.url, {
     credentials: "omit",
     redirect: "error",
@@ -69,7 +76,8 @@ export async function loadPublicCardExample(
   }
 
   return {
-    raw: new TextDecoder().decode(bytes),
+    raw: new TextDecoder("utf-8", {fatal: true}).decode(bytes),
+    file: new Blob([bytes], {type: "application/json"}),
     href: source.href,
   };
 }

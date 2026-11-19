@@ -34,6 +34,12 @@ const FUNCTIONS_DIR = join(ROOT, "functions");
 // Function-owned routes must not receive generic bare-to-slash redirects. A
 // sparse checkout without functions/ cannot make that decision safely.
 if (!existsSync(FUNCTIONS_DIR)) {
+  // In --check mode a missing input is UNCHECKABLE, not a finding about the file: the store
+  // could not answer, so it makes no claim.
+  if (process.argv.includes("--check")) {
+    console.error("? redirects: UNCHECKABLE — functions/ is absent, so no generation is possible");
+    process.exit(2);
+  }
   throw new Error("[redirects] functions/ is required to exclude Pages Function routes");
 }
 
@@ -128,6 +134,9 @@ const EXISTING = [
   "/conflicts/           /independence/       308",
   "/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308",
   "/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308",
+  // Preserve the published evidence-event identifier and the former plugin card address.
+  "/spec/evidence-event/v0.1  /spec/evidence-event/v0.1/  308",
+  "/agents/csoai-agent.json  /.well-known/agent-card.json  308",
   // Eat lid 2026-09-01 (still true 2026-09-06): GET /publisher-health.json 200,
   // GET /signed/publisher-health.json 404. The writer is scripts/publish_public_root.py
   // and it emits one file at public/publisher-health.json. A second copy under
@@ -267,6 +276,12 @@ const EXISTING = [
   "/widget/*               /dashboard?tab=learn         308",
   "/rankings               /dashboard?tab=board         308",
   "/rankings/              /dashboard?tab=board         308",
+  // /leaderboard got its edge rule from App.tsx's <Redirect> stub, and REDIRECT_RULES derives only
+  // the slashless form, so /leaderboard/ was a 404 (measured 18 Nov 2026) while /leaderboard 308'd.
+  // Both forms are held here. A hand rule claims the path, so the derived stub rule is skipped, not
+  // duplicated. The target is unchanged: the Leaderboard pane (DashboardPane `leaderboard`).
+  "/leaderboard            /dashboard?tab=leaderboard   308",
+  "/leaderboard/           /dashboard?tab=leaderboard   308",
   "/benchmarkers           /dashboard?tab=verify        308",
   "/benchmarkers/          /dashboard?tab=verify        308",
   "/mcp-registry           /mcps/                       308",
@@ -482,10 +497,21 @@ const funcOwnsPath = (p) => {
 // Stubs whose `from` a hand rule already claims are skipped here (first rule wins and
 // a duplicated `from` is exactly the drift this file exists to prevent); the rest are
 // emitted as real static rules so the hop happens at the edge, not after a 5 MB bundle.
-const REDIRECT_RULES = [...REDIRECT_STUBS.entries()]
+//
+// Each stub also gets its trailing-slash form, to the same target. The SPA's <Redirect> answers
+// only the slashless path, and so did this rule: on 18 Nov 2026, 17 of the 26 derived stubs
+// answered 404 with a trailing slash (/lookup/, /world/, /sovereign/ ...) while the slashless form
+// 308'd. The slash form is left alone wherever something already answers it: a page in public/
+// (/governance/), a Pages Function (functions/<p>.ts, e.g. /sovereign-pricing/), or a
+// retired-codename stub owned by its 308 Function.
+const stubSlashIsFree = (p) => !RETIRED_CODENAME.test(p) && !publicOwnsPath(p) && !funcOwnsPath(p);
+const STUB_ENTRIES = [...REDIRECT_STUBS.entries()]
   .filter(([p]) => !CLAIMED_FROM.has(normFrom(p)))
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([p, to]) => `${p}  ${to}  308`);
+  .sort(([a], [b]) => a.localeCompare(b));
+const REDIRECT_RULES = STUB_ENTRIES.flatMap(([p, to]) => [
+  `${p}  ${to}  308`,
+  ...(stubSlashIsFree(p) ? [`${normFrom(p)}/  ${to}  308`] : []),
+]);
 
 const ROUTE_SLASH = routes
   .map(normFrom)
@@ -542,7 +568,7 @@ const STATIC_RULES = [
   ...PERSONA_SLASH.flatMap((p) => [`/${p}  /${p}/  308`]),
   ...PERSONA_FOR_SLASH.map((p) => `/for/${p}  /for/${p}/  308`),
   "",
-  `# --- client <Redirect> stub routes: hop at the edge, not in the bundle (${REDIRECT_RULES.length}) ---`,
+  `# --- client <Redirect> stub routes: hop at the edge, not in the bundle (${STUB_ENTRIES.length} stubs, ${REDIRECT_RULES.length} rules) ---`,
   ...REDIRECT_RULES,
   "",
   `# --- every other concrete <Route> bare path → its prerendered trailing-slash (${ROUTE_SLASH.length}) ---`,
@@ -601,7 +627,46 @@ const lines = [
   "",
 ];
 
-writeFileSync(OUT, lines.join("\n"));
+// WHY A --check MODE. public/_redirects is COMMITTED and this script rewrites it on every
+// build. Nothing compared the two. The concrete miss it let through: on 2026-11-06 #3847
+// (857a6cc02) moved /mcp from an App.tsx route to a Pages Function, changing App.tsx only.
+// The committed _redirects kept a `/mcp  /mcp/  308` rule for a route that no longer existed
+// (and that the edge never applied anyway, because the Function answers /mcp directly with
+// 200), while the build produced a file without it. The live edge was correct; the committed
+// artefact was the fiction, and every deploy silently overwrote it.
+//
+// Exit codes: 0 = committed bytes match a fresh generation. 1 = they differ (a finding).
+// 2 = an input needed to generate is absent (UNCHECKABLE — not a finding about the file).
+const CHECK_MODE = process.argv.includes("--check");
+const next = lines.join("\n");
+
+if (CHECK_MODE) {
+  const current = existsSync(OUT) ? readFileSync(OUT, "utf8") : null;
+  if (current === next) {
+    console.log(`✓ redirects: up to date — ${lines.length} lines match a fresh generation`);
+    process.exit(0);
+  }
+  const have = new Set((current ?? "").split("\n"));
+  const want = new Set(next.split("\n"));
+  const stale = [...have].filter((l) => !want.has(l) && l.trim() && !l.trim().startsWith("#"));
+  const absent = [...want].filter((l) => !have.has(l) && l.trim() && !l.trim().startsWith("#"));
+  console.error("✗ redirects: STALE — public/_redirects does not match a fresh generation.");
+  console.error(`    committed ${(current ?? "").split("\n").length} lines · fresh ${next.split("\n").length} lines`);
+  if (stale.length) {
+    console.error(`    rules only in the committed file (${stale.length}):`);
+    for (const l of stale.slice(0, 12)) console.error(`      - ${l}`);
+    if (stale.length > 12) console.error(`      … and ${stale.length - 12} more`);
+  }
+  if (absent.length) {
+    console.error(`    rules only in a fresh generation (${absent.length}):`);
+    for (const l of absent.slice(0, 12)) console.error(`      + ${l}`);
+    if (absent.length > 12) console.error(`      … and ${absent.length - 12} more`);
+  }
+  console.error(`    fix: node scripts/generate-redirects.mjs && git add public/_redirects`);
+  process.exit(1);
+}
+
+writeFileSync(OUT, next);
 const nStatic = STATIC_RULES.filter((l) => l.trim() && !l.trim().startsWith("#")).length;
 const nDynamic = DYNAMIC_RULES.filter((l) => l.trim() && !l.trim().startsWith("#")).length + 1; // +1 catch-all
 console.log(`[redirects] ${routes.length} app routes detected (not emitted; catch-all covers them)`);

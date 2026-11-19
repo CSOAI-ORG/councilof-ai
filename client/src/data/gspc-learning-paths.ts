@@ -39,7 +39,7 @@ export interface LearningAxisDefinition {
   /** Identity copied at build time from the canonical board row. */
   id: string;
   family: "gspc" | "financial" | "subject";
-  kind: "model-comparison" | "deterministic-facts" | "declared-slot";
+  kind: "model-comparison" | "deterministic-facts" | "declared-slot" | "measured-subject";
   bench: string;
   task: string;
 }
@@ -126,7 +126,8 @@ function readCanonicalAxisRows(value: unknown): readonly CanonicalAxisRow[] {
         candidate.family !== "subject") ||
       (candidate.kind !== "model-comparison" &&
         candidate.kind !== "deterministic-facts" &&
-        candidate.kind !== "declared-slot")
+        candidate.kind !== "declared-slot" &&
+        candidate.kind !== "measured-subject")
     )
       throw new Error("GSPC axis canon contains an unsupported row");
     return {

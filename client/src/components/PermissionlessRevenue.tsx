@@ -7,9 +7,9 @@ import {
 } from "@/lib/permissionlessRevenue";
 
 const WHEN: { id: EarnWhen; label: string; hint: string }[] = [
-  { id: "now", label: "Open now — no mint required", hint: "Invoice work. Feed the SDKs we already planted." },
-  { id: "after-payto", label: "After custody / payTo", hint: "Settlement exists. Still assembly, never rank." },
-  { id: "after-100", label: "After 100/100 A+++", hint: "Permissionless flags and paid reruns." },
+  { id: "now", label: "Existing evidence services", hint: "Confirm the scope and terms of existing services before accepting an order." },
+  { id: "after-payto", label: "Payment-dependent services", hint: "Check the current service catalogue and payment requirements." },
+  { id: "after-100", label: "After evidence review", hint: "Publication candidates and separately scoped reproduction work." },
   { id: "never", label: "Never", hint: "Do not mine or mint a grade." },
 ];
 
@@ -27,20 +27,20 @@ export default function PermissionlessRevenue({ tone = "dark" }: { tone?: "dark"
     <section className="mt-12 space-y-8" data-testid="permissionless-revenue" aria-labelledby="earn-h">
       <div>
         <p className={`font-mono text-[11px] uppercase tracking-[0.18em] ${muted}`}>
-          Permissionless revenue · work, never rank
+          Evidence services · scope and delivery
         </p>
         <h2 id="earn-h" className={`mt-2 text-xl font-bold ${head}`}>
           {EARN_RULING}
         </h2>
         <p className={`mt-3 text-sm ${body}`}>{EARN_WEDGE}</p>
         <p className={`mt-2 text-sm ${body}`}>
-          A rank is never sold. 100 free calls a day stay free. Machine-access
-          pricing waits for a published ruling. This VM has no custody keys.
+          Verification is free. Availability, scope and payment requirements are
+          stated in the current service catalogue. An enquiry does not place an order.
         </p>
       </div>
 
       <div>
-        <h3 className={`text-sm font-bold ${title}`}>Open SDKs already planted — feed these</h3>
+        <h3 className={`text-sm font-bold ${title}`}>Published tools and connection routes</h3>
         <ul className="mt-3 grid gap-2 sm:grid-cols-2">
           {OPEN_SDKS.map((sdk) => (
             <li key={sdk.id} className={panel} data-testid={`earn-sdk-${sdk.id}`}>

@@ -65,7 +65,7 @@ export default function WhyCsoai() {
           </table>
         </div>
 
-        <div className="mt-8 text-sm font-bold uppercase tracking-wide text-emerald-300/70">What a stranger can do</div>
+        <div className="mt-8 text-sm font-bold uppercase tracking-wide text-emerald-300/70">Explore the evidence</div>
         <div className="mt-3 grid gap-4 sm:grid-cols-2">
           {USPS.map((u) => (
             <div key={u.t} className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">

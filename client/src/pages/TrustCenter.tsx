@@ -97,7 +97,7 @@ export default function TrustCenter() {
     },
     {
       title: "Data Retention",
-      description: "Configurable retention policies with automatic deletion after specified periods",
+      description: "See the current privacy notice for retention by data category. Configurable automatic deletion is not verified as a general service capability.",
       icon: <RotateCcw className="h-6 w-6" />,
     },
     {
@@ -238,7 +238,7 @@ export default function TrustCenter() {
       id: "data-deletion",
       title: "Can you permanently delete my data?",
       content:
-        "Yes, we fully support the right to erasure under GDPR Article 17. You can request permanent deletion of your account and all associated data through your dashboard or by contacting privacy@csoai.ai. Data is deleted within 30 days, and we provide a deletion certificate confirming completion. Backups are purged according to our backup retention policy (90-day maximum).",
+        "You can request erasure using the contact route in the current privacy notice at /privacy, which explains response times, retention and applicable exemptions. A dashboard deletion flow, an issued deletion certificate and an estate-wide 90-day backup purge have not been verified for this page. This capability clarification does not change your legal rights or any existing contractual retention or response commitments.",
       icon: <RotateCcw className="h-5 w-5" />,
     },
     {
@@ -371,6 +371,17 @@ export default function TrustCenter() {
 
   return (
     <div className="min-h-screen bg-white">
+      <aside className="border-b border-amber-200 bg-amber-50 px-5 py-6 text-sm text-slate-900">
+        <div className="mx-auto max-w-5xl">
+          <p className="font-semibold">Legacy trust-centre material — withdrawn from the public route</p>
+          <p className="mt-2">
+            The descriptions below are retained for review, not evidence that every control is operating.
+            For current data handling, retention and rights, read the{" "}
+            <a href="/privacy" className="font-semibold underline">privacy notice</a>.
+            This notice does not amend that policy or any applicable agreement.
+          </p>
+        </div>
+      </aside>
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 text-white py-24">
         <div className="container max-w-5xl">

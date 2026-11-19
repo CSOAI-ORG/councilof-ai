@@ -815,16 +815,25 @@ type ListingSpec = {
   as?: "json" | "text";
 };
 
+// The flagship's registry name is ai.councilof/gspc (functions/mcp/registry-name.test.ts). Read on 18 Nov
+// 2026: the registry lists io.github.CSOAI-ORG/gspc, its alias, with status "deprecated", while /about/ still
+// quoted the alias as the listing. A listing counts only while its entry is not deprecated.
+const REGISTRY_NAME = "ai.councilof/gspc";
+
 export const LISTINGS: ListingSpec[] = [
   {
     id: "mcp-registry",
     name: "Official MCP Registry",
-    url: "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG/gspc&version=latest",
-    probe: "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG/gspc&version=latest",
+    url: `https://registry.modelcontextprotocol.io/v0/servers?search=${REGISTRY_NAME}&version=latest`,
+    probe: `https://registry.modelcontextprotocol.io/v0/servers?search=${REGISTRY_NAME}&version=latest`,
     find: (b) => {
       try {
-        const s = (JSON.parse(b)?.servers ?? []).find((x: any) => x?.server?.name === "io.github.CSOAI-ORG/gspc");
-        return s ? `io.github.CSOAI-ORG/gspc ${s.server.version ?? ""} is listed`.trim() : null;
+        const s = (JSON.parse(b)?.servers ?? []).find(
+          (x: any) =>
+            x?.server?.name === REGISTRY_NAME &&
+            x?._meta?.["io.modelcontextprotocol.registry/official"]?.status !== "deprecated",
+        );
+        return s ? `${REGISTRY_NAME} ${s.server.version ?? ""} is listed`.trim() : null;
       } catch {
         return null;
       }
@@ -853,9 +862,9 @@ export const LISTINGS: ListingSpec[] = [
   {
     id: "glama",
     name: "Glama MCP directory",
-    url: "https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc",
-    probe: "https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc",
-    find: (b) => (b.includes("io.github.CSOAI-ORG/gspc") ? "the connector page names io.github.CSOAI-ORG/gspc" : null),
+    url: `https://glama.ai/mcp/connectors/${REGISTRY_NAME}`,
+    probe: `https://glama.ai/mcp/connectors/${REGISTRY_NAME}`,
+    find: (b) => (b.includes(REGISTRY_NAME) ? `the connector page names ${REGISTRY_NAME}` : null),
   },
   {
     id: "smithery",

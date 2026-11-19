@@ -189,8 +189,8 @@ describe("owner rulings on the front door, 2026-09-22", () => {
     // above the board and above everything after it, which is what this test has always meant.
     // 2026-09-30 (owner review): the front door leads with the live board directly under the
     // hero; the credibility tiles and the weak score moved to /about/#numbers, linked from home.
-    expect(home.indexOf("<LiveBoardGlance")).toBeGreaterThan(home.indexOf("<HomeHero"));
-    expect(home).toContain('href="/about/#numbers"');
+    expect(home.indexOf("<HomeResults")).toBeGreaterThan(home.indexOf("<HomeHero"));
+    expect(readFileSync(resolve(here, "../components/home/HomeResults.tsx"), "utf8")).toContain('href="/about/#numbers"');
     expect(aboutNumbers).toContain("<HomeCredibility");
     expect(aboutNumbers).toContain("<HomeWeakScore");
   });
@@ -243,7 +243,7 @@ describe("the 2026-09-23 shortening — retired, not deleted", () => {
   });
 
   it("the front door still reaches the retired material", () => {
-    expect(home).toContain("/how-we-work");
+    expect(readFileSync(resolve(here, "../components/home/HomeUpdates.tsx"), "utf8")).toContain("/how-we-work");
   });
 });
 
@@ -299,6 +299,10 @@ describe("no in-page anchor on the front door points at nothing", () => {
   const mounted = [
     "HomeVerify.tsx",
     "../components/home/HomeHero.tsx",
+    "../components/home/HomePublicJourney.tsx",
+    "../components/home/HomeResults.tsx",
+    "../components/home/HomeEvidence.tsx",
+    "../components/home/HomeDevelopers.tsx",
     "../components/home/LiveBoardGlance.tsx",
     "../components/home/HomeProducts.tsx",
     "../components/home/HomeProofPoints.tsx",
@@ -329,13 +333,13 @@ describe("home lock — later merges must not restore the desk video", () => {
     const home = readFileSync(resolve(here, "HomeVerify.tsx"), "utf8");
     // 2026-09-30: the compact live board (LiveBoardGlance) replaced the full table on the front
     // door; the full table is one click away at /board. It carries the one count line.
-    expect(home).toContain("<LiveBoardGlance");
+    expect(home).toContain("<HomeResults");
     expect(home).not.toContain("HfLivingRecord");
     expect(home).not.toContain("ReachStrip");
     expect(glance).toContain("The living board");
     expect(glance).toContain('data-testid="board-public-count"');
     expect(home).toContain("<HomeHero");
-    expect(home.indexOf("<HomeHero")).toBeLessThan(home.indexOf("<LiveBoardGlance"));
+    expect(home.indexOf("<HomeHero")).toBeLessThan(home.indexOf("<HomeResults"));
     expect(home).not.toMatch(/model fleets tested/i);
     expect(home).not.toContain("HomeDemoLoop");
     expect(home).not.toContain("csoai-demo.mp4");

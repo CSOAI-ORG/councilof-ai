@@ -41,14 +41,16 @@ def recount_turn(turn: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     allowing = 0
     for r in rails:
         if not isinstance(r, dict):
-            continue
+            return None
         name = str(r.get("name") or r.get("rail") or "unnamed-rail")
         # A rail with no recorded decision is NOT permission. Defaulting to "allow" turned missing evidence
         # into a clean result; the turn is now unreadable, which the caller maps to UNMEASURED.
         raw_decision = r.get("decision") if r.get("decision") is not None else r.get("status")
-        if raw_decision is None:
+        if not isinstance(raw_decision, str):
             return None
-        decision = str(raw_decision).lower()
+        decision = raw_decision.strip().lower()
+        if decision not in BLOCKING_DECISIONS and decision != "allow":
+            return None
         triggered.append(f"{name}:{decision}")
         if decision in BLOCKING_DECISIONS:
             blocking += 1
@@ -70,7 +72,7 @@ def flip_one_rail(turn: Dict[str, Any]) -> Dict[str, Any]:
     if isinstance(rails, list) and rails:
         any_blocking = any(
             isinstance(r, dict)
-            and str(r.get("decision") or r.get("status") or "allow").lower() in BLOCKING_DECISIONS
+            and str(r.get("decision") or r.get("status") or "allow").strip().lower() in BLOCKING_DECISIONS
             for r in rails
         )
         if any_blocking:
@@ -100,8 +102,10 @@ def ingest(
 
     for idx, turn in enumerate(turns):
         turn_id = str(turn.get("turn_id") or f"turn-{idx + 1}")
-        expected_raw = str(turn.get("expected_action") or "allow").lower()
-        expected_action = "block" if expected_raw in BLOCKING_DECISIONS else "allow"
+        raw_expected = turn.get("expected_action")
+        expected_raw = raw_expected.strip().lower() if isinstance(raw_expected, str) else None
+        expected_action = ("block" if expected_raw in BLOCKING_DECISIONS else
+                           "allow" if expected_raw == "allow" else None)
         declared = {
             "turn_id": turn_id,
             "expected_action": expected_action,
@@ -109,11 +113,12 @@ def ingest(
             "rail_type": str(turn.get("rail_type") or "input_output"),
         }
         recounted = recount_turn(turn)
-        if recounted is None:
+        if recounted is None or expected_action is None:
             observed: Dict[str, Any] = {
                 "observed_action": None,
                 "activated_rails": None,
-                "reason": "no activated_rails trace present for this turn",
+                "reason": ("missing or invalid expected_action" if expected_action is None else
+                           "missing, malformed or unsupported activated_rails decision"),
             }
             state = "UNMEASURED"
             nc = {

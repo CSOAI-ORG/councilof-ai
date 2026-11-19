@@ -41,8 +41,10 @@ from __future__ import annotations
 import argparse
 import datetime as _dt
 import hashlib
+import importlib.util
 import ipaddress
 import json
+import math
 import os
 import re
 import sys
@@ -50,8 +52,10 @@ import urllib.parse
 from typing import Any
 
 ADAPTER_NAME = "openshell-declared-vs-observed"
-ADAPTER_VERSION = "0.2.0"
+ADAPTER_VERSION = "0.2.1"
 HERE = os.path.dirname(os.path.abspath(__file__))
+_WITNESS_HELPER_PATH = os.path.abspath(os.path.join(HERE, "..", "..", "packages", "evidence-fabric", "openshell_witness.py"))
+_WITNESS_RULES = None
 
 # --------------------------------------------------------------------------- declared: documented constants
 # The release these constants were requalified against (requalify/v0.1.4/; earlier: requalify/v0.1.2/). A later release is not
@@ -444,7 +448,7 @@ def _iso_from_epoch(sec: float) -> str:
 
 
 def _t(iso: str | None) -> float | None:
-    if not iso:
+    if not isinstance(iso, str) or not iso:
         return None
     try:
         return _dt.datetime.strptime(iso.replace("Z", "+0000"), "%Y-%m-%dT%H:%M:%S.%f%z").timestamp()
@@ -492,10 +496,20 @@ def parse_shorthand(line: str, src: str, lineno: int) -> dict | None:
 def parse_ocsf_json(obj: dict, src: str, lineno: int, raw: str) -> dict:
     cls = obj.get("class_uid")
     t = obj.get("time")
+    timestamp = None
+    # OCSF time is epoch milliseconds. Invalid types or out-of-range values
+    # cannot become correlation evidence (bool is an int subclass in Python).
+    if type(t) in (int, float) and 0 <= t <= 253402300799999 and math.isfinite(t) and t == int(t):
+        try:
+            timestamp = _iso_from_epoch(t / 1000)
+        except (ValueError, OverflowError, OSError):
+            pass
     rec = {"source": src, "line": lineno, "format": "ocsf-json", "raw_sha256": sha256_bytes(raw.encode()),
-           "t": _iso_from_epoch(t / 1000) if isinstance(t, (int, float)) else None,
+           "t": timestamp,
            "class_uid": cls, "severity": obj.get("severity"), "message": obj.get("message")}
-    action = (obj.get("action") or "").upper()
+    # An absent, unknown or mistyped action is not an allow decision.
+    action = obj.get("action")
+    action = action.upper() if isinstance(action, str) else ""
     rec["action"] = {"ALLOWED": "ALLOWED", "DENIED": "DENIED", "BLOCKED": "BLOCKED"}.get(action, action or None)
     fr = obj.get("firewall_rule") or {}
     rec["policy"], rec["engine"] = fr.get("name"), fr.get("type")
@@ -568,7 +582,7 @@ def load_witness(path: str | None) -> list[dict]:
             if not s or s.startswith("#"):
                 continue
             w = json.loads(s)
-            if w.get("kind") not in ("egress", "file", "syscall"):
+            if not isinstance(w, dict) or w.get("kind") not in ("egress", "file", "syscall"):
                 raise ValueError(f"{path}:{i}: witness kind must be egress, file or syscall")
             w["_line"], w["_sha256"] = i, sha256_bytes(s.encode())
             out.append(w)
@@ -576,6 +590,25 @@ def load_witness(path: str | None) -> list[dict]:
 
 
 # --------------------------------------------------------------------------- comparison
+def _witness_rules():
+    global _WITNESS_RULES
+    if _WITNESS_RULES is None:
+        try:
+            spec = importlib.util.spec_from_file_location("csoai_openshell_witness", _WITNESS_HELPER_PATH)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            if not callable(module.witness_outcome):
+                raise AttributeError
+            _WITNESS_RULES = module
+        except (OSError, ImportError, AttributeError, TypeError, SyntaxError):
+            raise RuntimeError("Canonical OpenShell witness rules unavailable; use the complete repository.") from None
+    return _WITNESS_RULES
+
+
+def witness_outcome(w: Any) -> bool | None:
+    """Use the single canonical witness vocabulary; never infer a missing effect."""
+    return _witness_rules().witness_outcome(w)
+
 def _enforcer_claim(recs: list[dict], l7: bool) -> str:
     if not recs:
         return "ABSENT"
@@ -584,10 +617,12 @@ def _enforcer_claim(recs: list[dict], l7: bool) -> str:
     if any(r.get("action") in ("DENIED", "BLOCKED") for r in nets):
         return "DENIED"  # the connection never opened, so the request never went
     if l7 and https:
-        return "DENIED" if any(r.get("action") in ("DENIED", "BLOCKED") for r in https) else "ALLOWED"
+        if any(r.get("action") in ("DENIED", "BLOCKED") for r in https):
+            return "DENIED"
+        return "ALLOWED" if all(r.get("action") == "ALLOWED" for r in https) else "UNKNOWN"
     if l7 and not https and nets:
-        return "ALLOWED_CONNECTION_ONLY"
-    return "ALLOWED"
+        return "ALLOWED_CONNECTION_ONLY" if all(r.get("action") == "ALLOWED" for r in nets) else "UNKNOWN"
+    return "ALLOWED" if all(r.get("action") == "ALLOWED" for r in recs) else "UNKNOWN"
 
 
 def _compare_egress(declared: dict, claim: str, left: bool | None, marked_audit: bool,
@@ -634,13 +669,16 @@ def _provider(recs: list[dict]) -> bool:
 
 def compare(doc: dict, enforcer: list[dict], witness: list[dict], window_s: float = 5.0,
             workdir: str | None = "/sandbox") -> list[dict]:
+    if type(window_s) not in (int, float) or not math.isfinite(window_s) or window_s < 0:
+        raise ValueError("correlation window must be a finite non-negative number")
     D = Declared(doc, workdir)
     rows: list[dict] = []
     used: set[int] = set()
     traffic = [(i, r) for i, r in enumerate(enforcer) if r.get("kind") in ("net", "http")]
 
     def near(r, t):
-        return t is None or _t(r.get("t")) is None or abs(_t(r["t"]) - t) <= window_s
+        recorded = _t(r.get("t"))
+        return t is not None and recorded is not None and abs(recorded - t) <= window_s
 
     def attempt_records(host, port, method, path, t):
         got = []
@@ -678,7 +716,7 @@ def compare(doc: dict, enforcer: list[dict], witness: list[dict], window_s: floa
             rows.append(_row("egress", {"host": host, "port": port, **({"method": method, "path": path} if method else {})},
                              decl, recs, w, ROW_UNMODELLED, "LOOPBACK_OFF_POLICY_PATH"))
             continue
-        comp, code = _compare_egress(decl, _enforcer_claim(recs, bool(method)), w.get("left"),
+        comp, code = _compare_egress(decl, _enforcer_claim(recs, bool(method)), witness_outcome(w),
                                      any(r.get("enforcer_marked_audit") for r in recs), _provider(recs))
         rows.append(_row("egress", {"host": host, "port": port, **({"method": method, "path": path} if method else {})},
                          decl, recs, w, comp, code))
@@ -726,13 +764,13 @@ def compare(doc: dict, enforcer: list[dict], witness: list[dict], window_s: floa
     for w in witness:
         if w["kind"] == "file":
             decl = D.fs(str(w["path"]), str(w.get("op", "read")))
-            took_effect = str(w.get("result", "")).lower() in ("ok", "0", "success")
+            took_effect = witness_outcome(w)
             comp, code = _compare_effect(decl, took_effect, w.get("result"))
             rows.append(_row("file", {"path": w["path"], "op": w.get("op", "read")}, decl, [], w, comp, code,
                              enforcer_expected="none (OpenShell writes no per-access Landlock record)"))
         elif w["kind"] == "syscall":
             decl = D.syscall(str(w["name"]), w.get("flags"), w.get("domain"))
-            took_effect = str(w.get("result", "")).lower() in ("ok", "0", "success")
+            took_effect = witness_outcome(w)
             comp, code = _compare_effect(decl, took_effect, w.get("result"))
             attempt = {"name": w["name"], **({"flags": w["flags"]} if "flags" in w else {}),
                        **({"domain": w["domain"]} if "domain" in w else {})}
@@ -743,9 +781,11 @@ def compare(doc: dict, enforcer: list[dict], witness: list[dict], window_s: floa
     return rows
 
 
-def _compare_effect(decl: dict, took_effect: bool, result: Any) -> tuple[str, str | None]:
+def _compare_effect(decl: dict, took_effect: bool | None, result: Any) -> tuple[str, str | None]:
     if decl["effect"] == UNMODELLED:
         return ROW_UNMODELLED, None
+    if took_effect is None:
+        return ROW_UNMODELLED, "WITNESS_OUTCOME_UNKNOWN"
     if decl["effect"] == DENIED:
         return (DIVERGED, "DENY_DECLARED_EFFECT_OBSERVED") if took_effect else (HELD, None)
     return (HELD, None) if took_effect else (OVERBLOCK, "DECLARED_PERMIT_OPERATION_REFUSED")
@@ -780,7 +820,8 @@ def summarise(rows: list[dict], strict: bool = False) -> dict:
         counts[r["comparison"]] = counts.get(r["comparison"], 0) + 1
         if r.get("code"):
             codes[r["code"]] = codes.get(r["code"], 0) + 1
-    witnessed = sum(1 for r in rows if r.get("witness") is not None and r["comparison"] != ROW_UNMODELLED)
+    witnessed = sum(1 for r in rows if witness_outcome(r.get("witness")) is not None
+                    and r.get("witness", {}).get("kind") == r.get("kind") and r["comparison"] != ROW_UNMODELLED)
     failing = counts.get(DIVERGED, 0) + (counts.get(OVERBLOCK, 0) if strict else 0)
     if failing:
         result = DIVERGENT
@@ -826,7 +867,11 @@ def _row_detail(r: dict) -> str:
         parts.append(f"enforcer record: {r['enforcer'].get('claim')}")
     if r.get("witness") is not None:
         w = r["witness"]
-        parts.append(f"witness: {'left' if w.get('left') else 'did not leave' if w.get('left') is False else w.get('result')}")
+        outcome = witness_outcome(w)
+        if outcome is None:
+            parts.append("witness: outcome unknown")
+        else:
+            parts.append(f"witness: {'left' if w.get('left') is True else 'did not leave' if w.get('left') is False else w.get('result')}")
     return "; ".join(parts) + f" -> {r['comparison']}" + (f" ({r['code']})" if r.get("code") else "")
 
 
@@ -847,7 +892,8 @@ def build_receipts(rows, summary, inputs, subject, issued_at, enforcer_version, 
                    f"comparisons {summary['counts']}; codes {summary['codes'] or '{}'}"),
         "counts": summary["counts"], "codes": summary["codes"], "inputs": inputs,
         "enforcer": {"product": "OpenShell", "version": enforcer_version or "not stated"},
-        "adapter": {"name": ADAPTER_NAME, "version": ADAPTER_VERSION, "sha256": sha256_file(os.path.abspath(__file__))},
+        "adapter": {"name": ADAPTER_NAME, "version": ADAPTER_VERSION, "sha256": sha256_file(os.path.abspath(__file__)),
+                    "witness_rules_sha256": sha256_file(_WITNESS_HELPER_PATH)},
         "row_receipts": [rr["content_id"] for rr in row_receipts],
         "evidence_sha256": rows_sha,
     }
@@ -860,10 +906,10 @@ def cmd_compare(a) -> int:
         doc = load_policy(a.policy)
         enforcer, estats = load_enforcer(a.enforcer_log or [])
         witness = load_witness(a.witness)
-    except (PolicyError, OSError, ValueError, json.JSONDecodeError) as e:
+        rows = compare(doc, enforcer, witness, a.window, a.workdir)
+    except (PolicyError, OSError, ValueError, json.JSONDecodeError, RuntimeError) as e:
         print(f"input error: {e}", file=sys.stderr)
         return 2
-    rows = compare(doc, enforcer, witness, a.window, a.workdir)
     summary = summarise(rows, a.strict)
     inputs = {"policy_sha256": sha256_file(a.policy), "enforcer_logs": estats["files"],
               "enforcer_lines": estats["lines"], "enforcer_records_parsed": estats["parsed"],

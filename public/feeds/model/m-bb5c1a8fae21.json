@@ -1,0 +1,70 @@
+{
+ "schema": "csoai.feed.model/0.1",
+ "feed": "model/m-bb5c1a8fae21",
+ "as_of": "2026-08-19T09:24:39.174226+00:00",
+ "model_ref": "bb5c1a8fae21c4e9",
+ "identity_note": "the model identifier resolves via the signed card corpus (public/signed/cards, card-matrix.json); raw identifiers are not published on this surface",
+ "cards": 8,
+ "axes_covered": [
+  "arc-30",
+  "care",
+  "gov",
+  "gsm8k-30",
+  "jail-escape-detection",
+  "mmlu-30",
+  "swag-30",
+  "swarm-candidates"
+ ],
+ "variation_note": "same-fixture runs across this model's variations live here; deltas between models are the variation evidence",
+ "measurements": [
+  {
+   "id": "01c4c15d529ceb2f6b4529e9f5c44438a1aa2ac61f066b3a35b840bf98380813",
+   "axis": "swag-30",
+   "accuracy": 1,
+   "created": "2026-08-19T09:24:39.160126+00:00"
+  },
+  {
+   "id": "2073ab3d7d8d1cd330e4eb25789886da3dc932f16f96b47c69cf807e7f202c21",
+   "axis": "gsm8k-30",
+   "accuracy": 0.2,
+   "created": "2026-08-19T09:24:39.160088+00:00"
+  },
+  {
+   "id": "45724650575f8f40363728b42c54c5683fffab59a10d65e2991b666ba4d4a813",
+   "axis": "care",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.160202+00:00"
+  },
+  {
+   "id": "72bb793031ae4ab19f9e24f056441ca412dc3834fe5d0a61e6749c85b45eee6c",
+   "axis": "mmlu-30",
+   "accuracy": 0.7333,
+   "created": "2026-08-19T09:24:39.160050+00:00"
+  },
+  {
+   "id": "8311df2f6ac3f72e992d4a03ac0672208511e232959843c126a303b120589204",
+   "axis": "arc-30",
+   "accuracy": 0.7667,
+   "created": "2026-08-19T09:24:39.160164+00:00"
+  },
+  {
+   "id": "d353007a873ad527cb39e99ef2ac8a77e0fe917f1affe124b0aa379c51c427e0",
+   "axis": "jail-escape-detection",
+   "accuracy": 0.5352,
+   "created": "2026-08-19T09:24:39.160314+00:00"
+  },
+  {
+   "id": "eb9c45816edd670bc3aafeff001f983b1d503ccd0cec432ba19b3bbe936ace36",
+   "axis": "swarm-candidates",
+   "accuracy": 0.148,
+   "created": "2026-08-19T09:24:39.160276+00:00"
+  },
+  {
+   "id": "f99095aa712b7d4353c706145b87970e18f95e8631a4329e206cb09d83c9140b",
+   "axis": "gov",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.160239+00:00"
+  }
+ ],
+ "verify": "https://councilof.ai/gspc-verify/"
+}

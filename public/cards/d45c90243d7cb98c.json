@@ -1,0 +1,88 @@
+{
+  "card": {
+    "as_of": "2026-11-07T10:36:22Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "120",
+      "symbol": "PYUSD",
+      "attestation_page": "https://paxos.com/pyusd-transparency/",
+      "auditor": "KPMG",
+      "cadence_claimed": null,
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "73c2374daf5b1fcc772f407958306c235fbb45da054400fe972095f3937d3f44",
+      "excerpt": "rough verification Attestation reports posted on or after February 28, 2025 are issued by KPMG LLP, an independent third-party accounting firm. KPMG LLP’s exami",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "cadence_claimed",
+        "staleness"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d45c90243d7cb98c9f7fa442d97e814ad2d0560280206bbf4148d00333edbd15",
+    "sig_ed25519": "890f3966052610daede19ae6a3ca63fcb99d5bc6d24a93526e31f7bf9d28da20d577740c5146c8759278ca510219230ff4393fbfbeb43428bad04a35dc911d06",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://paxos.com/pyusd-transparency/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: PYUSD",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "cadence_claimed",
+      "staleness"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "3978cd2162b00c5773864f4aeabe46110779dba63d1e8b3c79a252e24cc8f23c",
+    "9f40c36febfb430a57c73ecdcba5c7bd51e4623e2dfc177da0cf4fc174e1357a",
+    "5a9d55a5e90313591813413e6058a5e770682fe465e04078b27cce19e70fcdeb",
+    "812a8a6dd9920ce776f9f85831927603187fe9283734a6ea3b380665671b0d3c",
+    "786f4068356928fccb57275b702359e9f01f09e23f8f003be7c50a9f8ce53e74",
+    "8ea7afe95125650af0ab3b96cc4509d62abac68529a7772aa4b56df2b34ba505",
+    "3bcf10b8f97700497fffc6bfd3f88a47a6b1fa80602f2ec2d524c59a32b08fce",
+    "7e77d1fcb1a770dfaf9c237ef819063da211dd6547b4e29db8a395bd8f5a154b",
+    "cec0ade3e6b95e387d4590c7411922e54d1c7cb7d959942770cbd04c2fa90f66"
+  ]
+}

@@ -148,7 +148,11 @@ export const AXES_D: AxisScore[] = [
     colour: "hsl(280 62% 52%)", hue: 280,
     note: "33 subjects from a frozen frame of 35 (2 refusals recorded, never converted to failures). rate 0.9091 = share meeting at least 3 of 5 declared presence classes (4-of-5 0.5152, 5-of-5 0.1818). Class census: mechanistic 32, sparse 11, pretrained 21, reproducible 26, peer 29. 33/33 must-fail negative controls caught. Presence of a string in public bytes at a stated time is not evidence of quality, truth or compliance.",
   },
-// Approved by the owner 2026-10-16 (33 axes). Definitions: AXES-33-SPEC.md §3.
+// Approved by the owner 2026-10-16 (the board as it stood that day). Definitions: the
+// committed axis records themselves — functions/api/_gspc_axes_{a,b,c,d,fin}.ts. This line
+// once cited AXES-33-SPEC.md §3; that document was never committed to any branch, so the
+// citation pointed at nothing a reader could open, and the definitions live with the code
+// they describe.
   // PROMOTED 2026-10-29 (owner ruling: option 3 — publish on the four outcomes the evidence
   // settles, and say in the axis's own note that the disclosure split is not part of the
   // measurement). This is the FIRST MEASURED SUBJECT AXIS: kind "measured-subject", with a

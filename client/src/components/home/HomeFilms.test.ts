@@ -16,7 +16,7 @@ describe("homepage films and understand lists", () => {
     expect(films).toContain("Three films. Then the scale.");
     expect(films).toContain("HomeUnderstand");
     expect(films).toContain("Frozen, published tests");
-    expect(films).toContain("Empty cells stay empty");
+    expect(films).toContain("A dash indicates no measurement");
     expect(films).toContain("We measure. We do not certify");
     expect(films).not.toMatch(/certified organization|buy a rank|all 22 measured/i);
   });

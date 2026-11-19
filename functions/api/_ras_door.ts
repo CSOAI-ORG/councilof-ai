@@ -1,3 +1,4 @@
+import { bookkeepingBudget, bookkeepingGap, postObservationState } from "./_bookkeeping_budget";
 import { recordPaidResponse } from "./_x402_delivery_record";
 /**
  * _ras_door — the settle-and-deliver sequence shared by the three self-serve RAS doors
@@ -198,11 +199,16 @@ export async function rasDoor(spec: RasDoorSpec): Promise<Response> {
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
   if (!payment.ok) return challenge(payment.reason);
 
-  if (env.REVENUE_KV) {
-    try {
-      const n = Number((await env.REVENUE_KV.get(spec.counter)) || "0") + 1;
-      await env.REVENUE_KV.put(spec.counter, String(n));
-    } catch { /* never blocks a paid deliverable */ }
+  let counterState="UNRECORDED_NO_STORE";
+  if(env.REVENUE_KV){
+    const budget=payment.observationBudget??bookkeepingBudget();
+    try{
+      const prior=await budget.run(()=>env.REVENUE_KV!.get(spec.counter),"get");
+      if(prior!==null && !/^\d+$/.test(prior))counterState="UNREADABLE";
+      else {const n=BigInt(prior??"0")+1n;
+        await budget.run(()=>env.REVENUE_KV!.put(spec.counter,n.toString()),"put");counterState="WRITTEN";}
+    }catch(error){counterState=bookkeepingGap(error);}
+    finally{if(!payment.observationBudget)budget.clear();}
   }
 
   return recordPaidResponse(rasJson(
@@ -222,10 +228,11 @@ export async function rasDoor(spec: RasDoorSpec): Promise<Response> {
     200,
     {
       "x-csoai-receipt-sha256": leaf.sha256,
+      "x-csoai-counter-state":counterState,
       "x-csoai-signed": leaf.sig_ed25519 ? "true" : "false",
       ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
     },
-  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+  ), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer:payment.buyer, buyerState:payment.purchaseState, paymentResponse:payment.paymentResponse, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 }
 
 /** sha256 hex of UTF-8 text (WebCrypto). */

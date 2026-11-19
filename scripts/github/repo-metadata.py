@@ -4,6 +4,9 @@ CSOAI-ORG public repositories.
 
   --plan  OUT.json        derive a plan (reads `gh repo list`, READMEs, manifests); no writes
   --apply PLAN.json       apply a plan with `gh repo edit` / contents API; skips archived repos
+  --apply-descriptions PLAN.json --repos NAME [NAME ...]
+                          apply only reviewed descriptions for explicitly selected repositories;
+                          preflight current values, skip archives, never write topics or licences
   --diff  PLAN.json       print before/after per repo as markdown (for the lane report)
   --replan PLAN.json      recompose from a cached plan (after editing the rules)
 
@@ -22,8 +25,8 @@ Rules, so a reader can audit what happened rather than trust it:
 * Third-party code that was copied or forked into the account gets
   "📦 Mirrors <upstream>" and NO licence file from us — the upstream licence applies.
 * A LICENSE is added only where: the repo is ours, not a fork, not archived, has no
-  licence-like file, and either declares a licence in pyproject/package.json (that text is
-  used) or declares none (MIT, matching councilof-ai/LICENSE).
+  licence-like file, and explicitly declares a supported licence in its manifest.
+  An absent declaration never supplies permission for an automated licence change.
 * Topics are added, never removed: ai-governance, measurement, x402, a2a, mcp, scitt,
   ed25519, merkle, eu-ai-act — each only when the name/description/README contains the term.
   GitHub caps topics at 20.
@@ -86,7 +89,9 @@ limitations under the License.
 
 # --------------------------------------------------------------------------- hand-written (read by a person on 2026-09-05)
 HAND: dict[str, str] = {
-    "councilof-ai": "📏 Measures AI systems on frozen instruments and publishes the live 22-axis GSPC board, Ed25519-signed cards, a signed Merkle root with a Rekor witness, and a public corrections ledger — councilof.ai. Measurement, not certification.",
+    "councilof-ai": "Council of AI — AI-behaviour measurements, published methods, signed evidence and free verification. Operated by CSOAI Ltd. Evidence services; measurement, not certification.",
+    "sovereign-wiki": "Council of AI source catalogue: AI governance references, measurement tools and data interfaces. Operated by CSOAI Ltd. Current measurements and verification: councilof.ai.",
+    "csoai-org-v2": "Earlier Council of AI website source (CSOAI Ltd). Current measurements, methods and free verification: councilof.ai.",
     "gspc-board": "🪞 Mirrors GET councilof.ai/api/gspc as dated JSON/parquet snapshots — every count derived from the axes array, every card Ed25519-verifiable without an account. CC0 data.",
     "a2a-signed-receipts": "🧾 Extends A2A with signed-receipts/v1 — did:web key-trust for §8.4 AgentCard signing plus Ed25519-signed task-outcome receipts. Evidence of what was claimed, not a certification.",
     "inspect-receipts": "🔏 Signs every Inspect AI eval run with an Ed25519, hash-chained, offline-verifiable measurement receipt. Evidence of what was claimed and when — not certification.",
@@ -292,11 +297,11 @@ def topics_for(name: str, desc: str, readme: str, existing: list[str]) -> list[s
 def licence_for(name: str, ours: bool, is_fork: bool, archived: bool, has_lic: bool, declared: str | None) -> str | None:
     if not ours or is_fork or archived or has_lic or name in MIRRORS:
         return None
-    if declared and "apache" in declared.lower():
+    if declared and declared.strip().lower() in {"apache-2.0", "apache 2.0"}:
         return "Apache-2.0"
-    if declared and "mit" not in declared.lower():
-        return None  # something else declared; a person decides
-    return "MIT"
+    if declared and declared.strip().lower() == "mit":
+        return "MIT"
+    return None  # absent, compound or unsupported declarations require explicit review
 
 
 def plan(out: str) -> None:
@@ -391,6 +396,74 @@ def apply(path: str) -> None:
     print(json.dumps(done, indent=1))
 
 
+def apply_descriptions(path: str, names: list[str]) -> dict:
+    """Apply one explicit description scope. Preflight is best-effort, not an atomic API lease."""
+    with open(path) as fh:
+        doc = json.load(fh)
+    if doc.get("owner") != OWNER or not isinstance(doc.get("repos"), list):
+        raise ValueError("description plan must identify this owner and contain a repos array")
+    if not names or any(not isinstance(name, str) for name in names) or len({name.casefold() for name in names}) != len(names):
+        raise ValueError("select one or more distinct repository names with --repos")
+    if any(not re.fullmatch(r"[A-Za-z0-9_.-]+", name) or name in {".", ".."} for name in names):
+        raise ValueError("repository scope must use names, not paths or owners")
+    rows = {}
+    for row in doc["repos"]:
+        if not isinstance(row, dict) or not isinstance(row.get("name"), str) or row["name"] in rows:
+            raise ValueError("plan contains malformed or duplicate repository rows")
+        rows[row["name"]] = row
+    selected = []
+    for name in names:
+        if name not in rows:
+            raise ValueError(f"{name}: selected repository is absent from the plan")
+        row = rows[name]
+        before, after = row.get("description_before"), row.get("description_after")
+        if before is not None and not isinstance(before, str):
+            raise ValueError(f"{name}: expected description must be text or null")
+        if not isinstance(after, str) or not after.strip() or len(after) > MAX_DESC or any(ord(c) < 32 for c in after):
+            raise ValueError(f"{name}: replacement must be nonempty single-line text within {MAX_DESC} characters")
+        if not isinstance(row.get("archived"), bool):
+            raise ValueError(f"{name}: plan must record its archived state")
+        selected.append((name, row, before or "", after))
+
+    def current(name):
+        data = json.loads(gh("api", f"repos/{OWNER}/{name}"))
+        if data.get("full_name", "").casefold() != f"{OWNER}/{name}".casefold():
+            raise ValueError(f"{name}: repository identity mismatch")
+        return data
+
+    def admissible(name, data, before, after):
+        if (data.get("description") or "") not in {before, after}:
+            raise ValueError(f"{name}: current description differs from the reviewed plan; refresh it")
+
+    # Complete validation and read-only preflight before the first write.
+    for name, row, before, after in selected:
+        if row["archived"]:
+            continue
+        data = current(name)
+        if not data.get("archived"):
+            admissible(name, data, before, after)
+    done = {"changed": [], "already_current": [], "skipped_archived": []}
+    for name, row, before, after in selected:
+        if row["archived"]:
+            done["skipped_archived"].append(name)
+            continue
+        data = current(name)  # catch changes since preflight, immediately before this write
+        if data.get("archived"):
+            done["skipped_archived"].append(name)
+            continue
+        admissible(name, data, before, after)
+        if (data.get("description") or "") == after:
+            done["already_current"].append(name)
+            continue
+        gh("api", "--method", "PATCH", f"repos/{OWNER}/{name}", "--input", "-",
+           input_=json.dumps({"description": after}))
+        if current(name).get("description") != after:
+            raise RuntimeError(f"{name}: description readback differs; stopping after a possible write")
+        done["changed"].append(name)
+    print(json.dumps(done, indent=1))
+    return done
+
+
 def diff_md(path: str) -> None:
     doc = json.load(open(path))
     print(f"| repo | description before | description after | topics added | licence added |\n|---|---|---|---|---|")
@@ -409,9 +482,17 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--plan", metavar="OUT.json")
     ap.add_argument("--apply", metavar="PLAN.json")
+    ap.add_argument("--apply-descriptions", metavar="PLAN.json")
+    ap.add_argument("--repos", nargs="+", metavar="NAME")
     ap.add_argument("--replan", metavar="PLAN.json", help="recompose descriptions/topics from a cached plan")
     ap.add_argument("--diff", metavar="PLAN.json")
     a = ap.parse_args()
+    if a.apply_descriptions and (not a.repos or any((a.plan, a.apply, a.replan, a.diff))):
+        ap.error("--apply-descriptions requires --repos and cannot be combined with other actions")
+    if a.repos and not a.apply_descriptions:
+        ap.error("--repos is only supported with --apply-descriptions")
+    if a.apply_descriptions:
+        apply_descriptions(a.apply_descriptions, a.repos)
     if a.plan:
         plan(a.plan)
     if a.replan:
@@ -420,3 +501,4 @@ if __name__ == "__main__":
         diff_md(a.diff)
     if a.apply:
         apply(a.apply)
+

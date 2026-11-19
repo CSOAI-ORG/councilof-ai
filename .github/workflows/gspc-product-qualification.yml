@@ -16,6 +16,10 @@ on:
       - 'scripts/hf/**'
       - '.github/workflows/gspc-product-qualification.yml'
 
+concurrency:
+  group: gspc-product-qualification-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

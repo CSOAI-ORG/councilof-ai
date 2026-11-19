@@ -167,5 +167,65 @@ class TestTheQueueIsCountableWithoutBeingAScore(unittest.TestCase):
             self.assertEqual(row["source_digest"], "a" * 64)
 
 
+class TestCharterAttribution(unittest.TestCase):
+    """A Council control must not acquire external authority through its label."""
+
+    def setUp(self):
+        self.index = {
+            "signals": [{
+                "source_id": "runtime-control",
+                "name": "Synthetic runtime control",
+                "kind": "standard-body",
+                "state": "REACHABLE",
+                "grid": ["hitl", "effect-binding"],
+                "body_sha256": "c" * 64,
+            }],
+        }
+        self.rows = wcf.build(self.index)["rows"]
+        self.row = next(row for row in self.rows if row["obligation"] == "charter")
+
+    def test_control_is_attributed_to_council_candidate(self):
+        self.assertEqual(
+            self.row["obligation_label"],
+            "Council of AI candidate profile — runtime enforcement and human oversight",
+        )
+        source = self.row["obligation_source"]
+        self.assertEqual(source["owner"], "Council of AI")
+        self.assertEqual(source["kind"], "CANDIDATE_PROFILE")
+        self.assertEqual(source["adoption"], "NOT_ESTABLISHED")
+        self.assertEqual(source["profile"], "csoai.hitl-authority-effect/0.2")
+        self.assertIn("/blob/b5cef696a1ae17d756bd73897d2e68293d05d94e/", source["source_url"])
+        self.assertEqual(source["git_blob_sha"], "f7c9af51d7ab897c62e2fa46cb63998e0cea9719")
+
+    def test_external_status_is_dated_reference_not_adoption(self):
+        source = self.row["obligation_source"]["external_reference"]
+        self.assertEqual(source["relationship"], "REFERENCE_ONLY")
+        self.assertEqual(source["status_at_check"], "UNDER_DEVELOPMENT")
+        self.assertEqual(source["checked_on"], "2026-11-11")
+        self.assertEqual(source["source_url"],
+                         "https://github.com/OpenSecureAIAlliance/wg-safe/blob/"
+                         "3769437209edac11d745dd58c165b951ed474e27/CHARTER.md")
+        self.assertEqual(source["git_blob_sha"], "c74309c122a465a88731f3f7842beb812c89cac4")
+
+    def test_attribution_changes_no_routing_identity_or_authority(self):
+        self.assertEqual(self.row["row_id"], "runtime-control::charter")
+        self.assertEqual(self.row["axis_touched"], ["effect-binding", "hitl"])
+        self.assertEqual(self.row["source_digest"], "c" * 64)
+        self.assertEqual(self.row["human_decision"], "HOLD")
+        for field in ("may_apply", "approval_may_be_inferred", "challenge_opened"):
+            self.assertIs(self.row[field], False)
+        self.assertIn("proposal for review", self.row["challenge_note"])
+        self.assertIn("/api/hitl", self.row["challenge_note"])
+        self.assertEqual([row["obligation"] for row in self.rows], ["charter", "cra"])
+        self.assertNotIn("obligation_source", self.rows[1])
+
+    def test_returned_reference_cannot_change_later_outputs(self):
+        self.row["obligation_source"]["external_reference"]["status_at_check"] = "ADOPTED"
+        next_row = next(row for row in wcf.build(self.index)["rows"]
+                        if row["obligation"] == "charter")
+        self.assertEqual(next_row["obligation_source"]["external_reference"]["status_at_check"],
+                         "UNDER_DEVELOPMENT")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

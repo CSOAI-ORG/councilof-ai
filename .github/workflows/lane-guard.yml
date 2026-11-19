@@ -18,6 +18,10 @@ on:
   push:
     branches: [master]
 
+concurrency:
+  group: lane-guard-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lane-guard:
     runs-on: ubuntu-latest

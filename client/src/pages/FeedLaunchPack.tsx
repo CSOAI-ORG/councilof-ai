@@ -40,11 +40,6 @@ export default function FeedLaunchPack() {
   return (
     <section className="min-h-screen bg-slate-950 text-slate-100">
       <Helmet>
-        <title>Council of AI — Stablewatch Feed</title>
-        <meta
-          name="description"
-          content="30-day RLUSD measurement streak, stablecoin top-20 deep measurement, alert examples. Subscribe via x402. Measurement, not certification."
-        />
         <meta name="robots" content="noindex,nofollow,noarchive" />
       </Helmet>
 

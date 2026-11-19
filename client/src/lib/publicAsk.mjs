@@ -151,8 +151,15 @@ async function readRaw(response, signal) {
   finally { reader.releaseLock(); }
   const bytes = new Uint8Array(size); let offset = 0; for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; } return bytes;
 }
-async function streamPublicAsk({ question, fetchImpl = globalThis.fetch, cryptoImpl = globalThis.crypto, signal: parentSignal, now = () => new Date().toISOString(), timeoutMs = 15000 }) {
-  const claimedQuestion = questionText(question);
+function publicAskTools(value) {
+  if (value === undefined || value === null) return value;
+  if (!Array.isArray(value) || value.length > 256 || value.some(tool => typeof tool !== 'string' || !/^[a-zA-Z0-9_.-]{1,128}$/.test(tool)) || new Set(value).size !== value.length) throw new Error('Invalid public Ask tool selection.');
+  return [...value];
+}
+async function streamPublicAsk({ question, enabledTools, fetchImpl = globalThis.fetch, cryptoImpl = globalThis.crypto, signal: parentSignal, now = () => new Date().toISOString(), timeoutMs = 15000 }) {
+  const claimedQuestion = questionText(question), selected = publicAskTools(enabledTools);
+  const payload = { messages: [{ id: 'm1', role: 'user', content: claimedQuestion }] };
+  if (selected !== undefined) payload.forwardedProps = { execution: { version: 1, host: 'cloud', provider: 'council-tools', connectivity: 'online', enabledTools: selected } };
   if (typeof fetchImpl !== 'function' || !cryptoImpl?.subtle) throw new Error('This browser cannot safely read and retain Ask streams.');
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 15000) throw new Error('The Ask deadline is invalid.');
   const controller = new AbortController(), signal = controller.signal; let timedOut = false;
@@ -160,7 +167,7 @@ async function streamPublicAsk({ question, fetchImpl = globalThis.fetch, cryptoI
   const timer = setTimeout(() => { timedOut = true; controller.abort(); }, timeoutMs);
   try {
     if (signal.aborted) throw abortError();
-    const response = await abortable(fetchImpl(PUBLIC_ASK_URL, { method: 'POST', credentials: 'omit', redirect: 'error', cache: 'no-store', referrerPolicy: 'no-referrer', signal, headers: { 'content-type': 'application/json', accept: 'text/event-stream' }, body: JSON.stringify({ messages: [{ id: 'm1', role: 'user', content: claimedQuestion }] }) }), signal);
+    const response = await abortable(fetchImpl(PUBLIC_ASK_URL, { method: 'POST', credentials: 'omit', redirect: 'error', cache: 'no-store', referrerPolicy: 'no-referrer', signal, headers: { 'content-type': 'application/json', accept: 'text/event-stream' }, body: JSON.stringify(payload) }), signal);
     if (response.status !== 200 || response.redirected || response.url !== PUBLIC_ASK_URL || !/^text\/event-stream(?:\s*;|$)/i.test(response.headers.get('content-type') || '')) throw new Error('The public Ask endpoint returned an unexpected response.');
     const raw = await readRaw(response, signal);
     return await abortable(makePublicTranscript(claimedQuestion, raw, now(), cryptoImpl), signal);
@@ -170,12 +177,13 @@ async function streamPublicAsk({ question, fetchImpl = globalThis.fetch, cryptoI
 function createPublicAskController({ onState = () => {}, ...options } = {}) {
   let sequence = 0, controller = null, busy = false;
   function cancel() { sequence++; controller?.abort(); controller = null; busy = false; onState({ state: 'cancelled' }); }
-  async function ask(question) {
+  async function ask(question, enabledTools = options.enabledTools) {
     if (busy) return null;
-    try { questionText(question); } catch (error) { onState({ state: 'error', message: error.message }); return null; }
+    let selected;
+    try { questionText(question); selected = publicAskTools(enabledTools); } catch (error) { onState({ state: 'error', message: error.message }); return null; }
     const ticket = ++sequence, requestController = new AbortController(); controller = requestController; busy = true; onState({ state: 'loading' });
     try {
-      const transcript = await streamPublicAsk({ ...options, question, signal: requestController.signal });
+      const transcript = await streamPublicAsk({ ...options, question, enabledTools: selected, signal: requestController.signal });
       if (ticket !== sequence) return null;
       const state = transcript.run.status === 'done' ? 'ready' : transcript.run.status === 'held' ? 'held' : 'error';
       onState({ state, transcript, message: transcript.run.error }); return transcript;

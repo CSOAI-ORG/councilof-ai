@@ -1,3 +1,4 @@
+import { purchaseSessionSnapshot, samePurchaseSession } from "./buyerPurchases";
 // sovTools — the bridge from the front end to the published MCP server.
 //
 // WHAT WAS WRONG (found by operating it, 2026-08-26): every call went to POST /api/mcp,
@@ -78,7 +79,10 @@ export async function listTools(door: McpDoor = "/mcp"): Promise<ToolListing> {
 // Actually run a tool and get a real, governed result back.
 export async function callTool(name: string, args: Record<string, any>): Promise<ToolResult> {
   try {
-    const d = await mcpRpc("tools/call", { name, arguments: args });
+    const session=purchaseSessionSnapshot();
+    if(!session.readable && typeof args.x_payment==="string" && args.x_payment)throw new Error("Session storage unavailable before payment dispatch");
+    const d = await mcpRpc("tools/call",{name,arguments:args},{...(session.readable&&session.token?{buyerToken:session.token}:{})});
+    if(session.token&&!samePurchaseSession(session.token))return {ok:false,state:"unreachable",text:"The session changed; this result was discarded. Inspect the original account\'s saved purchases before signing or retrying."};
     if (d && d.error) return { ok: false, state: "unreachable", text: "The MCP runtime declined: " + (d.error.message || "unknown"), raw: d };
     const content = Array.isArray(d?.result?.content) ? d.result.content : [];
     const text = content.map((c: any) => c && c.text).filter(Boolean).join("\n") || JSON.stringify(d && d.result ? d.result : d);

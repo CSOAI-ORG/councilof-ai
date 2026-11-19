@@ -16,6 +16,10 @@ on:
       - 'client/src/App.tsx'
       - 'scripts/resolve-app-tsx.mjs'
       - '.github/workflows/app-router-floor.yml'
+concurrency:
+  group: app-router-floor-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   floor:
     runs-on: ubuntu-latest

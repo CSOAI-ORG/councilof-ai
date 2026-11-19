@@ -140,6 +140,14 @@ describe("claim-maintenance register — the schedule", () => {
     expect(subject(register, "Alpha").next_scheduled_read_state).toBe("SCHEDULED");
     expect(subject(register, "Alpha").next_scheduled_check).toMatchObject({ check: "scheduled-read", due: "2026-09-28" });
     expect(register.totals.subjects_with_due_execution_unverified).toBe(0);
+    // Beta and Gamma have no registry-named read, despite having planned day checks.
+    expect(register.totals.subjects_with_a_future_registry_named_read).toBe(1);
+    expect(register.totals.subjects_without_a_registry_named_read_schedule).toBe(2);
+    expect(register.totals.subjects_with_a_scheduled_next_read).toBe(3);
+    const t = register.totals;
+    expect(t.subjects_with_a_future_registry_named_read + t.subjects_without_a_registry_named_read_schedule +
+      t.subjects_with_due_execution_unverified + t.subjects_with_a_completed_scheduled_read +
+      t.subjects_with_a_retry_required).toBe(t.subjects);
   });
 
   it("a check due today is not counted as still ahead", () => {

@@ -1,3 +1,4 @@
+import { postSettlementStore, postObservationState } from "./_bookkeeping_budget";
 import { recordPaidResponse, markPaidUndeliveredResponse } from "./_x402_delivery_record";
 /**
  * GET /api/evidence-bundle — Tier 2: an evidence bundle mapped to ONE regulatory obligation.
@@ -362,7 +363,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         // buyer reads that as "they know I asked". Nobody knows: this endpoint stores nothing,
         // and /api/lead reports {"bound":false}, so there is no datastore on this deployment to
         // store it in. The first line now says who has to act, because it is the buyer.
-        "NOTHING HERE HAS TOLD CSOAI THAT YOU ASKED — email the reference to nicholas@csoai.org, or no invoice can be raised.",
+        "NOTHING HERE HAS TOLD CSOAI THAT YOU ASKED — email the reference to contact@csoai.org, or no invoice can be raised.",
         "CSOAI LTD issues the invoice against this reference once it receives it — no amount is quoted on this endpoint.",
         "The bundle is assembled and delivered once that invoice settles.",
         "Nothing is assembled or released by this request, and no agent can commit the owner to a deal.",
@@ -465,8 +466,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   if (env.REVENUE_KV) {
     try {
-      const n = Number((await env.REVENUE_KV.get("count:proofs")) || "0") + 1;
-      await env.REVENUE_KV.put("count:proofs", String(n));
+      const n = Number((await postSettlementStore(env.REVENUE_KV,payment).get("count:proofs")) || "0") + 1;
+      await postSettlementStore(env.REVENUE_KV,payment).put("count:proofs", String(n));
     } catch {
       /* never blocks a paid deliverable */
     }
@@ -489,7 +490,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
     200,
     payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+  ), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

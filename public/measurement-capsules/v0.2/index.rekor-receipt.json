@@ -1,0 +1,18 @@
+{
+ "schema": "csoai.rekor-receipt/0.1",
+ "subject": "measurement-index-v0.2-2026-11-01.json",
+ "subject_sha256": "e9bc0ddfaf5347723e4e4f2b15248d26802e88d16c4a48fd4c063b94f3974012",
+ "preimage_sha256": "11363659645fc02530364e3977e17ac4278c77813bdb6f197442488cb46453f2",
+ "rekor": "https://rekor.sigstore.dev",
+ "uuid": "108e9186e8c5677ab8117ebf5f34492ceff8a84c7653bd9fd258644d98d7efaebb30af3ce735b05c",
+ "logIndex": 3624464275,
+ "integratedTime": 1793521864,
+ "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
+ "inclusion_proof": "VERIFIES",
+ "tree_size": 3502560292,
+ "root_hash": "b45c294b8188dfd9ec4e05e46124c4daa0e60e737da28eb93148b4e49cb911ac",
+ "how": "submitted (201)",
+ "checked_at": "2026-11-01T08:31:05Z",
+ "verify": "curl -s 'https://rekor.sigstore.dev/api/v1/log/entries?logIndex=3624464275' and check body -> spec.data.hash.value == preimage_sha256 (sha256 of the canonical payload in measurement-index-v0.2-2026-11-01.signed.json)",
+ "limits": "Rekor bounds WHEN these bytes and this signature existed (integratedTime). It says nothing about what was measured."
+}

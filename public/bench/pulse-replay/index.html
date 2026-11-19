@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verify an archived pulse, row by row | Council of AI</title>
+<meta name="description" content="Reproduce a pinned 23-observation archive with row binding, mandatory signature verification, negative controls and an unsigned evidence-event receipt.">
+<style>
+:root{font-family:system-ui,sans-serif;color:#172b38;background:#f6f8fa;line-height:1.6}body{margin:0}main{max-width:64rem;margin:auto;padding:clamp(1rem,4vw,3rem)}h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.12;max-width:20ch}h2{line-height:1.3;margin-top:2rem}p{max-width:76ch}a{color:#0b546d;text-underline-offset:.2em}a:focus-visible{outline:3px solid #ca820a;outline-offset:4px}.eyebrow{font-size:.85rem;text-transform:uppercase;letter-spacing:.12em}.note{border-left:4px solid #23798b;background:#fff;padding:1rem 1.3rem}.links{display:flex;gap:1rem;flex-wrap:wrap}.links a{display:inline-block;padding:.7rem 1rem;background:#fff;border:1px solid #a9c3cb;border-radius:.4rem}code{overflow-wrap:anywhere}pre{overflow:auto;background:#fff;padding:1rem;border:1px solid #dbe3e8}dl{display:grid;grid-template-columns:minmax(8rem,1fr) 3fr;gap:.6rem 1.2rem}dt{font-weight:700}dd{margin:0;overflow-wrap:anywhere}footer{margin-top:3rem;font-size:.9rem;border-top:1px solid #cdd9df;padding-top:1rem}@media(max-width:500px){dl{grid-template-columns:1fr;gap:.2rem}dd{margin-bottom:.8rem}}
+</style>
+</head>
+<body><main>
+<p class="eyebrow">Council of AI · reproducible archive verification</p>
+<h1>Verify the data, not just its list of hashes.</h1>
+<p>This reader accompanies a repair to the public GSPC Measurement Engine notebook. It checks the actual archived feed against its retained, signed freeze before calculating descriptive statistics.</p>
+<div class="note"><strong>Historical replay, not a live measurement.</strong> The snapshot has 23 observations from 3–9 November 2026. Running the notebook today does not refresh those observations, train a model or establish that their underlying claims are true.</div>
+<h2>Run the same code</h2>
+<nav class="links" aria-label="Reproduction resources">
+<a href="https://www.kaggle.com/code/nicktempleman/gspc-measurement-engine">Open the existing Kaggle notebook</a>
+<a href="kaggle/gspc-measurement-engine.ipynb" download>Download the generated notebook</a>
+<a href="README.md">Read the method and limitations</a>
+<a href="SOURCE_LOCK.json">Inspect source hashes</a>
+</nav>
+<h2>What is checked</h2>
+<p>Each feed row must reproduce its timestamp-bound leaf. Counts and timestamps must agree; the chain and Merkle root are recomputed from those rows. Ed25519 verification is mandatory under the separately pinned lane key. Missing dependencies or unavailable inputs stop execution rather than producing a successful result.</p>
+<p>The notebook first runs 39 offline regression controls, with no skipped cases allowed. It then checks the four immutable source files and rejects a deliberately altered copy of a real feed row. The synthetic controls are instrument tests, not model benchmark cases.</p>
+<h2>The exact archive</h2>
+<dl><dt>Source</dt><dd><a href="https://huggingface.co/datasets/csoai/evidence-index/tree/60342db01ef9d65243ff4177b872382d4f12b87b/gspc-pulse/2026-11-04">Pinned Hugging Face snapshot</a></dd>
+<dt>Observations</dt><dd>23, ending <time datetime="2026-11-09T01:54:33Z">9 November 2026 at 01:54:33 UTC</time></dd>
+<dt>Manifest produced</dt><dd><time datetime="2026-11-10T05:58:39Z">10 November 2026 at 05:58:39 UTC</time></dd>
+<dt>Immutable revision</dt><dd><code>60342db01ef9d65243ff4177b872382d4f12b87b</code></dd>
+<dt>Trust boundary</dt><dd>Source-history-pinned pulse key; not an independently established issuer identity or the GSPC DID signing key.</dd></dl>
+<h2>Read the output, including its limits</h2>
+<p>A successful run produces <code>test-results.json</code>, <code>pulse-replay-result.json</code> and <code>pulse-replay-event.json</code>. The latter reuses <code>csoai.evidence-event/0.1</code>, remains unsigned and carries a null value. Its consistency state applies to this verification scope; it is not execution authority, current service health, measurement admission or a safety determination.</p>
+<pre><code>python3 -B -m unittest -v test_pulse_replay
+python3 -B build_notebook.py</code></pre>
+<p>The original collector, data, signing key, manifest and signature are not rewritten by this package. Kaggle execution, source review and Cloudflare publication are separate acceptance steps; an accessible page alone does not prove a hosted notebook run succeeded.</p>
+<footer>Measurement, not certification. Data: GSPC live pulse — Council of AI, CC-BY-4.0 OR CC0-1.0. Verification code: MIT; canonical event helper: Apache-2.0. <a href="LICENSE">Code licence</a>.</footer>
+</main></body></html>

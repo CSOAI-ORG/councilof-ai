@@ -1,20 +1,21 @@
 /**
- * Slim Footer — 2026-08-28 Owner Stack
- *
- * Compact footer with essential links, framework wordmarks, and honesty line.
- * Newsletter is inline. No duplicate columns.
+ * ONE footer for every public route, the home page included. Until 2026-11-16 the home page
+ * rendered a shorter footer (three "essentials" groups, the directory folded into a disclosure,
+ * and none of the evidence rows), so it was the one page without the full footer and the trust
+ * row. Owner, 2026-11-16: the home page carries the same footer as /about/. The bottom bar names
+ * the site's one contact mailbox (CONTACT_MAILBOX, lib/buying) once.
  */
 
 import { Link } from 'wouter';
 import { BookOpen, Mail } from 'lucide-react';
 import EmailOff from './EmailOff';
-import { CONTACT_MAILBOX } from '@/lib/buying';
 import FooterVerifyStrip from './FooterVerifyStrip';
 import FooterStats from './momentum/FooterStats';
 import AuthoritySignals from './AuthoritySignals';
 import MembershipStrip from './MembershipStrip';
 import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
 import { useSiteChromeHidden } from '@/lib/osChrome';
+import { CONTACT_MAILBOX } from '@/lib/buying';
 
 interface FooterLink {
   name: string;
@@ -35,6 +36,7 @@ export function Footer() {
       title: 'Product',
       links: [
         { name: 'Check a record', href: '/gspc-verify/' },
+        { name: 'Services and buying', href: '/services/' },
         { name: 'Measurement enquiries', href: '/assess/' },
         { name: 'Board', href: '/dashboard/?tab=board' },
         { name: 'Connect tools to your AI', href: '/tools/' },
@@ -70,10 +72,11 @@ export function Footer() {
       title: 'Evidence',
       links: [
         { name: 'Measurement data (JSON)', href: '/api/gspc', external: true },
+        { name: 'GSPC Master dataset', href: 'https://huggingface.co/datasets/csoai/gspc-master', external: true },
         { name: 'Metered evidence catalog (live quotes)', href: '/metered/' },
         { name: 'Evidence files (cards, proofs)', href: 'https://huggingface.co/datasets/csoai/councilof-ai-evidence', external: true },
         { name: 'Methodology', href: '/methodology/' },
-        { name: 'What we cannot measure yet', href: '/honesty/' },
+        { name: 'Measurement scope and limitations', href: '/honesty/' },
         // The readable ledger page (renders /api/corrections), not raw JSON.
         { name: 'Corrections', href: '/corrections/' },
         { name: 'How far this reaches', href: '/reach/' },
@@ -103,10 +106,15 @@ export function Footer() {
       title: 'Company',
       links: [
         { name: 'About', href: '/about/' },
+        { name: 'Operation and external use', href: '/traction/' },
+        { name: 'Partners and investors', href: '/traction/#partners' },
         { name: 'Brand & impostor notice', href: '/brand/' },
         { name: 'Evidence and reuse rights', href: '/licensing-agreement/#rights' },
         { name: 'Independence and conflicts', href: '/independence/' },
         { name: 'Contact', href: '/contact/' },
+        // 17 Nov 2026: the press room was linked from nowhere on the site. native: a full load, so the
+        // reader gets the room functions/press/index.ts renders, not the older in-app /press route.
+        { name: 'Press', href: '/press/', native: true },
         { name: 'Where we take part', href: '/memberships/' },
         { name: 'FAQ', href: '/faq/' },
         { name: 'Careers', href: '/careers/' },
@@ -122,6 +130,7 @@ export function Footer() {
       ],
     },
   ];
+
 
   const socialLinks = [
     { name: 'Source snapshot (archived)', icon: BookOpen, href: 'https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai' },
@@ -142,6 +151,7 @@ export function Footer() {
         {/* Brand + socials */}
         <div className="mb-10 flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-6">
           <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+            <>
             <svg viewBox="0 0 100 100" className="h-9 w-9" aria-hidden="true">
               <defs>
                 <linearGradient id="footerShieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -169,9 +179,10 @@ export function Footer() {
               </g>
             </svg>
             <span className="text-xl font-bold">CSOAI</span>
+            </>
           </Link>
           <p className="text-muted-foreground text-sm max-w-md">
-            UK AI measurement infrastructure operated by CSOAI Ltd. We publish records you can check. Measurement is not certification.
+            An operating UK AI measurement and evidence organisation run by CSOAI Ltd. We publish records you can check. Measurement is not certification.
           </p>
           <div className="-mx-2.5 flex gap-1 sm:ml-auto">
             {socialLinks.map((social) => (
@@ -189,6 +200,8 @@ export function Footer() {
             ))}
           </div>
         </div>
+
+
 
         {/* Link columns (6) */}
         <div className="mb-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
@@ -222,6 +235,8 @@ export function Footer() {
             </div>
           ))}
         </div>
+
+
 
         {/*
           REFERENCE FRAMEWORKS — text, with the relationship named, never a logo row.
@@ -404,13 +419,14 @@ export function Footer() {
           </ul>
         </div>
 
+
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-xs">
-            © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · <EmailOff text={CONTACT_MAILBOX} />
+            © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE
           </p>
           <p className="text-muted-foreground text-xs">
-            To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href={`mailto:${CONTACT_MAILBOX}`} className="underline">{CONTACT_MAILBOX}</a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
+            To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href={`mailto:${CONTACT_MAILBOX}`} className="underline"><EmailOff text={CONTACT_MAILBOX} /></a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
           </p>
           <p className="text-muted-foreground text-xs text-center md:text-right max-w-md">
             Who runs and funds us, and where we have an interest:{" "}

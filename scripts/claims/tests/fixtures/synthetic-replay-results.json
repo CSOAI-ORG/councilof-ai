@@ -1,0 +1,164 @@
+{
+  "boundaries": [
+    "Invented worlds and caller weights, not observed source changes, costs, risk or savings.",
+    "Only the simulator creates successful checks; scheduling advice never marks a claim fresh.",
+    "Periodic NO_CHANGE input only; reaction/retry semantics are tested separately.",
+    "No calibrated VOI, monetary return, adoption, novelty or production-superiority claim."
+  ],
+  "budget_units_per_step": 12,
+  "claims_per_seed": 20,
+  "common_policy": "same mandatory ordering, exploration reserve and hard limits; discretionary due order differs",
+  "evidence_kind": "SYNTHETIC_OFFLINE_REPLAY",
+  "max_items_per_step": 6,
+  "runs": [
+    {
+      "hidden_weighted_stale_claim_steps": 505,
+      "max_wait_hours": 3,
+      "missed_policy_deadline_claim_steps": 0,
+      "scripted_failures": 22,
+      "scripted_successes": 166,
+      "seed": 7,
+      "selected_checks": 188,
+      "spent_cost_units": 471,
+      "strategy": "bounded_advice",
+      "unknown_claim_steps": 4
+    },
+    {
+      "hidden_weighted_stale_claim_steps": 529,
+      "max_wait_hours": 4,
+      "missed_policy_deadline_claim_steps": 1,
+      "scripted_failures": 19,
+      "scripted_successes": 165,
+      "seed": 7,
+      "selected_checks": 184,
+      "spent_cost_units": 452,
+      "strategy": "oldest_first",
+      "unknown_claim_steps": 4
+    },
+    {
+      "hidden_weighted_stale_claim_steps": 569,
+      "max_wait_hours": 4,
+      "missed_policy_deadline_claim_steps": 2,
+      "scripted_failures": 19,
+      "scripted_successes": 167,
+      "seed": 7,
+      "selected_checks": 186,
+      "spent_cost_units": 462,
+      "strategy": "round_robin",
+      "unknown_claim_steps": 4
+    },
+    {
+      "hidden_weighted_stale_claim_steps": 557,
+      "max_wait_hours": 1,
+      "missed_policy_deadline_claim_steps": 0,
+      "scripted_failures": 12,
+      "scripted_successes": 159,
+      "seed": 11,
+      "selected_checks": 171,
+      "spent_cost_units": 379,
+      "strategy": "bounded_advice",
+      "unknown_claim_steps": 4
+    },
+    {
+      "hidden_weighted_stale_claim_steps": 562,
+      "max_wait_hours": 2,
+      "missed_policy_deadline_claim_steps": 0,
+      "scripted_failures": 12,
+      "scripted_successes": 157,
+      "seed": 11,
+      "selected_checks": 169,
+      "spent_cost_units": 376,
+      "strategy": "oldest_first",
+      "unknown_claim_steps": 4
+    },
+    {
+      "hidden_weighted_stale_claim_steps": 569,
+      "max_wait_hours": 1,
+      "missed_policy_deadline_claim_steps": 0,
+      "scripted_failures": 10,
+      "scripted_successes": 160,
+      "seed": 11,
+      "selected_checks": 170,
+      "spent_cost_units": 379,
+      "strategy": "round_robin",
+      "unknown_claim_steps": 4
+    },
+    {
+      "hidden_weighted_stale_claim_steps": 622,
+      "max_wait_hours": 4,
+      "missed_policy_deadline_claim_steps": 0,
+      "scripted_failures": 14,
+      "scripted_successes": 143,
+      "seed": 23,
+      "selected_checks": 157,
+      "spent_cost_units": 468,
+      "strategy": "bounded_advice",
+      "unknown_claim_steps": 6
+    },
+    {
+      "hidden_weighted_stale_claim_steps": 605,
+      "max_wait_hours": 3,
+      "missed_policy_deadline_claim_steps": 1,
+      "scripted_failures": 12,
+      "scripted_successes": 142,
+      "seed": 23,
+      "selected_checks": 154,
+      "spent_cost_units": 464,
+      "strategy": "oldest_first",
+      "unknown_claim_steps": 6
+    },
+    {
+      "hidden_weighted_stale_claim_steps": 592,
+      "max_wait_hours": 4,
+      "missed_policy_deadline_claim_steps": 0,
+      "scripted_failures": 10,
+      "scripted_successes": 145,
+      "seed": 23,
+      "selected_checks": 155,
+      "spent_cost_units": 467,
+      "strategy": "round_robin",
+      "unknown_claim_steps": 6
+    }
+  ],
+  "scripted_check_failure_probability": 0.1,
+  "seeds": [
+    7,
+    11,
+    23
+  ],
+  "step_hours": 1,
+  "steps_per_seed": 48,
+  "totals": {
+    "bounded_advice": {
+      "hidden_weighted_stale_claim_steps": 1684,
+      "max_wait_hours": 4,
+      "missed_policy_deadline_claim_steps": 0,
+      "scripted_failures": 48,
+      "scripted_successes": 468,
+      "selected_checks": 516,
+      "spent_cost_units": 1318,
+      "unknown_claim_steps": 14
+    },
+    "oldest_first": {
+      "hidden_weighted_stale_claim_steps": 1696,
+      "max_wait_hours": 4,
+      "missed_policy_deadline_claim_steps": 2,
+      "scripted_failures": 43,
+      "scripted_successes": 464,
+      "selected_checks": 507,
+      "spent_cost_units": 1292,
+      "unknown_claim_steps": 14
+    },
+    "round_robin": {
+      "hidden_weighted_stale_claim_steps": 1730,
+      "max_wait_hours": 4,
+      "missed_policy_deadline_claim_steps": 2,
+      "scripted_failures": 39,
+      "scripted_successes": 472,
+      "selected_checks": 511,
+      "spent_cost_units": 1308,
+      "unknown_claim_steps": 14
+    }
+  },
+  "world_change_probability_per_claim_step": 0.08
+}

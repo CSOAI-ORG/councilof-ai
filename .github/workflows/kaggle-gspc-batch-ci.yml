@@ -17,6 +17,10 @@ on:
       - '.github/workflows/kaggle-gspc-batch-ci.yml'
   workflow_dispatch:
 
+concurrency:
+  group: kaggle-gspc-batch-ci-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

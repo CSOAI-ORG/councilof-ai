@@ -1,60 +1,64 @@
 /**
- * Effective independence of a multi-leg review council.
+ * Descriptive dependence of a review panel on one shared item set.
  *
- * DR-0007 withdrew the fault-tolerance claim for the 33-seat council because measured seat
- * independence was n_eff 1.21 against 3 nominal legs. The retraction was correct and the number is
- * the useful part: a quorum only tolerates faults to the extent its legs fail *independently*.
- * Correlated legs do not vote, they echo.
- *
- * For n legs with mean pairwise agreement correlation rho (intra-class correlation):
- *
- *     n_eff = n / (1 + (n - 1) * rho)
- *
- * rho = 0  -> n_eff = n     (fully independent; the quorum means what it says)
- * rho = 1  -> n_eff = 1     (one opinion wearing n hats)
- *
- * A council whose legs cannot disagree has rho = 1 by construction, so n_eff = 1 no matter how
- * many seats it has. That is the state a hardcoded verdict puts you in, and it is why seats are
- * not evidence.
+ * n_eff = n / (1 + (n - 1) * rho) is an equicorrelation design-effect proxy.
+ * It is NOT a count of Byzantine fault domains, a quorum certificate, or proof
+ * of independent reviewers. Zero pairwise correlation does not imply independence.
+ * Verdict agreement can reflect shared correct answers; correlated errors require
+ * an independently established answer key and a separately specified evaluation.
+ * Preserve DR-0007 and all historical signed observations unchanged.
  */
 
-/** Effective number of independent legs. */
 export function nEff(n, rho) {
-  if (!Number.isInteger(n) || n < 1) throw new RangeError("n must be a positive integer");
-  if (!(rho >= -1 / (n - 1 || 1) && rho <= 1)) throw new RangeError(`rho ${rho} out of range for n=${n}`);
-  return n / (1 + (n - 1) * rho);
+  if (!Number.isSafeInteger(n) || n < 1) throw new RangeError("n must be a positive safe integer");
+  if (typeof rho !== "number" || !Number.isFinite(rho) ||
+      rho < -1 / (n - 1 || 1) || rho > 1) throw new RangeError("rho out of range");
+  const denominator = 1 + (n - 1) * rho;
+  if (denominator <= 0) throw new RangeError("singular design effect");
+  const result = n / denominator;
+  if (!Number.isFinite(result)) throw new RangeError("non-finite design effect");
+  return result;
 }
 
-/** The rho implied by an observed n_eff — the inverse, for reading a published figure. */
 export function rhoFromNEff(n, neff) {
-  if (n < 2) throw new RangeError("n must be at least 2");
-  return (n / neff - 1) / (n - 1);
+  if (!Number.isSafeInteger(n) || n < 2) throw new RangeError("n must be a safe integer at least 2");
+  if (typeof neff !== "number" || !Number.isFinite(neff) || neff < 1)
+    throw new RangeError("n_eff must be finite and at least 1");
+  const rho = (n / neff - 1) / (n - 1);
+  if (1 + (n - 1) * rho <= 0) throw new RangeError("singular inverse design effect");
+  return rho;
 }
 
-/**
- * Mean pairwise phi correlation over binary verdict vectors.
- * @param legs  array of equal-length arrays of 0/1 verdicts, one per leg
- */
-export function observedRho(legs) {
+function validateLegs(legs) {
   if (!Array.isArray(legs) || legs.length < 2) throw new RangeError("need at least two legs");
+  if (!Array.isArray(legs[0]) || legs[0].length === 0) throw new RangeError("legs carry no items");
   const m = legs[0].length;
-  if (m === 0) throw new RangeError("legs carry no items");
-  if (legs.some((l) => l.length !== m)) throw new RangeError("legs must score the same items");
+  for (let j = 0; j < legs.length; j++) {
+    const leg = legs[j];
+    if (!Array.isArray(leg) || leg.length !== m) throw new RangeError("legs must score the same items");
+    for (let i = 0; i < m; i++) {
+      if (leg[i] !== 0 && leg[i] !== 1) throw new TypeError("verdicts must be numeric 0 or 1; missing values cannot be coerced");
+    }
+  }
+  return m;
+}
 
+/** Phi correlation of numeric binary verdict vectors, not authenticated votes. */
+export function observedRho(legs) {
+  const m = validateLegs(legs);
   const phis = [];
   for (let a = 0; a < legs.length; a++) {
     for (let b = a + 1; b < legs.length; b++) {
       let n11 = 0, n10 = 0, n01 = 0, n00 = 0;
       for (let i = 0; i < m; i++) {
-        const x = legs[a][i] ? 1 : 0, y = legs[b][i] ? 1 : 0;
+        const x = legs[a][i], y = legs[b][i];
         if (x && y) n11++; else if (x && !y) n10++; else if (!x && y) n01++; else n00++;
       }
       const den = Math.sqrt((n11 + n10) * (n01 + n00) * (n11 + n01) * (n10 + n00));
-      // A leg that never varies has no correlation to measure — that is a finding, not a zero.
       phis.push(den === 0 ? null : (n11 * n00 - n10 * n01) / den);
     }
   }
-  const usable = phis.filter((p) => p !== null);
+  const usable = phis.filter(p => p !== null);
   return {
     rho: usable.length ? usable.reduce((a, b) => a + b, 0) / usable.length : null,
     pairs: phis.length,
@@ -63,34 +67,36 @@ export function observedRho(legs) {
 }
 
 /**
- * Assess a council. Returns what the quorum actually establishes — never a bare boolean.
- * `UNCHECKABLE` when independence could not be measured at all.
+ * Assess descriptive panel dependence. Partial pair coverage cannot be scaled
+ * to the full roster. No output authorizes an action or establishes BFT.
+ * effectiveQuorum is retained as null for compatibility; a statistical design
+ * effect cannot justify discounting an authenticated consensus threshold.
  */
 export function assessCouncil(legs, quorum) {
-  const n = legs.length;
-  const constant = legs.filter((l) => new Set(l).size <= 1).length;
-
-  if (constant === n) {
-    return {
-      state: "UNCHECKABLE",
-      n, n_eff: 1, rho: 1, constantLegs: constant,
-      why: "every leg returned the same verdict on every item; the council cannot disagree, so its " +
-           "quorum carries no information and no fault tolerance is established",
-    };
-  }
+  const items = validateLegs(legs), n = legs.length;
+  if (quorum != null && (!Number.isSafeInteger(quorum) || quorum < 1 || quorum > n))
+    throw new RangeError("quorum must be an integer within the configured roster");
+  const constant = legs.filter(l => new Set(l).size === 1).length;
   const { rho, pairs, degeneratePairs } = observedRho(legs);
-  if (rho === null) {
-    return { state: "UNCHECKABLE", n, n_eff: null, rho: null, constantLegs: constant,
-             why: "no pair of legs varied enough to estimate a correlation" };
-  }
+  const base = {
+    n, items, constantLegs: constant, pairs, degeneratePairs,
+    quorum: quorum ?? null, effectiveQuorum: null,
+    statistic: "binary-verdict-phi/equicorrelation-design-effect",
+    independence_established: false, bft_status: "NOT_DEMONSTRATED",
+    execution_authorized: false,
+  };
+  if (rho === null) return {
+    ...base, state: "UNCHECKABLE", n_eff: null, rho: null,
+    why: "no pair varies enough to estimate correlation; constant verdicts do not establish rho or independence",
+  };
+  if (degeneratePairs) return {
+    ...base, state: "PARTIAL", n_eff: null, rho: Number(rho.toFixed(4)),
+    why: "correlation describes only varying pairs; a full-roster estimate is withheld because some pairs are uncheckable",
+  };
   const eff = nEff(n, Math.max(0, rho));
   return {
-    state: "MEASURED",
-    n, rho: Number(rho.toFixed(4)), n_eff: Number(eff.toFixed(3)),
-    constantLegs: constant, pairs, degeneratePairs,
-    quorum: quorum ?? null,
-    // A quorum of k out of n only means k out of n_eff independent opinions.
-    effectiveQuorum: quorum ? Number((quorum * (eff / n)).toFixed(3)) : null,
-    why: `${n} nominal legs behave like ${eff.toFixed(2)} independent ones at mean pairwise rho ${rho.toFixed(3)}`,
+    ...base, state: "MEASURED", rho: Number(rho.toFixed(4)),
+    n_eff: Number(eff.toFixed(3)), rho_floor_for_proxy: 0,
+    why: `descriptive verdict correlation on ${items} shared items; n_eff proxy ${eff.toFixed(2)}, not independent identities or fault tolerance`,
   };
 }

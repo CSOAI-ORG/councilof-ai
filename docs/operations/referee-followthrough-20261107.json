@@ -1,0 +1,85 @@
+{
+  "record_kind": "referee-followthrough-review-receipt",
+  "recorded_at": "2026-11-07T04:43:35Z",
+  "status": "SOURCE_PUBLISHED_FOR_REVIEW",
+  "pull_requests": [4021, 4029],
+  "canonical_event_schema": "csoai.evidence-event/0.1",
+  "renderer_revision": "axis-referee-review/2",
+  "source_pins": {
+    "packages/evidence-fabric/render/axis_referee_review.py": {
+      "git_blob": "9be7153db9e9f55f4131b36bb2e327b6d4b3f225",
+      "sha256": "cba456b97f2226b0822125533d512707d4cec7543a6daf58b94c3922d349791d"
+    },
+    "packages/evidence-fabric/tests/test_axis_referee_continuity.py": {
+      "git_blob": "ce8e151bddd5f882ad874406d83e6b460b4a092c",
+      "sha256": "29511ce804471b4fae21dec9110e15e00d3fca4aa2f48ab2aedabaa05ab763d0"
+    },
+    "packages/evidence-fabric/tests/test_axis_referee_mutations.py": {
+      "git_blob": "eefd377631ea317015e9a6af2e990af4eb9aab77",
+      "sha256": "da01cbd7ceab668e083fddba4741540f921f5cf6d869fcb40ac24dd78f7007b2"
+    }
+  },
+  "qualification": {
+    "environment": {"node": "v22.16.0", "python": "3.13.5"},
+    "parallel_start_utc": "2026-11-07T04:39:49Z",
+    "instrument_tests_passed": 20,
+    "projection_tests_passed": 56,
+    "deliberate_mutants_detected": 2,
+    "mutants_are_included_in_projection_test_count": true,
+    "finite_topology_cases": 3,
+    "all_three_jobs_exit_zero": true,
+    "log_sha256": {
+      "instrument": "9025cd30904344be74a7d64b5f1145459a8ae27f4e9d0d6a9ec3b253f1b95378",
+      "projection": "c4b25bcbf6f85f76baba90c755b663d2befa5311661c7fb3d787388448547b7a",
+      "topology": "dc0552356fa4dc21874b6cb92df939404b26291b97f06e4be2a3f711cb38fa43"
+    },
+    "independent_reviewer_acceptance": false,
+    "model_measurements_created": 0,
+    "full_repository_test_run": false
+  },
+  "retained_index_exercise": {
+    "source_revision": "01b10c7e551d9a217250f73c1b8c68c0ca444675",
+    "source_index_sha256": "99b675260be323284e441a8782931c930ef1c0ae86b366a377b32365b84d5586",
+    "underlying_board_snapshot": "2026-11-02",
+    "axis_rows": 34,
+    "distinct_review_observations": 7,
+    "carried_observations": 5,
+    "new_regression_observations": 2,
+    "axes_with_observations": 7,
+    "other_axes_are_not_passed": true,
+    "replay_new_content": 0,
+    "replay_carried_content": 7,
+    "source_index_bytes_unchanged": true,
+    "signed_historical_artifacts_modified": 0
+  },
+  "synthetic_timestamp_control": {
+    "not_a_new_source_read": true,
+    "observation_ids_changed": 5,
+    "content_ids_changed": 0,
+    "carried_content": 5
+  },
+  "workflow": {
+    "existing_path": ".github/workflows/evidence-handoff-checks.yml",
+    "added_step": "Held referee continuity and discriminating mutation controls",
+    "permissions": "contents:read unchanged",
+    "new_schedule": false,
+    "host_scheduler_changes": false
+  },
+  "boundaries": {
+    "human_decision": "HOLD",
+    "may_apply": false,
+    "replies": "HELD",
+    "signature_state": "UNSIGNED",
+    "independence": "NOT_ESTABLISHED",
+    "bft_status": "NOT_DEMONSTRATED",
+    "production_release_verified": false,
+    "source_owner_acknowledgement": "NOT_ESTABLISHED",
+    "financial_valuation": null
+  },
+  "limits": [
+    "All test results are same-author engineering checks, not separate organisational acceptance.",
+    "The derived content key excludes capture time only; it is not semantic truth or permission.",
+    "The two new observations describe reproduced code defects, not two independent measurements of model behaviour.",
+    "Hosted checks must be read at the final commit before release; a prior green head is not the new head's result."
+  ]
+}

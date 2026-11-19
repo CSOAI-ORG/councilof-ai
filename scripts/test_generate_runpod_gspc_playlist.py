@@ -130,6 +130,26 @@ class PlaylistGeneratorTests(unittest.TestCase):
             label_axis = next(a for a, _ in generator.AXES if a != keyword_axis)
             self.assertEqual(jobs[label_axis]["max_tokens"], 64)
 
+    def test_canary_row_with_null_expected_is_skipped(self) -> None:
+        """Chain 5: gspc-affect.jsonl line 42 carries _canary with expected=null."""
+        with tempfile.TemporaryDirectory() as temporary:
+            bank = Path(temporary) / "gspc-affect.jsonl"
+            rows = [
+                {"id": "AF-001", "text": "one", "expected": "PERMITTED"},
+                {"id": "AF-002", "text": "two", "expected": "PROHIBITED"},
+                {"id": "AF-003", "text": "three", "expected": "DISCLOSE"},
+                {"id": "CANARY-AF", "_canary": "KINGFISHER", "text": "canary", "expected": None},
+                {"_meta": "version-header", "expected": None},
+            ]
+            bank.write_text(
+                "".join(json.dumps(row) + "\n" for row in rows),
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                generator.bank_labels(bank),
+                ("DISCLOSE", "PERMITTED", "PROHIBITED"),
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

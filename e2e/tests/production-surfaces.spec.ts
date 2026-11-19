@@ -314,6 +314,30 @@ test.describe('Globe & Sovereign Surfaces', () => {
     await expect(page.getByTestId('world-tab-bridges')).toBeFocused();
   });
 
+  // U3 (2026-11-03): the governance library on /tools lists one row per framework the readiness
+  // tool accepts — the rows are DERIVED from the tool's enum, so their count and hrefs must
+  // always match what the door serves. Asserts structure and the honest split, never a number
+  // beyond what the page itself derives.
+  test('Governance library (/tools#governance-library) renders one row per readiness framework', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'networkidle' });
+    const library = page.getByTestId('governance-library');
+    await expect(library).toBeVisible();
+    await expect(library.getByRole('heading', { name: 'Governance library' })).toBeVisible();
+    const rows = library.locator('ul a');
+    const hrefs = await rows.evaluateAll((as) => as.map((a) => (a as HTMLAnchorElement).getAttribute('href')));
+    expect(hrefs.length).toBeGreaterThanOrEqual(9);
+    for (const href of hrefs) {
+      expect(href).toMatch(/^\/dashboard\?tab=tools&tool=framework_readiness&framework=[a-z0-9-]+$/);
+    }
+    // The honest split: the page names what is in preparation and never claims a determination.
+    await expect(library).toContainText(/In preparation/i);
+    await expect(library).toContainText(/never a determination/i);
+    // Following the first row lands the readiness tool preselected in the workspace pane.
+    await rows.first().click();
+    await expect(page).toHaveURL(/tab=tools&tool=framework_readiness&framework=/);
+    await expect(page.getByTestId('dashboard-tool-canvas')).toBeVisible();
+  });
+
   test('Old map URLs redirect into their /map tab', async ({ page }) => {
     await page.goto('/regions', { waitUntil: 'networkidle' });
     await expect(page).toHaveURL(/\/map\?tab=regions/);

@@ -6,7 +6,7 @@ export default function VerifiableTrust() {
   return (
     <DeckPage
       title="The science of verifiable trust | Council of AI"
-      description="What we refuse to measure is why the rest can be believed: the honesty gate, honest ties, unmeasured cells, and a public append-only ledger of our own retractions — including the consensus claim we withdrew about ourselves."
+      description="Explore Council of AI measurement methods, source records, verification boundaries, comparison limits and published corrections."
       hero={VERIFIABLE_TRUST_HERO}
       slides={VERIFIABLE_TRUST_SLIDES}
       notClaimed={VERIFIABLE_TRUST_NOT_CLAIMED}
@@ -14,7 +14,7 @@ export default function VerifiableTrust() {
       jsonLd={{
         "@context": "https://schema.org",
         "@type": "Article",
-        headline: "The science of verifiable trust — negative space and the refutation ledger",
+        headline: "Verifiable measurement methods, source records and corrections",
         publisher: { "@type": "Organization", name: "CSOAI Ltd", url: "https://councilof.ai", identifier: "UK Companies House 16939677" },
         about: "Measurement discipline: honesty gating, honest ties, and published retractions.",
       }}

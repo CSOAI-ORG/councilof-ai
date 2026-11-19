@@ -87,9 +87,18 @@ export function AnswerPage() {
         <section className="mt-10">
           <h2 className="text-sm font-bold uppercase tracking-wide text-slate-500">References</h2>
           <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-600">
-            {a.references.map((r) => (
-              <li key={r}>{r}</li>
-            ))}
+            {a.references.map((r) => {
+              const source = r.match(/^(.*?) — (https:\/\/\S+)$/);
+              return (
+                <li key={r}>
+                  {source ? (
+                    <a href={source[2]} className="text-emerald-800 underline underline-offset-4">
+                      {source[1]}
+                    </a>
+                  ) : r}
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}

@@ -572,9 +572,9 @@ export default function TrainingHub() {
           <div className="grid md:grid-cols-4 gap-6">
             {[
               { icon: Gamepad2, step: "1", title: "Pick a Game", desc: "Choose the style you enjoy. City builder, explorer, detective, card game — all teach AI governance." },
-              { icon: Play, step: "2", title: "Play & Learn", desc: "Every decision you make maps to real compliance actions. You're learning without knowing it." },
-              { icon: Brain, step: "3", title: "Data Flows", desc: "Your gameplay generates data — governance decisions, risk assessments, framework knowledge. The flywheel grows." },
-              { icon: Trophy, step: "4", title: "Get your record", desc: "Your game scores feed your GSPC axes. Complete the course and receive a signed training record — attests learning, never conformity." },
+              { icon: Play, step: "2", title: "Play & Learn", desc: "Practise governance decisions in learning scenarios. Practice is not a compliance determination." },
+              { icon: Brain, step: "3", title: "Data Flows", desc: "Review the activity feedback to identify topics for further practice. Learning activity is separate from published model measurements." },
+              { icon: Trophy, step: "4", title: "Get your record", desc: "Check the completion and record requirements for the selected course. A learning record does not certify competence or legal conformity." },
             ].map(item => (
               <Card key={item.step} className="bg-slate-800/30 border-slate-700/20 text-center">
                 <CardContent className="p-6">
@@ -598,8 +598,8 @@ export default function TrainingHub() {
             Everyone using AI needs training
           </h2>
           <p className="text-xl text-emerald-100 mb-8 max-w-2xl mx-auto">
-            Not boring courses. Addictive games that teach real governance.
-            Free for everyone. The more you play, the stronger the flywheel.
+            Build practical AI-governance knowledge through interactive scenarios.
+            Explore the available learning activities and review what each one covers.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/gspc-arena">
@@ -611,7 +611,7 @@ export default function TrainingHub() {
             <Link href="/courses">
               <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold rounded-xl">
                 <MapPin className="mr-2 h-5 w-5" />
-                Browse the courses that exist
+                Browse available courses
               </Button>
             </Link>
           </div>

@@ -42,6 +42,15 @@ function responseUser(value: unknown): CouncilSessionUser | null {
   return serverUser((value as Record<string, unknown>).user);
 }
 
+export const COUNCIL_SESSION_PERSISTENCE_MESSAGE = "This browser could not save your sign-in session. Sign-in was not completed; allow site storage before trying again.";
+
+export class CouncilSessionPersistenceError extends Error {
+  constructor() {
+    super(COUNCIL_SESSION_PERSISTENCE_MESSAGE);
+    this.name = "CouncilSessionPersistenceError";
+  }
+}
+
 function cancelled(): DOMException {
   return new DOMException("Authentication was cancelled", "AbortError");
 }
@@ -172,8 +181,15 @@ export function createCouncilSessionController(options: {
     if (!active) throw cancelled();
     const operation = begin();
     let expected = storedToken();
-    try {
+    const requireCurrentStorage = () => {
+      if (!current(operation)) throw cancelled();
+      if (!expected.readable || !storedToken().readable) {
+        invalidate(); emit(emptySession()); throw new CouncilSessionPersistenceError();
+      }
       if (!currentStorage(operation, expected)) throw cancelled();
+    };
+    try {
+      requireCurrentStorage();
       const body = action === "register"
         ? { email, password, name: name || email.split("@")[0] }
         : { email, password };
@@ -183,9 +199,9 @@ export function createCouncilSessionController(options: {
         body: JSON.stringify(body),
         signal: operation.abort.signal,
       });
-      if (!currentStorage(operation, expected)) throw cancelled();
+      requireCurrentStorage();
       const result: unknown = await response.json().catch(() => null);
-      if (!currentStorage(operation, expected)) throw cancelled();
+      requireCurrentStorage();
       if (!response.ok) {
         const error = result && typeof result === "object" ? (result as Record<string, unknown>).error : null;
         throw new Error(typeof error === "string" ? error : action === "login" ? "Login failed" : "Registration failed");
@@ -195,7 +211,7 @@ export function createCouncilSessionController(options: {
       if (!user || typeof token !== "string" || !token.trim() || user.email?.toLowerCase() !== email.toLowerCase()) {
         throw new Error("Authentication returned an invalid session");
       }
-      if (!currentStorage(operation, expected)) throw cancelled();
+      requireCurrentStorage();
       // Verify the candidate with the Council origin before caching or publishing anything.
       // Same-origin and independent of any login API override; same AbortSignal as the POST.
       // This does not call restore(): restore would invalidate this operation and reuse the old token.
@@ -205,26 +221,31 @@ export function createCouncilSessionController(options: {
         cache: "no-store",
         signal: operation.abort.signal,
       });
-      if (!currentStorage(operation, expected)) throw cancelled();
+      requireCurrentStorage();
       if (!verification.ok) throw new Error("Authentication could not be verified");
       const verifiedBody: unknown = await verification.json().catch(() => null);
-      if (!currentStorage(operation, expected)) throw cancelled();
+      requireCurrentStorage();
       const verified = responseUser(verifiedBody);
       // The verified /me subject must be the requested and candidate subject. This authenticates the
       // account only; it is not a verified email, profile, private-case or reviewer grant.
       if (!verified || verified.email !== email.toLowerCase() || verified.email !== user.email) {
         throw new Error("Authentication could not be verified");
       }
-      if (!currentStorage(operation, expected)) throw cancelled();
+      requireCurrentStorage();
       try { options.storage!.setItem(COUNCIL_TOKEN_KEY, token); }
-      catch { invalidate(); emit(emptySession()); throw cancelled(); }
+      catch { invalidate(); emit(emptySession()); throw new CouncilSessionPersistenceError(); }
+      const persisted = storedToken();
+      if (!persisted.readable || persisted.token !== token) {
+        invalidate(); emit(emptySession()); throw new CouncilSessionPersistenceError();
+      }
       expected = { readable: true, token };
-      if (!currentStorage(operation, expected)) throw cancelled();
+      requireCurrentStorage();
       cacheUser(verified);
-      if (!currentStorage(operation, expected)) throw cancelled();
+      requireCurrentStorage();
       emit({ user: verified, token, loading: false });
     } catch (error) {
-      if (!currentStorage(operation, expected)) throw cancelled();
+      if (error instanceof CouncilSessionPersistenceError) throw error;
+      requireCurrentStorage();
       emit({ ...state, loading: false });
       throw error;
     } finally {

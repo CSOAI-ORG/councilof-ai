@@ -514,18 +514,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.request_attestation",
-            "sku_id": "request_attestation",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "request_attestation"
           },
           "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
           "extra": {
@@ -534,7 +532,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -551,7 +549,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -571,14 +569,14 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
             "campaign_id": "csoai-launch-30d-20260911",
             "ends_at": "2027-01-11T00:00:00Z",
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "250000000",
-            "offered_amount_atomic": "10000",
+            "offered_amount_atomic": "20000",
             "pricing_basis": "PROMO_EXISTING_DATA",
             "product_id": "csoai.product.evidence_bundle",
             "sku_id": "evidence_bundle",
@@ -591,7 +589,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -608,7 +606,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -629,18 +627,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.issuance",
-            "sku_id": "issuance",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "issuance"
           },
           "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
           "extra": {
@@ -649,7 +645,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -666,7 +662,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -686,18 +682,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.issuance",
-            "sku_id": "issuance",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "issuance"
           },
           "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json.",
           "extra": {
@@ -706,7 +700,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -723,7 +717,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -743,18 +737,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.request_attestation",
-            "sku_id": "request_attestation",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "request_attestation"
           },
           "description": "RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free.",
           "extra": {
@@ -763,7 +755,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -780,7 +772,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -801,18 +793,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.request_attestation",
-            "sku_id": "request_attestation",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "request_attestation"
           },
           "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
           "extra": {
@@ -821,7 +811,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -838,7 +828,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -873,18 +863,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.request_attestation",
-            "sku_id": "request_attestation",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "request_attestation"
           },
           "description": "Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.",
           "extra": {
@@ -893,7 +881,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -910,7 +898,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -931,18 +919,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.wrapper.asset.usdc",
-            "sku_id": "request_attestation",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "request_attestation"
           },
           "description": "Wrapped-asset parity evidence for USDC: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
           "extra": {
@@ -951,7 +937,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -968,7 +954,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1004,18 +990,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.wrapper.asset.usdt",
-            "sku_id": "request_attestation",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "request_attestation"
           },
           "description": "Wrapped-asset parity evidence for USDT: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
           "extra": {
@@ -1024,7 +1008,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1041,7 +1025,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1077,18 +1061,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.wrapper.asset.dai",
-            "sku_id": "request_attestation",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "request_attestation"
           },
           "description": "Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
           "extra": {
@@ -1097,7 +1079,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1114,7 +1096,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1150,14 +1132,14 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
             "campaign_id": "csoai-launch-30d-20260911",
             "ends_at": "2027-01-11T00:00:00Z",
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "25000000",
-            "offered_amount_atomic": "10000",
+            "offered_amount_atomic": "20000",
             "pricing_basis": "PROMO_EXISTING_DATA",
             "product_id": "csoai.product.art50_marking_evidence",
             "sku_id": "art50_marking_evidence",
@@ -1170,7 +1152,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1187,7 +1169,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1208,14 +1190,14 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
             "campaign_id": "csoai-launch-30d-20260911",
             "ends_at": "2027-01-11T00:00:00Z",
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "25000000",
-            "offered_amount_atomic": "10000",
+            "offered_amount_atomic": "20000",
             "pricing_basis": "PROMO_EXISTING_DATA",
             "product_id": "csoai.product.provider_diff_feed",
             "sku_id": "provider_diff_feed",
@@ -1228,7 +1210,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1245,7 +1227,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1265,14 +1247,14 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
             "campaign_id": "csoai-launch-30d-20260911",
             "ends_at": "2027-01-11T00:00:00Z",
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "100000",
-            "offered_amount_atomic": "10000",
+            "offered_amount_atomic": "20000",
             "pricing_basis": "PROMO_EXISTING_DATA",
             "product_id": "csoai.product.receipts_batch",
             "sku_id": "receipts_batch",
@@ -1285,7 +1267,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1302,7 +1284,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1323,18 +1305,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.request_attestation",
-            "sku_id": "request_attestation",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "request_attestation"
           },
           "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim about one MCP endpoint, live. Compares the endpoint's own discovery documents with its initialize and tools/list answers for TOOLS, VERSION or PROTOCOL, each read hashed; no tool is ever called. States: CONSISTENT, INCONSISTENT, or UNCHECKABLE with the reason. Free unsigned preview; verification is free.",
           "extra": {
@@ -1343,7 +1323,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1360,7 +1340,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1382,18 +1362,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.population.stablecoins",
-            "sku_id": "issuance",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "issuance"
           },
           "description": "Stablecoin universe slice: every asset the frozen discovery index catalogues, read from the published artifact. Carries each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
@@ -1402,7 +1380,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1419,7 +1397,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1441,18 +1419,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.population.swift",
-            "sku_id": "issuance",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "issuance"
           },
           "description": "SWIFT-linked bank census slice: every bank named in a dated public notice about the Swift digital-asset MVP. Each row keeps its notice's own wording (LIVE, COMMITTED, DISCOVERED) and a hashed press URL; mixed identity by design, never a client list. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
@@ -1461,7 +1437,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1478,7 +1454,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1500,18 +1476,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.population.xrpl",
-            "sku_id": "issuance",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "issuance"
           },
           "description": "XRPL issued-asset slice: the assets whose signed xrpl.asset.state card sits on the current public root. Read from the live reader, with the issuer registry artifact beside it and never merged. States: INDEXED, UNCHECKABLE or UNMEASURED (a reader that cannot find the locked set is UNMEASURED, never zero). Free preview; verification is free.",
           "extra": {
@@ -1520,7 +1494,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1537,7 +1511,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1559,18 +1533,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.population.x402-bazaar",
-            "sku_id": "issuance",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "issuance"
           },
           "description": "x402 Bazaar listings slice: the payable resources the two public discovery indexes catalogue, from the census artifact. Counted within each frame, with the overlap published, plus the estate's own door census. Appearing in an index is not delivery. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
@@ -1579,7 +1551,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1596,7 +1568,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1618,18 +1590,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.population.mcp-registry",
-            "sku_id": "issuance",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "issuance"
           },
           "description": "MCP registry listings slice: every server name the estate publishes in the official registry, from the census artifact. Each is classified on its latest version, beside the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
           "extra": {
@@ -1638,7 +1608,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1655,7 +1625,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1677,18 +1647,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.population.a2a",
-            "sku_id": "issuance",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "issuance"
           },
           "description": "A2A registry population slice: the agents enumerable without a credential from the public A2A registry frame. Counted within that frame, with the estate's own directory-listing state beside it; a frame count, not a global count. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
@@ -1697,7 +1665,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1714,7 +1682,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1736,18 +1704,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.population.ots-proofs",
-            "sku_id": "issuance",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "issuance"
           },
           "description": "OpenTimestamps proof manifest slice: every published .ots proof of an estate artifact, each state read from its bytes. Rows are Bitcoin-attested, calendar-pending or subject absent; a pending proof is not anchored. States: MEASURED when the rows agree with the manifest, else UNCHECKABLE, or UNMEASURED. Free preview; verification is free.",
           "extra": {
@@ -1756,7 +1722,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1773,7 +1739,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1795,18 +1761,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.population.layer0",
-            "sku_id": "issuance",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "issuance"
           },
           "description": "Layer-0 ceremony slice: every rail and probe of the estate's own machine surface at the ceremony's as_of. Carries the HTTP status each returned and the ceremony artifact's .ots state; self-attestation, dated. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
@@ -1815,7 +1779,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1832,7 +1796,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1854,18 +1818,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.population.corrections",
-            "sku_id": "issuance",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "issuance"
           },
           "description": "Corrections ledger slice: the same entries as free /api/corrections, packaged with per-entry digests. Each entry states what was wrong, how it was caught, the fix and the date; /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
@@ -1874,7 +1836,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1891,7 +1853,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -1913,18 +1875,16 @@
     {
       "accepts": [
         {
-          "amount": "10000",
+          "amount": "20000",
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
           "csoai_pricing": {
-            "campaign_id": "csoai-launch-30d-20260911",
-            "ends_at": "2027-01-11T00:00:00Z",
+            "campaign_id": null,
             "fresh_compute_excluded": true,
             "normal_amount_atomic": "20000",
-            "offered_amount_atomic": "10000",
-            "pricing_basis": "PROMO_EXISTING_DATA",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
             "product_id": "csoai.product.population.claim-watch",
-            "sku_id": "issuance",
-            "starts_at": "2026-09-11T00:00:00Z"
+            "sku_id": "issuance"
           },
           "description": "Claim-maintenance registries slice: each published registry of a vendor's public claims, captured verbatim. Each claim is hashed, source-cited and paired with a measurement plan; file digest, reproducibility and .ots state are read from bytes. CLAIM_CAPTURED, never a claim of falsity. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
           "extra": {
@@ -1933,7 +1893,7 @@
             "symbol": "USDC",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "eip155:8453",
@@ -1950,7 +1910,7 @@
             "name": "USD Coin",
             "version": "2"
           },
-          "maxAmountRequired": "10000",
+          "maxAmountRequired": "20000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",

@@ -1,8 +1,8 @@
 {
  "schema": "csoai.watchdog-signal-index/0.1",
- "as_of": "2026-11-03T03:35:26Z",
- "run_id": "20261103T033526Z",
- "run_artifact": "/interop/watchdog-intake/20261103T033526Z.json",
+ "as_of": "2026-11-13T17:22:53Z",
+ "run_id": "20261113T172253Z",
+ "run_artifact": "/interop/watchdog-intake/20261113T172253Z.json",
  "measure": "PUBLIC SOURCE REACHABILITY AND PARSEABILITY — a count of sources probed",
  "count_grammar": "n counts SOURCES PROBED, the same grammar as effect-binding's 'tool-call servers probed'. It is never pooled with bank-item n and never appears in a mean. REACHABLE means the source answered 200 with a documented shape; UNCHECKABLE means it answered but the body was not the documented shape; UNREACHABLE means it did not answer. These are DIFFERENT facts and are never summed into a single figure that would read like a score.",
  "not_a": [
@@ -92,28 +92,28 @@
    "name": "CISA Known Exploited Vulnerabilities catalog",
    "kind": "advisory-feed",
    "state": "REACHABLE",
-   "count": 1766,
+   "count": 1779,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "effect-binding",
     "supply-chain"
    ],
-   "body_sha256": "3aa9cf3c01f116362a29d111702979175453c425e3733bde80fc4f6f8e2294e5"
+   "body_sha256": "41c8091ad62d508d6f8906ad5cd26b20efe551f7d51b95ecc8a6981fa640b4ea"
   },
   {
    "source_id": "nvd-cve-api",
    "name": "NIST National Vulnerability Database CVE API 2.0",
    "kind": "advisory-feed",
    "state": "REACHABLE",
-   "count": 418180,
+   "count": 425542,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "effect-binding",
     "supply-chain"
    ],
-   "body_sha256": "725c0ecda4371030da8dc66a7c9c1bf03c466b97b0993af79033d6a8f8d381ee"
+   "body_sha256": "466e9103226ff8922af7463079a8bf1785626ae547abf01ab836a6a1c625f57d"
   },
   {
    "source_id": "ghsa-api",
@@ -127,7 +127,7 @@
     "effect-binding",
     "supply-chain"
    ],
-   "body_sha256": "e76618035d2c3c87913439a0758a7d9411e7472adc47d9b7435621c2d1eb2054"
+   "body_sha256": "9028d09aa86a82ea441a9815040fd0353f046126fbfafbba11aacc76e4ea690b"
   },
   {
    "source_id": "osv-query",
@@ -141,7 +141,7 @@
     "effect-binding",
     "supply-chain"
    ],
-   "body_sha256": "b90c0628f286b385ffae6b18bf71b0f13f5131e3bfc2af5c915677b0e95a13dc"
+   "body_sha256": "a31f794e2a4e63f9209480347a6f89a08b7e7955a2dd5e10ddf2b844650a1a6c"
   },
   {
    "source_id": "mitre-cve",
@@ -161,13 +161,13 @@
    "name": "Go vulnerability database index",
    "kind": "advisory-feed",
    "state": "REACHABLE",
-   "count": 1444,
+   "count": 1457,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "supply-chain"
    ],
-   "body_sha256": "052060c04f9feb94c43e892073427c07cfea43e1c7860055087d03c74e6d781e"
+   "body_sha256": "e1064477b87ca8e977447efeb9884de9bfc3bff13a96086368545047a06c35f8"
   },
   {
    "source_id": "depsdev",
@@ -195,20 +195,20 @@
     "serving-fidelity",
     "provenance"
    ],
-   "body_sha256": "2d518afc752294d008714e5b98ee7a51c5902c14f5c1a2441627d9c8d2915db9"
+   "body_sha256": "ddb99bbb2b59dbd30c8d409e60ba3f2d3ee5f11a96e288f59648d64d3c622d06"
   },
   {
    "source_id": "openrouter",
    "name": "OpenRouter model catalog API",
    "kind": "model-registry",
    "state": "REACHABLE",
-   "count": 451,
+   "count": 470,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "serving-fidelity"
    ],
-   "body_sha256": "4400012fefcaa98352c6a75ba3de2aa4e6c91ee79efabcf02b4c241c0a49c1e2"
+   "body_sha256": "bf9547c2076a7d94230810fcb7292aa903a70b85c5b8cebdb271a9b6ff004d7c"
   },
   {
    "source_id": "atlas-current",
@@ -275,14 +275,14 @@
    "name": "Sigstore Rekor transparency log",
    "kind": "transparency-log",
    "state": "REACHABLE",
-   "count": 3535700616,
+   "count": 3736892785,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "provenance",
     "provenance-controls"
    ],
-   "body_sha256": "8d51c4be143e2632bb1253ea711090f7d7d0c1df9eb757c091f02dcdd46123cc"
+   "body_sha256": "f10a237db20706d8291000b5b179ddc64512e3c652f0dd52f446bdb24f336ced"
   },
   {
    "source_id": "openssf-scorecard",
@@ -296,7 +296,7 @@
     "supply-chain",
     "provenance-controls"
    ],
-   "body_sha256": "5a28b55faa76972cafee94a6491328fe7ddf9551d1b61225303222a064e92317"
+   "body_sha256": "d93c861340b0d4d0063cd179351eca21f5cf00e1a57122b8cd45de29aec2cb34"
   },
   {
    "source_id": "safe-repo",

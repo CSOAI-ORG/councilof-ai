@@ -6,6 +6,9 @@ const LEAF = "a".repeat(64);
 const ROOT_HASH = "b".repeat(64);
 // The clock is pinned inside the launch period, so the asserted amount does not flip when the launch
 // amount ends (2027-01-11T00:00:00Z since owner ruling #16, functions/api/_x402.ts X402_LAUNCH_CAMPAIGN).
+// /api/proof is issuance.reserve, whose own band floor is $0.02. The launch campaign amount is now
+// $0.02 (20000 atomic) rather than $0.01, so the campaign no longer moves this door's price: the
+// challenge reports the standard amount, and the receipt publishes both so the numbers agree.
 const context = (path: string) =>
   ({ request: new Request(ORIGIN + path), env: { X402_PROMO_NOW: "2026-09-26T00:00:00Z" }, params: {} }) as never;
 
@@ -31,7 +34,10 @@ describe("/api/proof buyer description", () => {
     expect(challenge.csoai.bazaar_note).not.toContain("CDP indexes after first settled payment");
     expect(challenge.csoai.free.one_inclusion).toBe("/api/proof?sha=<64-hex>");
     expect(challenge.resource.url).toBe(ORIGIN + "/api/proof?bundle=1");
-    expect(challenge.accepts[0].amount).toBe("10000");
+    expect(challenge.accepts[0].amount).toBe("20000");
+    expect(challenge.accepts[0].csoai_pricing?.pricing_basis).toBe("STANDARD");
+    expect(challenge.accepts[0].csoai_pricing?.normal_amount_atomic).toBe("20000");
+    expect(challenge.accepts[0].csoai_pricing?.offered_amount_atomic).toBe("20000");
     expect(challenge.extensions.bazaar.info.input).toMatchObject({
       type: "http", method: "GET", queryParams: { bundle: "1" },
     });

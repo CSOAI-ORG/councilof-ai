@@ -21,6 +21,8 @@
  *   sha the root lists in card_sha256[]. Every wrapper under public/cards/ is included
  *   (a superset of the root is harmless; a subset would 404 a leaf), so a single
  *   lookup resolves any hash on the current root.
+ *   public/card-feed-index.json — the complete root-ordered metadata projection for
+ *   /feed. Its tier comes from published card/proof metadata, not mirror availability.
  *
  * CONSISTENCY:
  *   Wired into `build:client` BEFORE `vite build`, so it reads the public/cards/ and
@@ -33,15 +35,26 @@
  *   that already exist under /cards/ and /proofs/. It signs nothing and asserts nothing.
  *
  * Run: node scripts/generate-cards-bundle.mjs   (wired into `npm run build:client`)
+ *      node scripts/generate-cards-bundle.mjs --feed-index-only
+ *      node scripts/generate-cards-bundle.mjs --check-feed-index   (read-only parity)
  */
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { buildCardFeedIndex } from "./card-feed-index.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CARDS_DIR = join(ROOT, "public", "cards");
 const ROOT_JSON = join(ROOT, "public", "root.json");
 const OUT = join(ROOT, "public", "cards-bundle.json");
+const FEED_OUT = join(ROOT, "public", "card-feed-index.json");
+const args = process.argv.slice(2);
+if (args.length > 1 || args.some(arg => !["--feed-index-only", "--check-feed-index"].includes(arg))) {
+  console.error("Usage: node scripts/generate-cards-bundle.mjs [--feed-index-only | --check-feed-index]");
+  process.exit(2);
+}
+const checkFeed = args.includes("--check-feed-index");
+const feedOnly = args.includes("--feed-index-only");
 
 const HEX64 = /^[0-9a-f]{64}$/;
 
@@ -49,7 +62,8 @@ let root = {};
 try {
   root = JSON.parse(readFileSync(ROOT_JSON, "utf8"));
 } catch {
-  console.warn("[cards-bundle] public/root.json unreadable — bundle will carry no merkle_root/as_of");
+  console.error("[cards-bundle] ERROR: public/root.json unreadable — refusing to write derived outputs.");
+  process.exit(1);
 }
 
 const cards = {};
@@ -98,6 +112,29 @@ if (missing.length) {
   process.exit(1);
 }
 
+// Validate the complete root before either output is written. Projection has no
+// clock, network, signatures, card payloads or extra historical leaves.
+let feedBytes;
+try {
+  feedBytes = JSON.stringify(buildCardFeedIndex(root, cards)) + "\n";
+} catch (error) {
+  console.error(`[cards-bundle] ERROR: ${error.message}`);
+  process.exit(1);
+}
+if (checkFeed) {
+  if (!existsSync(FEED_OUT) || readFileSync(FEED_OUT, "utf8") !== feedBytes) {
+    console.error("[card-feed-index] STALE or missing: regenerate with --feed-index-only");
+    process.exit(1);
+  }
+  console.log(`[card-feed-index] CHECK OK: ${rootHashes.length} complete root entries`);
+  process.exit(0);
+}
+if (feedOnly) {
+  writeFileSync(FEED_OUT, feedBytes);
+  console.log(`[card-feed-index] ${rootHashes.length} complete root entries -> public/card-feed-index.json`);
+  process.exit(0);
+}
+
 // Sorted keys → byte-stable output on an unchanged corpus.
 const orderedCards = {};
 for (const k of Object.keys(cards).sort()) orderedCards[k] = cards[k];
@@ -118,8 +155,25 @@ const bundle = {
   cards: orderedCards,
 };
 
-writeFileSync(OUT, JSON.stringify(bundle, null, 2) + "\n");
+// MINIFIED ON PURPOSE (2026-11-07). This file is a transport artefact, not a record: nothing
+// reads its whitespace, and every consumer parses it. Cloudflare Pages rejects any single file
+// over 25 MiB, and this one was at 24.89 MiB — 113 KiB of headroom — with the corpus still
+// growing by ~350 KiB per publish. The next card batch would have taken the whole site down,
+// and it did: the public-root candidate PR #3710 failed its own gates on
+// "cards-bundle.json — 25.2 MiB", which froze the public root for five days.
+//
+// The indentation was costing 6.29 MiB of pure whitespace (26,098,183 bytes -> 19,501,504).
+// Minified, the same content is 18.60 MiB and the headroom is 6.4 MiB — roughly nineteen more
+// publishes at the current rate. Content is byte-for-byte the same object: JSON.stringify with
+// no indent produces the identical value, and every reader does JSON.parse.
+//
+// This is not a fix for unbounded growth. It buys the room to shard the aggregate properly
+// before the next cliff. If it ever runs out again, shard it (a hash -> shard index plus one
+// shard per fetch is still O(1) subrequests, which is the only property this file exists for).
+writeFileSync(OUT, JSON.stringify(bundle) + "\n");
+writeFileSync(FEED_OUT, feedBytes);
 console.log(
   `[cards-bundle] ${read} cards -> public/cards-bundle.json ` +
     `(${rootHashes.length} on root, all resolved; ${skipped} non-card/unreadable files skipped)`,
 );
+console.log(`[card-feed-index] ${rootHashes.length} complete root entries -> public/card-feed-index.json`);

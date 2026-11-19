@@ -21,6 +21,10 @@ on:
       axis:
         description: "axis to re-run"
         default: "gspc-axis"
+concurrency:
+  group: eval-ci-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   bank-gate-and-delta:
     runs-on: ubuntu-latest

@@ -32,6 +32,7 @@ import { a2uiForTool } from "./a2uiSurfaces";
 import { executePlan, extractAxis, routeIntent, ROUTABLE_TOOLS, type Plan } from "./talkRouter";
 import { FRONTEND_TOOLS, FRONTEND_TOOL_NAMES, planUi, readPageContext, withPageSubject, type UiPlan } from "./uiTools";
 import PAID_TOOLS from "../mcp/paid-tools.json";
+import { blockedAITools, parseAIExecution, type AIExecutionSelection } from "./aiExecutionSelection";
 
 type Json = Record<string, unknown>;
 
@@ -141,6 +142,10 @@ export function aguiDescriptor(origin: string): Json {
     events: [...AGUI_EVENT_TYPES],
     router: "deterministic keyword/entity routing onto the POST /mcp tools; no model in the path",
     tools: [...ROUTABLE_TOOLS],
+    execution: { version: 1, host: "cloud", provider: "council-tools", connectivity: "online",
+      tools: [...new Set([...ROUTABLE_TOOLS, ...FRONTEND_TOOL_NAMES])],
+      selection: "forwardedProps.execution restricts this question; it does not grant tool, model, payment or offline authority.",
+      unavailable: ["local models", "other AI providers", "offline execution"] },
     frontend_tools: {
       declare: "RunAgentInput.tools: the AG-UI Tool definitions below. Only declared tools are called.",
       consent: "forwardedProps.consent = {watch: true}. Without it a run that would move the page emits CUSTOM consent_required and calls no frontend tool.",
@@ -174,6 +179,16 @@ export async function serveAguiRun(
     body = rec(await request.json()) ?? {};
   } catch {
     body = {};
+  }
+  let execution: AIExecutionSelection | null = null;
+  const forwarded = rec(body.forwardedProps);
+  try {
+    if (forwarded && Object.prototype.hasOwnProperty.call(forwarded, "execution")) {
+      execution = parseAIExecution(forwarded.execution, new Set([...ROUTABLE_TOOLS, ...FRONTEND_TOOL_NAMES]));
+    }
+  } catch (error) {
+    return Response.json({ error: "invalid_execution_selection", message: error instanceof Error ? error.message : "Invalid AI and tools selection." },
+      { status: 400, headers: { ...CORS, "cache-control": "no-store" } });
   }
   const threadId = typeof body.threadId === "string" && body.threadId ? body.threadId : crypto.randomUUID();
   const runId = typeof body.runId === "string" && body.runId ? body.runId : crypto.randomUUID();
@@ -231,6 +246,18 @@ export async function serveAguiRun(
           const steps = planned.steps.filter((s) => declared.has(s.tool));
           if (steps.length) ui = { intent: planned.intent, steps };
         }
+      }
+      // Check the whole plan before any backend call or frontend action is emitted.
+      const blocked = blockedAITools(execution, [
+        ...(plan.kind === "tools" ? plan.calls.map(call => call.tool) : []),
+        ...(ui && watchConsented(body) ? ui.steps.map(step => step.tool) : []),
+      ]);
+      if (blocked.length) {
+        await emit({ type: "CUSTOM", name: "tools_disabled", value: { tools: blocked } });
+        await say("These tools are turned off for this question: " + blocked.join(", ") + ". No planned tool was called. Change AI & tools before asking again.");
+        await emit({ type: "RUN_FINISHED", threadId, runId, result: { grounded: false, blocked_tools: blocked } });
+        onState?.("needs_input");
+        return;
       }
       const uiIds: string[] = [];
       if (ui && !watchConsented(body)) {

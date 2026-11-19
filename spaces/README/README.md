@@ -20,7 +20,7 @@ tags:
 
 **Council for the Safety of Artificial Intelligence** · Operated by CSOAI Ltd
 
-We publish scoped AI measurements with their methods, evidence and limitations. GSPC is our public measurement board. A measured result applies to a particular question, system and method; it is not certification, accreditation or permission to execute.
+Council of AI is an operating AI measurement and evidence organisation. We publish scoped measurements with their methods, evidence and limitations, and maintain the GSPC board, verification tools and public corrections. A measured result applies to a particular question, system and method; it is not certification, accreditation or permission to execute.
 
 ## Start here
 
@@ -31,6 +31,7 @@ We publish scoped AI measurements with their methods, evidence and limitations. 
 | Work in Kaggle | [GSPC Living Board dataset](https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board) |
 | Check a signed record | [Free verification](https://councilof.ai/gspc-verify) |
 | Understand the method | [Methodology and limits](https://councilof.ai/methodology/) |
+| Inspect documented external use | [Technical reuse and distribution evidence](https://councilof.ai/traction/) |
 | Find a particular model | [Search the board](https://huggingface.co/spaces/csoai/gspc-board) |
 
 ## Contribute a review

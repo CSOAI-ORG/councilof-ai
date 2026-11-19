@@ -20,6 +20,10 @@ on:
       - "tools/_jcs.py"
   workflow_dispatch: {}
 
+concurrency:
+  group: inspect-adoption-gate-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   gate:
     runs-on: ubuntu-latest

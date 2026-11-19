@@ -65,6 +65,9 @@ const DashboardRequestPane = lazy(
 const DashboardArenaPane = lazy(
   () => import("@/components/DashboardArenaPane"),
 );
+const DashboardEvidenceLearningPane = lazy(
+  () => import("@/components/DashboardEvidenceLearningPane"),
+);
 const DashboardLearningPane = lazy(
   () => import("@/components/DashboardLearningPane"),
 );
@@ -110,6 +113,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   measured: DashboardRequestPane,
   space: DashboardArenaPane,
   learn: DashboardLearningPane,
+  "evidence-learning": DashboardEvidenceLearningPane,
   research: DashboardResearchPane,
   // software: signed-in dashboard at /dashboard, the layout redirects there
   play: LobbyPlay, // gold local-play gallery (local kind)

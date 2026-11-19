@@ -143,7 +143,7 @@ export default function DocsHub() {
               <InA to="/gspc">/gspc</InA> — the board itself.{" "}
               <InA to="/methodology/">/methodology</InA> — fleets, frozen banks,
               deterministic grading, separation tests.{" "}
-              <InA to="/honesty/">/honesty</InA> — what we cannot measure yet.{" "}
+              <InA to="/honesty/">/honesty</InA> — measurement scope and limitations.{" "}
               <InA to="/corrections">/corrections</InA> — the full public ledger
               of what we published and got wrong.
             </p>

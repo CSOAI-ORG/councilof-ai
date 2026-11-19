@@ -48,6 +48,9 @@ export const PRIMARY_PATHS = new Set<string>([
   "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/verify-leaderboard", "/assess",
   "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
   "/models", "/tools", "/plugin", "/watchdog-hub",
+  // The current Public Watchdog dashboard, linked from the public site; keep its live route out
+  // of archive classification while the separate incident service remains unstaffed.
+  "/watchdog",
   // The GSPC console moved from a static file into the site shell (27 Sep 2026).
   "/gspc-console",
   // Connect GSPC to your AI — the per-platform install matrix + registry funnel.
@@ -163,6 +166,14 @@ export const PRIMARY_PATHS = new Set<string>([
   // archive" banner until 2026-09-27, which reads as a stale policy to anyone checking it (the Claude
   // connector directory requires a current privacy policy link).
   "/privacy-policy", "/privacy", "/legal/privacy",
+  // Current pages a primary surface links to, which shipped under the "Reference / archive" banner
+  // until 18 Nov 2026: /careers (footer "Careers"), /open-source (home "Explore open source and
+  // data"), /team (header nav "Team") and /metered (footer "Metered evidence catalog (live
+  // quotes)"; each of its 27 live-quote links answered that day, and each resource behind them
+  // returned an x402 challenge). Left libraried: /pressroom (the owner is choosing the canonical
+  // press room), /refund-policy (owner-pending refund and booking terms), /cookie-policy (its
+  // wording is with the owner), /challenge and /learn (no header, footer, home or menu link).
+  "/careers", "/open-source", "/team", "/metered",
   "/faq", "/traction",
   // #148 — /dispute is a live Charter Article 18 page, not an archive.
   // Without this entry it shipped under the "Reference / archive" banner.

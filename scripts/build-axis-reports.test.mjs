@@ -133,7 +133,7 @@ describe("build-axis-reports — derivation rules on a fixture corpus", () => {
 });
 
 describe("build-axis-reports — the parts that must be able to fail", () => {
-  it("writes, then --check is green; tamper a file and --check goes red; a rerun heals it", async () => {
+  it("heals a tampered owned report while preserving an unowned neighbouring file", async () => {
     const repo = fixtureRepo();
     try {
       const w = await writeTree({ repo, slots: SLOTS, verify: verifyOk });
@@ -144,14 +144,18 @@ describe("build-axis-reports — the parts that must be able to fail", () => {
       expect(green.ok).toBe(true);
       expect(green.stale).toEqual([]);
       writeFileSync(p, readFileSync(p, "utf8").replace('"UNMEASURED"', '"MEASURED"'));
-      writeFileSync(join(repo, "public/reports/model-two-3b/orphan.json"), "{}");
+      // A neighbouring file is not owned merely because it shares a subject directory.
+      const unowned = join(repo, "public/reports/model-two-3b/another-producer.json");
+      const sentinel = '{"producer":"another-producer","preserve":true}\n';
+      writeFileSync(unowned, sentinel);
       const red = await writeTree({ repo, slots: SLOTS, verify: verifyOk, check: true });
       expect(red.ok).toBe(false);
       expect(red.stale).toContain("model-two-3b/governance.json");
-      expect(red.stale).toContain("model-two-3b/orphan.json (orphan)");
+      expect(red.stale.some((entry) => entry.startsWith("model-two-3b/another-producer.json"))).toBe(false);
       await writeTree({ repo, slots: SLOTS, verify: verifyOk });
-      expect(existsSync(join(repo, "public/reports/model-two-3b/orphan.json"))).toBe(false);
+      expect(readFileSync(unowned, "utf8")).toBe(sentinel);
       expect(JSON.parse(readFileSync(p, "utf8")).status).toBe("UNMEASURED");
+      expect((await writeTree({ repo, slots: SLOTS, verify: verifyOk, check: true })).ok).toBe(true);
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }
@@ -184,3 +188,4 @@ describe("build-axis-reports — the parts that must be able to fail", () => {
     expect(st.reason).toMatch(/states status 'DRAFT'/);
   });
 });
+

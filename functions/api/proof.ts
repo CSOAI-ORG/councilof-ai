@@ -1,3 +1,4 @@
+import { postObservationState } from "./_bookkeeping_budget";
 import { recordPaidResponse, markPaidUndeliveredResponse } from "./_x402_delivery_record";
 /**
  * GET /api/proof — inclusion proofs for public-root leaves.
@@ -213,7 +214,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       200,
       // Echo settlement back per x402 when the facilitator returned one; omitted otherwise.
       payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-    ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+    ), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
   }
 
   if (!/^[0-9a-f]{64}$/.test(sha)) {
@@ -281,6 +282,33 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   const cardRes = await fetch(u(`/cards/${sha.slice(0, 16)}.json`));
   if (!cardRes.ok) {
+    // T18 F3 fallback: consult /cards-bundle.json when the /cards/<sha16>.json HF redirect 404s
+    const bundleRes = await fetch(u("/cards-bundle.json"));
+    if (bundleRes.ok) {
+      const cbundle = (await bundleRes.json()) as {
+        cards?: Record<string, { proof?: unknown[] } | undefined>;
+      };
+      const entry = cbundle?.cards?.[sha];
+      if (entry && Array.isArray(entry.proof)) {
+        return json({
+          schema: "csoai.public-root-proof/0.1",
+          kind: "inclusion",
+          free: true,
+          as_of: root.as_of || null,
+          sha256: sha,
+          index,
+          proof: entry.proof,
+          merkle_root: root.merkle_root || null,
+          card_count: root.card_count ?? null,
+          tree_bound:
+            "Reject this proof if index >= card_count: the tree duplicates an odd node, so a " +
+            "path into the duplicated tail recomputes to the same root without having been signed.",
+          note:
+            "Inclusion resolved from cards-bundle.json (card wrapper redirect returned HTTP " +
+            `${cardRes.status}).`,
+        });
+      }
+    }
     return json(
       {
         schema: "csoai.public-root-proof/0.1",

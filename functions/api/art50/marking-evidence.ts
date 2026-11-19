@@ -1,3 +1,5 @@
+import { postSettlementStore, postObservationState } from "../_bookkeeping_budget";
+import { captureBuyerRequest, type SettledBuyer } from "../_buyer_purchase";
 import { recordPaidResponse } from "../_x402_delivery_record";
 /**
  * /api/art50/marking-evidence — the Article 50 marking-evidence pack.
@@ -305,6 +307,8 @@ async function invoiceReference(org: string, subjectSha: string | null, fetched_
 
 // ───────────────────────────── handler ─────────────────────────────
 const handle: PagesFunction<Env> = async ({ request, env }) => {
+  const purchaseRequest=captureBuyerRequest(request);
+  let buyer:SettledBuyer|undefined;let buyerState:string|undefined;
   const url = new URL(request.url);
   const origin = url.origin;
   const resourceUrl = new URL("/api/art50/marking-evidence", origin).toString();
@@ -368,7 +372,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       },
       outputExample: { schema: KIND, measurement: { checked: [] } },
     });
-    const payment = await verifyX402Payment(request, env, challengeUrl, accepts[0], { bazaar });
+    const payment = await verifyX402Payment(purchaseRequest, env, challengeUrl, accepts[0], { bazaar });
     if (!payment.ok) {
       return paymentRequiredResponseSigned(
         buildPaymentRequiredV2({
@@ -463,7 +467,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
         422,
       );
     }
-    const paid = await verifyX402Payment(request, env, challengeUrl, accepts[0], { bazaar });
+    const paid = await verifyX402Payment(purchaseRequest, env, challengeUrl, accepts[0], { bazaar });
     if (!paid.ok) {
       const paymentRequired = buildPaymentRequiredV2({
         resourceUrl: challengeUrl,
@@ -491,6 +495,8 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     }
     payment = { mode: "x402", network: paid.settlement?.network || null, transaction: paid.settlement?.transaction || null, payer: paid.settlement?.payer || null };
     paymentResponseHeader = paid.paymentResponse;
+    buyer=paid.buyer;buyerState=paid.purchaseState;
+    Object.defineProperty(payment,"observationBudget",{value:paid.observationBudget,enumerable:false});
   }
 
   // PAID AND NOT SIGNED IS NEVER A BARE 500 (7 Oct 2026). By here the buyer has paid (x402 settled,
@@ -502,7 +508,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     let recorded: string | null = null;
     if (env.REVENUE_KV) {
       try {
-        await env.REVENUE_KV.put(key, JSON.stringify(failure));
+        await postSettlementStore(env.REVENUE_KV,payment!).put(key, JSON.stringify(failure));
         recorded = `REVENUE_KV ${key}`;
       } catch {
         recorded = null;
@@ -560,9 +566,9 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
 
   if (env.REVENUE_KV) {
     try {
-      const n = Number((await env.REVENUE_KV.get("count:issuances")) || "0") + 1;
-      await env.REVENUE_KV.put("count:issuances", String(n));
-      await env.REVENUE_KV.put(`art50:${leaf.sha256}`, JSON.stringify({ subject: m.subject.sha256, payment, as_of: fetched_at }));
+      const n = Number((await postSettlementStore(env.REVENUE_KV,payment!).get("count:issuances")) || "0") + 1;
+      await postSettlementStore(env.REVENUE_KV,payment!).put("count:issuances", String(n));
+      await postSettlementStore(env.REVENUE_KV,payment!).put(`art50:${leaf.sha256}`, JSON.stringify({ subject: m.subject.sha256, payment, as_of: fetched_at }));
     } catch {
       /* a tally failure never blocks a deliverable */
     }
@@ -607,7 +613,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     },
     200,
     paymentResponseHeader ? { "x-payment-response": paymentResponseHeader } : {},
-  ), { kv: env.REVENUE_KV, transaction: typeof payment.transaction === "string" ? payment.transaction : null, resource: resourceUrl, confirmedPaid: payment.mode === "x402", successfulOutput: true });
+  ), { kv: env.REVENUE_KV, observationState:postObservationState(payment!), buyer, buyerState, paymentResponse:paymentResponseHeader, transaction: typeof payment.transaction === "string" ? payment.transaction : null, resource: challengeUrl, confirmedPaid: payment.mode === "x402", successfulOutput: true });
 };
 
 export const onRequestGet = handle;

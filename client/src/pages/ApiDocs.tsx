@@ -343,9 +343,9 @@ console.log({
           <Card className="mb-12 border-l-4 border-l-amber-500">
             <CardContent className="p-6 space-y-3 text-sm text-muted-foreground">
               <p>
-                <strong className="text-foreground">There is no /v1/* SaaS API, no SDK to install,
-                and no API key to request.</strong> This is a measurement body, not a platform:
-                the public interface is a keyless JSON board. A valid optional site attestation
+                <strong className="text-foreground">The public board endpoint needs no SDK or API key.</strong>{" "}
+                Read its keyless JSON directly, or use the documented agent interfaces.
+                A valid optional site attestation
                 proves snapshot integrity; it does not prove that every aggregate is independently
                 recomputable.
               </p>

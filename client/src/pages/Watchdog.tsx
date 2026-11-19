@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
 import { verifyRecord } from "@/lib/recordVerify";
 import WorkingGroups from "@/components/WorkingGroups";
-// Shared with the server-side router (#3141): 4xx/5xx/timeout is UNCHECKABLE, never FAILED.
-import { retrievalState } from "../../../functions/_lib/watchdogRoute";
+import { readWatchdogJson as getJson } from "@/lib/watchdogRead";
 import {
+  CLAIM_STATES,
   CORRECTIONS_URL,
   REGISTER_URL,
   claimHref,
@@ -12,11 +12,10 @@ import {
   conclusionResult,
   correctionsFor,
   evidenceLinkState,
+  filterWatchdogClaims,
   libraryHref,
   parseJourney,
   registryPath,
-  retrievalFailed,
-  sha256Hex,
   sidecarPath,
   signatureResult,
   summariseRegister,
@@ -25,6 +24,7 @@ import {
   type Retrieval,
   type ThreeResults,
   type WatchClaim,
+  type ClaimState,
 } from "@/lib/watchdogJourney";
 import { NLM_CHECKED_ON, NLM_IDS, NLM_NAMED, NLM_SOURCE, ZENODO_REDIRECTED, ZENODO_TOMBSTONED } from "@/data/nlmCrosswalk";
 
@@ -39,23 +39,6 @@ import { NLM_CHECKED_ON, NLM_IDS, NLM_NAMED, NLM_SOURCE, ZENODO_REDIRECTED, ZENO
 
 const FOCUS = "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary";
 const TOMBSTONES = { checkedOn: NLM_CHECKED_ON, ids: ZENODO_TOMBSTONED };
-
-async function getJson(url: string): Promise<Retrieval<{ json: unknown; text: string }>> {
-  const fetchedAt = new Date().toISOString();
-  try {
-    const res = await fetch(url, { cache: "no-store", headers: { accept: "application/json" } });
-    if (retrievalState(res.status) === "UNCHECKABLE" || !res.ok) return retrievalFailed(`HTTP ${res.status}`, fetchedAt, res.status);
-    const text = await res.text();
-    try {
-      return { state: "OK", value: { json: JSON.parse(text), text }, fetchedAt, status: res.status, sha256: await sha256Hex(text) };
-    } catch {
-      return retrievalFailed("The response was not JSON", fetchedAt, res.status);
-    }
-  } catch (e) {
-    // A network error or timeout maps through the same helper: retrievalState(null, true) is UNCHECKABLE.
-    return retrievalFailed(e instanceof Error ? e.message : "Network error", fetchedAt);
-  }
-}
 
 function Chip({ word }: { word: string }) {
   return <span className="inline-flex items-center rounded-md border border-border px-2 py-0.5 font-mono text-xs font-semibold text-foreground">{word}</span>;
@@ -118,19 +101,23 @@ export default function Watchdog() {
 function Claims({ params, go }: { params: ReturnType<typeof parseJourney>; go: (h: string) => void }) {
   const [register, setRegister] = useState<Retrieval<{ json: unknown; text: string }> | null>(null);
   const [registries, setRegistries] = useState<Record<string, Retrieval<{ json: unknown; text: string }>>>({});
+  const [query, setQuery] = useState("");
+  const [stateFilter, setStateFilter] = useState<ClaimState | "ALL">("ALL");
 
   useEffect(() => {
     let off = false;
-    getJson(REGISTER_URL).then(async (r) => {
+    const controller = new AbortController();
+    getJson(REGISTER_URL, controller.signal).then(async (r) => {
       if (off) return;
       setRegister(r);
       if (r.state !== "OK") return;
       const live = summariseRegister(r.value.json).live;
-      const got = await Promise.all(live.map(async (l) => [l.registryId, await getJson(l.url)] as const));
+      const got = await Promise.all(live.map(async (l) => [l.registryId, await getJson(l.url, controller.signal)] as const));
       if (!off) setRegistries(Object.fromEntries(got));
     });
     return () => {
       off = true;
+      controller.abort();
     };
   }, []);
 
@@ -140,13 +127,14 @@ function Claims({ params, go }: { params: ReturnType<typeof parseJourney>; go: (
     [registries],
   );
   const failed = Object.entries(registries).filter(([, r]) => r.state !== "OK") as [string, Extract<Retrieval<unknown>, { state: "UNCHECKABLE" }>][];
+  const filteredClaims = useMemo(() => filterWatchdogClaims(claims, query, stateFilter), [claims, query, stateFilter]);
   const bySubject = useMemo(() => {
     const m = new Map<string, WatchClaim[]>();
-    for (const c of claims) m.set(c.subject, [...(m.get(c.subject) ?? []), c]);
+    for (const c of filteredClaims) m.set(c.subject, [...(m.get(c.subject) ?? []), c]);
     return [...m.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-  }, [claims]);
+  }, [filteredClaims]);
 
-  if (params.registry && params.claim) return <ClaimDetail registryId={params.registry} claimId={params.claim} go={go} />;
+  if (params.registry && params.claim) return <ClaimDetail key={params.registry + ":" + params.claim} registryId={params.registry} claimId={params.claim} go={go} />;
 
   return (
     <section className="mt-8" aria-labelledby="wd-claims">
@@ -164,9 +152,34 @@ function Claims({ params, go }: { params: ReturnType<typeof parseJourney>; go: (
       {failed.map(([id, r]) => (
         <Unreadable key={id} what={`Registry ${id}`} r={r} />
       ))}
+      <div role="search" aria-label="Search loaded Watchdog claims" className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_12rem]">
+        <div>
+          <label htmlFor="watchdog-claim-search" className="mb-1 block text-sm font-semibold">Search published claims</label>
+          <input id="watchdog-claim-search" type="search" data-testid="watchdog-search" value={query}
+            onChange={(event) => setQuery(event.target.value)} maxLength={160}
+            placeholder="Organisation, claim, source or ID"
+            className="min-h-11 w-full rounded-lg border border-border bg-background px-3 text-foreground" />
+        </div>
+        <div>
+          <label htmlFor="watchdog-state-filter" className="mb-1 block text-sm font-semibold">Claim state</label>
+          <select id="watchdog-state-filter" data-testid="watchdog-state-filter"
+            value={stateFilter} onChange={(event) => setStateFilter(event.target.value as ClaimState | "ALL")}
+            className="min-h-11 w-full rounded-lg border border-border bg-background px-3 text-foreground">
+            <option value="ALL">All states</option>
+            {CLAIM_STATES.map((state) => <option key={state} value={state}>{state.replaceAll("_", " ")}</option>)}
+          </select>
+        </div>
+      </div>
+      <p role="status" aria-live="polite" className="mt-2 text-sm text-muted-foreground" data-testid="watchdog-filter-summary">
+        Showing {filteredClaims.length} of {claims.length} loaded claims.
+        {failed.length ? " " + failed.length + " registries could not be read; search results may be incomplete." : ""}
+      </p>
+      {claims.length > 0 && filteredClaims.length === 0 && (
+        <p className="mt-3 text-sm" data-testid="watchdog-no-search-results">No matching claims among the records currently loaded. Clear your search or change the state filter. This is not a finding about an organisation.</p>
+      )}
       <div className="mt-4 space-y-4">
         {bySubject.map(([subject, list]) => (
-          <details key={subject} className="rounded-xl border border-border bg-card p-3">
+          <details key={subject} data-testid="watchdog-subject" className="rounded-xl border border-border bg-card p-3">
             <summary className={`cursor-pointer font-semibold ${FOCUS}`}>
               {subject} <span className="text-sm font-normal text-muted-foreground">({list.length})</span>
             </summary>
@@ -201,35 +214,66 @@ function ClaimDetail({ registryId, claimId, go }: { registryId: string; claimId:
   const [results, setResults] = useState<ThreeResults | null>(null);
   const [busy, setBusy] = useState(false);
   const path = registryPath(registryId);
+  const revision = useRef(0);
+  const reads = useRef<AbortController | null>(null);
 
   const load = useCallback(() => {
+    const current = ++revision.current;
+    reads.current?.abort();
+    const controller = new AbortController();
+    reads.current = controller;
     setResults(null);
-    if (path) getJson(path).then(setReg);
-    getJson(CORRECTIONS_URL).then(setCorr);
+    setBusy(false);
+    setReg(null);
+    setCorr(null);
+    if (path) getJson(path, controller.signal).then((r) => {
+      if (revision.current === current) setReg(r);
+    });
+    getJson(CORRECTIONS_URL, controller.signal).then((r) => {
+      if (revision.current === current) setCorr(r);
+    });
   }, [path]);
-  useEffect(load, [load]);
+  useEffect(() => {
+    load();
+    return () => {
+      ++revision.current;
+      reads.current?.abort();
+    };
+  }, [load]);
 
   const claim = reg?.state === "OK" ? claimsFromRegistry(reg.value.json).find((c) => c.claimId === claimId) ?? null : null;
 
   const verify = async () => {
     if (!claim || reg?.state !== "OK") return;
+    const current = revision.current;
     setBusy(true);
-    const inclusion = await verifyInclusion(claim.inclusion);
-    const side = sidecarPath(registryId);
-    const sc = side ? await getJson(side) : null;
-    let sigState: string | null = null;
-    let pinned: string | null = null;
-    let reasons: string[] = [];
-    if (sc?.state === "OK") {
-      const v = await verifyRecord(sc.value.text);
-      sigState = v.state;
-      reasons = v.reasons;
-      const p = (sc.value.json as { payload?: { artifact?: { sha256?: unknown } } })?.payload?.artifact?.sha256;
-      pinned = typeof p === "string" ? p : null;
-    } else sigState = "UNCHECKABLE";
-    const signature = sc?.state === "OK" ? signatureResult(sigState, pinned, reg.sha256 ?? null, reasons) : { result: "UNCHECKABLE" as const, detail: `The signed sidecar could not be read (${sc ? sc.reason : "no path"}).` };
-    setResults({ signature, inclusion, conclusion: conclusionResult(claim) });
-    setBusy(false);
+    setResults(null);
+    let inclusion: ThreeResults["inclusion"] = { result: "UNCHECKABLE", detail: "Root inclusion could not be checked in this browser." };
+    let signature: ThreeResults["signature"] = { result: "UNCHECKABLE", detail: "The signature could not be checked in this browser." };
+    try {
+      try {
+        inclusion = await verifyInclusion(claim.inclusion);
+      } catch {
+        // A verifier exception is not an invalid proof or a finding about the claim.
+      }
+      if (revision.current !== current) return;
+      const side = sidecarPath(registryId);
+      const sc = side ? await getJson(side, reads.current?.signal) : null;
+      if (sc?.state === "OK") {
+        const v = await verifyRecord(sc.value.text);
+        const p = (sc.value.json as { payload?: { artifact?: { sha256?: unknown } } })?.payload?.artifact?.sha256;
+        signature = signatureResult(v.state, typeof p === "string" ? p : null, reg.sha256 ?? null, v.reasons);
+      } else {
+        signature = { result: "UNCHECKABLE", detail: "The signed sidecar could not be read (" + (sc ? sc.reason : "no path") + ")." };
+      }
+    } catch {
+      // Keep any independently completed inclusion result and allow a retry.
+    } finally {
+      if (revision.current === current) {
+        setResults({ signature, inclusion, conclusion: conclusionResult(claim) });
+        setBusy(false);
+      }
+    }
   };
 
   return (

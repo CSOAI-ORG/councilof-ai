@@ -1,0 +1,20 @@
+/* Additive front-door journeys; reuse the homepage's colour and spacing tokens. */
+.home-page .hp-hero-index[data-journey-index] { grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: 18px; }
+.home-page .hp-public-journey { scroll-margin-top: 5rem; }
+.home-page .hp-public-journey-soft { background: var(--hp-soft); }
+.home-page .hp-journey-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.home-page .hp-journey-card { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--hp-line); border-radius: 10px; padding: 26px; background: var(--hp-paper); }
+.home-page .hp-journey-card > svg { color: var(--hp-green); }
+.home-page .hp-journey-card h3 { margin: 22px 0 12px; font-size: 23px; line-height: 1.25; letter-spacing: -0.03em; }
+.home-page .hp-journey-card p { margin: 0 0 20px; color: var(--hp-muted); font-size: 15px; line-height: 1.7; }
+.home-page .hp-journey-card a { margin-top: auto; min-height: 44px; font-size: 14px; }
+.home-page .hp-journey-disclosure { margin-top: 18px; padding: 0 22px; border: 1px solid var(--hp-line); border-radius: 8px; background: var(--hp-paper); }
+.home-page .hp-journey-disclosure summary { cursor: pointer; min-height: 52px; padding: 16px 0; font-size: 16px; line-height: 1.4; font-weight: 650; }
+.home-page .hp-journey-disclosure p { max-width: 80ch; margin: 0 0 18px; color: var(--hp-muted); font-size: 15px; line-height: 1.7; }
+.home-page .hp-journey-disclosure a { min-height: 44px; margin-bottom: 12px; font-size: 14px; }
+.home-page .hp-journey-card a:focus-visible,
+.home-page .hp-journey-disclosure a:focus-visible,
+.home-page .hp-journey-disclosure summary:focus-visible { outline: 2px solid var(--hp-green); outline-offset: 4px; border-radius: 3px; }
+@media (max-width: 1000px) { .home-page .hp-hero-index[data-journey-index] { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 800px) { .home-page .hp-journey-grid { grid-template-columns: 1fr; } .home-page .hp-journey-card { padding: 24px; } }
+@media (max-width: 520px) { .home-page .hp-hero-index[data-journey-index] { grid-template-columns: repeat(2, minmax(0, 1fr)); } .home-page .hp-journey-disclosure { padding: 0 18px; } }

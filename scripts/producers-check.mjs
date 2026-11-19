@@ -21,7 +21,7 @@
  *   node scripts/producers-check.mjs --list     # what is gated, and what is not, and why
  */
 import { execSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -104,6 +104,7 @@ if (process.argv.includes("--selftest")) {
 
 const gated = manifest.producers.filter((p) => p.gated);
 let failures = 0;
+const unchecked = [];
 console.log(`producers-check — ${gated.length} gated of ${manifest.producers.length} in the manifest\n`);
 
 for (const p of gated) {
@@ -111,6 +112,45 @@ for (const p of gated) {
     if (p.mode === "delegate-to-check") {
       const out = run(p.check).trim().split("\n").pop() ?? "";
       console.log(`  ✓ ${p.id.padEnd(28)} ${out.slice(0, 64)}`);
+    } else if (p.mode === "delegate-to-check-committed") {
+      // THE BUILD RUNS BEFORE THIS GATE, AND IT REGENERATES SOME PRODUCERS' OUTPUTS.
+      //
+      // pr-gates.yml runs "Build client" (which runs build:client, which runs the
+      // writers for card-matrix and gspc-quest-instruments) and THEN runs this
+      // gate. A plain --check compares the file ON DISK against a fresh
+      // generation -- and by then the file on disk IS the build's fresh output.
+      // So the check compares the build's output with the build's output and
+      // cannot fail, no matter how stale the COMMITTED bytes are.
+      //
+      // CONTROL (2026-11-06): corrupting public/signed/card-matrix.json made
+      // this gate exit 1 when run before a rebuild; running the build's writer
+      // first and then this gate reported "card-matrix: up to date" on the same
+      // stale artefact. The committed bytes are what ship from a PR, and
+      // neither file is in the OTS manifest, so nothing else covered them.
+      //
+      // So: restore the COMMITTED bytes, run the producer's own check against
+      // them, then put the build's bytes back. The producer's check keeps its
+      // own semantics -- this only changes WHICH bytes it is shown.
+      const saved = new Map();
+      const restored = [];
+      for (const o of p.outputs) {
+        const abs = join(REPO, o);
+        if (!existsSync(abs)) continue;
+        saved.set(o, readFileSync(abs));
+        // A file that is not in HEAD is new in this commit; there are no
+        // committed bytes to compare against, so leave the working tree alone.
+        const inHead = run(`git cat-file -e 'HEAD:${o}' 2>/dev/null && echo yes || echo no`).trim();
+        if (inHead === "yes") {
+          run(`git checkout -- '${o}'`);
+          restored.push(o);
+        }
+      }
+      try {
+        const out = run(p.check).trim().split("\n").pop() ?? "";
+        console.log(`  ✓ ${p.id.padEnd(28)} ${out.slice(0, 64)} (committed bytes)`);
+      } finally {
+        for (const [o, bytes] of saved) writeFileSync(join(REPO, o), bytes);
+      }
     } else if (p.mode === "rerun-and-diff") {
       // Compare the WHOLE tree, not just the declared outputs. Watching only `outputs` gives a
       // false green to a producer that writes somewhere it never declared — and leaves that file
@@ -181,6 +221,30 @@ for (const p of gated) {
       console.error(`  ✗ ${p.id}: unknown mode ${p.mode}`);
     }
   } catch (e) {
+    // UNCHECKABLE IS NOT FAIL — but the exit code for it is PER-PRODUCER.
+    //
+    // The estate's vocabulary is three-state: VALID, INVALID, UNCHECKABLE, and
+    // an UNCHECKABLE state is never a finding. Most gates spell it exit 2
+    // (evaluation_card_verify.py, root_candidate_reconcile.py,
+    // stamped-bytes-gate.py, sbom-pin-gate.mjs, canary-leak-gate.mjs).
+    //
+    // scripts/gen_sbom.py is the exception and says so: scripts/pre-push-gates.sh
+    // documents its contract as 0 pass / 2 THE SBOM DOES NOT MATCH THE TREE /
+    // 3 the pinned history is unreadable. So a blanket "exit 2 means
+    // UNCHECKABLE" would have read gen_sbom's REAL failure as a soft state and
+    // stopped blocking on it. Hence: each producer declares its own
+    // uncheckable exit code, and a producer that declares none keeps today's
+    // behaviour (any non-zero is a failure).
+    //
+    // This matters in practice: a depth-1 or partial clone cannot read the
+    // SBOM's pinned generation commit, and the estate's own rule is that a
+    // store which cannot answer is not making a finding.
+    const code = typeof e.status === "number" ? e.status : null;
+    if (code !== null && p.uncheckable_exit !== undefined && code === p.uncheckable_exit) {
+      unchecked.push({ id: p.id, detail: "the store could not answer — this is not a finding about the artefact" });
+      console.log(`  ? ${p.id.padEnd(28)} UNCHECKABLE — the store could not answer; this is not a finding`);
+      continue;
+    }
     failures++;
     // Do NOT print the last line of a stack trace: for a crashing Node script that is the version
     // banner ("Node.js v20.20.2"), which names neither the fault nor the file. CI showed exactly
@@ -200,5 +264,9 @@ if (failures) {
   console.error("  The committed bytes are stale — run the producer named above and commit the result.");
   console.error("  Do NOT edit the output by hand: it is a producer artefact.");
   process.exit(1);
+}
+if (unchecked.length) {
+  console.log(`\n? ${unchecked.length} producer(s) were UNCHECKABLE — the store could not answer. Not a finding, and nothing blocked.`);
+  for (const u of unchecked) console.log(`    ${u.id}: ${u.detail}`);
 }
 console.log(`\n✓ every gated producer still yields the committed bytes.`);
