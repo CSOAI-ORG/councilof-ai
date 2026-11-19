@@ -16,7 +16,7 @@ describe("withEmbed", () => {
 
   it("leaves hash-only and mailto links alone", () => {
     expect(withEmbed("#axis")).toBe("#axis");
-    expect(withEmbed("mailto:nicholas@csoai.org")).toBe("mailto:nicholas@csoai.org");
+    expect(withEmbed("mailto:contact@csoai.org")).toBe("mailto:contact@csoai.org");
   });
 
   it("never stamps embed=1 on host doors (no nested homepage, no /os in /os)", () => {

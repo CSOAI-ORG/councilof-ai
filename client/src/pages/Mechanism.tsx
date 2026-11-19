@@ -547,8 +547,8 @@ export default function Mechanism() {
             A wrong row is corrected in the source file and the producer re-run; the change is recorded in the{" "}
             <L href="/corrections/">corrections ledger</L>. To contest a published result, use the{" "}
             <L href="/dispute/">dispute route</L>. Or email{" "}
-            <a href="mailto:nicholas@csoai.org" className="font-medium text-emerald-800 underline underline-offset-2">
-              nicholas@csoai.org
+            <a href="mailto:contact@csoai.org" className="font-medium text-emerald-800 underline underline-offset-2">
+              contact@csoai.org
             </a>
             .
           </p>

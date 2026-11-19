@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 import ExternalUseEvidence from "@/components/ExternalUseEvidence";
 import { OPERATING_ORGANISATION_SUMMARY } from "@/data/external-use";
@@ -66,7 +65,6 @@ export default function Traction() {
   const usdc = live.revenue ? `$${(live.revenue.atomic / 1_000_000).toFixed(2)}` : undefined;
 
   return <section className="min-h-screen bg-slate-950 text-slate-100">
-    <Helmet><title>Operation and external use | Council of AI</title><meta name="description" content="Council of AI's evidence services, operating infrastructure, external use and business model. Information for organisations, partners and investors." /></Helmet>
     <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,.18),transparent_36%)]">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <p className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-300">Operating work and documented external use</p>
@@ -111,6 +109,10 @@ export default function Traction() {
       <aside className="mt-4 rounded-xl border border-slate-700 p-5" aria-label="Automated external endpoint tasks">
         <h3 className="text-lg font-bold">Read tasks recorded by an external agent directory</h3>
         <p className="mt-3 leading-7 text-slate-300">On 3 November 2026, <a href="https://agentpeering.com/agents/councilof.ai/council-of-ai-measurement-agent" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">AgentPeering's public record</a> reports two graded read tasks for the GSPC board and east-west crosswalk. A third Article 50 detection request was invalid and was not graded. Its <a href="https://agentpeering.com/docs/scoring#agent-tests" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">method</a> uses LLM-generated and LLM-graded preview tasks. These are bounded automated endpoint observations, not customer acceptance or independent validation of the measurement method. Sources reviewed 4 November 2026.</p>
+      </aside>
+      <aside className="mt-4 rounded-xl border border-slate-700 p-5" aria-label="External dataset reuse">
+        <h3 className="text-lg font-bold">A published dataset loaded in another author's notebook</h3>
+        <p className="mt-3 leading-7 text-slate-300">A <a href="https://www.kaggle.com/code/hosseinbadrnezhad/csoai-gspc-living-board-etl-eda-visualize-model" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">public Kaggle notebook</a> published under another account names the <a href="https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">GSPC Living Board dataset</a> as its data source and reads <code>gspc-axes.csv</code>. Kaggle's record dates the notebook's last run to 14 November 2026. Its code applies general-purpose data cleaning, charts and model fitting to a small table. This shows the published data was loaded outside the publishing account; it is not a review of the measurement method, a validation of any result or a customer deployment. Sources reviewed 17 November 2026.</p>
       </aside>
     </div>
 

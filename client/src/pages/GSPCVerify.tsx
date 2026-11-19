@@ -7,6 +7,7 @@ import { setMetaDescription } from "@/lib/utils";
 import BoardAttestation from "@/components/board/BoardAttestation";
 import { CARD_PARAM_MAX_BYTES, resolveCardParam, verifyCardHref } from "@/lib/cardParam";
 import { GOVERNANCE_RETRIEVE, loadPublicCardExample } from "@/lib/publicCardExample";
+import { thirdPartyExampleCells } from "@/lib/publishedExamplePick";
 import { takeCheckerSeed } from "@/lib/myResults";
 import { artifactCitation } from "@/lib/artifactCite";
 
@@ -24,8 +25,21 @@ import { artifactCitation } from "@/lib/artifactCite";
 type PublishedRef = { id: string; url: string };
 
 async function pickPublishedCard(signal?: AbortSignal): Promise<PublishedRef> {
-  // Prefer the signed chain links with a published body; fall back to card_index.
-  // Never invent a body — only URLs the estate actually lists.
+  // First choice: a signed card about a third-party model, from the matrix that labels each model
+  // own or third-party (lib/publishedExamplePick records why). Then the signed chain links with a
+  // published body, then card_index. Never invent a body — only URLs the estate actually lists.
+  try {
+    const m = await fetch("/signed/card-matrix.json", { signal, headers: { accept: "application/json" } });
+    if (m.ok) {
+      const pool = thirdPartyExampleCells(await m.json());
+      if (pool.length) {
+        const c = pool[Math.floor(Math.random() * pool.length)];
+        return { id: c.id, url: c.url };
+      }
+    }
+  } catch {
+    /* fall through to the chain */
+  }
   try {
     const r = await fetch("/signed/chain.json", { signal, headers: { accept: "application/json" } });
     if (r.ok) {
@@ -174,7 +188,8 @@ export default function GSPCVerify() {
     };
   }, []);
 
-  const tryExample = useCallback(async (choose: (signal: AbortSignal) => Promise<string>) => {
+  // reveal: the hero's quick start sits above the form, so it scrolls the loaded record into view.
+  const tryExample = useCallback(async (choose: (signal: AbortSignal) => Promise<string>, reveal = false) => {
     clearLinkedSource();
     const ac = new AbortController();
     linkedRequest.current = ac;
@@ -187,6 +202,7 @@ export default function GSPCVerify() {
       setAutoVerify(false);
       setSeed(example.raw);
       setSeedNonce((n) => n + 1);
+      if (reveal) requestAnimationFrame(() => document.getElementById("check-record")?.scrollIntoView({ block: "start" }));
     } catch (e: any) {
       if (!ac.signal.aborted && linkedRequest.current === ac) {
         setTryErr(String(e?.message ?? e));
@@ -200,7 +216,7 @@ export default function GSPCVerify() {
   }, [clearLinkedSource]);
 
   const tryPublished = useCallback(
-    () => tryExample(async (signal) => (await pickPublishedCard(signal)).url),
+    (reveal = false) => tryExample(async (signal) => (await pickPublishedCard(signal)).url, reveal),
     [tryExample],
   );
 
@@ -280,6 +296,28 @@ export default function GSPCVerify() {
             your record is not uploaded. Your browser may read published records and public-key metadata.
             A valid signature confirms the record's integrity. It does not certify a model's safety or compliance.
           </p>
+          {/* The check comes first on every width. On 17 Nov 2026 at 390 px the try button sat 1,597 px down. */}
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3" data-testid="verify-quick-start">
+            <button
+              type="button"
+              onClick={() => {
+                setMode("estate");
+                void tryPublished(true);
+              }}
+              disabled={tryBusy}
+              data-testid="hero-try-published-card"
+              className="min-h-[44px] rounded-lg bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300 disabled:opacity-40"
+            >
+              {tryBusy ? "Loading…" : "Try a published card"}
+            </button>
+            <a
+              href="#check-record"
+              onClick={() => setMode("estate")}
+              className="inline-flex min-h-[44px] items-center text-sm font-semibold text-emerald-200 underline decoration-emerald-500/40 underline-offset-4 hover:decoration-emerald-200"
+            >
+              or paste your own record
+            </a>
+          </div>
           <p className="mt-3 max-w-3xl text-sm text-emerald-200/75 leading-relaxed">
             Every check ends in one of three results: <strong>VALID</strong> (the completed record
             checks passed), <strong>INVALID</strong> (a check failed, and it says which), or{" "}
@@ -370,7 +408,7 @@ export default function GSPCVerify() {
         )}
 
         {mode === "estate" && (
-        <section>
+        <section id="check-record" className="scroll-mt-24">
           <h2 className="text-2xl font-bold text-emerald-50">Check one measurement record</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
             Paste any one estate record — hash and signature are recomputed here, in your browser,
@@ -398,7 +436,7 @@ export default function GSPCVerify() {
               {tryBusy ? "Loading…" : "Try a governance card"}
             </button>
             <span className="text-[12px] text-emerald-100/65">
-              The first button reads a published card. The governance example is a fixed historical record, not a new measurement. Both are free.
+              The first button reads a published card about a third-party model. The governance example is a fixed historical record, not a new measurement. Both are free.
             </span>
           </div>
           {publicExample && (

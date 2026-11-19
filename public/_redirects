@@ -145,6 +145,8 @@
 /widget/                /dashboard?tab=learn         308
 /rankings               /dashboard?tab=board         308
 /rankings/              /dashboard?tab=board         308
+/leaderboard            /dashboard?tab=leaderboard   308
+/leaderboard/           /dashboard?tab=leaderboard   308
 /benchmarkers           /dashboard?tab=verify        308
 /benchmarkers/          /dashboard?tab=verify        308
 /mcp-registry           /mcps/                       308
@@ -255,34 +257,50 @@
 /for/regulator  /for/regulator/  308
 /for/sec-filer  /for/sec-filer/  308
 
-# --- client <Redirect> stub routes: hop at the edge, not in the bundle (27) ---
+# --- client <Redirect> stub routes: hop at the edge, not in the bundle (26 stubs, 43 rules) ---
 /a2ui  /dashboard?tab=home  308
+/a2ui/  /dashboard?tab=home  308
 /about-ceasai  /about-credential  308
 /attestation-network  /attestation  308
+/attestation-network/  /attestation  308
 /catalog  /products  308
+/catalog/  /products  308
 /ceasai-training  /credential-training  308
 /ceremony  /events/three-root-ceremony  308
+/ceremony/  /events/three-root-ceremony  308
 /governance  /ai-governance  308
 /gspc-scoreboard  /dashboard?tab=board  308
-/leaderboard  /dashboard?tab=leaderboard  308
 /lookup  /gspc-verify  308
+/lookup/  /gspc-verify  308
 /map-regions  /map?tab=regions  308
+/map-regions/  /map?tab=regions  308
 /mcp-tools  /dashboard?tab=tools  308
+/mcp-tools/  /dashboard?tab=tools  308
 /public-dashboard  /transparency  308
+/public-dashboard/  /transparency  308
 /real-world  /globe  308
+/real-world/  /globe  308
 /regions  /map?tab=regions  308
+/regions/  /map?tab=regions  308
 /relevance-map  /map?tab=bridges  308
+/relevance-map/  /map?tab=bridges  308
 /risk-heatmap  /map?tab=risk  308
+/risk-heatmap/  /map?tab=risk  308
 /sov3  /workbench  308
 /sov3-model-card  /council-model-card  308
 /sov3-system-card  /council-system-card  308
 /sov3-whitepaper  /workbench-paper  308
 /sovereign  /me  308
+/sovereign/  /me  308
 /sovereign-network  /network  308
+/sovereign-network/  /network  308
 /sovereign-pricing  /pricing  308
 /sovereign-twin  /me  308
+/sovereign-twin/  /me  308
 /world  /gspc-arena?view=globe  308
+/world/  /gspc-arena?view=globe  308
 /world-3d  /globe  308
+/world-3d/  /globe  308
 
 # --- every other concrete <Route> bare path → its prerendered trailing-slash (408) ---
 /ab-testing  /ab-testing/  308

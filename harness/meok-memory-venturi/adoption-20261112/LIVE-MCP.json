@@ -1,0 +1,66 @@
+{
+  "state": "LIVE_EXISTING_MCP_ADOPTION_PASSED",
+  "at": "2026-11-12T01:21:12.464595+00:00",
+  "revision_before": "0c3267c5b57bc67672a2426f020a7f3174cad3fd",
+  "requests": [
+    {
+      "label": "default",
+      "tool": "meok_hf_runtime_memory_rehearsal",
+      "seconds": 0.906445084,
+      "event_output_digest_verified": true,
+      "signed": false
+    },
+    {
+      "label": "repeat",
+      "tool": "meok_hf_runtime_memory_rehearsal",
+      "seconds": 0.7846156669999997,
+      "event_output_digest_verified": true,
+      "signed": false
+    },
+    {
+      "label": "alternate",
+      "tool": "meok_hf_runtime_memory_rehearsal",
+      "seconds": 0.7890333749999998,
+      "event_output_digest_verified": true,
+      "signed": false
+    },
+    {
+      "label": "invalid-seed",
+      "tool": "meok_hf_runtime_memory_rehearsal",
+      "seconds": 0.5115626670000006,
+      "expected_refusal": true
+    },
+    {
+      "label": "invalid-reuse",
+      "tool": "meok_hf_runtime_memory_rehearsal",
+      "seconds": 0.49516729099999957,
+      "expected_refusal": true
+    },
+    {
+      "label": "recovery",
+      "tool": "meok_hf_runtime_memory_rehearsal",
+      "seconds": 0.79921475,
+      "event_output_digest_verified": true,
+      "signed": false
+    },
+    {
+      "label": "existing-status",
+      "tool": "meok_hf_runtime_lab_status",
+      "seconds": 0.6814598750000007
+    }
+  ],
+  "synthetic_only": true,
+  "large_model_or_GPU_calls_requested": 0,
+  "personal_memory_modified": false,
+  "protocol": "2025-03-26",
+  "revision_after": "0c3267c5b57bc67672a2426f020a7f3174cad3fd",
+  "valid_memory_calls": 4,
+  "targeted_control_observations": 20,
+  "original_small_neural_evaluations": 32,
+  "original_exact_reuse_hits": 16,
+  "negative_controls": 2,
+  "recovery": true,
+  "current_user_cache_permissions": "SYNTHETIC_FIXTURES_NOT_REAL_USER_AUTHORITY",
+  "independent_whole_job_benchmark": false,
+  "finished_at": "2026-11-12T01:21:19.758728+00:00"
+}

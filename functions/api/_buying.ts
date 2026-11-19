@@ -3,7 +3,7 @@
  * client/). client/src/lib/buying.test.ts pins both files to the same words, so they cannot drift.
  * No prices: the amount is on the 402 challenge or on the owner-issued invoice, never here.
  */
-export const CONTACT_MAILBOX = "nicholas@csoai.org";
+export const CONTACT_MAILBOX = "contact@csoai.org";
 
 export const BUYING_FAQ_URL = "/faq/#buying";
 

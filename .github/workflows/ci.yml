@@ -34,6 +34,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: OIDC ledger signer binds the stored digest to the exact JS payload bytes
+        run: python3 -m unittest scripts/test_sign_ledger_cards.py -v
       - name: Revenue report evidence and read-only check regressions
         run: python -I -B scripts/growth/test_revenue_loop.py
       - name: Install verification test dependencies

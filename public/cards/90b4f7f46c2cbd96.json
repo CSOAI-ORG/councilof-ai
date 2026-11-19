@@ -1,0 +1,89 @@
+{
+  "card": {
+    "as_of": "2026-11-12T11:42:17Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "246",
+      "symbol": "USDf",
+      "attestation_page": "https://falcon.finance/",
+      "auditor": null,
+      "cadence_claimed": null,
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "2dfcfd4219abd650368d5f0257bdeb0fda23515fa7dd40eae55785d00027b145",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "cadence_claimed",
+        "staleness"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "90b4f7f46c2cbd969a693e436ca57369af5791f94f008b8fb33c3579d16e3c3d",
+    "sig_ed25519": "d68fccc76b21863ef785aa63bd1bb28ce4e73ebd71b5b32c073c376f1e9af5f82328a5b65de2f3044e107a6e23807f3b2189100c6b7496fadf879b5a21ee370b",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://falcon.finance/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDf",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "cadence_claimed",
+      "staleness"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "093923160c12997cfd73c12e8b200efe052af926424781194c8848b2f2368001",
+    "7d25c77b42bcd818480667cb9db04e57903967cef29af55127525ef9a4de0115",
+    "2aa6ed6f32e6c3becb64531629a3bc5053541f7b179fac7864595f0a5d999eb1",
+    "47926493df803ed695ddc416364743dfa7bd051748757b4cead5b29032e366af",
+    "a69dc45dff4bd78557c66bd531f06448f033f31b5bc0938c6bd65e497be2f2d7",
+    "c2ffe83acb2d6a5a0ab44379db15481613b98270e1b8f6687eecc848cf6e54f9",
+    "46ddbeeabdd2bdbbb5dd4714aad379d8d766cf91b5212ec22f4115a649014d10",
+    "d902287bbf22d192ed834e7c12f8bb7300c1d8116419aefe02e6ad384657a746",
+    "61406dcfc597bdc8926652f164b238d59fe4185d3e9b2f58d644c7faf937ea1b"
+  ]
+}

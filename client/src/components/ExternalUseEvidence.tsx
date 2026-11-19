@@ -4,15 +4,16 @@ import { EXTERNAL_USE_EXAMPLES, EXTERNAL_USE_REVIEWED } from "@/data/external-us
 export default function ExternalUseEvidence({ compact = false, inverted = false, id = "external-use" }: { compact?: boolean; inverted?: boolean; id?: string }) {
   const muted = inverted ? "text-slate-300" : "text-muted-foreground";
   const link = inverted ? "text-emerald-300" : "text-emerald-700 dark:text-emerald-300";
+  const reviewedLabel = new Date(`${EXTERNAL_USE_REVIEWED}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
   return (
     <section aria-labelledby={`${id}-heading`} data-testid="external-use-evidence">
       <h2 id={`${id}-heading`} className="text-2xl font-bold tracking-tight">Public evidence of outside use</h2>
       <p className={`mt-3 max-w-3xl text-base leading-7 ${muted}`}>
-        Other developers have run a specific Council artifact, implemented a published proposal and cited its research.
+        Public records show external execution, outside implementation, reviewed reproduction of another contributor's tests and technical citation.
         Each example has its own scope and primary source.
       </p>
-      <p className={`mt-2 text-sm ${muted}`}>Sources reviewed <time dateTime={EXTERNAL_USE_REVIEWED}>4 November 2026</time>.</p>
-      <div className="mt-6 grid gap-5 lg:grid-cols-3">
+      <p className={`mt-2 text-sm ${muted}`}>Sources reviewed <time dateTime={EXTERNAL_USE_REVIEWED}>{reviewedLabel}</time>.</p>
+      <div className="mt-6 grid gap-5 lg:grid-cols-2">
         {EXTERNAL_USE_EXAMPLES.map((example) => (
           <article key={example.id} className={`min-w-0 rounded-2xl border p-5 ${inverted ? "border-slate-700 bg-slate-900" : "border-border bg-card"}`}>
             <p className={`text-xs font-bold uppercase tracking-wider ${link}`}>{example.category}</p>

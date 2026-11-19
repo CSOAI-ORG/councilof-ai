@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet-async";
 
 type ProofBody = {
   schema?: string;
@@ -52,13 +51,6 @@ export default function ProofReceipt() {
 
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
-      <Helmet>
-        <title>Inclusion receipt | Council of AI</title>
-        <meta
-          name="description"
-          content="Hash bytes locally, then GET /api/proof?sha= against the last published public root. Free. Not a grade."
-        />
-      </Helmet>
       <section className="mx-auto max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-300">
           Free inclusion check · GET /api/proof?sha=

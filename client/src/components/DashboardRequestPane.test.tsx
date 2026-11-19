@@ -230,7 +230,7 @@ describe("RAS booking CTA on the measured pane (/assess doors here)", () => {
   it("renders the booking link with the enquiry mailto; CTA and caption carry no price or stripe", () => {
     const html = render("tab=measured");
     expect(html).toContain('data-testid="ras-booking-cta"');
-    expect(html).toContain("mailto:nicholas@csoai.org?subject=RAS%20booking%20request%20(ras-booking)");
+    expect(html).toContain("mailto:contact@csoai.org?subject=RAS%20booking%20request%20(ras-booking)");
     const start = html.lastIndexOf("<div", html.indexOf('data-testid="ras-booking-cta"'));
     const block = html.slice(start, html.indexOf("</div>", start));
     expect(block).toContain("Measurement only, not certification");

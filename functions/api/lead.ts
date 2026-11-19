@@ -48,7 +48,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     ok: true,
     stored: false,
     reason: "no datastore bound to this deployment yet",
-    fallback: "email nicholas@csoai.org with your report_id",
+    fallback: "email contact@csoai.org with your report_id",
   });
 };
 

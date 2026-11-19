@@ -65,21 +65,25 @@ export default function DashboardStaffPane() {
     return { id, name: DESKS[id].name, role: DESKS[id].role, did: rec?.did ?? "" };
   });
 
+  // This pane draws no background of its own: it sits on the light Council OS shell, so it uses the
+  // shell's tokens (text-foreground, text-muted-foreground, bg-card, border-border). Until 17 Nov 2026
+  // it used colours made for a dark page (text-emerald-50, text-gray-300, text-sky-200), and its text
+  // read at 1.05-1.67:1 contrast: white on white. PalAskPanel and HitlConsole draw their own dark box.
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 text-emerald-50">
+    <div className="mx-auto max-w-5xl px-4 py-8 text-foreground">
       <h1 className="mb-2 text-2xl font-bold">Staff</h1>
-      <p className="mb-6 text-sm text-gray-300">
+      <p className="mb-6 text-sm text-muted-foreground">
         The Council of AI staff. Each one is an AI agent with its own identity, its own scope and its own
         memory namespace. It answers from published records, or says UNMEASURED, or talks — and it tells you which.
       </p>
 
       {modelConfigured === false ? (
-        <p role="note" className="mb-6 rounded-xl border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-[13px] text-amber-100">
+        <p role="note" className="mb-6 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-[13px] text-amber-900">
           No language model is configured for this deployment, so these staff answer from published records only.
           Nothing is invented to fill the gap.
         </p>
       ) : modelActive ? (
-        <p role="note" className="mb-6 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-[13px] text-emerald-100">
+        <p role="note" className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-[13px] text-emerald-900">
           Model configured: <span className="font-semibold">{modelActive}</span>. Records are answered first; the
           model is consulted for conversation the records do not cover.
         </p>
@@ -87,26 +91,26 @@ export default function DashboardStaffPane() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {rows.map((r) => (
-          <article key={r.id} data-testid={`os-agent-${r.id}`} className="flex flex-col rounded-2xl border border-sky-400/30 bg-sky-500/5 p-5">
+          <article key={r.id} data-testid={`os-agent-${r.id}`} className="flex flex-col rounded-2xl border border-border bg-card p-5 shadow-sm">
             <div className="mb-1 flex items-center gap-2">
               <h2 className="text-lg font-semibold">{r.name}</h2>
-              <span className="rounded-full border border-sky-400/50 px-2 py-0.5 text-[11px] text-sky-200">AI agent</span>
+              <span className="rounded-full border border-sky-300 bg-sky-50 px-2 py-0.5 text-[11px] text-sky-800">AI agent</span>
             </div>
-            <p className="mb-3 text-sm text-gray-300">{r.role}</p>
-            <p role="note" className="mb-3 text-[12px] text-sky-100/80">{deskDisclosure(r.name)}</p>
+            <p className="mb-3 text-sm text-muted-foreground">{r.role}</p>
+            <p role="note" className="mb-3 text-[12px] text-slate-700">{deskDisclosure(r.name)}</p>
             {r.did ? (
-              <p className="mb-3 break-all text-[11px] text-emerald-100/60">
+              <p className="mb-3 break-all text-[11px] text-muted-foreground">
                 did:key:{r.did.replace(/^did:key:/, "").slice(0, 16)}…
               </p>
             ) : (
-              <p className="mb-3 text-[11px] text-emerald-100/60">
+              <p className="mb-3 text-[11px] text-muted-foreground">
                 No signing key yet — these answers cannot be attributed to a key.
               </p>
             )}
             <button
               type="button"
               onClick={() => setOpen(r.id)}
-              className="mt-auto rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold"
+              className="mt-auto rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
             >
               Ask {r.name}
             </button>
@@ -114,7 +118,7 @@ export default function DashboardStaffPane() {
         ))}
       </div>
 
-      {!loaded ? <p className="mt-4 text-xs text-emerald-100/50">Reading the registry…</p> : null}
+      {!loaded ? <p className="mt-4 text-xs text-muted-foreground">Reading the registry…</p> : null}
       {open && <PalAskPanel desk={open} onClose={() => setOpen(null)} onEscalation={setChallenge} />}
 
       <HitlConsole challenge={challenge} />

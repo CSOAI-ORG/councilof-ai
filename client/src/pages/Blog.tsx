@@ -122,7 +122,7 @@ export default function Blog() {
               ) : state === "queued" ? (
                 <div role="status" className="bg-amber-500/20 border border-amber-400/50 rounded-lg p-4 text-amber-50 font-medium">
                   Received, but there is no subscriber store bound yet, so nothing was saved. Email{" "}
-                  <a className="underline" href="mailto:nicholas@csoai.org">nicholas@csoai.org</a> to be added.
+                  <a className="underline" href="mailto:contact@csoai.org">contact@csoai.org</a> to be added.
                 </div>
               ) : (
                 <>
@@ -144,7 +144,7 @@ export default function Blog() {
                   {state === "error" && (
                     <p role="alert" className="mt-3 text-sm font-semibold text-red-200">
                       That did not go through ({errMsg}). Nothing was saved — try again, or email{" "}
-                      <a className="underline" href="mailto:nicholas@csoai.org">nicholas@csoai.org</a>.
+                      <a className="underline" href="mailto:contact@csoai.org">contact@csoai.org</a>.
                     </p>
                   )}
                 </>

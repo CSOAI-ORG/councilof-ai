@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { axisHref } from "@/lib/axisHref";
+import AxisLink from "@/components/AxisLink";
 import { Link, useRoute } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
@@ -679,7 +680,7 @@ export default function GspcScoreboard() {
                       <td className="whitespace-nowrap p-3 font-semibold text-gray-900">
                         {/* -m-3 p-3 makes the link fill its cell, so the touch
                             target is the whole row cell rather than a 17px line. */}
-                        <Link href={axisHref(a) ?? undefined} className="-m-3 block p-3 hover:underline">{a.axis}</Link>
+                        <AxisLink href={axisHref(a)} className="-m-3 block p-3 hover:underline">{a.axis}</AxisLink>
                       </td>
                       <td className="whitespace-nowrap p-3 text-gray-600">{a.bench}</td>
                       <td className="whitespace-nowrap p-3 font-mono tabular-nums">

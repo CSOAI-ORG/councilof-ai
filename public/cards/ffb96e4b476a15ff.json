@@ -1,0 +1,88 @@
+{
+  "card": {
+    "as_of": "2026-11-12T11:42:17Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "195",
+      "symbol": "USD0",
+      "attestation_page": "https://usual.money/",
+      "auditor": null,
+      "cadence_claimed": "real-time",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "b46ac609cd0b549643f66f427b2aa83f7cd123efb07ef904075a54208b4708bc",
+      "excerpt": "the core stability asset of Usual, USD0 supports transparency and security by maintaining real-time reserves, offering a non-fractional, reliable alternative to",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "staleness"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "ffb96e4b476a15ff7c64d3fab358b13e87f49b315cfaea1ee583c2f890c87be6",
+    "sig_ed25519": "893880e2082ef45b96a081cd4557e4c4fa450e299e2efc18d93eaff313a9594eb4acbaeb95938498a986bae18fd1d6b5c5d165e0f2b8b8d374c9958df0042909",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://usual.money/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USD0",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "staleness"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "59fe544f935afad27b5767d71ac1e6b4246d36ac35b5f1fb16266edf68774930",
+    "864e86fb1fb596ca0a215283fa111aeeb6b11fe1cc5844be3b8222dfa2f9948a",
+    "878bcfcf5a098a550cedec343b7e98e43854acc4aab85788d2fb84ae12ceb271",
+    "79baf300632d055efad08844b7784284a350eba3f06399fa0ec8fe27895539f8",
+    "929ad67c36dec545a703fba63a1512bad63ed151d0fb81dfab9a59b6bd525c1f",
+    "4534cceaf3869357b975ab2e1265f29ba037a8d64042fb391103af3d193601e8",
+    "12616272f69faf71801a3253419f04acc34d363123a6cffc104f7805e196e0b9",
+    "d902287bbf22d192ed834e7c12f8bb7300c1d8116419aefe02e6ad384657a746",
+    "61406dcfc597bdc8926652f164b238d59fe4185d3e9b2f58d644c7faf937ea1b"
+  ]
+}

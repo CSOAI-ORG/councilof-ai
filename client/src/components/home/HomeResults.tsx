@@ -34,7 +34,7 @@ export default function HomeResults({
       <div className="section-shell">
         <div className="hp-section-heading">
           <div>
-            <p className="hp-eyebrow">01 / Published results</p>
+            <p className="hp-eyebrow">Published results</p>
             <h2 id="home-board-h">
               The living board.
               <br />
@@ -80,6 +80,13 @@ export default function HomeResults({
         )}
         {readable ? (
           <div data-testid="home-living-strip">
+            {/* The totals above count every axis; the strip holds only the model comparisons, and on
+                17 Nov 2026 five of its tiles were a bare dash. The count is the payload's own. */}
+            <p className="mb-3 max-w-3xl text-sm leading-relaxed text-slate-600" data-testid="home-strip-caption">
+              The strip shows the board’s {separation!.comparison} model-comparison axes; every other
+              axis is on the full board. A dash means no leading figure is published for that axis:
+              open it to read why.
+            </p>
             <LivingBoardStrip
               data={data}
               showHeader={false}

@@ -13,7 +13,7 @@
  * ever shown, it must come from catalog fields via rasPriceFromCatalog, never a literal.
  */
 export const RAS_BOOKING_MAILTO =
-  "mailto:nicholas@csoai.org" +
+  "mailto:contact@csoai.org" +
   "?subject=" + encodeURIComponent("RAS booking request (ras-booking)") +
   "&body=" + encodeURIComponent(
     "System (what it is and what it does):\n\nScope (which behaviours or axes to measure):\n\nWindow (preferred dates):\n\n" +

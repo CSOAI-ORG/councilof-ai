@@ -1,0 +1,53 @@
+{
+  "schema": "csoai.cross-runtime-replay/1",
+  "label": "Kaggle-v3-public-Cloudflare-strict-acceptance",
+  "state": "CROSS_RUNTIME_PARITY_PASSED",
+  "at": "2026-11-11T06:22:28.268429+00:00",
+  "python": "3.13.18",
+  "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+  "model_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+  "input_sha256": "6349f1e13d5e1952566110d52494d8da3dd4bde7b01bbaffecc28fdb8b66aa9c",
+  "source_space_revision": "1c2395b61d8d45955b28f05f971e759ddc799b49",
+  "rows": 560,
+  "episodes": 70,
+  "local_model_evaluations": 560,
+  "local_compute_seconds": 0.07758602499995959,
+  "local_constrained_mae": 0.0028797331109599016,
+  "local_worst_component_error": 0.7499076603275624,
+  "edge": {
+    "state": "CLOUDFLARE_PARITY_AND_REFUSALS_PASSED",
+    "transport_mode": "PUBLIC_PREVIEW_URL",
+    "url": "https://0e29bc3e-csoai-process-replay.nicholastempleman.workers.dev",
+    "rows_compared": 560,
+    "raw_and_constrained_values_compared": 4480,
+    "including_exact_rule_values_verified": 6720,
+    "strict_response_completion_checked": true,
+    "requests": 78,
+    "max_absolute_difference": 5.551115123125783e-16,
+    "tolerance": 1e-12,
+    "negative_controls": [
+      "wrong_pin",
+      "bad_json",
+      "boolean",
+      "empty_batch",
+      "too_many",
+      "over_size"
+    ],
+    "recovery_after_refusal": true,
+    "end_to_end_request_wall_seconds": 8.764619175000007,
+    "response_digest_checks": 78,
+    "cf_ray_present_count": 78,
+    "preview_expires_at": "2026-11-12T00:00:00Z",
+    "remote_GSPC_admission": false,
+    "timing_scope": "Sequential HTTP wall-time including transport/verification, not a provider-kernel latency or throughput benchmark."
+  },
+  "signed": false,
+  "new_training": false,
+  "GSPC_admitted": false,
+  "limitations": [
+    "Public synthetic test-bank replay, not a new blind benchmark.",
+    "Runtime parity is not real-world correctness or general intelligence.",
+    "No energy measurement, quantum/photonic execution or large-language-model training."
+  ],
+  "finished_at": "2026-11-11T06:22:37.323473+00:00"
+}

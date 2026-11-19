@@ -1,5 +1,6 @@
 /** Council of AI front door: one proposition, one results surface, distinct next steps. */
 import { HomeWatchdog, HomeLearningJourney, HomeJourneyQuestions } from "@/components/home/HomePublicJourney";
+import HomeDistribution from "@/components/home/HomeDistribution";
 import HomeHero from "@/components/home/HomeHero";
 import HomeResults from "@/components/home/HomeResults";
 import HomeMine from "@/components/home/HomeMine";
@@ -48,6 +49,9 @@ export default function HomeVerify() {
       <HomeHero />
       <HomeWatchdog />
       <HomeResults />
+      {/* Public distribution figures (own artifact + 48h staleness guard).
+          Restored 2026-11-16 after the Sep rebuild left it composed nowhere. */}
+      <HomeDistribution />
       {/* The live board strip + daily-report/newsletter band (owner-verified 1 Nov;
           restored 2026-11-09 after the journey rebuild dropped them). */}
       <HomeMine />

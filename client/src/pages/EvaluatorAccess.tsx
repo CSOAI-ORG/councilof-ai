@@ -71,8 +71,6 @@ export default function EvaluatorAccess() {
   return (
     <section className="min-h-screen bg-slate-50 px-5 py-14 text-slate-950">
       <Helmet>
-        <link rel="canonical" href={CANONICAL} />
-        <meta name="description" content={PAGE_DESCRIPTION} />
         <script type="application/ld+json">{JSON.stringify(PAGE_LD)}</script>
       </Helmet>
       <article className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
@@ -108,7 +106,7 @@ export default function EvaluatorAccess() {
           <p className="mt-2 leading-7 text-slate-700">
             A new version gets a new version number and date on this page. An evaluation is held to the
             version in force when its access was agreed. Questions go to{" "}
-            <a className="text-emerald-800 underline" href="mailto:nicholas@csoai.org">nicholas@csoai.org</a>.
+            <a className="text-emerald-800 underline" href="mailto:contact@csoai.org">contact@csoai.org</a>.
           </p>
           <p className="mt-4 text-sm text-slate-600">
             Measurement, not certification. <Link className="underline" href="/methodology">Methodology</Link>

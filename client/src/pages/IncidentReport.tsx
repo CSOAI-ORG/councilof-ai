@@ -67,7 +67,7 @@ export default function IncidentReport() {
       setFailure(
         "Your report was NOT submitted — the intake endpoint could not be reached (" +
           (e?.message || "network error") +
-          "). Nothing was recorded. Your text is still in the box; email it to nicholas@csoai.org if this persists.",
+          "). Nothing was recorded. Your text is still in the box; email it to contact@csoai.org if this persists.",
       );
     } finally {
       setBusy(false);
@@ -127,7 +127,7 @@ export default function IncidentReport() {
             </p>
             {!ack.stored && (
               <p className="mt-3 rounded-lg border border-amber-400/40 bg-amber-500/10 px-3 py-2.5 text-[12.5px] leading-relaxed text-amber-200">
-                <strong>Not yet stored:</strong> no datastore is bound on this deployment, so the record above lives only in this acknowledgement. {ack.fallback || "Keep it, and email it with your report to nicholas@csoai.org."}
+                <strong>Not yet stored:</strong> no datastore is bound on this deployment, so the record above lives only in this acknowledgement. {ack.fallback || "Keep it, and email it with your report to contact@csoai.org."}
               </p>
             )}
             <div className="mt-4 break-all rounded-lg bg-black/40 px-3 py-3 font-mono text-[11px] leading-relaxed text-emerald-300/80">

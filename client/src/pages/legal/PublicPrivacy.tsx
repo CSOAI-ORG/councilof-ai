@@ -7,7 +7,7 @@ const controller = {
   name: "CSOAI Ltd",
   number: "16939677",
   address: "3rd Floor, 86–90 Paul Street, London EC2A 4NE, United Kingdom",
-  email: "nicholas@csoai.org",
+  email: "contact@csoai.org",
 };
 
 const rows: { data: string; where: string; basis: string; kept: string }[] = [
@@ -30,7 +30,7 @@ const rows: { data: string; where: string; basis: string; kept: string }[] = [
     kept: "No automatic expiry. We delete it when the enquiry is closed and there is no continuing need, or on a valid erasure request where no exemption applies.",
   },
   {
-    data: "Email you send to nicholas@csoai.org.",
+    data: "Email you send to contact@csoai.org.",
     where: "Our mailbox provider (Namecheap Private Email).",
     basis: "Legitimate interests; steps before a contract.",
     kept: "Until the conversation is finished and any follow-on record is no longer needed.",
