@@ -1,4 +1,3 @@
-import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 import seoHead from "../data/seo-head.json";
 
@@ -73,12 +72,6 @@ const FAQ: Array<[string, string]> = [
 export default function Engagements() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      <Helmet>
-        <title>{seoHead.routes["/engagements"].title}</title>
-        <meta name="description" content={PAGE_DESCRIPTION} />
-        <link rel="canonical" href={CANONICAL} />
-      </Helmet>
-
       <main className="mx-auto max-w-4xl px-5 pb-16 pt-10">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-emerald-400">
           engagements
