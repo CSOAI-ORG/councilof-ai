@@ -357,6 +357,17 @@ describe("root middleware: the paymentless probe gate", () => {
     }
   });
 
+  it("every door whose free preview the gate passes through answers POST, so the preview is reachable", async () => {
+    // Passing a POST through is only half of it: a door that exports no onRequestPost sends it on
+    // to the /api 404. coverage-evidence.ts and wrapper/changes.ts did, until 2026-11-19.
+    const { resources } = await listing();
+    for (const { url } of resources.filter((r) => r.free_preview)) {
+      const path = new URL(url).pathname;
+      const door = (await import(/* @vite-ignore */ `./api${path.replace(/^\/api/, "")}`)) as { onRequestPost?: unknown };
+      expect(typeof door.onRequestPost, path).toBe("function");
+    }
+  });
+
   it("a query that asks only for a door's free part passes through, as each handler defines it", async () => {
     for (const url of [
       `${ORIGIN}/api/proof?sha=${SHA}`, // proof.ts: one inclusion is free

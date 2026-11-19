@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { KIND, onRequestGet } from "./coverage-evidence";
+import { KIND, onRequestGet, onRequestPost } from "./coverage-evidence";
 import { COVERAGE } from "./_coverage_rows";
 
 const call = async (u = "https://councilof.ai/api/coverage-evidence?asset=tether") =>
@@ -36,6 +36,21 @@ describe("/api/coverage-evidence — the TUI-2 assembled row as a paid door", ()
     expect(b.preview).toBe(true);
     expect(b.state).toBe("DEEP_MEASURED");
     expect(b.canonical.sha256).toBe(COVERAGE.canonical_sha256);
+  });
+
+  // POST answers as GET. Without onRequestPost a POST fell through to the /api 404, so a free
+  // preview sent as POST (which functions/_middleware.ts passes through) never reached it.
+  it("answers POST as GET: the free preview on POST, the 402 for the paid row", async () => {
+    expect(onRequestPost).toBe(onRequestGet);
+    const post = (u: string) =>
+      (onRequestPost as unknown as (c: unknown) => Promise<Response>)({
+        request: new Request(u, { method: "POST", body: "" }),
+        env: {},
+      });
+    const preview = await post("https://councilof.ai/api/coverage-evidence?asset=tether&preview=1");
+    expect(preview.status).toBe(200);
+    expect(((await preview.json()) as { preview: boolean }).preview).toBe(true);
+    expect((await post("https://councilof.ai/api/coverage-evidence?asset=tether")).status).toBe(402);
   });
 
   // The machine-readable discovery sample must describe what its own preview returns.

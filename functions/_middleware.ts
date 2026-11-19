@@ -89,10 +89,9 @@ export const onRequest = async (context: Ctx): Promise<Response> => {
  *
  * A door in offerFor() is not paid all the way through. proof.ts serves one inclusion (?sha=)
  * free and sells only ?bundle=1; most doors serve ?preview=1 free; signed-data-feed.ts and
- * provider-diff.ts serve their bare path free. A query listed here goes to the door untouched:
- * most of these handlers answer POST as they answer GET, so the free part stays free on POST.
- * (coverage-evidence.ts and wrapper/changes.ts answer GET only; a POST to them gets the /api 404,
- * as a POST with a body already did. Never a price for something free.)
+ * provider-diff.ts serve their bare path free. A query listed here goes to the door untouched,
+ * and every one of these handlers answers POST as it answers GET, so the free part stays free on
+ * POST (functions/_middleware.test.ts holds every listed free preview to that).
  *
  * Not listed — free-door, discover/*, request-attestation, ras/*: no query selects a free part.
  * A query that selects nothing (the bare path of most doors, or input the door refuses) is still
