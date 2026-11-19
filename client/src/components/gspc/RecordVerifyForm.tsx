@@ -278,6 +278,14 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
     if (!bound || current !== attempt.current) return;
     setVerdict(bound); setBusy(false);
     setNotice(`Check complete: ${bound.result.state}. Read the result and its limits below.`);
+    if (bound.result.state === "VALID") {
+      // aggregate-only execution count; no payload, no identifiers; counting never gates.
+      // The verification itself stays client-side and untouched: this POST carries no body and
+      // is never awaited, and an INVALID or UNCHECKABLE outcome sends nothing.
+      try {
+        void fetch("/api/verify-count", { method: "POST", keepalive: true }).catch(() => {});
+      } catch { /* counting never gates */ }
+    }
     onVerdict?.(bound.result);
   };
 

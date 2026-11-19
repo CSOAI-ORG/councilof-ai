@@ -1123,9 +1123,14 @@ export const onRequestGet: PagesFunction = async () => {
         {
           subject: "traffic, users, customers, revenue",
           why_not:
-            "Not measured and not published. There is no counter behind these anywhere in this repo, " +
-            "so any figure would be invented.",
-          where: "Nowhere. UNPUBLISHED is the honest answer, and it is the whole answer.",
+            "Not measured and not published, with one deliberate exception: verify-page " +
+            "executions carry an aggregate-only counter (payload-free beacon → daily bucket → " +
+            "the committed public/interop/verify-executions-latest.json, published on " +
+            "/api/counters). That counter counts executions, not people: nothing per-user or " +
+            "per-card exists anywhere in it, and counting never gates the free check. No counter " +
+            "behind sessions, visitors, customers or revenue exists anywhere in this repo, so any " +
+            "figure for those would be invented.",
+          where: "Nowhere else. UNPUBLISHED is the honest answer, and it is the whole answer.",
         },
         {
           subject: "live RunPod pod inventory and grokbot estate GPUs",

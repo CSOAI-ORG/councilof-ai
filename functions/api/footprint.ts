@@ -40,6 +40,12 @@
 import packages from "../../public/interop/footprint-packages.json";
 import distribution from "../../public/interop/distribution-latest.json";
 import registryLatest from "../../public/interop/mcp-registry-latest.json";
+import verifyExecutionsArtifact, {
+  VERIFY_EXECUTIONS_PATH,
+  VERIFY_EXECUTIONS_SERVED_PATH,
+  deriveVerifyExecutions,
+  type VerifyExecutionsArtifact,
+} from "./_verify_executions";
 import { headFromGet } from "./_head";
 
 export const SCHEMA = "csoai.footprint/0.1";
@@ -338,6 +344,51 @@ export function grossDistribution(nowIso: string, art: DistributionArtifact = di
 }
 
 // ── same-origin rows ──────────────────────────────────────────────────────────
+/**
+ * observed_execution: the aggregate-only verify executions, read out of the committed
+ * csoai.verify-executions/0.1 artifact — the same bytes /api/counters derives from, so the two
+ * surfaces agree by construction. Each completed successful verification fires one payload-free
+ * beacon; the daily bucket is landed by the workflow; nothing per-user exists anywhere in the
+ * pipeline and counting never gates. With no bucket landed yet the stage stays UNMEASURED —
+ * empty is empty, never zero. The stage covers ONLY verify-page executions: tool calls and
+ * installs are counted by nothing, and the UNMEASURED reason still says so.
+ */
+export function observedExecution(nowIso: string, art: VerifyExecutionsArtifact | null = verifyExecutionsArtifact): Row {
+  const derived = deriveVerifyExecutions(art);
+  if (!derived.measured) {
+    return unmeasured(
+      "The aggregate-only counter exists (POST /api/verify-count — payload-free; counting never " +
+        "gates), but " + VERIFY_EXECUTIONS_PATH + " names no bucket yet: UNMEASURED, not zero. " +
+        "Tool calls and installs are counted by nothing, so no number for them exists anywhere.",
+      { unit: "executions", source_url: new URL("/api/counters", "https://councilof.ai").toString() },
+    );
+  }
+  const age = derived.as_of ? ageHours(derived.as_of, nowIso) : null;
+  const stale = derived.stale_after_hours != null && age != null && age > derived.stale_after_hours;
+  return {
+    state: stale ? "STALE" : "READ",
+    value: derived.total,
+    as_of: derived.as_of,
+    unit: "successful verify-page executions",
+    kind: "measured (aggregate-only counter; no per-user data)",
+    source_url: VERIFY_EXECUTIONS_SERVED_PATH,
+    artifact: VERIFY_EXECUTIONS_PATH,
+    days: derived.day_count,
+    window_rule:
+      "The figure is the sum of the artifact's retained daily buckets (buckets older than " +
+      "retention_days are dropped), so it is a retained window, never a lifetime total; a " +
+      "read-modify-write race on one bucket makes it a floor rather than an exact tally.",
+    max_age_hours: derived.stale_after_hours,
+    ...(age != null ? { age_hours: Math.round(age * 10) / 10 } : {}),
+    ...(stale
+      ? { reason: `verify-executions artifact landed ${age!.toFixed(1)} h ago, past its own ${derived.stale_after_hours} h freshness declaration` }
+      : {}),
+    note:
+      "Aggregate-only: the beacon carries no payload and no identifiers, nothing about a person, " +
+      "a card or a result value is sent or stored, and counting never gates the free check.",
+  };
+}
+
 export async function economicUse(deps: Deps, revenue?: Fetched): Promise<Row> {
   const url = new URL("/api/revenue", deps.origin).toString();
   const got = revenue ?? await fetchJson(deps, url);
@@ -482,12 +533,7 @@ export async function buildFootprint(deps: Deps) {
     },
   );
 
-  const observed_execution = unmeasured(
-    "No counter exists behind a verify-page execution, a tool call or an install being run: " +
-      "/api/counters publishes verify_page_executions as UNPUBLISHED because nothing instruments it. " +
-      "A number here would be invented.",
-    { unit: "executions", source_url: new URL("/api/counters", deps.origin).toString() },
-  );
+  const observed_execution = observedExecution(nowIso);
 
   const institutional_use = unmeasured(
     "No register of institutions using the estate exists, and a download or a payer wallet does not identify one.",

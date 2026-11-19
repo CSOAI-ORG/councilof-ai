@@ -39,8 +39,14 @@
  * axes would become 22. Never add these together.
  *
  * UNPUBLISHED counters stay exactly as they were, and that part was always honest:
- * there is no counter behind verify-page executions or watch-desk reads anywhere in
- * this repo, so any number here would be invented. Null is the whole answer.
+ * there is no counter behind watch-desk reads anywhere in this repo, so any number here
+ * would be invented. Null is the whole answer. Verify-page executions — which used to sit
+ * in that same null — now carry an AGGREGATE-ONLY counter: a completed successful
+ * verification fires one payload-free beacon, and this row derives IN-PROCESS from the
+ * committed daily artifact public/interop/verify-executions-latest.json. Nothing is
+ * fetched to publish it, as_of is read OUT of the artifact, and while the artifact names
+ * no bucket the row stays UNPUBLISHED (deployment-order safe: absent or empty is null,
+ * never zero).
  *
  * Doctrine: council-os/QUOTING-NUMBERS.md. Aggregate authority: /api/state.
  * This endpoint has no state of its own — edit the artifact, commit, deploy.
@@ -57,6 +63,7 @@ import { AXES_C } from "./_gspc_axes_c";
 import { AXES_D } from "./_gspc_axes_d";
 import { crosscheckBoardSnapshot } from "./_board_snapshot";
 import { AXES as REGISTER_ROWS, AXIS_REGISTER_SOURCE } from "./_axis_register";
+import verifyExecutionsArtifact, { VERIFY_EXECUTIONS_PATH, deriveVerifyExecutions } from "./_verify_executions";
 import { headFromGet } from "./_head";
 
 /** How a number was obtained. Never inferred from the value, never collapsed. */
@@ -129,6 +136,11 @@ const boardClaimState = boardCrosscheck.claim_state;
 const regulatoryCounts = (regulatoryInventory as any).counts ?? {};
 const regulatoryAsOf: string | null = (regulatoryInventory as any).as_of ?? null;
 const frozenAt: string | null = (regulatoryInventory as any).frozen_provisions?.frozen_at ?? null;
+
+// Aggregate-only verify executions, derived IN-PROCESS from the committed daily artifact.
+// With no bucket landed (status "no buckets", empty days) or malformed bytes, measured is
+// false and the row below stays UNPUBLISHED — never zero, never a fetch, never a clock value.
+const verifyExec = deriveVerifyExecutions(verifyExecutionsArtifact);
 
 const COUNTERS: Counter[] = [
   counter(
@@ -216,14 +228,22 @@ const COUNTERS: Counter[] = [
   counter(
     "verify_page_executions",
     "Verify-page executions (free, zero-auth)",
-    null,
-    "unmeasured",
-    null,
-    null,
-    null,
-    "No counter exists behind this anywhere in this repo, so any number would be invented. " +
-      "Verification is free, zero-auth and unlogged by design; counting it would mean " +
-      "instrumenting it. UNPUBLISHED is the honest answer and it is the whole answer.",
+    verifyExec.measured ? verifyExec.total : null,
+    verifyExec.measured ? "measured" : "unmeasured",
+    verifyExec.measured ? VERIFY_EXECUTIONS_PATH + " → sum(days[].executions)" : null,
+    verifyExec.measured ? verifyExec.as_of : null,
+    verifyExec.measured ? "as_of" : null,
+    verifyExec.measured
+      ? "Aggregate-only execution counts from the committed daily artifact: each completed " +
+        "successful verification fires one payload-free beacon, the daily bucket is landed by " +
+        "the workflow, and nothing about a person, a card or a result value exists anywhere in " +
+        "the pipeline; counting does not gate verification. The figure is the sum of the " +
+        "artifact's RETAINED daily buckets (buckets older than retention_days are dropped), so " +
+        "it is a window, not a lifetime total, and a read-modify-write race on one bucket makes " +
+        "it a floor rather than an exact tally."
+      : "The aggregate-only counter exists (POST /api/verify-count — payload-free, and counting " +
+        "never gates), but no daily bucket has landed in public/interop/verify-executions-latest.json " +
+        "yet. UNPUBLISHED, not zero: empty is empty. Nothing about a person or a card is collected.",
   ),
   counter(
     "watch_desk_reads",
