@@ -44,6 +44,32 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-1118-01",
+      "date": "2026-11-18",
+      "detected_at": "2026-11-02T19:03:39Z",
+      "detected_by": "external report",
+      "published_at": "2026-11-06T04:54:14Z",
+      "timing_evidence": [
+        "detected_at is the Date header of the report, an email sent to us privately. When we first read it is not recorded",
+        "published_at is the end of the step 'Deploy → councilof.ai' in GitHub Actions run 42163160616 (Build + deploy site, master at 7287750047546d65c8d02b786363486b9dd5d292), the first deploy to serve the corrected verifier",
+        "Pull request 3957 merged at 2026-11-06T04:32:56Z. Our first reply to the reporter is dated 2026-11-18T04:47:09Z, and this entry was written the same day; the deploy that first serves this entry had not happened when it was written"
+      ],
+      "what_was_wrong": "Our record verifier returned VALID for a record that carried no signature. functions/_lib/cardVerify.ts is the one implementation behind POST /api/verify, the /gspc-verify page and the MCP verify_card tool. For a record whose signature was missing or an empty string, it added a Signature check with ok: null and the code unsigned, and recorded no reason. The verdict asked only that there were no reasons and no check with ok: false, so it came out VALID. A record needed three things to pass: a body of the sender's choosing, the id that body hashes to, and one of our published public keys or its name. Anyone can produce all three, so a record we never signed read state VALID and cryptographic_state VALID. The response did list the Signature check as unsigned, and the /gspc-verify page said 'a hash-only VALID result is labelled unsigned and does not prove who wrote the record', but the verdict itself was the word VALID. That contradicted our own published rule: public/signed/HOW-TO-VERIFY.md says a record with a null signature is unsigned and UNCHECKABLE, never VALID, and two other verifiers we publish (public/signed/verify-card.mjs and mcp/gspc-server/verify-card.mjs) already answered UNCHECKABLE for a missing signature. The logic was in cardVerify.ts from the file's first commit, a2d789a83 (2026-08-26), until the fix was deployed on 2026-11-06, about ten weeks. On 2026-10-14 we gave the badge endpoint its own signature requirement (commit 9efbfb7a1, pull request 3152) and wrote in a comment beside it that an empty signature 'still comes back valid:true'; we did not change the shared verifier then. Who could have been misled: anyone who relied on VALID from one of these three doors for a record that did not come from us. POST /api/verify stores nothing about the records it is sent, so whether anyone other than the reporter was shown VALID for an unsigned record is UNMEASURED.",
+      "how_caught": "kta1kri (https://github.com/kta1kri), an independent security researcher, read our public source, built a record with an empty signature, ran our own verifier handler on it offline and saw VALID. They reported it to us privately by email on 2026-11-02, naming the file, the line and the remedy, and told us they had made no live write requests and had published nothing. Credit for finding and reporting this goes to kta1kri, who is named here at their own request. The fix was deployed on 2026-11-06, but we did not reply to them until 2026-11-18, sixteen days after the report.",
+      "what_changed": "Fixed in pull request 3957 (commit 728775004), merged and deployed on 2026-11-06. A missing signature is now recorded as the reason unsigned, which gives the verdict UNCHECKABLE, and VALID also requires that an Ed25519 check ran and verified. A signature that does not verify still reads INVALID. The fix changes the verdict only for a record with no signature. The /gspc-verify page now says VALID requires a successful signature check and that a matching hash alone is insufficient. functions/_lib/cardVerify.signature-required.test.ts holds the shared verifier, the HTTP handler and the MCP handler to this. Re-checked on the live endpoint at 2026-11-18T06:27:35Z with the published card 82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c: as published it reads VALID; with the signature set to an empty string it reads UNCHECKABLE with the reason unsigned; with one character of the signature changed it reads INVALID with the reason signature_invalid. No signed record was changed.",
+      "status": "CORRECTED - at the shared verifier, deployed 2026-11-06; reporter credited; signed records unchanged",
+      "reached_the_public": true,
+      "evidence": [
+        "https://github.com/CSOAI-ORG/councilof-ai/pull/3957 (merge commit 7287750047546d65c8d02b786363486b9dd5d292)",
+        "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42163160616 (the deploy that first served the fix)",
+        "https://councilof.ai/api/verify (POST a record; GET explains how) and https://councilof.ai/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json (the card used for the re-check)",
+        "https://councilof.ai/signed/HOW-TO-VERIFY.md",
+        "functions/_lib/cardVerify.ts; functions/_lib/cardVerify.signature-required.test.ts; functions/api/badge.ts; client/src/pages/GSPCVerify.tsx",
+        "councilof-ai commits a2d789a83 (the verifier's first commit, 2026-08-26) and 9efbfb7a1 (the badge's own signature requirement, 2026-10-14)",
+        "https://github.com/kta1kri (the reporter, named at their own request)"
+      ]
+    },
+    {
       "id": "C-2026-1006-13",
       "date": "2026-10-06",
       "detected_at": "2026-10-06",
@@ -1992,20 +2018,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "b04c8d07014b1c0c9497e889481e5e3ededf76736427bac3d814bfd2b3d3f34a",
+    id: "b38290a7cb95a9152afb619f143e2c85b1fc93ca15d7079aed30a8390e5bf0e2",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "a699fbc4d89fbc49e6b06dc618f4445bbef59e18b74dc05ac33d0b8cc0b3917e7793c5430fbcf4304ba6456b6fd80d3b2fee7e498943ae1563e896b48f697206",
+    signature: "b51a920782fc6bfb2fdba70fa34d2ca917dc3f3a0817eaa7223c7fb4222e86b63588bffb2f7af4271f9db96a06b73f7e982a7941790879c9d4963be8dce4c203",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "b04c8d07014b1c0c9497e889481e5e3ededf76736427bac3d814bfd2b3d3f34a",
+          "content_id": "b38290a7cb95a9152afb619f143e2c85b1fc93ca15d7079aed30a8390e5bf0e2",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 93,
-          "latest_entry_id": "C-2026-1006-13",
-          "ledger_canonical_bytes": 229171,
+          "entries": 94,
+          "latest_entry_id": "C-2026-1118-01",
+          "ledger_canonical_bytes": 234435,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-10-06T13:51:47Z"
+          "signed_at": "2026-11-18T06:39:51Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
