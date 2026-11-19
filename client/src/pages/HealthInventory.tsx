@@ -43,12 +43,7 @@ export default function HealthInventory() {
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
-        <title>Health inventory | Council of AI</title>
         <meta name="robots" content="noindex" />
-        <meta
-          name="description"
-          content="Same-origin door check. Derived HTTP statuses. Not a certification."
-        />
       </Helmet>
       <section className="mx-auto max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-300">

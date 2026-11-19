@@ -1,5 +1,4 @@
 import { Link } from "wouter";
-import { Helmet } from "react-helmet-async";
 import { HUMAN_REVIEW_STEPS } from "@/components/home/HomeHumanReview";
 
 /**
@@ -44,14 +43,6 @@ const HIM_GATES = [
 export default function Him() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <Helmet>
-        <title>MEOK H.I.M. — the human in the loop · Council of AI</title>
-        <meta
-          name="description"
-          content="Inspect an AI proposal, check your understanding of its record and retain a decision receipt. Human identity, authority and executed effects need separate verification."
-        />
-      </Helmet>
-
       <section
         aria-labelledby="him-h"
         className="border-b border-emerald-800/60 bg-[#061811] text-emerald-50"
