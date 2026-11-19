@@ -112,6 +112,9 @@ export function Footer() {
         { name: 'Evidence and reuse rights', href: '/licensing-agreement/#rights' },
         { name: 'Independence and conflicts', href: '/independence/' },
         { name: 'Contact', href: '/contact/' },
+        // 17 Nov 2026: the press room was linked from nowhere on the site. native: a full load, so the
+        // reader gets the room functions/press/index.ts renders, not the older in-app /press route.
+        { name: 'Press', href: '/press/', native: true },
         { name: 'Where we take part', href: '/memberships/' },
         { name: 'FAQ', href: '/faq/' },
         { name: 'Careers', href: '/careers/' },

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 import { FFW, FINES } from "@/data/enforcement";
 
@@ -90,13 +89,6 @@ export default function Art50() {
 
   return (
     <section className="min-h-screen bg-stone-50 px-5 py-16 text-stone-800">
-      <Helmet>
-        <title>Article 50 verification services | Council of AI</title>
-        <meta
-          name="description"
-          content="Marking-presence census, detector-interop bench and specimen ledger for EU AI Act Article 50 transparency. Dates derived live from /api/regulation. Measurement, not certification."
-        />
-      </Helmet>
       <section className="mx-auto max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-amber-700">
           Derived from GET /api/regulation · verified_as_of{" "}

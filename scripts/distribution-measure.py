@@ -520,8 +520,11 @@ def main() -> int:
             "downloads_all_time": roll_up(registries, "downloads_all_time", "cumulative, all time", as_of),
         },
         "by_entity": {
-            "rule": ("CSOAI Ltd and MEOK AI Labs publish from one account and are labelled, never "
-                     "filtered. The estate total is every row; each entity's share is printed beside it."),
+            "rule": ("CSOAI Ltd and MEOK AI Labs are separate entities publishing from one account. Every "
+                     "row is labelled with its entity, never filtered. The CSOAI and MEOK AI Labs figures "
+                     "are two figures and are never added: quote each under its own label. totals counts "
+                     "every row of the account, joint and unattributed included, so it is neither "
+                     "entity's figure."),
             "downloads_30d": by_entity(all_packages, "downloads_30d", as_of),
             "downloads_all_time": by_entity(all_packages, "downloads_all_time", as_of),
         },

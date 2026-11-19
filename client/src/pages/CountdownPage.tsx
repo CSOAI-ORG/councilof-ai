@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 
 type Deadline = {
@@ -58,13 +57,6 @@ export default function CountdownPage() {
 
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
-      <Helmet>
-        <title>Regulatory countdown | Council of AI</title>
-        <meta
-          name="description"
-          content="Live EU AI Act and related deadlines derived from /api/regulation. Not a compliance determination."
-        />
-      </Helmet>
       <section className="mx-auto max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-300">
           Derived from GET /api/regulation

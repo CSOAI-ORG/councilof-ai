@@ -18,7 +18,27 @@ function count(row: unknown): Count | null {
   return { value: r.value, state: r.state, covered: r.covered, attempted: r.attempted, asOf: r.as_of };
 }
 
-/** Read the dated artifact directly; the full funnel can spend 25 seconds walking a registry. */
+/** A count as printed: "≥ N" when the row is a lower bound. */
+function shown(row: Count): string {
+  return `${row.state === "PARTIAL" ? "≥ " : ""}${nf.format(row.value)}`;
+}
+
+/** One entity's two windows from by_entity, or null unless both are readable and dated like the census. */
+function entityWindows(payload: DistributionArtifact, name: string, asOf: string) {
+  const lifetime = count(payload.by_entity?.downloads_all_time?.[name]);
+  const recent = count(payload.by_entity?.downloads_30d?.[name]);
+  return lifetime && recent && lifetime.asOf === asOf && recent.asOf === asOf ? { lifetime, recent } : null;
+}
+
+/**
+ * Read the dated artifact directly; the full funnel can spend 25 seconds walking a registry.
+ *
+ * The figures are CSOAI's own, read from by_entity.*.csoai. CSOAI Ltd and MEOK AI Labs publish
+ * from one account and the census labels every package with its entity. Live home page, 18 Nov
+ * 2026: the headline was the account total, "≥ 3,852,241", which is MEOK 2,746,597 + CSOAI
+ * 890,521 + joint + unattributed, while /api/momentum's rule says the two are never added. MEOK's
+ * figures are returned separately, for their own labelled line; nothing here adds them in.
+ */
 export function distributionRead(payload: DistributionArtifact | null, now = Date.now()) {
   if (payload?.schema !== "csoai.distribution/0.1") return null;
   const lifetime = count(payload.totals?.downloads_all_time);
@@ -26,24 +46,20 @@ export function distributionRead(payload: DistributionArtifact | null, now = Dat
   if (!lifetime || !recent || lifetime.asOf !== recent.asOf || payload.as_of !== lifetime.asOf) return null;
   const ageHours = payload.max_age_hours;
   if (typeof ageHours !== "number" || !Number.isFinite(ageHours) || ageHours <= 0 || ageHours > MAX_AGE_HOURS) return null;
-  const entityRows = payload.by_entity?.downloads_all_time;
-  const names = ["meok", "csoai", "joint", "unattributed"] as const;
-  const entries = names.map((name) => [name, count(entityRows?.[name])] as const);
-  const entitySplit = entries.every(([, row]) => row && row.asOf === lifetime.asOf)
-    && entries.reduce((sum, [, row]) => sum + (row?.value ?? 0), 0) === lifetime.value
-      ? entries.map(([name, row]) => ({ name, value: row!.value }))
-      : null;
-  const stale = lifetime.state === "STALE" || recent.state === "STALE"
+  const csoai = entityWindows(payload, "csoai", lifetime.asOf);
+  if (!csoai) return null;
+  const meok = entityWindows(payload, "meok", lifetime.asOf);
+  const stale = csoai.lifetime.state === "STALE" || csoai.recent.state === "STALE"
     || now - Date.parse(lifetime.asOf) > ageHours * 60 * 60 * 1000;
-  const partial = lifetime.state === "PARTIAL" || recent.state === "PARTIAL";
-  return { lifetime, recent, entitySplit, stale, partial };
+  const partial = csoai.lifetime.state === "PARTIAL" || csoai.recent.state === "PARTIAL";
+  return { asOf: lifetime.asOf, csoai, meok, stale, partial };
 }
 
 function Figure({ row, label }: { row: Count; label: string }) {
   return (
     <div className="border-t border-[var(--ink-border)] pt-4">
       <p className="font-mono text-3xl font-black tracking-tight text-[var(--ink-foreground)] tabular-nums sm:text-4xl">
-        {row.state === "PARTIAL" ? "≥ " : ""}{nf.format(row.value)}
+        {shown(row)}
       </p>
       <p className="ink-kicker mt-2 text-sm font-bold">{label}</p>
       <p className="ink-muted mt-1 text-xs leading-relaxed">
@@ -63,7 +79,7 @@ export default function HomeDistribution({
   const read = useDistributionArtifact(injected);
   const result = read.kind === "ready" ? distributionRead(read.payload, now) : null;
   const date = result
-    ? new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(result.lifetime.asOf))
+    ? new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(result.asOf))
     : null;
 
   return (
@@ -86,17 +102,20 @@ export default function HomeDistribution({
           {result ? (
             <>
               <div className="grid gap-6 sm:grid-cols-2">
-                <Figure row={result.lifetime} label="gross download events since first release" />
-                <Figure row={result.recent} label="gross download events in registry 30-day windows" />
+                <Figure row={result.csoai.lifetime} label="gross download events since first release, CSOAI packages" />
+                <Figure row={result.csoai.recent} label="gross download events in registry 30-day windows, CSOAI packages" />
               </div>
               <p className="ink-muted mt-6 text-xs leading-relaxed">
-                Published census dated {date} UTC · {result.stale ? "Out of date — a fresh census is needed." : result.partial ? "Partial read; missing counters are not treated as zero." : "All listed counters answered."} The PyPI source and a separate sample counter disagree, so these are reported registry events, not verified adoption.
+                Published census dated {date} UTC · {result.stale ? "Out of date — a fresh census is needed." : result.partial ? "Partial read; missing counters are not treated as zero." : "All CSOAI package counters answered."} The PyPI source and a separate sample counter disagree, so these are reported registry events, not verified adoption.
               </p>
-              {result.entitySplit && (
-                <p className="ink-muted mt-3 text-xs leading-relaxed">
-                  Of the cumulative total: {result.entitySplit.map(({ name, value }) => `${name === "meok" ? "MEOK" : name === "csoai" ? "CSOAI" : name} ${nf.format(value)}`).join(" · ")}. Package ownership labels come from the published census.
+              {result.meok && (
+                <p className="ink-muted mt-3 text-xs leading-relaxed" data-testid="home-distribution-meok">
+                  MEOK AI Labs, a separate entity publishing from the same account, is counted on its own and never added to CSOAI&apos;s figures: {shown(result.meok.lifetime)} since first release ({result.meok.lifetime.covered} of {result.meok.lifetime.attempted} counters answered) and {shown(result.meok.recent)} in 30-day windows ({result.meok.recent.covered} of {result.meok.recent.attempted}).
                 </p>
               )}
+              <p className="ink-muted mt-3 text-xs leading-relaxed">
+                Packages labelled joint or unattributed are in neither figure. Package ownership labels come from the published census.
+              </p>
             </>
           ) : (
             <p className="text-sm leading-relaxed text-[var(--ink-foreground)]">

@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 
 test("switching from a linked card to another published card drops the old source label", async ({ page }) => {
+  // No matrix here, so "Try a published card" falls back to the chain fixture below.
+  await page.route("**/signed/card-matrix.json", (route) => route.fulfill({ status: 404, body: "" }));
   await page.route("**/signed/cards/linked-source-fixture.json", (route) =>
     route.fulfill({ status: 200, contentType: "application/json", body: '{"id":"linked-source-fixture"}' }),
   );

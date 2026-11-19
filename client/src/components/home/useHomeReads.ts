@@ -124,7 +124,7 @@ export interface DistributionArtifact {
   as_of?: string;
   max_age_hours?: number;
   totals?: { downloads_all_time?: FootprintRow; downloads_30d?: FootprintRow };
-  by_entity?: { downloads_all_time?: Record<string, FootprintRow> };
+  by_entity?: { downloads_all_time?: Record<string, FootprintRow>; downloads_30d?: Record<string, FootprintRow> };
 }
 
 export function useDistributionArtifact(injected?: ReadState<DistributionArtifact>) {
