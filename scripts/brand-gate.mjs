@@ -460,13 +460,32 @@ const OBSERVED_TOKEN_NAME = Object.freeze({
   value: "BLACK SWAN",
   rule: "internal_strategy_codename",
 });
-function resolveObservedTokenExemptField(obj, rel, raw, meta) {
-  if (rel !== OBSERVED_TOKEN_NAME.path) return null;
+// A second, different XRPL token carries the same two words. It was issued on 13 Nov 2026 and
+// first appeared in the public-root refresh of 18 Nov 2026, on the ranking page at offset 8300
+// (candidate #4460, pr-gates run 44419454921). It gets its own record with the same four
+// bindings as the first: another ledger identity, another page, and its own exact spelling.
+// Nothing is shared between the two records, and a record does not follow its token to another
+// page: if XRPSCAN ranks this token onto a different mirrored page, the gate fails closed again.
+const OBSERVED_TOKEN_NAME_8300 = Object.freeze({
+  path: "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-8300.json",
+  metaId: "xrpscan-tokens-8300.json",
+  metaRole: "token-ranking-page-with-hits",
+  sourceUrl: "https://api.xrpscan.com/api/v1/tokens?limit=100&offset=8300",
+  tokenId: "424C4B53574E0000000000000000000000000000.rKxvi3eDot8aBACcGjpVyPv7cpYF4AiETJ",
+  currency: "424C4B53574E0000000000000000000000000000",
+  issuer: "rKxvi3eDot8aBACcGjpVyPv7cpYF4AiETJ",
+  createdAt: "2026-11-13T06:39:21.811Z",
+  value: "Black Swan",
+  rule: "internal_strategy_codename",
+});
+const OBSERVED_TOKEN_NAMES = Object.freeze([OBSERVED_TOKEN_NAME, OBSERVED_TOKEN_NAME_8300]);
+function resolveObservedTokenExemptField(obj, rel, raw, meta, spec = OBSERVED_TOKEN_NAME) {
+  if (rel !== spec.path) return null;
   if (typeof raw !== "string" || !raw.length || raw.trim() !== raw) return null;
   if (!meta || typeof meta !== "object") return null;
-  if (meta.id !== OBSERVED_TOKEN_NAME.metaId ||
-      meta.role !== OBSERVED_TOKEN_NAME.metaRole ||
-      meta.source_url !== OBSERVED_TOKEN_NAME.sourceUrl ||
+  if (meta.id !== spec.metaId ||
+      meta.role !== spec.metaRole ||
+      meta.source_url !== spec.sourceUrl ||
       meta.http !== 200 ||
       meta.bytes !== Buffer.byteLength(raw, "utf8") ||
       createHash("sha256").update(raw).digest("hex") !== meta.sha256) {
@@ -480,11 +499,11 @@ function resolveObservedTokenExemptField(obj, rel, raw, meta) {
   for (let i = 0; i < obj.length; i++) {
     const entry = obj[i];
     if (!entry || typeof entry !== "object") continue;
-    if (entry.id === OBSERVED_TOKEN_NAME.tokenId) {
+    if (entry.id === spec.tokenId) {
       if (matchIndex !== -1) return null; // duplicate record smuggling fails closed
-      if (entry.currency !== OBSERVED_TOKEN_NAME.currency ||
-          entry.issuer !== OBSERVED_TOKEN_NAME.issuer ||
-          entry.createdAt !== OBSERVED_TOKEN_NAME.createdAt) {
+      if (entry.currency !== spec.currency ||
+          entry.issuer !== spec.issuer ||
+          entry.createdAt !== spec.createdAt) {
         return null;
       }
       matchIndex = i;
@@ -494,7 +513,9 @@ function resolveObservedTokenExemptField(obj, rel, raw, meta) {
 }
 function jsonDisplayHits(obj, rel, raw = null, meta = null) {
   const hits = [];
-  const exemptField = resolveObservedTokenExemptField(obj, rel, raw, meta);
+  const exemptFields = OBSERVED_TOKEN_NAMES
+    .map((spec) => ({ spec, at: resolveObservedTokenExemptField(obj, rel, raw, meta, spec) }))
+    .filter((e) => e.at !== null);
 
   (function rec(node, at, key) {
     if (typeof node === "string") {
@@ -505,8 +526,8 @@ function jsonDisplayHits(obj, rel, raw = null, meta = null) {
       if (REGISTRY_IDENTIFIER.test(node.trim())) return;
       const text = decodeEntities(node); // what a consumer that renders the field shows
       for (const rule of RULES) {
-        if (exemptField !== null && rule.id === OBSERVED_TOKEN_NAME.rule &&
-            at === exemptField && node === OBSERVED_TOKEN_NAME.value) continue;
+        if (exemptFields.some((e) => rule.id === e.spec.rule &&
+            at === e.at && node === e.spec.value)) continue;
         if (rule.pagesOnly) continue; // see the rule: pages and text files only
         if (rule.allowOn && rule.allowOn.test(rel)) continue;
         const re = new RegExp(rule.pattern.source, "gi");
@@ -808,6 +829,81 @@ if (SELFTEST) {
       "allows our added display claim inside the observation file");
     assertControl(hit({ title: "BLACK SWAN" }, "/products/catalog.json", '{"title":"BLACK SWAN"}'),
       "no longer catches the standalone phrase in our catalogue");
+  }
+  // Second recorded third-party name. The controls are built here rather than read from the
+  // committed page, because the page on master was fetched before this token was issued; they
+  // prove the two records stay separate and that the second is bound as tightly as the first.
+  {
+    const first = OBSERVED_TOKEN_NAME;
+    const second = OBSERVED_TOKEN_NAME_8300;
+    const record = (spec) => ({
+      id: spec.tokenId,
+      currency: spec.currency,
+      issuer: spec.issuer,
+      createdAt: spec.createdAt,
+      updatedAt: "2026-11-18T06:21:53.000Z",
+      meta: { token: { name: spec.value } },
+    });
+    const receipt = (bytes, spec) => ({
+      id: spec.metaId,
+      role: spec.metaRole,
+      source_url: spec.sourceUrl,
+      http: 200,
+      bytes: Buffer.byteLength(bytes, "utf8"),
+      sha256: createHash("sha256").update(bytes).digest("hex"),
+    });
+    const hit = (obj, rel, bytes, m = null) => jsonDisplayHits(obj, rel, bytes, m)
+      .some((h) => h.rule === second.rule);
+    const assertControl = (condition, label) => {
+      if (!condition) { console.error(`✖ selftest: second external-name boundary ${label}`); bad++; }
+    };
+    const other = { id: "other.rOther", meta: { token: { name: "OTHER" } } };
+    const page = [other, record(second)];
+    const pageRaw = JSON.stringify(page);
+    assertControl(first.tokenId !== second.tokenId && first.path !== second.path && first.value !== second.value,
+      "records are no longer distinct");
+    assertControl(!hit(page, second.path, pageRaw, receipt(pageRaw, second)),
+      "blocks the second recorded token on its own receipt-matched page");
+    const moved = [record(second), other];
+    const movedRaw = JSON.stringify(moved);
+    assertControl(!hit(moved, second.path, movedRaw, receipt(movedRaw, second)),
+      "blocks a ranking-slot shift of the second token within its page");
+    assertControl(hit(page, first.path, pageRaw, receipt(pageRaw, first)),
+      "lets the second token through on the first token's page");
+    const crossed = [other, record(first)];
+    const crossedRaw = JSON.stringify(crossed);
+    assertControl(hit(crossed, second.path, crossedRaw, receipt(crossedRaw, second)),
+      "lets the first token through on the second token's page");
+    assertControl(hit(page, second.path.replace("8300", "8400"), pageRaw,
+      { ...receipt(pageRaw, second), id: "xrpscan-tokens-8400.json", source_url: second.sourceUrl.replace("8300", "8400") }),
+      "follows the second token to another ranking page");
+    assertControl(hit(page, second.path, pageRaw, null),
+      "accepts the second token without a .meta.json fetch receipt");
+    assertControl(hit(page, second.path, pageRaw, receipt(pageRaw + " ", second)),
+      "accepts second-token bytes whose sha256 disagrees with .meta.json");
+    assertControl(hit(page, second.path, pageRaw, { ...receipt(pageRaw, second), source_url: first.sourceUrl }),
+      "accepts the second token on a receipt for another source URL");
+    const respelled = [other, { ...record(second), meta: { token: { name: first.value } } }];
+    const respelledRaw = JSON.stringify(respelled);
+    assertControl(hit(respelled, second.path, respelledRaw, receipt(respelledRaw, second)),
+      "accepts the second token under the first token's spelling");
+    const forgedDate = [other, { ...record(second), createdAt: first.createdAt }];
+    const forgedDateRaw = JSON.stringify(forgedDate);
+    assertControl(hit(forgedDate, second.path, forgedDateRaw, receipt(forgedDateRaw, second)),
+      "accepts the second token with a forged createdAt");
+    const forgedIssuer = [other, { ...record(second), issuer: first.issuer }];
+    const forgedIssuerRaw = JSON.stringify(forgedIssuer);
+    assertControl(hit(forgedIssuer, second.path, forgedIssuerRaw, receipt(forgedIssuerRaw, second)),
+      "accepts the second token with a forged issuer");
+    const twice = [record(second), record(second)];
+    const twiceRaw = JSON.stringify(twice);
+    assertControl(hit(twice, second.path, twiceRaw, receipt(twiceRaw, second)),
+      "accepts a duplicated second-token record");
+    const ours = [{ ...other, title: second.value }, record(second)];
+    const oursRaw = JSON.stringify(ours);
+    assertControl(jsonDisplayHits(ours, second.path, oursRaw, receipt(oursRaw, second))
+      .some((h) => h.rule === second.rule && h.at === "[0].title"),
+      "allows our own display claim inside the second observation file");
   }
   // A whole-string MCP Registry identifier is an address, not copy; the same words as prose still fail.
   if (jsonDisplayHits({ servers: [{ name: "io.github.CSOAI-ORG/bft-progress-council-mcp" }] }, "/interop/effect-binding-server-probe-2026-09-22.json").length) {
@@ -1114,7 +1210,7 @@ for (const jf of walkAll(DIST)) {
   if (/^\/signed\//.test(jrel)) continue; // signed evidence carries the real model id — same carve-out
   let parsed, raw, meta = null;
   try { raw = fs.readFileSync(jf, "utf8"); parsed = JSON.parse(raw); } catch { continue; }
-  if (jrel === OBSERVED_TOKEN_NAME.path) {
+  if (OBSERVED_TOKEN_NAMES.some((spec) => spec.path === jrel)) {
     try { meta = JSON.parse(fs.readFileSync(jf + ".meta.json", "utf8")); } catch { meta = {}; }
   }
   for (const h of jsonDisplayHits(parsed, jrel, raw, meta)) {

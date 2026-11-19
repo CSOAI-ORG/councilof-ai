@@ -282,6 +282,17 @@ was a number that had stopped being true. Count the rows.
 7. REST + curl — `curl https://councilof.ai/api/gspc`
    If a public source refuses a request, retain its HTTP status and observation time. Report the source as unreachable for that request; do not substitute a cached value or work around an access restriction.
 
+User-Agent: name your client. The edge refuses Python's stdlib default User-Agent
+(`Python-urllib/3.x`) with HTTP 403, error code 1010, on free reads such as /api/gspc,
+/api/corrections and /.well-known/did.json. That 403 is not an invalid result: report it
+UNCHECKABLE, never INVALID and never a guessed number. A descriptive User-Agent is the fix we ask
+for, not a workaround, and https://councilof.ai/signed/HOW-TO-VERIFY.md gives the same example:
+
+```python
+req = urllib.request.Request(url, headers={"User-Agent": "my-verifier/1.0"})
+body = urllib.request.urlopen(req, timeout=30).read()
+```
+
 The install guide for those doors — the canonical remote install for any client, the exact reviewed tool catalog, and the safe first checks — is at https://councilof.ai/llms-install.md.
 
 The source-linked SOV World observatory is at https://councilof.ai/world/observatory/.
@@ -289,7 +300,7 @@ It is a dated simulation archive; its source date and upstream signature-verific
 
 ## 9. DISTRIBUTION, AND THE MCP REGISTRY FOOTPRINT
 
-### 9a. Distribution — measured, PARTIAL, and not adoption
+### 9a. Distribution — measured per entity, never added, and not adoption
 
 {{DISTRIBUTION_SECTION}}
 ### 9b. MCP Registry footprint — we measure what we probe; we do not vet the registry
