@@ -1488,7 +1488,31 @@ def spray_github(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
         status, body, _ = http(f"{api}/contents/SNAPSHOT.json", headers=hdr, timeout=30)
         return json.loads(body) if status == 200 else None
 
+    def remote_files() -> dict[str, bytes]:
+        """The mirror's copy of each snapshot file, raw from the contents API. A 404 is left out."""
+        files = {}
+        for name in SNAPSHOT_FILES:
+            status, body, _ = http(f"{api}/contents/{name}", headers=hdr, timeout=30)
+            if status == 200:
+                files[name] = body
+            elif status != 404:
+                raise RuntimeError(f"GET contents/{name} -> HTTP {status}")
+        return files
+
+    # The push below copies SNAPSHOT_FILES and nothing else, so those are the bytes the mirror must carry.
+    built = {name: data for name, data in built_files(snap).items() if name in SNAPSHOT_FILES}
     why = unchanged(remote(), tr, force)
+    if why:
+        # as_of/fingerprint match is not byte parity. A board change can land without a new root:
+        # on 2026-11-19 two held axes were released under root as_of 2026-11-19T03:15:46Z, the HF
+        # and Kaggle surfaces republished on their byte check, and this mirror kept the old board.
+        try:
+            bp = byte_parity_reason(built, remote_files())
+        except Exception as e:  # noqa: BLE001
+            bp = f"remote unreadable file-by-file ({type(e).__name__})"
+        if bp:
+            log(f"[github] {why} — but byte parity fails ({bp}); republishing")
+            why = None
     if why:
         return [result("github", "UNCHANGED", page, tr["as_of"], why)]
     if dry_run:
@@ -1532,9 +1556,11 @@ def spray_github(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
     if not want <= have:
         http(f"{api}/topics", method="PUT", data=json.dumps({"names": sorted(have | want)}).encode(),
              headers={**hdr, "Accept": "application/vnd.github+json", "Content-Type": "application/json"}, timeout=30)
-    seen = wait_for(lambda: (remote() or {}).get("as_of") == tr["as_of"] and tr["as_of"], tries=6, delay=5)
+    # Byte-strict confirmation: a republish under an unchanged root lands on a mirror that already
+    # carries this as_of, so an as_of re-read would confirm before the push is visible.
+    seen = wait_for(lambda: byte_parity_reason(built, remote_files()) is None and tr["as_of"], tries=6, delay=5)
     return [result("github", "PUBLISHED" if seen else "PUBLISHED-UNCONFIRMED", page, seen or None,
-                   None if seen else "pushed; contents API did not return the new SNAPSHOT.json yet")]
+                   None if seen else "pushed; contents API did not return the pushed snapshot bytes yet")]
 
 
 def zenodo_token() -> str | None:
