@@ -11,7 +11,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { LEDGER } from "./corrections";
-import { LEDGER_META, ledgerRow, ledgersBlock, otsEvidence, parseChecks, rootInclusionOf } from "./_ledgers";
+import { LEDGER_META, ledgerRow, ledgersBlock, newestCorrectionDate, otsEvidence, parseChecks, rootInclusionOf } from "./_ledgers";
 import rootWitness from "../../public/interop/root-witness-latest.json";
 import { onRequestGet as stateGet } from "./state";
 import publicRoot from "../../public/root.json";
@@ -72,6 +72,19 @@ describe("ledgers block", () => {
     const by = (LEDGER_META["withdrawals-mill-cards"].atom.payload.by_correction ?? {}) as Record<string, number>;
     expect(Object.keys(by).length).toBeGreaterThan(0);
     expect(Object.keys(by).filter((c) => !ids.has(c))).toEqual([]);
+  });
+
+  it("corrections_in_this_deploy dates its count by the newest entry in the served ledger (E2E 2026-11-19)", () => {
+    const c = b.corrections_in_this_deploy;
+    const dates = (LEDGER.corrections as { date?: string }[]).map((e) => e.date).filter(Boolean) as string[];
+    expect(c.count).toBe(LEDGER.corrections.length);
+    expect(c.newest_date).toBe([...dates].sort().at(-1));
+    expect(c.newest_date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    // The ledger is ordered by id, not by date: the maximum is taken over every entry, never corr[0].date.
+    expect(newestCorrectionDate([{ id: "a", date: "2026-09-24" }, { id: "b", date: "2026-09-30" }, { id: "c", date: "2026-09-22" }])).toBe("2026-09-30");
+    // No date is invented: an undated or malformed ledger reads null.
+    expect(newestCorrectionDate([])).toBeNull();
+    expect(newestCorrectionDate([{ id: "a" }, { id: "b", date: "yesterday" }, { id: "c", date: 20261118 }])).toBeNull();
   });
 
   it("the corrections head in the served-bytes atom is a ledger id (names, not only a count)", () => {

@@ -80,13 +80,22 @@ export function verifiedCardsFigure(state: unknown): Figure | null {
   return { value: String(n), label: "signed cards in the index verify", source: "/api/state → card_chain.bodies_verified_valid", as_of: str(f?.as_of) };
 }
 
-/** /api/state → ledgers.corrections_in_this_deploy. */
+/**
+ * /api/state → ledgers.corrections_in_this_deploy. The date is the newest entry date the producer
+ * reads from the served ledger (newest_date); when the payload does not carry it the tile says so
+ * ("Source date not supplied") rather than printing a date read from somewhere else.
+ */
 export function correctionsFigure(state: unknown): Figure | null {
   const c = rec(rec(rec(state)?.ledgers)?.corrections_in_this_deploy);
   const n = int(c?.count);
   if (n === null) return null;
   const head = str(c?.head_id);
-  return { value: String(n), label: head ? `corrections published · newest ${head}` : "corrections published", source: "/api/state → ledgers.corrections_in_this_deploy", as_of: null };
+  return {
+    value: String(n),
+    label: head ? `corrections published · newest ${head}` : "corrections published",
+    source: "/api/state → ledgers.corrections_in_this_deploy",
+    as_of: str(c?.newest_date),
+  };
 }
 
 /** /api/state → ledgers.claim_maintenance.counts, each outcome named; never summed into one number. */

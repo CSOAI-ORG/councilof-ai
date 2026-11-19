@@ -188,6 +188,16 @@ export function parseChecks(p: Json): Check[] {
   });
 }
 
+/** The maximum `date` (YYYY-MM-DD) over the ledger entries; null when none carries one. */
+export function newestCorrectionDate(entries: Json[]): string | null {
+  let max: string | null = null;
+  for (const c of entries) {
+    const d = typeof c?.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(c.date) ? c.date : null;
+    if (d && (max === null || d > max)) max = d;
+  }
+  return max;
+}
+
 export function ledgersBlock() {
   const rows = Object.keys(LEDGER_META).map(ledgerRow);
   const corr = LEDGER.corrections as Json[];
@@ -214,6 +224,11 @@ export function ledgersBlock() {
     corrections_in_this_deploy: {
       count: corr.length,
       head_id: (corr[0]?.id as string) ?? null,
+      // The newest entry date in the served ledger: the only date the count itself carries (the ledger
+      // is ordered by id, not by date, so it is the maximum, never corr[0].date). A reader quoting the
+      // count cites this, not the ledgers[] row's read_at, which dates a different, earlier read.
+      newest_date: newestCorrectionDate(corr),
+      newest_date_field: "corrections[].date (maximum); null when no entry carries a date",
       note: "The corrections ledger this deploy serves. The ledgers[] row is the served bytes at read_at; a difference means entries landed after the last read and reach the root at the next daily run.",
     },
     withdrawals: {
