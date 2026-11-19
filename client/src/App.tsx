@@ -89,6 +89,7 @@ const WatchdogSignup = lazy(() => import("./pages/WatchdogSignup"));
 const Admin = lazy(() => import("./pages/Admin"));
 const ApiDocs = lazy(() => import("./pages/ApiDocs"));
 const DocsHub = lazy(() => import("./pages/DocsHub"));
+const Engagements = lazy(() => import("./pages/Engagements"));
 const Brand = lazy(() => import("./pages/Brand"));
 const X402Catalog = lazy(() => import("./pages/X402Catalog"));
 const ApiKeys = lazy(() => import("./pages/ApiKeys"));
@@ -678,6 +679,7 @@ function AppShell() {
                   <Route path="/council-licensing" component={CouncilLicensingLanding} />
                   <Route path="/courses/:id" component={ContentReviewNotice} />
                   <Route path="/docs" component={DocsHub} />
+                  <Route path="/engagements" component={Engagements} />
                   <Route path="/brand" component={Brand} />
                   <Route path="/metered" component={X402Catalog} />
                   <Route path="/early-access" component={EarlyAccessLanding} />

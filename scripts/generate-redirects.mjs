@@ -82,6 +82,10 @@ const EXISTING = [
   // the numbers rather than left as a fifth board.
   "/gspc/field  /board  308",
   "/gspc/field/ /board  308",
+  // /pilot was announced before the page shipped under its real name; both spellings
+  // must land on the engagement journey, never on the SPA 404 (found 2026-11-19).
+  "/pilot   /engagements  308",
+  "/pilot/  /engagements  308",
   // The hand-authored /arena tree was a second, stale product surface. Keep
   // historical machine evidence in public/arena/*.json{,l}, but route every
   // former human page into the one Council OS play surface. Exact rules are
