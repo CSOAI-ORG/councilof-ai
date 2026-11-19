@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Historical MEOK documentation reference — not a release asset</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Use MEOK to explore public Council of AI evidence, save an unsigned Ask transcript and reopen it. Read current capabilities, verification boundaries and next steps.">
+<link rel="canonical" href="https://meok.ai/docs">
+<meta property="og:title" content="MEOK documentation — public evidence workspace">
+<meta property="og:description" content="Explore public evidence, save your Ask transcript and reopen it. Clear capabilities and verification boundaries.">
+<meta property="og:site_name" content="MEOK">
+<style>
+:root{--bg:#f4f1ea;--card:#fffdf8;--ink:#1a1712;--dim:#5f5749;--gold:#7d682f;--line:#e6dfd0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:36px 16px 72px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800}
+.brand .m{width:30px;height:30px;border-radius:8px;background:var(--ink);color:#c9a84c;display:grid;place-items:center}
+h1{font-size:28px;line-height:1.2;margin:24px 0 8px} h2{font-size:19px;margin:26px 0 8px}
+.sub{color:var(--dim);font-size:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:16px 0}
+.na{display:inline-block;font-size:12px;font-weight:700;background:#f1e3c4;color:#5c4a1a;border-radius:999px;padding:2px 10px}
+.ok{display:inline-block;font-size:12px;font-weight:700;background:#d7efe5;color:#0d5c44;border-radius:999px;padding:2px 10px}
+table{width:100%;border-collapse:collapse;font-size:14px} td,th{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+pre{background:#1c1a16;color:#f0ead9;border-radius:10px;padding:12px 14px;overflow-x:auto;font:12.5px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;word-break:break-all}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.92em;word-break:break-all}
+a{color:var(--gold);font-weight:600}
+footer{margin-top:36px;color:var(--dim);font-size:13px}
+</style>
+</head><body><main class="wrap">
+<a class="brand" href="/" style="text-decoration:none;color:inherit"><span class="m" aria-hidden="true">M</span> MEOK</a>
+<h1>Use the public evidence workspace</h1>
+<p class="card"><strong>Historical reference · 30 October 2026.</strong> Canonical website documentation work now supersedes this adoption route. Review the adjacent adoption note; do not deploy this standalone file.</p>
+<p class="sub">MEOK helps you explore published Council of AI evidence and keep a record of your enquiry. This guide describes the public Ask workspace reviewed on 29 October 2026.</p>
+<h2 id="status">Current capabilities</h2>
+<div class="card"><table><thead><tr><th scope="col">Capability</th><th scope="col">What you can do</th></tr></thead><tbody>
+<tr><td>Public Ask workspace</td><td>Ask about the evidence board, recent corrections or safety measurements and follow the returned sources.</td></tr>
+<tr><td>Transcript export</td><td>Use <strong>Save transcript &amp; events</strong> to keep an unsigned record of the response.</td></tr>
+<tr><td>Transcript reopening</td><td>Use <strong>Reopen a saved transcript</strong> to inspect a saved response without submitting another Ask request.</td></tr>
+<tr><td>Private AI staff and voice</td><td>These capabilities are not connected to this public workspace.</td></tr>
+<tr><td>Signed measurement records</td><td>Use Council of AI's verification tools for supported records. A MEOK transcript is not a signed measurement record.</td></tr>
+</tbody></table></div>
+<h2 id="ask">Ask, inspect and keep the result</h2>
+<ol><li>Open the <a href="/">MEOK workspace</a> and choose <strong>What does the board show?</strong>, or enter a question in <strong>Ask the evidence desk</strong>.</li>
+<li>Select <strong>Ask MEOK</strong>. Read the response and follow its source links. Check each source's date, scope and stated limitations before using it.</li>
+<li>Select <strong>Save transcript &amp; events</strong> to download the record. Keep the original file if you want to reopen it.</li>
+<li>Use <strong>Reopen a saved transcript</strong> to load that file. Reopening displays the saved answer; it does not refresh the underlying measurements.</li></ol>
+<p>If a request fails or you cancel it, do not treat it as a completed enquiry. If a transcript is rejected, retain the original and use the displayed error to decide whether to try a compatible export or start a new enquiry. Edited or incompatible files may not reopen.</p>
+<h2 id="verify">What verification means</h2>
+<p>A transcript's digest can detect a mismatch between its content and its recorded digest. It is not an authenticated signature, an independent measurement or proof that a third party issued the file. The public workspace does not sign its Ask replies.</p>
+<p>For a supported Council of AI record, use the <a href="https://councilof.ai/verify/">public verifier</a> and retain the record together with the result and its stated checks. A response summary cannot replace the source evidence or its verification.</p>
+<h2 id="data">Your saved transcript</h2>
+<p>The export is a file you choose to save. Review its contents before sharing it, and keep a copy if you need it later. This guide does not promise cross-device recovery or storage of your transcript by MEOK. Read the <a href="/privacy">privacy notice</a> for the service's data-handling terms.</p>
+<h2 id="overlay">Earlier playground documentation</h2>
+<p>Earlier versions of this page focused on a model prompt overlay. That experiment is separate from the current public evidence workspace. Its model, endpoint and availability have not been revalidated for this guide; do not use the earlier playground instructions as the Ask workspace's API documentation.</p>
+<h2 id="keys">API keys</h2>
+<p>This public Ask guide does not document an API-key service. Do not infer private workspace access from the availability of the public page.</p>
+<h2 id="mcp">MCP integrations</h2>
+<p>This guide does not establish a live MEOK MCP endpoint. Council of AI publishes its own <a href="https://councilof.ai/connect/">connection guidance</a>; those interfaces and their evidence boundaries are separate from a saved MEOK transcript.</p>
+<h2 id="boundary">Operator and measurement boundary</h2>
+<p>MEOK is a CSOAI product. Council of AI is the public AI measurement service operated by CSOAI Ltd. It publishes measurements, methods, limitations and corrections. Using those public sources in MEOK does not constitute an endorsement, ranking or certification of MEOK.</p>
+<p><a href="/">Open the public workspace</a> · <a href="https://councilof.ai/">Explore Council of AI</a></p>
+<footer><a href="/">Home</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a><br>Documentation scope: public Ask workspace, 29 October 2026.</footer>
+</main></body></html>

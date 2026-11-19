@@ -1,0 +1,128 @@
+{
+  "schema": "csoai.cross-runtime-experiment/1",
+  "state": "MULTIPLATFORM_EXECUTION_WITH_PUBLIC_PREVIEW_LIMIT",
+  "at": "2026-11-11T06:02:50.493422+00:00",
+  "canonical_pr": 4212,
+  "machine_verified": "Apple M4",
+  "model": {
+    "kind": "Existing 980-parameter synthetic process predictor",
+    "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+    "training_performed": false,
+    "heldout_bank_reused": true,
+    "constrained_mae": 0.0028797331109599016,
+    "worst_component_error": 0.7499076603275624
+  },
+  "M4": {
+    "python": "3.14.7",
+    "rows": 560,
+    "raw_and_constrained_values": 4480
+  },
+  "Hugging_Face": {
+    "actual_live_calls": true,
+    "selected_rows": 15,
+    "rows": [
+      0,
+      1,
+      7,
+      8,
+      31,
+      63,
+      127,
+      191,
+      255,
+      319,
+      383,
+      447,
+      511,
+      536,
+      559
+    ],
+    "max_absolute_difference": 0.0,
+    "negative_controls": 2,
+    "recovery": true,
+    "canonical_event_digests_verified": 15,
+    "signatures_verified": false,
+    "existing_private_runtime_unchanged": true,
+    "GPU_or_Cosmos_calls": 0
+  },
+  "Kaggle": {
+    "notebook": "nicktempleman/meok-cross-runtime-replay",
+    "version": 2,
+    "status": "COMPLETE",
+    "python": "3.13.18",
+    "rows": 560,
+    "values_compared": 4480,
+    "max_absolute_difference_vs_M4": 0,
+    "GPU": false,
+    "outputs_downloaded_and_checked": true,
+    "existing_Academy_notebook_changed": false
+  },
+  "Cloudflare": {
+    "execution": "Real Wrangler remote-development session, not a production URL",
+    "worker_name": "csoai-process-replay",
+    "preview_name": "parity-20261111",
+    "isolated_deployment_id": "0e29bc3e-b669-4163-a100-42d2e9434fa5",
+    "rows": 560,
+    "values_compared": 4480,
+    "max_absolute_difference": 5.551115123125783e-16,
+    "predeclared_tolerance": 1e-12,
+    "HTTP_requests": 78,
+    "response_byte_hashes_verified": 78,
+    "cf_ray_headers_observed": 78,
+    "negative_controls": 6,
+    "recovery": true,
+    "max_rows_per_request": 8,
+    "body_limit_bytes": 8192,
+    "configured_cpu_ms": 10,
+    "prediction_expiry": "2026-11-12T00:00:00Z",
+    "public_preview_url_status": "404/error1042 observed from M4 and Kaggle; no successful public inference claimed",
+    "temporary_remote_session_stopped": true,
+    "production_pages_or_domains_changed": false,
+    "AI_R2_D1_KV_or_private_bindings": [],
+    "new_paid_GPU_or_plan_change": false,
+    "actual_billing_or_credit_balance_checked": false
+  },
+  "source_tests": {
+    "handler_contract_checks": 25,
+    "all_560_handler_rows_compared": true,
+    "max_node_core_difference": 0
+  },
+  "retained_failures": [
+    {
+      "stage": "Kaggle version1",
+      "observation": "Unexpected HF307 refused before inference",
+      "resolution": "Version2 fetched exact canonical vendor bytes with original HF pins; no broad redirect exception added"
+    },
+    {
+      "stage": "Cloudflare standalone preview",
+      "observation": "Deployment created but preview endpoint returned1042 before app response",
+      "resolution": "Separate supported remote-development session executed real inference; public preview remains unqualified"
+    },
+    {
+      "stage": "HF record verifier",
+      "observation": "Sorted json.dumps did not match producer RFC8785 bytes",
+      "resolution": "Used exact pinned canonical evidence builder; all15 output digests passed"
+    }
+  ],
+  "concurrent_work_preserved": [
+    {
+      "notebook": "nicktempleman/council-academy-evidence-review",
+      "scope": "Existing Academy evidence run, not overwritten"
+    },
+    {
+      "notebook": "nicktempleman/meok-cross-platform-cpu-replay",
+      "scope": "Concurrent independent six-variant/no-network replay inspected; this lane focuses deployed Worker/MCP contracts, not duplicating its algorithm or checkpoint work"
+    }
+  ],
+  "boundaries": {
+    "new_model_capability_proved": false,
+    "new_neural_training": false,
+    "real_world_validity_established": false,
+    "GSPC_admission": false,
+    "source_independence_from_owner": false,
+    "execution_authority": false,
+    "private_data_published": false,
+    "production_master_merged": false,
+    "novelty_claim": "A new evidenced integration in this research lane, not a world-first technology claim"
+  }
+}

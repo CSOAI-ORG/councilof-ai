@@ -9,6 +9,10 @@ on:
   push:
     branches: [master]
 
+concurrency:
+  group: conflict-guard-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   conflict-guard:
     runs-on: ubuntu-latest

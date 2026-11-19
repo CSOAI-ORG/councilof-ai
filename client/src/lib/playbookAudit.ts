@@ -20,9 +20,9 @@ export const PLAYBOOK_RULING =
     "Use the playbook’s demand. Refuse its week-to-MEASURED, auto-email, and fused compliance score.";
 
 export const PLAYBOOK_SOURCE = {
-    title: "CSOAI permissionless domination playbook",
+    title: "Review of the August 2026 growth proposal",
     dated: "2026-08-30",
-    role: "External war brief. Not GET /api/gspc. Not a signed card.",
+    role: "Historical external proposal, reviewed below. It is not measurement evidence.",
 } as const;
 
 export const PLAYBOOK_PITCH =

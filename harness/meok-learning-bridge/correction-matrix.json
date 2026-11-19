@@ -1,0 +1,4335 @@
+{
+  "state": "SYNTHETIC_CORRECTION_MATRIX_PASSED",
+  "mapped_contexts": 107,
+  "mutations": 5,
+  "checks": 535,
+  "summary": [
+    {
+      "mutation": "SAFE-source-revised",
+      "pairs": 107,
+      "global_rejections": 107,
+      "scoped_rejections": 107,
+      "unchanged_lesson_bindings_preserved": 0,
+      "missed_relevant_invalidations": 0
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "pairs": 107,
+      "global_rejections": 107,
+      "scoped_rejections": 15,
+      "unchanged_lesson_bindings_preserved": 92,
+      "missed_relevant_invalidations": 0
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "pairs": 107,
+      "global_rejections": 107,
+      "scoped_rejections": 28,
+      "unchanged_lesson_bindings_preserved": 79,
+      "missed_relevant_invalidations": 0
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "pairs": 107,
+      "global_rejections": 107,
+      "scoped_rejections": 0,
+      "unchanged_lesson_bindings_preserved": 107,
+      "missed_relevant_invalidations": 0
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "pairs": 107,
+      "global_rejections": 107,
+      "scoped_rejections": 6,
+      "unchanged_lesson_bindings_preserved": 101,
+      "missed_relevant_invalidations": 0
+    }
+  ],
+  "records": [
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "governance",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "governance",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "governance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "governance",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "governance",
+      "industry": "public-oversight",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "safety",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "safety",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "safety",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "safety",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "safety",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "safety",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "provenance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "provenance",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "provenance",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "provenance",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "continuity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "continuity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "continuity",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "continuity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "conformance",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "conformance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "conformance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "conformance",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "openness",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "openness",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "openness",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "machinery-conformity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "machinery-conformity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "care",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "care",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "care",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "cross-reality",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "cross-reality",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "cross-reality",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "detector-interop",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "detector-interop",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "art5-safeguard",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "art5-safeguard",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "art5-safeguard",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "swarm",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "swarm",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "swarm",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "affect",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "affect",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "affect",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "jail",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "jail",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "effect-binding",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "effect-binding",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "effect-binding",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "effect-binding",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "effect-binding",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "effect-binding",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "provenance-controls",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "reserve-attestation",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "regulatory-framework",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "distribution-integrity",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "custody-disclosure",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "ai-adoption-components",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "ai-adoption-components",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "labour-components",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "labour-components",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "humanoid-labour-index",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "lab-practice",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "lab-practice",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "lab-practice",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "company-practice",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "company-practice",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "company-practice",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "company-practice",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "company-practice",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "company-practice",
+      "industry": "public-oversight",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "company-practice",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "measurer-integrity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "measurer-integrity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "measurer-integrity",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "harness-fidelity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "harness-fidelity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "harness-fidelity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "harness-fidelity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "interop-conformance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "interop-conformance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "interop-conformance",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "interop-conformance",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "humanoid-deployment",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "regulator-transparency",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "interpretability-reproducibility",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "interpretability-reproducibility",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "claim-maintenance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "claim-maintenance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "claim-maintenance",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "claim-maintenance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "claim-maintenance",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "claim-maintenance",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "claim-maintenance",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "serving-fidelity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "serving-fidelity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "serving-fidelity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "serving-fidelity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "instructions-case-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "governance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "governance",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "governance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "governance",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "governance",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "safety",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "safety",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "safety",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "safety",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "safety",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "safety",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "provenance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "provenance",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "provenance",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "provenance",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "continuity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "continuity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "continuity",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "continuity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "conformance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "conformance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "conformance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "conformance",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "openness",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "openness",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "openness",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "machinery-conformity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "machinery-conformity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "care",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "care",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "care",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "cross-reality",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "cross-reality",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "cross-reality",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "detector-interop",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "detector-interop",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "art5-safeguard",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "art5-safeguard",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "art5-safeguard",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "swarm",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "swarm",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "swarm",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "affect",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "affect",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "affect",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "jail",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "jail",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "effect-binding",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "effect-binding",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "effect-binding",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "effect-binding",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "effect-binding",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "effect-binding",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "provenance-controls",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "reserve-attestation",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "regulatory-framework",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "distribution-integrity",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "custody-disclosure",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "ai-adoption-components",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "ai-adoption-components",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "labour-components",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "labour-components",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "humanoid-labour-index",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "lab-practice",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "lab-practice",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "lab-practice",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "company-practice",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "company-practice",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "company-practice",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "company-practice",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "company-practice",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "company-practice",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "company-practice",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "measurer-integrity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "measurer-integrity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "measurer-integrity",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "harness-fidelity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "harness-fidelity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "harness-fidelity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "harness-fidelity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "interop-conformance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "interop-conformance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "interop-conformance",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "interop-conformance",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "humanoid-deployment",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "regulator-transparency",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "interpretability-reproducibility",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "interpretability-reproducibility",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "claim-maintenance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "claim-maintenance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "claim-maintenance",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "claim-maintenance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "claim-maintenance",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "claim-maintenance",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "claim-maintenance",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "serving-fidelity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "serving-fidelity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "serving-fidelity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "serving-fidelity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "safety-row-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "governance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "governance",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "governance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "governance",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "governance",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "safety",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "safety",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "safety",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "safety",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "safety",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "safety",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "provenance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "provenance",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "provenance",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "provenance",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "continuity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "continuity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "continuity",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "continuity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "conformance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "conformance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "conformance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "conformance",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "openness",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "openness",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "openness",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "machinery-conformity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "machinery-conformity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "care",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "care",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "care",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "cross-reality",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "cross-reality",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "cross-reality",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "detector-interop",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "detector-interop",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "art5-safeguard",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "art5-safeguard",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "art5-safeguard",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "swarm",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "swarm",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "swarm",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "affect",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "affect",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "affect",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "jail",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "jail",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "effect-binding",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "effect-binding",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "effect-binding",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "effect-binding",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "effect-binding",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "effect-binding",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "provenance-controls",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "reserve-attestation",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "regulatory-framework",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "distribution-integrity",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "custody-disclosure",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "ai-adoption-components",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "ai-adoption-components",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "labour-components",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "labour-components",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "humanoid-labour-index",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "lab-practice",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "lab-practice",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "lab-practice",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "company-practice",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "company-practice",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "company-practice",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "company-practice",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "company-practice",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "company-practice",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "company-practice",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "measurer-integrity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "measurer-integrity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "measurer-integrity",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "harness-fidelity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "harness-fidelity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "harness-fidelity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "harness-fidelity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "interop-conformance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "interop-conformance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "interop-conformance",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "interop-conformance",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "humanoid-deployment",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "regulator-transparency",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "interpretability-reproducibility",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "interpretability-reproducibility",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "claim-maintenance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "claim-maintenance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "claim-maintenance",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "claim-maintenance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "claim-maintenance",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "claim-maintenance",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "claim-maintenance",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "serving-fidelity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "serving-fidelity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "serving-fidelity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "serving-fidelity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "finance-context-corrected",
+      "axis": "watchdog-ingest",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "governance",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "governance",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "governance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "governance",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "governance",
+      "industry": "public-oversight",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "safety",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "safety",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "safety",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "safety",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "safety",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "safety",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "provenance",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "provenance",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "provenance",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "provenance",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "continuity",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "continuity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "continuity",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "continuity",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "conformance",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "conformance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "conformance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "conformance",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "openness",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "openness",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "openness",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "machinery-conformity",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "machinery-conformity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "care",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "care",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "care",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "cross-reality",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "cross-reality",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "cross-reality",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "detector-interop",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "detector-interop",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "art5-safeguard",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "art5-safeguard",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "art5-safeguard",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "swarm",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "swarm",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "swarm",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "affect",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "affect",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "affect",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "jail",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "jail",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "effect-binding",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "effect-binding",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "effect-binding",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "effect-binding",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "effect-binding",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "effect-binding",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "provenance-controls",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "reserve-attestation",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "regulatory-framework",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "distribution-integrity",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "custody-disclosure",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "ai-adoption-components",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "ai-adoption-components",
+      "industry": "public-oversight",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "labour-components",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "labour-components",
+      "industry": "public-oversight",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "humanoid-labour-index",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "lab-practice",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "lab-practice",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "lab-practice",
+      "industry": "public-oversight",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "company-practice",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "company-practice",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "company-practice",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "company-practice",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "company-practice",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "company-practice",
+      "industry": "public-oversight",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "company-practice",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "measurer-integrity",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "measurer-integrity",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "measurer-integrity",
+      "industry": "public-oversight",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "harness-fidelity",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "harness-fidelity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "harness-fidelity",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "harness-fidelity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "interop-conformance",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "interop-conformance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "interop-conformance",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "interop-conformance",
+      "industry": "public-oversight",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "humanoid-deployment",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "regulator-transparency",
+      "industry": "public-oversight",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "interpretability-reproducibility",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "interpretability-reproducibility",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "claim-maintenance",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "claim-maintenance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "claim-maintenance",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "claim-maintenance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "claim-maintenance",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "claim-maintenance",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "claim-maintenance",
+      "industry": "public-oversight",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "serving-fidelity",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "serving-fidelity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "serving-fidelity",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "serving-fidelity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "watchdog-ingest",
+      "industry": "ai-software",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "watchdog-ingest",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "watchdog-ingest",
+      "industry": "education-media",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "watchdog-ingest",
+      "industry": "finance-legacy",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "watchdog-ingest",
+      "industry": "hardware-research",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "watchdog-ingest",
+      "industry": "health-care",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "watchdog-ingest",
+      "industry": "public-oversight",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "SAFE-source-revised",
+      "axis": "watchdog-ingest",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": true,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": true
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "governance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "governance",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "governance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "governance",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "governance",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "safety",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "safety",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "safety",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "safety",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "safety",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "safety",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "provenance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "provenance",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "provenance",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "provenance",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "continuity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "continuity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "continuity",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "continuity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "conformance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "conformance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "conformance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "conformance",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "openness",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "openness",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "openness",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "machinery-conformity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "machinery-conformity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "care",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "care",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "care",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "cross-reality",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "cross-reality",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "cross-reality",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "detector-interop",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "detector-interop",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "art5-safeguard",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "art5-safeguard",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "art5-safeguard",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "swarm",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "swarm",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "swarm",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "affect",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "affect",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "affect",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "jail",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "jail",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "effect-binding",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "effect-binding",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "effect-binding",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "effect-binding",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "effect-binding",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "effect-binding",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "provenance-controls",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "reserve-attestation",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "regulatory-framework",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "distribution-integrity",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "custody-disclosure",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "ai-adoption-components",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "ai-adoption-components",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "labour-components",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "labour-components",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "humanoid-labour-index",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "lab-practice",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "lab-practice",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "lab-practice",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "company-practice",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "company-practice",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "company-practice",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "company-practice",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "company-practice",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "company-practice",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "company-practice",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "measurer-integrity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "measurer-integrity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "measurer-integrity",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "harness-fidelity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "harness-fidelity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "harness-fidelity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "harness-fidelity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "interop-conformance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "interop-conformance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "interop-conformance",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "interop-conformance",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "humanoid-deployment",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "regulator-transparency",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "interpretability-reproducibility",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "interpretability-reproducibility",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "claim-maintenance",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "claim-maintenance",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "claim-maintenance",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "claim-maintenance",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "claim-maintenance",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "claim-maintenance",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "claim-maintenance",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "serving-fidelity",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "serving-fidelity",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "serving-fidelity",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "serving-fidelity",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "watchdog-ingest",
+      "industry": "ai-software",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "watchdog-ingest",
+      "industry": "critical-infrastructure",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "watchdog-ingest",
+      "industry": "education-media",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "watchdog-ingest",
+      "industry": "finance-legacy",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "watchdog-ingest",
+      "industry": "hardware-research",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "watchdog-ingest",
+      "industry": "health-care",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "watchdog-ingest",
+      "industry": "public-oversight",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    },
+    {
+      "mutation": "retrieval-time-only",
+      "axis": "watchdog-ingest",
+      "industry": "robotics-industrial",
+      "dependent_change_expected": false,
+      "global_binding_rejected": true,
+      "scoped_binding_rejected": false
+    }
+  ],
+  "real_source_mutations": 0,
+  "human_trials": 0,
+  "gspc_admitted": false,
+  "model_weights_changed": false,
+  "boundary": "A lesson binding is not a credential; current access and action authority are separate. Outcomes are limited to this declared dependency map."
+}

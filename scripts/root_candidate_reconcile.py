@@ -33,7 +33,7 @@ so the ONE public root had not advanced for over nine hours. Two faults, both he
 
 Exit 0 = reconciled, 1 = a real conflict (fail closed), 2 = UNCHECKABLE (the tree is not a
 candidate, or a generator is missing). Measurement, not certification: this merges two trees
-and regenerates two derived views. It does not sign, root, attest or certify anything.
+and regenerates derived views. It does not sign, root, attest or certify anything.
 """
 from __future__ import annotations
 
@@ -51,6 +51,7 @@ from typing import Any
 
 DERIVED_VIEWS = (
     "public/cards-bundle.json",
+    "public/card-feed-index.json",
     "public/interop/model-lifecycle.json",
     "functions/api/_model-lifecycle-snapshot.ts",
     "public/interop/ots/manifest.json",
@@ -600,8 +601,11 @@ def _stubs(repo: Path, log: Path) -> tuple[list[str], list[str]]:
     _write(repo / "scripts/ots_manifest_rebuild.py",
            f"open({str(log)!r}, 'a').write('manifest\\n')\n")
     _write(repo / "scripts/generate-cards-bundle.mjs",
-           f"import {{ appendFileSync }} from 'node:fs';\n"
-           f"appendFileSync({str(log)!r}, 'bundle\\n');\n")
+           f"import {{ appendFileSync, existsSync, readFileSync, writeFileSync }} from 'node:fs';\n"
+           f"appendFileSync({str(log)!r}, 'bundle\\n');\n"
+           f"const root = existsSync('public/root.json')\n"
+           f"  ? readFileSync('public/root.json', 'utf8') : 'no root in this tree\\n';\n"
+           f"writeFileSync('public/card-feed-index.json', 'feed-of:' + root);\n")
     _write(repo / "scripts/build-model-lifecycle.mjs",
            f"import {{ appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync }} from 'node:fs';\n"
            f"appendFileSync({str(log)!r}, 'lifecycle\\n');\n"
@@ -848,10 +852,36 @@ def run_selftest() -> int:
         print(f"  {'ok ' if ok else 'BAD'} without the rebuild the ledger goes stale: {detail}")
         failures += not ok
 
+    # 12. The compact feed is another root-derived output of the existing bundle producer.
+    #     It must be regenerated and committed after reconciliation, not inherit one side's
+    #     stale projection. Read HEAD, not the working file, to exercise the staging list too.
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = _make_repo(Path(tmp), master_changes_root=False, candidate_changes_root=True)
+        log = Path(tmp) / "order.log"
+        builder, generator = _stubs(repo, log)
+        reconcile(repo, builder=builder, generator=generator)
+        index = git(repo, "cat-file", "-p", "HEAD:public/card-feed-index.json").stdout
+        root_raw = git(repo, "cat-file", "-p", "HEAD:public/root.json").stdout
+        ok = index == f"feed-of:{root_raw}"
+        print(f"  {'ok ' if ok else 'BAD'} the committed feed index holds the merged root")
+        failures += not ok
+
+    # 13. Suppressing the producer leaves the old index, so the case above can go red.
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = _make_repo(Path(tmp), master_changes_root=False, candidate_changes_root=True)
+        log = Path(tmp) / "order.log"
+        builder, generator = _stubs(repo, log)
+        reconcile(repo, builder=builder, generator=generator, bundle=["node", "-e", ""])
+        index = git(repo, "cat-file", "-p", "HEAD:public/card-feed-index.json").stdout
+        root_raw = git(repo, "cat-file", "-p", "HEAD:public/root.json").stdout
+        ok = index != f"feed-of:{root_raw}"
+        print(f"  {'ok ' if ok else 'BAD'} without the producer the feed index goes stale")
+        failures += not ok
+
     if failures:
         print(f"root-candidate-reconcile selftest: FAIL ({failures} case(s))", file=sys.stderr)
         return 1
-    print("root-candidate-reconcile selftest: PASS (11 cases)")
+    print("root-candidate-reconcile selftest: PASS (13 cases)")
     return 0
 
 

@@ -1,0 +1,399 @@
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.3
+[notice] To update, run: pip install --upgrade pip
+test_access_revoked_midcompute (test_memory_venturi.CacheTests.test_access_revoked_midcompute) ... ok
+test_access_revoked_on_hit (test_memory_venturi.CacheTests.test_access_revoked_on_hit) ... ok
+test_actual_capacity (test_memory_venturi.CacheTests.test_actual_capacity) ... ok
+test_closed_cache_invalidations_refused (test_memory_venturi.CacheTests.test_closed_cache_invalidations_refused) ... ok
+test_context_expiry (test_memory_venturi.CacheTests.test_context_expiry) ... ok
+test_duplicate_dependencies (test_memory_venturi.CacheTests.test_duplicate_dependencies) ... ok
+test_each_worker_revision_changes_key (test_memory_venturi.CacheTests.test_each_worker_revision_changes_key) ... ok
+test_full_impact_is_selective (test_memory_venturi.CacheTests.test_full_impact_is_selective) ... ok
+test_invalid_input_domains (test_memory_venturi.CacheTests.test_invalid_input_domains) ... ok
+test_lost_invalidation_still_refuses_stale_source (test_memory_venturi.CacheTests.test_lost_invalidation_still_refuses_stale_source) ... ok
+test_missing_source_refused (test_memory_venturi.CacheTests.test_missing_source_refused) ... ok
+test_near_match_not_reused (test_memory_venturi.CacheTests.test_near_match_not_reused) ... ok
+test_no_authority_or_training_grant (test_memory_venturi.CacheTests.test_no_authority_or_training_grant) ... ok
+test_no_implicit_replay_of_stochastic_output (test_memory_venturi.CacheTests.test_no_implicit_replay_of_stochastic_output) ... ok
+test_no_incomplete_dependency_closure (test_memory_venturi.CacheTests.test_no_incomplete_dependency_closure) ... ok
+test_persistence_reopen (test_memory_venturi.CacheTests.test_persistence_reopen) ... ok
+test_policy_epoch_separation (test_memory_venturi.CacheTests.test_policy_epoch_separation) ... ok
+test_principal_isolation (test_memory_venturi.CacheTests.test_principal_isolation) ... ok
+test_rejects_non_bytes_output (test_memory_venturi.CacheTests.test_rejects_non_bytes_output) ... ok
+test_rejects_oversized_result (test_memory_venturi.CacheTests.test_rejects_oversized_result) ... ok
+test_same_request_hits (test_memory_venturi.CacheTests.test_same_request_hits) ... ok
+test_shorter_ttl_has_distinct_key (test_memory_venturi.CacheTests.test_shorter_ttl_has_distinct_key) ... ok
+test_source_change_during_hit_verification (test_memory_venturi.CacheTests.test_source_change_during_hit_verification) ... ok
+test_source_correction_misses (test_memory_venturi.CacheTests.test_source_correction_misses) ... ok
+test_source_retirement_refused (test_memory_venturi.CacheTests.test_source_retirement_refused) ... ok
+test_sources_changed_midcompute (test_memory_venturi.CacheTests.test_sources_changed_midcompute) ... ok
+test_tampered_payload_recomputed (test_memory_venturi.CacheTests.test_tampered_payload_recomputed) ... ok
+test_tenant_isolation (test_memory_venturi.CacheTests.test_tenant_isolation) ... ok
+test_truncated_impact_flushes_tenant (test_memory_venturi.CacheTests.test_truncated_impact_flushes_tenant) ... ok
+test_truncated_invalidation_during_hit_validation (test_memory_venturi.CacheTests.test_truncated_invalidation_during_hit_validation) ... ok
+test_truncated_invalidation_midcompute (test_memory_venturi.CacheTests.test_truncated_invalidation_midcompute) ... ok
+test_ttl_expiry (test_memory_venturi.CacheTests.test_ttl_expiry) ... ok
+test_unhashable_dependency_refused (test_memory_venturi.CacheTests.test_unhashable_dependency_refused) ... ok
+test_validation_failure_not_cached (test_memory_venturi.CacheTests.test_validation_failure_not_cached) ... ok
+test_real_predictor_and_existing_event (test_memory_ui.MemoryIntegrationTests.test_real_predictor_and_existing_event) ... ok
+test_reuse_domain (test_memory_ui.MemoryIntegrationTests.test_reuse_domain) ... ok
+test_seed_domain (test_memory_ui.MemoryIntegrationTests.test_seed_domain) ... ok
+test_separate_calls_no_persistent_user_memory (test_memory_ui.MemoryIntegrationTests.test_separate_calls_no_persistent_user_memory) ... ok
+test_axis_snapshot_is_not_measurement (test_research_lab.ResearchTests.test_axis_snapshot_is_not_measurement) ... ok
+test_axis_specific (test_research_lab.ResearchTests.test_axis_specific) ... ok
+test_cycles_rejected (test_research_lab.ResearchTests.test_cycles_rejected) ... ok
+test_dimension_bound (test_research_lab.ResearchTests.test_dimension_bound) ... ok
+test_duplicate_keys_rejected (test_research_lab.ResearchTests.test_duplicate_keys_rejected) ... ok
+test_event_tampering_detected (test_research_lab.ResearchTests.test_event_tampering_detected) ... ok
+test_expiry_preserves_previous_state (test_research_lab.ResearchTests.test_expiry_preserves_previous_state) ... ok
+test_inference_and_existing_event (test_research_lab.ResearchTests.test_inference_and_existing_event) ... ok
+test_invalid_features (test_research_lab.ResearchTests.test_invalid_features) ... ok
+test_pixel_booleans_rejected (test_research_lab.ResearchTests.test_pixel_booleans_rejected) ... ok
+test_record_bound_and_accounting (test_research_lab.ResearchTests.test_record_bound_and_accounting) ... ok
+test_record_count_bound (test_research_lab.ResearchTests.test_record_count_bound) ... ok
+test_status_hash_and_adapter_rejection (test_research_lab.ResearchTests.test_status_hash_and_adapter_rejection) ... ok
+test_transitive_dependencies (test_research_lab.ResearchTests.test_transitive_dependencies) ... ok
+test_uniform_square (test_research_lab.ResearchTests.test_uniform_square) ... ok
+test_unknown_axis_rejected (test_research_lab.ResearchTests.test_unknown_axis_rejected) ... ok
+test_untyped_record_rejected (test_research_lab.ResearchTests.test_untyped_record_rejected) ... ok
+test_zero_mass_rejected (test_research_lab.ResearchTests.test_zero_mass_rejected) ... ok
+test_context_continues_only_with_the_given_session (test_core.RuntimeTests.test_context_continues_only_with_the_given_session) ... ok
+test_final_answer_discards_internal_reasoning (test_core.RuntimeTests.test_final_answer_discards_internal_reasoning) ... ok
+test_generated_output_does_not_become_observed_truth (test_core.RuntimeTests.test_generated_output_does_not_become_observed_truth) ... ok
+test_history_and_episode_bounds (test_core.RuntimeTests.test_history_and_episode_bounds) ... /usr/local/lib/python3.12/asyncio/base_events.py:730: ResourceWarning: unclosed event loop <_UnixSelectorEventLoop running=False closed=False debug=False>
+  _warn(f"unclosed event loop {self!r}", ResourceWarning, source=self)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_later_outcome_remains_held (test_core.RuntimeTests.test_later_outcome_remains_held) ... ok
+test_malformed_session_is_not_silently_reset (test_core.RuntimeTests.test_malformed_session_is_not_silently_reset) ... ok
+test_outcome_requires_a_prior_episode_and_source (test_core.RuntimeTests.test_outcome_requires_a_prior_episode_and_source) ... ok
+test_reuses_sixteen_existing_branches_and_small_card (test_core.RuntimeTests.test_reuses_sixteen_existing_branches_and_small_card) ... ok
+test_sessions_and_input_state_are_isolated (test_core.RuntimeTests.test_sessions_and_input_state_are_isolated) ... ok
+test_wrong_provider_and_oversized_input_are_refused (test_core.RuntimeTests.test_wrong_provider_and_oversized_input_are_refused) ... ok
+test_consent_is_checked_before_model_use (test_app.AppTests.test_consent_is_checked_before_model_use) ... ok
+test_cpu_rejects_images_before_network (test_app.AppTests.test_cpu_rejects_images_before_network) ... ok
+test_error_does_not_fall_back_to_cpu (test_app.AppTests.test_error_does_not_fall_back_to_cpu) ... ok
+test_explicit_cpu_route_uses_the_existing_fixed_endpoint (test_app.AppTests.test_explicit_cpu_route_uses_the_existing_fixed_endpoint) ... ok
+test_live_route_handler_joins_the_owned_loop (test_app.AppTests.test_live_route_handler_joins_the_owned_loop) ... ok
+test_lock_has_no_paid_upgrade (test_app.AppTests.test_lock_has_no_paid_upgrade) ... ok
+test_reset_discards_session (test_app.AppTests.test_reset_discards_session) ... ok
+test_axes_exact_source (test_conversation.ConversationTests.test_axes_exact_source) ... ok
+test_consent_before_provider_or_tools (test_conversation.ConversationTests.test_consent_before_provider_or_tools) ... ok
+test_cross_session_isolation (test_conversation.ConversationTests.test_cross_session_isolation) ... ok
+test_duplicate_keys (test_conversation.ConversationTests.test_duplicate_keys) ... ok
+test_export_restore_text_only (test_conversation.ConversationTests.test_export_restore_text_only) ... ok
+test_file_bound (test_conversation.ConversationTests.test_file_bound) ... ok
+test_followup_context (test_conversation.ConversationTests.test_followup_context) ... ok
+test_help_no_provider (test_conversation.ConversationTests.test_help_no_provider) ... ok
+test_history_bound (test_conversation.ConversationTests.test_history_bound) ... ok
+test_input_bound (test_conversation.ConversationTests.test_input_bound) ... ok
+test_input_state_unchanged (test_conversation.ConversationTests.test_input_state_unchanged) ... ok
+test_memory_scope (test_conversation.ConversationTests.test_memory_scope) ... ok
+test_message_required (test_conversation.ConversationTests.test_message_required) ... ok
+test_model_text_not_executed (test_conversation.ConversationTests.test_model_text_not_executed) ... ok
+test_no_silent_fallback (test_conversation.ConversationTests.test_no_silent_fallback) ... ok
+test_no_system_import (test_conversation.ConversationTests.test_no_system_import) ... ok
+test_nonfinite_json (test_conversation.ConversationTests.test_nonfinite_json) ... ok
+test_normal_chat_existing_worker (test_conversation.ConversationTests.test_normal_chat_existing_worker) ... ok
+test_qant_seed_bound (test_conversation.ConversationTests.test_qant_seed_bound) ... ok
+test_restore_context_cap (test_conversation.ConversationTests.test_restore_context_cap) ... ok
+test_six_exchange_context (test_conversation.ConversationTests.test_six_exchange_context) ... ok
+test_tampered_export (test_conversation.ConversationTests.test_tampered_export) ... ok
+test_tool_image_not_ignored (test_conversation.ConversationTests.test_tool_image_not_ignored) ... ok
+test_tools_disabled_normal_question (test_conversation.ConversationTests.test_tools_disabled_normal_question) ... ok
+test_unknown_command (test_conversation.ConversationTests.test_unknown_command) ... ok
+test_unknown_provider (test_conversation.ConversationTests.test_unknown_provider) ... ok
+test_chatbot_clear_has_reset_binding (test_conversation_ui.ChatUITests.test_chatbot_clear_has_reset_binding) ... ok
+test_consent_refusal (test_conversation_ui.ChatUITests.test_consent_refusal) ... ok
+test_dictation_is_click_started_not_autosent (test_conversation_ui.ChatUITests.test_dictation_is_click_started_not_autosent) ... ok
+test_endpoints_preserved (test_conversation_ui.ChatUITests.test_endpoints_preserved) ... ok
+test_export_restore (test_conversation_ui.ChatUITests.test_export_restore) ... ok
+test_failed_provider_retains_input_state (test_conversation_ui.ChatUITests.test_failed_provider_retains_input_state) ... ok
+test_image_cleared_after_success (test_conversation_ui.ChatUITests.test_image_cleared_after_success) ... ok
+test_reset (test_conversation_ui.ChatUITests.test_reset) ... ok
+test_tool_uses_retained_lab (test_conversation_ui.ChatUITests.test_tool_uses_retained_lab) ... ok
+test_two_phase_chat (test_conversation_ui.ChatUITests.test_two_phase_chat) ... ok
+test_all20_original_practice_options (test_learning_bridge.LearningTests.test_all20_original_practice_options) ... ok
+test_all272_context_pairs_never_imply_coverage (test_learning_bridge.LearningTests.test_all272_context_pairs_never_imply_coverage) ... ok
+test_all34_correction_chains_hold_training (test_learning_bridge.LearningTests.test_all34_correction_chains_hold_training) ... ok
+test_all34_roster_and170_source_stages (test_learning_bridge.LearningTests.test_all34_roster_and170_source_stages) ... ok
+test_all_original_reading_options (test_learning_bridge.LearningTests.test_all_original_reading_options) ... ok
+test_answer_keys_not_in_learner_packet (test_learning_bridge.LearningTests.test_answer_keys_not_in_learner_packet) ... ok
+test_duplicate_answers_do_not_multiply_xp (test_learning_bridge.LearningTests.test_duplicate_answers_do_not_multiply_xp) ... ok
+test_empty_history_gives_no_completion (test_learning_bridge.LearningTests.test_empty_history_gives_no_completion) ... ok
+test_global_completion_flags_are_absent (test_learning_bridge.LearningTests.test_global_completion_flags_are_absent) ... ok
+test_incorrect_case_hash_rejected_even_with_updated_outer_manifest (test_learning_bridge.LearningTests.test_incorrect_case_hash_rejected_even_with_updated_outer_manifest) ... ok
+test_invalid_options_types_refused (test_learning_bridge.LearningTests.test_invalid_options_types_refused) ... ok
+test_latest_wrong_answer_drops_current_xp (test_learning_bridge.LearningTests.test_latest_wrong_answer_drops_current_xp) ... ok
+test_malformed_json_and_duplicate_keys_refused (test_learning_bridge.LearningTests.test_malformed_json_and_duplicate_keys_refused) ... ok
+test_measurement_dates_are_copied_not_refreshed (test_learning_bridge.LearningTests.test_measurement_dates_are_copied_not_refreshed) ... ok
+test_no_cross_call_state (test_learning_bridge.LearningTests.test_no_cross_call_state) ... ok
+test_no_orb_rank_or_bank_change (test_learning_bridge.LearningTests.test_no_orb_rank_or_bank_change) ... ok
+test_no_person_appointments_or_industry_partners (test_learning_bridge.LearningTests.test_no_person_appointments_or_industry_partners) ... ok
+test_personal_names_reports_and_roles_not_accepted (test_learning_bridge.LearningTests.test_personal_names_reports_and_roles_not_accepted) ... ok
+test_retry_can_show_educational_success_without_grant (test_learning_bridge.LearningTests.test_retry_can_show_educational_success_without_grant) ... ok
+test_safe_eleven_layers_not_gspc_score (test_learning_bridge.LearningTests.test_safe_eleven_layers_not_gspc_score) ... ok
+test_size_and_count_bounds (test_learning_bridge.LearningTests.test_size_and_count_bounds) ... ok
+test_snapshot_signature_not_claimed (test_learning_bridge.LearningTests.test_snapshot_signature_not_claimed) ... ok
+test_source_paths_not_rewritten (test_learning_bridge.LearningTests.test_source_paths_not_rewritten) ... ok
+test_stale_reading_revision_refused (test_learning_bridge.LearningTests.test_stale_reading_revision_refused) ... ok
+test_tampered_asset_rejected (test_learning_bridge.LearningTests.test_tampered_asset_rejected) ... ok
+test_training_and_external_handoffs_stay_held (test_learning_bridge.LearningTests.test_training_and_external_handoffs_stay_held) ... ok
+test_unknown_axis_or_context_refused (test_learning_bridge.LearningTests.test_unknown_axis_or_context_refused) ... ok
+test_unrelated_case_is_not_cross_axis_credit (test_learning_bridge.LearningTests.test_unrelated_case_is_not_cross_axis_credit) ... ok
+test_wrong_case_digest_refused (test_learning_bridge.LearningTests.test_wrong_case_digest_refused) ... ok
+test_wrong_registry_revision_refused (test_learning_bridge.LearningTests.test_wrong_registry_revision_refused) ... ok
+test_attempt_actual_event (test_learning_tools.ToolTests.test_attempt_actual_event) ... ok
+test_catalogue_actual_event (test_learning_tools.ToolTests.test_catalogue_actual_event) ... ok
+test_correction_actual_event (test_learning_tools.ToolTests.test_correction_actual_event) ... ok
+test_lesson_actual_event (test_learning_tools.ToolTests.test_lesson_actual_event) ... ok
+test_question_view_and_choice_binding (test_learning_tools.ToolTests.test_question_view_and_choice_binding) ... ok
+test_reading_actual_event (test_learning_tools.ToolTests.test_reading_actual_event) ... ok
+test_tampered_output_is_detectable (test_learning_tools.ToolTests.test_tampered_output_is_detectable) ... ok
+test_unknown_case_and_revision_fail_before_event (test_learning_tools.ToolTests.test_unknown_case_and_revision_fail_before_event) ... ok
+
+----------------------------------------------------------------------
+Ran 147 tests in 5.771s
+
+OK
+
+test_access_revoked_midcompute (test_memory_venturi.CacheTests.test_access_revoked_midcompute) ... ok
+test_access_revoked_on_hit (test_memory_venturi.CacheTests.test_access_revoked_on_hit) ... ok
+test_actual_capacity (test_memory_venturi.CacheTests.test_actual_capacity) ... ok
+test_closed_cache_invalidations_refused (test_memory_venturi.CacheTests.test_closed_cache_invalidations_refused) ... ok
+test_context_expiry (test_memory_venturi.CacheTests.test_context_expiry) ... ok
+test_duplicate_dependencies (test_memory_venturi.CacheTests.test_duplicate_dependencies) ... ok
+test_each_worker_revision_changes_key (test_memory_venturi.CacheTests.test_each_worker_revision_changes_key) ... ok
+test_full_impact_is_selective (test_memory_venturi.CacheTests.test_full_impact_is_selective) ... ok
+test_invalid_input_domains (test_memory_venturi.CacheTests.test_invalid_input_domains) ... ok
+test_lost_invalidation_still_refuses_stale_source (test_memory_venturi.CacheTests.test_lost_invalidation_still_refuses_stale_source) ... ok
+test_missing_source_refused (test_memory_venturi.CacheTests.test_missing_source_refused) ... ok
+test_near_match_not_reused (test_memory_venturi.CacheTests.test_near_match_not_reused) ... ok
+test_no_authority_or_training_grant (test_memory_venturi.CacheTests.test_no_authority_or_training_grant) ... ok
+test_no_implicit_replay_of_stochastic_output (test_memory_venturi.CacheTests.test_no_implicit_replay_of_stochastic_output) ... ok
+test_no_incomplete_dependency_closure (test_memory_venturi.CacheTests.test_no_incomplete_dependency_closure) ... ok
+test_persistence_reopen (test_memory_venturi.CacheTests.test_persistence_reopen) ... ok
+test_policy_epoch_separation (test_memory_venturi.CacheTests.test_policy_epoch_separation) ... ok
+test_principal_isolation (test_memory_venturi.CacheTests.test_principal_isolation) ... ok
+test_rejects_non_bytes_output (test_memory_venturi.CacheTests.test_rejects_non_bytes_output) ... ok
+test_rejects_oversized_result (test_memory_venturi.CacheTests.test_rejects_oversized_result) ... ok
+test_same_request_hits (test_memory_venturi.CacheTests.test_same_request_hits) ... ok
+test_shorter_ttl_has_distinct_key (test_memory_venturi.CacheTests.test_shorter_ttl_has_distinct_key) ... ok
+test_source_change_during_hit_verification (test_memory_venturi.CacheTests.test_source_change_during_hit_verification) ... ok
+test_source_correction_misses (test_memory_venturi.CacheTests.test_source_correction_misses) ... ok
+test_source_retirement_refused (test_memory_venturi.CacheTests.test_source_retirement_refused) ... ok
+test_sources_changed_midcompute (test_memory_venturi.CacheTests.test_sources_changed_midcompute) ... ok
+test_tampered_payload_recomputed (test_memory_venturi.CacheTests.test_tampered_payload_recomputed) ... ok
+test_tenant_isolation (test_memory_venturi.CacheTests.test_tenant_isolation) ... ok
+test_truncated_impact_flushes_tenant (test_memory_venturi.CacheTests.test_truncated_impact_flushes_tenant) ... ok
+test_truncated_invalidation_during_hit_validation (test_memory_venturi.CacheTests.test_truncated_invalidation_during_hit_validation) ... ok
+test_truncated_invalidation_midcompute (test_memory_venturi.CacheTests.test_truncated_invalidation_midcompute) ... ok
+test_ttl_expiry (test_memory_venturi.CacheTests.test_ttl_expiry) ... ok
+test_unhashable_dependency_refused (test_memory_venturi.CacheTests.test_unhashable_dependency_refused) ... ok
+test_validation_failure_not_cached (test_memory_venturi.CacheTests.test_validation_failure_not_cached) ... ok
+test_real_predictor_and_existing_event (test_memory_ui.MemoryIntegrationTests.test_real_predictor_and_existing_event) ... ok
+test_reuse_domain (test_memory_ui.MemoryIntegrationTests.test_reuse_domain) ... ok
+test_seed_domain (test_memory_ui.MemoryIntegrationTests.test_seed_domain) ... ok
+test_separate_calls_no_persistent_user_memory (test_memory_ui.MemoryIntegrationTests.test_separate_calls_no_persistent_user_memory) ... ok
+test_axis_snapshot_is_not_measurement (test_research_lab.ResearchTests.test_axis_snapshot_is_not_measurement) ... ok
+test_axis_specific (test_research_lab.ResearchTests.test_axis_specific) ... ok
+test_cycles_rejected (test_research_lab.ResearchTests.test_cycles_rejected) ... ok
+test_dimension_bound (test_research_lab.ResearchTests.test_dimension_bound) ... ok
+test_duplicate_keys_rejected (test_research_lab.ResearchTests.test_duplicate_keys_rejected) ... ok
+test_event_tampering_detected (test_research_lab.ResearchTests.test_event_tampering_detected) ... ok
+test_expiry_preserves_previous_state (test_research_lab.ResearchTests.test_expiry_preserves_previous_state) ... ok
+test_inference_and_existing_event (test_research_lab.ResearchTests.test_inference_and_existing_event) ... ok
+test_invalid_features (test_research_lab.ResearchTests.test_invalid_features) ... ok
+test_pixel_booleans_rejected (test_research_lab.ResearchTests.test_pixel_booleans_rejected) ... ok
+test_record_bound_and_accounting (test_research_lab.ResearchTests.test_record_bound_and_accounting) ... ok
+test_record_count_bound (test_research_lab.ResearchTests.test_record_count_bound) ... ok
+test_status_hash_and_adapter_rejection (test_research_lab.ResearchTests.test_status_hash_and_adapter_rejection) ... ok
+test_transitive_dependencies (test_research_lab.ResearchTests.test_transitive_dependencies) ... ok
+test_uniform_square (test_research_lab.ResearchTests.test_uniform_square) ... ok
+test_unknown_axis_rejected (test_research_lab.ResearchTests.test_unknown_axis_rejected) ... ok
+test_untyped_record_rejected (test_research_lab.ResearchTests.test_untyped_record_rejected) ... ok
+test_zero_mass_rejected (test_research_lab.ResearchTests.test_zero_mass_rejected) ... ok
+test_context_continues_only_with_the_given_session (test_core.RuntimeTests.test_context_continues_only_with_the_given_session) ... ok
+test_final_answer_discards_internal_reasoning (test_core.RuntimeTests.test_final_answer_discards_internal_reasoning) ... ok
+test_generated_output_does_not_become_observed_truth (test_core.RuntimeTests.test_generated_output_does_not_become_observed_truth) ... ok
+test_history_and_episode_bounds (test_core.RuntimeTests.test_history_and_episode_bounds) ... /usr/local/lib/python3.12/asyncio/base_events.py:730: ResourceWarning: unclosed event loop <_UnixSelectorEventLoop running=False closed=False debug=False>
+  _warn(f"unclosed event loop {self!r}", ResourceWarning, source=self)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_later_outcome_remains_held (test_core.RuntimeTests.test_later_outcome_remains_held) ... ok
+test_malformed_session_is_not_silently_reset (test_core.RuntimeTests.test_malformed_session_is_not_silently_reset) ... ok
+test_outcome_requires_a_prior_episode_and_source (test_core.RuntimeTests.test_outcome_requires_a_prior_episode_and_source) ... ok
+test_reuses_sixteen_existing_branches_and_small_card (test_core.RuntimeTests.test_reuses_sixteen_existing_branches_and_small_card) ... ok
+test_sessions_and_input_state_are_isolated (test_core.RuntimeTests.test_sessions_and_input_state_are_isolated) ... ok
+test_wrong_provider_and_oversized_input_are_refused (test_core.RuntimeTests.test_wrong_provider_and_oversized_input_are_refused) ... ok
+test_consent_is_checked_before_model_use (test_app.AppTests.test_consent_is_checked_before_model_use) ... ok
+test_cpu_rejects_images_before_network (test_app.AppTests.test_cpu_rejects_images_before_network) ... ok
+test_error_does_not_fall_back_to_cpu (test_app.AppTests.test_error_does_not_fall_back_to_cpu) ... ok
+test_explicit_cpu_route_uses_the_existing_fixed_endpoint (test_app.AppTests.test_explicit_cpu_route_uses_the_existing_fixed_endpoint) ... ok
+test_live_route_handler_joins_the_owned_loop (test_app.AppTests.test_live_route_handler_joins_the_owned_loop) ... ok
+test_lock_has_no_paid_upgrade (test_app.AppTests.test_lock_has_no_paid_upgrade) ... ok
+test_reset_discards_session (test_app.AppTests.test_reset_discards_session) ... ok
+test_axes_exact_source (test_conversation.ConversationTests.test_axes_exact_source) ... ok
+test_consent_before_provider_or_tools (test_conversation.ConversationTests.test_consent_before_provider_or_tools) ... ok
+test_cross_session_isolation (test_conversation.ConversationTests.test_cross_session_isolation) ... ok
+test_duplicate_keys (test_conversation.ConversationTests.test_duplicate_keys) ... ok
+test_export_restore_text_only (test_conversation.ConversationTests.test_export_restore_text_only) ... ok
+test_file_bound (test_conversation.ConversationTests.test_file_bound) ... ok
+test_followup_context (test_conversation.ConversationTests.test_followup_context) ... ok
+test_help_no_provider (test_conversation.ConversationTests.test_help_no_provider) ... ok
+test_history_bound (test_conversation.ConversationTests.test_history_bound) ... ok
+test_input_bound (test_conversation.ConversationTests.test_input_bound) ... ok
+test_input_state_unchanged (test_conversation.ConversationTests.test_input_state_unchanged) ... ok
+test_memory_scope (test_conversation.ConversationTests.test_memory_scope) ... ok
+test_message_required (test_conversation.ConversationTests.test_message_required) ... ok
+test_model_text_not_executed (test_conversation.ConversationTests.test_model_text_not_executed) ... ok
+test_no_silent_fallback (test_conversation.ConversationTests.test_no_silent_fallback) ... ok
+test_no_system_import (test_conversation.ConversationTests.test_no_system_import) ... ok
+test_nonfinite_json (test_conversation.ConversationTests.test_nonfinite_json) ... ok
+test_normal_chat_existing_worker (test_conversation.ConversationTests.test_normal_chat_existing_worker) ... ok
+test_qant_seed_bound (test_conversation.ConversationTests.test_qant_seed_bound) ... ok
+test_restore_context_cap (test_conversation.ConversationTests.test_restore_context_cap) ... ok
+test_six_exchange_context (test_conversation.ConversationTests.test_six_exchange_context) ... ok
+test_tampered_export (test_conversation.ConversationTests.test_tampered_export) ... ok
+test_tool_image_not_ignored (test_conversation.ConversationTests.test_tool_image_not_ignored) ... ok
+test_tools_disabled_normal_question (test_conversation.ConversationTests.test_tools_disabled_normal_question) ... ok
+test_unknown_command (test_conversation.ConversationTests.test_unknown_command) ... ok
+test_unknown_provider (test_conversation.ConversationTests.test_unknown_provider) ... ok
+test_chatbot_clear_has_reset_binding (test_conversation_ui.ChatUITests.test_chatbot_clear_has_reset_binding) ... ok
+test_consent_refusal (test_conversation_ui.ChatUITests.test_consent_refusal) ... ok
+test_dictation_is_click_started_not_autosent (test_conversation_ui.ChatUITests.test_dictation_is_click_started_not_autosent) ... ok
+test_endpoints_preserved (test_conversation_ui.ChatUITests.test_endpoints_preserved) ... ok
+test_export_restore (test_conversation_ui.ChatUITests.test_export_restore) ... ok
+test_failed_provider_retains_input_state (test_conversation_ui.ChatUITests.test_failed_provider_retains_input_state) ... ok
+test_image_cleared_after_success (test_conversation_ui.ChatUITests.test_image_cleared_after_success) ... ok
+test_reset (test_conversation_ui.ChatUITests.test_reset) ... ok
+test_tool_uses_retained_lab (test_conversation_ui.ChatUITests.test_tool_uses_retained_lab) ... ok
+test_two_phase_chat (test_conversation_ui.ChatUITests.test_two_phase_chat) ... ok
+test_all272_context_pairs_never_imply_coverage (test_learning_bridge.LearningTests.test_all272_context_pairs_never_imply_coverage) ... ok
+test_all34_correction_chains_hold_training (test_learning_bridge.LearningTests.test_all34_correction_chains_hold_training) ... ok
+test_all34_roster_and170_source_stages (test_learning_bridge.LearningTests.test_all34_roster_and170_source_stages) ... ok
+test_all_original_reading_options (test_learning_bridge.LearningTests.test_all_original_reading_options) ... ok
+test_all_practice_options (test_learning_bridge.LearningTests.test_all_practice_options) ... ok
+test_answer_keys_not_in_learner_packet (test_learning_bridge.LearningTests.test_answer_keys_not_in_learner_packet) ... ok
+test_duplicate_answers_do_not_multiply_xp (test_learning_bridge.LearningTests.test_duplicate_answers_do_not_multiply_xp) ... ok
+test_empty_history_gives_no_completion (test_learning_bridge.LearningTests.test_empty_history_gives_no_completion) ... ok
+test_global_completion_flags_are_absent (test_learning_bridge.LearningTests.test_global_completion_flags_are_absent) ... ok
+test_incorrect_case_hash_rejected_even_with_updated_outer_manifest (test_learning_bridge.LearningTests.test_incorrect_case_hash_rejected_even_with_updated_outer_manifest) ... ok
+test_invalid_options_types_refused (test_learning_bridge.LearningTests.test_invalid_options_types_refused) ... ok
+test_latest_wrong_answer_drops_current_xp (test_learning_bridge.LearningTests.test_latest_wrong_answer_drops_current_xp) ... ok
+test_malformed_json_and_duplicate_keys_refused (test_learning_bridge.LearningTests.test_malformed_json_and_duplicate_keys_refused) ... ok
+test_measurement_dates_are_copied_not_refreshed (test_learning_bridge.LearningTests.test_measurement_dates_are_copied_not_refreshed) ... ok
+test_no_cross_call_state (test_learning_bridge.LearningTests.test_no_cross_call_state) ... ok
+test_no_orb_rank_or_bank_change (test_learning_bridge.LearningTests.test_no_orb_rank_or_bank_change) ... ok
+test_no_person_appointments_or_industry_partners (test_learning_bridge.LearningTests.test_no_person_appointments_or_industry_partners) ... ok
+test_personal_names_reports_and_roles_not_accepted (test_learning_bridge.LearningTests.test_personal_names_reports_and_roles_not_accepted) ... ok
+test_retry_can_show_educational_success_without_grant (test_learning_bridge.LearningTests.test_retry_can_show_educational_success_without_grant) ... ok
+test_safe_eleven_layers_not_gspc_score (test_learning_bridge.LearningTests.test_safe_eleven_layers_not_gspc_score) ... ok
+test_size_and_count_bounds (test_learning_bridge.LearningTests.test_size_and_count_bounds) ... ok
+test_snapshot_signature_not_claimed (test_learning_bridge.LearningTests.test_snapshot_signature_not_claimed) ... ok
+test_source_paths_not_rewritten (test_learning_bridge.LearningTests.test_source_paths_not_rewritten) ... ok
+test_stale_reading_revision_refused (test_learning_bridge.LearningTests.test_stale_reading_revision_refused) ... ok
+test_tampered_asset_rejected (test_learning_bridge.LearningTests.test_tampered_asset_rejected) ... ok
+test_training_and_external_handoffs_stay_held (test_learning_bridge.LearningTests.test_training_and_external_handoffs_stay_held) ... ok
+test_unknown_axis_or_context_refused (test_learning_bridge.LearningTests.test_unknown_axis_or_context_refused) ... ok
+test_unrelated_case_is_not_cross_axis_credit (test_learning_bridge.LearningTests.test_unrelated_case_is_not_cross_axis_credit) ... ok
+test_wrong_case_digest_refused (test_learning_bridge.LearningTests.test_wrong_case_digest_refused) ... ok
+test_wrong_registry_revision_refused (test_learning_bridge.LearningTests.test_wrong_registry_revision_refused) ... ok
+test_attempt_actual_event (test_learning_tools.ToolTests.test_attempt_actual_event) ... ok
+test_catalogue_actual_event (test_learning_tools.ToolTests.test_catalogue_actual_event) ... ok
+test_correction_actual_event (test_learning_tools.ToolTests.test_correction_actual_event) ... ok
+test_lesson_actual_event (test_learning_tools.ToolTests.test_lesson_actual_event) ... ok
+test_question_view_and_choice_binding (test_learning_tools.ToolTests.test_question_view_and_choice_binding) ... ok
+test_reading_actual_event (test_learning_tools.ToolTests.test_reading_actual_event) ... ok
+test_tampered_output_is_detectable (test_learning_tools.ToolTests.test_tampered_output_is_detectable) ... ok
+test_unknown_case_and_revision_fail_before_event (test_learning_tools.ToolTests.test_unknown_case_and_revision_fail_before_event) ... ok
+test_all_practice_remains_original_synthetic_and_pending (test_scoped_learning.ScopedLearningTests.test_all_practice_remains_original_synthetic_and_pending) ... ok
+test_code_version_change_rejects (test_scoped_learning.ScopedLearningTests.test_code_version_change_rejects) ... ok
+test_context_mapping_change_rejects (test_scoped_learning.ScopedLearningTests.test_context_mapping_change_rejects) ... ok
+test_cross_axis_replay_refused (test_scoped_learning.ScopedLearningTests.test_cross_axis_replay_refused) ... ok
+test_cross_context_replay_refused (test_scoped_learning.ScopedLearningTests.test_cross_context_replay_refused) ... ok
+test_invalid_token_prefix_not_enough (test_scoped_learning.ScopedLearningTests.test_invalid_token_prefix_not_enough) ... ok
+test_legacy_global_rejected_after_unrelated_change (test_scoped_learning.ScopedLearningTests.test_legacy_global_rejected_after_unrelated_change) ... ok
+test_new_cases_fill_eleven_layers_without_editor_approval (test_scoped_learning.ScopedLearningTests.test_new_cases_fill_eleven_layers_without_editor_approval) ... ok
+test_no_authority_from_valid_token (test_scoped_learning.ScopedLearningTests.test_no_authority_from_valid_token) ... ok
+test_own_axis_task_change_rejects (test_scoped_learning.ScopedLearningTests.test_own_axis_task_change_rejects) ... ok
+test_own_reading_key_change_rejects (test_scoped_learning.ScopedLearningTests.test_own_reading_key_change_rejects) ... ok
+test_packet_keeps_two_distinct_bindings (test_scoped_learning.ScopedLearningTests.test_packet_keeps_two_distinct_bindings) ... ok
+test_relevant_case_change_rejects (test_scoped_learning.ScopedLearningTests.test_relevant_case_change_rejects) ... ok
+test_removed_mapping_refuses_even_fresh_token (test_scoped_learning.ScopedLearningTests.test_removed_mapping_refuses_even_fresh_token) ... ok
+test_reordered_json_has_same_scope_digest (test_scoped_learning.ScopedLearningTests.test_reordered_json_has_same_scope_digest) ... ok
+test_retrieval_timestamp_alone_is_not_lesson_correction (test_scoped_learning.ScopedLearningTests.test_retrieval_timestamp_alone_is_not_lesson_correction) ... ok
+test_safe_policy_revision_change_rejects (test_scoped_learning.ScopedLearningTests.test_safe_policy_revision_change_rejects) ... ok
+test_scoped_and_current_legacy_both_accepted (test_scoped_learning.ScopedLearningTests.test_scoped_and_current_legacy_both_accepted) ... ok
+test_unrelated_axis_change_preserves_local (test_scoped_learning.ScopedLearningTests.test_unrelated_axis_change_preserves_local) ... ok
+test_unrelated_case_change_preserves_local (test_scoped_learning.ScopedLearningTests.test_unrelated_case_change_preserves_local) ... ok
+
+----------------------------------------------------------------------
+Ran 167 tests in 7.218s
+
+OK
+
+{"state": "SYNTHETIC_CORRECTION_MATRIX_PASSED", "mapped_contexts": 107, "mutations": 5, "checks": 535, "summary": [{"mutation": "SAFE-source-revised", "pairs": 107, "global_rejections": 107, "scoped_rejections": 107, "unchanged_lesson_bindings_preserved": 0, "missed_relevant_invalidations": 0}, {"mutation": "finance-context-corrected", "pairs": 107, "global_rejections": 107, "scoped_rejections": 15, "unchanged_lesson_bindings_preserved": 92, "missed_relevant_invalidations": 0}, {"mutation": "instructions-case-corrected", "pairs": 107, "global_rejections": 107, "scoped_rejections": 28, "unchanged_lesson_bindings_preserved": 79, "missed_relevant_invalidations": 0}, {"mutation": "retrieval-time-only", "pairs": 107, "global_rejections": 107, "scoped_rejections": 0, "unchanged_lesson_bindings_preserved": 107, "missed_relevant_invalidations": 0}, {"mutation": "safety-row-corrected", "pairs": 107, "global_rejections": 107, "scoped_rejections": 6, "unchanged_lesson_bindings_preserved": 101, "missed_relevant_invalidations": 0}], "real_source_mutations": 0, "human_trials": 0, "gspc_admitted": false, "model_weights_changed": false, "boundary": "A lesson binding is not a credential; current access and action authority are separate. Outcomes are limited to this declared dependency map."}
+
+AUTHORITY_REPLAY
+== v0.2 must-pass ==
+  ok  accept  the conforming v0.2 example
+  ok  accept  an authority with no claim dependency (claim_maintenance absent)
+  ok  accept  a historical execution whose claim has since gone stale
+== v0.2 must-fail: binding 1 — a claim that is not CURRENT does not authorize ==
+  ok  reject  live release ACTIVE with watch_state=RETEST_DUE   [$.claim_maintenance.watch_state]
+  ok  reject  live release ACTIVE with watch_state=STALE   [$.claim_maintenance.watch_state]
+  ok  reject  live release ACTIVE with watch_state=UNMEASURED   [$.claim_maintenance.watch_state]
+  ok  reject  live release ACTIVE with watch_state=NOT_WATCHED   [$.claim_maintenance.watch_state]
+  ok  reject  APPROVE decided while the claim was RETEST_DUE   [$.claim_maintenance.watch_state_at_decision]
+  ok  reject  APPROVE decided while the claim was STALE   [$.claim_maintenance.watch_state_at_decision]
+  ok  reject  APPROVE decided while the claim was UNMEASURED   [$.claim_maintenance.watch_state_at_decision]
+  ok  reject  APPROVE decided while the claim was NOT_WATCHED   [$.claim_maintenance.watch_state_at_decision]
+  ok  reject  EXECUTED while the claim was RETEST_DUE   [$.claim_maintenance.watch_state_at_invocation]
+  ok  reject  EXECUTED while the claim was STALE   [$.claim_maintenance.watch_state_at_invocation]
+  ok  reject  EXECUTED while the claim was UNMEASURED   [$.claim_maintenance.watch_state_at_invocation]
+  ok  reject  EXECUTED while the claim was NOT_WATCHED   [$.claim_maintenance.watch_state_at_invocation]
+  ok  reject  APPROVE with no watch state at the decision   [$.claim_maintenance.watch_state_at_decision]
+  ok  reject  EXECUTED with no watch state at the invocation   [$.claim_maintenance.watch_state_at_invocation]
+== v0.2 must-fail: binding 2 — APPROVE bound to a current external authority record ==
+  ok  reject  APPROVE with revocation_state=REVOKED   [$.authority.revocation_state]
+  ok  reject  APPROVE with revocation_state=REVOCATION_UNKNOWN   [$.authority.revocation_state]
+  ok  reject  APPROVE without authority.operational_baseline   [$.authority]
+  ok  reject  APPROVE without authority.validity_window   [$.authority]
+  ok  reject  APPROVE without authority.release_state   [$.authority]
+  ok  reject  APPROVE without authority.revocation_state   [$.authority]
+  ok  reject  APPROVE without authority.external_record_ref   [$.authority]
+  ok  reject  APPROVE without authority.external_record_digest   [$.authority]
+  ok  reject  operational_baseline without a baseline digest   [$.authority.operational_baseline]
+  ok  reject  validity_window without an expiry   [$.authority.validity_window]
+  ok  reject  malformed timestamp at authority.decided_at   [$.authority.decided_at]
+  ok  reject  malformed timestamp at authority.validity_window.not_before   [$.authority.validity_window.not_before]
+  ok  reject  malformed timestamp at authority.validity_window.not_after   [$.authority.validity_window.not_after]
+  ok  reject  malformed timestamp at authority.operational_baseline.observed_at   [$.authority.operational_baseline.observed_at]
+  ok  reject  malformed timestamp at invocation.invoked_at   [$.invocation.invoked_at]
+== negative control: v0.1 must accept the records v0.2 rejects ==
+  ok  v1-accepts  v0.1 accepts APPROVE+EXECUTED with watch_state=STALE
+  ok  v1-accepts  v0.1 accepts APPROVE+EXECUTED with watch_state=UNMEASURED
+  ok  v1-accepts  v0.1 accepts APPROVE+EXECUTED with watch_state=RETEST_DUE
+  ok  v1-accepts  v0.1 accepts an APPROVE with no external authority record binding
+== temporal gate (reference checker; JSON Schema cannot compare timestamps) ==
+  ok  the conforming example passes the temporal gate
+  ok  the temporal gate rejects it: ['invoked_at outside the validity window', 'the effect was observed before the invocation']
+  ok  the temporal gate rejects it: ['decided_at outside the validity window', 'invocation precedes the authority decision']
+== stage-order regression controls ==
+  ok  temporal rejection: invocation before approval, both inside the validity window
+  ok  temporal rejection: future baseline
+  ok  temporal rejection: effect before invocation
+  ok  temporal rejection: verification before effect
+  ok  temporal acceptance: same instant with a timezone offset
+  ok  temporal acceptance: invocation at the approval instant
+  ok  temporal acceptance: approval instant expressed with an equivalent timezone offset
+  ok  unknown effect remains unobserved
+== summary ==
+PASS 3 must-pass; 29 must-fail; 4 negative controls (v0.1 accepted what v0.2 rejects); 11 temporal checks (47 total)
+
+Traceback (most recent call last):
+  File "/tmp/qualify.py", line 33, in <module>
+    from research_ui import mount_lab
+ModuleNotFoundError: No module named 'research_ui'

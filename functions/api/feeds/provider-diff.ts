@@ -39,7 +39,7 @@ const INDEX_PATH = "/feeds/provider-diff/index.json";
 const STATE_PATH = "/feeds/provider-diff/state.json";
 const ATTESTS = "the bytes at this URL changed between the two times shown — nothing about what changed or why";
 const INVOICE_ISSUER = "CSOAI LTD (England and Wales, company 16939677), 3rd Floor 86-90 Paul Street, London EC2A 4NE";
-const INVOICE_CONTACT = "nicholas@csoai.org";
+const INVOICE_CONTACT = "contact@csoai.org";
 
 type IndexDoc = {
   schema?: string;

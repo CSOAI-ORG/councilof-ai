@@ -355,8 +355,8 @@ export default function CrosswalkOwaspAsi() {
         <p className="mt-12 border-t border-slate-200 pt-4 text-sm text-slate-600">
           Edited {data.edited}. Generated from <code>{data.generated_from.path}</code> (SHA-256{" "}
           {data.generated_from.sha256.slice(0, 16)}…). Think a row is wrong? Email{" "}
-          <a href="mailto:nicholas@csoai.org" className="font-medium text-emerald-800 underline underline-offset-2">
-            nicholas@csoai.org
+          <a href="mailto:contact@csoai.org" className="font-medium text-emerald-800 underline underline-offset-2">
+            contact@csoai.org
           </a>
           ; changes are recorded in the{" "}
           <Link href="/corrections/" className="font-medium text-emerald-800 underline underline-offset-2">

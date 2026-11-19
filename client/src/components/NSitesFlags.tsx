@@ -20,7 +20,7 @@ const GROUPS: { status: FlagStatus; label: string; hint: string }[] = [
   },
   {
     status: "next",
-    label: "Next permissionless drops",
+    label: "Next publication candidates",
     hint: "One object per platform, after the census and one external rerun.",
   },
   {

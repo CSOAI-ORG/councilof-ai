@@ -14,7 +14,7 @@ const sections = [
     title: "14-day statutory withdrawal (UK & EU consumers)",
     body:
       "If you are a UK or EU consumer, you have the right to withdraw from a purchase within 14 days of the charge, without giving a reason. " +
-      "Write to nicholas@csoai.org with your order number. If the service has already been fully performed at your express request during the withdrawal period, we may deduct a proportionate amount for what was delivered.",
+      "Write to contact@csoai.org with your order number. If the service has already been fully performed at your express request during the withdrawal period, we may deduct a proportionate amount for what was delivered.",
   },
   {
     title: "Measurement bookings (RAS)",
@@ -34,7 +34,7 @@ const sections = [
     title: "How refunds are issued",
     body:
       "Refunds go to the original payment method via the checkout provider of record, typically within 5–10 business days. " +
-      "Email nicholas@csoai.org first — most issues resolve without a formal refund. We never take money from anything we rank, and no refund, discount, or payment changes a measurement outcome. Public measurements stay public; corrections are published, not hidden.",
+      "Email contact@csoai.org first — most issues resolve without a formal refund. We never take money from anything we rank, and no refund, discount, or payment changes a measurement outcome. Public measurements stay public; corrections are published, not hidden.",
   },
 ];
 
@@ -76,8 +76,8 @@ export default function RefundPolicy() {
             </CardHeader>
             <CardContent className="text-muted-foreground">
               Refund requests and questions:{" "}
-              <a className="underline" href="mailto:nicholas@csoai.org">
-                nicholas@csoai.org
+              <a className="underline" href="mailto:contact@csoai.org">
+                contact@csoai.org
               </a>
               . See also our{" "}
               <Link className="underline" href="/terms-of-service">

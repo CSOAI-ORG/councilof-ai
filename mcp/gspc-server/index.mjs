@@ -28,6 +28,7 @@
  *     copy as fallback.
  */
 
+import { createHash } from "node:crypto";
 import { createInterface } from "node:readline";
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -144,7 +145,111 @@ function unreachable(path, e) {
 
 /* --------------------------------------------------------------------- tools */
 
-async function boardTotals() {
+// Self-contained stdio mirrors of functions/mcp/_board.ts and functions/_lib/leaderLabel.ts.
+// functions/mcp/stdio-board-parity.test.ts compares both transports on loopback fixtures.
+// Keep their result semantics aligned; do not introduce a separate measurement rule here.
+// A top observed estimate is a leader only when the existing separation test says so.
+const SEPARATED_LEADER_LABEL = "separated leader";
+const TOP_OBSERVED_LABEL = "top observed (not separated)";
+function isSeparated(separation) {
+  return String(separation ?? "").trim().toUpperCase() === "SEPARATED";
+}
+/** "separated leader" only for a SEPARATED row; every other state (TIE, UNTESTED, absent) is top observed. */
+function leaderLabel(separation) {
+  return isSeparated(separation) ? SEPARATED_LEADER_LABEL : TOP_OBSERVED_LABEL;
+}
+function boardDateOf(measuredOn) {
+  if (typeof measuredOn === "string")
+    return measuredOn;
+  if (measuredOn && typeof measuredOn === "object" && !Array.isArray(measuredOn)) {
+    const date = measuredOn.date;
+    if (typeof date === "string")
+      return date;
+  }
+  return null;
+}
+// Measurement age — the same rules as functions/mcp/_board.ts (stdio-board-parity.test.ts holds the
+// two to one shape). Age runs from each axis's measurement_time evidence date to the UTC day of this
+// read, in whole days; fetch, build and deploy times never refresh it. The board sets no maximum
+// age, so this reports age only and never calls a row CURRENT or STALE. NOT_AFTER ages are minimums.
+function utcDayOf(value) {
+  if (typeof value !== "string")
+    return null;
+  const text = value.trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text))
+    return text;
+  if (!/^\d{4}-\d{2}-\d{2}T/.test(text))
+    return null;
+  const ms = Date.parse(text);
+  return Number.isNaN(ms) ? null : new Date(ms).toISOString().slice(0, 10);
+}
+function daysBetween(fromDay, toDay) {
+  return Math.round((Date.parse(`${toDay}T00:00:00Z`) - Date.parse(`${fromDay}T00:00:00Z`)) / 86_400_000);
+}
+function measurementAge(measurementTime, asOfDay) {
+  let day = null;
+  let precision = "AS_PUBLISHED";
+  let minimum = false;
+  if (typeof measurementTime === "string") {
+    day = utcDayOf(measurementTime);
+  } else if (measurementTime && typeof measurementTime === "object" && !Array.isArray(measurementTime)) {
+    precision = typeof measurementTime.state === "string" ? measurementTime.state : "UNKNOWN";
+    if (measurementTime.state === "EXACT")
+      day = utcDayOf(measurementTime.observed_at);
+    else if (measurementTime.state === "DAY")
+      day = utcDayOf(measurementTime.observed_on);
+    else if (measurementTime.state === "NOT_AFTER") {
+      day = utcDayOf(measurementTime.not_after);
+      minimum = true;
+    }
+  }
+  if (!day)
+    return null;
+  return { evidence_date: day, precision, age_days: daysBetween(day, asOfDay), age_is_minimum: minimum };
+}
+const AGE_BASIS = "each axis's measurement_time; fetch time never refreshes it";
+function boardMeasurementAge(d, fetchedAt, detail) {
+  const asOfDay = fetchedAt.slice(0, 10);
+  const rows = Array.isArray(d.axes) ? d.axes : [];
+  const bands = { "0-30": 0, "31-90": 0, "91+": 0 };
+  const perAxis = [];
+  let noDate = 0;
+  let oldest = null;
+  let newest = null;
+  for (const r of rows) {
+    if (String(r.status ?? "").toUpperCase() !== "MEASURED")
+      continue;
+    const age = measurementAge(r.measurement_time, asOfDay);
+    if (!age) {
+      noDate += 1;
+      perAxis.push({ axis: r.axis ?? null, evidence_date: null, precision: null, age_days: null, age_is_minimum: null });
+      continue;
+    }
+    bands[age.age_days <= 30 ? "0-30" : age.age_days <= 90 ? "31-90" : "91+"] += 1;
+    if (oldest === null || age.evidence_date < oldest)
+      oldest = age.evidence_date;
+    if (newest === null || age.evidence_date > newest)
+      newest = age.evidence_date;
+    perAxis.push({ axis: r.axis ?? null, ...age });
+  }
+  const contract = d.measurement_time_contract ?? null;
+  return {
+    oldest,
+    newest,
+    axes_by_age_days: bands,
+    no_evidence_date: noDate,
+    basis: AGE_BASIS,
+    ...(detail === "full"
+      ? {
+          age_as_of_day: asOfDay,
+          max_age_policy: contract?.global_freshness_policy ?? null,
+          note: "Age only, in whole UTC days from each axis's evidence date to the day of this read. The board sets no maximum age, so no row is called CURRENT or STALE here. A NOT_AFTER date is an upper bound on when the run happened, so its age is a minimum (age_is_minimum).",
+          per_axis: perAxis,
+        }
+      : {}),
+  };
+}
+async function boardTotals(args = {}) {
   let d;
   try {
     d = await fetchJson("/api/gspc");
@@ -152,39 +257,67 @@ async function boardTotals() {
     return unreachable("/api/gspc", e);
   }
   const t = d.totals ?? {};
+  const fetched_at = new Date().toISOString();
+  const counts = [
+    {
+      name: "axis_slots",
+      value: t.axes ?? null,
+      kind: "declared slot count — a slot is a position on the board, not evidence anything was measured",
+    },
+    {
+      name: "measured",
+      value: t.measured_axes ?? null,
+      kind: "measurement count — slots with a real run behind them",
+    },
+    {
+      name: "unmeasured",
+      value: t.unmeasured_axes ?? null,
+      kind: "declared slots with no run behind them — published so the gap is visible; first-class, not an error",
+    },
+  ];
+  if (args.detail !== "full") {
+    return {
+      state: "LIVE",
+      reachable: true,
+      kind: "live-board-totals",
+      detail: "summary",
+      source: `${ORIGIN}/api/gspc`,
+      as_of: { board_measured_on: boardDateOf(d.measured_on), fetched_at },
+      counts,
+      public_count: t.public_count ?? null,
+      separation: {
+        public_count: t.separation_public_count ?? null,
+        comparison_axes: t.comparison_axes ?? null,
+        separated_leads: t.separated_leads ?? null,
+        ties: t.ties ?? null,
+        untested: t.untested_separations ?? null,
+        note: "A measured axis is not a separated leader: separation is a separate determination, and TIE and UNTESTED are not folded into it.",
+      },
+      measurement_age: boardMeasurementAge(d, fetched_at, "summary"),
+      more: 'Call again with detail: "full" for count_grammar, by_family, the full measured_on block and per-axis ages.',
+      not_a_certification: true,
+    };
+  }
   return {
     state: "LIVE",
     reachable: true,
     kind: "live-board-totals",
+    detail: "full",
     source: `${ORIGIN}/api/gspc`,
-    as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
-    counts: [
-      {
-        name: "axis_slots",
-        value: t.axes ?? null,
-        kind: "declared slot count — a slot is a position on the board, not evidence anything was measured",
-      },
-      {
-        name: "measured",
-        value: t.measured_axes ?? null,
-        kind: "measurement count — slots with a real run behind them",
-      },
-      {
-        name: "unmeasured",
-        value: t.unmeasured_axes ?? null,
-        kind: "declared slots with no run behind them — published so the gap is visible; first-class, not an error",
-      },
-    ],
+    as_of: { board_measured_on: d.measured_on ?? null, fetched_at },
+    counts,
     count_grammar: t.count_grammar ?? null,
     public_count: t.public_count ?? null,
     by_family: t.by_family ?? null,
+    measurement_age: boardMeasurementAge(d, fetched_at, "full"),
     not_a_certification: true,
   };
 }
-
 async function getAxis(args) {
   const asked = String(args.axis ?? "").trim();
-  if (!asked) return { state: "BAD_INPUT", error: "pass an axis name, e.g. governance" };
+  if (!asked)
+    return { state: "BAD_INPUT", error: "pass an axis name, e.g. governance" };
+  // Canonical ids and their aliases (gov, gspc-governance, …), case-insensitive — ./axis-aliases.json.
   const wanted = canonicalAxis(asked);
   let d;
   try {
@@ -204,6 +337,12 @@ async function getAxis(args) {
     };
   }
   const measured = String(row.status ?? "").toUpperCase() === "MEASURED";
+  // A row is a leader only when separation SEPARATED it (functions/_lib/leaderLabel.ts). On a TIE or
+  // UNTESTED axis the board's top row is the top observed point estimate, so it is returned under that
+  // name and `leader` stays null. separation is copied so a caller can see why.
+  const topName = typeof row.leader === "string" && row.leader.trim() ? row.leader : null;
+  const separated = isSeparated(row.separation);
+  const fetched_at = new Date().toISOString();
   return {
     state: "LIVE",
     axis: row.axis,
@@ -217,17 +356,28 @@ async function getAxis(args) {
     n: row.n ?? null,
     accuracy: row.accuracy ?? null,
     interval: row.interval ?? null,
-    leader: row.leader ?? null,
+    separation: row.separation ?? null,
+    leader: separated ? topName : null,
+    top_observed_not_separated: separated ? null : topName,
+    leader_label: topName ? leaderLabel(row.separation) : null,
     dataset: row.dataset ?? null,
-    // Same three door fields the HTTP door returns (functions/mcp/_board.ts): copied from the row,
-    // null when the row carries none, never invented.
+    // The doors behind the row, copied from it: a model-comparison axis carries a frozen bank on
+    // the Hub, a deterministic-facts axis carries a run artifact, and a row that carries neither
+    // returns null for both rather than an invented URL. row_url is the same board filtered to
+    // this one axis, so a caller can re-fetch exactly what this tool read.
     kind: row.kind ?? null,
     dataset_url: row.dataset_url ?? null,
     evidence_url: typeof row.evidence_url === "string" && row.evidence_url.startsWith("/")
       ? `${ORIGIN}${row.evidence_url}` : (row.evidence_url ?? null),
     row_url: `${ORIGIN}/api/gspc?axis=${encodeURIComponent(String(row.axis))}`,
     note: row.note ?? null,
-    as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
+    // Preserve per-axis measurement provenance; board/retrieval dates do not refresh it.
+    facts_as_of: row.facts_as_of ?? null,
+    measurement_time: row.measurement_time ?? null,
+    // How old that evidence is on the day of this read. Null for an unmeasured slot (nothing to
+    // age) and for a measured row whose evidence carries no readable date (never invented).
+    measurement_age: measured ? measurementAge(row.measurement_time, fetched_at.slice(0, 10)) : null,
+    as_of: { board_measured_on: d.measured_on ?? null, fetched_at },
     source: `${ORIGIN}/api/gspc`,
     not_a_certification: true,
   };
@@ -456,6 +606,104 @@ async function getCard(args) {
   return { ...base, state: "INVALID", reason: "not a leaf of the live root, and not in the signed card index" };
 }
 
+const HEX64 = /^[0-9a-f]{64}$/;
+const parentOf = (left, right) => createHash("sha256").update(Buffer.concat([left, right])).digest();
+
+/** Mirrors rootFromPath in functions/mcp/_board.ts: an even index is the left child, an odd one the right. */
+function rootFromPath(leaf, index, path) {
+  let node = Buffer.from(leaf, "hex");
+  let at = index;
+  for (const sibling of path) {
+    const s = Buffer.from(sibling, "hex");
+    node = at % 2 === 0 ? parentOf(node, s) : parentOf(s, node);
+    at = Math.floor(at / 2);
+  }
+  return node.toString("hex");
+}
+
+/** Mirrors rootFromLeaves: an odd node at any level is paired WITH ITSELF (root.json node_definition). */
+function rootFromLeaves(leaves) {
+  if (leaves.length === 0) return null;
+  let level = leaves.map((l) => Buffer.from(l, "hex"));
+  while (level.length > 1) {
+    if (level.length % 2 === 1) level.push(level[level.length - 1]);
+    const next = [];
+    for (let i = 0; i < level.length; i += 2) next.push(parentOf(level[i], level[i + 1]));
+    level = next;
+  }
+  return level[0].toString("hex");
+}
+
+/**
+ * Mirrors publishedRootInclusion in functions/mcp/_board.ts: an inclusion answer counts only if it
+ * reaches the merkle_root published in /root.json. A served path that does not is set aside and the
+ * published leaf list decides instead. (This package has no corpus-note helper, as before.)
+ */
+async function publishedRootInclusion(sha, d) {
+  let root;
+  try {
+    root = await fetchJson("/root.json");
+  } catch (e) {
+    return {
+      ...unreachable("/root.json", e),
+      state: "UNCHECKABLE",
+      sha256: sha,
+      reason: "the proof endpoint answered, but /root.json could not be read, so the path was not checked against the published root. Could not check is not VALID.",
+    };
+  }
+  const published = String(root.merkle_root ?? "").toLowerCase();
+  const count = typeof root.card_count === "number" ? root.card_count : 0;
+  const base = { sha256: sha, merkle_root: HEX64.test(published) ? published : null, card_count: count || null, as_of: root.as_of ?? null };
+  if (!HEX64.test(published) || count < 1) {
+    return { ...base, state: "UNCHECKABLE", reason: "/root.json carries no 64-hex merkle_root and positive card_count to check a path against.", not_a_certification: true };
+  }
+  const index = Number.isInteger(d.index) && d.index >= 0 ? d.index : null;
+  const path = Array.isArray(d.proof) && d.proof.every((p) => HEX64.test(String(p).toLowerCase())) ? d.proof.map((p) => String(p).toLowerCase()) : null;
+  const reaches = index !== null && path !== null && rootFromPath(sha, index, path) === published;
+  // The signed card_count bounds the tree: a path at or past it points into the duplicated tail.
+  const inBound = index !== null && index < count;
+  if (reaches && inBound) {
+    return { ...base, state: "VALID", index, checked: "the served path recomputes to the merkle_root in /root.json, at an index below its card_count", not_a_certification: true };
+  }
+  const served_proof = {
+    index,
+    merkle_root: typeof d.merkle_root === "string" ? d.merkle_root : null,
+    reaches_published_root: reaches,
+    index_below_card_count: inBound,
+    note: reaches
+      ? "GET /api/proof served an index at or past card_count, the duplicated tail of an odd-paired tree, so its path proves nothing. This answer does not rely on it."
+      : "GET /api/proof served a path that does not recompute to the merkle_root in /root.json. This answer does not rely on it.",
+  };
+  const leaves = Array.isArray(root.card_sha256) ? root.card_sha256.map((x) => String(x).toLowerCase()) : null;
+  if (!leaves || leaves.length !== count || !leaves.every((l) => HEX64.test(l)) || rootFromLeaves(leaves) !== published) {
+    return {
+      ...base,
+      state: "UNCHECKABLE",
+      reason: "the served path does not reach the published root, and the leaf list in /root.json is absent or does not recompute to its merkle_root, so inclusion could not be checked.",
+      served_proof,
+      not_a_certification: true,
+    };
+  }
+  const at = leaves.indexOf(sha);
+  if (at >= 0) {
+    return { ...base, state: "VALID", index: at, checked: "recomputed from the leaf list in /root.json, which hashes to its merkle_root", served_proof, not_a_certification: true };
+  }
+  return { ...base, state: "INVALID", reason: "not in the leaf list of /root.json", served_proof, not_a_certification: true };
+}
+
+/** Mirrors inclusionSummary in functions/mcp/_handlers.ts. */
+function inclusionSummary(payload) {
+  if (typeof payload.corpus_note === "string") return `${payload.state ?? "?"} — ${payload.corpus_note}`;
+  const root = String(payload.merkle_root || "").slice(0, 16);
+  if (payload.state === "VALID") {
+    return payload.served_proof
+      ? `VALID — leaf ${payload.index} of ${payload.card_count} in the published root ${root}, recomputed from the leaf list in /root.json; the path GET /api/proof served was set aside (served_proof says why).`
+      : `VALID — the path recomputes to the published root ${root} (leaf ${payload.index} of ${payload.card_count}).`;
+  }
+  const reason = typeof payload.reason === "string" ? payload.reason.replace(/\.$/, "") : "inclusion was not checked against the published root";
+  return `${payload.state ?? "?"} — ${reason}.`;
+}
+
 async function verifyInclusion(args) {
   const sha = String(args.sha256 || "").trim().toLowerCase();
   if (!/^[0-9a-f]{64}$/.test(sha)) {
@@ -464,7 +712,7 @@ async function verifyInclusion(args) {
   try {
     const d = await fetchJson(`/api/proof?sha=${sha}`);
     if (d.kind === "inclusion") {
-      return { state: "VALID", sha256: sha, merkle_root: d.merkle_root ?? null, not_a_certification: true };
+      return await publishedRootInclusion(sha, d);
     }
     if (d.error === "not_found") {
       return { state: "INVALID", sha256: sha, reason: d.reason ?? "not a leaf", not_a_certification: true };
@@ -885,16 +1133,42 @@ function replyError(id, code, message) {
   send({ jsonrpc: "2.0", id, error: { code, message } });
 }
 
+// "today", "1 day ago", "97 days ago" — whole UTC days, as measurement_age counts them.
+function daysAgo(days) {
+  return days === 0 ? "today" : days === 1 ? "1 day ago" : `${String(days)} days ago`;
+}
+// One clause on how old the board's measurements are; empty when the board carries no evidence dates.
+function boardAgeClause(age) {
+  const a = age ?? {};
+  if (typeof a.oldest !== "string" || typeof a.newest !== "string")
+    return "";
+  const bands = a.axes_by_age_days ?? {};
+  const over = typeof bands["91+"] === "number" ? bands["91+"] : 0;
+  return ` Measurement dates run from ${a.oldest} to ${a.newest}; ${over} measured ${over === 1 ? "axis is" : "axes are"} over 90 days old.`;
+}
+function axisSummaryLine(payload) {
+  if (payload.state === "NOT_ON_BOARD")
+    return `NOT ON BOARD — "${payload.axis}" is not a row the live board carries.`;
+  const age = payload.measurement_age ?? null;
+  const when =
+    age && typeof age.evidence_date === "string"
+      ? age.age_is_minimum === true
+        ? `; measured no later than ${age.evidence_date}, at least ${String(age.age_days)} day${age.age_days === 1 ? "" : "s"} ago`
+        : `; measured ${age.evidence_date}, ${daysAgo(age.age_days)}`
+      : "";
+  return `${payload.status ?? "?"} — axis "${payload.axis}" (${payload.measured ? "a real run stands behind this row" : "declared slot, no run behind it"}${when}).`;
+}
 function summaryLine(name, payload) {
   if (payload.state === "UNREACHABLE" || payload.index?.state === "UNREACHABLE")
     return `UNREACHABLE — the live source could not be fetched; no cached number is substituted.`;
+  // Every generated axis tool answers with get_axis's payload, so it gets get_axis's summary, not its own name.
+  if (String(name).startsWith("axis_"))
+    return axisSummaryLine(payload);
   switch (name) {
     case "board_totals":
-      return `LIVE board totals — ${payload.public_count ?? "see counts"} (slots and measurements are different kinds; never summed).`;
+      return `LIVE board totals — ${payload.public_count ?? "see counts"} (slots and measurements are different kinds; never summed).${boardAgeClause(payload.measurement_age)}`;
     case "get_axis":
-      return payload.state === "NOT_ON_BOARD"
-        ? `NOT ON BOARD — "${payload.axis}" is not a row the live board carries.`
-        : `${payload.status ?? "?"} — axis "${payload.axis}" (${payload.measured ? "a real run stands behind this row" : "declared slot, no run behind it"}).`;
+      return axisSummaryLine(payload);
     case "verify_card":
       return `${payload.state}${payload.reason ? " — " + payload.reason : ""}${payload.state === "VALID" ? ` — ${String(payload.id).slice(0, 16)}… verifies under the published key.` : ""}`;
     case "list_cards": {
@@ -909,7 +1183,7 @@ function summaryLine(name, payload) {
         ? `${payload.state ?? "?"} — ${payload.reason}`
         : `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
     case "verify_inclusion":
-      return `${payload.state ?? "?"} — inclusion against live merkle.`;
+      return inclusionSummary(payload);
     case "x402_trust":
       return `${payload.state ?? "?"} — ${payload.headline || "catalog trust counts"}.`;
     case "mcp_trust":

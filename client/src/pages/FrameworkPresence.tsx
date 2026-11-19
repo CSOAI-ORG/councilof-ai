@@ -1,4 +1,3 @@
-import { Helmet } from "react-helmet-async";
 import register from "@/data/framework-presence.json";
 
 /**
@@ -40,13 +39,6 @@ const emptyChairs = register.empty_chairs as EmptyChairRow[];
 export default function FrameworkPresence() {
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
-      <Helmet>
-        <title>Frontier framework presence register | Council of AI</title>
-        <meta
-          name="description"
-          content="A presence register of published frontier-safety frameworks at major AI labs — every row backed by an official URL fetched and status-checked on the verification date. Empty chairs record a bounded absence search, never a safety verdict."
-        />
-      </Helmet>
       <section className="mx-auto max-w-4xl">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-300">
           Measurement, not certification · verified as of {register.verified_as_of}

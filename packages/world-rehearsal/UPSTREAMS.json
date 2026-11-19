@@ -1,0 +1,61 @@
+{
+  "schema": "csoai.upstream-manifest/0.1",
+  "reviewed_on": "2026-11-08",
+  "sources": [
+    {
+      "id": "swarmchat",
+      "repository": "https://github.com/Pranjal2041/swarmchat",
+      "commit": "5ee0c0e307e7b58eb6aa881ee9a7b60d1ace5149",
+      "license": "MIT",
+      "included": "Seven unmodified library modules and LICENSE; no upstream client, CLI or server.",
+      "adaptation": "Private Python namespace; explicit temporary Store and restricted in-process API adapter."
+    },
+    {
+      "id": "earth_scale",
+      "repository": "https://github.com/FareedKhan-dev/earth-scale-society",
+      "commit": "47797403ee78c3c6243c7fb8bd456ddce000f578",
+      "license": "MIT",
+      "included": "Only Event and Tempo class definitions from notebook cell 61; imports and attribution header added.",
+      "adaptation": "Extracted stdlib queue; no models, survey data, training or notebook outputs."
+    }
+  ],
+  "files": {
+    "third_party/earth_scale/LICENSE": "b558b5ab4fb395ec879b63500d83cf9f2834cb54a562b5bf7305425995a358d7",
+    "third_party/earth_scale/tempo.py": "ccf24d96ee7c38c7edfeb7d40a7b8a7b703280081b513d489ec24555e02d957b",
+    "third_party/swarmchat/LICENSE": "aff440541db19ec61cb0fffd4a9fa9b02572cdcc4f7530bbaf40081b6a867d16",
+    "third_party/swarmchat/__init__.py": "1a6f05e5dd1a6593d6bcf9d12bf7cd16ebf20bbd988c22b66b9e971b156db369",
+    "third_party/swarmchat/api.py": "b78d0516eba2810250b405963d25153202dce43016749c6b122c830c070753bc",
+    "third_party/swarmchat/config.py": "4964850f9a5d203647c325bf84e4194010667ad3b061fbac3a1063d08115bbde",
+    "third_party/swarmchat/files.py": "66d9504a33faa52e0520178e4dabf87d577a4a5ff1b26e86e4888f5408c635d2",
+    "third_party/swarmchat/locking.py": "03a82aaf0c67eecc22cef26b01da39d412c139b7dd4711ae81c3caacaca98911",
+    "third_party/swarmchat/policy.py": "ffc0c31c3a16278b2ab3fd12fe38cbe2a0dd71d503fd80fc8b12d924c36fc8e3",
+    "third_party/swarmchat/store.py": "3ebfc60d90a1ee3aa774e87dd47b932bdd88acea6a62c8408cfe0d98bc91493d"
+  },
+  "canonical_dependency": {
+    "repository": "https://github.com/CSOAI-ORG/councilof-ai",
+    "commit": "ff0fbe8f3ad8aca4d02aa66d41e709b573ca091a",
+    "path": "../evidence-fabric/event.py",
+    "license": "Apache-2.0",
+    "sha256": "144c6a36d462e21283ab9b34a6469bb32c75021da56133813d5a848412270533"
+  },
+  "not_vendored": [
+    {
+      "project": "Original Light Society",
+      "reason": "No verified original source/CC0 grant established; MIT reimplementation is separately attributed."
+    },
+    {
+      "project": "Kiri",
+      "commit": "64474185fb483286a9dae12d90cb122a060463ec",
+      "reason": "Adapter uses generic Docker Engine GET /version only; no source, runtime, kernel or binary included. Real Kiri not tested."
+    },
+    {
+      "project": "GHOST",
+      "commit": "c822e629bf5b01ea267218be3c9ad5fd0e7ec62d",
+      "reason": "CC BY-NC-SA commercial-use restriction; no code or assets copied."
+    },
+    {
+      "project": "WVS, model weights, weight-editing research and Cosign",
+      "reason": "No data, weights or code included; rights and suitability not established."
+    }
+  ]
+}

@@ -152,7 +152,7 @@ export default function PricingFree() {
           <h2 id="human-h" className="text-xl font-bold text-emerald-300">Not an agent?</h2>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-300">
             Humans and institutions use the same artefacts on enquiry — a design-partner engagement invoices from CSOAI LTD, and the deliverable is still a signed card anyone can recompute.
-            Start at <Link href="/products" className="text-emerald-300 underline-offset-2 hover:underline">/products</Link> or write to nicholas@csoai.org.
+            Start at <Link href="/products" className="text-emerald-300 underline-offset-2 hover:underline">/products</Link> or write to contact@csoai.org.
           </p>
         </section>
       </section>

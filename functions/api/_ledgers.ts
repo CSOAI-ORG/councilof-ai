@@ -95,6 +95,25 @@ const inc = rootInclusion as Json;
 const w = ((rootWitness as Json).witnesses ?? {}) as Json;
 const otsStatus: string | null = w.ots?.status ?? null;
 const rekorStatus: string | null = w.rekor?.status ?? null;
+
+/**
+ * The OTS words the witness producers actually write — scripts/witness_public_root.py,
+ * scripts/witness/witness-root.py and scripts/root-witness-release-gate.py — so a row's two OTS
+ * questions are answered from the same vocabulary the witness file speaks:
+ *   CONFIRMED_BITCOIN        the proof carries Bitcoin block attestations (bitcoin_verified)
+ *   STAMPED_PENDING_BITCOIN  a calendar fragment only, not a Bitcoin proof (ots_calendar_pending)
+ *   NO_ATTESTATION / other   neither.
+ * Until 2026-11-14 bitcoin_verified was derived from strings no producer emits, so every head in a
+ * Bitcoin-confirmed root read "Bitcoin verified: no" on /corrections. Both fields are null for a head
+ * that is not in the root: the root's witness says nothing about it.
+ */
+export const OTS_CONFIRMED_BITCOIN = "CONFIRMED_BITCOIN";
+export const OTS_STAMPED_PENDING_BITCOIN = "STAMPED_PENDING_BITCOIN";
+export function otsEvidence(status: unknown, inRoot: boolean): { ots_calendar_pending: boolean | null; bitcoin_verified: boolean | null } {
+  if (!inRoot) return { ots_calendar_pending: null, bitcoin_verified: null };
+  const s = status == null ? "" : String(status);
+  return { ots_calendar_pending: s === OTS_STAMPED_PENDING_BITCOIN, bitcoin_verified: s === OTS_CONFIRMED_BITCOIN };
+}
 const claimEvents = claimEventsHead as Json;
 const claimEventsFeed = (claimEvents.feed ?? {}) as Json;
 const claimEventsTotals = (claimEvents.totals ?? {}) as Json;
@@ -149,8 +168,7 @@ export function ledgerRow(key: string) {
       public_readback: probed ? `HTTP ${p.http_status}, sha256 ${String(p.bytes_sha256).slice(0, 16)}… at ${m.atom.as_of}` : `UNMEASURED (HTTP ${p.http_status})`,
       root_inclusion: inclusion.state,
       root_leaf_sha256: inclusion.leaf_sha256,
-      ots_calendar_pending: inclusion.state === "IN_ROOT" ? otsStatus === "STAMPED_PENDING_BITCOIN" : null,
-      bitcoin_verified: inclusion.state === "IN_ROOT" ? /BITCOIN_VERIFIED|UPGRADED_VERIFIED/.test(String(otsStatus)) : null,
+      ...otsEvidence(otsStatus, inclusion.state === "IN_ROOT"),
       rekor: inclusion.state === "IN_ROOT" ? rekorStatus : null,
     },
     signing: m.signing,

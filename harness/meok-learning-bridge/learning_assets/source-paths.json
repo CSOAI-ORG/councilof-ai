@@ -1,0 +1,2586 @@
+[
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "governance",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "GovBench",
+      "task": "EU AI Act risk-tier classification"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied GovBench material for: EU AI Act risk-tier classification.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded governance practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "safety",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "DefBench",
+      "task": "calibrated refusal on paired requests"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied DefBench material for: calibrated refusal on paired requests.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded safety practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "provenance",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "ProvBench",
+      "task": "Article 50 marking survival by validity"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied ProvBench material for: Article 50 marking survival by validity.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded provenance practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "continuity",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "PQCBench",
+      "task": "post-quantum status of a cryptographic assumption"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied PQCBench material for: post-quantum status of a cryptographic assumption.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded continuity practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "conformance",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "MCPBench",
+      "task": "MCP tool conformance"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied MCPBench material for: MCP tool conformance.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded conformance practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "openness",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "OSSBench",
+      "task": "licence reasoning versus intended use"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied OSSBench material for: licence reasoning versus intended use.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded openness practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "machinery-conformity",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "MachBench",
+      "task": "Machinery Reg self-evolving safety-function classification (PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION)"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied MachBench material for: Machinery Reg self-evolving safety-function classification (PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION).",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded machinery-conformity practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "care",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "CareBench",
+      "task": "care-cost (protect × help) under paired conduct scenarios"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied CareBench material for: care-cost (protect × help) under paired conduct scenarios.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded care practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "cross-reality",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "XRAIV",
+      "task": "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied XRAIV material for: autonomous agent action authority (PROCEED / CONFIRM / REFUSE).",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded cross-reality practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "detector-interop",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "DetBench",
+      "task": "cross-detector watermark interoperability matrix"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied DetBench material for: cross-detector watermark interoperability matrix.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded detector-interop practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "art5-safeguard",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "Art5Bench",
+      "task": "EU AI Act Article 5 prohibited-practice trip"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied Art5Bench material for: EU AI Act Article 5 prohibited-practice trip.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded art5-safeguard practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "swarm",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "SwarmBench v2b",
+      "task": "multi-agent coordination safety"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied SwarmBench v2b material for: multi-agent coordination safety.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded swarm practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "affect",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "AffectBench",
+      "task": "emotional & embodied safety (manipulation / disclosure / vulnerability)"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied AffectBench material for: emotional & embodied safety (manipulation / disclosure / vulnerability).",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded affect practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "jail",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "GoldBank-Detector",
+      "task": "escape-attempt detection on a 71-row gold bank of 27 distinct inputs (38 ESCAPE / 33 BENIGN rows) — layer 2 of 2"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied GoldBank-Detector material for: escape-attempt detection on a 71-row gold bank of 27 distinct inputs (38 ESCAPE / 33 BENIGN rows) — layer 2 of 2.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded jail practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "effect-binding",
+      "family": "gspc",
+      "kind": "deterministic-facts",
+      "bench": "EffectBench v0.1 (server probe)",
+      "task": "does authorization bind to the request the server executes, or only to the tool call the agent declared"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied EffectBench v0.1 (server probe) material for: does authorization bind to the request the server executes, or only to the tool call the agent declared.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded effect-binding practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "provenance-controls",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "ChainFacts",
+      "task": "on-chain issuer control facts (allowlisting / freeze capability / identity domain)"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied ChainFacts material for: on-chain issuer control facts (allowlisting / freeze capability / identity domain).",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded provenance-controls practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "reserve-attestation",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "ReserveFacts",
+      "task": "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied ReserveFacts material for: is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE).",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded reserve-attestation practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "regulatory-framework",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "RegimeFacts",
+      "task": "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied RegimeFacts material for: is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE).",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded regulatory-framework practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "distribution-integrity",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "DistributionFacts",
+      "task": "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied DistributionFacts material for: reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE).",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded distribution-integrity practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "custody-disclosure",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "CustodyFacts",
+      "task": "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied CustodyFacts material for: are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each).",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded custody-disclosure practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "ai-adoption-components",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "Eurostat",
+      "task": "cited EU AI-adoption series (not an index)"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied Eurostat material for: cited EU AI-adoption series (not an index).",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded ai-adoption-components practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "labour-components",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "Eurostat",
+      "task": "cited EU labour series (not an index)"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied Eurostat material for: cited EU labour series (not an index).",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded labour-components practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "humanoid-labour-index",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "bench": "Disclosure",
+      "task": "named vendor publishes a dated deployment count on a stable URL? Y/N"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied Disclosure material for: named vendor publishes a dated deployment count on a stable URL? Y/N.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded humanoid-labour-index practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "lab-practice",
+      "family": "subject",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an AI lab publish its evaluations, safety framework and incident reports"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied frozen presence bank (5 classes, 3-of-5 bar) material for: does an AI lab publish its evaluations, safety framework and incident reports.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded lab-practice practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "company-practice",
+      "family": "subject",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does a non-lab AI company publish safety, evaluation, incident, model-card and contact material"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied frozen presence bank (5 classes, 3-of-5 bar) material for: does a non-lab AI company publish safety, evaluation, incident, model-card and contact material.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded company-practice practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "measurer-integrity",
+      "family": "subject",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an evaluation organisation publish methods, test sets, attestation and a reproduction route"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied frozen presence bank (5 classes, 3-of-5 bar) material for: does an evaluation organisation publish methods, test sets, attestation and a reproduction route.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded measurer-integrity practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "harness-fidelity",
+      "family": "subject",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an evaluation harness pin its dependencies, publish a must-fail control, isolate execution and document reproduction"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied frozen presence bank (5 classes, 3-of-5 bar) material for: does an evaluation harness pin its dependencies, publish a must-fail control, isolate execution and document reproduction.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded harness-fidelity practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "interop-conformance",
+      "family": "subject",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an interoperability or standards group publish a schema, a wire binding, conformance vectors and a versioned spec"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied frozen presence bank (5 classes, 3-of-5 bar) material for: does an interoperability or standards group publish a schema, a wire binding, conformance vectors and a versioned spec.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded interop-conformance practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "humanoid-deployment",
+      "family": "subject",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does a humanoid lab publish control, safety-limit, dexterity, hardware-bus and simulation material"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied frozen presence bank (5 classes, 3-of-5 bar) material for: does a humanoid lab publish control, safety-limit, dexterity, hardware-bus and simulation material.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded humanoid-deployment practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "regulator-transparency",
+      "family": "subject",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "factual presence checks on public regulatory artefacts (guidance, consultation, enforcement, open data, contact route); no ratings"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied frozen presence bank (5 classes, 3-of-5 bar) material for: factual presence checks on public regulatory artefacts (guidance, consultation, enforcement, open data, contact route); no ratings.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded regulator-transparency practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "interpretability-reproducibility",
+      "family": "subject",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an interpretability group publish method, checkpoints, a reproducible notebook and peer-reviewed material"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied frozen presence bank (5 classes, 3-of-5 bar) material for: does an interpretability group publish method, checkpoints, a reproducible notebook and peer-reviewed material.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded interpretability-reproducibility practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "claim-maintenance",
+      "family": "subject",
+      "kind": "measured-subject",
+      "bench": "claim-maintenance v0.2 re-read wave",
+      "task": "at each scheduled re-read, is a captured public claim still served unchanged, changed, withdrawn or unreachable; says nothing about whether the claim is true"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied claim-maintenance v0.2 re-read wave material for: at each scheduled re-read, is a captured public claim still served unchanged, changed, withdrawn or unreachable; says nothing about whether the claim is true.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded claim-maintenance practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "serving-fidelity",
+      "family": "subject",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an inference runtime document sampling control, quantisation, KV/attention strategy, latency metrics and parallelism"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied frozen presence bank (5 classes, 3-of-5 bar) material for: does an inference runtime document sampling control, quantisation, KV/attention strategy, latency metrics and parallelism.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded serving-fidelity practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  },
+  {
+    "schema": "csoai.gspc-learning-path/0.1",
+    "axis": {
+      "id": "watchdog-ingest",
+      "family": "subject",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does the subject offer a third party a documented route to report a problem, with a response commitment and a machine-readable path"
+    },
+    "stages": [
+      {
+        "id": "learn",
+        "order": 0,
+        "label": "Learn",
+        "mode": "PRACTICE",
+        "objective": "Read the supplied frozen presence bank (5 classes, 3-of-5 bar) material for: does the subject offer a third party a documented route to report a problem, with a response commitment and a machine-readable path.",
+        "completionArtifact": "LEARNING_NOTE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "play",
+        "order": 1,
+        "label": "Play",
+        "mode": "PRACTICE",
+        "objective": "Attempt a bounded watchdog-ingest practice scenario without changing a live system.",
+        "completionArtifact": "PRACTICE_ATTEMPT",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "explain",
+        "order": 2,
+        "label": "Explain",
+        "mode": "PRACTICE",
+        "objective": "Explain the choice, assumptions, uncertainty, and supplied source material in plain language.",
+        "completionArtifact": "RATIONALE",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "propose-fix",
+        "order": 3,
+        "label": "Propose fix",
+        "mode": "PRACTICE",
+        "objective": "Propose a bounded fix with trade-offs and a verification plan; do not apply it.",
+        "completionArtifact": "FIX_PROPOSAL",
+        "evidenceEffect": "NONE"
+      },
+      {
+        "id": "human-review",
+        "order": 4,
+        "label": "Human review",
+        "mode": "HUMAN_REVIEW",
+        "objective": "Ask a human to accept, return, or reject the practice record. Review does not admit GSPC evidence.",
+        "completionArtifact": "REVIEW_DECISION",
+        "evidenceEffect": "NONE"
+      }
+    ],
+    "evidenceBoundary": {
+      "practiceArtifactState": "PRACTICE_ONLY",
+      "measurementState": "UNMEASURED",
+      "practiceIsEvidence": false,
+      "humanReviewCreatesEvidence": false,
+      "humanReviewCreatesMeasurement": false,
+      "separateExplicitIntakeRequired": true,
+      "possibleStateAfterSeparateIntake": "CANDIDATE_FINDING",
+      "automaticAdmission": false,
+      "automaticSigning": false
+    },
+    "runtime": {
+      "networkRequests": false,
+      "persistentWrites": false,
+      "providerCalls": false,
+      "modelTraining": false,
+      "boardWrites": false,
+      "automaticPromotion": false
+    }
+  }
+]

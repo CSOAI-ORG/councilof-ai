@@ -68,6 +68,10 @@ on:
       - '.github/workflows/evidence-handoff-checks.yml'
   workflow_dispatch:
 
+concurrency:
+  group: evidence-handoff-checks-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

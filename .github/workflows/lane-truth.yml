@@ -34,6 +34,10 @@ on:
       - "scripts/surface/lane-truth-check.mjs"
       - ".github/workflows/lane-truth.yml"
 
+concurrency:
+  group: lane-truth-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   issues: write

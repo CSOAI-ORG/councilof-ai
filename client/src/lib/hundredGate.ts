@@ -49,7 +49,7 @@ export type UnlockLane = {
 };
 
 export const HUNDRED_RULING =
-  "Cover millions by census. Unlock permissionless flags at 100 unique lineages done 100/100 A+++.";
+  "Discover model repositories through a dated census. Review publication candidates after 100 unique lineages meet the stated evidence requirements.";
 
 export const MILLIONS_PUBLIC_CLAIM =
   "N discovered artefacts in a dated Hub walk; X licence-eligible; Y unique immutable weight lineages; Z measured across M GSPC axes.";

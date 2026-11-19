@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {webcrypto} from 'node:crypto';
+import {readFileSync,writeFileSync} from 'node:fs';
+import worker,{handle,observe,bounded} from '../cloudflare/worker.mjs';
+import lock from '../cloudflare/lock.json' with {type:'json'};
+if(!globalThis.crypto)globalThis.crypto=webcrypto;
+const now=1794376800000, head='a'.repeat(40),checks=[];
+const req=(p,method='GET')=>new Request('https://preview.invalid'+p,{method});
+const response=(body,status=200,hs={})=>new Response(typeof body==='string'?body:JSON.stringify(body),{status,headers:hs});
+function sequence(a){let i=0;return async(url,opts)=>{assert.equal(opts.redirect,'manual');assert.equal(opts.cache,'no-store');if(i>=a.length)throw Error('extra fetch');return a[i++]();};}
+async function check(name,fn){try{await fn();checks.push({name,passed:true});}catch(e){checks.push({name,passed:false,error:e.message});}}
+await check('post_refused_before_fetch',async()=>{let calls=0;const r=await handle(req('/api/current','POST'),{},()=>{calls++;throw Error('bad');},()=>now);assert.equal(r.status,405);assert.equal(calls,0);});
+await check('caller_url_refused',async()=>{let calls=0;const r=await handle(req('/api/current?url=http://127.0.0.1'),{},()=>{calls++;},()=>now);assert.equal(r.status,400);assert.equal(calls,0);});
+await check('caller_clock_refused',async()=>assert.equal((await handle(req('/api/current?now=0'),{},()=>{},()=>now)).status,400));
+await check('unknown_route_refused',async()=>assert.equal((await handle(req('/api/else'),{},()=>{},()=>now)).status,404));
+await check('fixed_registry_no_network',async()=>{const r=await handle(req('/api/registry'),{},()=>{throw Error('unexpected');},()=>now);const d=await r.json();assert.equal(d.approved_sha256,lock.approved_sha256);assert.equal(d.execution_authorized,false);});
+await check('preview_expires_without_network',async()=>{let calls=0;const r=await handle(req('/api/current'),{},()=>{calls++;},()=>lock.valid_until_ms);assert.equal(r.status,410);assert.equal(calls,0);});
+await check('network_failure_unknown_not_match',async()=>{const r=await handle(req('/api/current'),{},()=>{throw Error('secret_should_not_be_echoed');},()=>now);assert.equal(r.status,503);assert.equal((await r.json()).detail,'READ_FAILED');});
+await check('http_403_not_source_mismatch',async()=>{const r=await observe(sequence([()=>response('no',403)]),()=>now);assert.equal(r.state,'UNKNOWN');});
+await check('head_moves_during_read',async()=>{const f=sequence([()=>response({sha:head}),()=>response('fake'),()=>response({sha:'b'.repeat(40)})]);const r=await observe(f,()=>now);assert.equal(r.reason,'SOURCE_MOVED_DURING_READ');});
+await check('changed_bytes_hold',async()=>{const f=sequence([()=>response({sha:head}),()=>response('fake'),()=>response({sha:head})]);const r=await observe(f,()=>now);assert.equal(r.state,'HOLD');assert.equal(r.reason,'APPROVED_BYTES_CHANGED');});
+await check('cached_metadata_unknown',async()=>{const f=sequence([()=>response({sha:head},200,{Age:'1'}),()=>response('fake'),()=>response({sha:head})]);assert.equal((await observe(f,()=>now)).reason,'CACHED_OR_INVALID_AGE');});
+await check('upstream_body_bounded',async()=>{const f=sequence([()=>response({sha:head}),()=>response('x'.repeat(65537))]);assert.equal((await observe(f,()=>now)).detail,'UPSTREAM_SIZE_BOUND');});
+await check('invalid_source_revision_refused',async()=>assert.equal((await observe(sequence([()=>response({sha:'latest'})]),()=>now)).detail,'UPSTREAM_META_INVALID'));
+await check('malformed_metadata_unknown',async()=>assert.equal((await observe(sequence([()=>response('{')]),()=>now)).state,'UNKNOWN'));
+await check('no_store_even_on_refusal',async()=>{const r=await handle(req('/api/current','POST'),{},()=>{},()=>now);assert.equal(r.headers.get('cache-control'),'no-store');assert.equal(r.headers.get('cdn-cache-control'),'no-store');});
+await check('credentials_never_forwarded',async()=>{const q=new Request('https://preview.invalid/api/current',{headers:{Authorization:'private-test-only',Cookie:'private-test-only'}});let called=0;const r=await handle(q,{},async(url,opts)=>{called++;assert.equal(opts.headers.Authorization,undefined);assert.equal(opts.headers.Cookie,undefined);return response('no',403);},()=>now);assert.equal(r.status,503);assert.equal(called,1);});
+await check('production_fetch_signature_ignores_execution_context',async()=>{const old=globalThis.fetch,oldClock=Date.now;globalThis.fetch=async()=>response('no',403);Date.now=()=>now;try{const r=await worker.fetch(req('/api/current'),{},{waitUntil(){}});assert.equal((await r.json()).detail,'UPSTREAM_META_UNAVAILABLE');}finally{globalThis.fetch=old;Date.now=oldClock;}});
+const out={at:new Date().toISOString(),tests:checks.length,passed:checks.filter(x=>x.passed).length,checks,scope:'Local Worker request/transport controls with simulated upstream responses; live readback is separate'};
+writeFileSync(new URL('../results/worker-tests.json',import.meta.url),JSON.stringify(out,null,2)+'\n');console.log(JSON.stringify(out));if(checks.some(x=>!x.passed))process.exitCode=1;

@@ -112,7 +112,7 @@ describe("POST /api/lead is unchanged", () => {
     const r = await onRequestPost(postCtx({ email: "a@example.org" }));
     const b = await r.json();
     expect(b.stored).toBe(false);
-    expect(b.fallback).toContain("nicholas@csoai.org");
+    expect(b.fallback).toContain("contact@csoai.org");
   });
 
   it("rejects a missing email and a non-JSON body with 400", async () => {

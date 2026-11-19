@@ -27,8 +27,8 @@ describe("how to buy: one statement, one mailbox", () => {
     for (const m of [fn.CONTACT_MAILBOX, PLAIN_EMAIL_MAILBOX, CONTACT_ENQUIRY_EMAIL, ENQUIRY_EMAIL])
       expect(m).toBe(INVOICE_CONTACT);
     const footer = readFileSync(resolve(__dirname, "../components/Footer.tsx"), "utf8");
-    expect(footer).not.toContain("contact@csoai.org");
+    expect(footer).not.toMatch(/[\w.+-]+@csoai\.org/);
     const note = readFileSync(resolve(__dirname, "../components/momentum/MomentumMethodNote.tsx"), "utf8");
-    expect(note).not.toContain("contact@csoai.org");
+    expect(note).not.toMatch(/[\w.+-]+@csoai\.org/);
   });
 });

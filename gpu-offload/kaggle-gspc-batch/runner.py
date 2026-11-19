@@ -11,13 +11,18 @@ RECEIPT.json under OUT_ROOT.
 """
 from __future__ import annotations
 
-import datetime, glob, hashlib, json, os, shutil, subprocess, sys, time, urllib.request, urllib.error
+import datetime, glob, hashlib, json, os, re, shutil, subprocess, sys, time, urllib.request, urllib.error
 
 KIT = os.environ.get("GSPC_KIT", os.path.dirname(os.path.abspath(__file__)))
 WORKER_SHA = "31c7e3f0fd617a5f099879054601f764149790fe0e8bf4e2b5fedc4e47f6887a"
-GEN_SHA = "132b85e4e938e0720d64e32a7bdaa9f23ceee55daebff09304bd04889a6468b5"
+GEN_SHA = "0e03307e7b02dac71fa89a8170de5f749efbceb9424f14a6f830f842506cc8bd"
 OLLAMA_VERSION = "0.40.6"
 AXES = ["governance", "safety", "provenance", "continuity", "conformance", "openness", "care"]
+UNTESTED_AXES = [
+    "machinery-conformity", "cross-reality", "detector-interop", "art5-safeguard",
+    "affect", "swarm", "jail",
+]
+ALL_14_AXES = AXES + UNTESTED_AXES
 BANK_SHA = {
     "governance": "b93f9808f01416737a5944fec0ab8c3eda1dbba808daf7dda33a516b0cd61997",
     "safety": "f963e3c739c7d75bf4750d3638f2b9aad7a161f8043f8e353224d29af17718d5",
@@ -27,8 +32,103 @@ BANK_SHA = {
     "openness": "644dc6de897896a88e90b8954abfa08d49b0e774f6270f30a9bf28b0831179ec",
     "care": "cee5e47a31f1db6c117a0b2f4a4c026f9ebe267c28106e4901ea44189de1767e",
 }
+UNTESTED_BANK_SHA = {
+    "machinery-conformity": "fdbe463c3f0268600ebf9e70372db1f27ac5668b30276323e247de86adbbc51c",
+    "cross-reality": "9877a2b2f9752f37e00bcc400732ade99ec9f4f8d4f9b066907c588f142fc446",
+    "detector-interop": "73a30d6d32f4012b11a7ba2138abe8017f74f06faf40ac3f32e0094fe87ba36c",
+    "art5-safeguard": "60f08ca251d3afb6e085e66cb3e15a5c79b2f4e5422f16221c1fbf026748d672",
+    "affect": "5ce11c084a6e968cc49314cfec2898725fb7b01513dc117f869be17b4a263bc7",
+    "swarm": "ab318986d684ebf8a46682a5b82ad7594b1bbd01f7acb25a50e94a3d868076a1",
+    "jail": "17a4779d3d4321e900da2d8e047f4b1c8166b8145c0a7cd0ed92277845332970",
+}
+ALL_BANK_SHA = {**BANK_SHA, **UNTESTED_BANK_SHA}
 MT, KMT, TO, MAX_ATTEMPTS = 128, 1024, 225, 3
 LABEL = "GSPC-G3-Kaggle"
+HF_GGUF_RE = re.compile(
+    r"^hf:([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{40})[:/]([A-Za-z0-9_.-]+\.gguf)$"
+)
+
+
+def resolve_axes(axes_set: str = "tie7") -> tuple[list[str], dict[str, str]]:
+    mode = (axes_set or "tie7").strip().lower()
+    if mode == "tie7":
+        return list(AXES), dict(BANK_SHA)
+    if mode == "untested7":
+        return list(UNTESTED_AXES), dict(UNTESTED_BANK_SHA)
+    if mode == "all14":
+        return list(ALL_14_AXES), dict(ALL_BANK_SHA)
+    raise ValueError(f"Unsupported GSPC_AXES_SET={axes_set!r}; expected tie7, untested7, or all14")
+
+
+def parse_hf_gguf_tag(tag: str) -> dict | None:
+    m = HF_GGUF_RE.fullmatch(tag.strip())
+    if not m:
+        return None
+    repo, commit, filename = m.groups()
+    stem = filename[:-5] if filename.endswith(".gguf") else filename
+    local_name = f"hf-{slug(repo).lower()}:{slug(stem).lower()}"
+    return {
+        "repo": repo,
+        "commit": commit,
+        "filename": filename,
+        "url": f"https://huggingface.co/{repo}/resolve/{commit}/{filename}",
+        "local_model": local_name,
+    }
+
+
+def pull_hf_gguf_into_ollama(
+    tag: str,
+    want_sha256: str,
+    models_dir: str,
+    ollama: str,
+    env_o: dict,
+    work_dir: str,
+    downloader=None,
+) -> tuple[str | None, str | None, dict | None]:
+    """Download a commit-pinned GGUF from huggingface.co, verify SHA-256, and import into local Ollama."""
+    parsed = parse_hf_gguf_tag(tag)
+    if not parsed:
+        return None, None, {"model": tag, "why": "INVALID_HF_TAG"}
+    gguf_dir = os.path.join(work_dir, "gguf")
+    os.makedirs(gguf_dir, exist_ok=True)
+    gguf_path = os.path.join(gguf_dir, parsed["filename"])
+    try:
+        if downloader is not None:
+            downloader(parsed["url"], gguf_path)
+        else:
+            rc = subprocess.run(["curl", "-fsSL", "-o", gguf_path, parsed["url"]]).returncode
+            if rc != 0 or not os.path.isfile(gguf_path):
+                return None, None, {"model": tag, "why": "PULL_FAIL", "url": parsed["url"]}
+    except Exception as exc:
+        return None, None, {"model": tag, "why": "PULL_FAIL", "error": str(exc)}
+    got_gguf_sha = sha(gguf_path)
+    if got_gguf_sha != want_sha256:
+        try:
+            os.remove(gguf_path)
+        except OSError:
+            pass
+        return None, None, {
+            "model": tag,
+            "why": "DIGEST_CHANGED",
+            "pinned": want_sha256,
+            "got": got_gguf_sha,
+        }
+    modelfile_path = os.path.join(gguf_dir, f"Modelfile.{slug(parsed['local_model'])}")
+    with open(modelfile_path, "w", encoding="utf-8") as mf:
+        mf.write(f"FROM {gguf_path}\nPARAMETER temperature 0\nPARAMETER num_ctx 3072\n")
+    local_model = parsed["local_model"]
+    create_rc = subprocess.run([ollama, "create", local_model, "-f", modelfile_path], env=env_o).returncode
+    try:
+        os.remove(gguf_path)
+    except OSError:
+        pass
+    if create_rc != 0:
+        return None, None, {"model": tag, "why": "OLLAMA_CREATE_FAIL"}
+    n_, t_ = (local_model.split(":", 1) + ["latest"])[:2]
+    mp = f"{models_dir}/manifests/registry.ollama.ai/library/{n_}/{t_}"
+    if not os.path.isfile(mp):
+        return None, None, {"model": tag, "why": "MANIFEST_MISSING_AFTER_CREATE", "path": mp}
+    return local_model, sha(mp), None
 
 
 def now() -> str:
@@ -124,10 +224,17 @@ AXIS_TO_BANK = {
     "conformance": "gspc-mcp.jsonl",
     "openness": "gspc-oss.jsonl",
     "care": "gspc-care.jsonl",
+    "machinery-conformity": "gspc-mach.jsonl",
+    "cross-reality": "gspc-xr.jsonl",
+    "detector-interop": "gspc-det.jsonl",
+    "art5-safeguard": "gspc-art5.jsonl",
+    "affect": "gspc-affect.jsonl",
+    "swarm": "gspc-swarm.jsonl",
+    "jail": "gspc-jail.jsonl",
 }
 
 
-def preflight() -> None:
+def preflight(axes_set: str | None = None) -> None:
     assert sha(f"{KIT}/code/runpod_gspc_worker_serial.py") == WORKER_SHA, "WORKER_SHA_MISMATCH"
     assert sha(f"{KIT}/code/generate_runpod_gspc_playlist.py") == GEN_SHA, "GENERATOR_SHA_MISMATCH"
     sums = dict(reversed(l.split()) for l in open(f"{KIT}/banks/SHA256SUMS") if l.strip())
@@ -135,12 +242,13 @@ def preflight() -> None:
         bank_path = f"{KIT}/banks/{name}"
         assert os.path.isfile(bank_path), f"BANK_SHA_MISMATCH {name}: file missing"
         assert sha(bank_path) == want, f"BANK_SHA_MISMATCH {name}"
-    for axis in AXES:
+    active_axes, active_shas = resolve_axes(axes_set or os.environ.get("GSPC_AXES_SET", "tie7"))
+    for axis in active_axes:
         bank_name = AXIS_TO_BANK[axis]
         bank_path = f"{KIT}/banks/{bank_name}"
         assert os.path.isfile(bank_path), f"SPEC_BANK_MISSING {bank_name}"
         assert bank_name in sums, f"SPEC_BANK_NOT_IN_SHA256SUMS {bank_name}"
-        assert sums[bank_name] == BANK_SHA[axis], f"SPEC_BANK_SHA_MISMATCH {axis}"
+        assert sums[bank_name] == active_shas[axis], f"SPEC_BANK_SHA_MISMATCH {axis}"
 
 
 def smoke_generate(model: str, ollama_url: str = "http://127.0.0.1:11434", timeout: int = 120) -> dict:
@@ -270,18 +378,20 @@ def main() -> int:
     run_of_record = not diagnostic
     runtime_group = f"ollama-{OLLAMA_VERSION}"
     host = f"kaggle-{slug(batch_id).lower()}-{shard}"
+    axes_set = os.environ.get("GSPC_AXES_SET", "tie7")
+    active_axes, active_bank_sha = resolve_axes(axes_set)
     if diagnostic:
         log(f"DIAGNOSTIC_MODE batch={batch_id} item_limit={item_limit} run_of_record=false")
-    preflight()
-    log(f"PREFLIGHT_OK full_bank_shas verified against frozen BANK_SHA digests")
-    for axis in AXES:
-        log(f"FULL_BANK {axis}={BANK_SHA[axis][:16]}...")
+    preflight(axes_set)
+    log(f"PREFLIGHT_OK axes_set={axes_set} full_bank_shas verified against frozen digests")
+    for axis in active_axes:
+        log(f"FULL_BANK {axis}={active_bank_sha[axis][:16]}...")
     bank_dir = f"{KIT}/banks"
     diag_bank_shas = {}
     if diagnostic and item_limit > 0:
         diag_bank_dir = f"{out_root}/diag-banks"
         os.makedirs(diag_bank_dir, exist_ok=True)
-        for axis in AXES:
+        for axis in active_axes:
             src_bank = f"{bank_dir}/{AXIS_TO_BANK[axis]}"
             dst_bank = f"{diag_bank_dir}/{AXIS_TO_BANK[axis]}"
             with open(src_bank) as fin, open(dst_bank, "w") as fout:
@@ -312,6 +422,7 @@ def main() -> int:
     with open(tsv, "w") as f:
         f.write("cell\tmodel\taxis\trun_id\tgate\taccuracy\tvalid\tn_total\tunparsed_plus_trunc_pct\ttransport_pct\tseconds\tattempt\tdigest\trun_dir\truntime_group\trun_of_record\n")
     rec = {"schema": "csoai.kaggle-gspc-batch-receipt/0.1", "label": LABEL, "batch": batch_id, "shard": shard,
+           "axes_set": axes_set, "axes": active_axes,
            "host": host, "gpu": gpu, "started": now(), "worker_sha256": WORKER_SHA, "generator_sha256": GEN_SHA,
            "ollama_version": OLLAMA_VERSION, "ollama_tarball_sha256": ollama_tarball_sha256,
            "runtime_group": runtime_group, "instrument": f"exact-label-t{MT}", "num_parallel": 1,
@@ -324,48 +435,27 @@ def main() -> int:
     k = 0
     for r in rows:
         tag, want = r["tag"], r["ollama_manifest_sha256"]
-        hf_source = None
         if tag.startswith("hf:"):
-            # hf:<org>/<repo>@<revision>:<gguf-file> - weights from huggingface.co,
-            # pinned by the GGUF file's sha256 (moved = SKIPPED, never re-pinned).
-            spec = tag[3:]
-            try:
-                repo_rev, fname = spec.split(":", 1)
-                repo_id, rev = repo_rev.split("@", 1)
-            except ValueError:
-                rec["skipped"].append({"model": spec, "why": "HF_TAG_MALFORMED"}); continue
-            hf_source = {"repo_id": repo_id, "rev": rev, "fname": fname}
-            m = "hf-" + slug(spec)[:48]
+            log(f"PULL_HF_GGUF {tag}")
+            m, got, skip_err = pull_hf_gguf_into_ollama(tag, want, models_dir, ollama, env_o, G)
+            if skip_err is not None or m is None or got is None:
+                rec["skipped"].append(skip_err or {"model": tag, "why": "PULL_FAIL"})
+                if skip_err and skip_err.get("why") == "DIGEST_CHANGED":
+                    log(f"DIGEST_CHANGED {tag}: pinned={want[:12]} got={str(skip_err.get('got', ''))[:12]}, skipped")
+                continue
         else:
             m = tag.split(":", 1)[1] if tag.startswith("ollama:") else tag
-        log(f"PULL {m}")
-        if hf_source:
-            url = f"https://huggingface.co/{hf_source['repo_id']}/resolve/{hf_source['rev']}/{hf_source['fname']}"
-            gguf_path = f"{models_dir}/hf-{slug(spec)[:48]}.gguf"
-            try:
-                import urllib.request as _u
-                _u.urlretrieve(url, gguf_path)
-            except Exception as e:
-                rec["skipped"].append({"model": spec, "why": "HF_PULL_FAIL", "detail": str(e)[:120]}); continue
-            got_gguf = sha(gguf_path)
-            if got_gguf != want:
-                rec["skipped"].append({"model": spec, "why": "DIGEST_CHANGED", "pinned": want, "got": got_gguf})
-                os.remove(gguf_path); continue
-            mf = gguf_path + ".modelfile"
-            with open(mf, "w") as f:
-                f.write(f"FROM {gguf_path}\n")
-            if subprocess.run([ollama, "create", m, "-f", mf], env=env_o).returncode:
-                rec["skipped"].append({"model": spec, "why": "OLLAMA_CREATE_FAIL"}); continue
-        else:
+            log(f"PULL {m}")
             if subprocess.run([ollama, "pull", m], env=env_o).returncode:
                 rec["skipped"].append({"model": m, "why": "PULL_FAIL"}); continue
             n_, t_ = (m.split(":", 1) + ["latest"])[:2]
-        mp = f"{models_dir}/manifests/registry.ollama.ai/library/{n_}/{t_}"
-        got = sha(mp)
-        if got != want and not hf_source:
-            rec["skipped"].append({"model": m, "why": "DIGEST_CHANGED", "pinned": want, "got": got})
-            subprocess.run([ollama, "rm", m], env=env_o)
-            continue
+            mp = f"{models_dir}/manifests/registry.ollama.ai/library/{n_}/{t_}"
+            got = sha(mp)
+            if got != want:
+                rec["skipped"].append({"model": m, "why": "DIGEST_CHANGED", "pinned": want, "got": got})
+                log(f"DIGEST_CHANGED {m}: pinned={want[:12]} got={got[:12]}, skipped")
+                subprocess.run([ollama, "rm", m], env=env_o)
+                continue
         log(f"SMOKE {m}")
         smoke_result = smoke_generate(m)
         smoke_record = {"model": m, "passed": smoke_result["passed"], "done_reason": smoke_result["done_reason"],
@@ -385,20 +475,21 @@ def main() -> int:
                             "--workspace-root", "/", "--model-manifest-root", f"{models_dir}/manifests", "--jobs-dir", jd,
                             "--output-root", OUT, "--ollama-url", "http://127.0.0.1:11434", "--models", m,
                             "--max-tokens", str(MT), "--keyword-max-tokens", str(KMT),
-                            "--request-timeout-seconds", str(TO), "--axes", ",".join(AXES)], capture_output=True, text=True)
+                            "--request-timeout-seconds", str(TO), "--axes", ",".join(active_axes)], capture_output=True, text=True)
         if g.returncode:
             rec["skipped"].append({"model": m, "why": "GEN_FAIL", "tail": (g.stdout + g.stderr)[-400:]}); continue
         cfgs = {json.load(open(p))["axis"]: p for p in glob.glob(f"{jd}/*.json")}
-        expected_bank_sha = diag_bank_shas if diagnostic else BANK_SHA
-        for ax in AXES:
+        expected_bank_sha = diag_bank_shas if diagnostic else active_bank_sha
+        for ax in active_axes:
             k += 1
             cell = f"{batch_id}-{shard}-{k:02d}-{slug(m)}-{ax}"
             if ax not in cfgs:
                 rec["skipped"].append({"cell": cell, "why": "NO_CONFIG"}); continue
             cj = json.load(open(cfgs[ax]))
-            ax_bank_sha = expected_bank_sha.get(AXIS_TO_BANK[ax]) if diagnostic else BANK_SHA[ax]
+            ax_bank_sha = expected_bank_sha.get(AXIS_TO_BANK[ax]) if diagnostic else active_bank_sha[ax]
+            expected_mt = KMT if not cj.get("allowed_labels") else MT
             if (cj["expected_bank_sha256"] != ax_bank_sha or cj["expected_model_manifest_digest"] != "sha256:" + got
-                    or cj.get("max_tokens") != MT or cj.get("seed") != 0 or cj.get("temperature", 0) != 0):
+                    or cj.get("max_tokens") != expected_mt or cj.get("seed") != 0 or cj.get("temperature", 0) != 0):
                 rec["skipped"].append({"cell": cell, "why": "CONFIG_PIN_MISMATCH"}); continue
             for att in range(1, MAX_ATTEMPTS + 1):
                 outdir = cj["output_dir"]

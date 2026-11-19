@@ -38,6 +38,10 @@ on:
       - "scripts/test_runpod_reviewed_control.py"
   workflow_dispatch:
 
+concurrency:
+  group: runpod-maintenance-selftest-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

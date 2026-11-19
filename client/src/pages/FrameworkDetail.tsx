@@ -133,7 +133,7 @@ export default function FrameworkDetail() {
               <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">Ask about a measured run <ArrowRight className="h-4 w-4 ml-2" /></Button>
             </a>
             {fw.pdfName && (
-              <a href={`mailto:nicholas@csoai.org?subject=Request%20${encodeURIComponent(fw.name)}%20crosswalk%20PDF`}>
+              <a href={`mailto:contact@csoai.org?subject=Request%20${encodeURIComponent(fw.name)}%20crosswalk%20PDF`}>
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10"><FileText className="h-4 w-4 mr-2" /> Request crosswalk PDF</Button>
               </a>
             )}

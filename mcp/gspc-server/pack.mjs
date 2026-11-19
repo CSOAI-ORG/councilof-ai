@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * prepack — copy the two canonical files into the package directory so the npm
+ * prepack — copy the canonical files into the package directory so the npm
  * tarball is self-contained, and refuse to pack if a stale copy has drifted.
  *
  * The canonical files stay canonical:
@@ -8,6 +8,7 @@
  *   functions/mcp/paid-tools.json   — the ONE paid-tool definition source (HTTP + stdio)
  *   functions/mcp/axis-aliases.json — the ONE axis alias table (HTTP + stdio + Python client)
  *   public/signed/verify-card.mjs   — the ONE published card verifier
+ *   scripts/spray/pypi/csoai-gspc/LICENSE — existing Apache-2.0 text (already declared by this package)
  *
  * In a repo checkout index.mjs reads the canonical paths directly; the copies
  * made here exist only inside the published tarball.
@@ -24,6 +25,7 @@ const PAIRS = [
   ["../../functions/mcp/paid-tools.json", "./paid-tools.json"],
   ["../../functions/mcp/axis-aliases.json", "./axis-aliases.json"],
   ["../../public/signed/verify-card.mjs", "./verify-card.mjs"],
+  ["../../scripts/spray/pypi/csoai-gspc/LICENSE", "./LICENSE"],
 ];
 
 for (const [src, dst] of PAIRS) {

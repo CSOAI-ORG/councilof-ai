@@ -1,0 +1,41 @@
+{
+  "state": "LIVE_EXPIRY_REFUSAL_VERIFIED",
+  "at": "2026-11-12T01:19:03.434192+00:00",
+  "url": "https://0e29bc3e-csoai-process-replay.nicholastempleman.workers.dev",
+  "expected_expiry": "2026-11-12T00:00:00Z",
+  "requests": [
+    {
+      "path": "/health",
+      "status": 200,
+      "response_sha256": "c528174b763a1de65fc185b1d503d3be13ec595c889aaa93bb90387096dc14d3",
+      "application_digest_matches": true,
+      "payload": {
+        "state": "EXPIRED_RESEARCH_PREVIEW",
+        "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+        "limits": {
+          "max_input_bytes": 8192,
+          "max_rows": 8,
+          "expires_at": "2026-11-12T00:00:00Z"
+        },
+        "backend": "Cloudflare Worker CPU when deployed; same handler testable in Node",
+        "upstream_fetches": 0,
+        "storage_writes": 0,
+        "model_training": false,
+        "execution_authority": false,
+        "gspc_admitted": false
+      }
+    },
+    {
+      "path": "/v1/predict",
+      "status": 410,
+      "response_sha256": "7dfa8c96d5a920221d6db1ae258c09278a5f9e71816cd2d8468f8b513a073999",
+      "application_digest_matches": true,
+      "payload": {
+        "error": "PREVIEW_EXPIRED"
+      }
+    }
+  ],
+  "service_extended": false,
+  "configuration_changed": false,
+  "model_inference_after_expiry_requested_by_handler": false
+}

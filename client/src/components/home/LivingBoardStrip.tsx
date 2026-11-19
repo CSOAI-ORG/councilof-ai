@@ -22,6 +22,7 @@ import { Link } from "wouter";
 import { useGspcBoard, pct, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
 import { isOwnerGated } from "@/lib/ownerGated";
 import { axisHref } from "@/lib/axisHref";
+import AxisLink from "@/components/AxisLink";
 
 /** A finite number, or null — a count that is not carried is never rendered as zero. */
 function finiteNumber(v: unknown): number | null {
@@ -87,7 +88,7 @@ function Row({ a }: { a: GspcAxis }) {
       data-separation={chip}
     >
       {href ? (
-        <Link
+        <AxisLink
           href={href}
           className="flex items-baseline justify-between gap-2"
           title={typeof a.bench === "string" && a.bench ? `${a.axis} · ${a.bench}` : a.axis}
@@ -99,7 +100,7 @@ function Row({ a }: { a: GspcAxis }) {
           <span className="shrink-0 font-mono text-[12px] font-bold tabular-nums text-[#6ee7b7]">
             {hasFigure ? pct(a.accuracy as number) : "—"}
           </span>
-        </Link>
+        </AxisLink>
       ) : (
         <span
           className="flex items-baseline justify-between gap-2"

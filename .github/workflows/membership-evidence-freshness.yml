@@ -1,0 +1,66 @@
+name: Membership evidence freshness
+
+on:
+  schedule:
+    - cron: "17 8 * * *"
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "public/interop/memberships.json"
+      - "public/interop/memberships-updates.json"
+      - "scripts/memberships-check.mjs"
+      - "scripts/memberships-check.freshness.node-test.mjs"
+      - "scripts/memberships-check.test.ts"
+      - "client/src/pages/Memberships.tsx"
+      - "client/src/components/MembershipStrip.tsx"
+      - "client/src/components/MembershipStrip.badges.test.tsx"
+      - ".github/workflows/membership-evidence-freshness.yml"
+  pull_request:
+    paths:
+      - "public/interop/memberships.json"
+      - "public/interop/memberships-updates.json"
+      - "scripts/memberships-check.mjs"
+      - "scripts/memberships-check.freshness.node-test.mjs"
+      - "scripts/memberships-check.test.ts"
+      - "client/src/pages/Memberships.tsx"
+      - "client/src/components/MembershipStrip.tsx"
+      - "client/src/components/MembershipStrip.badges.test.tsx"
+      - "docs/governance/membership-evidence-freshness.md"
+      - ".github/workflows/membership-evidence-freshness.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: membership-evidence-freshness-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline:
+    name: Offline freshness regression tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Freshness and HTML parity regression tests
+        run: node --test scripts/memberships-check.freshness.node-test.mjs
+      - name: Existing negative-control selftest
+        run: node scripts/memberships-check.mjs --selftest
+
+  live:
+    name: Live public evidence and register readback
+    if: github.event_name != 'pull_request'
+    needs: offline
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check all public evidence URLs, manifest dates and HTML parity
+        run: node scripts/memberships-check.mjs

@@ -44,6 +44,32 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-1118-01",
+      "date": "2026-11-18",
+      "detected_at": "2026-11-02T19:03:39Z",
+      "detected_by": "external report",
+      "published_at": "2026-11-06T04:54:14Z",
+      "timing_evidence": [
+        "detected_at is the Date header of the report, an email sent to us privately. When we first read it is not recorded",
+        "published_at is the end of the step 'Deploy → councilof.ai' in GitHub Actions run 42163160616 (Build + deploy site, master at 7287750047546d65c8d02b786363486b9dd5d292), the first deploy to serve the corrected verifier",
+        "Pull request 3957 merged at 2026-11-06T04:32:56Z. Our first reply to the reporter is dated 2026-11-18T04:47:09Z, and this entry was written the same day; the deploy that first serves this entry had not happened when it was written"
+      ],
+      "what_was_wrong": "Our record verifier returned VALID for a record that carried no signature. functions/_lib/cardVerify.ts is the one implementation behind POST /api/verify, the /gspc-verify page and the MCP verify_card tool. For a record whose signature was missing or an empty string, it added a Signature check with ok: null and the code unsigned, and recorded no reason. The verdict asked only that there were no reasons and no check with ok: false, so it came out VALID. A record needed three things to pass: a body of the sender's choosing, the id that body hashes to, and one of our published public keys or its name. Anyone can produce all three, so a record we never signed read state VALID and cryptographic_state VALID. The response did list the Signature check as unsigned, and the /gspc-verify page said 'a hash-only VALID result is labelled unsigned and does not prove who wrote the record', but the verdict itself was the word VALID. That contradicted our own published rule: public/signed/HOW-TO-VERIFY.md says a record with a null signature is unsigned and UNCHECKABLE, never VALID, and two other verifiers we publish (public/signed/verify-card.mjs and mcp/gspc-server/verify-card.mjs) already answered UNCHECKABLE for a missing signature. The logic was in cardVerify.ts from the file's first commit, a2d789a83 (2026-08-26), until the fix was deployed on 2026-11-06, about ten weeks. On 2026-10-14 we gave the badge endpoint its own signature requirement (commit 9efbfb7a1, pull request 3152) and wrote in a comment beside it that an empty signature 'still comes back valid:true'; we did not change the shared verifier then. Who could have been misled: anyone who relied on VALID from one of these three doors for a record that did not come from us. POST /api/verify stores nothing about the records it is sent, so whether anyone other than the reporter was shown VALID for an unsigned record is UNMEASURED.",
+      "how_caught": "kta1kri (https://github.com/kta1kri), an independent security researcher, read our public source, built a record with an empty signature, ran our own verifier handler on it offline and saw VALID. They reported it to us privately by email on 2026-11-02, naming the file, the line and the remedy, and told us they had made no live write requests and had published nothing. Credit for finding and reporting this goes to kta1kri, who is named here at their own request. The fix was deployed on 2026-11-06, but we did not reply to them until 2026-11-18, sixteen days after the report.",
+      "what_changed": "Fixed in pull request 3957 (commit 728775004), merged and deployed on 2026-11-06. A missing signature is now recorded as the reason unsigned, which gives the verdict UNCHECKABLE, and VALID also requires that an Ed25519 check ran and verified. A signature that does not verify still reads INVALID. The fix changes the verdict only for a record with no signature. The /gspc-verify page now says VALID requires a successful signature check and that a matching hash alone is insufficient. functions/_lib/cardVerify.signature-required.test.ts holds the shared verifier, the HTTP handler and the MCP handler to this. Re-checked on the live endpoint at 2026-11-18T06:27:35Z with the published card 82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c: as published it reads VALID; with the signature set to an empty string it reads UNCHECKABLE with the reason unsigned; with one character of the signature changed it reads INVALID with the reason signature_invalid. No signed record was changed.",
+      "status": "CORRECTED - at the shared verifier, deployed 2026-11-06; reporter credited; signed records unchanged",
+      "reached_the_public": true,
+      "evidence": [
+        "https://github.com/CSOAI-ORG/councilof-ai/pull/3957 (merge commit 7287750047546d65c8d02b786363486b9dd5d292)",
+        "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42163160616 (the deploy that first served the fix)",
+        "https://councilof.ai/api/verify (POST a record; GET explains how) and https://councilof.ai/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json (the card used for the re-check)",
+        "https://councilof.ai/signed/HOW-TO-VERIFY.md",
+        "functions/_lib/cardVerify.ts; functions/_lib/cardVerify.signature-required.test.ts; functions/api/badge.ts; client/src/pages/GSPCVerify.tsx",
+        "councilof-ai commits a2d789a83 (the verifier's first commit, 2026-08-26) and 9efbfb7a1 (the badge's own signature requirement, 2026-10-14)",
+        "https://github.com/kta1kri (the reporter, named at their own request)"
+      ]
+    },
+    {
       "id": "C-2026-1103-01",
       "date": "2026-11-03",
       "detected_at": "2026-11-01",
@@ -51,17 +77,46 @@ export const LEDGER = {
       "published_at": "UNRECORDED",
       "timing_evidence": [
         "A name-for-name audit on 2026-11-01 extracted the published 0.2.4 tarball's own manifests (gspc-tools.json, paid-tools.json) and diffed them against the live door's tools/list; the drift was re-measured on 2026-11-03",
-        "published_at is UNRECORDED: the deploy that first serves this corrected guide had not happened when this entry was written"
+        "published_at is UNRECORDED: the deploy that first serves this corrected guide had not happened when this entry was written",
+        "This entry was first written on 2026-11-03. Before publication it was re-read on 2026-11-19 against the repository and the dated captures in the history of distribution/npm/npm-publish-check.json, and two passages were corrected to match them"
       ],
       "what_was_wrong": "public/llms-install.md — the agent-facing installation guide — typed tool counts as if they were stable facts: it advertised the npm release at '52 tool names' while the live door it installs against served 53 names from 2026-10-30 (axis_watchdog-ingest) and 54 names from 2026-11-02 (framework_readiness). An agent following the guide compared the door against a stale count and could conclude the deployment was wrong, when the typed number was. The same typed-count defect had already bitten the axes index (a lid saying 23 beside an h1 saying 22) and the tools-match-door test (expecting 47 free names the week the door reached 48).",
-      "how_caught": "An internal audit that ran the guide's own publication test: npm pack csoai-gspc-mcp@latest, extract the tarball's manifests, diff name-for-name against the live door's tools/list. The diff was empty on 2026-11-01 and the door grew two names by 2026-11-03, which made the typed '52' wrong twice in three days.",
-      "what_changed": "The guide no longer types tool counts at all. It points at the two sources of truth — the live door's tools/list and the published tarball's own manifests diffed name-for-name — and keeps the measured values only as dated history, explicitly marked as not the contract. The same de-typing landed in tools-match-door's test (counts derived; only the permanent facts pinned: disjoint banks, free-forever anchors, mill-tool phantoms absent) and in the axes-index generator (counts derived from the board, with a LID_COUNT_MISMATCH guard that refuses to render a totals row the page cannot explain).",
+      "how_caught": "An internal audit that ran the guide's own publication test: npm pack csoai-gspc-mcp@latest, extract the tarball's manifests, diff name-for-name against the live door's tools/list. The capture of 2026-11-01T11:54:15Z recorded release 0.2.4 with 52 names against a door serving 53 (axis_watchdog-ingest was live only). The capture of 2026-11-03T03:33:29Z recorded release 0.2.5 with 53 names against a door serving 54 (framework_readiness was live only). The typed count was out of date on both days.",
+      "what_changed": "The guide's counts are no longer typed by hand. Its npm facts (the latest release, its publication time, and how many tool names the published tarball and the live door carried) are generated from one dated capture by scripts/harness-x/npm-guide-facts.mjs, whose check mode refuses a committed guide that has drifted from the capture, and scripts/llms-install.test.mjs holds the count in the guide's prose to the tool catalogue the guide publishes. The guide tells the reader to re-run the name-for-name comparison whenever either side moves, and it marks the local package as not the contract. The same de-typing landed in tools-match-door's test (counts derived; only the permanent facts pinned: disjoint banks, free-forever anchors, mill-tool phantoms absent) and in the axes-index generator (counts derived from the board, with a LID_COUNT_MISMATCH guard that refuses to render a totals row the page cannot explain).",
       "status": "CORRECTED - at the producers",
       "reached_the_public": true,
       "evidence": [
         "https://councilof.ai/mcp (tools/list, request time)",
         "https://registry.npmjs.org/csoai-gspc-mcp (0.2.4, published 2026-10-28T16:48:34.768Z)",
-        "public/llms-install.md; scripts/derive-fin-run-attestation.mjs; scripts/surface/build-axis-pages.mjs; mcp/gspc-server/tools-match-door.test.ts"
+        "distribution/npm/npm-publish-check.json (in its history: the captures of 2026-11-01T11:54:15Z and 2026-11-03T03:33:29Z)",
+        "public/llms-install.md; scripts/harness-x/npm-guide-facts.mjs; scripts/llms-install.test.mjs; scripts/derive-fin-run-attestation.mjs; scripts/surface/build-axis-pages.mjs; mcp/gspc-server/tools-match-door.test.ts"
+      ]
+    },
+    {
+      "id": "C-2026-1012-01",
+      "date": "2026-10-12",
+      "detected_at": "2026-10-09T15:55Z",
+      "detected_by": "internal monitor",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "An internal alert log entry of 2026-10-09 15:55Z (not publicly hosted) first recorded the stale index against its own daily note",
+        "published_at is UNRECORDED: the deploy that first serves this correction had not happened when this entry was written",
+        "This entry was first written on 2026-10-12. Before publication it was re-read on 2026-11-19 against the served index and the repository history, and its account of what changed was corrected to match them"
+      ],
+      "what_was_wrong": "The signed measurement-capsule index publication block claimed it was \"published daily by the owner's approval (recorded 2026-09-26)\" while as_of stayed at 2026-10-01. On 2026-10-12 that is roughly eleven days stale against its own cadence claim. Free verification of existing cards is unaffected; the defect is a false publication promise on our own evidence index. Re-read on 2026-11-19, the same is true again: the served index is dated 2026-11-01, eighteen days old, and its note still reads 'published daily'.",
+      "how_caught": "Estate health reviews on 2026-10-09 and 2026-10-10 compared the index as_of with the publication note and with the calendar; an internal alert log entry of 2026-10-09 15:55Z filed the gap.",
+      "what_changed": "This entry amends the claim: the index is published on a best-effort basis, and as_of is the only source of truth for the last successful signed publication. The index's own note has not been changed. The served copy was replaced twice after this entry was first written, by the index of 2026-10-28 (commit 5adedf137, committed 2026-10-29) and by the index of 2026-11-01 (commit 857a6cc02, committed 2026-11-06), and both carry the same note. Read on 2026-11-19, the served index is dated 2026-11-01 (as_of 2026-11-01T08:30:40Z, chain_seq 26) and its note still reads 'published daily by the owner's approval (recorded 2026-09-26)'. The dated copies on Hugging Face (csoai/evidence-index, measurement-index/) run from 2026-09-26 to 2026-11-04 with gaps, and none is later. When the daily publisher is restored the note may say daily cadence target, never a guarantee. Prior indexes are not rewritten. Cards themselves remain valid and free to verify at councilof.ai.",
+      "status": "RECORDED - the claim is amended in this record only; the index still carries the daily note (read 2026-11-19); the publisher and the note are open; signed indexes not rewritten",
+      "reached_the_public": true,
+      "open_items": [
+        "Restore the daily measurement-index publisher (owner key + job); until as_of advances, treat daily cadence as degraded",
+        "Next signed index must carry the amended note (daily cadence target, not guarantee)"
+      ],
+      "evidence": [
+        "https://councilof.ai/measurement-capsules/v0.2/index.json (date, as_of, chain_seq and publication.note; https://councilof.ai/measurement-capsules/latest.json points to it)",
+        "councilof-ai commits 4e0033cbc (index of 2026-10-01, committed 2026-10-06), 5adedf137 (index of 2026-10-28) and 857a6cc02 (index of 2026-11-01)",
+        "https://huggingface.co/datasets/csoai/evidence-index/tree/main/measurement-index (the dated copies)",
+        "Internal notes, not publicly hosted: the alert log entry of 2026-10-09 15:55Z, and a cadence-claim decision note and a publisher-restore runbook, both dated 2026-10-12"
       ]
     },
     {
@@ -2013,20 +2068,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "75375feadd13f390f0e5a41c92e5bddffd37b79584962b0bb5c98d57607ae12e",
+    id: "edc842d53b0b66017d6b6c213006cfe21bca1cea6fa4037544e25b9e6477d206",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "0ac33a64b006a50ec14cdbb9716dfc9cf0d66660dce87569ded2b7b8a7e15c3534352ae0f3b15f1999bfdc0d97165bbd3e685d820cb570434cb82998a84e0a0e",
+    signature: "4eb20d0e54f6501b99ce8ae8f3ea039504fefa5dd55c8a60158397887ac5e6857ead2ac95472a826d624a9ad0eca5b0bbbf9d9c7e7882168b59499888a9eb00e",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "75375feadd13f390f0e5a41c92e5bddffd37b79584962b0bb5c98d57607ae12e",
+          "content_id": "edc842d53b0b66017d6b6c213006cfe21bca1cea6fa4037544e25b9e6477d206",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 94,
-          "latest_entry_id": "C-2026-1103-01",
-          "ledger_canonical_bytes": 231645,
+          "entries": 96,
+          "latest_entry_id": "C-2026-1118-01",
+          "ledger_canonical_bytes": 241233,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-11-12T02:08:01Z"
+          "signed_at": "2026-11-19T03:25:04Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +

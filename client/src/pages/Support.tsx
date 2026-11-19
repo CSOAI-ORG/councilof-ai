@@ -74,7 +74,7 @@ Would you like me to connect you with a human support agent for further assistan
 • **Living board** at GET /api/gspc
 • **Lobby door** /os?lobby=assess&task=pricing-overview
 
-If you have a signed report_id and no datastore is bound yet, email nicholas@csoai.org with that id.
+If you have a signed report_id and no datastore is bound yet, email contact@csoai.org with that id.
 
 Would you like me to connect you with a human agent?`
   },
@@ -318,7 +318,7 @@ Is there anything else I can help you with in the meantime?`,
     },
     {
       question: 'Do you sell plans or refunds?',
-      answer: 'No. There is nothing to buy on the public rail and nothing to refund. Measurement and verify stay free. Email nicholas@csoai.org with a report_id if you need a human.',
+      answer: 'No. There is nothing to buy on the public rail and nothing to refund. Measurement and verify stay free. Email contact@csoai.org with a report_id if you need a human.',
     },
     {
       question: 'How do I verify a signed card?',

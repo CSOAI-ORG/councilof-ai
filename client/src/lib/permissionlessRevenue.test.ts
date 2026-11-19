@@ -13,11 +13,11 @@ import {
 const products = readFileSync(resolve(__dirname, "../pages/Products.tsx"), "utf8");
 const internal = readFileSync(resolve(__dirname, "../pages/YieldInternal.tsx"), "utf8");
 
-describe("Permissionless revenue — work, not rank", () => {
+describe("Evidence services — defined scope and impartial results", () => {
   it("opens enquiry, RAS, census and SDK funnels now", () => {
-    expect(EARN_RULING).toMatch(/assembling and licensing work/i);
-    expect(EARN_RULING).toMatch(/Do not mint, mine or coupon a grade/);
-    expect(EARN_WEDGE).toMatch(/assembly/);
+    expect(EARN_RULING).toMatch(/assembly and data licensing/i);
+    expect(EARN_RULING).toMatch(/defined scope/);
+    expect(EARN_WEDGE).toMatch(/Payment does not purchase a favourable measurement or ranking/);
     expect(earnableNow().map((o) => o.id)).toEqual(
       expect.arrayContaining(["enquiry-skus", "ras-refresh", "census-data", "corrections-sla", "sdk-funnel"]),
     );

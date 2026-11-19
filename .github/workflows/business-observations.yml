@@ -9,6 +9,10 @@ on:
     paths:
       - 'scripts/business-operations/**'
       - '.github/workflows/business-observations.yml'
+concurrency:
+  group: business-observations-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:

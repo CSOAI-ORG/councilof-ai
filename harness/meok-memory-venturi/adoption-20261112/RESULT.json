@@ -1,0 +1,108 @@
+{
+  "schema": "csoai.eat-memory-adoption-result/1",
+  "state": "EXISTING_SOURCE_REPAIR_CONSUMED_AND_LIVE_CHECKED",
+  "at": "2026-11-12T01:23:07.881983+00:00",
+  "source_commit": "bd3d6424e7591c63477049c09f5811fe10d70e27",
+  "source_pr": 4176,
+  "source_path": "harness/meok-memory-venturi",
+  "upstream_candidate_study": "csoai.memory-venturi.eat-targeted-invalidation.20261112.r49",
+  "consumed_cache_sha256": "fee33861233dec6b7e89dbbf91582c0016c9538dd257f796ab9cef493fe1bebc",
+  "private_HF_deployed_revision": "0c3267c5b57bc67672a2426f020a7f3174cad3fd",
+  "base_HF_revision": "1887656611c1fb3a7010c77a2c6ca3599a5f9aed",
+  "HF_CPU_qualification_job": "csoai/6af513ee9737d9a9e093a023",
+  "tests": {
+    "existing_full_snapshot_methods": 340,
+    "composed_snapshot_methods": 359,
+    "new_methods": 19,
+    "new_targeted_source_methods": 12,
+    "new_adoption_methods": 7,
+    "separate_retained_join_methods": 87,
+    "fresh_core_qualification_methods": 53,
+    "old_source_fails_intended_diagnostic_assertion": true
+  },
+  "live": {
+    "MCP_protocol": "2025-03-26",
+    "tool": "meok_hf_runtime_memory_rehearsal",
+    "tool_calls": 7,
+    "successful_memory_calls": 4,
+    "synthetic_targeted_outcomes_observed": 20,
+    "invalid_inputs_refused": 2,
+    "recovery_passed": true,
+    "original_small_neural_evaluations": 32,
+    "original_exact_reuse_hits": 16,
+    "canonical_event_output_digests_verified": 4,
+    "source_unchanged_between_reads": true,
+    "model_weight_changes": false,
+    "authority_granted": false
+  },
+  "live_targeted_controls": [
+    {
+      "case": "during-compute",
+      "expected": "INVALIDATED_DURING_COMPUTE",
+      "observed": "INVALIDATED_DURING_COMPUTE",
+      "stored_results": 0,
+      "passed": true
+    },
+    {
+      "case": "during-hit",
+      "expected": "INVALIDATED_DURING_LOOKUP",
+      "observed": "INVALIDATED_DURING_LOOKUP",
+      "stored_results": 0,
+      "passed": true
+    },
+    {
+      "case": "unrelated-source",
+      "expected": "REUSED_RESULT",
+      "observed": "REUSED_RESULT",
+      "stored_results": 1,
+      "passed": true
+    },
+    {
+      "case": "other-tenant",
+      "expected": "REUSED_RESULT",
+      "observed": "REUSED_RESULT",
+      "stored_results": 1,
+      "passed": true
+    },
+    {
+      "case": "fresh-after-invalidation",
+      "expected": "FRESH_RESULT",
+      "observed": "FRESH_RESULT",
+      "stored_results": 1,
+      "passed": true
+    }
+  ],
+  "preserved": {
+    "other_manifest_entries": 100,
+    "chat_arithmetic_task_contract_academy_saved_copy_specialist_paths": true,
+    "private_visibility": true,
+    "hardware_and_model_lock": true,
+    "source_BUILD_historical_record": true,
+    "personal_memory_migration": false,
+    "production_master_merged": false
+  },
+  "devices": {
+    "M4": "OFFLINE_UNTOUCHED",
+    "M2": "SOURCE_INTEGRATION_PUBLICATION_AND_AUTHENTICATED_READBACK",
+    "Linux": "ORIGINAL_R49_QUALIFICATION_REPLAY",
+    "HF": "BOUNDED_CPU_COMPOSED_TEST_JOB_AND_EXISTING_RUNTIME"
+  },
+  "Cloudflare_lifetime": {
+    "observed_at": "2026-11-12T01:19:03.434192+00:00",
+    "health_state": "EXPIRED_RESEARCH_PREVIEW",
+    "prediction_status": 410,
+    "prediction_error": "PREVIEW_EXPIRED",
+    "response_hashes_verified": true,
+    "deadline_extended": false
+  },
+  "remaining_acceptance": {
+    "representative_authenticated_four_way_whole_job": "NOT_RUN",
+    "real_current_user_authorizer": "NOT_ESTABLISHED_BY_THIS_PASS",
+    "durable_source_epoch_lifecycle": "OWNER_POLICY_REQUIRED",
+    "cross_process_revocation_after_final_check": "NOT_GUARANTEED",
+    "real_learner_or_professional_review": "NOT_PERFORMED",
+    "new_model_training": "NOT_PERFORMED",
+    "GSPC_model_score_admission": "NOT_PERFORMED"
+  },
+  "explanation": "A race repair was moved from isolated research into the existing source lane and temporary research runtime. This is not a new cache, source-authority system, production user-memory store or performance/accuracy improvement claim."
+}

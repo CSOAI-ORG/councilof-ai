@@ -1,13 +1,15 @@
 /**
  * GET /feed — the card-index feed (JSON by default, RSS 2.0 with ?format=rss).
  *
- * Reads the ordered card index in public/root.json, fetches each card from
- * /cards/ to extract surface/subject/as_of, and checks /proofs/ for tier classification.
+ * Reads public/root.json and its small, complete /card-feed-index.json projection.
+ * The existing bundle producer derives the projection from the same published
+ * card wrappers and inclusion-proof arrays. A cold load costs two fetches,
+ * independent of the number of cards; it does not load the full cards bundle.
  *
  * Query parameters:
  *   ?format=rss   — RSS 2.0 XML instead of JSON
  *   ?family=<surface> — filter by card surface/family prefix
- *   ?tier=free|proof  — filter by proof availability
+ *   ?tier=free|proof  — filter by published card/proof metadata
  *   ?limit=N      — max results (default 50, max 303)
  *
  * Does NOT conflict with /feed.xml (the hand-maintained state-change RSS) or
@@ -15,15 +17,18 @@
  * hand-curated.
  *
  * Internal caching: completed entries have a 5-minute TTL. The memory cache and an
- * optional, origin/root-bound Cache API entry retain the same observation time.
+ * optional, origin/root-bound Cache API entry retain the same load time.
  * A fresh isolate can reuse a completed load in the same edge location. A cache
- * miss still reads every mirrored card/proof; this does not remove first-cold
- * fan-out or establish fresh proof availability on a cache hit. Request-scoped
+ * miss reads the compact projection. The feed describes the published root;
+ * it does not test mirror uptime or verify a signature/inclusion proof. Missing,
+ * malformed or root-mismatched projection data returns 503, not a partial feed
+ * or a fallback to hundreds of mirror requests. Request-scoped
  * waitUntil may let already-started loading finish after a client disconnects,
  * within the platform's shared 30-second continuation budget; completion is not
  * guaranteed and this starts no retry or background job.
  * Public response Cache-Control remains public, max-age=300; client cache age
- * is separate from the internal observation timestamp.
+ * is separate from the internal load timestamp. A successful response declares
+ * X-CSOAI-Feed-Tier-Basis: published-metadata (including RSS and HEAD).
  */
 import { headFromGet } from "./api/_head";
 
@@ -40,7 +45,9 @@ interface CardEntry {
 type CardCache = { entries: CardEntry[]; ts: number; origin: string };
 let cardCache: CardCache | null = null;
 
-const EDGE_CACHE_SCHEMA = "csoai.card-feed-cache/1";
+const EDGE_CACHE_SCHEMA = "csoai.card-feed-cache/2";
+const FEED_INDEX_SCHEMA = "csoai.card-feed-index/1";
+const TIER_BASIS = "published-metadata";
 const ENTRY_KEYS = ["as_of", "sha256", "subject", "surface", "tier"];
 
 function fresh(ts: unknown, now: number): ts is number {
@@ -48,37 +55,32 @@ function fresh(ts: unknown, now: number): ts is number {
 }
 
 function validEntries(entries: unknown, shas: string[]): entries is CardEntry[] {
-  if (!Array.isArray(entries) || entries.length === 0 || entries.length > shas.length) return false;
-  let next = 0;
-  const seen = new Set<string>();
-  return entries.every((entry) => {
+  if (!Array.isArray(entries) || entries.length === 0 || entries.length !== shas.length) return false;
+  return entries.every((entry, index) => {
     if (!entry || typeof entry !== "object" ||
         Object.keys(entry).sort().join(",") !== ENTRY_KEYS.join(",") ||
         typeof entry.sha256 !== "string" || !/^[0-9a-f]{64}$/.test(entry.sha256) ||
         typeof entry.surface !== "string" || typeof entry.subject !== "string" ||
-        typeof entry.as_of !== "string" || !["free", "proof"].includes(entry.tier) ||
-        seen.has(entry.sha256)) return false;
-    const index = shas.indexOf(entry.sha256, next);
-    if (index < 0) return false;
-    next = index + 1;
-    seen.add(entry.sha256);
-    return true;
+        typeof entry.as_of !== "string" || !["free", "proof"].includes(entry.tier)) return false;
+    return entry.sha256 === shas[index];
   });
 }
 
-async function edgeCacheForRoot(origin: string, root: unknown) {
+async function digestRoot(root: unknown): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(root)));
+  return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function edgeCacheForRoot(origin: string, rootDigest: string) {
   try {
     const cache = typeof caches === "undefined" ? undefined :
       (caches as CacheStorage & { default?: Cache }).default;
     if (!cache) return null;
-    // Bind the complete public root, including its ordering/as_of. Keep only
-    // derived public metadata in this cache; no request headers or card bodies.
-    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(root)));
-    const rootDigest = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
-    const key = new Request(`${origin}/.well-known/csoai-card-feed-cache/v1/${rootDigest}`);
+    // V2 cannot reuse a V1 partial result classified by mirror availability.
+    const key = new Request(`${origin}/.well-known/csoai-card-feed-cache/v2/${rootDigest}`);
     return { cache, key, rootDigest };
   } catch {
-    return null; // Optional transport cache must not replace the existing source path.
+    return null; // Optional transport cache must not prevent reading the projection.
   }
 }
 
@@ -104,13 +106,17 @@ async function fetchCardEntries(origin: string, waitUntil?: (promise: Promise<un
     as_of?: string;
     card_count?: number;
   };
-  if (!Array.isArray(root.card_sha256) || root.card_sha256.length === 0) {
-    throw new Error("root.json has no card_sha256 array");
+  if (!Array.isArray(root.card_sha256) || root.card_sha256.length === 0 ||
+      root.card_sha256.some(sha => typeof sha !== "string" || !/^[0-9a-f]{64}$/.test(sha)) ||
+      new Set(root.card_sha256).size !== root.card_sha256.length ||
+      root.card_count !== root.card_sha256.length) {
+    throw new Error("root.json needs unique SHA-256 leaves and an equal card_count");
   }
 
   const shas = root.card_sha256 as string[];
 
-  const edge = await edgeCacheForRoot(origin, root);
+  const rootDigest = await digestRoot(root);
+  const edge = edgeCacheForRoot(origin, rootDigest);
   if (edge) {
     try {
       const response = await edge.cache.match(edge.key);
@@ -119,73 +125,27 @@ async function fetchCardEntries(origin: string, waitUntil?: (promise: Promise<un
         if (saved.schema === EDGE_CACHE_SCHEMA && saved.origin === origin &&
             saved.root_digest === edge.rootDigest && fresh(saved.ts, Date.now()) &&
             validEntries(saved.entries, shas)) {
-          // Preserve the original observation time: reading a cache cannot
-          // renew the 300-second lifetime or reclassify mirror availability.
+          // Preserve the original load time: reading a cache cannot renew TTL.
           cardCache = { entries: saved.entries, ts: saved.ts, origin };
           return cardCache.entries;
         }
       }
     } catch {
-      // Missing, corrupt, inaccessible or incompatible cache: read the sources.
+      // Missing, corrupt, inaccessible or incompatible cache: read the projection.
     }
   }
 
-  // Fetch all card + proof files in parallel.
-  // Cards give us surface, subject, as_of. Proofs give us tier.
-  const cardPromises = shas.map((sha) => {
-    const prefix = sha.slice(0, 16);
-    return fetch(`${origin}/cards/${prefix}.json`, {
-      cf: { cacheTtl: 300, cacheEverything: true },
-    } as RequestInit)
-      .then((r) => (r.ok ? r.json() : null))
-      .catch(() => null);
-  });
-
-  const proofPromises = shas.map((sha) => {
-    const prefix = sha.slice(0, 16);
-    return fetch(`${origin}/proofs/${prefix}.json`, {
-      cf: { cacheTtl: 300, cacheEverything: true },
-    } as RequestInit)
-      .then((r) => (r.ok ? r.json() : null))
-      .catch(() => null);
-  });
-
-  const [cardResults, proofResults] = await Promise.all([
-    Promise.all(cardPromises),
-    Promise.all(proofPromises),
-  ]);
-
-  const entries: CardEntry[] = [];
-  for (let i = 0; i < shas.length; i++) {
-    const sha = shas[i];
-    const cardJson = cardResults[i] as
-      | { card?: { surface?: string; subject?: string; as_of?: string } }
-      | null;
-    const proofJson = proofResults[i] as
-      | { proof?: string[] | unknown[] }
-      | null;
-
-    if (!cardJson?.card) continue; // skip unreadable cards
-
-    const c = cardJson.card;
-    // G5.1: read tier from the product block when present (after next publish);
-    // fall back to proof-based heuristic for pre-v0.1 cards.
-    const productTier = (c as Record<string, unknown>).product as
-      | { tier?: string }
-      | undefined;
-    const hasProof =
-      proofJson &&
-      Array.isArray(proofJson.proof) &&
-      proofJson.proof.length > 0;
-
-    entries.push({
-      sha256: sha,
-      surface: c.surface ?? "unknown",
-      subject: c.subject ?? "",
-      as_of: c.as_of ?? "",
-      tier: productTier?.tier === "proof" ? "proof" : hasProof ? "proof" : "free",
-    });
+  const indexRes = await fetch(`${origin}/card-feed-index.json`, {
+    cf: { cacheTtl: 300, cacheEverything: true },
+  } as RequestInit);
+  if (!indexRes.ok) throw new Error(`card-feed-index.json HTTP ${indexRes.status}`);
+  const index = await indexRes.json() as Record<string, unknown> | null;
+  if (!index || index.schema !== FEED_INDEX_SCHEMA || index.tier_basis !== TIER_BASIS ||
+      index.root_digest !== rootDigest || index.root_card_count !== shas.length ||
+      !validEntries(index.entries, shas)) {
+    throw new Error("card-feed-index.json is malformed or does not match the complete current root");
   }
+  const entries = index.entries;
 
   // Warm the cache
   cardCache = { entries, ts: Date.now(), origin };
@@ -307,7 +267,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       {
         error: "upstream_failure",
         detail: `Could not read card index: ${msg}`,
-        note: "The static /root.json or its card files may be unavailable on this deploy.",
+        note: "The static root or its complete published metadata index is unavailable or inconsistent.",
       },
       {
         status: 503,
@@ -324,7 +284,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       {
         error: "empty_index",
         detail: "root.json parsed but yielded zero card entries",
-        note: "The card files under /cards/ may be missing on this deploy.",
+        note: "The complete published metadata index yielded no entries.",
       },
       {
         status: 503,
@@ -365,6 +325,8 @@ export const onRequestGet: PagesFunction = async (context) => {
         "content-type": "application/rss+xml; charset=utf-8",
         "cache-control": "public, max-age=300",
         "access-control-allow-origin": "*",
+        "x-csoai-feed-tier-basis": TIER_BASIS,
+        "access-control-expose-headers": "X-CSOAI-Feed-Tier-Basis",
       },
     });
   }
@@ -381,6 +343,8 @@ export const onRequestGet: PagesFunction = async (context) => {
       headers: {
         "cache-control": "public, max-age=300",
         "access-control-allow-origin": "*",
+        "x-csoai-feed-tier-basis": TIER_BASIS,
+        "access-control-expose-headers": "X-CSOAI-Feed-Tier-Basis",
       },
     },
   );

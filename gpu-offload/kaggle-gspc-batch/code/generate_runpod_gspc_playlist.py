@@ -180,7 +180,11 @@ def bank_labels(path: Path) -> tuple[str, ...]:
                 raise GenerationError(
                     f"{path.name}:{line_number} is not JSON"
                 ) from error
-            if isinstance(row, dict) and "_canary" in row and "expected" not in row:
+            if isinstance(row, dict) and (
+                row.get("_canary") is not None
+                or row.get("_meta") is not None
+                or ("_canary" in row and "expected" not in row)
+            ):
                 continue
             expected = row.get("expected") if isinstance(row, dict) else None
             if expected is None and isinstance(row, dict):

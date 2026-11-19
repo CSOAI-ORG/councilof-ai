@@ -1,0 +1,58 @@
+{
+  "schema": "csoai.evidence-event/0.1",
+  "subject": {
+    "kind": "sandbox_run",
+    "locator": "urn:csoai:qualification:eat-fold-integrity:2026-11-12-v2"
+  },
+  "claim": {
+    "text": "The repaired owned-row fold passed controlled tests and two immutable snapshot replays; delegated other-writer rows were not certified.",
+    "source_sha256": "9a22d3428cdc6a232eb9c4b63d4280457e7c8b907daecc8495d82ac341d72319",
+    "read_at": "2026-11-12T01:50:42.904758+00:00"
+  },
+  "method": {
+    "id": "csoai/auto-eat/fold-integrity",
+    "version": "2026-11-12.2",
+    "holder": "csoai",
+    "code_sha256": "8ba93bcaf3137d8745816e4986682cacd26427c4fa3d10266adba9ab82855d10"
+  },
+  "declared": {
+    "source_base": "0663a4395fc331b904804169b47a427c3a712d3d",
+    "new_test_methods": 54,
+    "production_write": false,
+    "signing": false,
+    "training": false
+  },
+  "observed": {
+    "qualification_sha256": "9a22d3428cdc6a232eb9c4b63d4280457e7c8b907daecc8495d82ac341d72319",
+    "regressions": "PASS",
+    "deliberate_mutants_detected": 3,
+    "copied_feed_rows": 8,
+    "copied_feed_reconciled": 6,
+    "base_master_staged_rows_checked": 27,
+    "legacy_preserved": 19,
+    "other_writer_delegated_unverified": 11507
+  },
+  "state": "PARTIAL",
+  "value": null,
+  "negative_control": {
+    "id": "three-deliberate-fold-mutants",
+    "expected": "ALL_THREE_DETECTED",
+    "got": "ALL_THREE_DETECTED"
+  },
+  "limits": [
+    "Unsigned author-run qualification, not production deployment or independent verification.",
+    "Legacy absence and delegated rows create no authentication, measurement, signature or authority.",
+    "Full repository release/review gates remain separate."
+  ],
+  "supersedes": null,
+  "signature": null,
+  "anchors": {
+    "ots": "none",
+    "rekor": {
+      "log_index": null,
+      "uuid": null
+    }
+  },
+  "maintenance": null,
+  "event_id": "sha256:04a99a6cf52739d5db0faacf457aa1589d863e75ec04cd3a3eeb314c60d6f82c"
+}

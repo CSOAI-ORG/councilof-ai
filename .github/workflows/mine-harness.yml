@@ -8,6 +8,10 @@ on:
     paths: ['harness/mine/**']
   workflow_dispatch: {}
 
+concurrency:
+  group: mine-harness-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   repo-smoke:
     runs-on: ubuntu-latest

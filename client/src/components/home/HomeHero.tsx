@@ -83,18 +83,25 @@ export default function HomeHero() {
       <div
         className="section-shell hp-hero-index"
         aria-label="Explore this page"
+        data-journey-index
       >
         <a href="#board">
           <span>01</span> Published results
         </a>
+        <a href="#watchdog">
+          <span>02</span> Public Watchdog
+        </a>
         <a href="#products">
-          <span>02</span> Put evidence to work
+          <span>03</span> Put evidence to work
+        </a>
+        <a href="#learning">
+          <span>04</span> Academy and practice
         </a>
         <a href="#how-it-works">
-          <span>03</span> How to check it
+          <span>05</span> How to check it
         </a>
         <a href="#developers">
-          <span>04</span> For developers
+          <span>06</span> For developers
         </a>
       </div>
     </section>
