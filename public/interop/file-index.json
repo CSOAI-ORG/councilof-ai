@@ -1,7 +1,7 @@
 {
  "schema": "csoai.interop-file-index/0.2",
- "as_of": "2026-11-19T09:02:23Z",
- "source_commit": "b84aeb43e15ea2abbcb0c575ce499d2112320863",
+ "as_of": "2026-11-19T20:57:23Z",
+ "source_commit": "7f37be713e9aefb75a6be922f7fce52ee2130f37",
  "what_this_is": "Every file the estate's committed tree publishes under /interop/, with its size, its sha256 and how it is served. Built by reading the tree, so it is a measurement, not a list of intentions. Three served states occur, because there are three \u2014 a path routed to the mirror is not the same path as one the estate serves from its retired-bytes archive, and a fourth state (retired-bytes-absent) is reserved for a retired record the archive does not hold, which is not emitted because the archive is a deploy-time artefact and naming its membership here would make this index stale on every deploy.",
  "how_to_verify": "sha256 is the digest of the file's bytes as published. Fetch the path and hash it; on a row whose served_bytes reads 'as-published', a match means you hold what the estate published. Three things to know when it does not match: the digest is of the bytes at THIS index's source_commit, and the live site serves the bytes of the currently DEPLOYED commit, so the two agree once that commit is deployed; for pages-served HTML the digest is over the BUILT file, which carries the workspace-launcher script the build injects; and the EDGE rewrites some HTML in transit, so on a row whose served_bytes reads 'edge-transformed' or 'edge-transformed-per-request' the bytes the site serves are NOT the bytes published here, and on a 'per-request' row they differ on every fetch, so no digest of them can be reproduced by anyone, including us. A row whose served state is hf-mirror is a different case again: the bytes come from the HuggingFace evidence mirror, which is a SEPARATE HOST whose membership this index does not record, so the row's digest is checkable only while the mirror still holds the file. For retired-bytes paths the digest is of the canonical bytes, which the archive copies verbatim.",
  "retired": "A retired record is HISTORICAL evidence of a past measurement, never current proof. The estate's server marks these with the response header x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE SAME AS BEING UNREACHABLE: a retired path that is served answers 200 and its bytes verify against the sha256 below; a retired path that is not served answers 404. The `served` field says which.",
@@ -18,7 +18,7 @@
  },
  "counts": {
   "files": 16451,
-  "bytes": 260801883,
+  "bytes": 260803640,
   "by_served": {
    "pages": 3205,
    "retired-bytes": 6,
@@ -6889,14 +6889,14 @@
   {
    "path": "/interop/hf-census/SUMMARY.json",
    "bytes": 690,
-   "sha256": "9861d8cb6660dc7743c054393ed112f0a19b23024e3f484f90fbb45b117a898f",
+   "sha256": "2292287761b5d71165fe6575242d782a1b5b91098e5b403e92e4827a9663518c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/hf-census/axis-sources.json",
    "bytes": 5542,
-   "sha256": "d8ad89e431d488dc2da81342659122582fa5218cc28f3c03a905c9e3705282f4",
+   "sha256": "d0c458abf129433653e4bdcfeba13388c174f9afc7d994cafbeb49b17ac7b840",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -6909,8 +6909,8 @@
   },
   {
    "path": "/interop/hf-census/org-register.json",
-   "bytes": 996931,
-   "sha256": "d597854495893e147a038fdba49226a3d2e4a1bc44679e4e046a6bfb257fe558",
+   "bytes": 998808,
+   "sha256": "dc592a11bf0d419983cb15c514f0f7ec4112e8ca5a63ec57668ef553a491ba54",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110944,8 +110944,8 @@
   },
   {
    "path": "/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
-   "bytes": 51956,
-   "sha256": "b8acd3c31da725e10544c40ad7e02a20b64d757efece5cb48c1755163f48c293",
+   "bytes": 51918,
+   "sha256": "53699b683b2ff3e6179ef70ad2868a93194927214c824cc1a3bf02f9bb5a7036",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -111175,8 +111175,8 @@
   },
   {
    "path": "/interop/subject-axis-live-20261027/state-table-repair-2026-11-02.json",
-   "bytes": 291256,
-   "sha256": "5997c53d492e0ea36b2fe93096284e0ccc63028507a45e95370205b9a8957e39",
+   "bytes": 291174,
+   "sha256": "86d515c61c700708c2244089fa8c0bf749485e1a50cf0db0cf52201e284eb16e",
    "served": "pages",
    "served_bytes": "as-published"
   },
