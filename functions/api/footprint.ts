@@ -20,6 +20,13 @@
  * and this endpoint reads that artifact out, with the artifact's own as_of and a STALE state when
  * it is older than the max age the artifact itself declares. No number here is typed.
  *
+ * gross_distribution heads with CSOAI's own figures (19 Nov 2026). CSOAI Ltd and MEOK AI Labs
+ * publish from one account, and the census labels every package with its entity. Until then this
+ * row headed with the census's `totals`, which count every row of the account (MEOK AI Labs +
+ * CSOAI + joint + unattributed), while the home page and /llms.txt headed with CSOAI's own
+ * figures and the census's rule says the two entities' figures are never added. The row now
+ * follows that rule too; grossDistribution says how.
+ *
  * registry_listings also reads an off-edge, cursor-exhausted measurement instead of walking the
  * MCP Registry during a Cloudflare request. The dated census is labelled STALE after 48 hours;
  * it is never passed off as a fresh registry read. Every remaining upstream read has its own
@@ -246,14 +253,9 @@ export function ageHours(asOf: string | undefined, nowIso: string): number | nul
   return (n - a) / 3_600_000;
 }
 
-/** One measured window out of the artifact. Never re-states a number the artifact did not carry. */
-export function artifactRow(
-  art: DistributionArtifact,
-  pick: (a: DistributionArtifact) => ArtifactRow | undefined,
-  label: string,
-  nowIso: string,
-): Row {
-  const base = {
+/** What every row read out of the artifact says about where it came from. */
+function artifactBase(art: DistributionArtifact) {
+  return {
     kind: KIND_THIRD_PARTY,
     measured_by: art.generator ?? "unknown generator",
     artifact: DISTRIBUTION_PATH,
@@ -261,6 +263,16 @@ export function artifactRow(
     artifact_as_of: art.as_of ?? null,
     max_age_hours: isNum(art.max_age_hours) ? art.max_age_hours : null,
   };
+}
+
+/** One measured window out of the artifact. Never re-states a number the artifact did not carry. */
+export function artifactRow(
+  art: DistributionArtifact,
+  pick: (a: DistributionArtifact) => ArtifactRow | undefined,
+  label: string,
+  nowIso: string,
+): Row {
+  const base = artifactBase(art);
   const r = pick(art);
   if (!r || typeof r !== "object") {
     return uncheckable(`${label}: ${DISTRIBUTION_PATH} carries no row for this window`, base);
@@ -306,17 +318,132 @@ function passThrough(r: ArtifactRow): Record<string, unknown> {
   return keep;
 }
 
+// ── gross_distribution's headline: CSOAI's own pair ───────────────────────────
+/** The entity whose figures head gross_distribution, and the scope the headline is stated under. */
+export const HEADLINE_ENTITY = "csoai";
+export const HEADLINE_SCOPE = "CSOAI packages";
+
+const WINDOWS = ["downloads_30d", "downloads_all_time"] as const;
+type WindowKey = (typeof WINDOWS)[number];
+const WINDOW_LABEL: Record<WindowKey, string> = { downloads_30d: "30-day", downloads_all_time: "cumulative" };
+
+export const ENTITY_RULE =
+  "CSOAI Ltd and MEOK AI Labs are separate entities publishing from one account, and the census labels every package with its entity. " +
+  "The headline, downloads_30d and downloads_all_time are CSOAI's own figures, read from by_entity.*.csoai, and they are published only " +
+  "when both of CSOAI's windows are readable and dated like the census, the rule the home page and /llms.txt follow. " +
+  "MEOK AI Labs' figures are in by_entity.*.meok under their own label and are never added to CSOAI's. " +
+  "Packages labelled joint or unattributed are in neither figure. The census's totals count every row of the account, " +
+  "so they are neither entity's figure and are not a headline here.";
+
+export const BY_REGISTRY_SCOPE =
+  "Each registry's pair counts every package row the account publishes on that registry: CSOAI, MEOK AI Labs, joint and " +
+  "unattributed. It is neither entity's figure.";
+
+/**
+ * A by_entity count as the home page and /llms.txt read one (count() in HomeDistribution.tsx and in
+ * scripts/llms-txt-distribution.mjs): a state that carries a number, a non-negative safe-integer
+ * value, safe-integer coverage with covered <= attempted, and a parseable as_of. Null otherwise.
+ * Those two also accept STALE. The census never writes it (its states are READ, PARTIAL,
+ * UNCHECKABLE and UNMEASURED; STALE is this endpoint's verdict on age), so here, as everywhere in
+ * this file, a row the artifact marks STALE carries a state this endpoint does not know.
+ */
+function entityCount(row: unknown): ArtifactRow | null {
+  if (!row || typeof row !== "object" || Array.isArray(row)) return null;
+  const r = row as ArtifactRow;
+  if (r.state !== "READ" && r.state !== "PARTIAL") return null;
+  if (typeof r.value !== "number" || !Number.isSafeInteger(r.value) || r.value < 0) return null;
+  const { covered, attempted } = r;
+  if (typeof covered !== "number" || typeof attempted !== "number") return null;
+  if (!Number.isSafeInteger(covered) || !Number.isSafeInteger(attempted) || covered < 0 || covered > attempted) return null;
+  if (typeof r.as_of !== "string" || !Number.isFinite(Date.parse(r.as_of))) return null;
+  return r;
+}
+
+/** The census's unit and window for one column. They describe what was counted over which span,
+ *  not whose packages, so they hold for an entity's figure in that column too. */
+function windowColumns(t: ArtifactRow | undefined): ArtifactRow {
+  const out: ArtifactRow = {};
+  if (t && typeof t === "object") {
+    if (typeof t.unit === "string") out.unit = t.unit;
+    if (typeof t.window === "string") out.window = t.window;
+  }
+  return out;
+}
+
+/**
+ * One entity's two windows out of by_entity, published as a pair or not at all.
+ *
+ * The rule is the home page's (entityWindows in HomeDistribution.tsx) and /llms.txt's: an entity's
+ * figures are printed only when BOTH windows are readable counts dated like the census (as_of equal
+ * to the census's own). Then each window goes through artifactRow like every other row here, so
+ * READ, PARTIAL and STALE mean what they mean everywhere in this file. Otherwise neither window is
+ * published: one the census marks UNMEASURED or UNCHECKABLE keeps that state and its reason, every
+ * other one is UNCHECKABLE with value null and says why, and the account total is never put in
+ * its place. Every row names its scope, its entity and the by_entity field it was read from.
+ */
+export function entityWindows(
+  art: DistributionArtifact,
+  nowIso: string,
+  entity: string = HEADLINE_ENTITY,
+  scope: string = HEADLINE_SCOPE,
+): Record<WindowKey, Row> {
+  const by = art.by_entity;
+  const raw = (w: WindowKey): unknown => {
+    const block = by && typeof by === "object" ? (by as Record<string, unknown>)[w] : undefined;
+    return block && typeof block === "object" ? (block as Record<string, unknown>)[entity] : undefined;
+  };
+  const fit = (w: WindowKey): ArtifactRow | null => {
+    const r = entityCount(raw(w));
+    return r && r.as_of === art.as_of ? r : null;
+  };
+  const ok: Record<WindowKey, ArtifactRow | null> = { downloads_30d: fit("downloads_30d"), downloads_all_time: fit("downloads_all_time") };
+  const out = {} as Record<WindowKey, Row>;
+  for (const w of WINDOWS) {
+    const label = `${scope}, ${WINDOW_LABEL[w]}`;
+    const tag = { scope, entity, source_field: `by_entity.${w}.${entity}` };
+    const columns = windowColumns(art.totals?.[w]);
+    const mine = ok[w];
+    if (mine && ok[w === "downloads_30d" ? "downloads_all_time" : "downloads_30d"]) {
+      out[w] = { ...artifactRow(art, () => ({ ...columns, ...mine }), label, nowIso), ...tag };
+      continue;
+    }
+    const x = raw(w);
+    const said = artifactRow(art, () => (x && typeof x === "object" && !Array.isArray(x) ? { ...columns, ...(x as ArtifactRow) } : undefined), label, nowIso);
+    if (said.state === "UNMEASURED" || said.state === "UNCHECKABLE") {
+      out[w] = { ...said, ...tag };
+      continue;
+    }
+    out[w] = uncheckable(
+      mine
+        ? `${label}: the other window is not a readable count dated like the census, and the two windows are published together or not at all; nothing is put in their place`
+        : `${label}: by_entity carries no readable count dated like the census (as_of ${art.as_of ?? "absent"}) for this window; nothing is put in its place`,
+      { ...artifactBase(art), ...columns, ...tag },
+    );
+  }
+  return out;
+}
+
 /**
  * gross_distribution: read out of the measured artifact, never fanned out from here.
+ *
+ * CSOAI'S OWN FIGURES HEAD IT (19 Nov 2026). The headline, `downloads_30d` and `downloads_all_time`
+ * are the census's by_entity.*.csoai pair, stated under the scope "CSOAI packages", by the rule the
+ * home page (client/src/components/home/HomeDistribution.tsx, #4455) and /llms.txt
+ * (scripts/llms-txt-distribution.mjs, #4463) follow; see entityWindows. Live on 19 Nov 2026 this row
+ * still headed with the census's `totals`, 771,433 over 30 days and 3,852,241 since first release,
+ * which count every row of the account: MEOK AI Labs + CSOAI + joint + unattributed. MEOK AI Labs
+ * keeps its own labelled figures in `by_entity`, the census's block as written, and nothing here
+ * adds them to CSOAI's. The account total is no headline key; it stays in the census's `totals`, at
+ * evidence_url.
  *
  * The headline `value` is the 30-day window, because that is the one every registry answers over
  * a comparable span. The cumulative figure is a DIFFERENT window and lives in its own row; the
  * two are never added. `by_registry` carries each registry's own pair, so a reader can see which
- * one is partial without the roll-up hiding it.
+ * one is partial without the roll-up hiding it; each pair counts every row of the account on that
+ * registry, and `by_registry_scope` says so.
  */
 export function grossDistribution(nowIso: string, art: DistributionArtifact = distribution as DistributionArtifact): Row {
-  const thirty = artifactRow(art, (a) => a.totals?.downloads_30d, "gross_distribution 30-day", nowIso);
-  const allTime = artifactRow(art, (a) => a.totals?.downloads_all_time, "gross_distribution cumulative", nowIso);
+  const csoai = entityWindows(art, nowIso);
   const byRegistry: Record<string, { downloads_30d: Row; downloads_all_time: Row }> = {};
   for (const name of Object.keys(art.registries ?? {})) {
     byRegistry[name] = {
@@ -325,13 +452,15 @@ export function grossDistribution(nowIso: string, art: DistributionArtifact = di
     };
   }
   return {
-    ...thirty,
-    downloads_30d: thirty,
-    downloads_all_time: allTime,
+    ...csoai.downloads_30d,
+    downloads_30d: csoai.downloads_30d,
+    downloads_all_time: csoai.downloads_all_time,
+    entity_rule: ENTITY_RULE,
     windows_rule:
       art.window_rule ??
       "30-day and cumulative are different windows over the same packages and are never added to each other.",
     by_registry: byRegistry,
+    by_registry_scope: BY_REGISTRY_SCOPE,
     by_entity: art.by_entity ?? null,
     package_list: PACKAGES_PATH,
     package_list_totals: (art.package_list as { totals?: unknown } | undefined)?.totals ?? (packages as { totals?: unknown }).totals ?? null,
@@ -339,6 +468,7 @@ export function grossDistribution(nowIso: string, art: DistributionArtifact = di
     measurement_requests: art.requests ?? null,
     note:
       "Gross. Mirrors, CI installs and crawlers are in this number. It is not a count of people. " +
+      `It counts ${HEADLINE_SCOPE} only: MEOK AI Labs, a separate entity publishing from the same account, is in by_entity under its own label and is never added. ` +
       `Measured package by package on the pod and read out here; every package's own figure is in ${DISTRIBUTION_PATH}.`,
   };
 }
