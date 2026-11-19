@@ -20,7 +20,7 @@
  * public/interop/verify-executions-latest.json; /api/counters derives from that artifact
  * in-process and stays UNPUBLISHED until a real bucket exists.
  */
-// @openapi-not-implemented
+// @openapi-get-method-not-allowed — GET answers the capability statement at 405; POST is the door.
 import { unavailable } from "./_unavailable";
 import { headFromGet } from "./_head";
 

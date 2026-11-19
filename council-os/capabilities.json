@@ -6676,6 +6676,57 @@
       "source": "functions/api/verify-card.ts"
     },
     {
+      "id": "api-verify-count",
+      "kind": "http",
+      "path": "/api/verify-count",
+      "method": "GET",
+      "name": "Verify count",
+      "description": "POST /api/verify-count — fire-and-forget aggregate counter for the free card verifier.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/verify-count",
+        "expect_status": [
+          405
+        ],
+        "safe": true
+      },
+      "source": "functions/api/verify-count.ts"
+    },
+    {
+      "id": "api-verify-count-post",
+      "kind": "http",
+      "path": "/api/verify-count",
+      "method": "POST",
+      "name": "Verify count (POST)",
+      "description": "POST /api/verify-count — fire-and-forget aggregate counter for the free card verifier. The body is never read or stored; counting never gates.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/verify-count",
+        "expect_status": [
+          204
+        ],
+        "safe": false,
+        "unsafe_reason": "POST increments the anonymous daily execution bucket; it stores no payload and never gates the free check"
+      },
+      "source": "functions/api/verify-count.ts"
+    },
+    {
       "id": "api-verify-post",
       "kind": "http",
       "path": "/api/verify",
