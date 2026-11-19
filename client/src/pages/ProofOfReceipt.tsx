@@ -56,11 +56,6 @@ export default function ProofOfReceipt() {
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
-        <title>Receipt status | Council of AI</title>
-        <meta
-          name="description"
-          content="Latest receipt issued by the estate, aggregate counts, and verification links. Measurement, not certification."
-        />
         <meta name="robots" content="noindex,nofollow,noarchive" />
       </Helmet>
 

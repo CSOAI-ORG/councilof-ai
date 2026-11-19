@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { resolve } from "node:path";
+import { distributionRead } from "./llms-txt-distribution.mjs";
 
 /**
  * scripts/llms-txt.mjs opens "llms.txt / llms-full.txt — DERIVED, never typed", and it was right
@@ -270,11 +271,20 @@ describe("llms distribution and timestamp sections are derived, stated and bound
     expect(src).toMatch(/readJSON\("public\/interop\/ots\/manifest\.json"\)/);
   });
 
-  it("every published download figure is the artifact's own value", () => {
+  // The figures are CSOAI's and MEOK AI Labs' own by_entity rows, never the account's `totals`, which
+  // adds the two (18 Nov 2026; scripts/llms-txt-distribution.test.ts). Each entity prints both of its
+  // windows or neither, by the home page's rule.
+  const printedRows = () => {
+    const read = distributionRead(dist);
+    expect(read.reason, "the committed census is readable by the producer's rule").toBeUndefined();
+    const pairs = [["CSOAI", read.csoai], ...(read.meok ? [["MEOK AI Labs", read.meok]] : [])] as const;
+    return pairs.flatMap(([entity, w]: any) => [[`${entity} since first release`, w.lifetime], [`${entity} 30-day`, w.recent]]);
+  };
+
+  it("every published download figure is the artifact's own by_entity value", () => {
     for (const f of files) {
       const out = R(f);
-      expect(out, `${f} must print the artifact's 30-day total`).toContain(fmt(dist.totals.downloads_30d.value));
-      expect(out, `${f} must print the artifact's cumulative total`).toContain(fmt(dist.totals.downloads_all_time.value));
+      for (const [name, row] of printedRows()) expect(out, `${f} must print ${name}`).toContain(fmt(row.value));
       expect(out, `${f} must print the package population`).toContain(fmt(dist.packages.length));
     }
   });
@@ -282,15 +292,15 @@ describe("llms distribution and timestamp sections are derived, stated and bound
   it("no download figure is printed without its state and its denominator", () => {
     for (const f of files) {
       const out = R(f);
-      for (const key of ["downloads_30d", "downloads_all_time"] as const) {
-        const row = dist.totals[key];
+      for (const [name, row] of printedRows()) {
         const line = out.split("\n").find((l: string) => l.includes(fmt(row.value)) && l.includes("state"));
-        expect(line, `${f}: ${key} is printed without a state`).toBeTruthy();
-        expect(line, `${f}: ${key} is printed without covered/attempted`)
+        expect(line, `${f}: ${name} is printed without a state`).toBeTruthy();
+        expect(line, `${f}: ${name} is printed without covered/attempted`)
           .toContain(`${fmt(row.covered)} of ${fmt(row.attempted)}`);
-        expect(line, `${f}: ${key} is printed without the artifact's as_of`).toContain(row.as_of);
+        expect(line, `${f}: ${name} is printed without the artifact's as_of`).toContain(row.as_of);
+        if (row.state === "PARTIAL") expect(line, `${f}: a PARTIAL figure is a lower bound`).toMatch(/LOWER BOUND/);
       }
-      expect(out, `${f} must say a PARTIAL total is a lower bound`).toMatch(/LOWER BOUND/);
+      expect(out, `${f} must keep: a download is not adoption`).toMatch(/A download is distribution\. It is not adoption/);
     }
   });
 
