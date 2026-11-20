@@ -1,6 +1,6 @@
 {
  "schema": "csoai.hf-cite-block-registry/1",
- "_comment": "Year and DOI for the How-to-cite block on each public csoai/* dataset card, as lane L5 read them from the Hugging Face API on 2026-09-28 (created_at.year; the repo's doi: tag) and wrote them to the live cards (log ~/_alignment/HF-CARDS-2026-09-28.md, oracle-micro-2 ~/lanes/l5-hfcards/plan.json). licence is the card's licence after L5, kept for the test that reads the live cards; scripts/hf/cite_block.py applies only L5's eight recorded licence decisions (LIC_FIX) and otherwise keeps the card's own licence. A new dataset needs no entry: the block takes the current year and no DOI until one is minted.",
+ "_comment": "Year and DOI for the How-to-cite block on each public csoai/* dataset card, as lane L5 read them from the Hugging Face API on 2026-09-28 (created_at.year; the repo's doi: tag) and wrote them to the live cards (log ~/_alignment/HF-CARDS-2026-09-28.md, oracle-micro-2 ~/lanes/l5-hfcards/plan.json). licence is the card's licence after L5, kept for the test that reads the live cards; scripts/hf/cite_block.py applies only L5's eight recorded licence decisions (LIC_FIX) and otherwise keeps the card's own licence. A new dataset needs no entry: the block takes the current year and no DOI until one is minted. A `source` record marks a dataset derived from someone else's data: cite_block.py gives its card source.licence and a section that credits the source (correction C-2026-1120-02).",
  "source": "oracle-micro-2:~/lanes/l5-hfcards/plan.json (126) + csoai/safe-findings-proposal (created 2026-09-28T13:03:22Z, no doi tag)",
  "n_datasets": 127,
  "datasets": {
@@ -292,7 +292,40 @@
   "gspc-gov": {
    "year": 2026,
    "doi": null,
-   "licence": "cc-by-4.0"
+   "licence": "cc-by-4.0",
+   "source": {
+    "_comment": "Correction C-2026-1120-02. Title, authors and year as on arXiv:2603.09435 (export.arxiv.org API, read 2026-11-20); affiliation as on the paper; licence statement and BibTeX as the source README gives them at commit d323167f5597dfd9365b376c9afe7b0e414eb81a. The changes were checked against items.jsonl at revision beecacfc2136a41d2c23274116770585d7da5c14 and the source's scenarios.json: 237 of 237 labels, sentences and anchors match.",
+    "scope": "The 237 items in `items.jsonl`",
+    "name": "AI Act Evaluation Benchmark",
+    "title": "AI Act Evaluation Benchmark: An Open, Transparent, and Reproducible Evaluation Dataset for NLP and RAG Systems",
+    "authors": [
+     "Athanasios Davvetas",
+     "Michael Papademas",
+     "Xenia Ziouvelou",
+     "Vangelis Karkaletsis"
+    ],
+    "affiliation": "NCSR Demokritos",
+    "year": 2026,
+    "arxiv": "2603.09435",
+    "paper": "https://arxiv.org/abs/2603.09435",
+    "repository": "https://github.com/davidath/ai-act-evaluation-benchmark",
+    "licence": "cc-by-4.0",
+    "licence_short": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_basis": "The source's README states that its JSON files are licensed under Creative Commons Attribution 4.0 International and its script code under the Apache License 2.0.",
+    "licence_history": "Before correction C-2026-1120-02 this card was tagged `cc0-1.0` (from 9 November 2026) and named the source only in its `NOTICE` file. Both were wrong.",
+    "bibtex": [
+     "@article{Davvetas2026,",
+     "  title   = {AI Act Evaluation Benchmark: An Open, Transparent, and Reproducible Evaluation Dataset for NLP and RAG Systems},",
+     "  author  = {Athanasios Davvetas and Michael Papademas and Xenia Ziouvelou and Vangelis Karkaletsis},",
+     "  journal = {arXiv preprint arXiv:2603.09435},",
+     "  year    = {2026}",
+     "}"
+    ],
+    "changes": "We took 237 of the 339 scenarios in the source's `scenarios.json`. For each one we joined five of its fields into one sentence, `A {role} deploys {system_type} intended for {intended_use} in the {domain} domain using {input_data}.`, with the role in lower case. Our label `expected` is the source's `risk_level` under another name (prohibited is `PROHIBITED`, high-risk is `HIGH_RISK`, limited is `LIMITED_RISK` and minimal is `MINIMAL_RISK`); we changed no label. `anchor` is the source's `related_articles` list. We added the fields `source_index`, `source` and `licence`, and one canary row as the first line of `items.jsonl`. We left out the source's `obligations`.",
+    "limit": "The wording of each item gives its tier away. A word-count classifier with no knowledge of the Act, trained only on the 102 source scenarios that are not in this dataset, matches 225 of the 237 labels. The labels are the tier the source generated each scenario for, and no legal expert has checked them for us. A score on these items therefore measures agreement with the source's labels. It is not a test of how a system applies the EU AI Act, and it will not be one until the items are rebuilt so that the wording no longer gives the tier away and a qualified person has checked the labels. The governance row of the GSPC board scores models on these items, so the same limit applies to it.",
+    "correction": "C-2026-1120-02"
+   }
   },
   "gspc-hf-estate-index": {
    "year": 2026,
