@@ -226,7 +226,7 @@ export const USAGE_LABEL_NOTES: readonly { effective: string; not_before: string
   },
   {
     effective:
-      "From the production deploy that shipped lane paid-call-usage-20261120 (not before 2026-11-20; the deploy time is not recorded here). The day of that deploy holds rows only for calls made after it.",
+      "From the production deploy that shipped lane paid-call-usage-20261120 (not before 2026-11-20; the deploy time is not recorded here). The day of that deploy carries both labellings: a metered call made before the deploy wrote no paid_call row, and one made after it wrote one. Every earlier day has none.",
     not_before: "2026-11-20",
     dim: "paid_call",
     note: "New dimension. Before the change, how a call of a metered tool presented payment (not at all, as the x_payment argument, or in _meta x402/payment) was not recorded anywhere: UNMEASURED, not zero. A row says a payment was presented, never that it settled.",
