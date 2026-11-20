@@ -15,8 +15,8 @@
  * handler answers a tool, which arguments it accepts, or how it is paid for.
  *
  * PAYMENT IS NOT RE-IMPLEMENTED HERE. A paid tool reaches paidToolResult (./_paid.ts), which
- * forwards the caller's x_payment ARGUMENT as X-PAYMENT to the tool's metered route on the same
- * origin. Settlement is that route's job (functions/api/_x402.ts: facilitator verify, then settle,
+ * forwards the caller's x_payment ARGUMENT (or, from POST /mcp, the PaymentPayload in
+ * _meta["x402/payment"]) as X-PAYMENT to the tool's metered route on the same origin. Settlement is that route's job (functions/api/_x402.ts: facilitator verify, then settle,
  * fail closed). With no x_payment the route answers 402 and nothing is charged. The free reads
  * (GET /api/gspc, GET /api/corrections, signature verification) sit behind nothing in this file.
  */

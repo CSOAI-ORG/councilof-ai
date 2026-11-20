@@ -43,7 +43,7 @@ hello@meok.ai
 
 ## Prospect 2: Cera Care (UK care-tech)
 
-- **To:** marek.stefanczak@ceracare.co.uk (CTO — care tech / AI)
+- **To:** [address removed] (CTO — care tech / AI)
 - **Subject:** Cera Care — your AI care-assessments are about to need 4-dim care validation, not just a risk score
 - **Tier target:** Enterprise £1,499/mo
 - **Keystone cert:** `MEOK-CAREMEM-CERA-2026`
@@ -77,7 +77,7 @@ hello@meok.ai
 
 ## Prospect 3: Verisure (EU security tech)
 
-- **To:** alvaro.vicente@verisure.com (Head of AI)
+- **To:** [address removed] (Head of AI)
 - **Subject:** Verisure — your intruder-alarm CV pipelines are about to become NIS2-reportable
 - **Tier target:** Pro £199/mo + Article 50 Kit £999
 - **Keystone cert:** `MEOK-NIS2-VERISURE-2026`
@@ -137,7 +137,7 @@ hello@meok.ai
 
 ## Prospect 5: Stitch (South Africa fintech, EU market entry)
 
-- **To:** kiaan@stitch.money (CEO)
+- **To:** [address removed] (CEO)
 - **Subject:** Kiaan — Stitch's payment-fraud AI is about to need DORA + EU AI Act double-coverage for EU market entry
 - **Tier target:** Pro £199/mo
 - **Keystone cert:** `MEOK-DORA-STITCH-2026`
@@ -170,10 +170,10 @@ Queued in `~/clawd/hive-mailer/queue.jsonl` at 2026-06-15 ~10:50Z. 5 new rows ap
 | # | Company | To | Keystone Cert | Tier |
 |---|---------|----|----|------|
 | 1 | Monzo | press@monzo.com | MEOK-EUAIAC-A50-MONZO-2026 | Pro + Watchdog |
-| 2 | Cera Care | marek.stefanczak@ceracare.co.uk | MEOK-CAREMEM-CERA-2026 | Enterprise |
-| 3 | Verisure | alvaro.vicente@verisure.com | MEOK-NIS2-VERISURE-2026 | Pro + Article 50 Kit |
+| 2 | Cera Care | [address removed] | MEOK-CAREMEM-CERA-2026 | Enterprise |
+| 3 | Verisure | [address removed] | MEOK-NIS2-VERISURE-2026 | Pro + Article 50 Kit |
 | 4 | Dr Ali Parsa | ali.parsa@example.com | MEOK-HEALTH-2026 | Watchdog Cert |
-| 5 | Stitch | kiaan@stitch.money | MEOK-DORA-STITCH-2026 | Pro |
+| 5 | Stitch | [address removed] | MEOK-DORA-STITCH-2026 | Pro |
 
 **Will NOT fire until:** `EMAIL_ADDRESS` + `EMAIL_PASSWORD` are set in `~/clawd/.env.local` (mailer v2 patch is live at commit `c436c69`, strike cap 9 + 24h auto-decay, 60-90s cadence after resume).
 

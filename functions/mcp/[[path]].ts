@@ -22,7 +22,8 @@ import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
 import { doorInstallLine, npmReleaseState } from "../../scripts/harness-x/npm-release-state.mjs";
 import { verifyToolResult } from "./_handlers";
-import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, type PaidCallerContext } from "./_paid";
+import { MCP_MAX_JSON_DEPTH, MCP_MAX_JSON_TOKENS, withinJsonBudget } from "./_input_budget";
+import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, X402_META_PAYMENT, type PaidCallerContext } from "./_paid";
 import { dispatchTool, FREE_TOOL_DEFINITIONS, TOOL_DEFINITIONS } from "./_dispatch";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
@@ -31,7 +32,7 @@ import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
 import { registerCouncilPanel } from "./_panel";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
-export const MCP_HTTP_SERVER_VERSION = "1.4.4";
+export const MCP_HTTP_SERVER_VERSION = "1.5.0";
 const SERVER_INFO = {
   name: "csoai-gspc-mcp",
   version: MCP_HTTP_SERVER_VERSION,
@@ -117,6 +118,33 @@ const CORS = {
   "access-control-expose-headers":
     "MCP-Protocol-Version, Mcp-Session-Id, x-otel-trace-id",
 };
+/**
+ * The Server Card routes' own CORS set (SEP-2127, ext-server-card docs/discovery.md, "CORS Requirements":
+ * "This is safe because Server Cards contain only public metadata and are read-only."). It is sent on
+ * the card's 204, 200, 304 and 405 answers. The JSON-RPC endpoints keep CORS above, without If-None-Match.
+ */
+const SERVER_CARD_CORS = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, HEAD, OPTIONS",
+  "access-control-allow-headers": "Content-Type, If-None-Match, Accept",
+  "access-control-expose-headers": "ETag",
+};
+/** The card's entity tag: the first 32 lower-case hex characters of the SHA-256 of the exact GET body, quoted. */
+async function serverCardEtag(body: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(body));
+  const hex = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `"${hex.slice(0, 32)}"`;
+}
+/**
+ * If-None-Match by the weak comparison of RFC 9110 section 13.1.2: "*" matches; otherwise each listed tag,
+ * trimmed and with a leading W/ removed, is compared with the current tag. An edge that compresses the
+ * response may serve the strong tag as W/"...", and that form still matches.
+ */
+function ifNoneMatchHits(header: string | null, etag: string): boolean {
+  if (header === null) return false;
+  if (header.trim() === "*") return true;
+  return header.split(",").some((part) => part.trim().replace(/^W\//, "") === etag);
+}
 // Wire cap accommodates 20 MiB base64 input; this is not a concurrency SLA.
 export const MCP_MAX_REQUEST_BYTES = 28 * 1024 * 1024;
 const BODY_TIMEOUT_MS = 10_000;
@@ -155,6 +183,15 @@ const compile = (defs: Tool[]) => defs.map((definition) => ({
     : undefined,
 }));
 
+/**
+ * A door alias answers with the same tools as councilof.ai/mcp, and its tools read and buy from the
+ * canonical origin. A paid call's challenge, resource and settlement then name the resources the
+ * x402 catalog (/.well-known/x402.json) lists. Measured 20 Nov 2026: a challenge from mcp.meok.ai
+ * named https://mcp.meok.ai/api/request-attestation, a resource no catalogue carries. Preview and
+ * local origins are not aliases and stay same-origin.
+ */
+export const DOOR_ALIAS_ORIGINS: Readonly<Record<string, string>> = { "mcp.meok.ai": "https://councilof.ai" };
+
 function buildMcp(
   definitions: Tool[],
   door: { instructions: string; paid: boolean },
@@ -164,7 +201,8 @@ function buildMcp(
   return createMcpHandler(
   ({ requestInfo }) => {
     if (!requestInfo) throw new Error("HTTP request context required");
-    const origin = new URL(requestInfo.url).origin;
+    const requestUrl = new URL(requestInfo.url);
+    const origin = DOOR_ALIAS_ORIGINS[requestUrl.host] ?? requestUrl.origin;
     const server = new McpServer(SERVER_INFO, {
       instructions: door.instructions,
       // No subscriptions are served here (maxSubscriptions: 0), so no list_changed is ever sent.
@@ -191,10 +229,16 @@ function buildMcp(
           ...(definition.annotations ? { annotations: definition.annotations } : {}),
           ...(definition._meta ? { _meta: definition._meta } : {}),
         },
-        (args) =>
+        (args, ctx) => {
+          // x402 MCP transport: a paying client retries the same call with its PaymentPayload in
+          // params._meta["x402/payment"]. Only the paid door passes it on, and only a paid tool reads it.
+          const metaPayment = door.paid
+            ? (ctx?.mcpReq?._meta as Record<string, unknown> | undefined)?.[X402_META_PAYMENT]
+            : undefined;
           // door.paid guards the dispatch as well as the registry: the free door never reaches
           // the paid wrapper even if a paid definition were ever passed to it by mistake.
-          dispatchTool(definition.name, args, origin, door, caller),
+          return dispatchTool(definition.name, args, origin, door, metaPayment === undefined ? caller : { ...caller, metaPayment });
+        },
       );
     }
     // Historical unlisted alias; it is not in tools/list and does not inflate the canonical count.
@@ -438,32 +482,42 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
     return jsonError(403, -32600, "Request host is not allowed.");
   if (!guardHeaders.has("host")) guardHeaders.set("host", url.host);
   const guardRequest = new Request(request.url, { headers: guardHeaders });
-  const rejected =
-    hostHeaderValidationResponse(guardRequest, hosts) ??
-    originValidationResponse(request, [...BROWSER_ORIGINS, ...hosts]);
-  if (rejected) return withHeaders(rejected);
+  const hostRejected = hostHeaderValidationResponse(guardRequest, hosts);
+  if (hostRejected) return withHeaders(hostRejected);
   // SEP-2127 (draft) Server Card at <streamable-http-url>/server-card, one per door (functions/mcp/_server_card.ts).
   // Built per request from the same definitions arrays tools/list returns, so its tool snapshot cannot drift.
+  // Answered after the host checks and before the Origin allowlist: the card is the same for every Origin,
+  // for "null" and for none. The allowlist still guards every other path, the JSON-RPC endpoints included.
   const cardDoor = serverCardDoor(url.pathname);
   if (cardDoor) {
-    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
+    if (request.method === "OPTIONS")
+      return new Response(null, { status: 204, headers: { ...SERVER_CARD_CORS, "access-control-max-age": "86400" } });
     if (request.method !== "GET" && request.method !== "HEAD")
-      return new Response(null, { status: 405, headers: { ...CORS, allow: "GET, HEAD, OPTIONS" } });
+      return new Response(null, { status: 405, headers: { ...SERVER_CARD_CORS, allow: "GET, HEAD, OPTIONS" } });
     const defs = cardDoor === "free" ? FREE_DEFINITIONS : DEFINITIONS;
     const card = await buildServerCard(cardDoor, url.origin, {
       version: MCP_HTTP_SERVER_VERSION,
       toolNames: defs.map((d) => d.name),
       toolCounts: cardDoor === "free" ? `${FREE_TOOL_COUNT} read-only tools at /mcp/free.` : TOOL_COUNTS,
     });
-    return new Response(request.method === "HEAD" ? null : JSON.stringify(card, null, 2), {
-      headers: {
-        ...CORS,
-        "content-type": SERVER_CARD_MEDIA_TYPE,
-        "cache-control": "public, max-age=300",
-        vary: "Accept",
-      },
+    // The body holds no per-request value: it depends on the door and the request's origin only, so
+    // each address has one body and one tag, and HEAD carries the tag of the body GET returns.
+    const body = JSON.stringify(card, null, 2);
+    const etag = await serverCardEtag(body);
+    const headers = {
+      ...SERVER_CARD_CORS,
+      etag,
+      "cache-control": "public, max-age=300",
+      vary: "Accept",
+    };
+    if (ifNoneMatchHits(request.headers.get("if-none-match"), etag))
+      return new Response(null, { status: 304, headers });
+    return new Response(request.method === "HEAD" ? null : body, {
+      headers: { ...headers, "content-type": SERVER_CARD_MEDIA_TYPE },
     });
   }
+  const originRejected = originValidationResponse(request, [...BROWSER_ORIGINS, ...hosts]);
+  if (originRejected) return withHeaders(originRejected);
   const door = doorFor(url.pathname);
   if (!door)
     return jsonError(404, -32601, "MCP endpoints are /mcp and /mcp/free; their server cards are /mcp/server-card and /mcp/free/server-card.");
@@ -563,6 +617,14 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       "Request body exceeds the size/time limit or is not valid UTF-8.",
     );
   }
+  // Bytes are capped above; structure is capped here, before this door's JSON.parse and the SDK's
+  // (functions/mcp/_input_budget.ts). One long string is one token, so 20 MiB of base64 still fits.
+  if (!withinJsonBudget(body))
+    return jsonError(
+      413,
+      -32600,
+      `Request JSON exceeds the structure limit (${MCP_MAX_JSON_TOKENS} tokens, ${MCP_MAX_JSON_DEPTH} levels).`,
+    );
   let call: unknown;
   try {
     call = JSON.parse(body);

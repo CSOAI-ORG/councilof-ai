@@ -139,6 +139,11 @@ export interface AxisScore {
   colour: string;   // globe layer colour
   hue: number;      // 0-360, for procedural ramps
   note?: string;
+  // What this axis's score does not show, stated on the row itself (first used 2026-11-20 for
+  // C-2026-1120-02 on governance). The public view serves it as typed, as axes[].limit, and
+  // /axis/<axis> prints it in a labelled Limit block. A row with no stated limit has no key at
+  // all: never "" and never null.
+  limit?: string;
 }
 
 // Pages nudge 2026-08-25T18:47Z — ensure measured_on.note TIE ships past sticky storm
