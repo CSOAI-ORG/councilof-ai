@@ -67,9 +67,8 @@ export const onRequest = async (context: Ctx): Promise<Response> => {
   // path was a door — so every POST to /mcp and /api/a2a was buffered here first. It also
   // challenged a door's FREE part: POST /api/proof?sha=<64-hex> got an issuance:reserve 402 for
   // an inclusion proof that is free. probeOffer() now leaves alone every path that is not a door
-  // and every query that asks only for a door's free part (FREE_PART below) or, since 2026-11-20,
-  // for its invoice terms (INVOICE_TERMS below); only a door query that selects neither reaches
-  // isEmptyProbe(), which reads a clone up to a size cap.
+  // and every query that asks only for a door's free part (FREE_PART below); only a door query
+  // that selects no free part reaches isEmptyProbe(), which reads a clone up to a size cap.
   const offer = probeOffer(context.request);
   if (offer && (await isEmptyProbe(context.request))) {
     return withApiSecurityHeaders(
@@ -157,7 +156,8 @@ const asksForInvoiceTerms = (url: URL) => INVOICE_TERMS[url.pathname]?.(url.sear
  * The offer a paymentless probe of this request is answered with, or null to leave the request
  * alone. Decided on the method, the payment header, the path and the query only: no byte of the
  * body has been read when this returns, so /mcp, /api/a2a and every other path that is not a door
- * are never read by this middleware.
+ * are never read by this middleware. A query for a door's free part (FREE_PART) or its invoice
+ * terms (INVOICE_TERMS, 2026-11-20) is left to the door as well.
  */
 function probeOffer(request: Request): ListingOffer | null {
   if (request.method !== "POST" || hasPaymentHeader(request)) return null;
