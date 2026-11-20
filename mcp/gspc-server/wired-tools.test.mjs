@@ -83,6 +83,14 @@ const routeServer = createServer((req, res) => {
     req.on("end", () => {
       const m = JSON.parse(body);
       const name = m.params?.name;
+      if (name === "route" && m.params?.arguments?.data_class === "secret") {
+        // The SDK refuses arguments outside a tool's input schema with text only and isError.
+        return answer(res, 200, {
+          jsonrpc: "2.0",
+          id: m.id,
+          result: { content: [{ type: "text", text: "Input validation error: data_class must be one of the listed classes" }], isError: true },
+        });
+      }
       const sc =
         name === "server_evidence"
           ? { state: "NOT_MEASURED", doctrine: "measurement, not endorsement", capsules: [], n_capsules: 0 }
@@ -94,6 +102,9 @@ const routeServer = createServer((req, res) => {
       answer(res, 200, { jsonrpc: "2.0", id: m.id, result: { content: [{ type: "text", text: "fixture" }], structuredContent: sc, isError: false } });
     });
     return;
+  }
+  if (url.pathname === "/api/request-attestation" && url.searchParams.get("subject") === "BAD") {
+    return answer(res, 400, { schema: "csoai.request-attestation/0.1", error: "bad_request", reason: "subject: not a measurable subject" });
   }
   if (url.pathname === "/api/request-attestation") {
     return answer(
@@ -113,6 +124,10 @@ const routeServer = createServer((req, res) => {
   }
   if (url.pathname === "/api/rwa/evidence" && url.searchParams.get("asset") === "ERR") {
     return answer(res, 500, { error: "fixture route failure" });
+  }
+  if (url.pathname === "/api/rwa/evidence" && url.searchParams.get("asset") === "ZZZ") {
+    // A deployed route's own 404 names its schema; it is "not found", not "not deployed".
+    return answer(res, 404, { schema: "csoai.rwa-evidence/0.1", error: "not_found", reason: "asset ZZZ is not in the public reader" });
   }
   if (url.pathname === "/api/rwa/evidence" && url.searchParams.get("asset") === "RESET") {
     req.socket.destroy();
@@ -274,7 +289,7 @@ check(
 
 const paid = await rpc("tools/call", {
   name: "receipts_batch",
-  arguments: { from: "2026-09-01T00:00:00Z", x_payment: "test-route-receipt" },
+  arguments: { from: "2026-09-01T00:00:00Z", to: "2026-09-02T00:00:00Z", x_payment: "test-route-receipt" },
 });
 const paidState = paid.result?.structuredContent;
 check(
@@ -289,7 +304,7 @@ check(
 
 const noReceipt = await rpc("tools/call", {
   name: "receipts_batch",
-  arguments: { from: "2026-09-01T00:00:00Z", x_payment: "test-no-receipt" },
+  arguments: { from: "2026-09-01T00:00:00Z", to: "2026-09-02T00:00:00Z", x_payment: "test-no-receipt" },
 });
 check(
   "delivery without a settlement header stays unconfirmed",
@@ -300,7 +315,7 @@ check(
 
 const gap = await rpc("tools/call", {
   name: "receipts_batch",
-  arguments: { from: "2026-09-01T00:00:00Z", x_payment: "test-receipt-gap" },
+  arguments: { from: "2026-09-01T00:00:00Z", to: "2026-09-02T00:00:00Z", x_payment: "test-receipt-gap" },
 });
 check(
   "a settlement echo without a receipt is an explicit receipt gap",
@@ -346,6 +361,64 @@ check(
     transportError.result?.structuredContent?.delivery_state === "UNKNOWN" &&
     transportError.result?.structuredContent?.settlement_state === "UNCONFIRMED" &&
     !JSON.stringify(transportError).includes(transportToken),
+);
+
+// A call that delivered nothing is a failed call, as on the HTTP door; NOT_DEPLOYED stays a state there too.
+check("a delivered paid result is not an error", paid.result?.isError === false);
+check("a missing route (NOT_DEPLOYED) stays a state, not an error", missingRoute.result?.isError === false);
+check("a 500 after authorization is an error", routeError.result?.isError === true);
+
+const ownNotFound = await rpc("tools/call", { name: "rwa_evidence", arguments: { asset: "ZZZ", preview: true } });
+const onf = ownNotFound.result?.structuredContent;
+check(
+  "a deployed route's own 404 is HTTP_404 with its reason, not NOT_DEPLOYED, and an error",
+  onf?.status === "HTTP_404" && onf?.reason === "asset ZZZ is not in the public reader" && ownNotFound.result?.isError === true,
+  `status=${onf?.status}`,
+);
+
+const refusedToken = "test-refused-authorization";
+const refused = await rpc("tools/call", { name: "commission_card", arguments: { subject: "BAD", x_payment: refusedToken } });
+check(
+  "a 4xx refusal is an error that says the route reported no settlement",
+  refused.result?.structuredContent?.status === "HTTP_400" &&
+    refused.result?.isError === true &&
+    /refused the request and reported no settlement/.test(refused.result?.structuredContent?.note || "") &&
+    !JSON.stringify(refused).includes(refusedToken),
+  `status=${refused.result?.structuredContent?.status}`,
+);
+
+const previewPaid = await rpc("tools/call", {
+  name: "rwa_evidence",
+  arguments: { asset: "RLUSD", preview: true, x_payment: "test-preview-authorization" },
+});
+check(
+  "preview with x_payment is refused before any request",
+  previewPaid.result?.structuredContent?.status === "BAD_ARGUMENTS" && previewPaid.result?.isError === true,
+);
+
+const noTo = await rpc("tools/call", {
+  name: "receipts_batch",
+  arguments: { from: "2026-09-01T00:00:00Z", x_payment: "test-route-receipt" },
+});
+check(
+  "a paid receipts_batch without to is refused before any request",
+  noTo.result?.structuredContent?.status === "BAD_ARGUMENTS" &&
+    /to is required when paying/.test(noTo.result?.structuredContent?.reason || ""),
+);
+
+const purchase = await rpc("tools/call", { name: "commission_card", arguments: { purchase_action: "history" } });
+check(
+  "purchase actions on stdio say they need the signed-in HTTP door, not that a subject is missing",
+  purchase.result?.structuredContent?.status === "BAD_ARGUMENTS" &&
+    /signed-in buyer/.test(purchase.result?.structuredContent?.reason || ""),
+);
+
+const doorRefusal = await rpc("tools/call", { name: "route", arguments: { data_class: "secret" } });
+check(
+  "a door that refuses the arguments is a tool error in the door's words, not UNREACHABLE",
+  doorRefusal.result?.isError === true &&
+    /Input validation error/.test(doorRefusal.result?.content?.[0]?.text || "") &&
+    !/UNREACHABLE/.test(JSON.stringify(doorRefusal)),
 );
 
 const childClosed = new Promise((resolve) => server.once("close", resolve));
