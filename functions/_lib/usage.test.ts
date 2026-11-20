@@ -1,10 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { SELF_TOOLS, cleanName, countDay, parseUsageKey, recordUsage, selfToolOf, usageKey, utcDay } from "./usage";
+import { PAID_CALL_PAYMENTS, SELF_TOOLS, USAGE_DAY_NOTES, USAGE_DIMS, USAGE_NAME_MAX, cleanName, countDay, paidCallName, parseUsageKey, recordUsage, selfToolOf, usageKey, utcDay } from "./usage";
 import { buildUsage } from "../api/usage";
-import { onRequestPost as a2aPost } from "../api/a2a";
+import { a2aPaidCallName, onRequestPost as a2aPost } from "../api/a2a";
+import { PAID_TOOL_NAMES } from "../mcp/_paid";
 import { onRequestPost as chatPost } from "../api/chat";
-import { onRequest as mcpRequest } from "../mcp/[[path]]";
+import { onRequest as mcpRequest, paidCallPayment } from "../mcp/[[path]]";
 
 /** An in-memory KV with the two calls usage uses. */
 function fakeKv() {
@@ -201,5 +202,111 @@ describe("the doors write what they say they write", () => {
     await settle();
     const rows = [...kv.store.keys()].map((k) => parseUsageKey(k)).map((p) => `${p?.dim}:${p?.name}`).sort();
     expect(rows).toEqual(["mcp_client:claude-code", "mcp_tool:not-a-tool"]);
+  });
+});
+
+// lane paid-call-usage-20261120. /api/usage showed 246 calls of the metered tools in the seven
+// days to 20 Nov 2026 and could not say whether one of them presented a payment, or where.
+describe("paid_call: whether and where a metered call presented payment, never the payment", () => {
+  const TOKEN = "eyJ4NDAyVmVyc2lvbiI6Mn0=";
+  const PAYLOAD = { x402Version: 2, payload: { signature: "0xsecretsignature" } };
+
+  it("reads presence and place off the request", () => {
+    expect(paidCallPayment({ arguments: { subject: "s" } })).toBe("none");
+    expect(paidCallPayment({})).toBe("none");
+    expect(paidCallPayment({ arguments: { asset: "RLUSD", preview: true } })).toBe("preview");
+    expect(paidCallPayment({ arguments: { subject: "s", x_payment: TOKEN } })).toBe("arg");
+    expect(paidCallPayment({ arguments: { subject: "s", x_payment: "   " } })).toBe("none");
+    expect(paidCallPayment({ arguments: { subject: "s" }, _meta: { "x402/payment": PAYLOAD } })).toBe("meta");
+    expect(paidCallPayment({ arguments: { subject: "s" }, _meta: { "x402/payment": null } })).toBe("none");
+    expect(paidCallPayment({ arguments: { subject: "s", x_payment: TOKEN }, _meta: { "x402/payment": PAYLOAD } })).toBe("both");
+    expect(paidCallPayment({ arguments: { purchase_action: "history" } })).toBe("purchase");
+  });
+
+  it("every label fits its cap, so none is cut", () => {
+    for (const door of ["mcp", "a2a"] as const)
+      for (const tool of PAID_TOOL_NAMES)
+        for (const payment of PAID_CALL_PAYMENTS) {
+          const name = paidCallName(door, tool, payment);
+          expect(name.length).toBeLessThanOrEqual(USAGE_NAME_MAX.paid_call);
+          expect(cleanName(name, USAGE_NAME_MAX.paid_call)).toBe(name);
+          expect(parseUsageKey(usageKey("2026-11-20", "paid_call", name, "r"))).toEqual({ day: "2026-11-20", dim: "paid_call", name });
+        }
+    expect(USAGE_DIMS).toContain("paid_call");
+  });
+
+  it("POST /mcp writes one paid_call row per metered call, and nothing of the payment", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ x402Version: 2, accepts: [] }, { status: 402 })));
+    const kv = fakeKv();
+    const env = { SOV_ARENA_STATE: kv };
+    const call = (path: string, params: unknown, ua = "claude-code/2.0") =>
+      mcpRequest({
+        request: new Request(`https://councilof.ai${path}`, {
+          method: "POST",
+          headers: { "content-type": "application/json", accept: "application/json, text/event-stream", "user-agent": ua },
+          body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params }),
+        }),
+        env,
+        waitUntil,
+      });
+    await call("/mcp", { name: "commission_card", arguments: { subject: "qwen3" } });
+    await call("/mcp", { name: "commission_card", arguments: { subject: "qwen3", x_payment: TOKEN } });
+    await call("/mcp", { name: "commission_card", arguments: { subject: "qwen3" }, _meta: { "x402/payment": PAYLOAD } });
+    await call("/mcp", { name: "board_totals", arguments: {} }); // a free tool writes no paid_call row
+    await call("/mcp/free", { name: "commission_card", arguments: { subject: "qwen3" } }); // not served on the free door
+    await call("/mcp", { name: "commission_card", arguments: { subject: "qwen3" } }, "csoai-lane-probe/1"); // ours, by name
+    await settle();
+    const rows = [...kv.store.keys()].map((k) => parseUsageKey(k)).filter((p) => p?.dim === "paid_call").map((p) => p?.name).sort();
+    expect(rows).toEqual(["mcp.commission_card.arg", "mcp.commission_card.meta", "mcp.commission_card.none"]);
+    expect([...kv.store.keys()].join(" ")).not.toMatch(/eyJ4|0xsecret|qwen3/);
+  });
+
+  it("reads the A2A label off the reply's own TOOL_RESULT part, in both wire shapes", () => {
+    const part = (structuredContent: Record<string, unknown>, tool = "evidence_bundle", metered = true) => ({
+      data: { kind: "TOOL_RESULT", skill: tool, tool, metered, result: { structuredContent } },
+    });
+    const v1 = (p: unknown) => ({ jsonrpc: "2.0", id: 1, result: { message: { role: "ROLE_AGENT", parts: [{ text: "summary" }, p] } } });
+    const v03 = (p: unknown) => ({ jsonrpc: "2.0", id: 1, result: { kind: "message", role: "agent", parts: [{ kind: "text", text: "summary" }, p] } });
+    expect(a2aPaidCallName(v1(part({ status: "PAYMENT_REQUIRED", payment_presented: false })))).toBe("a2a.evidence_bundle.none");
+    expect(a2aPaidCallName(v1(part({ status: "PAYMENT_REQUIRED", payment_presented: true })))).toBe("a2a.evidence_bundle.arg");
+    expect(a2aPaidCallName(v1(part({ status: "DELIVERED", payment_presented: true })))).toBe("a2a.evidence_bundle.arg");
+    expect(a2aPaidCallName(v1(part({ status: "DELIVERED", payment_presented: false, delivery_kind: "PREVIEW_OR_FREE" })))).toBe("a2a.evidence_bundle.preview");
+    expect(a2aPaidCallName(v1(part({ status: "PURCHASE_HISTORY", payment_presented: false })))).toBe("a2a.evidence_bundle.purchase");
+    expect(a2aPaidCallName(v03(part({ status: "PAYMENT_REQUIRED", payment_presented: false })))).toBe("a2a.evidence_bundle.none");
+    // Not a metered tool result: a free tool, an error, a plain answer.
+    expect(a2aPaidCallName(v1(part({ state: "VALID" }, "get_root", false)))).toBeNull();
+    expect(a2aPaidCallName(v1(part({ status: "DELIVERED" }, "not_a_paid_tool", true)))).toBeNull();
+    expect(a2aPaidCallName({ jsonrpc: "2.0", id: 1, error: { code: -32602, message: "x" } })).toBeNull();
+    expect(a2aPaidCallName(v1({ text: "board" }))).toBeNull();
+    expect(a2aPaidCallName(null)).toBeNull();
+  });
+
+  it("POST /api/a2a writes the row for a metered per-tool skill", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ x402Version: 2, accepts: [] }, { status: 402 })));
+    const kv = fakeKv();
+    const env = { SOV_ARENA_STATE: kv };
+    await a2aPost({
+      request: new Request("https://councilof.ai/api/a2a", {
+        method: "POST",
+        headers: { "content-type": "application/json", "a2a-version": "1.0" },
+        body: JSON.stringify({
+          jsonrpc: "2.0", id: 1, method: "SendMessage",
+          params: { message: { messageId: "m", role: "ROLE_USER", parts: [{ data: { skill: "commission_card", input: { subject: "qwen3" } } }] } },
+        }),
+      }),
+      env,
+      waitUntil,
+    } as never);
+    await settle();
+    const rows = [...kv.store.keys()].map((k) => parseUsageKey(k)).map((p) => `${p?.dim}:${p?.name}`).sort();
+    expect(rows).toEqual(["a2a_outcome:v1.0_ok", "paid_call:a2a.commission_card.none"]);
+  });
+
+  it("a lane's probes are excluded by name, and the days they were not are flagged", () => {
+    expect(selfToolOf(new Headers({ "user-agent": "csoai-lane-probe/1" }))).toBe("lane-probe");
+    expect(selfToolOf(new Headers({ "x-csoai-self": "lane-probe" }))).toBe("lane-probe");
+    expect(selfToolOf(new Headers({ "user-agent": "curl-probe/1.0" }))).toBeNull();
+    expect(USAGE_DAY_NOTES.map((n) => n.day)).toEqual(expect.arrayContaining(["2026-11-19", "2026-11-20"]));
+    for (const n of USAGE_DAY_NOTES) expect(n.note.startsWith("Not a baseline.")).toBe(true);
   });
 });
