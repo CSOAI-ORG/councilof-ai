@@ -19,11 +19,18 @@ for (const f of ["CITATION.cff", "public/CITATION.cff"]) {
       assert.equal(b.length, c.bytes);
     }
   });
-  test(`${f}: the DOIs are kept and labelled unavailable`, () => {
+  test(`${f}: the Zenodo DOIs are kept and labelled unavailable; other DOIs are not`, () => {
+    // Zenodo's records for CSOAI are unavailable since 29 Sep 2026, so each Zenodo DOI stays listed
+    // and says so. A DOI from another registrar resolves and must not carry that label: #4557 added
+    // the Hugging Face DataCite DOI 10.57967/hf/10114 (state findable), which this test used to
+    // count as a Zenodo DOI missing its label.
     const cff = readFileSync(new URL(`../../${f}`, import.meta.url), "utf8");
-    const dois = cff.match(/- type: doi/g) ?? [];
-    assert.ok(dois.length >= 1);
-    const unavailable = cff.match(/Zenodo record unavailable/g) ?? [];
-    assert.equal(unavailable.length, dois.length);
+    const entries = cff.split(/\n\s*- type: /).slice(1).filter((e) => e.startsWith("doi"));
+    assert.ok(entries.length >= 1);
+    assert.ok(entries.some((e) => /value:\s*"10\.5281\/zenodo\./.test(e)), "no Zenodo DOI kept");
+    for (const e of entries) {
+      const zenodo = /value:\s*"10\.5281\/zenodo\./.test(e);
+      assert.equal(/Zenodo record unavailable/.test(e), zenodo, e.split("\n")[1]);
+    }
   });
 }

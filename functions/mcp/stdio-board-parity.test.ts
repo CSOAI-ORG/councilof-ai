@@ -179,6 +179,18 @@ describe("board reader transport parity", () => {
     expect(withoutFetchTime(dedicated)).toEqual(withoutFetchTime(await getAxisTool(origin, { axis: "governance" })));
   });
 
+  it("copies a row's stated limit on get_axis and the axis tool, and adds no limit key to a row with none", async () => {
+    // axes[].limit (C-2026-1120-02, #4550): a string on the row, and no key at all on a row that states none.
+    const unstated = await client.call("get_axis", { axis: "governance" });
+    expect(Object.prototype.hasOwnProperty.call(unstated, "limit")).toBe(false);
+    body.axes[0].limit = "Fixture limit: this score shows agreement with the fixture bank's labels only.";
+    for (const [name, args] of [["get_axis", { axis: "governance" }], ["axis_governance", {}]] as const) {
+      const actual = await client.call(name, args);
+      expect(actual.limit, name).toBe(body.axes[0].limit);
+      expect(withoutFetchTime(actual)).toEqual(withoutFetchTime(await getAxisTool(origin, { axis: "governance" })));
+    }
+  });
+
   it("keeps an unmeasured slot distinct from zero", async () => {
     body.axes[0] = { axis: "governance", status: "UNMEASURED" };
     const actual = await client.call("get_axis", { axis: "governance" });
