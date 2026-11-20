@@ -46,6 +46,7 @@ import { verifyX402Payment, x402Accepts, buildPaymentRequiredV2, declareBazaarHt
 import { railMode } from "../_x402_config";
 import { signPayload, cardV0, canonicalBytes, PAYLOAD_CAP_BYTES } from "../../_lib/cardSign";
 import { inspectC2pa, sha256, xmpDigitalSourceType, type C2paInspection } from "../../_lib/c2pa";
+import { base64ToBytes } from "../../_lib/base64";
 import { ART50_SOURCES, ART50_DATES, art50LawBlock, art50TextSha256 } from "../../_lib/art50Law";
 import { invoiceHandoff, INVOICE_CONTACT } from "../_invoice_handoff";
 import { ART50_MARKING_EVIDENCE_DESCRIPTION } from "../_x402_descriptions";
@@ -64,8 +65,6 @@ const json = (body: unknown, status = 200, extra: Record<string, string> = {}) =
     status,
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", "access-control-allow-origin": "*", ...extra },
   });
-
-const b64ToBytes = (s: string): Uint8Array => Uint8Array.from(atob(s.replace(/\s+/g, "")), (c) => c.charCodeAt(0));
 
 // ───────────────────────────── input ─────────────────────────────
 type Input = {
@@ -126,7 +125,7 @@ async function readInput(request: Request, url: URL): Promise<Input> {
       }
       if (typeof body.bytes_b64 === "string" && body.bytes_b64) {
         try {
-          const b = b64ToBytes(body.bytes_b64);
+          const b = base64ToBytes(body.bytes_b64);
           if (b.byteLength === 0) return { ...none, error: "bytes_b64 decodes to an empty body" };
           if (b.byteLength > MAX_BYTES) return { ...none, error: `bytes_b64 exceeds ${MAX_BYTES} byte cap` };
           return { ...none, bytes: b, source: "upload" };
@@ -136,7 +135,7 @@ async function readInput(request: Request, url: URL): Promise<Input> {
       }
       if (typeof body.manifest_b64 === "string" && body.manifest_b64) {
         try {
-          const manifest = b64ToBytes(body.manifest_b64);
+          const manifest = base64ToBytes(body.manifest_b64);
           if (manifest.byteLength === 0) return { ...none, error: "manifest_b64 decodes to an empty body" };
           if (manifest.byteLength > MAX_BYTES) return { ...none, error: `manifest_b64 exceeds ${MAX_BYTES} byte cap` };
           return { ...none, manifest, source: "manifest-only" };
