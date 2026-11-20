@@ -1,6 +1,4 @@
-import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
-import seoHead from "../data/seo-head.json";
 
 /**
  * /engagements — what a scoped evidence engagement is, and what it is not.
@@ -9,9 +7,6 @@ import seoHead from "../data/seo-head.json";
  * The four offerings each name machinery that already ships (native-log ingest, claim maintenance,
  * dependency change records, connection audits). Prices are quoted privately and are never published.
  */
-
-const CANONICAL = "https://councilof.ai/engagements/";
-const PAGE_DESCRIPTION = seoHead.routes["/engagements"].description;
 
 const OFFERINGS: Array<{ name: string; blurb: string; points: string[] }> = [
   {
@@ -73,11 +68,6 @@ const FAQ: Array<[string, string]> = [
 export default function Engagements() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      <Helmet>
-        <title>{seoHead.routes["/engagements"].title}</title>
-        <meta name="description" content={PAGE_DESCRIPTION} />
-        <link rel="canonical" href={CANONICAL} />
-      </Helmet>
 
       <main className="mx-auto max-w-4xl px-5 pb-16 pt-10">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-emerald-400">
