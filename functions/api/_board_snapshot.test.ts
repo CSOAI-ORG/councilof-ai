@@ -255,7 +255,10 @@ describe("served /api/gspc vs the 2026-09-29 signed freeze (Measure ruling on #3
       ["governance", "safety", "provenance", "continuity", "conformance", "openness", "care"].sort(),
     );
     const ROW_SHA256_ON_MASTER: Record<string, string> = {
-      "governance": "df067a77905f4e5f7935e8656c93eef2e019d94ff01763caae7dab3f05075a21",
+      // Re-pinned 2026-11-20 (C-2026-1120-02): the governance row's own note now states the bank's
+      // limit, and the board serves that note as historical_measurement_record.note. No n, score,
+      // status, separation, card or root field moved; the watched-field comparison below still holds.
+      "governance": "78fd5476925d3f87b73de3ed074e6f8040ca9927916361ac736ceabaff2fae06",
       "safety": "3649540d31a592c36d3239aeada1c2ad8baffd99a50b3c91656d43b825439fe9",
       "provenance": "264dcfb78d51c74da7cae0d915aa6f98535555e7360a5b38c34e2635170d0f07",
       "continuity": "d018b90ae003dd33a721de982a068976924a48c527c2b936002356506859bc26",

@@ -22,7 +22,11 @@ export const AXES_A: AxisScore[] = [
       "Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). The other 102 scenarios are not " +
       "graded here, and they are not a private held-out set: all 339 are public in the upstream " +
       "scenarios.json (github.com/davidath/ai-act-evaluation-benchmark). No held-out slice backs this " +
-      "axis (C-2026-0929-02). In the original run our " +
+      "axis (C-2026-0929-02). The item wording gives the risk tier away: a wording-only baseline, a " +
+      "word-count classifier trained on the other 102 scenarios, matches 225 of 237 labels " +
+      "(C-2026-1120-02). So this axis does not test how a system applies the EU AI Act. Until the bank " +
+      "is rebuilt and a qualified person has checked the labels, its scores show agreement with this " +
+      "bank's labels only. In the original run our " +
       "own tuned governance specialist held the point lead, and that lead was separated from the best " +
       "base model, mistral:7b (McNemar p=0.0086). That is an in-lane result on our own model, not a " +
       "public ranking: the public board does not rank our own models and does not count it in " +
