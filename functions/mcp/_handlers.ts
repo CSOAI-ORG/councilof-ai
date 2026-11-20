@@ -27,6 +27,8 @@ export type McpToolResult = {
   content: Array<{ type: "text"; text: string }>;
   structuredContent?: Record<string, unknown>;
   isError: boolean;
+  /** Result metadata. The paid tools use it for the x402 MCP transport's settlement response. */
+  _meta?: Record<string, unknown>;
 };
 
 /**

@@ -84,7 +84,7 @@ jobs:
       - name: Install Playwright (chromium)
         run: |
           npm init -y >/dev/null 2>&1 || true
-          npm i -D playwright@1.61.1 >/dev/null 2>&1
+          npm i -D playwright@1.65.1 >/dev/null 2>&1
           npx playwright install --with-deps chromium
       # workflow_run fires when deploy.yml has finished, so the only wait needed is
       # Cloudflare's alias propagation, not the whole build.
