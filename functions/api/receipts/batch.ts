@@ -190,6 +190,10 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   if (preview && !to) return json({ schema: SCHEMA, error: "bad_request", reason: "to: not an ISO-8601 instant", usage }, 400);
   if (preview && from && to && to.getTime() < from.getTime()) return json({ schema: SCHEMA, error: "bad_request", reason: "to is before from", usage }, 400);
 
+  // A window that was asked for but cannot be read is a bad request, paid or not. Only a request that
+  // names no window at all gets the discovery 402 below, so a challenge never offers a window nobody
+  // asked for.
+  if (!preview && fromRaw && !from) return json({ schema: SCHEMA, error: "bad_request", reason: "from: not an ISO-8601 instant", usage }, 400);
   if (!preview && (!fromRaw || !from)) {
     if (hasPaymentHeader(request)) {
       return json({ schema: SCHEMA, error: "bad_request", reason: "from: an ISO-8601 instant is required before presenting payment", usage }, 400);
@@ -238,6 +242,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   if (!to) return json({ schema: SCHEMA, error: "bad_request", reason: "to: not an ISO-8601 instant", usage }, 400);
   if (from && to.getTime() < from.getTime()) return json({ schema: SCHEMA, error: "bad_request", reason: "to is before from", usage }, 400);
+  // A paid batch names its window end. The default end is "now", which moves on every request, so a
+  // payment bound to the challenge's resource could never match it and the paid bytes would not hash to
+  // the preview's batch_sha256. Refused before any payment is verified.
+  if (!preview && !toRaw && hasPaymentHeader(request))
+    return json({ schema: SCHEMA, error: "bad_request", reason: "to: required when presenting payment; use the window.to that the preview or the 402 challenge names", usage }, 400);
 
   // Sources — read, never typed. Two subrequests regardless of corpus size.
   const [bundle, history, root] = await Promise.all([
