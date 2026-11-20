@@ -22,7 +22,7 @@ import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
 import { doorInstallLine, npmReleaseState } from "../../scripts/harness-x/npm-release-state.mjs";
 import { verifyToolResult } from "./_handlers";
-import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, type PaidCallerContext } from "./_paid";
+import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, X402_META_PAYMENT, type PaidCallerContext } from "./_paid";
 import { dispatchTool, FREE_TOOL_DEFINITIONS, TOOL_DEFINITIONS } from "./_dispatch";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
@@ -218,10 +218,16 @@ function buildMcp(
           ...(definition.annotations ? { annotations: definition.annotations } : {}),
           ...(definition._meta ? { _meta: definition._meta } : {}),
         },
-        (args) =>
+        (args, ctx) => {
+          // x402 MCP transport: a paying client retries the same call with its PaymentPayload in
+          // params._meta["x402/payment"]. Only the paid door passes it on, and only a paid tool reads it.
+          const metaPayment = door.paid
+            ? (ctx?.mcpReq?._meta as Record<string, unknown> | undefined)?.[X402_META_PAYMENT]
+            : undefined;
           // door.paid guards the dispatch as well as the registry: the free door never reaches
           // the paid wrapper even if a paid definition were ever passed to it by mistake.
-          dispatchTool(definition.name, args, origin, door, caller),
+          return dispatchTool(definition.name, args, origin, door, metaPayment === undefined ? caller : { ...caller, metaPayment });
+        },
       );
     }
     // Historical unlisted alias; it is not in tools/list and does not inflate the canonical count.

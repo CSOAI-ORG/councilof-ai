@@ -417,25 +417,273 @@ describe("/mcp tools/call — paid tools", () => {
     expect(JSON.stringify(r)).not.toContain(token);
   });
 
-  // PAYMENT SEMANTICS UNCHANGED by the 2026-09-26 isError switch: payment is read ONLY from the
-  // x_payment argument. A client that puts a payload in _meta["x402/payment"] (the x402 MCP
-  // transport's field, not read here yet) gets the challenge again, and nothing is forwarded.
-  it("a payload sent only in _meta['x402/payment'] is not forwarded: same challenge, nothing charged", async () => {
+  // x402 MCP transport, "Payment Payload Transmission" and "Settlement Response Delivery"
+  // (x402-foundation/x402 specs/transports-v2/mcp.md). Until 2026-11-20 payment was read only from
+  // the x_payment argument: a client that followed the spec and retried with its PaymentPayload in
+  // _meta["x402/payment"] was sent the challenge again on every retry and could never buy.
+  const META_PAYLOAD = {
+    x402Version: 2,
+    accepted: { scheme: "exact", network: "eip155:8453", amount: "100000", payTo: "0xpay" },
+    payload: { signature: "0xabc", authorization: { from: "0xpayer", note: "naïve — non-ASCII survives" } },
+  };
+  // Exactly what the metered route does with X-PAYMENT (functions/api/_x402.ts verifyX402Payment):
+  // atob, then JSON.parse, with no UTF-8 step. A header this door builds must survive that.
+  const decodeHeader = (value: string | null) => JSON.parse(atob((value ?? "").trim()));
+
+  it("a payload in _meta['x402/payment'] reaches the route as X-PAYMENT, and the settlement comes back in _meta", async () => {
     const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
     const r = await call(
       rpc("tools/call", {
         name: "commission_card",
         arguments: { subject: "qwen3" },
-        _meta: { "x402/payment": { x402Version: 2, payload: { signature: "0xabc" } } },
+        _meta: { "x402/payment": META_PAYLOAD },
       }),
     );
-    expect(r.result.isError).toBe(true);
-    const sc = r.result.structuredContent;
-    expect(sc.status).toBe("PAYMENT_REQUIRED");
-    expect(sc.payment_presented).toBe(false);
-    expect(sc.nothing_charged).toBe(true);
     expect(seen).toHaveLength(1);
-    expect(seen[0].headers.get("x-payment")).toBeNull();
+    expect(decodeHeader(seen[0].headers.get("x-payment"))).toEqual(META_PAYLOAD);
+    expect(r.result.isError).toBe(false);
+    const sc = r.result.structuredContent;
+    expect(sc.status).toBe("DELIVERED");
+    expect(sc.payment_presented).toBe(true);
+    expect(sc.settlement_state).toBe("REPORTED_BY_ROUTE");
+    expect(sc.nothing_charged).toBeUndefined();
+    const meta = (r.result as unknown as { _meta?: Record<string, { success: boolean; transaction: string }> })._meta;
+    expect(meta?.["x402/payment-response"]).toMatchObject({ success: true, transaction: `0x${"a".repeat(64)}` });
+    // The payment itself is never echoed back.
+    expect(JSON.stringify(r)).not.toContain("0xabc");
+  });
+
+  it("the x_payment argument is unchanged, and its settlement is also returned in _meta", async () => {
+    const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
+    const r = await call(
+      rpc("tools/call", { name: "commission_card", arguments: { subject: "qwen3", x_payment: "eyJ4NDAyIjoxfQ==" } }),
+    );
+    expect(seen[0].headers.get("x-payment")).toBe("eyJ4NDAyIjoxfQ==");
+    expect(r.result.structuredContent.status).toBe("DELIVERED");
+    const meta = (r.result as unknown as { _meta?: Record<string, { success: boolean }> })._meta;
+    expect(meta?.["x402/payment-response"]).toMatchObject({ success: true });
+  });
+
+  it("no settlement is invented: no receipt header, or an unreadable one, leaves _meta off the result", async () => {
+    for (const receipt of [false, "unreadable"] as const) {
+      stubOrigin({ deployed: ["/api/request-attestation"], receipt });
+      const r = await call(
+        rpc("tools/call", {
+          name: "commission_card",
+          arguments: { subject: "qwen3" },
+          _meta: { "x402/payment": META_PAYLOAD },
+        }),
+      );
+      expect(r.result.structuredContent.status).toBe("DELIVERED");
+      expect((r.result as unknown as { _meta?: unknown })._meta).toBeUndefined();
+    }
+  });
+
+  it("a refused _meta payment gets the challenge again as an error, with no settlement in _meta", async () => {
+    const seen = stubOrigin({ deployed: ["/api/request-attestation"], paidOk: false });
+    const r = await call(
+      rpc("tools/call", {
+        name: "commission_card",
+        arguments: { subject: "qwen3" },
+        _meta: { "x402/payment": META_PAYLOAD },
+      }),
+    );
+    expect(decodeHeader(seen[0].headers.get("x-payment"))).toEqual(META_PAYLOAD);
+    expect(r.result.isError).toBe(true);
+    const sc = r.result.structuredContent as unknown as Record<string, unknown>;
+    expect(sc.status).toBe("PAYMENT_REQUIRED");
+    expect(sc.x402Version).toBe(2);
+    expect(sc.payment_presented).toBe(true);
+    expect(sc.settlement_state).toBe("UNCONFIRMED");
+    expect((r.result as unknown as { _meta?: unknown })._meta).toBeUndefined();
+  });
+
+  it("payment in both channels is refused before any request is made", async () => {
+    const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
+    const r = await call(
+      rpc("tools/call", {
+        name: "commission_card",
+        arguments: { subject: "qwen3", x_payment: "eyJ4NDAyIjoxfQ==" },
+        _meta: { "x402/payment": META_PAYLOAD },
+      }),
+    );
+    expect(seen).toHaveLength(0);
+    expect(r.result.isError).toBe(true);
+    const sc = r.result.structuredContent as unknown as Record<string, unknown>;
+    expect(sc.status).toBe("BAD_ARGUMENTS");
+    expect(sc.reason).toMatch(/not both/);
+    expect(sc.nothing_charged).toBe(true);
+    expect(sc.payment_forwarded).toBe(false);
+  });
+
+  it("a _meta payment that is not an object, or is oversized, is refused before any request is made", async () => {
+    for (const bad of ["eyJ4NDAyIjoxfQ==", ["x"], 7, { pad: "x".repeat(17 * 1024) }]) {
+      const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
+      const r = await call(
+        rpc("tools/call", { name: "commission_card", arguments: { subject: "qwen3" }, _meta: { "x402/payment": bad } }),
+      );
+      expect(seen).toHaveLength(0);
+      expect(r.result.isError).toBe(true);
+      const sc = r.result.structuredContent as unknown as Record<string, unknown>;
+      expect(sc.status).toBe("BAD_ARGUMENTS");
+      expect(sc.nothing_charged).toBe(true);
+    }
+  });
+
+  it("a free preview stays free: preview=true with a _meta payment is refused, nothing forwarded", async () => {
+    const seen = stubOrigin({ deployed: ["/api/receipts/batch"] });
+    const r = await call(
+      rpc("tools/call", {
+        name: "receipts_batch",
+        arguments: { from: "2026-08-31T00:00:00Z", preview: true },
+        _meta: { "x402/payment": META_PAYLOAD },
+      }),
+    );
+    expect(seen).toHaveLength(0);
+    expect(r.result.structuredContent.status).toBe("BAD_ARGUMENTS");
+    expect(r.result.structuredContent.reason).toMatch(/preview is free/);
+  });
+
+  it("a free tool never forwards a _meta payment", async () => {
+    const seen: Request[] = [];
+    vi.stubGlobal("fetch", async (u: string | URL | Request, init?: RequestInit) => {
+      const req = u instanceof Request ? u : new Request(String(u), init);
+      seen.push(req);
+      return new Response(JSON.stringify({ totals: { public_count: 1 } }), { status: 200 });
+    });
+    await call(
+      rpc("tools/call", { name: "board_totals", arguments: {}, _meta: { "x402/payment": META_PAYLOAD } }),
+    );
+    for (const req of seen) {
+      expect(req.headers.get("x-payment")).toBeNull();
+      expect(req.headers.get("payment-signature")).toBeNull();
+    }
+  });
+
+  it("the header is pure ASCII, so a non-ASCII payload reads the same under the route's decoder", async () => {
+    const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
+    const payload = { ...META_PAYLOAD, resource: { url: `${ORIGIN}/api/request-attestation?subject=qwen3`, description: "Évidence — 測定 · 🧪" } };
+    await call(
+      rpc("tools/call", { name: "commission_card", arguments: { subject: "qwen3" }, _meta: { "x402/payment": payload } }),
+    );
+    const header = seen[0].headers.get("x-payment") ?? "";
+    expect(atob(header)).toMatch(/^[\x20-\x7e]+$/);
+    expect(decodeHeader(header)).toEqual(payload);
+  });
+
+  it("a request on the current protocol version carries its _meta payment to the route as well", async () => {
+    const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
+    const CURRENT = "2026-07-28";
+    const response = await onRequest({
+      request: new Request(`${ORIGIN}/mcp`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          accept: "application/json, text/event-stream",
+          "MCP-Protocol-Version": CURRENT,
+          "Mcp-Method": "tools/call",
+          "Mcp-Name": "commission_card",
+        },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: "modern-pay",
+          method: "tools/call",
+          params: {
+            name: "commission_card",
+            arguments: { subject: "qwen3" },
+            _meta: {
+              "io.modelcontextprotocol/protocolVersion": CURRENT,
+              "io.modelcontextprotocol/clientCapabilities": {},
+              "x402/payment": META_PAYLOAD,
+            },
+          },
+        }),
+      }),
+      env: {},
+      params: {},
+    } as never);
+    const r = await decode(response, "modern-pay");
+    expect(r.error).toBeUndefined();
+    expect(seen).toHaveLength(1);
+    expect(decodeHeader(seen[0].headers.get("x-payment"))).toEqual(META_PAYLOAD);
+    expect(r.result.structuredContent.status).toBe("DELIVERED");
+    const meta = (r.result as unknown as { _meta?: Record<string, { success: boolean }> })._meta;
+    expect(meta?.["x402/payment-response"]).toMatchObject({ success: true });
+  });
+
+  // receipts_batch: the unpaid call may omit `to`, and the challenge names the window end. A spec
+  // client retries with the same arguments, so the window it pays for is the one its payload names.
+  const BATCH_FROM = "2026-08-31T00:00:00Z";
+  const BATCH_TO = "2026-09-01T00:00:00.000Z";
+  const batchPayload = (resource: unknown) => ({ ...META_PAYLOAD, resource });
+
+  it("receipts_batch: a _meta payment without `to` buys the window its payload's resource names", async () => {
+    const seen = stubOrigin({ deployed: ["/api/receipts/batch"] });
+    const r = await call(
+      rpc("tools/call", {
+        name: "receipts_batch",
+        arguments: { from: BATCH_FROM },
+        _meta: {
+          "x402/payment": batchPayload({
+            url: `${ORIGIN}/api/receipts/batch?from=${encodeURIComponent(BATCH_FROM)}&to=${encodeURIComponent(BATCH_TO)}`,
+          }),
+        },
+      }),
+    );
+    expect(seen).toHaveLength(1);
+    const asked = new URL(seen[0].url).searchParams;
+    expect(asked.get("from")).toBe(BATCH_FROM);
+    expect(asked.get("to")).toBe(BATCH_TO);
+    expect(seen[0].headers.get("x-payment")).toBeTruthy();
+    expect(r.result.structuredContent.status).toBe("DELIVERED");
+  });
+
+  it("receipts_batch: an explicit `to` argument is never overridden by the payload", async () => {
+    const seen = stubOrigin({ deployed: ["/api/receipts/batch"] });
+    await call(
+      rpc("tools/call", {
+        name: "receipts_batch",
+        arguments: { from: BATCH_FROM, to: "2026-08-31T12:00:00Z" },
+        _meta: {
+          "x402/payment": batchPayload({
+            url: `${ORIGIN}/api/receipts/batch?from=${encodeURIComponent(BATCH_FROM)}&to=${encodeURIComponent(BATCH_TO)}`,
+          }),
+        },
+      }),
+    );
+    expect(new URL(seen[0].url).searchParams.get("to")).toBe("2026-08-31T12:00:00Z");
+  });
+
+  it("receipts_batch: a payload naming another origin, route or window start supplies no `to`", async () => {
+    const q = `from=${encodeURIComponent(BATCH_FROM)}&to=${encodeURIComponent(BATCH_TO)}`;
+    for (const resource of [
+      { url: `https://example.com/api/receipts/batch?${q}` },
+      { url: `${ORIGIN}/api/evidence-bundle?${q}` },
+      { url: `${ORIGIN}/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=${encodeURIComponent(BATCH_TO)}` },
+      { url: "not a url" },
+      undefined,
+    ]) {
+      const seen = stubOrigin({ deployed: ["/api/receipts/batch"] });
+      const r = await call(
+        rpc("tools/call", {
+          name: "receipts_batch",
+          arguments: { from: BATCH_FROM },
+          _meta: { "x402/payment": batchPayload(resource) },
+        }),
+      );
+      expect(seen).toHaveLength(0);
+      expect(r.result.structuredContent.status).toBe("BAD_ARGUMENTS");
+      expect(r.result.structuredContent.reason).toMatch(/to is required when paying/);
+    }
+  });
+
+  it("the challenge names both ways to pay", async () => {
+    stubOrigin({ deployed: ["/api/request-attestation"] });
+    const r = await call(rpc("tools/call", { name: "commission_card", arguments: { subject: "qwen3" } }));
+    const sc = r.result.structuredContent as unknown as { how_to_pay: string; nothing_charged: boolean };
+    expect(sc.nothing_charged).toBe(true);
+    expect(sc.how_to_pay).toMatch(/x_payment=/);
+    expect(sc.how_to_pay).toContain('_meta["x402/payment"]');
   });
 
   it("paid: keeps delivery distinct while reporting a present, unverified route receipt", async () => {
