@@ -5,6 +5,8 @@ on:
       - "harness/hitl/approval-effect-demo.mjs"
       - "harness/hitl/approval-effect-demo.test.mjs"
       - "scripts/pilot/approval-effect-replay.mjs"
+      - "scripts/pilot/render-approval-proof-card.mjs"
+      - "scripts/pilot/render-approval-proof-card.test.mjs"
       - "docs/commercial/APPROVAL-EFFECT-PILOT.md"
       - ".github/workflows/approval-effect-pilot-demo.yml"
   workflow_dispatch:
@@ -28,8 +30,15 @@ jobs:
       - name: Fail if trial or scope labels are wrong
         run: |
           node --input-type=module -e "import fs from 'node:fs'; const r=JSON.parse(fs.readFileSync('pilot-demo-result.json')); if(r.outcome!=='PASS'||r.fixture_count!==14||r.production_authority!==false||r.independent_review!=='NOT_CONDUCTED'||Object.values(r.results).some(v=>v!==true))process.exit(1)"
+      - name: Proof card regression controls
+        run: node --test scripts/pilot/render-approval-proof-card.test.mjs
+      - name: Render claim-bounded evidence card
+        run: node scripts/pilot/render-approval-proof-card.mjs pilot-demo-result.json "$(git rev-parse HEAD)" proof-card
       - uses: actions/upload-artifact@v4
         with:
           name: synthetic-approval-effect-demo
-          path: pilot-demo-result.json
+          path: |
+            pilot-demo-result.json
+            proof-card/pilot-proof-card.json
+            proof-card/pilot-proof-card.md
           retention-days: 30
