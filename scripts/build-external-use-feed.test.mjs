@@ -14,6 +14,8 @@ test("one reviewed set produces deterministic, source-linked public output", () 
   assert.equal(output.records.length, 4);
   assert.ok(output.records.every(r => r.buyer_acceptance === "NOT_ESTABLISHED" && r.repeat_use === "NOT_ESTABLISHED"));
   assert.equal(render(current), render(current));
+  const committed = readFileSync(new URL("../public/interop/external-use.json", import.meta.url), "utf8");
+  assert.equal(committed, render(current), "Committed public feed must exactly match reviewed source");
 });
 test("rejects duplicate or missing-source observations", () => {
   const dup = clone(); dup.records[1].id = dup.records[0].id;
@@ -30,7 +32,7 @@ test("rejects silent commercial acceptance promotion", () => {
   const fake = clone(); fake.records[0].buyer_acceptance = "ACCEPTED";
   assert.throws(() => validate(fake), /Unsupported acceptance/);
   fake.records[0].buyer_acceptance_receipt = "https://example.org/receipt";
-  assert.doesNotThrow(() => validate(fake));
+  assert.throws(() => validate(fake), /Unsupported acceptance/);
 });
 test("rejects unreviewed event dates and unqualified evidence statuses", () => {
   const future = clone(); future.records[0].source_event_date = "2026-11-21";
