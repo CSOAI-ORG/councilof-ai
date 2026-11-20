@@ -203,6 +203,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   return recordPaidResponse(json(fullBody(id,row,payment),200,paid.paymentResponse?{"x-payment-response":paid.paymentResponse}:{}),{kv:env.REVENUE_KV,transaction:paid.settlement?.transaction,resource:resourceUrl,confirmedPaid:paid.ok,successfulOutput:true,paymentResponse:paid.paymentResponse,buyer:paid.buyer,buyerState:paid.purchaseState,observationState:postObservationState(paid)});
 };
 
+/** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
+export const onRequestPost = onRequestGet;
+
 // HEAD must answer exactly as GET would (same status, PAYMENT-REQUIRED on the 402,
 // no body): Pages answers HEAD with 404 unless the route exports it (_head.test).
 export const onRequestHead = headFromGet(onRequestGet);

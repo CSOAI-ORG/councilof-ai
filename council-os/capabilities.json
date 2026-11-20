@@ -2405,6 +2405,35 @@
       "paid_for": "assembly"
     },
     {
+      "id": "api-coverage-evidence-post",
+      "kind": "http",
+      "path": "/api/coverage-evidence",
+      "method": "POST",
+      "name": "Coverage evidence (POST)",
+      "description": "GET /api/coverage-evidence — the TUI-2 coverage evidence row, as an x402 paid door.",
+      "description_state": "DOCUMENTED",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.coverage-evidence/0.1"
+      ],
+      "surfaces": [
+        "llms",
+        "nav"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/coverage-evidence",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "source": "functions/api/coverage-evidence.ts"
+    },
+    {
       "id": "api-coverage-truth",
       "kind": "http",
       "path": "/api/coverage-truth",
@@ -7348,6 +7377,35 @@
       "source": "functions/api/wrapper/changes.ts",
       "free_preview": "/api/wrapper/changes?id=usdc.e:arbitrum&preview=1",
       "paid_for": "assembly"
+    },
+    {
+      "id": "api-wrapper-changes-post",
+      "kind": "http",
+      "path": "/api/wrapper/changes",
+      "method": "POST",
+      "name": "Wrapper changes (POST)",
+      "description": "GET /api/wrapper/changes?id=<pair> — delta of wrapped supply and escrow since the previous ledger snapshot (from public/interop/wrapped-asset-parity-*.json).",
+      "description_state": "DOCUMENTED",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.wrapper.changes/0.1"
+      ],
+      "surfaces": [
+        "llms",
+        "nav"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/wrapper/changes",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "source": "functions/api/wrapper/changes.ts"
     },
     {
       "id": "api-wrapper-index-json",

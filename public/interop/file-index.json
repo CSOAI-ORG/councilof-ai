@@ -1,7 +1,7 @@
 {
  "schema": "csoai.interop-file-index/0.2",
- "as_of": "2026-11-20T03:16:18Z",
- "source_commit": "34de247dcea7006e524db30d6e5eb78b09a0ea0c",
+ "as_of": "2026-11-19T09:02:23Z",
+ "source_commit": "b84aeb43e15ea2abbcb0c575ce499d2112320863",
  "what_this_is": "Every file the estate's committed tree publishes under /interop/, with its size, its sha256 and how it is served. Built by reading the tree, so it is a measurement, not a list of intentions. Three served states occur, because there are three \u2014 a path routed to the mirror is not the same path as one the estate serves from its retired-bytes archive, and a fourth state (retired-bytes-absent) is reserved for a retired record the archive does not hold, which is not emitted because the archive is a deploy-time artefact and naming its membership here would make this index stale on every deploy.",
  "how_to_verify": "sha256 is the digest of the file's bytes as published. Fetch the path and hash it; on a row whose served_bytes reads 'as-published', a match means you hold what the estate published. Three things to know when it does not match: the digest is of the bytes at THIS index's source_commit, and the live site serves the bytes of the currently DEPLOYED commit, so the two agree once that commit is deployed; for pages-served HTML the digest is over the BUILT file, which carries the workspace-launcher script the build injects; and the EDGE rewrites some HTML in transit, so on a row whose served_bytes reads 'edge-transformed' or 'edge-transformed-per-request' the bytes the site serves are NOT the bytes published here, and on a 'per-request' row they differ on every fetch, so no digest of them can be reproduced by anyone, including us. A row whose served state is hf-mirror is a different case again: the bytes come from the HuggingFace evidence mirror, which is a SEPARATE HOST whose membership this index does not record, so the row's digest is checkable only while the mirror still holds the file. For retired-bytes paths the digest is of the canonical bytes, which the archive copies verbatim.",
  "retired": "A retired record is HISTORICAL evidence of a past measurement, never current proof. The estate's server marks these with the response header x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE SAME AS BEING UNREACHABLE: a retired path that is served answers 200 and its bytes verify against the sha256 below; a retired path that is not served answers 404. The `served` field says which.",
@@ -17,20 +17,20 @@
   "edge-transformed-per-request": "the edge rewrites this markup and the rewrite is randomised per request, so the bytes the site serves differ on EVERY fetch; no digest of them can be reproduced, by a reader or by the estate"
  },
  "counts": {
-  "files": 16448,
-  "bytes": 260507606,
+  "files": 16451,
+  "bytes": 260801883,
   "by_served": {
-   "pages": 3202,
+   "pages": 3205,
    "retired-bytes": 6,
    "hf-mirror": 13240
   },
   "by_served_bytes": {
-   "as-published": 16447,
+   "as-published": 16450,
    "edge-transformed-per-request": 1
   },
-  "digests_taken_from_the_built_tree": 3202,
-  "digests_taken_from_the_injectors_transform": 0,
-  "digests_taken_from_the_tree_bytes": 0,
+  "digests_taken_from_the_built_tree": 0,
+  "digests_taken_from_the_injectors_transform": 54,
+  "digests_taken_from_the_tree_bytes": 3151,
   "digests_not_comparable_no_built_tree": 0,
   "excluded_the_index_itself": 1,
   "excluded_not_present_in_the_tree": 0
@@ -1536,8 +1536,8 @@
   },
   {
    "path": "/interop/axis-routes.json",
-   "bytes": 2982,
-   "sha256": "9519d514d38abb0d87e85999eddbc9ff20eb9d3b750a234aab729323b8f56fd5",
+   "bytes": 2884,
+   "sha256": "e996898aa068c75b3d3e5d159d4aa6b1e5f1f3f36945680c9ddabf5dda874b2e",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -4731,9 +4731,16 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/distribution-2026-11-19.json",
+   "bytes": 291491,
+   "sha256": "e51c95f6f106783c3bf38d6f256e7862f44fb658513b32e345888cd54a1370af",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/distribution-latest.json",
-   "bytes": 291480,
-   "sha256": "30c1deb1a695faedd898947945ffb8ed2dac2549591b0ec6839e2f93988fcf76",
+   "bytes": 291491,
+   "sha256": "e51c95f6f106783c3bf38d6f256e7862f44fb658513b32e345888cd54a1370af",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -7776,13 +7783,6 @@
    "served_bytes": "as-published"
   },
   {
-   "path": "/interop/institutions-register.json",
-   "bytes": 9711,
-   "sha256": "4f43a40482ba1532706fb51bb89491eff16ad6927beafa28ddc75ad3983c30c9",
-   "served": "pages",
-   "served_bytes": "as-published"
-  },
-  {
    "path": "/interop/instrument-controls-census-2026-09-22.json",
    "bytes": 293435,
    "sha256": "ff04a12f32a7dd54366eca9c7b3551adf20f8876007aa101be3029d19c94635b",
@@ -8198,7 +8198,7 @@
   {
    "path": "/interop/layer0-liveness-2026-09/card-layer0-liveness-unsigned.json",
    "bytes": 1157,
-   "sha256": "344d8d8ef10231cb70fb1c55e7fdbac9c68a706635f1e720b674d5127dfff833",
+   "sha256": "3ffc732e3e17e80a31e617806e885ba21494abbd28fe02617b204cc7322ddd20",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -8975,7 +8975,7 @@
   {
    "path": "/interop/ledger-heads-2026-09/card-ledger-corrections-unsigned.json",
    "bytes": 3133,
-   "sha256": "721dca1e94ae1fba373f54e226f90f4b235f377bd2cc3b1fe489f2e280f4d21b",
+   "sha256": "7981dc6c69108ccbc859a19c96fe1cce700bfe8a5e9f89a332ddcf8920d8d83f",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -9017,7 +9017,7 @@
   {
    "path": "/interop/ledger-heads-2026-09/root-inclusion.json",
    "bytes": 2110,
-   "sha256": "8acf0a11a14bbff8b1a60d6788a74f9059e0add5555055da6bb82f36e4491c44",
+   "sha256": "ac1478396bc047ea28eb068d7ce86b1d0a9a494248c2d155c2e27ddd3a218cd7",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -89766,7 +89766,7 @@
   {
    "path": "/interop/model-lifecycle.json",
    "bytes": 10464,
-   "sha256": "bbd78fc6ae67fd0d071015283350cc901e343b132ac4c1cc720546f50991576f",
+   "sha256": "dd52a0235c93940af6369f4171de2fb28ef26b59405b0a6054dccdb40fe0d66e",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -90577,8 +90577,8 @@
   },
   {
    "path": "/interop/ots/manifest.json",
-   "bytes": 229987,
-   "sha256": "36d6c6c9393b9f5ff7b15ae66b7e2283d22d1e171c2580c5fae5ad319d898ab2",
+   "bytes": 230287,
+   "sha256": "daacab27df070b73e04a01102e3406e34d43b46cf763244b5c56828722d3c3ba",
    "served": "hf-mirror",
    "served_bytes": "as-published"
   },
@@ -106602,6 +106602,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/rekor-root-2372701c.json",
+   "bytes": 2998,
+   "sha256": "03c591611881dbc22e8281b99b9725be5e434ab9d766a4148931e335be1cbe5d",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/rekor-root-24c75eeb.json",
    "bytes": 2998,
    "sha256": "b848f4c6a509068c6143eca446f983e4201494c14f47dfd40d88d013d5e71d58",
@@ -107785,6 +107792,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/root-2372701c.json.ots",
+   "bytes": 2562,
+   "sha256": "708d09b508447eb242b86a0ad6c783bf880674bb02142fece8d03b195e53a6be",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/root-24c75eeb.json.ots",
    "bytes": 4845,
    "sha256": "24d8d24cc2aa44396ef73da2666de7d4ca43e320bef2b4dec9d60c4950ccd177",
@@ -108312,7 +108326,7 @@
   {
    "path": "/interop/root-kinds.json",
    "bytes": 3280,
-   "sha256": "79339ba630cbcc5b2dffa387ecb5cc2e833de5395359c7e9a0e3d11360bd711e",
+   "sha256": "797f803f631e9e50ff690c5c4a3df9a20b8bb01001a4a4762379be36f38b3b62",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -109388,6 +109402,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/root-witness-2026-11-19-2372701c.json",
+   "bytes": 4544,
+   "sha256": "ba575596be30139e467e60ec408a8736d6a10070f42f969bf3e0f234c2590113",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/root-witness-2026-11-19-7ab14894.json",
    "bytes": 4568,
    "sha256": "7268e4fe620483b3ff95311446a711cb8e63486e4b543e4982aaf0031c47f4b9",
@@ -109403,15 +109424,15 @@
   },
   {
    "path": "/interop/root-witness-latest.json",
-   "bytes": 4568,
-   "sha256": "7268e4fe620483b3ff95311446a711cb8e63486e4b543e4982aaf0031c47f4b9",
+   "bytes": 4544,
+   "sha256": "ba575596be30139e467e60ec408a8736d6a10070f42f969bf3e0f234c2590113",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/root-witness-pointer.json",
    "bytes": 3153,
-   "sha256": "5d335aaa252476d234b73c3134f195e48c6eacd01e92bda74a02317b83b1ce67",
+   "sha256": "13a6da860706b6388f853f49b5535291b6f920105007e0287f7b319cdab79613",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -110818,8 +110839,8 @@
   },
   {
    "path": "/interop/stablecoin-universe-2026-09/readiness.json",
-   "bytes": 756083,
-   "sha256": "6a6f97420fd5f4dc0590dd76be9a6058631749c5593b155ea900a8bc7de965c1",
+   "bytes": 756047,
+   "sha256": "f4aa093e48abfd5274bd3dc8fbceba167d1795948aff2846a03967d9d2f65906",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -114692,245 +114713,245 @@
   {
    "path": "/interop/xrpl-16-state-matrix/artefact-manifest.json",
    "bytes": 6056,
-   "sha256": "4bb588c504ebe1864cc3e206d3ee80627deaf5cf69f998a21b8ac1e5aa38d109",
+   "sha256": "cda9e4bafb1ed344d13a971225be5c2c9f1c6af672d5dcad2cab74a9cfaa980d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/deltas.jsonl",
-   "bytes": 83048,
-   "sha256": "a3e0942feda9c4587da84042629c2d2700c9f4f23681eeeb2413f05182245a19",
+   "bytes": 85227,
+   "sha256": "ab5ef57cddfa467bfe21446f070b6fca457a041fade2ffdbf07c897917896f34",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/matrix.json",
-   "bytes": 21983,
-   "sha256": "3ae0b1f82347e53d9b29c9f4a5374a5a048fdc795ce0d3d6c3f98040b859619d",
+   "bytes": 21984,
+   "sha256": "c0624a090ffff46af18a7f712c36044498d37753ac04653d6f39202854df9d7b",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-BBRL.json",
    "bytes": 1185,
-   "sha256": "7afaab06fbd38fbdb428f8157daf23cd96acec576e0ea39c8f6746e879ec45ca",
+   "sha256": "78dbb5aac3f6e00de60bae5bc391907d498fe64189a9dd0250243813dabe50ec",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-BBRL.json.meta.json",
    "bytes": 332,
-   "sha256": "0d15a05d4ff0364afe4e7ea8151a33c7de286c3d3879e8f09d8e934592e7ff74",
+   "sha256": "0fcab9b2744a535105e807d37ea4aa07018bb586427db252242abc87c8e723b2",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-EUR.bs.json",
    "bytes": 1347,
-   "sha256": "da2cdf573304ce16d4231a726764865e9da5e4c24001ce213cf5934591c8b256",
+   "sha256": "c535435b65cd29fe4cfa2839af9b7ae1fd7c44515d69e53a39e298fdd8e06822",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-EUR.bs.json.meta.json",
    "bytes": 333,
-   "sha256": "894dedde1815a2e7b7316f04f7c0ffb788bd4031e8c4f1fff182aea79ce84b4a",
+   "sha256": "b069369e0b974a3b752ffd89f572f0537d537676b65891758edc548ab7557cd6",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-EUR.gh.json",
    "bytes": 1266,
-   "sha256": "197d697ffac3b5fe683f70beef6efd45f0de105fa95c0181068e218837cbcf4a",
+   "sha256": "4fa6c1a3bebee70e698376fd0aacf9fbd2e4966361f0dbef97ff5bad1fe64a01",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-EUR.gh.json.meta.json",
    "bytes": 334,
-   "sha256": "9c1bf9b20ffcc1bf9dbe3947ee8d786c8dfcafe4fc1057d381051b83db158f36",
+   "sha256": "c7d832401256c036e5ca47cfa64d8dec48652c4ddaaa4d1741d4898f3661a162",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-EURCV.json",
-   "bytes": 1110,
-   "sha256": "0733812740b7bd7f88fd58403ee5f4211f2abe3e1c773001391a6d26b16080d4",
+   "bytes": 1158,
+   "sha256": "a72e8c41ece5ab90b1517d01ac4b3246d0b92fb41466616142818a3510be0820",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-EURCV.json.meta.json",
    "bytes": 333,
-   "sha256": "deca83f3242fb86c76cf3a6e69a42031ceed79a66f30eb10f33713f0797f790c",
+   "sha256": "39fa2b86a092b862f880c8c48351c933144fdd78ab32f91cb88b3f21992b0b42",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-EURQ.json",
    "bytes": 1110,
-   "sha256": "81fdb2243cfd5ba7950f3dbca677cc84797f5211a68f88c1fb4a57fc47288d46",
+   "sha256": "f8adecacbad626ad2bcf9575d55d00a837c961dae37edce158bb030b39d3f9d8",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-EURQ.json.meta.json",
    "bytes": 332,
-   "sha256": "27ed9cb5cd445bc4d3a947c555096691c6c28825a0f5794d0b6161866bd88025",
+   "sha256": "92b9c92bebd528b5d98476d83952a05d1d292e2af09620ebc3b5a5746df8ca19",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-EUR\u00d8P.json",
    "bytes": 1130,
-   "sha256": "991b4a39555c03627e28663ef7b64eadc4ee9796485130a302fac2dd83f43713",
+   "sha256": "09dbfd72cb8de0c1af4528ea2ea0292ae98d023312b906e8dba4ecb6ec347d12",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-EUR\u00d8P.json.meta.json",
    "bytes": 338,
-   "sha256": "407a3466037af3f3d73545fdba26492d8a71b5c171d924519115931599a83e64",
+   "sha256": "a209f829785deec233a5c2503377f16f702fa2999b9e47ae5f349d6fdd8d2f00",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-GBP.gh.json",
    "bytes": 1183,
-   "sha256": "1f3d9e79abf282cf8440f6bc5f75fb5159161408e7c2abb688ea0be11407e459",
+   "sha256": "2a2db6cc5bc836d569c167b04ce4f07427935b2e6fac99ff336cb36367661a40",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-GBP.gh.json.meta.json",
    "bytes": 334,
-   "sha256": "fa573edc771d6fc620472ad47cfce8b5ab12809b9eaf4daf7d4bc144ef7e02d8",
+   "sha256": "3800e732dcb9c9b94a8f1c1d942e77a72f108602f33263e837b1ff2c277d50ac",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-OUSG.json",
    "bytes": 1146,
-   "sha256": "6165474f2446525372acc9bee95518847a97e3b119490108556c6d9896e18311",
+   "sha256": "307f8234d4f6c0944dbe85a6bc372c04c30e74490eb394d20ad89088f5d6e841",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-OUSG.json.meta.json",
    "bytes": 332,
-   "sha256": "ed042db4821c6dc5dfe9fd355ea723e0f41e3219e4c09b4478b691f0da0bcffc",
+   "sha256": "094a23a4d6d99bd8ad1295e7b404980c102187dd6cc093cb8b588f278f9fe447",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-PSC.json",
    "bytes": 1121,
-   "sha256": "a0d0c9152d41f152c71105dde83209c0e91122c69cf345b58207559f8cc283f7",
+   "sha256": "1d600e21c9bc1635dac14837fe9fea97c95142a8d6b9c6cb3a5f07337b8908ae",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-PSC.json.meta.json",
    "bytes": 331,
-   "sha256": "29354e73161b6064375b2ca1c7aa1bcf316562fb68086ea8ff8d4c9c351434e0",
+   "sha256": "6fd9bb3cb7daad307912f31898b6cf2befff61232488bef04022d29efb065ae1",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-RLUSD.json",
    "bytes": 1158,
-   "sha256": "b0e16ae563e98c3d6d4f82cd9e676f76ae276d35b4305fb698dd349b2f43fa25",
+   "sha256": "b2e3517effaf6cef46fbfc9ec7f103442c7041ae821542d483a6000a822a2f67",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-RLUSD.json.meta.json",
    "bytes": 333,
-   "sha256": "8dd9713904031dd1702003bed6934c03f7e78151d5f806fde0ea9830e0e878d3",
+   "sha256": "722065d0f6d865a0538020d2d8311194d7de510ff0c76d9686f5a3c7fe02ab02",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-USD.bs.json",
    "bytes": 1347,
-   "sha256": "da2cdf573304ce16d4231a726764865e9da5e4c24001ce213cf5934591c8b256",
+   "sha256": "c535435b65cd29fe4cfa2839af9b7ae1fd7c44515d69e53a39e298fdd8e06822",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-USD.bs.json.meta.json",
    "bytes": 333,
-   "sha256": "922052c655e155b4db7aafccf6b6693b97b3a4e28e3669e3db05b7d06e0439f5",
+   "sha256": "a405f6a1d99bc8b46aa12bea3839efbe0a84e73d4ee30be4d0e055df538e975c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-USD.gh.json",
    "bytes": 1266,
-   "sha256": "197d697ffac3b5fe683f70beef6efd45f0de105fa95c0181068e218837cbcf4a",
+   "sha256": "4fa6c1a3bebee70e698376fd0aacf9fbd2e4966361f0dbef97ff5bad1fe64a01",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-USD.gh.json.meta.json",
    "bytes": 334,
-   "sha256": "2fbef4fe69fb268cbf5a5e5396c3af0d90a9aab12ec7871b9f9e74fd3e4f0ea5",
+   "sha256": "cc680665346f20b13e5f2ab54230bedc8d45adfb94c0c996120db3594e217dfa",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-USDB.json",
    "bytes": 1185,
-   "sha256": "9cd3cee8bd9415dc87e01120dc7800ead5d0265c0acd45114482de6b6f446d89",
+   "sha256": "c1171079cfa784ff30e864aa17a05272a85081be28ba6548a7dc232c059831d7",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-USDB.json.meta.json",
    "bytes": 332,
-   "sha256": "32d48442f34f11ccd16a57c9a5ef0ce79f2d386d43988c667ecbe655e764aa92",
+   "sha256": "5ceb6088a16b7fea1590d34bf078a00bf4bf4651ea96cb0e7e13789f01459abd",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-USDC.json",
    "bytes": 1155,
-   "sha256": "fb6adb67c82fa0f7b956e703744b36a231e249104feafe9ffff8320949d50948",
+   "sha256": "2cdbac0a1d97771bd239397242943b502626041900dc3502a09ede76524701d7",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-USDC.json.meta.json",
    "bytes": 332,
-   "sha256": "786659d0cb9d214248aeb4ae13a0a1d328f536f10937d5c7df85ff39263a7e01",
+   "sha256": "dca78c4f0250e0b87f72b7ce8d7fd07a974bbe195484102aac05ec9c0246c080",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-USDQ.json",
    "bytes": 1110,
-   "sha256": "81fdb2243cfd5ba7950f3dbca677cc84797f5211a68f88c1fb4a57fc47288d46",
+   "sha256": "f8adecacbad626ad2bcf9575d55d00a837c961dae37edce158bb030b39d3f9d8",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-USDQ.json.meta.json",
    "bytes": 332,
-   "sha256": "8835509f48f6ae0dc27caf50a71ab0bc99835e1f9968cc865f4e807c1838c900",
+   "sha256": "a3bdf62229e50303ee844f120b7cb332f78eec5fb22adb1854676c151b46d456",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-XAU.gh.json",
    "bytes": 1176,
-   "sha256": "3cdc18004c3375d368e2ba28e58d09180dec5cbcca541c9cc969cea20a114b1a",
+   "sha256": "07b3c2e19c09e355bc124708bd63f81a2eda98ac9a3c33799a694b36d6667c3f",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-16-state-matrix/mirrors/account-info-XAU.gh.json.meta.json",
    "bytes": 333,
-   "sha256": "187c99b9c779243843241f2d5b356b795f1bc4c327869b2c7e39842591a2faed",
+   "sha256": "c4d7569bcdacfba3109aa1071dc75e182444036f2758a38542e0eedde1fdaf5b",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -114965,7 +114986,7 @@
   {
    "path": "/interop/xrpl-impersonation-2026-09/artefact-manifest.json",
    "bytes": 33181,
-   "sha256": "8223718080f65d7ba196e201c2d383462866cea782e63e4cfd2e36f056093bb5",
+   "sha256": "31a0748fde6903eb84688522be540a321da454ab59e289fe929f27309ea0ce8e",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -114978,8 +114999,8 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/latest.json",
-   "bytes": 45707,
-   "sha256": "fa35bf5b74cbd1ee1aa78c6fad793736fd9360fed059ef64bb694880450a498f",
+   "bytes": 45708,
+   "sha256": "9af127780e847ea968bae81bd9e1b711c5c52a9703a24b24f2ff35bc83278a93",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115083,15 +115104,15 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-0.json",
-   "bytes": 100059,
-   "sha256": "d36c0920b226be70bf3039f22ed22ac378ea066718e1b6440189be5f29f13557",
+   "bytes": 100069,
+   "sha256": "009cea792a1c6900e581b00d710e69f978db84adc205f47e4c9e43187da5884a",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-0.json.meta.json",
    "bytes": 308,
-   "sha256": "a2ef3f620e46cdb11dc7123a23afe933fcaceead6569f54eff927992d86425d6",
+   "sha256": "88e4d3790c27450bf9d3b9d590a0c69c6fe13cdf929de332830fab69009a3c38",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115182,14 +115203,14 @@
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-10700.json",
    "bytes": 90016,
-   "sha256": "6dfbf579689cc4982515acd9c3603d4400aeddfe2f2ba3c51caf646bc77b6d53",
+   "sha256": "a27c4593694b9ea7e091a785bdd830dc377b116d46e414e04cdcbb2214d4ade3",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-10700.json.meta.json",
    "bytes": 315,
-   "sha256": "3206c3e18c88162aa778c75c2eee3cba0a15a264fd31ee18f0a98f97201e5579",
+   "sha256": "195ab4add8baef95a3110ed0180e8117567fa498137ef2753c975253b45bda50",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115307,15 +115328,15 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-1500.json",
-   "bytes": 88527,
-   "sha256": "414909b6c66a0d09bc61a10a007492c4665fa036fa9ca1ccd1510b0414d02322",
+   "bytes": 88542,
+   "sha256": "a4c6c0be2edc54e653da1f4d536f6e60c25911dfb2e57cc6ba989d3696e0ebd9",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-1500.json.meta.json",
    "bytes": 313,
-   "sha256": "696970ab157ffa15d220c63f65503479bdc88f7b36be9c6d681453e5bc5d62bf",
+   "sha256": "9dd5fc3372c76cc3335bc685b45c19fabf2e40d04dce127bb5c9949f698478e0",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115363,15 +115384,15 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-1900.json",
-   "bytes": 92287,
-   "sha256": "6b0b4b35d8bcbbecf1bc05e98e129f2b31276d0b906251dc3c31ad78da769c2b",
+   "bytes": 92284,
+   "sha256": "183160603e2893d715bd21649185b2b0ca30538c2ab9e1b0051c195e041a5144",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-1900.json.meta.json",
    "bytes": 313,
-   "sha256": "a1c110322d71369f59fd597453256f1a839ea464a98a52e245990572187a3a94",
+   "sha256": "68cb8a285a54750b584b42e73eceef5a0d7bb838c15b177ff900a0b3abc21043",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115391,29 +115412,29 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-2000.json",
-   "bytes": 97772,
-   "sha256": "ae140bd28bc622bd4eedcb0f901108f66b2cc612570f9c2a716198d738849530",
+   "bytes": 97782,
+   "sha256": "355c2aa9a230b3faa90d9a39c935337e4994ea38b611c167e6af3a819c31c7df",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-2000.json.meta.json",
    "bytes": 313,
-   "sha256": "05935ee90524c716b135c08dbeb9976a67ca773ba4e79a0c7f68d9404ea3b7d9",
+   "sha256": "1a40593999ce419628c67169b5619a885a9181187c870628dcc159f3de97807c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-2100.json",
-   "bytes": 92378,
-   "sha256": "b64a2214f4ee3d87abd999d44fdea9ea5ae32b33e11880f441629e94053a6014",
+   "bytes": 92355,
+   "sha256": "cfed61b61d203739c57b26af7738b193b5b95352bce7aee89271636543573e33",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-2100.json.meta.json",
    "bytes": 313,
-   "sha256": "8f2e2b3c6553c05717de46361b99a00da06b9c2789dfe8e9526d0fc4a0dec823",
+   "sha256": "1116dae73c3031a8d4d28528ec2be5251ab3ae8afa33cdc1e9e0ed9494c92588",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115517,29 +115538,29 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-2900.json",
-   "bytes": 86775,
-   "sha256": "1eba4807f23cdd6a9a01d145a1e99c016b37f47d335143fb7b0241e419bff944",
+   "bytes": 86778,
+   "sha256": "1c360303fd2e5a59c1b9168aac23a2e49d757fa97d5f9451082f6e31f966ba45",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-2900.json.meta.json",
    "bytes": 313,
-   "sha256": "afeb77bdec1a0ab0d07eaccb825b59635b718b5d65c9cdc492b55d77a98786f7",
+   "sha256": "616e6be54c4fbe26b65712082aadf905361baa9e3762442bcaa8beced1576466",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-300.json",
-   "bytes": 91787,
-   "sha256": "42a9cd5d7e6fcc5f381e12c132f51fc333de565faa753488eae43453c5dd0e26",
+   "bytes": 91766,
+   "sha256": "065ad050ba9c5138719b0c6d4a49ab81e192ca82413bba7532b6c5d848f24900",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-300.json.meta.json",
    "bytes": 311,
-   "sha256": "d818e779d2456e380fa2cfefadbbfb85cad786cb2cddf5ced70c8d464799299f",
+   "sha256": "4e7b6c577c9b6642b7490c0af725bcb026f0423328392d7e59c46eb6077c17eb",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115587,15 +115608,15 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-4000.json",
-   "bytes": 86873,
-   "sha256": "0e3d120c4e3e384c7d2d6fc3302f155f202c174b2e3a367741de8e25b87a4340",
+   "bytes": 86863,
+   "sha256": "1f4b6cc3e8789effadc28113b2ff82528864df0cc7d71c9beb37e25a7d416ce3",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-4000.json.meta.json",
    "bytes": 313,
-   "sha256": "32d3fe56dd19f7b9ed0c781c23da0c5398d9a0dff2f32aa05647a01e71c3f499",
+   "sha256": "0cb22eb6f35fa1a1589de5fd948f464f8820516d882acaddcf6689fb312438b7",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115629,15 +115650,15 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-4500.json",
-   "bytes": 91706,
-   "sha256": "21adf35e5c88bc44c9d863914f3315a84878b5a412cabd7d25ef8472d97e7d37",
+   "bytes": 91744,
+   "sha256": "2d5e1e8554674a0a1fd139bd75fdf29e0446eae31fe340a6585fc960c71d90ec",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-4500.json.meta.json",
    "bytes": 313,
-   "sha256": "c8eb44ce6269f44adea8441d5781348eba01910bb678eaf25b958fd4bb101bd2",
+   "sha256": "6ca87cf1e5fd3e0d729c66901a78c6ea9296c02f3308d0830aa566dfc8da742f",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115657,15 +115678,15 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-4900.json",
-   "bytes": 91283,
-   "sha256": "a0b828cfd2dc76edb8fa42c011188dcc77f90a8d94fe64f77ef9e99b291918a1",
+   "bytes": 91289,
+   "sha256": "ca452ec321b37e1f384de4537aada13810314082100c893c143a022461c08b12",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-4900.json.meta.json",
    "bytes": 313,
-   "sha256": "a2178a39bea0deb4067a2e0135cd18e13bf0dbc37be464200000f8c7039f2f43",
+   "sha256": "95d8ae192b7d8ed2d5dbcda0411a816fc635367c2c5632c64f527a0a5d602911",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115714,14 +115735,14 @@
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-5400.json",
    "bytes": 91324,
-   "sha256": "401b9eba7864fe2550048ca8d3d2bbd36c4cc6f37555a2a0049fde8e70967d26",
+   "sha256": "2ef9097bb1b670e0984823a7aef4bb8809e08f68bd457730623b8d5e613f9a47",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-5400.json.meta.json",
    "bytes": 313,
-   "sha256": "2ec34063a755d39913dd8f036f895a6c47687603fc36a5b4fe1f50247fffb718",
+   "sha256": "6a09ebd478d3d3857a302f4efe4eae31b9d09b03ef3856e2f7b92d08415a69f3",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115741,15 +115762,15 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-5600.json",
-   "bytes": 97215,
-   "sha256": "fde579d48170c84aa39ed05125b3d55d0fdc2e94cca540b41c12b07ad1f51219",
+   "bytes": 97203,
+   "sha256": "a93493e28ae54ea315dc75cfead78ced10487a08c47adaa158b77b752d738275",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-5600.json.meta.json",
    "bytes": 313,
-   "sha256": "02336f16683d9ff7a587ec15f4d025d2cc31e83a822d0f753635abcd4ec5e89e",
+   "sha256": "e2dae0590a909fba8e2132c5d231c6f8aff2a098bab0c76f267f73e18a68529a",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115797,15 +115818,15 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-6500.json",
-   "bytes": 91036,
-   "sha256": "5eb2a6bfccbce2c96d195da694edf52770377c41dd25dd39a361639c852de037",
+   "bytes": 91037,
+   "sha256": "44af049df2d4ac8f14e456ab237e40ef895c4983356a93037fc946a22231d1ee",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-6500.json.meta.json",
    "bytes": 313,
-   "sha256": "cb0cb27e38fae3ae5bfc977d901bc73a50ea8bffadce49b9dfaaf8f68e5abfe0",
+   "sha256": "b513d8e199b6bce6f7be48484b62654105bf1926ae3c957acb26612f8fabe0bf",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115882,14 +115903,14 @@
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-7200.json",
    "bytes": 90556,
-   "sha256": "75feae76dd67d42a22c9d240e0ac89f9ccd9e63ef1b7236330de3b4674df546c",
+   "sha256": "67e38fcc7372d9e1871c2917f012e126e3f6ce64ad59b4ceeb3176c568325e3b",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-7200.json.meta.json",
    "bytes": 313,
-   "sha256": "c6a5fe0f18b1e78d67fa8a0b7680a1053ac96d188eb4d277fdc46874b29c5730",
+   "sha256": "399ea8b29eefc3199c982a28ad19ea9869555ace98b0dd0b2b2156de476148fa",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115938,14 +115959,14 @@
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-7700.json",
    "bytes": 92246,
-   "sha256": "57ca58069d7fe582e96764aa505940b9f5bf11c2d946aa9649f80cbc97ccf339",
+   "sha256": "96587b432b54c68b4a2cfb514448ad3cdf22fcedc43fa7d9765a6a48bebff471",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-7700.json.meta.json",
    "bytes": 313,
-   "sha256": "6188a9905effdaaadb8f1b8d44bbb3013d83e7049a7c5a4a2a37d09f8842fe12",
+   "sha256": "95284f8dd55b6542aae521f9fdb1e9988d01dc8e62e9a4eb2341b30867dc7e3e",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -116007,15 +116028,15 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-8100.json",
-   "bytes": 92639,
-   "sha256": "5ad76d0d1e1c1ff7e547c04c47a02fb420df0ab18bca7c993b80e4916915f0f1",
+   "bytes": 92637,
+   "sha256": "594908db394034e965f6d549f1efacb5a871a0c65798af95f8606677d0f34312",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-8100.json.meta.json",
    "bytes": 313,
-   "sha256": "2622bdc35eb19648b3fe8ac8fb9215a1851b718f700fac2b23aa7b9e3f9572ed",
+   "sha256": "7a7c3c9225c8a664257663457a9bee518fd5b69d09486252f8b995561b87963e",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -116035,15 +116056,15 @@
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-8300.json",
-   "bytes": 92862,
-   "sha256": "db6ad9a43a5d32f6d13616ff6e691c2f1f2dbe5eb59c14e9766f933457546ae9",
+   "bytes": 92861,
+   "sha256": "5b4212429e6f3052fd66c81e3015dcd3a38afd2e95584dcb19bcaa3d882910a5",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-8300.json.meta.json",
    "bytes": 313,
-   "sha256": "77b30af69f77e340a12d43017ae049253295e2bcafb64e161ee892e8b0613534",
+   "sha256": "e743fd1d5ed62ebc28f204a95be07a72023de12da7fffcd9c135562bdb26c6e2",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -116120,14 +116141,14 @@
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-8900.json",
    "bytes": 94153,
-   "sha256": "9d749b3c352b5c2a0d0d8fe538cdaecc8f35f5c4ac41ea7f6320772a9272a305",
+   "sha256": "b8447fa47aa6094a252a4abfc69c7398d796934071b7744066e275e1b7002767",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-8900.json.meta.json",
    "bytes": 313,
-   "sha256": "be9464b6bf997ba548748def2406363500af68822cb6fdd7ca3ce24e3ee67218",
+   "sha256": "fdc9bf4902813cdca1bbc1ada46b9a94764ab1e7b4d8acbdb12fedcdea6e04a3",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -116148,14 +116169,14 @@
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-9000.json",
    "bytes": 89069,
-   "sha256": "80570003ad5ff9e45ebf0069b3913f4ce7342c05c8ae16f5d75a734d16819def",
+   "sha256": "8a72755e82d0890f737eceaa3d48f1dba27a225a3ccf57bc5ca5ef1fa292d4ba",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-9000.json.meta.json",
    "bytes": 313,
-   "sha256": "8d7463341e2d72ce09ef3f2eb6851ea173a3d1fc5551d335543e45f3dfb4c901",
+   "sha256": "c07ee7b9f19a5e6b52a824c69b13b986d2ac7b7b6d5f3e666b51d034dca83d7b",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -116204,42 +116225,42 @@
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-9400.json",
    "bytes": 92648,
-   "sha256": "3ae538d5d73a39762001692ff406d32b5d0408c5eddc39da9888b6494f833c9e",
+   "sha256": "bdd3a4dd1a05495d2c2aef5ba1c843b8d54bbc33d4f9cfdd157e651aef40ae9b",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-9400.json.meta.json",
    "bytes": 313,
-   "sha256": "383699ccf488d6d16c1865505021878fc1c705d54605859e24291cde37a557f8",
+   "sha256": "1d67242f474cdbe6824e4b229668187863b1205bfe008c905216c1b850ae8e9e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-9500.json",
    "bytes": 90534,
-   "sha256": "327b659dda0b19d3a937f014a57a419cfb2093f54b8ba2512945ac809898fd77",
+   "sha256": "930e8fcb8c0813e76fc98b1d851e43c525e5d9e3eb37dc430693ed7d6ad159aa",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-9500.json.meta.json",
    "bytes": 313,
-   "sha256": "cef98b3f30d0d974e4e3b48644ffaab29037d8b539b0c93449e276c516f94232",
+   "sha256": "fcb4137676db82df13bf51f9bf20f1447cfa38ba6d01381c212dc1fb1223c7b6",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-9600.json",
    "bytes": 86999,
-   "sha256": "c45d5aefb5ec526e5af3c8758d62bb98ae78fe2082117b677692abeef8310b44",
+   "sha256": "4df817e000c27a4bc38fda911658bcddabcbab9f9d0af07dfd4fd1e1d98fbaf5",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-9600.json.meta.json",
    "bytes": 313,
-   "sha256": "469326b75fe749a92dd23eebc2ea45f897af3fbe4ac016f5ecbca677d97ef227",
+   "sha256": "bfe6d03d32d2ac6c187b7e63b67fe132454bb52514a615483f99949f4d21e035",
    "served": "pages",
    "served_bytes": "as-published"
   },

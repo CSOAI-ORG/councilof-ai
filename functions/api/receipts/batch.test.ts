@@ -368,3 +368,29 @@ describe("bazaar readiness — every 402 route on master emits the same extensio
     }
   });
 });
+
+describe("/api/receipts/batch — a challenge never offers a window nobody asked for", () => {
+  afterEach(() => vi.unstubAllGlobals());
+  it("a window that was named but cannot be read is 400, not a 402 for another window", async () => {
+    const r = await batch(ctx("/api/receipts/batch?from=yesterday"));
+    expect(r.status).toBe(400);
+    expect((await r.json()).reason).toMatch(/from: not an ISO-8601 instant/);
+    // A request that names no window at all is still the discovery 402.
+    expect((await batch(ctx("/api/receipts/batch"))).status).toBe(402);
+  });
+
+  it("a paid request without `to` is refused before the facilitator is called", async () => {
+    let facilitatorCalls = 0;
+    vi.stubGlobal("fetch", async (u: string | URL | Request) => {
+      const url = new URL(String(u instanceof Request ? u.url : u));
+      if (url.host === "f.example") facilitatorCalls++;
+      return new Response("{}", { status: 404 });
+    });
+    const r = await batch(
+      ctx("/api/receipts/batch?from=2026-08-31T00:00:00Z", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": paidReceipt() }),
+    );
+    expect(r.status).toBe(400);
+    expect((await r.json()).reason).toMatch(/to: required when presenting payment/);
+    expect(facilitatorCalls).toBe(0);
+  });
+});
