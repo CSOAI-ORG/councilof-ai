@@ -15,7 +15,9 @@ name: loops-registry-census
 
 on:
   schedule:
-    - cron: "30 4 * * 1" # Mondays 04:30Z, weekly
+    # Daily, not weekly: /api/footprint calls a registry census STALE after 48 h
+    # (REGISTRY_CENSUS_MAX_AGE_HOURS in functions/api/footprint.ts). A weekly round would read STALE five days in seven.
+    - cron: "30 4 * * *" # 04:30Z daily
   workflow_dispatch: {}
 
 permissions:
