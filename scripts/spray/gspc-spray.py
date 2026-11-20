@@ -27,8 +27,11 @@ RULES this script enforces on itself
   * Every number is DERIVED at run time from the live GET, root.json and the frozen banks. Nothing is typed.
   * If /api/gspc (or root.json) cannot be read the script REFUSES to publish. Absent is not zero.
   * Idempotent: a surface already carrying this as_of, or this content fingerprint, is left alone
-    (--force overrides the fingerprint check, never the as_of check).
-  * Each push prints the LIVE URL and re-reads it until the as_of appears there, or reports that it did not.
+    (--force overrides the fingerprint check, never the as_of check). The HF dataset and Space, Kaggle
+    and the GitHub mirror then also compare every snapshot file, and republish when the bytes differ:
+    a board change can land without a new root.
+  * Each push prints the LIVE URL and re-reads it until the pushed bytes (HF, Kaggle, GitHub) or the
+    as_of (Zenodo, PyPI) appear there, or reports that they did not.
   * No prices. Never "certified", "BFT" or "sovereign" — the README is scanned before anything is pushed.
   * Owner-gated actions are not taken: no accounts, no payments, no deletions outside the snapshot folder
     each surface owns, no email. This script does not publish npm; its BLOCKED row describes only
@@ -1983,8 +1986,26 @@ def spray_pypi(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict
         return [result("pypi", "FAILED", page, detail=f"pypi JSON HTTP {status}")]
     proj = json.loads(body)
     if version in proj.get("releases", {}):
-        return [result("pypi", "UNCHANGED", f"{page}{version}/", tr["as_of"],
-                       f"release {version} already exists (one release per snapshot day; a second board change on the same day waits for tomorrow's run)")]
+        # One release per root DATE, not per run day: a later root or board under the same date waits
+        # for a root dated later. Report what that release bundles instead of this run's as_of.
+        try:
+            s, b, _ = http(f"https://pypi.org/pypi/{PYPI_PROJECT}/{version}/json", headers={"Cache-Control": "no-cache"}, timeout=30)
+            text = (json.loads(b)["info"].get("description") or "") if s == 200 else ""
+        except Exception:  # noqa: BLE001 — an unreadable release page is reported as such, not as a failure
+            text = ""
+        fp_m = re.search(r"spray-fingerprint: ([0-9a-f]{64})", text)
+        as_of_m = re.search(r"Bundled snapshot — as of (\S+)", text)
+        bundled_fp = fp_m.group(1) if fp_m else None
+        bundled_as_of = as_of_m.group(1) if as_of_m else None
+        if bundled_fp == tr["fingerprint"]:
+            return [result("pypi", "UNCHANGED", f"{page}{version}/", bundled_as_of,
+                           f"release {version} already bundles fingerprint {tr['fingerprint'][:16]}…")]
+        held = f"fingerprint {bundled_fp[:16]}…" if bundled_fp else "a fingerprint this run could not read"
+        return [result("pypi", "UNCHANGED", f"{page}{version}/", bundled_as_of,
+                       f"release {version} already exists and bundles {held}"
+                       + (f" as of {bundled_as_of}" if bundled_as_of else "")
+                       + f", not this build's {tr['fingerprint'][:16]}… as of {tr['as_of']}. One release per root date: "
+                       f"this board waits for a root dated after {tr['as_of'][:10]}")]
     if not force and tr["fingerprint"] in (proj["info"].get("description") or ""):
         return [result("pypi", "UNCHANGED", f"{page}{proj['info']['version']}/", None,
                        f"latest release {proj['info']['version']} already bundles fingerprint {tr['fingerprint'][:16]}… — use --force")]
