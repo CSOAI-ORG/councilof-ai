@@ -28,8 +28,9 @@ import { purchaseSha256 } from "../../shared/buyerPurchase";
  *         a paid delivery with no settle echo, a settle echo with a receipt gap, and a settle echo
  *         carrying an unverified JWS receipt are four different structured states.
  *   404 → status NOT_DEPLOYED: the route is not on this origin — said plainly, never a fabricated
- *         result.
- *   other → status = the HTTP status, body passed through.
+ *         result. A 404 that carries the route's own JSON body (its `schema` field) is NOT this: the
+ *         route is deployed and answered "not found", so it is reported as HTTP_404 with its reason.
+ *   other → status = the HTTP status, body passed through, isError:true — nothing was delivered.
  * Same-origin fetch: one subrequest per call. Routes are forwarded to by exact path from the
  * definitions file; a caller cannot steer the tool to any other URL.
  */
@@ -125,6 +126,10 @@ export function buildPaidRequest(
   const headers: Record<string, string> = { accept: "application/json" };
   const xp = str("x_payment");
   if (xp) headers["x-payment"] = xp;
+  // A free preview never verifies a payment, so a preview sent with x_payment would come back as a
+  // delivery with "settlement unconfirmed" for an authorization no route ever looked at.
+  if (flag("preview") && xp)
+    return { error: "preview is free: omit x_payment for a preview, or drop preview to buy" };
   const u = new URL(route, origin);
   let method = "GET";
   let body: string | undefined;
@@ -161,6 +166,11 @@ export function buildPaidRequest(
     }
     case "receipts_batch": {
       if (!str("from")) return { error: "from is required (ISO-8601)" };
+      // A paid batch names its window end. The route's default end is "now", which moves on every
+      // call, so the paid bytes could never hash to the preview's batch_sha256 or match the
+      // resource the challenge named.
+      if (xp && !str("to"))
+        return { error: "to is required when paying: pass the window.to that the free preview (preview=true) or the 402 challenge names" };
       u.searchParams.set("from", str("from"));
       if (str("to")) u.searchParams.set("to", str("to"));
       if (flag("preview")) u.searchParams.set("preview", "1");
@@ -337,10 +347,20 @@ export async function paidToolResult(
     const advertised=typeof paymentRequired.resource==="object"&&paymentRequired.resource!==null
       ?(paymentRequired.resource as {url?:unknown}).url:typeof paymentRequired.resource==="string"?paymentRequired.resource
       :Array.isArray(paymentRequired.accepts)&&typeof paymentRequired.accepts[0]?.resource==="string"?paymentRequired.accepts[0].resource:undefined;
-    const purchaseRequest=identityRequest?{url:identityRequest.url,resource:typeof advertised==="string"?advertised:identityRequest.url,
-      method:identityRequest.method,body_sha256:await purchaseSha256(await purchaseBody(identityRequest))}:undefined;
+    let purchaseRequest: Record<string, unknown> | undefined;
+    let purchaseRequestUnavailable: string | undefined;
+    if (identityRequest) {
+      try {
+        purchaseRequest={url:identityRequest.url,resource:typeof advertised==="string"?advertised:identityRequest.url,
+          method:identityRequest.method,body_sha256:await purchaseSha256(await purchaseBody(identityRequest))};
+      } catch (e) {
+        // A body too large to hash for purchase binding must not swallow the challenge itself.
+        purchaseRequestUnavailable = e instanceof Error ? e.message : String(e);
+      }
+    }
     const payload = {
       ...(purchaseRequest?{purchase_request:purchaseRequest}:{}),
+      ...(purchaseRequestUnavailable?{purchase_request_unavailable:purchaseRequestUnavailable}:{}),
       // x402 MCP transport: the PaymentRequired object sits at the top level of structuredContent.
       ...paymentRequired,
       ...base,
@@ -376,7 +396,13 @@ export async function paidToolResult(
       isError: true,
     };
   }
-  if (res.status === 404) {
+  // A deployed route answers with its own JSON, which always names its `schema`. Without that, a 404
+  // means the route itself is missing from this origin.
+  const routeBody =
+    body && typeof body === "object" && !Array.isArray(body) && typeof (body as { schema?: unknown }).schema === "string"
+      ? (body as Record<string, unknown>)
+      : null;
+  if (res.status === 404 && !routeBody) {
     return reply(
       {
         ...base,
@@ -429,17 +455,26 @@ export async function paidToolResult(
     );
   }
   const reportedPayment = res.headers.get("x-payment-response");
+  const routeReason = typeof routeBody?.reason === "string" ? routeBody.reason : undefined;
+  const refusedNote = reportedPayment
+    ? "Settlement was reported by the route; inspect the receipt before retrying."
+    : paymentPresented && res.status >= 400 && res.status < 500
+      ? "The route refused the request and reported no settlement; nothing was delivered. Correct the arguments before paying again, and inspect the wallet if in doubt."
+      : retryWarning;
   return reply(
     {
       ...base,
       status: `HTTP_${res.status}`,
       http_status: res.status,
+      ...(routeReason ? { reason: routeReason } : {}),
       delivery_state: "NOT_DELIVERED",
       ...settlementFields(reportedPayment),
       body,
     },
-    `HTTP ${res.status} from ${tool.csoai.route} — passed through, nothing invented. ${reportedPayment ? "Settlement was reported by the route; inspect the receipt before retrying." : retryWarning}`,
-    res.status >= 500,
+    `HTTP ${res.status} from ${tool.csoai.route}${routeReason ? `: ${routeReason}` : ""} — not delivered; the route's body is passed through, nothing invented. ${refusedNote}`,
+    // Nothing was delivered, so this is a failed call whatever the status: an x402 MCP client and a
+    // model both read isError to decide whether to correct the arguments.
+    true,
   );
 }
 

@@ -1,0 +1,81 @@
+{
+  "card": {
+    "as_of": "2026-11-19T03:13:25Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "GBP.gh",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_supply",
+          "from": 199041.3200614305,
+          "to": 199041.318910535
+        }
+      ],
+      "ledger_index": 108423876,
+      "observed_at": "2026-11-19T03:13:25Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "4b87c2ac3909a2ec1dcc0d8b2024c4c19cd1d78859d0ffbcbbb260cf907ad1d5",
+    "sig_ed25519": "d86bbd523d9b867584ca1a021ef2b12d5e4daa0f0cf54c7a5ab591b5dc080d4326193df801fa7797f325dfbd2774e2ea0ebcded2072297735ddcaa89e6fd3e04",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: GBP.gh changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:GBP.gh"
+    ],
+    "unmeasured": [],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "9dbf2399b4032718fbb703e0dfe1509cfa0b5415ea7786030c4be4dc6f7082c6",
+    "6eea18b4a7fb33be7762d0f153d997519278793d53620877012df55085f57b80",
+    "24ef7823432a7640d2d8228787574f92791e6ee6f1d09639ec6976063d6d0e8a",
+    "ba9b31d1c6fb45e7f58857e8832d698c3d3e7e8bb295f04cb6dd34d2e83307fc",
+    "6ddf1b8fffbac188f6aecc29fc617a56490d329ca82539a6e4126bdf2ef12a0c",
+    "a59fd5401f8dffd7033a42658ce6168d42b926567bd730c44bcdaf7e75441cb9",
+    "46ddbeeabdd2bdbbb5dd4714aad379d8d766cf91b5212ec22f4115a649014d10",
+    "a9675e29a094934eb31ca292335fb47455c1d79e5833ad409f0ed871e62fb59a",
+    "d6ca26a44356d30b747927482118c9ea9639527192a2779f4b5a107016d0abc1"
+  ]
+}
