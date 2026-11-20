@@ -43,6 +43,12 @@ describe("frozen provision source texts", () => {
     }
     const capped = rows.filter((r: { text: string }) => [...r.text].length === FROZEN_TEXT_CAP).map((r: { provision_id: string }) => r.provision_id).sort();
     expect(verifySources(rows, manifest).texts_at_frozen_cap).toEqual(capped);
+    expect(rows.filter((r: { truncated_at_10000: boolean }) => r.truncated_at_10000).map((r: { provision_id: string }) => r.provision_id).sort()).toEqual(capped);
+    expect(capped).toEqual(
+      ["32022L2464:1", "32022L2464:3", "32022L2464:25", "32022L2464:29", "32022L2555:6", "32022L2555:32", "32022R2554:3", "32024R1689:3", "32024R1689:5", "32024R2847:3", "32024R2847:13"].sort(),
+    );
+    const flipped = rows.map((r: object, i: number) => (i === 0 ? { ...r, truncated_at_10000: !(r as { truncated_at_10000: boolean }).truncated_at_10000 } : r));
+    expect(verifySources(flipped, manifest).problems.join()).toMatch(/truncated_at_10000/);
   });
 
   it("fails on one changed character, a dropped row, a duplicate row or a stray row", () => {

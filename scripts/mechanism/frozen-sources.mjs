@@ -18,7 +18,11 @@ import { NORMALISER_VERSION, corpusRoot, provisionHash } from "./normaliser-v1.m
 
 export const SOURCES = "public/interop/frozen-provision-sources-v1.jsonl";
 export const MANIFEST = "public/interop/frozen-provision-hashes.json";
-/** Rows whose text is exactly this long were cut there before hashing; the hash covers the cut text. */
+/**
+ * The original eurlex_sync capped `content` at this many characters, so a row whose text is exactly this
+ * long was cut there before hashing: its v1 hash covers the cut text, and drift after the cut is invisible
+ * to it. Such rows carry truncated_at_10000: true, and the check fails if the flag and the length disagree.
+ */
 export const FROZEN_TEXT_CAP = 10000;
 
 export function parseSources(bytes) {
@@ -56,7 +60,10 @@ export function verifySources(rows, manifest) {
     if (anchors[pid] !== h) problems.push(`${pid}: text hash is not the manifest anchor`);
     const kind = r.source?.kind ?? "UNSTATED";
     bySourceKind[kind] = (bySourceKind[kind] ?? 0) + 1;
-    if ([...r.text].length === FROZEN_TEXT_CAP) atCap.push(pid);
+    const capped = [...r.text].length === FROZEN_TEXT_CAP;
+    if (capped) atCap.push(pid);
+    if (r.truncated_at_10000 !== capped)
+      problems.push(`${pid}: truncated_at_10000 is ${r.truncated_at_10000}, but the text is ${capped ? "" : "not "}exactly ${FROZEN_TEXT_CAP} characters`);
   }
   for (const pid of Object.keys(anchors)) if (!Object.hasOwn(recomputed, pid)) problems.push(`${pid}: in the manifest, no source row`);
   for (const pid of Object.keys(recomputed)) if (!Object.hasOwn(anchors, pid)) problems.push(`${pid}: source row, not in the manifest`);

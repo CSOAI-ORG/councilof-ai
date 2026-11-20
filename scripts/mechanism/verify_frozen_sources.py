@@ -21,6 +21,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 SOURCES = "public/interop/frozen-provision-sources-v1.jsonl"
 MANIFEST = "public/interop/frozen-provision-hashes.json"
+# The original eurlex_sync capped content at this many characters; such rows hash the cut text.
+FROZEN_TEXT_CAP = 10000
 
 _spec = importlib.util.spec_from_file_location("normaliser_v1", Path(__file__).with_name("normaliser_v1.py"))
 normaliser = importlib.util.module_from_spec(_spec)
@@ -43,6 +45,9 @@ def verify(rows, manifest):
             problems.append(f"{pid}: text hashes to {got}, row says {r['provision_sha256']}")
         if anchors.get(pid) != got:
             problems.append(f"{pid}: text hash is not the manifest anchor")
+        capped = len(r["text"]) == FROZEN_TEXT_CAP
+        if r.get("truncated_at_10000") is not capped:
+            problems.append(f"{pid}: truncated_at_10000 disagrees with the text length")
     missing = sorted(set(anchors) - set(seen))
     extra = sorted(set(seen) - set(anchors))
     problems += [f"{p}: in the manifest, no source row" for p in missing]

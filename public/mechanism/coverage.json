@@ -7,7 +7,7 @@
   "edited": "2026-11-20",
   "generated_from": {
     "path": "scripts/mechanism/coverage.source.json",
-    "sha256": "1572c375eaa8a94630842b853fab8fbef19a5eb434153f82e70286656a835a99",
+    "sha256": "e2215daf679c5141b5731924dc2e5e8cdbb3f7dd3a42d8b8cfdece2de66e79b4",
     "producer": "scripts/mechanism/build-coverage.mjs"
   },
   "statements": [
@@ -84,7 +84,7 @@
     "inventory_source_database_state": "NOT_RECOVERED",
     "source_texts": {
       "path": "/interop/frozen-provision-sources-v1.jsonl",
-      "sha256": "52708e3c67e9c76337f51fa56c4e7a3f77bfb019811f7d56045e98537c7e5a86",
+      "sha256": "6224a54c8e8fc9ae095edf1c4cdcf2bb96dc2b6ac12103963f743a56deb0f3e2",
       "state": "SOURCE_BYTES_RECOVERED",
       "rows": 417,
       "hashes_reproduced": 417,
@@ -111,7 +111,7 @@
         "node scripts/mechanism/frozen-sources.mjs",
         "python3 scripts/mechanism/verify_frozen_sources.py --selftest"
       ],
-      "note": "Recovered after the freeze: the EU AI Act articles and annexes from a re-fetch of the Cellar XHTML manifestation of Regulation (EU) 2024/1689; GDPR, CRA, DORA, NIS2 and CSRD from the regulations database of CSOAI-ORG/eu-ai-act-compliance-mcp. Each row names its source. A text of exactly the frozen length cap was cut there before hashing, so the hash covers the cut text, not the whole provision; those ids are listed in texts_at_frozen_cap.",
+      "note": "Recovered after the freeze: the EU AI Act articles and annexes from a re-fetch of the Cellar XHTML manifestation of Regulation (EU) 2024/1689; GDPR, CRA, DORA, NIS2 and CSRD from the regulations database of CSOAI-ORG/eu-ai-act-compliance-mcp. Each row names its source. The original eurlex_sync capped content at the frozen length cap, so a text of exactly that length was cut there before hashing: its v1 hash covers the cut text, and a change after the cut is invisible to it. Those rows carry truncated_at_10000: true and are listed in texts_at_frozen_cap; full-text anchors for them are a later corpus version, and the v1 manifest is unchanged.",
       "licence": "EU legislative text from EUR-Lex / Cellar (Publications Office of the European Union), reused under Commission Decision 2011/833/EU. Only the official Journal edition is authentic."
     },
     "watcher": "NOT BUILT — local corpus only; no authority is polled",
