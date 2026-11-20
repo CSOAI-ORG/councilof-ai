@@ -80,6 +80,14 @@ export function FreshnessLine({
       </span>,
     );
   }
+  for (const b of f?.boundOnly ?? []) {
+    // An upper bound is not a measurement date: the source proves the run existed by this instant.
+    items.push(
+      <span key={`bound-${b.axis}`}>
+        {b.axis} dated only by an upper bound: not after <strong>{fmtDate(b.date)}</strong>
+      </span>,
+    );
+  }
   if (f?.newest) {
     items.push(
       <span key="newest">

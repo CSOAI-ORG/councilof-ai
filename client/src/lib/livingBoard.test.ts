@@ -8,6 +8,7 @@ import {
   freshness,
   groupAxis,
   isOwnModel,
+  isUpperBound,
   modelCells,
   spreadsOverlap,
   type BoardDoc,
@@ -142,8 +143,39 @@ describe("freshness", () => {
     });
     expect(f.comparisonDates).toEqual(["2026-08-12"]);
     expect(f.newest).toEqual({ date: "2026-09-22", axis: "b" });
+    expect(f.boundOnly).toEqual([]);
     expect(f.axesWithDate).toBe(2);
     expect(f.axesTotal).toBe(3);
+  });
+  it("never prints an upper bound as a measurement date (live shape of 20 Nov 2026)", () => {
+    // swarm carries only not_after (its card's body.created); jail an exact observed_at.
+    const swarm = {
+      axis: "swarm",
+      kind: "model-comparison",
+      measurement_time: { state: "NOT_AFTER", precision: "instant-upper-bound", not_after: "2026-08-19T09:24:39.162060+00:00" },
+    };
+    const f = freshness({
+      axes: [
+        { axis: "governance", kind: "model-comparison", measurement_time: { state: "DAY", precision: "day", observed_on: "2026-08-12" } },
+        { axis: "jail", kind: "model-comparison", measurement_time: { state: "EXACT", precision: "instant", observed_at: "2026-08-18T03:22:16Z" } },
+        swarm,
+        { axis: "harness-fidelity", kind: "measured-subject", measurement_time: { state: "EXACT", observed_at: "2026-11-02T04:20:54.265Z" } },
+      ],
+    });
+    expect(isUpperBound(swarm)).toBe(true);
+    expect(f.comparisonDates).toEqual(["2026-08-12", "2026-08-18"]);
+    expect(f.boundOnly).toEqual([{ date: "2026-08-19", axis: "swarm" }]);
+    expect(f.newest).toEqual({ date: "2026-11-02", axis: "harness-fidelity" });
+    expect(f.axesWithDate).toBe(4);
+  });
+  it("treats a bare not_after as a bound, and a bound as the newest only when nothing is observed", () => {
+    expect(isUpperBound({ axis: "x", measurement_time: { not_after: "2026-12-01T00:00:00Z" } })).toBe(true);
+    expect(isUpperBound({ axis: "x", measurement_time: { observed_on: "2026-08-12", not_after: "2026-08-19T00:00:00Z" } })).toBe(false);
+    expect(isUpperBound({ axis: "x" })).toBe(false);
+    const f = freshness({ axes: [{ axis: "only", kind: "model-comparison", measurement_time: { not_after: "2026-12-01T00:00:00Z" } }] });
+    expect(f.comparisonDates).toEqual([]);
+    expect(f.newest).toBeNull();
+    expect(f.boundOnly).toEqual([{ date: "2026-12-01", axis: "only" }]);
   });
   it("counts whole days in UTC", () => {
     expect(daysSince("2026-08-12", new Date("2026-10-06T01:00:00Z"))).toBe(55);

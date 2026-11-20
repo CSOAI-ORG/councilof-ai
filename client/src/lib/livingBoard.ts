@@ -95,6 +95,20 @@ export function measuredDate(a: BoardAxis): string | null {
   return raw && /^\d{4}-\d{2}-\d{2}/.test(raw) ? raw.slice(0, 10) : null;
 }
 
+/**
+ * True when the only time the axis carries is an upper bound (measurement_time.state NOT_AFTER /
+ * precision instant-upper-bound, or a not_after with no observed date). The source says the
+ * measurement existed by that instant, not that it happened then, so the date is never printed
+ * as a measurement date (20 Nov 2026 E2E: swarm's card-creation instant was read as "measured
+ * 19 Aug 2026" while /api/gspc → measured_on.date gives 2026-08-12 and jail 2026-08-18).
+ */
+export function isUpperBound(a: BoardAxis): boolean {
+  const t = a.measurement_time;
+  if (!t) return false;
+  if (t.state === "NOT_AFTER" || t.precision === "instant-upper-bound") return true;
+  return !t.observed_on && !t.observed_at && !!t.not_after;
+}
+
 /** Whole days between a YYYY-MM-DD date and `now` (UTC). */
 export function daysSince(date: string, now: Date): number {
   const then = Date.parse(`${date}T00:00:00Z`);
@@ -103,10 +117,12 @@ export function daysSince(date: string, now: Date): number {
 }
 
 export interface Freshness {
-  /** Distinct measurement dates of the model-comparison axes, oldest first. */
+  /** Distinct OBSERVED measurement dates of the model-comparison axes, oldest first. Upper bounds are not in it. */
   comparisonDates: string[];
-  /** The newest measurement on the whole board and the axis that carries it. */
+  /** The newest observed measurement on the whole board and the axis that carries it. Never an upper bound. */
   newest: { date: string; axis: string } | null;
+  /** Axes whose only time is an upper bound (NOT_AFTER): the measurement existed by that date. Oldest first. */
+  boundOnly: { date: string; axis: string }[];
   axesWithDate: number;
   axesTotal: number;
 }
@@ -115,15 +131,21 @@ export function freshness(board: BoardDoc): Freshness {
   const axes = board.axes ?? [];
   const cmp = new Set<string>();
   let newest: Freshness["newest"] = null;
+  const boundOnly: Freshness["boundOnly"] = [];
   let withDate = 0;
   for (const a of axes) {
     const d = measuredDate(a);
     if (!d) continue;
     withDate += 1;
+    if (isUpperBound(a)) {
+      boundOnly.push({ date: d, axis: a.axis });
+      continue;
+    }
     if (a.kind === "model-comparison") cmp.add(d);
     if (!newest || d > newest.date) newest = { date: d, axis: a.axis };
   }
-  return { comparisonDates: [...cmp].sort(), newest, axesWithDate: withDate, axesTotal: axes.length };
+  boundOnly.sort((x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : x.axis.localeCompare(y.axis)));
+  return { comparisonDates: [...cmp].sort(), newest, boundOnly, axesWithDate: withDate, axesTotal: axes.length };
 }
 
 /** Distinct base models with published figures in the fleet file. */
