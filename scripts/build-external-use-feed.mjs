@@ -42,7 +42,7 @@ export function validate(review) {
       urls.add(source.href);
       const host = u.hostname.toLowerCase();
       const isCouncilHost = ["councilof.ai", "www.councilof.ai", "csoai.org", "www.csoai.org", "meok.ai"].includes(host);
-      const isCouncilGithub = host === "github.com" && /^\\/(?:CSOAI-ORG|nicktempleman)\\//i.test(u.pathname);
+      const isCouncilGithub = host === "github.com" && new RegExp("^/(?:CSOAI-ORG|nicktempleman)/", "i").test(u.pathname);
       if (!isCouncilHost && !isCouncilGithub) hasOutsideSource = true;
     }
     if (!hasOutsideSource) throw Error("No independently hosted source: " + r.id);
