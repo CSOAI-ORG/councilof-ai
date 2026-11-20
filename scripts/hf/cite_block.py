@@ -113,7 +113,7 @@ def title_of(fm, body, name):
 # omits the section, so no card shows it twice.
 OBJ_HEADING = "## Objections, contact and corrections"
 OBJ_TEXT = ("To object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, "
-            "email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. "
+            "email **contact@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. "
             "Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what "
             "changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.")
 
