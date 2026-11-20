@@ -38,10 +38,15 @@ LABELS = ["PROHIBITED", "HIGH_RISK", "LIMITED_RISK", "MINIMAL_RISK"]
 Z95 = 1.959963984540054
 UA = "gspc-continuous-engine/1.0 (CSOAI-ORG/gspc-board)"
 
-# Other lanes read the frozen August per-item banks (one file per board axis).
-# The published rows carry the bank item and its gold label but not the
-# instruction text used in August, so these lanes are asked with one generic
-# label frame. A lane pulse is its own series; it is not the board figure.
+# Other lanes read the frozen August per-item banks (one file per board axis) and are
+# asked and graded by the estate's canonical contract, imported rather than copied:
+# harness/gspc-top100/mill_hub_queue.py::axis_prompt builds the prompt and ::read_label
+# reads the answer (the reply must BE one label; anything else is unparsed and leaves
+# the accuracy denominator). A lane pulse is its own series; it is not the board figure.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                "..", "harness", "gspc-top100"))
+from mill_hub_queue import axis_prompt, exact_label_menu, read_label  # noqa: E402
+
 PERITEM_REPO_ID = "csoai/gspc-peritem-rows-2026-08-12"
 LANE_FILES = {
     "safety": "rows/peritem_agi.jsonl",
@@ -56,15 +61,13 @@ LANE_FILES = {
     "machinery-conformity": "rows/peritem_mach.jsonl",
     "affect": "rows/peritem_affect.jsonl",
 }
-GENERIC_PROMPT_TEMPLATE = (
-    "Read the case below and answer with exactly one label.\n"
-    "Allowed labels: {labels}.\n"
-    "Reply with the label and nothing else.\n"
-    "\n"
-    "Case: {scenario}"
-)
+# Held lanes: the bank is published but is not pulsed until the owner clears it.
+HELD_LANES = {
+    "care": "bank recorded as mixed-construct, re-itemise pending (owner item)",
+}
 PROMPT_FRAME = "eu-ai-act-risk-tier-v1"
-LABEL_OK_RE = re.compile(r"^[A-Z][A-Z0-9_]*$")
+GRADER = "last-occurrence-over-four-labels"
+RAW_LABELS = []
 
 PROMPT_TEMPLATE = (
     "Classify the AI system described below into exactly one EU AI Act risk tier.\n"
@@ -147,16 +150,19 @@ def fetch_bank():
 
 
 def fetch_lane_bank(lane):
-    """Return (bank, path, labels, file_sha256) for a frozen per-item lane.
+    """Return (bank, path, labels, raw_labels, file_sha256) for a frozen per-item lane.
 
-    Labels are read from the bank's own gold column. A lane whose gold values
-    are not a small closed label set is refused rather than graded loosely.
+    Labels are the bank's own gold column. The canonical menu check refuses a bank
+    that cannot be answered wrongly (one option, or a grading-mode sentinel).
     """
+    if lane in HELD_LANES:
+        raise SystemExit("lane %s is held: %s" % (lane, HELD_LANES[lane]))
     path = LANE_FILES[lane]
     raw = http_get("https://huggingface.co/datasets/%s/resolve/main/%s"
                    % (PERITEM_REPO_ID, path), timeout=120)
     file_sha = hashlib.sha256(raw).hexdigest()
     gold_of = {}
+    raw_labels = set()
     for line in raw.decode("utf-8").splitlines():
         line = line.strip()
         if not line:
@@ -166,18 +172,20 @@ def fetch_lane_bank(lane):
         except ValueError:
             continue
         scenario = row.get("item")
-        gold = row.get("expected")
-        if not scenario or not isinstance(gold, str) or not gold.strip():
+        expected = row.get("expected")
+        if not scenario or expected is None or not str(expected).strip():
             continue
-        gold = gold.strip().upper().replace("-", "_")
+        raw_labels.add(str(expected))
+        gold = str(expected).strip().upper()
         if gold_of.setdefault(scenario, gold) != gold:
             raise SystemExit("lane %s: item has two gold labels, refusing" % lane)
+    try:
+        menu = exact_label_menu(sorted(raw_labels))
+    except ValueError as refused:
+        raise SystemExit("lane %s is not label-gradable: %s" % (lane, refused))
     labels = sorted(set(gold_of.values()))
-    if not 2 <= len(labels) <= 8 or any(not LABEL_OK_RE.match(l) for l in labels):
-        raise SystemExit("lane %s is not label-gradable: gold values %r"
-                         % (lane, labels[:12]))
     bank = sorted(gold_of.items(), key=lambda p: (p[1], p[0]))
-    return bank, path, labels, file_sha
+    return bank, path, labels, menu, file_sha
 
 
 def build_panel(bank, limit, offset):
@@ -205,7 +213,7 @@ def parse_label(text):
     if not text:
         return "UNPARSED"
     if LANE != "governance":
-        return parse_label_generic(text)
+        return read_label(text, LABELS) or "UNPARSED"
     t = THINK_RE.sub(" ", text)
     t = t.upper().replace("-", "_")
     best, best_idx = None, -1
@@ -216,17 +224,10 @@ def parse_label(text):
     return best if best is not None else "UNPARSED"
 
 
-def parse_label_generic(text):
-    """Whole-token match, last occurrence wins, longest label on a tie, so a
-    label that is a substring of another (SAFE inside UNSAFE) is not misread."""
-    t = THINK_RE.sub(" ", text).upper().replace("-", "_")
-    best, best_key = None, (-1, -1)
-    for label in LABELS:
-        for m in re.finditer(r"(?<![A-Z0-9_])%s(?![A-Z0-9_])" % re.escape(label), t):
-            key = (m.start(), len(label))
-            if key > best_key:
-                best, best_key = label, key
-    return best if best is not None else "UNPARSED"
+def build_prompt(scenario):
+    if LANE == "governance":
+        return PROMPT_TEMPLATE.format(scenario=scenario)
+    return axis_prompt(LANE, scenario, RAW_LABELS)
 
 
 class BlockedCredential(Exception):
@@ -274,7 +275,7 @@ def post_json(url, payload, headers, timeout=90, retries=3):
 
 
 def classify(model, scenario, cred):
-    prompt = PROMPT_TEMPLATE.format(scenario=scenario)
+    prompt = build_prompt(scenario)
     if model.startswith("hf:"):
         router_model = model.split(":", 1)[1]
         data = post_json(
@@ -360,16 +361,15 @@ def main():
     run_id = args.run_id or utc_now_stamp()
     started = utc_now_stamp()
 
-    global LANE, LABELS, PROMPT_TEMPLATE, PROMPT_FRAME
+    global LANE, LABELS, RAW_LABELS, PROMPT_FRAME, GRADER
     bank_repo, bank_file_sha = REPO_ID, None
     if args.lane == "governance":
         bank, source = fetch_bank()
     else:
         LANE = args.lane
-        bank, source, LABELS, bank_file_sha = fetch_lane_bank(args.lane)
-        PROMPT_TEMPLATE = GENERIC_PROMPT_TEMPLATE.replace(
-            "{labels}", ", ".join(LABELS))
-        PROMPT_FRAME = "generic-label-v1"
+        bank, source, LABELS, RAW_LABELS, bank_file_sha = fetch_lane_bank(args.lane)
+        PROMPT_FRAME = "harness/gspc-top100/mill_hub_queue.py::axis_prompt"
+        GRADER = "harness/gspc-top100/mill_hub_queue.py::read_label"
         bank_repo = PERITEM_REPO_ID
     panel = build_panel(bank, args.limit, args.offset)
     bank_digest = hashlib.sha256(
@@ -440,13 +440,18 @@ def main():
             else:
                 status = "LIVE"
                 reason = None
+            # Canonical lanes: an unparsed reply is not a wrong answer, so it leaves the
+            # denominator. Governance keeps its own rule (unparsed counts against n).
+            graded = n if LANE == "governance" else n - unparsed
             providers_summary[model] = {
                 "status": status,
                 "reason": reason,
                 "n": n, "correct": correct, "unparsed": unparsed,
+                "n_graded": graded,
+                "parse_rate": round((n - unparsed) / n, 4) if n else None,
                 "transport_errors": transport_errors,
-                "accuracy": round(correct / n, 4) if n else None,
-                "wilson95": wilson(correct, n),
+                "accuracy": round(correct / graded, 4) if graded else None,
+                "wilson95": wilson(correct, graded),
             }
             print("[model:%s] %s n=%d acc=%s unparsed=%d"
                   % (model, status, n,
@@ -466,6 +471,7 @@ def main():
         },
         "labels": list(LABELS),
         "prompt_frame": PROMPT_FRAME,
+        "grader": GRADER,
         "comparable_to_board": False,
         "panel": {"limit": args.limit, "offset": args.offset, "n": len(panel)},
         "started_at": started,
