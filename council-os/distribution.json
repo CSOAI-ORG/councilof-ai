@@ -51,6 +51,7 @@
     "deprecated_alias": "io.github.CSOAI-ORG/gspc",
     "github": "io.github.CSOAI-ORG/gspc",
     "domain": "ai.councilof/gspc",
+    "domain_free": "ai.councilof/gspc-free",
     "note": "ai.councilof/gspc is the canonical MCP Registry name (domain-verified via /.well-known/mcp-registry-auth). io.github.CSOAI-ORG/gspc is its deprecated alias: the same door, listed under the GitHub-org namespace; the owner deprecates it in the registry."
   },
   "distribution": [
@@ -88,6 +89,23 @@
       "owner_approval_needed": true,
       "approver": "Nick — holds the Ed25519 private key matching /.well-known/mcp-registry-auth",
       "flagged_org_impact": "None: domain auth does not touch GitHub. No npm package and no repository URL are declared, because the npm package's mcpName names the GitHub namespace and the repository is dark to anonymous readers.",
+      "flagged_org_affected": false
+    },
+    {
+      "id": "mcp-registry-domain-free",
+      "format": "MCP Registry server.json (schema 2025-12-11), domain namespace, remote-only, the free door",
+      "output": [
+        "distribution/mcp-registry/ai.councilof-gspc-free/server.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/mcp-registry/ai.councilof-gspc-free/server.json"
+      ],
+      "licence": "n/a (registry metadata)",
+      "version_source": "remote",
+      "listing_channel": "registry.modelcontextprotocol.io via mcp-publisher (login http --domain councilof.ai)",
+      "owner_approval_needed": true,
+      "approver": "Nick — holds the Ed25519 private key matching /.well-known/mcp-registry-auth",
+      "flagged_org_impact": "None: domain auth does not touch GitHub. Remote-only: the free door, which registers no payment tool; no npm package and no repository URL are declared.",
       "flagged_org_affected": false
     },
     {
