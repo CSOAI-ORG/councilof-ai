@@ -12,6 +12,19 @@ are GENERATED MIRRORS from this monorepo.
 - Never git add -A (multi-lane)
 - Deploy: **GHA on master only** (push to master triggers `deploy.yml`; direct wrangler is owner-only per DEPLOY-LOCK.md)
 
+## Outside people's contact details never go into this repository
+
+This repository is public, and so is every branch, commit message, pull request and comment in it. Never put the
+email address or other contact details of anyone outside Council of AI into any of them, and never their
+correspondence: keep drafts, replies and contact lists in private records. Deleting a line later does not clean
+git history or PR pages.
+
+The `outside-email-addresses` job in `pr-gates.yml` (`scripts/privacy/test_outside_email_addresses.py`) fails a
+PR when any tracked file, the PR's title or description, or its commit messages hold such an address. Our own
+domains, role mailboxes such as `security@`, example domains and the reviewed exceptions in
+`scripts/privacy/outside-email-allowlist.txt` pass. A personal address of our own, such as a Gmail account, does
+not: use a councilof.ai address. Never add a person's own address to the allowlist to get a PR through; remove it.
+
 ## The GSPC grader has exactly one home
 
 `harness/gspc-top100/mill_hub_queue.py` — `read_label()` — is the grader the board's
