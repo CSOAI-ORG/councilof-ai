@@ -182,6 +182,15 @@ const compile = (defs: Tool[]) => defs.map((definition) => ({
     : undefined,
 }));
 
+/**
+ * A door alias answers with the same tools as councilof.ai/mcp, and its tools read and buy from the
+ * canonical origin. A paid call's challenge, resource and settlement then name the resources the
+ * x402 catalog (/.well-known/x402.json) lists. Measured 20 Nov 2026: a challenge from mcp.meok.ai
+ * named https://mcp.meok.ai/api/request-attestation, a resource no catalogue carries. Preview and
+ * local origins are not aliases and stay same-origin.
+ */
+export const DOOR_ALIAS_ORIGINS: Readonly<Record<string, string>> = { "mcp.meok.ai": "https://councilof.ai" };
+
 function buildMcp(
   definitions: Tool[],
   door: { instructions: string; paid: boolean },
@@ -191,7 +200,8 @@ function buildMcp(
   return createMcpHandler(
   ({ requestInfo }) => {
     if (!requestInfo) throw new Error("HTTP request context required");
-    const origin = new URL(requestInfo.url).origin;
+    const requestUrl = new URL(requestInfo.url);
+    const origin = DOOR_ALIAS_ORIGINS[requestUrl.host] ?? requestUrl.origin;
     const server = new McpServer(SERVER_INFO, {
       instructions: door.instructions,
       // No subscriptions are served here (maxSubscriptions: 0), so no list_changed is ever sent.
