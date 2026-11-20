@@ -302,3 +302,22 @@ test("a deterministic-fact page keeps saying that no separation test applies", (
   assert.doesNotMatch(fact, /data-glossary="separation"/);
   assert.match(fact, /facts, no separation test/);
 });
+
+test("the governance page renders the row's limit in a labelled Limit block citing C-2026-1120-02, and no other page has one", async () => {
+  const live = await loadBoard();
+  const row = live.axes.find((a) => a.axis === "governance");
+  // The text is the row's own (axes[].limit), so the test reads it from the commit board.
+  assert.equal(typeof row?.limit, "string");
+  assert.match(row.limit, /\b225 of 237\b/);
+  const block =
+    `\n  <h2>Limit</h2>\n  <div class="note" data-limit="governance">${row.limit}</div>` +
+    `\n  <p class="muted">Recorded in the corrections ledger: <a href="/corrections/#C-2026-1120-02">C-2026-1120-02</a>.</p>`;
+  const out = renderAll(live);
+  assert.ok(out["axis/governance.html"].includes(block), "rendered governance page carries the Limit block");
+  // The committed page is the one the site serves; build-axis-pages --check holds the rest of it.
+  const committed = readFileSync(new URL("../../public/axis/governance.html", import.meta.url), "utf8");
+  assert.ok(committed.includes(block), "committed public/axis/governance.html carries the Limit block");
+  // Only a row that states a limit gets the block.
+  const withBlock = Object.keys(out).filter((path) => out[path].includes("<h2>Limit</h2>"));
+  assert.deepEqual(withBlock, ["axis/governance.html"]);
+});
