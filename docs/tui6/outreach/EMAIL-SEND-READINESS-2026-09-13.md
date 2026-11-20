@@ -24,7 +24,7 @@ SendGrid config in `~/.env.local` shows `SENDGRID_API_KEY=placeholder` — not a
 
 | # | Recipient | Subject | Source draft |
 |---|-----------|---------|--------------|
-| 1 | emil@aiuc.com | Signed third-party observations for AIUC-1 evidence | docs/outreach/emails-ready/02-aiuc-schellman.eml |
+| 1 | [address removed] | Signed third-party observations for AIUC-1 evidence | docs/outreach/emails-ready/02-aiuc-schellman.eml |
 | 2 | connect@relminsurance.com | Marking evidence for AI-generated-content media liability | docs/outreach/emails-ready/04-relm-insurance.eml |
 | 3 | integrationpartners@vanta.com | Integration partner enquiry — signed AI measurement evidence | docs/outreach/emails-ready/06-vanta.eml |
 | 4 | contact@epoch.ai | Independent signed replication of one published eval | docs/outreach/emails-ready/10-epoch-ai.eml |
