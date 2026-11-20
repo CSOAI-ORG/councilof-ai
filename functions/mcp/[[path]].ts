@@ -27,7 +27,7 @@ import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, X402_META_PAYMENT, type PaidCallerCont
 import { dispatchTool, FREE_TOOL_DEFINITIONS, TOOL_DEFINITIONS } from "./_dispatch";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
-import { recordUsage } from "../_lib/usage";
+import { paidCallName, recordUsage, type PaidCallPayment } from "../_lib/usage";
 import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
 import { registerCouncilPanel } from "./_panel";
 
@@ -263,6 +263,21 @@ function buildMcp(
 }
 const mcp = buildMcp(DEFINITIONS, { instructions: INSTRUCTIONS, paid: true });
 const mcpFree = buildMcp(FREE_DEFINITIONS, { instructions: FREE_INSTRUCTIONS, paid: false });
+
+/**
+ * How a tools/call of a metered tool presented payment: presence and place only, read off the
+ * request before anything runs. "meta" is _meta["x402/payment"], the x402 MCP transport's field.
+ */
+export function paidCallPayment(params: Record<string, unknown>): PaidCallPayment {
+  const args = object(params.arguments) ? params.arguments : {};
+  const arg = typeof args.x_payment === "string" && args.x_payment.trim() !== "";
+  const meta = object(params._meta) && params._meta["x402/payment"] != null;
+  if (arg && meta) return "both";
+  if (arg) return "arg";
+  if (meta) return "meta";
+  if ("purchase_action" in args) return "purchase";
+  return args.preview === true || args.preview === "1" || args.preview === "true" ? "preview" : "none";
+}
 
 /** Which door a path names: "/mcp" (full), "/mcp/free" (free tools only), or none. */
 export function doorFor(pathname: string): "full" | "free" | null {
@@ -676,6 +691,9 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
   } else if (call.method === "tools/call") {
     const tool = typeof params.name === "string" && KNOWN_TOOL_NAMES.has(params.name) ? params.name : "not-a-tool";
     recordUsage({ request, env, waitUntil }, "mcp_tool", tool);
+    // A metered tool on the door that serves it: whether and where a payment was presented.
+    if (door === "full" && PAID_TOOL_NAMES.has(tool))
+      recordUsage({ request, env, waitUntil }, "paid_call", paidCallName("mcp", tool, paidCallPayment(params)));
   }
   const trace =
     call.method === "tools/call" && typeof params.name === "string"

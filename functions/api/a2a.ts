@@ -48,7 +48,7 @@
 
 import { DOCTRINE, measurementIndex, serverEvidence, verifyCapsule } from "../_lib/measurementCapsule";
 import { executePlan, routeIntent, type Plan } from "../_lib/talkRouter";
-import { recordUsage } from "../_lib/usage";
+import { paidCallName, recordUsage } from "../_lib/usage";
 import { shapeLabel } from "../_lib/askInput";
 import { evidenceBundlePreview } from "../mcp/_evidence";
 import { routeResult } from "../mcp/_route";
@@ -925,6 +925,15 @@ async function sendToolMessage(
       });
     caller = { ...caller, metaPayment };
   }
+  // Which field this door read a payment from, said in the reply so a client and the usage row
+  // (a2aPaidCallName) need not infer it. Both at once never reaches here: it was refused above.
+  const paymentChannel = !metered
+    ? undefined
+    : metaPayment !== undefined
+      ? A2A_PAYMENT_FIELD
+      : typeof input.x_payment === "string" && input.x_payment.trim() !== ""
+        ? "input.x_payment"
+        : "none";
   let result: McpToolResult;
   try {
     result = await dispatchTool(tool, input, origin, { paid: true }, caller);
@@ -972,6 +981,7 @@ async function sendToolMessage(
               tool,
               state,
               metered,
+              ...(paymentChannel ? { payment_channel: paymentChannel } : {}),
               door: "POST /api/a2a",
               same_as: `POST /mcp tools/call ${tool}`,
               card: new URL(`/.well-known/agents/${tool}.json`, origin).toString(),
@@ -1344,6 +1354,39 @@ export function a2aUsageShape(rawVersionHeader: string | null, servedAs03: boole
   return "vother";
 }
 
+/**
+ * The paid_call label for a reply, or null. Read off the reply's own TOOL_RESULT part: a metered
+ * per-tool skill that reached the dispatch, the field the door says it read a payment from
+ * (payment_channel: input.x_payment is "arg", message.metadata["x402.payment.payload"] is "meta"),
+ * and what the paid wrapper said about payment. A call refused before the dispatch (both fields at
+ * once, an input the schema refuses) has no TOOL_RESULT and writes no row. Presence only.
+ */
+export function a2aPaidCallName(replyBody: unknown): string | null {
+  const result = record(record(replyBody)?.result);
+  const message = record(result?.message) ?? result; // 1.0 wraps the Message; the 0.3 shim does not
+  const parts = Array.isArray(message?.parts) ? message.parts : [];
+  for (const part of parts) {
+    const data = record(record(part)?.data);
+    if (data?.kind !== "TOOL_RESULT" || data.metered !== true) continue;
+    const tool = str(data.tool);
+    if (!tool || !PAID_TOOL_NAMES.has(tool)) continue;
+    const structured = record(record(data.result)?.structuredContent) ?? {};
+    const status = str(structured.status) ?? "";
+    const payment =
+      data.payment_channel === A2A_PAYMENT_FIELD
+        ? "meta"
+        : structured.payment_presented === true || data.payment_channel === "input.x_payment"
+          ? "arg"
+        : status.startsWith("PURCHASE_") || status === "ORIGINAL_RECOVERED" || status.startsWith("BUYER_DECISION")
+          ? "purchase"
+          : structured.delivery_kind === "PREVIEW_OR_FREE"
+            ? "preview"
+            : "none";
+    return paidCallName("a2a", tool, payment);
+  }
+  return null;
+}
+
 export const onRequestPost: PagesFunction = async (context) => {
   const res = await handlePost(context.request, (context as { env?: unknown }).env);
   // Aggregate usage (functions/_lib/usage.ts): declared version + ok / error code, and for a body
@@ -1357,6 +1400,8 @@ export const onRequestPost: PagesFunction = async (context) => {
           const err = record(record(j)?.error) ?? {};
           const code = err.code;
           recordUsage(ctx, "a2a_outcome", `${shape}_${typeof code === "number" ? `error${code}` : "ok"}`);
+          const paid = a2aPaidCallName(j);
+          if (paid) recordUsage(ctx, "paid_call", paid);
           if (code === A2A_ERROR.INVALID_REQUEST || code === A2A_ERROR.PARSE) {
             const meta = record(record(Array.isArray(err.data) ? err.data[0] : null)?.metadata);
             const received = str(meta?.received);
