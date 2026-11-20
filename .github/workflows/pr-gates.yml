@@ -133,6 +133,29 @@ jobs:
           THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
         run: python3 scripts/privacy/test_third_party_identifiers.py -v
 
+  # 20 Nov 2026: outside people's email addresses reached public files more than once (#4490 removed 60 from 9
+  # files, and a full read on 20 Nov found 27 more in 10 files, removed by the PR that added this job). The
+  # repository is public, and so is every branch, commit message and PR in it. The guard reads every tracked file,
+  # plus this PR's title, description and commit messages, and fails on any address that is not ours, a role
+  # mailbox, an example or a reviewed exception (scripts/privacy/outside-email-allowlist.txt). Its output names
+  # places, never addresses, because this log is public too. merge_group-safe: with no PR number the two PR
+  # checks skip and the whole tree is still read.
+  outside-email-addresses:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: No outside person's email address in a tracked file or in this PR's text and commits
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: python3 scripts/privacy/test_outside_email_addresses.py -v
+
   # 7 Nov 2026: .github/workflows/runpod-intake.yml called
   # scripts/resolve_runpod_trusted_bank.py with flags the script never had ("--index-out"
   # and "--index"), while the script's real CLI is two subcommands, "stage" and "lookup".
@@ -358,12 +381,23 @@ jobs:
 
       - name: Native canvas build prerequisites
         if: steps.scope.outputs.gated == 'true'
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: |
-          sudo apt-get update
-          sudo env DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
-            build-essential pkg-config libpixman-1-dev \
-            libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+          # The runner's apt mirror stalled past the old 5-minute limit on 18 and 19 Nov 2026 (deploy run
+          # 44397073610; gates on #4499) when this step normally takes 13-24 s. Short network timeouts,
+          # apt's own retries and three attempts turn one stalled mirror read into a retry, not a red run.
+          APT_OPTS="-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30"
+          for attempt in 1 2 3; do
+            if sudo apt-get $APT_OPTS update && \
+              sudo env DEBIAN_FRONTEND=noninteractive apt-get $APT_OPTS install --yes --no-install-recommends \
+                build-essential pkg-config libpixman-1-dev \
+                libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev; then
+              exit 0
+            fi
+            echo "apt attempt $attempt failed; retrying in 15 s" >&2
+            sleep 15
+          done
+          exit 1
 
       - name: Install deps
         if: steps.scope.outputs.gated == 'true'
