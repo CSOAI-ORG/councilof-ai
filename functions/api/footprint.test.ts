@@ -35,9 +35,11 @@ import {
   getFootprint,
   grossDistribution,
   onRequestGet,
+  observedExecution,
   registryListings,
   type Deps,
 } from "./footprint";
+import verifyExecutionsArtifact from "../../public/interop/verify-executions-latest.json";
 import packages from "../../public/interop/footprint-packages.json";
 import distribution from "../../public/interop/distribution-latest.json";
 import registryCensus from "../../public/interop/mcp-registry-2026-09-23/census.json";
@@ -573,5 +575,46 @@ describe("/api/footprint — cache and handler", () => {
       }
     }
     expect(String(p.gross_distribution.note)).toContain("not a count of people");
+  });
+});
+
+describe("observed_execution — aggregate-only verify executions from the committed artifact", () => {
+  const withDays = {
+    schema: "csoai.verify-executions/0.1",
+    as_of: "2026-11-19T07:31:00Z",
+    status: "measured",
+    days: [{ date: "2026-11-18", executions: 7 }, { date: "2026-11-19", executions: 3 }],
+    stale_after_hours: 48,
+    retention_days: 120,
+  };
+
+  it("with no bucket landed, the stage stays UNMEASURED and never says zero", () => {
+    for (const art of [null, { ...withDays, days: [], status: "no buckets" }]) {
+      const row = observedExecution(NOW, art as never);
+      expect(row).toMatchObject({ state: "UNMEASURED", value: null });
+      expect(String(row.reason)).toContain("not zero");
+    }
+    // the committed pointer names no bucket yet, so the served stage is UNMEASURED too
+    expect(verifyExecutionsArtifact.days?.length ?? 0).toBe(0);
+    expect(observedExecution(NOW).state).toBe("UNMEASURED");
+  });
+
+  it("with real buckets, the stage is the artifact's own sum, as_of and window rule", () => {
+    const row = observedExecution("2026-11-19T08:00:00Z", withDays);
+    expect(row).toMatchObject({ state: "READ", value: 10, as_of: "2026-11-19T07:31:00Z", days: 2 });
+    expect(String(row.window_rule)).toContain("never a lifetime total");
+    expect(String(row.note)).toContain("counting never gates");
+  });
+
+  it("an artifact past its own freshness declaration is STALE, with the real number intact", () => {
+    const row = observedExecution("2026-11-23T08:00:00Z", withDays);
+    expect(row.state).toBe("STALE");
+    expect(row.value).toBe(10);
+    expect(String(row.reason)).toContain("48 h freshness declaration");
+  });
+
+  it("malformed bucket bytes refuse the number instead of publishing a partial sum", () => {
+    const row = observedExecution(NOW, { ...withDays, days: [{ date: "2026-11-18", executions: "seven" } as never] });
+    expect(row).toMatchObject({ state: "UNMEASURED", value: null });
   });
 });

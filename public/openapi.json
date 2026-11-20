@@ -9511,6 +9511,37 @@
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
+    "/api/verify-count": {
+      "get": {
+        "description": "POST /api/verify-count \u2014 fire-and-forget aggregate counter for the free card verifier.",
+        "operationId": "get__api_verify-count",
+        "responses": {
+          "405": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Method not allowed \u2014 use the documented read method"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/verify-count \u2014 fire-and-forget aggregate counter for the free card verifier.",
+        "x-csoai-lifecycle": "METHOD_NOT_ALLOWED"
+      },
+      "post": {
+        "description": "POST /api/verify-count \u2014 fire-and-forget aggregate counter for the free card verifier.",
+        "operationId": "post__api_verify-count",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/verify-count \u2014 fire-and-forget aggregate counter for the free card verifier."
+      }
+    },
     "/api/verify-tally": {
       "get": {
         "description": "",
@@ -10828,7 +10859,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 143,
+    "public_operations": 144,
     "quarantined": [
       {
         "buyable": false,
@@ -10844,7 +10875,7 @@
       "well_known": "csoai.x402/0.2"
     },
     "scheme": "exact",
-    "unauthenticated_facades": 26,
+    "unauthenticated_facades": 27,
     "well_known": "https://councilof.ai/.well-known/x402.json"
   }
 }

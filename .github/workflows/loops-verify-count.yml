@@ -1,0 +1,191 @@
+# loops-verify-count — land the aggregate-only verify-execution counter as a committed artifact.
+#
+# WHY THIS EXISTS. Verification on /gspc-verify executes client-side, so /api/counters published
+# verify_page_executions as UNPUBLISHED because nothing instrumented it. The client now fires one
+# payload-free POST beacon per completed successful verification (functions/api/verify-count.ts),
+# which increments one daily bucket in the WORKER_STATE_KV namespace. This workflow is the only
+# reader: it walks the buckets once a day and lands them as public/interop/verify-executions-<date>.json
+# plus the verify-executions-latest.json pointer (schema csoai.verify-executions/0.1), so
+# /api/counters can derive the row IN-PROCESS from committed bytes and stay a deterministic,
+# nothing-fetched endpoint.
+#
+# HONESTY RULES. Aggregate-only: buckets are counts, no per-user data exists anywhere in the
+# pipeline, and nothing about a card, a result value or a person is ever read here. days[] carries
+# only buckets that exist — a day with no bucket is absent, never written as zero. With zero
+# buckets the artifact is still written, with status "no buckets" and an empty days array:
+# UNMEASURED-empty is first-class. Buckets older than retention_days are dropped from the
+# artifact (the days array is a retained window, not a lifetime total). The namespace is
+# discovered by title via the Cloudflare API (no namespace id is committed in this repo; the
+# WORKER_STATE_KV binding itself is optional in the Pages config, and an unbound or failing KV
+# simply counts nothing).
+#
+# LAND ON A BRANCH + PR (github-actions[bot] identity, pr-gates dispatched for the bot commit,
+# squash auto-merge). Direct push to master is not a path.
+
+name: loops-verify-count
+
+on:
+  schedule:
+    - cron: "30 7 * * *" # daily 07:30Z
+  workflow_dispatch: {}
+
+permissions:
+  actions: write # dispatches pr-gates for the bot branch (GITHUB_TOKEN pushes emit no pull_request event)
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: loops-verify-count
+  cancel-in-progress: false
+
+jobs:
+  land:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: read the verify-exec daily buckets from the WORKER_STATE_KV namespace
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          RETENTION_DAYS: "120"
+          STALE_AFTER_HOURS: "48"
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import datetime, json, os, pathlib, sys, urllib.parse, urllib.request
+
+          token = os.environ.get("CLOUDFLARE_API_TOKEN", "")
+          account = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "")
+          retention = int(os.environ["RETENTION_DAYS"])
+          stale_after = int(os.environ["STALE_AFTER_HOURS"])
+          now = datetime.datetime.now(datetime.timezone.utc)
+          as_of = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+          date = now.strftime("%Y-%m-%d")
+
+          def api(url):
+              req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      body = json.load(r)
+              except Exception as e:  # an unreadable counter must fail loudly, never land as "no buckets"
+                  raise SystemExit(f"HALT: Cloudflare API read failed ({e.__class__.__name__}); landing nothing rather than a false 'no buckets'")
+              if not body.get("success"):
+                  raise SystemExit(f"HALT: Cloudflare API error: {body.get('errors')}")
+              return body.get("result")
+
+          days = []
+          if token and account:
+              # The namespace id is not committed in this repo: discover it by title.
+              namespace = None
+              page = 1
+              while namespace is None:
+                  found = api(f"https://api.cloudflare.com/client/v4/accounts/{account}/storage/kv/namespaces?per_page=100&page={page}") or []
+                  for ns in found:
+                      title = (ns.get("title") or "").lower()
+                      if "worker_state_kv" in title or "worker-state-kv" in title:
+                          namespace = ns
+                          break
+                  if not found or len(found) < 100:
+                      break
+                  page += 1
+              if namespace is None:
+                  print("WARNING: no WORKER_STATE_KV namespace found by title — nothing has ever been counted. "
+                        "Create the namespace, bind it in wrangler.jsonc, and this run stays 'no buckets'.")
+              else:
+                  print(f"namespace: {namespace.get('title')} ({namespace.get('id')})")
+                  prefix = "verify-exec:"
+                  cursor = ""
+                  keys = []
+                  while True:
+                      q = {"prefix": prefix, "per_page": "1000"}
+                      if cursor:
+                          q["cursor"] = cursor
+                      res = api(f"https://api.cloudflare.com/client/v4/accounts/{account}/storage/kv/namespaces/{namespace['id']}/keys?" + urllib.parse.urlencode(q)) or {}
+                      keys.extend(res.get("keys") or [])
+                      cursor = (res.get("result_info") or {}).get("cursor") or ""
+                      if not cursor:
+                          break
+                  cutoff = (now - datetime.timedelta(days=retention)).strftime("%Y-%m-%d")
+                  for entry in keys:
+                      name = entry.get("name") or ""
+                      bucket_date = name[len(prefix):]
+                      if len(bucket_date) != 10 or bucket_date.count("-") != 2:
+                          raise SystemExit(f"HALT: unexpected key in the counter namespace: {name!r}")
+                      if bucket_date < cutoff:
+                          print(f"dropped (older than {retention} d): {bucket_date}")
+                          continue
+                      value = api(f"https://api.cloudflare.com/client/v4/accounts/{account}/storage/kv/namespaces/{namespace['id']}/values/{urllib.parse.quote(name, safe='')}")
+                      try:
+                          executions = int(str(value).strip())
+                          if executions < 0:
+                              raise ValueError
+                      except ValueError:
+                          raise SystemExit(f"HALT: bucket {name} does not hold a non-negative integer: {str(value)[:80]!r}")
+                      days.append({"date": bucket_date, "executions": executions})
+                  days.sort(key=lambda d: d["date"])
+          else:
+              print("WARNING: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID secrets are not set on this run — nothing read, status 'no buckets'.")
+
+          status = "measured" if days else "no buckets"
+          note = (
+              "Aggregate-only execution counts for the free, zero-auth card verifier. Each completed "
+              "successful verification fires one payload-free POST beacon to /api/verify-count, which "
+              "increments one daily bucket; nothing about the record, the card, the result value or the "
+              "person is sent or stored, and no timestamp beyond the day bucket exists anywhere in this "
+              "pipeline. days[] carries the daily buckets the landing workflow retained (buckets older "
+              "than retention_days are dropped), so it is a retained window, never a lifetime total; a "
+              "read-modify-write race on one bucket can skip an increment, so treat the figure as a floor. "
+              "status 'no buckets' with an empty days array means no bucket has landed yet: empty is empty "
+              "and is never written as zero."
+          )
+          dated = {
+              "schema": "csoai.verify-executions/0.1",
+              "as_of": as_of,
+              "status": status,
+              "days": days,
+              "stale_after_hours": stale_after,
+              "retention_days": retention,
+              "note": note,
+          }
+          latest = dict(dated, source_artifact=f"/interop/verify-executions-{date}.json")
+
+          out = pathlib.Path("public/interop")
+          out.mkdir(parents=True, exist_ok=True)
+          (out / f"verify-executions-{date}.json").write_text(json.dumps(dated, indent=1) + "\n", encoding="utf-8")
+          (out / "verify-executions-latest.json").write_text(json.dumps(latest, indent=1) + "\n", encoding="utf-8")
+          total = sum(d["executions"] for d in days)
+          print(f"artifact written: status={status} days={len(days)} retained_total={total} as_of={as_of}")
+          PY
+      - name: land dated artifact + re-pointed pointer on a branch, PR, gates, gated merge
+        id: land
+        env:
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }} # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          DATE=$(date -u +%Y-%m-%d)
+          git add "public/interop/verify-executions-$DATE.json" public/interop/verify-executions-latest.json
+          if git diff --cached --quiet; then
+            echo "artifact byte-identical to master; nothing to land"
+            echo "landed=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
+          BR="loops/verify-count-${STAMP}"
+          git checkout -b "$BR"
+          git commit -m "verify-executions: aggregate daily buckets round (${STAMP})"
+          git push origin "HEAD:$BR"
+          URL=$(gh pr create --base master --head "$BR" \
+            --title "verify-executions: aggregate daily buckets round (${STAMP})" \
+            --body "Daily landing of the aggregate-only verify-execution counter (\`csoai.verify-executions/0.1\`). Payload-free beacons from the free client-side verifier are one daily bucket each; this workflow is the only reader and publishes buckets as committed bytes. \`days[]\` carries only buckets that exist — a day with no bucket is absent, never zero; an empty array with \`status: no buckets\` means nothing has been counted yet, which is a valid day. Retained window only (buckets past \`retention_days\` dropped): never a lifetime total. No per-user data exists anywhere in this pipeline. \`verify-executions-latest.json\` re-pointed at the dated artifact; \`/api/counters\` and \`/api/footprint\` derive from the pointer in-process.")
+          gh workflow run pr-gates.yml --ref "$BR"
+          gh pr merge "$URL" --squash --auto || echo "auto-merge unavailable; $URL needs a human merge"
+          echo "landed=1" >> "$GITHUB_OUTPUT"
+          echo "branch=$BR" >> "$GITHUB_OUTPUT"

@@ -1,0 +1,10 @@
+{
+ "schema": "csoai.verify-executions/0.1",
+ "as_of": "2026-11-19T03:44:05Z",
+ "status": "no buckets",
+ "days": [],
+ "stale_after_hours": 48,
+ "retention_days": 120,
+ "source_artifact": "/interop/verify-executions-2026-11-19.json",
+ "note": "Aggregate-only execution counts for the free, zero-auth card verifier. Each completed successful verification fires one payload-free POST beacon to /api/verify-count, which increments one daily bucket; nothing about the record, the card, the result value or the person is sent or stored, and no timestamp beyond the day bucket exists anywhere in this pipeline. days[] carries the daily buckets the landing workflow retained (buckets older than retention_days are dropped), so it is a retained window, never a lifetime total; a read-modify-write race on one bucket can skip an increment, so treat the figure as a floor. status 'no buckets' with an empty days array means no bucket has landed yet: empty is empty and is never written as zero. This pointer is written by .github/workflows/loops-verify-count.yml alongside the dated artifact it names in source_artifact."
+}

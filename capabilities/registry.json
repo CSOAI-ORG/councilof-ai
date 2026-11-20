@@ -2970,6 +2970,32 @@
       "payment": "free"
     },
     {
+      "id": "api-verify-count",
+      "protocols": [
+        "http"
+      ],
+      "title": "Verify count",
+      "description": "POST /api/verify-count — fire-and-forget aggregate counter for the free card verifier.",
+      "endpoint": "/api/verify-count",
+      "method": "GET",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-verify-count-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Verify count (POST)",
+      "description": "POST /api/verify-count — fire-and-forget aggregate counter for the free card verifier. The body is never read or stored; counting never gates.",
+      "endpoint": "/api/verify-count",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-verify-post",
       "protocols": [
         "http"
