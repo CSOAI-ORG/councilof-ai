@@ -27,7 +27,7 @@ const TOOL_TITLES: Record<string, string> = {
   get_axis: "One axis of the board",
   list_cards: "Signed records",
   get_root: "The public root",
-  x402_trust: "Paid-door census",
+  x402_trust: "x402 catalog census",
   measurement_index: "Measurement index",
   corrections_summary: "Corrections",
   claim_maintenance_register: "Claims we keep re-checking",
@@ -172,20 +172,17 @@ const CLEAR_WINNER: Record<string, string> = {
 };
 
 /**
- * The x402 census in plain counts: ONE place that both the tiles and the card's sentence read.
- * "Gone or not answering" is the snapshot producer's own "phantom or unreachable" figure
- * (scripts/catalog-trust-round.py: dead_404_or_unreachable + other_error), so the tile, the
- * sentence and the snapshot's headline all print the same number. Tools audit retest, 6 Oct
- * 2026: the tile printed dead_404_or_unreachable alone (15) beside a headline of 16.
+ * Status-only census of catalog rows. Buckets stay separate and missing stays unknown.
+ * HTTP 402 alone does not establish a valid envelope, signability, settlement or delivery.
  */
-export function x402Counts(o: Obj): { tried: number | null; askCorrectly: number | null; goneOrNotAnswering: number | null } {
+export function x402Counts(o: Obj): { tried: number | null; http402: number | null; unreachableOr404: number | null; otherErrors: number | null } {
   const c = rec(o.counts);
-  const dead = num(c?.dead_404_or_unreachable);
-  const other = num(c?.other_error);
+  const count = (v: unknown): number | null => typeof v === "number" && Number.isSafeInteger(v) && v >= 0 ? v : null;
   return {
-    tried: num(c?.total),
-    askCorrectly: num(c?.challenge_402),
-    goneOrNotAnswering: dead === null ? null : dead + (other ?? 0),
+    tried: count(c?.total),
+    http402: count(c?.challenge_402),
+    unreachableOr404: count(c?.dead_404_or_unreachable),
+    otherErrors: count(c?.other_error),
   };
 }
 
@@ -326,12 +323,13 @@ const TILE_SPECS: Record<string, (o: Obj) => StatTile[]> = {
   x402_trust: (o) => {
     const c = x402Counts(o);
     const t: StatTile[] = [];
-    if (c.tried !== null) t.push({ key: "counts.total", label: "Paid doors tried", value: fmt(c.tried) });
-    if (c.askCorrectly !== null) t.push({ key: "counts.challenge_402", label: "Ask for payment correctly", value: fmt(c.askCorrectly) });
-    if (c.goneOrNotAnswering !== null)
-      t.push({ key: "counts.dead_404_or_unreachable+other_error", label: "Gone or not answering", value: fmt(c.goneOrNotAnswering) });
     const asOf = day(o.as_of);
-    if (asOf) t.push({ key: "as_of", label: "Read on", value: asOf });
+    if (c.tried !== null) t.push({ key: "counts.total", label: "Catalog rows", value: fmt(c.tried), hint: asOf ? `snapshot ${asOf}` : undefined });
+    if (c.http402 !== null) t.push({ key: "counts.challenge_402", label: "Returned HTTP 402", value: fmt(c.http402) });
+    if (c.unreachableOr404 !== null)
+      t.push({ key: "counts.dead_404_or_unreachable", label: "HTTP 404 or unreachable", value: fmt(c.unreachableOr404) });
+    if (c.otherErrors !== null) t.push({ key: "counts.other_error", label: "Other errors", value: fmt(c.otherErrors) });
+    if (asOf && c.tried === null) t.push({ key: "as_of", label: "Snapshot dated", value: asOf });
     return t;
   },
   model_lookup: (o) => {
@@ -375,7 +373,7 @@ export function statTiles(output: unknown, max = 4, tool?: string): StatTile[] {
   const o = output as Record<string, unknown>;
   if (tool && Object.prototype.hasOwnProperty.call(TILE_SPECS, tool)) {
     const spec = TILE_SPECS[tool](o).filter((t) => t.value);
-    if (spec.length) return spec.slice(0, max);
+    if (spec.length || tool === "x402_trust") return spec.slice(0, max);
   }
   const found: StatTile[] = [];
   const push = (key: string, label: string, v: unknown) => {
@@ -425,10 +423,11 @@ export function plainAnswer(tool: string, output: unknown): string | null {
   switch (tool) {
     case "x402_trust": {
       const tried = v("counts.total");
-      const ok = v("counts.challenge_402");
-      const gone = v("counts.dead_404_or_unreachable+other_error");
-      if (!tried || !ok) return null;
-      return `Of ${tried} paid doors we tried, ${ok} asked for payment correctly${gone ? ` and ${gone} were gone or not answering` : ""}.`;
+      const status = v("counts.challenge_402");
+      const gone = v("counts.dead_404_or_unreachable");
+      const other = v("counts.other_error");
+      if (!tried || !status) return null;
+      return `Of ${tried} catalog rows, ${status} returned HTTP 402${gone ? `; ${gone} returned HTTP 404 or were unreachable` : ""}${other ? `; ${other} had other errors` : ""}. HTTP status alone does not establish a valid payment challenge, settlement or delivery.`;
     }
     case "mcp_trust": {
       const tried = v("counts.total");
