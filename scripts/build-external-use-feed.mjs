@@ -63,6 +63,13 @@ export function render(review) {
     not_regulatory_endorsement: true,
     unknown_is_not_zero: true,
     scope: checked.scope,
+    navigation: [
+      { role: "source_evidence", url: "/interop/external-use.json", state: "SOURCE_REVIEWED_NOT_ATTESTED" },
+      { role: "human_explanation", url: "/traction/#external-use", state: "PUBLIC_VIEW_AFTER_RELEASE" },
+      { role: "trust_floor", url: "/layer0/", state: "DOCUMENTATION_ONLY" },
+      { role: "artifact_verification", url: "/gspc-verify/", state: "USER_SUPPLIED_RECORD_REQUIRED" },
+      { role: "execution_boundary", url: "/api/route/execute", state: "GET_DOCUMENTATION_ONLY_POST_NOT_INVOKED" },
+    ],
     records: checked.records,
     attribution_note: "Independent activity, publication, method verification, buyer acceptance, and repeat demand are distinct stages. This feed does not create new source evidence."
   }, null, 2) + "\n";
