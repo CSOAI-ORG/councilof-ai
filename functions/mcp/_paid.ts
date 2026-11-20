@@ -21,9 +21,15 @@ import { purchaseSha256 } from "../../shared/buyerPurchase";
  *         2026-09-26 this returned isError:false with the challenge nested under
  *         `payment_required`, which an x402 MCP client (checks structuredContent.x402Version +
  *         accepts) could not recognise. `payment_required` is kept for existing readers.
- *         PAYMENT SEMANTICS UNCHANGED: payment is still read only from the `x_payment` argument and
- *         forwarded as X-PAYMENT; `_meta["x402/payment"]` is not read, so a client that sends only
- *         that receives the same challenge and is charged nothing (paid-tools.test.ts pins both).
+ *         PAYMENT, TWO CHANNELS, ONE HEADER (2026-11-20). Until then payment was read only from the
+ *         `x_payment` argument, so a client following the same transport spec's "Payment Payload
+ *         Transmission" (it retries the call with its PaymentPayload in `_meta["x402/payment"]`)
+ *         was sent the challenge again on every retry and could never buy. Now POST /mcp hands that
+ *         object to this module, which base64s its JSON into the same X-PAYMENT header the argument
+ *         becomes; the route decodes exactly that (functions/api/_x402.ts) and still verifies and
+ *         settles, fail closed. Both channels at once are refused and nothing is forwarded. When the
+ *         route reports settlement, the decoded X-PAYMENT-RESPONSE is also returned as
+ *         `_meta["x402/payment-response"]` ("Settlement Response Delivery"), never invented.
  *   2xx → status DELIVERED: delivery is separate from settlement and receipt state. A free preview,
  *         a paid delivery with no settle echo, a settle echo with a receipt gap, and a settle echo
  *         carrying an unverified JWS receipt are four different structured states.
@@ -199,8 +205,124 @@ export function buildPaidRequest(
   };
 }
 
-export type PaidCallerContext={authorization?:string;env?:BuyerEnv};
+/** x402 MCP transport field names (x402-foundation/x402 specs/transports-v2/mcp.md). */
+export const X402_META_PAYMENT = "x402/payment";
+export const X402_META_PAYMENT_RESPONSE = "x402/payment-response";
+// A PaymentPayload is a signature and an authorization. This bounds what becomes a request header.
+export const META_PAYMENT_MAX_BYTES = 16 * 1024;
+
+/**
+ * `_meta["x402/payment"]` as the X-PAYMENT header value: base64 of the PaymentPayload's JSON, the
+ * form the metered routes decode. Only the shape is checked here; whether the payment is good is
+ * the route's question (facilitator verify, then settle).
+ */
+export function metaPaymentHeader(meta: unknown): { header: string } | { error: string } {
+  if (!meta || typeof meta !== "object" || Array.isArray(meta))
+    return { error: `_meta["${X402_META_PAYMENT}"] must be an x402 PaymentPayload object` };
+  // Every non-ASCII character is written as a JSON \uXXXX escape, so the header is base64 of pure
+  // ASCII. The route decodes with atob then JSON.parse (functions/api/_x402.ts), which reads bytes
+  // as Latin-1: base64 of UTF-8 would hand it altered strings wherever the payload's resource
+  // description carries a dash or an accent. Escaped, both decoders read the same object.
+  const json = JSON.stringify(meta).replace(
+    /[\u0080-\uffff]/g,
+    (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`,
+  );
+  if (json.length > META_PAYMENT_MAX_BYTES)
+    return { error: `_meta["${X402_META_PAYMENT}"] exceeds ${META_PAYMENT_MAX_BYTES} bytes` };
+  return { header: btoa(json) };
+}
+
+/**
+ * receipts_batch only. An unpaid call may omit `to`: the route then ends the window at "now" and
+ * names that end in the challenge's resource URL. A client following the x402 MCP transport
+ * retries with the SAME arguments, so its paid call would be refused for a missing `to`. Its
+ * PaymentPayload carries the resource it signed for; when that is this tool's route on this
+ * origin with the same `from`, its `to` is the window the caller is paying for.
+ */
+function challengedWindowEnd(meta: unknown, route: string, origin: string, from: unknown): string | undefined {
+  if (typeof from !== "string" || !from.trim()) return undefined;
+  const payload = meta as { resource?: unknown; accepted?: { resource?: unknown } };
+  const named =
+    typeof payload.resource === "string"
+      ? payload.resource
+      : payload.resource && typeof payload.resource === "object"
+        ? (payload.resource as { url?: unknown }).url
+        : payload.accepted?.resource;
+  if (typeof named !== "string") return undefined;
+  try {
+    const url = new URL(named);
+    if (url.origin !== origin || url.pathname !== route) return undefined;
+    if (url.searchParams.get("from") !== from.trim()) return undefined;
+    return url.searchParams.get("to") || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** The route's X-PAYMENT-RESPONSE as an object, or null when it is not base64 of a JSON object. */
+function settlementResponse(header: unknown): Record<string, unknown> | null {
+  if (typeof header !== "string" || !header) return null;
+  try {
+    const normalized = header.replace(/-/g, "+").replace(/_/g, "/");
+    const binary = atob(normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "="));
+    const decoded: unknown = JSON.parse(new TextDecoder().decode(Uint8Array.from(binary, (c) => c.charCodeAt(0))));
+    return decoded && typeof decoded === "object" && !Array.isArray(decoded) ? (decoded as Record<string, unknown>) : null;
+  } catch {
+    return null;
+  }
+}
+
+export type PaidCallerContext={authorization?:string;env?:BuyerEnv;
+  /** params._meta["x402/payment"] of the tools/call, when the caller sent one (POST /mcp only). */
+  metaPayment?:unknown};
+
+/**
+ * Run a paid tool. Payment arrives as the `x_payment` argument or as `_meta["x402/payment"]`
+ * (caller.metaPayment); either way it reaches the route as one X-PAYMENT header. A settlement the
+ * route reports is returned in `_meta["x402/payment-response"]` beside the existing fields.
+ */
 export async function paidToolResult(
+  name: string,
+  args: Record<string, unknown>,
+  origin: string,
+  caller?:PaidCallerContext,
+): Promise<McpToolResult> {
+  let paidArgs = args;
+  const meta = caller?.metaPayment;
+  if (meta !== undefined && meta !== null) {
+    const refused = (reason: string): McpToolResult => ({
+      content: [{ type: "text", text: `BAD_ARGUMENTS — ${reason}. Nothing was forwarded to the route; nothing was charged by this request.` }],
+      structuredContent: {
+        tool: name,
+        status: "BAD_ARGUMENTS",
+        reason,
+        payment_presented: true,
+        payment_forwarded: false,
+        settlement_state: "NOT_REQUESTED",
+        nothing_charged: true,
+        delivery_state: "NOT_DELIVERED",
+        doctrine: DOCTRINE,
+        not_a_certification: true,
+      },
+      isError: true,
+    });
+    if (typeof args.x_payment === "string" && args.x_payment.trim() !== "")
+      return refused(`payment was sent twice: use the x_payment argument or _meta["${X402_META_PAYMENT}"], not both`);
+    const encoded = metaPaymentHeader(meta);
+    if ("error" in encoded) return refused(encoded.error);
+    paidArgs = { ...args, x_payment: encoded.header };
+    if (name === "receipts_batch" && !(typeof args.to === "string" && args.to.trim())) {
+      const route = TOOLS.find((t) => t.name === name)?.csoai.route;
+      const to = route ? challengedWindowEnd(meta, route, origin, args.from) : undefined;
+      if (to) paidArgs.to = to;
+    }
+  }
+  const result = await paidToolCall(name, paidArgs, origin, caller);
+  const settled = settlementResponse(result.structuredContent?.payment_response_header);
+  return settled ? { ...result, _meta: { [X402_META_PAYMENT_RESPONSE]: settled } } : result;
+}
+
+async function paidToolCall(
   name: string,
   args: Record<string, unknown>,
   origin: string,
@@ -372,7 +494,7 @@ export async function paidToolResult(
       ...settlementFields(),
       how_to_pay: paymentPresented
         ? "A payment authorization was presented, but this response does not prove settlement. Inspect the returned reason, wallet, chain and facilitator before signing or retrying."
-        : "sign accepts[0] (x402 exact scheme, EIP-3009 transferWithAuthorization under extra.name/version) with your wallet, base64 the payload, and call this tool again with x_payment=<that value>. The free preview, if any, is in payment_required.csoai.preview.",
+        : "sign accepts[0] (x402 exact scheme, EIP-3009 transferWithAuthorization under extra.name/version) with your wallet, then call this tool again with the same arguments and either x_payment=<base64 of the payload> or the payload object in _meta[\"x402/payment\"] (x402 MCP transport), not both. The free preview, if any, is in payment_required.csoai.preview.",
     };
     // T11 (6 Oct 2026): a dated amount is said in the human line, built from the challenge itself so it
     // disappears once accepts[0] no longer carries an end date. No amount is typed here.
