@@ -1,0 +1,49 @@
+# Exceptions for scripts/privacy/test_outside_email_addresses.py. Every entry needs a reason after '#'.
+#
+# List an organisation's published mailbox (a consultation inbox, a working-group list, a team inbox) or a test
+# value. Never list a person's own address, at any domain, and never ours at a webmail provider: remove those
+# instead. Role words such as press, security and comments, our own domains, example domains and list hosts pass
+# without an entry here.
+#
+# A verbatim third-party record that must stay byte-for-byte can be exempted as a whole file:
+#   file <path> sha256:<digest of the file>  # reason
+# The exemption lapses as soon as the file's bytes change, and the guard then reads it like any other file.
+
+# Verbatim third-party records
+file functions/_lib/route/__fixtures__/ard-agntcy-gateway.json sha256:3cceee5c9805741aeadc776fc312915151bcf6c8c13990aa1d601547a679c9ec  # records recorded live from the AGNTCY Directory gateway; the signer identity comes from the public Sigstore log, and the test needs the records verbatim
+file public/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-6500.json sha256:44af049df2d4ac8f14e456ab237e40ef895c4983356a93037fc946a22231d1ee  # byte-exact mirror of a public XRPL token registry response, kept as evidence
+
+# Consultation and regulator mailboxes
+cp-systemicstablecoin@bankofengland.co.uk  # Bank of England consultation response inbox
+cp14_26@bankofengland.co.uk  # Bank of England consultation response inbox
+cnect-aioffice@ec.europa.eu  # European Commission AI Office functional mailbox
+cnect-aioffice-code-of-practice-transparency@ec.europa.eu  # AI Office mailbox for the transparency code of practice
+cat1additionalduties@ofcom.org.uk  # Ofcom consultation inbox
+drcf@ofcom.org.uk  # Digital Regulation Cooperation Forum mailbox
+smartdatacfeinbox@businessandtrade.gov.uk  # Department for Business and Trade smart data call-for-evidence inbox
+tevv-athlon@nist.gov  # NIST programme mailbox
+dncert@cert-in.org.in  # CERT-In functional mailbox
+governor@pboc.gov.cn  # People's Bank of China office of the governor
+gisteam@wirral.gov.uk  # Wirral Council GIS team inbox
+informationmanager@wirral.gov.uk  # Wirral Council information management inbox
+foxtrot.bartshealth@nhs.net  # NHS shared mailbox (service.trust form)
+
+# Standards bodies and working-group lists
+agent2agent@ietf.org  # IETF mailing list
+agentproto@ietf.org  # IETF mailing list
+audit@ietf.org  # IETF mailing list
+scitt@ietf.org  # IETF SCITT working-group list
+public-agent-conformance@w3.org  # W3C public mailing list
+adminstart@bsigroup.com  # BSI standards administration mailbox
+
+# Company and programme mailboxes
+aidatascience@lloyds.com  # team mailbox
+esp@ethereum.org  # Ethereum Foundation Ecosystem Support Program
+qwen@alibaba-inc.com  # Qwen team mailbox
+watsonx@ibm.com  # IBM watsonx product mailbox
+
+# Test values
+a@b.co  # test value in functions/api/booking-webhook.test.ts
+a@b.org  # test value in scripts/outward-gate/test_contact_reachability.py
+b@github.com  # test value in scripts/review/safe-evidence/test_evidence_review.py
+p@github.com  # test value in scripts/measurements/subject-artifact-evidence.node-test.mjs

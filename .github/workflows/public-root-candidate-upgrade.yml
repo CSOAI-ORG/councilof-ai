@@ -34,10 +34,17 @@ jobs:
       # candidate lookup because after a merge there is no open candidate and every later
       # step is skipped. workflow_dispatch is GitHub's documented exception to GITHUB_TOKEN
       # loop-prevention; deploy.yml serialises (cancel-in-progress: false).
+      # That exception creates the deploy run and nothing more: GitHub starts no workflow_run
+      # for a run GITHUB_TOKEN started. The three deploys this step dispatched with it (13, 14
+      # and 19 Nov 2026) shipped with none of their five followers, so no post-deploy
+      # verification and no GSPC spray. The dispatch now uses SNAPSHOT_PR_TOKEN; see the
+      # deploy-dispatch block at the end of this step.
       - name: Publish a merged root that production is not serving
+        id: lag
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
+          DEPLOY_DISPATCH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN }}
         run: |
           set -euo pipefail
           # Hash FILES, never a $(…) capture. Command substitution strips trailing newlines and
@@ -71,7 +78,21 @@ jobs:
             exit 0
           fi
           echo "LAG_DISPATCHED: production root.json differs from master; dispatching deploy.yml."
-          gh workflow run deploy.yml --repo "$REPO" --ref master
+          # >>> deploy-dispatch: byte-identical in every workflow that dispatches deploy.yml, and
+          # executed by scripts/deploy-dispatch-followers.node-test.mjs. GitHub creates a run that
+          # GITHUB_TOKEN dispatches but starts no workflow_run for it, so none of deploy.yml's five
+          # followers would run. SNAPSHOT_PR_TOKEN dispatches as a user, so the deploy is followed
+          # like a push deploy. If that token is absent or refused, deploy.yml is still dispatched,
+          # with GITHUB_TOKEN, and the step output followers=not-started records that none will run.
+          if [ -n "${DEPLOY_DISPATCH_TOKEN:-}" ] &&
+            GH_TOKEN="$DEPLOY_DISPATCH_TOKEN" gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref master; then
+            echo "DEPLOY_DISPATCHED_AS_USER: deploy.yml dispatched with SNAPSHOT_PR_TOKEN, not GITHUB_TOKEN."
+          else
+            echo "followers=not-started" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Deploy followers not started::SNAPSHOT_PR_TOKEN is absent or was refused, so deploy.yml is dispatched with GITHUB_TOKEN. GitHub starts no workflow_run for that run: post-deploy-verify.yml, claims-e2e.yml, sov-stack-e2e.yml, hf-gspc-surface-sync.yml and gspc-spray.yml will not follow this deploy. The next push, scheduled or user-dispatched deploy starts them."
+            gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref master
+          fi
+          # <<< deploy-dispatch
 
       - name: Find the one open candidate
         id: candidate
@@ -315,3 +336,12 @@ jobs:
             git show origin/master:scripts/public_root_promotion_gate.py > "$gate"
           fi
           python3 "$gate" --repo "$REPO" --branch "$BRANCH" --pr "$URL"
+
+      # The deploy-dispatch block in the first step fell back to GITHUB_TOKEN, so the deploy it
+      # dispatched has none of its five followers. No step above is skipped for that; this one
+      # turns the run red so the gap is seen.
+      - name: Fail when the dispatched deploy has no followers
+        if: ${{ !cancelled() && steps.lag.outputs.followers == 'not-started' }}
+        run: |
+          echo "::error title=Deploy followers not started::deploy.yml was dispatched with GITHUB_TOKEN, so GitHub starts none of its five followers for it. Set or renew SNAPSHOT_PR_TOKEN."
+          exit 1

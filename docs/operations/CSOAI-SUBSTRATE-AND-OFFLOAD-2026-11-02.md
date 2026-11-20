@@ -135,7 +135,7 @@ recreated under a running container. The keeper of record belongs on `/workspace
 **Proven.** The M4 bridge (`com.csoai.dc-bridge`, 29 tools) drove the Oracle lanes box end to end:
 `hostname; uptime; df -h /; ls ~/lanes | wc -l` on device
 `b4b647b8-0a67-4b8f-9b25-2981363e9bd0` (`sov33-owem-micro2`) returned the hostname, 2d22h uptime,
-45G disk at 93%, **257 lanes**, load 0.28. Account `nicholastempleman@gmail.com`, 5 devices.
+45G disk at 93%, **257 lanes**, load 0.28. Account `[address removed]`, 5 devices.
 
 **The pod agent was gone** (`/root` wiped), so the codes from 28 Oct were dead. Rebuilding it
 needed five fixes, in order:
