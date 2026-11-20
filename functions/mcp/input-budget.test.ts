@@ -111,6 +111,21 @@ describe("a card sent as a JSON string is bounded before it is parsed", () => {
     }
     expect(network).not.toHaveBeenCalled();
   });
+
+  it("walks a parsed array by index, so a wide array is refused without building its keys", async () => {
+    offline();
+    let enumerated = 0;
+    const values = new Proxy(Array(1_000_000).fill(0), {
+      ownKeys(target) {
+        enumerated++;
+        return Reflect.ownKeys(target);
+      },
+    });
+    const card = { id: "a".repeat(64), pubkey: "00", signature: "00", body: { values } };
+    const result = await sharedToolResult("verify_card", { card }, ORIGIN);
+    expect(result.structuredContent).toMatchObject({ state: "UNCHECKABLE", reasons: ["input_budget_exceeded"] });
+    expect(enumerated).toBe(0);
+  });
 });
 
 describe("a capsule is bounded before the lexical parse", () => {

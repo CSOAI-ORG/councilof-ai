@@ -81,19 +81,32 @@ export function withinJsonBudget(text: string, maxElements = Infinity): boolean 
   return true;
 }
 
-/** The same element and depth budget for a value that arrived already parsed. Iterative. */
+/**
+ * The same element and depth budget for a value that arrived already parsed. Iterative. An array
+ * is walked by index: for...in would first build a string key for every element (5 million
+ * elements: 94 ms and 153 MB before the first comparison).
+ */
 export function withinValueBudget(value: unknown, maxElements = MCP_MAX_TOOL_INPUT_ELEMENTS): boolean {
   let elements = 0;
   const stack: Array<{ node: object; depth: number }> = [];
+  const visit = (child: unknown, depth: number) => {
+    if (child !== null && typeof child === "object") stack.push({ node: child, depth: depth + 1 });
+  };
   if (value !== null && typeof value === "object") stack.push({ node: value, depth: 1 });
   while (stack.length) {
     const { node, depth } = stack.pop()!;
     if (depth > MCP_MAX_JSON_DEPTH) return false;
+    if (Array.isArray(node)) {
+      for (let i = 0; i < node.length; i++) {
+        if (++elements > maxElements) return false;
+        visit(node[i], depth);
+      }
+      continue;
+    }
     for (const key in node) {
       if (!Object.prototype.hasOwnProperty.call(node, key)) continue;
       if (++elements > maxElements) return false;
-      const child = (node as Record<string, unknown>)[key];
-      if (child !== null && typeof child === "object") stack.push({ node: child, depth: depth + 1 });
+      visit((node as Record<string, unknown>)[key], depth);
     }
   }
   return true;
