@@ -921,6 +921,15 @@ async function sendToolMessage(
       });
     caller = { ...caller, metaPayment };
   }
+  // Which field this door read a payment from, said in the reply so a client and the usage row
+  // (a2aPaidCallName) need not infer it. Both at once never reaches here: it was refused above.
+  const paymentChannel = !metered
+    ? undefined
+    : metaPayment !== undefined
+      ? A2A_PAYMENT_FIELD
+      : typeof input.x_payment === "string" && input.x_payment.trim() !== ""
+        ? "input.x_payment"
+        : "none";
   let result: McpToolResult;
   try {
     result = await dispatchTool(tool, input, origin, { paid: true }, caller);
@@ -968,6 +977,7 @@ async function sendToolMessage(
               tool,
               state,
               metered,
+              ...(paymentChannel ? { payment_channel: paymentChannel } : {}),
               door: "POST /api/a2a",
               same_as: `POST /mcp tools/call ${tool}`,
               card: new URL(`/.well-known/agents/${tool}.json`, origin).toString(),
@@ -1342,8 +1352,10 @@ export function a2aUsageShape(rawVersionHeader: string | null, servedAs03: boole
 
 /**
  * The paid_call label for a reply, or null. Read off the reply's own TOOL_RESULT part: a metered
- * per-tool skill that reached the dispatch, and what the paid wrapper said about payment. A2A reads
- * payment only from input.x_payment, so "arg" is the only paid channel here. Presence only.
+ * per-tool skill that reached the dispatch, the field the door says it read a payment from
+ * (payment_channel: input.x_payment is "arg", message.metadata["x402.payment.payload"] is "meta"),
+ * and what the paid wrapper said about payment. A call refused before the dispatch (both fields at
+ * once, an input the schema refuses) has no TOOL_RESULT and writes no row. Presence only.
  */
 export function a2aPaidCallName(replyBody: unknown): string | null {
   const result = record(record(replyBody)?.result);
@@ -1357,8 +1369,10 @@ export function a2aPaidCallName(replyBody: unknown): string | null {
     const structured = record(record(data.result)?.structuredContent) ?? {};
     const status = str(structured.status) ?? "";
     const payment =
-      structured.payment_presented === true
-        ? "arg"
+      data.payment_channel === A2A_PAYMENT_FIELD
+        ? "meta"
+        : structured.payment_presented === true || data.payment_channel === "input.x_payment"
+          ? "arg"
         : status.startsWith("PURCHASE_") || status === "ORIGINAL_RECOVERED" || status.startsWith("BUYER_DECISION")
           ? "purchase"
           : structured.delivery_kind === "PREVIEW_OR_FREE"

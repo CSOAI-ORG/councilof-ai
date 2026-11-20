@@ -28,8 +28,10 @@
  *                 "mcp" (POST /mcp tools/call) or "a2a" (POST /api/a2a, a per-tool skill that
  *                 reached the dispatch). payment says only WHETHER and WHERE a payment was
  *                 presented: "none", "preview" (the free preview), "arg" (the x_payment
- *                 argument), "meta" (_meta["x402/payment"], the x402 MCP transport's field),
- *                 "both", or "purchase" (a purchase_action on an owned purchase; no new payment).
+ *                 argument; on a2a, input.x_payment), "meta" (the x402 transport's own field:
+ *                 _meta["x402/payment"] on mcp, message.metadata["x402.payment.payload"] on a2a),
+ *                 "both" (mcp only: a2a refuses both before the dispatch and writes no row), or
+ *                 "purchase" (a purchase_action on an owned purchase; no new payment).
  *                 Never the payment, an amount, a wallet or an argument value. A row says a
  *                 payment was PRESENTED, never that it settled: settlement is counted from
  *                 facilitator records (GET /api/revenue), and this dimension is added to nothing.

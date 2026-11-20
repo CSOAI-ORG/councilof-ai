@@ -262,8 +262,8 @@ describe("paid_call: whether and where a metered call presented payment, never t
   });
 
   it("reads the A2A label off the reply's own TOOL_RESULT part, in both wire shapes", () => {
-    const part = (structuredContent: Record<string, unknown>, tool = "evidence_bundle", metered = true) => ({
-      data: { kind: "TOOL_RESULT", skill: tool, tool, metered, result: { structuredContent } },
+    const part = (structuredContent: Record<string, unknown>, tool = "evidence_bundle", metered = true, channel?: string) => ({
+      data: { kind: "TOOL_RESULT", skill: tool, tool, metered, ...(channel ? { payment_channel: channel } : {}), result: { structuredContent } },
     });
     const v1 = (p: unknown) => ({ jsonrpc: "2.0", id: 1, result: { message: { role: "ROLE_AGENT", parts: [{ text: "summary" }, p] } } });
     const v03 = (p: unknown) => ({ jsonrpc: "2.0", id: 1, result: { kind: "message", role: "agent", parts: [{ kind: "text", text: "summary" }, p] } });
@@ -273,6 +273,12 @@ describe("paid_call: whether and where a metered call presented payment, never t
     expect(a2aPaidCallName(v1(part({ status: "DELIVERED", payment_presented: false, delivery_kind: "PREVIEW_OR_FREE" })))).toBe("a2a.evidence_bundle.preview");
     expect(a2aPaidCallName(v1(part({ status: "PURCHASE_HISTORY", payment_presented: false })))).toBe("a2a.evidence_bundle.purchase");
     expect(a2aPaidCallName(v03(part({ status: "PAYMENT_REQUIRED", payment_presented: false })))).toBe("a2a.evidence_bundle.none");
+    // The two A2A payment fields are told apart by the channel the door names in its reply.
+    const META = 'message.metadata["x402.payment.payload"]';
+    expect(a2aPaidCallName(v1(part({ status: "PAYMENT_REQUIRED", payment_presented: true }, "evidence_bundle", true, META)))).toBe("a2a.evidence_bundle.meta");
+    expect(a2aPaidCallName(v1(part({ status: "DELIVERED", payment_presented: true }, "evidence_bundle", true, META)))).toBe("a2a.evidence_bundle.meta");
+    expect(a2aPaidCallName(v1(part({ status: "DELIVERED", payment_presented: true }, "evidence_bundle", true, "input.x_payment")))).toBe("a2a.evidence_bundle.arg");
+    expect(a2aPaidCallName(v1(part({ status: "PAYMENT_REQUIRED", payment_presented: false }, "evidence_bundle", true, "none")))).toBe("a2a.evidence_bundle.none");
     // Not a metered tool result: a free tool, an error, a plain answer.
     expect(a2aPaidCallName(v1(part({ state: "VALID" }, "get_root", false)))).toBeNull();
     expect(a2aPaidCallName(v1(part({ status: "DELIVERED" }, "not_a_paid_tool", true)))).toBeNull();
@@ -300,6 +306,39 @@ describe("paid_call: whether and where a metered call presented payment, never t
     await settle();
     const rows = [...kv.store.keys()].map((k) => parseUsageKey(k)).map((p) => `${p?.dim}:${p?.name}`).sort();
     expect(rows).toEqual(["a2a_outcome:v1.0_ok", "paid_call:a2a.commission_card.none"]);
+  });
+
+  it("POST /api/a2a tells input.x_payment from the x402 A2A transport's metadata field", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ x402Version: 2, accepts: [] }, { status: 402 })));
+    const kv = fakeKv();
+    const env = { SOV_ARENA_STATE: kv };
+    const send = (input: Record<string, unknown>, metadata?: Record<string, unknown>) =>
+      a2aPost({
+        request: new Request("https://councilof.ai/api/a2a", {
+          method: "POST",
+          headers: { "content-type": "application/json", "a2a-version": "1.0" },
+          body: JSON.stringify({
+            jsonrpc: "2.0", id: 1, method: "SendMessage",
+            params: { message: { messageId: "m", role: "ROLE_USER", ...(metadata ? { metadata } : {}), parts: [{ data: { skill: "commission_card", input } }] } },
+          }),
+        }),
+        env,
+        waitUntil,
+      } as never);
+    const first = await send({ subject: "qwen3", x_payment: TOKEN });
+    const second = await send({ subject: "qwen3" }, { "x402.payment.payload": PAYLOAD });
+    // Both fields at once is refused before the dispatch: an error, and no paid_call row.
+    await send({ subject: "qwen3", x_payment: TOKEN }, { "x402.payment.payload": PAYLOAD });
+    await settle();
+    const channel = async (res: Response) => {
+      const body = (await res.json()) as { result: { message: { parts: { data?: { payment_channel?: string } }[] } } };
+      return body.result.message.parts.find((p) => p.data)?.data?.payment_channel;
+    };
+    expect(await channel(first)).toBe("input.x_payment");
+    expect(await channel(second)).toBe('message.metadata["x402.payment.payload"]');
+    const rows = [...kv.store.keys()].map((k) => parseUsageKey(k)).filter((p) => p?.dim === "paid_call").map((p) => p?.name).sort();
+    expect(rows).toEqual(["a2a.commission_card.arg", "a2a.commission_card.meta"]);
+    expect([...kv.store.keys()].join(" ")).not.toMatch(/eyJ4|0xsecret|qwen3/);
   });
 
   it("a lane's probes are excluded by name, and the days they were not are flagged", () => {
