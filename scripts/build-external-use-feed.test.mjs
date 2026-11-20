@@ -21,6 +21,11 @@ test("rejects duplicate or missing-source observations", () => {
   const missing = clone(); missing.records[0].sources = [];
   assert.throws(() => validate(missing), /No sources/);
 });
+test("a self-hosted reference alone cannot masquerade as external use", () => {
+  const selfOnly = clone();
+  selfOnly.records[0].sources = [{ label: "Self reference", href: "https://github.com/CSOAI-ORG/councilof-ai/issues/1" }];
+  assert.throws(() => validate(selfOnly), /No independently hosted source/);
+});
 test("rejects silent commercial acceptance promotion", () => {
   const fake = clone(); fake.records[0].buyer_acceptance = "ACCEPTED";
   assert.throws(() => validate(fake), /Unsupported acceptance/);
