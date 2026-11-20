@@ -67,8 +67,9 @@ export const onRequest = async (context: Ctx): Promise<Response> => {
   // path was a door — so every POST to /mcp and /api/a2a was buffered here first. It also
   // challenged a door's FREE part: POST /api/proof?sha=<64-hex> got an issuance:reserve 402 for
   // an inclusion proof that is free. probeOffer() now leaves alone every path that is not a door
-  // and every query that asks only for a door's free part (FREE_PART below); only a door query
-  // that selects no free part reaches isEmptyProbe(), which reads a clone up to a size cap.
+  // and every query that asks only for a door's free part (FREE_PART below) or, since 2026-11-20,
+  // for its invoice terms (INVOICE_TERMS below); only a door query that selects neither reaches
+  // isEmptyProbe(), which reads a clone up to a size cap.
   const offer = probeOffer(context.request);
   if (offer && (await isEmptyProbe(context.request))) {
     return withApiSecurityHeaders(
@@ -95,8 +96,8 @@ export const onRequest = async (context: Ctx): Promise<Response> => {
  *
  * Not listed — free-door, discover/*, request-attestation, ras/*: no query selects a free part.
  * A query that selects nothing (the bare path of most doors, or input the door refuses) is still
- * challenged, which is the probe this gate exists for. invoice=gbp is not a free part either and
- * is challenged exactly as before.
+ * challenged, which is the probe this gate exists for. invoice=gbp is not a free part; the doors
+ * that sell against an invoice are handled by INVOICE_TERMS below.
  */
 type Query = URLSearchParams;
 const one = (q: Query, key: string) => q.get(key) === "1";
@@ -132,6 +133,27 @@ function asksOnlyForFreePart(url: URL): boolean {
 }
 
 /**
+ * THE INVOICE TERMS OF THE DOORS THAT SELL AGAINST A CSOAI LTD INVOICE (2026-11-20).
+ *
+ * evidence-bundle.ts, provider-diff.ts and art50/marking-evidence.ts answer invoice=gbp with their
+ * own invoice terms (a quotation, an invoice-required reference, or the pack against the
+ * invoice), never with x402 terms, and in each invoice=gbp wins over bundle=1 / history=1. The
+ * bundle's own 402 advertises its invoice link WITH bundle=1, so that link POSTed with no body got
+ * the USDC challenge here instead of the quotation: the enterprise path the invoice door exists
+ * for. A query listed here goes to the door untouched. Each test mirrors its handler's own parse.
+ */
+const INVOICE_TERMS: Record<string, (q: Query) => boolean> = {
+  // evidence-bundle.ts: exact "gbp", and only once an obligation is named (no obligation, no quotation).
+  "/api/evidence-bundle": (q) => given(q, "obligation") && q.get("invoice") === "gbp",
+  // provider-diff.ts lowercases the value.
+  "/api/feeds/provider-diff": (q) => (q.get("invoice") ?? "").toLowerCase() === "gbp",
+  // marking-evidence.ts: exact "gbp".
+  "/api/art50/marking-evidence": (q) => q.get("invoice") === "gbp",
+};
+
+const asksForInvoiceTerms = (url: URL) => INVOICE_TERMS[url.pathname]?.(url.searchParams) ?? false;
+
+/**
  * The offer a paymentless probe of this request is answered with, or null to leave the request
  * alone. Decided on the method, the payment header, the path and the query only: no byte of the
  * body has been read when this returns, so /mcp, /api/a2a and every other path that is not a door
@@ -140,7 +162,9 @@ function asksOnlyForFreePart(url: URL): boolean {
 function probeOffer(request: Request): ListingOffer | null {
   if (request.method !== "POST" || hasPaymentHeader(request)) return null;
   const offer = offerFor(request.url);
-  if (!offer || asksOnlyForFreePart(new URL(request.url))) return null;
+  if (!offer) return null;
+  const url = new URL(request.url);
+  if (asksOnlyForFreePart(url) || asksForInvoiceTerms(url)) return null;
   return offer;
 }
 
