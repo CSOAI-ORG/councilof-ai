@@ -8,7 +8,7 @@
  * cards and the router to one set, and hold the A2A answer to what POST /mcp answers for the
  * same tool and the same arguments: the same validation, the same dispatch, the same payment
  * path. A refused input reaches no route, and no payment is read from anywhere but
- * input.x_payment.
+ * input.x_payment or the x402 A2A transport's message.metadata["x402.payment.payload"].
  */
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
@@ -53,6 +53,27 @@ const a2a = async (data: unknown, headers: Record<string, string> = { "a2a-versi
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (await res.json()) as any;
 };
+
+/** SendMessage with message-level metadata: where the x402 A2A transport carries its payment. */
+const a2aMessage = async (metadata: Record<string, unknown>, data: unknown) => {
+  const res = await onRequestPost({
+    request: new Request(`${ORIGIN}/api/a2a`, {
+      method: "POST",
+      headers: { "content-type": "application/json", "a2a-version": "1.0" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 9,
+        method: "SendMessage",
+        params: { message: { messageId: "m-x402", role: "ROLE_USER", metadata, parts: [{ data, mediaType: "application/json" }] } },
+      }),
+    }),
+  } as never);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (await res.json()) as any;
+};
+
+/** The route reads X-PAYMENT with atob then JSON.parse, as functions/api/_x402.ts does. */
+const routeDecodes = (header: string | null) => JSON.parse(atob(header ?? ""));
 
 /** POST /mcp tools/call, decoded from SSE or JSON, so the two doors can be compared. */
 const mcpCall = async (name: string, args: Record<string, unknown>) => {
@@ -212,7 +233,7 @@ describe("metered tool execution on POST /api/a2a", () => {
     expect(seen).toHaveLength(0);
   });
 
-  it("payment is read only from input.x_payment: a payload elsewhere in the message is charged nothing", async () => {
+  it("payment is never read from HTTP headers or part metadata: the challenge, nothing charged", async () => {
     const seen = stubPaidRoute();
     const res = await onRequestPost({
       request: new Request(`${ORIGIN}/api/a2a`, {
@@ -231,8 +252,12 @@ describe("metered tool execution on POST /api/a2a", () => {
             message: {
               messageId: "m-meta",
               role: "ROLE_USER",
-              metadata: { "x402.payment.payload": "METADATA-PAYLOAD" },
-              parts: [{ data: { skill: "evidence_bundle", input: { obligation: "article-50" } } }],
+              parts: [
+                {
+                  data: { skill: "evidence_bundle", input: { obligation: "article-50" } },
+                  metadata: { "x402.payment.payload": { x402Version: 2, payload: { signature: "0xPART" } } },
+                },
+              ],
             },
           },
         }),
@@ -243,6 +268,71 @@ describe("metered tool execution on POST /api/a2a", () => {
     expect(seen[0].headers.get("x-payment")).toBeNull();
     expect(seen[0].headers.get("payment-signature")).toBeNull();
     expect(body.result.message.parts[1].data.result.structuredContent.nothing_charged).toBe(true);
+    expect(body.result.message.metadata["x402.payment.status"]).toBe("payment-required");
+  });
+
+  it("the x402 A2A transport: a PaymentPayload in message.metadata is forwarded, and the reply carries the receipt", async () => {
+    const seen = stubPaidRoute();
+    // A non-ASCII character in the payload must reach the route unaltered (the route has no UTF-8 step).
+    const payload = { x402Version: 2, resource: { description: "bundle — article 50" }, accepted: CHALLENGE.accepts[0], payload: { signature: "0xabc" } };
+    const res = await a2aMessage(
+      { "x402.payment.status": "payment-submitted", "x402.payment.payload": payload },
+      { skill: "evidence_bundle", input: { obligation: "article-50" } },
+    );
+    expect(seen).toHaveLength(1);
+    expect(routeDecodes(seen[0].headers.get("x-payment"))).toEqual(payload);
+    const message = res.result.message;
+    expect(message.parts[1].data.result.structuredContent.status).toBe("DELIVERED");
+    expect(message.parts[1].data.result._meta["x402/payment-response"]).toEqual({ success: true });
+    expect(message.metadata["x402.payment.status"]).toBe("payment-completed");
+    expect(message.metadata["x402.payment.receipts"]).toEqual([{ success: true }]);
+  });
+
+  it("the unpaid challenge names x402.payment.required on the reply message", async () => {
+    stubPaidRoute();
+    const res = await a2a({ skill: "evidence_bundle", input: { obligation: "article-50" } });
+    const metadata = res.result.message.metadata;
+    expect(metadata["x402.payment.status"]).toBe("payment-required");
+    expect(metadata["x402.payment.required"].accepts).toEqual(CHALLENGE.accepts);
+    expect(metadata["x402.payment.receipts"]).toBeUndefined();
+  });
+
+  it("both channels at once, or a carried payment that is not an object, is refused before any route is called", async () => {
+    const seen = stubPaidRoute();
+    const twice = await a2aMessage(
+      { "x402.payment.payload": { x402Version: 2 } },
+      { skill: "evidence_bundle", input: { obligation: "article-50", x_payment: "SIGNED" } },
+    );
+    expect(twice.error.code).toBe(-32602);
+    expect(twice.error.data[0].reason).toBe("INVALID_SKILL_INPUT");
+    expect(twice.error.message).toContain("payment was sent twice");
+    expect(twice.error.message).toContain('message.metadata["x402.payment.payload"]');
+    const notObject = await a2aMessage(
+      { "x402.payment.payload": "METADATA-PAYLOAD" },
+      { skill: "evidence_bundle", input: { obligation: "article-50" } },
+    );
+    expect(notObject.error.data[0].reason).toBe("INVALID_SKILL_INPUT");
+    expect(notObject.error.message).toContain('message.metadata["x402.payment.payload"] must be an x402 PaymentPayload object');
+    expect(seen).toHaveLength(0);
+  });
+
+  it("a null metadata payment is no payment: the challenge, nothing charged", async () => {
+    const seen = stubPaidRoute();
+    const res = await a2aMessage({ "x402.payment.payload": null }, { skill: "evidence_bundle", input: { obligation: "article-50" } });
+    expect(seen).toHaveLength(1);
+    expect(seen[0].headers.get("x-payment")).toBeNull();
+    expect(res.result.message.metadata["x402.payment.status"]).toBe("payment-required");
+  });
+
+  it("a free skill never reads a carried payment: no request carries it, no x402 metadata", async () => {
+    const seen = stubPaidRoute();
+    const res = await a2aMessage(
+      { "x402.payment.payload": "not even an object" },
+      { skill: "board_totals", input: {} },
+    );
+    expect(res.result.message.parts[1].data.metered).toBe(false);
+    expect(res.result.message.metadata).toBeUndefined();
+    expect(seen.every((r) => r.headers.get("x-payment") === null)).toBe(true);
   });
 
   it("verification stays free on this door: no verify tool is metered", () => {

@@ -1,0 +1,104 @@
+# loops-registry-census — the MCP registry census, re-homed after RunPod retirement.
+#
+# WHY THIS EXISTS. scripts/registry-census.py produced /interop/mcp-registry-<date>/census.json
+# and the /interop/mcp-registry-latest.json pointer, but NO workflow or cron owns the producer
+# anymore: the last artifact was 2026-09-23 and /api/footprint → registry_listings sat at
+# ~1,342 hours against its own 48 h freshness policy before the 2026-11-18 one-off refresh.
+# This workflow makes the census a scheduled measurement again, on the producer's own terms.
+#
+# SCOPE. A listing we published ourselves says a server is registered — not that anyone runs it.
+# --no-repo-probe: the anonymous repository sweep is omitted (shared runner IPs make the
+# throttle-control HALT the expected outcome, and the census artifact is about REGISTRY listings).
+# Version counting stays: each server's /versions read, with a partial sum refused as a total.
+
+name: loops-registry-census
+
+on:
+  schedule:
+    # Daily, not weekly: /api/footprint calls a registry census STALE after 48 h
+    # (REGISTRY_CENSUS_MAX_AGE_HOURS in functions/api/footprint.ts). A weekly round would read STALE five days in seven.
+    - cron: "30 4 * * *" # 04:30Z daily
+  workflow_dispatch: {}
+
+permissions:
+  actions: write # dispatches pr-gates for the bot branch (GITHUB_TOKEN pushes emit no pull_request event)
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: loops-registry-census
+  cancel-in-progress: false
+
+jobs:
+  census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: walk the registry namespace, one /versions read per server
+        run: |
+          set -euo pipefail
+          DATE=$(date -u +%Y-%m-%d)
+          echo "DATE=$DATE" >> "$GITHUB_ENV"
+          mkdir -p "public/interop/mcp-registry-$DATE"
+          python3 scripts/registry-census.py --no-repo-probe \
+            --out "public/interop/mcp-registry-$DATE/census.json"
+      - name: re-point mcp-registry-latest.json at the dated artifact
+        run: |
+          set -euo pipefail
+          CENSUS_PATH="public/interop/mcp-registry-$DATE/census.json" python3 - <<'PY'
+          import collections, hashlib, json, os
+          src = os.environ["CENSUS_PATH"]
+          raw = open(src, "rb").read()
+          c = json.load(open(src), object_pairs_hook=collections.OrderedDict)
+          if c.get("version_rows") is None and c.get("version_read_failures"):
+              raise SystemExit("HALT: version read failures present; a partial sum is not published as a total")
+          latest_path = "public/interop/mcp-registry-latest.json"
+          latest = json.load(open(latest_path), object_pairs_hook=collections.OrderedDict)
+          latest["completed_utc"] = c["completed_utc"]
+          latest["measured_utc"] = c["measured_utc"]
+          latest["servers"] = c["servers"]
+          latest["source_artifact"] = "/interop/mcp-registry-%s/census.json" % os.environ["DATE"]
+          latest["source_bytes"] = len(raw)
+          latest["source_sha256"] = hashlib.sha256(raw).hexdigest()
+          latest["version_read_failures"] = c["version_read_failures"]
+          latest["version_rows"] = c["version_rows"]
+          open(latest_path, "w").write(json.dumps(latest, indent=1) + "\n")
+          print("latest.json re-pointed:", latest["source_artifact"], latest["servers"], "servers,", latest["version_rows"], "version rows")
+          PY
+      - name: land dated artifact + re-pointed pointer on a branch, PR, gates, gated merge
+        id: land
+        env:
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }} # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "public/interop/mcp-registry-$DATE/census.json" public/interop/mcp-registry-latest.json
+          if git diff --cached --quiet; then
+            echo "census byte-identical to master; nothing to land"
+            echo "landed=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
+          BR="loops/registry-census-${STAMP}"
+          git checkout -b "$BR"
+          git commit -m "registry-census: io.github.CSOAI-ORG listings round (${STAMP})"
+          git push origin "HEAD:$BR"
+          URL=$(gh pr create --base master --head "$BR" \
+            --title "registry-census: MCP registry listings round (${STAMP})" \
+            --body "Weekly re-homed round (producer orphaned after the RunPod retirement). Self-published listings in the MCP Registry under \`io.github.CSOAI-ORG\`: a listing says a server is registered, not that anyone runs it. \`servers\` counts distinct names; \`version_rows\` counts distinct name@version listings; the two are never added together and a partial version sum is refused as a total. Repository sweep omitted (\`--no-repo-probe\`). \`mcp-registry-latest.json\` re-pointed at the dated artifact with its own bytes and sha256.")
+          gh workflow run pr-gates.yml --ref "$BR"
+          gh pr merge "$URL" --squash --auto || echo "auto-merge unavailable; $URL needs a human merge"
+          NEW="${URL##*/}"
+          for n in $(gh pr list --base master --state open --limit 50 --json number,headRefName \
+              --jq '.[] | select(.headRefName | startswith("loops/registry-census-")) | .number'); do
+            [ "$n" = "$NEW" ] || gh pr close "$n" --comment "Superseded by $URL, a newer registry round. Landing this older one would put an older census back on the site."
+          done
+          echo "landed=1" >> "$GITHUB_OUTPUT"
+          echo "branch=$BR" >> "$GITHUB_OUTPUT"

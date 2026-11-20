@@ -59,6 +59,15 @@ describe("stage lines", () => {
     expect(lines.find((l) => l.key === "registry_listings")!.reason).toBeNull();
   });
 
+  it("labels a stage with the scope its row states, as the pills do", () => {
+    // /api/footprint's downloads row counts CSOAI packages and says so (19 Nov 2026); the state
+    // beside the label must not read as the whole account's.
+    const scoped = { ...payload, gross_distribution: { ...payload.gross_distribution, scope: "CSOAI packages" } };
+    expect(stageLines(scoped).find((l) => l.key === "gross_distribution")!.label).toBe("Downloads, CSOAI packages");
+    expect(stageLines(payload).find((l) => l.key === "gross_distribution")!.label).toBe("Downloads");
+    expect(stageLines(null).find((l) => l.key === "gross_distribution")!.label).toBe("Downloads");
+  });
+
   it("says a stage is absent rather than dropping it, and says 'reading' before the payload lands", () => {
     expect(stageLines({}).every((l) => l.state === "absent from the payload")).toBe(true);
     expect(stageLines(null).every((l) => l.state === "reading")).toBe(true);

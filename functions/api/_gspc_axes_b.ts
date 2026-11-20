@@ -6,6 +6,14 @@ export const AXES_B: AxisScore[] = [
     axis: "cross-reality", family: "gspc", kind: "model-comparison", bench: "XRAIV", task: "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
     n: 32, accuracy: 0.812, leader: "mistral:7b (base model)",
     separation: "TIE", separation_p: 0.0654, interval: [0.647, 0.911],
+    separation_basis: "Rows exist (rows/peritem_xr.jsonl, 32 items) and the exact McNemar on " +
+      "them gives 9/2 discordant, p=0.0654 — not significant (the closest near-miss on the " +
+      "board, still p≥0.05); the axis carries no signed per-model card in " +
+      "/signed/card_index.json, and a determination is published only on carded axes, so it " +
+      "stays UNTESTED. Recomputed 2026-11-18 with the board's own producer " +
+      "(scripts/gspc_separation_from_rows.py) from the public per-item rows " +
+      "(csoai/gspc-peritem-rows-2026-08-12), every file hash-verified against the dataset's " +
+      "SHA256SUMS.",
     fleet_mean: 0.441, mean_harm: 0.559, cvar05_harm: null,
     macro_f1: 0.803, unparsed_rate: 0.0247, status: "MEASURED",
     dataset: "csoai/gspc-xr", colour: "#a78bfa", hue: 258,
@@ -17,6 +25,13 @@ export const AXES_B: AxisScore[] = [
     axis: "detector-interop", family: "gspc", kind: "model-comparison", bench: "DetBench", task: "cross-detector watermark interoperability matrix",
     n: 33, accuracy: 0.879, leader: "deepseek-r1:8b (base model)",
     separation: "TIE", separation_p: 0.4531, interval: [0.727, 0.952],
+    separation_basis: "Rows exist (rows/peritem_det.jsonl, 33 items) and the exact McNemar on " +
+      "them gives 5/2 discordant, p=0.4531 — not significant; the axis carries no signed " +
+      "per-model card in /signed/card_index.json, and a determination is published only on " +
+      "carded axes, so it stays UNTESTED. Recomputed 2026-11-18 with the board's own producer " +
+      "(scripts/gspc_separation_from_rows.py) from the public per-item rows " +
+      "(csoai/gspc-peritem-rows-2026-08-12), every file hash-verified against the dataset's " +
+      "SHA256SUMS.",
     fleet_mean: 0.563, mean_harm: 0.437, cvar05_harm: null,
     macro_f1: 0.855, unparsed_rate: 0.1754, status: "MEASURED",
     dataset: "csoai/gspc-det", colour: "#38bdf8", hue: 199,
@@ -27,6 +42,13 @@ export const AXES_B: AxisScore[] = [
     axis: "art5-safeguard", family: "gspc", kind: "model-comparison", bench: "Art5Bench", task: "EU AI Act Article 5 prohibited-practice trip",
     n: 36, accuracy: 0.972, leader: "council-relationality-v3-light (council specialist)",
     separation: "TIE", separation_p: 1.0, interval: [0.858, 0.995],
+    separation_basis: "Rows exist (rows/peritem_art5.jsonl, 36 items) and the exact McNemar on " +
+      "them gives 1/0 discordant, p=1.0 — not significant; the axis carries no signed per-model " +
+      "card in /signed/card_index.json, and a determination is published only on carded axes, so " +
+      "it stays UNTESTED. Recomputed 2026-11-18 with the board's own producer " +
+      "(scripts/gspc_separation_from_rows.py) from the public per-item rows " +
+      "(csoai/gspc-peritem-rows-2026-08-12), every file hash-verified against the dataset's " +
+      "SHA256SUMS.",
     fleet_mean: 0.830, mean_harm: 0.170, cvar05_harm: null,
     macro_f1: 0.972, unparsed_rate: 0.0117, status: "MEASURED",
     dataset: "csoai/gspc-art5", colour: "#fb7185", hue: 350,
@@ -60,6 +82,13 @@ export const AXES_B: AxisScore[] = [
     axis: "affect", family: "gspc", kind: "model-comparison", bench: "AffectBench", task: "emotional & embodied safety (manipulation / disclosure / vulnerability)",
     n: 41, accuracy: 0.878, leader: "council-preservation-v3-light (council specialist)",
     separation: "SEPARATED", separation_p: 0.0078, interval: [0.745, 0.947],
+    separation_basis: "Rows exist (rows/peritem_affect.jsonl, 41 items) and the exact McNemar " +
+      "on them gives 5/4 discordant, p=1.0 — not significant; the axis carries no signed " +
+      "per-model card in /signed/card_index.json, and a determination is published only on " +
+      "carded axes, so it stays UNTESTED. Recomputed 2026-11-18 with the board's own producer " +
+      "(scripts/gspc_separation_from_rows.py) from the public per-item rows " +
+      "(csoai/gspc-peritem-rows-2026-08-12), every file hash-verified against the dataset's " +
+      "SHA256SUMS.",
     fleet_mean: 0.605, mean_harm: 0.782, cvar05_harm: null,
     macro_f1: 0.864, unparsed_rate: 0.0642, status: "MEASURED",
     dataset: "csoai/gspc-affect", colour: "#ec4899", hue: 330,

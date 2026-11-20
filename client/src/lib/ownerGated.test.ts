@@ -6,27 +6,42 @@ import { isOwnerGated } from "./ownerGated";
 
 const board = { axes: AXES_D } as any;
 const gated = AXES_D.filter(isOwnerGated).map((a) => a.axis);
+const RELEASED = ["regulator-transparency", "watchdog-ingest"];
+
+// The board holds no slot back today, so the filters are exercised on a held row added here
+// rather than passing vacuously over an empty list.
+const HELD = { ...AXES_D[0], axis: "held-slot-fixture", public_pages: "HIDDEN_PENDING_OWNER_GO" };
+const withHeld = { axes: [...AXES_D, HELD] } as any;
 
 describe("owner-gated axes never render publicly", () => {
-  it("the owner-gated slots are exactly the ones the board marks", () => {
-    // DERIVED, not typed: the estate adds subject axes and an owner-gated one can be
-    // added at any time. Naming them here would make the test fail on a correct board
-    // — and would name an axis that is NOT gated as if it were.
-    expect(gated).toContain("regulator-transparency");
-    expect(gated).toContain("watchdog-ingest");
-    for (const id of gated) {
+  it("no subject slot is held: the owner released both held slots on 2026-11-18", () => {
+    // The owner's words: "Release both". Holding a slot again is a new owner decision,
+    // so this test is meant to fail until that decision is recorded here.
+    expect(gated).toEqual([]);
+    for (const id of RELEASED) {
       const axis = AXES_D.find((a) => a.axis === id);
-      expect(axis?.public_pages, id).toBe("HIDDEN_PENDING_OWNER_GO");
+      expect(axis, id).toBeDefined();
+      expect(axis?.public_pages, id).toBeUndefined();
     }
   });
-  it("homepage tiles drop every owner-gated axis", () => {
-    const ids = boardTiles(board).map((t) => t.axis);
-    for (const id of gated) expect(ids).not.toContain(id);
-    expect(ids.length).toBe(AXES_D.length - gated.length);
+  it("the released slots render on the homepage tiles and the board table", () => {
+    const tiles = boardTiles(board).map((t) => t.axis);
+    const rows = loadBoard(board).rows.map((r) => r.id);
+    for (const id of RELEASED) {
+      expect(tiles).toContain(id);
+      expect(rows).toContain(id);
+    }
+    expect(tiles.length).toBe(AXES_D.length);
   });
-  it("board table rows drop every owner-gated axis", () => {
-    const ids = loadBoard(board).rows.map((r) => r.id);
-    for (const id of gated) expect(ids).not.toContain(id);
+  it("homepage tiles drop a held axis", () => {
+    const ids = boardTiles(withHeld).map((t) => t.axis);
+    expect(ids).not.toContain(HELD.axis);
+    expect(ids.length).toBe(AXES_D.length);
+  });
+  it("board table rows drop a held axis", () => {
+    const ids = loadBoard(withHeld).rows.map((r) => r.id);
+    expect(ids).not.toContain(HELD.axis);
+    expect(ids.length).toBe(AXES_D.length);
   });
 });
 
