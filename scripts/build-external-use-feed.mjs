@@ -33,13 +33,19 @@ export function validate(review) {
     }
     if (!Array.isArray(r.sources) || r.sources.length === 0) throw Error("No sources: " + r.id);
     const urls = new Set();
+    let hasOutsideSource = false;
     for (const source of r.sources) {
       if (!source || typeof source.label !== "string" || !source.label.trim() || typeof source.href !== "string") throw Error("Malformed source: " + r.id);
       let u;
       try { u = new URL(source.href); } catch { throw Error("Bad source URL: " + r.id); }
       if (u.protocol !== "https:" || !u.hostname || urls.has(source.href)) throw Error("Invalid or duplicate source URL: " + r.id);
       urls.add(source.href);
+      const host = u.hostname.toLowerCase();
+      const isCouncilHost = ["councilof.ai", "www.councilof.ai", "csoai.org", "www.csoai.org", "meok.ai"].includes(host);
+      const isCouncilGithub = host === "github.com" && /^\\/(?:CSOAI-ORG|nicktempleman)\\//i.test(u.pathname);
+      if (!isCouncilHost && !isCouncilGithub) hasOutsideSource = true;
     }
+    if (!hasOutsideSource) throw Error("No independently hosted source: " + r.id);
   }
   return review;
 }
