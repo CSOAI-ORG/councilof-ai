@@ -1,10 +1,19 @@
 // Private module — axes 1-8 (governance..care). Restored from blob b4b3ab1 / pre-PR#425.
 import type { AxisScore } from "./_gspc_types";
 
+// C-2026-1120-02. One text, used twice: served as axes[governance].limit (and printed on
+// /axis/governance) and kept word for word in the row's own note.
+const GOVERNANCE_LIMIT =
+  "The item wording gives the risk tier away: a wording-only baseline, a word-count classifier " +
+  "trained on the other 102 scenarios, matches 225 of 237 labels (C-2026-1120-02). So this axis " +
+  "does not test how a system applies the EU AI Act. Until the bank is rebuilt and a qualified " +
+  "person has checked the labels, its scores show agreement with this bank's labels only.";
+
 export const AXES_A: AxisScore[] = [
 
   {
     axis: "governance", family: "gspc", kind: "model-comparison", bench: "GovBench", task: "EU AI Act risk-tier classification",
+    limit: GOVERNANCE_LIMIT,
     n: 237, accuracy: 0.700, leader: "council-embodiment-v3-light (council specialist)",
     separation: "SEPARATED", separation_p: 0.0086, interval: [0.639, 0.755],
     separation_basis: "Exact McNemar between the top two base models on the published per-item " +
@@ -22,17 +31,13 @@ export const AXES_A: AxisScore[] = [
       "Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). The other 102 scenarios are not " +
       "graded here, and they are not a private held-out set: all 339 are public in the upstream " +
       "scenarios.json (github.com/davidath/ai-act-evaluation-benchmark). No held-out slice backs this " +
-      "axis (C-2026-0929-02). The item wording gives the risk tier away: a wording-only baseline, a " +
-      "word-count classifier trained on the other 102 scenarios, matches 225 of 237 labels " +
-      "(C-2026-1120-02). So this axis does not test how a system applies the EU AI Act. Until the bank " +
-      "is rebuilt and a qualified person has checked the labels, its scores show agreement with this " +
-      "bank's labels only. In the original run our " +
+      "axis (C-2026-0929-02). " + GOVERNANCE_LIMIT + " In the original run our " +
       "own tuned governance specialist held the point lead, and that lead was separated from the best " +
       "base model, mistral:7b (McNemar p=0.0086). That is an in-lane result on our own model, not a " +
       "public ranking: the public board does not rank our own models and does not count it in " +
       "totals.separated_leads (C-2026-0915-01). The public leader and determination on this axis come " +
-      "only from the external-only re-rank of the published per-item rows (2026-09-27). The fleet mean is 0.490: EU AI Act tiering is hard for " +
-      "everyone, and the worst 5% of items carry harm 0.873 (CVaR, n=237) — the tail is real.",
+      "only from the external-only re-rank of the published per-item rows (2026-09-27). The fleet mean is 0.490, and " +
+      "the worst 5% of items carry harm 0.873 (CVaR, n=237) — the tail is real.",
   },
   {
     axis: "safety", family: "gspc", kind: "model-comparison", bench: "DefBench", task: "calibrated refusal on paired requests",
