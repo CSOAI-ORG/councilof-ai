@@ -8,6 +8,7 @@
 import GSPC_TOOLS from "./gspc-tools.json";
 import { measurementIndex, verifyCapsule, serverEvidence } from "../_lib/measurementCapsule";
 import type { McpToolResult } from "./_handlers";
+import { MCP_MAX_TOOL_INPUT_ELEMENTS, withinJsonBudget, withinValueBudget } from "./_input_budget";
 
 /** The readers this module answers, by name. Each must be a definition in gspc-tools.json. */
 export const MEASUREMENT_TOOL_NAMES = new Set(["measurement_index", "verify_capsule", "server_evidence"]);
@@ -41,7 +42,14 @@ export async function measurementToolResult(
     name === "measurement_index"
       ? await measurementIndex(origin)
       : name === "verify_capsule"
-        ? await verifyCapsule(origin, args.capsule_json)
+        ? (typeof args.capsule_json === "string"
+            ? withinJsonBudget(args.capsule_json, MCP_MAX_TOOL_INPUT_ELEMENTS)
+            : withinValueBudget(args.capsule_json))
+          // Scan exact text without parsing/re-serialising it: v0.1 number lexemes are evidence.
+          ? await verifyCapsule(origin, args.capsule_json)
+          : { state: "UNCHECKABLE", doctrine: "measurement, not endorsement",
+              reason: "Capsule input exceeds the structure limit; verification was not attempted.",
+              reasons: ["input_budget_exceeded"] }
         : await serverEvidence(origin, args.endpoint_url);
   return {
     content: [{ type: "text", text: `${summary(name, payload)}\n\n${JSON.stringify(payload, null, 2)}` }],
