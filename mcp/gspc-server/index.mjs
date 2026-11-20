@@ -798,6 +798,8 @@ async function x402Trust() {
  * NOT_MEASURED (which is a statement about the index, not about the connection).
  */
 const MEASUREMENT_DOCTRINE = "measurement, not endorsement";
+/** Marks a door answer that refused the arguments; tools/call turns it into isError with the door's words. */
+const DOOR_REFUSAL = Symbol("door-refusal");
 
 async function doorTool(name, args) {
   const url = `${ORIGIN}/mcp`;
@@ -825,6 +827,14 @@ async function doorTool(name, args) {
       msg = JSON.parse(frames[frames.length - 1]);
     } else msg = JSON.parse(text);
     const sc = msg?.result?.structuredContent;
+    // The door refused the arguments (the SDK's input validation answers isError with text only): pass
+    // that refusal on as a tool error, as the HTTP door does. It is not an unreachable source.
+    if ((!sc || typeof sc !== "object") && msg?.result?.isError) {
+      const said = Array.isArray(msg.result.content)
+        ? msg.result.content.map((c) => (c && typeof c.text === "string" ? c.text : "")).join(" ").trim()
+        : "";
+      return { [DOOR_REFUSAL]: said || `the door refused the arguments for ${name}` };
+    }
     if (!sc || typeof sc !== "object") throw new Error(msg?.error?.message || "the door returned no structuredContent");
     return { ...sc, answered_by: url };
   } catch (e) {
@@ -847,12 +857,19 @@ const PAID_DOCTRINE =
 function buildPaidRequest(name, args) {
   const tool = PAID_BY_NAME.get(name);
   if (!tool) return { error: `unknown paid tool: ${name}` };
+  if ("purchase_action" in args)
+    return {
+      error:
+        "purchase actions need a signed-in buyer: call this tool on https://councilof.ai/mcp with your Authorization header. This stdio server carries no buyer identity.",
+    };
   const route = tool.csoai.route;
   const str = (k) => (typeof args[k] === "string" ? args[k].trim() : "");
   const flag = (k) => args[k] === true || args[k] === "1" || args[k] === "true";
   const headers = { accept: "application/json" };
   const xp = str("x_payment");
   if (xp) headers["x-payment"] = xp;
+  // Same rule as the HTTP door (functions/mcp/_paid.ts): a free preview never verifies a payment.
+  if (flag("preview") && xp) return { error: "preview is free: omit x_payment for a preview, or drop preview to buy" };
   const u = new URL(route, ORIGIN);
   let method = "GET";
   let body;
@@ -884,6 +901,8 @@ function buildPaidRequest(name, args) {
       break;
     case "receipts_batch":
       if (!str("from")) return { error: "from is required (ISO-8601)" };
+      if (xp && !str("to"))
+        return { error: "to is required when paying: pass the window.to that the free preview (preview=true) or the 402 challenge names" };
       u.searchParams.set("from", str("from"));
       if (str("to")) u.searchParams.set("to", str("to"));
       if (flag("preview")) u.searchParams.set("preview", "1");
@@ -898,7 +917,8 @@ function buildPaidRequest(name, args) {
     default:
       return { error: `no request builder for ${name}` };
   }
-  return { url: u.toString(), init: { method, headers, ...(body ? { body } : {}) }, route };
+  // A paid authorization must never follow a redirect to another URL (same rule as the HTTP door).
+  return { url: u.toString(), init: { method, headers, redirect: "manual", ...(body ? { body } : {}) }, route };
 }
 
 function inspectReceipt(paymentResponse) {
@@ -1036,7 +1056,10 @@ async function callPaidTool(name, args) {
         datedAmount,
     };
   }
-  if (res.status === 404) {
+  // A deployed route answers with its own JSON, which always names its `schema`; only a 404 without
+  // that means the route is missing from this origin.
+  const routeBody = body && typeof body === "object" && !Array.isArray(body) && typeof body.schema === "string" ? body : null;
+  if (res.status === 404 && !routeBody) {
     return {
       ...base,
       status: "NOT_DEPLOYED",
@@ -1047,6 +1070,18 @@ async function callPaidTool(name, args) {
       note: paymentPresented
         ? `${tool.csoai.route} is not on ${ORIGIN}. Settlement is unconfirmed; inspect the wallet, chain and facilitator before signing or retrying.`
         : `${tool.csoai.route} is not on ${ORIGIN}. No payment authorization was presented; nothing was charged by this request.`,
+    };
+  }
+  if (res.ok && res.headers.get("x-csoai-delivery-state") === "PAID_NOT_DELIVERED") {
+    const settle = res.headers.get("x-payment-response");
+    return {
+      ...base,
+      status: "PAID_NOT_DELIVERED",
+      http_status: res.status,
+      body,
+      delivery_state: "NOT_DELIVERED",
+      ...settlementFields(paymentPresented, settle),
+      note: "Settlement was reported but the requested output was not delivered; inspect the route before retrying.",
     };
   }
   if (res.ok) {
@@ -1069,14 +1104,17 @@ async function callPaidTool(name, args) {
     ...base,
     status: `HTTP_${res.status}`,
     http_status: res.status,
+    ...(typeof routeBody?.reason === "string" ? { reason: routeBody.reason } : {}),
     body,
     delivery_state: "NOT_DELIVERED",
     ...settlementFields(paymentPresented, settle),
     note: settle
       ? "Settlement was reported by the route; inspect the receipt before retrying."
-      : paymentPresented
-        ? "Settlement is unconfirmed; inspect the wallet, chain and facilitator before signing or retrying."
-        : "No payment authorization was presented; nothing was charged by this request.",
+      : paymentPresented && res.status >= 400 && res.status < 500
+        ? "The route refused the request and reported no settlement; nothing was delivered. Correct the arguments before paying again, and inspect the wallet if in doubt."
+        : paymentPresented
+          ? "Settlement is unconfirmed; inspect the wallet, chain and facilitator before signing or retrying."
+          : "No payment authorization was presented; nothing was charged by this request.",
   };
 }
 
@@ -1233,6 +1271,9 @@ async function handle(msg) {
     if (!fn) return replyError(id, -32602, `unknown tool: ${name}`);
     try {
       const payload = await fn(params?.arguments ?? {});
+      if (payload && typeof payload === "object" && DOOR_REFUSAL in payload) {
+        return reply(id, { content: [{ type: "text", text: payload[DOOR_REFUSAL] }], isError: true });
+      }
       // x402 MCP transport (x402-foundation/x402 specs/transports-v2/mcp.md): a payment challenge is
       // a tool result with isError:true whose structuredContent IS the PaymentRequired object and
       // whose content[0].text is that object as JSON. Same shape as the HTTP door
@@ -1251,10 +1292,13 @@ async function handle(msg) {
           isError: true,
         });
       }
+      // Same rule as the HTTP door: a paid call that delivered nothing is a failed call. NOT_DEPLOYED
+      // stays a state, as there (functions/mcp/paid-tools.test.ts pins it).
+      const paidFailed = PAID_BY_NAME.has(name) && !["DELIVERED", "NOT_DEPLOYED"].includes(payload?.status);
       return reply(id, {
         content: [{ type: "text", text: `${summaryLine(name, payload)}\n\n${JSON.stringify(payload, null, 2)}` }],
         structuredContent: payload,
-        isError: false,
+        isError: paidFailed,
       });
     } catch (e) {
       return reply(id, {

@@ -356,7 +356,8 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       );
     }
     const description = ART50_MARKING_EVIDENCE_DESCRIPTION;
-    const accepts = x402Accepts(env, challengeUrl, { skuId: "request_attestation", tier: "per_request", description });
+    // The discovery 402 advertises the price a real request is charged (the pack), not another SKU's.
+    const accepts = x402Accepts(env, challengeUrl, { skuId: SKU, tier: "pack", description });
     // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
     // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
     // Behavior) — that echo is what gets a resource catalogued.

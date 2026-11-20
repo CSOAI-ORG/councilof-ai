@@ -44,6 +44,103 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-1120-03",
+      "date": "2026-11-20",
+      "detected_at": "2026-10-30",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "detected_at is the day of our own review, docs/operations/CLAIM-MAINTENANCE-PROMOTION-PROPOSAL-2026-10-28.md. It is marked 'Updated 30 October 2026' and reached master in commit c2d57549a7 (pull request 3645) at 2026-10-30T09:42:20Z. It states that the 182 rows represented 91 distinct claims and that n_valid = 174 must not be used as the admission denominator. The moment the double count was first noticed is not recorded, so only the day is given",
+        "No ledger entry was made on 2026-10-30. This entry was written on 2026-11-20, 21 days later",
+        "published_at is UNRECORDED: the board still serves n 174 from the 2026-10-28 file, and the deploy that serves this entry had not happened when it was written"
+      ],
+      "what_was_wrong": "The claim-maintenance axis on our board reads MEASURED with n = 174 and cites our re-read of 2026-10-28 (https://councilof.ai/interop/claim-maintenance-wave-2026-10-28.json). Its note says 'n_valid 174 of 182 captured claims', and it serves the file's outcome counts: 110 CHANGED, 52 WITHDRAWN, 12 UNCHANGED and 8 UNREACHABLE. That file counts each claim twice. Its counts give claims: 182, but its 182 rows hold 91 distinct claim_id values: it read two registers, each in its original and its revised version (62, 62, 29 and 29 claims), so every claim has two rows. Its n_valid of 174 is the 87 reachable claims, each counted twice. Counted once, on the newer capture, the 91 claims read 52 changed, 26 withdrawn, 9 unchanged and 4 unreachable; six claims have a different outcome in their two rows. The 91 claims sit on 37 distinct source addresses, so they are not 91 independent pages. Our own later re-read of the same 91 claims, https://councilof.ai/interop/claim-maintenance-wave-2026-10-30.json (status CANDIDATE_OBSERVATION, not eligible for the axis), reads each claim once: 61 changed, 26 unchanged and 4 unreachable, with no WITHDRAWN outcome. Against the newer capture in the 2026-10-28 file it gives a different outcome for 40 of the 91 claims: 23 withdrawn became changed, 3 withdrawn became unchanged and 14 changed became unchanged. Four of the claims, in eight rows, are about Council of AI itself: the 2026-10-28 file reads all eight rows as WITHDRAWN, and the 2026-10-30 file reads the four claims as CHANGED. The review that produced the 2026-10-30 file also found that the 2026-10-28 run compared baselines taken with an older text extractor, and raw-byte baselines such as PDFs, against page text from a newer extractor, and that it counted text missing from one read as a withdrawal, although a redirect, a template change or an access challenge can also remove it. We recorded the double count in that review on 2026-10-30 and wrote there that n_valid = 174 must not be used as the admission denominator. We made no ledger entry and did not change the board, which still rests on n_valid 174. Who could have been misled: anyone who read the board's n of 174, or the file's 182 claims and its split of 110, 52, 12 and 8, as counts of distinct claims, or its WITHDRAWN rows as evidence that a claim was withdrawn.",
+      "how_caught": "Our own review found the double count on 2026-10-30, while checking whether the axis could be promoted. It is recorded in docs/operations/CLAIM-MAINTENANCE-PROMOTION-PROPOSAL-2026-10-28.md, merged in pull request 3645 together with the 2026-10-30 re-read. No ledger entry was made then. On 2026-11-19 two internal reviewers found the double count again, in a figure we had listed for use in draft texts, and the counts were recomputed from both public files. On 2026-11-20, while writing this entry, we recomputed them once more and found that the review of 2026-10-30 had already recorded the finding. No outside party reported this.",
+      "what_changed": "Nothing has been changed yet on the board: the claim-maintenance row still reads MEASURED, n 174, and cites the 2026-10-28 file. Both re-read files stay published unchanged, so the counts above can be checked. This entry records the double count and the day our own review first recorded it.",
+      "status": "OPEN - recorded in our own review on 2026-10-30 and in this ledger on 2026-11-20; board row unchanged (n 174)",
+      "reached_the_public": true,
+      "open_items": [
+        "The board row still rests on n_valid 174 and says '174 of 182 captured claims'. It is to be corrected; which re-read it rests on, if any, is not decided. The 2026-10-30 file says itself that it is not eligible for the axis and lists four open gates.",
+        "The same note, '174 of 182 captured claims', is also on https://councilof.ai/axis/claim-maintenance and in public/axis-specialists/claim-maintenance.json."
+      ],
+      "evidence": [
+        "https://councilof.ai/interop/claim-maintenance-wave-2026-10-28.json (sha256 a62b017a9081b817613c03887c3c6690597a2016ea175f9d95c211d593db0877; counts, thresholds.n_valid, rows[].claim_id)",
+        "https://councilof.ai/interop/claim-maintenance-wave-2026-10-30.json (sha256 660315bedb8e2908b5928d682bdf310963fa7f474f1a41d6d0e705cd6f857097; status, counts, outstanding_gates)",
+        "https://councilof.ai/api/gspc (axes[], the row with axis claim-maintenance: status, n, per_outcome, note and evidence_url) and https://councilof.ai/axis/claim-maintenance",
+        "functions/api/_gspc_axes_d.ts (the claim-maintenance row)",
+        "docs/operations/CLAIM-MAINTENANCE-PROMOTION-PROPOSAL-2026-10-28.md, updated in commit c2d57549a73cae6685041f100d0665e2e959dbd7 (https://github.com/CSOAI-ORG/councilof-ai/pull/3645, 2026-10-30T09:42:20Z)"
+      ]
+    },
+    {
+      "id": "C-2026-1120-02",
+      "date": "2026-11-20",
+      "detected_at": "2026-11-19",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "detected_at is the day of our internal records of the finding. Our internal note that states the finding and what it touches was created at 2026-11-19T04:00:36Z (file system birth time); the two checks it draws on ran earlier the same day. The moment the finding was first noticed is not recorded, so only the day is given",
+        "published_at is UNRECORDED: nothing has been corrected on the board, on the dataset or in the two documents named in this entry, and the deploy that serves this entry had not happened when it was written"
+      ],
+      "what_was_wrong": "The governance axis on our board (bench GovBench, task 'EU AI Act risk-tier classification', n = 237) scores models on the 237 items of our dataset csoai/gspc-gov on Hugging Face. The items are copied from a public synthetic benchmark, the AI Act Evaluation Benchmark of NCSR Demokritos (arXiv:2603.09435): for all 237 items our label equals the source's risk_level, and our sentence is the source's structured fields joined into one sentence. On 2026-11-19 we found that an item's label can be read from its wording without any knowledge of the Act. A word-count classifier, trained only on the 102 source items that are not in our bank, matches 225 of the 237 labels: 48 of 50 prohibited, 58 of 59 high-risk, 52 of 59 limited and 67 of 69 minimal. The source generated its scenarios with language models, and each tier's wording has a style of its own: for example, 'anonymised' appears in 46 of the 59 limited items and in no other item. The labels are the tier each scenario was generated for, and no legal expert has checked them for us. A score on this axis therefore measures agreement with the source's labels, which the wording gives away. It does not measure whether a system applies the EU AI Act correctly, and the board row does not say so. Two documents in our public repository quote a score on this bank, 219/237 for a system of our own, beside 222/237 for frontier models under the same referee: docs/operations/CSOAI-WORK-PLAN-YEARS-TO-DAYS-2026-10-28.md and docs/operations/SITES-AND-COMPUTE-CATALOGUE-2026-10-27.md. Both figures are below the 225 of 237 that the word-count classifier reaches. The dataset's licence statement is also wrong. The card's front matter and the dataset's licence tag say cc0-1.0, while the card body says 'Licence: CC-BY-4.0. Attribute Council of AI', and only the dataset's NOTICE file credits the source. The source's data are licensed CC BY 4.0, which requires credit to its authors. Who could have been misled: anyone who read a score on the governance axis, or the figure 219/237, as a measure of how well a system applies the EU AI Act, and anyone who reused the dataset as CC0 or without crediting the source.",
+      "how_caught": "Two internal checks found it independently on 2026-11-19: a review of a benchmark task file built from this bank, and a separate trial that traced every item to the source and ran current models on the items. A third check the same day read what the finding touches in public: the board row, the dataset card and its licence tag. On 2026-11-20, while writing this entry, we reproduced the word-count result from the published dataset itself, confirmed that all 237 labels and sentences equal the source, and found the two documents that quote 219/237. No outside party reported this.",
+      "what_changed": "Nothing has been changed yet. The board row, the dataset csoai/gspc-gov and its card, and the two documents named above are as they were. The dataset card is not changed by this entry; its correction is an open item below.",
+      "status": "OPEN - limit recorded; board row, dataset card and the two documents unchanged; card licence and source credit owed",
+      "reached_the_public": true,
+      "open_items": [
+        "The board's governance row still describes the task as EU AI Act risk-tier classification and states no limit. The limit recorded here is owed on the row itself.",
+        "The card of csoai/gspc-gov still carries the cc0-1.0 tag and front matter, and a body line that credits us and not the source. It needs the licence cc-by-4.0, a credit to the source and its authors, and a statement of the changes we made. The body line is produced by scripts/hf/cite_block.py from scripts/hf/cite-block-registry.json, so the correction is owed there too.",
+        "The items have not been rebuilt. Until the wording no longer gives the tier away and a qualified person has checked the labels, the axis is not a test of how a system applies the Act.",
+        "The two documents named above still quote 219/237 without this limit."
+      ],
+      "evidence": [
+        "https://councilof.ai/api/gspc (axes[], the row with axis governance: bench, task, n and dataset)",
+        "https://huggingface.co/datasets/csoai/gspc-gov at revision beecacfc2136a41d2c23274116770585d7da5c14: items.jsonl (sha256 9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5), README.md (line 2 'license: cc0-1.0'; line 156 'Licence: CC-BY-4.0. Attribute Council of AI, ...') and NOTICE",
+        "https://github.com/davidath/ai-act-evaluation-benchmark and https://arxiv.org/abs/2603.09435 (the source; its JSON data are licensed CC BY 4.0)",
+        "docs/operations/CSOAI-WORK-PLAN-YEARS-TO-DAYS-2026-10-28.md (line 109) and docs/operations/SITES-AND-COMPUTE-CATALOGUE-2026-10-27.md (line 341), the two documents that quote 219/237"
+      ]
+    },
+    {
+      "id": "C-2026-1120-01",
+      "date": "2026-11-20",
+      "detected_at": "2026-11-18",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "detected_at is the day of our internal record of the finding. The record says the published bank files were downloaded for the check at 05:36Z on 2026-11-18, and a second internal note that states the finding was created at 2026-11-18T05:40:04Z. The moment the earliest defect was noticed is not recorded, so only the day is given",
+        "published_at is UNRECORDED: no corrected figure has been published, and the deploy that serves this entry had not happened when it was written"
+      ],
+      "what_was_wrong": "Ten subject axes on our board are each backed by a bank file under https://councilof.ai/interop/axis-banks/ . The ten are watchdog-ingest, harness-fidelity, serving-fidelity, company-practice, measurer-integrity, lab-practice, interop-conformance, regulator-transparency, humanoid-deployment and interpretability-reproducibility. Each row of a bank is one public page of one organisation or project. For each row the bank records whether five kinds of wording were found on that page. The board publishes, for each axis, the share of rows where at least three of the five were found, and shows the axis as MEASURED. We found seven defects in the method that built these banks. (1) Patterns matched inside other words. Each pattern was searched as a plain run of letters. In the watchdog-ingest bank the pattern for a response commitment contains the alternative 'sla'. It matched inside words such as translation, legislation, slavery and Slack. We read the pages again on 2026-11-19 with the same pattern: of the 95 pages we could read, 35 matched this alternative and 4 of them contained it as a word of its own. Every pattern in all ten banks is built the same way. (2) Eight banks were matched on the raw page source and not on the text a reader sees, so tag names, style rules and script code could match. In the serving-fidelity bank two of the five checks are true for all 38 rows. In the regulator-transparency bank one check is true for all 41 rows. This fits the defect. It does not prove it, and we have not measured how many rows the defect changed. (3) Every page was cut at 400,000 bytes before it was scored. Rows recorded at exactly that size: watchdog-ingest 32 of 106, serving-fidelity 20 of 38, company-practice 20 of 40, measurer-integrity 13 of 40, lab-practice 12 of 37, harness-fidelity 6 of 36, interpretability-reproducibility 6 of 33, humanoid-deployment 4 of 35, interop-conformance 2 of 34, regulator-transparency 2 of 41. The cut hides the text after it. Where the cut falls inside a script block, script code is then scored as page text; we confirmed this on one page. (4) Pages that returned almost nothing were scored as zero. A page that answered with under 3,000 bytes was kept as a valid row with all five checks false. Three banks hold one such row each (watchdog-ingest, lab-practice, harness-fidelity). Our own rule is that 'could not be checked' is a different statement from 'absent'. (5) The same page was counted twice. The watchdog-ingest bank has 106 rows and 104 distinct pages. The lab-practice bank has 37 rows and 36 distinct pages. The board gives n as 106 and 37. (6) One check does not do what its name says. In watchdog-ingest the check named security_txt_or_disclosure looks for words on one landing page. It never requests /.well-known/security.txt . The bank marks 91 of 106 rows false for it. On 2026-11-19 we asked the host of each page for the file: 35 pages (37 bank rows) marked false sit on a host that serves it. (7) Our own endpoints are inside an axis about other bodies. In the interop-conformance bank, the five rows numbered 34 to 38 are our own endpoints. The board says the axis applies to interoperability and standards groups. Without our rows the bank has 29 rows, under our minimum of 30 for a measured axis. The counts dated 2026-11-19 in points (1) and (6) come from one reading of one axis with a draft method. They are observations, not published measurements. Who could have been misled: anyone who read a rate, a count or a single row of these ten axes as a statement about an organisation in them. Each bank says that absence on the page is not evidence of absence elsewhere, but the published rates and the board's wording read as more than the method supports.",
+      "how_caught": "On 2026-11-18 an internal research pass was reading our published banks for observations to send to other organisations. It found rows in our own banks that did not hold when the page was read again. Each point was then checked against the published bank files and the live pages. On 2026-11-19 we read the three producer scripts line by line. This added the raw page source defect and two further banks. We also read one axis again with draft corrected rules to see the size of the effect. No outside party reported this.",
+      "what_changed": "Nothing has been changed yet in the published banks, on the board or on the axis pages. Our hold on quoting figures from these banks in our own outward work stays in force; entering this entry does not lift it. The bank files stay published under their names, so the earlier figures can be checked. A corrected method is drafted and is not yet adopted. In the draft, every pattern alternative is matched as a whole word. Patterns are applied to the visible text. Each distinct page is one row. A page that could not be read, or that answered with under 3,000 bytes, is recorded as UNCHECKABLE and kept out of n. Pages are read in full up to 5,000,000 bytes. The file /.well-known/security.txt is requested from the host of the page. Our own endpoints are shown apart and kept out of n. The ten banks have not been run again. When they are, the old and the new figures will be published side by side and this entry will be updated.",
+      "status": "OPEN - defects recorded; corrected method drafted, not adopted; re-run of the ten banks PENDING; published figures unchanged",
+      "reached_the_public": true,
+      "open_items": [
+        "The ten banks have not been run again. Until they are, no rate, count or single row of these axes should be relied on.",
+        "Our hold on quoting, as set on 2026-11-18, names seven of the ten axes: watchdog-ingest, serving-fidelity, company-practice, measurer-integrity, lab-practice, harness-fidelity and interop-conformance. Whether it is widened to regulator-transparency, humanoid-deployment and interpretability-reproducibility is the owner's decision; this entry does not widen it.",
+        "For nine of the ten banks the list of candidates is not published: the bank publishes only the digest of its list. The list for harness-fidelity is in its producer script. A new run needs the lists, or a newly frozen list that is published with the bank.",
+        "interop-conformance: without our own five rows the bank has 29 rows, under the minimum of 30. The axis needs more subjects or returns to UNMEASURED.",
+        "The effect of matching on raw page source in the eight banks it applies to is UNMEASURED.",
+        "The byte limit for a page, and the rule for a page built by script that carries little visible text, are not decided.",
+        "A separate record, the dataset csoai/mcp-contract-parity (record 0.1.2, as of 2026-09-25), lists a version difference for the server com.wikimedia.enterprise/docs. On 2026-11-19 the registry entry and the live server both read 1.2.6. The row records what was read on 2026-09-25 and is now out of date. A dated re-read is owed for it."
+      ],
+      "evidence": [
+        "https://councilof.ai/interop/axis-banks/watchdog-ingest-20261102.json (sha256 8c5a3438294a8dc56baf9fb879b6a336b90bccd5a5a45e3944016b834dff2e88)",
+        "https://councilof.ai/interop/axis-banks/harness-fidelity-20261102.json (sha256 3f10dc5f034f3ccf5e6522606cfdc3e4bd4ebcf1a86adc2a28420fba41822a3b)",
+        "https://councilof.ai/interop/axis-banks/serving-fidelity-20261102.json (sha256 68826b5e1c0b4539130aaef2113a3901147eec7bb908e263dc02361f589d2c3e)",
+        "https://councilof.ai/interop/axis-banks/company-practice-20261102.json (sha256 23ba58453183dc1804cdb00e0e5b3445ddc53fa038782a9ecf0684566b185b34)",
+        "https://councilof.ai/interop/axis-banks/measurer-integrity-20261102.json (sha256 138a216a54e77949b582804e6179ab752ae7873bf3e67a7650f688a2b54253e3)",
+        "https://councilof.ai/interop/axis-banks/lab-practice-20261102.json (sha256 b96d0879876f0e405a27a350dde8e0f5d2737e9b69876c4b3287951a69c37ec9)",
+        "https://councilof.ai/interop/axis-banks/interop-conformance-20261102.json (sha256 d751a0373a7f6ec58c85b8b6f2ea24de7c73a240ed9ba081ce0086142d9aed0c)",
+        "https://councilof.ai/interop/axis-banks/regulator-transparency-20261102.json (sha256 1a8667ca10ab9486b75daf460a680c12d2b4823ad3bbb9cfd6697143f882f6d5)",
+        "https://councilof.ai/interop/axis-banks/humanoid-deployment-20261102.json (sha256 edda7ffcf81d3ea863741aeb275304f581aa1f55792a68df7a9cb65b2a29b0ed)",
+        "https://councilof.ai/interop/axis-banks/interpretability-reproducibility-20261102.json (sha256 d72980fd27f31ff6a2fa63287b4b018219b91785ba03078d8f841b8e581bdd2d)",
+        "scripts/subject-axis/build_missing_axes.mjs (sha256 eeabfeb8a0515d719840d33c2a9320bd8279b7da7db17fc537acd23632509b5b); scripts/subject-axis/build_harness_fidelity.mjs (sha256 1ec4ee46eb119cae5832ed2ffeb1a203609e11c67523231d25be6240b3ff9ab4); scripts/subject-axis/subject-axis-live-run.mjs (sha256 1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7). Each bank prints the digest of the script that built it as method_sha256",
+        "https://councilof.ai/api/gspc (axes[].n, axes[].rate and axes[].note for the ten subject axes)",
+        "https://councilof.ai/axes and https://councilof.ai/axis/watchdog-ingest (the pages that show the figures)",
+        "https://huggingface.co/datasets/csoai/mcp-contract-parity (rows.v0.1.2.jsonl.gz, the row for the endpoint https://enterprise.wikimedia.com/mcp) and https://registry.modelcontextprotocol.io/v0/servers?search=wikimedia (read 2026-11-19)"
+      ]
+    },
+    {
       "id": "C-2026-1118-01",
       "date": "2026-11-18",
       "detected_at": "2026-11-02T19:03:39Z",
@@ -2045,20 +2142,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "ee158a3210e17a93d4d6625f8054e3bf3b614b1d97aca718a2eff04be2303f9d",
+    id: "d75c54f5768adca8f4b263779d331f7b7d604fefea8ea0273d60f67e9815184c",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "7790ced67419c1f198a407c4eaa00cf3505b4b9089fb7a03772cf591461fc0e9e0ffd710e0e90b81fe6a0938f0d84a4e6f60a9ee967376bfd7d99d9c04f5a80e",
+    signature: "c02ea3424ced50bd682483fb9739d6ed8d1870b1bbd4e41352b6876d2b8289c78253f363ab65c0481ae0549ed08cb4f82e0b387e82f17a70ab79393f243e760f",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "ee158a3210e17a93d4d6625f8054e3bf3b614b1d97aca718a2eff04be2303f9d",
+          "content_id": "d75c54f5768adca8f4b263779d331f7b7d604fefea8ea0273d60f67e9815184c",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 95,
-          "latest_entry_id": "C-2026-1118-01",
-          "ledger_canonical_bytes": 237817,
+          "entries": 98,
+          "latest_entry_id": "C-2026-1120-03",
+          "ledger_canonical_bytes": 258672,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-11-19T03:25:04Z"
+          "signed_at": "2026-11-20T04:08:33Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
