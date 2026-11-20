@@ -167,6 +167,56 @@ export const LEDGER = {
       ]
     },
     {
+      "id": "C-2026-1103-01",
+      "date": "2026-11-03",
+      "detected_at": "2026-11-01",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "A name-for-name audit on 2026-11-01 extracted the published 0.2.4 tarball's own manifests (gspc-tools.json, paid-tools.json) and diffed them against the live door's tools/list; the drift was re-measured on 2026-11-03",
+        "published_at is UNRECORDED: the deploy that first serves this corrected guide had not happened when this entry was written",
+        "This entry was first written on 2026-11-03. Before publication it was re-read on 2026-11-19 against the repository and the dated captures in the history of distribution/npm/npm-publish-check.json, and two passages were corrected to match them"
+      ],
+      "what_was_wrong": "public/llms-install.md — the agent-facing installation guide — typed tool counts as if they were stable facts: it advertised the npm release at '52 tool names' while the live door it installs against served 53 names from 2026-10-30 (axis_watchdog-ingest) and 54 names from 2026-11-02 (framework_readiness). An agent following the guide compared the door against a stale count and could conclude the deployment was wrong, when the typed number was. The same typed-count defect had already bitten the axes index (a lid saying 23 beside an h1 saying 22) and the tools-match-door test (expecting 47 free names the week the door reached 48).",
+      "how_caught": "An internal audit that ran the guide's own publication test: npm pack csoai-gspc-mcp@latest, extract the tarball's manifests, diff name-for-name against the live door's tools/list. The capture of 2026-11-01T11:54:15Z recorded release 0.2.4 with 52 names against a door serving 53 (axis_watchdog-ingest was live only). The capture of 2026-11-03T03:33:29Z recorded release 0.2.5 with 53 names against a door serving 54 (framework_readiness was live only). The typed count was out of date on both days.",
+      "what_changed": "The guide's counts are no longer typed by hand. Its npm facts (the latest release, its publication time, and how many tool names the published tarball and the live door carried) are generated from one dated capture by scripts/harness-x/npm-guide-facts.mjs, whose check mode refuses a committed guide that has drifted from the capture, and scripts/llms-install.test.mjs holds the count in the guide's prose to the tool catalogue the guide publishes. The guide tells the reader to re-run the name-for-name comparison whenever either side moves, and it marks the local package as not the contract. The same de-typing landed in tools-match-door's test (counts derived; only the permanent facts pinned: disjoint banks, free-forever anchors, mill-tool phantoms absent) and in the axes-index generator (counts derived from the board, with a LID_COUNT_MISMATCH guard that refuses to render a totals row the page cannot explain).",
+      "status": "CORRECTED - at the producers",
+      "reached_the_public": true,
+      "evidence": [
+        "https://councilof.ai/mcp (tools/list, request time)",
+        "https://registry.npmjs.org/csoai-gspc-mcp (0.2.4, published 2026-10-28T16:48:34.768Z)",
+        "distribution/npm/npm-publish-check.json (in its history: the captures of 2026-11-01T11:54:15Z and 2026-11-03T03:33:29Z)",
+        "public/llms-install.md; scripts/harness-x/npm-guide-facts.mjs; scripts/llms-install.test.mjs; scripts/derive-fin-run-attestation.mjs; scripts/surface/build-axis-pages.mjs; mcp/gspc-server/tools-match-door.test.ts"
+      ]
+    },
+    {
+      "id": "C-2026-1012-01",
+      "date": "2026-10-12",
+      "detected_at": "2026-10-09T15:55Z",
+      "detected_by": "internal monitor",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "An internal alert log entry of 2026-10-09 15:55Z (not publicly hosted) first recorded the stale index against its own daily note",
+        "published_at is UNRECORDED: the deploy that first serves this correction had not happened when this entry was written",
+        "This entry was first written on 2026-10-12. Before publication it was re-read on 2026-11-19 against the served index and the repository history, and its account of what changed was corrected to match them"
+      ],
+      "what_was_wrong": "The signed measurement-capsule index publication block claimed it was \"published daily by the owner's approval (recorded 2026-09-26)\" while as_of stayed at 2026-10-01. On 2026-10-12 that is roughly eleven days stale against its own cadence claim. Free verification of existing cards is unaffected; the defect is a false publication promise on our own evidence index. Re-read on 2026-11-19, the same is true again: the served index is dated 2026-11-01, eighteen days old, and its note still reads 'published daily'.",
+      "how_caught": "Estate health reviews on 2026-10-09 and 2026-10-10 compared the index as_of with the publication note and with the calendar; an internal alert log entry of 2026-10-09 15:55Z filed the gap.",
+      "what_changed": "This entry amends the claim: the index is published on a best-effort basis, and as_of is the only source of truth for the last successful signed publication. The index's own note has not been changed. The served copy was replaced twice after this entry was first written, by the index of 2026-10-28 (commit 5adedf137, committed 2026-10-29) and by the index of 2026-11-01 (commit 857a6cc02, committed 2026-11-06), and both carry the same note. Read on 2026-11-19, the served index is dated 2026-11-01 (as_of 2026-11-01T08:30:40Z, chain_seq 26) and its note still reads 'published daily by the owner's approval (recorded 2026-09-26)'. The dated copies on Hugging Face (csoai/evidence-index, measurement-index/) run from 2026-09-26 to 2026-11-04 with gaps, and none is later. When the daily publisher is restored the note may say daily cadence target, never a guarantee. Prior indexes are not rewritten. Cards themselves remain valid and free to verify at councilof.ai.",
+      "status": "RECORDED - the claim is amended in this record only; the index still carries the daily note (read 2026-11-19); the publisher and the note are open; signed indexes not rewritten",
+      "reached_the_public": true,
+      "open_items": [
+        "Restore the daily measurement-index publisher (owner key + job); until as_of advances, treat daily cadence as degraded",
+        "Next signed index must carry the amended note (daily cadence target, not guarantee)"
+      ],
+      "evidence": [
+        "https://councilof.ai/measurement-capsules/v0.2/index.json (date, as_of, chain_seq and publication.note; https://councilof.ai/measurement-capsules/latest.json points to it)",
+        "councilof-ai commits 4e0033cbc (index of 2026-10-01, committed 2026-10-06), 5adedf137 (index of 2026-10-28) and 857a6cc02 (index of 2026-11-01)",
+        "https://huggingface.co/datasets/csoai/evidence-index/tree/main/measurement-index (the dated copies)",
+        "Internal notes, not publicly hosted: the alert log entry of 2026-10-09 15:55Z, and a cadence-claim decision note and a publisher-restore runbook, both dated 2026-10-12"
+      ]
+    },
+    {
       "id": "C-2026-1006-13",
       "date": "2026-10-06",
       "detected_at": "2026-10-06",
@@ -2115,20 +2165,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "2b70ffeffba81209f102af38c8611d2fda87faa3a7ae15cab158b512991e39ec",
+    id: "b1555faf770261b4c9fa7eb3b50010b049094bddd372915aaed386a41442fac8",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "52558310d5a7ad65817b2bafe1c6961c105677c19e1f4850702dc8765668f191d3c00a7b042cc6e48e10e97e61e22f9df64267b65fb35d1866e3ef70c6a18a03",
+    signature: "5e154b4bfccb8b57badd1483fe3afe736628e2129bd3e9fb15f339c4c1574e0326beb7d5a74a75628be0d4a6849c7815faf422592f9917756cdcd67270fc3100",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "2b70ffeffba81209f102af38c8611d2fda87faa3a7ae15cab158b512991e39ec",
+          "content_id": "b1555faf770261b4c9fa7eb3b50010b049094bddd372915aaed386a41442fac8",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 97,
+          "entries": 99,
           "latest_entry_id": "C-2026-1120-03",
-          "ledger_canonical_bytes": 255290,
+          "ledger_canonical_bytes": 262088,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-11-20T03:26:54Z"
+          "signed_at": "2026-11-20T04:08:33Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
