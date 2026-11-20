@@ -27,6 +27,8 @@ export type McpToolResult = {
   content: Array<{ type: "text"; text: string }>;
   structuredContent?: Record<string, unknown>;
   isError: boolean;
+  /** Result metadata: a paid tool's route-reported settlement sits under "x402/payment-response". */
+  _meta?: Record<string, unknown>;
 };
 
 /**

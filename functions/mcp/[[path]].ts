@@ -22,7 +22,7 @@ import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
 import { doorInstallLine, npmReleaseState } from "../../scripts/harness-x/npm-release-state.mjs";
 import { verifyToolResult } from "./_handlers";
-import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, type PaidCallerContext } from "./_paid";
+import { MCP_PAYMENT_META_KEY, PAID_TOOL_DEFS, PAID_TOOL_NAMES, type PaidCallerContext } from "./_paid";
 import { dispatchTool, FREE_TOOL_DEFINITIONS, TOOL_DEFINITIONS } from "./_dispatch";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
@@ -104,7 +104,7 @@ export function fullDoorInstall(origin: string): Record<string, string> {
   };
 }
 const INSTRUCTIONS =
-  `GSPC MCP. ${FREE_TOOL_COUNT} free read-only tools and ${PAID_TOOL_COUNT} paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT; each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.`;
+  `GSPC MCP. ${FREE_TOOL_COUNT} free read-only tools and ${PAID_TOOL_COUNT} paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT; each implementation sets the X-PAYMENT header itself. This HTTP door also takes the x402 MCP transport's PaymentPayload object in params._meta["x402/payment"] (one carrier per call) and returns a settlement the route reports in result._meta["x402/payment-response"]. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.`;
 // The free door speaks to a person using a chat client, so it carries no operations notes and no
 // payment text (packet CR-6). The count is derived from the file, like the one above.
 export const FREE_INSTRUCTIONS =
@@ -155,6 +155,17 @@ const compile = (defs: Tool[]) => defs.map((definition) => ({
     : undefined,
 }));
 
+/**
+ * The x402 MCP transport carries a PaymentPayload in params._meta["x402/payment"]. Hand it to the
+ * dispatch beside the caller context: only the paid wrapper reads it (dispatchTool passes `caller`
+ * to nothing else), and the free door never reaches that wrapper. A null field is no payment.
+ */
+function withTransportPayment(caller: PaidCallerContext | undefined, meta: unknown): PaidCallerContext | undefined {
+  const payload = object(meta) ? meta[MCP_PAYMENT_META_KEY] : undefined;
+  if (payload === undefined || payload === null) return caller;
+  return { ...caller, transportPayment: { carrier: `_meta["${MCP_PAYMENT_META_KEY}"]`, payload } };
+}
+
 function buildMcp(
   definitions: Tool[],
   door: { instructions: string; paid: boolean },
@@ -191,10 +202,10 @@ function buildMcp(
           ...(definition.annotations ? { annotations: definition.annotations } : {}),
           ...(definition._meta ? { _meta: definition._meta } : {}),
         },
-        (args) =>
+        (args, ctx) =>
           // door.paid guards the dispatch as well as the registry: the free door never reaches
           // the paid wrapper even if a paid definition were ever passed to it by mistake.
-          dispatchTool(definition.name, args, origin, door, caller),
+          dispatchTool(definition.name, args, origin, door, withTransportPayment(caller, ctx?.mcpReq?._meta)),
       );
     }
     // Historical unlisted alias; it is not in tools/list and does not inflate the canonical count.
@@ -510,7 +521,7 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       install: fullDoorInstall(origin),
       tool_counts: TOOL_COUNTS,
       stdio_alternative:
-        "npm csoai-gspc-mcp and the Pages HTTP implementation are released independently. Payment travels as the x_payment ARGUMENT; each door sets the X-PAYMENT header itself. Ask each installed version for its tools/list.",
+        "npm csoai-gspc-mcp and the Pages HTTP implementation are released independently. Payment travels as the x_payment ARGUMENT; each door sets the X-PAYMENT header itself. The Pages HTTP door also reads the x402 MCP transport's params._meta[\"x402/payment\"]; npm reads x_payment only. Ask each installed version for its tools/list.",
       paid_tools: {
         names: [...PAID_TOOL_NAMES],
         how: "Call without x_payment for a 402 challenge. A challenge is not settlement, delivery or revenue.",

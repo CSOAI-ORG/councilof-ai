@@ -21,9 +21,15 @@ import { purchaseSha256 } from "../../shared/buyerPurchase";
  *         2026-09-26 this returned isError:false with the challenge nested under
  *         `payment_required`, which an x402 MCP client (checks structuredContent.x402Version +
  *         accepts) could not recognise. `payment_required` is kept for existing readers.
- *         PAYMENT SEMANTICS UNCHANGED: payment is still read only from the `x_payment` argument and
- *         forwarded as X-PAYMENT; `_meta["x402/payment"]` is not read, so a client that sends only
- *         that receives the same challenge and is charged nothing (paid-tools.test.ts pins both).
+ *         PAYMENT CARRIERS (20 Nov 2026): the `x_payment` argument (a base64 header value), or the
+ *         x402 transport's own field holding a PaymentPayload OBJECT: MCP params._meta["x402/payment"]
+ *         (specs/transports-v2/mcp.md) or A2A message metadata "x402.payment.payload"
+ *         (specs/transports-v2/a2a.md). A carried object is encoded as base64 of its JSON, the value
+ *         the route decodes, and forwarded as X-PAYMENT like the argument; nothing else changes. One
+ *         carrier per call: both at once, or a carried value that is not an object, is BAD_ARGUMENTS
+ *         and nothing is forwarded. A settlement the route reports in X-PAYMENT-RESPONSE comes back
+ *         decoded in result._meta["x402/payment-response"], as reported and not independently
+ *         verified; the raw header stays in payment_response_header (paid-tools.test.ts pins both).
  *   2xx → status DELIVERED: delivery is separate from settlement and receipt state. A free preview,
  *         a paid delivery with no settle echo, a settle echo with a receipt gap, and a settle echo
  *         carrying an unverified JWS receipt are four different structured states.
@@ -44,6 +50,12 @@ type PaidTool = {
 const TOOLS = (PAID_TOOLS as { tools: PaidTool[] }).tools;
 export const PAID_TOOL_NAMES = new Set(TOOLS.map((t) => t.name));
 export const PAID_TOOL_DEFS = (PAID_TOOLS as { tools: unknown[] }).tools;
+
+/** The x402 MCP transport's request and result fields (x402 specs/transports-v2/mcp.md). */
+export const MCP_PAYMENT_META_KEY = "x402/payment";
+export const MCP_PAYMENT_RESPONSE_META_KEY = "x402/payment-response";
+/** A carried PaymentPayload becomes one request header, so it is bounded. */
+const TRANSPORT_PAYMENT_MAX_BYTES = 8_192;
 
 const DOCTRINE =
   "measurement, not certification — no tool here carries or awards a trust label of any kind; verification stays free";
@@ -108,6 +120,50 @@ function deliveryFields(paymentPresented: boolean, paymentResponse?: string | nu
     receipt_gap:
       "The route reported settlement, but its opaque response did not carry a readable offer-receipt JWS. Inspect the route, chain and facilitator; do not retry blindly.",
   } as const;
+}
+
+/** base64 of UTF-8 bytes; btoa alone is Latin-1 only. */
+function base64Utf8(text: string): string {
+  let binary = "";
+  for (const byte of new TextEncoder().encode(text)) binary += String.fromCharCode(byte);
+  return btoa(binary);
+}
+
+/**
+ * The X-PAYMENT value for a PaymentPayload carried in a transport field: base64 of its JSON, the
+ * form functions/api/_x402.ts decodes. Only a JSON object is a PaymentPayload.
+ */
+export function encodeTransportPayment(payload: unknown): { value: string } | { error: string } {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload))
+    return {
+      error:
+        "the carried payment must be the x402 PaymentPayload object; send a base64 header value as x_payment instead",
+    };
+  let json: string;
+  try {
+    json = JSON.stringify(payload);
+  } catch {
+    return { error: "the carried payment could not be serialised as JSON" };
+  }
+  if (new TextEncoder().encode(json).length > TRANSPORT_PAYMENT_MAX_BYTES)
+    return { error: `the carried payment is larger than ${TRANSPORT_PAYMENT_MAX_BYTES} bytes of JSON` };
+  return { value: base64Utf8(json) };
+}
+
+/** The settlement a route reported in X-PAYMENT-RESPONSE, decoded; null when absent or unreadable. */
+export function decodePaymentResponse(header?: string | null): Record<string, unknown> | null {
+  if (!header) return null;
+  try {
+    const normalized = header.trim().replace(/-/g, "+").replace(/_/g, "/");
+    const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+    const bytes = Uint8Array.from(atob(padded), (character) => character.charCodeAt(0));
+    const decoded: unknown = JSON.parse(new TextDecoder().decode(bytes));
+    return decoded && typeof decoded === "object" && !Array.isArray(decoded)
+      ? (decoded as Record<string, unknown>)
+      : null;
+  } catch {
+    return null;
+  }
 }
 
 /** Build the same-origin request for a paid tool from its arguments. */
@@ -199,15 +255,30 @@ export function buildPaidRequest(
   };
 }
 
-export type PaidCallerContext={authorization?:string;env?:BuyerEnv};
+/** A PaymentPayload carried by the transport's own field instead of the x_payment argument. */
+export type TransportPayment = { carrier: string; payload: unknown };
+export type PaidCallerContext={authorization?:string;env?:BuyerEnv;transportPayment?:TransportPayment};
 export async function paidToolResult(
   name: string,
   args: Record<string, unknown>,
   origin: string,
   caller?:PaidCallerContext,
 ): Promise<McpToolResult> {
-  const paymentPresented =
+  const argumentPayment =
     typeof args.x_payment === "string" && args.x_payment.trim() !== "";
+  // A PaymentPayload in the transport's own field becomes the x_payment value here (base64 of its
+  // JSON), so everything below forwards it exactly as it forwards the argument. One carrier per call.
+  const transport = caller?.transportPayment;
+  const encoded = transport && !argumentPayment ? encodeTransportPayment(transport.payload) : null;
+  const transportError = !transport
+    ? undefined
+    : argumentPayment
+      ? `payment presented twice (x_payment and ${transport.carrier}); send it once`
+      : encoded && "error" in encoded
+        ? encoded.error
+        : undefined;
+  if (encoded && "value" in encoded) args = { ...args, x_payment: encoded.value };
+  const paymentPresented = argumentPayment || transport !== undefined;
   const built = buildPaidRequest(name, args, origin);
   const tool = TOOLS.find((t) => t.name === name);
   if (!tool) {
@@ -231,6 +302,15 @@ export async function paidToolResult(
     sku: tool.csoai.sku,
     rail: tool.csoai.rail,
     payment_presented: paymentPresented,
+    ...(paymentPresented
+      ? {
+          payment_carrier: transport
+            ? argumentPayment
+              ? `x_payment and ${transport.carrier}`
+              : transport.carrier
+            : "x_payment",
+        }
+      : {}),
     doctrine: DOCTRINE,
     not_a_certification: true,
   };
@@ -266,6 +346,21 @@ export async function paidToolResult(
     structuredContent: payload,
     isError,
   });
+  // x402 MCP transport: the settlement the route reported for the payment presented here, decoded,
+  // in result._meta["x402/payment-response"]. No payment presented means no settlement of this call.
+  const withSettlement = (result: McpToolResult, header?: string | null): McpToolResult => {
+    const settlement = paymentPresented ? decodePaymentResponse(header) : null;
+    return settlement
+      ? { ...result, _meta: { ...(result._meta ?? {}), [MCP_PAYMENT_RESPONSE_META_KEY]: settlement } }
+      : result;
+  };
+
+  if (transportError)
+    return reply(
+      { ...base, status: "BAD_ARGUMENTS", reason: transportError },
+      `BAD_ARGUMENTS — ${transportError}. No payment was forwarded.`,
+      true,
+    );
 
   if("purchase_action" in args){
     if(paymentPresented)return reply({...base,status:"BAD_ARGUMENTS",reason:"Recovery and decisions must omit payment authorization."},"No payment was attempted.",true);
@@ -320,7 +415,7 @@ export async function paidToolResult(
   try {
     text = await res.text();
   } catch {
-    return reply(
+    return withSettlement(reply(
       {
         ...base,
         status: "UNREADABLE_RESPONSE",
@@ -331,7 +426,7 @@ export async function paidToolResult(
       },
       `UNREADABLE_RESPONSE — ${tool.csoai.route} answered, but delivery could not be established. ${res.headers.get("x-payment-response") ? "The route reported settlement; inspect the wallet, chain and facilitator before signing or retrying. The opaque header is not independently verified." : retryWarning}`,
       true,
-    );
+    ), res.headers.get("x-payment-response"));
   }
   try {
     body = text ? JSON.parse(text) : null;
@@ -372,7 +467,7 @@ export async function paidToolResult(
       ...settlementFields(),
       how_to_pay: paymentPresented
         ? "A payment authorization was presented, but this response does not prove settlement. Inspect the returned reason, wallet, chain and facilitator before signing or retrying."
-        : "sign accepts[0] (x402 exact scheme, EIP-3009 transferWithAuthorization under extra.name/version) with your wallet, base64 the payload, and call this tool again with x_payment=<that value>. The free preview, if any, is in payment_required.csoai.preview.",
+        : "sign accepts[0] (x402 exact scheme, EIP-3009 transferWithAuthorization under extra.name/version) with your wallet, base64 the payload, and call this tool again with x_payment=<that value>, or send the PaymentPayload object in params._meta[\"x402/payment\"] (x402 MCP transport) instead. The free preview, if any, is in payment_required.csoai.preview.",
     };
     // T11 (6 Oct 2026): a dated amount is said in the human line, built from the challenge itself so it
     // disappears once accepts[0] no longer carries an end date. No amount is typed here.
@@ -421,11 +516,11 @@ export async function paidToolResult(
     delivery_record_scope: "unsigned bookkeeping for the underlying HTTP body; not this MCP JSON-RPC envelope",
   };
   if (res.ok && res.headers.get("x-csoai-delivery-state") === "PAID_NOT_DELIVERED") {
-    return reply({
+    return withSettlement(reply({
       ...base, ...deliveryRecordFields, status: "PAID_NOT_DELIVERED", http_status: res.status,
       delivery_state: "NOT_DELIVERED", body,
       ...settlementFields(res.headers.get("x-payment-response")),
-    }, "Settlement was reported but the requested output was not delivered; inspect the route before retrying.", true);
+    }, "Settlement was reported but the requested output was not delivered; inspect the route before retrying.", true), res.headers.get("x-payment-response"));
   }
   if (res.ok) {
     const paymentResponse = res.headers.get("x-payment-response");
@@ -449,10 +544,10 @@ export async function paidToolResult(
           : delivered.delivery_kind === "DELIVERED_RECEIPT_GAP"
             ? "Settlement was reported by the route, but its receipt is missing or unreadable; inspect it before retrying."
             : "Settlement and a JWS receipt were reported by the route; the receipt is present but not independently verified here.";
-    return reply(
+    return withSettlement(reply(
       payload,
       `DELIVERED — ${tool.csoai.route} HTTP ${res.status}. ${deliverySummary} ${DOCTRINE}.`,
-    );
+    ), paymentResponse);
   }
   const reportedPayment = res.headers.get("x-payment-response");
   const routeReason = typeof routeBody?.reason === "string" ? routeBody.reason : undefined;
@@ -461,7 +556,7 @@ export async function paidToolResult(
     : paymentPresented && res.status >= 400 && res.status < 500
       ? "The route refused the request and reported no settlement; nothing was delivered. Correct the arguments before paying again, and inspect the wallet if in doubt."
       : retryWarning;
-  return reply(
+  return withSettlement(reply(
     {
       ...base,
       status: `HTTP_${res.status}`,
@@ -475,7 +570,7 @@ export async function paidToolResult(
     // Nothing was delivered, so this is a failed call whatever the status: an x402 MCP client and a
     // model both read isError to decide whether to correct the arguments.
     true,
-  );
+  ), reportedPayment);
 }
 
 export async function handlePaidTool(

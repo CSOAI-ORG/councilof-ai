@@ -21,6 +21,7 @@ type Envelope = {
   jsonrpc: string;
   id?: unknown;
   result: {
+    _meta?: Record<string, Record<string, unknown> | undefined>;
     tools: Array<{ name: string }>;
     serverInfo: { version: string };
     instructions: string;
@@ -32,6 +33,7 @@ type Envelope = {
       payment_required_header: string | null;
       nothing_charged?: boolean;
       payment_presented: boolean;
+      payment_carrier?: string;
       delivery_state: string;
       delivery_kind: string;
       settlement_state: string;
@@ -417,25 +419,137 @@ describe("/mcp tools/call — paid tools", () => {
     expect(JSON.stringify(r)).not.toContain(token);
   });
 
-  // PAYMENT SEMANTICS UNCHANGED by the 2026-09-26 isError switch: payment is read ONLY from the
-  // x_payment argument. A client that puts a payload in _meta["x402/payment"] (the x402 MCP
-  // transport's field, not read here yet) gets the challenge again, and nothing is forwarded.
-  it("a payload sent only in _meta['x402/payment'] is not forwarded: same challenge, nothing charged", async () => {
+  // The x402 MCP transport's own carrier (20 Nov 2026, specs/transports-v2/mcp.md). A
+  // PaymentPayload OBJECT in params._meta["x402/payment"] is forwarded as X-PAYMENT, base64 of its
+  // JSON (the value the route decodes), exactly as the x_payment argument is, and the route's
+  // settlement comes back decoded in result._meta["x402/payment-response"].
+  const TRANSPORT_PAYLOAD = {
+    x402Version: 2,
+    accepted: { scheme: "exact", network: "eip155:8453", amount: "100000", payTo: "0xpay" },
+    payload: { signature: "0xabc", authorization: { from: "0xbuyer", to: "0xpay", value: "100000" } },
+  };
+  const metaCall = (args: Record<string, unknown>, meta: Record<string, unknown>, name = "commission_card") =>
+    call(rpc("tools/call", { name, arguments: args, _meta: meta }));
+
+  it("a PaymentPayload in _meta['x402/payment'] is forwarded as X-PAYMENT, base64 of its JSON", async () => {
     const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
+    const r = await metaCall({ subject: "qwen3" }, { "x402/payment": TRANSPORT_PAYLOAD });
+    expect(seen).toHaveLength(1);
+    expect(JSON.parse(atob(seen[0].headers.get("x-payment") ?? ""))).toEqual(TRANSPORT_PAYLOAD);
+    const sc = r.result.structuredContent;
+    expect(r.result.isError).toBe(false);
+    expect(sc.status).toBe("DELIVERED");
+    expect(sc.payment_presented).toBe(true);
+    expect(sc.payment_carrier).toBe('_meta["x402/payment"]');
+    const settlement = r.result._meta?.["x402/payment-response"];
+    expect(settlement?.success).toBe(true);
+    expect(settlement?.transaction).toBe(`0x${"a".repeat(64)}`);
+    // The raw header is still reported beside the decoded field, and says the same thing.
+    expect(JSON.parse(atob(sc.payment_response_header ?? ""))).toEqual(settlement);
+  });
+
+  it("the x_payment argument reports its carrier and the same decoded settlement", async () => {
+    stubOrigin({ deployed: ["/api/request-attestation"] });
     const r = await call(
-      rpc("tools/call", {
-        name: "commission_card",
-        arguments: { subject: "qwen3" },
-        _meta: { "x402/payment": { x402Version: 2, payload: { signature: "0xabc" } } },
-      }),
+      rpc("tools/call", { name: "commission_card", arguments: { subject: "qwen3", x_payment: "SIGNED" } }),
     );
+    expect(r.result.structuredContent.payment_carrier).toBe("x_payment");
+    expect(r.result._meta?.["x402/payment-response"]?.success).toBe(true);
+  });
+
+  it("both carriers at once is BAD_ARGUMENTS and forwards nothing", async () => {
+    const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
+    const r = await metaCall({ subject: "qwen3", x_payment: "SIGNED" }, { "x402/payment": TRANSPORT_PAYLOAD });
+    expect(seen).toHaveLength(0);
     expect(r.result.isError).toBe(true);
+    expect(r.result.structuredContent.status).toBe("BAD_ARGUMENTS");
+    expect(r.result.structuredContent.reason).toMatch(/payment presented twice/);
+    expect(r.result._meta?.["x402/payment-response"]).toBeUndefined();
+  });
+
+  it("a carried value that is not a PaymentPayload object, or is oversized, forwards nothing", async () => {
+    const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
+    for (const bad of ["BASE64-STRING", 7, [TRANSPORT_PAYLOAD]]) {
+      const r = await metaCall({ subject: "qwen3" }, { "x402/payment": bad });
+      expect(r.result.isError).toBe(true);
+      expect(r.result.structuredContent.status).toBe("BAD_ARGUMENTS");
+      expect(r.result.structuredContent.reason).toMatch(/PaymentPayload object/);
+    }
+    const huge = await metaCall(
+      { subject: "qwen3" },
+      { "x402/payment": { x402Version: 2, payload: { signature: `0x${"f".repeat(9_000)}` } } },
+    );
+    expect(huge.result.structuredContent.status).toBe("BAD_ARGUMENTS");
+    expect(huge.result.structuredContent.reason).toMatch(/larger than 8192 bytes/);
+    expect(seen).toHaveLength(0);
+  });
+
+  it("a null _meta['x402/payment'] is no payment: the challenge, nothing charged", async () => {
+    const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
+    const r = await metaCall({ subject: "qwen3" }, { "x402/payment": null });
     const sc = r.result.structuredContent;
     expect(sc.status).toBe("PAYMENT_REQUIRED");
     expect(sc.payment_presented).toBe(false);
+    expect(sc.payment_carrier).toBeUndefined();
     expect(sc.nothing_charged).toBe(true);
     expect(seen).toHaveLength(1);
     expect(seen[0].headers.get("x-payment")).toBeNull();
+    expect(r.result._meta?.["x402/payment-response"]).toBeUndefined();
+  });
+
+  it("a free preview refuses a carried payment as it refuses x_payment", async () => {
+    const seen = stubOrigin({ deployed: ["/api/receipts/batch"] });
+    const r = await metaCall(
+      { from: "2026-09-01T00:00:00Z", preview: true },
+      { "x402/payment": TRANSPORT_PAYLOAD },
+      "receipts_batch",
+    );
+    expect(r.result.structuredContent.status).toBe("BAD_ARGUMENTS");
+    expect(r.result.structuredContent.reason).toMatch(/preview is free/);
+    expect(seen).toHaveLength(0);
+  });
+
+  it("an unreadable settlement header adds no x402/payment-response; the raw header is still reported", async () => {
+    stubOrigin({ deployed: ["/api/request-attestation"], receipt: "unreadable" });
+    const r = await metaCall({ subject: "qwen3" }, { "x402/payment": TRANSPORT_PAYLOAD });
+    expect(r.result.structuredContent.status).toBe("DELIVERED");
+    expect(r.result.structuredContent.payment_response_header).toBe("not-base64");
+    expect(r.result._meta?.["x402/payment-response"]).toBeUndefined();
+  });
+
+  it("a 2026-07-28 request carries the PaymentPayload beside its envelope keys", async () => {
+    const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
+    const body = rpc("tools/call", {
+      name: "commission_card",
+      arguments: { subject: "qwen3" },
+      _meta: {
+        "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+        "io.modelcontextprotocol/clientCapabilities": {},
+        "x402/payment": TRANSPORT_PAYLOAD,
+      },
+    });
+    const response = await onRequest({
+      request: new Request(`${ORIGIN}/mcp`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          accept: "application/json, text/event-stream",
+          "MCP-Protocol-Version": "2026-07-28",
+          "Mcp-Method": "tools/call",
+          "Mcp-Name": "commission_card",
+        },
+        body: JSON.stringify(body),
+      }),
+      env: {},
+      params: {},
+    } as never);
+    const r = await decode(response, body.id);
+    expect(seen).toHaveLength(1);
+    expect(JSON.parse(atob(seen[0].headers.get("x-payment") ?? ""))).toEqual(TRANSPORT_PAYLOAD);
+    expect(r.result.structuredContent.payment_carrier).toBe('_meta["x402/payment"]');
+    expect(r.result._meta?.["x402/payment-response"]?.success).toBe(true);
+    // The SDK's identity stamp sits beside the settlement, not over it.
+    expect(r.result._meta?.["io.modelcontextprotocol/serverInfo"]).toBeDefined();
   });
 
   it("paid: keeps delivery distinct while reporting a present, unverified route receipt", async () => {

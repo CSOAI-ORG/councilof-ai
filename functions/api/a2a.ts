@@ -57,7 +57,7 @@ import { evidenceDeliveryMessage, validateEvidenceDeliveryInput } from "../_lib/
 import { axisSpecialistResult, validateAxisSpecialistInput } from "../_lib/axisSpecialist";
 import { headFromGet } from "./_head";
 import { dispatchTool, TOOL_DEFINITIONS, toolInputError } from "../mcp/_dispatch";
-import { PAID_TOOL_NAMES, type PaidCallerContext } from "../mcp/_paid";
+import { MCP_PAYMENT_RESPONSE_META_KEY, PAID_TOOL_NAMES, type PaidCallerContext } from "../mcp/_paid";
 import type { McpToolResult } from "../mcp/_handlers";
 
 type Json = Record<string, unknown>;
@@ -848,13 +848,46 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
   };
 }
 
+/** The x402 A2A transport's payment field (x402 specs/transports-v2/a2a.md). */
+export const A2A_PAYMENT_PAYLOAD_KEY = "x402.payment.payload";
+
+/** A PaymentPayload in message.metadata["x402.payment.payload"], handed to the paid wrapper. */
+function withA2aTransportPayment(caller: PaidCallerContext | undefined, message: Json): PaidCallerContext | undefined {
+  const payload = record(message.metadata)?.[A2A_PAYMENT_PAYLOAD_KEY];
+  if (payload === undefined || payload === null) return caller;
+  return { ...caller, transportPayment: { carrier: `metadata["${A2A_PAYMENT_PAYLOAD_KEY}"]`, payload } };
+}
+
+/**
+ * The x402 A2A transport's status fields on the reply message: the challenge in
+ * "x402.payment.required", or the settlement the route reported in "x402.payment.receipts". This
+ * door answers SendMessage with a Message, not a Task, so only the metadata half of that transport
+ * is carried here; the data part stays the full tool result.
+ */
+function a2aPaymentMetadata(result: McpToolResult): Json | null {
+  const settlement = record(record(result._meta)?.[MCP_PAYMENT_RESPONSE_META_KEY]);
+  if (settlement)
+    return {
+      "x402.payment.status": settlement.success === false ? "payment-failed" : "payment-completed",
+      "x402.payment.receipts": [settlement],
+    };
+  const structured = record(result.structuredContent);
+  if (structured?.status !== "PAYMENT_REQUIRED") return null;
+  return {
+    "x402.payment.status": structured.payment_presented === true ? "payment-failed" : "payment-required",
+    "x402.payment.required": structured.payment_required ?? null,
+  };
+}
+
 /**
  * A per-tool skill. The input is validated against the tool's inputSchema first, so a refused
  * input calls no route and forwards no payment. The tool then runs through the dispatch POST /mcp
  * tools/call runs, and its result (content, structuredContent, isError) is quoted unchanged in
- * the data part: a client reads exactly what /mcp would have answered. Payment is read only from
- * input.x_payment, as the MCP tool reads its x_payment argument; never from text, metadata or a
- * header.
+ * the data part: a client reads exactly what /mcp would have answered. Payment is read from
+ * input.x_payment, as the MCP tool reads its x_payment argument, or from the x402 A2A transport's
+ * PaymentPayload in message.metadata["x402.payment.payload"], as the MCP door reads
+ * params._meta["x402/payment"]: one carrier per call, encoded and forwarded by the same paid
+ * wrapper. Never from text, part metadata or an HTTP header.
  */
 async function sendToolMessage(
   id: unknown,
@@ -889,19 +922,21 @@ async function sendToolMessage(
   // paidToolResult's 402 answer carries the machine JSON first and its human line second.
   const human = (texts.length > 1 && texts[0].trimStart().startsWith("{") ? texts[1] : texts[0]) ?? "";
   const summary = human.split("\n\n")[0].slice(0, 2_000);
+  const paymentMetadata = metered ? a2aPaymentMetadata(result) : null;
   return reply(id, {
     result: {
       message: {
         messageId: crypto.randomUUID(),
         contextId: contextId ?? crypto.randomUUID(),
         role: "ROLE_AGENT",
+        ...(paymentMetadata ? { metadata: paymentMetadata } : {}),
         parts: [
           {
             text: [
               `${tool}: ${state} — run by the dispatch POST /mcp tools/call runs (functions/mcp/_dispatch.ts).`,
               summary,
               metered
-                ? "Metered (x402): payment is read only from input.x_payment, as the MCP tool reads its x_payment argument, and the tool's route settles it, fail closed. With no x_payment nothing is charged."
+                ? "Metered (x402): payment is read from input.x_payment, or from the x402 A2A transport's PaymentPayload in message.metadata[\"x402.payment.payload\"] (one carrier per call), and the tool's route settles it, fail closed. With neither, nothing is charged."
                 : "Free: no payment is read or asked for.",
               REGISTER,
             ].filter(Boolean).join("\n"),
@@ -989,7 +1024,7 @@ async function sendMessage(id: unknown, params: unknown, origin: string, caller?
     });
   }
   if ("kind" in selection && selection.kind === "TOOL") {
-    return sendToolMessage(id, selection, str(message.contextId), origin, caller);
+    return sendToolMessage(id, selection, str(message.contextId), origin, withA2aTransportPayment(caller, message));
   }
   if ("kind" in selection) {
     return reply(id, {
@@ -1095,7 +1130,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       metered: [...METERED_TOOL_SKILL_IDS],
       selector: 'Part.data {"skill":"<tool>","input":{...}}: input is the MCP tool\'s arguments, validated against its inputSchema',
       payment:
-        "A metered tool answers with its x402 challenge (result.structuredContent.accepts) and charges nothing. To pay, send the same selector again with input.x_payment set to the base64 payment payload; the tool's route verifies and settles it, fail closed. Payment is never read from text, metadata or headers. Verification stays free.",
+        "A metered tool answers with its x402 challenge (result.structuredContent.accepts) and charges nothing. To pay, send the same selector again with input.x_payment set to the base64 payment payload, or with the PaymentPayload object in message.metadata[\"x402.payment.payload\"] (x402 A2A transport); the tool's route verifies and settles it, fail closed. Payment is never read from text, part metadata or HTTP headers. Verification stays free.",
     },
     version_rule:
       "Send `A2A-Version: 1.0`; a patch number (1.0.1) is ignored, as A2A v1.0 section 3.6 requires. Per A2A v1.0, an absent or empty header means 0.3. A v1.0 method name sent as 0.3 returns VersionNotSupportedError -32009; any other name that is not an A2A 0.3 method returns -32601. The 0.3 wire shape itself is served: a 0.3 method name (message/send, tasks/get, ...) with no header or a 0.x one is mapped onto the 1.0 handler and answered as a 0.3 Message; a request that declares 1.0 must use the 1.0 names. A body that is not JSON-RPC returns -32600; to ask in plain words, POST {\"message\": \"...\"} to /api/chat.",
