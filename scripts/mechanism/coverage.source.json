@@ -3,16 +3,17 @@
   "title": "Open measurement mechanism: coverage of the frozen provision corpus",
   "page": "/mechanism/",
   "json": "/mechanism/coverage.json",
-  "edited": "2026-09-27",
+  "edited": "2026-11-20",
   "statements": [
     "This report counts what the published data holds. Every number in it is derived by scripts/mechanism/build-coverage.mjs from committed files; none is typed.",
     "A provision marked PREDICATE has a deterministic check whose result a stranger can re-run. It is a measurement of one observable the provision names, not a finding that anyone complies with or breaches it.",
     "A provision marked RELATED_MEASURE is one that a measured board axis points to as relevant. The pointer is informative: the axis does not test the provision.",
-    "HASH_ONLY means the provision is in the frozen manifest as an identifier and a SHA-256, and nothing tests it. The source text bytes behind those hashes were not recovered, so the manifest is not an inspectable legal corpus.",
+    "HASH_ONLY means the provision is in the frozen manifest as an identifier and a SHA-256, and nothing tests it. Its source text is published beside the manifest and regenerates the hash, so the text can be read; reading it is not measuring it.",
     "Measurement, not certification. No compliance label, endorsement or regulator relationship is stated or implied."
   ],
   "sources": {
     "manifest": "public/interop/frozen-provision-hashes.json",
+    "source_texts": "public/interop/frozen-provision-sources-v1.jsonl",
     "inventory": "public/interop/regulatory-inventory-latest.json",
     "regulator_crosswalk": "client/src/data/regulator-crosswalk.json",
     "east_west": "public/crosswalk/east-west-v1.json",
@@ -24,7 +25,7 @@
   "hierarchy": [
     { "level": "authority", "label": "Authority", "means": "Who makes or enforces the rule. Held as a source-and-routing record; a record is not a relationship with the authority and not a live regulator API." },
     { "level": "instrument", "label": "Instrument", "means": "The law, framework or standard, named by its official identifier (CELEX for EU acts)." },
-    { "level": "version", "label": "Version", "means": "Which text of the instrument was frozen. Today the manifest pins each provision by a SHA-256 of normalised text; the source bytes that produced those hashes were not recovered." },
+    { "level": "version", "label": "Version", "means": "Which text of the instrument was frozen. The manifest pins each provision by a SHA-256 of normalised text (normaliser v1.0.0). The source texts that produce those hashes are published beside it, and the producer fails unless every one regenerates its hash and the root." },
     { "level": "provision", "label": "Provision", "means": "One addressable unit of the instrument (an article, or an id the manifest assigns), with its frozen hash." },
     { "level": "obligation", "label": "Obligation", "means": "A single duty cut out of a provision, with its conditions. No obligation register exists yet." },
     { "level": "applicability", "label": "Applicability", "means": "Whether the obligation applies to a given system. Not determined here: every authority record says applicability needs review by the party concerned." },
@@ -33,6 +34,15 @@
     { "level": "test", "label": "Test / profile", "means": "A deterministic predicate (PREDICATE) or a measured axis that points to the provision (RELATED_MEASURE)." },
     { "level": "watcher", "label": "Watcher", "means": "Something that polls the authority and expires the mapping when the text changes. Read from the manifest's own watcher field." }
   ],
+  "source_texts": {
+    "verifiers": [
+      "node scripts/mechanism/frozen-sources.mjs",
+      "python3 scripts/mechanism/verify_frozen_sources.py --selftest"
+    ],
+    "note": "Recovered after the freeze: the EU AI Act articles and annexes from a re-fetch of the Cellar XHTML manifestation of Regulation (EU) 2024/1689; GDPR, CRA, DORA, NIS2 and CSRD from the regulations database of CSOAI-ORG/eu-ai-act-compliance-mcp. Each row names its source. A text of exactly the frozen length cap was cut there before hashing, so the hash covers the cut text, not the whole provision; those ids are listed in texts_at_frozen_cap.",
+    "licence": "EU legislative text from EUR-Lex / Cellar (Publications Office of the European Union), reused under Commission Decision 2011/833/EU. Only the official Journal edition is authentic.",
+    "limitation": "The published source texts regenerate every per-provision hash and the corpus root with normaliser v1.0.0, so the manifest is now an inspectable corpus. They were recovered after the freeze, not saved with it; the stamped regulatory inventory still records the state it was issued with (inventory_state). Some texts are cut at the frozen length cap. No authority watcher was active when the corpus was frozen, and none is today."
+  },
   "instruments": [
     { "celex": "32024R1689", "name": "EU AI Act", "inventory_name": "EU AI Act", "long": "Regulation (EU) 2024/1689", "jurisdiction": "EU", "authority_record": "eu-ai-act-2024-1689", "crosswalk_regulator": "eu-ai-act", "east_west_regime": "EU", "east_west_entry": "EU AI Act (Reg 2024/1689)", "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj" },
     { "celex": "32016R0679", "name": "GDPR", "inventory_name": "GDPR", "long": "Regulation (EU) 2016/679", "jurisdiction": "EU", "authority_record": "eu-gdpr-2016-679", "crosswalk_regulator": null, "east_west_regime": "EU", "east_west_entry": "GDPR (Reg 2016/679)", "source_url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj" },

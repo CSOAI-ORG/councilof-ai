@@ -4,17 +4,17 @@
   "title": "Open measurement mechanism: coverage of the frozen provision corpus",
   "url": "https://councilof.ai/mechanism/",
   "json": "https://councilof.ai/mechanism/coverage.json",
-  "edited": "2026-09-27",
+  "edited": "2026-11-20",
   "generated_from": {
     "path": "scripts/mechanism/coverage.source.json",
-    "sha256": "0ecd7cb974ea09affe32b08c4fb9b766872ddbf4a2051b8c556dfc0b991620bc",
+    "sha256": "1572c375eaa8a94630842b853fab8fbef19a5eb434153f82e70286656a835a99",
     "producer": "scripts/mechanism/build-coverage.mjs"
   },
   "statements": [
     "This report counts what the published data holds. Every number in it is derived by scripts/mechanism/build-coverage.mjs from committed files; none is typed.",
     "A provision marked PREDICATE has a deterministic check whose result a stranger can re-run. It is a measurement of one observable the provision names, not a finding that anyone complies with or breaches it.",
     "A provision marked RELATED_MEASURE is one that a measured board axis points to as relevant. The pointer is informative: the axis does not test the provision.",
-    "HASH_ONLY means the provision is in the frozen manifest as an identifier and a SHA-256, and nothing tests it. The source text bytes behind those hashes were not recovered, so the manifest is not an inspectable legal corpus.",
+    "HASH_ONLY means the provision is in the frozen manifest as an identifier and a SHA-256, and nothing tests it. Its source text is published beside the manifest and regenerates the hash, so the text can be read; reading it is not measuring it.",
     "Measurement, not certification. No compliance label, endorsement or regulator relationship is stated or implied."
   ],
   "hierarchy": [
@@ -31,7 +31,7 @@
     {
       "level": "version",
       "label": "Version",
-      "means": "Which text of the instrument was frozen. Today the manifest pins each provision by a SHA-256 of normalised text; the source bytes that produced those hashes were not recovered."
+      "means": "Which text of the instrument was frozen. The manifest pins each provision by a SHA-256 of normalised text (normaliser v1.0.0). The source texts that produce those hashes are published beside it, and the producer fails unless every one regenerates its hash and the root."
     },
     {
       "level": "provision",
@@ -78,10 +78,44 @@
     "provisions": 417,
     "instruments": 6,
     "frozen_at": "2026-08-12T05:22:20.629949+00:00",
-    "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
-    "source_database_state": "NOT_RECOVERED",
+    "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_RECOVERED",
+    "source_database_state": "SOURCE_BYTES_RECOVERED",
+    "inventory_state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+    "inventory_source_database_state": "NOT_RECOVERED",
+    "source_texts": {
+      "path": "/interop/frozen-provision-sources-v1.jsonl",
+      "sha256": "52708e3c67e9c76337f51fa56c4e7a3f77bfb019811f7d56045e98537c7e5a86",
+      "state": "SOURCE_BYTES_RECOVERED",
+      "rows": 417,
+      "hashes_reproduced": 417,
+      "corpus_root_reproduced": true,
+      "normaliser_version": "1.0.0",
+      "rows_by_source_kind": {
+        "cellar_xhtml_refetch": 126,
+        "git_db": 291
+      },
+      "texts_at_frozen_cap": [
+        "32022L2464:1",
+        "32022L2464:25",
+        "32022L2464:29",
+        "32022L2464:3",
+        "32022L2555:32",
+        "32022L2555:6",
+        "32022R2554:3",
+        "32024R1689:3",
+        "32024R1689:5",
+        "32024R2847:13",
+        "32024R2847:3"
+      ],
+      "verifiers": [
+        "node scripts/mechanism/frozen-sources.mjs",
+        "python3 scripts/mechanism/verify_frozen_sources.py --selftest"
+      ],
+      "note": "Recovered after the freeze: the EU AI Act articles and annexes from a re-fetch of the Cellar XHTML manifestation of Regulation (EU) 2024/1689; GDPR, CRA, DORA, NIS2 and CSRD from the regulations database of CSOAI-ORG/eu-ai-act-compliance-mcp. Each row names its source. A text of exactly the frozen length cap was cut there before hashing, so the hash covers the cut text, not the whole provision; those ids are listed in texts_at_frozen_cap.",
+      "licence": "EU legislative text from EUR-Lex / Cellar (Publications Office of the European Union), reused under Commission Decision 2011/833/EU. Only the official Journal edition is authentic."
+    },
     "watcher": "NOT BUILT — local corpus only; no authority is polled",
-    "limitation": "The public manifest proves the 417 identifiers, their frozen hashes and their aggregate root. It does not include the exact normalized source-text bytes needed to regenerate each per-provision hash, and no authority watcher was active when it was frozen."
+    "limitation": "The published source texts regenerate every per-provision hash and the corpus root with normaliser v1.0.0, so the manifest is now an inspectable corpus. They were recovered after the freeze, not saved with it; the stamped regulatory inventory still records the state it was issued with (inventory_state). Some texts are cut at the frozen length cap. No authority watcher was active when the corpus was frozen, and none is today."
   },
   "recovered_counts": [
     {
@@ -143,9 +177,10 @@
           "id": "CELEX 32024R1689"
         },
         "version": {
-          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_RECOVERED",
           "frozen_at": "2026-08-12T05:22:20.629949+00:00",
-          "source_bytes": "NOT_RECOVERED"
+          "source_bytes": "SOURCE_BYTES_RECOVERED",
+          "source_rows": 126
         },
         "provision": {
           "state": "HASHED",
@@ -206,9 +241,10 @@
           "id": "CELEX 32016R0679"
         },
         "version": {
-          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_RECOVERED",
           "frozen_at": "2026-08-12T05:22:20.629949+00:00",
-          "source_bytes": "NOT_RECOVERED"
+          "source_bytes": "SOURCE_BYTES_RECOVERED",
+          "source_rows": 99
         },
         "provision": {
           "state": "HASHED",
@@ -264,9 +300,10 @@
           "id": "CELEX 32024R2847"
         },
         "version": {
-          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_RECOVERED",
           "frozen_at": "2026-08-12T05:22:20.629949+00:00",
-          "source_bytes": "NOT_RECOVERED"
+          "source_bytes": "SOURCE_BYTES_RECOVERED",
+          "source_rows": 71
         },
         "provision": {
           "state": "HASHED",
@@ -322,9 +359,10 @@
           "id": "CELEX 32022R2554"
         },
         "version": {
-          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_RECOVERED",
           "frozen_at": "2026-08-12T05:22:20.629949+00:00",
-          "source_bytes": "NOT_RECOVERED"
+          "source_bytes": "SOURCE_BYTES_RECOVERED",
+          "source_rows": 64
         },
         "provision": {
           "state": "HASHED",
@@ -380,9 +418,10 @@
           "id": "CELEX 32022L2555"
         },
         "version": {
-          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_RECOVERED",
           "frozen_at": "2026-08-12T05:22:20.629949+00:00",
-          "source_bytes": "NOT_RECOVERED"
+          "source_bytes": "SOURCE_BYTES_RECOVERED",
+          "source_rows": 46
         },
         "provision": {
           "state": "HASHED",
@@ -438,9 +477,10 @@
           "id": "CELEX 32022L2464"
         },
         "version": {
-          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+          "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_RECOVERED",
           "frozen_at": "2026-08-12T05:22:20.629949+00:00",
-          "source_bytes": "NOT_RECOVERED"
+          "source_bytes": "SOURCE_BYTES_RECOVERED",
+          "source_rows": 11
         },
         "provision": {
           "state": "HASHED",
