@@ -1,5 +1,5 @@
 /** Dated examples of external use. These are not an estate-wide adoption census. */
-export const EXTERNAL_USE_REVIEWED = "2026-11-16";
+export const EXTERNAL_USE_REVIEWED = "2026-11-20";
 
 export const OPERATING_ORGANISATION_SUMMARY =
   "Council of AI is an operating UK AI measurement and evidence organisation run by CSOAI Ltd. It publishes test instruments, software, datasets, signed records and free verification tools.";
@@ -49,6 +49,20 @@ export const EXTERNAL_USE_EXAMPLES = [
       { label: "Author review and credit", href: "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60#issuecomment-6251270225" },
       { label: "Checker reproduction and controls", href: "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60#issuecomment-6038806039" },
       { label: "Candidate evidence template PR", href: "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60" },
+    ],
+  },
+  {
+    id: "correctover-independent-rerun",
+    category: "Independent operator reproduction",
+    title: "Correctover reproduced the pinned conformance fixture",
+    event: "External report in a W3C-hosted public mailing-list archive: 14 October 2026",
+    summary: "Correctover reported running the pinned Council fixture from a fresh Linux x86-64 checkout under a different Python and cryptography environment. All 18 tests passed and all 21 selected native outcomes matched the retained result tuples.",
+    detail: "The external report identifies Python 3.13.12, cryptography 46.0.5, the exact Council revision and matching fixture digests. It explicitly classified this as the same implementation run by an independent operator, rather than an independent implementation. The respondent proposed citation in future supporting material; that proposal is not evidence that the later citation was published.",
+    boundary: "The reproducibility evidence is limited to the October signed-artifact digest/signature fixture. A public W3C archive is a record of the respondent's statement, not W3C endorsement, formal conformance adoption, independent product deployment or buyer acceptance.",
+    revision: "d0cbe773e8f2fe130feaf4dc0c11c1e4ccb84c15",
+    sources: [
+      { label: "Dated external reproduction statement", href: "https://lists.w3.org/Archives/Public/public-agent-conformance/2026Oct/0088.html" },
+      { label: "Pinned Council source revision", href: "https://github.com/CSOAI-ORG/councilof-ai/tree/d0cbe773e8f2fe130feaf4dc0c11c1e4ccb84c15" },
     ],
   },
   {
