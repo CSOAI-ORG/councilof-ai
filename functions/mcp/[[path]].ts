@@ -22,6 +22,7 @@ import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
 import { doorInstallLine, npmReleaseState } from "../../scripts/harness-x/npm-release-state.mjs";
 import { verifyToolResult } from "./_handlers";
+import { MCP_MAX_JSON_DEPTH, MCP_MAX_JSON_TOKENS, withinJsonBudget } from "./_input_budget";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, X402_META_PAYMENT, type PaidCallerContext } from "./_paid";
 import { dispatchTool, FREE_TOOL_DEFINITIONS, TOOL_DEFINITIONS } from "./_dispatch";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
@@ -616,6 +617,14 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       "Request body exceeds the size/time limit or is not valid UTF-8.",
     );
   }
+  // Bytes are capped above; structure is capped here, before this door's JSON.parse and the SDK's
+  // (functions/mcp/_input_budget.ts). One long string is one token, so 20 MiB of base64 still fits.
+  if (!withinJsonBudget(body))
+    return jsonError(
+      413,
+      -32600,
+      `Request JSON exceeds the structure limit (${MCP_MAX_JSON_TOKENS} tokens, ${MCP_MAX_JSON_DEPTH} levels).`,
+    );
   let call: unknown;
   try {
     call = JSON.parse(body);
