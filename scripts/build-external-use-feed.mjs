@@ -27,7 +27,9 @@ export function validate(review) {
     }
     if (!/\b(not|no|does not)\b/i.test(r.boundary)) throw Error("Claim boundary missing: " + r.id);
     for (const key of ["buyer_acceptance", "repeat_use"]) {
-      if (r[key] !== "NOT_ESTABLISHED" && !(r[key] === "ACCEPTED" && typeof r[key + "_receipt"] === "string" && /^https:\/\//.test(r[key + "_receipt"]))) {
+      // Future ACCEPTED transitions require a separate, owner-qualified receipt verifier.
+      // An arbitrary HTTPS URL is not buyer acceptance, repeated use, or human authority.
+      if (r[key] !== "NOT_ESTABLISHED") {
         throw Error("Unsupported acceptance assertion: " + r.id + "/" + key);
       }
     }
