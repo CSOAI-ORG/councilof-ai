@@ -38,6 +38,34 @@ LABELS = ["PROHIBITED", "HIGH_RISK", "LIMITED_RISK", "MINIMAL_RISK"]
 Z95 = 1.959963984540054
 UA = "gspc-continuous-engine/1.0 (CSOAI-ORG/gspc-board)"
 
+# Other lanes read the frozen August per-item banks (one file per board axis).
+# The published rows carry the bank item and its gold label but not the
+# instruction text used in August, so these lanes are asked with one generic
+# label frame. A lane pulse is its own series; it is not the board figure.
+PERITEM_REPO_ID = "csoai/gspc-peritem-rows-2026-08-12"
+LANE_FILES = {
+    "safety": "rows/peritem_agi.jsonl",
+    "continuity": "rows/peritem_asi.jsonl",
+    "provenance": "rows/peritem_prv.jsonl",
+    "cross-reality": "rows/peritem_xr.jsonl",
+    "detector-interop": "rows/peritem_det.jsonl",
+    "art5-safeguard": "rows/peritem_art5.jsonl",
+    "care": "rows/peritem_care.jsonl",
+    "conformance": "rows/peritem_mcp.jsonl",
+    "openness": "rows/peritem_oss.jsonl",
+    "machinery-conformity": "rows/peritem_mach.jsonl",
+    "affect": "rows/peritem_affect.jsonl",
+}
+GENERIC_PROMPT_TEMPLATE = (
+    "Read the case below and answer with exactly one label.\n"
+    "Allowed labels: {labels}.\n"
+    "Reply with the label and nothing else.\n"
+    "\n"
+    "Case: {scenario}"
+)
+PROMPT_FRAME = "eu-ai-act-risk-tier-v1"
+LABEL_OK_RE = re.compile(r"^[A-Z][A-Z0-9_]*$")
+
 PROMPT_TEMPLATE = (
     "Classify the AI system described below into exactly one EU AI Act risk tier.\n"
     "Allowed labels: PROHIBITED, HIGH_RISK, LIMITED_RISK, MINIMAL_RISK.\n"
@@ -118,6 +146,40 @@ def fetch_bank():
     return bank, source
 
 
+def fetch_lane_bank(lane):
+    """Return (bank, path, labels, file_sha256) for a frozen per-item lane.
+
+    Labels are read from the bank's own gold column. A lane whose gold values
+    are not a small closed label set is refused rather than graded loosely.
+    """
+    path = LANE_FILES[lane]
+    raw = http_get("https://huggingface.co/datasets/%s/resolve/main/%s"
+                   % (PERITEM_REPO_ID, path), timeout=120)
+    file_sha = hashlib.sha256(raw).hexdigest()
+    gold_of = {}
+    for line in raw.decode("utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            row = json.loads(line)
+        except ValueError:
+            continue
+        scenario = row.get("item")
+        gold = row.get("expected")
+        if not scenario or not isinstance(gold, str) or not gold.strip():
+            continue
+        gold = gold.strip().upper().replace("-", "_")
+        if gold_of.setdefault(scenario, gold) != gold:
+            raise SystemExit("lane %s: item has two gold labels, refusing" % lane)
+    labels = sorted(set(gold_of.values()))
+    if not 2 <= len(labels) <= 8 or any(not LABEL_OK_RE.match(l) for l in labels):
+        raise SystemExit("lane %s is not label-gradable: gold values %r"
+                         % (lane, labels[:12]))
+    bank = sorted(gold_of.items(), key=lambda p: (p[1], p[0]))
+    return bank, path, labels, file_sha
+
+
 def build_panel(bank, limit, offset):
     """Round-robin interleave by gold tier so every pulse is tier-balanced."""
     by_gold = {g: [] for g in LABELS}
@@ -142,6 +204,8 @@ def parse_label(text):
     last-occurrence-wins over the 4 labels. No match -> UNPARSED."""
     if not text:
         return "UNPARSED"
+    if LANE != "governance":
+        return parse_label_generic(text)
     t = THINK_RE.sub(" ", text)
     t = t.upper().replace("-", "_")
     best, best_idx = None, -1
@@ -149,6 +213,19 @@ def parse_label(text):
         idx = t.rfind(label)
         if idx > best_idx:
             best, best_idx = label, idx
+    return best if best is not None else "UNPARSED"
+
+
+def parse_label_generic(text):
+    """Whole-token match, last occurrence wins, longest label on a tie, so a
+    label that is a substring of another (SAFE inside UNSAFE) is not misread."""
+    t = THINK_RE.sub(" ", text).upper().replace("-", "_")
+    best, best_key = None, (-1, -1)
+    for label in LABELS:
+        for m in re.finditer(r"(?<![A-Z0-9_])%s(?![A-Z0-9_])" % re.escape(label), t):
+            key = (m.start(), len(label))
+            if key > best_key:
+                best, best_key = label, key
     return best if best is not None else "UNPARSED"
 
 
@@ -275,12 +352,25 @@ def main():
                     help="rotational offset into the tier-balanced panel")
     ap.add_argument("--out-dir", default="out")
     ap.add_argument("--run-id", default=None)
+    ap.add_argument("--lane", default="governance",
+                    choices=["governance"] + sorted(LANE_FILES),
+                    help="board lane to pulse (default: governance)")
     args = ap.parse_args()
 
     run_id = args.run_id or utc_now_stamp()
     started = utc_now_stamp()
 
-    bank, source = fetch_bank()
+    global LANE, LABELS, PROMPT_TEMPLATE, PROMPT_FRAME
+    bank_repo, bank_file_sha = REPO_ID, None
+    if args.lane == "governance":
+        bank, source = fetch_bank()
+    else:
+        LANE = args.lane
+        bank, source, LABELS, bank_file_sha = fetch_lane_bank(args.lane)
+        PROMPT_TEMPLATE = GENERIC_PROMPT_TEMPLATE.replace(
+            "{labels}", ", ".join(LABELS))
+        PROMPT_FRAME = "generic-label-v1"
+        bank_repo = PERITEM_REPO_ID
     panel = build_panel(bank, args.limit, args.offset)
     bank_digest = hashlib.sha256(
         ("\n".join("%s\t%s" % p for p in bank)).encode("utf-8")).hexdigest()[:16]
@@ -368,11 +458,15 @@ def main():
         "lane": LANE,
         "repo": "CSOAI-ORG/gspc-board",
         "bank": {
-            "dataset": REPO_ID,
+            "dataset": bank_repo,
             "source_dir": source,
+            "file_sha256": bank_file_sha,
             "unique_pairs": len(bank),
             "sha256_16": bank_digest,
         },
+        "labels": list(LABELS),
+        "prompt_frame": PROMPT_FRAME,
+        "comparable_to_board": False,
         "panel": {"limit": args.limit, "offset": args.offset, "n": len(panel)},
         "started_at": started,
         "finished_at": utc_now_stamp(),
