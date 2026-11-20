@@ -219,12 +219,44 @@ export const META_PAYMENT_MAX_BYTES = 16 * 1024;
 export function metaPaymentHeader(meta: unknown): { header: string } | { error: string } {
   if (!meta || typeof meta !== "object" || Array.isArray(meta))
     return { error: `_meta["${X402_META_PAYMENT}"] must be an x402 PaymentPayload object` };
-  const bytes = new TextEncoder().encode(JSON.stringify(meta));
-  if (bytes.byteLength > META_PAYMENT_MAX_BYTES)
+  // Every non-ASCII character is written as a JSON \uXXXX escape, so the header is base64 of pure
+  // ASCII. The route decodes with atob then JSON.parse (functions/api/_x402.ts), which reads bytes
+  // as Latin-1: base64 of UTF-8 would hand it altered strings wherever the payload's resource
+  // description carries a dash or an accent. Escaped, both decoders read the same object.
+  const json = JSON.stringify(meta).replace(
+    /[\u0080-\uffff]/g,
+    (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`,
+  );
+  if (json.length > META_PAYMENT_MAX_BYTES)
     return { error: `_meta["${X402_META_PAYMENT}"] exceeds ${META_PAYMENT_MAX_BYTES} bytes` };
-  let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return { header: btoa(binary) };
+  return { header: btoa(json) };
+}
+
+/**
+ * receipts_batch only. An unpaid call may omit `to`: the route then ends the window at "now" and
+ * names that end in the challenge's resource URL. A client following the x402 MCP transport
+ * retries with the SAME arguments, so its paid call would be refused for a missing `to`. Its
+ * PaymentPayload carries the resource it signed for; when that is this tool's route on this
+ * origin with the same `from`, its `to` is the window the caller is paying for.
+ */
+function challengedWindowEnd(meta: unknown, route: string, origin: string, from: unknown): string | undefined {
+  if (typeof from !== "string" || !from.trim()) return undefined;
+  const payload = meta as { resource?: unknown; accepted?: { resource?: unknown } };
+  const named =
+    typeof payload.resource === "string"
+      ? payload.resource
+      : payload.resource && typeof payload.resource === "object"
+        ? (payload.resource as { url?: unknown }).url
+        : payload.accepted?.resource;
+  if (typeof named !== "string") return undefined;
+  try {
+    const url = new URL(named);
+    if (url.origin !== origin || url.pathname !== route) return undefined;
+    if (url.searchParams.get("from") !== from.trim()) return undefined;
+    return url.searchParams.get("to") || undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 /** The route's X-PAYMENT-RESPONSE as an object, or null when it is not base64 of a JSON object. */
@@ -279,6 +311,11 @@ export async function paidToolResult(
     const encoded = metaPaymentHeader(meta);
     if ("error" in encoded) return refused(encoded.error);
     paidArgs = { ...args, x_payment: encoded.header };
+    if (name === "receipts_batch" && !(typeof args.to === "string" && args.to.trim())) {
+      const route = TOOLS.find((t) => t.name === name)?.csoai.route;
+      const to = route ? challengedWindowEnd(meta, route, origin, args.from) : undefined;
+      if (to) paidArgs.to = to;
+    }
   }
   const result = await paidToolCall(name, paidArgs, origin, caller);
   const settled = settlementResponse(result.structuredContent?.payment_response_header);
