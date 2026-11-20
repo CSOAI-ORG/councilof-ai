@@ -13,6 +13,11 @@ export default function ExternalUseEvidence({ compact = false, inverted = false,
         Each example has its own scope and primary source.
       </p>
       <p className={`mt-2 text-sm ${muted}`}>Sources reviewed <time dateTime={EXTERNAL_USE_REVIEWED}>{reviewedLabel}</time>.</p>
+      <p className={`mt-3 max-w-3xl text-sm leading-6 ${muted}`}>
+        <strong>Separate regulatory participation record:</strong>{" "}
+        The UK Competition and Markets Authority's official document host publishes CSOAI Ltd's non-confidential consultation response dated 8 October 2026 on Google's proposed search-choice requirements. This establishes publication of a response, not CMA endorsement, appointment, adoption or independent technical assessment.{" "}
+        <a href="https://assets.publishing.service.gov.uk/media/6adb87142263175ac2aca3e0/Council_of_AI.pdf" target="_blank" rel="noopener noreferrer" className={`font-semibold underline underline-offset-4 ${link}`}>Read the government-hosted response</a>.
+      </p>
       <div className="mt-6 grid gap-5 lg:grid-cols-2">
         {EXTERNAL_USE_EXAMPLES.map((example) => (
           <article key={example.id} className={`min-w-0 rounded-2xl border p-5 ${inverted ? "border-slate-700 bg-slate-900" : "border-border bg-card"}`}>
