@@ -12,6 +12,8 @@ test("one reviewed set produces deterministic, source-linked public output", () 
   assert.equal(output.not_a_census, true);
   assert.equal(output.qualification, "OWNER_REVIEWED_SOURCE_ONLY");
   assert.equal(output.records.length, 4);
+  assert.ok(output.navigation.some(route => route.role === "execution_boundary" && route.state === "GET_DOCUMENTATION_ONLY_POST_NOT_INVOKED"));
+  assert.ok(output.navigation.some(route => route.role === "artifact_verification" && route.state === "USER_SUPPLIED_RECORD_REQUIRED"));
   assert.ok(output.records.every(r => r.buyer_acceptance === "NOT_ESTABLISHED" && r.repeat_use === "NOT_ESTABLISHED"));
   assert.equal(render(current), render(current));
   const committed = readFileSync(new URL("../public/interop/external-use.json", import.meta.url), "utf8");
