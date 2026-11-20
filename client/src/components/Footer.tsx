@@ -99,6 +99,7 @@ export function Footer() {
         { name: 'GSPC axes, one page each', href: '/axes', native: true },
         { name: 'Signed findings', href: '/findings/', native: true },
         { name: 'Claim maintenance', href: '/claim-maintenance/', native: true },
+        { name: 'Engagements', href: '/engagements/', native: true },
         { name: 'Records feed (Atom)', href: '/feeds/records.xml', native: true },
       ],
     },
