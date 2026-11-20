@@ -683,6 +683,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Energy Ai Act"
  },
  {
+  "path": "/engagements",
+  "comp": "Engagements",
+  "title": "Engagements"
+ },
+ {
   "path": "/enter",
   "comp": "OsEnter",
   "title": "Os Enter"
