@@ -1,8 +1,10 @@
+import { verifyContactChallenge } from "./_contact-turnstile";
+
 /**
  * POST /api/contact — durable enquiry intake.
  * A stored record is not an email notification, a confirmed commission, or a booking.
  */
-interface Env { LEADS?: KVNamespace }
+interface Env { LEADS?: KVNamespace; CONTACT_TURNSTILE_SECRET?: string }
 const LIMITS = { name: 100, email: 254, subject: 160, message: 5000 } as const;
 type Field = keyof typeof LIMITS;
 const reply = (body: unknown, status: number) => Response.json(body, {
@@ -41,6 +43,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (!env.LEADS) return reply({
     stored: false, code: "INTAKE_UNAVAILABLE", fallback: "contact@csoai.org",
   }, 503);
+  if (!env.CONTACT_TURNSTILE_SECRET) return reply({
+    stored: false, code: "CHALLENGE_NOT_CONFIGURED", fallback: "contact@csoai.org",
+  }, 503);
+  const challenge = await verifyContactChallenge(body.turnstile_token, env.CONTACT_TURNSTILE_SECRET, new URL(request.url).hostname);
+  if (challenge !== "VALID") return reply({
+    stored: false, code: challenge === "DENIED" ? "CHALLENGE_DENIED" : "CHALLENGE_UNAVAILABLE",
+    fallback: "contact@csoai.org",
+  }, challenge === "DENIED" ? 403 : 503);
   const id = crypto.randomUUID();
   const at = new Date().toISOString();
   try {
