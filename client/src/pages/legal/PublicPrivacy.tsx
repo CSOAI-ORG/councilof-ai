@@ -27,7 +27,7 @@ const rows: { data: string; where: string; basis: string; kept: string }[] = [
     data: "Contact and lead submissions, and newsletter signups: the email address, name, subject, message, any report or service reference you enter, and (for signups) the page that captured the address.",
     where: "functions/api/contact.ts, lead.ts and subscribe.ts write them to KV (LEADS). Measurement-intake requests (functions/api/evidence-intake.ts) are stored the same way.",
     basis: "Steps you ask us to take before a contract; legitimate interests (answering you).",
-    kept: "No automatic expiry. We delete it when the enquiry is closed and there is no continuing need, or on a valid erasure request where no exemption applies.",
+    kept: "Contact form submissions through /api/contact expire automatically from LEADS KV after 30 days. Other lead, measurement-intake and newsletter records do not yet have automatic expiry; those are deleted when there is no continuing need, or following a valid erasure request where no exemption applies.",
   },
   {
     data: "Email you send to contact@csoai.org.",
@@ -58,7 +58,7 @@ export default function PublicPrivacy() {
     <section className="min-h-screen bg-slate-50 px-5 py-14 text-slate-950">
       <article className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
-          Operative notice · version 1.6 · 7 November 2026
+          Operative notice · version 1.7 · 17 November 2026
         </p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">Privacy notice</h1>
         <p className="mt-5 leading-7 text-slate-700">

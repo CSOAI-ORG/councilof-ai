@@ -112,8 +112,9 @@ export default function Services() {
             </a>
           </div>
           <p className="mt-4 text-sm leading-6 text-slate-400">
-            This is an enquiry, not checkout or a reservation. The current contact page opens an
-            email draft or lets you copy an enquiry; it does not silently submit or store your details.
+            This is an enquiry, not checkout or a reservation. The contact page may store a validated
+            enquiry and return a reference when the intake is available; it does not automatically
+            send email or confirm a commission. An email-draft fallback remains available.
             For paid services, the service itself provides its x402 price before payment.
           </p>
         </div>
