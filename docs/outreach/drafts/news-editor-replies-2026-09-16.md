@@ -8,7 +8,7 @@ disclosed, no certification claims, every number fetchable.
 
 ---
 
-## Reply 1 — To: yyang@bloomberg.net (Yueqi Yang, Bloomberg)
+## Reply 1 — To: [address removed] (Yueqi Yang, Bloomberg)
 
 **Subject:** AI agents + stablecoin rules: a weekly measurement you can cite
 
@@ -64,7 +64,7 @@ time of drafting (commands above run against live endpoints).
 
 ---
 
-## Reply 2 — To: jeffrey.dastin@thomsonreuters.com (Jeffrey Dastin, Reuters)
+## Reply 2 — To: [address removed] (Jeffrey Dastin, Reuters)
 
 **Subject:** 311 signed AI measurement cards — what a public, independently verifiable corpus looks like
 
@@ -117,7 +117,7 @@ time of drafting.
 
 ---
 
-## Reply 3 — To: james.vincent@theverge.com (James Vincent, The Verge)
+## Reply 3 — To: [address removed] (James Vincent, The Verge)
 
 **Subject:** 500 MCP servers, median 3 tools each — what the AI agent layer actually looks like
 
@@ -170,7 +170,7 @@ time of drafting.
 
 ---
 
-## Reply 4 — To: lily@wired.com (Lily Hay Newman, Wired)
+## Reply 4 — To: [address removed] (Lily Hay Newman, Wired)
 
 **Subject:** x402 payment-door conformance — 100 hosts probed, what "conformant" actually means
 
@@ -218,7 +218,7 @@ time of drafting.
 
 ---
 
-## Reply 5 — To: dangoodin@arstechnica.com (Dan Goodin, Ars Technica)
+## Reply 5 — To: [address removed] (Dan Goodin, Ars Technica)
 
 **Subject:** Ed25519-signed measurements, append-only corrections, the refutation ledger
 
@@ -267,7 +267,7 @@ time of drafting.
 
 ---
 
-## Reply 6 — To: thomas.claburn@theregister.com (Thomas Claburn, The Register)
+## Reply 6 — To: [address removed] (Thomas Claburn, The Register)
 
 **Subject:** 13 MCP tools, zero deps — what an AI measurement server looks like
 
@@ -315,7 +315,7 @@ time of drafting.
 
 ---
 
-## Reply 7 — To: sharon.goldman@venturebeat.com (Sharon Goldman, VentureBeat)
+## Reply 7 — To: [address removed] (Sharon Goldman, VentureBeat)
 
 **Subject:** MCP trust board at protocol scale — weekly snapshot, all counts, no host names
 
@@ -361,7 +361,7 @@ time of drafting.
 
 ---
 
-## Reply 8 — To: cory.weinberg@theinformation.com (Cory Weinberg, The Information)
+## Reply 8 — To: [address removed] (Cory Weinberg, The Information)
 
 **Subject:** $0.02 per signed card — metered per artifact, not per seat
 
@@ -404,7 +404,7 @@ time of drafting.
 
 ---
 
-## Reply 9 — To: sander@decrypt.co (Sander Lutz, Decrypt)
+## Reply 9 — To: [address removed] (Sander Lutz, Decrypt)
 
 **Subject:** x402 payment-door conformance — the AI-agent stablecoin payment layer
 
@@ -446,7 +446,7 @@ time of drafting.
 
 ---
 
-## Reply 10 — To: shakeelhashim@protocol.com (Shakeel Hashim, Protocol)
+## Reply 10 — To: [address removed] (Shakeel Hashim, Protocol)
 
 **Subject:** 22 governance axes from statute — what's measurable vs what's not
 

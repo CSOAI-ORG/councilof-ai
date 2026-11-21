@@ -13,6 +13,10 @@ export default function ExternalUseEvidence({ compact = false, inverted = false,
         Each example has its own scope and primary source.
       </p>
       <p className={`mt-2 text-sm ${muted}`}>Sources reviewed <time dateTime={EXTERNAL_USE_REVIEWED}>{reviewedLabel}</time>.</p>
+      <p className={`mt-2 text-sm ${muted}`}>
+        Each source is a separate event. These records are not a customer count, a regulatory endorsement, or proof of paid demand.
+        <a href="/interop/external-use.json" className={`ml-1 font-semibold underline underline-offset-4 ${link}`}>Inspect the machine-readable reviewed evidence</a>.
+      </p>
       <div className="mt-6 grid gap-5 lg:grid-cols-2">
         {EXTERNAL_USE_EXAMPLES.map((example) => (
           <article key={example.id} className={`min-w-0 rounded-2xl border p-5 ${inverted ? "border-slate-700 bg-slate-900" : "border-border bg-card"}`}>
@@ -20,8 +24,11 @@ export default function ExternalUseEvidence({ compact = false, inverted = false,
             <h3 className="mt-3 text-lg font-bold leading-snug">{example.title}</h3>
             <p className={`mt-3 text-sm leading-6 ${muted}`}>{example.summary}</p>
             <p className={`mt-3 text-xs leading-5 ${muted}`}>{example.event}</p>
+            <p className={`mt-2 text-xs font-semibold uppercase tracking-wide ${link}`}>Verified scope: {example.stage_label}</p>
             {!compact && <>
               <p className={`mt-3 text-sm leading-6 ${muted}`}>{example.detail}</p>
+              <p className={`mt-2 text-sm leading-6 ${muted}`}><strong>What this enables:</strong> {example.what_it_enables}</p>
+              <p className={`mt-2 text-sm leading-6 ${muted}`}><strong>Next independent acceptance gate:</strong> {example.next_gate}</p>
               <p className={`mt-2 text-xs leading-5 ${muted}`}>Source revision: <code className="break-all">{example.revision}</code></p>
             </>}
             <p className={`mt-3 text-sm leading-6 ${muted}`}>{example.boundary}</p>
@@ -33,6 +40,15 @@ export default function ExternalUseEvidence({ compact = false, inverted = false,
           </article>
         ))}
       </div>
+      {!compact && <div className={`mt-6 rounded-xl border p-5 ${inverted ? "border-slate-700" : "border-border"}`}>
+        <h3 className="font-bold">The evidence-to-adoption loop</h3>
+        <p className={`mt-2 text-sm leading-6 ${muted}`}>Outside source event → exact dated artifact → independent reproduction or review → receiving-party acceptance → attributable return use. Each stage needs its own receipt. Missing stages stay unknown; an external reference is not a purchase or an endorsement.</p>
+        <div className="mt-3 flex flex-wrap gap-4 text-sm">
+          <Link href="/methodology" className={`font-semibold underline ${link}`}>Inspect the method</Link>
+          <Link href="/gspc-verify" className={`font-semibold underline ${link}`}>Verify an existing record</Link>
+          <Link href="/contact/?arm=run" className={`font-semibold underline ${link}`}>Discuss a scoped evidence delivery</Link>
+        </div>
+      </div>}
       {compact && <Link href="/traction/#external-use" className={`mt-4 inline-flex min-h-11 items-center font-bold underline underline-offset-4 ${link}`}>Read the evidence and commercial position</Link>}
     </section>
   );
