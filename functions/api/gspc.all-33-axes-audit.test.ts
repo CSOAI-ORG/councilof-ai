@@ -352,9 +352,8 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
       expect(row.leader).toBeUndefined();
       expect(row.accuracy).toBeUndefined();
       expect(row.separation).toBeUndefined();
-      if (axisName === "regulator-transparency" || axisName === "watchdog-ingest") {
-        expect(row.public_pages).toBe("HIDDEN_PENDING_OWNER_GO");
-      }
+      // The owner released both held subject slots on 2026-11-18 ("Release both"): no subject row is held back.
+      expect(row.public_pages).toBeUndefined();
 
       const badge = await invokeBadge(axisName);
       expect(badge).toMatchObject({

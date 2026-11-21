@@ -154,7 +154,48 @@ export function runFixture(scenario, at = Date.now()) {
     if (scenario === 'missing_pin') pin = '';
     const execResult = cli('--execute', dir, at, pin);
     const observed = cli('--observe', dir, at, pin);
-    const result = { scenario, execution: execResult.state, reasons: execResult.reasons, observer: observed.state, actual_effect_written: existsSync(file(dir, 'effects.jsonl')) };
+    // Retain test-generated process byte bindings BEFORE the owned temp directory
+    // is removed. No synthetic signing private key or source document text escapes.
+    // An approval field is a DECLARATION, not a valid live authority decision.
+    const reqBytes = readFileSync(file(dir, 'request.json'));
+    const authorityBytes = readFileSync(file(dir, 'authority.json'));
+    const approvalBytes = readFileSync(file(dir, 'approval.json'));
+    const req = JSON.parse(reqBytes.toString('utf8'));
+    const statement = JSON.parse(approvalBytes.toString('utf8')).statement;
+    const hadEffect = existsSync(file(dir, 'effects.jsonl'));
+    const effectReceiptPath = file(dir, 'effect-receipt.json');
+    const effectReceiptBytes = existsSync(effectReceiptPath) ? readFileSync(effectReceiptPath) : null;
+    const invocationInput = {
+      scenario, at, request_sha256: sha256(reqBytes),
+      approval_sha256: sha256(approvalBytes), authority_sha256: sha256(authorityBytes),
+      supplied_authority_pin: pin, execution: execResult.state
+    };
+    const binding = {
+      request_sha256: invocationInput.request_sha256,
+      approval_sha256: invocationInput.approval_sha256,
+      authority_sha256: invocationInput.authority_sha256,
+      supplied_authority_pin: pin,
+      caller_pin_matches_captured_authority: pin === invocationInput.authority_sha256,
+      request_id: req.id,
+      action: req.action,
+      resource_ref: req.resource,
+      decision_id: statement.id,
+      declared_decision: statement.decision,
+      principal_ref: statement.principal_ref,
+      authority_epoch: statement.authority_epoch,
+      scope_sha256: sha256(Buffer.from(JSON.stringify(statement.scope))),
+      decided_at_ms: statement.decided_at_ms,
+      expires_at_ms: statement.expires_at_ms,
+      execution_at_ms: at,
+      invocation_sha256: sha256(Buffer.from(JSON.stringify(invocationInput))),
+      effect_sha256: hadEffect && observed.state === 'EFFECT_READBACK_MATCHED'
+        ? observed.effect_sha256 : null,
+      effect_receipt_sha256: effectReceiptBytes ? sha256(effectReceiptBytes) : null,
+      observer_process: observed.observation_process ?? 'separate-local-process-no-effect',
+      authenticated_human: false,
+      source: 'OWNED_LOCAL_TEST_FIXTURE'
+    };
+    const result = { scenario, execution: execResult.state, reasons: execResult.reasons, observer: observed.state, actual_effect_written: hadEffect, binding };
     if (scenario === 'pass') {
       result.replay = cli('--execute', dir, at, pin).state;
       result.replay_does_not_append = readFileSync(file(dir, 'effects.jsonl'), 'utf8').split('\n').length === 2;

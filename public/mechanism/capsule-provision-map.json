@@ -1,0 +1,98 @@
+{
+  "schema": "csoai.capsule-provision-map/0.1",
+  "what_this_is": "The deterministic backfill map from a capsule adapter, or an evidence kind, to the frozen provision it may cite in the optional capsule 0.3 provisions binding. Read by functions/api/_provisions.ts for the ?provision= door and checked by scripts/mechanism/capsule-provision-map.test.ts.",
+  "what_this_is_not": "Not a re-emission of any capsule: no published capsule, batch or root changes. Not a statement that any measured party complies with any provision.",
+  "rule": "An adapter or evidence kind maps to a provision only when an implemented predicate in scripts/mechanism/coverage.source.json names that provision and the producing code is that predicate's code. Every published v0.2 capsule adapter is listed, mapped or unmapped, so a new adapter fails the check until it is classified. Obligation aliases are derived from the Article numbers in each obligation's title in functions/api/_obligations.ts; an obligation whose title names no Article maps to no provision.",
+  "manifest": "/interop/frozen-provision-hashes.json",
+  "corpus_root": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7",
+  "mappings": [
+    {
+      "source": "route",
+      "kind": "csoai.art50.marking-evidence/0.1",
+      "code": "functions/api/art50/marking-evidence.ts",
+      "predicate": "art50-marking-evidence",
+      "provision_id": "32024R1689:50",
+      "provision_sha256": "7acac08345151e9d00babc21ffbc91af3768c7043288f3cbbedd3c838e10d22c",
+      "relation": "PREDICATE",
+      "scope": "Article 50(2) only: whether a generated file carries a machine-readable mark that named methods detect, at the time of the check.",
+      "capsule_state": "NOT_EMITTED_AS_CAPSULE: the route returns signed packs and previews, not v0.2 capsule batches, so no published capsule carries this binding yet."
+    }
+  ],
+  "unmapped_adapters": [
+    {
+      "adapter": "a2a_card",
+      "reason": "No implemented deterministic predicate names a frozen provision for this measurement, so no provision is mapped. A crosswalk or axis pointer is not a mapping."
+    },
+    {
+      "adapter": "busabase",
+      "reason": "No implemented deterministic predicate names a frozen provision for this measurement, so no provision is mapped. A crosswalk or axis pointer is not a mapping."
+    },
+    {
+      "adapter": "claim_watch",
+      "reason": "No implemented deterministic predicate names a frozen provision for this measurement, so no provision is mapped. A crosswalk or axis pointer is not a mapping."
+    },
+    {
+      "adapter": "contract_parity",
+      "reason": "No implemented deterministic predicate names a frozen provision for this measurement, so no provision is mapped. A crosswalk or axis pointer is not a mapping."
+    },
+    {
+      "adapter": "cross_ledger",
+      "reason": "No implemented deterministic predicate names a frozen provision for this measurement, so no provision is mapped. A crosswalk or axis pointer is not a mapping."
+    },
+    {
+      "adapter": "meok",
+      "reason": "No implemented deterministic predicate names a frozen provision for this measurement, so no provision is mapped. A crosswalk or axis pointer is not a mapping."
+    },
+    {
+      "adapter": "mill_cross_runtime",
+      "reason": "No implemented deterministic predicate names a frozen provision for this measurement, so no provision is mapped. A crosswalk or axis pointer is not a mapping."
+    },
+    {
+      "adapter": "operations",
+      "reason": "No implemented deterministic predicate names a frozen provision for this measurement, so no provision is mapped. A crosswalk or axis pointer is not a mapping."
+    },
+    {
+      "adapter": "public_signals",
+      "reason": "No implemented deterministic predicate names a frozen provision for this measurement, so no provision is mapped. A crosswalk or axis pointer is not a mapping."
+    },
+    {
+      "adapter": "self_parity",
+      "reason": "No implemented deterministic predicate names a frozen provision for this measurement, so no provision is mapped. A crosswalk or axis pointer is not a mapping."
+    },
+    {
+      "adapter": "tool_drift",
+      "reason": "No implemented deterministic predicate names a frozen provision for this measurement, so no provision is mapped. A crosswalk or axis pointer is not a mapping."
+    }
+  ],
+  "obligation_aliases": {
+    "article-50": {
+      "celex": "32024R1689",
+      "provisions": [
+        "32024R1689:50"
+      ],
+      "derived_from": "title"
+    },
+    "article-53": {
+      "celex": "32024R1689",
+      "provisions": [
+        "32024R1689:53"
+      ],
+      "derived_from": "title"
+    },
+    "dora": {
+      "celex": "32022R2554",
+      "provisions": [
+        "32022R2554:28",
+        "32022R2554:29",
+        "32022R2554:30"
+      ],
+      "derived_from": "title"
+    },
+    "cra": {
+      "celex": "32024R2847",
+      "provisions": [],
+      "derived_from": "title",
+      "note": "The obligation title names no Article of the Cyber Resilience Act, so no provision is derived. Which Articles it covers is a reviewer's decision."
+    }
+  }
+}

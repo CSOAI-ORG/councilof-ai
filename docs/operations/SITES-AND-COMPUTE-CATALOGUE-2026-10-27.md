@@ -344,6 +344,11 @@ not a lead. And in the live frontier benchmark, **20 of 30 items were answered b
 rule cascade rather than a model**, so the "MEOK leads the fleet" claim was measuring a routing
 rule, not a model.
 
+> **Note (2026-11-20, correction C-2026-1120-02):** 219/237 and 222/237 are scores on the 237-item governance
+> bank. Its items can be answered from their wording alone: a wording-only baseline matches 225 of 237 labels.
+> These figures are agreement with that bank's labels, not a measure of how a system applies the EU AI Act.
+> See https://councilof.ai/api/corrections (C-2026-1120-02).
+
 **Rule:** MEOK's referee and router must never be the grader for a CSOAI board cell. A board
 cell's referee must be independent of the subject it grades, and a MEOK-produced number must be
 published as MEOK's, never as the board's.
