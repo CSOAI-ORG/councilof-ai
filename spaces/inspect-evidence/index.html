@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inspect evidence: verify in browser</title>
+<style>
+  body{font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;margin:0;color:#111;background:#fafafa}
+  header,main{max-width:1100px;margin:0 auto;padding:1rem 1.25rem}
+  header{border-bottom:1px solid #ddd}
+  h1{font-size:1.35rem;margin:.2rem 0}
+  .banner{background:#fff7e0;border:1px solid #e6c65c;padding:.6rem .8rem;border-radius:6px;margin:.8rem 0}
+  table{border-collapse:collapse;width:100%;font-size:13px;background:#fff}
+  th,td{border:1px solid #ddd;padding:.3rem .45rem;text-align:left;vertical-align:top}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;word-break:break-all}
+  .VALID{color:#0a7a32;font-weight:600}.INVALID{color:#b00020;font-weight:600}.PENDING{color:#666}
+  iframe{width:100%;height:70vh;border:1px solid #ddd;background:#fff}
+  button{font:inherit;padding:.35rem .8rem}
+  section{margin:1.2rem 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>Inspect evidence: sealed logs, verified in your browser</h1>
+  <div>Static Space. This page fetches <code>evidence/evidence_manifest.json</code> and every listed
+  <code>.eval</code> log, recomputes SHA-256 with WebCrypto, rebuilds the Merkle root, and shows the
+  report that was generated from those logs alone. No server-side code and no GSPC service are involved.</div>
+  <div class="banner"><b>Read first.</b> Rows marked <code>PIPELINE_TEST_MOCKLLM</code> come from Inspect's mock model,
+  which returns a fixed string: they test the pipeline and <b>measure nothing about any model</b>. The one real-model row
+  (Qwen2.5-0.5B-Instruct, n=10) is a smoke run, too small for any claim. The manifest is
+  <b>CONTENT_ADDRESSED_UNSIGNED</b> (hashes and Merkle root, no signature).</div>
+</header>
+<main>
+<section>
+  <h2>1. Integrity check (served files)</h2>
+  <div id="rootline" class="mono">Loading manifest…</div>
+  <table id="files"><thead><tr><th>file</th><th>task</th><th>model / run kind</th><th>n</th><th>dataset @ revision</th><th>sha256 (manifest)</th><th>state</th></tr></thead><tbody></tbody></table>
+</section>
+<section>
+  <h2>2. Verify your own copies (offline)</h2>
+  <p>Choose a manifest JSON and the <code>.eval</code> files you downloaded. Nothing is uploaded: hashing runs locally.</p>
+  <label>Manifest <input type="file" id="localManifest" accept=".json"></label>
+  <label>Logs <input type="file" id="localLogs" accept=".eval" multiple></label>
+  <button id="verifyLocal">Verify</button>
+  <pre id="localOut" class="mono"></pre>
+</section>
+<section>
+  <h2>3. Report generated from the logs alone</h2>
+  <p><a href="evidence/report.md">report.md</a> · <a href="evidence/evidence_manifest.csv">manifest.csv</a> ·
+  <a href="evidence/evidence_manifest.json">manifest.json</a>. Generator: <code>report_from_logs.py</code>
+  (stdlib + <code>inspect_ai.log</code> only).</p>
+  <iframe src="evidence/report.html" title="Evidence report"></iframe>
+</section>
+<section>
+  <h2>Merkle rule</h2>
+  <p class="mono">leaves sorted by filename; leaf = SHA256(0x00 ‖ sha256(file)); node = SHA256(0x01 ‖ L ‖ R); an odd node is promoted unchanged.</p>
+</section>
+</main>
+<script>
+"use strict";
+const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, "0")).join("");
+const unhex = h => new Uint8Array(h.match(/../g).map(x => parseInt(x, 16)));
+const sha = async u8 => new Uint8Array(await crypto.subtle.digest("SHA-256", u8));
+const cat = (...a) => { const o = new Uint8Array(a.reduce((n, x) => n + x.length, 0)); let i = 0; for (const x of a) { o.set(x, i); i += x.length; } return o; };
+
+async function merkleRoot(hexLeaves) {
+  let level = [];
+  for (const h of hexLeaves) level.push(await sha(cat(new Uint8Array([0]), unhex(h))));
+  if (!level.length) return "";
+  while (level.length > 1) {
+    const nxt = [];
+    for (let i = 0; i < level.length; i += 2)
+      nxt.push(i + 1 < level.length ? await sha(cat(new Uint8Array([1]), level[i], level[i + 1])) : level[i]);
+    level = nxt;
+  }
+  return hex(level[0]);
+}
+
+function cell(tr, html, cls) { const td = document.createElement("td"); td.innerHTML = html; if (cls) td.className = cls; tr.appendChild(td); return td; }
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+
+async function verifyServed() {
+  const rl = document.getElementById("rootline");
+  let man;
+  try { man = await (await fetch("evidence/evidence_manifest.json", {cache: "no-store"})).json(); }
+  catch (e) { rl.innerHTML = '<span class="INVALID">UNCHECKABLE</span>: manifest not readable'; return; }
+  const body = document.querySelector("#files tbody");
+  const order = [...man.logs].sort((a, b) => a.file < b.file ? -1 : a.file > b.file ? 1 : 0);
+  const got = [];
+  for (const r of order) {
+    const tr = document.createElement("tr");
+    cell(tr, `<code>${esc(r.file)}</code>`); cell(tr, `${esc(r.task)} (v${esc(r.task_version)})`);
+    cell(tr, `${esc(r.model)}<br><small>${esc(r.run_kind)}</small>`); cell(tr, `${esc(r.samples_run)} / ${esc(r.dataset_size)}`);
+    cell(tr, `<code>${esc(r.dataset)}@${esc((r.dataset_revision||"").slice(0,12))}</code>`); cell(tr, `<code>${esc(r.sha256)}</code>`);
+    const st = cell(tr, "checking…", "PENDING"); body.appendChild(tr);
+    try {
+      const buf = new Uint8Array(await (await fetch("evidence/logs/" + encodeURIComponent(r.file), {cache: "no-store"})).arrayBuffer());
+      const h = hex(await sha(buf)); got.push(h);
+      st.className = h === r.sha256 ? "VALID" : "INVALID"; st.textContent = st.className + (h === r.sha256 ? "" : " (got " + h.slice(0, 16) + "…)");
+    } catch (e) { got.push("00".repeat(32)); st.className = "INVALID"; st.textContent = "UNCHECKABLE (fetch failed)"; }
+  }
+  const root = await merkleRoot(got);
+  const ok = root === man.merkle_root;
+  rl.innerHTML = `manifest root <b>${esc(man.merkle_root)}</b><br>recomputed root <b>${root}</b> → <span class="${ok ? "VALID" : "INVALID"}">${ok ? "VALID" : "INVALID"}</span>` +
+    ` · ${order.length} logs · sealed ${esc(man.sealed_at)} · ${esc(man.attestation)}`;
+}
+
+document.getElementById("verifyLocal").addEventListener("click", async () => {
+  const out = document.getElementById("localOut");
+  const mf = document.getElementById("localManifest").files[0];
+  const logs = [...document.getElementById("localLogs").files];
+  if (!mf) { out.textContent = "Choose a manifest JSON first."; return; }
+  const man = JSON.parse(await mf.text());
+  const byName = new Map(logs.map(f => [f.name, f]));
+  const order = [...man.logs].sort((a, b) => a.file < b.file ? -1 : a.file > b.file ? 1 : 0);
+  const lines = [], got = [];
+  for (const r of order) {
+    const f = byName.get(r.file);
+    if (!f) { lines.push(`MISSING  ${r.file}`); got.push("00".repeat(32)); continue; }
+    const h = hex(await sha(new Uint8Array(await f.arrayBuffer()))); got.push(h);
+    lines.push(`${h === r.sha256 ? "VALID  " : "INVALID"}  ${r.file}`);
+  }
+  const root = await merkleRoot(got);
+  lines.push("", `merkle_root ${root === man.merkle_root ? "VALID" : "INVALID"}  ${root}`);
+  out.textContent = lines.join("\n");
+});
+
+verifyServed();
+</script>
+</body>
+</html>

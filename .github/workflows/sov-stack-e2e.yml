@@ -73,10 +73,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      # Playwright comes from the lockfile, as in deploy.yml and pr-gates.yml. This step
+      # used to add its own pinned copy (npm i -D playwright@X) beside the locked
+      # @playwright/test. When #4429 locked 1.65.1 the pin stayed at 1.61.1: `npx playwright`
+      # fetched Chromium build 1255 for 1.65.1, the fixture test imported 1.61.1, which needs
+      # build 1228, and all four tests went red in their `before` hook from run 44232391572
+      # (18 Nov) until #4441 moved the pin by hand. With `npm ci` there is one copy and no pin.
+      # --ignore-scripts: these checks load only playwright, which needs no install script.
       - name: Install Playwright (chromium)
         run: |
-          npm init -y >/dev/null 2>&1 || true
-          npm i -D playwright@1.61.1 >/dev/null 2>&1
+          npm ci --ignore-scripts --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Check globe probe replacement and missing-delivery fixtures
         run: node --test scripts/sov-stack-globe-spy.node-test.mjs

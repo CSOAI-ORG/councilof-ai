@@ -102,12 +102,23 @@ jobs:
         run: node scripts/pages-size-guard.mjs public --packed-history-projection --exclude proofs,cards
 
       - name: Native canvas build prerequisites
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: |
-          sudo apt-get update
-          sudo env DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
-            build-essential pkg-config libpixman-1-dev \
-            libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+          # The runner's apt mirror stalled past the old 5-minute limit on 18 and 19 Nov 2026 (deploy run
+          # 44397073610; gates on #4499) when this step normally takes 13-24 s. Short network timeouts,
+          # apt's own retries and three attempts turn one stalled mirror read into a retry, not a red run.
+          APT_OPTS="-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30"
+          for attempt in 1 2 3; do
+            if sudo apt-get $APT_OPTS update && \
+              sudo env DEBIAN_FRONTEND=noninteractive apt-get $APT_OPTS install --yes --no-install-recommends \
+                build-essential pkg-config libpixman-1-dev \
+                libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev; then
+              exit 0
+            fi
+            echo "apt attempt $attempt failed; retrying in 15 s" >&2
+            sleep 15
+          done
+          exit 1
 
       - name: Install deps
         run: npm ci --no-audit --no-fund
