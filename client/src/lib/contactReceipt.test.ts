@@ -42,6 +42,11 @@ describe("contact receipt is bound to the submitted revision", () => {
   it("calls a known pre-write rejection rejected, not a failed KV write", () => {
     expect(classifyContactResponse(400, { stored: false, code: "INVALID_FIELD" })).toEqual({ kind: "rejected", code: "INVALID_FIELD" });
     expect(classifyContactResponse(503, { stored: false, code: "INTAKE_UNAVAILABLE" })).toEqual({ kind: "rejected", code: "INTAKE_UNAVAILABLE" });
+    for (const [status, code] of [
+      [503, "CHALLENGE_NOT_CONFIGURED"], [503, "CHALLENGE_UNAVAILABLE"], [403, "CHALLENGE_DENIED"],
+    ] as const) {
+      expect(classifyContactResponse(status, { stored: false, code })).toEqual({ kind: "rejected", code });
+    }
     expect(classifyContactResponse(503, { stored: false, code: "STORAGE_FAILED" })).toEqual({ kind: "unknown" });
     expect(classifyContactResponse(400, { stored: false, code: "STORAGE_FAILED" })).toEqual({ kind: "unknown" });
     expect(formatRejectedContactSubmission(mailbox)).toContain("rejected this attempt before storage");
