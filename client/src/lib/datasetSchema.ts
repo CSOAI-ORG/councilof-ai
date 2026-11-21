@@ -23,6 +23,7 @@
 //     no constructed identifiers, no invented DOIs.
 
 import { AXES } from "./gspcAxes";
+import { COUNCIL_ORG } from "./orgNode";
 
 const BASE = "https://councilof.ai";
 
@@ -61,15 +62,15 @@ export const AXES_ACCEPTING_DOIS: Record<string, string> = {
   sovereignty: "10.5281/zenodo.22070725",
 };
 
-/** The estate's canonical publisher node. */
-export const GSPC_CREATOR = {
-  "@type": "Organization",
-  "@id": BASE + "/#org",
-  name: "Council of AI",
-  legalName: "CSOAI LTD",
-  url: BASE + "/",
-  identifier: "UK Companies House 16939677",
-} as const;
+/** The page the board Dataset names as its `url`: the public board, served 200 at this exact
+ *  address. Until 2026-11-17 the Dataset named /gspc-scoreboard, which public/_redirects 308s to
+ *  /dashboard?tab=board — so the one Dataset node answer engines read pointed at a redirect into
+ *  the workspace rather than at a page describing the dataset. scripts/structured-data-gate.mjs
+ *  now fails a deploy whose home-page Dataset names a URL the built tree does not serve. */
+export const GSPC_BOARD_PAGE = BASE + "/board/";
+
+/** The estate's canonical publisher node (client/src/lib/orgNode.ts). */
+export const GSPC_CREATOR = COUNCIL_ORG;
 
 /** The deterministic method, stated the way the site states it everywhere else. */
 export const GSPC_MEASUREMENT_TECHNIQUE =
@@ -94,7 +95,7 @@ export function gspcAxisDatasets(): Record<string, unknown>[] {
       publisher: GSPC_CREATOR,
       measurementTechnique: GSPC_MEASUREMENT_TECHNIQUE,
       variableMeasured: a.task,
-      isPartOf: { "@type": "Dataset", name: "GSPC board", url: `${BASE}/gspc-scoreboard` },
+      isPartOf: { "@type": "Dataset", "@id": `${GSPC_BOARD_PAGE}#dataset`, name: "GSPC board", url: GSPC_BOARD_PAGE },
     };
     // A Hub repository page is a valid Dataset URL, but it is not itself a JSON
     // download. Do not emit DataDownload until the registry publishes a stable,
@@ -115,10 +116,11 @@ export function gspcAxisDatasets(): Record<string, unknown>[] {
 export function gspcBoardDataset(withParts = true): Record<string, unknown> {
   const node: Record<string, unknown> = {
     "@type": "Dataset",
+    "@id": `${GSPC_BOARD_PAGE}#dataset`,
     name: "GSPC board — governance-axis AI measurement banks",
     description:
       "Deterministic per-axis AI-governance measurement banks and their live results: per-item counts, leader accuracy, Wilson 95% intervals where n≥30, and McNemar-primary separation verdicts (ties stated as ties). Empty cells stay empty. The live count and stamps come from GET /api/gspc.",
-    url: `${BASE}/gspc-scoreboard`,
+    url: GSPC_BOARD_PAGE,
     // The board's identifier is its own live dataset URL; the Zenodo concept DOI answers 410.
     identifier: `${BASE}/api/gspc`,
     license: GSPC_LICENSE,

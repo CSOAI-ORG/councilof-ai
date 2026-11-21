@@ -16,7 +16,7 @@ const complete = {
   PROBE_OUTCOME: 'success', PROBE_PASS: '40', PROBE_FAIL: '0', PROBE_EXPECTED: '40',
   CONTENT_OUTCOME: 'success', CONTENT_PASS: '3', CONTENT_FAIL: '0', CONTENT_EXPECTED: '3',
   PROBE_REPORT: 'Endpoint report', CONTENT_REPORT: 'Content report',
-  CONTROL_PASS: '10', CONTROL_FAIL: '0', CONTROL_EXPECTED: '10', CONTROL_REPORT: 'Application-UA control report',
+  DEFAULT_UA_PASS: '0', DEFAULT_UA_FAIL: '10', DEFAULT_UA_EXPECTED: '10', DEFAULT_UA_REPORT: 'Default User-Agent diagnostic report',
 };
 
 async function run(changes = {}, summaryError = false) {
@@ -36,7 +36,7 @@ async function run(changes = {}, summaryError = false) {
   return result;
 }
 
-test('a complete zero-failure run records all 43 probes and the triggering deployment', async () => {
+test('a complete run with zero required failures passes and records all 43 probes, the refused default User-Agent and the triggering deployment', async () => {
   const result = await run();
   assert.deepEqual(result.failures, []);
   assert.equal(result.error, undefined);
@@ -47,24 +47,27 @@ test('a complete zero-failure run records all 43 probes and the triggering deplo
   assert.ok(result.summary.includes(complete.DEPLOY_SHA));
   assert.ok(result.summary.includes(complete.DEPLOY_RUN_URL));
   assert.match(result.summary, /do not prove which commit the apex serves/);
+  assert.match(result.summary, /PYTHON DEFAULT USER-AGENT \(diagnostic only\): 0 pass, 10 fail of 10/);
 });
 
-test('the historical 30-pass, 10-failure result fails the verification job', async () => {
+test('a 30-pass, 10-failure required result fails the verification job', async () => {
   const result = await run({ PROBE_PASS: '30', PROBE_FAIL: '10' });
   assert.equal(result.failures.length, 1);
   assert.match(result.summary, /FAILED/);
   assert.match(result.summary, /30 pass, 10 fail of 40/);
-  assert.match(result.summary, /APPLICATION-UA CONTROL \(diagnostic only\): 10 pass, 0 fail of 10/);
 });
 
-test('control failures and missing control evidence remain visible without replacing required observations', async () => {
-  const failed = await run({ CONTROL_PASS: '0', CONTROL_FAIL: '10' });
-  assert.deepEqual(failed.failures, []);
-  assert.match(failed.summary, /APPLICATION-UA CONTROL \(diagnostic only\): 0 pass, 10 fail of 10/);
-  const missing = await run({ CONTROL_PASS: '', CONTROL_FAIL: '', CONTROL_EXPECTED: '' });
+test('default User-Agent results stay visible but can neither fail nor rescue the job', async () => {
+  const refused = await run();
+  assert.deepEqual(refused.failures, []);
+  assert.match(refused.summary, /PYTHON DEFAULT USER-AGENT \(diagnostic only\): 0 pass, 10 fail of 10/);
+  const served = await run({ DEFAULT_UA_PASS: '10', DEFAULT_UA_FAIL: '0', PROBE_PASS: '30', PROBE_FAIL: '10' });
+  assert.equal(served.failures.length, 1);
+  assert.match(served.summary, /PYTHON DEFAULT USER-AGENT \(diagnostic only\): 10 pass, 0 fail of 10/);
+  const missing = await run({ DEFAULT_UA_PASS: '', DEFAULT_UA_FAIL: '', DEFAULT_UA_EXPECTED: '' });
   assert.deepEqual(missing.failures, []);
-  assert.match(missing.summary, /APPLICATION-UA CONTROL \(diagnostic only\): UNCHECKABLE/);
-  assert.match(missing.summary, /never replace default-client observations/);
+  assert.match(missing.summary, /PYTHON DEFAULT USER-AGENT \(diagnostic only\): UNCHECKABLE/);
+  assert.match(missing.summary, /never count toward a required pass or failure/);
 });
 
 test('a failed content predicate cannot hide behind passing endpoint probes', async () => {
@@ -78,7 +81,7 @@ test('missing outputs are UNCHECKABLE and fail instead of parsing to NaN', async
   assert.equal(result.failures.length, 1);
   assert.match(result.summary, /PROBE: UNCHECKABLE/);
   assert.match(result.summary, /CONTENT: UNCHECKABLE/);
-  assert.match(result.summary, /APPLICATION-UA CONTROL \(diagnostic only\): UNCHECKABLE/);
+  assert.match(result.summary, /PYTHON DEFAULT USER-AGENT \(diagnostic only\): UNCHECKABLE/);
 });
 
 test('every count rejects malformed, negative, fractional, unsafe and partial numbers', async () => {
@@ -142,9 +145,10 @@ test('both probe stages export positive planned populations and completed counts
   assert.match(workflow, /echo "expected=\$EXPECTED" >> "\$GITHUB_OUTPUT"/);
   assert.match(workflow, /echo "expected=3" >> "\$GITHUB_OUTPUT"/);
   assert.equal((workflow.match(/echo "pass=\$PASS" >> "\$GITHUB_OUTPUT"/g) || []).length, 2);
-  assert.match(workflow, /--client urllib "\$URL"/);
-  assert.match(workflow, /--client urllib --application-control "\$URL"/);
-  assert.match(workflow, /echo "control_expected=\$CONTROL_EXPECTED"/);
+  // The required urllib probe sends the application User-Agent; the default one feeds only the diagnostic counts.
+  assert.match(workflow, /--client urllib --application-user-agent "\$URL"\); then\n\s+PASS=\$\(\(PASS\+1\)\)/);
+  assert.match(workflow, /--client urllib "\$URL"\); then\n\s+DEFAULT_UA_PASS=\$\(\(DEFAULT_UA_PASS\+1\)\)/);
+  assert.match(workflow, /echo "default_ua_expected=\$DEFAULT_UA_EXPECTED"/);
   assert.doesNotMatch(workflow, /\|\| echo "000"/);
 });
 

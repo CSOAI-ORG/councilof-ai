@@ -124,6 +124,13 @@ type PublicAxis = AxisScore & {
 };
 const excludeOwnLeader = (a: AxisScore): PublicAxis => {
   if (a.kind !== "model-comparison" || !isOwnCouncilModel(a.leader)) return a;
+  // separation_basis is NOT leader-specific and is kept on every axis that types it: it states
+  // the rows recompute (or the reason no public determination is published) that the separation
+  // field rests on, so the served axis keeps its basis even when the leader's own numbers are
+  // dropped here. The leader's accuracy/interval/p/note still describe the excluded model and go.
+  // `limit` is deliberately absent from this destructure and from the two in dropUncardedLeader
+  // and applyRowsSeparation: a row's stated limit says what its score does not show, which no
+  // leader change alters, so every public view serves it as typed (axes[].limit, C-2026-1120-02).
   const {
     accuracy: _acc,
     accuracy_is: _accIs,
@@ -131,7 +138,6 @@ const excludeOwnLeader = (a: AxisScore): PublicAxis => {
     macro_f1: _mf1,
     unparsed_rate: _upr,
     separation_p: _sp,
-    separation_basis: _sb,
     leader: _ld,
     note: _note,
     ...rest
@@ -229,7 +235,6 @@ const dropUncardedLeader = (a: PublicAxis): PublicAxis => {
     macro_f1: _mf1,
     unparsed_rate: _upr,
     separation_p: _sp,
-    separation_basis: _sb,
     leader: _ld,
     note: _note,
     ...rest
@@ -357,7 +362,6 @@ const applyRowsSeparation = (a: PublicAxis): RowsAxis => {
     macro_f1,
     unparsed_rate,
     separation_p: _sp,
-    separation_basis: _sb,
     leader: _ld,
     note: _note,
     public_leader_state: _pls,

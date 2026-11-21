@@ -40,7 +40,7 @@ export const REACH_SURFACES: ReachSurface[] = [
     label: "MCP · councilof.ai/mcp",
     href: "https://councilof.ai/mcp",
     kind: "Flagship MCP",
-    note: "Official registry io.github.CSOAI-ORG/gspc 1.1.1 → this URL.",
+    note: "Official registry ai.councilof/gspc → this URL.",
   },
   {
     id: "npm",

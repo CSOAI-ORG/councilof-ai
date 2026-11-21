@@ -36,13 +36,17 @@ import { recordPaidResponse } from "../_x402_delivery_record";
  * the c2pa.hash.data hard binding, and the COSE_Sign1 claim signature under the leaf's own key;
  * IPTC DigitalSourceType from XMP. WHAT IS UNCHECKABLE (and why, in `gaps`): chain trust (no trust
  * list bundled), SynthID and every keyed watermark (no public key-free detector), and the
- * open-source DWT-DCT detector (public, but not implemented in this Function).
+ * open-source DWT-DCT detector (public, but not implemented in this Function). An input whose C2PA
+ * structure exceeds the parser's resource budget is UNCHECKABLE too: the free preview says so with
+ * the reason, and the x402 and invoice rails refuse it (422, payment_taken: false) before any
+ * payment is verified or an invoice reference is made.
  */
 import { headFromGet } from "../_head";
 import { verifyX402Payment, x402Accepts, buildPaymentRequiredV2, declareBazaarHttpGet, paymentRequiredResponseSigned, hasPaymentHeader, CSOAI_LID, type X402Env } from "../_x402";
 import { railMode } from "../_x402_config";
 import { signPayload, cardV0, canonicalBytes, PAYLOAD_CAP_BYTES } from "../../_lib/cardSign";
 import { inspectC2pa, sha256, xmpDigitalSourceType, type C2paInspection } from "../../_lib/c2pa";
+import { base64ToBytes } from "../../_lib/base64";
 import { ART50_SOURCES, ART50_DATES, art50LawBlock, art50TextSha256 } from "../../_lib/art50Law";
 import { invoiceHandoff, INVOICE_CONTACT } from "../_invoice_handoff";
 import { ART50_MARKING_EVIDENCE_DESCRIPTION } from "../_x402_descriptions";
@@ -61,8 +65,6 @@ const json = (body: unknown, status = 200, extra: Record<string, string> = {}) =
     status,
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", "access-control-allow-origin": "*", ...extra },
   });
-
-const b64ToBytes = (s: string): Uint8Array => Uint8Array.from(atob(s.replace(/\s+/g, "")), (c) => c.charCodeAt(0));
 
 // ───────────────────────────── input ─────────────────────────────
 type Input = {
@@ -123,7 +125,7 @@ async function readInput(request: Request, url: URL): Promise<Input> {
       }
       if (typeof body.bytes_b64 === "string" && body.bytes_b64) {
         try {
-          const b = b64ToBytes(body.bytes_b64);
+          const b = base64ToBytes(body.bytes_b64);
           if (b.byteLength === 0) return { ...none, error: "bytes_b64 decodes to an empty body" };
           if (b.byteLength > MAX_BYTES) return { ...none, error: `bytes_b64 exceeds ${MAX_BYTES} byte cap` };
           return { ...none, bytes: b, source: "upload" };
@@ -133,7 +135,7 @@ async function readInput(request: Request, url: URL): Promise<Input> {
       }
       if (typeof body.manifest_b64 === "string" && body.manifest_b64) {
         try {
-          const manifest = b64ToBytes(body.manifest_b64);
+          const manifest = base64ToBytes(body.manifest_b64);
           if (manifest.byteLength === 0) return { ...none, error: "manifest_b64 decodes to an empty body" };
           if (manifest.byteLength > MAX_BYTES) return { ...none, error: `manifest_b64 exceeds ${MAX_BYTES} byte cap` };
           return { ...none, manifest, source: "manifest-only" };
@@ -190,8 +192,19 @@ export async function measure(input: Input): Promise<Measurement> {
 
   if (c2) {
     const present = c2.manifest_store_present;
-    checked.push({ method: "c2pa.manifest-store", result: present ? "DETECTED" : "NOT_DETECTED", ...(present ? { note: `${c2.manifest_count} manifest(s); active ${c2.active_manifest_label ?? "?"}; generator ${c2.claim?.claim_generator ?? "?"}` } : {}) });
-    statements.push(present ? "marking detected by method c2pa.manifest-store" : "marking not detected by method c2pa.manifest-store");
+    if (c2.parser_budget_exceeded) {
+      const reason = c2.signature.reason ?? "C2PA parser resource budget exceeded";
+      checked.push({ method: "c2pa.manifest-store", result: "UNCHECKABLE", note: reason });
+      statements.push("marking UNCHECKABLE by method c2pa.manifest-store: parser resource budget exceeded");
+      gap("c2pa.manifest-store", reason);
+      for (const method of ["c2pa.assertion-hashes", "c2pa.hard-binding", "c2pa.claim-signature"]) {
+        checked.push({ method, result: "UNCHECKABLE", note: reason });
+        gap(method, reason);
+      }
+    } else {
+      checked.push({ method: "c2pa.manifest-store", result: present ? "DETECTED" : "NOT_DETECTED", ...(present ? { note: `${c2.manifest_count} manifest(s); active ${c2.active_manifest_label ?? "?"}; generator ${c2.claim?.claim_generator ?? "?"}` } : {}) });
+      statements.push(present ? "marking detected by method c2pa.manifest-store" : "marking not detected by method c2pa.manifest-store");
+    }
     if (present) {
       checked.push({ method: "c2pa.assertion-hashes", result: c2.assertion_hashes.status, ...(c2.assertion_hashes.reason ? { note: c2.assertion_hashes.reason } : { note: `${c2.assertion_hashes.checked} recomputed` }) });
       checked.push({ method: "c2pa.hard-binding", result: c2.data_hash.status, ...(c2.data_hash.reason ? { note: c2.data_hash.reason } : { note: `${c2.data_hash.binding} ${c2.data_hash.alg ?? ""} ${c2.data_hash.exclusions} exclusion(s)`.trim() }) });
@@ -356,7 +369,8 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       );
     }
     const description = ART50_MARKING_EVIDENCE_DESCRIPTION;
-    const accepts = x402Accepts(env, challengeUrl, { skuId: "request_attestation", tier: "per_request", description });
+    // The discovery 402 advertises the price a real request is charged (the pack), not another SKU's.
+    const accepts = x402Accepts(env, challengeUrl, { skuId: SKU, tier: "pack", description });
     // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
     // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
     // Behavior) — that echo is what gets a resource catalogued.
@@ -419,8 +433,16 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
         x402: `${resourceUrl} (same request without preview=1 — the 402 carries the price)`,
         invoice_gbp: `${resourceUrl}?commissioned_by=<organisation>&invoice=gbp`,
       },
-      note: "Preview: same measurement, no signature, no card. Marking results are stated as detected / not detected by the named method at fetched_at.",
+      note: "Preview: unsigned observations and explicit UNCHECKABLE limits; no signature or card.",
     });
+  }
+
+  if (m.detail?.parser_budget_exceeded) {
+    return json({
+      schema: KIND, error: "parser_resource_limit", state: "UNCHECKABLE",
+      reason: m.detail.signature.reason, payment_taken: false,
+      free_preview: `${resourceUrl}?preview=1`,
+    }, 422);
   }
 
   let payment: Record<string, unknown> | null = null;

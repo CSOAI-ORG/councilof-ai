@@ -18,7 +18,8 @@
  *   {{AXIS_DOORS_SECTION}} {{AXIS_DEEP_SECTION}}                       GET /api/gspc → axes[] (one entry per row)
  *   {{PAID_DOORS_SECTION}}                                            council-os/capabilities.json (the ONE declaration)
  *   {{SEPARATED_LEADS}} {{TIES}} {{UNTESTED_SEPARATIONS}} {{COMPARISON_AXES}}  GET /api/gspc -> totals.*
- *   {{DISTRIBUTION_SECTION}}                                          public/interop/distribution-latest.json
+ *   {{DISTRIBUTION_SECTION}}                                          public/interop/distribution-latest.json -> by_entity
+ *                                                                      (scripts/llms-txt-distribution.mjs)
  *   {{OTS_SECTION}}                                                   public/interop/ots/manifest.json
  *   {{EVIDENCE_RECORDS_SECTION}}                                      public/evidence/published-records.json (scripts/pubbus)
  *   {{FILE_INDEX_SECTION}}                                          public/interop/file-index.json -> the published interop tree
@@ -65,6 +66,7 @@ import { createHash } from "node:crypto";
 import path from "path";
 import { fileURLToPath } from "url";
 import { isPlaceholderLink } from "./internal-links-check.mjs";
+import { distributionSection } from "./llms-txt-distribution.mjs";
 import {
   CAPTURE_PATH,
   llmsStdioSentence,
@@ -256,56 +258,9 @@ ${freeDoors.length ? freeDoors.join("\n") + "\n" : ""}- Free preview: omit \`bun
 
 const fmtN = (n) => Number(n).toLocaleString("en-US");
 
-// Distribution — every line carries the artifact's own state, coverage and as_of.
-//
-// WHY EVERY LINE NAMES covered/attempted. A distribution figure was once published here that was a
-// partial read presented as the whole estate: a total with no denominator beside it, and nothing in
-// the bytes said which counters had answered. The artifact this derives from already records that
-// (state READ | PARTIAL | UNCHECKABLE | UNMEASURED, with covered and attempted on the row), so the
-// only job here is to refuse to print the value without them. A counter that returned nothing is
-// named on its own line and its value stays null — never 0, never quietly folded into the sum.
-function distributionSection() {
-  const d = readJSON("public/interop/distribution-latest.json");
-  const t = d.totals || {};
-  const pkgs = Array.isArray(d.packages) ? d.packages : [];
-  if (!pkgs.length) throw new Error("distribution-latest.json carries no packages[] — absent is not zero");
-  const by = {};
-  for (const r of pkgs) by[r.registry] = (by[r.registry] || 0) + 1;
-  const perReg = Object.keys(by).sort().map((k) => `${k} ${fmtN(by[k])}`).join(" · ");
-  const totalLine = (key, label) => {
-    const f = t[key];
-    if (!f || f.value === undefined) throw new Error(`distribution-latest.json carries no totals.${key} — absent is not zero`);
-    const bound = f.state === "PARTIAL" ? ", so it is a LOWER BOUND over those, never a total over all of them" : "";
-    return `- ${label}: ${fmtN(f.value)} ${f.unit} — state ${f.state}, ${fmtN(f.covered)} of ${fmtN(f.attempted)} counters answered${bound}. Window: ${f.window}. as_of ${f.as_of}.`;
-  };
-  const silent = pkgs.filter((r) => r.downloads_30d === null || r.downloads_all_time === null);
-  const silentLines = silent.length
-    ? silent.map((r) => `- Counter that did not answer, named rather than absorbed: ${r.registry} \`${r.name}\` — ${r.reason ?? "no reason recorded"}. Its value is null, never 0.`).join("\n")
-    : "- Every counter answered on this run; nothing is a lower bound for want of a reply.";
-  const cc = d.registries?.pypi?.cross_check;
-  const ccLine = cc && cc.pepy_over_pypistats_median
-    ? `- Two third-party counters over the same PyPI packages DISAGREE: on ${cc.samples_compared} sampled packages ${cc.source_url.split("/")[2]} read about ${cc.pepy_over_pypistats_median}x lower than the source published above. That divergence is recorded, not resolved by picking one, and the LARGER of the two is what is published — which is exactly why it is labelled gross. Quote this ratio beside the number.`
-    : "";
-  // No heading here: llms.txt and llms-full.txt number their sections differently, so each
-  // template supplies the heading and this returns the body both of them share.
-  return `Derived at generation from https://councilof.ai/interop/distribution-latest.json (same bytes on
-disk at public/interop/distribution-latest.json, schema ${d.schema}, artifact as_of ${d.as_of}).
-Re-read it live; do not quote these figures without the state and coverage beside them.
-
-- Packages published across three registries: ${fmtN(pkgs.length)} (${perReg}). Three registries are
-  three populations. The package ROWS are added; the download counts of different registries are
-  reported per registry and the totals below are the artifact's own, not an arithmetic of this line.
-${totalLine("downloads_30d", "Downloads in the last 30 days")}
-${totalLine("downloads_all_time", "Downloads since first release (cumulative)")}
-- The 30-day and cumulative figures are different WINDOWS over the same packages. They are never
-  added to each other, and neither is a count of people: mirrors, CI and crawlers are inside both.
-${silentLines}${ccLine ? "\n" + ccLine : ""}
-- A download is distribution. It is not adoption, not a user, not a customer, and not a measurement.
-  Reach says how far the board travels; authority stays GET /api/gspc, the signed cards and free verify.
-- Per-entity shares (CSOAI Ltd and MEOK AI Labs publish from one account and are labelled, never
-  filtered) are on the artifact at \`by_entity\`; the estate total is every row.
-`;
-}
+// Distribution — CSOAI's own by_entity figures head the section; MEOK AI Labs' figures sit on their
+// own labelled line and are never added in. The rule for when a figure may be printed is the home
+// page's, and it lives in scripts/llms-txt-distribution.mjs so it can be tested without a board.
 
 // Timestamp proofs — derived from the manifest this repo publishes, on disk.
 //
@@ -522,7 +477,8 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
     // Separation is a different determination from measurement, so it travels as its own numbers.
     SEPARATED_LEADS: t.separated_leads, TIES: t.ties,
     UNTESTED_SEPARATIONS: t.untested_separations, COMPARISON_AXES: t.comparison_axes,
-    DISTRIBUTION_SECTION: distributionSection(), OTS_SECTION: otsSection(),
+    DISTRIBUTION_SECTION: distributionSection(readJSON("public/interop/distribution-latest.json")),
+    OTS_SECTION: otsSection(),
     EVIDENCE_RECORDS_SECTION: evidenceRecordsSection(),
     FILE_INDEX_SECTION: fileIndexSection(),
     DATED_MILL_ROOT_LINE: datedMillRootLine(),

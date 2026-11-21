@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 import ExternalUseEvidence from "@/components/ExternalUseEvidence";
 import { OPERATING_ORGANISATION_SUMMARY } from "@/data/external-use";
@@ -66,7 +65,6 @@ export default function Traction() {
   const usdc = live.revenue ? `$${(live.revenue.atomic / 1_000_000).toFixed(2)}` : undefined;
 
   return <section className="min-h-screen bg-slate-950 text-slate-100">
-    <Helmet><title>Operation and external use | Council of AI</title><meta name="description" content="Council of AI's evidence services, operating infrastructure, external use and business model. Information for organisations, partners and investors." /></Helmet>
     <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,.18),transparent_36%)]">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <p className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-300">Operating work and documented external use</p>
@@ -104,6 +102,12 @@ export default function Traction() {
 
     <div id="external-use" className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-14">
       <ExternalUseEvidence inverted />
+      <aside className="mt-6 rounded-xl border border-slate-700 p-5" aria-label="Published CMA consultation response">
+        <h3 className="text-lg font-bold">Our published response to the CMA's search-choice consultation</h3>
+        <p className="mt-3 leading-7 text-slate-300">On 8 October 2026, Council of AI (CSOAI LTD) prepared a non-confidential six-page response to the UK Competition and Markets Authority's consultation on Google's proposed general-search user-choice requirement. The response is available on the UK government's document host. It proposes versioned assessment criteria and outcome measures for informed choice, effective control, fairness, accessibility and follow-up.</p>
+        <p className="mt-3 leading-7 text-slate-300">This establishes a publicly available consultation contribution, <strong>not</strong> CMA adoption of our proposals, regulatory accreditation, an evaluation commission or evidence that the CMA has used our measurement service.</p>
+        <p className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm"><a href="https://assets.publishing.service.gov.uk/media/6adb87142263175ac2aca3e0/Council_of_AI.pdf" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">Read the original response (PDF, 6 pages)</a><Link href="/methodology" className="text-emerald-300 underline">Inspect our current methods</Link><Link href="/contact/?arm=run" className="text-emerald-300 underline">Discuss a scoped evidence project</Link></p>
+      </aside>
       <aside className="mt-6 rounded-xl border border-slate-700 p-5" aria-label="Additional external artifact">
         <h3 className="text-lg font-bold">A public API contract reused in an external catalogue</h3>
         <p className="mt-3 leading-7 text-slate-300">API Evangelist generated an OpenAPI overlay from Council of AI's published read-surfaces contract. The <a href="https://apis.io/overlays/councilof-ai/councilof-ai-gspc-read-surfaces-overlay/" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">APIs.io record</a> dates the generated artifact to 19 September 2026 and identifies it as an external derivative. This supports discoverability and reuse of the contract; it is not a customer deployment, endorsement or validation of the measurement service.</p>
