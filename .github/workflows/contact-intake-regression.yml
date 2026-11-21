@@ -8,6 +8,9 @@ on:
       - "client/src/lib/contactReceipt.ts"
       - "client/src/lib/contactReceipt.test.ts"
       - "client/src/pages/Contact.receipt-interaction.test.tsx"
+      - "functions/api/_contact-operator.ts"
+      - "functions/api/private/contact-review.ts"
+      - "functions/api/private/contact-review.test.ts"
       - "client/src/pages/Services.tsx"
       - ".github/workflows/contact-intake-regression.yml"
   workflow_dispatch:
@@ -27,4 +30,4 @@ jobs:
       - name: Install locked dev dependencies
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Exercise happy path, nonstorage, invalid and cross-origin cases
-        run: npx vitest run functions/api/contact.test.ts client/src/lib/contactReceipt.test.ts client/src/pages/Contact.receipt-interaction.test.tsx
+        run: npx vitest run functions/api/contact.test.ts client/src/lib/contactReceipt.test.ts client/src/pages/Contact.receipt-interaction.test.tsx functions/api/private/contact-review.test.ts
