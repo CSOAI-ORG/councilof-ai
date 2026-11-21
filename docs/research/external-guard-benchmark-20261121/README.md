@@ -4,7 +4,7 @@
 
 ## Exact observed outcome, not a marketing estimate
 
-We ran [Horizon-Labs/prompt-injection-guard-small](https://huggingface.co/Horizon-Labs/prompt-injection-guard-small) at frozen revision \`2efc2ed5abecd21eb45c2506d231a65d6e392b85\` against all **116** records in the test split of [deepset/prompt-injections](https://huggingface.co/datasets/deepset/prompt-injections), frozen at revision \`4f61ecb038e9c3fb77e21034b22511b523772cdd\`.
+We ran [Horizon-Labs/prompt-injection-guard-small](https://huggingface.co/Horizon-Labs/prompt-injection-guard-small) at frozen revision `2efc2ed5abecd21eb45c2506d231a65d6e392b85` against all **116** records in the test split of [deepset/prompt-injections](https://huggingface.co/datasets/deepset/prompt-injections), frozen at revision `4f61ecb038e9c3fb77e21034b22511b523772cdd`.
 
 | Measure | Exactly observed at score threshold 0.5 |
 | --- | ---: |
@@ -24,16 +24,16 @@ Those 19 misses have been retained in the machine-readable [error review](error-
 
 ## Reproducibility and source integrity
 
-- Dataset file: \`data/test-00000-of-00001-701d16158af87368.parquet\`.
-- Dataset **bytes** SHA-256: \`39ac797cabc157eeed58435a08593b2952bb6cb16fc394a2d383f447cc7b246e\`.
-- Model quantised ONNX weights SHA-256: \`61cd0741cdbfcc229e32e1de1392f352736d87d1e8b3c2b67ad9836bb7910d5d\`.
-- Model tokenizer normalizer SHA-256: \`768931fc0b38fb141796abf181e0bafe96308e92c8832c817dbd6df7fc41ac79\`.
+- Dataset file: `data/test-00000-of-00001-701d16158af87368.parquet`.
+- Dataset **bytes** SHA-256: `39ac797cabc157eeed58435a08593b2952bb6cb16fc394a2d383f447cc7b246e`.
+- Model quantised ONNX weights SHA-256: `61cd0741cdbfcc229e32e1de1392f352736d87d1e8b3c2b67ad9836bb7910d5d`.
+- Model tokenizer normalizer SHA-256: `768931fc0b38fb141796abf181e0bafe96308e92c8832c817dbd6df7fc41ac79`.
 - Inference: ONNX CPU, 2 threads, max 512 tokens, no classifier fine-tuning, fixed score threshold 0.5.
 - Original measured run: 2026-11-21T01:19:19.571960+00:00 on a Council-controlled M4.
 - Source label prevalence: 60/116 positive. F1/accuracy will not generalise to deployment prevalences.
 - Dataset license metadata is **inconsistent**: the dataset's top-level metadata says Apache-2.0 but a nested dataset_info field says CC-BY-4.0. Only source-link attribution and input digests are republished; do not redistribute source texts or commercialise the dataset until rights are reconciled.
 
-The retained [record.json](record.json) includes every label, model score, hash and threshold-sensitivity check; [event.json](event.json) is the unsigned \`csoai.evidence-event/0.1\` \`PARTIAL\` observation. There is no third-party review, external root anchor or GSPC board admission.
+The retained [record.json](record.json) includes every label, model score, hash and threshold-sensitivity check; [event.json](event.json) is the unsigned `csoai.evidence-event/0.1` `PARTIAL` observation. There is no third-party review, external root anchor or GSPC board admission.
 
 The experiment can be reproduced from an isolated checkout with Python 3.12+:
 
