@@ -20,10 +20,19 @@ email address and an objection / re-check / correction route, which the outward 
 card (accountability.objection_route, accountability.contact_plain_email). It is omitted when the card's own
 body already carries that heading. The fixtures are re-read from the live cards after the 29 Sep write.
 
+SOURCE SECTION (20 Nov 2026, correction C-2026-1120-02). A dataset whose rows are derived from someone else's
+data carries that data's licence and credits it. Its registry entry then holds a `source` record: the source's
+name, its authors as named on its paper, the paper and repository links, the source's licence, the citation the
+source asks for, the changes we made and any limit on what a score on the rows means. For such a dataset the
+front matter takes the source's licence, the card gets a "## Source, licence and limit" section right after its
+title (between its own markers, so it is replaced, never added twice), and the block's How to cite and licence line
+credit the source. csoai/gspc-gov is the first: its 237 items are copied from the AI Act Evaluation Benchmark,
+whose JSON data are CC BY 4.0, while the card said cc0-1.0 and credited only us.
+
 WHAT IT NEVER DOES. It reads no network, invents no number and chooses no licence except the eight decisions
-L5 recorded with their sources. Year and DOI come from cite-block-registry.json (read from the HF API by L5:
-created_at.year and the repo's doi: tag); a dataset not in the registry takes the year passed in, else the
-current UTC year, and no DOI.
+L5 recorded with their sources, and the source licence a registry `source` record states for derived data. Year
+and DOI come from cite-block-registry.json (read from the HF API by L5: created_at.year and the repo's doi: tag);
+a dataset not in the registry takes the year passed in, else the current UTC year, and no DOI.
 
 Usage (as a library):
     from cite_block import apply            # scripts/hf on sys.path
@@ -46,6 +55,9 @@ import urllib.request
 from pathlib import Path
 
 START, END = "<!-- csoai-cite-v1:start -->", "<!-- csoai-cite-v1:end -->"
+SRC_START, SRC_END = "<!-- csoai-source-v1:start -->", "<!-- csoai-source-v1:end -->"
+SRC_HEADING = "## Source, licence and limit"
+CORRECTIONS = "https://councilof.ai/api/corrections"
 REGISTRY_PATH = Path(__file__).with_name("cite-block-registry.json")
 
 LIC_LABEL = {"cc-by-4.0": "CC-BY-4.0", "cc0-1.0": "CC0-1.0", "other": "mixed (see Licence note)",
@@ -113,7 +125,7 @@ def title_of(fm, body, name):
 # omits the section, so no card shows it twice.
 OBJ_HEADING = "## Objections, contact and corrections"
 OBJ_TEXT = ("To object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, "
-            "email **contact@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. "
+            "email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. "
             "Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what "
             "changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.")
 
@@ -124,7 +136,56 @@ def has_own_objections(body: str) -> bool:
     return OBJ_HEADING in outside
 
 
-def block(name, title, year, lic, doi, key=None, objections=True):
+def names(people) -> str:
+    """'A', 'A and B', 'A, B and C'."""
+    people = list(people)
+    return people[0] if len(people) == 1 else ", ".join(people[:-1]) + " and " + people[-1]
+
+
+def source_section(src: dict) -> str:
+    """The section a dataset derived from someone else's data carries right after its title: who made the source,
+    where it is, its licence, what we changed and, when the registry records one, the limit on what a score means."""
+    who = names(src["authors"]) + (f" ({src['affiliation']})" if src.get("affiliation") else "")
+    paras = [
+        f"**Source.** {src['scope']} are derived from the [{src['name']}]({src['repository']}) by {who}. "
+        f"It is described in their paper [*{src['title']}*]({src['paper']}) (arXiv:{src['arxiv']}, {src['year']}). "
+        "Cite the paper when you use the items: its citation is under How to cite, below.",
+        f"**Licence.** {src['licence_basis']} The licence of the source's data, [{src['licence_short']}]({src['licence_url']}), "
+        f"governs this derived data, so this dataset is offered under {src['licence_short']} too. When you reuse it, credit the "
+        "source's authors, as above, and Council of AI." + (f" {src['licence_history']}" if src.get("licence_history") else ""),
+        f"**Changes we made.** {src['changes']}",
+    ]
+    if src.get("limit"):
+        paras.append(f"**Limit.** {src['limit']} This limit is recorded as correction {src['correction']} in our "
+                     f"corrections ledger: {CORRECTIONS}")
+    return "\n\n".join([f"{SRC_START}\n{SRC_HEADING}", *paras]) + f"\n{SRC_END}"
+
+
+_SRC_RE = re.compile(r"\n?" + re.escape(SRC_START) + r".*?" + re.escape(SRC_END) + r"\n?", flags=re.S)
+
+
+def title_end(body: str) -> int:
+    """Index just after the card's first '# ' title line outside a code fence; 0 when it has none."""
+    fenced, pos = False, 0
+    for line in body.splitlines(True):
+        if line.lstrip().startswith(("```", "~~~")):
+            fenced = not fenced
+        elif not fenced and re.match(r"#\s+\S", line):
+            return pos + len(line)
+        pos += len(line)
+    return 0
+
+
+def place_source(body: str, src: dict | None) -> str:
+    """Drop any earlier source section; for a derived dataset, put one right after the card's title."""
+    body = _SRC_RE.sub("", body)
+    if not src:
+        return body
+    at = title_end(body)
+    return body[:at] + "\n" + source_section(src) + "\n" + body[at:]
+
+
+def block(name, title, year, lic, doi, key=None, objections=True, source=None):
     url = f"https://huggingface.co/datasets/csoai/{name}"
     cite = f"CSOAI Ltd (Council of AI). *{title}*. {year}. Hugging Face dataset `csoai/{name}`. {url}"
     if doi:
@@ -134,14 +195,26 @@ def block(name, title, year, lic, doi, key=None, objections=True):
            f"  year         = {{{year}}},", f"  howpublished = {{Hugging Face dataset, {url}}},"]
     if doi:
         bib.append(f"  doi          = {{{doi}}},")
-    bib.append("  note         = {Corrections: https://councilof.ai/api/corrections}")
+    derived = f"Derived from arXiv:{source['arxiv']} ({source['licence_short']}). " if source else ""
+    bib.append(f"  note         = {{{derived}Corrections: {CORRECTIONS}}}")
     bib.append("}")
     lic_line = {"cc-by-4.0": "Licence: CC-BY-4.0. Attribute Council of AI, CSOAI Ltd (16939677), https://councilof.ai.",
                 "cc0-1.0": "Licence: CC0-1.0. Attribution is appreciated, not required.",
                 "other": "Licence: mixed. See the Licence note in this card."}.get(lic, f"Licence: {LIC_LABEL.get(lic, lic)}.")
+    cite_part = [cite, "", "```bibtex", *bib, "```"]
+    if source:
+        # Derived data: the source's licence, and its authors credited before us (C-2026-1120-02).
+        who = names(source["authors"])
+        lic_line = (f"Licence: {LIC_LABEL.get(lic, lic)}, the licence of the source's data, which governs this derived "
+                    f"dataset. Credit the source's authors, {who} (arXiv:{source['arxiv']}), and Council of AI, "
+                    "CSOAI Ltd (16939677), https://councilof.ai.")
+        cite_part = [f"The items are derived from the {source['name']} (see {SRC_HEADING[3:]}, above). "
+                     "Cite its paper, as its authors ask:", "",
+                     f"{who}. *{source['title']}*. arXiv:{source['arxiv']}, {source['year']}. {source['paper']}", "",
+                     "```bibtex", *source["bibtex"], "```", "", "To cite this derived dataset:", "", *cite_part]
     obj = [OBJ_HEADING, "", OBJ_TEXT, ""] if objections else []
     return "\n".join([
-        START, *obj, "## How to cite", "", cite, "", "```bibtex", *bib, "```", "", lic_line, "",
+        START, *obj, "## How to cite", "", *cite_part, "", lic_line, "",
         "## Corrections and verification", "",
         "- Corrections ledger (signed): https://councilof.ai/api/corrections. Corrections to CSOAI's published records are logged there with what changed and when.",
         "- Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).",
@@ -174,9 +247,11 @@ def extract(text: str) -> str | None:
 
 def apply(readme: str, repo_id: str, *, year: int | None = None, doi: str | None = None) -> str:
     """Return `readme` carrying the block at its end (replacing any earlier copy), with L5's licence decision
-    for this dataset applied to the front matter. Idempotent: apply(apply(x)) == apply(x)."""
+    for this dataset applied to the front matter, and, for data derived from a registry `source`, the source's
+    licence and its section after the title. Idempotent: apply(apply(x)) == apply(x)."""
     name = repo_id.split("/", 1)[1] if "/" in repo_id else repo_id
     reg = registry().get(name, {})
+    src = reg.get("source")
     fm, body = fm_split(readme)
     lic = fm_licence(fm)
     if name in LIC_FIX:
@@ -186,6 +261,11 @@ def apply(readme: str, repo_id: str, *, year: int | None = None, doi: str | None
             extra = {"license_name": "csoai-mixed-data",
                      "license_link": f"https://huggingface.co/datasets/csoai/{name}/blob/main/README.md#licence-note"}
         fm = set_licence(fm, lic, extra)
+    elif src:
+        # Derived data carry the licence of the data they are derived from, as the registry records it with
+        # its source (C-2026-1120-02: csoai/gspc-gov said cc0-1.0 over CC BY 4.0 items).
+        lic = src["licence"]
+        fm = set_licence(fm, lic)
     # A card that already carries a block keeps its citation: the BibTeX key always, and the year and DOI
     # when the registry has no entry for the dataset (a card made after L5 by another producer), so a
     # rebuild never churns a citation that is already published.
@@ -201,11 +281,12 @@ def apply(readme: str, repo_id: str, *, year: int | None = None, doi: str | None
     if doi is None:
         doi = reg.get("doi") if name in registry() else prev_doi
     title = title_of(fm, body, name).replace("{", "(").replace("}", ")")
-    blk = block(name, title, year, lic, doi, key=prev_key, objections=not has_own_objections(body))
+    blk = block(name, title, year, lic, doi, key=prev_key, objections=not has_own_objections(body), source=src)
     if START in body:
         body = re.sub(re.escape(START) + r".*?" + re.escape(END) + r"\n?", "", body, flags=re.S)
     if name in LIC_NOTE and "## Licence note" not in body:
         body = body.rstrip("\n") + "\n" + LIC_NOTE[name]
+    body = place_source(body, src)
     body = body.rstrip("\n") + "\n\n" + blk
     return (f"---\n{fm.rstrip(chr(10))}\n---\n" if fm is not None else "") + body
 
