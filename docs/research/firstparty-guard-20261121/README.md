@@ -40,6 +40,32 @@ python3 scripts/research/firstparty-guard-replay.py verify \
 
 The workflow .github/workflows/self-run-open-model-guard-sample.yml replays on a GitHub-hosted runner, retains false alarms/misses and full receipts, uploads artifacts, and verifies report integrity in a second job. It runs weekly only after the reviewed workflow is merged to the default branch. A separate-job verifier checks report arithmetic and evidence identity but does not independently rerun the neural inference.
 
+## Layered synthetic effect demonstration
+
+A second **actual owned-file test** has now composed the 8 pinned classifier decisions with the existing Council-of-AI synthetic HITL approval-to-effect executor. In this small controlled run:
+
+- Four benign examples passed the detector and triggered four separately observed, *synthetically authorised* local file effects.
+- Four injected examples were held before invoking the executor, so these are explicitly labelled NOT_DISPATCHED rather than pretending an independent observer watched a denied execution.
+- A forced classifier-bypass negative control was sent to the existing wrong-scope host authority path and was **DENIED with NO_EFFECT**.
+- A simulated false-negative branch also reaches host denial. A simulated false-positive branch prevents an otherwise permitted synthetic effect. These are regression checks, not additional classifier-model observations.
+- The saved composition has **zero observed unauthorised file effects** within its exact synthetic fixture population. This does not establish real-world threat prevention, human approval, institutional independence or complete coverage.
+
+Retained output: [layered-demo.json](layered-demo.json). Re-run with the pinned classifier result:
+
+~~~sh
+node scripts/research/composed-guard-effect-demo.mjs --selftest
+node scripts/research/composed-guard-effect-demo.mjs --run \
+  docs/research/firstparty-guard-20261121/record.json \
+  scripts/research/firstparty-guard-cases.json \
+  new-layered-demo.json
+node scripts/research/composed-guard-effect-demo.mjs --verify \
+  docs/research/firstparty-guard-20261121/record.json \
+  scripts/research/firstparty-guard-cases.json \
+  new-layered-demo.json
+~~~
+
+The model predicts; the existing exact-authority host fixture checks execution. This is the architectural division between an external detector and MEOK's future operating enforcement. The real human authority, distributed lease and production-specific tool binding remain unqualified.
+
 ## GSPC and MEOK interpretation
 
 This qualifies a small classifier integration, not general safety. MEOK should treat model detection as a signal and separately enforce exact-action host authorisation at tool dispatch. GSPC may measure participating revisions under a frozen method, but these eight examples are not admitted to a live GSPC axis. A public threat-prevention claim requires pinned models, independent held-out samples, failure and false-positive denominators, real forbidden-action observations and reproducible outside review.
