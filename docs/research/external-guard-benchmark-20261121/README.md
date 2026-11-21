@@ -63,3 +63,14 @@ GitHub CI reruns inference and validates the published source in a **separate jo
 3. **Failures drive a qualified repair queue.** The 19 identified examples should be studied to design *new*, separately sourced and blind evaluation cases, or improve the authorisation/observability architecture. No automatic model retraining or live authority changes are justified by this sample.
 
 **Product architecture:** model/revision discovery → pinned execution → full confusion matrix and per-row hash → canonical unsigned evidence event → independent-job source and evidence verification → failure-review queue → separately authorised fixes → next frozen benchmark. This cycle operates without waiting for a customer.
+
+
+## Proposed GitHub Sigstore build provenance after merge
+
+The scoped scheduled workflow includes a **separate master-only** attestation job, after the replay and source-verification jobs pass. It uses the GitHub OIDC workflow identity and official `actions/attest@v4` to attest the exact JSON artifact bytes. It deliberately grants **no OIDC signing permission to pull-request jobs**. GitHub's CLI can check the resulting attestation online:
+
+~~~sh
+gh attestation verify PATH_TO_DOWNLOADED_ARTIFACT.json -R CSOAI-ORG/councilof-ai
+~~~
+
+Until the job has actually run and the CLI has verified the published attestation, **no such signed provenance is claimed to exist**. An attestation proves where an artifact was produced and that its bytes match the signed workflow statement; it does not validate underlying test labels, certify an AI model, adopt governance policy, supply a human's approval or sign a GSPC board record.
