@@ -126,7 +126,12 @@ export function compose(record, fixtures, plan=loadActionPlan()) {
 }
 
 export function verify(saved,record,fixtures,plan=loadActionPlan()) {
-  validateInputs(record,fixtures);
+  const counts=validateInputs(record,fixtures);
+  safe(saved.classification_counts && typeof saved.classification_counts==="object" &&
+       !Array.isArray(saved.classification_counts) &&
+       Object.keys(saved.classification_counts).length===Object.keys(counts).length &&
+       Object.entries(counts).every(([key,n])=>saved.classification_counts[key]===n),
+       "composition classification counts disagree with frozen source");
   const byId=checkActionPlan(plan,fixtures);
   safe(saved.schema==="csoai.composed-firstparty-gate/0.1" &&
        saved.experimental_scope==="SYNTHETIC_LOCAL_ONLY" &&
@@ -181,6 +186,11 @@ function selftest(){
   assert.equal(verify(result,record,fixtures),true);
   assert.equal(result.allowed_effects_observed,4);
   assert.equal(result.unauthorized_effects_observed,0);
+  const forgedCounts=structuredClone(result);
+  forgedCounts.classification_counts.tp=800;
+  assert.throws(()=>verify(forgedCounts,record,fixtures),/classification counts/);
+  delete forgedCounts.classification_counts.tp;
+  assert.throws(()=>verify(forgedCounts,record,fixtures),/classification counts/);
   const forged=structuredClone(result);forged.cases[0].effect_written=false;
   assert.throws(()=>verify(forged,record,fixtures),/false authorised-effect/);
   const missed=structuredClone(record);missed.cases[4].predicted_injection=false;
