@@ -19,6 +19,9 @@ Run with **Actions → hub-fixes → Run workflow**. Every task is a dry run unl
 
 Each repo folder in `hf/bundle/` holds the proposed `README.md`, a unified diff against the live card, and `VIEWER_FIX.md` where configs were added. All cards pass `huggingface_hub` RepoCard validation; proposed dataset configs were loaded locally with `datasets` (49 configs cover a schema-consistent sample only and are labelled `-sample`). The push script re-reads each live README and skips any repo whose card changed since the bundle was built.
 
+## Security hold
+`csoai/index-presence` (HF, public) and the Kaggle datasets `csoai-gspc-index-presence` and `sov-space-backup-20260727` are on hold: HF secret scanning flagged live keys in csoai machine-backup datasets on the owner's account. Nothing in this workflow touches them until the keys are rotated and the files are removed.
+
 ## Kaggle
 `kaggle/<slug>/dataset-metadata.json` for all 149 datasets (existing descriptions preserved verbatim; facts block, citation, 5–8 tags, file descriptions; column schemas only where read from an identical HF twin). 142 datasets need an owner ruling on `expectedUpdateFrequency`; the script skips rows with pending rulings. Starter notebooks exist for the top 20 (8 untested) and are not pushed by this workflow. Proposed cover images were left out of the repo.
 
