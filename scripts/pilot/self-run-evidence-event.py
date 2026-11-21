@@ -19,6 +19,10 @@ EVENT_PATH = ROOT / "packages/evidence-fabric/event.py"
 spec = importlib.util.spec_from_file_location("csoai_evidence_event", EVENT_PATH)
 evidence = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(evidence)
+PROFILE_PATH = ROOT / "scripts/pilot/self-run-hitl-profiles.py"
+profile_spec = importlib.util.spec_from_file_location("csoai_selfrun_hitl_profiles", PROFILE_PATH)
+profiles_module = importlib.util.module_from_spec(profile_spec)
+profile_spec.loader.exec_module(profiles_module)
 
 LIMITS = [
     "Synthetic test key; no authenticated human decision or production authority.",
@@ -83,9 +87,14 @@ def _extract(receipt):
             "successful": passed}
 
 
-def make_event(receipt, raw_bytes, source_commit):
+def make_event(receipt, raw_bytes, source_commit, profiles):
     _require(re.fullmatch(r"[a-f0-9]{40}", source_commit or ""), "exact source commit required")
     obs = _extract(receipt)
+    expected_profiles = profiles_module.records(receipt, raw_bytes, source_commit)
+    profiles_module.validate_records(expected_profiles)
+    _require(profiles == expected_profiles, "HITL profile pack is not reconstructed from receipt")
+    references = profiles_module.digests(expected_profiles)
+    _require(len(references) == 14, "must bind all fourteen actual process profiles")
     state = "CONSISTENT" if obs["successful"] else "DIVERGENT"
     negative_got = ("DENIED_WITHOUT_EFFECT" if obs["denied_without_effect"] == 13
                     else "UNEXPECTED_EFFECT_OR_UNOBSERVED")
@@ -104,10 +113,13 @@ def make_event(receipt, raw_bytes, source_commit):
                 "holder": "csoai", "code_sha256": hashlib.sha256(SCRIPT.read_bytes()).hexdigest()},
         declared={"fixture_count": 14, "invalid_control_count": 13,
                   "allowed_control_count": 1, "expect_invalid_effect": False,
-                  "experiment": "synthetic-only"},
+                  "experiment": "synthetic-only",
+                  "process_profile": "csoai.hitl-authority-effect/0.1"},
         observed={k: v for k, v in obs.items() if k != "successful"} | {
             "raw_receipt_sha256": hashlib.sha256(raw_bytes).hexdigest(),
-            "observed_at": receipt["ran_at"]},
+            "observed_at": receipt["ran_at"],
+            "hitl_process_profiles": references,
+            "profile_count": len(references)},
         state=state, value=None, negative_control=control, limits=LIMITS
     )
 
@@ -126,9 +138,13 @@ def main():
         p.add_argument("--receipt", required=True)
         p.add_argument("--commit", required=True)
         p.add_argument("--event", required=True)
+        p.add_argument("--profiles", required=True)
     a = ap.parse_args()
     receipt, raw = read_receipt(a.receipt)
-    expected = make_event(receipt, raw, a.commit)
+    raw_profiles = Path(a.profiles).read_bytes()
+    _require(0 < len(raw_profiles) < 500000, "profile pack missing or too large")
+    process_profiles = json.loads(raw_profiles)
+    expected = make_event(receipt, raw, a.commit, process_profiles)
     if a.command == "make":
         path = Path(a.event)
         with path.open("x", encoding="utf8") as f:
@@ -136,6 +152,7 @@ def main():
             f.write("\n")
         print(json.dumps({"event_id": expected["event_id"], "state": expected["state"],
                           "receipt_sha256": hashlib.sha256(raw).hexdigest(),
+                          "bound_hitl_profiles": len(process_profiles),
                           "event_is_signed": False, "gspc_admitted": False}))
         return 1 if expected["state"] != "CONSISTENT" else 0
     got = json.loads(Path(a.event).read_text(encoding="utf8"))
@@ -143,6 +160,7 @@ def main():
     _require(not errors and got == expected, "event differs from reconstructed source: " + "; ".join(errors))
     print(json.dumps({"verified": True, "event_id": got["event_id"],
                       "state": got["state"], "signed": False,
+                      "bound_hitl_profiles": len(process_profiles),
                       "institutionally_independent": False}))
     return 1 if got["state"] != "CONSISTENT" else 0
 
