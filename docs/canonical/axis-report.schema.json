@@ -1,0 +1,461 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schemas/axis-report.schema.json",
+  "title": "CSOAI per-axis report (contract v0.1, draft)",
+  "description": "One report per GSPC axis per frozen snapshot. See docs/canonical/AXIS-REPORT-CONTRACT.md. A measurement record, not a certificate or rating.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "axis_id",
+    "kind",
+    "snapshot_id",
+    "method_sha",
+    "bank_sha",
+    "dataset_revision",
+    "population",
+    "status",
+    "stale_after_days",
+    "separation",
+    "reproductions",
+    "reliance",
+    "anchor",
+    "disclaimer"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "0.1"
+    },
+    "axis_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$"
+    },
+    "family": {
+      "enum": [
+        "gspc",
+        "subject",
+        "financial"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "model-comparison",
+        "deterministic-facts",
+        "measured-subject"
+      ]
+    },
+    "snapshot_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Frozen snapshot id; never 'live'."
+    },
+    "method_sha": {
+      "$ref": "#/$defs/sha"
+    },
+    "method_status": {
+      "type": "string",
+      "description": "e.g. meets-rule, legacy"
+    },
+    "bank_sha": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/sha"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "dataset_revision": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "HF dataset revision (commit sha) or null when no dataset applies."
+    },
+    "measured_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "population": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit",
+        "denominator",
+        "tested",
+        "failures",
+        "inaccessible"
+      ],
+      "properties": {
+        "unit": {
+          "type": "string"
+        },
+        "denominator": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "tested": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failures": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "inaccessible": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "result": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "metric",
+        "value"
+      ],
+      "properties": {
+        "metric": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "ci": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "low",
+            "high"
+          ],
+          "properties": {
+            "level": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "exclusiveMaximum": 1
+            },
+            "low": {
+              "type": "number"
+            },
+            "high": {
+              "type": "number"
+            },
+            "method": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "separation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verdict"
+      ],
+      "properties": {
+        "verdict": {
+          "enum": [
+            "SEPARATED",
+            "TIE",
+            "UNTESTED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "test": {
+          "type": "string"
+        },
+        "p_value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "leader": {
+          "type": "string"
+        },
+        "reason_code": {
+          "type": "string"
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "MEASURED",
+        "STALE",
+        "UNMEASURED",
+        "UNCHECKABLE"
+      ]
+    },
+    "stale_after_days": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "reproductions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "by",
+          "at",
+          "outcome"
+        ],
+        "properties": {
+          "by": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date"
+          },
+          "outcome": {
+            "enum": [
+              "REPRODUCED",
+              "DIFFERED",
+              "FAILED"
+            ]
+          },
+          "ref": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "reliance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "party",
+          "at",
+          "consent"
+        ],
+        "properties": {
+          "party": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date"
+          },
+          "consent": {
+            "const": true
+          },
+          "ref": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "merkle_root",
+        "state"
+      ],
+      "properties": {
+        "merkle_root": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "enum": [
+            "ANCHORED",
+            "PENDING",
+            "SIMULATED",
+            "NONE"
+          ]
+        },
+        "ots": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rekor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "disclaimer": {
+      "type": "string",
+      "minLength": 20
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "separation": {
+            "properties": {
+              "verdict": {
+                "const": "SEPARATED"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "separation": {
+            "required": [
+              "verdict",
+              "test",
+              "p_value",
+              "leader"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "separation": {
+            "properties": {
+              "verdict": {
+                "const": "TIE"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "separation": {
+            "required": [
+              "verdict",
+              "test",
+              "p_value"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "separation": {
+            "properties": {
+              "verdict": {
+                "const": "UNTESTED"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "separation": {
+            "required": [
+              "verdict",
+              "reason_code"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "MEASURED",
+              "STALE"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "measured_at",
+          "result"
+        ],
+        "properties": {
+          "result": {
+            "type": "object"
+          },
+          "measured_at": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "UNMEASURED",
+              "UNCHECKABLE"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "model-comparison"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "separation": {
+            "properties": {
+              "verdict": {
+                "enum": [
+                  "SEPARATED",
+                  "TIE",
+                  "UNTESTED"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$",
+      "description": "git sha-1 (40 hex) or sha-256 (64 hex)"
+    }
+  }
+}
