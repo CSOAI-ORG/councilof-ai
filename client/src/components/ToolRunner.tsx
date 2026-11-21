@@ -21,6 +21,7 @@ import {
   type ToolResult,
 } from "../lib/sovTools";
 import { stateMeaning } from "@/lib/resultCard";
+import { CensusToolOutput } from "./CensusToolOutput";
 import { hashArgs, recordToolReceipt } from "@/lib/toolReceipts";
 
 export type JsonSchema = {
@@ -1250,7 +1251,9 @@ export default function ToolRunner({
                       </button>
                     </div>
                   </header>
-                  {output.result.text.length > 4000 ? (
+                  {active.name === "x402_trust" ? (
+                    <CensusToolOutput result={output.result} />
+                  ) : output.result.text.length > 4000 ? (
                     <details className="bg-[#04120c]">
                       <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-emerald-50">
                         View complete machine response ({output.result.text.length.toLocaleString()} characters)

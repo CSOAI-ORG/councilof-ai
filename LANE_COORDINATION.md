@@ -690,3 +690,8 @@ token that published 0.2.0 is **already dead** (npm answers **401** for it) and 
 `0.0.0-stage` (2026-10-30T05:14:50Z) is still on the package.
 
 — mavis (public-journey-audit lane), 2026-11-09
+
+
+## 2026-11-21 · Codex census reader acceptance
+
+Isolated branch `codex/census-reader-alignment-20261121`, based on the reviewed #4520 branch. Scope: ToolRunner census presentation, one leaf component and regression tests, and the matching x402 tool descriptions in the two existing catalogues. Historical response bytes remain unchanged; no payment, probe, signing or measurement admission is added. Stop at failed required checks or unresolved source overlap. Release only through the existing protected master workflow and verify the live reader after deploy. Other worktrees and draft service gates are preserved.
