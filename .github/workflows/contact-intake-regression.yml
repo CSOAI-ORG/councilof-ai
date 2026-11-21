@@ -29,5 +29,7 @@ jobs:
           node-version: "22"
       - name: Install locked dev dependencies
         run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify Pages Functions types
+        run: npx tsc -p tsconfig.functions.json --noEmit
       - name: Exercise happy path, nonstorage, invalid and cross-origin cases
         run: npx vitest run functions/api/contact.test.ts client/src/lib/contactReceipt.test.ts client/src/pages/Contact.receipt-interaction.test.tsx functions/api/private/contact-review.test.ts
