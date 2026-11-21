@@ -49,6 +49,10 @@ jobs:
         working-directory: spaces/inspect-evidence
         run: python tools/verify_manifest.py .
 
+      - name: Verify third-party dataset notices (not legal clearance)
+        working-directory: spaces/inspect-evidence
+        run: python tools/verify_release_notices.py .
+
       - name: Install Hub client
         if: ${{ !inputs.dry_run }}
         run: python -m pip install --quiet "huggingface_hub==1.26.0"
