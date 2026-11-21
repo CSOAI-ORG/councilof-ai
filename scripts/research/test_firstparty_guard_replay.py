@@ -44,6 +44,18 @@ class GuardReplayTests(unittest.TestCase):
         self.assertEqual(m.check_record(r)["fn"],1)
         self.assertEqual(m.canonical(r)["state"],"DIVERGENT")
 
+    def test_near_threshold_scores_keep_exact_decision_precision(self):
+        scores=(0.4999998,0.5000002,0.3,0.09,0.9999998,0.5,1.0,0.99)
+        r=sample(scores=scores)
+        self.assertEqual(r["cases"][0]["probability_injection"],0.4999998)
+        self.assertIs(r["cases"][0]["predicted_injection"],False)
+        self.assertEqual(r["cases"][1]["probability_injection"],0.5000002)
+        self.assertIs(r["cases"][1]["predicted_injection"],True)
+        self.assertEqual(r["cases"][5]["probability_injection"],0.5)
+        self.assertIs(r["cases"][5]["predicted_injection"],True)
+        self.assertEqual(m.check_record(r),m.counts(r["cases"]))
+        self.assertEqual(m.canonical(r)["state"],"DIVERGENT")
+
     def test_benign_input_hash_tamper_is_rejected(self):
         r=sample()
         r["cases"][0]["text_sha256"]="0"*64
