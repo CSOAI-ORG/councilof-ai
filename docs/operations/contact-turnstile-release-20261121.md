@@ -6,7 +6,7 @@
 
 - The **primary customer action remains a local email draft**. Opening it is not sending it; the person must press Send in their own email app.
 - **Store a copy (no email sent)** is optional. Without a configured public Turnstile sitekey, its button is disabled and a readable email fallback remains available.
-- The browser renders an explicit Turnstile challenge with action `contact_enquiry` and sends `turnstile_token` only with that optional POST. Successful or unsuccessful POSTs reset the challenge, because tokens are single-use (subject to propagation caveats).
+- The browser only loads the third-party Turnstile widget **after the visitor explicitly chooses optional storage verification**; email-only visitors are not required to load it. The challenge uses action `contact_enquiry` and sends `turnstile_token` only with that optional POST. Successful or unsuccessful POSTs reset the challenge, because tokens are single-use (subject to propagation caveats).
 - `POST /api/contact` checks the existing form validations, LEADS binding, then requires `CONTACT_TURNSTILE_SECRET` and a server-side Siteverify response proving `success === true`, exact request hostname and action `contact_enquiry` **before any KV write**.
 - Missing key, missing/oversized token, wrong action or hostname, replay/denial, HTTP failure, invalid JSON, or Siteverify timeout means **no KV put**. Invalid or unconfigured challenges are explicitly classified as known pre-write rejection, not as an ambiguous storage failure.
 - The challenge token and secret are **never written** into LEADS, URLs, analytics, public proof records, GitHub commits, or operator-queue responses. This branch does not send mail, read existing leads, use a paid model, or create schedules.
