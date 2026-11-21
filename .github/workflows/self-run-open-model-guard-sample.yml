@@ -224,3 +224,41 @@ jobs:
           assert e['signature'] is None
           print('Independent-job file reconstruction OK; no external witness or GSPC admission.')
           PY
+
+  # GitHub build provenance is cryptographically verifiable workflow/artifact origin.
+  # It is NOT a GSPC signing, a truth guarantee, human review or institutionally
+  # independent verification. OIDC signing permission is NEVER given to PR jobs.
+  attest-research-provenance:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    needs: independent-job-integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: open-model-guard-firstparty-evidence
+          path: verified
+      - name: Refuse incomplete release packet
+        run: |
+          for f in model-sample.json model-evidence-event.json composed-effects.json \
+            external-116-eval.json external-116-event.json external-116-error-review.json \
+            japanese-60-eval.json japanese-60-event.json; do
+            test -s "verified/$f" || { echo "missing $f" >&2; exit 1; }
+          done
+      - name: Attest exact research artifact bytes under GitHub workflow identity
+        uses: actions/attest@v4
+        with:
+          subject-path: 'verified/*.json'
+      - name: Stranger-reproducible provenance check with GitHub CLI
+        run: |
+          for file in verified/*.json; do
+            gh attestation verify "$file" -R "$GITHUB_REPOSITORY"
+          done
+      - name: Separate scope declaration
+        run: |
+          echo 'Provenance signed by GitHub workflow identity, not a qualified human or an independent safety authority.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'These are self-run, unsigned GSPC-compatible evidence events. No board admission or safety certification.' >> "$GITHUB_STEP_SUMMARY"
