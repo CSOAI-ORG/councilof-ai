@@ -6,7 +6,7 @@ import { Mail, MapPin, Clock, Send } from 'lucide-react';
 import PlainEmail, { CONTACT_MAILBOX } from '@/components/PlainEmail';
 import { enquiryPreset, prepareContactEmail } from '@/lib/pilotEnquiry';
 import { BUYING_LINES } from '@/lib/buying';
-import { formatStoredContactReceipt } from '@/lib/contactReceipt';
+import { formatStoredContactReceipt, formatUnconfirmedContactSubmission } from '@/lib/contactReceipt';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -55,7 +55,7 @@ export default function Contact() {
       if (!res.ok || data.stored !== true || !data.receipt_id) throw Error(data.code || "INTAKE_UNAVAILABLE");
       setSubmitFeedback(formatStoredContactReceipt(data.receipt_id, submittedRevision === formRevision.current, CONTACT_MAILBOX));
     } catch {
-      setSubmitFeedback("Storage was not confirmed and nothing was sent. Please use the email draft or copy option to contact " + CONTACT_MAILBOX + ".");
+      setSubmitFeedback(formatUnconfirmedContactSubmission(CONTACT_MAILBOX));
     } finally {
       setSubmitting(false);
     }
