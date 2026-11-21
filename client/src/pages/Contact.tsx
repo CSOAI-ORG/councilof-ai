@@ -231,13 +231,22 @@ export default function Contact() {
                     data-testid="contact-message-input"
                   />
                 </div>
-                <Button type="submit" disabled={submitting} size="lg" className="w-full bg-primary hover:bg-brand-institutional" data-testid="contact-submit-button">
+                {emailDraft.mailto ? (
+                  <a
+                    href={emailDraft.mailto}
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground hover:bg-brand-institutional focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    data-testid="contact-primary-email-link"
+                  >
+                    <Mail className="h-4 w-4 mr-2" aria-hidden="true" />
+                    Open email draft to contact Council (press Send in your email app)
+                  </a>
+                ) : null}
+                <Button type="submit" disabled={submitting} variant="outline" size="lg" className="w-full" data-testid="contact-submit-button">
                   <Send className="h-4 w-4 mr-2" />
                   {submitting ? "Storing…" : "Store a copy (no email sent)"}
                 </Button>
                 {submitFeedback ? <p role="status" aria-live="polite" className="rounded-lg border border-border p-3 text-sm text-foreground" data-testid="contact-submission-status">{submitFeedback}</p> : null}
                 <div className="flex flex-wrap items-center gap-3">
-                  {emailDraft.mailto ? <a href={emailDraft.mailto} className="inline-flex min-h-11 items-center rounded-lg border border-input px-4 py-2 text-sm font-medium">Open email draft instead</a> : null}
                   <Button type="button" variant="outline" onClick={() => void copyEnquiry()} data-testid="contact-copy-button">
                     Copy enquiry text
                   </Button>
