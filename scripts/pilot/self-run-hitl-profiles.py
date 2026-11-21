@@ -87,8 +87,30 @@ def inspect_receipt(receipt):
                 b["authority_epoch"].startswith("demo-epoch-"), "outside synthetic fixture")
         require(b.get("declared_decision") in ("APPROVE", "DENY"),
                 "unexpected declaration")
+        supplied_pin = b.get("supplied_authority_pin")
+        require(supplied_pin == "" if case["scenario"] == "missing_pin"
+                else is_hex(supplied_pin), "caller-supplied authority pin missing")
+        actual_match = supplied_pin == b["authority_sha256"]
+        expected_match = case["scenario"] not in (
+            "substituted_trust_key", "unrevoked_by_folder_writer", "missing_pin")
+        require(actual_match is expected_match
+                and b.get("caller_pin_matches_captured_authority") is actual_match,
+                "caller pin and captured authority mismatch is unaccounted")
         for key in ("decided_at_ms", "expires_at_ms", "execution_at_ms"):
             dt(b.get(key))
+        invocation_input = {
+            "scenario": case["scenario"],
+            "at": b["execution_at_ms"],
+            "request_sha256": b["request_sha256"],
+            "approval_sha256": b["approval_sha256"],
+            "authority_sha256": b["authority_sha256"],
+            "supplied_authority_pin": supplied_pin,
+            "execution": case.get("execution"),
+        }
+        expected_invocation_sha = sha(json.dumps(
+            invocation_input, ensure_ascii=False, separators=(",", ":")).encode("utf8"))
+        require(expected_invocation_sha == b["invocation_sha256"],
+                "invocation digest does not bind supplied pin and execution inputs")
         require(type(case.get("reasons")) is list and
                 all(type(v) is str and v for v in case["reasons"]),
                 "guard reason list missing")
@@ -121,7 +143,8 @@ def records(receipt, receipt_bytes, source_commit):
             "sha256:" + receipt_digest,
             "sha256:" + b["request_sha256"],
             "sha256:" + b["approval_sha256"],
-            "sha256:" + b["authority_sha256"]
+            "sha256:" + b["authority_sha256"],
+            "sha256:" + sha(b["supplied_authority_pin"].encode("utf8"))
         ]
         if positive:
             proof_refs.extend(["sha256:" + b["effect_sha256"],
@@ -153,6 +176,10 @@ def records(receipt, receipt_bytes, source_commit):
                 "constraints": [
                     "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
                     "fixture:" + c["scenario"],
+                    "caller-supplied-authority-pin:" +
+                      (b["supplied_authority_pin"] or "EMPTY"),
+                    "caller-pin-equals-captured-authority:" +
+                      str(b["caller_pin_matches_captured_authority"]).lower(),
                     "authority validity depends on test guard; the declaration is not a valid live grant"
                 ]
             },
