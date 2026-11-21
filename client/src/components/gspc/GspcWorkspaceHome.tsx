@@ -33,6 +33,7 @@ import {
   type LiveRead,
 } from "./useLiveJson";
 import { useModelsCount } from "./useModelsCount";
+import { freeToolsFigure } from "./useLiveJson";
 import { checkWords, chipOf, countsLine, dayLabel, readClaimChecks, registryWords, STATUS_WORDS } from "./claimChecks";
 import { FREE_TOOL_NAMES, FREE_TOOLS } from "@/lib/mcpTools";
 import GetResults from "./GetResults";
@@ -481,7 +482,7 @@ export function useFreeDoorToolCount(list: typeof listTools = listTools): LiveRe
       if (cancelled) return;
       setRead(
         reply.state === "ok"
-          ? { state: "ok", data: reply.tools.length, error: null }
+          ? { state: "ok", data: { count: reply.tools.length, read_at: reply.read_at ?? null }, error: null }
           : { state: "error", data: null, error: "tools/list on /mcp/free did not answer" },
       );
     });
@@ -545,7 +546,7 @@ export default function GspcWorkspaceHome({
       figure: (
         <LiveFigureLine
           read={toolsRead}
-          pick={(n) => (typeof n === "number" ? { value: String(n), label: "free tools, no account", source: "POST https://councilof.ai/mcp/free → tools/list (the door this card installs; the paid tools are on /mcp only) · declared by tools/list; a tool is runtime-observed only after its own tools/call", as_of: null } : null)}
+          pick={freeToolsFigure}
           testId="ws-fig-connect"
         />
       ),

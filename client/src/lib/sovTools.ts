@@ -36,7 +36,9 @@ export type ToolResult = {
 
 // The live, server-executed governance tools (govern, sign, verify, talk, agent-card).
 export type ToolListing =
-  | { state: "ok"; tools: SovTool[] }
+  /** read_at: when the door answered this tools/list (ISO 8601 UTC). A cached listing keeps the time
+   *  of the read it came from, so a count shown with it is dated by the read, not by the render. */
+  | { state: "ok"; tools: SovTool[]; read_at?: string }
   | { state: "unreachable"; reason: string };
 
 /**
@@ -65,7 +67,7 @@ export async function listTools(door: McpDoor = "/mcp"): Promise<ToolListing> {
     else {
       const tools = d && d.result && d.result.tools;
       if (!Array.isArray(tools)) listing = { state: "unreachable", reason: "the reply carried no tools list" };
-      else listing = { state: "ok", tools };
+      else listing = { state: "ok", tools, read_at: new Date().toISOString() };
     }
     listCache.set(door, { at: Date.now(), listing });
     return listing;

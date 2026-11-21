@@ -116,3 +116,22 @@ export function exercisesFigure(doc: unknown): Figure | null {
   if (!Array.isArray(list) || list.length === 0) return null;
   return { value: String(list.length), label: "exercises that reproduce a published figure", source: "/academy/exercises/exercises.json", as_of: str(rec(doc)?.date_published) };
 }
+
+/**
+ * POST /mcp/free → tools/list, as read by useFreeDoorToolCount ({ count, read_at }). The figure's
+ * date is the time the door answered that tools/list (E2E 2026-11-20: the tile printed "Source date
+ * not supplied" for a number that had been read seconds earlier). It is the read time, not a deploy
+ * date: a tool is declared by tools/list and runtime-observed only after its own tools/call. When the
+ * read carries no time the tile still says "not supplied" rather than printing the render time.
+ */
+export function freeToolsFigure(read: unknown): Figure | null {
+  const r = rec(read);
+  const n = int(r?.count);
+  if (n === null) return null;
+  return {
+    value: String(n),
+    label: "free tools, no account",
+    source: "POST https://councilof.ai/mcp/free → tools/list (the door this card installs; the paid tools are on /mcp only) · declared by tools/list; a tool is runtime-observed only after its own tools/call",
+    as_of: str(r?.read_at),
+  };
+}
