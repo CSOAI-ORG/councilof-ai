@@ -1,0 +1,39 @@
+{
+  "title": "Wrapped-Asset Parity Ledger",
+  "id": "nicktempleman/csoai-wrapped-asset-parity",
+  "id_no": 12264053,
+  "subtitle": "Mirror of Hugging Face csoai/wrapped-asset-parity",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-wrapped-asset-parity`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-wrapped-asset-parity -p ./dataset --unzip\n```\n\nStart by inspecting `records.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `records.jsonl`\n- `wrapped-asset-parity.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/wrapped-asset-parity at revision `24e435ef72089eb28a3e91ec1b4dee6e5b61b834`, made 2026-09-29. The Hugging Face copy is the original; if the two differ, it wins.\n\n# Wrapped-Asset Parity Ledger\n\n**Council of AI · CSOAI Ltd (UK #16939677)** · live source `https://councilof.ai/interop/wrapped-asset-parity-latest.json` · door `GET https://councilof.ai/api/wrapper?id=\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-09-29.\n- 3 files, 57,524 bytes. File types: .md (1), .jsonl (1), .json (1).\n- Related Hugging Face repository: [csoai/wrapped-asset-parity](https://huggingface.co/datasets/csoai/wrapped-asset-parity). No byte-identical files were found, so treat it as related, not a mirror.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_wrapped_asset_parity,\n  title        = {Wrapped-Asset Parity Ledger},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/wrapped-asset-parity},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software",
+    "computer vision"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. Related Hugging Face repository: [csoai/wrapped-asset-parity](https://huggingface.co/datasets/csoai/wrapped-asset-parity) (no byte-identical files found on 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 10,898 bytes."
+    },
+    {
+      "path": "records.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 24 rows; fields: id (string), wrapped_chain (string), wrapped_symbol (string), wrapped_address (string), canonical_chain (string), canonical_symbol (string), backing_model (string), escrow (string), state (string), wrapped_total_supply (string), escrow_balance (string), escrow_over_wrapped (string), wrapped_block (integer), canonical_block (integer), as_of (datetime), note (string). 9,991 bytes."
+    },
+    {
+      "path": "wrapped-asset-parity.json",
+      "description": "JSON document. Provisional, from a differently-sized HF copy: top-level keys: schema, reader_revision, as_of, attests, states, terms_boundary, correction_link, license, pins, counts, records, profile_rule, documentary. `records` holds 24 records with fields: id (string), wrapped (string), canonical (string), backing_model (string), escrow (string), escrow_name (string), note (string), reads (string), state (string), error (string), escrow_over_wrapped (string), profile (string). 36,635 bytes."
+    }
+  ]
+}
