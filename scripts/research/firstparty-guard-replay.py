@@ -104,7 +104,7 @@ def canonical(record):
                   "model_revision": REVISION, "weight_sha256": WEIGHT_SHA256,
                   "fixture_sha256": record["fixtures_sha256"]},
         observed={"tp": record["tp"], "tn": record["tn"], "fp": record["fp"],
-                  "fn": record["fn"], "model_weight_sha256": record["model_weight_sha256"],
+                  "fn": record["fn"], "model_weight_sha256": record["model_file_sha256"],
                   "normalizer_sha256": record["normalizer_sha256"],
                   "observed_at": record["observed_at"], "scope": "FIRST_PARTY_SYNTHETIC",
                   "real_tool_effects_observed": False, "gspc_admitted": False},
