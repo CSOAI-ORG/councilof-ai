@@ -168,12 +168,14 @@ export function runFixture(scenario, at = Date.now()) {
     const invocationInput = {
       scenario, at, request_sha256: sha256(reqBytes),
       approval_sha256: sha256(approvalBytes), authority_sha256: sha256(authorityBytes),
-      execution: execResult.state
+      supplied_authority_pin: pin, execution: execResult.state
     };
     const binding = {
       request_sha256: invocationInput.request_sha256,
       approval_sha256: invocationInput.approval_sha256,
       authority_sha256: invocationInput.authority_sha256,
+      supplied_authority_pin: pin,
+      caller_pin_matches_captured_authority: pin === invocationInput.authority_sha256,
       request_id: req.id,
       action: req.action,
       resource_ref: req.resource,
