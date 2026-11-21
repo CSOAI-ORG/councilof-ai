@@ -64,7 +64,7 @@ node scripts/research/composed-guard-effect-demo.mjs --verify \
   new-layered-demo.json
 ~~~
 
-The model predicts; the existing exact-authority host fixture checks execution. This is the architectural division between an external detector and MEOK's future operating enforcement. The real human authority, distributed lease and production-specific tool binding remain unqualified.
+The synthetic action scope comes from [`firstparty-action-scope.json`](../../../scripts/research/firstparty-action-scope.json), **not** the example's known injection label. A regression test changes an attack's requested action to a permitted action after a model miss and confirms the action can still execute. Host scope is not a semantic safety guarantee. The sample's tool requests are preselected by the research author; a real LLM has not proposed or executed them.\n\nThe broader [116-case published-source evaluation](../external-guard-benchmark-20261121/README.md) found **19 false negatives among 60 labelled injections** at threshold 0.5; it is not an unseen holdout. Those misses enter a hashed, non-training review register, rather than disappearing behind the eight selected examples.\n\nThe model predicts; the existing exact-authority host fixture checks execution. This is the architectural division between an external detector and MEOK's future operating enforcement. The real human authority, distributed lease and production-specific tool binding remain unqualified.
 
 ## GSPC and MEOK interpretation
 
