@@ -45,6 +45,7 @@ beforeEach(() => {
   document.body.appendChild(host);
   root = createRoot(host);
   act(() => { root.render(<Contact />); });
+  expect(document.querySelector('[data-testid="contact-submit-button"]')?.textContent).toContain("Store a copy (no email sent)");
 });
 
 afterEach(() => {
@@ -75,7 +76,7 @@ describe("contact enquiry: real page state transitions", () => {
     expect(status?.textContent).toContain("An earlier version");
     expect(status?.textContent).toContain("subsequent edits were not submitted");
     expect(status?.textContent).toContain(id);
-    expect(status?.textContent).toContain("No email notification was sent");
+    expect(status?.textContent).toContain("NOT been notified");
     expect((document.querySelector('[data-testid="contact-message-input"]') as HTMLTextAreaElement).value)
       .toBe("I changed this message before the receipt arrived.");
   });

@@ -233,7 +233,7 @@ export default function Contact() {
                 </div>
                 <Button type="submit" disabled={submitting} size="lg" className="w-full bg-primary hover:bg-brand-institutional" data-testid="contact-submit-button">
                   <Send className="h-4 w-4 mr-2" />
-                  {submitting ? "Submitting…" : "Submit enquiry"}
+                  {submitting ? "Storing…" : "Store a copy (no email sent)"}
                 </Button>
                 {submitFeedback ? <p role="status" aria-live="polite" className="rounded-lg border border-border p-3 text-sm text-foreground" data-testid="contact-submission-status">{submitFeedback}</p> : null}
                 <div className="flex flex-wrap items-center gap-3">

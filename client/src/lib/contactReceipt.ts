@@ -6,7 +6,7 @@ export function formatStoredContactReceipt(receiptId: string, unchanged: boolean
   const scope = unchanged
     ? `Stored with reference ${receiptId}.`
     : `An earlier version of your enquiry was stored with reference ${receiptId}; your subsequent edits were not submitted. Submit again to store those edits.`;
-  return `${scope} No email notification was sent. For time-sensitive requests, email ${mailbox} directly.`;
+  return `${scope} The Council team has NOT been notified and this is not a request for a reply. To reach us, send the prepared email using ‘Open email draft instead’ below or write to ${mailbox}.`;
 }
 
 /**
@@ -14,7 +14,7 @@ export function formatStoredContactReceipt(receiptId: string, unchanged: boolean
  * the request before the network failed; avoid prompting an automatic retry.
  */
 export function formatUnconfirmedContactSubmission(mailbox: string): string {
-  return `No storage receipt was returned. Delivery and storage are unconfirmed; this request may have reached the server. Please do not assume it failed or resubmit solely because of this message. The form sends no automatic email notification. Use the email draft or copy option to contact ${mailbox} if necessary.`;
+  return `No storage receipt was returned. Delivery and storage are unconfirmed; this request may have reached the server. Please do not assume it failed or resubmit solely because of this message. This form does not notify the Council team. Use the email draft or copy option to contact ${mailbox} if necessary.`;
 }
 
 /**
@@ -55,5 +55,5 @@ export function classifyContactResponse(status: number, value: unknown): Contact
 }
 
 export function formatRejectedContactSubmission(mailbox: string): string {
-  return `The intake service rejected this attempt before storage. No receipt was issued or automatic email sent. Check the form or contact ${mailbox} using the email draft instead.`;
+  return `The intake service rejected this attempt before storage. No receipt was issued and the Council team was not notified. Check the form or contact ${mailbox} using the email draft instead.`;
 }
