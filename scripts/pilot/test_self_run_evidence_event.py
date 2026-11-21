@@ -25,7 +25,7 @@ def receipt():
             "approval_sha256": hashlib.sha256(("approval" + str(i)).encode()).hexdigest(),
             "authority_sha256": hashlib.sha256(("authority" + str(i)).encode()).hexdigest(),
             "scope_sha256": hashlib.sha256(("scope" + str(i)).encode()).hexdigest(),
-            "invocation_sha256": hashlib.sha256(("invocation" + str(i)).encode()).hexdigest(),
+            "invocation_sha256": "",
             "request_id": "demo-request-001", "action": "append_bounded_marker",
             "resource_ref": "local:effects.jsonl", "decision_id": "demo-approval-001",
             "declared_decision": "DENY" if scenario == "deny" else "APPROVE",
@@ -38,6 +38,26 @@ def receipt():
             "authenticated_human": False,
             "source": "OWNED_LOCAL_TEST_FIXTURE"
         }
+        supplied_pin = (
+            "" if scenario == "missing_pin"
+            else hashlib.sha256(("older-pin" + str(i)).encode()).hexdigest()
+            if scenario in ("substituted_trust_key", "unrevoked_by_folder_writer")
+            else binding["authority_sha256"]
+        )
+        binding["supplied_authority_pin"] = supplied_pin
+        binding["caller_pin_matches_captured_authority"] = (
+            supplied_pin == binding["authority_sha256"])
+        invocation_input = {
+            "scenario": scenario,
+            "at": T,
+            "request_sha256": binding["request_sha256"],
+            "approval_sha256": binding["approval_sha256"],
+            "authority_sha256": binding["authority_sha256"],
+            "supplied_authority_pin": supplied_pin,
+            "execution": "EXECUTED" if positive else "DENIED",
+        }
+        binding["invocation_sha256"] = hashlib.sha256(json.dumps(
+            invocation_input, separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         cases.append({
             "scenario": scenario,
             "execution": "EXECUTED" if positive else "DENIED",
@@ -149,6 +169,32 @@ class TestSelfRun(unittest.TestCase):
         r = receipt()
         r["cases"][0]["binding"]["effect_sha256"] = None
         with self.assertRaisesRegex(ValueError, "positive effect evidence"):
+            proof(r)
+
+    def test_source_pin_mismatch_denials_are_explicit_and_digest_bound(self):
+        r = receipt()
+        pack = proof(r)
+        bad = {"substituted_trust_key", "unrevoked_by_folder_writer", "missing_pin"}
+        for case, item in zip(r["cases"], pack):
+            b = case["binding"]
+            self.assertEqual(
+                b["caller_pin_matches_captured_authority"],
+                case["scenario"] not in bad)
+            self.assertIn(
+                "caller-supplied-authority-pin:" +
+                (b["supplied_authority_pin"] or "EMPTY"),
+                item["authority"]["constraints"])
+        self.assertEqual(r["cases"][-1]["binding"]["supplied_authority_pin"], "")
+        self.assertEqual(len(pack), 14)
+
+    def test_caller_pin_tampering_is_refused(self):
+        r = receipt()
+        r["cases"][0]["binding"]["supplied_authority_pin"] = "0" * 64
+        with self.assertRaisesRegex(ValueError, "caller pin"):
+            proof(r)
+        r = receipt()
+        r["cases"][1]["binding"]["invocation_sha256"] = "0" * 64
+        with self.assertRaisesRegex(ValueError, "invocation digest"):
             proof(r)
 
     def test_profile_contract_has_real_request_effect_and_verification(self):
