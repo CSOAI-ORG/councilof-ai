@@ -6,6 +6,7 @@ import { Mail, MapPin, Clock, Send } from 'lucide-react';
 import PlainEmail, { CONTACT_MAILBOX } from '@/components/PlainEmail';
 import { enquiryPreset, prepareContactEmail } from '@/lib/pilotEnquiry';
 import { BUYING_LINES } from '@/lib/buying';
+import { formatStoredContactReceipt } from '@/lib/contactReceipt';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ export default function Contact() {
   const [submitFeedback, setSubmitFeedback] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const copyRevision = useRef(0);
+  const formRevision = useRef(0);
 
   useEffect(() => {
     document.title = 'Contact — Council of AI';
@@ -39,17 +41,19 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
+    const submittedRevision = formRevision.current;
+    const submittedForm = { ...formData, website: "" };
     setSubmitting(true);
     setSubmitFeedback("");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...formData, website: "" }),
+        body: JSON.stringify(submittedForm),
       });
       const data = await res.json() as { stored?: boolean; receipt_id?: string; code?: string };
       if (!res.ok || data.stored !== true || !data.receipt_id) throw Error(data.code || "INTAKE_UNAVAILABLE");
-      setSubmitFeedback("Stored with reference " + data.receipt_id + ". No email notification was sent. For time-sensitive requests, email " + CONTACT_MAILBOX + " directly.");
+      setSubmitFeedback(formatStoredContactReceipt(data.receipt_id, submittedRevision === formRevision.current, CONTACT_MAILBOX));
     } catch {
       setSubmitFeedback("Storage was not confirmed and nothing was sent. Please use the email draft or copy option to contact " + CONTACT_MAILBOX + ".");
     } finally {
@@ -72,6 +76,8 @@ export default function Contact() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     ++copyRevision.current;
+    ++formRevision.current;
+    setSubmitFeedback("");
     setFormData(prev => ({ ...prev, [name]: value }));
     setCopyFeedback("");
   };
