@@ -36,6 +36,8 @@ describe("working-group human-oversight readback", () => {
       if (String(input) === "/api/hitl") return json({
         schema: "csoai.hitl-companion-state/0.1",
         module_count: 34, review_queue_summary: { PENDING: 3, APPROVED: 2 },
+        store_bound: true,
+        counts_are: "counts in a bounded, eventually consistent view of challenges and historical decisions; not current execution authority",
         assessment_scope: {
           operator_identity: "NOT_VERIFIED", human_presence: "NOT_ESTABLISHED",
           professional_competence: "NOT_ASSESSED", execution_authority: false,
@@ -59,6 +61,31 @@ describe("working-group human-oversight readback", () => {
     expect(c.textContent).toContain("does not create a new GSPC axis");
     expect(c.querySelector('a[href="/api/hitl/record"]')).not.toBeNull();
     expect(c.querySelector('a[href="/dispute/"]')).not.toBeNull();
+  });
+
+  it("does not show empty-ledger zeros as a pending-challenge count when no decision store is bound", async () => {
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+      if (String(input) === "/api/hitl") return json({
+        schema: "csoai.hitl-companion-state/0.1",
+        module_count: 34, review_queue_summary: { PENDING: 0, APPROVED: 0 },
+        store_bound: false,
+        counts_are: "an empty ledger — no decision store is bound, so these zeros are not a claim that nothing was ever decided",
+        assessment_scope: {
+          operator_identity: "NOT_VERIFIED", human_presence: "NOT_ESTABLISHED",
+          professional_competence: "NOT_ASSESSED", execution_authority: false,
+        },
+      });
+      return json({
+        schema: "csoai.gspc-axes/0.5",
+        totals: { axes: 34, measured_axes: 34, comparison_axes: 14,
+          separated_leads: 0, ties: 7, untested_separations: 7 },
+      });
+    });
+    const c = await mount();
+    const reading = c.querySelector('[data-testid="wg-hitl-live"]')?.textContent ?? "";
+    expect(reading).toContain("Queue count unavailable: no decision store is bound.");
+    expect(reading).toContain("these zeros are not a claim that nothing was ever decided");
+    expect(reading).not.toContain("0 pending challenges");
   });
 
   it("does not convert API failures or bad schemas into a human PASS or a measured zero", async () => {
