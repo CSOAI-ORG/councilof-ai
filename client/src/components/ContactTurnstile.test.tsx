@@ -42,6 +42,10 @@ describe("optional human verification", () => {
     const onToken = vi.fn();
 
     act(() => root.render(<ContactTurnstile onToken={onToken} resetRevision={0} />));
+    expect(render).not.toHaveBeenCalled();
+    const enable = host.querySelector('[data-testid="contact-challenge-enable"]') as HTMLButtonElement;
+    expect(enable?.textContent).toContain("Enable verification");
+    act(() => enable.click());
     expect(render).toHaveBeenCalledTimes(1);
     expect(config.sitekey).toBe("synthetic-public-sitekey");
     expect(config.action).toBe("contact_enquiry");
