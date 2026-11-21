@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatStoredContactReceipt } from "./contactReceipt";
+import { formatStoredContactReceipt, formatUnconfirmedContactSubmission } from "./contactReceipt";
 
 describe("contact receipt is bound to the submitted revision", () => {
   const receipt = "a1b2c3";
@@ -21,5 +21,14 @@ describe("contact receipt is bound to the submitted revision", () => {
     expect(text).toContain("your subsequent edits were not submitted");
     expect(text).toContain("Submit again");
     expect(text).toContain("No email notification was sent.");
+  });
+
+  it("does not convert a lost response into a false claim that nothing reached storage", () => {
+    const text = formatUnconfirmedContactSubmission(mailbox);
+    expect(text).toContain("storage are unconfirmed");
+    expect(text).toContain("may have reached the server");
+    expect(text).toContain("do not assume it failed");
+    expect(text).toContain(mailbox);
+    expect(text).not.toMatch(/nothing was sent|not stored|failed to store/i);
   });
 });
