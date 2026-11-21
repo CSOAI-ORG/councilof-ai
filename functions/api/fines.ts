@@ -11,11 +11,16 @@
  * NEVER "every problem of every AI company" — absolutist phrasing fails the publication
  * gate. An entry not verified on the date claimed is stated UNMEASURED, never a fake 0.
  *
- * PROVENANCE (restored 2026-08-26). The rows below are the same rows the site already
- * publishes at /first-fine-watch (client/src/data/enforcement.ts) and sells as data at
- * /api/signed-data-feed (then /api/eunomia-data) — landed by 33a26615 on 2026-08-24. They are NOT re-derived here and
- * carry no fresher claim than that review. Every row is REPORTED (a public secondary
- * record), not MEASURED by us; `verified` says so per row.
+ * PROVENANCE (re-reviewed 2026-11-07). The rows below are the same rows the site publishes at
+ * /first-fine-watch (client/src/data/enforcement.ts) and sells as data at /api/signed-data-feed.
+ * On 2026-11-07 every row was re-verified against a PRIMARY source — a regulator's own decision,
+ * order, judgment or statute text — and `verified` says per row what was opened. The review
+ * record, with every URL and the verbatim text relied on, is published beside this file at
+ * docs/research/FINES-REFRESH-RESEARCH-2026-11-07.md.
+ *
+ * The corrections that review forced are published in `corrections_2026_11_07` below. The estate
+ * rule is that a dated record is not rewritten silently: the error, the corrected row and the
+ * primary source are all visible, so a reader can see what changed and check it.
  *
  * The feed is Ed25519-signed with the board-attestation key (#board-attestation-1, the
  * same key /api/gspc and /api/clarity use). No key present -> NO signature field: honest
@@ -27,7 +32,7 @@
  */
 import { headFromGet } from "./_head";
 
-const AS_OF = "2026-08-24"; // date the rows below were last reviewed (commit 33a26615)
+const AS_OF = "2026-11-07"; // date the rows below were last reviewed against primary sources
 const POWERS_LIVE = "2026-08-02"; // EU AI Act Art 101 GPAI fining powers switched on
 
 // Whole days between two corpus dates. Data in, data out — never Date.now().
@@ -41,36 +46,55 @@ const CORPUS = {
   as_of: AS_OF,
   freshness: {
     rows_last_reviewed: AS_OF,
-    reviewed_against: "public secondary sources; no row re-verified against a primary regulator filing on this date",
+    reviewed_against: "every row re-verified against a primary regulator source on 2026-11-07 (a decision, order, judgment or statute text); the review record and every URL are published at docs/research/FINES-REFRESH-RESEARCH-2026-11-07.md",
     rule: "as_of is the review date carried by the corpus, never the time this request was served",
   },
   first_fine_watch: {
     eu_ai_act_fines_collected_eur: 0,
     enforcement_powers_live_since: POWERS_LIVE,
+    enforcement_powers_scope: "this is the date Art 101 (GPAI fines) applies, not a general enforcement date: Art 113(b) expressly carves Article 101 out of the 2 Aug 2025 batch, while the Art 99(1)-(11) operator penalties have applied since 2 Aug 2025",
     days_since_powers_live: daysBetween(POWERS_LIVE, AS_OF),
     days_since_powers_live_derivation: `as_of (${AS_OF}) minus enforcement_powers_live_since (${POWERS_LIVE}) — derived from corpus dates, not from the request clock`,
-    maximal_exposure: "Art 101 GPAI — EUR 35M or 7% of worldwide turnover, whichever is higher",
-    sentence: `EU AI Act enforcement powers switched ON ${POWERS_LIVE} (Art 101 GPAI fining up to EUR 35M / 7%). Fines collected as at ${AS_OF}: EUR 0.`,
+    maximal_exposure: "Art 101 GPAI — EUR 15 000 000 or 3 % of annual total worldwide turnover, whichever is higher (Art 101(1)); the 'EUR 35M / 7 %' pair is the Art 99(3) prohibited-practices tier and does not apply to GPAI providers",
+    sentence: `EU AI Act Art 101 (GPAI fines) applies from ${POWERS_LIVE} (fines up to EUR 15 000 000 or 3 % of worldwide turnover, whichever is higher). Fines collected as at ${AS_OF}: EUR 0.`,
+    first_process_steps: "the first Art 101 process steps have occurred and are requests for information under Art 91, not fines; no Art 101 fine was found as at 2026-11-07",
     zero_is_measured: "EUR 0 is an observed absence of any published Art 101 fine as at as_of — not an unmeasured cell defaulted to zero",
     page: "/first-fine-watch",
     verify_free: true,
     certification: false,
   },
   fines_by_jurisdiction: [
-    { jurisdiction: "EU/UK/IT", actor: "Clearview AI", regime: "GDPR", amount: ">EUR 100M", note: "cumulative across multiple supervisory authorities; GDPR route, pre-AIA", verified: "REPORTED", status: "cumulative (multi-MSA)" },
-    { jurisdiction: "US", actor: "FTC", regime: "FTC Act / ECOA", amount: "~USD 85M", note: "headline order figure; partly suspended", verified: "REPORTED", status: "order (partly suspended)" },
-    { jurisdiction: "UK", actor: "UK ICO", regime: "UK GDPR", amount: "~GBP 17M", note: "AI-adjacent ICO action, not an AI-Act fine", verified: "REPORTED", status: "AI-adjacent" },
-    { jurisdiction: "IT", actor: "OpenAI", regime: "GDPR", amount: "EUR 15M", note: "annulled — not a collected fine; the annulment month is DISPUTED in our own sources (site data says Mar 2025, the 2026-08-25 recovery draft said Mar 2026) and has not been re-checked against the Garante decision", verified: "REPORTED", annulment_date: "UNVERIFIED", status: "annulled (not a fine)" },
+    { jurisdiction: "EU/UK/IT", actor: "Clearview AI", regime: "GDPR", amount: "EUR 95.7M imposed (EU/EEA) + GBP 7.55M (UK, under appeal)", note: "monetary penalties imposed by IT, GR, FR (incl. a EUR 5.2M CNIL penalty payment) and NL; nothing collected; the UK element was remitted after [2025] UKUT 319 (AAC)", verified: "MEASURED", collected: false, status: "imposed, uncollected; UK element under appeal" },
+    { jurisdiction: "US", actor: "FTC / Helping America Group", regime: "FTC Act + TSR + Florida FDUTPA", amount: "USD 85.66M judgment (partly suspended)", note: "2017-18 debt-relief scheme, FTC + Florida AG; about USD 35M of assets collected and paid to consumers as redress; not an AI action and not a penalty paid to Treasury", verified: "MEASURED", status: "imposed, largely uncollected; redress distributed" },
+    { jurisdiction: "US", actor: "FTC / Air AI", regime: "FTC Act + TSR + Business Opportunity Rule", amount: "USD 18M judgment (largely suspended); USD 50,000 paid", note: "AI business-opportunity earnings claims; 24 Mar 2026; D. Ariz.; not an AI Act fine", verified: "MEASURED", status: "imposed, largely suspended" },
+    { jurisdiction: "UK", actor: "UK ICO", regime: "UK GDPR", amount: "GBP 7.55M (2022, under appeal)", note: "the '~GBP 17M' was a 2021 notice of intent that was never imposed; this is the same actor as the Clearview row, so the two must not be added together", verified: "MEASURED", status: "imposed, under appeal; not collected" },
+    { jurisdiction: "IT", actor: "OpenAI", regime: "GDPR", amount: "EUR 15M", note: "annulled — not a collected fine; the annulment is 18 March 2026 on allocation of competence, not on the merits, and the same judgment declared the interim bond ineffective", verified: "MEASURED", annulment_date: "2026-03-18", deciding_body: "Tribunale di Roma", case_reference: "sentenza n. 4153/2026, R.G. 4785/2025", status: "annulled (not a fine)" },
     { jurisdiction: "EU", actor: "EU AI Act (Art 101 GPAI)", regime: "EU AI Act", amount: "EUR 0", note: "no Art 101 fine published as at as_of", verified: "MEASURED", status: "FIRST-FINE WATCH" },
   ],
   deadlines_calendar: [
-    { event: "Texas AI systems registration portal", date: "2026-09-01", note: "state AI disclosure" },
-    { event: "DRCF (UK) AI disclosure", date: "2026-09-02", note: "Digital Regulation Cooperation Forum" },
-    { event: "EU AI Act Art 50(2) transparency grace ends", date: "2026-12-02", note: "GPAI transparency marking" },
-    { event: "Korea AI Act grace period ends", date: "2027-01-22", note: "Korea AI Basic Act" },
-    { event: "Illinois AI audits (265 ILCS)", date: "2028-01-01", note: "state AI audit" },
+    { event: "Illinois AI Video Interview Act (820 ILCS 42) in force", date: "2020-01-01", note: "employment notice, explanation and consent for AI-analysed video interviews; sharing limited; destruction on request within 30 days — not an audit duty" },
+    { event: "Korea AI Basic Act in force; MSIT grace period on administrative fines begins", date: "2026-01-22", note: "the obligations applied from 22 Jan 2026; MSIT defers fact-finding and fines for 'at least one year' and left the duration unpublished, so there is no published end date" },
+    { event: "Texas AG AI complaints portal goes live (TRAIGA §552.102)", date: "2026-09-01", note: "the attorney general's online reporting mechanism — TRAIGA creates no AI systems registration; the Act took effect 1 Jan 2026" },
+    { event: "DRCF (UK) 'Consumer interest and AI' phase 2 call for input closes", date: "2026-09-02", note: "CMA/FCA/ICO/Ofcom consultation on tools for managing AI risks — a consultation, not a disclosure obligation" },
+    { event: "EU AI Act Art 50(2) compliance for systems placed on the market before 2 Aug 2026", date: "2026-12-02", note: "Art 111(4) as inserted by Reg (EU) 2026/1744 (Digital Omnibus on AI), in force 27 Jul 2026" },
   ],
   correction_59: "Art 73 windows are 15d / 10d / 2d (not 15d / 24h — that was NIS2).",
+  corrections_2026_11_07: {
+    rule: "a dated record is not rewritten silently — the error, the corrected row and the primary source are all published, so a reader can see what changed and check it",
+    review_record: "docs/research/FINES-REFRESH-RESEARCH-2026-11-07.md",
+    corrections: [
+      { row: "first_fine_watch.maximal_exposure", was: "Art 101 GPAI — EUR 35M or 7% of worldwide turnover, whichever is higher", now: "Art 101 GPAI — EUR 15 000 000 or 3 % of annual total worldwide turnover, whichever is higher", why: "Art 101(1) verbatim; EUR 35M / 7 % is the Art 99(3) prohibited-practices tier — a different article and a different authority" },
+      { row: "fines_by_jurisdiction[Clearview AI].amount", was: ">EUR 100M", now: "EUR 95.7M imposed (EU/EEA) + GBP 7.55M (UK, under appeal)", why: "EUR 95.7M is the sum of the EU monetary penalties actually imposed; '>EUR 100M' counted the Dutch DPA's conditional penalty in full and added the disputed UK penalty. No collection is reported" },
+      { row: "fines_by_jurisdiction[FTC].regime", was: "FTC Act / ECOA", now: "FTC Act + TSR + Florida FDUTPA (Helping America Group) — ECOA is not among the violations charged", why: "the old row spliced a USD 85M judgment figure onto a regime tag belonging to a different line. The ECOA auto-dealer line is a separate matter: USD 15.93M across three actions, all paid, with its disparate-impact injunctive relief vacated by the FTC on 7 Aug 2026" },
+      { row: "fines_by_jurisdiction[UK ICO].amount", was: "~GBP 17M", now: "GBP 7.55M (2022, under appeal)", why: "GBP 17M was the 2021 provisional notice of intent; the final monetary penalty notice of 18 May 2022 imposed GBP 7,552,800" },
+      { row: "fines_by_jurisdiction[OpenAI].annulment_date", was: "UNVERIFIED", now: "2026-03-18", why: "the Garante's own site and the judgment text; the site's 'Mar 2025' was the precautionary suspension, not the annulment" },
+      { row: "deadlines_calendar[Texas]", was: "AI systems registration portal", now: "attorney general's complaints portal under TRAIGA §552.102", why: "TRAIGA creates no AI systems registration; the 1 Sep 2026 date is the AG's duty to post the reporting mechanism" },
+      { row: "deadlines_calendar[DRCF (UK)]", was: "AI disclosure", now: "phase 2 call for input on tools for managing AI risks", why: "a consultation response deadline, not a disclosure obligation" },
+      { row: "deadlines_calendar[EU AI Act Art 50(2)]", was: "transparency grace ends", now: "Art 111(4) as inserted by Reg (EU) 2026/1744, scoped to systems placed on the market before 2 Aug 2026", why: "the same date, now pinned to a primary text rather than inherited" },
+      { row: "deadlines_calendar[Korea]", was: "grace period ends 2027-01-22", now: "no published end date; MSIT's floor is 'at least one year' with the duration left unfinalised, and the obligations applied from 22 Jan 2026", why: "the old date was the estate's own arithmetic presented as a deadline the ministry never set" },
+      { row: "deadlines_calendar[Illinois]", was: "AI audits (265 ILCS), 2028-01-01", now: "AI Video Interview Act (820 ILCS 42), in force 1 Jan 2020", why: "the citation, the subject and the date were each wrong: 265 ILCS is not the Act's chapter, it is not an audit duty, and it has been in force since 2020" },
+    ],
+  },
   honest_register: {
     status_vocabulary: "MEASURED / REPORTED / UNMEASURED / UNVERIFIED",
     rule: "an unmeasurable entry is stated UNMEASURED, never defaulted to a fake 0",
