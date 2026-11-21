@@ -61,7 +61,9 @@ permissions:
 jobs:
   sign:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # A mill batch is one board-sign call per card. At 15 minutes the job was cancelled on 11 of
+    # 12 runs from 14 to 20 Nov, so nothing was signed and each batch grew.
+    timeout-minutes: 45
     env:
       BOARD_SIGN_URL: https://councilof.ai/api/board-sign
     steps:
