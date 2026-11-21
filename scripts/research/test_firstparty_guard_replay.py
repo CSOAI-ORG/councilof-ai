@@ -1,6 +1,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import tempfile
 from datetime import datetime, timezone
 import unittest
 
@@ -55,6 +56,20 @@ class GuardReplayTests(unittest.TestCase):
         self.assertIs(r["cases"][5]["predicted_injection"],True)
         self.assertEqual(m.check_record(r),m.counts(r["cases"]))
         self.assertEqual(m.canonical(r)["state"],"DIVERGENT")
+
+    def test_archive_method_hash_survives_precision_fix(self):
+        archived=sample()
+        previous=m.canonical(archived,method_source_sha256=m.ARCHIVED_METHOD_CODE_SHA256)
+        with tempfile.TemporaryDirectory(prefix="csoai-evidence-history-") as d:
+            result=Path(d)/"old-record.json"
+            event=Path(d)/"old-event.json"
+            result.write_text(json.dumps(archived))
+            event.write_text(json.dumps(previous))
+            m.verify(str(result),str(event))
+            previous["method"]["code_sha256"]="0"*64
+            event.write_text(json.dumps(previous))
+            with self.assertRaisesRegex(ValueError,"unrecognized current or archived"):
+                m.verify(str(result),str(event))
 
     def test_benign_input_hash_tamper_is_rejected(self):
         r=sample()
