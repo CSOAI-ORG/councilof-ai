@@ -45,7 +45,12 @@ beforeEach(() => {
   document.body.appendChild(host);
   root = createRoot(host);
   act(() => { root.render(<Contact />); });
-  expect(document.querySelector('[data-testid="contact-submit-button"]')?.textContent).toContain("Store a copy (no email sent)");
+  const storeButton = document.querySelector('[data-testid="contact-submit-button"]') as HTMLButtonElement;
+  const emailLink = document.querySelector('[data-testid="contact-primary-email-link"]') as HTMLAnchorElement;
+  expect(storeButton.textContent).toContain("Store a copy (no email sent)");
+  expect(emailLink.getAttribute("href")).toMatch(/^mailto:contact@csoai\.org\?/);
+  expect(emailLink.textContent).toContain("press Send in your email app");
+  expect(emailLink.compareDocumentPosition(storeButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 });
 
 afterEach(() => {
