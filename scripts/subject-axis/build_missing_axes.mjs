@@ -8,12 +8,13 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { homedir } from "node:os";
+import { presence as presenceV2, presenceCorpus, compileAxis, discriminatingSelfTest } from "./presence-v2.mjs";
 
 const AXIS_DIR = join(homedir(), "_alignment", "axis-runs-20261024");
 const OUT_DIR = join(homedir(), "jewel-audit-20261027", "out");
 const RUN_ID = "subject-axis-live-run-20261102";
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36";
-const TIMEOUT_MS = 12000, MAX_BYTES = 400_000, CONCURRENCY = 6, BAR = 3;
+const TIMEOUT_MS = 12000, MAX_BYTES = 2_000_000, CONCURRENCY = 6, BAR = 3;
 
 // Population: the union of the three organisation-facing frozen grids. Declared, not chosen.
 const POP_GRIDS = [
@@ -25,7 +26,7 @@ const POP_GRIDS = [
 const PATTERNS = {
   "claim-maintenance": {
     changelog_or_release_notes: "changelog|release notes|what'?s new|version history|releases|what changed",
-    corrections_or_errata: "correction|errata|supersed|amended|retract|updated to reflect|previously stated",
+    corrections_or_errata: "correction|errata|supersed*|amended|retract*|updated to reflect|previously stated",
     dated_last_updated: "last updated|last reviewed|effective date|updated on|revision date|last modified",
     versioned_policy: "version|v\\d+\\.\\d+|revision history|policy version|effective from|change log",
     status_or_incident_history: "status page|incident history|uptime|postmortem|service status|trust report",
@@ -33,9 +34,9 @@ const PATTERNS = {
   "watchdog-ingest": {
     security_txt_or_disclosure: "security\\.txt|vulnerability disclosure|responsible disclosure|security policy|bug bounty",
     reporting_channel: "report a|submit a|contact us|get in touch|report an issue|feedback|report concern",
-    whistleblow_or_grievance: "whistleblow|grievance|complaint|speak up|ethics hotline|ombuds|appeal",
+    whistleblow_or_grievance: "whistleblow*|grievance|complaint|speak up|ethics hotline|ombuds*|appeal",
     machine_readable_route: "\\.well-known|/api/|json|rss|webhook|openapi|endpoint",
-    response_commitment: "response time|within \\d+ (business )?days|service level|sla|acknowledg|we aim to respond",
+    response_commitment: "response time|within \\d+ (business )?days|service level|sla|acknowledg*|we aim to respond",
   },
 };
 
@@ -61,8 +62,8 @@ async function fetchSubject(url) {
   const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {
     const res = await fetch(url, { redirect: "follow", signal: ctrl.signal, headers: { "User-Agent": UA, "Accept": "text/html,*/*" } });
-    const buf = Buffer.from(await res.arrayBuffer()).subarray(0, MAX_BYTES);
-    return { reachable: true, status: res.status, final_url: res.url, bytes: buf.length, sha256: sha256hex(buf), body: buf.toString("utf8") };
+    const full = Buffer.from(await res.arrayBuffer()); const buf = full.subarray(0, MAX_BYTES);
+    return { reachable: true, status: res.status, final_url: res.url, bytes: buf.length, truncated: full.length > MAX_BYTES, sha256: sha256hex(buf), body: buf.toString("utf8") };
   } catch (e) {
     return { reachable: false, error: `${e.name}: ${e.message}` };
   } finally { clearTimeout(t); }
@@ -97,6 +98,9 @@ const observedAt = new Date().toISOString();
 const methodSha = sha256hex(readFileSync(new URL(import.meta.url)));
 
 const summary = {};
+// presence/2.0: refuse to run if the detector cannot return both outcomes.
+const SELF_TEST = discriminatingSelfTest(PATTERNS, BAR);
+if (!SELF_TEST.ok) { console.error(JSON.stringify(SELF_TEST, null, 2)); process.exit(2); }
 for (const axis of Object.keys(PATTERNS)) {
   const pats = PATTERNS[axis];
   const classes = Object.keys(pats);
@@ -116,8 +120,7 @@ for (const axis of Object.keys(PATTERNS)) {
   rows.forEach((r, i) => {
     const res = live[i];
     if (!res || !res.reachable || res.status >= 400) return;
-    const text = extractText(res.body).toLowerCase();
-    const checks = Object.fromEntries(classes.map(c => [c, new RegExp(pats[c], "i").test(text)]));
+    const checks = presenceV2(presenceCorpus(res.body), compileAxis(pats));
     const present = Object.values(checks).filter(Boolean).length;
     for (const c of classes) if (checks[c]) census[c]++;
     hist[present] = (hist[present] || 0) + 1;
@@ -125,7 +128,7 @@ for (const axis of Object.keys(PATTERNS)) {
     const itemId = `${axis}-live-${String(items.length + 1).padStart(3, "0")}`;
     const payload = {
       axis_id: axis, item_id: itemId, subject: r.subject, url: r.url,
-      final_url: res.final_url, http_status: res.status, bytes: res.bytes,
+      final_url: res.final_url, http_status: res.status, bytes: res.bytes, truncated: res.truncated,
       content_sha256: res.sha256, text_sha256: sha256hex(Buffer.from(extractText(res.body), "utf8")),
       observed_at: observedAt, presence_checks: checks, checks_present: present,
       meets_disclosure_bar: present >= BAR, previous_grid_sha256: r.sha256, bytes_match_previous_grid: r.sha256 === res.sha256,
@@ -168,7 +171,8 @@ for (const axis of Object.keys(PATTERNS)) {
     admission_state: "CANDIDATE_FINDING", public_board_slot_state: "UNMEASURED",
     method_sha256: methodSha,
     source_grid_file: gridPath, source_grid_sha256: gridSha, source_grid_observed_at: frameDate,
-    disclosure_bar: { rule: `presence of at least ${BAR} of 5 link classes`, classes, patterns: pats },
+    disclosure_bar: { rule: `presence of at least ${BAR} of 5 link classes`, classes, patterns: pats,
+      presence_method: "csoai.subject-axis-presence/2.0", discriminating_self_test: SELF_TEST.results[axis] },
     frame: {
       population_description: `the ${rows.length} distinct subjects in the union of ${POP_GRIDS.join(", ")}`,
       inclusion_rule: "Every candidate in the frozen union was attempted exactly once at run time; no candidate was added, dropped, substituted or re-ordered. The grid digest is published, so the population is checkable.",
