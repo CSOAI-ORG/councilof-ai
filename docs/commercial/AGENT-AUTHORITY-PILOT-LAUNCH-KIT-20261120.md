@@ -68,7 +68,7 @@ Never request keys, private cases, customer records or exploit details via the p
 
 The original synthetic demonstrator was freshly replayed on the connected Mac on 2026-11-20 from master commit \`6304e43c20cab7687e2d3c8977a66d1e93a40634\`: **20/20 Node tests passed; 13/13 intentionally invalid synthetic cases wrote no effect; 1/1 allowed synthetic case produced a local file effect with separate-process readback.** The test key is synthetic. No production human, third-party endorsement, fresh model-attack result, GSPC board admission or outside buyer acceptance is established.
 
-Draft PR #4572 adds a claim-bounded machine-readable proof card generated from each CI replay, with evidence checks; until reviewed/merged this is a PR candidate, not a canonical published signature or live service.
+PR #4572 merged on 21 November. GitHub master CI run 44854144079 on pinned source ad3d28621addbb7ce58f8764871a7a96a9961c68 passed its self-replay and separate consistency check. All five exact unsigned/unanchored outputs, SHA-256 listing and limitations are staged under public/pilots/agent-authority/evidence/2026-11-21/ in this still-draft PR. This is not a live service, independent external assessment or production signature.
 
 **Required before a public headline about stopping attacks:** a registered real attack/control matrix with held-out inputs, fixed model and guard versions, A/B control, actual action observation, precision/recall/false-positive reporting, overhead and reproducible third-party evidence. Negative results stay published. Cloudflare remote-preview 403 and Hugging Face Sandbox 402 are *blocked experiments*, not successful defences.
 
