@@ -159,11 +159,21 @@ print(len(errs)); [print(e) for e in errs[:5]]; sys.exit(1 if errs else 0)`);
     const wantRemote = (dist.distribution.find((r) => r.id === id) || {}).remote_url || DOOR;
     rec(id, wantRemote === DOOR ? "remote == door" : "remote == door + trailing slash (declared remote_url)",
       wantRemote.replace(/\/$/, "") === DOOR && doc.remotes?.[0]?.url === wantRemote && doc.remotes[0].type === "streamable-http", doc.remotes?.[0]?.url);
-    const fl = doc._meta["io.modelcontextprotocol.registry/publisher-provided"]["ai.councilof/fleet"];
-    rec(id, "fleet names == locked", sameList([...fl.free, ...fl.paid], EXPECT_TOOLS), `${fl.free.length}+${fl.paid.length}`);
+  }
+  // A published registry version is frozen, so no entry names a tool list or a count (render.mjs, section 1).
+  for (const [id, p] of [
+    ["mcp-registry-github", "distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json"],
+    ["mcp-registry-domain", "distribution/mcp-registry/ai.councilof-gspc/server.json"],
+    ["mcp-registry-domain-free", "distribution/mcp-registry/ai.councilof-gspc-free/server.json"],
+  ]) {
+    const doc = readJson(p);
+    const pp = doc._meta?.["io.modelcontextprotocol.registry/publisher-provided"] || {};
+    rec(id, "no tool list; points at tools/list", !("ai.councilof/fleet" in pp) && /tools\/list/.test(pp["ai.councilof/tools"] || ""), Object.keys(pp).join(","));
+    rec(id, "description names no number (Ed25519 and x402 aside)", !/\d/.test(doc.description.replace(/\bEd25519\b|\bx402\b/gi, "")), doc.description);
+    if (id === "mcp-registry-domain-free") rec(id, "version == live", doc.version === WANT_VERSION, doc.version);
   }
   // what the public registry currently serves as latest for each name (read-only GET)
-  for (const [id, name] of [["mcp-registry-github", dist.registry_names.github], ["mcp-registry-domain", dist.registry_names.domain]]) {
+  for (const [id, name] of [["mcp-registry-github", dist.registry_names.github], ["mcp-registry-domain", dist.registry_names.domain], ["mcp-registry-domain-free", dist.registry_names.domain_free]]) {
     if (OFFLINE) { rec(id, "registry isLatest", null, "offline"); continue; }
     let latest = null, why = "";
     try {

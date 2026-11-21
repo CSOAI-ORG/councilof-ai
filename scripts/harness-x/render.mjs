@@ -143,15 +143,29 @@ const emit = (rel, text) => {
 };
 
 // ── 1. MCP Registry server.json, both namespaces ─────────────────────────────────────────────
+// A registry entry is frozen when it is published: "Once published, the version string (and other
+// metadata) cannot be changed" (https://modelcontextprotocol.io/registry/versioning). So the entries name
+// no tool count and no tool list. ai.councilof/gspc 1.4.4 said "19 tools (14 free, 5 x402-metered)" from
+// 2026-09-30 until 1.5.0 replaced it on 2026-11-21, while the door grew to 54 tools under the same
+// version; a list of names goes stale the same way. The texts name kinds of tool only and the entry
+// points at tools/list. Every other surface this renderer writes is re-rendered and deployed with the
+// code, so it may carry the derived counts; the registry is the one surface that is not.
+const REGISTRY_TOOLS_POINTER = "This entry states no tool count and no tool list. Call tools/list on the remote for the current set.";
+const countFree = (label, text) => {
+  if (text.length > 100) throw new Error(`${label} is ${text.length} chars; the 2025-12-11 schema allows 100`);
+  // Ed25519 and x402 are names. Any other digit is a count or a version, and either goes stale.
+  if (/\d/.test(text.replace(/\bEd25519\b|\bx402\b/gi, ""))) throw new Error(`${label} names a number: ${text}`);
+  return text;
+};
 const regMeta = {
   "io.modelcontextprotocol.registry/publisher-provided": {
     "ai.councilof/doctrine": DOCTRINE,
-    "ai.councilof/fleet": { free: free.map((t) => t.id), paid: paid.map((t) => t.id) },
+    "ai.councilof/tools": REGISTRY_TOOLS_POINTER,
     "ai.councilof/generator": "scripts/harness-x/render.mjs from council-os/distribution.json",
   },
 };
-const regDescription = `${FLEET}: GSPC board, evidence, Ed25519 card verify. Measurement only.`;
-if (regDescription.length > 100) throw new Error(`registry description is ${regDescription.length} chars; the 2025-12-11 schema allows 100`);
+const regDescription = countFree("registry description",
+  "Signed AI measurements over MCP: board and axis readers, free card verify, x402-metered evidence.");
 emit("distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json", j({
   $schema: mcpServer.$schema,
   name: dist.registry_names.github,
@@ -183,13 +197,13 @@ emit("distribution/mcp-registry/ai.councilof-gspc/server.json", j({
 }));
 // The free door's own name, ai.councilof/gspc-free. Its 1.4.3 and 1.4.4 were published from a
 // descriptor this renderer did not own, so the listing still said "14 free read-only tools" (read
-// 20 Nov 2026) while /mcp/free served 49. Rendered here, the count is the length of the definitions
-// the free door serves (functions/mcp/gspc-tools.json), like every other count. The remote is the
-// free door itself, which registers no payment tool; the same domain login publishes it.
+// 20 Nov 2026) while /mcp/free served 49. It is rendered here under the count-free rule of section 1.
+// The remote is the free door itself, which registers no payment tool; the same domain login
+// publishes it.
 const FREE_REGISTRY_NAME = dist.registry_names.domain_free;
 if (!FREE_REGISTRY_NAME) throw new Error("council-os/distribution.json registry_names.domain_free is missing");
-const regFreeDescription = `${SERVED_FREE.length} free read-only tools: GSPC board, signed card and capsule verify, Merkle proofs, route.`;
-if (regFreeDescription.length > 100) throw new Error(`free registry description is ${regFreeDescription.length} chars; the 2025-12-11 schema allows 100`);
+const regFreeDescription = countFree("free registry description",
+  "Free read-only tools: GSPC board, per-axis readers, signed card and capsule verify, Merkle proofs.");
 emit("distribution/mcp-registry/ai.councilof-gspc-free/server.json", j({
   $schema: mcpServer.$schema,
   name: FREE_REGISTRY_NAME,
@@ -201,7 +215,7 @@ emit("distribution/mcp-registry/ai.councilof-gspc-free/server.json", j({
   _meta: {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "ai.councilof/doctrine": DOCTRINE,
-      "ai.councilof/fleet": { free: SERVED_FREE, paid: [] },
+      "ai.councilof/tools": REGISTRY_TOOLS_POINTER,
       "ai.councilof/generator": "scripts/harness-x/render.mjs from council-os/distribution.json",
     },
   },

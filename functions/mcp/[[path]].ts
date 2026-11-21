@@ -32,7 +32,7 @@ import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
 import { registerCouncilPanel } from "./_panel";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
-export const MCP_HTTP_SERVER_VERSION = "1.5.0";
+export const MCP_HTTP_SERVER_VERSION = "1.5.1";
 const SERVER_INFO = {
   name: "csoai-gspc-mcp",
   version: MCP_HTTP_SERVER_VERSION,

@@ -5,7 +5,7 @@ published, submitted or registered. Every step is an owner action.
 
 Targets: 27. Owner approval needed: 26.
 Affected by the flagged CSOAI-ORG GitHub account (blocked, re-routed to CouncilofAI-CSOAI, or losing GitHub-based provenance): 13 (`mcp-registry-github`, `claude-plugin`, `cursor-plugin`, `grok-plugin`, `antigravity-plugin`, `gemini-extension`, `pypi-langchain-csoai`, `pypi-llama-index-tools-csoai`, `pypi-crewai-csoai`, `npm-ai-sdk-gspc`, `npm-mastra-gspc`, `docker-mcp-catalog`, `dify-plugin`).
-Remote server version: 1.5.0 (from `mcp/gspc-server/server.json`; `scripts/harness-x/check.mjs` requires it to equal the live serverInfo.version).
+Remote server version: 1.5.1 (from `mcp/gspc-server/server.json`; `scripts/harness-x/check.mjs` requires it to equal the live serverInfo.version).
 Fleet: 54 tools (49 free, 5 x402-metered) at https://councilof.ai/mcp; https://councilof.ai/mcp/free serves the 49 free tools only. Doctrine sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a`.
 
 Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harness-x/check.mjs`.
@@ -72,7 +72,7 @@ CONSISTENT / INCONSISTENT (quoting source and live) / UNCHECKABLE (staged daily:
 1. The same login as mcp-registry-domain: `mcp-publisher login http --domain councilof.ai --private-key <64-hex Ed25519 seed>`.
 2. `mcp-publisher publish distribution/mcp-registry/ai.councilof-gspc-free/server.json`.
 3. The free door's own name, at the same version as mcp-registry-domain. The remote is `https://councilof.ai/mcp/free`, which serves the 49 free tools and no payment tool. Publish a version above this name's current isLatest; registry versions are immutable.
-4. Read the exact version back: `SERVER_JSON=distribution/mcp-registry/ai.councilof-gspc-free/server.json VER=1.5.0 EXPECTED_NAME=ai.councilof/gspc-free node scripts/mcp-registry-publish.cjs --check` (exit 0 is an active match, is_latest reported separately; exit 2 is absent). A publish whose readback fails is unconfirmed (docs/operations/MCP-REGISTRY-PUBLICATION.md).
+4. Read the exact version back: `SERVER_JSON=distribution/mcp-registry/ai.councilof-gspc-free/server.json VER=1.5.1 EXPECTED_NAME=ai.councilof/gspc-free node scripts/mcp-registry-publish.cjs --check` (exit 0 is an active match, is_latest reported separately; exit 2 is absent). A publish whose readback fails is unconfirmed (docs/operations/MCP-REGISTRY-PUBLICATION.md).
 
 ## `claude-plugin`
 
