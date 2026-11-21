@@ -68,7 +68,7 @@ class ExternalDataTests(unittest.TestCase):
 
     def test_posthoc_threshold_cannot_hide_errors(self):
         r,src=observed()
-        r["threshold_sensitivity"][0]["fn"]=0
+        r["threshold_sensitivity"][4]["fn"]=0
         with self.assertRaisesRegex(ValueError,"threshold sensitivity"):
             m.validate(r,src)
 
