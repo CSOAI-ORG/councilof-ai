@@ -13,6 +13,7 @@
       "api-claims-register",
       "api-claims-watch-request-post",
       "api-commissions",
+      "api-coverage-evidence-post",
       "api-evidence-bundle-post",
       "api-feeds-provider-diff-post",
       "api-free-door-post",
@@ -37,6 +38,7 @@
       "api-state",
       "api-waitlist",
       "api-waitlist-post",
+      "api-wrapper-changes-post",
       "api-wrapper-post",
       "api-x402"
     ]
@@ -140,6 +142,17 @@
       "payment": "free",
       "path": "/api/commissions",
       "method": "GET"
+    },
+    {
+      "id": "api-coverage-evidence-post",
+      "kind": "http",
+      "name": "Coverage evidence (POST)",
+      "description": "GET /api/coverage-evidence — the TUI-2 coverage evidence row, as an x402 paid door.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/coverage-evidence",
+      "method": "POST"
     },
     {
       "id": "api-evidence-bundle-post",
@@ -403,6 +416,17 @@
       "lifecycle": "QUARANTINED_PRE_RELEASE",
       "payment": "free",
       "path": "/api/waitlist",
+      "method": "POST"
+    },
+    {
+      "id": "api-wrapper-changes-post",
+      "kind": "http",
+      "name": "Wrapper changes (POST)",
+      "description": "GET /api/wrapper/changes?id=<pair> — delta of wrapped supply and escrow since the previous ledger snapshot (from public/interop/wrapped-asset-parity-*.json).",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/wrapper/changes",
       "method": "POST"
     },
     {

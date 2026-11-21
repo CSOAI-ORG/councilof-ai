@@ -1,10 +1,11 @@
-// CSOAI Claims-Verification E2E — checks the enumerated live-site assertions and
-// historical backend contract. Tool-list and signature-field checks have the limits below.
-// Run before any demo. See DEMO_READINESS.md.
+// CSOAI Claims-Verification E2E — checks the enumerated live-site assertions, each at the place
+// the site serves it. The tool-list check counts tools and does not execute one; the signing
+// check verifies every published card. Run before any demo. See DEMO_READINESS.md.
 // Robust: createRequire import (works local + CI); waits for lazy-loaded elements before
 // interacting so it never throws a false fail.
 import { createRequire } from "module";
-import { probeBrainHealth, SYSTEM_CARD_TITLE } from "./claims-e2e-contract.mjs";
+import { mcpToolCount, verifyPublishedCards, SYSTEM_CARD_TITLE } from "./claims-e2e-contract.mjs";
+import { verifyCard } from "../public/signed/verify-card.mjs";
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
 
@@ -14,7 +15,9 @@ const { chromium } = require("playwright");
 // at https://councilof.ai, and nothing else. A test aimed elsewhere is not a weaker test —
 // it is a test of a different system, reporting on this one.
 const SITE = process.env.SITE || "https://councilof.ai";
-const BRAIN = process.env.BRAIN || "https://os.meok.ai/api";
+// RETIRED 2026-11-21: BRAIN (https://os.meok.ai/api) and its five rows. That host answers as the
+// MEOK HIM public read plane, not the historical sovereign-backend, and no claim on this site
+// depends on it. The why, row by row, is in claims-e2e-contract.mjs.
 const R = [];
 const pass = (c, d) => R.push(`✅ ${c} — ${d}`);
 const fail = (c, d) => R.push(`❌ ${c} — ${d}`);
@@ -23,11 +26,6 @@ const fail = (c, d) => R.push(`❌ ${c} — ${d}`);
 // when the truth is that nothing was measured, and four identical "Unexpected end of JSON input"
 // lines say neither.
 const unchecked = (c, d) => R.push(`⚠️  ${c} — UNCHECKABLE: ${d}`);
-
-async function rpc(method, params) {
-  const r = await fetch(BRAIN + "/mcp", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) });
-  return r.json();
-}
 
 async function apiTruth() {
   // Catalog count is expected to GROW as new governed MCPs are registered (e.g. csoai-governance-mcp
@@ -77,21 +75,20 @@ async function apiTruth() {
         : fail("MCP tool search filters", `q="${sample}" → ${hit.total} (expected >0), q="zzzz…" → ${miss.total} (expected 0) — the q parameter is not filtering`);
     }
   } catch (e) { fail("MCP tool catalogue", e.message); }
-  // A JSON response alone can be an error or another service's health endpoint.
-  const brain = await probeBrainHealth(BRAIN);
-  if (!brain.up) {
-    // One clear sentence instead of four "Unexpected end of JSON input" lines that named the
-    // symptom and hid the cause. These claims are not refuted; they are unmeasured.
-    unchecked("Brain host", brain.why);
-    for (const c of ["Live MCP tools", "meok_govern executes", 'CLAIM "Ed25519 signing"', "Brain health"]) {
-      unchecked(c, "depends on the brain host above; not probed");
-    }
-  } else {
-    try { const d = await rpc("tools/list"); const n = (d.result?.tools || []).length; n >= 5 ? pass("Live MCP tools", `tools/list count=${n}; execution not checked`) : fail("Live MCP tools", `only ${n}`); } catch (e) { fail("tools/list", e.message); }
-    try { const d = await rpc("tools/call", { name: "meok_govern", arguments: { industry: "a bank" } }); const t = d.result?.content?.map((c) => c.text).join(" ") || ""; /EU AI Act|DORA|GDPR/.test(t) ? pass("meok_govern executes", t.slice(0, 55)) : fail("meok_govern", "no framework output"); } catch (e) { fail("meok_govern", e.message); }
-    try { const r = await fetch(BRAIN + "/sign", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "claims-test" }) }); const d = await r.json(); (d.signature && d.publicKey) ? pass('CLAIM "Ed25519 signing"', `signature/publicKey fields present; signature len=${String(d.signature).length}, reported alg=${d.alg || "?"}; cryptographic verification not performed`) : fail("Ed25519 signing", "signature/publicKey response check failed"); } catch (e) { fail("Ed25519 signing", e.message); }
-    pass("Brain health", brain.health.service);
-  }
+  // Live MCP tools — the site's own MCP door (the endpoint its registry entry and tool runner
+  // name), not the retired brain host. Counts the tools/list answer; the "run live tools" row
+  // below is the one that executes a tool.
+  try {
+    const n = await mcpToolCount(SITE + "/mcp", fetch);
+    n >= 5 ? pass("Live MCP tools", `${SITE}/mcp tools/list count=${n}; execution not checked here`) : fail("Live MCP tools", `${SITE}/mcp tools/list count=${n}, expected at least 5`);
+  } catch (e) { fail("Live MCP tools", e.message); }
+  // Ed25519 signing — register claim CR-001, the claim behind the "Ed25519 · Layer 0 signing"
+  // chip: every published card verifies under the key the DID document publishes. This is a real
+  // signature check (the previous row only looked for signature and publicKey fields).
+  const cards = await verifyPublishedCards(SITE, fetch, verifyCard);
+  if (cards.state === "VALID") pass('CLAIM "Ed25519 signing"', cards.detail);
+  else if (cards.state === "UNCHECKABLE") unchecked('CLAIM "Ed25519 signing"', cards.detail);
+  else fail('CLAIM "Ed25519 signing"', cards.detail);
   try { const r = await fetch(SITE + "/api/og?title=Test"); (r.status === 200 && (r.headers.get("content-type") || "").includes("image")) ? pass("Dynamic OG", "image/png 200") : fail("Dynamic OG", r.status + ""); } catch (e) { fail("OG", e.message); }
 }
 

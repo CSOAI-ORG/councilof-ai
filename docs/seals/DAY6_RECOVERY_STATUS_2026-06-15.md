@@ -10,7 +10,7 @@
 
 ### 🔥 THE BREAKTHROUGH — Hive Mailer is SENDING
 - At **04:27:57** the probe status flipped from "pending + refused" to **"pending but probe SENT"** — Resend's flag-flap cleared itself
-- **9 real emails sent 04:28-04:38** (info@antagonist.nl, info@kenter.nu, service@scholt.nl, info@host-bioenergy.com, customerservice@muller.nl, info@vanduuren.com, info@inlandterminalsgroup.com, info@enraf-nonius.nl, marieke.kortekaas@sanday.com)
+- **9 real emails sent 04:28-04:38** (info@antagonist.nl, info@kenter.nu, service@scholt.nl, info@host-bioenergy.com, customerservice@muller.nl, info@vanduuren.com, info@inlandterminalsgroup.com, info@enraf-nonius.nl, [address removed])
 - **34 total SENT** in the campaign · queue.jsonl has 34 lines
 - **This is a real outbound lead-gen pipeline** — the 12-hour wait on Resend's flag-flap just ended on its own
 - Dashboard re-sync (mentioned in MAIL_DOMAIN_VERIFY doc) was NOT needed; the system self-healed
