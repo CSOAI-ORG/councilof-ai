@@ -167,6 +167,33 @@ export const LEDGER = {
       ]
     },
     {
+      "id": "C-2026-1012-01",
+      "date": "2026-10-12",
+      "detected_at": "2026-10-09T15:55Z",
+      "detected_by": "internal monitor",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "An internal alert log entry of 2026-10-09 15:55Z (not publicly hosted) first recorded the stale index against its own daily note",
+        "published_at is UNRECORDED: the deploy that first serves this correction had not happened when this entry was written",
+        "This entry was first written on 2026-10-12. Before publication it was re-read on 2026-11-19 against the served index and the repository history, and its account of what changed was corrected to match them"
+      ],
+      "what_was_wrong": "The signed measurement-capsule index publication block claimed it was \"published daily by the owner's approval (recorded 2026-09-26)\" while as_of stayed at 2026-10-01. On 2026-10-12 that is roughly eleven days stale against its own cadence claim. Free verification of existing cards is unaffected; the defect is a false publication promise on our own evidence index. Re-read on 2026-11-19, the same is true again: the served index is dated 2026-11-01, eighteen days old, and its note still reads 'published daily'.",
+      "how_caught": "Estate health reviews on 2026-10-09 and 2026-10-10 compared the index as_of with the publication note and with the calendar; an internal alert log entry of 2026-10-09 15:55Z filed the gap.",
+      "what_changed": "This entry amends the claim: the index is published on a best-effort basis, and as_of is the only source of truth for the last successful signed publication. The index's own note has not been changed. The served copy was replaced twice after this entry was first written, by the index of 2026-10-28 (commit 5adedf137, committed 2026-10-29) and by the index of 2026-11-01 (commit 857a6cc02, committed 2026-11-06), and both carry the same note. Read on 2026-11-19, the served index is dated 2026-11-01 (as_of 2026-11-01T08:30:40Z, chain_seq 26) and its note still reads 'published daily by the owner's approval (recorded 2026-09-26)'. The dated copies on Hugging Face (csoai/evidence-index, measurement-index/) run from 2026-09-26 to 2026-11-04 with gaps, and none is later. When the daily publisher is restored the note may say daily cadence target, never a guarantee. Prior indexes are not rewritten. Cards themselves remain valid and free to verify at councilof.ai.",
+      "status": "RECORDED - the claim is amended in this record only; the index still carries the daily note (read 2026-11-19); the publisher and the note are open; signed indexes not rewritten",
+      "reached_the_public": true,
+      "open_items": [
+        "Restore the daily measurement-index publisher (owner key + job); until as_of advances, treat daily cadence as degraded",
+        "Next signed index must carry the amended note (daily cadence target, not guarantee)"
+      ],
+      "evidence": [
+        "https://councilof.ai/measurement-capsules/v0.2/index.json (date, as_of, chain_seq and publication.note; https://councilof.ai/measurement-capsules/latest.json points to it)",
+        "councilof-ai commits 4e0033cbc (index of 2026-10-01, committed 2026-10-06), 5adedf137 (index of 2026-10-28) and 857a6cc02 (index of 2026-11-01)",
+        "https://huggingface.co/datasets/csoai/evidence-index/tree/main/measurement-index (the dated copies)",
+        "Internal notes, not publicly hosted: the alert log entry of 2026-10-09 15:55Z, and a cadence-claim decision note and a publisher-restore runbook, both dated 2026-10-12"
+      ]
+    },
+    {
       "id": "C-2026-1006-13",
       "date": "2026-10-06",
       "detected_at": "2026-10-06",
@@ -2115,20 +2142,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "2b70ffeffba81209f102af38c8611d2fda87faa3a7ae15cab158b512991e39ec",
+    id: "d75c54f5768adca8f4b263779d331f7b7d604fefea8ea0273d60f67e9815184c",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "52558310d5a7ad65817b2bafe1c6961c105677c19e1f4850702dc8765668f191d3c00a7b042cc6e48e10e97e61e22f9df64267b65fb35d1866e3ef70c6a18a03",
+    signature: "c02ea3424ced50bd682483fb9739d6ed8d1870b1bbd4e41352b6876d2b8289c78253f363ab65c0481ae0549ed08cb4f82e0b387e82f17a70ab79393f243e760f",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "2b70ffeffba81209f102af38c8611d2fda87faa3a7ae15cab158b512991e39ec",
+          "content_id": "d75c54f5768adca8f4b263779d331f7b7d604fefea8ea0273d60f67e9815184c",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 97,
+          "entries": 98,
           "latest_entry_id": "C-2026-1120-03",
-          "ledger_canonical_bytes": 255290,
+          "ledger_canonical_bytes": 258672,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-11-20T03:26:54Z"
+          "signed_at": "2026-11-20T04:08:33Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
