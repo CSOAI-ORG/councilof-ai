@@ -6,6 +6,7 @@ import { Mail, MapPin, Clock, Send } from 'lucide-react';
 import PlainEmail, { CONTACT_MAILBOX } from '@/components/PlainEmail';
 import { enquiryPreset, prepareContactEmail } from '@/lib/pilotEnquiry';
 import { BUYING_LINES } from '@/lib/buying';
+import { classifyContactResponse, formatRejectedContactSubmission, formatStoredContactReceipt, formatUnconfirmedContactSubmission } from '@/lib/contactReceipt';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ export default function Contact() {
   const [submitFeedback, setSubmitFeedback] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const copyRevision = useRef(0);
+  const formRevision = useRef(0);
 
   useEffect(() => {
     document.title = 'Contact — Council of AI';
@@ -39,19 +41,27 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
+    const submittedRevision = formRevision.current;
+    const submittedForm = { ...formData, website: "" };
     setSubmitting(true);
     setSubmitFeedback("");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...formData, website: "" }),
+        body: JSON.stringify(submittedForm),
       });
-      const data = await res.json() as { stored?: boolean; receipt_id?: string; code?: string };
-      if (!res.ok || data.stored !== true || !data.receipt_id) throw Error(data.code || "INTAKE_UNAVAILABLE");
-      setSubmitFeedback("Stored with reference " + data.receipt_id + ". The Council team has NOT been notified and this is not a request for a reply. To reach us, send the prepared email using ‘Open email draft instead’ below or write to " + CONTACT_MAILBOX + ".");
+      const data: unknown = await res.json().catch(() => null);
+      const outcome = classifyContactResponse(res.status, data);
+      if (outcome.kind === "stored") {
+        setSubmitFeedback(formatStoredContactReceipt(outcome.receiptId, submittedRevision === formRevision.current, CONTACT_MAILBOX));
+      } else if (outcome.kind === "rejected") {
+        setSubmitFeedback(formatRejectedContactSubmission(CONTACT_MAILBOX));
+      } else {
+        setSubmitFeedback(formatUnconfirmedContactSubmission(CONTACT_MAILBOX));
+      }
     } catch {
-      setSubmitFeedback("Storage was not confirmed and nothing was sent. Please use the email draft or copy option to contact " + CONTACT_MAILBOX + ".");
+      setSubmitFeedback(formatUnconfirmedContactSubmission(CONTACT_MAILBOX));
     } finally {
       setSubmitting(false);
     }
@@ -72,6 +82,8 @@ export default function Contact() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     ++copyRevision.current;
+    ++formRevision.current;
+    setSubmitFeedback("");
     setFormData(prev => ({ ...prev, [name]: value }));
     setCopyFeedback("");
   };
@@ -219,13 +231,22 @@ export default function Contact() {
                     data-testid="contact-message-input"
                   />
                 </div>
-                <Button type="submit" disabled={submitting} size="lg" className="w-full bg-primary hover:bg-brand-institutional" data-testid="contact-submit-button">
+                {emailDraft.mailto ? (
+                  <a
+                    href={emailDraft.mailto}
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground hover:bg-brand-institutional focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    data-testid="contact-primary-email-link"
+                  >
+                    <Mail className="h-4 w-4 mr-2" aria-hidden="true" />
+                    Open email draft to contact Council (press Send in your email app)
+                  </a>
+                ) : null}
+                <Button type="submit" disabled={submitting} variant="outline" size="lg" className="w-full" data-testid="contact-submit-button">
                   <Send className="h-4 w-4 mr-2" />
                   {submitting ? "Storing…" : "Store a copy (no email sent)"}
                 </Button>
                 {submitFeedback ? <p role="status" aria-live="polite" className="rounded-lg border border-border p-3 text-sm text-foreground" data-testid="contact-submission-status">{submitFeedback}</p> : null}
                 <div className="flex flex-wrap items-center gap-3">
-                  {emailDraft.mailto ? <a href={emailDraft.mailto} className="inline-flex min-h-11 items-center rounded-lg border border-input px-4 py-2 text-sm font-medium">Open email draft instead</a> : null}
                   <Button type="button" variant="outline" onClick={() => void copyEnquiry()} data-testid="contact-copy-button">
                     Copy enquiry text
                   </Button>
