@@ -57,7 +57,7 @@ afterEach(() => {
 describe("contact enquiry: real page state transitions", () => {
   it("does not present a receipt for later edits made while a stored request is in flight", async () => {
     let respond!: (result: any) => void;
-    const fetchMock = vi.fn(() => new Promise((resolve) => { respond = resolve; }));
+    const fetchMock = vi.fn((_url: RequestInfo | URL, _init?: RequestInit) => new Promise((resolve) => { respond = resolve; }));
     vi.stubGlobal("fetch", fetchMock);
     fill();
     submit();
