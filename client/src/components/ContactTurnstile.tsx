@@ -25,14 +25,16 @@ export default function ContactTurnstile({
   const SITE_KEY = (import.meta.env?.VITE_CONTACT_TURNSTILE_SITE_KEY || "").trim();
   const parent = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | number | null>(null);
+  const [requested, setRequested] = useState(false);
   const onTokenRef = useRef(onToken);
-  const [state, setState] = useState<"NO_CONFIG" | "LOADING" | "READY" | "ERROR">(
-    SITE_KEY ? "LOADING" : "NO_CONFIG",
+  const [state, setState] = useState<"NO_CONFIG" | "IDLE" | "LOADING" | "READY" | "ERROR">(
+    SITE_KEY ? "IDLE" : "NO_CONFIG",
   );
   onTokenRef.current = onToken;
 
   useEffect(() => {
-    if (!SITE_KEY) return;
+    if (!SITE_KEY || !requested) return;
+    setState("LOADING");
     let cancelled = false;
     let script: HTMLScriptElement | null = null;
     const mount = () => {
@@ -78,7 +80,7 @@ export default function ContactTurnstile({
       }
       script?.remove();
     };
-  }, []);
+  }, [requested]);
 
   useEffect(() => {
     if (resetRevision === 0 || widgetId.current === null) return;
@@ -94,6 +96,12 @@ export default function ContactTurnstile({
         <p className="text-sm text-muted-foreground">
           Optional storage is not configured. Use the email draft above to contact Council.
         </p>
+      ) : state === "IDLE" ? (
+        <button type="button" data-testid="contact-challenge-enable"
+          onClick={() => setRequested(true)}
+          className="min-h-11 rounded-lg border border-input px-4 py-2 text-sm font-medium">
+          Enable verification if you want to store a copy
+        </button>
       ) : state === "LOADING" ? (
         <p className="text-sm text-muted-foreground">Loading the optional storage verification…</p>
       ) : state === "ERROR" ? (
