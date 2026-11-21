@@ -14,7 +14,6 @@ declare global {
   interface Window { turnstile?: TurnstileApi }
 }
 const SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
-const SITE_KEY = (import.meta.env?.VITE_CONTACT_TURNSTILE_SITE_KEY || "").trim();
 
 export default function ContactTurnstile({
   onToken,
@@ -23,6 +22,7 @@ export default function ContactTurnstile({
   onToken: (token: string) => void;
   resetRevision: number;
 }) {
+  const SITE_KEY = (import.meta.env?.VITE_CONTACT_TURNSTILE_SITE_KEY || "").trim();
   const parent = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | number | null>(null);
   const onTokenRef = useRef(onToken);
