@@ -3,6 +3,7 @@ import { WORKING_GROUPS, WORKING_GROUPS_AS_OF, WORKING_GROUPS_CHARTER, REVOCATIO
 import { axisRoute } from "@/lib/axisRoutes";
 
 import WorkingGroupTracker from "./WorkingGroupTracker";
+import WorkingGroupHITLOversight from "./WorkingGroupHITLOversight";
 
 const LINK = "underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4";
 
@@ -53,6 +54,7 @@ export default function WorkingGroups() {
         <p className="mt-2">Council of AI is an evidence and measurement project. Participation in another working group is not its endorsement. These groups do not certify compliance or speak for regulators.</p>
         <p className="mt-3"><a className={LINK} href={WORKING_GROUPS_CHARTER}>Read the full draft charter</a></p>
       </div>
+      <WorkingGroupHITLOversight />
       {view === "tracker" ? <WorkingGroupTracker /> : <div className="grid gap-4 md:grid-cols-2">
         {WORKING_GROUPS.map(group => (
           <article key={group.id} id={group.id} className="rounded-xl border border-border p-5">
