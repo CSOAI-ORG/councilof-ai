@@ -79,6 +79,6 @@ describe("working-group human-oversight readback", () => {
     expect(c.querySelectorAll("tbody tr").length).toBe(4);
     expect(c.querySelector('a[href="/gspc-verify/"]')).not.toBeNull();
     expect(c.querySelector('a[href="https://github.com/OpenSecureAIAlliance/wg-safe/issues/13"]')).not.toBeNull();
-    expect(c.textContent).toContain("without");
+    expect(c.textContent).toContain("NOT_TESTED");
   });
 });
