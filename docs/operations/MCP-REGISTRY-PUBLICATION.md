@@ -71,3 +71,15 @@ API and namespace contracts were checked against the official
 ## Release closeout — 30 October 2026
 
 PR #3608 is merged as `0580fd0ddec80a0fcc3b783d2da22cffafa47334`. The master publisher check and deployment 41042619207 passed. Immediate and delayed apex/production-alias readbacks passed on 30 October. See [the dated checklist and next-week plan](REGISTRY-FRIDAY-CLOSEOUT-2026-10-30.md) for exact scope, evidence and remaining registry dependencies. This resolves the publisher repair's release status; it does not assert corrected external listings or paid fulfilment.
+
+## Release closeout — 21 November 2026
+
+Version 1.5.0 replaces the 1.4.4 records, whose text no longer matched the server: they listed 19 tools while the doors served 54.
+
+- PR #4532 (merged 2026-11-20 04:28Z as `4abc10be30`) moved `mcp/gspc-server/server.json` and `MCP_HTTP_SERVER_VERSION` to 1.5.0. It rendered both registry manifests from the live counts, and the renderer now also renders `ai.councilof-gspc-free`. Every door answered `initialize` with 1.5.0 once deploy run 44677344430 finished at 05:22Z on 20 November.
+- The release owner published both names on 2026-11-21 at 01:43Z. The commands were `mcp-publisher-official login http --domain councilof.ai` and `mcp-publisher-official publish`. The signing key stays on the Oracle host, never in this repository.
+- Readback at 01:44Z (`GET /v0/servers?search=ai.councilof`):
+  - `ai.councilof/gspc` 1.5.0 is latest and active, reading "54 tools (49 free, 5 x402-metered)…".
+  - `ai.councilof/gspc-free` 1.5.0 is latest and active, reading "49 free read-only tools…".
+  - Both 1.4.4 records stay active and are no longer latest. Registry versions cannot be edited.
+- Still open: the OASF records need re-signing (`node scripts/harness-x/sign-oasf.mjs --token-file <pod caller token>`). `parity_live.py` does not read the free listing, because `published_channels` has no entry for it.
