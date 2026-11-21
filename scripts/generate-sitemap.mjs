@@ -433,6 +433,7 @@ paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 // they only leave the sitemap. Owner-authorised 2026-09-24; each removal is recorded in the
 // release guard's baseline under delistings[], and the guard re-checks the built page.
 const DELISTED = new Map([
+  ["/pilots/agent-authority", "noindex: pre-launch pilot candidate with unaccepted service readiness"],
   ...["agent-rails", "care", "critical-infrastructure", "defence", "emotion-ai", "government", "humanoid",
       "insurance", "legal", "machinery", "media", "multi-agent-commerce", "open-source", "security", "xr"]
     .map((s) => [`/industries/${s}`, "noindex: withdrawn industry page"]),
