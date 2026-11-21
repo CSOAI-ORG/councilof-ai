@@ -12,6 +12,7 @@ on:
       - "scripts/research/test_firstparty_guard_replay.py"
       - "packages/evidence-fabric/event.py"
       - ".github/workflows/self-run-open-model-guard-sample.yml"
+      - "docs/research/firstparty-guard-20261121/**"
 
 permissions:
   contents: read
@@ -27,6 +28,11 @@ jobs:
           python-version: "3.12"
       - name: Offline regression tests for tamper and false alarms
         run: python3 -m unittest discover -s scripts/research -p 'test_firstparty_guard_replay.py' -v
+      - name: Verify retained first-party reference from the M4 without inference
+        run: |
+          python3 scripts/research/firstparty-guard-replay.py verify \
+            --result docs/research/firstparty-guard-20261121/record.json \
+            --event docs/research/firstparty-guard-20261121/event.json
       - name: Install CPU-only model inference runtime
         run: |
           python3 -m pip install --disable-pip-version-check \
