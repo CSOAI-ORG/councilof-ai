@@ -2,31 +2,39 @@
  "schema": "csoai.provider-diff.state/0.1",
  "normaliser": "csoai-norm-v1",
  "created_at": "2026-09-02T11:14:05Z",
- "updated_at": "2026-11-20T14:09:45Z",
+ "updated_at": "2026-11-21T13:35:04Z",
  "targets": {
   "openai/terms": {
    "provider": "openai",
    "surface": "terms",
    "url": "https://openai.com/policies/terms-of-use/",
    "latest": {
-    "fetched_at": "2026-11-20T14:08:52Z",
+    "fetched_at": "2026-11-21T13:34:08Z",
     "url": "https://openai.com/policies/terms-of-use/",
     "normaliser": "csoai-norm-v1",
-    "state": "UNCHECKABLE",
-    "reason": "anti-bot challenge (HTTP 403); not bypassed",
+    "state": "OK",
+    "reason": null,
     "robots": "allow",
-    "http_status": 403,
+    "http_status": 200,
     "final_url": "https://openai.com/policies/terms-of-use/",
     "redirected": false,
-    "content_type": "text/html; charset=UTF-8",
+    "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 9991,
-    "bytes_sha256": null,
-    "norm_sha256": null,
+    "byte_length": 412989,
+    "bytes_sha256": "b4eb361a15bd34c96f6bf5eb6f8a63c4172e1712926b4812099231508b02d9b8",
+    "norm_sha256": "fd6349450b06d2330cf36ba5082c31285fac5faaf841274c2ca05bd992a8c1d5",
     "robots_http_status": 200
    },
-   "last_ok": null,
+   "last_ok": {
+    "fetched_at": "2026-11-21T13:34:08Z",
+    "bytes_sha256": "b4eb361a15bd34c96f6bf5eb6f8a63c4172e1712926b4812099231508b02d9b8",
+    "norm_sha256": "fd6349450b06d2330cf36ba5082c31285fac5faaf841274c2ca05bd992a8c1d5",
+    "byte_length": 412989,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
    "history": [
     {
      "at": "2026-09-03T09:51:48Z",
@@ -447,9 +455,18 @@
      "bytes_sha256": null,
      "norm_sha256": null,
      "reason": "anti-bot challenge (HTTP 403); not bypassed"
+    },
+    {
+     "at": "2026-11-21T13:34:08Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "b4eb361a15bd34c96f6bf5eb6f8a63c4172e1712926b4812099231508b02d9b8",
+     "norm_sha256": "fd6349450b06d2330cf36ba5082c31285fac5faaf841274c2ca05bd992a8c1d5"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 0
   },
   "openai/usage_policy": {
@@ -457,24 +474,32 @@
    "surface": "usage_policy",
    "url": "https://openai.com/policies/usage-policies/",
    "latest": {
-    "fetched_at": "2026-11-20T14:08:53Z",
+    "fetched_at": "2026-11-21T13:34:09Z",
     "url": "https://openai.com/policies/usage-policies/",
     "normaliser": "csoai-norm-v1",
-    "state": "UNCHECKABLE",
-    "reason": "anti-bot challenge (HTTP 403); not bypassed",
+    "state": "OK",
+    "reason": null,
     "robots": "allow",
-    "http_status": 403,
+    "http_status": 200,
     "final_url": "https://openai.com/policies/usage-policies/",
     "redirected": false,
-    "content_type": "text/html; charset=UTF-8",
+    "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 9997,
-    "bytes_sha256": null,
-    "norm_sha256": null,
+    "byte_length": 386019,
+    "bytes_sha256": "c8cb314bd8d1a455a74c315df9335320725e1a2a3dac73b862020a83faa3e6b1",
+    "norm_sha256": "88b482e6a0782b91b24231ede9512bb5dd1a3a6af7c82fcba9bcb83407d8c115",
     "robots_http_status": 200
    },
-   "last_ok": null,
+   "last_ok": {
+    "fetched_at": "2026-11-21T13:34:09Z",
+    "bytes_sha256": "c8cb314bd8d1a455a74c315df9335320725e1a2a3dac73b862020a83faa3e6b1",
+    "norm_sha256": "88b482e6a0782b91b24231ede9512bb5dd1a3a6af7c82fcba9bcb83407d8c115",
+    "byte_length": 386019,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
    "history": [
     {
      "at": "2026-09-03T09:51:48Z",
@@ -895,9 +920,18 @@
      "bytes_sha256": null,
      "norm_sha256": null,
      "reason": "anti-bot challenge (HTTP 403); not bypassed"
+    },
+    {
+     "at": "2026-11-21T13:34:09Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "c8cb314bd8d1a455a74c315df9335320725e1a2a3dac73b862020a83faa3e6b1",
+     "norm_sha256": "88b482e6a0782b91b24231ede9512bb5dd1a3a6af7c82fcba9bcb83407d8c115"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 0
   },
   "openai/model_cards": {
@@ -905,24 +939,32 @@
    "surface": "model_cards",
    "url": "https://openai.com/safety/evaluations-hub/",
    "latest": {
-    "fetched_at": "2026-11-20T14:08:53Z",
+    "fetched_at": "2026-11-21T13:34:09Z",
     "url": "https://openai.com/safety/evaluations-hub/",
     "normaliser": "csoai-norm-v1",
-    "state": "UNCHECKABLE",
-    "reason": "anti-bot challenge (HTTP 403); not bypassed",
+    "state": "OK",
+    "reason": null,
     "robots": "allow",
-    "http_status": 403,
-    "final_url": "https://openai.com/safety/evaluations-hub/",
-    "redirected": false,
-    "content_type": "text/html; charset=UTF-8",
+    "http_status": 200,
+    "final_url": "https://deploymentsafety.openai.com/",
+    "redirected": true,
+    "content_type": "text/html",
     "etag": null,
     "last_modified": null,
-    "byte_length": 9994,
-    "bytes_sha256": null,
-    "norm_sha256": null,
+    "byte_length": 56773,
+    "bytes_sha256": "d7ae754b1199b4fca5b3a12df0c26811dfc8e7c6eb697378d63c51bd6becffd5",
+    "norm_sha256": "2639bc0c17758f88a53f365e1fe9025a7b3f7ed7d3afa654e43e88579bf1382e",
     "robots_http_status": 200
    },
-   "last_ok": null,
+   "last_ok": {
+    "fetched_at": "2026-11-21T13:34:09Z",
+    "bytes_sha256": "d7ae754b1199b4fca5b3a12df0c26811dfc8e7c6eb697378d63c51bd6becffd5",
+    "norm_sha256": "2639bc0c17758f88a53f365e1fe9025a7b3f7ed7d3afa654e43e88579bf1382e",
+    "byte_length": 56773,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
    "history": [
     {
      "at": "2026-09-03T09:51:48Z",
@@ -1343,9 +1385,18 @@
      "bytes_sha256": null,
      "norm_sha256": null,
      "reason": "anti-bot challenge (HTTP 403); not bypassed"
+    },
+    {
+     "at": "2026-11-21T13:34:09Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "d7ae754b1199b4fca5b3a12df0c26811dfc8e7c6eb697378d63c51bd6becffd5",
+     "norm_sha256": "2639bc0c17758f88a53f365e1fe9025a7b3f7ed7d3afa654e43e88579bf1382e"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 0
   },
   "openai/pricing": {
@@ -1353,24 +1404,32 @@
    "surface": "pricing",
    "url": "https://openai.com/api/pricing/",
    "latest": {
-    "fetched_at": "2026-11-20T14:08:54Z",
+    "fetched_at": "2026-11-21T13:34:10Z",
     "url": "https://openai.com/api/pricing/",
     "normaliser": "csoai-norm-v1",
-    "state": "UNCHECKABLE",
-    "reason": "anti-bot challenge (HTTP 403); not bypassed",
+    "state": "OK",
+    "reason": null,
     "robots": "allow",
-    "http_status": 403,
-    "final_url": "https://openai.com/api/pricing/",
-    "redirected": false,
-    "content_type": "text/html; charset=UTF-8",
+    "http_status": 200,
+    "final_url": "https://openai.com/business/pricing/#api",
+    "redirected": true,
+    "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 9939,
-    "bytes_sha256": null,
-    "norm_sha256": null,
+    "byte_length": 809517,
+    "bytes_sha256": "ecd7a65f1f488364ed0151d3b4a849c85fb5869e034582bb26a4e81c79d0fc22",
+    "norm_sha256": "fe189fbec025e61bb9301718e7a3971b8883c410a50398b18d16d71492c3a274",
     "robots_http_status": 200
    },
-   "last_ok": null,
+   "last_ok": {
+    "fetched_at": "2026-11-21T13:34:10Z",
+    "bytes_sha256": "ecd7a65f1f488364ed0151d3b4a849c85fb5869e034582bb26a4e81c79d0fc22",
+    "norm_sha256": "fe189fbec025e61bb9301718e7a3971b8883c410a50398b18d16d71492c3a274",
+    "byte_length": 809517,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
    "history": [
     {
      "at": "2026-09-03T09:51:48Z",
@@ -1791,9 +1850,18 @@
      "bytes_sha256": null,
      "norm_sha256": null,
      "reason": "anti-bot challenge (HTTP 403); not bypassed"
+    },
+    {
+     "at": "2026-11-21T13:34:10Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "ecd7a65f1f488364ed0151d3b4a849c85fb5869e034582bb26a4e81c79d0fc22",
+     "norm_sha256": "fe189fbec025e61bb9301718e7a3971b8883c410a50398b18d16d71492c3a274"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 0
   },
   "openai/safety_policy": {
@@ -1801,24 +1869,32 @@
    "surface": "safety_policy",
    "url": "https://openai.com/safety/",
    "latest": {
-    "fetched_at": "2026-11-20T14:08:55Z",
+    "fetched_at": "2026-11-21T13:34:11Z",
     "url": "https://openai.com/safety/",
     "normaliser": "csoai-norm-v1",
-    "state": "UNCHECKABLE",
-    "reason": "anti-bot challenge (HTTP 403); not bypassed",
+    "state": "OK",
+    "reason": null,
     "robots": "allow",
-    "http_status": 403,
-    "final_url": "https://openai.com/safety/",
-    "redirected": false,
-    "content_type": "text/html; charset=UTF-8",
+    "http_status": 200,
+    "final_url": "https://openai.com/safety-alignment/",
+    "redirected": true,
+    "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 9924,
-    "bytes_sha256": null,
-    "norm_sha256": null,
+    "byte_length": 354244,
+    "bytes_sha256": "a13288ea00681dba8a8b6949e285251c3a002373f1a56731391d6cc18698712e",
+    "norm_sha256": "1cd2b2ad46aa0ddc8b7ceb3681332655aca25c16847f9b05ac9d9ce4c699e537",
     "robots_http_status": 200
    },
-   "last_ok": null,
+   "last_ok": {
+    "fetched_at": "2026-11-21T13:34:11Z",
+    "bytes_sha256": "a13288ea00681dba8a8b6949e285251c3a002373f1a56731391d6cc18698712e",
+    "norm_sha256": "1cd2b2ad46aa0ddc8b7ceb3681332655aca25c16847f9b05ac9d9ce4c699e537",
+    "byte_length": 354244,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
    "history": [
     {
      "at": "2026-09-03T09:51:48Z",
@@ -2239,9 +2315,18 @@
      "bytes_sha256": null,
      "norm_sha256": null,
      "reason": "anti-bot challenge (HTTP 403); not bypassed"
+    },
+    {
+     "at": "2026-11-21T13:34:11Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "a13288ea00681dba8a8b6949e285251c3a002373f1a56731391d6cc18698712e",
+     "norm_sha256": "1cd2b2ad46aa0ddc8b7ceb3681332655aca25c16847f9b05ac9d9ce4c699e537"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 0
   },
   "openai/art50_marking": {
@@ -2249,24 +2334,32 @@
    "surface": "art50_marking",
    "url": "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content",
    "latest": {
-    "fetched_at": "2026-11-20T14:08:55Z",
+    "fetched_at": "2026-11-21T13:34:11Z",
     "url": "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content",
     "normaliser": "csoai-norm-v1",
-    "state": "UNCHECKABLE",
-    "reason": "anti-bot challenge (HTTP 403); not bypassed",
+    "state": "OK",
+    "reason": null,
     "robots": "allow",
-    "http_status": 403,
-    "final_url": "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content",
-    "redirected": false,
-    "content_type": "text/html; charset=UTF-8",
+    "http_status": 200,
+    "final_url": "https://help.openai.com/en/articles/8912793-provenance-signals-in-content-processed-by-openai-tools",
+    "redirected": true,
+    "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 10318,
-    "bytes_sha256": null,
-    "norm_sha256": null,
+    "byte_length": 118475,
+    "bytes_sha256": "d22a98b01846e8c74e5efb84119fb826fe54d28c75e0b9b69fb05e0fbd47dff8",
+    "norm_sha256": "39a12666e0e97769a878821e397f5eaedb45da01788535d6819b795e3d7b62b2",
     "robots_http_status": 200
    },
-   "last_ok": null,
+   "last_ok": {
+    "fetched_at": "2026-11-21T13:34:11Z",
+    "bytes_sha256": "d22a98b01846e8c74e5efb84119fb826fe54d28c75e0b9b69fb05e0fbd47dff8",
+    "norm_sha256": "39a12666e0e97769a878821e397f5eaedb45da01788535d6819b795e3d7b62b2",
+    "byte_length": 118475,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
    "history": [
     {
      "at": "2026-09-03T09:51:48Z",
@@ -2687,9 +2780,18 @@
      "bytes_sha256": null,
      "norm_sha256": null,
      "reason": "anti-bot challenge (HTTP 403); not bypassed"
+    },
+    {
+     "at": "2026-11-21T13:34:11Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "d22a98b01846e8c74e5efb84119fb826fe54d28c75e0b9b69fb05e0fbd47dff8",
+     "norm_sha256": "39a12666e0e97769a878821e397f5eaedb45da01788535d6819b795e3d7b62b2"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 0
   },
   "anthropic/terms": {
@@ -2697,7 +2799,7 @@
    "surface": "terms",
    "url": "https://www.anthropic.com/legal/commercial-terms",
    "latest": {
-    "fetched_at": "2026-11-20T14:08:55Z",
+    "fetched_at": "2026-11-21T13:34:12Z",
     "url": "https://www.anthropic.com/legal/commercial-terms",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -2709,16 +2811,16 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 213151,
-    "bytes_sha256": "f2f7c8f26846c5f584f5c397ba36911835722fd8e198ae951f87cd1d483eb06d",
+    "byte_length": 212148,
+    "bytes_sha256": "7fd04fa0ab4185af067335c6290210ed5ac83fa380eb6cfc160601c9487ba9f1",
     "norm_sha256": "af7339aa6cd891ca0433cc84f5f98e8a2d428bcc178578d39297285202f3b0ea",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:08:55Z",
-    "bytes_sha256": "f2f7c8f26846c5f584f5c397ba36911835722fd8e198ae951f87cd1d483eb06d",
+    "fetched_at": "2026-11-21T13:34:12Z",
+    "bytes_sha256": "7fd04fa0ab4185af067335c6290210ed5ac83fa380eb6cfc160601c9487ba9f1",
     "norm_sha256": "af7339aa6cd891ca0433cc84f5f98e8a2d428bcc178578d39297285202f3b0ea",
-    "byte_length": 213151,
+    "byte_length": 212148,
     "etag": null,
     "last_modified": null,
     "http_status": 200
@@ -3142,9 +3244,21 @@
      "prev_norm_sha256": "af7339aa6cd891ca0433cc84f5f98e8a2d428bcc178578d39297285202f3b0ea",
      "prev_bytes_sha256": "6c5ef6eeb98311c7d9175315e0debf951ae391e8f4d8581f888e2a58c26ed635",
      "prev_fetched_at": "2026-11-19T14:31:07Z"
+    },
+    {
+     "at": "2026-11-21T13:34:12Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "7fd04fa0ab4185af067335c6290210ed5ac83fa380eb6cfc160601c9487ba9f1",
+     "norm_sha256": "af7339aa6cd891ca0433cc84f5f98e8a2d428bcc178578d39297285202f3b0ea",
+     "prev_norm_sha256": "af7339aa6cd891ca0433cc84f5f98e8a2d428bcc178578d39297285202f3b0ea",
+     "prev_bytes_sha256": "f2f7c8f26846c5f584f5c397ba36911835722fd8e198ae951f87cd1d483eb06d",
+     "prev_fetched_at": "2026-11-20T14:08:55Z"
     }
    ],
-   "n_runs": 40,
+   "n_runs": 41,
    "n_changed": 2
   },
   "anthropic/usage_policy": {
@@ -3152,7 +3266,7 @@
    "surface": "usage_policy",
    "url": "https://www.anthropic.com/legal/aup",
    "latest": {
-    "fetched_at": "2026-11-20T14:08:56Z",
+    "fetched_at": "2026-11-21T13:34:13Z",
     "url": "https://www.anthropic.com/legal/aup",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -3164,16 +3278,16 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 992254,
-    "bytes_sha256": "753a9cfd76772e80a42e8353c540f3a16141c02a91167829db2ecaf3e7637c5c",
+    "byte_length": 991324,
+    "bytes_sha256": "2296272dde64ea57cf7351e94b565f9954bdb708f38bee0a72b239503e59f5d2",
     "norm_sha256": "309f11c006dbf2898a5b449237a36d25b9151c965e7af2574122f3ef4f8189af",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:08:56Z",
-    "bytes_sha256": "753a9cfd76772e80a42e8353c540f3a16141c02a91167829db2ecaf3e7637c5c",
+    "fetched_at": "2026-11-21T13:34:13Z",
+    "bytes_sha256": "2296272dde64ea57cf7351e94b565f9954bdb708f38bee0a72b239503e59f5d2",
     "norm_sha256": "309f11c006dbf2898a5b449237a36d25b9151c965e7af2574122f3ef4f8189af",
-    "byte_length": 992254,
+    "byte_length": 991324,
     "etag": null,
     "last_modified": null,
     "http_status": 200
@@ -3597,9 +3711,21 @@
      "prev_norm_sha256": "309f11c006dbf2898a5b449237a36d25b9151c965e7af2574122f3ef4f8189af",
      "prev_bytes_sha256": "e83f174ba4c6010dbfd1403571194dc5bdbd2105c89c912bf01cec1f2b4b96d2",
      "prev_fetched_at": "2026-11-19T14:31:08Z"
+    },
+    {
+     "at": "2026-11-21T13:34:13Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "2296272dde64ea57cf7351e94b565f9954bdb708f38bee0a72b239503e59f5d2",
+     "norm_sha256": "309f11c006dbf2898a5b449237a36d25b9151c965e7af2574122f3ef4f8189af",
+     "prev_norm_sha256": "309f11c006dbf2898a5b449237a36d25b9151c965e7af2574122f3ef4f8189af",
+     "prev_bytes_sha256": "753a9cfd76772e80a42e8353c540f3a16141c02a91167829db2ecaf3e7637c5c",
+     "prev_fetched_at": "2026-11-20T14:08:56Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 2
   },
   "anthropic/model_cards": {
@@ -3607,7 +3733,7 @@
    "surface": "model_cards",
    "url": "https://www.anthropic.com/transparency",
    "latest": {
-    "fetched_at": "2026-11-20T14:08:57Z",
+    "fetched_at": "2026-11-21T13:34:14Z",
     "url": "https://www.anthropic.com/transparency",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -3619,16 +3745,16 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 1041380,
-    "bytes_sha256": "fb41a51ed08a7f05af74fcf3088e7486d57de8f8c7f7af7dbdb596bbfb3ebfe6",
+    "byte_length": 867923,
+    "bytes_sha256": "623d6479e0789ffb5591d9d726cd84145c82733e1d73c16005ca0b41e49faee7",
     "norm_sha256": "e25906a99486a91f1f487c100eb03602d6475e98f955ac83ec7ade8dbebf3d6a",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:08:57Z",
-    "bytes_sha256": "fb41a51ed08a7f05af74fcf3088e7486d57de8f8c7f7af7dbdb596bbfb3ebfe6",
+    "fetched_at": "2026-11-21T13:34:14Z",
+    "bytes_sha256": "623d6479e0789ffb5591d9d726cd84145c82733e1d73c16005ca0b41e49faee7",
     "norm_sha256": "e25906a99486a91f1f487c100eb03602d6475e98f955ac83ec7ade8dbebf3d6a",
-    "byte_length": 1041380,
+    "byte_length": 867923,
     "etag": null,
     "last_modified": null,
     "http_status": 200
@@ -4054,9 +4180,21 @@
      "prev_norm_sha256": "e25906a99486a91f1f487c100eb03602d6475e98f955ac83ec7ade8dbebf3d6a",
      "prev_bytes_sha256": "c7aea7bb106f4455fed1e26467faa2d732d3c3e4448fc4bb34da8eec6495e9cc",
      "prev_fetched_at": "2026-11-19T14:31:09Z"
+    },
+    {
+     "at": "2026-11-21T13:34:14Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "623d6479e0789ffb5591d9d726cd84145c82733e1d73c16005ca0b41e49faee7",
+     "norm_sha256": "e25906a99486a91f1f487c100eb03602d6475e98f955ac83ec7ade8dbebf3d6a",
+     "prev_norm_sha256": "e25906a99486a91f1f487c100eb03602d6475e98f955ac83ec7ade8dbebf3d6a",
+     "prev_bytes_sha256": "fb41a51ed08a7f05af74fcf3088e7486d57de8f8c7f7af7dbdb596bbfb3ebfe6",
+     "prev_fetched_at": "2026-11-20T14:08:57Z"
     }
    ],
-   "n_runs": 40,
+   "n_runs": 41,
    "n_changed": 1
   },
   "anthropic/pricing": {
@@ -4064,7 +4202,7 @@
    "surface": "pricing",
    "url": "https://www.anthropic.com/pricing",
    "latest": {
-    "fetched_at": "2026-11-20T14:08:58Z",
+    "fetched_at": "2026-11-21T13:34:15Z",
     "url": "https://www.anthropic.com/pricing",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -4077,13 +4215,13 @@
     "etag": null,
     "last_modified": null,
     "byte_length": 1446012,
-    "bytes_sha256": "e6a18052cfd55a2c0d2fec0379cf8008cfaac71c7e7977dda2fe95f013ca7b02",
+    "bytes_sha256": "2a067d0363be5ded0561fbd5e33b01d018dea609b2420031f318a2524692b7c6",
     "norm_sha256": "b7a9838d0c94206f5fa6ee2891fe596228d9499f1b74539d0a0263946bc1bf48",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:08:58Z",
-    "bytes_sha256": "e6a18052cfd55a2c0d2fec0379cf8008cfaac71c7e7977dda2fe95f013ca7b02",
+    "fetched_at": "2026-11-21T13:34:15Z",
+    "bytes_sha256": "2a067d0363be5ded0561fbd5e33b01d018dea609b2420031f318a2524692b7c6",
     "norm_sha256": "b7a9838d0c94206f5fa6ee2891fe596228d9499f1b74539d0a0263946bc1bf48",
     "byte_length": 1446012,
     "etag": null,
@@ -4545,9 +4683,21 @@
      "prev_norm_sha256": "b7a9838d0c94206f5fa6ee2891fe596228d9499f1b74539d0a0263946bc1bf48",
      "prev_bytes_sha256": "d9193238ce3899c04b2c6f83d7a5a8440ecbaa4479ef363aba89153206e8e5ee",
      "prev_fetched_at": "2026-11-19T14:31:09Z"
+    },
+    {
+     "at": "2026-11-21T13:34:15Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "2a067d0363be5ded0561fbd5e33b01d018dea609b2420031f318a2524692b7c6",
+     "norm_sha256": "b7a9838d0c94206f5fa6ee2891fe596228d9499f1b74539d0a0263946bc1bf48",
+     "prev_norm_sha256": "b7a9838d0c94206f5fa6ee2891fe596228d9499f1b74539d0a0263946bc1bf48",
+     "prev_bytes_sha256": "e6a18052cfd55a2c0d2fec0379cf8008cfaac71c7e7977dda2fe95f013ca7b02",
+     "prev_fetched_at": "2026-11-20T14:08:58Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 3
   },
   "anthropic/safety_policy": {
@@ -4555,7 +4705,7 @@
    "surface": "safety_policy",
    "url": "https://www.anthropic.com/responsible-scaling-policy",
    "latest": {
-    "fetched_at": "2026-11-20T14:08:59Z",
+    "fetched_at": "2026-11-21T13:34:16Z",
     "url": "https://www.anthropic.com/responsible-scaling-policy",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -4567,16 +4717,16 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 205414,
-    "bytes_sha256": "afa9a011c7cbdfb711df4d5a720505cace61b8e4024f266a3b9b22e877d22100",
+    "byte_length": 204260,
+    "bytes_sha256": "21e4256d17443f9b92d66f6ca1f0e643159284468fc1aec132c2c10fe4f99df9",
     "norm_sha256": "e52235803df06a91f88bf9864c505e1a1b62fc312031672a90693fe28da8f4df",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:08:59Z",
-    "bytes_sha256": "afa9a011c7cbdfb711df4d5a720505cace61b8e4024f266a3b9b22e877d22100",
+    "fetched_at": "2026-11-21T13:34:16Z",
+    "bytes_sha256": "21e4256d17443f9b92d66f6ca1f0e643159284468fc1aec132c2c10fe4f99df9",
     "norm_sha256": "e52235803df06a91f88bf9864c505e1a1b62fc312031672a90693fe28da8f4df",
-    "byte_length": 205414,
+    "byte_length": 204260,
     "etag": null,
     "last_modified": null,
     "http_status": 200
@@ -4988,9 +5138,21 @@
      "prev_norm_sha256": "e52235803df06a91f88bf9864c505e1a1b62fc312031672a90693fe28da8f4df",
      "prev_bytes_sha256": "9aac4b28e6a9fd32df2bab3a645a950f04eb5cba6b2f3b35a2c89eaab93b8e0e",
      "prev_fetched_at": "2026-11-19T14:31:11Z"
+    },
+    {
+     "at": "2026-11-21T13:34:16Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "21e4256d17443f9b92d66f6ca1f0e643159284468fc1aec132c2c10fe4f99df9",
+     "norm_sha256": "e52235803df06a91f88bf9864c505e1a1b62fc312031672a90693fe28da8f4df",
+     "prev_norm_sha256": "e52235803df06a91f88bf9864c505e1a1b62fc312031672a90693fe28da8f4df",
+     "prev_bytes_sha256": "afa9a011c7cbdfb711df4d5a720505cace61b8e4024f266a3b9b22e877d22100",
+     "prev_fetched_at": "2026-11-20T14:08:59Z"
     }
    ],
-   "n_runs": 40,
+   "n_runs": 41,
    "n_changed": 2
   },
   "anthropic/art50_marking": {
@@ -4998,7 +5160,7 @@
    "surface": "art50_marking",
    "url": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
    "latest": {
-    "fetched_at": "2026-11-20T14:08:59Z",
+    "fetched_at": "2026-11-21T13:34:16Z",
     "url": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -5010,9 +5172,9 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 248585,
-    "bytes_sha256": "c1ca4ffb5169b1f64031aa5eea2833716ff9a6452875ec2c9748661b355c277c",
-    "norm_sha256": "1d33d45023808c73b9d56d9b04540a3304e9c6c5801388619174033ac3a316c8",
+    "byte_length": 248593,
+    "bytes_sha256": "2bd3ff19524862b1ea8260c245dadf5b45ef7bd7668d4cf13ccef600b0b69104",
+    "norm_sha256": "0d39732784338fc0744b720271e898903c4c84002551abdece53ff17ef48f132",
     "robots_http_status": 200
    },
    "last_ok": {
@@ -5463,14 +5625,23 @@
      "robots": "allow",
      "bytes_sha256": "c1ca4ffb5169b1f64031aa5eea2833716ff9a6452875ec2c9748661b355c277c",
      "norm_sha256": "1d33d45023808c73b9d56d9b04540a3304e9c6c5801388619174033ac3a316c8"
+    },
+    {
+     "at": "2026-11-21T13:34:16Z",
+     "kind": "UNCONFIRMED",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "2bd3ff19524862b1ea8260c245dadf5b45ef7bd7668d4cf13ccef600b0b69104",
+     "norm_sha256": "0d39732784338fc0744b720271e898903c4c84002551abdece53ff17ef48f132"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 3,
    "pending": {
-    "norm_sha256": "1d33d45023808c73b9d56d9b04540a3304e9c6c5801388619174033ac3a316c8",
-    "bytes_sha256": "c1ca4ffb5169b1f64031aa5eea2833716ff9a6452875ec2c9748661b355c277c",
-    "first_seen_at": "2026-11-20T14:08:59Z",
+    "norm_sha256": "0d39732784338fc0744b720271e898903c4c84002551abdece53ff17ef48f132",
+    "bytes_sha256": "2bd3ff19524862b1ea8260c245dadf5b45ef7bd7668d4cf13ccef600b0b69104",
+    "first_seen_at": "2026-11-21T13:34:16Z",
     "n_seen": 1
    }
   },
@@ -5479,7 +5650,7 @@
    "surface": "terms",
    "url": "https://ai.google.dev/gemini-api/terms",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:00Z",
+    "fetched_at": "2026-11-21T13:34:17Z",
     "url": "https://ai.google.dev/gemini-api/terms",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -5491,16 +5662,16 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 58130,
-    "bytes_sha256": "1183dfe0433f4274a4de5619aea1d9dd1ad41d28a06720a0e044983f7adcfc06",
+    "byte_length": 58186,
+    "bytes_sha256": "4b8cf582d8079fd5603ac1e2211d11ab5f937c598650efce2f606f212d0f0775",
     "norm_sha256": "8d60d0da9c2162344725405be82e34d390d8208186bce452d5aa12b0b1c76934",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:00Z",
-    "bytes_sha256": "1183dfe0433f4274a4de5619aea1d9dd1ad41d28a06720a0e044983f7adcfc06",
+    "fetched_at": "2026-11-21T13:34:17Z",
+    "bytes_sha256": "4b8cf582d8079fd5603ac1e2211d11ab5f937c598650efce2f606f212d0f0775",
     "norm_sha256": "8d60d0da9c2162344725405be82e34d390d8208186bce452d5aa12b0b1c76934",
-    "byte_length": 58130,
+    "byte_length": 58186,
     "etag": null,
     "last_modified": null,
     "http_status": 200
@@ -5974,9 +6145,21 @@
      "prev_norm_sha256": "8d60d0da9c2162344725405be82e34d390d8208186bce452d5aa12b0b1c76934",
      "prev_bytes_sha256": "1caca128b024341382342c9a71f40f38aab32f47dca07933e5ab083f62fd1133",
      "prev_fetched_at": "2026-11-19T14:31:11Z"
+    },
+    {
+     "at": "2026-11-21T13:34:17Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "4b8cf582d8079fd5603ac1e2211d11ab5f937c598650efce2f606f212d0f0775",
+     "norm_sha256": "8d60d0da9c2162344725405be82e34d390d8208186bce452d5aa12b0b1c76934",
+     "prev_norm_sha256": "8d60d0da9c2162344725405be82e34d390d8208186bce452d5aa12b0b1c76934",
+     "prev_bytes_sha256": "1183dfe0433f4274a4de5619aea1d9dd1ad41d28a06720a0e044983f7adcfc06",
+     "prev_fetched_at": "2026-11-20T14:09:00Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 1
   },
   "google/usage_policy": {
@@ -5984,7 +6167,7 @@
    "surface": "usage_policy",
    "url": "https://policies.google.com/terms/generative-ai/use-policy",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:01Z",
+    "fetched_at": "2026-11-21T13:34:17Z",
     "url": "https://policies.google.com/terms/generative-ai/use-policy",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -5996,16 +6179,16 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 542694,
-    "bytes_sha256": "940dceab6f3a08f3db8e10aee49c0bf40195f98ff1235a35ef2ebe18211c2aed",
+    "byte_length": 542721,
+    "bytes_sha256": "8f73d9c1b623f36168eb0b169ed8488192f2c2001cfa9b78a939a27a634ae027",
     "norm_sha256": "b185b553f36a79a63c344fc7ca5058757ed9400eb2ddfe6aaa8b0e20a0a40d06",
     "robots_http_status": 404
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:01Z",
-    "bytes_sha256": "940dceab6f3a08f3db8e10aee49c0bf40195f98ff1235a35ef2ebe18211c2aed",
+    "fetched_at": "2026-11-21T13:34:17Z",
+    "bytes_sha256": "8f73d9c1b623f36168eb0b169ed8488192f2c2001cfa9b78a939a27a634ae027",
     "norm_sha256": "b185b553f36a79a63c344fc7ca5058757ed9400eb2ddfe6aaa8b0e20a0a40d06",
-    "byte_length": 542694,
+    "byte_length": 542721,
     "etag": null,
     "last_modified": null,
     "http_status": 200
@@ -6507,9 +6690,21 @@
      "prev_norm_sha256": "b185b553f36a79a63c344fc7ca5058757ed9400eb2ddfe6aaa8b0e20a0a40d06",
      "prev_bytes_sha256": "a73eb6affcebd19ac52bb89f7ee12f947b2279e347f3118e888c0b3b1b0e49b2",
      "prev_fetched_at": "2026-11-19T14:31:12Z"
+    },
+    {
+     "at": "2026-11-21T13:34:17Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "8f73d9c1b623f36168eb0b169ed8488192f2c2001cfa9b78a939a27a634ae027",
+     "norm_sha256": "b185b553f36a79a63c344fc7ca5058757ed9400eb2ddfe6aaa8b0e20a0a40d06",
+     "prev_norm_sha256": "b185b553f36a79a63c344fc7ca5058757ed9400eb2ddfe6aaa8b0e20a0a40d06",
+     "prev_bytes_sha256": "940dceab6f3a08f3db8e10aee49c0bf40195f98ff1235a35ef2ebe18211c2aed",
+     "prev_fetched_at": "2026-11-20T14:09:01Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 0
   },
   "google/model_cards": {
@@ -6517,7 +6712,7 @@
    "surface": "model_cards",
    "url": "https://modelcards.withgoogle.com/model-cards",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:01Z",
+    "fetched_at": "2026-11-21T13:34:18Z",
     "url": "https://modelcards.withgoogle.com/model-cards",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -6526,8 +6721,8 @@
     "http_status": 200,
     "final_url": "https://deepmind.google/models/model-cards/",
     "redirected": true,
-    "content_type": "text/html; charset=utf-8",
-    "etag": null,
+    "content_type": "text/html",
+    "etag": "\"kSecjw\"",
     "last_modified": null,
     "byte_length": 142440,
     "bytes_sha256": "892e6b5e19968b5dd317373e0a8d38044e9d4b5a807bb0ec1e7e346f00b31e31",
@@ -6535,11 +6730,11 @@
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-18T14:15:18Z",
-    "bytes_sha256": "00186475feb295f2d5ffa81daf6be7529d81596ac2b14995bae7d5ce7847d768",
-    "norm_sha256": "c86eddd4ed3433d6dc0a2d71f667d678755b5a5190bbd20ba4bcfd93394d698f",
-    "byte_length": 24550,
-    "etag": "\"LQRfDw\"",
+    "fetched_at": "2026-11-21T13:34:18Z",
+    "bytes_sha256": "892e6b5e19968b5dd317373e0a8d38044e9d4b5a807bb0ec1e7e346f00b31e31",
+    "norm_sha256": "4621582dfd44df0ff5b635a93220ecfdcf6bc92b5f0af44ec01b6937e25593ee",
+    "byte_length": 142440,
+    "etag": "\"kSecjw\"",
     "last_modified": null,
     "http_status": 200
    },
@@ -6909,23 +7104,30 @@
      "robots": "allow",
      "bytes_sha256": "892e6b5e19968b5dd317373e0a8d38044e9d4b5a807bb0ec1e7e346f00b31e31",
      "norm_sha256": "4621582dfd44df0ff5b635a93220ecfdcf6bc92b5f0af44ec01b6937e25593ee"
+    },
+    {
+     "at": "2026-11-21T13:34:18Z",
+     "kind": "CHANGED",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "892e6b5e19968b5dd317373e0a8d38044e9d4b5a807bb0ec1e7e346f00b31e31",
+     "norm_sha256": "4621582dfd44df0ff5b635a93220ecfdcf6bc92b5f0af44ec01b6937e25593ee",
+     "prev_norm_sha256": "c86eddd4ed3433d6dc0a2d71f667d678755b5a5190bbd20ba4bcfd93394d698f",
+     "prev_bytes_sha256": "00186475feb295f2d5ffa81daf6be7529d81596ac2b14995bae7d5ce7847d768",
+     "prev_fetched_at": "2026-11-18T14:15:18Z",
+     "leaf": "card-google-model_cards-20261121T133408Z-unsigned.json"
     }
    ],
-   "n_runs": 40,
-   "n_changed": 6,
-   "pending": {
-    "norm_sha256": "4621582dfd44df0ff5b635a93220ecfdcf6bc92b5f0af44ec01b6937e25593ee",
-    "bytes_sha256": "892e6b5e19968b5dd317373e0a8d38044e9d4b5a807bb0ec1e7e346f00b31e31",
-    "first_seen_at": "2026-11-20T14:09:01Z",
-    "n_seen": 1
-   }
+   "n_runs": 41,
+   "n_changed": 7
   },
   "google/pricing": {
    "provider": "google",
    "surface": "pricing",
    "url": "https://ai.google.dev/gemini-api/docs/pricing",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:03Z",
+    "fetched_at": "2026-11-21T13:34:20Z",
     "url": "https://ai.google.dev/gemini-api/docs/pricing",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -6937,16 +7139,16 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 156127,
-    "bytes_sha256": "15852b7e4fcb596f52ac761ace1c3039da1d081e27046b37857a3cbb17bc2add",
+    "byte_length": 156222,
+    "bytes_sha256": "083a515d496334d5beef363762334de2abb7b9523246045bbf3e85d96e3b81bf",
     "norm_sha256": "589778f208577fed08682fc0d07f247d248fa9f3676d014de1ec84a2f2f17b37",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:03Z",
-    "bytes_sha256": "15852b7e4fcb596f52ac761ace1c3039da1d081e27046b37857a3cbb17bc2add",
+    "fetched_at": "2026-11-21T13:34:20Z",
+    "bytes_sha256": "083a515d496334d5beef363762334de2abb7b9523246045bbf3e85d96e3b81bf",
     "norm_sha256": "589778f208577fed08682fc0d07f247d248fa9f3676d014de1ec84a2f2f17b37",
-    "byte_length": 156127,
+    "byte_length": 156222,
     "etag": null,
     "last_modified": null,
     "http_status": 200
@@ -7412,9 +7614,21 @@
      "prev_norm_sha256": "589778f208577fed08682fc0d07f247d248fa9f3676d014de1ec84a2f2f17b37",
      "prev_bytes_sha256": "fcdbd9cdd9e2381103a45a5e035cdeff33ddc30ac150c4ea4378772bdc7e210a",
      "prev_fetched_at": "2026-11-19T14:31:13Z"
+    },
+    {
+     "at": "2026-11-21T13:34:20Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "083a515d496334d5beef363762334de2abb7b9523246045bbf3e85d96e3b81bf",
+     "norm_sha256": "589778f208577fed08682fc0d07f247d248fa9f3676d014de1ec84a2f2f17b37",
+     "prev_norm_sha256": "589778f208577fed08682fc0d07f247d248fa9f3676d014de1ec84a2f2f17b37",
+     "prev_bytes_sha256": "15852b7e4fcb596f52ac761ace1c3039da1d081e27046b37857a3cbb17bc2add",
+     "prev_fetched_at": "2026-11-20T14:09:03Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 2
   },
   "google/safety_policy": {
@@ -7422,7 +7636,7 @@
    "surface": "safety_policy",
    "url": "https://ai.google/responsibility/principles/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:03Z",
+    "fetched_at": "2026-11-21T13:34:21Z",
     "url": "https://ai.google/responsibility/principles/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -7431,8 +7645,8 @@
     "http_status": 200,
     "final_url": "https://ai.google/principles/",
     "redirected": true,
-    "content_type": "text/html; charset=utf-8",
-    "etag": null,
+    "content_type": "text/html",
+    "etag": "\"pxl23g\"",
     "last_modified": null,
     "byte_length": 171261,
     "bytes_sha256": "9f6259b5f8bd4d62224a3f61b6e0295b3e236e76ea94f168ed3346e4dd2c4091",
@@ -7440,11 +7654,11 @@
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:03Z",
+    "fetched_at": "2026-11-21T13:34:21Z",
     "bytes_sha256": "9f6259b5f8bd4d62224a3f61b6e0295b3e236e76ea94f168ed3346e4dd2c4091",
     "norm_sha256": "a909d0afe6633ca7283498cbb97ac37b30c4d9b5b38594bdc7941b4a91073d7f",
     "byte_length": 171261,
-    "etag": null,
+    "etag": "\"pxl23g\"",
     "last_modified": null,
     "http_status": 200
    },
@@ -7714,7 +7928,7 @@
      "prev_fetched_at": "2026-11-18T14:15:20Z"
     }
    ],
-   "n_runs": 40,
+   "n_runs": 41,
    "n_changed": 0
   },
   "google/art50_marking": {
@@ -7722,7 +7936,7 @@
    "surface": "art50_marking",
    "url": "https://deepmind.google/technologies/synthid/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:05Z",
+    "fetched_at": "2026-11-21T13:34:21Z",
     "url": "https://deepmind.google/technologies/synthid/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -7731,20 +7945,20 @@
     "http_status": 200,
     "final_url": "https://deepmind.google/models/synthid/",
     "redirected": true,
-    "content_type": "text/html; charset=utf-8",
-    "etag": null,
+    "content_type": "text/html",
+    "etag": "\"kSecjw\"",
     "last_modified": null,
     "byte_length": 145250,
-    "bytes_sha256": "12af5d46610434363314e833c98d1bfacb27de5f3fcac349ff49aa637ca446ee",
+    "bytes_sha256": "21fac646573c583f2864482e95c766916f15309ce9cfa9c21818a02cb7f9d14a",
     "norm_sha256": "bb3d7fc0c2dc6877a8ae218384083662f7bbee2a774020ee39e17f21bf5b2290",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-16T13:47:48Z",
-    "bytes_sha256": "272d44882d4eee393701395532f72aebf61d26a63c13af1f4322e256d2ae2b51",
-    "norm_sha256": "fb1e32a9a4469bb16a9615c5cd0f298b8ab1546a3ae160771251b41719da7d65",
-    "byte_length": 144858,
-    "etag": "\"IUgEwg\"",
+    "fetched_at": "2026-11-21T13:34:21Z",
+    "bytes_sha256": "21fac646573c583f2864482e95c766916f15309ce9cfa9c21818a02cb7f9d14a",
+    "norm_sha256": "bb3d7fc0c2dc6877a8ae218384083662f7bbee2a774020ee39e17f21bf5b2290",
+    "byte_length": 145250,
+    "etag": "\"kSecjw\"",
     "last_modified": null,
     "http_status": 200
    },
@@ -8165,23 +8379,30 @@
      "robots": "allow",
      "bytes_sha256": "12af5d46610434363314e833c98d1bfacb27de5f3fcac349ff49aa637ca446ee",
      "norm_sha256": "bb3d7fc0c2dc6877a8ae218384083662f7bbee2a774020ee39e17f21bf5b2290"
+    },
+    {
+     "at": "2026-11-21T13:34:21Z",
+     "kind": "CHANGED",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "21fac646573c583f2864482e95c766916f15309ce9cfa9c21818a02cb7f9d14a",
+     "norm_sha256": "bb3d7fc0c2dc6877a8ae218384083662f7bbee2a774020ee39e17f21bf5b2290",
+     "prev_norm_sha256": "fb1e32a9a4469bb16a9615c5cd0f298b8ab1546a3ae160771251b41719da7d65",
+     "prev_bytes_sha256": "272d44882d4eee393701395532f72aebf61d26a63c13af1f4322e256d2ae2b51",
+     "prev_fetched_at": "2026-11-16T13:47:48Z",
+     "leaf": "card-google-art50_marking-20261121T133408Z-unsigned.json"
     }
    ],
-   "n_runs": 42,
-   "n_changed": 1,
-   "pending": {
-    "norm_sha256": "bb3d7fc0c2dc6877a8ae218384083662f7bbee2a774020ee39e17f21bf5b2290",
-    "bytes_sha256": "12af5d46610434363314e833c98d1bfacb27de5f3fcac349ff49aa637ca446ee",
-    "first_seen_at": "2026-11-20T14:09:05Z",
-    "n_seen": 1
-   }
+   "n_runs": 43,
+   "n_changed": 2
   },
   "meta/terms": {
    "provider": "meta",
    "surface": "terms",
    "url": "https://www.llama.com/llama4/license/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:05Z",
+    "fetched_at": "2026-11-21T13:34:22Z",
     "url": "https://www.llama.com/llama4/license/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -8193,16 +8414,16 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 398409,
-    "bytes_sha256": "928ec210ee5657462fc797efb0957783c5536fd0da09d2857a9023c4d2272d31",
+    "byte_length": 398408,
+    "bytes_sha256": "679953463d5aaa2a19eb6f8ad8b62ede04fe44c77ca5a460cf98c343f46c38aa",
     "norm_sha256": "8f72cf794549340c350ae724868ba801590ef561f6aa4f5ef895f561e0131fb0",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:05Z",
-    "bytes_sha256": "928ec210ee5657462fc797efb0957783c5536fd0da09d2857a9023c4d2272d31",
+    "fetched_at": "2026-11-21T13:34:22Z",
+    "bytes_sha256": "679953463d5aaa2a19eb6f8ad8b62ede04fe44c77ca5a460cf98c343f46c38aa",
     "norm_sha256": "8f72cf794549340c350ae724868ba801590ef561f6aa4f5ef895f561e0131fb0",
-    "byte_length": 398409,
+    "byte_length": 398408,
     "etag": null,
     "last_modified": null,
     "http_status": 200
@@ -8668,9 +8889,21 @@
      "prev_norm_sha256": "8f72cf794549340c350ae724868ba801590ef561f6aa4f5ef895f561e0131fb0",
      "prev_bytes_sha256": "92dcfb8d2f03b7d79a95b807a421fa30d248215d4b8748c65cd8f386c194d291",
      "prev_fetched_at": "2026-11-19T14:31:14Z"
+    },
+    {
+     "at": "2026-11-21T13:34:22Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "679953463d5aaa2a19eb6f8ad8b62ede04fe44c77ca5a460cf98c343f46c38aa",
+     "norm_sha256": "8f72cf794549340c350ae724868ba801590ef561f6aa4f5ef895f561e0131fb0",
+     "prev_norm_sha256": "8f72cf794549340c350ae724868ba801590ef561f6aa4f5ef895f561e0131fb0",
+     "prev_bytes_sha256": "928ec210ee5657462fc797efb0957783c5536fd0da09d2857a9023c4d2272d31",
+     "prev_fetched_at": "2026-11-20T14:09:05Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 3
   },
   "meta/usage_policy": {
@@ -8678,7 +8911,7 @@
    "surface": "usage_policy",
    "url": "https://www.llama.com/llama4/use-policy/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:08Z",
+    "fetched_at": "2026-11-21T13:34:25Z",
     "url": "https://www.llama.com/llama4/use-policy/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -8690,16 +8923,16 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 393150,
-    "bytes_sha256": "be5df47282f64a90bb6c4034ec1832699355ad39c2394509d1849c1ba556f852",
+    "byte_length": 394427,
+    "bytes_sha256": "334aa73f597b3e3c5207b9b17cb692bbff3cc88a7e1719c9435b605e7e8883a6",
     "norm_sha256": "8c3dbf6c2b604e9df812d550450894c29c2ca00162e2216c6b126618dfb71583",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:08Z",
-    "bytes_sha256": "be5df47282f64a90bb6c4034ec1832699355ad39c2394509d1849c1ba556f852",
+    "fetched_at": "2026-11-21T13:34:25Z",
+    "bytes_sha256": "334aa73f597b3e3c5207b9b17cb692bbff3cc88a7e1719c9435b605e7e8883a6",
     "norm_sha256": "8c3dbf6c2b604e9df812d550450894c29c2ca00162e2216c6b126618dfb71583",
-    "byte_length": 393150,
+    "byte_length": 394427,
     "etag": null,
     "last_modified": null,
     "http_status": 200
@@ -9165,9 +9398,21 @@
      "prev_norm_sha256": "8c3dbf6c2b604e9df812d550450894c29c2ca00162e2216c6b126618dfb71583",
      "prev_bytes_sha256": "392f51555ef8199e777a0db2172ff8f69808bc6bad4b3dda7b8f5bdd538d63f1",
      "prev_fetched_at": "2026-11-19T14:31:16Z"
+    },
+    {
+     "at": "2026-11-21T13:34:25Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "334aa73f597b3e3c5207b9b17cb692bbff3cc88a7e1719c9435b605e7e8883a6",
+     "norm_sha256": "8c3dbf6c2b604e9df812d550450894c29c2ca00162e2216c6b126618dfb71583",
+     "prev_norm_sha256": "8c3dbf6c2b604e9df812d550450894c29c2ca00162e2216c6b126618dfb71583",
+     "prev_bytes_sha256": "be5df47282f64a90bb6c4034ec1832699355ad39c2394509d1849c1ba556f852",
+     "prev_fetched_at": "2026-11-20T14:09:08Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 3
   },
   "meta/model_cards": {
@@ -9175,7 +9420,7 @@
    "surface": "model_cards",
    "url": "https://www.llama.com/docs/model-cards-and-prompt-formats/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:10Z",
+    "fetched_at": "2026-11-21T13:34:27Z",
     "url": "https://www.llama.com/docs/model-cards-and-prompt-formats/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -9188,13 +9433,13 @@
     "etag": null,
     "last_modified": null,
     "byte_length": 407595,
-    "bytes_sha256": "66c87bf12d5f5554faa40125d43995f6c12d53bfbe1563d7d510a1c60d3b242e",
+    "bytes_sha256": "431cb0369c9549c5dc8b44f435cac6f592947b546eedad98f64b8eb9d7717f77",
     "norm_sha256": "827bd4986b2a5060614da29254601e400fd178a363cdaa300d961934c3bfd8ad",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:10Z",
-    "bytes_sha256": "66c87bf12d5f5554faa40125d43995f6c12d53bfbe1563d7d510a1c60d3b242e",
+    "fetched_at": "2026-11-21T13:34:27Z",
+    "bytes_sha256": "431cb0369c9549c5dc8b44f435cac6f592947b546eedad98f64b8eb9d7717f77",
     "norm_sha256": "827bd4986b2a5060614da29254601e400fd178a363cdaa300d961934c3bfd8ad",
     "byte_length": 407595,
     "etag": null,
@@ -9662,9 +9907,21 @@
      "prev_norm_sha256": "827bd4986b2a5060614da29254601e400fd178a363cdaa300d961934c3bfd8ad",
      "prev_bytes_sha256": "2f1ad4fe60884f7e75c0a8bcb3dba4c8940f6473d6b0ba22b1b7638218984c18",
      "prev_fetched_at": "2026-11-19T14:31:18Z"
+    },
+    {
+     "at": "2026-11-21T13:34:27Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "431cb0369c9549c5dc8b44f435cac6f592947b546eedad98f64b8eb9d7717f77",
+     "norm_sha256": "827bd4986b2a5060614da29254601e400fd178a363cdaa300d961934c3bfd8ad",
+     "prev_norm_sha256": "827bd4986b2a5060614da29254601e400fd178a363cdaa300d961934c3bfd8ad",
+     "prev_bytes_sha256": "66c87bf12d5f5554faa40125d43995f6c12d53bfbe1563d7d510a1c60d3b242e",
+     "prev_fetched_at": "2026-11-20T14:09:10Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 3
   },
   "meta/safety_policy": {
@@ -9672,7 +9929,7 @@
    "surface": "safety_policy",
    "url": "https://ai.meta.com/responsible-ai/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:11Z",
+    "fetched_at": "2026-11-21T13:34:28Z",
     "url": "https://ai.meta.com/responsible-ai/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -9684,16 +9941,16 @@
     "content_type": "text/html; charset=\"utf-8\"",
     "etag": null,
     "last_modified": null,
-    "byte_length": 187639,
-    "bytes_sha256": "fc12df3d80bc172baa6c540cddbcfc04fc086df38ee2aeda7a6c550202b1b72f",
+    "byte_length": 187623,
+    "bytes_sha256": "3f27f4664d0b30ee42e2a55715cfd869f6adece1acbb8c1ed3727e97c53343c1",
     "norm_sha256": "cc60cc5fcee11609761dd33afa6e1dd17c1efd26d2e2490c6a92f63a8d264ec2",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:11Z",
-    "bytes_sha256": "fc12df3d80bc172baa6c540cddbcfc04fc086df38ee2aeda7a6c550202b1b72f",
+    "fetched_at": "2026-11-21T13:34:28Z",
+    "bytes_sha256": "3f27f4664d0b30ee42e2a55715cfd869f6adece1acbb8c1ed3727e97c53343c1",
     "norm_sha256": "cc60cc5fcee11609761dd33afa6e1dd17c1efd26d2e2490c6a92f63a8d264ec2",
-    "byte_length": 187639,
+    "byte_length": 187623,
     "etag": null,
     "last_modified": null,
     "http_status": 200
@@ -10198,9 +10455,21 @@
      "prev_norm_sha256": "cc60cc5fcee11609761dd33afa6e1dd17c1efd26d2e2490c6a92f63a8d264ec2",
      "prev_bytes_sha256": "b8168c18bb4230a681f0a2c1a25ecb41c0f46c62c5963b465e133318c5cbb6a5",
      "prev_fetched_at": "2026-11-19T14:31:19Z"
+    },
+    {
+     "at": "2026-11-21T13:34:28Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "3f27f4664d0b30ee42e2a55715cfd869f6adece1acbb8c1ed3727e97c53343c1",
+     "norm_sha256": "cc60cc5fcee11609761dd33afa6e1dd17c1efd26d2e2490c6a92f63a8d264ec2",
+     "prev_norm_sha256": "cc60cc5fcee11609761dd33afa6e1dd17c1efd26d2e2490c6a92f63a8d264ec2",
+     "prev_bytes_sha256": "fc12df3d80bc172baa6c540cddbcfc04fc086df38ee2aeda7a6c550202b1b72f",
+     "prev_fetched_at": "2026-11-20T14:09:11Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 1
   },
   "meta/art50_marking": {
@@ -10208,7 +10477,7 @@
    "surface": "art50_marking",
    "url": "https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:12Z",
+    "fetched_at": "2026-11-21T13:34:30Z",
     "url": "https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -10220,9 +10489,9 @@
     "content_type": "text/html; charset=UTF-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 525691,
-    "bytes_sha256": "00e46e18dff30869eea4f07e7b9270e07ded78f87e2f228833271a430cc09e96",
-    "norm_sha256": "a08f8212830b14bd7d80476803c08462284a640f252608f2121236e7f1718e65",
+    "byte_length": 525782,
+    "bytes_sha256": "7cb117919b357d70fcda948405557aed75286bff01f5b14afcb87c1233487653",
+    "norm_sha256": "769073becf46e3c5392a0df1610f7713fcb6ab91664cf35b974249a260ee9e54",
     "robots_http_status": 200
    },
    "last_ok": {
@@ -10688,17 +10957,32 @@
      "prev_norm_sha256": "a08f8212830b14bd7d80476803c08462284a640f252608f2121236e7f1718e65",
      "prev_bytes_sha256": "0c50dc9844417fbae40e95681e6b79e4202d33d6614d72c6a1514aa76e5644fd",
      "prev_fetched_at": "2026-11-19T14:31:20Z"
+    },
+    {
+     "at": "2026-11-21T13:34:30Z",
+     "kind": "UNCONFIRMED",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "7cb117919b357d70fcda948405557aed75286bff01f5b14afcb87c1233487653",
+     "norm_sha256": "769073becf46e3c5392a0df1610f7713fcb6ab91664cf35b974249a260ee9e54"
     }
    ],
-   "n_runs": 42,
-   "n_changed": 5
+   "n_runs": 43,
+   "n_changed": 5,
+   "pending": {
+    "norm_sha256": "769073becf46e3c5392a0df1610f7713fcb6ab91664cf35b974249a260ee9e54",
+    "bytes_sha256": "7cb117919b357d70fcda948405557aed75286bff01f5b14afcb87c1233487653",
+    "first_seen_at": "2026-11-21T13:34:30Z",
+    "n_seen": 1
+   }
   },
   "mistral/terms": {
    "provider": "mistral",
    "surface": "terms",
    "url": "https://mistral.ai/terms",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:17Z",
+    "fetched_at": "2026-11-21T13:34:35Z",
     "url": "https://mistral.ai/terms",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -10716,7 +11000,7 @@
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:17Z",
+    "fetched_at": "2026-11-21T13:34:35Z",
     "bytes_sha256": "5bf6fdc208d2d780ee5102aea8c7b85dda6200042b5287c9ea43ee78c909ffb9",
     "norm_sha256": "8a718ea19ceaae2f23b1bea1c09533bbaff2b6a30031d713ed6fbe6bd6f8a041",
     "byte_length": 58871,
@@ -10933,7 +11217,7 @@
      "prev_fetched_at": "2026-11-06T13:02:48Z"
     }
    ],
-   "n_runs": 35,
+   "n_runs": 36,
    "n_changed": 0
   },
   "mistral/usage_policy": {
@@ -10941,7 +11225,7 @@
    "surface": "usage_policy",
    "url": "https://mistral.ai/terms",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:19Z",
+    "fetched_at": "2026-11-21T13:34:36Z",
     "url": "https://mistral.ai/terms",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -10959,7 +11243,7 @@
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:19Z",
+    "fetched_at": "2026-11-21T13:34:36Z",
     "bytes_sha256": "5bf6fdc208d2d780ee5102aea8c7b85dda6200042b5287c9ea43ee78c909ffb9",
     "norm_sha256": "8a718ea19ceaae2f23b1bea1c09533bbaff2b6a30031d713ed6fbe6bd6f8a041",
     "byte_length": 58871,
@@ -11176,7 +11460,7 @@
      "prev_fetched_at": "2026-11-06T13:02:49Z"
     }
    ],
-   "n_runs": 35,
+   "n_runs": 36,
    "n_changed": 0
   },
   "mistral/model_cards": {
@@ -11184,7 +11468,7 @@
    "surface": "model_cards",
    "url": "https://docs.mistral.ai/getting-started/models/models_overview/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:20Z",
+    "fetched_at": "2026-11-21T13:34:37Z",
     "url": "https://docs.mistral.ai/getting-started/models/models_overview/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -11202,7 +11486,7 @@
     "robots_http_status": 404
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:20Z",
+    "fetched_at": "2026-11-21T13:34:37Z",
     "bytes_sha256": "9dce17e58d11f07ff08c97f4b0457c978c9b41a9577eb6e9d4775b8e24504d7d",
     "norm_sha256": "88e38d1d6abdf7d4aac74a266f77abc4403bc6cae595dabbd763e79e4e34cff0",
     "byte_length": 934287,
@@ -11553,7 +11837,7 @@
      "prev_fetched_at": "2026-11-18T14:15:35Z"
     }
    ],
-   "n_runs": 37,
+   "n_runs": 38,
    "n_changed": 3
   },
   "mistral/pricing": {
@@ -11561,7 +11845,7 @@
    "surface": "pricing",
    "url": "https://mistral.ai/pricing",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:21Z",
+    "fetched_at": "2026-11-21T13:34:38Z",
     "url": "https://mistral.ai/pricing",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -11573,16 +11857,16 @@
     "content_type": "text/html; charset=UTF-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 419444,
-    "bytes_sha256": "03e238470ab7ae4362ccbd25aec6fac3fc16f5d67bdae07a445c4b4184f05bbe",
+    "byte_length": 419442,
+    "bytes_sha256": "729d29701deecd4ba319cff28bef7ddfe215ae6f332e30adf19240b3d16100bc",
     "norm_sha256": "eb3288cb88cc3c34752396d3e8d65c30ba11aa6538239d03564c22010866ec1f",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-17T14:39:23Z",
-    "bytes_sha256": "3a72b23ed53b9494251daa69d764d8ca112d568d841fae241d82488ec770bd40",
-    "norm_sha256": "c7190e48adfa674b41cdacf08dd8520f9b14931a574a0e66bf373f979675aa11",
-    "byte_length": 424140,
+    "fetched_at": "2026-11-21T13:34:38Z",
+    "bytes_sha256": "729d29701deecd4ba319cff28bef7ddfe215ae6f332e30adf19240b3d16100bc",
+    "norm_sha256": "eb3288cb88cc3c34752396d3e8d65c30ba11aa6538239d03564c22010866ec1f",
+    "byte_length": 419442,
     "etag": null,
     "last_modified": null,
     "http_status": 200
@@ -11938,23 +12222,30 @@
      "robots": "allow",
      "bytes_sha256": "03e238470ab7ae4362ccbd25aec6fac3fc16f5d67bdae07a445c4b4184f05bbe",
      "norm_sha256": "eb3288cb88cc3c34752396d3e8d65c30ba11aa6538239d03564c22010866ec1f"
+    },
+    {
+     "at": "2026-11-21T13:34:38Z",
+     "kind": "CHANGED",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "729d29701deecd4ba319cff28bef7ddfe215ae6f332e30adf19240b3d16100bc",
+     "norm_sha256": "eb3288cb88cc3c34752396d3e8d65c30ba11aa6538239d03564c22010866ec1f",
+     "prev_norm_sha256": "c7190e48adfa674b41cdacf08dd8520f9b14931a574a0e66bf373f979675aa11",
+     "prev_bytes_sha256": "3a72b23ed53b9494251daa69d764d8ca112d568d841fae241d82488ec770bd40",
+     "prev_fetched_at": "2026-11-17T14:39:23Z",
+     "leaf": "card-mistral-pricing-20261121T133408Z-unsigned.json"
     }
    ],
-   "n_runs": 38,
-   "n_changed": 3,
-   "pending": {
-    "norm_sha256": "eb3288cb88cc3c34752396d3e8d65c30ba11aa6538239d03564c22010866ec1f",
-    "bytes_sha256": "03e238470ab7ae4362ccbd25aec6fac3fc16f5d67bdae07a445c4b4184f05bbe",
-    "first_seen_at": "2026-11-20T14:09:21Z",
-    "n_seen": 1
-   }
+   "n_runs": 39,
+   "n_changed": 4
   },
   "mistral/safety_policy": {
    "provider": "mistral",
    "surface": "safety_policy",
    "url": "https://docs.mistral.ai/capabilities/guardrailing/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:21Z",
+    "fetched_at": "2026-11-21T13:34:39Z",
     "url": "https://docs.mistral.ai/capabilities/guardrailing/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -11966,16 +12257,16 @@
     "content_type": "text/html; charset=utf-8",
     "etag": "\"xqqyy70lt9kukb\"",
     "last_modified": null,
-    "byte_length": 973404,
-    "bytes_sha256": "c61882d922aba9af2be1649d3093e03b3ac7989b3067f2d41ac7c43bf99a44c7",
+    "byte_length": 972885,
+    "bytes_sha256": "ecf74228b4ec9ae9a79ccb89802b0f4f77e4ada0745af27719270f23e5663726",
     "norm_sha256": "ae56004174490cf69b69821ebe468a7c63a5eace87322f2d46b84ecab5dc9cbd",
     "robots_http_status": 404
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:21Z",
-    "bytes_sha256": "c61882d922aba9af2be1649d3093e03b3ac7989b3067f2d41ac7c43bf99a44c7",
+    "fetched_at": "2026-11-21T13:34:39Z",
+    "bytes_sha256": "ecf74228b4ec9ae9a79ccb89802b0f4f77e4ada0745af27719270f23e5663726",
     "norm_sha256": "ae56004174490cf69b69821ebe468a7c63a5eace87322f2d46b84ecab5dc9cbd",
-    "byte_length": 973404,
+    "byte_length": 972885,
     "etag": "\"xqqyy70lt9kukb\"",
     "last_modified": null,
     "http_status": 200
@@ -12335,9 +12626,21 @@
      "prev_norm_sha256": "ae56004174490cf69b69821ebe468a7c63a5eace87322f2d46b84ecab5dc9cbd",
      "prev_bytes_sha256": "0c078ea4410d13383c4deec267c64063fd37aa5b1cf56aa3f637b9fcd8b66dd3",
      "prev_fetched_at": "2026-11-18T14:15:36Z"
+    },
+    {
+     "at": "2026-11-21T13:34:39Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "ecf74228b4ec9ae9a79ccb89802b0f4f77e4ada0745af27719270f23e5663726",
+     "norm_sha256": "ae56004174490cf69b69821ebe468a7c63a5eace87322f2d46b84ecab5dc9cbd",
+     "prev_norm_sha256": "ae56004174490cf69b69821ebe468a7c63a5eace87322f2d46b84ecab5dc9cbd",
+     "prev_bytes_sha256": "c61882d922aba9af2be1649d3093e03b3ac7989b3067f2d41ac7c43bf99a44c7",
+     "prev_fetched_at": "2026-11-20T14:09:21Z"
     }
    ],
-   "n_runs": 37,
+   "n_runs": 38,
    "n_changed": 2
   },
   "xai/terms": {
@@ -12345,7 +12648,7 @@
    "surface": "terms",
    "url": "https://x.ai/legal/terms-of-service",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:22Z",
+    "fetched_at": "2026-11-21T13:34:39Z",
     "url": "https://x.ai/legal/terms-of-service",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -12358,13 +12661,13 @@
     "etag": null,
     "last_modified": null,
     "byte_length": 205902,
-    "bytes_sha256": "116da501ff94d1182729339036992d562e260d9932f8904ee2c3378e6c65824a",
+    "bytes_sha256": "122c1b227e2c868ee7d7e07f18ac330436b7abe3c464fce638368d920b7f2e3f",
     "norm_sha256": "611cac74bddad934c1c6916e15dc93bd838b5b696f944519230d6c781cfdfc93",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:22Z",
-    "bytes_sha256": "116da501ff94d1182729339036992d562e260d9932f8904ee2c3378e6c65824a",
+    "fetched_at": "2026-11-21T13:34:39Z",
+    "bytes_sha256": "122c1b227e2c868ee7d7e07f18ac330436b7abe3c464fce638368d920b7f2e3f",
     "norm_sha256": "611cac74bddad934c1c6916e15dc93bd838b5b696f944519230d6c781cfdfc93",
     "byte_length": 205902,
     "etag": null,
@@ -12843,9 +13146,21 @@
      "prev_norm_sha256": "611cac74bddad934c1c6916e15dc93bd838b5b696f944519230d6c781cfdfc93",
      "prev_bytes_sha256": "bab21505e979c1f19a3753e9ac4bd449be64875b357ee16296710e4bfbf6064e",
      "prev_fetched_at": "2026-11-19T14:31:28Z"
+    },
+    {
+     "at": "2026-11-21T13:34:39Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "122c1b227e2c868ee7d7e07f18ac330436b7abe3c464fce638368d920b7f2e3f",
+     "norm_sha256": "611cac74bddad934c1c6916e15dc93bd838b5b696f944519230d6c781cfdfc93",
+     "prev_norm_sha256": "611cac74bddad934c1c6916e15dc93bd838b5b696f944519230d6c781cfdfc93",
+     "prev_bytes_sha256": "116da501ff94d1182729339036992d562e260d9932f8904ee2c3378e6c65824a",
+     "prev_fetched_at": "2026-11-20T14:09:22Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 0
   },
   "xai/usage_policy": {
@@ -12853,7 +13168,7 @@
    "surface": "usage_policy",
    "url": "https://x.ai/legal/acceptable-use-policy",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:23Z",
+    "fetched_at": "2026-11-21T13:34:40Z",
     "url": "https://x.ai/legal/acceptable-use-policy",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -12866,13 +13181,13 @@
     "etag": null,
     "last_modified": null,
     "byte_length": 98989,
-    "bytes_sha256": "f42b3eca1c34ec6e926357f1cf28a527b19d0f5d2087b1d577d8037057b1fc84",
+    "bytes_sha256": "5919d3934a3228c7c3bbeba03db6241f906b7611b6cf82fc91716b34c3aa3870",
     "norm_sha256": "1eb88f26288adaf96ecb56aa0877c8712f39534bbd301057ecb2f567a56c1b61",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:23Z",
-    "bytes_sha256": "f42b3eca1c34ec6e926357f1cf28a527b19d0f5d2087b1d577d8037057b1fc84",
+    "fetched_at": "2026-11-21T13:34:40Z",
+    "bytes_sha256": "5919d3934a3228c7c3bbeba03db6241f906b7611b6cf82fc91716b34c3aa3870",
     "norm_sha256": "1eb88f26288adaf96ecb56aa0877c8712f39534bbd301057ecb2f567a56c1b61",
     "byte_length": 98989,
     "etag": null,
@@ -13350,9 +13665,21 @@
      "prev_norm_sha256": "1eb88f26288adaf96ecb56aa0877c8712f39534bbd301057ecb2f567a56c1b61",
      "prev_bytes_sha256": "c7328d918180df5a39d618f9da0cd13b312d8a6f48d4ecae6889ae87fb331794",
      "prev_fetched_at": "2026-11-19T14:31:28Z"
+    },
+    {
+     "at": "2026-11-21T13:34:40Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "5919d3934a3228c7c3bbeba03db6241f906b7611b6cf82fc91716b34c3aa3870",
+     "norm_sha256": "1eb88f26288adaf96ecb56aa0877c8712f39534bbd301057ecb2f567a56c1b61",
+     "prev_norm_sha256": "1eb88f26288adaf96ecb56aa0877c8712f39534bbd301057ecb2f567a56c1b61",
+     "prev_bytes_sha256": "f42b3eca1c34ec6e926357f1cf28a527b19d0f5d2087b1d577d8037057b1fc84",
+     "prev_fetched_at": "2026-11-20T14:09:23Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 0
   },
   "xai/model_cards": {
@@ -13360,7 +13687,7 @@
    "surface": "model_cards",
    "url": "https://docs.x.ai/docs/models",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:23Z",
+    "fetched_at": "2026-11-21T13:34:40Z",
     "url": "https://docs.x.ai/docs/models",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -13372,9 +13699,9 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 380535,
-    "bytes_sha256": "b5dcabd544c38abd5fbfa4193e70142bf807a24b4993a44468f3a48c69cc9fc9",
-    "norm_sha256": "bc502498321a7ce683cad33ebbc32952e9f0b5ba675c6cc8d9f03744bd580c1f",
+    "byte_length": 384522,
+    "bytes_sha256": "79f66e90e57618931bcffc0b0f0a2f50aabcf7c8ebae6eacc3bc8c541ca52bf9",
+    "norm_sha256": "b9ca323cd25036cce4d0d170f8d2481a222e5d6f463c6344c61fffe82ce25bc6",
     "robots_http_status": 200
    },
    "last_ok": {
@@ -13852,17 +14179,32 @@
      "prev_norm_sha256": "bc502498321a7ce683cad33ebbc32952e9f0b5ba675c6cc8d9f03744bd580c1f",
      "prev_bytes_sha256": "0ec47fb3043eecbcc70f8a9e74a482ed84150d813738b87fe99cce7c39c7f0c7",
      "prev_fetched_at": "2026-11-19T14:31:28Z"
+    },
+    {
+     "at": "2026-11-21T13:34:40Z",
+     "kind": "UNCONFIRMED",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "79f66e90e57618931bcffc0b0f0a2f50aabcf7c8ebae6eacc3bc8c541ca52bf9",
+     "norm_sha256": "b9ca323cd25036cce4d0d170f8d2481a222e5d6f463c6344c61fffe82ce25bc6"
     }
    ],
-   "n_runs": 42,
-   "n_changed": 2
+   "n_runs": 43,
+   "n_changed": 2,
+   "pending": {
+    "norm_sha256": "b9ca323cd25036cce4d0d170f8d2481a222e5d6f463c6344c61fffe82ce25bc6",
+    "bytes_sha256": "79f66e90e57618931bcffc0b0f0a2f50aabcf7c8ebae6eacc3bc8c541ca52bf9",
+    "first_seen_at": "2026-11-21T13:34:40Z",
+    "n_seen": 1
+   }
   },
   "xai/pricing": {
    "provider": "xai",
    "surface": "pricing",
    "url": "https://x.ai/api",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:23Z",
+    "fetched_at": "2026-11-21T13:34:41Z",
     "url": "https://x.ai/api",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -13875,13 +14217,13 @@
     "etag": null,
     "last_modified": null,
     "byte_length": 305468,
-    "bytes_sha256": "ea21141cbe96c76e88468241858124ddd6b04153e29ed29dcb359a3894909c14",
+    "bytes_sha256": "8a437f12ff291cfe49e8357cceccfbafd08e95b1d3acff6976cee8adf4bb712d",
     "norm_sha256": "9b4eec3a50dca6a76ccfcdf01b63bdd07b32b0b6209769ebc853b357c71014f2",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:23Z",
-    "bytes_sha256": "ea21141cbe96c76e88468241858124ddd6b04153e29ed29dcb359a3894909c14",
+    "fetched_at": "2026-11-21T13:34:41Z",
+    "bytes_sha256": "8a437f12ff291cfe49e8357cceccfbafd08e95b1d3acff6976cee8adf4bb712d",
     "norm_sha256": "9b4eec3a50dca6a76ccfcdf01b63bdd07b32b0b6209769ebc853b357c71014f2",
     "byte_length": 305468,
     "etag": null,
@@ -14358,9 +14700,21 @@
      "prev_norm_sha256": "9b4eec3a50dca6a76ccfcdf01b63bdd07b32b0b6209769ebc853b357c71014f2",
      "prev_bytes_sha256": "627fb664e11f9c00c770dbe7f383439f98899510aba057ff800b036694c307b5",
      "prev_fetched_at": "2026-11-19T14:31:29Z"
+    },
+    {
+     "at": "2026-11-21T13:34:41Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "8a437f12ff291cfe49e8357cceccfbafd08e95b1d3acff6976cee8adf4bb712d",
+     "norm_sha256": "9b4eec3a50dca6a76ccfcdf01b63bdd07b32b0b6209769ebc853b357c71014f2",
+     "prev_norm_sha256": "9b4eec3a50dca6a76ccfcdf01b63bdd07b32b0b6209769ebc853b357c71014f2",
+     "prev_bytes_sha256": "ea21141cbe96c76e88468241858124ddd6b04153e29ed29dcb359a3894909c14",
+     "prev_fetched_at": "2026-11-20T14:09:23Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 1
   },
   "xai/safety_policy": {
@@ -14368,7 +14722,7 @@
    "surface": "safety_policy",
    "url": "https://x.ai/safety",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:24Z",
+    "fetched_at": "2026-11-21T13:34:42Z",
     "url": "https://x.ai/safety",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -14381,13 +14735,13 @@
     "etag": null,
     "last_modified": null,
     "byte_length": 139990,
-    "bytes_sha256": "1e51bf97f4fadf86d928fb4f082bad87fc4ec88a2b10fafb9b440f9f49512564",
+    "bytes_sha256": "42ccba6c89acd34282c2cb200fbcd0d990d599808b022e6dafdaea7daa3325e2",
     "norm_sha256": "18b526565e94a69e78ffe843fc841541919a9c3bcc924d1a4e5948a7298d9d1f",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:24Z",
-    "bytes_sha256": "1e51bf97f4fadf86d928fb4f082bad87fc4ec88a2b10fafb9b440f9f49512564",
+    "fetched_at": "2026-11-21T13:34:42Z",
+    "bytes_sha256": "42ccba6c89acd34282c2cb200fbcd0d990d599808b022e6dafdaea7daa3325e2",
     "norm_sha256": "18b526565e94a69e78ffe843fc841541919a9c3bcc924d1a4e5948a7298d9d1f",
     "byte_length": 139990,
     "etag": null,
@@ -14865,9 +15219,21 @@
      "prev_norm_sha256": "18b526565e94a69e78ffe843fc841541919a9c3bcc924d1a4e5948a7298d9d1f",
      "prev_bytes_sha256": "e7326d61392741c796e676b4d3ae054fede659bfeef739008d7335702d8134bc",
      "prev_fetched_at": "2026-11-19T14:31:29Z"
+    },
+    {
+     "at": "2026-11-21T13:34:42Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "42ccba6c89acd34282c2cb200fbcd0d990d599808b022e6dafdaea7daa3325e2",
+     "norm_sha256": "18b526565e94a69e78ffe843fc841541919a9c3bcc924d1a4e5948a7298d9d1f",
+     "prev_norm_sha256": "18b526565e94a69e78ffe843fc841541919a9c3bcc924d1a4e5948a7298d9d1f",
+     "prev_bytes_sha256": "1e51bf97f4fadf86d928fb4f082bad87fc4ec88a2b10fafb9b440f9f49512564",
+     "prev_fetched_at": "2026-11-20T14:09:24Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 0
   },
   "cohere/terms": {
@@ -14875,7 +15241,7 @@
    "surface": "terms",
    "url": "https://cohere.com/terms-of-use",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:24Z",
+    "fetched_at": "2026-11-21T13:34:42Z",
     "url": "https://cohere.com/terms-of-use",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -14887,16 +15253,16 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 532673,
-    "bytes_sha256": "11ef60d856eced389671da452ef30e2662b538a0f023df775d1f976f1ea1ad5f",
+    "byte_length": 533328,
+    "bytes_sha256": "74a772c374ee85851ec50cc4da3361d6a20fb11567f14359364de241b74f3d71",
     "norm_sha256": "6dcfc10984e80617b2bc8055ce5f146b718f942f5cb0cfcfac62c5ce263c63f7",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:24Z",
-    "bytes_sha256": "11ef60d856eced389671da452ef30e2662b538a0f023df775d1f976f1ea1ad5f",
+    "fetched_at": "2026-11-21T13:34:42Z",
+    "bytes_sha256": "74a772c374ee85851ec50cc4da3361d6a20fb11567f14359364de241b74f3d71",
     "norm_sha256": "6dcfc10984e80617b2bc8055ce5f146b718f942f5cb0cfcfac62c5ce263c63f7",
-    "byte_length": 532673,
+    "byte_length": 533328,
     "etag": null,
     "last_modified": null,
     "http_status": 200
@@ -15317,9 +15683,21 @@
      "prev_norm_sha256": "6dcfc10984e80617b2bc8055ce5f146b718f942f5cb0cfcfac62c5ce263c63f7",
      "prev_bytes_sha256": "b7bb2dac72a437fb0c29fcafab7802586650c7ffe62a4cdd79783038c62c33ae",
      "prev_fetched_at": "2026-11-19T14:31:29Z"
+    },
+    {
+     "at": "2026-11-21T13:34:42Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "74a772c374ee85851ec50cc4da3361d6a20fb11567f14359364de241b74f3d71",
+     "norm_sha256": "6dcfc10984e80617b2bc8055ce5f146b718f942f5cb0cfcfac62c5ce263c63f7",
+     "prev_norm_sha256": "6dcfc10984e80617b2bc8055ce5f146b718f942f5cb0cfcfac62c5ce263c63f7",
+     "prev_bytes_sha256": "11ef60d856eced389671da452ef30e2662b538a0f023df775d1f976f1ea1ad5f",
+     "prev_fetched_at": "2026-11-20T14:09:24Z"
     }
    ],
-   "n_runs": 40,
+   "n_runs": 41,
    "n_changed": 4
   },
   "cohere/usage_policy": {
@@ -15327,7 +15705,7 @@
    "surface": "usage_policy",
    "url": "https://docs.cohere.com/docs/usage-policy",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:25Z",
+    "fetched_at": "2026-11-21T13:34:42Z",
     "url": "https://docs.cohere.com/docs/usage-policy",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -15337,20 +15715,20 @@
     "final_url": "https://docs.cohere.com/docs/usage-policy",
     "redirected": false,
     "content_type": "text/html; charset=utf-8",
-    "etag": "W/\"a14jur7813e5b88\"",
-    "last_modified": "Thu, 19 Nov 2026 20:03:22 GMT",
+    "etag": "W/\"a1es0y9e12h8ml2\"",
+    "last_modified": "Fri, 20 Nov 2026 19:21:37 GMT",
     "byte_length": 182115,
-    "bytes_sha256": "559bb14a9b58b38d4b875517761d4fd5b82a9d1f99511bb83c0299e40000557b",
+    "bytes_sha256": "898445aa50a11b2798d057e965f09d2329f194e934609cf9600db4085ad93691",
     "norm_sha256": "6be0a51281b668880f27db14dea7b3a7b4d7f447aa1e50b3629b73ecb5c400fa",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:25Z",
-    "bytes_sha256": "559bb14a9b58b38d4b875517761d4fd5b82a9d1f99511bb83c0299e40000557b",
+    "fetched_at": "2026-11-21T13:34:42Z",
+    "bytes_sha256": "898445aa50a11b2798d057e965f09d2329f194e934609cf9600db4085ad93691",
     "norm_sha256": "6be0a51281b668880f27db14dea7b3a7b4d7f447aa1e50b3629b73ecb5c400fa",
     "byte_length": 182115,
-    "etag": "W/\"a14jur7813e5b88\"",
-    "last_modified": "Thu, 19 Nov 2026 20:03:22 GMT",
+    "etag": "W/\"a1es0y9e12h8ml2\"",
+    "last_modified": "Fri, 20 Nov 2026 19:21:37 GMT",
     "http_status": 200
    },
    "history": [
@@ -15717,9 +16095,21 @@
      "prev_norm_sha256": "6be0a51281b668880f27db14dea7b3a7b4d7f447aa1e50b3629b73ecb5c400fa",
      "prev_bytes_sha256": "119d7f646dd1ad23115853bbe195dd2ec48727a4b2b70695d2b35aa286bfda4b",
      "prev_fetched_at": "2026-11-19T14:31:29Z"
+    },
+    {
+     "at": "2026-11-21T13:34:42Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "898445aa50a11b2798d057e965f09d2329f194e934609cf9600db4085ad93691",
+     "norm_sha256": "6be0a51281b668880f27db14dea7b3a7b4d7f447aa1e50b3629b73ecb5c400fa",
+     "prev_norm_sha256": "6be0a51281b668880f27db14dea7b3a7b4d7f447aa1e50b3629b73ecb5c400fa",
+     "prev_bytes_sha256": "559bb14a9b58b38d4b875517761d4fd5b82a9d1f99511bb83c0299e40000557b",
+     "prev_fetched_at": "2026-11-20T14:09:25Z"
     }
    ],
-   "n_runs": 39,
+   "n_runs": 40,
    "n_changed": 1
   },
   "cohere/model_cards": {
@@ -15727,7 +16117,7 @@
    "surface": "model_cards",
    "url": "https://docs.cohere.com/docs/models",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:26Z",
+    "fetched_at": "2026-11-21T13:34:44Z",
     "url": "https://docs.cohere.com/docs/models",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -15737,20 +16127,20 @@
     "final_url": "https://docs.cohere.com/docs/models",
     "redirected": false,
     "content_type": "text/html; charset=utf-8",
-    "etag": "W/\"akuumd21a4kezu\"",
-    "last_modified": "Thu, 19 Nov 2026 20:03:22 GMT",
+    "etag": "W/\"ah2af4c1ctvg8w\"",
+    "last_modified": "Fri, 20 Nov 2026 19:21:37 GMT",
     "byte_length": 273360,
-    "bytes_sha256": "0cd8133f7dd77ce7f5d745c0e6f764311b6ac02dca01b7d733916ff443018a45",
+    "bytes_sha256": "9e8b64f27385cd6357a0ec73a0c366423942ada35aa23b336f4c2a0de40bac4e",
     "norm_sha256": "cd7c9304247bbaa41137ab36f883f09e58a87a33b6e28e317ab387ae0445c8c0",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:26Z",
-    "bytes_sha256": "0cd8133f7dd77ce7f5d745c0e6f764311b6ac02dca01b7d733916ff443018a45",
+    "fetched_at": "2026-11-21T13:34:44Z",
+    "bytes_sha256": "9e8b64f27385cd6357a0ec73a0c366423942ada35aa23b336f4c2a0de40bac4e",
     "norm_sha256": "cd7c9304247bbaa41137ab36f883f09e58a87a33b6e28e317ab387ae0445c8c0",
     "byte_length": 273360,
-    "etag": "W/\"akuumd21a4kezu\"",
-    "last_modified": "Thu, 19 Nov 2026 20:03:22 GMT",
+    "etag": "W/\"ah2af4c1ctvg8w\"",
+    "last_modified": "Fri, 20 Nov 2026 19:21:37 GMT",
     "http_status": 200
    },
    "history": [
@@ -16115,9 +16505,21 @@
      "prev_norm_sha256": "cd7c9304247bbaa41137ab36f883f09e58a87a33b6e28e317ab387ae0445c8c0",
      "prev_bytes_sha256": "cf54e835f5740006bf03f46b8a2180b7b0ab04b82570b37f616f2b3ea96fbba2",
      "prev_fetched_at": "2026-11-19T14:31:31Z"
+    },
+    {
+     "at": "2026-11-21T13:34:44Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "9e8b64f27385cd6357a0ec73a0c366423942ada35aa23b336f4c2a0de40bac4e",
+     "norm_sha256": "cd7c9304247bbaa41137ab36f883f09e58a87a33b6e28e317ab387ae0445c8c0",
+     "prev_norm_sha256": "cd7c9304247bbaa41137ab36f883f09e58a87a33b6e28e317ab387ae0445c8c0",
+     "prev_bytes_sha256": "0cd8133f7dd77ce7f5d745c0e6f764311b6ac02dca01b7d733916ff443018a45",
+     "prev_fetched_at": "2026-11-20T14:09:26Z"
     }
    ],
-   "n_runs": 39,
+   "n_runs": 40,
    "n_changed": 1
   },
   "cohere/pricing": {
@@ -16125,7 +16527,7 @@
    "surface": "pricing",
    "url": "https://cohere.com/pricing",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:26Z",
+    "fetched_at": "2026-11-21T13:34:44Z",
     "url": "https://cohere.com/pricing",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -16137,9 +16539,9 @@
     "content_type": "text/html; charset=utf-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 522848,
-    "bytes_sha256": "1315e784ab8625cf61e32789ccd88c2010ece9ca6bfe8606ebca1b9fa52171fb",
-    "norm_sha256": "f03ea4de07de0caf7a61bfa1b4139d0cbf2e093e9c993ca437a7369647ed18fd",
+    "byte_length": 523491,
+    "bytes_sha256": "53cdd4a1cd674e73455b0ac0d32123deeedb5b71b768c9c691a41a2f495f42da",
+    "norm_sha256": "fd7e255a4c661a93a38fa3a1eadae632dbe7f1d5bec49d4735a5272598bfece3",
     "robots_http_status": 200
    },
    "last_ok": {
@@ -16542,14 +16944,23 @@
      "robots": "allow",
      "bytes_sha256": "1315e784ab8625cf61e32789ccd88c2010ece9ca6bfe8606ebca1b9fa52171fb",
      "norm_sha256": "f03ea4de07de0caf7a61bfa1b4139d0cbf2e093e9c993ca437a7369647ed18fd"
+    },
+    {
+     "at": "2026-11-21T13:34:44Z",
+     "kind": "UNCONFIRMED",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "53cdd4a1cd674e73455b0ac0d32123deeedb5b71b768c9c691a41a2f495f42da",
+     "norm_sha256": "fd7e255a4c661a93a38fa3a1eadae632dbe7f1d5bec49d4735a5272598bfece3"
     }
    ],
-   "n_runs": 39,
+   "n_runs": 40,
    "n_changed": 3,
    "pending": {
-    "norm_sha256": "f03ea4de07de0caf7a61bfa1b4139d0cbf2e093e9c993ca437a7369647ed18fd",
-    "bytes_sha256": "1315e784ab8625cf61e32789ccd88c2010ece9ca6bfe8606ebca1b9fa52171fb",
-    "first_seen_at": "2026-11-20T14:09:26Z",
+    "norm_sha256": "fd7e255a4c661a93a38fa3a1eadae632dbe7f1d5bec49d4735a5272598bfece3",
+    "bytes_sha256": "53cdd4a1cd674e73455b0ac0d32123deeedb5b71b768c9c691a41a2f495f42da",
+    "first_seen_at": "2026-11-21T13:34:44Z",
     "n_seen": 1
    }
   },
@@ -16558,7 +16969,7 @@
    "surface": "safety_policy",
    "url": "https://cohere.com/responsibility",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:27Z",
+    "fetched_at": "2026-11-21T13:34:45Z",
     "url": "https://cohere.com/responsibility",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -16568,20 +16979,20 @@
     "final_url": "https://docs.cohere.com/docs/responsible-use",
     "redirected": true,
     "content_type": "text/html; charset=utf-8",
-    "etag": "W/\"a2u86xm1o56ehy\"",
-    "last_modified": "Thu, 19 Nov 2026 20:03:22 GMT",
+    "etag": "W/\"ajr5th4hvvfas\"",
+    "last_modified": "Fri, 20 Nov 2026 19:21:37 GMT",
     "byte_length": 186254,
-    "bytes_sha256": "648b7b40841467202d76f170914eed0383906dd33cbefa563197a81d2d868423",
+    "bytes_sha256": "c9d2360d8ae0747c098daca91ed8dcb17931e25c89e880d4d8d7a15bde3e4f50",
     "norm_sha256": "09111426eef64919bc586f22734111c830965da4ed2aa201f91c91ad47f7c4d8",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:27Z",
-    "bytes_sha256": "648b7b40841467202d76f170914eed0383906dd33cbefa563197a81d2d868423",
+    "fetched_at": "2026-11-21T13:34:45Z",
+    "bytes_sha256": "c9d2360d8ae0747c098daca91ed8dcb17931e25c89e880d4d8d7a15bde3e4f50",
     "norm_sha256": "09111426eef64919bc586f22734111c830965da4ed2aa201f91c91ad47f7c4d8",
     "byte_length": 186254,
-    "etag": "W/\"a2u86xm1o56ehy\"",
-    "last_modified": "Thu, 19 Nov 2026 20:03:22 GMT",
+    "etag": "W/\"ajr5th4hvvfas\"",
+    "last_modified": "Fri, 20 Nov 2026 19:21:37 GMT",
     "http_status": 200
    },
    "history": [
@@ -16960,9 +17371,21 @@
      "prev_norm_sha256": "09111426eef64919bc586f22734111c830965da4ed2aa201f91c91ad47f7c4d8",
      "prev_bytes_sha256": "f2210be7dbe93416165fa97f13e737206058fa2fa97cb3fe6b50d8803a2cc8b5",
      "prev_fetched_at": "2026-11-19T14:31:32Z"
+    },
+    {
+     "at": "2026-11-21T13:34:45Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "c9d2360d8ae0747c098daca91ed8dcb17931e25c89e880d4d8d7a15bde3e4f50",
+     "norm_sha256": "09111426eef64919bc586f22734111c830965da4ed2aa201f91c91ad47f7c4d8",
+     "prev_norm_sha256": "09111426eef64919bc586f22734111c830965da4ed2aa201f91c91ad47f7c4d8",
+     "prev_bytes_sha256": "648b7b40841467202d76f170914eed0383906dd33cbefa563197a81d2d868423",
+     "prev_fetched_at": "2026-11-20T14:09:27Z"
     }
    ],
-   "n_runs": 40,
+   "n_runs": 41,
    "n_changed": 1
   },
   "deepseek/terms": {
@@ -16970,7 +17393,7 @@
    "surface": "terms",
    "url": "https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:28Z",
+    "fetched_at": "2026-11-21T13:34:45Z",
     "url": "https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -16988,7 +17411,7 @@
     "robots_http_status": 404
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:28Z",
+    "fetched_at": "2026-11-21T13:34:45Z",
     "bytes_sha256": "e5c52c238ff59a6d274cd66c449f939ba6bd3183fe7927397b595df02887a76d",
     "norm_sha256": "d96a2d2c10e921b38348a3917a6b37fb99797c95bd3f4590e39d0ed642ad2b31",
     "byte_length": 39095,
@@ -17007,7 +17430,7 @@
      "norm_sha256": "d96a2d2c10e921b38348a3917a6b37fb99797c95bd3f4590e39d0ed642ad2b31"
     }
    ],
-   "n_runs": 21,
+   "n_runs": 22,
    "n_changed": 0
   },
   "deepseek/usage_policy": {
@@ -17015,7 +17438,7 @@
    "surface": "usage_policy",
    "url": "https://cdn.deepseek.com/policies/en-US/deepseek-open-platform-terms-of-service.html",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:31Z",
+    "fetched_at": "2026-11-21T13:34:47Z",
     "url": "https://cdn.deepseek.com/policies/en-US/deepseek-open-platform-terms-of-service.html",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -17033,7 +17456,7 @@
     "robots_http_status": 404
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:31Z",
+    "fetched_at": "2026-11-21T13:34:47Z",
     "bytes_sha256": "2b433c53cbac75491959025eba5a27908f9f1886352dce0a05f3d5a936d87790",
     "norm_sha256": "06ea28acc70954f24d48d9bee1c5822f8ca5329630c1288acdfae174ad75ea76",
     "byte_length": 33904,
@@ -17052,7 +17475,7 @@
      "norm_sha256": "06ea28acc70954f24d48d9bee1c5822f8ca5329630c1288acdfae174ad75ea76"
     }
    ],
-   "n_runs": 21,
+   "n_runs": 22,
    "n_changed": 0
   },
   "deepseek/model_cards": {
@@ -17060,7 +17483,7 @@
    "surface": "model_cards",
    "url": "https://huggingface.co/deepseek-ai",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:31Z",
+    "fetched_at": "2026-11-21T13:34:48Z",
     "url": "https://huggingface.co/deepseek-ai",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -17070,11 +17493,11 @@
     "final_url": "https://huggingface.co/deepseek-ai",
     "redirected": false,
     "content_type": "text/html; charset=utf-8",
-    "etag": "W/\"6ca97-T8cEEBbddE4YzJepmUBhQ+Uoeuo\"",
+    "etag": "W/\"6ca0a-okxhBr8g/vuBojQVlJyVeU4EvLs\"",
     "last_modified": null,
-    "byte_length": 445079,
-    "bytes_sha256": "da837d2c19c158fc7b48349e9f260c3f0459d2c7e88a9f233aa99c17c9e3571f",
-    "norm_sha256": "0103e48dc424e1fb7ec741c608002dc5fea92f7d5e9866873d21969c31f12b6d",
+    "byte_length": 444938,
+    "bytes_sha256": "963258b971f4960cdeec669236a97e25791ef2a0ce958a7789b7ebae7008315d",
+    "norm_sha256": "eb040a84483037e6766f0141e903abc4f153f1dd5415e809ce570fb2626915f3",
     "robots_http_status": 200
    },
    "last_ok": {
@@ -17484,14 +17907,23 @@
      "robots": "allow",
      "bytes_sha256": "da837d2c19c158fc7b48349e9f260c3f0459d2c7e88a9f233aa99c17c9e3571f",
      "norm_sha256": "0103e48dc424e1fb7ec741c608002dc5fea92f7d5e9866873d21969c31f12b6d"
+    },
+    {
+     "at": "2026-11-21T13:34:48Z",
+     "kind": "UNCONFIRMED",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "963258b971f4960cdeec669236a97e25791ef2a0ce958a7789b7ebae7008315d",
+     "norm_sha256": "eb040a84483037e6766f0141e903abc4f153f1dd5415e809ce570fb2626915f3"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 0,
    "pending": {
-    "norm_sha256": "0103e48dc424e1fb7ec741c608002dc5fea92f7d5e9866873d21969c31f12b6d",
-    "bytes_sha256": "da837d2c19c158fc7b48349e9f260c3f0459d2c7e88a9f233aa99c17c9e3571f",
-    "first_seen_at": "2026-11-20T14:09:31Z",
+    "norm_sha256": "eb040a84483037e6766f0141e903abc4f153f1dd5415e809ce570fb2626915f3",
+    "bytes_sha256": "963258b971f4960cdeec669236a97e25791ef2a0ce958a7789b7ebae7008315d",
+    "first_seen_at": "2026-11-21T13:34:48Z",
     "n_seen": 1
    }
   },
@@ -17500,7 +17932,7 @@
    "surface": "pricing",
    "url": "https://api-docs.deepseek.com/quick_start/pricing",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:32Z",
+    "fetched_at": "2026-11-21T13:34:48Z",
     "url": "https://api-docs.deepseek.com/quick_start/pricing",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -17518,12 +17950,12 @@
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-16T13:48:16Z",
-    "bytes_sha256": "5efd7e7661de5b86a1a3d5569ea5d9d8633bf1ca1c311ec42baace85ef18d78e",
-    "norm_sha256": "49df3d049627bd67fe92e59be3e5cfcceda40365c94fab96493aac0d8439b803",
-    "byte_length": 29133,
-    "etag": "\"76247b532359062e06c3cf50167fed24\"",
-    "last_modified": "Mon, 16 Nov 2026 09:36:39 GMT",
+    "fetched_at": "2026-11-21T13:34:48Z",
+    "bytes_sha256": "b61db7d97374d37819b4dcdd41e86aa2d6bfa4d50bf059e700327727a4462e02",
+    "norm_sha256": "1e505de7cdae46ec0570319ec80a507c412c0863257f7cf00f9c33dbc738c694",
+    "byte_length": 29466,
+    "etag": "\"5d6b1a57a35bf5a8172b5d3a2c5937c5\"",
+    "last_modified": "Fri, 20 Nov 2026 08:09:59 GMT",
     "http_status": 200
    },
    "history": [
@@ -17852,23 +18284,30 @@
      "robots": "allow",
      "bytes_sha256": "b61db7d97374d37819b4dcdd41e86aa2d6bfa4d50bf059e700327727a4462e02",
      "norm_sha256": "1e505de7cdae46ec0570319ec80a507c412c0863257f7cf00f9c33dbc738c694"
+    },
+    {
+     "at": "2026-11-21T13:34:48Z",
+     "kind": "CHANGED",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "b61db7d97374d37819b4dcdd41e86aa2d6bfa4d50bf059e700327727a4462e02",
+     "norm_sha256": "1e505de7cdae46ec0570319ec80a507c412c0863257f7cf00f9c33dbc738c694",
+     "prev_norm_sha256": "49df3d049627bd67fe92e59be3e5cfcceda40365c94fab96493aac0d8439b803",
+     "prev_bytes_sha256": "5efd7e7661de5b86a1a3d5569ea5d9d8633bf1ca1c311ec42baace85ef18d78e",
+     "prev_fetched_at": "2026-11-16T13:48:16Z",
+     "leaf": "card-deepseek-pricing-20261121T133408Z-unsigned.json"
     }
    ],
-   "n_runs": 36,
-   "n_changed": 5,
-   "pending": {
-    "norm_sha256": "1e505de7cdae46ec0570319ec80a507c412c0863257f7cf00f9c33dbc738c694",
-    "bytes_sha256": "b61db7d97374d37819b4dcdd41e86aa2d6bfa4d50bf059e700327727a4462e02",
-    "first_seen_at": "2026-11-20T14:09:32Z",
-    "n_seen": 1
-   }
+   "n_runs": 37,
+   "n_changed": 6
   },
   "alibaba-qwen/terms": {
    "provider": "alibaba-qwen",
    "surface": "terms",
    "url": "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-product-terms-of-service",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:34Z",
+    "fetched_at": "2026-11-21T13:34:53Z",
     "url": "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-product-terms-of-service",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -17881,13 +18320,13 @@
     "etag": null,
     "last_modified": null,
     "byte_length": 283480,
-    "bytes_sha256": "fa14099ae4377149bc449f9e70aab956c71a6b5510ac1ba07faad9bd360788e5",
+    "bytes_sha256": "82885192d1f755b4c6ae3fe24be6cdfe24e299ad1b0dec6f6d52ea9a01e6868b",
     "norm_sha256": "f8be3e631554a692e3ff971cb8fd0ca9b9db5ce673e601f65449f0f4b46d0319",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:34Z",
-    "bytes_sha256": "fa14099ae4377149bc449f9e70aab956c71a6b5510ac1ba07faad9bd360788e5",
+    "fetched_at": "2026-11-21T13:34:53Z",
+    "bytes_sha256": "82885192d1f755b4c6ae3fe24be6cdfe24e299ad1b0dec6f6d52ea9a01e6868b",
     "norm_sha256": "f8be3e631554a692e3ff971cb8fd0ca9b9db5ce673e601f65449f0f4b46d0319",
     "byte_length": 283480,
     "etag": null,
@@ -18367,9 +18806,21 @@
      "prev_norm_sha256": "f8be3e631554a692e3ff971cb8fd0ca9b9db5ce673e601f65449f0f4b46d0319",
      "prev_bytes_sha256": "7d1d2385b94699c3709835d9df79e7aa87160067adaf3144fe4e67e30bba93cd",
      "prev_fetched_at": "2026-11-19T14:31:39Z"
+    },
+    {
+     "at": "2026-11-21T13:34:53Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "82885192d1f755b4c6ae3fe24be6cdfe24e299ad1b0dec6f6d52ea9a01e6868b",
+     "norm_sha256": "f8be3e631554a692e3ff971cb8fd0ca9b9db5ce673e601f65449f0f4b46d0319",
+     "prev_norm_sha256": "f8be3e631554a692e3ff971cb8fd0ca9b9db5ce673e601f65449f0f4b46d0319",
+     "prev_bytes_sha256": "fa14099ae4377149bc449f9e70aab956c71a6b5510ac1ba07faad9bd360788e5",
+     "prev_fetched_at": "2026-11-20T14:09:34Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 1
   },
   "alibaba-qwen/model_cards": {
@@ -18377,7 +18828,7 @@
    "surface": "model_cards",
    "url": "https://huggingface.co/Qwen",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:37Z",
+    "fetched_at": "2026-11-21T13:34:55Z",
     "url": "https://huggingface.co/Qwen",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -18387,11 +18838,11 @@
     "final_url": "https://huggingface.co/Qwen",
     "redirected": false,
     "content_type": "text/html; charset=utf-8",
-    "etag": "W/\"a0c92-QzqNHW/DqGbN9z8W4YAc7a2Mz9U\"",
+    "etag": "W/\"a018d-Um5RJDQNDBY5c6QZabACLuaBTQw\"",
     "last_modified": null,
-    "byte_length": 658578,
-    "bytes_sha256": "7d6e19f12cf6d06e20e5ae7dd521e4123759930a66cdb923da4405122bfdc469",
-    "norm_sha256": "7a01bdf8b91b5e5c8ff8e1f2fe5527774a51671f3569fbe45e7d446d5bfddad1",
+    "byte_length": 655757,
+    "bytes_sha256": "058a0b9e4c036c94acdffb7c29fea1f7566859e7f44e57a915e60f6cfc125cd6",
+    "norm_sha256": "2fdc825db90152b8553a45a8e1173db383aed474af149b66cd7a4608b89b6943",
     "robots_http_status": 200
    },
    "last_ok": {
@@ -18801,14 +19252,23 @@
      "robots": "allow",
      "bytes_sha256": "7d6e19f12cf6d06e20e5ae7dd521e4123759930a66cdb923da4405122bfdc469",
      "norm_sha256": "7a01bdf8b91b5e5c8ff8e1f2fe5527774a51671f3569fbe45e7d446d5bfddad1"
+    },
+    {
+     "at": "2026-11-21T13:34:55Z",
+     "kind": "UNCONFIRMED",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "058a0b9e4c036c94acdffb7c29fea1f7566859e7f44e57a915e60f6cfc125cd6",
+     "norm_sha256": "2fdc825db90152b8553a45a8e1173db383aed474af149b66cd7a4608b89b6943"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 0,
    "pending": {
-    "norm_sha256": "7a01bdf8b91b5e5c8ff8e1f2fe5527774a51671f3569fbe45e7d446d5bfddad1",
-    "bytes_sha256": "7d6e19f12cf6d06e20e5ae7dd521e4123759930a66cdb923da4405122bfdc469",
-    "first_seen_at": "2026-11-20T14:09:37Z",
+    "norm_sha256": "2fdc825db90152b8553a45a8e1173db383aed474af149b66cd7a4608b89b6943",
+    "bytes_sha256": "058a0b9e4c036c94acdffb7c29fea1f7566859e7f44e57a915e60f6cfc125cd6",
+    "first_seen_at": "2026-11-21T13:34:55Z",
     "n_seen": 1
    }
   },
@@ -18817,7 +19277,7 @@
    "surface": "pricing",
    "url": "https://www.alibabacloud.com/help/en/model-studio/billing-for-model-studio",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:37Z",
+    "fetched_at": "2026-11-21T13:34:55Z",
     "url": "https://www.alibabacloud.com/help/en/model-studio/billing-for-model-studio",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -18829,9 +19289,9 @@
     "content_type": "text/html;charset=UTF-8",
     "etag": null,
     "last_modified": null,
-    "byte_length": 532464,
-    "bytes_sha256": "25b4fd5ed6857f32722afbb65ff7b4c8cd432dda1903583acb35a0121a15f122",
-    "norm_sha256": "052b3f6c9fe3df16bc110f5b2ba530d15b5504f2b270e760bd5a8d534cbfa201",
+    "byte_length": 533230,
+    "bytes_sha256": "147a2b7132dc9603048f2a713da6ecf58964e5e1e1c8380d95004608afd27d0f",
+    "norm_sha256": "0206957edc9e51bfb8b433d1eda0259de5dbd7755c23cc0a9f3682d89c88227c",
     "robots_http_status": 200
    },
    "last_ok": {
@@ -19283,14 +19743,23 @@
      "robots": "allow",
      "bytes_sha256": "25b4fd5ed6857f32722afbb65ff7b4c8cd432dda1903583acb35a0121a15f122",
      "norm_sha256": "052b3f6c9fe3df16bc110f5b2ba530d15b5504f2b270e760bd5a8d534cbfa201"
+    },
+    {
+     "at": "2026-11-21T13:34:55Z",
+     "kind": "UNCONFIRMED",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "147a2b7132dc9603048f2a713da6ecf58964e5e1e1c8380d95004608afd27d0f",
+     "norm_sha256": "0206957edc9e51bfb8b433d1eda0259de5dbd7755c23cc0a9f3682d89c88227c"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 4,
    "pending": {
-    "norm_sha256": "052b3f6c9fe3df16bc110f5b2ba530d15b5504f2b270e760bd5a8d534cbfa201",
-    "bytes_sha256": "25b4fd5ed6857f32722afbb65ff7b4c8cd432dda1903583acb35a0121a15f122",
-    "first_seen_at": "2026-11-20T14:09:37Z",
+    "norm_sha256": "0206957edc9e51bfb8b433d1eda0259de5dbd7755c23cc0a9f3682d89c88227c",
+    "bytes_sha256": "147a2b7132dc9603048f2a713da6ecf58964e5e1e1c8380d95004608afd27d0f",
+    "first_seen_at": "2026-11-21T13:34:55Z",
     "n_seen": 1
    }
   },
@@ -19299,7 +19768,7 @@
    "surface": "usage_policy",
    "url": "https://www.alibabacloud.com/help/en/model-studio/getting-started/models",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:40Z",
+    "fetched_at": "2026-11-21T13:35:00Z",
     "url": "https://www.alibabacloud.com/help/en/model-studio/getting-started/models",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -19312,13 +19781,13 @@
     "etag": null,
     "last_modified": null,
     "byte_length": 47409,
-    "bytes_sha256": "581233011582d165ea3ae91d1f6ae611bff4ed381add47dea164a6ffefa13caf",
+    "bytes_sha256": "82bfbbefd6d9e66d6540925bb464ddcdde8c441d888460f5a69de9899466394c",
     "norm_sha256": "ffbdfbebf17538a6159a5f78344c885d5829065bb397d215ec02a3a9a27ed1e2",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:40Z",
-    "bytes_sha256": "581233011582d165ea3ae91d1f6ae611bff4ed381add47dea164a6ffefa13caf",
+    "fetched_at": "2026-11-21T13:35:00Z",
+    "bytes_sha256": "82bfbbefd6d9e66d6540925bb464ddcdde8c441d888460f5a69de9899466394c",
     "norm_sha256": "ffbdfbebf17538a6159a5f78344c885d5829065bb397d215ec02a3a9a27ed1e2",
     "byte_length": 47409,
     "etag": null,
@@ -19786,9 +20255,21 @@
      "prev_norm_sha256": "ffbdfbebf17538a6159a5f78344c885d5829065bb397d215ec02a3a9a27ed1e2",
      "prev_bytes_sha256": "9f4ebe3100c65def56c326341d8bc8c94a54e6e6087655e39ee20664cf70f98c",
      "prev_fetched_at": "2026-11-19T14:31:49Z"
+    },
+    {
+     "at": "2026-11-21T13:35:00Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "82bfbbefd6d9e66d6540925bb464ddcdde8c441d888460f5a69de9899466394c",
+     "norm_sha256": "ffbdfbebf17538a6159a5f78344c885d5829065bb397d215ec02a3a9a27ed1e2",
+     "prev_norm_sha256": "ffbdfbebf17538a6159a5f78344c885d5829065bb397d215ec02a3a9a27ed1e2",
+     "prev_bytes_sha256": "581233011582d165ea3ae91d1f6ae611bff4ed381add47dea164a6ffefa13caf",
+     "prev_fetched_at": "2026-11-20T14:09:40Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 3
   },
   "amazon/terms": {
@@ -19796,7 +20277,7 @@
    "surface": "terms",
    "url": "https://aws.amazon.com/service-terms/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:43Z",
+    "fetched_at": "2026-11-21T13:35:02Z",
     "url": "https://aws.amazon.com/service-terms/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -19807,19 +20288,19 @@
     "redirected": false,
     "content_type": "text/html;charset=utf-8",
     "etag": null,
-    "last_modified": "Thu, 19 Nov 2026 17:15:21 GMT",
+    "last_modified": "Thu, 19 Nov 2026 17:15:22 GMT",
     "byte_length": 1042014,
-    "bytes_sha256": "578f973aa9df190d748863e5312999919ff20dc5f0cf95b6ee8b67fea222f992",
+    "bytes_sha256": "8c338d40ab0f534857c4ceabda74ef402b132f77bf42657c382b6dbcb41f2036",
     "norm_sha256": "e78c1cf307c5b5196b1596cc362c1e2b1bb92a919b4773718eefae5ea05587f9",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-19T14:31:52Z",
-    "bytes_sha256": "dd6420c5509b1ecbf300db9a38f9cae551975259c0b8f341ee056f188a7f9940",
-    "norm_sha256": "e6d8acb1282d580fcedb49d2dec58495bed378e6889dd428140c1e1cbc847a6a",
-    "byte_length": 1041929,
+    "fetched_at": "2026-11-21T13:35:02Z",
+    "bytes_sha256": "8c338d40ab0f534857c4ceabda74ef402b132f77bf42657c382b6dbcb41f2036",
+    "norm_sha256": "e78c1cf307c5b5196b1596cc362c1e2b1bb92a919b4773718eefae5ea05587f9",
+    "byte_length": 1042014,
     "etag": null,
-    "last_modified": "Wed, 18 Nov 2026 03:21:40 GMT",
+    "last_modified": "Thu, 19 Nov 2026 17:15:22 GMT",
     "http_status": 200
    },
    "history": [
@@ -20282,23 +20763,30 @@
      "robots": "allow",
      "bytes_sha256": "578f973aa9df190d748863e5312999919ff20dc5f0cf95b6ee8b67fea222f992",
      "norm_sha256": "e78c1cf307c5b5196b1596cc362c1e2b1bb92a919b4773718eefae5ea05587f9"
+    },
+    {
+     "at": "2026-11-21T13:35:02Z",
+     "kind": "CHANGED",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "8c338d40ab0f534857c4ceabda74ef402b132f77bf42657c382b6dbcb41f2036",
+     "norm_sha256": "e78c1cf307c5b5196b1596cc362c1e2b1bb92a919b4773718eefae5ea05587f9",
+     "prev_norm_sha256": "e6d8acb1282d580fcedb49d2dec58495bed378e6889dd428140c1e1cbc847a6a",
+     "prev_bytes_sha256": "dd6420c5509b1ecbf300db9a38f9cae551975259c0b8f341ee056f188a7f9940",
+     "prev_fetched_at": "2026-11-19T14:31:52Z",
+     "leaf": "card-amazon-terms-20261121T133408Z-unsigned.json"
     }
    ],
-   "n_runs": 42,
-   "n_changed": 5,
-   "pending": {
-    "norm_sha256": "e78c1cf307c5b5196b1596cc362c1e2b1bb92a919b4773718eefae5ea05587f9",
-    "bytes_sha256": "578f973aa9df190d748863e5312999919ff20dc5f0cf95b6ee8b67fea222f992",
-    "first_seen_at": "2026-11-20T14:09:43Z",
-    "n_seen": 1
-   }
+   "n_runs": 43,
+   "n_changed": 6
   },
   "amazon/usage_policy": {
    "provider": "amazon",
    "surface": "usage_policy",
    "url": "https://aws.amazon.com/ai/responsible-ai/policy/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:44Z",
+    "fetched_at": "2026-11-21T13:35:03Z",
     "url": "https://aws.amazon.com/ai/responsible-ai/policy/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -20311,13 +20799,13 @@
     "etag": null,
     "last_modified": "Wed, 18 Nov 2026 03:15:34 GMT",
     "byte_length": 301006,
-    "bytes_sha256": "d8accfafb9fc45770bf420802d58b6d42d8ff7a7202753fc31eef58828f97410",
+    "bytes_sha256": "03caf317ad3940e0ccda2013048dc29192474e160870832a6c62663ccf842bee",
     "norm_sha256": "29c8486fc67588750e012ac4f878f63cee8385212653d58d2e86ce8c243c1623",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:44Z",
-    "bytes_sha256": "d8accfafb9fc45770bf420802d58b6d42d8ff7a7202753fc31eef58828f97410",
+    "fetched_at": "2026-11-21T13:35:03Z",
+    "bytes_sha256": "03caf317ad3940e0ccda2013048dc29192474e160870832a6c62663ccf842bee",
     "norm_sha256": "29c8486fc67588750e012ac4f878f63cee8385212653d58d2e86ce8c243c1623",
     "byte_length": 301006,
     "etag": null,
@@ -20792,9 +21280,21 @@
      "prev_norm_sha256": "29c8486fc67588750e012ac4f878f63cee8385212653d58d2e86ce8c243c1623",
      "prev_bytes_sha256": "cbbec8eeef2d8fb4c7b7ca0a472e1b2a066f9f29c34a767cce6c5c03911317ca",
      "prev_fetched_at": "2026-11-19T14:31:53Z"
+    },
+    {
+     "at": "2026-11-21T13:35:03Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "03caf317ad3940e0ccda2013048dc29192474e160870832a6c62663ccf842bee",
+     "norm_sha256": "29c8486fc67588750e012ac4f878f63cee8385212653d58d2e86ce8c243c1623",
+     "prev_norm_sha256": "29c8486fc67588750e012ac4f878f63cee8385212653d58d2e86ce8c243c1623",
+     "prev_bytes_sha256": "d8accfafb9fc45770bf420802d58b6d42d8ff7a7202753fc31eef58828f97410",
+     "prev_fetched_at": "2026-11-20T14:09:44Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 2
   },
   "amazon/model_cards": {
@@ -20802,7 +21302,7 @@
    "surface": "model_cards",
    "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:44Z",
+    "fetched_at": "2026-11-21T13:35:03Z",
     "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -20813,19 +21313,19 @@
     "redirected": false,
     "content_type": "text/html",
     "etag": "\"zqZralrvthqA5KpHcZmLNSYzhsE=\"",
-    "last_modified": "Fri, 20 Nov 2026 09:29:06 GMT",
+    "last_modified": "Sat, 21 Nov 2026 05:05:30 GMT",
     "byte_length": 11721,
     "bytes_sha256": "23dc0833288d788d6b09f24537aa8d175a72445206ab6ed4e272cf0a8bbfbcc3",
     "norm_sha256": "4141c5552b6d34660835454e4ca305112891b00d76d36534d0a7459171da787c",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:44Z",
+    "fetched_at": "2026-11-21T13:35:03Z",
     "bytes_sha256": "23dc0833288d788d6b09f24537aa8d175a72445206ab6ed4e272cf0a8bbfbcc3",
     "norm_sha256": "4141c5552b6d34660835454e4ca305112891b00d76d36534d0a7459171da787c",
     "byte_length": 11721,
     "etag": "\"zqZralrvthqA5KpHcZmLNSYzhsE=\"",
-    "last_modified": "Fri, 20 Nov 2026 09:29:06 GMT",
+    "last_modified": "Sat, 21 Nov 2026 05:05:30 GMT",
     "http_status": 200
    },
    "history": [
@@ -20863,7 +21363,7 @@
      "prev_fetched_at": "2026-10-29T11:37:28Z"
     }
    ],
-   "n_runs": 22,
+   "n_runs": 23,
    "n_changed": 0
   },
   "amazon/pricing": {
@@ -20871,7 +21371,7 @@
    "surface": "pricing",
    "url": "https://aws.amazon.com/bedrock/pricing/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:44Z",
+    "fetched_at": "2026-11-21T13:35:03Z",
     "url": "https://aws.amazon.com/bedrock/pricing/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -20882,19 +21382,19 @@
     "redirected": false,
     "content_type": "text/html;charset=utf-8",
     "etag": null,
-    "last_modified": "Wed, 18 Nov 2026 03:13:41 GMT",
-    "byte_length": 901860,
-    "bytes_sha256": "287465542530fa5f260bd170493fe24f92e7b92376164e9b5e9662d7125a2837",
+    "last_modified": "Fri, 20 Nov 2026 14:42:35 GMT",
+    "byte_length": 904031,
+    "bytes_sha256": "73895f7823c6c1ca90260fa7307c046a563dc1369156343d62b93c1c57fcbe43",
     "norm_sha256": "61a93f41c0ca4446d5f3d04775b866e10e4eb05081fefc27b4536fc8adb95863",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:44Z",
-    "bytes_sha256": "287465542530fa5f260bd170493fe24f92e7b92376164e9b5e9662d7125a2837",
+    "fetched_at": "2026-11-21T13:35:03Z",
+    "bytes_sha256": "73895f7823c6c1ca90260fa7307c046a563dc1369156343d62b93c1c57fcbe43",
     "norm_sha256": "61a93f41c0ca4446d5f3d04775b866e10e4eb05081fefc27b4536fc8adb95863",
-    "byte_length": 901860,
+    "byte_length": 904031,
     "etag": null,
-    "last_modified": "Wed, 18 Nov 2026 03:13:41 GMT",
+    "last_modified": "Fri, 20 Nov 2026 14:42:35 GMT",
     "http_status": 200
    },
    "history": [
@@ -21356,9 +21856,21 @@
      "prev_norm_sha256": "61a93f41c0ca4446d5f3d04775b866e10e4eb05081fefc27b4536fc8adb95863",
      "prev_bytes_sha256": "ef171f77ff762c744f545706348a2bcddb55895d17650bedbd4162017eacafa9",
      "prev_fetched_at": "2026-11-19T14:31:53Z"
+    },
+    {
+     "at": "2026-11-21T13:35:03Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "73895f7823c6c1ca90260fa7307c046a563dc1369156343d62b93c1c57fcbe43",
+     "norm_sha256": "61a93f41c0ca4446d5f3d04775b866e10e4eb05081fefc27b4536fc8adb95863",
+     "prev_norm_sha256": "61a93f41c0ca4446d5f3d04775b866e10e4eb05081fefc27b4536fc8adb95863",
+     "prev_bytes_sha256": "287465542530fa5f260bd170493fe24f92e7b92376164e9b5e9662d7125a2837",
+     "prev_fetched_at": "2026-11-20T14:09:44Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 5
   },
   "amazon/safety_policy": {
@@ -21366,7 +21878,7 @@
    "surface": "safety_policy",
    "url": "https://aws.amazon.com/ai/responsible-ai/",
    "latest": {
-    "fetched_at": "2026-11-20T14:09:45Z",
+    "fetched_at": "2026-11-21T13:35:04Z",
     "url": "https://aws.amazon.com/ai/responsible-ai/",
     "normaliser": "csoai-norm-v1",
     "state": "OK",
@@ -21377,19 +21889,19 @@
     "redirected": false,
     "content_type": "text/html;charset=utf-8",
     "etag": null,
-    "last_modified": "Wed, 18 Nov 2026 03:19:23 GMT",
+    "last_modified": "Wed, 18 Nov 2026 03:19:24 GMT",
     "byte_length": 433032,
-    "bytes_sha256": "aa4ef9ee5a8bdce382bc8de7a82ed7cdc029d0afd099a754c6d0fe52846376b5",
+    "bytes_sha256": "c75005fc1e0a8cc0688a0762cf32046095d9f8f2f7bebcfa65e2f847607c21b0",
     "norm_sha256": "35c8fa46b99be8512cb1a8c158bd26671f363d740ac87923c362bd5283d7e6fb",
     "robots_http_status": 200
    },
    "last_ok": {
-    "fetched_at": "2026-11-20T14:09:45Z",
-    "bytes_sha256": "aa4ef9ee5a8bdce382bc8de7a82ed7cdc029d0afd099a754c6d0fe52846376b5",
+    "fetched_at": "2026-11-21T13:35:04Z",
+    "bytes_sha256": "c75005fc1e0a8cc0688a0762cf32046095d9f8f2f7bebcfa65e2f847607c21b0",
     "norm_sha256": "35c8fa46b99be8512cb1a8c158bd26671f363d740ac87923c362bd5283d7e6fb",
     "byte_length": 433032,
     "etag": null,
-    "last_modified": "Wed, 18 Nov 2026 03:19:23 GMT",
+    "last_modified": "Wed, 18 Nov 2026 03:19:24 GMT",
     "http_status": 200
    },
    "history": [
@@ -21861,9 +22373,21 @@
      "prev_norm_sha256": "35c8fa46b99be8512cb1a8c158bd26671f363d740ac87923c362bd5283d7e6fb",
      "prev_bytes_sha256": "640d3912724ec39ec45065c09255d5b1eaf72dd255086b3404ff6090223ad88b",
      "prev_fetched_at": "2026-11-19T14:31:54Z"
+    },
+    {
+     "at": "2026-11-21T13:35:04Z",
+     "kind": "BYTES_ONLY",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "c75005fc1e0a8cc0688a0762cf32046095d9f8f2f7bebcfa65e2f847607c21b0",
+     "norm_sha256": "35c8fa46b99be8512cb1a8c158bd26671f363d740ac87923c362bd5283d7e6fb",
+     "prev_norm_sha256": "35c8fa46b99be8512cb1a8c158bd26671f363d740ac87923c362bd5283d7e6fb",
+     "prev_bytes_sha256": "aa4ef9ee5a8bdce382bc8de7a82ed7cdc029d0afd099a754c6d0fe52846376b5",
+     "prev_fetched_at": "2026-11-20T14:09:45Z"
     }
    ],
-   "n_runs": 42,
+   "n_runs": 43,
    "n_changed": 2
   }
  },
@@ -24107,6 +24631,44 @@
     "alibaba-qwen/model_cards",
     "alibaba-qwen/pricing",
     "amazon/terms"
+   ]
+  },
+  {
+   "run_at": "2026-11-21T13:34:08Z",
+   "n_targets": 51,
+   "ok": 51,
+   "unchanged": 7,
+   "changed": 5,
+   "bytes_only": 26,
+   "first": 6,
+   "uncheckable": 0,
+   "unknown": 0,
+   "changed_ids": [
+    "google/model_cards",
+    "google/art50_marking",
+    "mistral/pricing",
+    "deepseek/pricing",
+    "amazon/terms"
+   ],
+   "uncheckable_ids": [],
+   "unknown_ids": [],
+   "leaves": [
+    "card-google-model_cards-20261121T133408Z-unsigned.json",
+    "card-google-art50_marking-20261121T133408Z-unsigned.json",
+    "card-mistral-pricing-20261121T133408Z-unsigned.json",
+    "card-deepseek-pricing-20261121T133408Z-unsigned.json",
+    "card-amazon-terms-20261121T133408Z-unsigned.json",
+    "card-daily-20261121T133408Z-unsigned.json"
+   ],
+   "unconfirmed": 7,
+   "unconfirmed_ids": [
+    "anthropic/art50_marking",
+    "meta/art50_marking",
+    "xai/model_cards",
+    "cohere/pricing",
+    "deepseek/model_cards",
+    "alibaba-qwen/model_cards",
+    "alibaba-qwen/pricing"
    ]
   }
  ]
