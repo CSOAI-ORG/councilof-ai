@@ -6,7 +6,7 @@ import { Mail, MapPin, Clock, Send } from 'lucide-react';
 import PlainEmail, { CONTACT_MAILBOX } from '@/components/PlainEmail';
 import { enquiryPreset, prepareContactEmail } from '@/lib/pilotEnquiry';
 import { BUYING_LINES } from '@/lib/buying';
-import { formatStoredContactReceipt, formatUnconfirmedContactSubmission } from '@/lib/contactReceipt';
+import { classifyContactResponse, formatRejectedContactSubmission, formatStoredContactReceipt, formatUnconfirmedContactSubmission } from '@/lib/contactReceipt';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -51,9 +51,15 @@ export default function Contact() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify(submittedForm),
       });
-      const data = await res.json() as { stored?: boolean; receipt_id?: string; code?: string };
-      if (!res.ok || data.stored !== true || !data.receipt_id) throw Error(data.code || "INTAKE_UNAVAILABLE");
-      setSubmitFeedback(formatStoredContactReceipt(data.receipt_id, submittedRevision === formRevision.current, CONTACT_MAILBOX));
+      const data: unknown = await res.json().catch(() => null);
+      const outcome = classifyContactResponse(res.status, data);
+      if (outcome.kind === "stored") {
+        setSubmitFeedback(formatStoredContactReceipt(outcome.receiptId, submittedRevision === formRevision.current, CONTACT_MAILBOX));
+      } else if (outcome.kind === "rejected") {
+        setSubmitFeedback(formatRejectedContactSubmission(CONTACT_MAILBOX));
+      } else {
+        setSubmitFeedback(formatUnconfirmedContactSubmission(CONTACT_MAILBOX));
+      }
     } catch {
       setSubmitFeedback(formatUnconfirmedContactSubmission(CONTACT_MAILBOX));
     } finally {
