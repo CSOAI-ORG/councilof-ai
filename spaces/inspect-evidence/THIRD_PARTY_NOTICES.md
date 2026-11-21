@@ -1,6 +1,6 @@
 # Third-party sources, dataset licences and public evidence limits
 
-**Scope:** `csoai/inspect-evidence` static demonstration; source pin and log hashes are in `evidence/evidence_manifest.json`. This is a provenance/redistribution notice, **not** a legal opinion or a grant of rights over third-party content. A cryptographic digest establishes byte integrity, not licence compliance, model truth or ownership.
+**Scope:** `csoai/inspect-evidence` static demonstration; source pin and log hashes are in `evidence/evidence_manifest.json`. This is a provenance/redistribution notice, not a legal opinion or a grant of rights over third-party content. A cryptographic digest establishes byte integrity, not licence compliance, model truth or ownership.
 
 The Space contains (a) CSOAI-authored static viewer and packaging scripts, which may be licensed MIT, and (b) Inspect `.eval` archives that can embed third-party prompts, expected answers, scorer outputs and dataset fragments. **The entire Space cannot be described as MIT.** Upstream licences and any distinct rights in individual dataset contents remain in force.
 
