@@ -128,6 +128,9 @@ const excludeOwnLeader = (a: AxisScore): PublicAxis => {
   // the rows recompute (or the reason no public determination is published) that the separation
   // field rests on, so the served axis keeps its basis even when the leader's own numbers are
   // dropped here. The leader's accuracy/interval/p/note still describe the excluded model and go.
+  // `limit` is deliberately absent from this destructure and from the two in dropUncardedLeader
+  // and applyRowsSeparation: a row's stated limit says what its score does not show, which no
+  // leader change alters, so every public view serves it as typed (axes[].limit, C-2026-1120-02).
   const {
     accuracy: _acc,
     accuracy_is: _accIs,
