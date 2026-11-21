@@ -36,8 +36,7 @@ describe("business standing and public-record signals", () => {
     expect(html).toContain("sec-submissions-cik1786958.json.meta.json");
     expect(html).toContain("FDIC");
     expect(html).toContain("consultation research · no submission claimed");
-    expect(html).toContain("our FDIC document remained a draft and was not submitted");
-    expect(html).toContain("File 4-927, 18 September 2026");
+    expect(html).toContain("remained drafts and were not submitted");
     expect(html).not.toMatch(/FDIC[- ]insured|SEC[- ]registered|FDIC member|SEC member/i);
   });
 
@@ -54,9 +53,8 @@ describe("Organization structured data", () => {
       "C2PA",
       "Open Invention Network",
       "LOT Network",
-      "The Linux Foundation",
     ]);
-    for (const id of ["c2pa", "open-invention-network", "lot-network", "linux-foundation"]) {
+    for (const id of ["c2pa", "open-invention-network", "lot-network"]) {
       const row = manifest.rows.find((candidate: { id: string }) => candidate.id === id);
       expect(row.kind).toBe("member");
       expect(row.state).toBe("VERIFIED");

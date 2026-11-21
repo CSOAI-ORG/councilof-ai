@@ -1,6 +1,6 @@
 {
   "schema": "csoai.memberships/0.1",
-  "as_of": "2026-11-21",
+  "as_of": "2026-11-13",
   "signed": false,
   "purpose": "Where Council of AI (CSOAI Ltd, UK Companies House 16939677) takes part, and what each entry does and does not prove. One row per body. Every row names its evidence: a public URL a stranger can open, or a dated mailbox record when the only evidence is private (public_evidence: false). scripts/memberships-check.mjs re-fetches every public URL and fails when one stops answering 200 with our name. Participation is not endorsement, a listing is not adoption, a filing is not recognition. Nothing here is a score, a rank, or a mark.",
   "honesty_line": "Participation is not endorsement, and a listing is not adoption. Every entry links to its evidence.",
@@ -700,30 +700,6 @@
       "answer": "Not yet. A comment on Treasury's GENIUS Act rule, Federal Register document 2026-16796 at https://www.federalregister.gov/documents/2026/08/18/2026-16796/genius-act-regulations-on-payment-stablecoin-issuance-offer-and-sale, docket TREAS-DO-2026-0496, is drafted and will be submitted by hand at regulations.gov; until a tracking number exists this entry is marked PENDING and claims nothing. Comments close on 2026-10-19."
     },
     {
-      "id": "sec-file-4-927",
-      "org": "US Securities and Exchange Commission — File 4-927 (Release 34-106402) comment",
-      "short": "SEC File 4-927 comment",
-      "group": "filings",
-      "kind": "filed",
-      "since": "2026-09-18",
-      "since_basis": "The SEC published the comment of Nicholas Templeman dated 18 September 2026 on File 4-927.",
-      "evidence": "https://www.sec.gov/comments/4-927/4927-3629006.htm",
-      "evidence_kind": "public_url",
-      "public_evidence": true,
-      "check": {
-        "expect": [
-          "Templeman",
-          "CSOAI"
-        ]
-      },
-      "what_it_proves": "A technical comment from CSOAI Ltd on the observability of the notice, transaction-transparency and trading-stoppage conditions (sections II.C, II.G and II.H) is on the SEC's public comment file for File 4-927.",
-      "what_it_does_not_prove": "A published comment is a submission, not recognition. It does not mean the SEC agrees with it, has acted on it, or has registered, reviewed or endorsed CSOAI Ltd.",
-      "state": "VERIFIED",
-      "verified_on": "2026-11-21",
-      "question": "Has Council of AI filed a comment with the SEC?",
-      "answer": "Yes, one: a technical comment on File 4-927 dated 18 September 2026, published on the SEC's comment page. A comment is a submission, not recognition."
-    },
-    {
       "id": "open-invention-network",
       "org": "Open Invention Network — OIN 2.0 licensee",
       "short": "Open Invention Network",
@@ -766,31 +742,6 @@
       "what_it_does_not_prove": "Like the OIN row, this is a patent arrangement and nothing more. LOT Network is not a standards body, not an AI governance body, and has adopted, reviewed or endorsed nothing we publish.",
       "state": "VERIFIED",
       "verified_on": "2026-11-13"
-    },
-    {
-      "id": "linux-foundation",
-      "org": "The Linux Foundation",
-      "short": "Linux Foundation",
-      "group": "commons",
-      "kind": "member",
-      "since": "2026-09-21",
-      "since_basis": "DocuSign reported the membership agreement completed by all parties on 2026-09-21 (INBOX 8955, INBOX 8987); the member-portal record M-018884 gives the tier as Silver. The Foundation's public landscape now lists CSOAI LTD under LF Members, Silver.",
-      "evidence": "https://landscape.linuxfoundation.org/?item=lf-members--silver--csoai-ltd-council-for-the-safety-of-artificial-intelligence-member",
-      "evidence_kind": "public_url",
-      "public_evidence": true,
-      "check": {
-        "url": "https://landscape.linuxfoundation.org/data/base.json",
-        "expect": [
-          "CSOAI LTD",
-          "lf-members--silver--csoai-ltd-council-for-the-safety-of-artificial-intelligence-member"
-        ]
-      },
-      "what_it_proves": "CSOAI LTD is a Linux Foundation member at the Silver tier: the Foundation's public landscape lists it under LF Members, Silver, with project memberships in The Linux Foundation and the C2PA Fund.",
-      "what_it_does_not_prove": "Silver is a paid corporate membership tier. It does not mean the Linux Foundation has reviewed, endorsed or adopted anything Council of AI publishes, and it is not LF AI & Data membership. The description text on the landscape entry predates our measurement-only scope and mentions certifying; Council of AI does not certify.",
-      "state": "VERIFIED",
-      "verified_on": "2026-11-21",
-      "question": "Is Council of AI a Linux Foundation member?",
-      "answer": "Yes, at the Silver tier: the Linux Foundation's public landscape lists CSOAI LTD under LF Members, Silver. Membership is a paid participation tier, not an endorsement of anything Council of AI publishes."
     },
     {
       "id": "sail-awesome-ai-leaderboard",
@@ -912,6 +863,12 @@
       "org": "Agentry",
       "reason": "no_record",
       "why": "The operator's follow-up mail of 2026-09-15 says the agent is listed, but no public listing URL was located and the automated listing confirmation is not in the mailbox. Not listed until a stranger can open the page."
+    },
+    {
+      "org": "The Linux Foundation",
+      "reason": "unverified",
+      "why": "Not listed. The only records are private: a DocuSign completion notice and a member-portal record that needs a login. The Foundation's public members page did not name us on 2026-09-22, nor in the page fetched on 2026-09-26, so a stranger cannot check the claim. Until a public page names CSOAI LTD, no Linux Foundation membership is claimed on this site. Taking part in the Open Secure AI Alliance, a Linux Foundation project, is a separate row above.",
+      "evidence": "https://www.linuxfoundation.org/about/members"
     }
   ]
 }

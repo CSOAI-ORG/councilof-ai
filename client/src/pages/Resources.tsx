@@ -23,8 +23,8 @@ export default function Resources() {
       category: "Methodology",
     },
     {
-      title: "Watchdog Analyst Training Manual",
-      description: "Training materials for watchdog analysts. Completing them is not a certification or a professional qualification.",
+      title: "Watchdog Analyst Certification Manual",
+      description: "Complete training materials for becoming a certified AI safety watchdog analyst.",
       type: "PDF",
       pages: 68,
       updated: "2025-01-15",

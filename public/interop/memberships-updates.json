@@ -1,6 +1,6 @@
 {
   "schema": "csoai.memberships-updates/0.1",
-  "as_of": "2026-11-21",
+  "as_of": "2026-11-13",
   "signed": false,
   "purpose": "The dated record of what changed in public/interop/memberships.json and why. One entry per change, newest first. Every entry names the manifest row it touches (or null when it touches the manifest as a whole) and carries the same kind of evidence the rows do: a public URL a stranger can open, or a dated mailbox record when the only evidence is private. This file exists so a reader can see that a row moved, when, and on what basis — a table that only ever shows its current state cannot be audited. scripts/memberships-check.mjs validates it and fails when an entry names a row that does not exist.",
   "honesty_line": "An update is a record of a change, not an announcement of an achievement. Nothing here upgrades a row; the rows say what they prove.",
@@ -23,24 +23,6 @@
     }
   ],
   "entries": [
-    {
-      "date": "2026-11-21",
-      "kind": "added",
-      "row": "linux-foundation",
-      "headline": "Linux Foundation row restored: the Foundation's public landscape now lists CSOAI LTD at Silver",
-      "detail": "The row was withdrawn on 2026-09-26 because the only evidence was private. On 2026-11-21 the Linux Foundation landscape data (landscape.linuxfoundation.org/data/base.json) lists 'CSOAI LTD — Council for the Safety of Artificial Intelligence (member)' under LF Members, Silver, with project memberships in The Linux Foundation and the C2PA Fund. A stranger can now check it, so the row returns to the table and the 'Named, and not listed' entry is removed. This also resolves the contradiction between that entry and the LF AI & Data note, which already said the Silver membership was held.",
-      "evidence": "https://landscape.linuxfoundation.org/data/base.json",
-      "evidence_kind": "public_url"
-    },
-    {
-      "date": "2026-11-21",
-      "kind": "added",
-      "row": "sec-file-4-927",
-      "headline": "SEC File 4-927 comment recorded: the SEC publishes it",
-      "detail": "The comment of Nicholas Templeman dated 18 September 2026 (CSOAI technical comment on notice history and transaction-publication evidence) is on the SEC's public comment file for File 4-927. It had no row, and the site footer said the SEC documents were drafts; both now match the public record.",
-      "evidence": "https://www.sec.gov/comments/4-927/4927-3629006.htm",
-      "evidence_kind": "public_url"
-    },
     {
       "date": "2026-11-13",
       "kind": "corrected",
