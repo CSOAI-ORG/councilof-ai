@@ -5,26 +5,34 @@
 ## Run it
 ```bash
 cd councilof-ai && npm install   # first time (needs playwright)
-node scripts/claims-e2e.mjs      # hits the LIVE site + brain, prints a pass/FAIL matrix
+node scripts/claims-e2e.mjs      # hits the LIVE site, prints a pass/FAIL/UNCHECKABLE matrix
 # override target: SITE=https://staging... node scripts/claims-e2e.mjs
 ```
 
 ## What it proves (each = a claim we make on the site)
-| Claim on the platform | Test | Must be true |
+Each row is one line of the run's matrix, probed where the site serves the claim. FAIL and UNCHECKABLE both fail the run.
+
+| Claim on the platform | Test (row in the run) | Must be true |
 |---|---|---|
-| "377+ governed MCP tools" | `/api/tools` total | at least 377 (catalog grows as new MCPs register — e.g. csoai-governance-mcp took it to 378 on 2026-07-07); update copy's number periodically, don't demo a stale exact figure |
-| "live tools execute" | `/api/mcp tools/list` + `tools/call` | ≥5 tools run server-side, real output |
-| "governed answers" | `meok_govern` | returns real frameworks, not jargon |
-| **"Ed25519 · Layer 0 signing"** | `/api/sign` | returns a **real signature + publicKey** (not empty) |
+| the MCP tool catalogue and its search | `/api/tools` and `/api/tools?q=` ("MCP tool catalogue", "MCP tool search filters") | `total` is derived from the listed tools, the catalogue is not empty, a real tool name matches and a nonsense query matches nothing |
+| live MCP tools | `POST /mcp` `tools/list` ("Live MCP tools") | the site's own MCP door lists at least 5 tools; the ToolRunner row is the one that executes a tool |
+| **"Ed25519 · Layer 0 signing"** (register claim CR-001) | every card in `/signed/card_index.json` ("CLAIM \"Ed25519 signing\"") | each card verifies, with `public/signed/verify-card.mjs`, under `did:web:csoai.org#card-attestation-1`, the key `/.well-known/did.json` publishes |
 | "run a live tool" | ToolRunner on `/tool-commons` | renders real governed output |
 | "classify your AI" | `/classifier` | returns a risk tier |
-| **"sealed to Layer 0"** | `/report` submit | receipt shows a **real signature/fingerprint** |
-| "signed artifacts" | `/workbench` run+seal | produces a sealed artifact |
-| "33-agent council" | `/try` | BFT council visualization renders |
+| incident intake is withdrawn | `/report` | the page says the intake is not live and offers no "Submit + seal" |
+| the workbench is not anonymously writable | `/workbench` | an anonymous session fails closed onto `/login` |
+| the Council is a design | `/council` | the design / not-a-live-system boundary and `n_eff = 1` are on the page |
 | "live globe" | `/globe3d.html` | Cesium canvas renders |
+| the SOV3 release pages | `/sov3-model-card`, `/sov3-system-card`, `/sov3-whitepaper`, `/research-transparency` | each renders its own title and body evidence |
 | dynamic social cards | `/api/og` | returns image/png |
 
+**Retired 2026-11-21.** The run used to probe a second host, the historical brain at `https://os.meok.ai/api`, for five rows: brain host, live MCP tools, `meok_govern`, Ed25519 signing (`/sign`) and brain health. Since 11 Nov that host has answered as the MEOK HIM public read plane (`"scope": "public-read-plane"`), not `sovereign-backend`, so all five rows were UNCHECKABLE on every run and the run exited 1 for that reason alone. No page on this site depends on that host: the client calls its own `/api`. So "live MCP tools" now reads the site's `/mcp`, and "Ed25519 signing" now verifies the published cards. The `meok_govern` and brain-health rows are gone, because no page claims either.
+
+The seal door is a separate thing. `POST /api/sign` (the artifact seal behind the checklist workbench's "Seal my answers" and `csoai_sign`) answers 503 `SIGNER_UNAVAILABLE` until `ARTIFACT_SIGN_KEY_PKCS8_B64` is provisioned. Until then a seal says **Not sealed**, and nothing stands in for it.
+
 ## Latest result
+Current results are the Claims E2E workflow runs (it runs after every production deploy and daily at 06:00 UTC). The entries below are historical.
+
 **2026-07 · 12 pass · 0 FAIL** — all headline claims verified functionally true on the live site + brain (Ed25519 signature len=128 alg=ed25519; `/api/tools` total=377; ToolRunner/classifier/report/workbench all execute; globe renders).
 
 **2026-07-07 update (API-layer only, re-verified by Claude Science):** `/api/tools` total is now **378** (csoai-governance-mcp registered + deployed) — still a genuine pass under the "377+" rule above. Re-ran the 6 API-level checks (tools count, live MCP tools/list, meok_govern, Ed25519 sign+verify round-trip, brain health, dynamic OG) — all 6 pass. Did NOT re-run the 6 browser-level checks (ToolRunner/classifier/report/workbench/council-viz/globe) this pass — Playwright's Chromium binary could not be downloaded in this sandbox; treat those 6 as last-verified under the 2026-07 run above, not re-confirmed today.
@@ -52,7 +60,7 @@ browser can actually install (i.e. not this sandbox).
 
 ## Honesty guardrails (so a claim never overstates)
 - The catalogue is **377 connectable** MCP packages; **5 execute server-side** live. Say both accurately — don't imply all 377 run in our cloud.
-- Seals are **real Ed25519** when the brain is reachable; the offline fallback is a **real SHA-256 content hash**, labelled as such — never presented as a signature.
+- A seal is the signing door's **Ed25519 signature or nothing**. When `/api/sign` does not sign (503 `SIGNER_UNAVAILABLE` while its key is unprovisioned, or no answer), the page says **Not sealed**; no browser-computed hash stands in for a seal. Until 21 Nov 2026 the checklist workbench showed a local SHA-256 as "Sealed.".
 - Regulatory dates: only state ✅ rows from the ground-truth register; flag anything else "indicative — verify".
 
 *If it's not green here, it's not ready to show. Green here = we can walk into any room and it works.*

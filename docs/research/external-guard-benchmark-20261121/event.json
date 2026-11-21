@@ -1,0 +1,111 @@
+{
+  "anchors": {
+    "ots": "none",
+    "rekor": {
+      "log_index": null,
+      "uuid": null
+    }
+  },
+  "claim": {
+    "read_at": "2026-11-21T01:19:19.571960+00:00",
+    "source_sha256": "39ac797cabc157eeed58435a08593b2952bb6cb16fc394a2d383f447cc7b246e",
+    "source_url": "https://huggingface.co/datasets/deepset/prompt-injections/tree/4f61ecb038e9c3fb77e21034b22511b523772cdd",
+    "text": "External-source test-split model classification: measured false negatives and benign controls"
+  },
+  "declared": {
+    "benign_label_count": 56,
+    "dataset": "deepset/prompt-injections",
+    "injection_label_count": 60,
+    "model_revision": "2efc2ed5abecd21eb45c2506d231a65d6e392b85",
+    "raw_text_redistributed": false,
+    "sample_population": 116,
+    "source_revision": "4f61ecb038e9c3fb77e21034b22511b523772cdd",
+    "threshold": 0.5,
+    "weights_sha256": "61cd0741cdbfcc229e32e1de1392f352736d87d1e8b3c2b67ad9836bb7910d5d"
+  },
+  "event_id": "sha256:67e466c5d37d484436f7dff4b861be43ab9ef0bc68f2af0dd10bc60ca05b12f7",
+  "limits": [
+    "116 externally sourced labelled test records, previously evaluated by model publisher; no unseen/blind holdout.",
+    "Ground-truth third-party labels not independently reviewed and may be noisy or incomplete.",
+    "Only one classifier and a declared 0.5 threshold; no direct agent tool effect tested.",
+    "Source dataset metadata conflicts: top-level Apache-2.0 vs nested CC-BY-4.0; no raw prompt redistribution.",
+    "No independent reviewer, external signature, production authority or GSPC board admission.",
+    "Secondary threshold sensitivity is post hoc on this same split; not a tuned deployment recommendation."
+  ],
+  "maintenance": null,
+  "method": {
+    "code_sha256": "ecbc26ce9092598b2a6f4ba2cce97c6537ad05018ab8a68ca41baf28c81bea68",
+    "holder": "csoai",
+    "id": "external-test-split-onnx-classification",
+    "version": "0.1"
+  },
+  "negative_control": {
+    "expected": null,
+    "got": "BENIGN_56_FLAGGED_0",
+    "id": "third-party-benign-population"
+  },
+  "observed": {
+    "fn": 19,
+    "fp": 0,
+    "gspc_measurement_admission": false,
+    "independent_review": "NOT_CONDUCTED",
+    "n": 116,
+    "observed_at": "2026-11-21T01:19:19.571960+00:00",
+    "source_sha256": "39ac797cabc157eeed58435a08593b2952bb6cb16fc394a2d383f447cc7b246e",
+    "threshold_sensitivity": [
+      {
+        "fn": 8,
+        "fp": 0,
+        "threshold": 0.05,
+        "tn": 56,
+        "tp": 52
+      },
+      {
+        "fn": 12,
+        "fp": 0,
+        "threshold": 0.1,
+        "tn": 56,
+        "tp": 48
+      },
+      {
+        "fn": 14,
+        "fp": 0,
+        "threshold": 0.2,
+        "tn": 56,
+        "tp": 46
+      },
+      {
+        "fn": 15,
+        "fp": 0,
+        "threshold": 0.35,
+        "tn": 56,
+        "tp": 45
+      },
+      {
+        "fn": 19,
+        "fp": 0,
+        "threshold": 0.5,
+        "tn": 56,
+        "tp": 41
+      },
+      {
+        "fn": 34,
+        "fp": 0,
+        "threshold": 0.8,
+        "tn": 56,
+        "tp": 26
+      }
+    ],
+    "tn": 56,
+    "tp": 41
+  },
+  "schema": "csoai.evidence-event/0.1",
+  "signature": null,
+  "state": "PARTIAL",
+  "subject": {
+    "kind": "model_run",
+    "locator": "hf:Horizon-Labs/prompt-injection-guard-small@2efc2ed5abecd21eb45c2506d231a65d6e392b85#deepset/prompt-injections@4f61ecb038e9c3fb77e21034b22511b523772cdd"
+  },
+  "supersedes": null,
+  "value": null
+}
