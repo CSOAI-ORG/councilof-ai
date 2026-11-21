@@ -6,7 +6,7 @@ export function formatStoredContactReceipt(receiptId: string, unchanged: boolean
   const scope = unchanged
     ? `Stored with reference ${receiptId}.`
     : `An earlier version of your enquiry was stored with reference ${receiptId}; your subsequent edits were not submitted. Submit again to store those edits.`;
-  return `${scope} The Council team has NOT been notified and this is not a request for a reply. To reach us, send the prepared email using ‘Open email draft instead’ below or write to ${mailbox}.`;
+  return `${scope} The Council team has NOT been notified and this is not a request for a reply. To reach us, send the prepared email using the primary email-draft action above or write to ${mailbox}.`;
 }
 
 /**
