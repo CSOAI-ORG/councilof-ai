@@ -32,7 +32,7 @@ export function validateInputs(record, fixtures) {
          "classifier score / outcome");
   }
   const cm={tp:0,tn:0,fp:0,fn:0};
-  for(const r of record.cases)cm[(r.expected_injection?"t":"f") + (r.predicted_injection?"p":"n")]++;
+  for(const r of record.cases)cm[r.expected_injection ? (r.predicted_injection ? "tp" : "fn") : (r.predicted_injection ? "fp" : "tn")]++;
   safe(Object.entries(cm).every(([k,v])=>record[k]===v),"classifier metrics disagree with rows");
   return cm;
 }
@@ -138,7 +138,7 @@ function selftest(){
     gspc_admitted:false,production_authority:false,independent_review:"NOT_CONDUCTED",
     threshold:.5,n:8,tp:4,tn:4,fp:0,fn:0,
     cases:fixtures.cases.map(x=>({id:x.id,expected_injection:x.injection,
-      predicted_injection:x.injection,probability_injection:x.injection?.99:.01,
+      predicted_injection:x.injection,probability_injection:x.injection ? 0.99 : 0.01,
       text_sha256:hash(x.text)}))};
   const result=compose(record,fixtures);
   assert.equal(verify(result,record,fixtures),true);
