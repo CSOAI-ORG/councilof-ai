@@ -11,6 +11,8 @@ type Read<T> = { state: "READ"; data: T } | { state: "LOADING" | "UNCHECKABLE" }
 type HITL = {
   module_count: number;
   review_queue_summary: Record<string, number>;
+  store_bound: boolean;
+  counts_are: string;
   assessment_scope: {
     operator_identity: string;
     human_presence: string;
@@ -40,13 +42,15 @@ function hitlShape(value: unknown): HITL | null {
     v.schema !== "csoai.hitl-companion-state/0.1" ||
     !integer(v.module_count) ||
     !q || typeof q !== "object" || !integer(q.PENDING) ||
+    typeof v.store_bound !== "boolean" ||
+    typeof v.counts_are !== "string" || !v.counts_are.trim() ||
     !a || typeof a !== "object" ||
     typeof a.operator_identity !== "string" ||
     typeof a.human_presence !== "string" ||
     typeof a.professional_competence !== "string" ||
     typeof a.execution_authority !== "boolean"
   ) return null;
-  return { module_count: v.module_count, review_queue_summary: q, assessment_scope: a };
+  return { module_count: v.module_count, review_queue_summary: q, store_bound: v.store_bound, counts_are: v.counts_are, assessment_scope: a };
 }
 
 function gspcShape(value: unknown): GSPC | null {
@@ -140,7 +144,8 @@ export default function WorkingGroupHITLOversight() {
           <p className="text-xs font-semibold uppercase tracking-wide">HITL source · /api/hitl</p>
           {hitl.state === "READ" ? (
             <>
-              <p className="mt-2 text-sm">{hitl.data.module_count} board-reading modules; {hitl.data.review_queue_summary.PENDING} pending challenges in the recorded queue.</p>
+              <p className="mt-2 text-sm">{hitl.data.module_count} board-reading modules. {hitl.data.store_bound ? `${hitl.data.review_queue_summary.PENDING} pending challenges in the recorded queue.` : "Queue count unavailable: no decision store is bound."}</p>
+              <p className="mt-2 text-xs text-muted-foreground">Queue qualification: {hitl.data.counts_are}.</p>
               <p className="mt-2 text-xs text-muted-foreground">Operator identity: {hitl.data.assessment_scope.operator_identity}. Human presence: {hitl.data.assessment_scope.human_presence}. Professional competence: {hitl.data.assessment_scope.professional_competence}. Execution authority: {String(hitl.data.assessment_scope.execution_authority)}.</p>
             </>
           ) : (
