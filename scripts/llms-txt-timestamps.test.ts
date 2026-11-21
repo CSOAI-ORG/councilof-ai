@@ -28,6 +28,8 @@ function fixture() {
     resolve(__dirname, "harness-x/npm-release-state.mjs"),
     join(root, "scripts/harness-x/npm-release-state.mjs"),
   );
+  // And ./llms-txt-distribution.mjs, the distribution section and its print rule (18 Nov 2026).
+  copyFileSync(resolve(__dirname, "llms-txt-distribution.mjs"), join(root, "scripts/llms-txt-distribution.mjs"));
   for (const name of names) writeFileSync(join(root, "public", name), `BOARD SNAPSHOT ${name}\n## Timestamps\n\n${marker}\nstale\n\n## Evidence\nIMMUTABLE SNAPSHOT ${name}\n`);
   writeFileSync(join(root, "public/interop/ots/manifest.json"), JSON.stringify({
     schema: "csoai.ots-manifest/0.4", as_of: "2026-10-11T00:00:00Z",

@@ -6,8 +6,34 @@
  * doors can never disagree.
  */
 import GSPC_TOOLS from "./gspc-tools.json";
-import { measurementIndex, verifyCapsule, serverEvidence } from "../_lib/measurementCapsule";
+import { DOCTRINE, measurementIndex, verifyCapsule, serverEvidence } from "../_lib/measurementCapsule";
 import type { McpToolResult } from "./_handlers";
+import {
+  MCP_MAX_JSON_DEPTH,
+  MCP_MAX_TOOL_INPUT_ELEMENTS,
+  looksLikeJsonContainer,
+  withinJsonBudget,
+  withinValueBudget,
+} from "./_input_budget";
+
+/**
+ * A capsule's JSON text is one token to the door's request scan, and the reader's parse grows with
+ * the square of one object's key count, so its structure is bounded before verifyCapsule sees it.
+ * The text is only scanned, never re-serialised: v0.1 number lexemes are evidence.
+ */
+function capsuleWithinBudget(input: unknown): boolean {
+  if (typeof input === "string")
+    return !looksLikeJsonContainer(input) || withinJsonBudget(input, MCP_MAX_TOOL_INPUT_ELEMENTS);
+  return withinValueBudget(input);
+}
+const CAPSULE_OVER_BUDGET = {
+  state: "UNCHECKABLE",
+  doctrine: DOCTRINE,
+  reason:
+    `the capsule exceeds the structure limit (${MCP_MAX_TOOL_INPUT_ELEMENTS} array elements and object members, ` +
+    `${MCP_MAX_JSON_DEPTH} levels); it was not parsed or checked`,
+  reasons: ["input_budget_exceeded"],
+};
 
 /** The readers this module answers, by name. Each must be a definition in gspc-tools.json. */
 export const MEASUREMENT_TOOL_NAMES = new Set(["measurement_index", "verify_capsule", "server_evidence"]);
@@ -41,7 +67,9 @@ export async function measurementToolResult(
     name === "measurement_index"
       ? await measurementIndex(origin)
       : name === "verify_capsule"
-        ? await verifyCapsule(origin, args.capsule_json)
+        ? capsuleWithinBudget(args.capsule_json)
+          ? await verifyCapsule(origin, args.capsule_json)
+          : { ...CAPSULE_OVER_BUDGET }
         : await serverEvidence(origin, args.endpoint_url);
   return {
     content: [{ type: "text", text: `${summary(name, payload)}\n\n${JSON.stringify(payload, null, 2)}` }],

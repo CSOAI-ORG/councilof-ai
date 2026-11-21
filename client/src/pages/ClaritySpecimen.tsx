@@ -1,16 +1,8 @@
-import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 
 export default function ClaritySpecimen() {
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
-      <Helmet>
-        <title>CLARITY pre-commit specimen (unsigned) | Council of AI</title>
-        <meta
-          name="description"
-          content="Unsigned pre-commit: market-implied vs hype-implied CLARITY divergence, outcome 16 Sep 2026. Not advice."
-        />
-      </Helmet>
       <section className="mx-auto max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-amber-300">
           Unsigned artifact · publisher queue

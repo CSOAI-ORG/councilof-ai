@@ -24,10 +24,9 @@ import { isOwnerGated } from "./ownerGated";
  *
  * Those two routes partition the axes exactly: scripts/surface/build-axis-pages.mjs
  * renders one `public/axis/<axis>.html` for every board axis that is not
- * owner-gated (32 of 34 at the time of writing), and scripts/prerender.mjs
- * prerenders `/gspc/<axis>/` for the model-comparison axes. Measured against
- * the live site, all 32 non-owner-gated axes answer 200 at the route this
- * function returns.
+ * owner-gated (build:client runs it, so the pages follow the board), and
+ * scripts/prerender.mjs prerenders `/gspc/<axis>/` for the model-comparison
+ * axes. The counts are the board's, never typed here.
  *
  * NO HARDCODED LIST. An earlier list of axis slugs was a list that rots: the
  * board grew an axis and the link broke. The route is now read from the same
