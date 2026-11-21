@@ -6,7 +6,9 @@ colorTo: green
 sdk: static
 app_file: index.html
 pinned: false
-license: mit
+license: other
+license_name: mixed-evaluation-artifacts
+license_link: https://huggingface.co/spaces/csoai/inspect-evidence/blob/main/THIRD_PARTY_NOTICES.md
 short_description: Sealed Inspect AI logs with in-browser SHA-256 verification
 ---
 
@@ -18,6 +20,8 @@ in a Layer-0-style manifest and verified client-side with WebCrypto.
 - Manifest: `evidence/evidence_manifest.json` (also `.csv`, `.md`). Merkle root `dc977e1c9b5c6fa0c1e6a6d1fb05e59dffe5c90fd63fb7e47a19c2c0836bd9e7` over 5 logs.
 - Report: `evidence/report.md` / `evidence/report.html`, generated from the `.eval` logs and manifest only (no GSPC service).
 - Attestation: **CONTENT_ADDRESSED_UNSIGNED**. No signature is claimed.
+
+**Code licence is not the data licence.** The static viewer and newly authored local tooling are distributed as MIT, but the retained `.eval` logs embed prompts and source-derived data with **separate upstream terms**. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before reuse; MIT does not relicense third-party dataset contents.
 
 **These are not measurements.** Four logs are `mockllm` pipeline tests (a fixed-string mock model). One log is a
 10-item smoke run of Qwen2.5-0.5B-Instruct on GovBench. Use them to check the pipeline, never to rank models.
