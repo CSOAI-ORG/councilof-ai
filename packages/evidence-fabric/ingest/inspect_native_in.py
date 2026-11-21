@@ -19,6 +19,7 @@ import argparse
 import copy
 import hashlib
 import json
+import math
 import os
 import sys
 from typing import Any, Dict, List, Optional
@@ -54,7 +55,10 @@ def _value(entry: Any) -> Optional[float]:
     if isinstance(entry, bool):
         return 1.0 if entry else 0.0
     if isinstance(entry, (int, float)):
-        return float(entry)
+        value = float(entry)
+        # Native scorer values must be finite and within [0, 1]. Malformed
+        # scores are uncheckable, not ordinary pass/fail observations.
+        return value if math.isfinite(value) and 0.0 <= value <= 1.0 else None
     return None
 
 
