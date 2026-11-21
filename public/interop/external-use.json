@@ -1,0 +1,148 @@
+{
+  "kind": "csoai.public-external-evidence/0.1",
+  "reviewed_at": "2026-11-16",
+  "source_schema": "csoai.external-use-review/0.1",
+  "qualification": "OWNER_REVIEWED_SOURCE_ONLY",
+  "not_a_census": true,
+  "not_regulatory_endorsement": true,
+  "unknown_is_not_zero": true,
+  "scope": "Curated dated external-source evidence, not an adoption census or a certification register.",
+  "navigation": [
+    {
+      "role": "source_evidence",
+      "url": "/interop/external-use.json",
+      "state": "SOURCE_REVIEWED_NOT_ATTESTED"
+    },
+    {
+      "role": "human_explanation",
+      "url": "/traction/#external-use",
+      "state": "PUBLIC_VIEW_AFTER_RELEASE"
+    },
+    {
+      "role": "trust_floor",
+      "url": "/layer0/",
+      "state": "DOCUMENTATION_ONLY"
+    },
+    {
+      "role": "artifact_verification",
+      "url": "/gspc-verify/",
+      "state": "USER_SUPPLIED_RECORD_REQUIRED"
+    },
+    {
+      "role": "execution_boundary",
+      "url": "/api/route/execute",
+      "state": "GET_DOCUMENTATION_ONLY_POST_NOT_INVOKED"
+    }
+  ],
+  "records": [
+    {
+      "id": "r7-rerun",
+      "category": "External execution",
+      "title": "Council code run by another operator",
+      "event": "Run: 3 November 2026",
+      "summary": "Probity's automated workflow reran Council's pinned R7 evidence artifact on Linux x86-64, Linux ARM64 and macOS ARM64.",
+      "detail": "All three R7 jobs completed successfully. The Linux log reports 18 tests, none skipped, matching artifact digests and the expected fixture outcomes. The recorded outputs were visible to the rerun operator.",
+      "boundary": "This demonstrates a bounded automated rerun. It does not establish production deployment, customer acceptance or validation of the whole GSPC service.",
+      "revision": "d0cbe773e8f2fe130feaf4dc0c11c1e4ccb84c15",
+      "sources": [
+        {
+          "label": "External workflow run",
+          "href": "https://github.com/probityai/agent-evidence-vectors/actions/runs/41583335594"
+        },
+        {
+          "label": "Linux R7 result log",
+          "href": "https://github.com/probityai/agent-evidence-vectors/actions/runs/41583335594/job/125742974646"
+        },
+        {
+          "label": "Pinned rerun workflow",
+          "href": "https://github.com/probityai/agent-evidence-vectors/blob/59a067989d9166f73d8e97e56c4c8cdeca91894d/.github/workflows/w3c-v01-appendix.yml"
+        }
+      ],
+      "stage": "EXTERNAL_RERUN",
+      "stage_label": "Outside operator rerun",
+      "source_event_date": "2026-11-03",
+      "what_it_enables": "A third party can inspect and rerun the pinned fixture on multiple systems.",
+      "next_gate": "A consenting external recipient must accept an actual evidence deliverable; repeat use is not established.",
+      "buyer_acceptance": "NOT_ESTABLISHED",
+      "repeat_use": "NOT_ESTABLISHED"
+    },
+    {
+      "id": "evidence-state-implementation",
+      "category": "Outside implementation",
+      "title": "A proposal developed into runnable fixtures",
+      "event": "Merged into the W3C AIKR Community Group repository: 8 November 2026",
+      "summary": "Kenne Ives' runnable key and evidence-state fixtures, based on Nicholas Templeman's published proposal, were merged as W3C AIKR Community Group repository PR #25.",
+      "detail": "The merged contribution contains ten synthetic, deterministic cases covering key validity, stale lookups, successor lineage, revocation and unavailable evidence, plus eleven mutation controls. The PR explicitly credits Templeman's October fixture-table proposal.",
+      "boundary": "A participant's code contribution was merged in a W3C Community Group repository. That does not establish W3C Recommendation status, standards adoption, endorsement or production deployment.",
+      "revision": "47e389d415a645ebcc8b4abc446f442aae41462c",
+      "sources": [
+        {
+          "label": "Implementation and discussion: PR 25",
+          "href": "https://github.com/w3c-cg/aikr/pull/25"
+        }
+      ],
+      "stage": "EXTERNAL_IMPLEMENTATION",
+      "stage_label": "Outside implementation merged",
+      "source_event_date": "2026-11-08",
+      "what_it_enables": "A separate contributor built reusable fixtures around the proposed evidence-state method.",
+      "next_gate": "Demonstrate use beyond the bounded community-group repository; no W3C Recommendation or customer acceptance is established.",
+      "buyer_acceptance": "NOT_ESTABLISHED",
+      "repeat_use": "NOT_ESTABLISHED"
+    },
+    {
+      "id": "safe-template-reproduction",
+      "category": "Independent reproduction reviewed",
+      "title": "SAFE template author reviewed Council's checker",
+      "event": "Author credited CSOAI Ltd in candidate PR #60: 18 October 2026",
+      "summary": "CSOAI independently reproduced another contributor's SAFE evidence-template example and controls. The template author read the checker, clarified four ambiguous rules and credited CSOAI Ltd in his candidate template.",
+      "detail": "The original synthetic example's manifest digest and both test-key signatures matched. Five required negative controls and five additional variants reproduced after the author pinned the ambiguous rules. Erik Newton reviewed both checker scripts and incorporated the dated, pinned credit at commit b640a90.",
+      "boundary": "The checker was authored by CSOAI, independently of the template author, and the author reviewed it. This is not an unrelated third party running Council's product, an approved SAFE specification, certification, endorsement or customer deployment; upstream PR #60 remains open.",
+      "revision": "b640a9045730a07e72ad5d90a62fde906ca99b80",
+      "sources": [
+        {
+          "label": "Author review and credit",
+          "href": "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60#issuecomment-6251270225"
+        },
+        {
+          "label": "Checker reproduction and controls",
+          "href": "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60#issuecomment-6038806039"
+        },
+        {
+          "label": "Candidate evidence template PR",
+          "href": "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60"
+        }
+      ],
+      "stage": "AUTHOR_REVIEWED_CANDIDATE",
+      "stage_label": "Upstream author reviewed a candidate",
+      "source_event_date": "2026-10-18",
+      "what_it_enables": "The checker and negative controls can support a scoped reproducibility case study.",
+      "next_gate": "An upstream merge or other expressly accepted outcome is still required; reviewer credit is not adoption.",
+      "buyer_acceptance": "NOT_ESTABLISHED",
+      "repeat_use": "NOT_ESTABLISHED"
+    },
+    {
+      "id": "framing-space-citation",
+      "category": "Technical citation",
+      "title": "Research used in another author's analysis",
+      "event": "Draft version: 26 October 2026",
+      "summary": "Konrad Gruszka's evaluation-receipt-mappings draft discusses Templeman's framing-space experiment and cites the underlying research.",
+      "detail": "Section 10 discusses the 64 CBOR encodings and relates the finding to the draft's own encoding restrictions.",
+      "boundary": "This is an individual Internet-Draft, not an adopted IETF standard or RFC.",
+      "revision": "draft-gruszka-evaluation-receipt-mappings-04",
+      "sources": [
+        {
+          "label": "Dated draft and references",
+          "href": "https://datatracker.ietf.org/doc/draft-gruszka-evaluation-receipt-mappings/04/"
+        }
+      ],
+      "stage": "EXTERNAL_CITATION",
+      "stage_label": "Referenced by another author",
+      "source_event_date": "2026-10-26",
+      "what_it_enables": "Readers can trace the experiment through another author's dated analysis.",
+      "next_gate": "Independent implementation or reproducible downstream use is not yet established by a citation.",
+      "buyer_acceptance": "NOT_ESTABLISHED",
+      "repeat_use": "NOT_ESTABLISHED"
+    }
+  ],
+  "attribution_note": "Independent activity, publication, method verification, buyer acceptance, and repeat demand are distinct stages. This feed does not create new source evidence."
+}

@@ -22,7 +22,8 @@ import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
 import { doorInstallLine, npmReleaseState } from "../../scripts/harness-x/npm-release-state.mjs";
 import { verifyToolResult } from "./_handlers";
-import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, type PaidCallerContext } from "./_paid";
+import { MCP_MAX_JSON_DEPTH, MCP_MAX_JSON_TOKENS, withinJsonBudget } from "./_input_budget";
+import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, X402_META_PAYMENT, type PaidCallerContext } from "./_paid";
 import { dispatchTool, FREE_TOOL_DEFINITIONS, TOOL_DEFINITIONS } from "./_dispatch";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
@@ -31,7 +32,7 @@ import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
 import { registerCouncilPanel } from "./_panel";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
-export const MCP_HTTP_SERVER_VERSION = "1.4.4";
+export const MCP_HTTP_SERVER_VERSION = "1.5.0";
 const SERVER_INFO = {
   name: "csoai-gspc-mcp",
   version: MCP_HTTP_SERVER_VERSION,
@@ -182,6 +183,15 @@ const compile = (defs: Tool[]) => defs.map((definition) => ({
     : undefined,
 }));
 
+/**
+ * A door alias answers with the same tools as councilof.ai/mcp, and its tools read and buy from the
+ * canonical origin. A paid call's challenge, resource and settlement then name the resources the
+ * x402 catalog (/.well-known/x402.json) lists. Measured 20 Nov 2026: a challenge from mcp.meok.ai
+ * named https://mcp.meok.ai/api/request-attestation, a resource no catalogue carries. Preview and
+ * local origins are not aliases and stay same-origin.
+ */
+export const DOOR_ALIAS_ORIGINS: Readonly<Record<string, string>> = { "mcp.meok.ai": "https://councilof.ai" };
+
 function buildMcp(
   definitions: Tool[],
   door: { instructions: string; paid: boolean },
@@ -191,7 +201,8 @@ function buildMcp(
   return createMcpHandler(
   ({ requestInfo }) => {
     if (!requestInfo) throw new Error("HTTP request context required");
-    const origin = new URL(requestInfo.url).origin;
+    const requestUrl = new URL(requestInfo.url);
+    const origin = DOOR_ALIAS_ORIGINS[requestUrl.host] ?? requestUrl.origin;
     const server = new McpServer(SERVER_INFO, {
       instructions: door.instructions,
       // No subscriptions are served here (maxSubscriptions: 0), so no list_changed is ever sent.
@@ -218,10 +229,16 @@ function buildMcp(
           ...(definition.annotations ? { annotations: definition.annotations } : {}),
           ...(definition._meta ? { _meta: definition._meta } : {}),
         },
-        (args) =>
+        (args, ctx) => {
+          // x402 MCP transport: a paying client retries the same call with its PaymentPayload in
+          // params._meta["x402/payment"]. Only the paid door passes it on, and only a paid tool reads it.
+          const metaPayment = door.paid
+            ? (ctx?.mcpReq?._meta as Record<string, unknown> | undefined)?.[X402_META_PAYMENT]
+            : undefined;
           // door.paid guards the dispatch as well as the registry: the free door never reaches
           // the paid wrapper even if a paid definition were ever passed to it by mistake.
-          dispatchTool(definition.name, args, origin, door, caller),
+          return dispatchTool(definition.name, args, origin, door, metaPayment === undefined ? caller : { ...caller, metaPayment });
+        },
       );
     }
     // Historical unlisted alias; it is not in tools/list and does not inflate the canonical count.
@@ -600,6 +617,14 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       "Request body exceeds the size/time limit or is not valid UTF-8.",
     );
   }
+  // Bytes are capped above; structure is capped here, before this door's JSON.parse and the SDK's
+  // (functions/mcp/_input_budget.ts). One long string is one token, so 20 MiB of base64 still fits.
+  if (!withinJsonBudget(body))
+    return jsonError(
+      413,
+      -32600,
+      `Request JSON exceeds the structure limit (${MCP_MAX_JSON_TOKENS} tokens, ${MCP_MAX_JSON_DEPTH} levels).`,
+    );
   let call: unknown;
   try {
     call = JSON.parse(body);
