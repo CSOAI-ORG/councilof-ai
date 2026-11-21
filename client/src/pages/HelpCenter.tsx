@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Search, ChevronDown, MessageCircle, Mail, Phone, BookOpen, AlertCircle, CheckCircle } from 'lucide-react';
+import { Search, ChevronDown, Mail, BookOpen, AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function HelpCenter() {
   useEffect(() => { document.title = "CSOAI Help Center — Support, Guides & Answers"; }, []);
@@ -90,21 +90,15 @@ export default function HelpCenter() {
   const contactMethods = [
     {
       icon: Mail,
-      title: 'Email Support',
-      description: 'support@csoai.org',
-      link: 'mailto:support@csoai.org',
+      title: 'Email',
+      description: 'contact@csoai.org',
+      link: 'mailto:contact@csoai.org',
     },
     {
-      icon: MessageCircle,
-      title: 'Live Chat',
-      description: 'Available 9am-5pm EST',
-      link: '#',
-    },
-    {
-      icon: Phone,
-      title: 'Phone Support',
-      description: '+1 (555) 123-4567',
-      link: 'tel:+15551234567',
+      icon: AlertCircle,
+      title: 'Corrections and disputes',
+      description: 'Object to, or ask us to correct, anything we publish',
+      link: '/dispute/',
     },
   ];
 

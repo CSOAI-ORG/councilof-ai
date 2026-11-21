@@ -52,7 +52,7 @@ export default function MembershipAgreement() {
               Membership Agreement
             </h1>
             <p className="text-xl text-muted-foreground mb-4">
-              Council Safety of Artificial Intelligence (CSOAI)
+              Council for the Safety of Artificial Intelligence (CSOAI)
             </p>
             <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
               <span>Version 1.0</span>
@@ -81,7 +81,7 @@ export default function MembershipAgreement() {
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
-                    <h4 className="font-semibold mb-2">Council Safety of Artificial Intelligence ("CSOAI")</h4>
+                    <h4 className="font-semibold mb-2">Council for the Safety of Artificial Intelligence ("CSOAI")</h4>
                     <p className="text-sm text-muted-foreground">United Kingdom</p>
                   </div>
                   <div className="p-4 rounded-lg bg-muted">
@@ -481,7 +481,7 @@ export default function MembershipAgreement() {
 
           {/* Footer */}
           <div className="text-center text-sm text-muted-foreground pt-8 border-t">
-            <p>© 2026 Council Safety of Artificial Intelligence. All Rights Reserved.</p>
+            <p>© 2026 Council for the Safety of Artificial Intelligence. All Rights Reserved.</p>
           </div>
         </div>
       </div>

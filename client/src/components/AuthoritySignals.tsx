@@ -140,7 +140,8 @@ export default function AuthoritySignals() {
       </div>
       <p className="mx-auto mt-5 max-w-4xl text-center text-xs leading-relaxed text-muted-foreground">
         Participation is not endorsement, and a listing is not adoption. SEC links are public-data mirrors.
-        The FDIC link is a consultation we researched; our FDIC and SEC consultation documents remained drafts and were not submitted.
+        The FDIC link is a consultation we researched; our FDIC document remained a draft and was not submitted. One comment to the SEC is
+        public: <a className="underline underline-offset-2" href="https://www.sec.gov/comments/4-927/4927-3629006.htm">File 4-927, 18 September 2026</a>.
         These links do not mean that either regulator endorses, insures, registers or accredits CSOAI Ltd.
       </p>
     </section>
