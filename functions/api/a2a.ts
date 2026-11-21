@@ -641,6 +641,8 @@ export interface DerivedBoard {
     separation: string | null;
     leader: string | null;
     public_leader_state: string | null;
+    /** What the axis's score does not show, as the row states it (axes[].limit). Absent when the row states none. */
+    limit?: string;
   }>;
 }
 
@@ -681,6 +683,8 @@ export async function deriveBoard(origin: string): Promise<DerivedBoard> {
           separation: str(a.separation),
           leader: str(a.leader),
           public_leader_state: str(a.public_leader_state),
+          // Copied verbatim when the row states a limit (C-2026-1120-02); a row with none gets no limit key.
+          ...(typeof a.limit === "string" ? { limit: a.limit } : {}),
         };
       }),
     };
