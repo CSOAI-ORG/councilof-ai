@@ -10,6 +10,7 @@ on:
       - "scripts/research/firstparty-guard-cases.json"
       - "scripts/research/firstparty-guard-replay.py"
       - "scripts/research/test_firstparty_guard_replay.py"
+      - "scripts/research/composed-guard-effect-demo.mjs"
       - "packages/evidence-fabric/event.py"
       - ".github/workflows/self-run-open-model-guard-sample.yml"
       - "docs/research/firstparty-guard-20261121/**"
@@ -23,6 +24,9 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -33,6 +37,14 @@ jobs:
           python3 scripts/research/firstparty-guard-replay.py verify \
             --result docs/research/firstparty-guard-20261121/record.json \
             --event docs/research/firstparty-guard-20261121/event.json
+      - name: Test layered synthetic approval gate and bypass controls
+        run: node scripts/research/composed-guard-effect-demo.mjs --selftest
+      - name: Verify retained synthetic effect results
+        run: |
+          node scripts/research/composed-guard-effect-demo.mjs --verify \
+            docs/research/firstparty-guard-20261121/record.json \
+            scripts/research/firstparty-guard-cases.json \
+            docs/research/firstparty-guard-20261121/layered-demo.json
       - name: Install CPU-only model inference runtime
         run: |
           python3 -m pip install --disable-pip-version-check \
@@ -43,6 +55,12 @@ jobs:
           python3 scripts/research/firstparty-guard-replay.py run \
             --result model-sample.json \
             --event model-evidence-event.json
+      - name: Combine fresh detector signals with real owned-file effect readback
+        run: |
+          node scripts/research/composed-guard-effect-demo.mjs --run \
+            model-sample.json scripts/research/firstparty-guard-cases.json composed-effects.json
+          node scripts/research/composed-guard-effect-demo.mjs --verify \
+            model-sample.json scripts/research/firstparty-guard-cases.json composed-effects.json
       - name: Verify recorded outcomes and canonical evidence
         run: |
           python3 scripts/research/firstparty-guard-replay.py verify \
@@ -57,7 +75,7 @@ jobs:
           print('Pinned open-source ONNX model; eight synthetic, non-blind examples.')
           print('N:',r['n'],' TP:',r['tp'],' TN:',r['tn'],' FP:',r['fp'],' FN:',r['fn'])
           print('Model revision:',r['model_commit'])
-          print('No live action was tested. Self-observed, unsigned, unanchored; not a GSPC score.')
+          print('Only owned synthetic file actions were tested. No production authority, external witness or GSPC score.')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
@@ -66,6 +84,7 @@ jobs:
           path: |
             model-sample.json
             model-evidence-event.json
+            composed-effects.json
           if-no-files-found: warn
           retention-days: 30
 
@@ -75,6 +94,9 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -87,6 +109,12 @@ jobs:
           python3 scripts/research/firstparty-guard-replay.py verify \
             --result replay-evidence/model-sample.json \
             --event replay-evidence/model-evidence-event.json
+      - name: Verify synthetic effect composition in a separate CI job
+        run: |
+          node scripts/research/composed-guard-effect-demo.mjs --verify \
+            replay-evidence/model-sample.json \
+            scripts/research/firstparty-guard-cases.json \
+            replay-evidence/composed-effects.json
       - name: Confirm independent job did not promote self-tests
         run: |
           python3 - <<'PY'
