@@ -163,4 +163,35 @@ describe("ChecklistWorkbench", () => {
       "the seal lands in the local receipts log",
     ).toBe(true);
   });
+
+  it("a seal the door did not sign renders as not sealed, keeps the ticks and records no seal", async () => {
+    mockDoor(true);
+    const notSealed = "Not sealed: the signing door is not running (/api/sign answered 503 SIGNER_UNAVAILABLE). Nothing was claimed in its place.";
+    sealArtifact.mockResolvedValue({ ok: false, text: notSealed });
+    await act(async () => root.render(<ChecklistWorkbench framework="dora" />));
+    await act(async () => {
+      fire($("cwb-load") as HTMLElement, "click");
+      await new Promise((r) => setTimeout(r, 0));
+      await new Promise((r) => setTimeout(r, 0));
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    const checkbox = ($("cwb-item-dora-1") as HTMLElement).querySelector('input[type="checkbox"]') as HTMLInputElement;
+    await act(async () => {
+      checkbox.click();
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    await act(async () => {
+      ($("cwb-seal") as HTMLElement).click();
+      await new Promise((r) => setTimeout(r, 0));
+      await new Promise((r) => setTimeout(r, 0));
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    expect(sealArtifact).toHaveBeenCalledTimes(1);
+    expect($("cwb-sealed"), "no sealed state for a seal the door did not sign").toBeNull();
+    expect($("cwb-error")?.textContent).toBe(notSealed);
+    expect(container.textContent).not.toContain("Sealed.");
+    expect(container.textContent, "the checklist and its ticks stay on the page").toContain("1 marked");
+    const receipts = JSON.parse(localStorage.getItem(RECEIPTS_KEY) ?? "[]");
+    expect(receipts.some((r: { outcome: string }) => r.outcome === "SEALED")).toBe(false);
+  });
 });
