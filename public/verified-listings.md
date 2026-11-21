@@ -16,7 +16,7 @@ page is a milestone index, not a trophy wall.
 | 3 | [csoai-gspc-measurement — MCP.so](https://mcp.so/servers/csoai-gspc-measurement) | MCP.so | 2026-10-07 | Public MCP server listing. | Listing only |
 | 4 | [CSOAI-ORG/councilof-ai — Glama](https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai) | Glama.ai | 2026-10-07 (badge + connector served, HTTP 200) | Auto-indexed MCP server record with quality badge; connector mirror at `ai.councilof/mcp`. | Auto-indexed from metadata; not a review |
 | 5 | [councilof-ai — PayAPI Market](https://payapi.market/api/councilof-ai) | PayAPI | 2026-10-07 (HTTP 200) | x402 marketplace presence. | Listing only |
-| 6 | [councilof.ai/mcp — live endpoint](https://councilof.ai/mcp) | CSOAI Ltd | live; `csoai-gspc-mcp v1.4.4`, tool count from `tools/list` at read time (free read-only tools plus x402-metered tools) | Machine-readable measurement access: free read-only tools plus paid (x402) tools. | Measurement, not certification |
+| 6 | [councilof.ai/mcp — live endpoint](https://councilof.ai/mcp) | CSOAI Ltd | live; `csoai-gspc-mcp v1.5.0` (read 2026-11-21), tool count from `tools/list` at read time (free read-only tools plus x402-metered tools) | Machine-readable measurement access: free read-only tools plus paid (x402) tools. | Measurement, not certification |
 
 ## Submissions awaiting upstream review (not yet listings)
 
