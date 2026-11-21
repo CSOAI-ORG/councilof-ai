@@ -45,6 +45,31 @@ def sha256_hex(b: bytes) -> str:
     return hashlib.sha256(b).hexdigest()
 
 
+_CALLER_VERDICTS_PRINTED = set()
+
+
+def _log_board_sign_caller(reply) -> None:
+    """Print the signer's unsigned `caller` echo to stderr.
+
+    Once per run, and once more for each different strict verdict, so a run logs how a
+    later, stricter signer would treat it ("would-refuse" names the reason). Logging only:
+    it never raises, and it changes nothing that is signed or written.
+    """
+    try:
+        caller = reply.get("caller") if isinstance(reply, dict) else None
+        if not isinstance(caller, dict):
+            return
+        strict = caller.get("strict") if isinstance(caller.get("strict"), dict) else {}
+        verdict = {True: "pass", False: "would-refuse"}.get(strict.get("pass"), "none")
+        seen = f"{verdict}:{strict.get('reason')}"
+        if seen in _CALLER_VERDICTS_PRINTED:
+            return
+        _CALLER_VERDICTS_PRINTED.add(seen)
+        print(f"board-sign caller strict={verdict} {json.dumps(caller, sort_keys=True)}", file=sys.stderr)
+    except Exception:
+        pass
+
+
 def sign_via_oidc(payload: dict) -> str:
     req_url = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL") or ""
     req_tok = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN") or ""
@@ -77,6 +102,7 @@ def sign_via_oidc(payload: dict) -> str:
     except urllib.error.HTTPError as e:
         err = e.read()[:300].decode("utf-8", "replace")
         raise RuntimeError(f"board-sign HTTP {e.code} {err}") from e
+    _log_board_sign_caller(out)
     sig = out.get("sig_ed25519")
     if not isinstance(sig, str) or len(sig) < 64:
         raise RuntimeError("board-sign returned no sig_ed25519")
