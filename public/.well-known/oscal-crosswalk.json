@@ -3,19 +3,38 @@
   "slug": "oscal-crosswalk",
   "name": "OSCAL crosswalk posture",
   "description": "What OSCAL material the estate actually holds, measured, with the path to each file.",
-  "as_of": "20260905T133000Z",
-  "state": "PARTIAL",
+  "as_of": "20261113T014000Z",
+  "state": "MEASURED",
   "upstream": {
     "standard": "NIST OSCAL (Open Security Controls Assessment Language)",
     "reference": "https://github.com/usnistgov/OSCAL",
     "relationship": "none. A crosswalk to a public schema is not a relationship with the body that publishes it, and no NIST participation, membership or endorsement is implied."
   },
   "measured_component_definitions": [
-    { "path": "defoneos-assurance-pack/oscal/MEOK_OSCAL_COMPONENT.json", "components": 15 },
-    { "path": "csoai-os/maps/archive/sovereign_maps.oscal.json", "components": 14 },
-    { "path": "MEOK_OSCAL_COMPONENT.json", "components": 10 }
+    {
+      "path": "public/interop/oscal-full-estate-53-component-definition-v1.json",
+      "components": 53,
+      "sha256": "3da5d9c8471f02ef1243a9d332b51b59a7a664e13cc1f87f502655989a311e2d"
+    },
+    {
+      "path": "public/interop/oscal-gspc-34-component-definition-v1.json",
+      "components": 34,
+      "sha256": "ef82a3d2a107d8242a32aa6d258736a7f61e35b6786d0badfd3c05bf6ba5585b"
+    },
+    {
+      "path": "defoneos-assurance-pack/oscal/MEOK_OSCAL_COMPONENT.json",
+      "components": 15
+    },
+    {
+      "path": "csoai-os/maps/archive/sovereign_maps.oscal.json",
+      "components": 14
+    },
+    {
+      "path": "MEOK_OSCAL_COMPONENT.json",
+      "components": 10
+    }
   ],
-  "largest_real_component_definition": 15,
+  "largest_real_component_definition": 53,
   "probe": "python3 -c \"import json,sys; d=json.load(open(sys.argv[1])); print(len(d['component-definition']['components']))\" <path>",
   "retracted_claim": {
     "claim": "97-component Ed25519-signed OSCAL package",
@@ -30,10 +49,12 @@
     "note": "A real crosswalk the estate already holds. Recorded so the gap is scoped correctly: what is missing is an OSCAL component-definition over the GSPC axes, not a crosswalk capability."
   },
   "what_this_does_not_establish": [
-    "No OSCAL component-definition over the GSPC axes exists yet.",
     "No NIST endorsement, membership or participation is claimed.",
     "The 97-component figure is not restated here as true. It is recorded as a retracted claim with the measurement that replaced it."
   ],
-  "links": { "self": "https://councilof.ai/.well-known/oscal-crosswalk.json", "live_board": "https://councilof.ai/api/gspc" },
+  "links": {
+    "self": "https://councilof.ai/.well-known/oscal-crosswalk.json",
+    "live_board": "https://councilof.ai/api/gspc"
+  },
   "doctrine": "A number with no runnable check behind it is not a measurement. Every count on this door names the file it came from."
 }
