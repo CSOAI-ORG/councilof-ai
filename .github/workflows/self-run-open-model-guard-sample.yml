@@ -1,0 +1,266 @@
+name: self-run-open-model-guard-sample
+on:
+  workflow_dispatch:
+  # A tiny model-inference sample once weekly; not a public GSPC axis.
+  # The scheduled run is active only after this workflow merges to master.
+  schedule:
+    - cron: "43 6 * * 1"
+  pull_request:
+    paths:
+      - "scripts/research/firstparty-guard-cases.json"
+      - "scripts/research/firstparty-guard-replay.py"
+      - "scripts/research/test_firstparty_guard_replay.py"
+      - "scripts/research/composed-guard-effect-demo.mjs"
+      - "scripts/research/firstparty-action-scope.json"
+      - "scripts/research/external-guard-benchmark.py"
+      - "scripts/research/test_external_guard_benchmark.py"
+      - "scripts/research/build-guard-error-review.py"
+      - "scripts/research/test_build_guard_error_review.py"
+      - "scripts/research/japanese-indirect-classifier.py"
+      - "scripts/research/test_japanese_indirect_classifier.py"
+      - "docs/research/japanese-indirect-20261121/**"
+      - "docs/research/external-guard-benchmark-20261121/**"
+      - "packages/evidence-fabric/event.py"
+      - ".github/workflows/self-run-open-model-guard-sample.yml"
+      - "docs/research/firstparty-guard-20261121/**"
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-onnx-sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Offline regression tests for tamper and false alarms
+        run: python3 -m unittest discover -s scripts/research -p 'test_firstparty_guard_replay.py' -v
+      - name: Offline regression suite for third-party failure denominators
+        run: python3 -m unittest discover -s scripts/research -p 'test_external_guard_benchmark.py' -v
+      - name: Offline regression checks for lossless failure review
+        run: python3 -m unittest discover -s scripts/research -p 'test_build_guard_error_review.py' -v
+      - name: Offline tests for Japanese positive-only and context-scope limitations
+        run: python3 -m unittest discover -s scripts/research -p 'test_japanese_indirect_classifier.py' -v
+      - name: Verify retained first-party reference from the M4 without inference
+        run: |
+          python3 scripts/research/firstparty-guard-replay.py verify \
+            --result docs/research/firstparty-guard-20261121/record.json \
+            --event docs/research/firstparty-guard-20261121/event.json
+      - name: Test layered synthetic approval gate and bypass controls
+        run: node scripts/research/composed-guard-effect-demo.mjs --selftest
+      - name: Verify retained synthetic effect results
+        run: |
+          node scripts/research/composed-guard-effect-demo.mjs --verify \
+            docs/research/firstparty-guard-20261121/record.json \
+            scripts/research/firstparty-guard-cases.json \
+            docs/research/firstparty-guard-20261121/layered-demo.json
+      - name: Validate archived 19-error review without source download
+        run: |
+          python3 scripts/research/build-guard-error-review.py verify \
+            --current docs/research/external-guard-benchmark-20261121/record.json \
+            --baseline docs/research/external-guard-benchmark-20261121/record.json \
+            --output docs/research/external-guard-benchmark-20261121/error-review.json
+      - name: Install CPU-only model inference runtime
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            onnxruntime==1.26.0 huggingface-hub==1.19.0 \
+            transformers==5.5.0 tokenizers==0.22.2 numpy==2.3.5 \
+            pyarrow==22.0.0
+      - name: Verify archived 116-case result against published third-party source bytes
+        run: |
+          python3 scripts/research/external-guard-benchmark.py verify \
+            --result docs/research/external-guard-benchmark-20261121/record.json \
+            --event docs/research/external-guard-benchmark-20261121/event.json \
+            --check-source
+      - name: Verify archived Japanese probe observation and exact source bytes
+        run: |
+          python3 scripts/research/japanese-indirect-classifier.py verify \
+            --result docs/research/japanese-indirect-20261121/record.json \
+            --event docs/research/japanese-indirect-20261121/event.json \
+            --check-source
+      - name: Run pinned Hugging Face open-source model on eight owned synthetic examples
+        run: |
+          python3 scripts/research/firstparty-guard-replay.py run \
+            --result model-sample.json \
+            --event model-evidence-event.json
+      - name: Combine fresh detector signals with real owned-file effect readback
+        run: |
+          node scripts/research/composed-guard-effect-demo.mjs --run \
+            model-sample.json scripts/research/firstparty-guard-cases.json composed-effects.json
+          node scripts/research/composed-guard-effect-demo.mjs --verify \
+            model-sample.json scripts/research/firstparty-guard-cases.json composed-effects.json
+      - name: Verify recorded outcomes and canonical evidence
+        run: |
+          python3 scripts/research/firstparty-guard-replay.py verify \
+            --result model-sample.json \
+            --event model-evidence-event.json
+      - name: Measure complete 116-row third-party test split and create canonical failure evidence
+        run: |
+          python3 scripts/research/external-guard-benchmark.py run \
+            --result external-116-eval.json --event external-116-event.json
+          python3 scripts/research/external-guard-benchmark.py verify \
+            --result external-116-eval.json --event external-116-event.json \
+            --check-source
+      - name: Turn observed misses into case-hashed failure review and drift record
+        run: |
+          python3 scripts/research/build-guard-error-review.py build \
+            --current external-116-eval.json \
+            --baseline docs/research/external-guard-benchmark-20261121/record.json \
+            --output external-116-error-review.json
+          python3 scripts/research/build-guard-error-review.py verify \
+            --current external-116-eval.json \
+            --baseline docs/research/external-guard-benchmark-20261121/record.json \
+            --output external-116-error-review.json
+      - name: Re-run Japanese indirect injection canary classifier in both document and prompt context
+        run: |
+          python3 scripts/research/japanese-indirect-classifier.py run \
+            --result japanese-60-eval.json --event japanese-60-event.json
+          python3 scripts/research/japanese-indirect-classifier.py verify \
+            --result japanese-60-eval.json --event japanese-60-event.json \
+            --check-source
+      - name: Publish an honest experiment summary, including any misses
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          r=json.load(open('model-sample.json'))
+          print('# First-party open-model guard sample')
+          print('Pinned open-source ONNX model; eight synthetic, non-blind examples.')
+          print('N:',r['n'],' TP:',r['tp'],' TN:',r['tn'],' FP:',r['fp'],' FN:',r['fn'])
+          print('Model revision:',r['model_commit'])
+          x=json.load(open('external-116-eval.json'))
+          print('Third-party labelled test split: N=',x['n'],' TP=',x['tp'],
+                ' TN=',x['tn'],' FP=',x['fp'],' FN=',x['fn'])
+          q=json.load(open('external-116-error-review.json'))
+          print('Hashed failures for review:',q['n_errors'])
+          print('Changed classifications since pinned prior:',q['changed_from_baseline'])
+          j=json.load(open('japanese-60-eval.json'))
+          print('Japanese indirect canaries: document',j['counts']['document']['detected'],'of',j['n'])
+          print('Full prompt context:',j['counts']['prompt']['detected'],'of',j['n'])
+          print('Positive-only dataset: no benign controls, not generative canary-following.')
+          print('Japanese obfuscation category:',j['counts']['document']['by_category']['obfuscation-script'],'of 6 flagged')
+          print('Do not train on this published test split and present it as a fresh validation.')
+          print('Dataset previously evaluated by this model publisher; not unseen holdout.')
+          print('Action scope is separate; the model does not author tool calls here.')
+          print('No production authority, external witness, or live GSPC score.')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: open-model-guard-firstparty-evidence
+          path: |
+            model-sample.json
+            model-evidence-event.json
+            composed-effects.json
+            external-116-eval.json
+            external-116-event.json
+            external-116-error-review.json
+            japanese-60-eval.json
+            japanese-60-event.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  independent-job-integrity:
+    runs-on: ubuntu-latest
+    needs: pinned-onnx-sample
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: open-model-guard-firstparty-evidence
+          path: replay-evidence
+      - name: Verify retained file and event without re-running the model
+        run: |
+          python3 scripts/research/firstparty-guard-replay.py verify \
+            --result replay-evidence/model-sample.json \
+            --event replay-evidence/model-evidence-event.json
+      - name: Verify synthetic effect composition in a separate CI job
+        run: |
+          node scripts/research/composed-guard-effect-demo.mjs --verify \
+            replay-evidence/model-sample.json \
+            scripts/research/firstparty-guard-cases.json \
+            replay-evidence/composed-effects.json
+      - name: Recheck 116-case dataset provenance and missed examples in another runner
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            huggingface-hub==1.19.0 pyarrow==22.0.0
+          python3 scripts/research/external-guard-benchmark.py verify \
+            --result replay-evidence/external-116-eval.json \
+            --event replay-evidence/external-116-event.json \
+            --check-source
+      - name: Verify failure queue and baseline comparison in separate job
+        run: |
+          python3 scripts/research/build-guard-error-review.py verify \
+            --current replay-evidence/external-116-eval.json \
+            --baseline docs/research/external-guard-benchmark-20261121/record.json \
+            --output replay-evidence/external-116-error-review.json
+      - name: Recheck Japanese source labels and provenance separately
+        run: |
+          python3 scripts/research/japanese-indirect-classifier.py verify \
+            --result replay-evidence/japanese-60-eval.json \
+            --event replay-evidence/japanese-60-event.json \
+            --check-source
+      - name: Confirm independent job did not promote self-tests
+        run: |
+          python3 - <<'PY'
+          import json
+          a=json.load(open('replay-evidence/model-sample.json'))
+          e=json.load(open('replay-evidence/model-evidence-event.json'))
+          assert a['operator_scope']=='SELF_RUN_NO_CUSTOMER'
+          assert a['gspc_admitted'] is False and a['production_authority'] is False
+          assert a['independent_review']=='NOT_CONDUCTED'
+          assert e['signature'] is None
+          print('Independent-job file reconstruction OK; no external witness or GSPC admission.')
+          PY
+
+  # GitHub build provenance is cryptographically verifiable workflow/artifact origin.
+  # It is NOT a GSPC signing, a truth guarantee, human review or institutionally
+  # independent verification. OIDC signing permission is NEVER given to PR jobs.
+  attest-research-provenance:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    needs: independent-job-integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: open-model-guard-firstparty-evidence
+          path: verified
+      - name: Refuse incomplete release packet
+        run: |
+          for f in model-sample.json model-evidence-event.json composed-effects.json \
+            external-116-eval.json external-116-event.json external-116-error-review.json \
+            japanese-60-eval.json japanese-60-event.json; do
+            test -s "verified/$f" || { echo "missing $f" >&2; exit 1; }
+          done
+      - name: Attest exact research artifact bytes under GitHub workflow identity
+        uses: actions/attest@v4
+        with:
+          subject-path: 'verified/*.json'
+      - name: Stranger-reproducible provenance check with GitHub CLI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for file in verified/*.json; do
+            gh attestation verify "$file" -R "$GITHUB_REPOSITORY"
+          done
+      - name: Separate scope declaration
+        run: |
+          echo 'Provenance signed by GitHub workflow identity, not a qualified human or an independent safety authority.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'These are self-run, unsigned GSPC-compatible evidence events. No board admission or safety certification.' >> "$GITHUB_STEP_SUMMARY"
