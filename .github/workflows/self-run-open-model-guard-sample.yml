@@ -254,6 +254,8 @@ jobs:
         with:
           subject-path: 'verified/*.json'
       - name: Stranger-reproducible provenance check with GitHub CLI
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           for file in verified/*.json; do
             gh attestation verify "$file" -R "$GITHUB_REPOSITORY"
