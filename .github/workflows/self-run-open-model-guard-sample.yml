@@ -14,6 +14,8 @@ on:
       - "scripts/research/firstparty-action-scope.json"
       - "scripts/research/external-guard-benchmark.py"
       - "scripts/research/test_external_guard_benchmark.py"
+      - "scripts/research/build-guard-error-review.py"
+      - "scripts/research/test_build_guard_error_review.py"
       - "docs/research/external-guard-benchmark-20261121/**"
       - "packages/evidence-fabric/event.py"
       - ".github/workflows/self-run-open-model-guard-sample.yml"
@@ -38,6 +40,8 @@ jobs:
         run: python3 -m unittest discover -s scripts/research -p 'test_firstparty_guard_replay.py' -v
       - name: Offline regression suite for third-party failure denominators
         run: python3 -m unittest discover -s scripts/research -p 'test_external_guard_benchmark.py' -v
+      - name: Offline regression checks for lossless failure review
+        run: python3 -m unittest discover -s scripts/research -p 'test_build_guard_error_review.py' -v
       - name: Verify retained first-party reference from the M4 without inference
         run: |
           python3 scripts/research/firstparty-guard-replay.py verify \
@@ -51,6 +55,12 @@ jobs:
             docs/research/firstparty-guard-20261121/record.json \
             scripts/research/firstparty-guard-cases.json \
             docs/research/firstparty-guard-20261121/layered-demo.json
+      - name: Validate archived 19-error review without source download
+        run: |
+          python3 scripts/research/build-guard-error-review.py verify \
+            --current docs/research/external-guard-benchmark-20261121/record.json \
+            --baseline docs/research/external-guard-benchmark-20261121/record.json \
+            --output docs/research/external-guard-benchmark-20261121/error-review.json
       - name: Install CPU-only model inference runtime
         run: |
           python3 -m pip install --disable-pip-version-check \
@@ -86,6 +96,16 @@ jobs:
           python3 scripts/research/external-guard-benchmark.py verify \
             --result external-116-eval.json --event external-116-event.json \
             --check-source
+      - name: Turn observed misses into case-hashed failure review and drift record
+        run: |
+          python3 scripts/research/build-guard-error-review.py build \
+            --current external-116-eval.json \
+            --baseline docs/research/external-guard-benchmark-20261121/record.json \
+            --output external-116-error-review.json
+          python3 scripts/research/build-guard-error-review.py verify \
+            --current external-116-eval.json \
+            --baseline docs/research/external-guard-benchmark-20261121/record.json \
+            --output external-116-error-review.json
       - name: Publish an honest experiment summary, including any misses
         run: |
           python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
@@ -98,6 +118,10 @@ jobs:
           x=json.load(open('external-116-eval.json'))
           print('Third-party labelled test split: N=',x['n'],' TP=',x['tp'],
                 ' TN=',x['tn'],' FP=',x['fp'],' FN=',x['fn'])
+          q=json.load(open('external-116-error-review.json'))
+          print('Hashed failures for review:',q['n_errors'])
+          print('Changed classifications since pinned prior:',q['changed_from_baseline'])
+          print('Do not train on this published test split and present it as a fresh validation.')
           print('Dataset previously evaluated by this model publisher; not unseen holdout.')
           print('Action scope is separate; the model does not author tool calls here.')
           print('No production authority, external witness, or live GSPC score.')
@@ -112,6 +136,7 @@ jobs:
             composed-effects.json
             external-116-eval.json
             external-116-event.json
+            external-116-error-review.json
           if-no-files-found: warn
           retention-days: 30
 
@@ -150,6 +175,12 @@ jobs:
             --result replay-evidence/external-116-eval.json \
             --event replay-evidence/external-116-event.json \
             --check-source
+      - name: Verify failure queue and baseline comparison in separate job
+        run: |
+          python3 scripts/research/build-guard-error-review.py verify \
+            --current replay-evidence/external-116-eval.json \
+            --baseline docs/research/external-guard-benchmark-20261121/record.json \
+            --output replay-evidence/external-116-error-review.json
       - name: Confirm independent job did not promote self-tests
         run: |
           python3 - <<'PY'
