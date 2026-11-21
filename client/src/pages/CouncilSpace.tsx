@@ -10,8 +10,9 @@ import AISystemNotice from "../components/AISystemNotice";
 import { personaSpeak, stopVoice } from "../lib/sovPersona";
 import { useLedger, type DecisionRecord } from "../hooks/useLedger";
 import JSpaceTimeline, { type TimelineEvent } from "../components/JSpaceTimeline";
-import CouncilGalaxy, { type FlywheelPlanet, type HiveLayer, type CitizenNode } from "../components/CouncilGalaxy";
+import CouncilGalaxy, { type FlywheelPlanet, type HiveLayer } from "../components/CouncilGalaxy";
 import ArenaDoorPanel from "../components/gspc/ArenaDoorPanel";
+import { readFlywheelSnapshot } from "../lib/flywheelSnapshot";
 
 // SOV SPACE is the container OS — the arena, the globe and the towns live
 // INSIDE it as layers, not as separate products (Nick's unification law,
@@ -133,18 +134,6 @@ const HIVE: HiveLayer[] = [
   { id: "iso-42001", name: "ISO 42001", count: 8, description: "AI management system controls" },
   { id: "nist-ai-rmf", name: "NIST AI RMF", count: 7, description: "govern / map / measure / manage" },
   { id: "annexes", name: "Annexes", count: 13, description: "annex III high-risk + annex IV technical docs" },
-];
-
-const FLYWHEELS: FlywheelPlanet[] = [
-  { id: "find-besT", name: "find_besT", axis: "care", phase: "honey", description: "21-subject Day-1 sweep, care_cost joint scoring", metric: "composite=3.1564 (unified fine-tune)", last_run_iso: "2026-07-30T11:17:00Z" },
-  { id: "n-eff", name: "n_eff_diversity", axis: "continuity", phase: "milk", description: "pairwise ρ + Kish n_eff across council roster", metric: "n_eff=1.285 · gate failed (>2.0 required)", last_run_iso: "2026-07-30T11:25:00Z" },
-  { id: "provbench", name: "ProvBench", axis: "provenance", phase: "honey", description: "0/12 embedded C2PA markings survive binding-intact (signed run)", metric: "0 of 12 assets · 0 of 108 cells · one-sided 95% CP upper = 22.1%", last_run_iso: "2026-08-13T04:02:31Z" },
-  { id: "defbench", name: "DefBench", axis: "safety", phase: "honey", description: "45-item care battery, 33 harmful / 12 benign", metric: "1 of 4 axis resolved (with gate)", last_run_iso: "2026-07-30T09:35:00Z" },
-  { id: "govbench", name: "GovBench", axis: "governance", phase: "honey", description: "193 samples, 26 dimensions, cluster-robust", metric: "composed +6.63 [+1.05, +12.21]", last_run_iso: "2026-07-30T09:46:00Z" },
-  { id: "pqcbench", name: "PQCBench", axis: "continuity", phase: "water", description: "25 criteria for PQC-ready signing chains", metric: "1 of 25 criteria pass · ML-DSA-65 needed", last_run_iso: "2026-07-30T08:00:00Z" },
-  { id: "flywheel-daily", name: "flywheel-daily", axis: "care", phase: "honey", description: "cron — daily drift, salted PRACTICE/HELD_OUT split", metric: "selftest 9/9 · salt=csoai-flywheel-v1", last_run_iso: "2026-07-30T03:00:00Z" },
-  { id: "honey-pipe", name: "honey_pipeline", axis: "care", phase: "honey", description: "KB harvest → honey cache → cite-on-serve", metric: "83 verified entries · 87KB", last_run_iso: "2026-07-30T05:00:00Z" },
-  { id: "production-ready", name: "production_ready", axis: "care", phase: "honey", description: "signed care_cost evidence pack for marketing", metric: "Ed25519 signature · care_score=0.7891", last_run_iso: "2026-07-30T12:00:00Z" },
 ];
 
 const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "/api";
@@ -292,9 +281,9 @@ export default function CouncilSpace() {
   const [busEvents, setBusEvents] = useState<TimelineEvent[]>(() => getCards().map(cardToTimeline));
   useEffect(() => subscribeCards((cs) => setBusEvents(cs.map(cardToTimeline))), []);
   const [kbMatches, setKbMatches] = useState<KbMatch[]>([]);
-  const [flywheels, setFlywheels] = useState<FlywheelPlanet[]>(FLYWHEELS);
+  const [flywheels, setFlywheels] = useState<FlywheelPlanet[]>([]);
   const [flywheelGeneratedAt, setFlywheelGeneratedAt] = useState<string | null>(null);
-  const [citizens, setCitizens] = useState<CitizenNode[]>([]);
+  const [snapshotState, setSnapshotState] = useState<"loading" | "ready" | "unavailable">("loading");
   const [kbStats, setKbStats] = useState<KbStats | null>(null);
   const [kbOnline, setKbOnline] = useState<boolean | null>(null);
   const [gwOnline, setGwOnline] = useState<boolean | null>(null);
@@ -467,13 +456,19 @@ export default function CouncilSpace() {
     let cancelled = false;
     fetch("/flywheel-snapshot.json")
       .then((r) => (r.ok ? r.json() : null))
-      .then((snap: { generated_at?: string; planets?: FlywheelPlanet[]; citizens?: CitizenNode[] } | null) => {
-        if (cancelled || !snap) return;
-        if (Array.isArray(snap.planets) && snap.planets.length > 0) setFlywheels(snap.planets);
-        if (Array.isArray(snap.citizens)) setCitizens(snap.citizens);
-        setFlywheelGeneratedAt(typeof snap.generated_at === "string" ? snap.generated_at : null);
+      .then((raw: unknown) => {
+        if (cancelled) return;
+        const snap = readFlywheelSnapshot(raw);
+        setFlywheels(snap?.planets ?? []);
+        setFlywheelGeneratedAt(snap?.generatedAt ?? null);
+        setSnapshotState(snap ? "ready" : "unavailable");
       })
-      .catch(() => {});
+      .catch(() => {
+        if (cancelled) return;
+        setFlywheels([]);
+        setFlywheelGeneratedAt(null);
+        setSnapshotState("unavailable");
+      });
     return () => { cancelled = true; };
   }, []);
 
@@ -713,10 +708,15 @@ export default function CouncilSpace() {
               <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">Council Space · 5D layered view</div>
               <div className="text-sm font-bold text-sky-100">Hive → C-space → J-space → dated flywheel snapshot — the estate as a galaxy</div>
             </div>
-            <div className="text-right font-mono text-[10px] text-sky-300/60">flywheels: {flywheels.length}{flywheelGeneratedAt ? ` · snapshot ${flywheelGeneratedAt.slice(0, 10)}` : " · bundled demo data"}</div>
+            <div className="text-right font-mono text-[10px] text-sky-300/60">flywheels: {flywheels.length}{flywheelGeneratedAt ? ` · snapshot built ${flywheelGeneratedAt.slice(0, 10)}` : snapshotState === "loading" ? " · loading snapshot" : " · snapshot unavailable"}</div>
           </div>
+          <p role="status" className="px-4 pt-3 text-xs text-sky-100/75">
+            {snapshotState === "loading" ? "Loading artifact metadata…" : snapshotState === "unavailable"
+              ? "Artifact snapshot unavailable or awaiting update. No measurement results or user counts are inferred."
+              : "Dated artifact metadata. Read each source and freshness state; snapshot build time is not measurement time. Signatures and admission are not checked here."}
+          </p>
           <div className="p-2">
-            <CouncilGalaxy hive={HIVE} cspace={cSpaceEvents.length} jspace={jrecords.length} flywheels={flywheels} citizens={citizens} height={520} />
+            <CouncilGalaxy hive={HIVE} cspace={cSpaceEvents.length} jspace={jrecords.length} flywheels={flywheels} height={520} />
           </div>
         </div>
       </section>
