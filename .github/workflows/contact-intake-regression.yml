@@ -3,8 +3,10 @@ on:
   pull_request:
     paths:
       - "functions/api/contact.ts"
+      - "functions/api/_contact-turnstile.ts"
       - "functions/api/contact.test.ts"
       - "client/src/pages/Contact.tsx"
+      - "client/src/components/ContactTurnstile.tsx"
       - "client/src/lib/contactReceipt.ts"
       - "client/src/lib/contactReceipt.test.ts"
       - "client/src/pages/Contact.receipt-interaction.test.tsx"
