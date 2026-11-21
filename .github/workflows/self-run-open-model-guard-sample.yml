@@ -11,6 +11,10 @@ on:
       - "scripts/research/firstparty-guard-replay.py"
       - "scripts/research/test_firstparty_guard_replay.py"
       - "scripts/research/composed-guard-effect-demo.mjs"
+      - "scripts/research/firstparty-action-scope.json"
+      - "scripts/research/external-guard-benchmark.py"
+      - "scripts/research/test_external_guard_benchmark.py"
+      - "docs/research/external-guard-benchmark-20261121/**"
       - "packages/evidence-fabric/event.py"
       - ".github/workflows/self-run-open-model-guard-sample.yml"
       - "docs/research/firstparty-guard-20261121/**"
@@ -32,6 +36,8 @@ jobs:
           python-version: "3.12"
       - name: Offline regression tests for tamper and false alarms
         run: python3 -m unittest discover -s scripts/research -p 'test_firstparty_guard_replay.py' -v
+      - name: Offline regression suite for third-party failure denominators
+        run: python3 -m unittest discover -s scripts/research -p 'test_external_guard_benchmark.py' -v
       - name: Verify retained first-party reference from the M4 without inference
         run: |
           python3 scripts/research/firstparty-guard-replay.py verify \
@@ -49,7 +55,14 @@ jobs:
         run: |
           python3 -m pip install --disable-pip-version-check \
             onnxruntime==1.26.0 huggingface-hub==1.19.0 \
-            transformers==5.5.0 tokenizers==0.22.2 numpy==2.3.5
+            transformers==5.5.0 tokenizers==0.22.2 numpy==2.3.5 \
+            pyarrow==22.0.0
+      - name: Verify archived 116-case result against published third-party source bytes
+        run: |
+          python3 scripts/research/external-guard-benchmark.py verify \
+            --result docs/research/external-guard-benchmark-20261121/record.json \
+            --event docs/research/external-guard-benchmark-20261121/event.json \
+            --check-source
       - name: Run pinned Hugging Face open-source model on eight owned synthetic examples
         run: |
           python3 scripts/research/firstparty-guard-replay.py run \
@@ -66,6 +79,13 @@ jobs:
           python3 scripts/research/firstparty-guard-replay.py verify \
             --result model-sample.json \
             --event model-evidence-event.json
+      - name: Measure complete 116-row third-party test split and create canonical failure evidence
+        run: |
+          python3 scripts/research/external-guard-benchmark.py run \
+            --result external-116-eval.json --event external-116-event.json
+          python3 scripts/research/external-guard-benchmark.py verify \
+            --result external-116-eval.json --event external-116-event.json \
+            --check-source
       - name: Publish an honest experiment summary, including any misses
         run: |
           python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
@@ -75,7 +95,12 @@ jobs:
           print('Pinned open-source ONNX model; eight synthetic, non-blind examples.')
           print('N:',r['n'],' TP:',r['tp'],' TN:',r['tn'],' FP:',r['fp'],' FN:',r['fn'])
           print('Model revision:',r['model_commit'])
-          print('Only owned synthetic file actions were tested. No production authority, external witness or GSPC score.')
+          x=json.load(open('external-116-eval.json'))
+          print('Third-party labelled test split: N=',x['n'],' TP=',x['tp'],
+                ' TN=',x['tn'],' FP=',x['fp'],' FN=',x['fn'])
+          print('Dataset previously evaluated by this model publisher; not unseen holdout.')
+          print('Action scope is separate; the model does not author tool calls here.')
+          print('No production authority, external witness, or live GSPC score.')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
@@ -85,6 +110,8 @@ jobs:
             model-sample.json
             model-evidence-event.json
             composed-effects.json
+            external-116-eval.json
+            external-116-event.json
           if-no-files-found: warn
           retention-days: 30
 
@@ -115,6 +142,14 @@ jobs:
             replay-evidence/model-sample.json \
             scripts/research/firstparty-guard-cases.json \
             replay-evidence/composed-effects.json
+      - name: Recheck 116-case dataset provenance and missed examples in another runner
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            huggingface-hub==1.19.0 pyarrow==22.0.0
+          python3 scripts/research/external-guard-benchmark.py verify \
+            --result replay-evidence/external-116-eval.json \
+            --event replay-evidence/external-116-event.json \
+            --check-source
       - name: Confirm independent job did not promote self-tests
         run: |
           python3 - <<'PY'
