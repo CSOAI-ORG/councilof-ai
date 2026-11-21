@@ -24,8 +24,8 @@ class RegisterTests(unittest.TestCase):
     def test_new_miss_is_not_silently_merged(self):
         a,_=fixture.observed()
         changed=deepcopy(a)
-        changed["cases"][41]["score"]=0.1
-        changed["cases"][41]["predicted"]=0
+        changed["cases"][40]["score"]=0.1
+        changed["cases"][40]["predicted"]=0
         changed.update(review.bench.compute_counts(changed["cases"]))
         changed["threshold_sensitivity"]=[
             {"threshold":t,**review.bench.compute_counts(changed["cases"],t)}
