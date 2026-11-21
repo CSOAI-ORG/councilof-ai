@@ -29,7 +29,7 @@ const report = {
   limitations: ["Owned temporary files only", "No authenticated human or customer data",
     "Authority trust anchor supplied by local test runner", "Not a model benchmark, certification or outside review"],
   cases: trial.cases.map(c => ({ scenario:c.scenario,execution:c.execution,
-    observer:c.observer,actual_effect_written:c.actual_effect_written })),
+    observer:c.observer,actual_effect_written:c.actual_effect_written, binding:c.binding })),
 };
 const output = JSON.stringify(report, null, 2) + "\n";
 if (process.argv.length === 2) process.stdout.write(output);
