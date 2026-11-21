@@ -1,0 +1,59 @@
+{
+  "title": "CSOAI MCP Census printer",
+  "id": "nicktempleman/csoai-mcp-census",
+  "id_no": 12012881,
+  "subtitle": "Mirror of Hugging Face csoai/mcp-census",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-mcp-census`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-mcp-census -p ./dataset --unzip\n```\n\nStart by inspecting `mcp_census.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `manifest.jsonl`\n- `mcp_census.json`\n- `mcp_census.jsonl`\n- `mcp_live_atoms.json`\n- `CURRENT-2026-09-25.json`\n- `ledger-card-mcp-server-unsigned.json`\n- `history/pre-current-readback-2026-09-25/README.md`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/mcp-census at revision `945be56cf9e29e6714ea41313f7e38f0503a8f0e`, made 2026-09-29. The Hugging Face copy is the original; if the two differ, it wins.\n\n# MCP server census\n\nDISCOVERED — read-only census of the public MCP (Model Context Protocol) server ecosystem. Keyless registry listing + MCP handshake `initialize` + `tools/list` **only** — never `tools/call`. Nothing published to any stranger server. The live board is `GET https://councilof.ai/api/gspc`. [![GSPC](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc&query=%24.totals.public_count&label=GSPC&color=0B1F33)](https://councilof.ai/gspc-scoreboard)\n\n**Historical own-server probe (1 September 2026).** The first server probed was our own\n`councilof.ai/mcp` surface. The frozen sample records **7 tools at that time** (`board_totals get_axis verify_card\nlist_cards get_root get_card verify_inclusion`), all with valid `inputSchema` in that one probe. See the dated current readback below for its present tool list.\n\n\n## Current public readback — 2026-09-25T04:15:15Z\n\nThe [dated machine-readable readback](CURRENT-2026-09-25.json) records a fresh `POST https://councilof.ai/mcp` `tools/list`: **13 named tools**. The separate live `GET https://councilof.ai/api/gspc` returned **23 declared axes, 23 measured**. Both exact response digests and the tool names are in that JSON; re-fetch the endpoints for later state.\n\nThe original `mcp_census.json`, `mcp_census.jsonl` and registry figures below are a **1 September 2026, 41-server historical sample**. Its own-server row correctly records seven tools *then*. Lower 22-axis and 12-tool statements were dated prior reads and are superseded for current use. This update did not re-probe the other 40 servers, call tools, measure correctness, sign or anchor a result, or establish adoption.\n\n## Registries censused\n\n- **modelcontextprotocol.io** (official, keyless): **2,000** server records fetched\n  (cursor-paginated, bounded); **455** carry a resolvable remote URL.\n- **Smithery** (keyless): **11,191** servers reported; 300 sampled.\n- **Glama**: endpoint requires an API key → DISCOVERED, **not probed**.\n- **PulseMCP**: v0beta is sunsetting (random-fail), v0.1 path not resolvable keyless → noted.\n\n## Probe result (`mcp_census.json`)\n\n- **41 servers probed** (ours first + a 40-server sample from the official registry's\n  resolvable remote URLs). Handshake `initialize` + `tools/list` only.\n- **21 LIVE / 20 DEAD → live-fraction 0.512.** 20 of the LIVE servers returned a\n  schema-valid tool list. Roughly half of registry-listed remote MCP servers actually\n  answer an MCP handshake.\n\n## Files\n\n- `mcp_census.jsonl` — flat viewer table, one row per probed server (41): `server_id`,\n  `server_name`, `source_registry`, `url`, `probe_state` (LIVE/DEAD), `tool_count`,\n  `schema_valid`, `as_of`. Nested tool-name lists live in `mcp_census.json`, not this table.\n- `mcp_census.json` — registries, per-server three-state (reachable / tool-count / schema-valid).\n- `mcp_live_atoms.json` — the LIVE servers with a readable, schema-valid tool list.\n- `ledger-card-mcp-server-unsigned.json` — the `mcp.server` card-v0 atom\n  (`sig_ed25519=null` — NO_LAPTOP_SIGN, queued for GHA OIDC signing).\n\n## What this is not\n\n- No `tools/call` was ever issued. Tool **correctness** is `unmeasured[]`.\n- Auth-gated servers were not bypassed. Uptime is a single-point read, not monitored.\n- Not a GSPC axis. No GSPC measure fields on any card.\n\n**Measurement, not certification.** Verify a card (free, no account): https://councilof.ai/gspc-verify\n\n## What is in this repository\n\n| file | bytes | rows | what |\n|---|---:|---:|---|\n| `mcp_census.json` | 16421 |  | JSON document |\n| `mcp_census.jsonl` | 10249 | 41 | data (one JSON object per line) |\n| `mcp_live_atoms.json` | 6146 |  | JSON document |\n| `README.md` | 3765 |  | card |\n| `ledger-card-mcp-server-unsigned.json` | 2240 |  | JSON document |\n| `manifest.jsonl` | | 6 | derived at 2026-09-04T04:33:29Z |\n\n`manifest.jsonl` is derived from this repository's own file tree at 2026-09-04T04:33:29Z; it lists every file with its\nsize, its blob hash and a direct URL, so an agent can enumerate the repo without cloning it.\n\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_mcp_census,\n  title        = {MCP server census},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  doi          = {10.5281/zenodo.21991104},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/mcp-census}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n\n\n\n## Objections, contact and corrections\n\nTo object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.\n\n## How to cite\n\nCSOAI Ltd (Council of AI). *MCP server census*. 2026. Hugging Face dataset `csoai/mcp-census`. https://huggingface.co/datasets/csoai/mcp-census\n\n```bibtex\n@misc{csoai_mcp_census,\n  title        = {MCP server census},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/mcp-census},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n\nLicence: CC-BY-4.0. Attribute Council of AI, CSOAI Ltd (16939677), https://councilof.ai.\n\n## Corrections and verification\n\n- Corrections ledger (signed): https://councilof.ai/api/corrections. Corrections to CSOAI's published records are logged there with what changed and when.\n- Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).\n- Conformance kit for signed-receipts/v1, with test vectors for implementers: https://councilof.ai/spec/signed-receipts/v1/conformance/\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 3, last updated 2026-09-29.\n- 8 files, 66,645 bytes. File types: .json (4), .md (2), .jsonl (2).\n- Hugging Face twin: [csoai/mcp-census](https://huggingface.co/datasets/csoai/mcp-census). 7 of 8 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software",
+    "computer vision"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 7 of 8 files have the same byte size as files in the Hugging Face dataset [csoai/mcp-census](https://huggingface.co/datasets/csoai/mcp-census) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "CURRENT-2026-09-25.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). Same byte size as `CURRENT-2026-09-25.json` in huggingface.co/datasets/csoai/mcp-census (checked 2026-11-20). 1,715 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "3765 — card. Dataset README (Markdown). 15,074 bytes."
+    },
+    {
+      "path": "history/pre-current-readback-2026-09-25/README.md",
+      "description": "3765 — card. Dataset README (Markdown). Same byte size as `history/pre-current-readback-2026-09-25/README.md` in huggingface.co/datasets/csoai/mcp-census (checked 2026-11-20). 12,805 bytes."
+    },
+    {
+      "path": "ledger-card-mcp-server-unsigned.json",
+      "description": "the `mcp.server` card-v0 atom. JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). Same byte size as `ledger-card-mcp-server-unsigned.json` in huggingface.co/datasets/csoai/mcp-census (checked 2026-11-20). 2,240 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "6 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/mcp-census (checked 2026-11-20). 1,995 bytes."
+    },
+    {
+      "path": "mcp_census.json",
+      "description": "registries, per-server three-state (reachable / tool-count / schema-valid). JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). Same byte size as `mcp_census.json` in huggingface.co/datasets/csoai/mcp-census (checked 2026-11-20). 16,421 bytes."
+    },
+    {
+      "path": "mcp_census.jsonl",
+      "description": "flat viewer table, one row per probed server (41): `server_id`,. Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). Same byte size as `mcp_census.jsonl` in huggingface.co/datasets/csoai/mcp-census (checked 2026-11-20). 10,249 bytes."
+    },
+    {
+      "path": "mcp_live_atoms.json",
+      "description": "the LIVE servers with a readable, schema-valid tool list. JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). Same byte size as `mcp_live_atoms.json` in huggingface.co/datasets/csoai/mcp-census (checked 2026-11-20). 6,146 bytes."
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+--- a/csoai/agent-interop-census/README.md (live)
++++ b/csoai/agent-interop-census/README.md (proposed)
+@@ -12,15 +12,29 @@
+ - census
+ - measurement
+ - csoai
++- council-of-ai
+ task_categories:
+ - other
+ size_categories:
+ - 10K<n<100K
+ configs:
+-- config_name: default
+-  data_files:
+-  - split: train
+-    path: census.jsonl
++- config_name: manifest
++  data_files:
++  - split: train
++    path: manifest.jsonl
++  default: true
++- config_name: census-frame-summary
++  data_files:
++  - split: train
++    path: census-frame-*/summary.json
++- config_name: manifest-json
++  data_files:
++  - split: train
++    path: manifest.json
++- config_name: totals
++  data_files:
++  - split: train
++    path: totals.json
+ ---
+ 
+ <!-- csoai-hubcard-v2 -->
+@@ -208,3 +222,24 @@
+ - Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).
+ - Conformance kit for signed-receipts/v1, with test vectors for implementers: https://councilof.ai/spec/signed-receipts/v1/conformance/
+ <!-- csoai-cite-v1:end -->
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `manifest` (default) | `manifest.jsonl` | 5 |
++| `census-frame-summary` | `census-frame-*/summary.json` | 1 |
++| `manifest-json` | `manifest.json` | 1 |
++| `totals` | `totals.json` | 1 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/agent-interop-census", "manifest", split="train")
++```
++
++<!-- csoai-card-fixes:end -->

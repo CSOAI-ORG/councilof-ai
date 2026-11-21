@@ -1,0 +1,41 @@
+{
+  "title": "CSOAI MCP exact-byte readback",
+  "id": "nicktempleman/csoai-mcp-exact-byte-readback",
+  "id_no": 12185327,
+  "subtitle": "Four replayable public MCP responses from a dated Kaggle run",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-mcp-exact-byte-readback`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-mcp-exact-byte-readback -p ./dataset --unzip\n```\n\nStart by inspecting `csoai-mcp-readback.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `verify_mcp_smoke.py`\n- `csoai-mcp-readback.json`\n- `local-verification.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\nExact request and response bytes from a CSOAI-operated, read-only Kaggle notebook run on 25 September 2026. Includes an offline verifier. This checks service responses only; it does not measure a model or establish independent adoption.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-09-25.\n- 4 files, 71,296 bytes. File types: .json (2), .md (1), .py (1).\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{templeman_csoaimcpexactbytereadback_2026,\n  author       = {Templeman, Nick and {Council of AI (CSOAI Ltd)}},\n  title        = {CSOAI MCP exact-byte readback},\n  year         = {2026},\n  publisher    = {Kaggle},\n  howpublished = {\\url{https://www.kaggle.com/datasets/nicktempleman/csoai-mcp-exact-byte-readback}},\n  note         = {Version 1}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "benchmark",
+    "artificial intelligence",
+    "ml ethics",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai.",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 1,775 bytes."
+    },
+    {
+      "path": "csoai-mcp-readback.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 57,688 bytes."
+    },
+    {
+      "path": "local-verification.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 863 bytes."
+    },
+    {
+      "path": "verify_mcp_smoke.py",
+      "description": "Python source file. 10,970 bytes."
+    }
+  ]
+}

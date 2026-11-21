@@ -1,0 +1,46 @@
+{
+  "datasetSlugNullable": "csoai-gspc-reserve-attestation",
+  "ownerUserNullable": "nicktempleman",
+  "usabilityRatingNullable": 0.625,
+  "titleNullable": "GSPC · Reserve-Attestation Axis — Council of AI",
+  "subtitleNullable": "Independent measurement of reserve attestations, as facts. Not a certification.",
+  "descriptionNullable": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-reserve-attestation`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-reserve-attestation -p ./dataset --unzip\n```\n\nStart by inspecting `axis-live.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `eval.yaml`\n- `skeleton.json`\n- `manifest.jsonl`\n- `axis-live.jsonl`\n- `input-schema.json`\n- `coverage-card.json`\n- `tui-pack-skeleton.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement of reserve attestations, as facts. Not a certification.**\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-reserve-attestation at revision `dce6f8749a13d226137e0a2a3cdca8433442495d`, made 2026-09-29. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC — reserve attestation facts (ReserveFacts)\n\n\n**In one line:** For the 16 XRPL issuer accounts in the live reader: is third-party reserve-attestation language on a retrieved issuer page? PASS, FAIL or UNCHECKABLE. For stablecoin and tokenised-asset analysts. It grades no issuer.\n\n### Use it\n\n```python\nfrom datasets import load_dataset\nds = load_dataset(\"csoai/gspc-reserve-attestation\", split=\"train\")\nprint(ds[0])\n```\n\n- **Verify a signed card in your browser, free, no account:**\n",
+  "expectedUpdateFrequencyNullable": "not specified",
+  "datasetId": 11811124,
+  "datasetSlug": "csoai-gspc-reserve-attestation",
+  "hasDatasetSlug": true,
+  "ownerUser": "nicktempleman",
+  "hasOwnerUser": true,
+  "usabilityRating": 0.625,
+  "hasUsabilityRating": true,
+  "totalViews": 77,
+  "totalVotes": 0,
+  "totalDownloads": 22,
+  "title": "GSPC · Reserve-Attestation Axis — Council of AI",
+  "hasTitle": true,
+  "subtitle": "Independent measurement of reserve attestations, as facts. Not a certification.",
+  "hasSubtitle": true,
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-reserve-attestation`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-reserve-attestation -p ./dataset --unzip\n```\n\nStart by inspecting `axis-live.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `eval.yaml`\n- `skeleton.json`\n- `manifest.jsonl`\n- `axis-live.jsonl`\n- `input-schema.json`\n- `coverage-card.json`\n- `tui-pack-skeleton.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement of reserve attestations, as facts. Not a certification.**\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-reserve-attestation at revision `dce6f8749a13d226137e0a2a3cdca8433442495d`, made 2026-09-29. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC — reserve attestation facts (ReserveFacts)\n\n\n**In one line:** For the 16 XRPL issuer accounts in the live reader: is third-party reserve-attestation language on a retrieved issuer page? PASS, FAIL or UNCHECKABLE. For stablecoin and tokenised-asset analysts. It grades no issuer.\n\n### Use it\n\n```python\nfrom datasets import load_dataset\nds = load_dataset(\"csoai/gspc-reserve-attestation\", split=\"train\")\nprint(ds[0])\n```\n\n- **Verify a signed card in your browser, free, no account:**\n",
+  "hasDescription": true,
+  "isPrivate": false,
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark"
+  ],
+  "licenses": [
+    {
+      "nameNullable": "CC0-1.0",
+      "name": "CC0-1.0",
+      "hasName": true
+    }
+  ],
+  "collaborators": [],
+  "data": [],
+  "expectedUpdateFrequency": "not specified",
+  "hasExpectedUpdateFrequency": true,
+  "userSpecifiedSources": "",
+  "hasUserSpecifiedSources": false
+}

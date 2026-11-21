@@ -1,0 +1,481 @@
+--- a/csoai/cross-ledger-supply/README.md (live)
++++ b/csoai/cross-ledger-supply/README.md (proposed)
+@@ -1,8 +1,430 @@
+ ---
+ license: cc-by-4.0
+ pretty_name: Cross-ledger supply (issuer-listed deployments, evidence-labelled)
+-tags: [tokenization, stablecoins, tokenized-funds, deposit-tokens, measurement, merkle-proofs]
+-viewer: false
++tags:
++- tokenization
++- stablecoins
++- tokenized-funds
++- deposit-tokens
++- measurement
++- merkle-proofs
++- council-of-ai
++size_categories:
++- n<1K
++configs:
++- config_name: ots-upgraded-ots-upgrade
++  data_files:
++  - split: train
++    path: ots-upgraded/*/OTS-UPGRADE.json
++  default: true
++- config_name: xl-daily-assets-bny-digital-cash
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-26/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-09-27/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-09-28/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-09-29/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-09-30/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-01/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-02/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-03/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-06/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-07/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-08/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-16/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-17/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-18/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-19/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-20/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-21/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-22/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-23/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-24/assets/bny-digital-cash.json.gz
++    - xl-daily/2026-10-25/assets/bny-digital-cash.json.gz
++- config_name: xl-daily-assets-buidl
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-26/assets/buidl.json.gz
++    - xl-daily/2026-09-27/assets/buidl.json.gz
++    - xl-daily/2026-09-28/assets/buidl.json.gz
++    - xl-daily/2026-09-29/assets/buidl.json.gz
++    - xl-daily/2026-09-30/assets/buidl.json.gz
++    - xl-daily/2026-10-01/assets/buidl.json.gz
++    - xl-daily/2026-10-02/assets/buidl.json.gz
++    - xl-daily/2026-10-03/assets/buidl.json.gz
++    - xl-daily/2026-10-06/assets/buidl.json.gz
++    - xl-daily/2026-10-07/assets/buidl.json.gz
++    - xl-daily/2026-10-08/assets/buidl.json.gz
++    - xl-daily/2026-10-16/assets/buidl.json.gz
++    - xl-daily/2026-10-17/assets/buidl.json.gz
++    - xl-daily/2026-10-18/assets/buidl.json.gz
++    - xl-daily/2026-10-19/assets/buidl.json.gz
++    - xl-daily/2026-10-20/assets/buidl.json.gz
++    - xl-daily/2026-10-21/assets/buidl.json.gz
++    - xl-daily/2026-10-22/assets/buidl.json.gz
++    - xl-daily/2026-10-23/assets/buidl.json.gz
++    - xl-daily/2026-10-24/assets/buidl.json.gz
++    - xl-daily/2026-10-25/assets/buidl.json.gz
++- config_name: xl-daily-assets-citi-token-services
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-26/assets/citi-token-services.json.gz
++    - xl-daily/2026-09-27/assets/citi-token-services.json.gz
++    - xl-daily/2026-09-28/assets/citi-token-services.json.gz
++    - xl-daily/2026-09-29/assets/citi-token-services.json.gz
++    - xl-daily/2026-09-30/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-01/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-02/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-03/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-06/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-07/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-08/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-16/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-17/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-18/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-19/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-20/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-21/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-22/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-23/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-24/assets/citi-token-services.json.gz
++    - xl-daily/2026-10-25/assets/citi-token-services.json.gz
++- config_name: xl-daily-assets-dai
++  data_files:
++  - split: train
++    path: xl-daily/*/assets/dai.json.gz
++- config_name: xl-daily-assets-swift-ledger
++  data_files:
++  - split: train
++    path: xl-daily/*/assets/swift-ledger.json.gz
++- config_name: xl-daily-assets-usdc
++  data_files:
++  - split: train
++    path: xl-daily/*/assets/usdc.json.gz
++- config_name: xl-daily-assets-usdg
++  data_files:
++  - split: train
++    path: xl-daily/*/assets/usdg.json.gz
++- config_name: xl-daily-assets-usds
++  data_files:
++  - split: train
++    path: xl-daily/*/assets/usds.json.gz
++- config_name: xl-daily-proofs-rlusd-base-rlusd-proof
++  data_files:
++  - split: train
++    path: xl-daily/*/proofs/rlusd-base-RLUSD-proof.json.gz
++- config_name: xl-daily-proofs-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-10-24/proofs/usdg-ethereum-USDG-proof.json.gz
++    - xl-daily/2026-10-24/proofs/usdt-ethereum-USDT-proof.json.gz
++    - xl-daily/2026-10-24/proofs/ustb-ethereum-USTB-proof.json.gz
++    - xl-daily/2026-10-24/proofs/usyc-ethereum-USYC-proof.json.gz
++    - xl-daily/2026-10-25/proofs/benji-ethereum-BENJI-proof.json.gz
++    - xl-daily/2026-10-25/proofs/benji-ethereum-iBENJI-proof.json.gz
++    - xl-daily/2026-10-25/proofs/eurau-ethereum-EURAU-proof.json.gz
++    - xl-daily/2026-10-25/proofs/eurc-ethereum-EURC-proof.json.gz
++    - xl-daily/2026-10-25/proofs/eurc-worldchain-EURC-proof.json.gz
++    - xl-daily/2026-10-25/proofs/pyusd-ethereum-PYUSD-proof.json.gz
++    - xl-daily/2026-10-25/proofs/rlusd-ethereum-RLUSD-proof.json.gz
++    - xl-daily/2026-10-25/proofs/rlusd-optimism-RLUSD-proof.json.gz
++    - xl-daily/2026-10-25/proofs/rlusd-xrplevm-RLUSD-proof.json.gz
++    - xl-daily/2026-10-25/proofs/usd1-bsc-USD1-proof.json.gz
++    - xl-daily/2026-10-25/proofs/usd1-ethereum-USD1-proof.json.gz
++    - xl-daily/2026-10-25/proofs/usd1-mantle-USD1-proof.json.gz
++    - xl-daily/2026-10-25/proofs/usdc-ethereum-USDC-proof.json.gz
++    - xl-daily/2026-10-25/proofs/usdc-optimism-USDC-proof.json.gz
++    - xl-daily/2026-10-25/proofs/usdc-worldchain-USDC-proof.json.gz
++    - xl-daily/2026-10-25/proofs/usde-ethereum-USDe-proof.json.gz
++    - xl-daily/2026-10-25/proofs/usdg-ethereum-USDG-proof.json.gz
++    - xl-daily/2026-10-25/proofs/usdt-ethereum-USDT-proof.json.gz
++    - xl-daily/2026-10-25/proofs/ustb-ethereum-USTB-proof.json.gz
++    - xl-daily/2026-10-25/proofs/usyc-ethereum-USYC-proof.json.gz
++- config_name: xl-daily-assets-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-27/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-09-28/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-09-29/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-09-30/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-01/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-02/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-03/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-06/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-07/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-08/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-16/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-17/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-18/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-19/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-20/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-21/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-22/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-23/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-24/assets/hsbc-tokenised-deposit-service.json.gz
++    - xl-daily/2026-10-25/assets/hsbc-tokenised-deposit-service.json.gz
++- config_name: xl-daily-signed-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-27/institutional-evidence-links-2026-09-27.signed.json
++    - xl-daily/2026-09-28/institutional-evidence-links-2026-09-28.signed.json
++    - xl-daily/2026-09-29/institutional-evidence-links-2026-09-29.signed.json
++    - xl-daily/2026-09-30/institutional-evidence-links-2026-09-30.signed.json
++    - xl-daily/2026-10-01/institutional-evidence-links-2026-10-01.signed.json
++    - xl-daily/2026-10-02/institutional-evidence-links-2026-10-02.signed.json
++    - xl-daily/2026-10-03/institutional-evidence-links-2026-10-03.signed.json
++    - xl-daily/2026-10-06/institutional-evidence-links-2026-10-06.signed.json
++    - xl-daily/2026-10-07/institutional-evidence-links-2026-10-07.signed.json
++    - xl-daily/2026-10-08/institutional-evidence-links-2026-10-08.signed.json
++    - xl-daily/2026-10-16/institutional-evidence-links-2026-10-16.signed.json
++    - xl-daily/2026-10-17/institutional-evidence-links-2026-10-17.signed.json
++    - xl-daily/2026-10-18/institutional-evidence-links-2026-10-18.signed.json
++    - xl-daily/2026-10-19/institutional-evidence-links-2026-10-19.signed.json
++    - xl-daily/2026-10-20/institutional-evidence-links-2026-10-20.signed.json
++    - xl-daily/2026-10-21/institutional-evidence-links-2026-10-21.signed.json
++    - xl-daily/2026-10-22/institutional-evidence-links-2026-10-22.signed.json
++    - xl-daily/2026-10-23/institutional-evidence-links-2026-10-23.signed.json
++    - xl-daily/2026-10-24/institutional-evidence-links-2026-10-24.signed.json
++    - xl-daily/2026-10-25/institutional-evidence-links-2026-10-25.signed.json
++- config_name: xl-daily-assets-ousg-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-26/assets/ousg.json.gz
++    - xl-daily/2026-09-27/assets/ousg.json.gz
++    - xl-daily/2026-09-28/assets/ousg.json.gz
++    - xl-daily/2026-09-29/assets/ousg.json.gz
++    - xl-daily/2026-09-30/assets/ousg.json.gz
++    - xl-daily/2026-10-01/assets/ousg.json.gz
++    - xl-daily/2026-10-02/assets/ousg.json.gz
++    - xl-daily/2026-10-06/assets/ousg.json.gz
++    - xl-daily/2026-10-07/assets/ousg.json.gz
++    - xl-daily/2026-10-08/assets/ousg.json.gz
++    - xl-daily/2026-10-16/assets/ousg.json.gz
++    - xl-daily/2026-10-17/assets/ousg.json.gz
++    - xl-daily/2026-10-18/assets/ousg.json.gz
++    - xl-daily/2026-10-19/assets/ousg.json.gz
++    - xl-daily/2026-10-20/assets/ousg.json.gz
++    - xl-daily/2026-10-21/assets/ousg.json.gz
++    - xl-daily/2026-10-22/assets/ousg.json.gz
++    - xl-daily/2026-10-23/assets/ousg.json.gz
++    - xl-daily/2026-10-24/assets/ousg.json.gz
++    - xl-daily/2026-10-25/assets/ousg.json.gz
++- config_name: xl-daily-assets-usyc-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-26/assets/usyc.json.gz
++    - xl-daily/2026-09-27/assets/usyc.json.gz
++    - xl-daily/2026-09-28/assets/usyc.json.gz
++    - xl-daily/2026-09-29/assets/usyc.json.gz
++    - xl-daily/2026-10-01/assets/usyc.json.gz
++    - xl-daily/2026-10-02/assets/usyc.json.gz
++    - xl-daily/2026-10-03/assets/usyc.json.gz
++    - xl-daily/2026-10-06/assets/usyc.json.gz
++    - xl-daily/2026-10-07/assets/usyc.json.gz
++    - xl-daily/2026-10-08/assets/usyc.json.gz
++    - xl-daily/2026-10-16/assets/usyc.json.gz
++    - xl-daily/2026-10-17/assets/usyc.json.gz
++    - xl-daily/2026-10-18/assets/usyc.json.gz
++    - xl-daily/2026-10-19/assets/usyc.json.gz
++    - xl-daily/2026-10-20/assets/usyc.json.gz
++    - xl-daily/2026-10-21/assets/usyc.json.gz
++    - xl-daily/2026-10-22/assets/usyc.json.gz
++    - xl-daily/2026-10-23/assets/usyc.json.gz
++    - xl-daily/2026-10-24/assets/usyc.json.gz
++    - xl-daily/2026-10-25/assets/usyc.json.gz
++- config_name: xl-daily-assets-usde-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-26/assets/usde.json.gz
++    - xl-daily/2026-09-27/assets/usde.json.gz
++    - xl-daily/2026-09-28/assets/usde.json.gz
++    - xl-daily/2026-09-29/assets/usde.json.gz
++    - xl-daily/2026-09-30/assets/usde.json.gz
++    - xl-daily/2026-10-01/assets/usde.json.gz
++    - xl-daily/2026-10-02/assets/usde.json.gz
++    - xl-daily/2026-10-03/assets/usde.json.gz
++    - xl-daily/2026-10-06/assets/usde.json.gz
++    - xl-daily/2026-10-07/assets/usde.json.gz
++    - xl-daily/2026-10-08/assets/usde.json.gz
++    - xl-daily/2026-10-18/assets/usde.json.gz
++    - xl-daily/2026-10-19/assets/usde.json.gz
++    - xl-daily/2026-10-20/assets/usde.json.gz
++    - xl-daily/2026-10-21/assets/usde.json.gz
++    - xl-daily/2026-10-22/assets/usde.json.gz
++    - xl-daily/2026-10-23/assets/usde.json.gz
++    - xl-daily/2026-10-24/assets/usde.json.gz
++    - xl-daily/2026-10-25/assets/usde.json.gz
++- config_name: xl-daily-assets-eurc-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-26/assets/eurc.json.gz
++    - xl-daily/2026-09-27/assets/eurc.json.gz
++    - xl-daily/2026-09-28/assets/eurc.json.gz
++    - xl-daily/2026-09-29/assets/eurc.json.gz
++    - xl-daily/2026-10-01/assets/eurc.json.gz
++    - xl-daily/2026-10-03/assets/eurc.json.gz
++    - xl-daily/2026-10-07/assets/eurc.json.gz
++    - xl-daily/2026-10-08/assets/eurc.json.gz
++    - xl-daily/2026-10-16/assets/eurc.json.gz
++    - xl-daily/2026-10-17/assets/eurc.json.gz
++    - xl-daily/2026-10-18/assets/eurc.json.gz
++    - xl-daily/2026-10-19/assets/eurc.json.gz
++    - xl-daily/2026-10-20/assets/eurc.json.gz
++    - xl-daily/2026-10-21/assets/eurc.json.gz
++    - xl-daily/2026-10-22/assets/eurc.json.gz
++    - xl-daily/2026-10-23/assets/eurc.json.gz
++    - xl-daily/2026-10-24/assets/eurc.json.gz
++    - xl-daily/2026-10-25/assets/eurc.json.gz
++- config_name: xl-daily-assets-usdt-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-27/assets/usdt.json.gz
++    - xl-daily/2026-09-28/assets/usdt.json.gz
++    - xl-daily/2026-09-29/assets/usdt.json.gz
++    - xl-daily/2026-10-01/assets/usdt.json.gz
++    - xl-daily/2026-10-02/assets/usdt.json.gz
++    - xl-daily/2026-10-06/assets/usdt.json.gz
++    - xl-daily/2026-10-07/assets/usdt.json.gz
++    - xl-daily/2026-10-08/assets/usdt.json.gz
++    - xl-daily/2026-10-16/assets/usdt.json.gz
++    - xl-daily/2026-10-17/assets/usdt.json.gz
++    - xl-daily/2026-10-18/assets/usdt.json.gz
++    - xl-daily/2026-10-19/assets/usdt.json.gz
++    - xl-daily/2026-10-20/assets/usdt.json.gz
++    - xl-daily/2026-10-21/assets/usdt.json.gz
++    - xl-daily/2026-10-22/assets/usdt.json.gz
++    - xl-daily/2026-10-23/assets/usdt.json.gz
++    - xl-daily/2026-10-24/assets/usdt.json.gz
++    - xl-daily/2026-10-25/assets/usdt.json.gz
++- config_name: xl-daily-assets-usdy-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-27/assets/usdy.json.gz
++    - xl-daily/2026-09-28/assets/usdy.json.gz
++    - xl-daily/2026-10-01/assets/usdy.json.gz
++    - xl-daily/2026-10-02/assets/usdy.json.gz
++    - xl-daily/2026-10-06/assets/usdy.json.gz
++    - xl-daily/2026-10-07/assets/usdy.json.gz
++    - xl-daily/2026-10-08/assets/usdy.json.gz
++    - xl-daily/2026-10-16/assets/usdy.json.gz
++    - xl-daily/2026-10-17/assets/usdy.json.gz
++    - xl-daily/2026-10-18/assets/usdy.json.gz
++    - xl-daily/2026-10-19/assets/usdy.json.gz
++    - xl-daily/2026-10-20/assets/usdy.json.gz
++    - xl-daily/2026-10-21/assets/usdy.json.gz
++    - xl-daily/2026-10-22/assets/usdy.json.gz
++    - xl-daily/2026-10-23/assets/usdy.json.gz
++    - xl-daily/2026-10-24/assets/usdy.json.gz
++    - xl-daily/2026-10-25/assets/usdy.json.gz
++- config_name: xl-daily-assets-v2-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-27/assets/usd1.json.gz
++    - xl-daily/2026-09-28/assets/usd1.json.gz
++    - xl-daily/2026-09-29/assets/usd1.json.gz
++    - xl-daily/2026-09-30/assets/usd1.json.gz
++    - xl-daily/2026-10-01/assets/usd1.json.gz
++    - xl-daily/2026-10-07/assets/usd1.json.gz
++    - xl-daily/2026-10-08/assets/usd1.json.gz
++    - xl-daily/2026-10-16/assets/usd1.json.gz
++    - xl-daily/2026-10-17/assets/usd1.json.gz
++    - xl-daily/2026-10-18/assets/usd1.json.gz
++    - xl-daily/2026-10-20/assets/usd1.json.gz
++    - xl-daily/2026-10-21/assets/usd1.json.gz
++    - xl-daily/2026-10-22/assets/usd1.json.gz
++    - xl-daily/2026-10-23/assets/usd1.json.gz
++    - xl-daily/2026-10-25/assets/usd1.json.gz
++- config_name: xl-daily-assets-ustb-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-10-06/assets/ustb.json.gz
++    - xl-daily/2026-10-07/assets/ustb.json.gz
++    - xl-daily/2026-10-08/assets/ustb.json.gz
++    - xl-daily/2026-10-16/assets/ustb.json.gz
++    - xl-daily/2026-10-17/assets/ustb.json.gz
++    - xl-daily/2026-10-18/assets/ustb.json.gz
++    - xl-daily/2026-10-19/assets/ustb.json.gz
++    - xl-daily/2026-10-20/assets/ustb.json.gz
++    - xl-daily/2026-10-21/assets/ustb.json.gz
++    - xl-daily/2026-10-22/assets/ustb.json.gz
++    - xl-daily/2026-10-23/assets/ustb.json.gz
++    - xl-daily/2026-10-24/assets/ustb.json.gz
++    - xl-daily/2026-10-25/assets/ustb.json.gz
++- config_name: xl-daily-assets-jpmd-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-27/assets/jpmd.json.gz
++    - xl-daily/2026-09-28/assets/jpmd.json.gz
++    - xl-daily/2026-09-29/assets/jpmd.json.gz
++    - xl-daily/2026-10-02/assets/jpmd.json.gz
++    - xl-daily/2026-10-03/assets/jpmd.json.gz
++    - xl-daily/2026-10-06/assets/jpmd.json.gz
++    - xl-daily/2026-10-07/assets/jpmd.json.gz
++    - xl-daily/2026-10-08/assets/jpmd.json.gz
++    - xl-daily/2026-10-16/assets/jpmd.json.gz
++    - xl-daily/2026-10-17/assets/jpmd.json.gz
++    - xl-daily/2026-10-18/assets/jpmd.json.gz
++    - xl-daily/2026-10-19/assets/jpmd.json.gz
++- config_name: xl-daily-signed-v2-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-27/xl-daily-2026-09-27.signed.json
++    - xl-daily/2026-09-28/xl-daily-2026-09-28.signed.json
++    - xl-daily/2026-09-29/xl-daily-2026-09-29.signed.json
++    - xl-daily/2026-09-30/xl-daily-2026-09-30.signed.json
++    - xl-daily/2026-10-01/xl-daily-2026-10-01.signed.json
++    - xl-daily/2026-10-02/xl-daily-2026-10-02.signed.json
++    - xl-daily/2026-10-06/xl-daily-2026-10-06.signed.json
++    - xl-daily/2026-10-07/xl-daily-2026-10-07.signed.json
++    - xl-daily/2026-10-08/xl-daily-2026-10-08.signed.json
++    - xl-daily/2026-10-18/xl-daily-2026-10-18.signed.json
++    - xl-daily/2026-10-23/xl-daily-2026-10-23.signed.json
++- config_name: xl-daily-assets-pyusd-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-09-27/assets/pyusd.json.gz
++    - xl-daily/2026-09-28/assets/pyusd.json.gz
++    - xl-daily/2026-09-29/assets/pyusd.json.gz
++    - xl-daily/2026-09-30/assets/pyusd.json.gz
++    - xl-daily/2026-10-01/assets/pyusd.json.gz
++    - xl-daily/2026-10-02/assets/pyusd.json.gz
++    - xl-daily/2026-10-03/assets/pyusd.json.gz
++    - xl-daily/2026-10-06/assets/pyusd.json.gz
++    - xl-daily/2026-10-07/assets/pyusd.json.gz
++    - xl-daily/2026-10-08/assets/pyusd.json.gz
++- config_name: xl-daily-assets-pyusd-v2-sample
++  data_files:
++  - split: train
++    path:
++    - xl-daily/2026-10-16/assets/pyusd.json.gz
++    - xl-daily/2026-10-17/assets/pyusd.json.gz
++    - xl-daily/2026-10-18/assets/pyusd.json.gz
++    - xl-daily/2026-10-19/assets/pyusd.json.gz
++    - xl-daily/2026-10-20/assets/pyusd.json.gz
++    - xl-daily/2026-10-21/assets/pyusd.json.gz
++    - xl-daily/2026-10-22/assets/pyusd.json.gz
++    - xl-daily/2026-10-23/assets/pyusd.json.gz
++    - xl-daily/2026-10-24/assets/pyusd.json.gz
++    - xl-daily/2026-10-25/assets/pyusd.json.gz
++language:
++- en
+ ---
+ 
+ <p align="center">
+@@ -275,3 +697,45 @@
+ **Agents/machines:** every call in this catalogue is priced over [x402](https://www.x402.org) — USDC, pay-per-call, no keys, no subscription. Machine entry: [councilof.ai/mcp](https://councilof.ai/mcp).
+ Measurement, not certification.
+ <!-- ACCESS-MODEL:END -->
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table. The viewer was previously disabled (`viewer: false`); it is re-enabled now that every subset loads.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `ots-upgraded-ots-upgrade` (default) | `ots-upgraded/*/OTS-UPGRADE.json` | 21 |
++| `xl-daily-assets-bny-digital-cash` | `xl-daily/2026-09-26/assets/bny-digital-cash.json.gz`, `xl-daily/2026-09-27/assets/bny-digital-cash.json.gz`, `xl-daily/2026-09-28/assets/bny-digital-cash.json.gz` … (+18) | 21 |
++| `xl-daily-assets-buidl` | `xl-daily/2026-09-26/assets/buidl.json.gz`, `xl-daily/2026-09-27/assets/buidl.json.gz`, `xl-daily/2026-09-28/assets/buidl.json.gz` … (+18) | 21 |
++| `xl-daily-assets-citi-token-services` | `xl-daily/2026-09-26/assets/citi-token-services.json.gz`, `xl-daily/2026-09-27/assets/citi-token-services.json.gz`, `xl-daily/2026-09-28/assets/citi-token-services.json.gz` … (+18) | 21 |
++| `xl-daily-assets-dai` | `xl-daily/*/assets/dai.json.gz` | 21 |
++| `xl-daily-assets-swift-ledger` | `xl-daily/*/assets/swift-ledger.json.gz` | 21 |
++| `xl-daily-assets-usdc` | `xl-daily/*/assets/usdc.json.gz` | 21 |
++| `xl-daily-assets-usdg` | `xl-daily/*/assets/usdg.json.gz` | 21 |
++| `xl-daily-assets-usds` | `xl-daily/*/assets/usds.json.gz` | 21 |
++| `xl-daily-proofs-rlusd-base-rlusd-proof` | `xl-daily/*/proofs/rlusd-base-RLUSD-proof.json.gz` | 21 |
++| `xl-daily-proofs-sample` | `xl-daily/2026-10-24/proofs/usdg-ethereum-USDG-proof.json.gz`, `xl-daily/2026-10-24/proofs/usdt-ethereum-USDT-proof.json.gz`, `xl-daily/2026-10-24/proofs/ustb-ethereum-USTB-proof.json.gz` … (+21) | 24 |
++| `xl-daily-assets-sample` | `xl-daily/2026-09-27/assets/hsbc-tokenised-deposit-service.json.gz`, `xl-daily/2026-09-28/assets/hsbc-tokenised-deposit-service.json.gz`, `xl-daily/2026-09-29/assets/hsbc-tokenised-deposit-service.json.gz` … (+17) | 20 |
++| `xl-daily-signed-sample` | `xl-daily/2026-09-27/institutional-evidence-links-2026-09-27.signed.json`, `xl-daily/2026-09-28/institutional-evidence-links-2026-09-28.signed.json`, `xl-daily/2026-09-29/institutional-evidence-links-2026-09-29.signed.json` … (+17) | 20 |
++| `xl-daily-assets-ousg-sample` | `xl-daily/2026-09-26/assets/ousg.json.gz`, `xl-daily/2026-09-27/assets/ousg.json.gz`, `xl-daily/2026-09-28/assets/ousg.json.gz` … (+17) | 20 |
++| `xl-daily-assets-usyc-sample` | `xl-daily/2026-09-26/assets/usyc.json.gz`, `xl-daily/2026-09-27/assets/usyc.json.gz`, `xl-daily/2026-09-28/assets/usyc.json.gz` … (+17) | 20 |
++| `xl-daily-assets-usde-sample` | `xl-daily/2026-09-26/assets/usde.json.gz`, `xl-daily/2026-09-27/assets/usde.json.gz`, `xl-daily/2026-09-28/assets/usde.json.gz` … (+16) | 19 |
++| `xl-daily-assets-eurc-sample` | `xl-daily/2026-09-26/assets/eurc.json.gz`, `xl-daily/2026-09-27/assets/eurc.json.gz`, `xl-daily/2026-09-28/assets/eurc.json.gz` … (+15) | 18 |
++| `xl-daily-assets-usdt-sample` | `xl-daily/2026-09-27/assets/usdt.json.gz`, `xl-daily/2026-09-28/assets/usdt.json.gz`, `xl-daily/2026-09-29/assets/usdt.json.gz` … (+15) | 18 |
++| `xl-daily-assets-usdy-sample` | `xl-daily/2026-09-27/assets/usdy.json.gz`, `xl-daily/2026-09-28/assets/usdy.json.gz`, `xl-daily/2026-10-01/assets/usdy.json.gz` … (+14) | 17 |
++| `xl-daily-assets-v2-sample` | `xl-daily/2026-09-27/assets/usd1.json.gz`, `xl-daily/2026-09-28/assets/usd1.json.gz`, `xl-daily/2026-09-29/assets/usd1.json.gz` … (+12) | 15 |
++| `xl-daily-assets-ustb-sample` | `xl-daily/2026-10-06/assets/ustb.json.gz`, `xl-daily/2026-10-07/assets/ustb.json.gz`, `xl-daily/2026-10-08/assets/ustb.json.gz` … (+10) | 13 |
++| `xl-daily-assets-jpmd-sample` | `xl-daily/2026-09-27/assets/jpmd.json.gz`, `xl-daily/2026-09-28/assets/jpmd.json.gz`, `xl-daily/2026-09-29/assets/jpmd.json.gz` … (+9) | 12 |
++| `xl-daily-signed-v2-sample` | `xl-daily/2026-09-27/xl-daily-2026-09-27.signed.json`, `xl-daily/2026-09-28/xl-daily-2026-09-28.signed.json`, `xl-daily/2026-09-29/xl-daily-2026-09-29.signed.json` … (+8) | 11 |
++| `xl-daily-assets-pyusd-sample` | `xl-daily/2026-09-27/assets/pyusd.json.gz`, `xl-daily/2026-09-28/assets/pyusd.json.gz`, `xl-daily/2026-09-29/assets/pyusd.json.gz` … (+7) | 10 |
++| `xl-daily-assets-pyusd-v2-sample` | `xl-daily/2026-10-16/assets/pyusd.json.gz`, `xl-daily/2026-10-17/assets/pyusd.json.gz`, `xl-daily/2026-10-18/assets/pyusd.json.gz` … (+7) | 10 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/cross-ledger-supply", "ots-upgraded-ots-upgrade", split="train")
++```
++
++<!-- csoai-card-fixes:end -->

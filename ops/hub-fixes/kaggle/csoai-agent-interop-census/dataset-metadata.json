@@ -1,0 +1,58 @@
+{
+  "title": "CSOAI Agent Interop Census printer",
+  "id": "nicktempleman/csoai-agent-interop-census",
+  "id_no": 12012880,
+  "subtitle": "GSPC dated evidence export · check councilof.ai/api/gspc",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-agent-interop-census`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-agent-interop-census -p ./dataset --unzip\n```\n\nStart by inspecting `census.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `totals.json`\n- `census.jsonl`\n- `CORRECTION.md`\n- `manifest.json`\n- `manifest.jsonl`\n- `living-cite.json`\n- `census-frame-2026-09-25/summary.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n# CSOAI Agent Interop Census\n\nAgent interop census printer. Products/data/signals — not tip paint.\n\n**HF atom (authority bank):** https://huggingface.co/datasets/csoai/agent-interop-census\n\n## Living GET (re-GET before paste)\n- Board: https://councilof.ai/api/gspc → **22·22·0** · `22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.`\n- Hub: https://councilof.ai/api/hub-cards → **1191/1191/0** · as_of `2026-09-14T00:42:23.925Z`\n- Verify free: https://councilof.ai/gspc-verify\n- x402 discovery: https://councilof.ai/.well-known/x402.json\n- Free door (amount 0): https://councilof.ai/api/free-door\n\nMeasurement, never certification. Printer only — no invent scores/buyers/settled_usdc.\nKill stale Hub pastes 885/900/937/1113/1182/1185.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 2, last updated 2026-10-16.\n- 8 files, 14,343,518 bytes. File types: .json (4), .md (2), .jsonl (2).\n- Hugging Face twin: [csoai/agent-interop-census](https://huggingface.co/datasets/csoai/agent-interop-census). 4 of 8 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "benchmark",
+    "finance",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 4 of 8 files have the same byte size as files in the Hugging Face dataset [csoai/agent-interop-census](https://huggingface.co/datasets/csoai/agent-interop-census) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "CORRECTION.md",
+      "description": "Markdown document. Same byte size as `CORRECTION.md` in huggingface.co/datasets/csoai/agent-interop-census (checked 2026-11-20). 4,957 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 682 bytes."
+    },
+    {
+      "path": "census-frame-2026-09-25/summary.json",
+      "description": "JSON document. top-level keys: schema, run_started, run_finished, user_agent, min_interval_s, requests, retry_after_waits, sources, union, overlap, canonicalisation, not_read_by_this_frame, what_a_row_is, what_it_never_proves, files. Same byte size as `census-frame-2026-09-25/summary.json` in huggingface.co/datasets/csoai/agent-interop-census (checked 2026-11-20). 5,535 bytes."
+    },
+    {
+      "path": "census.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 46301 rows; fields: source (string), kind (string), id (string), version (string), is_latest (boolean), status (string), exposes_remote_endpoint (boolean), package_registries (string), repo_url (url), graded (boolean), measurement (string), what_this_row_is (string), what_it_never_proves (string). 14,327,150 bytes."
+    },
+    {
+      "path": "living-cite.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 685 bytes."
+    },
+    {
+      "path": "manifest.json",
+      "description": "JSON document. top-level keys: schema, as_of, files. `files` holds 3 records with fields: path (string), bytes (integer), sha256 (string). Same byte size as `manifest.json` in huggingface.co/datasets/csoai/agent-interop-census (checked 2026-11-20). 529 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 5 rows; fields: file (string), bytes (integer), sha256 (string), blob_id (string), url (url), as_of (datetime). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/agent-interop-census (checked 2026-11-20). 1,258 bytes."
+    },
+    {
+      "path": "totals.json",
+      "description": "JSON document. Provisional, from a differently-sized HF copy: top-level keys: schema, as_of, rows_total, rows_by_source, mcp_registry_unique_entries, mcp_registry_pages_read, mcp_registry_source_file, mcp_registry_stop_reason, mcp_registry_read_state, mcp_registry_enumeration_complete, mcp_registry_population_total, mcp_registry_is_latest, mcp_registry_exposing_remote_endpoint, hf_spaces_pages_read, hf_spaces_read_state, rows_with_repo_url, github_topic_repo_counts, github_mcp_server_by_licence, smithery_declared_total, smithery_unique_collected …. 2,722 bytes."
+    }
+  ]
+}
