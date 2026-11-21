@@ -1,0 +1,95 @@
+name: self-run-open-model-guard-sample
+on:
+  workflow_dispatch:
+  # A tiny model-inference sample once weekly; not a public GSPC axis.
+  # The scheduled run is active only after this workflow merges to master.
+  schedule:
+    - cron: "43 6 * * 1"
+  pull_request:
+    paths:
+      - "scripts/research/firstparty-guard-cases.json"
+      - "scripts/research/firstparty-guard-replay.py"
+      - "scripts/research/test_firstparty_guard_replay.py"
+      - "packages/evidence-fabric/event.py"
+      - ".github/workflows/self-run-open-model-guard-sample.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-onnx-sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Offline regression tests for tamper and false alarms
+        run: python3 -m unittest discover -s scripts/research -p 'test_firstparty_guard_replay.py' -v
+      - name: Install CPU-only model inference runtime
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            onnxruntime==1.26.0 huggingface-hub==1.19.0 \
+            transformers==5.5.0 tokenizers==0.22.2 numpy==2.3.5
+      - name: Run pinned Hugging Face open-source model on eight owned synthetic examples
+        run: |
+          python3 scripts/research/firstparty-guard-replay.py run \
+            --result model-sample.json \
+            --event model-evidence-event.json
+      - name: Verify recorded outcomes and canonical evidence
+        run: |
+          python3 scripts/research/firstparty-guard-replay.py verify \
+            --result model-sample.json \
+            --event model-evidence-event.json
+      - name: Publish an honest experiment summary, including any misses
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          r=json.load(open('model-sample.json'))
+          print('# First-party open-model guard sample')
+          print('Pinned open-source ONNX model; eight synthetic, non-blind examples.')
+          print('N:',r['n'],' TP:',r['tp'],' TN:',r['tn'],' FP:',r['fp'],' FN:',r['fn'])
+          print('Model revision:',r['model_commit'])
+          print('No live action was tested. Self-observed, unsigned, unanchored; not a GSPC score.')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: open-model-guard-firstparty-evidence
+          path: |
+            model-sample.json
+            model-evidence-event.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  independent-job-integrity:
+    runs-on: ubuntu-latest
+    needs: pinned-onnx-sample
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: open-model-guard-firstparty-evidence
+          path: replay-evidence
+      - name: Verify retained file and event without re-running the model
+        run: |
+          python3 scripts/research/firstparty-guard-replay.py verify \
+            --result replay-evidence/model-sample.json \
+            --event replay-evidence/model-evidence-event.json
+      - name: Confirm independent job did not promote self-tests
+        run: |
+          python3 - <<'PY'
+          import json
+          a=json.load(open('replay-evidence/model-sample.json'))
+          e=json.load(open('replay-evidence/model-evidence-event.json'))
+          assert a['operator_scope']=='SELF_RUN_NO_CUSTOMER'
+          assert a['gspc_admitted'] is False and a['production_authority'] is False
+          assert a['independent_review']=='NOT_CONDUCTED'
+          assert e['signature'] is None
+          print('Independent-job file reconstruction OK; no external witness or GSPC admission.')
+          PY
