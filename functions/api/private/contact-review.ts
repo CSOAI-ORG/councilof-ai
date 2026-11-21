@@ -52,7 +52,7 @@ export async function readContactReview(
   overrideKeySet?: JWTVerifyGetKey,
 ): Promise<Response> {
   const auth = await authorizeContactOperator(request, env, overrideKeySet);
-  if (!auth.ok) return reply({ state: "UNAVAILABLE_OR_UNAUTHORIZED" }, auth.status);
+  if (auth.ok === false) return reply({ state: "UNAVAILABLE_OR_UNAUTHORIZED" }, auth.status);
   const kv = env.LEADS;
   if (!kv) return reply({ state: "UNAVAILABLE_OR_UNAUTHORIZED" }, 503);
 
@@ -82,7 +82,7 @@ export async function readContactReview(
     const keys = page.keys.map(k => k.name).filter(k => KEY_PATTERN.test(k));
     return reply({
       state: "KEYS_ONLY", records_read: false, keys,
-      cursor: page.list_complete ? null : (page.cursor ?? null),
+      cursor: !page.list_complete && "cursor" in page && typeof page.cursor === "string" ? page.cursor : null,
       count_this_page: keys.length,
     });
   } catch {
