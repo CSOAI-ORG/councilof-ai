@@ -8,6 +8,16 @@ vi.mock("framer-motion", async () => {
   return { motion: { div: ({ children }: { children: React.ReactNode }) => React.createElement("div", null, children) } };
 });
 
+vi.mock("@/components/ContactTurnstile", async () => {
+  const React = await import("react");
+  return {
+    default: ({ onToken }: { onToken: (token: string) => void }) => {
+      React.useEffect(() => { onToken("local-test-challenge-token"); }, [onToken]);
+      return React.createElement("div", { "data-testid": "test-contact-challenge" });
+    },
+  };
+});
+
 import Contact from "./Contact";
 
 const id = "4c6a4ca0-197b-423d-8341-1f77d6eb40ba";
@@ -70,6 +80,7 @@ describe("contact enquiry: real page state transitions", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const body = JSON.parse(fetchMock.mock.calls[0][1].body as string);
     expect(body.message).toBe("Please review this public artifact.");
+    expect(body.turnstile_token).toBe("local-test-challenge-token");
     enter("contact-message-input", "I changed this message before the receipt arrived.");
 
     await act(async () => {
