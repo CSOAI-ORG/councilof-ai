@@ -28,6 +28,19 @@ describe("/api/coverage-evidence — the TUI-2 assembled row as a paid door", ()
     expect(b.csoai.input_note).toContain("not in this coverage record");
   });
 
+  // resource.url is the bare path, so the bare path itself must answer as a door: a paymentless
+  // GET of it gets the same priced challenge (402), never a raw 400 an indexer records as dead.
+  it("answers its own resource.url (the bare path) with the discovery 402, not a 400", async () => {
+    const res = await call("https://councilof.ai/api/coverage-evidence");
+    expect(res.status).toBe(402);
+    const b = (await res.json()) as { resource: { url: string }; csoai: { input_note?: string; free_preview: string } };
+    expect(b.resource.url).toBe("https://councilof.ai/api/coverage-evidence");
+    expect(b.csoai.input_note).toContain("required query parameter 'asset' is missing");
+    expect(b.csoai.free_preview).toBe("https://councilof.ai/api/coverage-evidence?asset=tether&preview=1");
+    // the free rail keeps its honest input error
+    expect((await call("https://councilof.ai/api/coverage-evidence?preview=1")).status).toBe(400);
+  });
+
   // The free preview is the evaluation surface: identity + state + as_of, no payment header.
   it("serves the free preview with state and provenance header for a real asset", async () => {
     const res = await call("https://councilof.ai/api/coverage-evidence?asset=tether&preview=1");

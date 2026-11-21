@@ -153,10 +153,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json(previewBody(prev.id, prev.row));
   }
 
-  if (!asset) {
-    if (hasPaymentHeader(request)) return challenge("required query parameter 'asset' is missing");
-    return json({ error: "bad_request", error_description: "required query parameter 'asset' is missing", hint: "asset = numeric DefiLlama id (or a symbol/name; collisions ask for the id)", kind: KIND, free_preview: `${resourceUrl}?asset=tether&preview=1`, catalog: `${origin}/api/x402` }, 400);
-  }
+  // The bare path IS this door's resource.url (path-scoped above), so a paymentless GET of it is
+  // an indexer or a stranger following the listing: it gets the discovery 402, exactly as the
+  // middleware already answers a paymentless POST of the same path and as /api/wrapper answers
+  // its id-less door. A raw 400 here read as a dead listing. The missing input rides input_note.
+  if (!asset) return challenge("required query parameter 'asset' is missing — asset = numeric DefiLlama id (or a symbol/name; collisions ask for the id)");
 
   const resolved = resolve(asset);
   if (!resolved) {
