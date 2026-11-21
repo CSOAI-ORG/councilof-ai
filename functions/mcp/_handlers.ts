@@ -7,6 +7,13 @@
 import { verifyCard, anchorsFromDid, cardState, type Anchor } from "../_lib/cardVerify";
 import GSPC_TOOLS from "./gspc-tools.json";
 import {
+  MCP_MAX_JSON_DEPTH,
+  MCP_MAX_TOOL_INPUT_ELEMENTS,
+  looksLikeJsonContainer,
+  withinJsonBudget,
+  withinValueBudget,
+} from "./_input_budget";
+import {
   CARD_ID_RE,
   FETCHABLE_ORIGINS,
   UPSTREAM,
@@ -27,6 +34,8 @@ export type McpToolResult = {
   content: Array<{ type: "text"; text: string }>;
   structuredContent?: Record<string, unknown>;
   isError: boolean;
+  /** Result metadata. The paid tools use it for the x402 MCP transport's settlement response. */
+  _meta?: Record<string, unknown>;
 };
 
 /**
@@ -40,11 +49,12 @@ async function verifyCardThreeState(
   origin: string,
 ) {
   const raw = args.card ?? args.record ?? args.json ?? args.url ?? args.input;
-  const { card, error, resolved } = await coerceCard(raw, origin);
+  const { card, error, errorCode, resolved } = await coerceCard(raw, origin);
   if (error) {
     return {
       state: "UNCHECKABLE",
       reason: error,
+      ...(errorCode ? { reasons: [errorCode] } : {}),
       ...(resolved ? { resolved_from: resolved } : {}),
       not_a_certification: true,
     };
@@ -93,12 +103,14 @@ function sharedToolSummary(
   const idx = payload.index as Record<string, unknown> | null;
   if (payload.state === "UNREACHABLE" || (idx && idx.state === "UNREACHABLE"))
     return "UNREACHABLE — the live source could not be fetched; no cached number is substituted.";
+  // Every generated axis tool answers with get_axis's payload, so it gets get_axis's summary, not its own name.
+  if (axisToolAxis(name) !== null) return axisSummary(payload);
   switch (name) {
     case "board_totals": {
       const sep = payload.separation as Record<string, unknown> | undefined;
       return `LIVE board totals — ${payload.public_count ?? "see counts"} (slots and measurements are different kinds; never summed).${
         sep && typeof sep.public_count === "string" ? ` Separation: ${sep.public_count}.` : ""
-      }`;
+      }${boardAgeClause(payload.measurement_age)}`;
     }
     case "get_axis":
       return axisSummary(payload);
@@ -126,7 +138,7 @@ function sharedToolSummary(
       // A not-a-leaf answer leads with the corpus note, so "INVALID" is never read as "forged".
       return typeof payload.corpus_note === "string"
         ? `${payload.state ?? "?"} — ${payload.corpus_note}`
-        : `${payload.state ?? "?"} — inclusion against live merkle.`;
+        : inclusionSummary(payload);
     case "x402_trust":
       return `${payload.state ?? "?"} — ${(payload.headline as string) || "catalog trust counts"}.`;
     case "mcp_trust":
@@ -134,6 +146,18 @@ function sharedToolSummary(
     default:
       return name;
   }
+}
+
+/** VALID names the published root it reached and how; any other state leads with its reason. */
+function inclusionSummary(payload: Record<string, unknown>): string {
+  const root = String(payload.merkle_root || "").slice(0, 16);
+  if (payload.state === "VALID") {
+    return payload.served_proof
+      ? `VALID — leaf ${payload.index} of ${payload.card_count} in the published root ${root}, recomputed from the leaf list in /root.json; the path GET /api/proof served was set aside (served_proof says why).`
+      : `VALID — the path recomputes to the published root ${root} (leaf ${payload.index} of ${payload.card_count}).`;
+  }
+  const reason = typeof payload.reason === "string" ? payload.reason.replace(/\.$/, "") : "inclusion was not checked against the published root";
+  return `${payload.state ?? "?"} — ${reason}.`;
 }
 
 export const SHARED_TOOL_NAMES = new Set(
@@ -157,11 +181,34 @@ export function axisToolAxis(name: string): string | null {
   return name.slice(AXIS_TOOL_PREFIX.length) || null;
 }
 
+/** "today", "1 day ago", "97 days ago" — whole UTC days, as measurement_age counts them. */
+function daysAgo(days: unknown): string {
+  return days === 0 ? "today" : days === 1 ? "1 day ago" : `${String(days)} days ago`;
+}
+
+/**
+ * One clause on how old the board's measurements are, from board_totals' measurement_age. Empty
+ * when the board carries no evidence dates: nothing is said rather than a date being invented.
+ */
+function boardAgeClause(age: unknown): string {
+  const a = (age ?? {}) as Record<string, unknown>;
+  if (typeof a.oldest !== "string" || typeof a.newest !== "string") return "";
+  const bands = (a.axes_by_age_days ?? {}) as Record<string, unknown>;
+  const over = typeof bands["91+"] === "number" ? bands["91+"] : 0;
+  return ` Measurement dates run from ${a.oldest} to ${a.newest}; ${over} measured ${over === 1 ? "axis is" : "axes are"} over 90 days old.`;
+}
+
 /** The get_axis summary, shared by get_axis and every generated axis tool. */
 function axisSummary(payload: Record<string, unknown>): string {
-  return payload.state === "NOT_ON_BOARD"
-    ? `NOT ON BOARD — "${payload.axis}" is not a row the live board carries.`
-    : `${payload.status ?? "?"} — axis "${payload.axis}" (${payload.measured ? "a real run stands behind this row" : "declared slot, no run behind it"}).`;
+  if (payload.state === "NOT_ON_BOARD") return `NOT ON BOARD — "${payload.axis}" is not a row the live board carries.`;
+  const age = (payload.measurement_age ?? null) as Record<string, unknown> | null;
+  const when =
+    age && typeof age.evidence_date === "string"
+      ? age.age_is_minimum === true
+        ? `; measured no later than ${age.evidence_date}, at least ${String(age.age_days)} day${age.age_days === 1 ? "" : "s"} ago`
+        : `; measured ${age.evidence_date}, ${daysAgo(age.age_days)}`
+      : "";
+  return `${payload.status ?? "?"} — axis "${payload.axis}" (${payload.measured ? "a real run stands behind this row" : "declared slot, no run behind it"}${when}).`;
 }
 
 export async function sharedToolResult(
@@ -252,6 +299,13 @@ async function loadAnchors(origin: string): Promise<Anchor[]> {
   return [];
 }
 
+const CARD_OVER_BUDGET = {
+  error:
+    `the card exceeds the structure limit (${MCP_MAX_TOOL_INPUT_ELEMENTS} array elements and object members, ` +
+    `${MCP_MAX_JSON_DEPTH} levels); it was not parsed or verified`,
+  errorCode: "input_budget_exceeded",
+};
+
 /**
  * Coerce whatever the caller passed into a card object, or explain why we could not.
  *
@@ -265,8 +319,8 @@ async function loadAnchors(origin: string): Promise<Anchor[]> {
 export async function coerceCard(
   raw: unknown,
   origin = "https://councilof.ai",
-): Promise<{ card?: unknown; error?: string; resolved?: { id: string; url: string } }> {
-  if (raw && typeof raw === "object") return { card: raw };
+): Promise<{ card?: unknown; error?: string; errorCode?: string; resolved?: { id: string; url: string } }> {
+  if (raw && typeof raw === "object") return withinValueBudget(raw) ? { card: raw } : { ...CARD_OVER_BUDGET };
   if (typeof raw !== "string") {
     return {
       error:
@@ -309,6 +363,8 @@ export async function coerceCard(
       return { error: `card fetch failed: ${(e as Error).message}` };
     }
   }
+  // A card sent as a JSON string is one token to the door's request scan; bound it before parsing.
+  if (looksLikeJsonContainer(s) && !withinJsonBudget(s, MCP_MAX_TOOL_INPUT_ELEMENTS)) return { ...CARD_OVER_BUDGET };
   try {
     return { card: JSON.parse(s) };
   } catch {
@@ -334,13 +390,13 @@ export async function verifyToolResult(
   origin: string,
 ): Promise<McpToolResult> {
   const raw = args.card ?? args.record ?? args.json ?? args.url ?? args.input;
-  const { card, error, resolved } = await coerceCard(raw, origin);
+  const { card, error, errorCode, resolved } = await coerceCard(raw, origin);
   if (error) {
     const payload = {
       valid: false,
       state: "UNCHECKABLE",
       reason: error,
-      reasons: ["input_not_a_card"],
+      reasons: [errorCode ?? "input_not_a_card"],
       ...(resolved ? { resolved_from: resolved } : {}),
     };
     return {

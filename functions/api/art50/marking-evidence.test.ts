@@ -353,3 +353,18 @@ describe("scope — every pack says what it can and cannot see", () => {
     expect(pinned.reasons).toEqual(["signature_invalid"]);
   });
 });
+
+describe("x402 rail — the discovery 402 names the price a real request is charged", () => {
+  it("a bare request advertises the art50 pack: the same SKU and amount a measured request asks", async () => {
+    stubFetch();
+    const bare = await get(ctx(EP));
+    expect(bare.status).toBe(402);
+    const b = await bare.json();
+    const measured = await get(ctx(`${EP}?url=https://cdn.example/plain.png`));
+    expect(measured.status).toBe(402);
+    const m = await measured.json();
+    expect(b.accepts[0].csoai_pricing.sku_id).toBe("art50_marking_evidence");
+    expect(b.accepts[0].csoai_pricing.sku_id).toBe(m.accepts[0].csoai_pricing.sku_id);
+    expect(b.accepts[0].amount ?? b.accepts[0].maxAmountRequired).toBe(m.accepts[0].amount ?? m.accepts[0].maxAmountRequired);
+  });
+});

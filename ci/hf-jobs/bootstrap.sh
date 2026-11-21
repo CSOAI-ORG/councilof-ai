@@ -8,7 +8,7 @@
 # Used two ways:
 #   1. `RUN bash bootstrap.sh` in ci/hf-jobs/Dockerfile → the csoai/ci-runner Space image.
 #   2. At job start on the bare Playwright image when the Space image does not exist yet:
-#        hf jobs run mcr.microsoft.com/playwright:v1.61.1-noble bash -lc \
+#        hf jobs run mcr.microsoft.com/playwright:v1.65.1-noble bash -lc \
 #          'git clone … /w && bash /w/ci/hf-jobs/bootstrap.sh && …'
 #
 # Adds: git, GNU coreutils timeout, a CPython 3.11 venv at /opt/py311 (public-root.yml

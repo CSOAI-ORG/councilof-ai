@@ -1,7 +1,7 @@
 # Council of AI — Daily evidence report
 
-Report day: 2026-11-16
-Report SHA-256: 5abc23a4f74ba2b3d6491d97e4d95a3f33ac8b6ccf21e38fecb8b73e22ba5e77
+Report day: 2026-11-19
+Report SHA-256: 2b564bb3856611ee76e16ced33c0fd767d587cc0c394b9f2c69615d1c2a956ea
 
 This unsigned report organises retained source snapshots. It is not a fresh model measurement, legal assessment or financial valuation.
 
@@ -24,21 +24,21 @@ These dates and requirements are retained clock assertions and have not been rev
 
 ## Comparison
 
-Compared with report 45026fb527dbf99cabe250eb20b5c099fb7decd9fa2811f3c4ed06604082c3c4: 0 entered the window, 0 left, 0 changed retained rows. 0 source references changed. These counts are not new measurements or legal amendments.
+Compared with report 81ed98c264bf9a95393f4b86f8cddfbc766bbc548cc96722bbbd1400530ee182: 0 entered the window, 0 left, 0 changed retained rows. 0 source references changed. These counts are not new measurements or legal amendments.
 
 ## Findings and next actions
 
-- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/0/mapping; finding ID 6d5f4023b8546e4ea5d96ee48ca36f0c0fa3c1848dc358ac1f8feb25f6bc526a.
-- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/1/mapping; finding ID 5f412b9a9a0ec02cb43b2e7134447d53cf47f8e2e51934e940717525727a1b09.
-- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/2/mapping; finding ID cb33d30b32e092e8494fec7f5394f41e4fa5588c2f5c61bc82c0c19c8740042d.
-- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/3/mapping; finding ID 6b1b6f5615d97744de1b8f5d0766f246cc54cd8ed185741b95ad28376f2dafea.
-- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/4/mapping; finding ID 41044474ef8d924e9bb2cca5728d64808289cac4db489cae967a094eb39a8246.
-- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/5/mapping; finding ID df9484c9a00918f47561c90a98f3de6c46f17ece8f2b448f8b54fffdfffa057d.
-- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/6/mapping; finding ID b25a185dedbdb9d38aa3c1427cf6a16023000e8a872380ab026c11cd174d8f10.
-- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/7/mapping; finding ID 8cd0e1c6cf785eb5a02594f1f46f6c27ba20f8a56b4f352069fdf7a7cbfb093e.
-- **DEADLINE_SOURCES_NOT_REVALIDATED** — The report retains the regulatory clock assertions without revalidating their legal sources. Confirm the official source version, applicability and date before relying on a deadline. Source: /signals; finding ID 9247f15afcd094f60191ab8f605b0add2b1ef0fae359ab0297c2a32e08f1d610.
-- **SOURCE_ABSENT** — An input is absent: mappings. Supply the scoped source and preserve its revision, date and byte digest. Source: /generated_from/mappings; finding ID b436afad170fc56d21e71d698b54f39c1d92ea6b715620eadaff16069e3f8054.
-- **CLAIM_DELTA_NOT_COMPUTED** — The retained claim register is a snapshot; a correction delta has not been computed. Compare exact retained claim-register revisions and retain explicit supersession references. Source: /corrections; finding ID e908d82d3d49a1ec44186ef2c42929f4cff06da4fc3d22fc0a1aff928c34b75d.
+- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/0/mapping; finding ID f6d337b5aed9e749155cc86578af2ba0f85f1a4a7107d9fc37cd59cdd7f08e19.
+- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/1/mapping; finding ID 95a85242f77afec93e196afd3d6b4fe293eefdcd331b1d3f85d469640d5e23d6.
+- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/2/mapping; finding ID f855f354a13cab6638e9ddded6edafc8e9254ed7da9cf66e969523def5e52437.
+- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/3/mapping; finding ID 1ba0c4999b4ff73482a6a801d14f3d5ed096075fd7aec3bca62bb028ea890978.
+- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/4/mapping; finding ID ce99354cec06bf9d2809e3347164588fc9610464819253016c5702d0ac4efb8d.
+- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/5/mapping; finding ID b640cdd390a6dbcf711e5fe645dc638286d905fde6943eda05d1f9d81fc9bdb7.
+- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/6/mapping; finding ID 0023a21b1904cbe60bf355f1afbd56ab016e3b64a7bb666b141f05f32aee63a2.
+- **PROVISION_MAPPING_PENDING** — The deadline has no current reviewed provision mapping. Review the exact event and versioned provision, then record a mapping bound to both source digests. Source: /signals/7/mapping; finding ID c9c280112621e2e90da033d97960a1672bea7532224e6185cd9186a6b9799bf1.
+- **DEADLINE_SOURCES_NOT_REVALIDATED** — The report retains the regulatory clock assertions without revalidating their legal sources. Confirm the official source version, applicability and date before relying on a deadline. Source: /signals; finding ID 3009650b296ffb11f39da49b1910414ddf32938b28ac6985b22bd6650038d917.
+- **SOURCE_ABSENT** — An input is absent: mappings. Supply the scoped source and preserve its revision, date and byte digest. Source: /generated_from/mappings; finding ID 854b2f7134c50edc4c3b138b1679f7bdd383a3f5a9275efc39bcc1437be104f1.
+- **CLAIM_DELTA_NOT_COMPUTED** — The retained claim register is a snapshot; a correction delta has not been computed. Compare exact retained claim-register revisions and retain explicit supersession references. Source: /corrections; finding ID 342ae4f48bafda731b7dfc06575334abce360054a6bc013503da304f3d2facae.
 
 ## Maintenance metadata
 
@@ -54,4 +54,4 @@ State: UNCHANGED. Selected semantic snapshot: be54e0e40019c9f515b3863a6687ae3613
 
 Claim-register source timestamp: 2026-11-01T07:17:54Z. General per-source retrieval timestamps are not supplied. Selected declared dates, where present, are in maintenance metadata; report day is not a retrieval time.
 
-[Source JSON](/reports/daily-signal/2026-11-16.json) · [Archive](/reports/daily-signal/) · [GPAI evidence matrix](/gpai) · [Claim maintenance](/claim-maintenance)
+[Source JSON](/reports/daily-signal/2026-11-19.json) · [Archive](/reports/daily-signal/) · [GPAI evidence matrix](/gpai) · [Claim maintenance](/claim-maintenance)

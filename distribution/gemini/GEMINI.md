@@ -1,6 +1,6 @@
 # Council of AI GSPC (Layer 0)
 
-The `gspc` MCP server (server 1.4.4) exposes 54 tools (49 free, 5 x402-metered) at https://councilof.ai/mcp; https://councilof.ai/mcp/free serves the 49 free tools only.
+The `gspc` MCP server (server 1.5.0) exposes 54 tools (49 free, 5 x402-metered) at https://councilof.ai/mcp; https://councilof.ai/mcp/free serves the 49 free tools only.
 
 Gemini CLI loads MCP servers only in a trusted folder: in an untrusted folder this server shows as Disabled. Trust the folder when Gemini CLI asks, or run `/permissions` in it. This extension adds the server as `gspc`; do not also add a `gspc` entry to settings.json.
 

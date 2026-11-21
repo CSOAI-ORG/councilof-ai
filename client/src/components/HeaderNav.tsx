@@ -71,6 +71,7 @@ export const navigation: NavGroup[] = [
       { name: 'Council Ledger', href: '/council-licensing', description: 'Signed evidence feed for insurers, procurement and deployers — never a purchased rank' },
       { name: 'Council Data', href: '/licensing-agreement', description: 'Ask about licensing published evidence data. A licence does not buy a score.' },
       { name: 'Claim maintenance', href: '/claim-maintenance/', description: 'Public claims register, dated corrections and an enquiry route; monitoring is scoped separately' },
+      { name: 'Engagements', href: '/engagements/', description: 'Scoped evidence work with a receipt: qualification, claim maintenance, change records and connection audits' },
       { section: 'Modules', name: 'Evidence for general-purpose AI providers', href: '/gpai-evidence', description: 'Independent third-party evidence a GPAI provider can hand the AI Office. Evidence, never a conformity mark' },
       { name: 'Check an AI output for a mark', href: '/dashboard/?tab=art50', description: 'Article 50(2): paste the link to an image, video, audio file or PDF; see whether a C2PA manifest or IPTC AI label is detected, and which watermarks cannot be checked. Free preview' },
       { name: 'Cybersecurity readiness guide', href: '/cra-readiness', description: 'Cybersecurity reporting guidance and a workflow for recording software components' },

@@ -47,6 +47,14 @@ const STANDING = [
 ];
 
 const DISPUTE_EMAIL = CONTACT_MAILBOX;
+// The hero's button and the contact box below open the same email, with what "How to raise one"
+// asks for already laid out, so a first message can be answered without a round trip.
+const DISPUTE_MAILTO = `mailto:${DISPUTE_EMAIL}?subject=Dispute&body=${encodeURIComponent(
+  "What I contest (card hash, board cell, instrument run or record link):\n\n" +
+    "The specific claim I am raising:\n\n" +
+    "Primary source, if any (link and date):\n\n" +
+    "Name and organisation (if applicable):\n",
+)}`;
 
 const GUARANTEES = [
   "Notice — a clear explanation of the decision, the reasoning, and the evidence",
@@ -90,6 +98,21 @@ export default function Dispute() {
           automatically, so a contest asks for a dated measurement — it does not enrol you in
           a monitoring service.
         </p>
+        {/* 17 Nov 2026: the only way to raise a dispute sat 2,196 px down the page at 1440 px. */}
+        <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3" data-testid="dispute-quick-start">
+          <a
+            href={DISPUTE_MAILTO}
+            className="inline-flex min-h-11 items-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800"
+          >
+            Contest a result by email
+          </a>
+          <a
+            href="#how-to-raise"
+            className="inline-flex min-h-11 items-center text-sm font-semibold text-emerald-700 underline underline-offset-4"
+          >
+            What to include, and when we answer
+          </a>
+        </div>
 
         <div className="mt-8 rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
           <strong>Stated plainly:</strong> an allegation is not a verdict. A dispute is not
@@ -139,7 +162,7 @@ export default function Dispute() {
           : it opens with our own errors, and it grows when a dispute shows we were wrong.
         </p>
 
-        <h2 className="mt-10 text-xl font-bold">How to raise one</h2>
+        <h2 id="how-to-raise" className="mt-10 scroll-mt-24 text-xl font-bold">How to raise one</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
           Disputes run through the same intake as everything else on this estate — via{" "}
           <Link href="/contact/" className="text-emerald-700 underline">
@@ -154,7 +177,7 @@ export default function Dispute() {
           <h3 className="font-bold">Direct dispute contact</h3>
           <p className="mt-2 text-sm leading-relaxed text-slate-600">
             Email{" "}
-            <a href={`mailto:${DISPUTE_EMAIL}?subject=Dispute`} className="text-emerald-700 underline font-medium">
+            <a href={DISPUTE_MAILTO} className="text-emerald-700 underline font-medium">
               {DISPUTE_EMAIL}
             </a>{" "}
             with the card hash, board cell, instrument run or record you contest. Include your

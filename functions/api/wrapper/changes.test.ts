@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
-import { onRequestGet as changes } from "./changes";
+import { onRequestGet as changes, onRequestPost as changesPost } from "./changes";
 
 const ORIGIN = "https://councilof.ai";
 const ctx = (path: string, env: Record<string, unknown> = {}) =>
@@ -56,6 +56,28 @@ describe("/api/wrapper/changes", () => {
     expect(body.schema).toBe("csoai.wrapper.changes/0.1");
     expect(body.id).toBe("usdc.e:arbitrum");
     expect(body.preview).toBe(true);
+  });
+
+  // POST answers as GET. Without onRequestPost a POST fell through to the /api 404, so a free
+  // preview sent as POST (which functions/_middleware.ts passes through) never reached it.
+  it("answers POST as GET: the free preview on POST, the 402 for the paid record", async () => {
+    expect(changesPost).toBe(changes);
+    vi.stubGlobal("fetch", async (u: string | URL | Request) => {
+      const url = String(u instanceof Request ? u.url : u);
+      if (url.includes("wrapped-asset-parity-latest")) {
+        return new Response(JSON.stringify({
+          as_of: "2026-09-14T00:00:00Z",
+          pairs: [{ id: "usdc.e:arbitrum", wrapped_total_supply: "1000000000000", escrow_balance: "1000000000000", state: "ESCROW_PARITY_READ" }],
+        }));
+      }
+      return new Response("{}", { status: 404 });
+    });
+    const post = (path: string) =>
+      changesPost({ request: new Request(ORIGIN + path, { method: "POST", body: "" }), env: {}, params: {} } as never);
+    const preview = await post("/api/wrapper/changes?id=usdc.e:arbitrum&preview=1");
+    expect(preview.status).toBe(200);
+    expect((await preview.json()).preview).toBe(true);
+    expect((await post("/api/wrapper/changes?id=usdc.e:arbitrum")).status).toBe(402);
   });
 
   it("returns UNCHECKABLE when only one snapshot exists", async () => {
