@@ -20,23 +20,34 @@
 //
 // Measurement only. Presence of a string is not quality, truth or compliance.
 
+// Inert markup: never rendered, never a link a visitor can follow. Removed before
+// BOTH text and href extraction (Codex review on #4484: an <a href> inside a script
+// string or an HTML comment otherwise counted as a link class).
+const INERT = /<script\b[\s\S]*?<\/script\s*>|<style\b[\s\S]*?<\/style\s*>|<noscript\b[\s\S]*?<\/noscript\s*>|<template\b[\s\S]*?<\/template\s*>|<!--[\s\S]*?(?:-->|$)/gi;
+export const stripInert = (html) => String(html).replace(INERT, ' ');
+
+// Numeric references outside Unicode (> 0x10FFFF) or in the surrogate range decode to
+// U+FFFD instead of throwing: one malformed third-party page must not abort a build.
+const cp = (n) => (Number.isInteger(n) && n >= 0 && n <= 0x10ffff && !(n >= 0xd800 && n <= 0xdfff))
+  ? String.fromCodePoint(n) : '\uFFFD';
+
 export function extractText(html) {
-  let s = String(html);
-  s = s.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<noscript[\s\S]*?<\/noscript>|<!--[\s\S]*?-->/gi, ' ');
+  let s = stripInert(html);
   s = s.replace(/<[^>]+>/g, ' ');
   s = s.replace(/&nbsp;/gi, ' ').replace(/&amp;/gi, '&').replace(/&lt;/gi, '<')
     .replace(/&gt;/gi, '>').replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'")
-    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
-    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)));
+    .replace(/&#(\d+);/g, (_, d) => cp(Number(d)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => cp(parseInt(h, 16)));
   return s.replace(/\s+/g, ' ').trim();
 }
 
-/** href values of <a> elements only — what a "link class" refers to. */
+/** href values of rendered <a> elements only — what a "link class" refers to. */
 export function extractHrefs(html) {
   const out = [];
   const re = /<a\b[^>]*\bhref\s*=\s*["']([^"']+)["']/gi;
+  const live = stripInert(html);
   let m;
-  while ((m = re.exec(String(html))) !== null) out.push(m[1]);
+  while ((m = re.exec(live)) !== null) out.push(m[1]);
   return out.join(' ');
 }
 

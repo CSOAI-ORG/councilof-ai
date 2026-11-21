@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import {
   compileClass, compileAxis, presence, presenceCorpus, extractText,
-  discriminatingSelfTest, BENIGN_CORPUS,
+  discriminatingSelfTest, BENIGN_CORPUS, extractHrefs,
 } from '../subject-axis/presence-v2.mjs';
 
 const ROOT = path.resolve(new URL('../../', import.meta.url).pathname);
@@ -73,4 +73,23 @@ test('every axis passes its discriminating self-test in both directions', () => 
 test('the self-test fails closed when a pattern cannot discriminate', () => {
   const broken = { 'broken-axis': { a: 'bread*', b: 'cake*', c: 'bakery', d: 'zzzz', e: 'yyyy' } };
   assert.equal(discriminatingSelfTest(broken, 3).ok, false);
+});
+
+test('anchors inside script strings, comments and templates are not link targets', () => {
+  const bakery = '<p>Our bakery recipe blog. Contact the team for catering.</p>';
+  const inert = bakery
+    + '<!-- <a href="/security.txt">report</a> <a href="/api/incidents.json">feed</a> -->'
+    + '<script>const t = \'<a href="/.well-known/security.txt">disclose</a>\';</script>'
+    + '<template><a href="/dispute/">appeal</a></template>'
+    + '<!-- unterminated <a href="/api/report">';
+  assert.equal(extractHrefs(inert), '');
+  assert.equal(presenceCorpus(inert), presenceCorpus(bakery));
+  assert.equal(extractHrefs(bakery + '<a href="/dispute/">appeal</a>'), '/dispute/');
+});
+
+test('out-of-range and surrogate numeric references decode to U+FFFD, not a throw', () => {
+  let s;
+  assert.doesNotThrow(() => { s = extractText('a &#1114112; b &#x110000; c &#xD800; d &#65; &#x42;'); });
+  assert.equal(s, 'a \uFFFD b \uFFFD c \uFFFD d A B');
+  assert.doesNotThrow(() => presenceCorpus('<p>&#99999999999;</p>'));
 });
