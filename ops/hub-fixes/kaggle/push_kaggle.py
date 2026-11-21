@@ -142,6 +142,8 @@ def main():
         pend = rulings.get(ref, [])
         if pend:
             print(f"    needs_owner_ruling: {', '.join(pend)}")
+        if "security_hold" in pend:
+            print("    [skip] security_hold: never published by this script"); n_skip += 1; continue
         live = None
         if a.diff or publish:
             live = live_metadata(ref); time.sleep(a.sleep)
