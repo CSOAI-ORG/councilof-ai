@@ -76,8 +76,8 @@ def produce_rows(scores, clock):
         require(isinstance(score, (float, int)) and not isinstance(score, bool) and
                 math.isfinite(score) and 0 <= score <= 1, "invalid model score")
         records.append({"id": c["id"], "expected_injection": c["injection"],
-                        "predicted_injection": score >= spec["threshold"],
-                        "probability_injection": round(float(score), 6),
+                        "predicted_injection": float(score) >= spec["threshold"],
+                        "probability_injection": float(score),
                         "text_sha256": sha(c["text"].encode())})
     return records, fixture_sha
 
