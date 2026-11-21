@@ -1,0 +1,20 @@
+name: Offline census reporting
+on:
+  pull_request:
+    paths:
+      - scripts/catalog-trust-round.py
+      - scripts/test_catalog_trust_round.py
+      - scripts/test_catalog_reporting.py
+      - .github/workflows/census-reporting.yml
+permissions:
+  contents: read
+jobs:
+  offline-census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m unittest discover -s scripts -p 'test_catalog*.py' -v
