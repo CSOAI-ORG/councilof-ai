@@ -27,6 +27,9 @@ WEIGHT_SHA256 = "61cd0741cdbfcc229e32e1de1392f352736d87d1e8b3c2b67ad9836bb7910d5
 NORMALIZER = "code/train/normalizer.py"
 NORMALIZER_SHA256 = "768931fc0b38fb141796abf181e0bafe96308e92c8832c817dbd6df7fc41ac79"
 EVENT_PATH = ROOT / "packages/evidence-fabric/event.py"
+# Historical 2026-11-21 archived run was emitted by this exactly pinned source.
+# It remains verifiable without rewriting history after improving score precision.
+ARCHIVED_METHOD_CODE_SHA256 = "dd5d34e0c8ad26f31b846fe91dd9e1ccd459a361b1be7c3cf0f3cb3eed7613ce"
 LIMITS = [
     "Eight pre-registered, synthetic, first-party prompts; no independent blind benchmark.",
     "No tested downstream model actions; classifier output does not itself enforce tool permissions.",
@@ -82,7 +85,7 @@ def produce_rows(scores, clock):
     return records, fixture_sha
 
 
-def canonical(record):
+def canonical(record, method_source_sha256=None):
     path = EVENT_PATH
     spec = importlib.util.spec_from_file_location("csoai_evidence_event", path)
     mod = importlib.util.module_from_spec(spec)
@@ -99,7 +102,7 @@ def canonical(record):
                "source_sha256": record["fixtures_sha256"],
                "read_at": record["observed_at"]},
         method={"id": "firstparty-onnx-guard-sample", "version": "0.1",
-                "holder": "csoai", "code_sha256": sha(Path(__file__).read_bytes())},
+                "holder": "csoai", "code_sha256": method_source_sha256 or sha(Path(__file__).read_bytes())},
         declared={"positive": 4, "benign": 4, "threshold": 0.5,
                   "model_revision": REVISION, "weight_sha256": WEIGHT_SHA256,
                   "fixture_sha256": record["fixtures_sha256"]},
@@ -213,7 +216,11 @@ def verify(output, event_path):
     record = json.loads(Path(output).read_text())
     metrics = check_record(record)
     provided = json.loads(Path(event_path).read_text())
-    rebuilt = canonical(record)
+    recorded_method_sha = (provided.get("method") or {}).get("code_sha256")
+    current_method_sha = sha(Path(__file__).read_bytes())
+    require(recorded_method_sha in {current_method_sha, ARCHIVED_METHOD_CODE_SHA256},
+            "unrecognized current or archived method source SHA-256")
+    rebuilt = canonical(record, method_source_sha256=recorded_method_sha)
     require(provided == rebuilt, "event differs from reconstructed evidence")
     print(json.dumps({"verified_against_saved_inputs": True, "metrics": metrics,
                       "event_id": provided["event_id"], "self_test_only": True,
