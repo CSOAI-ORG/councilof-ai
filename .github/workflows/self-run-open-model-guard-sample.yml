@@ -16,6 +16,9 @@ on:
       - "scripts/research/test_external_guard_benchmark.py"
       - "scripts/research/build-guard-error-review.py"
       - "scripts/research/test_build_guard_error_review.py"
+      - "scripts/research/japanese-indirect-classifier.py"
+      - "scripts/research/test_japanese_indirect_classifier.py"
+      - "docs/research/japanese-indirect-20261121/**"
       - "docs/research/external-guard-benchmark-20261121/**"
       - "packages/evidence-fabric/event.py"
       - ".github/workflows/self-run-open-model-guard-sample.yml"
@@ -42,6 +45,8 @@ jobs:
         run: python3 -m unittest discover -s scripts/research -p 'test_external_guard_benchmark.py' -v
       - name: Offline regression checks for lossless failure review
         run: python3 -m unittest discover -s scripts/research -p 'test_build_guard_error_review.py' -v
+      - name: Offline tests for Japanese positive-only and context-scope limitations
+        run: python3 -m unittest discover -s scripts/research -p 'test_japanese_indirect_classifier.py' -v
       - name: Verify retained first-party reference from the M4 without inference
         run: |
           python3 scripts/research/firstparty-guard-replay.py verify \
@@ -72,6 +77,12 @@ jobs:
           python3 scripts/research/external-guard-benchmark.py verify \
             --result docs/research/external-guard-benchmark-20261121/record.json \
             --event docs/research/external-guard-benchmark-20261121/event.json \
+            --check-source
+      - name: Verify archived Japanese probe observation and exact source bytes
+        run: |
+          python3 scripts/research/japanese-indirect-classifier.py verify \
+            --result docs/research/japanese-indirect-20261121/record.json \
+            --event docs/research/japanese-indirect-20261121/event.json \
             --check-source
       - name: Run pinned Hugging Face open-source model on eight owned synthetic examples
         run: |
@@ -106,6 +117,13 @@ jobs:
             --current external-116-eval.json \
             --baseline docs/research/external-guard-benchmark-20261121/record.json \
             --output external-116-error-review.json
+      - name: Re-run Japanese indirect injection canary classifier in both document and prompt context
+        run: |
+          python3 scripts/research/japanese-indirect-classifier.py run \
+            --result japanese-60-eval.json --event japanese-60-event.json
+          python3 scripts/research/japanese-indirect-classifier.py verify \
+            --result japanese-60-eval.json --event japanese-60-event.json \
+            --check-source
       - name: Publish an honest experiment summary, including any misses
         run: |
           python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
@@ -121,6 +139,11 @@ jobs:
           q=json.load(open('external-116-error-review.json'))
           print('Hashed failures for review:',q['n_errors'])
           print('Changed classifications since pinned prior:',q['changed_from_baseline'])
+          j=json.load(open('japanese-60-eval.json'))
+          print('Japanese indirect canaries: document',j['counts']['document']['detected'],'of',j['n'])
+          print('Full prompt context:',j['counts']['prompt']['detected'],'of',j['n'])
+          print('Positive-only dataset: no benign controls, not generative canary-following.')
+          print('Japanese obfuscation category:',j['counts']['document']['by_category']['obfuscation-script'],'of 6 flagged')
           print('Do not train on this published test split and present it as a fresh validation.')
           print('Dataset previously evaluated by this model publisher; not unseen holdout.')
           print('Action scope is separate; the model does not author tool calls here.')
@@ -137,6 +160,8 @@ jobs:
             external-116-eval.json
             external-116-event.json
             external-116-error-review.json
+            japanese-60-eval.json
+            japanese-60-event.json
           if-no-files-found: warn
           retention-days: 30
 
@@ -181,6 +206,12 @@ jobs:
             --current replay-evidence/external-116-eval.json \
             --baseline docs/research/external-guard-benchmark-20261121/record.json \
             --output replay-evidence/external-116-error-review.json
+      - name: Recheck Japanese source labels and provenance separately
+        run: |
+          python3 scripts/research/japanese-indirect-classifier.py verify \
+            --result replay-evidence/japanese-60-eval.json \
+            --event replay-evidence/japanese-60-event.json \
+            --check-source
       - name: Confirm independent job did not promote self-tests
         run: |
           python3 - <<'PY'
