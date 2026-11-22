@@ -3313,7 +3313,7 @@
     },
     "/api/lead": {
       "get": {
-        "description": "POST /api/lead \u2014 accepts the \"email me the signed report\" form.",
+        "description": "POST /api/lead \u2014 bounded, explicitly acknowledged assessment enquiry. Storage is NOT an email notification, acceptance, or promise of a report.",
         "operationId": "get__api_lead",
         "responses": {
           "200": {
@@ -3324,10 +3324,10 @@
           }
         },
         "security": [],
-        "summary": "POST /api/lead \u2014 accepts the \"email me the signed report\" form."
+        "summary": "POST /api/lead \u2014 bounded, explicitly acknowledged assessment enquiry. Storage is NOT an email notification, acceptance, or promise of a report."
       },
       "post": {
-        "description": "POST /api/lead \u2014 accepts the \"email me the signed report\" form.",
+        "description": "POST /api/lead \u2014 bounded, explicitly acknowledged assessment enquiry. Storage is NOT an email notification, acceptance, or promise of a report.",
         "operationId": "post__api_lead",
         "responses": {
           "200": {
@@ -3338,7 +3338,7 @@
           }
         },
         "security": [],
-        "summary": "POST /api/lead \u2014 accepts the \"email me the signed report\" form."
+        "summary": "POST /api/lead \u2014 bounded, explicitly acknowledged assessment enquiry. Storage is NOT an email notification, acceptance, or promise of a report."
       }
     },
     "/api/learn-loop": {
@@ -9134,7 +9134,7 @@
     },
     "/api/subscribe": {
       "get": {
-        "description": "POST /api/subscribe \u2014 the newsletter signup behind the homepage daily-report band and the footer email capture.",
+        "description": "POST /api/subscribe \u2014 bounded newsletter subscription storage.",
         "operationId": "get__api_subscribe",
         "responses": {
           "200": {
@@ -9145,10 +9145,10 @@
           }
         },
         "security": [],
-        "summary": "POST /api/subscribe \u2014 the newsletter signup behind the homepage daily-report band and the footer email capture."
+        "summary": "POST /api/subscribe \u2014 bounded newsletter subscription storage."
       },
       "post": {
-        "description": "POST /api/subscribe \u2014 the newsletter signup behind the homepage daily-report band and the footer email capture.",
+        "description": "POST /api/subscribe \u2014 bounded newsletter subscription storage.",
         "operationId": "post__api_subscribe",
         "responses": {
           "200": {
@@ -9159,7 +9159,7 @@
           }
         },
         "security": [],
-        "summary": "POST /api/subscribe \u2014 the newsletter signup behind the homepage daily-report band and the footer email capture."
+        "summary": "POST /api/subscribe \u2014 bounded newsletter subscription storage."
       }
     },
     "/api/summary": {
