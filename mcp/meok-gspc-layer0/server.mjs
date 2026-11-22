@@ -119,11 +119,21 @@ async function handleToolCall(name, args = {}) {
     }
     // Stateless read-only bridge to local Desktop Commander MCP (127.0.0.1:8765).
     const DC = process.env.DC_BRIDGE_URL || 'http://127.0.0.1:8765/mcp';
+    let origin;
+    try { origin = new URL(DC); } catch { /* unqualified source */ }
+    if (!origin || !['http:', 'https:'].includes(origin.protocol) ||
+        !['127.0.0.1', 'localhost', '[::1]'].includes(origin.hostname) ||
+        origin.username || origin.password || origin.search || origin.hash ||
+        origin.pathname !== '/mcp') {
+      return JSON.stringify({ state: 'REFUSED', error: 'desktop_bridge_origin_not_qualified',
+        request_dispatched: false });
+    }
     const MAX_DESKTOP_RESPONSE = 1_048_576;
     const rpc = (payload) => fetch(DC, {
       method: 'POST',
       headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' },
       body: JSON.stringify(payload),
+      redirect: 'error', credentials: 'omit', cache: 'no-store',
       signal: AbortSignal.timeout(8000),
     });
     const boundedRead = async (response) => {
