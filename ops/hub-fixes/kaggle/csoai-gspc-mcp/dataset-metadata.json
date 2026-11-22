@@ -1,0 +1,56 @@
+{
+  "title": "GSPC · Conformance Axis (MCP) — Council of AI",
+  "id": "nicktempleman/csoai-gspc-mcp",
+  "id_no": 11811191,
+  "subtitle": "Mirror of Hugging Face csoai/gspc-mcp",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-mcp`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-mcp -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `mcp.json`\n- `README.md`\n- `eval.yaml`\n- `items.jsonl`\n- `manifest.jsonl`\n- `axis-live.jsonl`\n- `results_2026-08-11.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-mcp at revision `fcceb39a93c9337c2b343c125dfa88e45117704a`, made 2026-10-25. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC — conformance bank (MCPBench)\n\n> **Start here — free verify:** [https://councilof.ai/gspc-verify/](https://councilof.ai/gspc-verify/) (or the free MCP tool `verify_card` at `https://councilof.ai/mcp`) · **Full catalog:** [https://councilof.ai/catalog.json](https://councilof.ai/catalog.json) · Methodology: [https://councilof.ai/methodology/](https://councilof.ai/methodology/) · Measurement, not certification.\n\nCouncil of AI measurement bank. Measurement, not certification.\n\n![Illustration of people and humanoid robots in a white arena with floating green geometric shapes](https://councilof.ai/images/coliseum_hero_arena.jpg)\n\n**Bank.** Frozen split. Live `n` is the matching axis on `GET https://councilof.ai/api/gspc`, not a Hub score. **Not a certificate.** Art 50 (EUR-Lex): 2 August 2026 live; marking grace 2 December 2026.\n\n\n**Live measurement.** This bank stands behind the `conformance` row of the live GSPC board: `GET https://councilof.ai/api/gspc?axis=conformance` (family, kind, status and n are on that row, never typed here; the whole board is `GET https://councilof.ai/api/gspc`). Measurement, not certification.\n\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_gspc_mcp,\n  title        = {GSPC — conformance bank (MCPBench)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/gspc-mcp}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n\n\n## Public discovery and verification\n\n- [Live GSPC board](https://councilof.ai/api/gspc): quote `totals.public_count` and `totals.separation_public_count` from the current response.\n- [Hub cards](https://councilof.ai/api/hub-cards): quote current `counts.cells`, `counts.measured` and `counts.unmeasured`; the [Hub cards dataset](https://huggingface.co/datasets/csoai/gspc-hub-cards) is a separate bank.\n- [MCP endpoint](https://councilof.ai/mcp): use `POST tools/list` for its current tool inventory.\n- [OpenAPI catalog](https://councilof.ai/openapi.json) and [GSPC API slice](https://councilof.ai/api/openapi.json): read their current paths and versions.\n- [x402 discovery manifest](https://councilof.ai/.well-known/x402.json), [offer catalog](https://councilof.ai/api/x402), and [free door](https://councilof.ai/api/free-door): inspect current terms and any paid route's HTTP 402 challenge at the endpoints.\n- [Free card verification](https://councilof.ai/gspc-verify) and the [jail goldbank](https://huggingface.co/datasets/csoai/gspc-jail-goldbank) are separate public resources.\n\nThis dataset describes a frozen bank and points to live services; it does not run a new measurement. The well-known x402 manifest is the discovery authority; any Hub copy is a mirror. A directory listing or self-settlement does not establish adoption or an external buyer. The merchant `payTo` address is a receiver, not the signer. Measurement, not certification.\n\n\n\n## Objections, contact and corrections\n\nTo object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.\n\n## How to cite\n\nCSOAI Ltd (Council of AI). *GSPC — conformance bank (MCPBench)*. 2026. Hugging Face dataset `csoai/gspc-mcp`. https://huggingface.co/datasets/csoai/gspc-mcp\n\n```bibtex\n@misc{csoai_gspc_mcp,\n  title        = {GSPC — conformance bank (MCPBench)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/gspc-mcp},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n\nLicence: CC-BY-4.0. Attribute Council of AI, CSOAI Ltd (16939677), https://councilof.ai.\n\n## Corrections and verification\n\n- Corrections ledger (signed): https://councilof.ai/api/corrections. Corrections to CSOAI's published records are logged there with what changed and when.\n- Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).\n- Conformance kit for signed-receipts/v1, with test vectors for implementers: https://councilof.ai/spec/signed-receipts/v1/conformance/\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 9, last updated 2026-10-25.\n- 7 files, 27,812 bytes. File types: .jsonl (3), .json (2), .md (1), .yaml (1).\n- Hugging Face twin: [csoai/gspc-mcp](https://huggingface.co/datasets/csoai/gspc-mcp). 6 of 7 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "cyber security",
+    "model comparison",
+    "finance",
+    "internet"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 6 of 7 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-mcp](https://huggingface.co/datasets/csoai/gspc-mcp) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 12,802 bytes."
+    },
+    {
+      "path": "axis-live.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 1 rows; fields: axis (string), family (string), kind (string), bench (string), task (string), n (integer), separation (string), fleet_mean (numeric), mean_harm (numeric), cvar05_harm (string), status (string), dataset (string), colour (string), hue (integer), excluded_leader (string), public_leader_state (string), note (string), excluded_note (string), measurement_note (string), dataset_url (url), _as_of (datetime), _source (url), _authority (string), _public_count (string), separation_basis (string), … (+2 more). Same byte size as `axis-live.jsonl` in huggingface.co/datasets/csoai/gspc-mcp (checked 2026-11-20). 1,850 bytes."
+    },
+    {
+      "path": "eval.yaml",
+      "description": "YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-mcp (checked 2026-11-20). 504 bytes."
+    },
+    {
+      "path": "items.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 36 rows; fields: tool (string), expected (string), anchor (string), axis (string), source (string), _canary (string). Same byte size as `items.jsonl` in huggingface.co/datasets/csoai/gspc-mcp (checked 2026-11-20). 8,617 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 6 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-mcp (checked 2026-11-20). 1,887 bytes."
+    },
+    {
+      "path": "mcp.json",
+      "description": "JSON document. top-level keys: schema, record_type, not_a_certification, endorsement, authored_by, basis, axis, model, measured, n, wilson95, bank, never, opinion_framing, witnessed_at, content_id, signature, pubkey, key_id, verification_method …. Same byte size as `mcp.json` in huggingface.co/datasets/csoai/gspc-mcp (checked 2026-11-20). 1,469 bytes."
+    },
+    {
+      "path": "results_2026-08-11.json",
+      "description": "JSON document. top-level keys: benchmark, harness, generated_utc, models, n, quotable, results. Same byte size as `results_2026-08-11.json` in huggingface.co/datasets/csoai/gspc-mcp (checked 2026-11-20). 683 bytes."
+    }
+  ]
+}

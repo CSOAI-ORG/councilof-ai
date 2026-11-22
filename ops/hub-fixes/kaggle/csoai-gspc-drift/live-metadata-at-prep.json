@@ -1,0 +1,46 @@
+{
+  "datasetSlugNullable": "csoai-gspc-drift",
+  "ownerUserNullable": "nicktempleman",
+  "usabilityRatingNullable": 0.625,
+  "titleNullable": "GSPC · Drift (superseded) — Council of AI",
+  "subtitleNullable": "Independent measurement of GSPC drift, superseded snapshot. Not a certification.",
+  "descriptionNullable": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-drift`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-drift -p ./dataset --unzip\n```\n\nStart by inspecting `drift_rail.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `eval.yaml`\n- `manifest.jsonl`\n- `drift_rail.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement of GSPC drift, superseded snapshot. Not a certification.**\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-drift at revision `a72afb5fe427db55dacfb69468425ad8877e21d3`, made 2026-10-06. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC drift rail — day-over-day consistency\n\nA longitudinal consistency signal over signed boards. `drift_rail.json` states its own\nmethod in the file: day-over-day best-score delta on MEASURED boards with `n>=30`, thin-n boards excluded,\n**no model judges** anywhere in the computation — the predicates are deterministic. Per axis it records the\nboards in the window, the window bounds, and the deltas between consecutive timestamps. Drift is a\nconsistency signal, not a certification.\n",
+  "expectedUpdateFrequencyNullable": "not specified",
+  "datasetId": 11757779,
+  "datasetSlug": "csoai-gspc-drift",
+  "hasDatasetSlug": true,
+  "ownerUser": "nicktempleman",
+  "hasOwnerUser": true,
+  "usabilityRating": 0.625,
+  "hasUsabilityRating": true,
+  "totalViews": 65,
+  "totalVotes": 0,
+  "totalDownloads": 25,
+  "title": "GSPC · Drift (superseded) — Council of AI",
+  "hasTitle": true,
+  "subtitle": "Independent measurement of GSPC drift, superseded snapshot. Not a certification.",
+  "hasSubtitle": true,
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-drift`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-drift -p ./dataset --unzip\n```\n\nStart by inspecting `drift_rail.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `eval.yaml`\n- `manifest.jsonl`\n- `drift_rail.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement of GSPC drift, superseded snapshot. Not a certification.**\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-drift at revision `a72afb5fe427db55dacfb69468425ad8877e21d3`, made 2026-10-06. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC drift rail — day-over-day consistency\n\nA longitudinal consistency signal over signed boards. `drift_rail.json` states its own\nmethod in the file: day-over-day best-score delta on MEASURED boards with `n>=30`, thin-n boards excluded,\n**no model judges** anywhere in the computation — the predicates are deterministic. Per axis it records the\nboards in the window, the window bounds, and the deltas between consecutive timestamps. Drift is a\nconsistency signal, not a certification.\n",
+  "hasDescription": true,
+  "isPrivate": false,
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark"
+  ],
+  "licenses": [
+    {
+      "nameNullable": "Attribution 4.0 International (CC BY 4.0)",
+      "name": "Attribution 4.0 International (CC BY 4.0)",
+      "hasName": true
+    }
+  ],
+  "collaborators": [],
+  "data": [],
+  "expectedUpdateFrequency": "not specified",
+  "hasExpectedUpdateFrequency": true,
+  "userSpecifiedSources": "",
+  "hasUserSpecifiedSources": false
+}

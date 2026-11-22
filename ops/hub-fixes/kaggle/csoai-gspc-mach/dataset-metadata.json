@@ -1,0 +1,64 @@
+{
+  "title": "GSPC · Machinery-Conformity Axis — Council of AI",
+  "id": "nicktempleman/csoai-gspc-mach",
+  "id_no": 11811194,
+  "subtitle": "Independent measurement of machinery conformity. Not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-mach`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-mach -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `eval.yaml`\n- `mach.json`\n- `meta.json`\n- `items.jsonl`\n- `manifest.jsonl`\n- `axis-live.jsonl`\n- `machbench-draft.json`\n- See the Data tab for all 9 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement of machinery conformity. Not a certification.**\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-mach at revision `a871b74c614c2fa9473c22158c15e3a9425ac771`, made 2026-10-06. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC — machinery conformity bank (MachBench)\n\nCouncil of AI measurement bank. Measurement, not certification.\n\n**Bank.** Frozen split. Live `n` is the matching axis on `GET https://councilof.ai/api/gspc`, not a Hub score. **Not a certificate.** Art 50 (EUR-Lex): 2 August 2026 live; marking grace 2 December 2026.\n\n\n**Live measurement.** This bank stands behind the `machinery-conformity` row of the live GSPC board: `GET https://councilof.ai/api/gspc?axis=machinery-conformity` (family, kind, status and n are on that row, never typed here; the whole board is `GET https://councilof.ai/api/gspc`). Measurement, not certification.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 4, last updated 2026-10-06.\n- 9 files, 53,135 bytes. File types: .json (4), .jsonl (3), .md (1), .yaml (1).\n- Hugging Face twin: [csoai/gspc-mach](https://huggingface.co/datasets/csoai/gspc-mach). 8 of 9 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_gspc_mach,\n  title        = {GSPC — machinery conformity bank (MachBench)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/gspc-mach}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 8 of 9 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-mach](https://huggingface.co/datasets/csoai/gspc-mach) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "2017 — card. Dataset README (Markdown). 17,577 bytes."
+    },
+    {
+      "path": "axis-live.jsonl",
+      "description": "1 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 1 rows; fields: axis (string), family (string), kind (string), bench (string), task (string), n (integer), separation (string), fleet_mean (numeric), mean_harm (numeric), cvar05_harm (string), status (string), dataset (string), colour (string), hue (integer), excluded_leader (string), public_leader_state (string), note (string), excluded_note (string), measurement_note (string), dataset_url (url), _as_of (datetime), _source (url), _authority (string), _public_count (string). Same byte size as `axis-live.jsonl` in huggingface.co/datasets/csoai/gspc-mach (checked 2026-11-20). 1,933 bytes."
+    },
+    {
+      "path": "eval.yaml",
+      "description": "505 — config. YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-mach (checked 2026-11-20). 505 bytes."
+    },
+    {
+      "path": "items.jsonl",
+      "description": "10104 — 34 — data (one JSON object per line). Newline-delimited JSON (one record per line). 34 rows; fields: case (string), expected (string), anchor (string), axis (string), source (string), verified_against (string), _canary (string). Same byte size as `items.jsonl` in huggingface.co/datasets/csoai/gspc-mach (checked 2026-11-20). 10,104 bytes."
+    },
+    {
+      "path": "mach.json",
+      "description": "1459 — JSON document. JSON document. top-level keys: schema, record_type, not_a_certification, endorsement, authored_by, basis, axis, model, measured, n, wilson95, bank, never, opinion_framing, witnessed_at, content_id, signature, pubkey, key_id, verification_method …. Same byte size as `mach.json` in huggingface.co/datasets/csoai/gspc-mach (checked 2026-11-20). 1,459 bytes."
+    },
+    {
+      "path": "machbench-draft.json",
+      "description": "14115 — JSON document. JSON document. top-level keys: schema, bench, axis, status, built, instrument, applies_from, task, labels, n_scored, n_disputed, rule, legal_basis, caveats, items. `items` holds 19 records with fields: case (string), expected (string), anchor (string), basis (string). Same byte size as `machbench-draft.json` in huggingface.co/datasets/csoai/gspc-mach (checked 2026-11-20). 14,115 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "8 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 8 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-mach (checked 2026-11-20). 2,568 bytes."
+    },
+    {
+      "path": "meta.json",
+      "description": "4190 — JSON document. JSON document. top-level keys: schema, bench, axis, status, built, instrument, applies_from, task, labels, n_scored, n_disputed, rule, legal_basis, caveats. Same byte size as `meta.json` in huggingface.co/datasets/csoai/gspc-mach (checked 2026-11-20). 4,190 bytes."
+    },
+    {
+      "path": "results_2026-08-11.json",
+      "description": "684 — JSON document. JSON document. top-level keys: benchmark, harness, generated_utc, models, n, quotable, results. Same byte size as `results_2026-08-11.json` in huggingface.co/datasets/csoai/gspc-mach (checked 2026-11-20). 684 bytes."
+    }
+  ]
+}

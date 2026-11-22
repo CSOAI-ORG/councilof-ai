@@ -1,0 +1,58 @@
+{
+  "title": "GSPC-XR — cross-reality (MEASURED)",
+  "id": "nicktempleman/gspc-xr",
+  "id_no": 11514533,
+  "subtitle": "Mirror of Hugging Face csoai/gspc-xr",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/gspc-xr`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/gspc-xr -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `xr.json`\n- `README.md`\n- `eval.yaml`\n- `items.jsonl`\n- `checks.jsonl`\n- `manifest.jsonl`\n- `axis-live.jsonl`\n- `results_2026-08-11.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-xr at revision `7b6d062bf5023d3959233c518ff031e9dda813b8`, made 2026-09-29. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC — cross reality bank (XRAIV)\n\nCouncil of AI measurement bank. Measurement, not certification.\n\n**Bank.** Frozen split. Live `n` is the matching axis on `GET https://councilof.ai/api/gspc`, not a Hub score. **Not a certificate.** Art 50 (EUR-Lex): 2 August 2026 live; marking grace 2 December 2026.\n\n\n**Live measurement.** This bank stands behind the `cross-reality` row of the live GSPC board: `GET https://councilof.ai/api/gspc?axis=cross-reality` (family, kind, status and n are on that row, never typed here; the whole board is `GET https://councilof.ai/api/gspc`). Measurement, not certification.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 8, last updated 2026-09-29.\n- 8 files, 35,205 bytes. File types: .jsonl (4), .json (2), .md (1), .yaml (1).\n- Hugging Face twin: [csoai/gspc-xr](https://huggingface.co/datasets/csoai/gspc-xr). 7 of 8 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_gspc_xr,\n  title        = {GSPC — cross reality bank (XRAIV)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/gspc-xr}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software",
+    "computer vision"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 7 of 8 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-xr](https://huggingface.co/datasets/csoai/gspc-xr) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "2091 — card. Dataset README (Markdown). 13,467 bytes."
+    },
+    {
+      "path": "axis-live.jsonl",
+      "description": "1 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 1 rows; fields: axis (string), family (string), kind (string), bench (string), task (string), n (integer), separation (string), fleet_mean (numeric), mean_harm (numeric), cvar05_harm (string), status (string), dataset (string), colour (string), hue (integer), excluded_leader (string), public_leader_state (string), note (string), excluded_note (string), measurement_note (string), dataset_url (url), _as_of (datetime), _source (url), _authority (string), _public_count (string). Same byte size as `axis-live.jsonl` in huggingface.co/datasets/csoai/gspc-xr (checked 2026-11-20). 1,852 bytes."
+    },
+    {
+      "path": "checks.jsonl",
+      "description": "6167 — 30 — data (one JSON object per line). Newline-delimited JSON (one record per line). 30 rows; fields: id (string), check (string), question (string), labels (string). Same byte size as `checks.jsonl` in huggingface.co/datasets/csoai/gspc-xr (checked 2026-11-20). 6,167 bytes."
+    },
+    {
+      "path": "eval.yaml",
+      "description": "503 — config. YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-xr (checked 2026-11-20). 503 bytes."
+    },
+    {
+      "path": "items.jsonl",
+      "description": "8888 — 33 — data (one JSON object per line). Newline-delimited JSON (one record per line). 33 rows; fields: item (string), expected (string), category (string), anchor (string), source (string), note (string), _canary (string). Same byte size as `items.jsonl` in huggingface.co/datasets/csoai/gspc-xr (checked 2026-11-20). 8,888 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "7 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 7 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-xr (checked 2026-11-20). 2,188 bytes."
+    },
+    {
+      "path": "results_2026-08-11.json",
+      "description": "681 — JSON document. JSON document. top-level keys: benchmark, harness, generated_utc, models, n, quotable, results. Same byte size as `results_2026-08-11.json` in huggingface.co/datasets/csoai/gspc-xr (checked 2026-11-20). 681 bytes."
+    },
+    {
+      "path": "xr.json",
+      "description": "1459 — JSON document. JSON document. top-level keys: schema, record_type, not_a_certification, endorsement, authored_by, basis, axis, model, measured, n, wilson95, bank, never, opinion_framing, witnessed_at, content_id, signature, pubkey, key_id, verification_method …. Same byte size as `xr.json` in huggingface.co/datasets/csoai/gspc-xr (checked 2026-11-20). 1,459 bytes."
+    }
+  ]
+}

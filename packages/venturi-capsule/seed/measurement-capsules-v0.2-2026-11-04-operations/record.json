@@ -1,0 +1,131 @@
+{
+ "schema": "csoai.measurement-capsule-batch/0.2",
+ "as_of": "2026-11-04T08:16:43Z",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "adapter": "operations",
+ "kind": "operations",
+ "n_capsules": 106,
+ "states": {
+  "BITCOIN_ATTESTED": 81,
+  "INCLUDED_PROOF_VERIFIES": 22,
+  "UNCHECKABLE": 3
+ },
+ "merkle_root": "1ab9ce6ad69896966f0d52560ae340086aab1f3de6b4050606d8f4108bdbb58e",
+ "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
+ "canonicalisation": {
+  "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
+  "jcs_byte_equal": "106/106",
+  "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
+ },
+ "capsules_file": {
+  "path": "capsules.jsonl.gz",
+  "sha256": "72f7e0638136ec8ad8c3ba8d39b7bf2fd36bdd554b6d5714af82f1ba804e522c",
+  "bytes": 20414,
+  "uncompressed_sha256": "6cfabd619ae8a771d3d0589080841c32e8e4ac4fbf3c6eacd93207b8bfcbb1ee",
+  "uncompressed_bytes": 131702,
+  "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
+ },
+ "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+ "what_this_is": "Our own operations measured the way we measure others: one capsule per deploy run, master landing, correction, public dataset commit, timestamp/log anchor and private notice in the window, each declared vs observed. Failed, stopped and unshipped events are recorded like the rest.",
+ "what_this_is_not": "Not a claim that the work is good, and not a grade. A private notice is recorded only as having been sent: no recipient, domain, address or message text.",
+ "window": {
+  "continues_from": {
+   "batch_dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-07-operations",
+   "index_date": "2026-10-07",
+   "record_sha256": "91114d37d85d2f16160bec985b4f6038504dc94fa30e954cedc74da790c83e2e"
+  },
+  "end": "2026-11-04T08:05:03Z",
+  "rule": "starts where the newest operations batch named by a final daily index (dated before this day) ended; the first starts at 2026-09-26T00:00:00Z; ends at the harvest time",
+  "start": "2026-10-07T08:05:03Z"
+ },
+ "source": {
+  "harvest_dir": "/evac-bulk/operations/2026-11-04/20261104T080503Z",
+  "harvest_sha256": "7af2f7a600960536fbb0d615c3e341ad47ee9362b2d01336e149547529bc0d8b",
+  "date": "2026-11-04",
+  "schema": "csoai.operations-harvest/0.1",
+  "harvested_at": "2026-11-04T08:05:03Z",
+  "source_states": {
+   "anchor": "READ",
+   "correction": "READ",
+   "deploy": "UNCHECKABLE",
+   "landing": "UNCHECKABLE",
+   "notice": "READ",
+   "publication": "UNCHECKABLE"
+  },
+  "files_sha256": {
+   "anchors.json": "3f3503848e4e88c9b4249a65d22215c0c3fc48431456f480b55dc73789e956b9",
+   "corrections.json": "9816cb4742b95b6105ab208abd265445c979d573a6a7cfe810305c20dffd4c42",
+   "corrections.previous.json": "da0e1f7da7f44da1c67c98613fed5374bf3d6c155436732bf0d9506ced2a3434",
+   "notices.json": "5083afdc16b6c6e5c05854feec19f20d3569880ee91d7197d98609e2ab3d7863"
+  }
+ },
+ "capsules_by_type_and_state": {
+  "deploy": {
+   "UNCHECKABLE": 1
+  },
+  "landing": {
+   "UNCHECKABLE": 1
+  },
+  "correction": {},
+  "publication": {
+   "UNCHECKABLE": 1
+  },
+  "anchor": {
+   "BITCOIN_ATTESTED": 81,
+   "INCLUDED_PROOF_VERIFIES": 22
+  },
+  "notice": {}
+ },
+ "completeness": {
+  "deploy": {
+   "state": "UNCHECKABLE",
+   "listed": 0,
+   "capsuled": 0,
+   "complete": true
+  },
+  "landing": {
+   "state": "UNCHECKABLE",
+   "listed": 0,
+   "capsuled": 0,
+   "complete": true
+  },
+  "correction": {
+   "ledger_entries": 93,
+   "capsuled": 0,
+   "rule": "all entries on the first harvest (BACKFILL); afterwards entries NEW or CHANGED since the harvest of the last indexed batch",
+   "listed": 0,
+   "complete": true
+  },
+  "publication": {
+   "state": "UNCHECKABLE",
+   "listed": 0,
+   "capsuled": 0,
+   "complete": true
+  },
+  "anchor": {
+   "ots": 81,
+   "rekor": 22,
+   "base": 0,
+   "listed": 103,
+   "capsuled": 103,
+   "complete": true
+  },
+  "notice": {
+   "notices": 0,
+   "listed": 0,
+   "capsuled": 0,
+   "complete": true
+  }
+ },
+ "privacy_guard": {
+  "email_pattern": "no match",
+  "internal_names": "no match",
+  "private_identifiers_checked": 57,
+  "result": "PASS"
+ },
+ "publication": {
+  "state": "PUBLIC",
+  "approved": "2026-09-26",
+  "note": "published daily by the owner's approval (recorded 2026-09-26); copies: HF csoai/evidence-index measurement-index/<date>/"
+ }
+}

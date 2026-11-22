@@ -1,0 +1,32 @@
+--- a/csoai/csoai-merge-v1/README.md (live)
++++ b/csoai/csoai-merge-v1/README.md (proposed)
+@@ -2,6 +2,8 @@
+ license: apache-2.0
+ base_model: Qwen/Qwen2.5-0.5B-Instruct
+ tags: [mergekit, ties, governance, provenance-signed]
++pipeline_tag: text-generation
++library_name: transformers
+ ---
+ # oowm-merge-v1 — TIES proof-of-pipeline merge
+ 
+@@ -24,3 +26,20 @@
+ of the `sov*` / `oowm*` repos, and CSOAI's rule is that it never hosts, scores or ranks a model of its
+ own. The figures were also out of date. That section is removed. The rest of this card was not
+ re-checked in this change.
++
++<!-- csoai-card-fixes:start -->
++
++## Citation
++
++```bibtex
++@misc{csoai_csoai_merge_v1_2026,
++  title        = {oowm-merge-v1 — TIES proof-of-pipeline merge},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/csoai/csoai-merge-v1}},
++  url          = {https://huggingface.co/csoai/csoai-merge-v1}
++}
++```
++
++<!-- csoai-card-fixes:end -->
