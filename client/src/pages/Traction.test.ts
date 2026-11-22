@@ -5,9 +5,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { Router } from "wouter";
 import ExternalUseEvidence from "../components/ExternalUseEvidence";
 import { EXTERNAL_USE_EXAMPLES, EXTERNAL_USE_REVIEWED } from "../data/external-use";
+import INSTITUTIONS_REGISTER from "../../../public/interop/institutions-register.json";
+import Traction from "./Traction";
 
 const source = readFileSync(new URL("./Traction.tsx", import.meta.url), "utf8");
 const ia = readFileSync(new URL("../data/library-ia.ts", import.meta.url), "utf8");
+
+// renderToStaticMarkup escapes apostrophes in text nodes; compare through the same escape.
+const escaped = (text: string) => text.replace(/'/g, "&#x27;");
 
 describe("traction public-truth contract", () => {
   it("derives operating and commercial counters from public JSON", () => {
@@ -91,5 +96,43 @@ describe("traction public-truth contract", () => {
   it("removes the stale August vanity inventory and keeps traction primary", () => {
     expect(source).not.toMatch(/15574|21091|579 public repos|last audit: 2026-08-10/);
     expect(ia).toMatch(/"\/faq", "\/traction"/);
+  });
+
+  it("renders the institutions register from the committed artifact, within scope", () => {
+    // The section reads the register artifact, not typed rows, and links the machine surface.
+    expect(source).toContain('id="institutions-register"');
+    expect(source).toContain("Institutions register");
+    expect(source).toContain("public/interop/institutions-register.json");
+    expect(source).toContain('href="/api/institutions"');
+    expect(INSTITUTIONS_REGISTER.schema).toBe("csoai.institutions-register/0.1");
+    const rows = INSTITUTIONS_REGISTER.rows as {
+      actor: string;
+      date_or_since: string;
+      claim_boundary: string;
+      sources: string[];
+      relationship_state: string;
+      evidence_quality: { url: string; label: string }[];
+    }[];
+    expect(rows).toHaveLength(8);
+    for (const row of rows) {
+      // Every row stays a bounded observation with its own sources and honest default relationship.
+      expect(row.relationship_state).toBe("none_on_record");
+      expect(row.claim_boundary.length).toBeGreaterThan(0);
+      expect(row.sources.length).toBeGreaterThan(0);
+      expect(row.evidence_quality.map((e) => e.url)).toEqual(row.sources);
+    }
+    // The rendered page carries every row, its date formatting and the boundary line.
+    const html = renderToStaticMarkup(createElement(Router, { ssrPath: "/traction", children: createElement(Traction) }));
+    expect(html).toContain("Institutions register");
+    expect(html).toContain("as of 2026-11-19");
+    expect(html).toContain("3 November 2026");
+    expect(html).toContain("Since 23 July 2026");
+    expect(html).toContain("relationship_state: none on record");
+    for (const row of rows) {
+      expect(html).toContain(escaped(row.actor));
+      for (const href of row.sources) expect(html).toContain(href);
+    }
+    // The register is visibility for the catalogue; it does not claim an institution count.
+    expect(html).toContain("never a count of customers");
   });
 });
