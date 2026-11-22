@@ -22,8 +22,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (!/^application\/json(?:\s*;|\s*$)/i.test(request.headers.get("content-type") || ""))
     return reply({ stored: false, code: "JSON_REQUIRED" }, 415);
   const bounded = await readBoundedContactBody(request);
-  if (bounded.state === "TOO_LARGE") return reply({ stored: false, code: "TOO_LARGE" }, 413);
-  if (bounded.state === "BAD_BODY") return reply({ stored: false, code: "BAD_JSON" }, 400);
+  if (bounded.state !== "OK") {
+    const oversized = bounded.state === "TOO_LARGE";
+    return reply({ stored: false, code: oversized ? "TOO_LARGE" : "BAD_JSON" }, oversized ? 413 : 400);
+  }
   const raw = bounded.text;
   let body: Record<string, unknown>;
   try {
