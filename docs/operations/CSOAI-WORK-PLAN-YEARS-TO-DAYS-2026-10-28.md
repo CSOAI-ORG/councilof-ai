@@ -110,6 +110,11 @@ referee that is never the subject's own. The estate's own referee gave MEOK 219/
 same referee gave the frontier 222/237, and 20 of 30 items were answered by a rule cascade
 rather than a model — a self-graded lead is not a lead.
 
+> **Note (2026-11-20, correction C-2026-1120-02):** 219/237 and 222/237 are scores on the 237-item governance
+> bank. Its items can be answered from their wording alone: a wording-only baseline matches 225 of 237 labels.
+> These figures are agreement with that bank's labels, not a measure of how a system applies the EU AI Act.
+> See https://councilof.ai/api/corrections (C-2026-1120-02).
+
 **Close test:** a published separation document *and* a referee implementation whose provenance
 shows it is not the subject's, on every published cell.
 

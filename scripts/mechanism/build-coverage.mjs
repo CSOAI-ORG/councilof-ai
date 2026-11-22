@@ -3,7 +3,8 @@
 //
 // Input:  scripts/mechanism/coverage.source.json — the hand-edited map (instrument names, which
 //         routing record belongs to which instrument, the predicates, the jurisdiction list).
-// Reads:  the frozen provision manifest, the regulatory inventory, the crosswalk files, the
+// Reads:  the frozen provision manifest, its published source texts (which must regenerate every
+//         hash, see frozen-sources.mjs), the regulatory inventory, the crosswalk files, the
 //         published capsule batches and client/src/App.tsx. Every count in the output is derived
 //         from those bytes; the source file carries no number.
 // Output: public/mechanism/coverage.json. No clock time, so unchanged inputs give identical bytes.
@@ -15,6 +16,7 @@ import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync } from 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gunzipSync } from "node:zlib";
+import { parseSources, verifySources } from "./frozen-sources.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const SOURCE = "scripts/mechanism/coverage.source.json";
@@ -23,6 +25,9 @@ export const PRODUCER = "scripts/mechanism/build-coverage.mjs";
 /** A frozen provision id: CELEX number, a colon, the manifest's own (possibly negative) number. */
 export const PROVISION_ID_RE = /\b3\d{4}[RLD]\d{4}:-?\d+\b/g;
 export const STATUSES = ["PREDICATE", "RELATED_MEASURE", "CROSSWALK_ONLY", "HASH_ONLY"];
+/** Source-bytes state when the published texts regenerate every hash and the root (verifySources ok). */
+export const SOURCE_BYTES_RECOVERED = "SOURCE_BYTES_RECOVERED";
+export const MANIFEST_STATE_RECOVERED = "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_RECOVERED";
 
 const fail = (msg) => {
   throw new Error(`mechanism coverage: ${msg}`);
@@ -147,6 +152,37 @@ export function derive(sourceBytes, io) {
       fail(`${i.name}: inventory says ${want}, manifest holds ${byCelex.get(i.celex).length}`);
   }
   const adapters = new Map(inv.authority_adapters.map((a) => [a.id, a]));
+
+  // ---- the source texts behind the hashes. Optional in the source file; when named, every row
+  // must regenerate its manifest hash and the root, or the producer fails (no partial state).
+  let sourceTexts = null;
+  const sourceRowsByCelex = new Map();
+  if (S.source_texts) {
+    const bytes = readBytes(S.source_texts);
+    const rows = parseSources(bytes);
+    const v = verifySources(rows, manifest);
+    if (!v.ok) fail(`${S.source_texts} does not reproduce the manifest: ${v.problems.slice(0, 3).join("; ")}`);
+    for (const r of rows) {
+      const celex = r.provision_id.split(":")[0];
+      sourceRowsByCelex.set(celex, (sourceRowsByCelex.get(celex) ?? 0) + 1);
+    }
+    sourceTexts = {
+      path: `/${S.source_texts.replace(/^public\//, "")}`,
+      sha256: sha256(bytes),
+      state: SOURCE_BYTES_RECOVERED,
+      rows: v.rows,
+      hashes_reproduced: v.hashes_reproduced,
+      corpus_root_reproduced: v.corpus_root_reproduced,
+      normaliser_version: v.normaliser_version,
+      rows_by_source_kind: v.rows_by_source_kind,
+      texts_at_frozen_cap: v.texts_at_frozen_cap,
+      verifiers: src.source_texts.verifiers,
+      note: src.source_texts.note,
+      licence: src.source_texts.licence,
+    };
+  }
+  const corpusState = sourceTexts ? MANIFEST_STATE_RECOVERED : inv.frozen_provisions.state;
+  const sourceBytesState = sourceTexts ? SOURCE_BYTES_RECOVERED : inv.frozen_provisions.source_database_state;
 
   // ---- which provisions anything points to
   const status = new Map(); // provision id -> { predicates, related, crosswalk }
@@ -310,9 +346,10 @@ export function derive(sourceBytes, io) {
           : { state: "NO_RECORD" },
         instrument: { state: "NAMED", id: `CELEX ${i.celex}` },
         version: {
-          state: inv.frozen_provisions.state,
+          state: corpusState,
           frozen_at: inv.frozen_provisions.frozen_at,
-          source_bytes: inv.frozen_provisions.source_database_state,
+          source_bytes: sourceBytesState,
+          source_rows: sourceTexts ? (sourceRowsByCelex.get(i.celex) ?? 0) : 0,
         },
         provision: { state: "HASHED", n: nums.length },
         obligation: { state: "NO_REGISTER", n: 0 },
@@ -453,10 +490,13 @@ export function derive(sourceBytes, io) {
       provisions: ids.length,
       instruments: byCelex.size,
       frozen_at: inv.frozen_provisions.frozen_at,
-      state: inv.frozen_provisions.state,
-      source_database_state: inv.frozen_provisions.source_database_state,
+      state: corpusState,
+      source_database_state: sourceBytesState,
+      inventory_state: inv.frozen_provisions.state,
+      inventory_source_database_state: inv.frozen_provisions.source_database_state,
+      source_texts: sourceTexts,
       watcher: manifest.watcher,
-      limitation: inv.frozen_provisions.limitation,
+      limitation: sourceTexts ? src.source_texts.limitation : inv.frozen_provisions.limitation,
     },
     recovered_counts: recovered,
     totals,
