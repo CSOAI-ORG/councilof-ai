@@ -7,6 +7,10 @@ on:
         description: "Only read back visibility; change nothing"
         type: boolean
         default: true
+      target:
+        description: "Allowlisted kind/name; defaults to only the flagged dataset. Blank targets the full list."
+        type: string
+        default: "dataset/index-presence"
 
 permissions:
   contents: read
@@ -26,9 +30,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Validate 34-entry privacy plan before any API access
+        run: python -B -m unittest discover -s scripts/hf -p test_make_private_plan.py -v
       - run: pip install --quiet "huggingface_hub>=0.25,<2"
       - name: make private (never delete) and read back
         env:
           DRY_RUN: ${{ inputs.dry_run }}
+          HF_TARGET_ONLY: ${{ inputs.target }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: python scripts/hf/make-private.py
