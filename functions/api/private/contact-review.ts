@@ -92,3 +92,6 @@ export async function readContactReview(
 }
 export const onRequestGet: PagesFunction<ContactReviewEnv> = async ({ request, env }) =>
   readContactReview(request, env);
+
+// HEAD follows the exact authenticated GET status/headers but never returns PII.
+export const onRequestHead = headFromGet(onRequestGet);
