@@ -7,7 +7,7 @@
  * No model training, inference, external dataset, actual human or remote call.
  */
 import { createHash } from "node:crypto";
-import { writeFileSync } from "node:fs";
+import { writeFileSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -18,6 +18,9 @@ const POLICY_TO="HITL=DISABLED";
 check(POLICY_FROM.length===POLICY_TO.length,"same-byte-length invariant");
 export const BASELINE_RECORDS=10_000;
 export const CHANGE_COUNTS=[1,5,25,150];
+export const VERSIONED_REFERENCE_SHA256=readFileSync(
+  new URL("./fixtures/gspc-dataset-mutation-baseline.sha256",import.meta.url),"utf8").trim();
+check(/^[0-9a-f]{64}$/.test(VERSIONED_REFERENCE_SHA256),"invalid checked-in reference digest");
 
 export function syntheticDocuments(n=BASELINE_RECORDS) {
   check(Number.isSafeInteger(n)&&n>=150,"synthetic corpus needs at least 150 records");
@@ -67,7 +70,7 @@ export function compareSnapshots(baseline,variant,{baselinePin=null}={}) {
     change_count:changes.length,
     row_count_only_detected:baseline.length!==variant.length,
     file_size_only_detected:Buffer.byteLength(original)!==Buffer.byteLength(candidate),
-    trusted_baseline_pin_matches:baselinePin===null ? "UNCHECKABLE_NO_EXTERNAL_PIN" : baselinePin===newDigest,
+    reference_baseline_digest_matches:baselinePin===null ? "UNCHECKABLE_NO_EXTERNAL_PIN" : baselinePin===newDigest,
     // This intentionally demonstrates why a manifest recomputed by whoever
     // modified the source is insufficient. It verifies itself.
     untrusted_rehashed_manifest_self_consistent:sha(candidate)===newDigest,
@@ -78,12 +81,16 @@ export function runSyntheticMutationStudy({n=BASELINE_RECORDS,counts=CHANGE_COUN
   const baseline=syntheticDocuments(n);
   const baselineBytes=serialized(baseline);
   const pin=sha(baselineBytes);
+  if(n===BASELINE_RECORDS) {
+    check(pin===VERSIONED_REFERENCE_SHA256,
+      "version-controlled baseline digest disagrees with generated baseline; review drift");
+  }
   const selected=selectMutationIds(n,counts);
   const cases=counts.map(k=>{
     const variant=mutateDocuments(baseline,selected.slice(0,k));
     const m=compareSnapshots(baseline,variant,{baselinePin:pin});
     check(m.change_count===k && !m.row_count_only_detected && !m.file_size_only_detected &&
-      m.trusted_baseline_pin_matches===false,"mutation control failed");
+      m.reference_baseline_digest_matches===false,"mutation control failed");
     const sampled=m.changed_document_indices.filter(id=>id%sample_stride===0).length;
     return {
       changed_documents:k,
@@ -94,7 +101,7 @@ export function runSyntheticMutationStudy({n=BASELINE_RECORDS,counts=CHANGE_COUN
       mutated_sha256:m.source_sha256_after,
       row_count_only_detection:"MISSED_SAME_COUNT",
       size_only_detection:"MISSED_SAME_SIZE",
-      external_baseline_digest_comparison:"DETECTED_CHANGED_SOURCE_BYTES",
+      versioned_reference_digest_comparison:"DETECTED_CHANGED_SOURCE_BYTES",
       item_hash_reconciliation:"DETECTED_ALL_CHANGED_DOCUMENTS",
       untrusted_rehashed_manifest_state:"SELF_CONSISTENT_BUT_NOT_AUTHENTICATED",
       deterministic_sample_stride:sample_stride,
@@ -112,11 +119,13 @@ export function runSyntheticMutationStudy({n=BASELINE_RECORDS,counts=CHANGE_COUN
     document_count:n,
     record_ids_unique:new Set(baseline.map(x=>x.doc_id)).size===n,
     baseline_sha256:pin,
+    reference_pin_state:n===BASELINE_RECORDS ?
+      "GIT_REVIEWABLE_REFERENCE_NO_EXTERNAL_SIGNATURE" : "LOCAL_ONLY_NO_VERSIONED_PIN",
     mutation_policy:{from:POLICY_FROM,to:POLICY_TO,byte_length_preserved:true,
       selection:"SHA-256 deterministic pseudorandom ordering; nested change sets"},
     cases,
     conclusions:[
-      "An independently retained baseline digest detects even one changed byte; a recomputed untrusted hash alone does not authenticate a dataset",
+      "A separately version-controlled baseline digest detects even one changed byte in this simulation; the repository reference is not an independent witness or external signature",
       "Row count and file size checks miss all these same-length, same-record-count modifications",
       "The sample check is one deterministic illustration, not a statistical sensitivity estimate",
       "No AI model was trained or queried, so this does not measure the effect of 1/5/25/150 poisoned documents on model behavior",
