@@ -11,14 +11,14 @@ A paired 2 × 2 experiment uses four conditions:
 
 | Arm | Answer shown to subject? | Evaluation objective disclosed? |
 | --- | --- | --- |
-| \`blind_hidden\` | No | No |
-| \`blind_objective\` | No | Yes |
-| \`answer_hidden\` | Yes | No |
-| \`answer_objective\` | Yes | Yes |
+| `blind_hidden` | No | No |
+| `blind_objective` | No | Yes |
+| `answer_hidden` | Yes | No |
+| `answer_objective` | Yes | Yes |
 
 The answer-revealed arms are *interventions*, not bona fide blind benchmarks. They must never be used to claim generalisation. All four arms use **the same frozen tasks and corresponding ground truth**, but separate, reset agent contexts. An independent hidden answer key is delivered only to the offline grader. Randomise arm order, pre-register the hypothesis and avoid subject-visible scores during a test. Any prompt injection must stay inside a controlled sandbox.
 
-For each task, twelve voters return \`0\` or \`1\`; 7+ matching votes form a majority. A 6:6 tie is an abstention, reported separately, and counts as non-success for unconditional accuracy. The deterministic evaluator compares the decision with the private answer key. A scorer using a known key is **not** itself an independent referee or Byzantine agreement protocol.
+For each task, twelve voters return `0` or `1`; 7+ matching votes form a majority. A 6:6 tie is an abstention, reported separately, and counts as non-success for unconditional accuracy. The deterministic evaluator compares the decision with the private answer key. A scorer using a known key is **not** itself an independent referee or Byzantine agreement protocol.
 
 ### Main estimands
 
@@ -27,36 +27,36 @@ For each task, twelve voters return \`0\` or \`1\`; 7+ matching votes form a maj
 - **Interaction:** difference-in-differences; detects whether information pathways have non-additive effects.
 - **Council uplift:** twelve-agent majority accuracy minus mean single-agent accuracy *on the same tasks*.
 - **Error correlation:** across-task pairwise correlation of correctness indicators (not text similarity).
-- **Effective sample size (descriptive):** under equal competence/exchangeable correlation, \`12/(1+11*rho)\`; NOT twelve independent witnesses.
+- **Effective sample size (descriptive):** under equal competence/exchangeable correlation, `12/(1+11*rho)`; NOT twelve independent witnesses.
 - **Coverage:** share of tasks with a majority decision; report alongside unconditional accuracy.
 - **Reversibility:** reset memory/context between arms, and check scores under prompt/order reversal.
 - **Harm:** unauthorised actions must be blocked by Layer 0; do not use adversarial live endpoints.
 
 ### Implementation and simulation
 
-\`two_path_council.py\` is a standard-library **offline prototype**; it accepts grader-side JSONL or generates wholly synthetic, explicitly labelled rows. It fails closed on missing paired arms, fewer than 30 unique tasks, mismatched truth, mixed bank digests and duplicate voters. Public reports contain no task labels, individual answers, text or canaries. They carry descriptive statistics and paired bootstrap intervals. It is not an automatic authority or grading admission gate.
+`two_path_council.py` is a standard-library **offline prototype**; it accepts grader-side JSONL or generates wholly synthetic, explicitly labelled rows. It fails closed on missing paired arms, fewer than 30 unique tasks, mismatched truth, mixed bank digests and duplicate voters. Public reports contain no task labels, individual answers, text or canaries. They carry descriptive statistics and paired bootstrap intervals. It is not an automatic authority or grading admission gate.
 
 Run from this directory:
 
-\`\`\`bash
+```bash
 python3 -B -m unittest -v test_two_path_council.py
 python3 two_path_council.py --tasks 1500 --rho 0 --bootstrap 350
 python3 two_path_council.py --tasks 1500 --rho .35 --bootstrap 350
 # Only inside a private grader workspace:
 python3 two_path_council.py --input private-paired-votes.jsonl
-\`\`\`
+```
 
 Private grader-side JSONL row:
-\`\`\`json
+```json
 {"task_id":"opaque-id","arm":"blind_hidden","bank_commitment":"<64 hex SHA256>","truth":"1","votes":[{"agent_id":"agent-01","answer":"1"}]}
-\`\`\`
+```
 The example shows one of the **twelve required** votes, not a complete admissible row. All four arms and exactly twelve distinct voters per task are mandatory.
 
-**Important:** A reproducible synthetic simulation is a test of the harness and mathematics only. No local or hosted models are called, and simulated parameter effects are not measured AI behaviour. For real model claims, store actual call receipts, immutable model revisions, decoded outputs and the controlled experimental assignment in the existing private evidence store. A private Hub repo is not evidence of a genuinely held-out bank: check the per-item public exposure history under \`docs/operations/INSTRUMENT-GUARD-POLICY.md\`.
+**Important:** A reproducible synthetic simulation is a test of the harness and mathematics only. No local or hosted models are called, and simulated parameter effects are not measured AI behaviour. For real model claims, store actual call receipts, immutable model revisions, decoded outputs and the controlled experimental assignment in the existing private evidence store. A private Hub repo is not evidence of a genuinely held-out bank: check the per-item public exposure history under `docs/operations/INSTRUMENT-GUARD-POLICY.md`.
 
 ## Difference from current CSOAI infrastructure
 
-Do **not** replace the established \`harness/instrument-guard\`, bank rotation, contamination canaries, \`csoai.evidence-event/0.1\`, GSPC card verifier, charter or protected authority paths.
+Do **not** replace the established `harness/instrument-guard`, bank rotation, contamination canaries, `csoai.evidence-event/0.1`, GSPC card verifier, charter or protected authority paths.
 
 This is a new *method family*, initially a read-only sidecar. Its outputs can be promoted only through the existing governance and evidence gates, with explicit provenance and external replication.
 
@@ -70,8 +70,8 @@ Potential mapping of a *future validated* record:
 | Metric | Accuracy, coverage, error correlation, exposure and objective effects | Measured, not certified |
 | Uncertainty | Paired bootstrap CI, n unique tasks, missingness | No leader claim from synthetic run |
 | Counterfactual | Matched answer/objective disclosure intervention | Randomisation; separate clean resets |
-| Evidence | Existing \`csoai.evidence-event/0.1\` envelope and model-call receipts | No new authority or provenance root |
-| Qualification | \`SYNTHETIC\`, \`UNVERIFIED\`, \`MEASURED\`, \`UNCHECKABLE\` | Evidence state explicit |
+| Evidence | Existing `csoai.evidence-event/0.1` envelope and model-call receipts | No new authority or provenance root |
+| Qualification | `SYNTHETIC`, `UNVERIFIED`, `MEASURED`, `UNCHECKABLE` | Evidence state explicit |
 | MEOK learning | Store *verified* failure taxonomy and retrieval rules; held-out retest required | Never tune on held-out items |
 | Action | Human/Layer 0 approval and independent effect receipt | No self-awarded permissions |
 
@@ -79,7 +79,7 @@ A frozen record becomes a **versioned, append-only measurement entity**. Map pro
 
 ### MEOK reaction chain
 
-Verified negative-control failure -> GSPC error taxonomy -> evidence event -> scoped MEOK retrieval of approved rule -> candidate new policy/router/adaptor (not weight update) -> private development test -> truly unseen held-out retest -> independent human review -> governed promotion or rollback -> release receipt -> production drift watch. Every transition can result in \`HOLD\` / \`UNCHECKABLE\`; no autonomous consequential execution.
+Verified negative-control failure -> GSPC error taxonomy -> evidence event -> scoped MEOK retrieval of approved rule -> candidate new policy/router/adaptor (not weight update) -> private development test -> truly unseen held-out retest -> independent human review -> governed promotion or rollback -> release receipt -> production drift watch. Every transition can result in `HOLD` / `UNCHECKABLE`; no autonomous consequential execution.
 
 ## Planned real experiments (gates before claims)
 
