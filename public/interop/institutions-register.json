@@ -1,0 +1,185 @@
+{
+  "schema": "csoai.institutions-register/0.1",
+  "as_of": "2026-11-19",
+  "source_page": {
+    "host": "councilof.ai",
+    "path": "/traction/"
+  },
+  "note": "A row is a dated, sourced observation of outside use or engagement, transcribed from the external-use examples the estate published on the source_page below. A row is not adoption, not endorsement, not a measured institution count and not a customer count; rows are catalogued observations and are never added into a count of customers. relationship_state is none_on_record for every row: no customer, partner or contractual relationship is claimed, and a registered interest is not a customer. evidence_quality labels each source URL: public = a pinned, merged or versioned record; live = a live page whose current bytes the estate cannot pin. Dates are the estate's published dates for each row; date_provenance says where each date comes from, and no contact details, conversations or messages are recorded.",
+  "rows": [
+    {
+      "actor": "Probity (probityai)",
+      "kind": "external_execution",
+      "date_or_since": "2026-11-03",
+      "date_provenance": "shown on the cited source",
+      "what": "Probity's automated workflow reran Council's pinned R7 evidence artifact on Linux x86-64, Linux ARM64 and macOS ARM64 on 3 November 2026; all three jobs completed and the recorded outputs were visible to the rerun operator.",
+      "claim_boundary": "A bounded automated rerun. Does not establish production deployment, customer acceptance or validation of the whole GSPC service.",
+      "sources": [
+        "https://github.com/probityai/agent-evidence-vectors/actions/runs/41583335594",
+        "https://github.com/probityai/agent-evidence-vectors/actions/runs/41583335594/job/125742974646",
+        "https://github.com/probityai/agent-evidence-vectors/blob/59a067989d9166f73d8e97e56c4c8cdeca91894d/.github/workflows/w3c-v01-appendix.yml"
+      ],
+      "relationship_state": "none_on_record",
+      "evidence_quality": [
+        {
+          "url": "https://github.com/probityai/agent-evidence-vectors/actions/runs/41583335594",
+          "label": "live"
+        },
+        {
+          "url": "https://github.com/probityai/agent-evidence-vectors/actions/runs/41583335594/job/125742974646",
+          "label": "live"
+        },
+        {
+          "url": "https://github.com/probityai/agent-evidence-vectors/blob/59a067989d9166f73d8e97e56c4c8cdeca91894d/.github/workflows/w3c-v01-appendix.yml",
+          "label": "public"
+        }
+      ]
+    },
+    {
+      "actor": "Kenne Ives",
+      "kind": "outside_implementation",
+      "date_or_since": "2026-11-08",
+      "date_provenance": "shown on the cited source",
+      "what": "Kenne Ives' runnable key and evidence-state fixtures, based on Nicholas Templeman's published proposal, were merged into the W3C AIKR Community Group repository as PR #25 on 8 November 2026.",
+      "claim_boundary": "A participant's code contribution merged in a W3C Community Group repository. Does not establish W3C Recommendation status, standards adoption, endorsement or production deployment.",
+      "sources": [
+        "https://github.com/w3c-cg/aikr/pull/25"
+      ],
+      "relationship_state": "none_on_record",
+      "evidence_quality": [
+        {
+          "url": "https://github.com/w3c-cg/aikr/pull/25",
+          "label": "public"
+        }
+      ]
+    },
+    {
+      "actor": "The SAFE evidence-template author (Erik Newton), OpenSecureAIAlliance wg-safe",
+      "kind": "independent_reproduction",
+      "date_or_since": "2026-10-18",
+      "date_provenance": "shown on the cited source",
+      "what": "The SAFE template author read CSOAI's independently written checker, clarified four ambiguous rules and credited CSOAI Ltd in his candidate evidence template at commit b640a90 (wg-safe PR #60) on 18 October 2026.",
+      "claim_boundary": "The checker was authored by CSOAI independently of the template author, who reviewed it. Not an unrelated third party running Council's product, an approved SAFE specification, certification, endorsement or customer deployment; upstream PR #60 remains open.",
+      "sources": [
+        "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60#issuecomment-6251270225",
+        "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60#issuecomment-6038806039",
+        "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60"
+      ],
+      "relationship_state": "none_on_record",
+      "evidence_quality": [
+        {
+          "url": "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60#issuecomment-6251270225",
+          "label": "live"
+        },
+        {
+          "url": "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60#issuecomment-6038806039",
+          "label": "live"
+        },
+        {
+          "url": "https://github.com/OpenSecureAIAlliance/wg-safe/pull/60",
+          "label": "live"
+        }
+      ]
+    },
+    {
+      "actor": "Konrad Gruszka",
+      "kind": "technical_citation",
+      "date_or_since": "2026-10-26",
+      "date_provenance": "shown on the cited source",
+      "what": "Konrad Gruszka's evaluation-receipt-mappings Internet-Draft (draft-04) discusses Templeman's framing-space experiment and cites the underlying research in its section 10.",
+      "claim_boundary": "An individual Internet-Draft. Not an adopted IETF standard or RFC.",
+      "sources": [
+        "https://datatracker.ietf.org/doc/draft-gruszka-evaluation-receipt-mappings/04/"
+      ],
+      "relationship_state": "none_on_record",
+      "evidence_quality": [
+        {
+          "url": "https://datatracker.ietf.org/doc/draft-gruszka-evaluation-receipt-mappings/04/",
+          "label": "public"
+        }
+      ]
+    },
+    {
+      "actor": "API Evangelist (APIs.io)",
+      "kind": "listing",
+      "date_or_since": "2026-09-19",
+      "date_provenance": "shown on the cited source",
+      "what": "API Evangelist generated an OpenAPI overlay from Council of AI's published read-surfaces contract and published it in the APIs.io catalogue as an external derivative, dated 19 September 2026.",
+      "claim_boundary": "Supports discoverability and reuse of the contract. Not a customer deployment, endorsement or validation of the measurement service.",
+      "sources": [
+        "https://apis.io/overlays/councilof-ai/councilof-ai-gspc-read-surfaces-overlay/"
+      ],
+      "relationship_state": "none_on_record",
+      "evidence_quality": [
+        {
+          "url": "https://apis.io/overlays/councilof-ai/councilof-ai-gspc-read-surfaces-overlay/",
+          "label": "live"
+        }
+      ]
+    },
+    {
+      "actor": "AgentPeering",
+      "kind": "external_execution",
+      "date_or_since": "2026-11-03",
+      "date_provenance": "shown on the cited source",
+      "what": "AgentPeering's public record reports two graded read tasks against the GSPC board and east-west crosswalk on 3 November 2026; a third Article 50 detection request was invalid and was not graded.",
+      "claim_boundary": "The directory's method uses LLM-generated and LLM-graded preview tasks. Bounded automated endpoint observations; not customer acceptance or independent validation of the measurement method.",
+      "sources": [
+        "https://agentpeering.com/agents/councilof.ai/council-of-ai-measurement-agent",
+        "https://agentpeering.com/docs/scoring#agent-tests"
+      ],
+      "relationship_state": "none_on_record",
+      "evidence_quality": [
+        {
+          "url": "https://agentpeering.com/agents/councilof.ai/council-of-ai-measurement-agent",
+          "label": "live"
+        },
+        {
+          "url": "https://agentpeering.com/docs/scoring#agent-tests",
+          "label": "live"
+        }
+      ]
+    },
+    {
+      "actor": "A public Kaggle notebook under another account (hosseinbadrnezhad)",
+      "kind": "external_execution",
+      "date_or_since": "2026-11-14",
+      "date_provenance": "shown on the cited source",
+      "what": "A public Kaggle notebook published under another account names the GSPC Living Board dataset as its data source and reads gspc-axes.csv; Kaggle's record dates the notebook's last run to 14 November 2026.",
+      "claim_boundary": "The published data was loaded outside the publishing account. Not a review of the measurement method, a validation of any result or a customer deployment.",
+      "sources": [
+        "https://www.kaggle.com/code/hosseinbadrnezhad/csoai-gspc-living-board-etl-eda-visualize-model",
+        "https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board"
+      ],
+      "relationship_state": "none_on_record",
+      "evidence_quality": [
+        {
+          "url": "https://www.kaggle.com/code/hosseinbadrnezhad/csoai-gspc-living-board-etl-eda-visualize-model",
+          "label": "live"
+        },
+        {
+          "url": "https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board",
+          "label": "live"
+        }
+      ]
+    },
+    {
+      "actor": "SAILResearch, Queen's University",
+      "kind": "listing",
+      "date_or_since": "since 2026-07-23",
+      "date_provenance": "since-date from the estate's own records; the cited page carries no date",
+      "what": "The SAILResearch Awesome AI Leaderboard lists GovBench and GSPC in its Safety section.",
+      "claim_boundary": "An independent listing in a third-party leaderboard. Listing is not adoption and not endorsement.",
+      "sources": [
+        "https://github.com/SAILResearch/awesome-ai-leaderboard#safety"
+      ],
+      "relationship_state": "none_on_record",
+      "evidence_quality": [
+        {
+          "url": "https://github.com/SAILResearch/awesome-ai-leaderboard#safety",
+          "label": "live"
+        }
+      ]
+    }
+  ]
+}
