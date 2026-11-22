@@ -112,6 +112,17 @@ two fetch calls irrespective of card count. It checks the parsed root's SHA-256
 digest, leaf count and exact ordered membership before using the index. This is
 transport and consistency checking, not signature or inclusion-proof verification.
 
+Since 22 Nov 2026 the same producer splits `public/cards-bundle.json`
+(`csoai.cards-bundle/0.2`) so that no file nears Cloudflare Pages' 25 MiB per-file cap.
+`/cards-bundle.json` keeps its URL and its `as_of`, `merkle_root`, `card_count` (every
+wrapper on disk) and `root_card_count`. Its `cards` now holds only the wrappers on the
+current root, so a lookup by a root hash is still one fetch. Every wrapper, the root's
+included, is in exactly one of 16 shards, `/cards-bundle/<c>.json`, where `c` is the
+first hex character of the card's sha256; `shards.files` lists each shard's card count,
+byte length and sha256. Readers that need every wrapper read the index and all 16
+shards (`functions/api/_cards_bundle.ts`) and fail closed if any shard is missing or
+disagrees with the index.
+
 **Tier describes published metadata.** A card has tier `proof` if its published
 `product.tier` is `proof` or its published wrapper has a nonempty inclusion-proof
 array; otherwise it has tier `free`. The root publisher writes the same proof array
