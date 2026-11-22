@@ -1,0 +1,38 @@
+--- a/csoai/gspc-gov-counter-v1/README.md (live)
++++ b/csoai/gspc-gov-counter-v1/README.md (proposed)
+@@ -2,6 +2,10 @@
+ license: cc-by-4.0
+ pretty_name: Held-out governance counter-bank v1 (GSPC)
+ tags: [gspc, measurement, council-of-ai, eu-ai-act, held-out, counter-bank]
++size_categories:
++- n<1K
++language:
++- en
+ ---
+ 
+ # Held-out governance counter-bank v1 — METHOD
+@@ -32,3 +36,24 @@
+ 
+ ## Reproduce
+ `python3 -I build_counter_bank.py` regenerates the bank deterministically from the public source bank + the arbiter source. Measure with `MEOK_ITEMS_FILE=counter-bank-v1.jsonl node meok-measure.mjs` (+ `MEOK_STRUCTURED=1`).
++
++<!-- csoai-card-fixes:start -->
++
++## Front door
++
++Council of AI publishes its live measurement board and methods at [https://councilof.ai](https://councilof.ai).
++
++## Citation
++
++```bibtex
++@misc{csoai_gspc_gov_counter_v1_2026,
++  title        = {Held-out governance counter-bank v1 (GSPC)},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/csoai/gspc-gov-counter-v1}},
++  url          = {https://huggingface.co/datasets/csoai/gspc-gov-counter-v1}
++}
++```
++
++<!-- csoai-card-fixes:end -->

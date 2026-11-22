@@ -1,0 +1,1904 @@
+{
+  "title": "GSPC · Index: evidence — Council of AI",
+  "id": "nicktempleman/csoai-gspc-index-evidence",
+  "id_no": 12621354,
+  "subtitle": "Mirror of HF csoai/evidence-index. Measurement, not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-index-evidence`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-index-evidence -p ./dataset --unzip\n```\n\nStart by inspecting `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.supersession.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `index.md`\n- `README.md`\n- `owners.py`\n- `verify.py`\n- `index.json`\n- `verify.log`\n- `publish_hf.py`\n- `index.json.ots`\n- See the Data tab for all 469 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement: evidence. Not a certification.**\n\n> **Mirror.** Copy of https://huggingface.co/datasets/csoai/evidence-index at revision `0038c71d57d6b59664188a84bec1e1dfe1123603`, made 2026-10-16. The Hugging Face copy is the original; if the two differ, it wins.\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n\n# CSOAI evidence index\n\n> **Start here — free verify:**\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-10-16.\n- 469 files, 8,576,692 bytes. File types: .json (403), .ots (35), .py (23), .md (5), .jsonl (1), (none) (1), .log (1).\n- Hugging Face twin: [csoai/evidence-index](https://huggingface.co/datasets/csoai/evidence-index). 468 of 469 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_evidence_index_2026,\n  author       = {{Council of AI (CSOAI)}},\n  title        = {CSOAI evidence index},\n  year         = {2026},\n  publisher    = {Hugging Face},\n  howpublished = {\\url{https://huggingface.co/datasets/csoai/evidence-index}}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "cyber security",
+    "model comparison"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 468 of 469 files have the same byte size as files in the Hugging Face dataset [csoai/evidence-index](https://huggingface.co/datasets/csoai/evidence-index) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 14,873 bytes."
+    },
+    {
+      "path": "build_evidence_index.py",
+      "description": "Python source file. Same byte size as `build_evidence_index.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 51,527 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__a2a-card-census.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__a2a-card-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 577 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__a2a-census.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__a2a-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 367 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__agent-interop-census.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__agent-interop-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 322 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__agisafe-bench.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__agisafe-bench.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 287 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__aiact-frozen-split-harness.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__aiact-frozen-split-harness.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 515 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__arena-elo-by-axis.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__arena-elo-by-axis.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 255 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__arena-matrices.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__arena-matrices.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 451 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__arena-rounds.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__arena-rounds.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 244 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__asisec-bench.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__asisec-bench.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 255 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__attestation-network-2026-09-14.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__attestation-network-2026-09-14.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 256 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__cinematic-world-stills.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__cinematic-world-stills.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 322 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__claim-capture-census.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__claim-capture-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 9,178 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__claim-registries.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__claim-registries.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,088 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__claimguard.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__claimguard.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 244 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__coai-bench.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__coai-bench.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 988 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__compbench.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__compbench.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 316 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__council-brand.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__council-brand.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 304 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__council-of-ai.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__council-of-ai.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 304 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__council-os.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__council-os.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 244 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__council-space.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__council-space.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 247 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__councilof-ai-mirror.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__councilof-ai-mirror.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 4,207 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__councilof-ai-source.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__councilof-ai-source.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 7,739 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__cross-ledger-supply.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__cross-ledger-supply.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,713 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__east-west.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__east-west.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 243 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__eldorado-data-listing.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__eldorado-data-listing.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 254 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__eldorado-eval-results.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__eldorado-eval-results.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 289 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__erc8004-reader.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__erc8004-reader.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 504 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__faq.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__faq.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 237 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__fleet-status.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__fleet-status.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 239 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__games-catalog.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__games-catalog.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 247 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-affect.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-affect.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 295 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-agi.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-agi.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 306 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-ai-economy-index.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-ai-economy-index.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 325 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-airbench-eu-mandatory-run.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-airbench-eu-mandatory-run.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 401 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-arena-results.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-arena-results.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 526 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-art5.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-art5.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 426 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-asi.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-asi.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 306 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-autoeat.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-autoeat.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 612 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-axis-corpus.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-axis-corpus.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 310 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-bench-results.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-bench-results.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 341 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-board.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-board.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,667 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-boards.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-boards.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,684 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-care.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-care.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 378 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-compare.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-compare.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 258 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-custody-disclosure.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-custody-disclosure.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 352 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-det.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-det.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 323 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-distribution-integrity.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-distribution-integrity.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 331 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-drift.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-drift.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 257 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-estate.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-estate.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,514 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-fleet.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-fleet.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 270 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-gap-index.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-gap-index.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 302 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-genai-mil-notices.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-genai-mil-notices.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 545 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-gov.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-gov.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 315 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-hf-estate-index.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-hf-estate-index.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 425 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-hf-model-census.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-hf-model-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 255 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-hub-cards.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-hub-cards.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 16,967 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-human-labour-index.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-human-labour-index.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 327 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-humanoid-labour-index.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-humanoid-labour-index.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 330 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-interop.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-interop.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 258 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-jail-goldbank.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-jail-goldbank.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 478 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-jail.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-jail.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 291 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-kernel-results.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-kernel-results.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 271 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-leaderboard-results.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-leaderboard-results.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 283 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-mach.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-mach.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 343 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-mcp.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-mcp.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 306 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-normalized.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-normalized.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 299 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-ontology.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-ontology.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 334 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-oss.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-oss.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 306 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-own-models-measured.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-own-models-measured.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 275 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-papers.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-papers.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 487 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-provenance-controls.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-provenance-controls.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 384 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-prv.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-prv.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 481 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-regulatory-framework.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-regulatory-framework.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 354 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-reserve-attestation.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-reserve-attestation.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 353 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-signed-boards.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-signed-boards.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,364 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-sim-cards.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-sim-cards.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 261 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-swarm.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-swarm.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 536 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-swift-17.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-swift-17.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 246 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-swift-26.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-swift-26.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 291 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-swift-50.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-swift-50.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 246 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-top100.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-top100.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 260 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-verify.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-verify.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 257 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-xr.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-xr.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 319 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__gspc-xrpl-16.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__gspc-xrpl-16.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,010 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__hf-mcp-spaces-census.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__hf-mcp-spaces-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 560 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__hub-queue.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__hub-queue.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 322 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__index-presence.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__index-presence.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 774 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__jail-floor.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__jail-floor.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 244 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__labour-economy-unmeasured.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__labour-economy-unmeasured.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 275 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__living-catalog.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__living-catalog.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 262 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__living-gspc-board-2026-09-14.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__living-gspc-board-2026-09-14.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 228 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__lmeval-official-format.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__lmeval-official-format.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 415 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__mcp-census.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__mcp-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 452 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__mcp-contract-parity.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__mcp-contract-parity.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 415 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__mcp-fabric.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__mcp-fabric.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 244 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__mcp-registry-self-audit.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__mcp-registry-self-audit.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 482 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__mcp-remote-census.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__mcp-remote-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 815 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__mcp-scoreboard.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__mcp-scoreboard.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 288 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__measured-vs-reported.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__measured-vs-reported.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 294 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__omai-bench.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__omai-bench.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 284 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__oss-model-census.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__oss-model-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 252 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__poai-bench.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__poai-bench.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 402 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__ras-assess.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__ras-assess.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 333 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__registry-harvest-xrpl-mica-lei.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__registry-harvest-xrpl-mica-lei.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 501 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__revenue-history.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__revenue-history.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 256 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__rwa-attest.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__rwa-attest.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 659 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__rwa-onchain-measurement.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__rwa-onchain-measurement.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 337 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__rwa-testnet-unmeasured.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__rwa-testnet-unmeasured.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 254 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__signed-fleet-boards-v2.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__signed-fleet-boards-v2.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 16,888 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__signed-measurement-records.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__signed-measurement-records.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 447 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__swift-17.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__swift-17.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 291 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__trust-chain-freshness.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__trust-chain-freshness.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 4,920 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__unified-evidence-factory-2026-09-19.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__unified-evidence-factory-2026-09-19.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 10,946 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__white-label-eu-ai-act-regulator-findings.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__white-label-eu-ai-act-regulator-findings.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 607 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__wrapped-asset-parity.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__wrapped-asset-parity.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 264 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__x402-bazaar-census.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__x402-bazaar-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 367 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__x402-bazaar-conformance.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__x402-bazaar-conformance.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,660 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__x402-free-discovery-2026-09-14.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__x402-free-discovery-2026-09-14.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 230 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__x402-settlement-census.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__x402-settlement-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 570 bytes."
+    },
+    {
+      "path": "checks/datasets__csoai__xrpl-16-reader.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/datasets__csoai__xrpl-16-reader.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 288 bytes."
+    },
+    {
+      "path": "checks/models__csoai__clan-csoai-plain.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/models__csoai__clan-csoai-plain.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 214 bytes."
+    },
+    {
+      "path": "checks/models__csoai__council-safe.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/models__csoai__council-safe.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 210 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__claimguard.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__claimguard.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 246 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__council-city.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__council-city.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 223 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__council-coliseum.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__council-coliseum.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 227 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__council-mcp-playground.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__council-mcp-playground.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 233 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__council-os.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__council-os.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 246 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__council-space.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__council-space.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 249 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__csoai-gspc-mcp.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__csoai-gspc-mcp.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 240 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__east-west.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__east-west.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 220 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__faq.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__faq.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 239 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__games-catalog.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__games-catalog.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 224 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-affect.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-affect.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 234 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-agi.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-agi.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 231 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-art5.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-art5.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 232 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-asi.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-asi.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 231 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-board.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-board.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 809 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-care.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-care.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 232 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-det.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-det.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 231 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-explorer.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-explorer.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 260 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-gov.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-gov.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 231 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-governance-leaderboard-spc.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-governance-leaderboard-spc.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 254 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-governance-leaderboard.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-governance-leaderboard.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 278 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-interop.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-interop.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 235 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-live-board.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-live-board.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 272 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-lookup.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-lookup.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 231 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-mach.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-mach.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 232 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-mcp.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-mcp.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 231 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-mill.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-mill.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 317 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-node.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-node.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 229 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-oss.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-oss.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 231 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-prv.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-prv.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 231 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-swarm.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-swarm.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 233 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-verify.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-verify.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 979 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__gspc-xr.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__gspc-xr.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 230 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__jail-floor.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__jail-floor.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 233 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__living-catalog.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__living-catalog.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 276 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__mcp-fabric.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__mcp-fabric.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 221 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__measurement-card-verifier.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__measurement-card-verifier.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 394 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__ras-assess.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__ras-assess.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 221 bytes."
+    },
+    {
+      "path": "checks/spaces__csoai__verify-demo.json",
+      "description": "JSON document. top-level keys: byte_checked_paths, item, revision, schema, signature_checks. Same byte size as `checks/spaces__csoai__verify-demo.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 234 bytes."
+    },
+    {
+      "path": "enumeration/owners.json",
+      "description": "the PyPI / npm owner enumeration the package items were selected from. JSON document. top-level keys: schema, fetched_utc, pypi_owner, pypi_owned_count, pypi_selected, npm_maintainer, npm_search_hits, npm_selected, filter. Same byte size as `enumeration/owners.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 841 bytes."
+    },
+    {
+      "path": "index.json",
+      "description": "the index (schema `csoai.evidence-index/0.1`), sha256 `951a813866ffc745f6a1f0bb9210865099f1aa5c232cb520d4439360b9e9d2e9`. JSON document. top-level keys: schema, as_of, build_started, publisher, licence, what_this_is, what_this_does_not_show, trust_anchor, enumeration, caps, totals, items. `items` holds 212 records with fields: id (string), kind (string), title (string), url (url), pinned_revision (string), content_sha256 (string), content_sha256_of (string), fetched_utc (datetime), bytes (integer), ots (string), check (string), as_of (string), licence (string), signature (string), does_not_show (string), … (+6 more). Same byte size as `index.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 553,648 bytes."
+    },
+    {
+      "path": "index.json.ots",
+      "description": "OpenTimestamps proof file for `index.json` (included in this dataset). Same byte size as `index.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 705 bytes."
+    },
+    {
+      "path": "index.md",
+      "description": "the same index for humans. Markdown document. Same byte size as `index.md` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 56,150 bytes."
+    },
+    {
+      "path": "index.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, inspect, state, state_meaning. Same byte size as `index.ots.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,110 bytes."
+    },
+    {
+      "path": "index.signed.json",
+      "description": "Ed25519 signature over a payload pinning index.json by sha256, `did:web:csoai.org#board-attestation-1`, signed 2026-09-25T14:13:38.191Z. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `index.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,949 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__a2a-card-census.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 14 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__a2a-card-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,864 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__a2a-census.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 7 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__a2a-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 931 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__agent-interop-census.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 8 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__agent-interop-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,104 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__agisafe-bench.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 7 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__agisafe-bench.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 898 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__aiact-frozen-split-harness.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 11 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__aiact-frozen-split-harness.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,500 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__arena-elo-by-axis.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__arena-elo-by-axis.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 591 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__arena-matrices.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__arena-matrices.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,246 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__arena-rounds.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__arena-rounds.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 581 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__asisec-bench.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__asisec-bench.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 684 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__attestation-network-2026-09-14.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 3 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__attestation-network-2026-09-14.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 499 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__cinematic-world-stills.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 7 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__cinematic-world-stills.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,121 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__claim-capture-census.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 129 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__claim-capture-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 20,383 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__claim-registries.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 14 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__claim-registries.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,263 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__claimguard.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__claimguard.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 578 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__coai-bench.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 34 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__coai-bench.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 4,065 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__compbench.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__compbench.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 742 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__council-brand.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__council-brand.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,541 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__council-of-ai.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__council-of-ai.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,540 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__council-os.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__council-os.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 578 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__council-space.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__council-space.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 581 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__councilof-ai-mirror.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5806 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__councilof-ai-mirror.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 813,053 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__councilof-ai-source.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 31492 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__councilof-ai-source.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 4,895,847 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__cross-ledger-supply.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 54 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__cross-ledger-supply.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 8,106 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__east-west.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__east-west.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 577 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__eldorado-data-listing.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__eldorado-data-listing.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 590 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__eldorado-eval-results.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__eldorado-eval-results.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 716 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__erc8004-reader.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 11 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__erc8004-reader.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,431 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__faq.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__faq.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 571 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__fleet-status.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 3 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__fleet-status.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 481 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__games-catalog.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__games-catalog.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 581 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-affect.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 8 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-affect.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 997 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-agi.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 8 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-agi.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,007 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-ai-economy-index.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 8 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-ai-economy-index.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,027 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-airbench-eu-mandatory-run.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 11 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-airbench-eu-mandatory-run.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,475 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-arena-results.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 12 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-arena-results.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,546 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-art5.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 11 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-art5.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,364 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-asi.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 8 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-asi.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,008 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-autoeat.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 17 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-autoeat.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,146 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-axis-corpus.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 7 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-axis-corpus.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 904 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-bench-results.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-bench-results.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,198 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-board.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 165 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-board.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 25,177 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-boards.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 222 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-boards.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 28,788 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-care.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 12 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-care.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,450 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-compare.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-compare.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 683 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-custody-disclosure.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-custody-disclosure.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,144 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-det.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-det.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,119 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-distribution-integrity.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 8 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-distribution-integrity.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,032 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-drift.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-drift.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 684 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-estate.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 1178 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-estate.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 157,661 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-fleet.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-fleet.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 856 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-gap-index.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 7 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-gap-index.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 912 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-genai-mil-notices.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 15 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-genai-mil-notices.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,894 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-gov.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-gov.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,110 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-hf-estate-index.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 12 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-hf-estate-index.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,726 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-hf-model-census.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-hf-model-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 764 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-hub-cards.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 2823 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-hub-cards.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 397,292 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-human-labour-index.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 8 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-human-labour-index.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,028 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-humanoid-labour-index.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 8 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-humanoid-labour-index.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,031 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-interop.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-interop.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 683 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-jail-goldbank.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 15 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-jail-goldbank.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,824 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-jail.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 8 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-jail.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 993 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-kernel-results.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-kernel-results.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 700 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-leaderboard-results.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-leaderboard-results.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 800 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-mach.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 10 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-mach.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,231 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-mcp.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 8 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-mcp.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,007 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-normalized.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-normalized.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 943 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-ontology.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-ontology.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,132 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-oss.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 8 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-oss.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,008 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-own-models-measured.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-own-models-measured.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 767 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-papers.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 13 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-papers.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,651 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-provenance-controls.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-provenance-controls.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,176 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-prv.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 15 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-prv.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,827 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-regulatory-framework.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-regulatory-framework.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,146 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-reserve-attestation.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-reserve-attestation.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,146 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-signed-boards.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 24 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-signed-boards.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,263 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-sim-cards.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-sim-cards.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 690 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-swarm.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 17 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-swarm.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,066 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-swift-17.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-swift-17.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 582 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-swift-26.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-swift-26.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 811 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-swift-50.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-swift-50.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 581 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-top100.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-top100.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 752 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-verify.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-verify.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 682 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-xr.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-xr.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,113 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__gspc-xrpl-16.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 26 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__gspc-xrpl-16.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,361 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__hf-mcp-spaces-census.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 14 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__hf-mcp-spaces-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,849 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__hub-queue.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 8 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__hub-queue.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,096 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__index-presence.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 16 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__index-presence.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,325 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__jail-floor.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__jail-floor.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 579 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__labour-economy-unmeasured.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__labour-economy-unmeasured.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 610 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__living-catalog.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 5 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__living-catalog.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 692 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__living-gspc-board-2026-09-14.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 2 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__living-gspc-board-2026-09-14.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 379 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__lmeval-official-format.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 7 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__lmeval-official-format.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,027 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__mcp-census.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__mcp-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,202 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__mcp-contract-parity.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 10 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__mcp-contract-parity.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,399 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__mcp-fabric.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__mcp-fabric.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 579 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__mcp-registry-self-audit.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 10 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__mcp-registry-self-audit.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,374 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__mcp-remote-census.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 21 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__mcp-remote-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,771 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__mcp-scoreboard.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 7 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__mcp-scoreboard.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 898 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__measured-vs-reported.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__measured-vs-reported.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 814 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__omai-bench.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 7 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__omai-bench.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 895 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__oss-model-census.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__oss-model-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 934 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__poai-bench.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 10 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__poai-bench.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,290 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__ras-assess.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__ras-assess.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 851 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__registry-harvest-xrpl-mica-lei.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 13 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__registry-harvest-xrpl-mica-lei.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,670 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__revenue-history.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__revenue-history.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 591 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__rwa-attest.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 18 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__rwa-attest.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,249 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__rwa-onchain-measurement.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 7 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__rwa-onchain-measurement.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 949 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__rwa-testnet-unmeasured.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__rwa-testnet-unmeasured.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 590 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__signed-fleet-boards-v2.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 170 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__signed-fleet-boards-v2.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 22,758 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__signed-measurement-records.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 11 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__signed-measurement-records.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,431 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__swift-17.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__swift-17.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 874 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__trust-chain-freshness.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 661 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__trust-chain-freshness.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 90,861 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__unified-evidence-factory-2026-09-19.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 118 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__unified-evidence-factory-2026-09-19.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 18,867 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__white-label-eu-ai-act-regulator-findings.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__white-label-eu-ai-act-regulator-findings.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,350 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__wrapped-asset-parity.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__wrapped-asset-parity.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 600 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__x402-bazaar-census.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 9 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__x402-bazaar-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,243 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__x402-bazaar-conformance.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 59 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__x402-bazaar-conformance.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 7,433 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__x402-free-discovery-2026-09-14.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 2 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__x402-free-discovery-2026-09-14.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 381 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__x402-settlement-census.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 13 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__x402-settlement-census.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,745 bytes."
+    },
+    {
+      "path": "manifests/datasets__csoai__xrpl-16-reader.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/datasets__csoai__xrpl-16-reader.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 871 bytes."
+    },
+    {
+      "path": "manifests/models__csoai__clan-csoai-plain.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 2 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/models__csoai__clan-csoai-plain.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 365 bytes."
+    },
+    {
+      "path": "manifests/models__csoai__council-safe.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 2 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/models__csoai__council-safe.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 362 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__claimguard.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__claimguard.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 581 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__council-city.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 3 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__council-city.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 466 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__council-coliseum.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 3 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__council-coliseum.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 470 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__council-mcp-playground.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 3 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__council-mcp-playground.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 476 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__council-os.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__council-os.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 581 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__council-space.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__council-space.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 584 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__csoai-gspc-mcp.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__csoai-gspc-mcp.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 573 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__east-west.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 3 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__east-west.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 463 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__faq.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__faq.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 574 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__games-catalog.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 3 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__games-catalog.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 467 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-affect.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-affect.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 568 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-agi.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-agi.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 565 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-art5.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-art5.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 567 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-asi.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-asi.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 566 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-board.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 24 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-board.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,992 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-care.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-care.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 567 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-det.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-det.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 566 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-explorer.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-explorer.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 782 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-gov.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-gov.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 566 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-governance-leaderboard-spc.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-governance-leaderboard-spc.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 588 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-governance-leaderboard.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-governance-leaderboard.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 794 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-interop.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-interop.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 569 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-live-board.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-live-board.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 793 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-lookup.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-lookup.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 568 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-mach.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-mach.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 567 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-mcp.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-mcp.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 566 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-mill.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 11 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-mill.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,296 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-node.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-node.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 564 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-oss.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-oss.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 566 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-prv.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-prv.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 566 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-swarm.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-swarm.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 568 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-verify.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 19 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-verify.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,818 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__gspc-xr.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__gspc-xr.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 565 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__jail-floor.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__jail-floor.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 568 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__living-catalog.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 6 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__living-catalog.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 795 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__mcp-fabric.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 3 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__mcp-fabric.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 465 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__measurement-card-verifier.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 12 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__measurement-card-verifier.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,460 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__ras-assess.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 3 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__ras-assess.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 465 bytes."
+    },
+    {
+      "path": "manifests/spaces__csoai__verify-demo.json",
+      "description": "JSON document. top-level keys: files, repo, revision, schema. `files` holds 4 records with fields: git_oid (string), lfs_sha256 (string), path (string), size (integer). Same byte size as `manifests/spaces__csoai__verify-demo.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 569 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-chain-genesis.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, date, chain_seq, prev_date, prev_index_sha256, prev_index_root, gap_days, genesis, index_path, index_sha256, index_root, index_schema, index_signed_payload_sha256, index_signed_at, chain_rule, signed_fields, private_until. Same byte size as `measurement-index/2026-09-26/measurement-index-chain-genesis.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,831 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-chain-genesis.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-26/measurement-index-chain-genesis.json` (included in this dataset). Same byte size as `measurement-index/2026-09-26/measurement-index-chain-genesis.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 740 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-chain-genesis.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-26/measurement-index-chain-genesis.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,552 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, record_date, iso_week, head_date, head_index_sha256, head_index_root, head_chain_seq, head_index_signed_payload_sha256, chain_length, genesis_date, genesis_index_sha256, genesis_record_sha256, declared_gap_days_total, gap_dates, ots_summary, bitcoin_attested_days, prev_head_date …. `bitcoin_attested_days` holds 1 records with fields: date (datetime), heights (string). Same byte size as `measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,782 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.json` (included in this dataset). Same byte size as `measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 530 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677aa3b9e6c821cf978ca9c5f2c616cc83cd33aa2b40823d624dcf974762740a2840. Same byte size as `measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.rekor-entry.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,779 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.rekor-receipt.json",
+      "description": "JSON document. top-level keys: schema, subject, subject_sha256, preimage_sha256, rekor, uuid, logIndex, integratedTime, logID, inclusion_proof, tree_size, root_hash, how, checked_at, verify, limits. Same byte size as `measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.rekor-receipt.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,130 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,723 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, private_until. `batches` holds 8 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 34,150 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.json` (included in this dataset). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,532 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication-erratum.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, date, index_file, index_sha256, index_root, erratum, field_superseded, publication, index_publication_record, from_now_on, n_files, files, files_sha256, files_sha256_rule, signed_fields. `files` holds 16 records with fields: file (string), role (string), schema (string), sha256 (string), private_until (string), public_at (string). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication-erratum.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 12,759 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication-erratum.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication-erratum.json` (included in this dataset). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication-erratum.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication-erratum.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication-erratum.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,860 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, date, index_file, index_sha256, index_root, index_schema, index_signed_payload_sha256, index_field_superseded, publication, published_at, signed_fields. `published_at` holds 2 records with fields: url (url), sha256_at_check (string), checked_at (datetime), same_bytes (boolean). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,069 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.json` (included in this dataset). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677ad544b59e4447852b74a7fc48fb8132823a71b47ed79c3359c896891b19d4d82f. Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.rekor-entry.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,998 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.rekor-receipt.json",
+      "description": "JSON document. top-level keys: schema, subject, subject_sha256, preimage_sha256, rekor, uuid, logIndex, integratedTime, logID, inclusion_proof, tree_size, root_hash, how, checked_at, verify, limits. Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.rekor-receipt.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,128 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,785 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677a95033baa53cbb4134660f8eadd6bd78e45d10c33d9f6a0fd67419c35555b0ac9. Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.rekor-entry.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,852 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.rekor-receipt.json",
+      "description": "JSON document. top-level keys: schema, subject, subject_sha256, preimage_sha256, rekor, uuid, logIndex, integratedTime, logID, inclusion_proof, tree_size, root_hash, how, checked_at, verify, limits. Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.rekor-receipt.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,118 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,934 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T071103Z.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, private_until. `batches` holds 5 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T071103Z.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 12,850 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T071103Z.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T071103Z.json` (included in this dataset). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T071103Z.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,637 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T071103Z.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T071103Z.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,376 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T072439Z.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, private_until. `batches` holds 6 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T072439Z.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 14,667 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T072439Z.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T072439Z.json` (included in this dataset). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T072439Z.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,637 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T072439Z.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T072439Z.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,559 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T075412Z.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, private_until. `batches` holds 7 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T075412Z.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 15,834 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T075412Z.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T075412Z.json` (included in this dataset). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T075412Z.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,637 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T075412Z.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T075412Z.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,744 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T083332Z.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, private_until. `batches` holds 7 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T083332Z.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 15,647 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T083332Z.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T083332Z.json` (included in this dataset). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T083332Z.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,671 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T083332Z.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T083332Z.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,744 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T103401Z.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, private_until. `batches` holds 7 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T103401Z.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 15,718 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T103401Z.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T103401Z.json` (included in this dataset). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T103401Z.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,601 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T103401Z.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T103401Z.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,745 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.supersession.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 5 rows; fields: at (datetime), superseded (string), by (string), why (string), note (string). Same byte size as `measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.supersession.jsonl` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 4,400 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, record_date, iso_week, head_date, head_index_sha256, head_index_root, head_chain_seq, head_index_signed_payload_sha256, chain_length, genesis_date, genesis_index_sha256, genesis_record_sha256, declared_gap_days_total, gap_dates, ots_summary, bitcoin_attested_days, prev_head_date …. `bitcoin_attested_days` holds 1 records with fields: date (datetime), heights (string). Same byte size as `measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,044 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.json` (included in this dataset). Same byte size as `measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677a30bac1fa63ac28df732390ca230ba589f772b03fc48e700464167527dd60d084. Same byte size as `measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.rekor-entry.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,852 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.rekor-receipt.json",
+      "description": "JSON document. top-level keys: schema, subject, subject_sha256, preimage_sha256, rekor, uuid, logIndex, integratedTime, logID, inclusion_proof, tree_size, root_hash, how, checked_at, verify, limits. Same byte size as `measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.rekor-receipt.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,116 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,785 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, date, chain_rule, chain_seq, prev_date, prev_index_sha256 …. `batches` holds 9 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 42,988 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.json` (included in this dataset). Same byte size as `measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677a0cbff80ef272ea7260eb5ff5c57ae4db3b4e78661535a0303bd00e0802a12bfe. Same byte size as `measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.rekor-entry.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,998 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.rekor-receipt.json",
+      "description": "JSON document. top-level keys: schema, subject, subject_sha256, preimage_sha256, rekor, uuid, logIndex, integratedTime, logID, inclusion_proof, tree_size, root_hash, how, checked_at, verify, limits. Same byte size as `measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.rekor-receipt.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,104 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,503 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, date, chain_rule, chain_seq, prev_date, prev_index_sha256 …. `batches` holds 9 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 43,925 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.json` (included in this dataset). Same byte size as `measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677a6e7f5fabf6fd2f9705c55ab0fc791db25970de298595f398c5f6a188f74a72b5. Same byte size as `measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.rekor-entry.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,998 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.rekor-receipt.json",
+      "description": "JSON document. top-level keys: schema, subject, subject_sha256, preimage_sha256, rekor, uuid, logIndex, integratedTime, logID, inclusion_proof, tree_size, root_hash, how, checked_at, verify, limits. Same byte size as `measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.rekor-receipt.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,104 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,503 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, date, chain_rule, chain_seq, prev_date, prev_index_sha256 …. `batches` holds 10 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 40,233 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.json` (included in this dataset). Same byte size as `measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 600 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677a61f2d0fd6eaaa8b1209935744e4c222ba2e9ed6f4ad502a8015862a944fcef36. Same byte size as `measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.rekor-entry.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,998 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.rekor-receipt.json",
+      "description": "JSON document. top-level keys: schema, subject, subject_sha256, preimage_sha256, rekor, uuid, logIndex, integratedTime, logID, inclusion_proof, tree_size, root_hash, how, checked_at, verify, limits. Same byte size as `measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.rekor-receipt.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,104 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,684 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, date, chain_rule, chain_seq, prev_date, prev_index_sha256 …. `batches` holds 10 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 40,319 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.json` (included in this dataset). Same byte size as `measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 600 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677a6a419fa84a8ead53a720caa5db53c7b0b89cd267886f10ac2d5ca03f1bd5ef0f. Same byte size as `measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.rekor-entry.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,071 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.rekor-receipt.json",
+      "description": "JSON document. top-level keys: schema, subject, subject_sha256, preimage_sha256, rekor, uuid, logIndex, integratedTime, logID, inclusion_proof, tree_size, root_hash, how, checked_at, verify, limits. Same byte size as `measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.rekor-receipt.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,104 bytes."
+    },
+    {
+      "path": "measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,684 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, date, chain_rule, chain_seq, prev_date, prev_index_sha256 …. `batches` holds 10 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 40,567 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.json` (included in this dataset). Same byte size as `measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 429 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677a6bee5ebdf0c4c3724f342d9792170c896c507407e23cecc46d29859461be4da9. Same byte size as `measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.rekor-entry.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,998 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.rekor-receipt.json",
+      "description": "JSON document. top-level keys: schema, subject, subject_sha256, preimage_sha256, rekor, uuid, logIndex, integratedTime, logID, inclusion_proof, tree_size, root_hash, how, checked_at, verify, limits. Same byte size as `measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.rekor-receipt.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,104 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,684 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-02/measurement-index-v0.2-2026-10-02.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, date, chain_rule, chain_seq, prev_date, prev_index_sha256 …. `batches` holds 10 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-10-02/measurement-index-v0.2-2026-10-02.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 40,529 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-02/measurement-index-v0.2-2026-10-02.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-10-02/measurement-index-v0.2-2026-10-02.json` (included in this dataset). Same byte size as `measurement-index/2026-10-02/measurement-index-v0.2-2026-10-02.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,636 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-02/measurement-index-v0.2-2026-10-02.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-10-02/measurement-index-v0.2-2026-10-02.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,684 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-03/measurement-index-v0.2-2026-10-03.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, date, chain_rule, chain_seq, prev_date, prev_index_sha256 …. `batches` holds 10 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-10-03/measurement-index-v0.2-2026-10-03.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 40,705 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-03/measurement-index-v0.2-2026-10-03.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-10-03/measurement-index-v0.2-2026-10-03.json` (included in this dataset). Same byte size as `measurement-index/2026-10-03/measurement-index-v0.2-2026-10-03.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,636 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-03/measurement-index-v0.2-2026-10-03.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-10-03/measurement-index-v0.2-2026-10-03.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,684 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-06/measurement-index-v0.2-2026-10-06.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, date, chain_rule, chain_seq, prev_date, prev_index_sha256 …. `batches` holds 9 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-10-06/measurement-index-v0.2-2026-10-06.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 38,791 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-06/measurement-index-v0.2-2026-10-06.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-10-06/measurement-index-v0.2-2026-10-06.json` (included in this dataset). Same byte size as `measurement-index/2026-10-06/measurement-index-v0.2-2026-10-06.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,742 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-06/measurement-index-v0.2-2026-10-06.rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677ae25d72d0a5f1d4a699f01aa93ca58251fb6a1d1af24e561072f8065557c3a2b4. Same byte size as `measurement-index/2026-10-06/measurement-index-v0.2-2026-10-06.rekor-entry.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,148 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-06/measurement-index-v0.2-2026-10-06.rekor-receipt.json",
+      "description": "JSON document. top-level keys: schema, subject, subject_sha256, preimage_sha256, rekor, uuid, logIndex, integratedTime, logID, inclusion_proof, tree_size, root_hash, how, checked_at, verify, limits. Same byte size as `measurement-index/2026-10-06/measurement-index-v0.2-2026-10-06.rekor-receipt.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,104 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-06/measurement-index-v0.2-2026-10-06.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-10-06/measurement-index-v0.2-2026-10-06.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,502 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, date, chain_rule, chain_seq, prev_date, prev_index_sha256 …. `batches` holds 10 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 40,568 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.json` (included in this dataset). Same byte size as `measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 705 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677a8b28751ba75b95198360c63d21ec42d1b100d4105aab7b18816d054c061cbcb2. Same byte size as `measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.rekor-entry.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,706 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.rekor-receipt.json",
+      "description": "JSON document. top-level keys: schema, subject, subject_sha256, preimage_sha256, rekor, uuid, logIndex, integratedTime, logID, inclusion_proof, tree_size, root_hash, how, checked_at, verify, limits. Same byte size as `measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.rekor-receipt.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,104 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,685 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.json",
+      "description": "JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, date, chain_rule, chain_seq, prev_date, prev_index_sha256 …. `batches` holds 12 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 43,180 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.json.ots",
+      "description": "OpenTimestamps proof file for `measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.json` (included in this dataset). Same byte size as `measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677a1c1d5060d47d3468685cdace5ec0f7e327081cbb6838af16f1b267b39147a3a8. Same byte size as `measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.rekor-entry.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,148 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.rekor-receipt.json",
+      "description": "JSON document. top-level keys: schema, subject, subject_sha256, preimage_sha256, rekor, uuid, logIndex, integratedTime, logID, inclusion_proof, tree_size, root_hash, how, checked_at, verify, limits. Same byte size as `measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.rekor-receipt.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,104 bytes."
+    },
+    {
+      "path": "measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 4,036 bytes."
+    },
+    {
+      "path": "measurement-index/README.md",
+      "description": "Dataset README (Markdown). Same byte size as `measurement-index/README.md` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 5,637 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-26/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-26/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,509 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-26/index.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-26/index.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,776 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-27/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 6 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-27/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 6,901 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-27/measurement-index/2026-09-26/measurement-index-chain-genesis.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-27/measurement-index/2026-09-26/measurement-index-chain-genesis.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,637 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-27/measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-27/measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,462 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-27/measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication-erratum.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-27/measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication-erratum.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,742 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-27/measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-27/measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.publication.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,567 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-27/measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-27/measurement-index/2026-09-27/measurement-index-chain-head-2026-09-27.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,532 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-27/measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-27/measurement-index/2026-09-27/measurement-index-v0.2-2026-09-27.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,532 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-28/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-28/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,680 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-28/measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-28/measurement-index/2026-09-28/measurement-index-v0.2-2026-09-28.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,672 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-29/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,680 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-29/measurement-index/2026-09-29/measurement-index-v0.2-2026-09-29.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,672 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-30/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-30/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,680 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-30/measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-30/measurement-index/2026-09-30/measurement-index-v0.2-2026-09-30.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,707 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-01/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-10-01/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,680 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-01/measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-10-01/measurement-index/2026-10-01/measurement-index-v0.2-2026-10-01.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,396 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-07/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-10-07/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,680 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-07/measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-10-07/measurement-index/2026-10-07/measurement-index-v0.2-2026-10-07.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,672 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-15/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-10-15/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,680 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-15/measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-10-15/measurement-index/2026-10-15/measurement-index-v0.2-2026-10-15.json.ots` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,532 bytes."
+    },
+    {
+      "path": "owners.py",
+      "description": "Python source file. Same byte size as `owners.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,216 bytes."
+    },
+    {
+      "path": "publish_hf.py",
+      "description": "Python source file. Same byte size as `publish_hf.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 941 bytes."
+    },
+    {
+      "path": "render_evidence_index.py",
+      "description": "Python source file. Same byte size as `render_evidence_index.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 12,878 bytes."
+    },
+    {
+      "path": "source/LICENSE",
+      "description": "Licence text file. Same byte size as `source/LICENSE` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 11,358 bytes."
+    },
+    {
+      "path": "source/README.md",
+      "description": "Dataset README (Markdown). Same byte size as `source/README.md` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 3,954 bytes."
+    },
+    {
+      "path": "source/SOURCE-MANIFEST.json",
+      "description": "JSON document. top-level keys: schema, what, licence, exported_from, files. Same byte size as `source/SOURCE-MANIFEST.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,466 bytes."
+    },
+    {
+      "path": "source/adapters/__init__.py",
+      "description": "Python source file. Same byte size as `source/adapters/__init__.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,107 bytes."
+    },
+    {
+      "path": "source/adapters/a2a_card.py",
+      "description": "Python source file. Same byte size as `source/adapters/a2a_card.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 9,719 bytes."
+    },
+    {
+      "path": "source/adapters/contract_parity.py",
+      "description": "Python source file. Same byte size as `source/adapters/contract_parity.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 10,409 bytes."
+    },
+    {
+      "path": "source/adapters/cross_ledger.py",
+      "description": "Python source file. Same byte size as `source/adapters/cross_ledger.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 23,490 bytes."
+    },
+    {
+      "path": "source/adapters/mill_cross_runtime.py",
+      "description": "Python source file. Same byte size as `source/adapters/mill_cross_runtime.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,477 bytes."
+    },
+    {
+      "path": "source/adapters/public_signals.py",
+      "description": "Python source file. Same byte size as `source/adapters/public_signals.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 6,130 bytes."
+    },
+    {
+      "path": "source/adapters/self_parity.py",
+      "description": "Python source file. Same byte size as `source/adapters/self_parity.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 6,633 bytes."
+    },
+    {
+      "path": "source/adapters/tool_drift.py",
+      "description": "Python source file. Same byte size as `source/adapters/tool_drift.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 17,259 bytes."
+    },
+    {
+      "path": "source/chain.py",
+      "description": "Python source file. Same byte size as `source/chain.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 81,331 bytes."
+    },
+    {
+      "path": "source/docs/VERIFY-CHAIN.md",
+      "description": "Markdown document. Same byte size as `source/docs/VERIFY-CHAIN.md` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 6,402 bytes."
+    },
+    {
+      "path": "source/measurement_capsule.py",
+      "description": "Python source file. Same byte size as `source/measurement_capsule.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 47,258 bytes."
+    },
+    {
+      "path": "source/test_adapters.py",
+      "description": "Python source file. Same byte size as `source/test_adapters.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 20,097 bytes."
+    },
+    {
+      "path": "source/test_artifact_path.py",
+      "description": "Python source file. Same byte size as `source/test_artifact_path.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 1,857 bytes."
+    },
+    {
+      "path": "source/test_chain.py",
+      "description": "Python source file. Same byte size as `source/test_chain.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 39,840 bytes."
+    },
+    {
+      "path": "source/test_cross_ledger_daily.py",
+      "description": "Python source file. Same byte size as `source/test_cross_ledger_daily.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 9,990 bytes."
+    },
+    {
+      "path": "source/test_measurement_capsule.py",
+      "description": "Python source file. Same byte size as `source/test_measurement_capsule.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 5,268 bytes."
+    },
+    {
+      "path": "source/test_public_signals.py",
+      "description": "Python source file. Same byte size as `source/test_public_signals.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 5,342 bytes."
+    },
+    {
+      "path": "source/test_tool_drift.py",
+      "description": "Python source file. Same byte size as `source/test_tool_drift.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 9,806 bytes."
+    },
+    {
+      "path": "source/test_v02.py",
+      "description": "Python source file. Same byte size as `source/test_v02.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 7,163 bytes."
+    },
+    {
+      "path": "source/testdata/measurement-index-v0.2-2026-09-26.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `source/testdata/measurement-index-v0.2-2026-09-26.signed.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,934 bytes."
+    },
+    {
+      "path": "source/testdata/rekor-entry-measurement-index-2026-09-26.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677a95033baa53cbb4134660f8eadd6bd78e45d10c33d9f6a0fd67419c35555b0ac9. Same byte size as `source/testdata/rekor-entry-measurement-index-2026-09-26.json` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 2,851 bytes."
+    },
+    {
+      "path": "verify.log",
+      "description": "the output of `python3 verify.py` at build time. Log file. Same byte size as `verify.log` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 22,489 bytes."
+    },
+    {
+      "path": "verify.py",
+      "description": "a stranger's one-command verifier (Apache-2.0). Python source file. Same byte size as `verify.py` in huggingface.co/datasets/csoai/evidence-index (checked 2026-11-20). 25,407 bytes."
+    }
+  ]
+}

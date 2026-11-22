@@ -1,0 +1,115 @@
+{
+  "title": "CSOAI GSPC Kaggle T4 candidate evidence",
+  "id": "nicktempleman/csoai-gspc-kaggle-t4-candidate-evidence",
+  "id_no": 12185638,
+  "subtitle": "Two pinned T4 models and a label-order control; unsigned",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-kaggle-t4-candidate-evidence`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-kaggle-t4-candidate-evidence -p ./dataset --unzip\n```\n\nStart by inspecting `bank-jail-b4745f843b33.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `quality_control.py`\n- `quality-control.json`\n- `label_order_control.py`\n- `label_order_control.json`\n- `admission-b7283fd1613a.json`\n- `bank-jail-b4745f843b33.jsonl`\n- `bank-affect-5ce11c084a6e.jsonl`\n- See the Data tab for all 22 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\nExact per-item evidence from two public Kaggle T4 model runs plus a third label-order control. Both original provenance runs answered DESTROYED on all 30 items (the bank has 14 DESTROYED, 16 SURVIVES). Reversing offered label order left Qwen at 30 DESTROYED; SmolLM2 produced 19 SURVIVES and 11 unparsed. These are instrument-quality findings, not GSPC measurements. All cards are unsigned and UNMEASURED. Current public board (separate from these candidates): https://councilof.ai/api/gspc. Reproduction and limits: README.md in this dataset.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 4, last updated 2026-09-25.\n- 22 files, 264,256 bytes. File types: .jsonl (10), .json (9), .py (2), .md (1).\n- Related Hugging Face repository: [csoai/gspc-prv](https://huggingface.co/datasets/csoai/gspc-prv). No byte-identical files were found, so treat it as related, not a mirror.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_gspc_prv,\n  title        = {GSPC — provenance bank (ProvBench)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/gspc-prv}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "benchmark",
+    "cyber security",
+    "internet",
+    "software",
+    "pre-trained model"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "https://www.kaggle.com/code/nicktempleman/csoai-gspc-unsigned-community-cells/versions/1 and https://www.kaggle.com/code/nicktempleman/csoai-gspc-unsigned-community-cells/versions/2 and https://huggingface.co/datasets/csoai/gspc-prv and https://huggingface.co/datasets/csoai/gspc-affect",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "2006 — card. Dataset README (Markdown). 3,301 bytes."
+    },
+    {
+      "path": "admission-b7283fd1613a.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,612 bytes."
+    },
+    {
+      "path": "bank-affect-5ce11c084a6e.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 17,438 bytes."
+    },
+    {
+      "path": "bank-jail-b4745f843b33.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 21,100 bytes."
+    },
+    {
+      "path": "bank-provenan-79711366e29e.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 8,036 bytes."
+    },
+    {
+      "path": "items-affect-562a47af598f.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 27,015 bytes."
+    },
+    {
+      "path": "items-provenan-c72b79733cef.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 25,963 bytes."
+    },
+    {
+      "path": "kaggle_community_cells_report.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 3,181 bytes."
+    },
+    {
+      "path": "label_order_control.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 35,949 bytes."
+    },
+    {
+      "path": "label_order_control.py",
+      "description": "Python source file. 6,161 bytes."
+    },
+    {
+      "path": "quality-control.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 2,567 bytes."
+    },
+    {
+      "path": "quality_control.py",
+      "description": "Python source file. 2,408 bytes."
+    },
+    {
+      "path": "smollm2-v2/bank-affect-5ce11c084a6e.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 17,438 bytes."
+    },
+    {
+      "path": "smollm2-v2/bank-jail-b4745f843b33.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 21,100 bytes."
+    },
+    {
+      "path": "smollm2-v2/bank-provenan-79711366e29e.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 8,036 bytes."
+    },
+    {
+      "path": "smollm2-v2/items-affect-621bb217181a.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 28,141 bytes."
+    },
+    {
+      "path": "smollm2-v2/items-provenan-08f992ce61f4.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 26,233 bytes."
+    },
+    {
+      "path": "smollm2-v2/kaggle_community_cells_report.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 3,218 bytes."
+    },
+    {
+      "path": "smollm2-v2/unsigned-affect-74ecb80647ec.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,361 bytes."
+    },
+    {
+      "path": "smollm2-v2/unsigned-provenan-3075e8cb6dd7.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,328 bytes."
+    },
+    {
+      "path": "unsigned-affect-dce52446dedb.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,351 bytes."
+    },
+    {
+      "path": "unsigned-provenan-a3e97d1a51c6.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,319 bytes."
+    }
+  ]
+}
