@@ -327,6 +327,7 @@ const Glossary = lazy(() => import("./pages/Glossary"));
 const ReadinessAssessment = lazy(() => import("./pages/ReadinessAssessment"));
 const IndustrySolutions = lazy(() => import("./pages/IndustrySolutions"));
 const Traction = lazy(() => import("./pages/Traction"));
+const Investors = lazy(() => import("./pages/Investors"));
 const ComparisonPage = lazy(() => import("./pages/ComparisonPage"));
 const ROICalculator = lazy(() => import("./pages/ROICalculator"));
 const Integrations = lazy(() => import("./pages/Integrations"));
@@ -1167,6 +1168,7 @@ function AppShell() {
                   <Route path="/trust-center" component={ContentReviewNotice} />
                   <Route path="/security" component={ContentReviewNotice} />
                   <Route path="/traction" component={Traction} />
+                  <Route path="/investors" component={Investors} />
                   <Route path="/comparison" component={ComparisonPage} />
                   <Route path="/roi-calculator" component={ROICalculator} />
                   <Route path="/roi" component={ROICalculator} />
