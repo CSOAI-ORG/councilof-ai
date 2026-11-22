@@ -62,3 +62,7 @@ Same code, same items, same statistic, same flag rule, under the public model na
 - Replicas, routing and load vary by time; C0 measures how much of that shows as false flags.
 - Hosted endpoints are a different arm from a local copy of the same model; no cross-claim is made.
 - Raw reasoning, weights and training data of paid models stay in `unmeasured[]`.
+
+## 10. Addendum 1 (22 Nov 2026, still before any data): data-quality gate
+
+If more than 5 percent of the calls of a batch fail at the transport (network error, timeout, an HTTP error other than a refusal of credentials), the batch is `UNCHECKABLE`: it is not compared, not counted as a flag and not counted in any rate. A failed fetch is never read as "unchanged" or "changed". `UNPARSED` answers are not transport failures; they stay a category. Sections 1 to 9 are unchanged. This is recorded in `protocol.json` under `addendum_1`.
