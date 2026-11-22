@@ -3,6 +3,13 @@
 """Read public CSOAI evidence without a wallet, API key, GPU or downloaded-code execution.
 Checks exact published bytes. It does not establish source truth, payment, independent
 publisher identity, signature validity or Bitcoin confirmation. Python 3.9+; stdlib only.
+
+There is no release to read at present. The two release families this client reads, claim
+capture and the claim-maintenance operations report, were published only in the Hugging Face
+dataset csoai/councilof-ai-mirror; the last releases were published on 24 Sep 2026. That dataset was
+deleted on 21 Nov 2026 and no other host carries them, so fetch() stops before any request and
+both commands exit 2. The checks are unchanged and run offline on bytes you supply (see
+test_csoai_read.py). README.md lists the public sources that do exist.
 """
 from __future__ import annotations
 import argparse
@@ -13,16 +20,18 @@ from pathlib import Path
 import re
 import sys
 import urllib.parse
-import urllib.request
 
+# HF_BASE is the URL shape the checks accept. It still names the deleted dataset so that a saved
+# copy of one of its releases, and the offline tests, check exactly as before; fetch() never
+# requests it.
 HF_BASE = 'https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/'
 CAPTURE_POINTER = HF_BASE + 'main/claim-capture/latest.json'
 OPERATIONS_POINTER = HF_BASE + 'main/operations/claim-maintenance/latest.json'
+NO_CURRENT_RELEASE = ('No current release: these releases were published only in the Hugging Face dataset '
+                      'csoai/councilof-ai-mirror, deleted on 21 Nov 2026. README.md lists the public sources that exist.')
 HEX64 = re.compile(r'^[0-9a-f]{64}$')
 HEX40 = re.compile(r'^[0-9a-f]{40}$')
 POPULATIONS = ('stablecoins', 'protocols', 'mcp_versions', 'x402_services')
-MAX_BYTES = 8_000_000
-UA = 'CSOAI-Public-Consumer/1.0 (+https://councilof.ai)'
 
 class EvidenceError(ValueError):
     """A contract or integrity check failed; do not promote to verified."""
@@ -67,23 +76,11 @@ def checked_url(url: str, revision: str | None = None) -> str:
         raise EvidenceError('Unknown public release family')
     return url
 
-class MirrorRedirect(urllib.request.HTTPRedirectHandler):
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
-        # These bounded JSON artifacts normally remain on huggingface.co. Refuse
-        # an unexpected host rather than following arbitrary dataset content.
-        u = urllib.parse.urlsplit(newurl)
-        if u.scheme != 'https' or u.hostname != 'huggingface.co' or u.username or u.password:
-            raise EvidenceError('Unexpected download redirect; inspect it separately')
-        return super().redirect_request(req, fp, code, msg, headers, newurl)
-
 def fetch(url: str) -> bytes:
     checked_url(url)
-    request = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept': 'application/json', 'Accept-Encoding': 'identity'})
-    with urllib.request.build_opener(MirrorRedirect()).open(request, timeout=25) as response:
-        raw = response.read(MAX_BYTES + 1)
-    if len(raw) > MAX_BYTES:
-        raise EvidenceError('Public artifact exceeds the download budget')
-    return raw
+    # The only host of these releases is gone. Stop here rather than send a request that can only
+    # be refused, and never put another host's bytes in place of a missing release.
+    raise EvidenceError(NO_CURRENT_RELEASE)
 
 def equal_bytes(raw: bytes, digest: str, length=None) -> None:
     if not isinstance(digest, str) or not HEX64.fullmatch(digest) or sha(raw) != digest:
