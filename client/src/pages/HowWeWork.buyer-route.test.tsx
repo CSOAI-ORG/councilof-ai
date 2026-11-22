@@ -28,7 +28,8 @@ describe("/how-we-work measured-run route", () => {
     expect(contact).toContain('outcome.kind === "stored"');
     expect(contact).toContain("Open email draft to contact Council");
     expect(contact).toContain("Store a copy (no email sent)");
-    expect(contact).toContain("The Council team has NOT been notified");
+    const receipts = readFileSync(resolve(__dirname, "../lib/contactReceipt.ts"), "utf8");
+    expect(receipts).toContain("The Council team has NOT been notified");
     expect(contact).toContain("copyEnquiry");
     expect(enquiry).toContain("return formatDraft(CONTACT_ENQUIRY_EMAIL, subject, body);");
 
