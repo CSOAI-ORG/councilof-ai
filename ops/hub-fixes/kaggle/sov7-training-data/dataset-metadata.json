@@ -1,0 +1,33 @@
+{
+  "title": "ARCHIVED historical train data",
+  "id": "nicktempleman/sov7-training-data",
+  "id_no": 11357565,
+  "subtitle": "ARCHIVED. Not a product. Living board = GET https://councilof.ai/api/gspc only.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/sov7-training-data`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/sov7-training-data -p ./dataset --unzip\n```\n\nStart by inspecting `teacher_full.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `teacher_full.jsonl`\n- `sov7_kaggle_training.py`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\nARCHIVED historical bytes. Not a live product. Do not cite this slug as a product name.\n\nLiving measurement is the GET only — this card must not quote board counts or Hub card counts.\nAUTHORITY: GET https://councilof.ai/api/gspc (living). Archived Kaggle bytes are not a product.\nHub cards living GET: https://councilof.ai/api/hub-cards (do not freeze a triple here).\n\nVerify: https://councilof.ai/gspc-verify\n\nDOI 10.5281/zenodo.21991104 — GSPC Methodology and the Frozen Corpus Anchor.\nIssuer: CSOAI Ltd (GB, Companies House 16939677).\n\nMeasurement, not certification. Do not freeze a score table on this card.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-07-26.\n- 2 files, 5,066 bytes. File types: .py (1), .jsonl (1).\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai.",
+  "resources": [
+    {
+      "path": "sov7_kaggle_training.py",
+      "description": "Python source file. 4,650 bytes."
+    },
+    {
+      "path": "teacher_full.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 416 bytes."
+    }
+  ]
+}

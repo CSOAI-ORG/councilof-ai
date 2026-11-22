@@ -337,6 +337,12 @@ jobs:
           node --test scripts/post-deploy-verification.node-test.mjs
           node scripts/workflow-trigger-coupling.mjs
 
+      # The globe probe's deadline, with a fake page (no browser). sov-stack-e2e runs only after a
+      # deploy, so its intermittent "Timeout 1ms exceeded" was never caught on a pull request.
+      - name: Globe probe deadline — offline controls
+        if: steps.scope.outputs.gated == 'true'
+        run: node --test scripts/sov-stack-globe-spy-deadline.node-test.mjs
+
       - name: Outward claims — offline manifest contract selftest
         if: steps.scope.outputs.gated == 'true'
         run: node scripts/outward-claims-guard.mjs --selftest

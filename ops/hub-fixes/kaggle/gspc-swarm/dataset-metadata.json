@@ -1,0 +1,91 @@
+{
+  "title": "GSPC-SWARM — multi-agent safety (MEASURED)",
+  "id": "nicktempleman/gspc-swarm",
+  "id_no": 11515468,
+  "subtitle": "Mirror of Hugging Face csoai/gspc-swarm",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/gspc-swarm`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/gspc-swarm -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `eval.yaml`\n- `swarm.json`\n- `items.jsonl`\n- `samples.jsonl`\n- `manifest.jsonl`\n- `protocol.jsonl`\n- `axis-live.jsonl`\n- See the Data tab for all 16 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-swarm at revision `c6893fcb8c1016d9293bed524ef2a6da8c3f3105`, made 2026-09-29. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC — swarm bank (SwarmBench v2b)\n\n\n**In one line:** The frozen multi-agent coordination safety bank (SwarmBench v2b) behind the board's `swarm` axis, with candidates, samples and protocol. For evaluators who want to run the same items against their own model.\n\n### Use it\n\n```python\nfrom datasets import load_dataset\nds = load_dataset(\"csoai/gspc-swarm\", split=\"train\")\nprint(ds[0])\n```\n\n- **Verify a signed card in your browser, free, no account:**\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 5, last updated 2026-09-29.\n- 16 files, 118,443 bytes. File types: .jsonl (7), .json (4), .py (3), .md (1), .yaml (1).\n- Hugging Face twin: [csoai/gspc-swarm](https://huggingface.co/datasets/csoai/gspc-swarm). 14 of 16 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_swarm,\n  title        = {GSPC — swarm bank (SwarmBench v2b)},\n  author       = {{CSOAI Ltd (Council of AI)}},\n  year         = {2026},\n  publisher    = {Hugging Face},\n  url          = {https://huggingface.co/datasets/csoai/gspc-swarm},\n  note         = {Methodology: https://councilof.ai/methodology/. Measurement, not certification.}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software",
+    "employment",
+    "computer vision"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 14 of 16 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-swarm](https://huggingface.co/datasets/csoai/gspc-swarm) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "PATH-A-MANIFEST.json",
+      "description": "JSON document. top-level keys: path_a, as_of, file, hub, replaces, sha256, n, unique_text, unique_lines, expected_sha256, sha_match, unique_ne_1, board, note. Same byte size as `PATH-A-MANIFEST.json` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 569 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "2099 — card. Dataset README (Markdown). 21,299 bytes."
+    },
+    {
+      "path": "SAMPLES-MANIFEST.json",
+      "description": "JSON document. top-level keys: axis, source, n, unique_text, samples_sha256, keep_sha256, path_a, board, as_of, note. Same byte size as `SAMPLES-MANIFEST.json` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 533 bytes."
+    },
+    {
+      "path": "axis-live.jsonl",
+      "description": "1 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 1 rows; fields: axis (string), family (string), kind (string), bench (string), task (string), n (integer), n_note (string), accuracy (numeric), accuracy_is (string), leader (string), separation (string), separation_basis (string), status (string), dataset (string), colour (string), hue (integer), note (string), dataset_url (url), _as_of (datetime), _source (url), _authority (string), _public_count (string), separation_reviewed_at (datetime). 1,872 bytes."
+    },
+    {
+      "path": "eval.yaml",
+      "description": "506 — config. YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 1,359 bytes."
+    },
+    {
+      "path": "gspc-swarm-candidates-v2.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 37 rows; fields: text (string), expected (string), axis (string), category (string), must_inc (string), source (string). Same byte size as `gspc-swarm-candidates-v2.jsonl` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 15,267 bytes."
+    },
+    {
+      "path": "inspect/__init__.py",
+      "description": "Python source file. Same byte size as `inspect/__init__.py` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 31 bytes."
+    },
+    {
+      "path": "inspect/gspc-swarm-candidates-v2.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 37 rows; fields: text (string), expected (string), axis (string), category (string), must_inc (string), source (string). Same byte size as `inspect/gspc-swarm-candidates-v2.jsonl` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 15,267 bytes."
+    },
+    {
+      "path": "inspect/task.py",
+      "description": "Python source file. Same byte size as `inspect/task.py` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 6,830 bytes."
+    },
+    {
+      "path": "items.jsonl",
+      "description": "14343 — 41 — data (one JSON object per line). Newline-delimited JSON (one record per line). 37 rows; fields: text (string), expected (string), axis (string), category (string), must_inc (string), source (string). Same byte size as `items.jsonl` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 15,267 bytes."
+    },
+    {
+      "path": "jobs/inspect_gspc_swarm_uv.py",
+      "description": "Python source file. Same byte size as `jobs/inspect_gspc_swarm_uv.py` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 1,142 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "7 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 7 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 2,258 bytes."
+    },
+    {
+      "path": "protocol.jsonl",
+      "description": "6789 — 30 — data (one JSON object per line). Newline-delimited JSON (one record per line). 30 rows; fields: id (string), dimension (string), question (string), labels (string), note (string). Same byte size as `protocol.jsonl` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 6,789 bytes."
+    },
+    {
+      "path": "results_2026-08-11.json",
+      "description": "679 — JSON document. JSON document. top-level keys: benchmark, harness, generated_utc, models, n, quotable, results. Same byte size as `results_2026-08-11.json` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 679 bytes."
+    },
+    {
+      "path": "samples.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 37 rows; fields: id (string), input (string), target (string), text (string), expected (string), category (string), must_inc (string), axis (string), hub_dataset (string), source_bank (string), n_bank (integer), keep_sha256 (string). Same byte size as `samples.jsonl` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 28,358 bytes."
+    },
+    {
+      "path": "swarm.json",
+      "description": "923 — JSON document. JSON document. top-level keys: schema, record_type, not_a_certification, endorsement, authored_by, axis, status, basis, witnessed_at, grammar, content_id, signature, pubkey, key_id, verification_method, did_resolver. Same byte size as `swarm.json` in huggingface.co/datasets/csoai/gspc-swarm (checked 2026-11-20). 923 bytes."
+    }
+  ]
+}

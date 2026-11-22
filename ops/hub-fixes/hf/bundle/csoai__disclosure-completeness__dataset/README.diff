@@ -1,0 +1,83 @@
+--- a/csoai/disclosure-completeness/README.md (live)
++++ b/csoai/disclosure-completeness/README.md (proposed)
+@@ -6,11 +6,49 @@
+ - benchmarks
+ - disclosure
+ - provenance
++- council-of-ai
+ size_categories:
+ - n<1K
+ language:
+ - en
+-viewer: false
++configs:
++- config_name: disclosure-completeness-epoch-date-and-n-record
++  data_files:
++  - split: train
++    path: disclosure-completeness-*/epoch-date-and-n/record.json
++  default: true
++- config_name: disclosure-completeness-epoch-date-and-n-record-signed
++  data_files:
++  - split: train
++    path: disclosure-completeness-*/epoch-date-and-n/record.signed.json
++- config_name: disclosure-completeness-lmarena-publish-lag-record
++  data_files:
++  - split: train
++    path: disclosure-completeness-*/lmarena-publish-lag/record.json
++- config_name: disclosure-completeness-lmarena-publish-lag-record-signed
++  data_files:
++  - split: train
++    path: disclosure-completeness-*/lmarena-publish-lag/record.signed.json
++- config_name: disclosure-completeness-openrouter-hf-declared-fields-record
++  data_files:
++  - split: train
++    path: disclosure-completeness-*/openrouter-hf-declared-fields/record.json
++- config_name: disclosure-completeness-openrouter-hf-declared-fields-record-json
++  data_files:
++  - split: train
++    path: disclosure-completeness-*/openrouter-hf-declared-fields/record.signed.json
++- config_name: disclosure-completeness-swebench-logs-pointer-record
++  data_files:
++  - split: train
++    path: disclosure-completeness-*/swebench-logs-pointer/record.json
++- config_name: disclosure-completeness-swebench-logs-pointer-record-signed
++  data_files:
++  - split: train
++    path: disclosure-completeness-*/swebench-logs-pointer/record.signed.json
++- config_name: ots-upgraded-ots-upgrade
++  data_files:
++  - split: train
++    path: ots-upgraded/*/OTS-UPGRADE.json
+ ---
+ 
+ <p align="center">
+@@ -95,3 +133,29 @@
+ 
+ For reproducible reuse, pass the repository commit SHA as `revision` and retain the downloaded bytes. Loading a file does not verify its signature; follow this card's verification instructions before relying on a claim. Dated snapshots remain historical measurements.
+ <!-- DATA-ACCESS:END -->
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table. The viewer was previously disabled (`viewer: false`); it is re-enabled now that every subset loads.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `disclosure-completeness-epoch-date-and-n-record` (default) | `disclosure-completeness-*/epoch-date-and-n/record.json` | 1 |
++| `disclosure-completeness-epoch-date-and-n-record-signed` | `disclosure-completeness-*/epoch-date-and-n/record.signed.json` | 1 |
++| `disclosure-completeness-lmarena-publish-lag-record` | `disclosure-completeness-*/lmarena-publish-lag/record.json` | 1 |
++| `disclosure-completeness-lmarena-publish-lag-record-signed` | `disclosure-completeness-*/lmarena-publish-lag/record.signed.json` | 1 |
++| `disclosure-completeness-openrouter-hf-declared-fields-record` | `disclosure-completeness-*/openrouter-hf-declared-fields/record.json` | 1 |
++| `disclosure-completeness-openrouter-hf-declared-fields-record-json` | `disclosure-completeness-*/openrouter-hf-declared-fields/record.signed.json` | 1 |
++| `disclosure-completeness-swebench-logs-pointer-record` | `disclosure-completeness-*/swebench-logs-pointer/record.json` | 1 |
++| `disclosure-completeness-swebench-logs-pointer-record-signed` | `disclosure-completeness-*/swebench-logs-pointer/record.signed.json` | 1 |
++| `ots-upgraded-ots-upgrade` | `ots-upgraded/*/OTS-UPGRADE.json` | 1 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/disclosure-completeness", "disclosure-completeness-epoch-date-and-n-record", split="train")
++```
++
++<!-- csoai-card-fixes:end -->

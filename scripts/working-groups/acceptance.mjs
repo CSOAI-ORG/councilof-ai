@@ -56,6 +56,11 @@ try{
   });
   const page=await context.newPage();page.on("pageerror",e=>errors.push(e.message));
   await page.route("**/spec/claim-maintenance/register.json",route=>route.fulfill({json:{registries:[],totals:{subjects:0,claims:0}}}));
+  await page.goto(origin+"/watchdog/?view=groups");
+  await expect(page.getByRole("heading",{name:"Public Watchdog working groups"})).toBeVisible();
+  await expect(page.getByRole("button",{name:"Start a task",exact:true})).toHaveAttribute("aria-pressed","true");
+  await expect(page.locator("article")).toHaveCount(7);
+  checks.push("direct working-group link opens the task view on first load");
   await page.goto(origin+"/watchdog/?view=groups&groupview=tracker");
   const tracker=page.locator("#working-group-tracker");
   await expect(tracker).toBeVisible();
