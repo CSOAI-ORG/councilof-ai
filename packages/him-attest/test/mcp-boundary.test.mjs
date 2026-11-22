@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { runCeremony } from '../src/ceremony.js';
 
 const PROGRAM = fileURLToPath(new URL('../mcp/him-attest.mjs', import.meta.url));
 
@@ -75,3 +76,8 @@ test('malformed JSON is a refusal, not a process crash', () => temporary(dir => 
   const response = request(dir, '{');
   assert.equal(response.error.message, 'MALFORMED_JSON');
 }));
+
+
+test('core ceremony loader refuses framework traversal without reading files or making requests', async () => {
+  await assert.rejects(() => runCeremony({ frameworkSlug: '../outside', frameworksDir: '/tmp', subject: 'case', fetchImpl: () => { throw new Error('network invoked'); } }), /INVALID_FRAMEWORK/);
+});
