@@ -1,4 +1,5 @@
 import { verifyContactChallenge } from "./_contact-turnstile";
+import { readBoundedContactBody } from "./_contact-body";
 
 /**
  * POST /api/contact — durable enquiry intake.
@@ -18,10 +19,12 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         return reply({ stored: false, code: "CROSS_ORIGIN" }, 403);
     } catch { return reply({ stored: false, code: "CROSS_ORIGIN" }, 403); }
   }
-  if (!/application\/json/i.test(request.headers.get("content-type") || ""))
+  if (!/^application\/json(?:\s*;|\s*$)/i.test(request.headers.get("content-type") || ""))
     return reply({ stored: false, code: "JSON_REQUIRED" }, 415);
-  const raw = await request.text();
-  if (raw.length > 8500) return reply({ stored: false, code: "TOO_LARGE" }, 413);
+  const bounded = await readBoundedContactBody(request);
+  if (bounded.state === "TOO_LARGE") return reply({ stored: false, code: "TOO_LARGE" }, 413);
+  if (bounded.state === "BAD_BODY") return reply({ stored: false, code: "BAD_JSON" }, 400);
+  const raw = bounded.text;
   let body: Record<string, unknown>;
   try {
     const parsed = JSON.parse(raw);
