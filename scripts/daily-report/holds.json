@@ -1,0 +1,82 @@
+{
+ "schema": "csoai.daily-report-holds/0.1",
+ "about": "What the daily report withholds while a correction is open. Each entry names its correction in https://councilof.ai/api/corrections. generate_daily_report.py drops every figure of a held axis (n, accuracy, interval, leader, top three, notes) and prints why; check_holds.py refuses publication if any held figure or banned phrase reaches the report. Lifting a hold is the owner's decision: remove the axis here in a reviewed change.",
+ "as_of": "2026-11-22",
+ "axes": {
+  "watchdog-ingest": "C-2026-1120-01",
+  "harness-fidelity": "C-2026-1120-01",
+  "serving-fidelity": "C-2026-1120-01",
+  "company-practice": "C-2026-1120-01",
+  "measurer-integrity": "C-2026-1120-01",
+  "lab-practice": "C-2026-1120-01",
+  "interop-conformance": "C-2026-1120-01",
+  "regulator-transparency": "C-2026-1120-01",
+  "humanoid-deployment": "C-2026-1120-01",
+  "interpretability-reproducibility": "C-2026-1120-01",
+  "claim-maintenance": "C-2026-1120-03",
+  "governance": "C-2026-1120-02"
+ },
+ "entries": {
+  "C-2026-1120-01": {
+   "why": "WITHHELD under correction C-2026-1120-01: the bank behind this axis is one of ten whose method defects are recorded there, and until the ten banks are run again no rate, count or row of this axis is restated in this report."
+  },
+  "C-2026-1120-02": {
+   "why": "WITHHELD under correction C-2026-1120-02: no figure from this axis is restated in this report while that correction is open.",
+   "limit": "A score on this axis measures agreement with the source benchmark's labels, which the wording of each item gives away. It does not measure whether a system applies the EU AI Act correctly (correction C-2026-1120-02)."
+  },
+  "C-2026-1120-03": {
+   "why": "WITHHELD under correction C-2026-1120-03: the board's n for this axis counts each claim twice, so no count or outcome of this axis is restated in this report until the board row is corrected."
+  }
+ },
+ "frontier_section": "C-2026-1120-02",
+ "banned": [
+  {
+   "pattern": "\\b(219|222|225)\\s*(of|/)\\s*237\\b",
+   "why": "a score on the governance bank (C-2026-1120-02)"
+  },
+  {
+   "pattern": "\\b92\\.41",
+   "why": "a score on the governance bank (C-2026-1120-02)"
+  },
+  {
+   "pattern": "\\b237[- ]item",
+   "why": "the governance bank (C-2026-1120-02)"
+  },
+  {
+   "pattern": "\\b182\\s+(captured\\s+)?claims\\b",
+   "why": "the double count (C-2026-1120-03)"
+  },
+  {
+   "pattern": "\\b174\\s+of\\s+182\\b",
+   "why": "the double count (C-2026-1120-03)"
+  },
+  {
+   "pattern": "\\bcertif(y|ies|ied)\\b",
+   "why": "certification wording"
+  },
+  {
+   "pattern": "\\baccredited\\b",
+   "why": "certification wording"
+  },
+  {
+   "pattern": "\\bcompliant\\b",
+   "why": "certification wording"
+  },
+  {
+   "pattern": "\\bendorsed\\b",
+   "why": "certification wording"
+  },
+  {
+   "pattern": "[$€£]\\s?\\d",
+   "why": "a price"
+  },
+  {
+   "pattern": "\\b\\d+(\\.\\d+)?\\s?(USD|USDC|EUR|GBP)\\b",
+   "why": "a price"
+  },
+  {
+   "pattern": "\\bdownloads?\\b",
+   "why": "download figures (CSOAI and MEOK figures are never added together)"
+  }
+ ]
+}
