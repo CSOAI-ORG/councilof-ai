@@ -15,12 +15,16 @@
  *   card body (and its inclusion proof) from ONE static asset — /cards-bundle.json —
  *   so they cost O(1) subrequests regardless of how many cards the root grows to.
  *
- * WHAT IT WRITES:
- *   public/cards-bundle.json — { schema, as_of, merkle_root, card_count, generated_by,
- *   note, cards: { "<full-sha256>": { card, proof } } }, keyed by the SAME full 64-hex
- *   sha the root lists in card_sha256[]. Every wrapper under public/cards/ is included
- *   (a superset of the root is harmless; a subset would 404 a leaf), so a single
- *   lookup resolves any hash on the current root.
+ * WHAT IT WRITES (csoai.cards-bundle/0.2 since 22 Nov 2026; layout in cards-bundle-shards.mjs):
+ *   public/cards-bundle.json — { schema, as_of, merkle_root, card_count, root_card_count,
+ *   generated_by, note, cards_scope: "root", shards: { files: [...] }, cards }. `cards` is
+ *   keyed by the SAME full 64-hex sha the root lists in card_sha256[] and holds exactly the
+ *   wrappers on the current root, so a single lookup still resolves any hash on the root.
+ *   card_count still counts EVERY wrapper under public/cards/.
+ *   public/cards-bundle/<c>.json — 16 shards. Shard c holds every wrapper under
+ *   public/cards/ whose sha256 starts with hex character c, the root's included. Together
+ *   they are the whole corpus the 0.1 file carried (a subset would 404 a leaf, so the
+ *   readers check each shard's card_count, as_of and merkle_root against the index).
  *   public/card-feed-index.json — the complete root-ordered metadata projection for
  *   /feed. Its tier comes from published card/proof metadata, not mirror availability.
  *
@@ -37,24 +41,30 @@
  * Run: node scripts/generate-cards-bundle.mjs   (wired into `npm run build:client`)
  *      node scripts/generate-cards-bundle.mjs --feed-index-only
  *      node scripts/generate-cards-bundle.mjs --check-feed-index   (read-only parity)
+ *      node scripts/generate-cards-bundle.mjs --check-bundle       (read-only parity: index + shards)
  */
-import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { buildCardFeedIndex } from "./card-feed-index.mjs";
+import { buildBundleFiles } from "./cards-bundle-shards.mjs";
+import { PAGES_FILE_BYTES_CAP, PAGES_FILE_BYTES_WARN } from "./pages-limits.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CARDS_DIR = join(ROOT, "public", "cards");
 const ROOT_JSON = join(ROOT, "public", "root.json");
-const OUT = join(ROOT, "public", "cards-bundle.json");
+const PUBLIC = join(ROOT, "public");
+const OUT = join(PUBLIC, "cards-bundle.json");
+const SHARD_DIR = join(PUBLIC, "cards-bundle");
 const FEED_OUT = join(ROOT, "public", "card-feed-index.json");
 const args = process.argv.slice(2);
-if (args.length > 1 || args.some(arg => !["--feed-index-only", "--check-feed-index"].includes(arg))) {
-  console.error("Usage: node scripts/generate-cards-bundle.mjs [--feed-index-only | --check-feed-index]");
+if (args.length > 1 || args.some(arg => !["--feed-index-only", "--check-feed-index", "--check-bundle"].includes(arg))) {
+  console.error("Usage: node scripts/generate-cards-bundle.mjs [--feed-index-only | --check-feed-index | --check-bundle]");
   process.exit(2);
 }
 const checkFeed = args.includes("--check-feed-index");
 const feedOnly = args.includes("--feed-index-only");
+const checkBundle = args.includes("--check-bundle");
 
 const HEX64 = /^[0-9a-f]{64}$/;
 
@@ -135,45 +145,61 @@ if (feedOnly) {
   process.exit(0);
 }
 
-// Sorted keys → byte-stable output on an unchanged corpus.
-const orderedCards = {};
-for (const k of Object.keys(cards).sort()) orderedCards[k] = cards[k];
-
-const bundle = {
-  schema: "csoai.cards-bundle/0.1",
-  as_of: root.as_of || null,
-  merkle_root: root.merkle_root || null,
-  card_count: read,
-  root_card_count: rootHashes.length,
-  generated_by: "scripts/generate-cards-bundle.mjs",
-  note:
-    "Build-time aggregate of every public/cards/*.json wrapper (card + inclusion proof), keyed by full " +
-    "sha256. Exists so /api/xrpl and /api/proof read all card bodies in ONE subrequest instead of one " +
-    "fetch per card (Cloudflare Pages Functions cap: 50 subrequests/invocation). Copies bytes that already " +
-    "exist under /cards/ and /proofs/; signs nothing, measures nothing. Regenerated in build:client, so it " +
-    "is consistent with the root.json shipped in the same build.",
-  cards: orderedCards,
-};
-
-// MINIFIED ON PURPOSE (2026-11-07). This file is a transport artefact, not a record: nothing
-// reads its whitespace, and every consumer parses it. Cloudflare Pages rejects any single file
-// over 25 MiB, and this one was at 24.89 MiB — 113 KiB of headroom — with the corpus still
-// growing by ~350 KiB per publish. The next card batch would have taken the whole site down,
-// and it did: the public-root candidate PR #3710 failed its own gates on
-// "cards-bundle.json — 25.2 MiB", which froze the public root for five days.
+// THE SPLIT (22 Nov 2026). Until then this wrote ONE file with every wrapper, minified since
+// 7 Nov (#4009) to buy room: 26,098,183 bytes -> 19,501,504. #4009 said so itself: "not a fix for
+// unbounded growth ... shard it". By 22 Nov the file was 24,635,449 of Cloudflare Pages' 26,214,400
+// bytes per file and grew ~265 KB per root publish, a few days from freezing the root again the
+// way #3710 did (1-7 Nov). buildBundleFiles keeps /cards-bundle.json at the same URL with the same
+// top-level fields, holding the root's wrappers, and partitions every wrapper into 16 shards by the
+// first hex character of its sha256. Each shard starts near 1.5 MiB, about 6% of the cap.
 //
-// The indentation was costing 6.29 MiB of pure whitespace (26,098,183 bytes -> 19,501,504).
-// Minified, the same content is 18.60 MiB and the headroom is 6.4 MiB — roughly nineteen more
-// publishes at the current rate. Content is byte-for-byte the same object: JSON.stringify with
-// no indent produces the identical value, and every reader does JSON.parse.
-//
-// This is not a fix for unbounded growth. It buys the room to shard the aggregate properly
-// before the next cliff. If it ever runs out again, shard it (a hash -> shard index plus one
-// shard per fetch is still O(1) subrequests, which is the only property this file exists for).
-writeFileSync(OUT, JSON.stringify(bundle) + "\n");
+// Keys are sorted inside every file, so output is byte-stable on an unchanged corpus. Minified on
+// purpose: nothing reads the whitespace, and every consumer parses the JSON.
+const built = buildBundleFiles({ root, cards });
+const outputs = [
+  { file: OUT, rel: "public/cards-bundle.json", text: built.index.text, bytes: built.index.bytes },
+  ...built.shards.map((s) => ({ file: join(SHARD_DIR, `${s.prefix}.json`), rel: `public${s.path}`, text: s.text, bytes: s.bytes })),
+];
+
+// A file over the cap would only fail later, at the size guard or at the deploy, with less context.
+// Refuse here and name the remedy. Above 80% of the cap, say so while there is still room.
+const tooBig = outputs.filter((o) => o.bytes > PAGES_FILE_BYTES_CAP);
+if (tooBig.length) {
+  for (const o of tooBig) console.error(`[cards-bundle] ERROR: ${o.rel} would be ${o.bytes} bytes, over the Pages per-file cap of ${PAGES_FILE_BYTES_CAP}.`);
+  console.error("[cards-bundle] Widen the shard key in scripts/cards-bundle-shards.mjs (and keep the 17-fetch read within the subrequest cap) before publishing more cards.");
+  process.exit(1);
+}
+for (const o of outputs.filter((x) => x.bytes > PAGES_FILE_BYTES_WARN)) {
+  console.warn(`[cards-bundle] WARNING: ${o.rel} is ${o.bytes} bytes, ${(100 * o.bytes / PAGES_FILE_BYTES_CAP).toFixed(1)}% of the Pages per-file cap. Plan a wider shard key now.`);
+}
+
+const expectedShardNames = new Set(built.shards.map((s) => `${s.prefix}.json`));
+const strayShards = () => (existsSync(SHARD_DIR) ? readdirSync(SHARD_DIR).filter((f) => !expectedShardNames.has(f)) : []);
+
+if (checkBundle) {
+  // Read-only parity for the committed bytes: every output must equal a fresh build, and the shard
+  // folder must hold nothing else (a stray shard would be served beside the real ones).
+  const stale = outputs.filter((o) => !existsSync(o.file) || readFileSync(o.file, "utf8") !== o.text).map((o) => o.rel);
+  const stray = strayShards().map((f) => `public/cards-bundle/${f}`);
+  if (stale.length || stray.length) {
+    for (const r of stale) console.error(`[cards-bundle] STALE or missing: ${r}`);
+    for (const r of stray) console.error(`[cards-bundle] UNEXPECTED file in the shard folder: ${r}`);
+    console.error("[cards-bundle] regenerate with: node scripts/generate-cards-bundle.mjs");
+    process.exit(1);
+  }
+  const largest = outputs.reduce((a, b) => (b.bytes > a.bytes ? b : a));
+  console.log(`[cards-bundle] CHECK OK: index + ${built.shards.length} shards, ${read} cards; largest ${largest.rel} ${largest.bytes} bytes (${(100 * largest.bytes / PAGES_FILE_BYTES_CAP).toFixed(1)}% of the cap)`);
+  process.exit(0);
+}
+
+mkdirSync(SHARD_DIR, { recursive: true });
+for (const f of strayShards()) rmSync(join(SHARD_DIR, f), { force: true, recursive: true });
+for (const o of outputs) writeFileSync(o.file, o.text);
 writeFileSync(FEED_OUT, feedBytes);
+const largest = outputs.reduce((a, b) => (b.bytes > a.bytes ? b : a));
 console.log(
-  `[cards-bundle] ${read} cards -> public/cards-bundle.json ` +
-    `(${rootHashes.length} on root, all resolved; ${skipped} non-card/unreadable files skipped)`,
+  `[cards-bundle] ${read} cards -> public/cards-bundle.json (${rootHashes.length} on root, all resolved; ` +
+    `${skipped} non-card/unreadable files skipped) + ${built.shards.length} shards under public/cards-bundle/; ` +
+    `largest file ${largest.rel} ${largest.bytes} bytes (${(100 * largest.bytes / PAGES_FILE_BYTES_CAP).toFixed(1)}% of the cap)`,
 );
 console.log(`[card-feed-index] ${rootHashes.length} complete root entries -> public/card-feed-index.json`);
