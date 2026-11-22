@@ -65,9 +65,9 @@ jobs:
           set -euo pipefail
           DIR="$RUNNER_TEMP/gspc-coverage"
           if test -s "$DIR/previous.json"; then
-            node scripts/measurements/gspc-coverage-feed.mjs --board "$DIR/source-board.json" --manifest "$DIR/source-fact-manifest.json" --previous "$DIR/previous.json" --out "$DIR/coverage.json"
+            node scripts/measurements/gspc-coverage-feed.mjs --board "$DIR/source-board.json" --manifest "$DIR/source-fact-manifest.json" --evidence public/interop/mill-evidence --previous "$DIR/previous.json" --out "$DIR/coverage.json"
           else
-            node scripts/measurements/gspc-coverage-feed.mjs --board "$DIR/source-board.json" --manifest "$DIR/source-fact-manifest.json" --out "$DIR/coverage.json"
+            node scripts/measurements/gspc-coverage-feed.mjs --board "$DIR/source-board.json" --manifest "$DIR/source-fact-manifest.json" --evidence public/interop/mill-evidence --out "$DIR/coverage.json"
           fi
           python3 - <<'PY'
           import json,os
