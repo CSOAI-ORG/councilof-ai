@@ -594,6 +594,7 @@ const evidenceModule=await moduleFrom(current('functions/api/evidence-bundle.ts'
  './_bookkeeping_budget':bookkeepingModule,'./_buyer_purchase':buyerModule,
  './_head':headModule,'./_x402':x402,'./_x402_config':{railMode:()=> 'fixture'},
  './_obligations':{OBLIGATIONS:{fixture:obligation},resolveObligation:id=>id==='fixture'?obligation:null,isRelevant:()=>includeEvidenceFixture},
+ './_provisions':{resolveProvision:()=>null,provisionView:()=>({}),PROVISION_USAGE:'fixture'},
  './_invoice_handoff':{invoiceHandoff:()=>({state:'quotation-only'}),INVOICE_CONTACT:'fixture.invalid'},
  '../_lib/cardSign':{sha256Hex:cardSignModule.namespace.sha256Hex,cardV0:cardSignModule.namespace.cardV0,
   signPayload:async payload=>{if(failBundleSign)throw Error('fixture sign failure');return{sha256:digest(Buffer.from(JSON.stringify(payload))),bytes:100,sig_ed25519:null,unsigned_reason:'offline unsigned fixture',did:'did:fixture'};}},

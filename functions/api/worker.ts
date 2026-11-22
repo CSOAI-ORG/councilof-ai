@@ -11,7 +11,10 @@
 import { headFromGet } from "./_head";
 type Env = { RUNPOD_WORKER_HEALTH_URL?: string; WORKER_STATE_KV?: KVNamespace };
 
-export const DEFAULT_HEALTH_URL = "https://fpowppss5ngtkw-8888.proxy.runpod.net/health";
+// Historical pod fpowppss5ngtkw was decommissioned. The 7 Nov 2026 inventory reported
+// zero RunPod pods. Never silently probe its obsolete URL as if it were the active worker.
+// Production must declare an authenticated, reviewed RUNPOD_WORKER_HEALTH_URL.
+export const DEFAULT_HEALTH_URL: string | null = null;
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -39,13 +42,36 @@ async function readStale(kv: KVNamespace | undefined): Promise<Record<string, un
 }
 
 export async function buildWorker(env: Env, fetcher: typeof fetch = fetch) {
-  const url = env.RUNPOD_WORKER_HEALTH_URL || DEFAULT_HEALTH_URL;
+  const url = env.RUNPOD_WORKER_HEALTH_URL?.trim() || DEFAULT_HEALTH_URL;
   const base = {
     schema: "csoai.worker-state/0.1",
     endpoint: "/api/worker",
     source: url,
     what: "The RunPod GSPC compute worker's own /health, read at request time. Compute state only: no counter here is a signed measurement or publication receipt. Staged outputs require separate admission and guarded release; unadmitted or withdrawn rows do not reach the board.",
   };
+  if (!url) {
+    return { ...base, status: "OFFLINE", http: null, worker: null,
+      worker_state: "UNKNOWN", diagnostic_code: "HEALTH_URL_NOT_CONFIGURED",
+      note: "No active worker URL is configured. The historical RunPod 3090 was decommissioned; this API is not proof of running compute. Set RUNPOD_WORKER_HEALTH_URL only after verifying a replacement worker and its /health schema." };
+  }
+  // A Cloudflare environment variable can outlive the pod it named. The 7 Nov
+  // estate inventory records the old RunPod pod terminated, so do not use even
+  // an explicit stale binding to advertise or attempt a retired origin.
+  let parsedUrl: URL;
+  try { parsedUrl = new URL(url); }
+  catch { return { ...base, status: "OFFLINE", http: null, worker: null,
+    worker_state: "UNKNOWN", diagnostic_code: "INVALID_WORKER_ORIGIN",
+    note: "Configured worker URL is malformed; no health request was made." }; }
+  if (parsedUrl.protocol !== "https:") {
+    return { ...base, status: "OFFLINE", http: null, worker: null,
+      worker_state: "UNKNOWN", diagnostic_code: "INSECURE_WORKER_ORIGIN",
+      note: "The worker health URL must use HTTPS; no health request was made." };
+  }
+  if (parsedUrl.hostname.toLowerCase() === "fpowppss5ngtkw-8888.proxy.runpod.net") {
+    return { ...base, status: "OFFLINE", http: null, worker: null,
+      worker_state: "UNKNOWN", diagnostic_code: "RETIRED_WORKER_ORIGIN",
+      note: "The configured RunPod worker URL belongs to the retired pod; a verified replacement must be configured before reporting compute health." };
+  }
   let http: number | null = null;
   try {
     const r = await fetcher(url, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(8000) });
@@ -53,7 +79,7 @@ export async function buildWorker(env: Env, fetcher: typeof fetch = fetch) {
     if (!r.ok) {
       const stale = await readStale(env.WORKER_STATE_KV);
       if (stale) return { ...stale, status: "STALE", stale: true, stale_reason: `pod health answered HTTP ${r.status}`, stale_age_seconds: staleAge(stale.read_at) };
-      return { ...base, status: "OFFLINE", http, worker: null, note: `pod health answered HTTP ${r.status} — state unknown, not zero` };
+      return { ...base, status: "OFFLINE", http, worker: null, worker_state: "UNKNOWN", diagnostic_code: r.status === 404 ? "HEALTH_ROUTE_NOT_FOUND" : "HEALTH_HTTP_ERROR", note: `pod health answered HTTP ${r.status} — this checks a URL, not proof the compute process stopped; verify RUNPOD_WORKER_HEALTH_URL and the pod health route` };
     }
     const h = (await r.json()) as Record<string, unknown>;
     if (!h || typeof h !== "object" || typeof h.state !== "string") {
