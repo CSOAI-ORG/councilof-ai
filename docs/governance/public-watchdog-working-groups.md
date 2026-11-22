@@ -62,3 +62,47 @@ The first checks actual downloads, all seven contribution handoffs, copy recover
 
 ## Release boundary
 This charter and registry may be reviewed and amended through the source repository. Public names, staffed-service claims and authority changes require their own supporting evidence. Ship website changes through the protected master release workflow; do not bypass deployment ownership.
+
+## Candidate Human-in-the-Loop measurement overlay (21 November 2026)
+
+**Status: proposed amendment only.** This paragraph does not appoint reviewers, change the frozen constitutional charter, create a new working group or constitute adoption by SAFE, W3C, IETF or other external organisations. It does not authorize an automated action or a regulator notification.
+
+Each of the seven groups uses the **same existing** Council OS and HITL decision infrastructure. Forum discussions, blog comments, public-watchdog tips and agent-generated reports may *nominate* a case; they never silently become findings, votes, appointments or authority. The intake path should preserve source, date, permission, case revision, evidence digest, consent/retention and a right of reply. Private or sensitive material needs separately approved access.
+
+**Proposed adjudication sequence:**
+
+1. **Intake and qualify.** Attribute the reported claim or concern. Confirm source rights, jurisdiction, affected people, conflicts, available expertise and the exact question. State `NO_RECEIVER` / `NOT_STAFFED` when no qualified person has accepted a review.
+2. **Freeze and measure.** Pin subject, test-bank revision, grader, negative controls, environment, tool/model versions, source bytes, expected result, observation window and denominators. Use GSPC's canonical instruments where applicable; never mint a bespoke GSPC verdict because a forum comment or person agreed.
+3. **HITL authority.** Identify the separately authenticated reviewer, accepted role and competence, disclosed conflicts, scope digest, authority epoch, permitted action and time window. A display name, shared operator token, exercise completion or signed receipt alone does **not** establish human identity, professional competence, independence or authority.
+4. **Record the decision.** Record `APPROVE`, `HOLD` or `REJECT` with evidence and rationale against a specific immutable case revision. A model-generated recommendation remains a proposal; an unaccepted proposal remains unexecuted.
+5. **Observe any bounded effect.** The executor must independently check current authorization immediately before an action. Preserve `proposed ≠ approved ≠ invoked ≠ effect observed ≠ independently verified`. Denial, expiry, revocation, changed scope and unresolvable authority fail closed. A transport timeout cannot prove the external action failed.
+6. **Challenge, appeal and maintain.** An independent reviewer can dispute the decision, inspect the same pinned bytes, record dissent and approve a correction/supersession. Preserve old records and explain unresolved outcomes. Do not publish an unreviewed incident as a verified finding.
+
+**Group-specific review applications, without new group IDs:**
+
+| Group | Human task | Existing GSPC-relevant evidence |
+| --- | --- | --- |
+| Governance, rights and regulatory evidence | Verify the scope and wording of one self-claim; accept or reject a dated correction | Governance/claim-maintenance run, raw claim source and freshness |
+| Agent authority and stopping | Challenge revoked, expired and out-of-scope execution in a synthetic environment | Effect-binding and revocation trial; independent effect observation |
+| Evaluation and reproducibility | Blindly rerun one pinned instrument, including a failing control | Instrument, deterministic grader, bank digest, paired per-item output |
+| Provenance and open evidence | Inspect rights, source lineage and signed-card verification | Provenance, distribution-integrity and free verifier outcome |
+| Runtime and interoperability | Distinguish tool intent, execution receipt and actual effect | Serving-path evidence, conformance bank and unknown-effect handling |
+| Human impact and embodied systems | Gather appropriately consented affected-user and specialist review; publish dissent | Care/affect scenario evidence, safety scope and accessibility report |
+| Economic evidence and work | Independently review denominator, source and dates without investment advice | Financial facts/claims and source-to-indicator transformations |
+
+**Proposed measurement cards, not yet a released GSPC axis.** Publish one row per frozen experiment with `case_id`, `group_id`, `source_ref`, `case_revision_sha256`, `method_version`, `actor_identity_state`, `reviewer_conflict_state`, `authority_scope_digest`, `authority_epoch`, `decision_state`, `invocation_state`, `effect_state`, `verifier_state`, `challenge_state`, `observed_at`, `retest_due_at`, `negative_control_id`, `evidence_refs`, `known_limits` and `correction_ref`, omitting personal data from public projections.
+
+**Predeclared numerator/denominator examples:**
+
+- *Authority scope binding:* correctly refused altered-scope/expired/revoked attempts divided by **attempted negative-control calls** (not all discovered agents). Report `NOT_TESTED` when no negative controls ran.
+- *Reviewer independence:* cases with separately verified reviewer authority and resolved conflicts divided by **cases requiring independent review**; a shared token without identity proof cannot enter the verified numerator.
+- *Effect observability:* effects independently observed divided by **authorized invocations in the test window**; unresolved external effects stay a separate `UNKNOWN` bucket.
+- *Revocation latency:* elapsed time from accepted revocation to last observed external action and separately to confirmed quiescence, only for cases with compatible clocks and trace windows; unknown and uncancellable cases remain visible.
+- *Challenge resolution:* independently disposed public challenges divided by **all received public challenges in the declared window**, with a separate not-staffed / privacy-held / open count; do not advertise time-to-resolution before coverage is agreed.
+- *Inter-reviewer agreement:* predeclare two competent independent reviewers, blinded or independently assigned where possible; publish agreement and disagreement with the same pinned evidence. Agreement does not itself establish truth.
+
+Every metric needs its test bank, sampling population, exclusions, minimum observed sample, event taxonomy, missingness, negative controls, source digest, timestamp and rerun instructions. Publish `PASS`, `FAIL`, `INSUFFICIENT_EVIDENCE` and `NOT_APPLICABLE` only under the declared rules; do not interpret `NOT_TESTED` or `UNMEASURED` as a pass. Do **not** add an axis to the 34-axis GSPC board or modify the canonical grader before an independently reproducible, method-approved instrument exists. This is a **cross-cutting process measurement**, not a certification.
+
+**Public readbacks:** [proposed working-group journey](https://councilof.ai/watchdog/?view=groups), [HITL source](https://councilof.ai/api/hitl), [HITL receipt ledger](https://councilof.ai/api/hitl/record), [GSPC board](https://councilof.ai/api/gspc), [H.I.M. explanation](https://councilof.ai/him/), [appeals](https://councilof.ai/dispute/), [corrections](https://councilof.ai/corrections/). SAFE's own [approval-to-execution discussion](https://github.com/OpenSecureAIAlliance/wg-safe/issues/13) may receive a portable measurement proposal, subject to the working group's maintainers; no external adoption is implied.
+
+**Acceptance before calling the overlay operational:** one real consenting reviewer with authenticated identity, written role acceptance, conflict/competence checks, a qualified second reviewer, a permitted dataset, one frozen positive/negative/unknown fixture suite, accepted scope-to-effect verification, an appeal/refusal and public correction example, reviewed retention/privacy terms, and independently rerunnable results. The live `/api/hitl` records board-reading completion and shared-token decisions but currently declares `operator_identity=NOT_VERIFIED`, `human_presence=NOT_ESTABLISHED`, `professional_competence=NOT_ASSESSED` and `execution_authority=false`; do not relabel it a human-authenticated authority system without separate evidence.

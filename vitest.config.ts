@@ -94,7 +94,9 @@ export const NODE_TEST_FILES = [
   'scripts/watchdog/source-status.test.mjs',
   // This bounded synthetic approval demo uses node:test; the same source list is executed by pr-gates.
   'harness/hitl/approval-effect-demo.test.mjs',
-  // v2 receipt-loss controls use node:test and are excluded from the Vitest collector.
+  // Separate synthetic process capsule uses node:test, not the Vitest collector.
+  'scripts/hitl/oversight-measurement-capsule.test.mjs',
+  // Versioned receipt-gap controls use node:test and are excluded from Vitest.
   'scripts/hitl/receipt-gap-bank-v2.test.mjs',
   // Claim-bounded proof cards use the same standalone node:test runner.
   'scripts/pilot/render-approval-proof-card.test.mjs',
