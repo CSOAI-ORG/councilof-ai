@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { onRequestGet, onRequestPost } from "./subscribe";
 
 // Subscribe records join contact:/lead: in LEADS under `subscribe:<ISO>:<uuid>`.
@@ -8,12 +8,14 @@ import { onRequestGet, onRequestPost } from "./subscribe";
 
 function fakeKV() {
   const store = new Map<string, string>();
+  const ttls: number[] = [];
   return {
     kv: {
-      put: async (k: string, v: string) => void store.set(k, v),
+      put: async (k: string, v: string, options?: { expirationTtl?: number }) => { store.set(k, v); ttls.push(options?.expirationTtl ?? -1); },
       get: async (k: string) => store.get(k) ?? null,
     } as unknown as KVNamespace,
     store,
+    ttls,
   };
 }
 
@@ -21,6 +23,7 @@ function postCtx(body: unknown, LEADS?: KVNamespace) {
   return {
     request: new Request("https://councilof.ai/api/subscribe", {
       method: "POST",
+      headers: { "content-type": "application/json" },
       body: typeof body === "string" ? body : JSON.stringify(body),
     }),
     env: { LEADS },
@@ -49,6 +52,7 @@ describe("POST /api/subscribe", () => {
     expect(stored.email).toBe("reader@example.com");
     expect(stored.source).toBe("home-band");
     expect(typeof stored.at).toBe("string");
+    expect(f.ttls).toEqual([2592000]);
   });
 
   it("without a binding it refuses to pretend: stored:false with the reason", async () => {
@@ -66,22 +70,20 @@ describe("POST /api/subscribe", () => {
     expect(noEmail.status).toBe(400);
   });
 
-  it("rejects an over-long address whose @ falls outside the cap, and caps one inside it", async () => {
-    // 500 a's then @: the 200-char cap removes the @, and an address without @ is rejected
-    // rather than stored corrupted.
-    const rejected = await onRequestPost(
-      postCtx({ email: "a".repeat(500) + "@example.com" }, fakeKV().kv),
-    );
-    expect(rejected.status).toBe(400);
-
+  it("rejects invalid or overlong addresses rather than saving truncated email identities", async () => {
     const f = fakeKV();
-    await onRequestPost(
-      postCtx({ email: "b".repeat(190) + "@example.com" }, f.kv),
-    );
-    const key = [...f.store.keys()][0];
-    const stored = JSON.parse(f.store.get(key)!) as { email: string };
-    expect(stored.email.length).toBe(200);
-    expect(stored.email.includes("@")).toBe(true);
+    for (const email of ["a".repeat(500) + "@example.com", "bad-email", "b".repeat(255) + "@example.com"]) {
+      const rejected = await onRequestPost(postCtx({ email }, f.kv));
+      expect(rejected.status).toBe(400);
+    }
+    expect(f.store.size).toBe(0);
+  });
+
+  it("does not claim success after a failed KV write", async () => {
+    const kv = { put: vi.fn(async () => { throw new Error("KV unavailable"); }) } as unknown as KVNamespace;
+    const response = await onRequestPost(postCtx({ email: "reader@example.com" }, kv));
+    expect(response.status).toBe(503);
+    expect((await response.json())).toMatchObject({ ok: false, stored: false });
   });
 });
 
