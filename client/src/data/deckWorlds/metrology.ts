@@ -46,7 +46,7 @@ import type { Slide } from "@/components/scrollworld";
 
 export const METROLOGY_HERO = {
   kicker: "The metrology apparatus — a published doctrine",
-  title: "A benchmark you can memorise is not an instrument",
+  title: "Reproducible evaluation in interactive environments",
   lede:
     "Static tests leak into training data and then measure recall wearing reasoning's clothes. The way out is metrology: environments generated fresh for every evaluation, turn-based and seed-reproducible, scored by a fixed rule. This page sets out that doctrine — and marks clearly which parts of it run today and which are design.",
   bg: {
@@ -62,7 +62,7 @@ export const METROLOGY_HERO = {
 export const METROLOGY_SLIDES: Slide[] = [
   {
     kicker: "The crisis",
-    title: "Static benchmarks leak, then flatter everyone",
+    title: "Benchmark contamination and evaluation design",
     body:
       "A fixed test published once ends up in the next training corpus, and from then on it measures memorisation. This is not a scandal, it is thermodynamics: any benchmark that stays still long enough becomes training data. Saturation and contamination are widely documented across the popular static suites — we do not restate other people's audit numbers here, but the direction of travel is not in dispute.",
     points: [
@@ -105,7 +105,7 @@ export const METROLOGY_SLIDES: Slide[] = [
   },
   {
     kicker: "The gate",
-    title: "If it is not deterministic, it cannot be signed",
+    title: "Reproducibility and fixed scoring rules",
     body:
       "This is the hard boundary between an entertaining arena and an instrument. Only turn-based, fixed-seed, tick-locked environments with an append-only action log can produce a result that someone else can reproduce — and only a reproducible result can be meaningfully signed. Real-time, stochastic or wall-clock-dependent environments are wonderful to watch and cannot be measurement.",
     points: [
@@ -167,7 +167,7 @@ export const METROLOGY_SLIDES: Slide[] = [
     kicker: "What is design, and what runs",
     title: "The apparatus is doctrine. The board is live.",
     body:
-      "Being precise about this matters more than the pitch. What runs today is the fourteen-slot board, the signed cards, the public verification endpoint and the swarm axis — a protocol bank measuring multi-step agent behaviour, with its effective-n caveat published. What is design is the games apparatus itself: the proposed efficiency predicate, the rating engine, the calibrated arena. And auto-generating fresh environments from existing benchmarks is a live research direction, not a product we are promising — the moment a language model enters the scoring loop, our first design law is broken.",
+      "Being precise about this matters more than the pitch. What runs today is the public measurement board, the signed cards, the public verification endpoint and the swarm axis — a protocol bank measuring multi-step agent behaviour, with its effective-n caveat published. What is design is the games apparatus itself: the proposed efficiency predicate, the rating engine, the calibrated arena. And auto-generating fresh environments from existing benchmarks is a live research direction, not a product we are promising — the moment a language model enters the scoring loop, our first design law is broken.",
     points: [
       { tag: "pain", text: "Roadmap architecture presented as shipped capability" },
       { tag: "benefit", text: "A published doctrine you can hold us to as it gets built" },
@@ -197,5 +197,5 @@ export const METROLOGY_RELATED = [
   { href: "/gspc-scoreboard", label: "The live board", what: "What is actually measured today, with every sample size and status." },
   { href: "/gspc-arena", label: "Council Space", what: "Models facing the same frozen tests, head to head." },
   { href: "/methodology", label: "The method", what: "Determinism, n≥30, and why no model ever judges another." },
-  { href: "/verifiable-trust", label: "The science of verifiable trust", what: "The negative space — what we refuse to measure, and why." },
+  { href: "/verifiable-trust", label: "The science of verifiable trust", what: "Measurement methods, verification boundaries and published corrections." },
 ];

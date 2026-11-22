@@ -182,7 +182,7 @@ export default function CouncilTown() {
               there is no live chain to check. Figures above are last-known and labelled.
             </span>
             <a
-              href="mailto:nicholas@csoai.org?subject=Council%20Town%20pilot"
+              href="mailto:contact@csoai.org?subject=Council%20Town%20pilot"
               className="rounded-lg border border-emerald-300/50 px-5 py-3 font-semibold text-emerald-100 hover:bg-white/5"
             >
               Request a pilot
@@ -307,7 +307,7 @@ export default function CouncilTown() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <a
-              href="mailto:nicholas@csoai.org?subject=Council%20Town%20pilot"
+              href="mailto:contact@csoai.org?subject=Council%20Town%20pilot"
               className="rounded-lg bg-emerald-400 px-5 py-3 font-bold text-emerald-950 hover:bg-emerald-300"
             >
               Request a pilot

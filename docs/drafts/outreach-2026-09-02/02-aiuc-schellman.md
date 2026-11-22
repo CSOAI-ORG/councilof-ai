@@ -3,7 +3,7 @@
 segment: C / E — signed observations into AIUC-1 evidence collection
 status: DRAFT — HOLD until endpoint 200
 
-**To:** Rajiv Dattani (Co-Founder) rajiv@aiuc.com and Emil Bender Lassen (Standard Lead) emil@aiuc.com — both published on https://www.aiuc-1.com/research/contributor-community (read 2026-09-02). Send to ONE of them (Emil, the standard lead) — never both. Schellman: https://www.schellman.com/contact-us (read via the 2026-02-03 post; no personal address) — a separate, later email only if AIUC replies.
+**To:** Rajiv Dattani (Co-Founder) [address removed] and Emil Bender Lassen (Standard Lead) [address removed] — both published on https://www.aiuc-1.com/research/contributor-community (read 2026-09-02). Send to ONE of them (Emil, the standard lead) — never both. Schellman: https://www.schellman.com/contact-us (read via the 2026-02-03 post; no personal address) — a separate, later email only if AIUC replies.
 **Subject:** Signed third-party observations for AIUC-1 evidence
 
 **Body (plain text):**

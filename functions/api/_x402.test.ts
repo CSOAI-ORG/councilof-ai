@@ -33,12 +33,18 @@ const receipt = (v: 1 | 2) =>
 afterEach(() => vi.unstubAllGlobals());
 
 describe("pricing_terms — a dated amount is said in words, then disappears by itself (T11)", () => {
+  // The Art 50 pack, not issuance.reserve: the campaign amount is now $0.02 (2026-11-04), which IS
+  // issuance.reserve's own standard price, so that door reports STANDARD and carries no end date
+  // (see the launch-floor case below). A door whose amount is not dated must say nothing about a
+  // date, so the fixture has to be a door that IS still dated. $25 -> $0.02 also makes the
+  // "no amount in prose" check bite on a 8-digit figure.
+  const DATED_SKU = { skuId: "art50_marking_evidence", tier: "pack" } as const;
   const challenge = (now: string) =>
     buildPaymentRequiredV2({
       resourceUrl: RESOURCE,
       description: "fixture door",
       serviceName: "fixture",
-      accepts: x402Accepts({ X402_PROMO_NOW: now }, RESOURCE, { skuId: "issuance", tier: "reserve" }),
+      accepts: x402Accepts({ X402_PROMO_NOW: now }, RESOURCE, DATED_SKU),
       bazaar: { info: {}, schema: {} },
       csoai: { per: "fixture" },
     });
@@ -62,17 +68,22 @@ describe("pricing_terms — a dated amount is said in words, then disappears by 
       resourceUrl: RESOURCE,
       description: "fixture door",
       serviceName: "fixture",
-      accepts: x402Accepts({ X402_PROMO_NOW: "2027-01-12T00:00:00Z" }, RESOURCE, { skuId: "issuance", tier: "reserve" }),
+      accepts: x402Accepts({ X402_PROMO_NOW: "2027-01-12T00:00:00Z" }, RESOURCE, DATED_SKU),
       bazaar: { info: {}, schema: {} },
     });
     expect("csoai" in bare).toBe(false);
-    expect(pricingTerms(x402Accepts({ X402_PROMO_NOW: "2027-01-12T00:00:00Z" }, RESOURCE, { skuId: "issuance", tier: "reserve" }))).toBeNull();
+    expect(pricingTerms(x402Accepts({ X402_PROMO_NOW: "2027-01-12T00:00:00Z" }, RESOURCE, DATED_SKU))).toBeNull();
   });
 });
 
 describe("x402 rail — money destination and token domain", () => {
   it("applies the bounded launch offer only to existing-data work and exposes both terms", () => {
-    const [promo] = x402Accepts(
+    // RAISED 4 Nov 2026: the campaign amount is $0.02 (20000 atomic), not $0.01. issuance.reserve's
+    // own declared band is band(0.02, [0.02, 0.1]) — its FLOOR is $0.02 — and $0.01 sat below that
+    // floor: a price the product's own pricing says does not exist. The campaign amount is now the
+    // floor of every existing-data door, and a campaign that does not move the price reports
+    // STANDARD rather than claiming a discount the published numbers would contradict.
+    const [reserve] = x402Accepts(
       { X402_PROMO_NOW: "2026-09-20T12:00:00Z" },
       RESOURCE,
       {
@@ -81,15 +92,19 @@ describe("x402 rail — money destination and token domain", () => {
         productId: "csoai.product.issuance",
       },
     );
-    expect(promo.amount).toBe("10000");
-    expect(promo.csoaiPricing).toMatchObject({
+    expect(reserve.amount).toBe("20000");
+    expect(reserve.csoaiPricing).toMatchObject({
       product_id: "csoai.product.issuance",
-      pricing_basis: "PROMO_EXISTING_DATA",
-      campaign_id: "csoai-launch-30d-20260911",
+      pricing_basis: "STANDARD",
+      campaign_id: null,
       normal_amount_atomic: "20000",
-      offered_amount_atomic: "10000",
+      offered_amount_atomic: "20000",
       fresh_compute_excluded: true,
     });
+    // No campaign, so no dates and no pricing_terms sentence: nothing about this amount is dated.
+    expect(reserve.csoaiPricing?.starts_at).toBeUndefined();
+    expect(reserve.csoaiPricing?.ends_at).toBeUndefined();
+    expect(pricingTerms([reserve])).toBeNull();
 
     const [fresh] = x402Accepts(
       { X402_PROMO_NOW: "2026-09-20T12:00:00Z" },
@@ -99,26 +114,51 @@ describe("x402 rail — money destination and token domain", () => {
     expect(fresh.amount).toBe("500000");
     expect(fresh.csoaiPricing?.pricing_basis).toBe("STANDARD");
 
+    // The Art 50 pack still carries the campaign: $25 standard, $0.02 offered — a 1,250-fold
+    // discount, not 2,500-fold. The receipt publishes BOTH amounts, so a buyer sees what moved.
+    const [art50] = x402Accepts(
+      { X402_PROMO_NOW: "2026-09-20T12:00:00Z" },
+      RESOURCE,
+      { skuId: "art50_marking_evidence", tier: "pack" },
+    );
+    expect(art50.amount).toBe("20000");
+    expect(art50.csoaiPricing).toMatchObject({
+      product_id: "csoai.product.art50_marking_evidence",
+      pricing_basis: "PROMO_EXISTING_DATA",
+      campaign_id: "csoai-launch-30d-20260911",
+      normal_amount_atomic: "25000000",
+      offered_amount_atomic: "20000",
+      starts_at: "2026-09-11T00:00:00Z",
+      ends_at: "2027-01-11T00:00:00Z",
+      fresh_compute_excluded: true,
+    });
+    // ...and it IS dated, so it says so.
+    expect(pricingTerms([art50])).toContain("until 2027-01-11T00:00:00Z");
+
     // Owner ruling #16 (7 Oct 2026): the old end, 2026-10-11, is still inside the launch period.
     const [extended] = x402Accepts(
       { X402_PROMO_NOW: "2026-10-11T00:00:00Z" },
       RESOURCE,
-      { skuId: "issuance", tier: "reserve" },
+      { skuId: "art50_marking_evidence", tier: "pack" },
     );
-    expect(extended.amount).toBe("10000");
+    expect(extended.amount).toBe("20000");
     expect(extended.csoaiPricing).toMatchObject({
       campaign_id: "csoai-launch-30d-20260911",
-      normal_amount_atomic: "20000",
+      normal_amount_atomic: "25000000",
+      offered_amount_atomic: "20000",
       ends_at: "2027-01-11T00:00:00Z",
     });
 
+    // After the campaign ends the standard amount applies — ruling #16's mechanism, now visible.
     const [expired] = x402Accepts(
       { X402_PROMO_NOW: "2027-01-11T00:00:00Z" },
       RESOURCE,
-      { skuId: "issuance", tier: "reserve" },
+      { skuId: "art50_marking_evidence", tier: "pack" },
     );
-    expect(expired.amount).toBe("20000");
+    expect(expired.amount).toBe("25000000");
     expect(expired.csoaiPricing?.campaign_id).toBeNull();
+    expect(expired.csoaiPricing?.pricing_basis).toBe("STANDARD");
+    expect(pricingTerms([expired])).toBeNull();
 
     const [free] = x402Accepts(
       { X402_PROMO_NOW: "2026-09-20T12:00:00Z", X402_AMOUNT: "0" },

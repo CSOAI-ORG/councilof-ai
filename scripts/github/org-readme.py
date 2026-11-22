@@ -3,7 +3,10 @@
 councilof-ai/README.md, the personal-profile draft and the public repo inventory
 from LIVE endpoints.
 
-Nothing in the emitted markdown is typed. Every count is read at run time from:
+The compact --account-profile introduction links live evidence without copying counts.
+Other profile modes read measurement and distribution counts from the sources below.
+Entity information and the external-use evidence link remain maintained in this generator
+rather than hand-edited into its output.
 
   https://councilof.ai/api/gspc                 totals.lid verbatim, the board (axis count derived at run time, never typed)
   https://councilof.ai/api/badge                the board image (200 image/svg+xml, or it is left out)
@@ -28,12 +31,14 @@ Nothing in the emitted markdown is typed. Every count is read at run time from:
   https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board                  Kaggle read-back
   https://raw.githubusercontent.com/CSOAI-ORG/gspc-board/main/SNAPSHOT.json              GitHub-mirror read-back
 
-A fetch that fails is printed as UNCHECKABLE — never a fabricated 0. Every output
+A fetch that fails is printed as UNCHECKABLE — never a fabricated 0. Every live-derived output
 carries a `derived <ISO-8601>` stamp. Before anything is written the rendered text is
 scanned for the words the estate does not use (certified, BFT, sovereign) and for a
 price; a hit aborts the run.
 
 Usage:
+  org-readme.py --repository-profile NAME > docs/github/NAME-README.md (reviewed, count-free repository introduction)
+  org-readme.py --account-profile    > docs/github/ACCOUNT-PROFILE.md (compact account introduction)
   org-readme.py --profile            > profile/README.md          (CSOAI-ORG/.github/profile — and the draft below)
   org-readme.py --personal OUT.md                                 (draft for the repo named after the login; never pushed by a lane)
   org-readme.py --councilof README.md                             (splice the top block in place)
@@ -360,8 +365,10 @@ def derive() -> dict:
          "as_of": None, "current": None},
         {"surface": "Kaggle dataset", "id": "nicktempleman/csoai-gspc-living-board", "url": KAGGLE_URL,
          "lands": "a new dataset version per changed fingerprint; the subtitle carries `as_of`",
-         "read_back": (f"HTTP {kst} · latest ISO timestamp on the listing page `{kiso[-1]}`" if kiso else (f"HTTP {kst} · no timestamp readable without a login" if kst else UNCHECKABLE)),
-         "as_of": kiso[-1] if kiso else None, "current": cur(kiso[-1] if kiso else None)},
+         "read_back": (f"HTTP {kst} · latest listing timestamp `{kiso[-1]}`; snapshot `as_of` not checked here" if kiso else (f"HTTP {kst} · snapshot `as_of` not readable from this listing" if kst else UNCHECKABLE)),
+         # A listing may expose upload or page-update dates. None identifies the
+         # snapshot's root timestamp, so this read cannot establish its currency.
+         "as_of": None, "current": None},
         {"surface": "GitHub mirror", "id": f"{OWNER}/gspc-board", "url": f"https://github.com/{OWNER}/gspc-board",
          "lands": "the snapshot files on `main`",
          "read_back": (f"as_of `{dig(gm, 'as_of')}` · merkle `{short(dig(gm, 'merkle_root'), 12)}` · {n_or_unc(dig(gm, 'card_count'))} leaves" if gm else UNCHECKABLE),
@@ -375,7 +382,7 @@ def derive() -> dict:
          "read_back": f"{f['pypi']['version']} · uploaded {f['pypi']['uploaded']} · {f['pypi']['license']}",
          "as_of": None, "current": None},
         {"surface": "npm", "id": "csoai-gspc-mcp", "url": "https://www.npmjs.com/package/csoai-gspc-mcp",
-         "lands": "stdio MCP server over the same endpoints (published by hand — the account is WebAuthn, so the daily spray cannot push here)",
+         "lands": "stdio MCP server over the same endpoints, released from `councilof-ai`",
          "read_back": f"{f['npm']['version']} · published {f['npm']['published']} · {f['npm']['license']}",
          "as_of": None, "current": None},
     ]
@@ -538,7 +545,7 @@ LEAD_LINE = (
 )
 
 WHO_WE_ARE = (
-    f"**{WORDMARK} — Council of AI — is the public measurement service operated by CSOAI Ltd, "
+    f"**{WORDMARK} — Council of AI — is an operating AI measurement and evidence organisation run by CSOAI Ltd, "
     # The company number is a STABLE fact about the entity, not a live endpoint, so it lives HERE
     # and not in a fetch. It was once added by hand to the emitted README, and the next daily
     # regeneration wiped it — the claim lived in the artefact and not in the generator that emits
@@ -550,10 +557,18 @@ WHO_WE_ARE = (
     "We measure; we do not certify, accredit, issue legal-compliance determinations, sell a rank, or take money from anything we rank."
 )
 
+EXTERNAL_USE = (
+    "**Documented external use:** public records include an externally operated automated rerun, "
+    "a participant's open implementation proposal, and a citation in an individual Internet-Draft. "
+    "The [dated evidence and scope of each example](https://councilof.ai/traction/#external-use) distinguish "
+    "technical reuse from package-download events, customers and institutional endorsement."
+)
+
 
 def derived_line(f: dict) -> str:
     return (f"_derived {f['derived']} by [`scripts/github/org-readme.py`](https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/github/org-readme.py) — "
-            "every number on this page is read live from the URLs in that script; if this page and the API disagree, the API is right._")
+            "measurement and distribution fields are read from the sources in that script at derive time. "
+            "Recheck those sources for current values; external-use examples retain their cited dates and scope._")
 
 
 def repos_table() -> str:
@@ -590,6 +605,8 @@ def profile_md(f: dict, product_index: Path | None) -> str:
         "",
         WHO_WE_ARE,
         "",
+        EXTERNAL_USE,
+        "",
         f"> **{f['lid']}**",
         "",
         board_image_row(f),
@@ -600,8 +617,8 @@ def profile_md(f: dict, product_index: Path | None) -> str:
         "",
         "## The board today",
         "",
-        f"`GET https://councilof.ai/api/gspc` — schema `{f['schema']}` · `totals.public_count` = **{f['public_count']}** · "
-        f"{n_or_unc(f['model_fleets'])} model fleets · {n_or_unc(f['fact_runs'])} fact runs · {n_or_unc(f['public_leader_count'])} public leader scores.",
+        f"`GET https://councilof.ai/api/gspc` — schema `{f['schema']}` · `totals.public_count` = **{f['public_count']}**. "
+        "The table preserves each axis's kind; model comparisons, deterministic facts and measured subjects are distinct populations.",
         "",
         board_table(f),
         "",
@@ -649,6 +666,51 @@ def profile_md(f: dict, product_index: Path | None) -> str:
     return "\n".join(parts)
 
 
+def account_profile_md() -> str:
+    """Stable public introduction; mutable counts stay at their authoritative URLs."""
+    return "# Nicholas Templeman · Council of AI\n\nFounder of **[Council of AI](https://councilof.ai/about/) — Council for the Safety of Artificial Intelligence**, an AI measurement body operated by **CSOAI Ltd** (England and Wales, company 16939677).\n\nWe measure how AI systems behave on published tests and make the results available for others to inspect. Our work includes frozen test banks, deterministic grading where the method permits it, signed measurement records, free verification and public corrections.\n\n## Inspect the work\n\n| What you need | Start here |\n| --- | --- |\n| Current results, coverage and limitations | [Measurement board](https://councilof.ai/board/) |\n| Test methods and grading rules | [Methodology](https://councilof.ai/methodology/) |\n| Check a supported signed record | [Free verifier](https://councilof.ai/gspc-verify/) |\n| Published corrections | [Corrections ledger](https://councilof.ai/corrections/) |\n| Read evidence from your software | [Connection guide](https://councilof.ai/connect/) |\n| Discuss a defined evidence requirement | [Services](https://councilof.ai/services/) · [Contact](https://councilof.ai/contact/) |\n\n[![Current measurement board; open the board for dates and limitations](https://councilof.ai/api/badge)](https://councilof.ai/api/gspc)\n\nCounts and measurement dates belong to the [live board data](https://councilof.ai/api/gspc). Coverage is distinct from model ranking: a tie remains a tie, an untested comparison remains untested, and a fact run does not rank models. Signed and unsigned records state their status separately.\n\n## Our role\n\nCouncil of AI measures and publishes evidence. It does not certify or accredit AI systems, issue legal-compliance determinations, or sell ranking positions. Verification is free. Paid evidence work has a defined scope and does not purchase a favourable result. Our own models are disclosed separately from public rankings.\n\n**MEOK is a CSOAI product.** Its [public workspace](https://meok.ai/) reads Council's public evidence and lets users retain a transcript. Product capabilities and availability must be checked on the current MEOK site; they are not endorsements or measurement results.\n\n## Source and contributions\n\nThe [Council source repository](https://github.com/CSOAI-ORG/councilof-ai) contains the site, public APIs and measurement tooling. The [board mirror](https://github.com/CSOAI-ORG/gspc-board) provides dated snapshots. The [Hugging Face profile](https://huggingface.co/csoai) links published datasets and tools.\n\nFor reproducible defects or measurement challenges, include the record identifier, method version and steps to reproduce. Use the [security reporting route](https://councilof.ai/security/) for sensitive findings.\n\nCSOAI Ltd · Founded by Nicholas Templeman · [councilof.ai](https://councilof.ai/) · [nicholas@csoai.org](mailto:nicholas@csoai.org)\n"
+
+
+REPOSITORY_PROFILES = {
+    "sovereign-wiki": """# Council of AI — governance source catalogue
+
+**Council of AI — Council for the Safety of Artificial Intelligence** publishes AI measurements, methods and verification at **[councilof.ai](https://councilof.ai/)**. This repository contains its public catalogue of AI governance sources, measurement tools and data interfaces. The legal operator is **CSOAI Ltd**.
+
+## Inspect current work
+
+- [Measurement board](https://councilof.ai/board/) — coverage, dates and limitations.
+- [Published methods](https://councilof.ai/methodology/) — what is tested and how results are produced.
+- [Free verification](https://councilof.ai/gspc-verify/) — check supported signed records.
+- [Connection guide](https://councilof.ai/connect/) — current integration guidance.
+- [Source repository](https://github.com/CSOAI-ORG/councilof-ai) — implementation and reviewable changes.
+
+## Catalogue scope
+
+The [catalogue source](index.html), [data-interface pages](x402/index.html) and [tool catalogue](crown-jewels/index.html) retain their existing paths. Their historical labels, counts and availability statements require source-level review; use each linked project's current documentation before relying on an interface. Inclusion in this catalogue does not establish that a tool is deployed, measured or independently validated.
+
+Current counts belong to the [board data](https://councilof.ai/api/gspc) and the relevant dated source. A repository listing, retrieved root or signature is not itself a measurement result. Paid interfaces define their own scope and terms; verification of supported records remains free.
+
+Council of AI measures and publishes evidence. It does not certify or accredit AI systems, issue legal-compliance determinations, or sell ranking positions.
+
+For a defined evidence requirement, use [How we work](https://councilof.ai/how-we-work/) or [Contact](https://councilof.ai/contact/). Report sensitive findings through the [security reporting route](https://councilof.ai/security/).
+
+<!-- Generated by scripts/github/org-readme.py in the Council source repository. Edit the producer, then regenerate. -->
+""",
+    "csoai-org-v2": """# Council of AI — earlier CSOAI website source
+
+This repository retains an earlier CSOAI website implementation. The current **Council of AI — Council for the Safety of Artificial Intelligence** measurement service, published methods and free verification are at **[councilof.ai](https://councilof.ai/)**, operated by **CSOAI Ltd**.
+
+Start with the [measurement board](https://councilof.ai/board/), [methodology](https://councilof.ai/methodology/), [free verifier](https://councilof.ai/gspc-verify/) and [current source repository](https://github.com/CSOAI-ORG/councilof-ai).
+
+Earlier pages in this repository may contain historical terminology or superseded product claims. They do not establish the current service's capabilities, deployment state or institutional status. Council of AI publishes measurement evidence; it does not certify or accredit AI systems or issue legal-compliance determinations.
+
+For current evidence services, see [How we work](https://councilof.ai/how-we-work/) and [Contact](https://councilof.ai/contact/).
+
+<!-- Generated by scripts/github/org-readme.py in the Council source repository. Edit the producer, then regenerate. -->
+""",
+}
+
+
 def personal_md(f: dict, product_index: Path | None) -> str:
     note = ("<!-- DRAFT for CSOAI-ORG/csoai-org/README.md — the file github.com/CSOAI-ORG renders as the account profile\n"
             "     (the account is a GitHub user, and that repository is named after the login). No lane pushes it: it is the\n"
@@ -669,6 +731,8 @@ def councilof_top(f: dict, product_index: Path | None) -> str:
         LEAD_LINE,
         "",
         WHO_WE_ARE,
+        "",
+        EXTERNAL_USE,
         "",
         "**How to read the board:** measurement coverage and model-ranking separation are different determinations. "
         "TIE means the evidence does not justify a hierarchy; UNTESTED means no separation test is published yet; "
@@ -853,6 +917,8 @@ def inventory_md(f: dict, readme_sizes: dict | None = None) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--account-profile", action="store_true", help="print the compact account profile without fetching mutable metrics")
+    ap.add_argument("--repository-profile", choices=sorted(REPOSITORY_PROFILES), help="print a reviewed repository introduction without fetching mutable metrics")
     ap.add_argument("--profile", action="store_true", help="print the profile README to stdout")
     ap.add_argument("--personal", metavar="OUT.md", help="write the personal-profile draft (never pushed by a lane)")
     ap.add_argument("--councilof", metavar="README", help="splice the generated top block into this councilof-ai README.md")
@@ -862,6 +928,18 @@ def main() -> int:
     ap.add_argument("--product-index", default=None, help="path to docs/product/_INDEX.json (default: relative to this repo)")
     ap.add_argument("--selftest", action="store_true", help="prove the corrections selection can go red")
     args = ap.parse_args()
+
+    if args.repository_profile:
+        text = REPOSITORY_PROFILES[args.repository_profile]
+        guard(text, "repository profile")
+        sys.stdout.write(text)
+        return 0
+
+    if args.account_profile:
+        text = account_profile_md()
+        guard(text, "account profile")
+        sys.stdout.write(text)
+        return 0
 
     if args.selftest:
         # A FIXED LATE-DATED ENTRY AT THE END OF THE ARRAY IS THE CASE THAT BROKE IT.

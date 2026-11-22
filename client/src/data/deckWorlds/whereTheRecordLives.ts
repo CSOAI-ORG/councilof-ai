@@ -89,7 +89,7 @@ export const RECORD_SLIDES: Slide[] = [
       { tag: "usp", text: "The retraction is published, not buried — see the corrections ledger" },
     ],
     href: "/honesty",
-    cta: "Read what we got wrong",
+    cta: "Read published corrections",
   },
 ];
 
@@ -104,7 +104,7 @@ export const RECORD_NOT_CLAIMED = [
 
 export const RECORD_RELATED = [
   { href: "/gspc-verify", label: "Verify a card", what: "Client-side verification — no account, no server call." },
-  { href: "/honesty", label: "The honesty gate", what: "Our own errors, including the claim withdrawn in DR-0007." },
+  { href: "/honesty", label: "Measurement scope and limitations", what: "Our own errors, including the claim withdrawn in DR-0007." },
   { href: "/statute-to-predicate", label: "From statute to predicate", what: "What is inside the record before it is signed." },
   { href: "/trust-center", label: "Trust center", what: "The real hosting posture, without borrowed multi-region claims." },
   { href: "/.well-known/software-heritage.json", label: "Software Heritage record", what: "The dated snapshot identifier and its stated limits." },

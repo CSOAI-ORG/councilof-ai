@@ -252,7 +252,7 @@ export default function Doctrine() {
         <p className="mt-10 text-sm leading-6 text-gray-500">
           Also:{" "}
           <Link href="/honesty" className="text-emerald-700 underline">
-            honesty gate
+            measurement scope and limitations
           </Link>
           {" · "}
           <Link href="/firewall-charter" className="text-emerald-700 underline">

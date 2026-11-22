@@ -1,0 +1,56 @@
+{
+ "schema": "csoai.feed.model/0.1",
+ "feed": "model/m-57eb6dd52a40",
+ "as_of": "2026-08-19T09:24:39.174226+00:00",
+ "model_ref": "57eb6dd52a40b6aa",
+ "identity_note": "the model identifier resolves via the signed card corpus (public/signed/cards, card-matrix.json); raw identifiers are not published on this surface",
+ "cards": 6,
+ "axes_covered": [
+  "arc-30",
+  "care",
+  "gov",
+  "gsm8k-30",
+  "mmlu-30",
+  "swag-30"
+ ],
+ "variation_note": "same-fixture runs across this model's variations live here; deltas between models are the variation evidence",
+ "measurements": [
+  {
+   "id": "01c2f3c124a84e8f62a6f1bf1c6a35103c23e58c67ec7757fd3e3e543d058038",
+   "axis": "gov",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.170100+00:00"
+  },
+  {
+   "id": "079cb17611c010b49933fb09bba60217bbf63292c33908e9125863a0923e49cc",
+   "axis": "arc-30",
+   "accuracy": 0.9667,
+   "created": "2026-08-19T09:24:39.169977+00:00"
+  },
+  {
+   "id": "1a2e39a3cd8a84a2e78256eab5bbf446d34ae3c66ffdc180d4636cc940418d7b",
+   "axis": "mmlu-30",
+   "accuracy": 0.9667,
+   "created": "2026-08-19T09:24:39.169733+00:00"
+  },
+  {
+   "id": "4a9d74d40d87f26d8e957e4f0d1f693bba4622ff34e4840e87bb67c4c48c7b74",
+   "axis": "swag-30",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.169910+00:00"
+  },
+  {
+   "id": "5d7baf6bb095f3014cbdbe658b97451f17f6acde23d562b3649db82e22d3b5c7",
+   "axis": "care",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.170039+00:00"
+  },
+  {
+   "id": "fdb2a676a2d5027ba8d845fd3ac73dc00fe83073ec5078f5d89551d99ad062c7",
+   "axis": "gsm8k-30",
+   "accuracy": 0.6,
+   "created": "2026-08-19T09:24:39.169797+00:00"
+  }
+ ],
+ "verify": "https://councilof.ai/gspc-verify/"
+}

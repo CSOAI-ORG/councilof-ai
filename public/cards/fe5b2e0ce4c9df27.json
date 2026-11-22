@@ -1,0 +1,149 @@
+{
+  "card": {
+    "as_of": "2026-11-01T23:37:11Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:BENJI:ethereum",
+      "symbol": "BENJI",
+      "product": "Franklin OnChain U.S. Government Money Fund",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3ddc84940ab509c11b20b76b466933f40b750dc9",
+      "block": 26323250,
+      "block_hash": "0x0bf0741174e641b29fca9f1d5a26e54c72a0fb4ef92a15b0a1686b6a2f2ded79",
+      "block_time": "2026-11-01T23:37:11Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "Franklin OnChain U.S. Government Money Fund",
+        "symbol": "BENJI",
+        "decimals": 18,
+        "totalSupply": "48397965019305649648651673",
+        "eip1967_implementation": "0x20ca56f1215c3376b25bba1f2f9d3701c5def4c5"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "owner()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "b6c446c8f86120f21a5fee7a1cf2fdc29c7f437fe28953214cff84292a2e8c22",
+        "bytes": 10277,
+        "url": "/archive/proofs/eip1186/b6c446c8f86120f2.json",
+        "rpc": "1rpc.io",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0x5e4dcb0bb1910f6429e5fe91678990088a51c6d1cfe1b31d05fb9d948cc7867c",
+          "storageHash": "0x740e4041562f154e640cfd3eb259f52dcec895a13130050a30f737d87e82f260",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x20ca56f1215c3376b25bba1f2f9d3701c5def4c5",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 2
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 26323250 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "fe5b2e0ce4c9df273fbab0dc56395a23415e6d2ad575bc8aa5b6b961899f5688",
+    "sig_ed25519": "c347cad6a910e0f0f1339d3d9d1d248c707ec87e163f00b84a9f4c53eb6ff896fad73c85c6699ecf62e61f670941e6fe5a5d8494ab0dcebb87638c7d404ab60f",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://etherscan.io/token/0x3ddc84940ab509c11b20b76b466933f40b750dc9",
+      "https://1rpc.io/eth"
+    ],
+    "subject": "evm:BENJI:ethereum permission state at block 26323250",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:BENJI"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "861d9c10ae40f9d62c54a46012e56734b6cccfebbb26ae443af429dc49e2364e",
+    "69da9ecb532a578b48a1012115cf93673b3b37d2b11fbe8b99e05dddaa09b54b",
+    "eac57f39e55f031729d74dceac20c3d303ba8ee62d0c04e331635428fff7edb9",
+    "8e96ed4359cfca847321bc661d9c2c43d2c76beb3cc0d4718dd50cacf2cb9d70",
+    "76cef47c0cc09a06618c501a851e887ba7a2f21b4fdf0b4748f7b6cc448e48c4",
+    "5065dcc9add28767ad9e33942835f6fd114b5989972f148559f301f46db03135",
+    "843b25a66e8cd97e2d5c9ec103174a2388fd004ce66553d9b876889dc66898e7",
+    "1db67c023862361bdf7e05508fb92048b1571fe9e16129fa609c4eec6231faca",
+    "5559f3ff379011e8522c22cd04d1c4e4d88b485344b79320c3d40038bb295a03"
+  ]
+}

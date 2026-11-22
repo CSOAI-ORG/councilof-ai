@@ -24,6 +24,10 @@ on:
       - ".github/workflows/charter-federation.yml"
   workflow_dispatch:
 
+concurrency:
+  group: charter-federation-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

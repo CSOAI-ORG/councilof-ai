@@ -1,0 +1,83 @@
+{
+  "schema": "csoai.growth-loop/0.1",
+  "date": "2026-11-09",
+  "as_of": "2026-11-09T16:01:43Z",
+  "one_number": {
+    "value": 4,
+    "last_30d": 2,
+    "settlements": 5,
+    "self_settlements": 22,
+    "zero_value_settlements": 9,
+    "status": "MEASURED",
+    "gate": {
+      "0 for 30 days": "shape or price is wrong; do not add doors",
+      "\u22651 repeat": "open the next door",
+      "\u22655 distinct in 30d": "it is a product"
+    },
+    "repeat_nonself_payers": {
+      "all_time": 1,
+      "last_30d": 0,
+      "status": "MEASURED",
+      "source": "/api/revenue one_number.repeat_nonself_payers",
+      "boundary": "Repeated wallets and transaction IDs do not prove buyer receipt, acceptance or an independent customer, and do not authorize another product."
+    }
+  },
+  "funnel_per_door": {
+    "receipts_lookup_available": false,
+    "distinct_nonself_payers": "?",
+    "settlements_listed": 0,
+    "note": "402s-issued counter lands with TUI-1's builder change; until then this reads settles only"
+  },
+  "signals": {
+    "board_lid": "34 axes \u00b7 34 measured",
+    "census_files": {
+      "x402-settlement-census-dry-2026-09-06.summary.json": "0.0000"
+    },
+    "index_probes": {
+      "mcp_so": 200,
+      "mcpservers": 200,
+      "pulsemcp": 200,
+      "glama": 200,
+      "arcade": 200,
+      "hf_dataset": 200
+    },
+    "hf_downloads": {
+      "x402-settlement-census": 445
+    },
+    "pypi_downloads": {
+      "meok-watermark-attest-mcp": 55,
+      "csoai-axis-engine": null
+    }
+  },
+  "costs": {
+    "census_usdc_spent": "0.0000"
+  },
+  "next_moves": [
+    {
+      "rank": 1,
+      "move": "historical repeat-wallet evidence only \u2014 seek accepted repeat delivery in the current 30-day window",
+      "proof": "distinct wallets 3 \u2192 4; repeat_nonself_payers.all_time=1; last_30d=0; status=MEASURED",
+      "owner": false
+    },
+    {
+      "rank": 3,
+      "move": "self-settlements recorded \u2014 shown as self, never growth",
+      "proof": "self=22",
+      "owner": false
+    },
+    {
+      "rank": 4,
+      "move": "historical grant-map wording needs current primary-source verification before any application decision",
+      "proof": "2026-09-06 map: 8 line(s) contain 'open'; current status unverified",
+      "owner": true
+    }
+  ],
+  "retro": [
+    {
+      "prior_moves": 3,
+      "one_number_before": 3,
+      "one_number_after": 4,
+      "moved": true
+    }
+  ]
+}

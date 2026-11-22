@@ -1,0 +1,37 @@
+--- a/Nicholastempleman/csoai-opa-readonly-policy-lab/README.md (live)
++++ b/Nicholastempleman/csoai-opa-readonly-policy-lab/README.md (proposed)
+@@ -14,6 +14,9 @@
+ - policy-as-code
+ - reproducibility
+ - synthetic-data
++- council-of-ai
++size_categories:
++- n<1K
+ ---
+ 
+ # One allowed agent read, three blocked: a reproducible OPA lab
+@@ -63,3 +66,24 @@
+ - `FILES.json`: SHA-256 manifest for every archived source file except itself.
+ 
+ This is a dated snapshot. The public GSPC endpoint may change; a later run need not return the same board hash. No binary, private key, grant credential, payment, customer data or production authority is included. The policy and lab scripts are released under Apache-2.0; the pinned OPA source README and license are included for upstream attribution. For wider context, see the [public LF capability index](https://huggingface.co/datasets/Nicholastempleman/csoai-lf-agent-infrastructure-index) and its [methods article](https://huggingface.co/blog/Nicholastempleman/open-agent-infrastructure-capability-index).
++
++<!-- csoai-card-fixes:start -->
++
++## Limitations
++
++**Measurement is not certification.** Values in this repository are measurements recorded by Council of AI (CSOAI Ltd) under the method, instrument version and observation date stated in each file. They are not a certification, audit opinion, conformity assessment or legal determination (including under the EU AI Act). Results depend on the instrument version, the sampled items and the date, and a re-measurement can change them. Repository updates and download counts are not new measurements.
++
++## Citation
++
++```bibtex
++@misc{nicholastempleman_csoai_opa_readonly_policy_lab_2026,
++  title        = {CSOAI OPA Read-Only Policy Effect Lab},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/Nicholastempleman/csoai-opa-readonly-policy-lab}},
++  url          = {https://huggingface.co/datasets/Nicholastempleman/csoai-opa-readonly-policy-lab}
++}
++```
++
++<!-- csoai-card-fixes:end -->

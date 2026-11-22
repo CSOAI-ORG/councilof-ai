@@ -1,0 +1,83 @@
+{
+  "card": {
+    "as_of": "2026-11-12T11:42:17Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "129",
+      "symbol": "USDY",
+      "attestation_page": "https://ondo.finance/usdy",
+      "auditor": null,
+      "cadence_claimed": "daily",
+      "latest_report_date": "2026-11-10",
+      "staleness_days": 2,
+      "mirror_sha256": "41449768b88b8c768e4f60327fbb6a13e367b6d1fa352a00da8a946126a0f74f",
+      "excerpt": "TVL $ 2.39B TVL 1W 1M 1Y ALL Chart values as of 7:00:00pm EST . Portfolio Overview As of November 10, 2026 6:59:59pm EST Value of USDY Outstanding 3 $ 1.97B Val",
+      "unmeasured": [
+        "auditor"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "0d4c5b8f87714e052734f16ed0ce7bf63aea9f28c2f3472d4ef8416b99ba7faa",
+    "sig_ed25519": "686a9808356bac0cbaf9dd8e07c40371ddc5c0abc64e9c010f446ce60203a4efeb06e876078c71a381a8db3dfc185ae76857c6cadee97df649c6d1b7de1eab07",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://ondo.finance/usdy"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDY",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "e7de72531b2c05f894626081629cb85960c3bc80ca499d63cc654f03be30a27c",
+    "dabf3f89d86af2e3b8eeed9b237eccfbd7dbcfc44eee8fb322eb29126a4c2aaf",
+    "31471992e26243546fa23493994538a2900964b9f6805702b0afd1dbb0265b97",
+    "a7222fed604cf60365f8297487128eb36ca8db72033599c0509a11b098526817",
+    "a3a8399b75841ec0fe0db4d298c1f2382d49fec35e9bf9ad8fad46da947cbc6e",
+    "0ba1c7aad91fa87981b134dce998db0c45db78e11e9595ad726cbdf92f91924e",
+    "3ad84468f0125eade27881c3bd470cb378c97c8e5bb547b349d27a6ad609215d",
+    "e3232a12899f170b21784f255d9ff53019716c31132a257e1d606083605194c3",
+    "9101a0efa916efe5bee7d6b3598a9d33552f298c526fce6162a5106e1c295994"
+  ]
+}

@@ -396,6 +396,8 @@ def test_spray_follows_the_deploy_workflow_by_its_exact_name():
     coupling, and pin the guard that a cancelled or failed deploy — which moved nothing at the apex —
     is skipped."""
     deploy_name = _workflow_name(WORKFLOWS / "deploy.yml")
+    # GitHub workflow filters are globs; JSON supplies YAML double-quote escaping.
+    deploy_filter = json.dumps("".join("\\" + c if c in "\\*?+![]" else c for c in deploy_name))
     # Every workflow whose workflow_run trigger follows the deploy by its `name:` string — a rename
     # of deploy.yml silently stops all of them (2026-09-15: spray; 2026-09-20 audit found the other
     # four had been dead since the 'gated production branch' rename). Pin them all.
@@ -409,9 +411,10 @@ def test_spray_follows_the_deploy_workflow_by_its_exact_name():
     for follower in followers:
         text = (WORKFLOWS / follower).read_text(encoding="utf-8")
         assert "workflow_run:" in text, follower
-        assert f'- "{deploy_name}"' in text or f'workflows: ["{deploy_name}"]' in text, follower
-        # Failing control: the coupling is byte-exact — one extra character and the trigger is a miss.
-        assert f'- "{deploy_name}x"' not in text, follower
+        assert f'- {deploy_filter}' in text or f'workflows: [{deploy_filter}]' in text, follower
+        # An unescaped producer name is not a literal workflow filter.
+        assert f'- {json.dumps(deploy_name)}' not in text, follower
+        assert f'workflows: [{json.dumps(deploy_name)}]' not in text, follower
     spray_text = (WORKFLOWS / "gspc-spray.yml").read_text(encoding="utf-8")
     assert "github.event.workflow_run.conclusion == 'success'" in spray_text
     assert _workflow_name(WORKFLOWS / "gspc-spray.yml") == "gspc-spray"
@@ -624,3 +627,45 @@ def test_pypi_refuses_a_snapshot_version_below_its_own_source():
     why = spray.pypi_stale_source_refusal("0.2.20260928.1", "0.2.20260928", _proj("0.2.20260922"))
     assert why and "sorts below" in why
     assert spray.pypi_stale_source_refusal(None, "0.2.20260929", _proj("0.2.20260922"))
+
+
+def _pypi_release_for_the_root_date(monkeypatch, tmp_path, bundled_fp, bundled_as_of):
+    """PyPI already serves 0.2.20261119, the release for this root date, bundling the given snapshot."""
+    src = tmp_path / "pypi" / "csoai-gspc"
+    src.mkdir(parents=True)
+    (src / "pyproject.toml").write_text('version = "0.2.20261119"\n')
+    monkeypatch.setattr(spray, "HERE", tmp_path)
+    monkeypatch.setenv("PYPI_API_TOKEN", "test-token")
+    description = (f"\n## Bundled snapshot — as of {bundled_as_of}\n\n**lid**\n\n"
+                   f"spray-fingerprint: {bundled_fp}\n\nspray-source-version: 0.2.20261119\n")
+    info = {"version": "0.2.20261119", "description": description}
+
+    def fake_http(url, *, method="GET", data=None, headers=None, timeout=60.0):
+        if url == f"https://pypi.org/pypi/{spray.PYPI_PROJECT}/json":
+            return 200, json.dumps({"info": info, "releases": {"0.2.20261119": [{}]}}).encode(), {}
+        if url == f"https://pypi.org/pypi/{spray.PYPI_PROJECT}/0.2.20261119/json":
+            return 200, json.dumps({"info": info}).encode(), {}
+        raise AssertionError(f"unexpected request {method} {url}")
+
+    monkeypatch.setattr(spray, "http", fake_http)
+
+
+def test_pypi_same_root_date_release_names_the_older_board_it_bundles(monkeypatch, tmp_path):
+    """19 Nov 2026: 0.2.20261119 bundled the board read before two held axes were released, and the root
+    then moved to 13:03:53Z on the same date. The row said the board "waits for tomorrow's run" and
+    reported the new as_of as seen. It must name what the existing release bundles."""
+    _pypi_release_for_the_root_date(monkeypatch, tmp_path, "a" * 64, "2026-11-19T03:15:46Z")
+    tr = {"as_of": "2026-11-19T13:03:53Z", "fingerprint": "9" * 64, "lid": "x", "read_at": "x"}
+    [row] = spray.spray_pypi(tr, tmp_path, dry_run=True, force=False)
+    assert row["status"] == "UNCHANGED"
+    assert row["as_of_seen"] == "2026-11-19T03:15:46Z", "the row must show the as_of the release bundles"
+    assert "a" * 16 in row["detail"] and "9" * 16 in row["detail"]
+    assert "tomorrow" not in row["detail"] and "root dated after 2026-11-19" in row["detail"]
+
+
+def test_pypi_same_root_date_release_that_bundles_this_board_says_so(monkeypatch, tmp_path):
+    _pypi_release_for_the_root_date(monkeypatch, tmp_path, "9" * 64, "2026-11-19T13:03:53Z")
+    tr = {"as_of": "2026-11-19T13:03:53Z", "fingerprint": "9" * 64, "lid": "x", "read_at": "x"}
+    [row] = spray.spray_pypi(tr, tmp_path, dry_run=True, force=False)
+    assert row["status"] == "UNCHANGED" and row["as_of_seen"] == "2026-11-19T13:03:53Z"
+    assert "already bundles fingerprint 9999999999999999" in row["detail"]

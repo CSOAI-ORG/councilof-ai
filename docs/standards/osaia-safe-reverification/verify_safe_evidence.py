@@ -76,6 +76,8 @@ def check_approval_dependency(record, dep_id, actual_uri, approval_bytes):
     are 128 dependencies and 128 KiB of approval bytes; exceeding them means
     unsupported by this check, not schema-invalid or a claim-state change.
     Supported input encoding is UTF-8 without a byte-order mark.
+    Retained HITL profiles 0.1 and 0.2 use this same byte-link check. A match
+    does not establish either version's authority or temporal requirements.
     """
     safe_fields = {
         "profile", "record_id", "issuer", "issued_at", "supersedes", "finding",
@@ -138,7 +140,8 @@ def check_approval_dependency(record, dep_id, actual_uri, approval_bytes):
                      "invocation", "effect", "verification", "limits"}
     if (type(approval) is not dict or set(approval) - hitl_fields
             or hitl_required - set(approval)
-            or approval.get("profile") != "csoai.hitl-authority-effect/0.1"
+            or approval.get("profile") not in (
+                "csoai.hitl-authority-effect/0.1", "csoai.hitl-authority-effect/0.2")
             or any(type(approval[key]) is not dict for key in
                    ("request", "authority", "invocation", "effect", "verification"))
             or any(type(approval[key]) is not str or not approval[key].strip()

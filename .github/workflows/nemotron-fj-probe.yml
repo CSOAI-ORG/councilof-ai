@@ -1,0 +1,64 @@
+name: nemotron-fj-probe
+
+# GSPC probe 3 — privacy-leak pattern scan over a declared sample of
+# nvidia/Nemotron-Personas-Finance-Japan (CC-BY-4.0). Runs the scan, lands the
+# result card (schema csoai.bank-probe-result/0.1) on a dated branch, and opens
+# a PR (master is protected — direct GHA push is refused).
+
+on:
+  workflow_dispatch:
+    inputs:
+      sample:
+        description: "rows scanned (first N, declared on the card)"
+        default: "50000"
+  schedule:
+    - cron: "50 6 * * 1" # Mondays 06:50 UTC, before the 07:15 UTC pile-up
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: nemotron-fj-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install datasets client
+        run: pip install datasets --quiet
+      - name: Run privacy-leak pattern scan
+        run: |
+          python scripts/measurements/nemotron-finance-japan/probe_privacy_leak.py \
+            --dataset nvidia/Nemotron-Personas-Finance-Japan \
+            --sample ${{ github.event.inputs.sample || '50000' }} \
+            --out /tmp/result.json
+          cat /tmp/result.json
+      - name: Land the result card on a dated branch and open the PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          DATE=$(date -u +%F)
+          BRANCH="probe/nemotron-fj-$DATE"
+          mkdir -p public/interop/nemotron-fj-probe
+          cp /tmp/result.json "public/interop/nemotron-fj-probe/result-${DATE}.json"
+          cp /tmp/result.json "public/interop/nemotron-fj-probe/latest.json"
+          git config user.name "CSOAI"
+          git config user.email "nicholas@csoai.org"
+          git checkout -b "$BRANCH"
+          git add public/interop/nemotron-fj-probe/
+          if git diff --cached --quiet; then
+            echo "UNCHANGED — result identical to the landed card; nothing to submit"
+            exit 0
+          fi
+          git commit -m "nemotron-fj probe: privacy-leak scan landed (${DATE}, sample ${{ github.event.inputs.sample || '50000' }})"
+          git push origin "$BRANCH"
+          gh pr create --base master --head "$BRANCH" \
+            --title "nemotron-fj probe result: privacy-leak scan (${DATE})" \
+            --body "Result card for probe 3 (bank proposal #4250). Schema csoai.bank-probe-result/0.1. Pattern-level indicative scan of a declared sample — not a proof of privacy. Measurement, never certification. Auto-merge lands it."

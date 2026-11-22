@@ -41,6 +41,10 @@ on:
       - "package.json"
       - "package-lock.json"
 
+concurrency:
+  group: a2a-contract-selftest-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

@@ -1,0 +1,150 @@
+{
+  "schema": "csoai.controlled-reproduction/1",
+  "upstream": "asago-ai/midojo",
+  "source_commit": "10426b489746ca588174e0a98f5e9952aacb99fa",
+  "collector_sha256": "0ae66dffea5564ce2b9a780e0c8dd2f665548fc128c70238758269f57db00ddc",
+  "orchestrator_sha256": "183dfa969644d83c1a5e9fde9721ac3c64761b0c66abd043a909930d7fc8615d",
+  "candidate_sha256": "2d89350b1f62dce23c02fbc8e5719ccf38255e0c3a1eea1316390a23851780e4",
+  "baseline": {
+    "checks": [
+      {
+        "case": "log-read-error-is-not-empty-evidence",
+        "satisfied": false
+      },
+      {
+        "case": "failure-does-not-cache-an-empty-success",
+        "satisfied": false
+      },
+      {
+        "case": "missing-terminal-marker-is-incomplete",
+        "satisfied": false
+      },
+      {
+        "case": "observed-marker-removes-only-marker",
+        "satisfied": true
+      },
+      {
+        "case": "failed-listing-is-not-a-deleted-file",
+        "satisfied": false
+      },
+      {
+        "case": "failed-diff-is-not-no-change",
+        "satisfied": false
+      },
+      {
+        "case": "failed-content-read-is-not-empty-content",
+        "satisfied": false
+      },
+      {
+        "case": "successful-empty-collection-remains-empty",
+        "satisfied": true
+      },
+      {
+        "case": "successful-absence-still-reports-deletion",
+        "satisfied": true
+      },
+      {
+        "case": "complete-events-are-cached-once",
+        "satisfied": true
+      },
+      {
+        "case": "failed-collection-never-reaches-complete-or-grade",
+        "satisfied": false
+      },
+      {
+        "case": "complete-collection-still-records-and-grades",
+        "satisfied": true
+      }
+    ],
+    "passed": 5,
+    "total": 12,
+    "failure_path": [
+      "agent",
+      "record",
+      "teardown",
+      "complete",
+      "grade"
+    ],
+    "success_path": [
+      "agent",
+      "record",
+      "teardown",
+      "complete",
+      "grade"
+    ]
+  },
+  "candidate": {
+    "checks": [
+      {
+        "case": "log-read-error-is-not-empty-evidence",
+        "satisfied": true
+      },
+      {
+        "case": "failure-does-not-cache-an-empty-success",
+        "satisfied": true
+      },
+      {
+        "case": "missing-terminal-marker-is-incomplete",
+        "satisfied": true
+      },
+      {
+        "case": "observed-marker-removes-only-marker",
+        "satisfied": true
+      },
+      {
+        "case": "failed-listing-is-not-a-deleted-file",
+        "satisfied": true
+      },
+      {
+        "case": "failed-diff-is-not-no-change",
+        "satisfied": true
+      },
+      {
+        "case": "failed-content-read-is-not-empty-content",
+        "satisfied": true
+      },
+      {
+        "case": "successful-empty-collection-remains-empty",
+        "satisfied": true
+      },
+      {
+        "case": "successful-absence-still-reports-deletion",
+        "satisfied": true
+      },
+      {
+        "case": "complete-events-are-cached-once",
+        "satisfied": true
+      },
+      {
+        "case": "failed-collection-never-reaches-complete-or-grade",
+        "satisfied": true
+      },
+      {
+        "case": "complete-collection-still-records-and-grades",
+        "satisfied": true
+      }
+    ],
+    "passed": 12,
+    "total": 12,
+    "failure_path": [
+      "agent",
+      "teardown",
+      "revoke",
+      "collection-error"
+    ],
+    "success_path": [
+      "agent",
+      "record",
+      "teardown",
+      "complete",
+      "grade"
+    ]
+  },
+  "disabled_guard_detected": true,
+  "scope": "Exact pinned collector methods and orchestrator run_task, isolated fixture dependencies. Not a native OpenShell run, full package test or vendor production measurement.",
+  "limits": [
+    "Conservative full-evaluation stop; per-check bool-or-null and unaffected-grade preservation in #190 remain open.",
+    "Not installed or merged upstream.",
+    "No model, network, genuine user approval, or customer evidence."
+  ]
+}

@@ -36,17 +36,20 @@ describe("recordSettlement reports whether it actually wrote", () => {
   });
 
   it("says so when the write THROWS — the case that read as 'nothing settled'", async () => {
+    let writes = 0;
     const kv = {
       get: async () => null,
       put: async () => {
+        writes++;
         throw new Error("KV PUT failed: quota");
       },
     };
     const out = await recordSettlement({ REVENUE_KV: kv } as never, rec);
     expect(out.stored).toBe(false);
     if (!out.stored) {
-      expect(out.reason).toMatch(/kv write failed/i);
-      expect(out.reason).toMatch(/quota/);
+      expect(out.reason).toBe("ERROR: observation failed");
+      expect(out.reason).not.toMatch(/quota|KV PUT failed/);
+      expect(writes).toBe(1); // an observed bookkeeping failure must never retry the settled payment
       // the record is still returned — the grant stands, only the bookkeeping is missing
       expect(out.record?.transaction).toBe("0xdeadbeef");
     }

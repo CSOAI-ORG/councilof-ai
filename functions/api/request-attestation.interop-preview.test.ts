@@ -33,9 +33,9 @@ const pointer = {
   root_sha256: digest,
   n_leaves: 3,
 };
-const call = async () => {
+const call = async (subject = "ollama:gemma3:4b") => {
   const response = await onRequestGet({
-    request: new Request(origin + "/api/request-attestation?subject=ollama:gemma3:4b"),
+    request: new Request(origin + "/api/request-attestation?subject=" + encodeURIComponent(subject)),
     env: {},
   } as Parameters<typeof onRequestGet>[0]);
   return { response, body: await response.json() as any };
@@ -166,6 +166,94 @@ describe("interop preview fetch cost and subject scope", () => {
       matching_active_leaves: null,
       root_active_leaves: null,
       reason: "source exceeds byte limit",
+      included_in_paid_reserve: false,
+    });
+  });
+});
+
+describe("interop roots containing non-model measurements", () => {
+  // scripts/card_root.py publishes body.get("model"), so a tool/subject card
+  // without a model contributes an explicit null while retaining its root leaf.
+  const toolLeaf = { card: "signed-tool-par-444444444444.json", model: null, axis: "tool-parity" };
+  const stubRoot = (leaves: unknown[]) => {
+    const fixture = { ...root, n_leaves: leaves.length, leaves };
+    const bytes = JSON.stringify(fixture);
+    const fixturePointer = {
+      ...pointer,
+      n_leaves: leaves.length,
+      root_sha256: createHash("sha256").update(bytes).digest("hex"),
+    };
+    vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url === origin + "/signed/card-matrix.json") return Response.json({ as_of: asOf, cells: [] });
+      if (url === origin + "/interop/card-root-latest.json") return Response.json(fixturePointer);
+      if (url === origin + rootPath) return new Response(bytes);
+      throw new Error("unexpected fetch " + url);
+    }));
+  };
+
+  it("keeps non-model leaves in the total without adding them to model matches or paid reserve", async () => {
+    stubRoot([...root.leaves, toolLeaf]);
+    const { response, body } = await call();
+    expect(response.status).toBe(402);
+    expect(body.csoai.preview.interop_collection).toMatchObject({
+      state: "ROOT_REFERENCES_AVAILABLE",
+      root_active_leaves: 4,
+      matching_active_leaves: 2,
+      sample_card_urls: [
+        origin + "/interop/mill-cards-signed/signed-governan-111111111111.json",
+        origin + "/interop/mill-cards-signed/signed-care-222222222222.json",
+      ],
+      included_in_paid_reserve: false,
+      signature_verification: "NOT_PERFORMED",
+      root_integrity: "BYTE_MATCHES_UNSIGNED_POINTER",
+    });
+    expect(body.csoai.preview.signed_cards_on_file).toBe(0);
+    expect(body.csoai.preview.cards).toEqual([]);
+  });
+
+  it("does not invent a model named null for a non-model leaf", async () => {
+    stubRoot([...root.leaves, toolLeaf]);
+    const { body } = await call("null");
+    expect(body.csoai.preview.interop_collection).toMatchObject({
+      state: "ROOT_REFERENCES_AVAILABLE",
+      root_active_leaves: 4,
+      matching_active_leaves: 0,
+      sample_card_urls: [],
+    });
+  });
+
+  it.each([
+    ["non-model only", [toolLeaf], 1],
+    ["empty", [], 0],
+  ])("reports read counts for a valid %s root", async (_name, leaves, count) => {
+    stubRoot(leaves as unknown[]);
+    const { body } = await call();
+    expect(body.csoai.preview.interop_collection).toMatchObject({
+      state: "ROOT_REFERENCES_AVAILABLE",
+      root_active_leaves: count,
+      matching_active_leaves: 0,
+      sample_card_urls: [],
+    });
+  });
+
+  it.each([
+    ["number model", { ...toolLeaf, model: 7 }],
+    ["object model", { ...toolLeaf, model: {} }],
+    ["array model", { ...toolLeaf, model: [] }],
+    ["missing model", { card: toolLeaf.card, axis: toolLeaf.axis }],
+    ["invalid card path", { ...toolLeaf, card: "../signed-tool-par-444444444444.json" }],
+    ["invalid axis", { ...toolLeaf, axis: null }],
+    ["null leaf", null],
+  ])("keeps an unreadable collection uncheckable for a %s", async (_name, malformed) => {
+    stubRoot([...root.leaves, malformed]);
+    const { body } = await call();
+    expect(body.csoai.preview.interop_collection).toMatchObject({
+      state: "UNCHECKABLE",
+      root_active_leaves: null,
+      matching_active_leaves: null,
+      root_url: null,
+      sample_card_urls: [],
       included_in_paid_reserve: false,
     });
   });

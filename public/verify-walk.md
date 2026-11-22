@@ -37,6 +37,6 @@ Or replay the public chain on the same page — one button, client-side, includi
 
 ## If something fails
 
-That's a finding, not an embarrassment — tell us: nicholas@csoai.org. Failures are published to the corrections ledger with the fix. The instrument that catches its owner is the instrument you can rely on.
+That's a finding, not an embarrassment — tell us: contact@csoai.org. Failures are published to the corrections ledger with the fix. The instrument that catches its owner is the instrument you can rely on.
 
 *Machine-readable everything: https://councilof.ai/llms.txt · board API /api/gspc · feed /api/feed.xml · charter /firewall-charter*

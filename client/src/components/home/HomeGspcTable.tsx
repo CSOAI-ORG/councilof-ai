@@ -21,6 +21,7 @@
  * White + green, mobile-first: a card list under `sm`, a table from `sm` up.
  */
 import { isOwnerGated } from "@/lib/ownerGated";
+import { axisHref } from "@/lib/axisHref";
 import { useEffect, useState } from "react";
 import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
 import {
@@ -106,7 +107,7 @@ function LeaderWords({ a }: { a: GspcAxis }) {
 
 function AxisName({ a }: { a: GspcAxis }) {
   const label = boardAxisLabel(a.axis);
-  const href = a.kind === "model-comparison" ? `/gspc/${encodeURIComponent(a.axis)}/` : typeof a.evidence_url === "string" && a.evidence_url ? a.evidence_url : null;
+  const href = axisHref(a);
   return (
     <span className="block">
       {href ? (
@@ -397,7 +398,7 @@ export default function HomeGspcTable({
                     <p className="text-lg font-black tracking-tight text-slate-900">{m.model}</p>
                     <p className="mt-0.5 text-sm text-slate-600">
                       leads{" "}
-                      <a href={`/gspc/${encodeURIComponent(m.axis)}/`} className="font-semibold text-emerald-800 hover:underline">
+                      <a href={axisHref({ axis: m.axis, kind: "model-comparison" }) ?? undefined} className="font-semibold text-emerald-800 hover:underline">
                         {boardAxisLabel(m.axis)}
                       </a>
                     </p>

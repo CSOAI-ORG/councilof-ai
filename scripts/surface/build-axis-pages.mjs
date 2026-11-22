@@ -15,7 +15,8 @@
  * read from that payload's axis row; the only typed prose is what a word means (taken from
  * state_enum) and what the page is not. Each state is also written as data-axis / data-status /
  * data-separation / data-n attributes, so scripts/axis-state-gate.mjs can compare values, not
- * phrases.
+ * phrases. A row that states a limit (axes[].limit: what its score does not show) gets a labelled
+ * Limit block, printed from the row, with each correction it cites linked to the ledger.
  *
  *   node scripts/surface/build-axis-pages.mjs                 # writes public/axis/*.html + public/axes.html
  *   node scripts/surface/build-axis-pages.mjs --out dist/client   # writes into a built tree
@@ -95,6 +96,24 @@ function measuredWhen(row) {
 }
 
 const pct = (v) => (typeof v === "number" ? `${(v * 100).toFixed(1)}%` : null);
+
+/** A correction id as the ledger spells it. /corrections/ gives each entry <details id="C-…">. */
+const CORRECTION_ID = /\bC-\d{4}-\d{4}-\d{2}\b/g;
+
+/**
+ * The row's stated limit (axes[].limit), when it carries one: what the axis's score does not
+ * show. The text is the row's own, never typed here, and each correction it cites is linked to
+ * its ledger entry. A row with no limit renders nothing, so its page is byte-for-byte unchanged.
+ */
+export function limitBlock(row) {
+  const text = typeof row?.limit === "string" ? row.limit.trim() : "";
+  if (!text) return "";
+  const ids = [...new Set(text.match(CORRECTION_ID) ?? [])];
+  const cites = ids.length
+    ? `\n  <p class="muted">Recorded in the corrections ledger: ${ids.map((id) => `<a href="/corrections/#${id}">${id}</a>`).join(", ")}.</p>`
+    : "";
+  return `\n\n  <h2>Limit</h2>\n  <div class="note" data-limit="${esc(row.axis)}">${esc(text)}</div>${cites}`;
+}
 
 const CSS = `${SHELL_CSS}  :root { --bg:#fff; --fg:#0b1a12; --muted:#4b5b52; --line:#e2e8e4; --accent:#0f766e; --warn:#92400e; }
   @media (prefers-color-scheme: dark) { :root { --bg:#0b1a12; --fg:#eafff4; --muted:#a7c4b6; --line:rgba(52,211,153,.18); --accent:#34d399; --warn:#fbbf24; } .site-header { background: rgba(11,26,18,.95); } }
@@ -211,7 +230,7 @@ ${enumSep.map((w) => `    <dt>${esc(w)}</dt><dd>${esc(SEPARATION_MEANS[w] ?? "se
   <p><span class="pill">family: ${esc(row.family ?? "—")}</span><span class="pill">kind: ${esc(row.kind ?? "—")}</span></p>
 
   <h2>What this axis asks</h2>
-  <p>${task ? esc(task) : "The board publishes no task description for this axis."}</p>
+  <p>${task ? esc(task) : "The board publishes no task description for this axis."}</p>${limitBlock(row)}
 
   <h2>The numbers, as the board serves them</h2>
   <dl>
@@ -333,6 +352,37 @@ export function renderAll(boardIn) {
     out[`axis/${row.axis}.html`] = renderAxisPage(row, board);
   }
   out["axes.html"] = renderAxesIndex(board);
+  // THE ROUTE MAP. Where each axis's public page lives, and which axes have no
+  // public page at all. Published next to the pages it describes, from the same
+  // payload, so a surface that must not fetch can still link a real URL.
+  //
+  // WHY. The working-groups registry renders statically (no network call) and
+  // lists all 34 axes. It used to link every one of them to /gspc/<axis>/,
+  // which is prerendered only for model-comparison axes — so 20 of its links
+  // were 404s, and the 2 owner-held axes were linked at all when they have no
+  // public page. Typing the route per axis is the thing that rots: the board
+  // grows an axis and the link breaks. This map is regenerated on every build
+  // from the payload the pages were rendered from, so it cannot disagree with
+  // them.
+  out["interop/axis-routes.json"] =
+    JSON.stringify(
+      {
+        schema: "csoai.axis-routes/0.1",
+        source: "GET /api/gspc",
+        // The board's own words, not a date this script invented: the payload
+        // carries no single as_of, so the stamp and the published count are
+        // quoted and the field stays null when the board does not supply one.
+        as_of: boardIn?.measured_on?.living_stamp?.updated ?? null,
+        board_public_count: boardIn?.totals?.public_count ?? null,
+        axes: allAxes.map((a) => ({
+          axis: a?.axis,
+          kind: a?.kind,
+          ...(a?.public_pages ? { public_pages: a.public_pages } : {}),
+        })),
+      },
+      null,
+      2,
+    ) + "\n";
   return out;
 }
 
@@ -419,6 +469,6 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   console.log(
     check
       ? `✓ axis pages: ${Object.keys(files).length} files match this commit's /api/gspc`
-      : `✓ axis pages: ${Object.keys(files).length - 1} axes + axes.html rendered into ${relative(ROOT, outDir) || "."}`,
+      : `✓ axis pages: ${Object.keys(files).length - 2} axes + axes.html + interop/axis-routes.json rendered into ${relative(ROOT, outDir) || "."}`,
   );
 }

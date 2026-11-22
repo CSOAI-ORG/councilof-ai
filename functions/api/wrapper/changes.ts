@@ -1,3 +1,4 @@
+import { postObservationState } from "../_bookkeeping_budget";
 import { recordPaidResponse, markPaidUndeliveredResponse } from "../_x402_delivery_record";
 /**
  * GET /api/wrapper/changes?id=<pair> — delta of wrapped supply and escrow since the
@@ -255,8 +256,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ...result, preview: true, preview_note: "Full data requires payment." });
   }
 
-  return recordPaidResponse(json(result), { kv: env.REVENUE_KV, transaction: payment.ok ? payment.settlement?.transaction : null, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: result.state === "DELTA_READ", paymentResponse: payment.ok ? payment.paymentResponse : undefined });
+  return recordPaidResponse(json(result), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, transaction: payment.ok ? payment.settlement?.transaction : null, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: result.state === "DELTA_READ", paymentResponse: payment.ok ? payment.paymentResponse : undefined });
 };
+
+/** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
+export const onRequestPost = onRequestGet;
 
 // HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
 export const onRequestHead = headFromGet(onRequestGet);

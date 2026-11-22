@@ -123,7 +123,7 @@ export const AXES_D: AxisScore[] = [
     n: 41, status: "MEASURED", method_status: "meets-rule",
     method: "scripts/subject-axis/subject-axis-live-run.mjs", method_sha: "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
     rate: 0.9268, rate_scale: "fraction", rate_rule: "presence of at least 3 of 5 declared classes",
-    public_pages: "HIDDEN_PENDING_OWNER_GO",
+    // public_pages hold released by the owner on 2026-11-18 ("Release both"): this row has public pages.
     bank: "interop/axis-banks/regulator-transparency-20261102.json", bank_sha256: "1a8667ca10ab9486b75daf460a680c12d2b4823ad3bbb9cfd6697143f882f6d5",
     frame_sha256: "eb7d23d861fc6151f7b6ebb77e173bc70e22d4d5d76f7f062fcd0d41106d8b23",
     facts_as_of: "2026-10-28T04:25:30.845Z", evidence_url: "/interop/axis-banks/regulator-transparency-20261102.json",
@@ -148,7 +148,11 @@ export const AXES_D: AxisScore[] = [
     colour: "hsl(280 62% 52%)", hue: 280,
     note: "33 subjects from a frozen frame of 35 (2 refusals recorded, never converted to failures). rate 0.9091 = share meeting at least 3 of 5 declared presence classes (4-of-5 0.5152, 5-of-5 0.1818). Class census: mechanistic 32, sparse 11, pretrained 21, reproducible 26, peer 29. 33/33 must-fail negative controls caught. Presence of a string in public bytes at a stated time is not evidence of quality, truth or compliance.",
   },
-// Approved by the owner 2026-10-16 (33 axes). Definitions: AXES-33-SPEC.md §3.
+// Approved by the owner 2026-10-16 (the board as it stood that day). Definitions: the
+// committed axis records themselves — functions/api/_gspc_axes_{a,b,c,d,fin}.ts. This line
+// once cited AXES-33-SPEC.md §3; that document was never committed to any branch, so the
+// citation pointed at nothing a reader could open, and the definitions live with the code
+// they describe.
   // PROMOTED 2026-10-29 (owner ruling: option 3 — publish on the four outcomes the evidence
   // settles, and say in the axis's own note that the disclosure split is not part of the
   // measurement). This is the FIRST MEASURED SUBJECT AXIS: kind "measured-subject", with a
@@ -219,7 +223,7 @@ export const AXES_D: AxisScore[] = [
     n: 106, status: "MEASURED", method_status: "meets-rule",
     method: "scripts/subject-axis/build_missing_axes.mjs", method_sha: "eeabfeb8a0515d719840d33c2a9320bd8279b7da7db17fc537acd23632509b5b",
     rate: 0.1981, rate_scale: "fraction", rate_rule: "presence of at least 3 of 5 declared classes",
-    public_pages: "HIDDEN_PENDING_OWNER_GO",
+    // public_pages hold released by the owner on 2026-11-18 ("Release both"): this row has public pages.
     bank: "interop/axis-banks/watchdog-ingest-20261102.json", bank_sha256: "8c5a3438294a8dc56baf9fb879b6a336b90bccd5a5a45e3944016b834dff2e88",
     frame_sha256: "0a4876147edfbf18848bbfe17f32a7e4a92a710e68c76ff4481998b9bbbe5d2a",
     facts_as_of: "2026-11-02T04:17:24.499Z", evidence_url: "/interop/axis-banks/watchdog-ingest-20261102.json",

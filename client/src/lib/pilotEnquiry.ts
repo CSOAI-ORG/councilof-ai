@@ -101,10 +101,10 @@ export function prepareEnquiry(input: EnquiryFields): EnquiryDraft {
 }
 
 /**
- * The existing Contact form's recipient; never supplied by query or form data. Until 6 Oct 2026
- * this was contact@csoai.org while the footer, JSON-LD, security.txt and the invoice handoff
- * named nicholas@csoai.org; nothing confirms contact@ reaches a monitored inbox, so the form
- * uses the one mailbox constant too.
+ * The existing Contact form's recipient; never supplied by query or form data. It is the one
+ * mailbox constant, like every other surface. From 6 Oct to 16 Nov 2026 that constant was the
+ * owner's own address; since 16 Nov it is contact@csoai.org, which lands in the same
+ * monitored inbox.
  */
 export const CONTACT_ENQUIRY_EMAIL = CONTACT_MAILBOX;
 

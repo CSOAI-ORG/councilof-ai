@@ -22,9 +22,13 @@ import { headFromGet } from "./_head";
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
 // in but absent from the data, so the board reported 14 — the un-swept state.
-// method_status (Measure ruling 2026-10-16, AXES-33-SPEC.md): each live axis either meets the rule
+// method_status (Measure ruling 2026-10-16): each live axis either meets the rule
 // (frozen sha-pinned bank or method, n_valid >= 30) or names its exact gap. Fact-axis gaps read n off
 // the row, never typed. Remediation is queued in bank-next-version. The measured count is unchanged.
+// This ruling was cited as AXES-33-SPEC.md. That document was never committed to any branch, so
+// the citation pointed at nothing a reader could open. The rule it states is enforced at
+// pull-request time by scripts/board-production-anchor.mjs, which refuses a promotion without a
+// frozen sha-pinned bank, method_status "meets-rule" and n >= 30.
 const LEGACY_GAP: Record<string, string> = {
   jail: "27 distinct prompts, n<30",
   swarm: "bank sha points to retired bank",
@@ -120,6 +124,13 @@ type PublicAxis = AxisScore & {
 };
 const excludeOwnLeader = (a: AxisScore): PublicAxis => {
   if (a.kind !== "model-comparison" || !isOwnCouncilModel(a.leader)) return a;
+  // separation_basis is NOT leader-specific and is kept on every axis that types it: it states
+  // the rows recompute (or the reason no public determination is published) that the separation
+  // field rests on, so the served axis keeps its basis even when the leader's own numbers are
+  // dropped here. The leader's accuracy/interval/p/note still describe the excluded model and go.
+  // `limit` is deliberately absent from this destructure and from the two in dropUncardedLeader
+  // and applyRowsSeparation: a row's stated limit says what its score does not show, which no
+  // leader change alters, so every public view serves it as typed (axes[].limit, C-2026-1120-02).
   const {
     accuracy: _acc,
     accuracy_is: _accIs,
@@ -127,7 +138,6 @@ const excludeOwnLeader = (a: AxisScore): PublicAxis => {
     macro_f1: _mf1,
     unparsed_rate: _upr,
     separation_p: _sp,
-    separation_basis: _sb,
     leader: _ld,
     note: _note,
     ...rest
@@ -225,7 +235,6 @@ const dropUncardedLeader = (a: PublicAxis): PublicAxis => {
     macro_f1: _mf1,
     unparsed_rate: _upr,
     separation_p: _sp,
-    separation_basis: _sb,
     leader: _ld,
     note: _note,
     ...rest
@@ -353,7 +362,6 @@ const applyRowsSeparation = (a: PublicAxis): RowsAxis => {
     macro_f1,
     unparsed_rate,
     separation_p: _sp,
-    separation_basis: _sb,
     leader: _ld,
     note: _note,
     public_leader_state: _pls,

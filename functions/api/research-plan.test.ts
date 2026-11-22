@@ -1,21 +1,21 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import registry from "./_gspc_research_semantics.json";
 import { onRequestGet, validRegistryForTest } from "./research-plan";
+import { AXES_A } from "./_gspc_axes_a";
+import { AXES_B } from "./_gspc_axes_b";
+import { AXES_C } from "./_gspc_axes_c";
+import { AXES_FIN } from "./_gspc_axes_fin";
+import { AXES_D } from "./_gspc_axes_d";
+
+// Use the board producer's roster. Deriving this fixture from the research registry
+// itself hid the live 503 when eleven measured subject axes were added to the board.
+const publishedAxes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
 
 function board() {
-  const axes = registry.axes.map(({ axis }, index) => ({
-    axis,
-    status: "MEASURED",
-    kind: index < 14 ? "model-comparison" : "deterministic-facts",
-    family: axis === "effect-binding" || index < 14 ? "gspc" : "financial",
-    task: `${axis} published task`,
-    n: index + 30,
-    ...(index < 14 ? { separation: index < 7 ? "TIE" : "UNTESTED" } : {}),
-    measurement_time: { state: "DAY", observed_on: "2026-08-12" },
-  }));
+  const axes: Record<string, unknown>[] = structuredClone(publishedAxes);
   return {
     schema: "csoai.gspc-axes/0.5",
-    totals: { axes: axes.length, measured_axes: axes.length },
+    totals: { axes: axes.length, measured_axes: axes.filter(axis => axis.status === "MEASURED").length },
     axes,
   };
 }
@@ -41,8 +41,9 @@ afterEach(() => vi.unstubAllGlobals());
 describe("GSPC continuous research semantics", () => {
   it("is a complete, unique, authoritative-source registry with safe controls", () => {
     expect(validRegistryForTest(registry)).toBe(true);
-    expect(registry.axes).toHaveLength(23);
-    expect(new Set(registry.axes.map((axis) => axis.axis)).size).toBe(23);
+    const measuredIds = publishedAxes.filter(axis => axis.status === "MEASURED").map(axis => axis.axis).sort();
+    expect(registry.axes.map(axis => axis.axis).sort()).toEqual(measuredIds);
+    expect(new Set(registry.axes.map((axis) => axis.axis)).size).toBe(measuredIds.length);
     expect(registry.axes.every((axis) => axis.compound_semantics.length >= 4)).toBe(true);
     expect(registry.axes.every((axis) => axis.implementation.present && axis.implementation.missing)).toBe(true);
     expect(Object.values(registry.sources).every((source) => source.url.startsWith("https://"))).toBe(true);
@@ -64,8 +65,9 @@ describe("GSPC continuous research semantics", () => {
     const second = await get();
     expect(first.response.status).toBe(200);
     expect(first.body).toEqual(second.body);
-    expect(first.body.measured_axis_count).toBe(23);
-    expect(first.body.plans).toHaveLength(23);
+    const measured = publishedAxes.filter(axis => axis.status === "MEASURED");
+    expect(first.body.measured_axis_count).toBe(measured.length);
+    expect(first.body.plans).toHaveLength(measured.length);
     expect(calls.every((call) => call.method === "GET" && call.path === "/api/gspc")).toBe(true);
     expect(first.body.controls.candidate_is_measurement).toBe(false);
     expect(first.body.watch.candidate_submission).toBe("NONE");
@@ -76,9 +78,32 @@ describe("GSPC continuous research semantics", () => {
       expect(plan.candidate_is_measurement).toBe(false);
       expect(plan.sources.length).toBeGreaterThan(0);
       expect(plan.controls).toMatchObject({ read_only: true, automatic_signing: false, automatic_promotion: false });
+      const published = measured.find(axis => axis.axis === plan.axis)!;
+      for (const key of ["kind", "n", "accuracy", "separation", "applies_to", "rate", "rate_scale", "rate_rule", "method_sha", "bank_sha256"] as const) {
+        expect(plan.measurement[key]).toEqual(published[key]);
+      }
     }
-    expect(first.body.plans[0].measurement.separation).toBe("TIE");
-    expect(first.body.plans[7].measurement.separation).toBe("UNTESTED");
+    expect(first.body.plans.some((plan: any) => plan.measurement.separation === "TIE")).toBe(true);
+    expect(first.body.plans.some((plan: any) => plan.measurement.separation === "UNTESTED")).toBe(true);
+    expect(first.body.plans.filter((plan: any) => plan.measurement.kind === "measured-subject")).toHaveLength(11);
+  });
+
+  it("catalogues external methods without enabling watchers or replacing Council constructs", async () => {
+    stub();
+    const { body } = await get();
+    const safety = body.plans.find((plan: any) => plan.axis === "safety");
+    expect(safety.human_gate).toMatch(/Practice results are internal only/);
+    expect(safety.sources.some((source: any) => source.id === "mlcommons-result-policy")).toBe(true);
+    const jail = body.plans.find((plan: any) => plan.axis === "jail");
+    expect(jail.human_gate).toMatch(/different construct from escape-attempt detector accuracy/);
+    const references = Object.entries(registry.sources).filter(([id]) => id.startsWith("mlcommons-") || id === "safe-reporting-compact");
+    expect(references.length).toBeGreaterThan(0);
+    for (const [, source] of references) {
+      expect(source.watch).toBe(false);
+      expect((source as any).boundary).toMatch(/No test execution/);
+    }
+    const financial = body.plans.filter((plan: any) => plan.measurement.family === "financial");
+    expect(financial.every((plan: any) => plan.sources.every((source: any) => !source.id.startsWith("mlcommons-")))).toBe(true);
   });
 
   it("filters by exact axis and returns an honest 404 for unknown or unmeasured slots", async () => {
@@ -101,7 +126,7 @@ describe("GSPC continuous research semantics", () => {
     expect(unavailable.body.plans).toEqual([]);
 
     const expanded = board();
-    expanded.axes.push({ axis: "new-measured-axis", status: "MEASURED", kind: "deterministic-facts", task: "new task" });
+    expanded.axes.push({ ...expanded.axes[0], axis: "new-measured-axis", status: "MEASURED", kind: "deterministic-facts", task: "new task" });
     expanded.totals.axes += 1;
     expanded.totals.measured_axes += 1;
     stub(expanded);
@@ -117,5 +142,34 @@ describe("GSPC continuous research semantics", () => {
     const missingSource = structuredClone(registry) as any;
     missingSource.axes[0].source_ids = ["invented-source"];
     expect(validRegistryForTest(missingSource)).toBe(false);
+  });
+
+  it("retains public reference restrictions without leaking arbitrary source fields or implying a configured watch", async () => {
+    const plan = registry.axes[0];
+    const sources = registry.sources as Record<string, Record<string, unknown>>;
+    const snapshots = plan.source_ids.map(id => [id, structuredClone(sources[id])] as const);
+    try {
+      for (const id of plan.source_ids) {
+        Object.assign(sources[id], {
+          watch: false, reviewed_on: "2026-11-06", boundary: "Practice outputs stay internal.",
+          rights_url: "https://example.test/terms", version: "1.4", license: "Declared terms",
+          private_note: "fixture-private-value", automatic_submission: true,
+        });
+      }
+      stub();
+      const { response, body } = await get(`/api/research-plan?axis=${plan.axis}`);
+      expect(response.status).toBe(200);
+      expect(body.plans[0].research_state).toBe("REFERENCE_ONLY");
+      expect(body.plans[0].sources[0]).toMatchObject({
+        watch: false, reviewed_on: "2026-11-06", boundary: "Practice outputs stay internal.",
+        rights_url: "https://example.test/terms", version: "1.4", license: "Declared terms",
+      });
+      expect(JSON.stringify(body)).not.toContain("fixture-private-value");
+      expect(body.plans[0].sources[0]).not.toHaveProperty("automatic_submission");
+      expect(body.controls.candidate_is_measurement).toBe(false);
+      expect(body.watch.candidate_submission).toBe("NONE");
+    } finally {
+      for (const [id, original] of snapshots) sources[id] = original;
+    }
   });
 });

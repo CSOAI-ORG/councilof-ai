@@ -4,6 +4,8 @@
 # Census = today's local conformance snapshot if loop 2 produced one, else the script's Hub default.
 # Output: out/x402-settlement-census/dry-<date>.jsonl (the script APPENDS, so the .done marker is what
 # makes a day idempotent) -> csoai/x402-settlement-census as dated config dry-<date> (queued without token).
+# The .done marker is written only AFTER the upload reports UPLOADED: it marks the day PUBLISHED,
+# so a run that wrote rows and failed to publish is not marked done and can still be published.
 set -u
 . "$(dirname "$0")/lib.sh"
 [ "${1:-}" = "--now" ] || stamp settlement-dry || exit 0
@@ -22,5 +24,19 @@ first=$(head -1 "$LOGS/settlement-dry.run.log"); last=$(tail -1 "$LOGS/settlemen
 n=$(wc -l < "$F" 2>/dev/null || echo 0)
 log settlement-dry "RESULT rc=$rc rows=$n | $first | $last"
 [ "$rc" = 0 ] && [ -z "${MAX_HOSTS:-}" ] || { [ -n "${MAX_HOSTS:-}" ] && log settlement-dry "smoke run: not uploaded"; exit $rc; }
-echo "$(now)" > "$F.done"
-log settlement-dry "$(python3 "$LOOPS/hf_upload.py" --repo csoai/x402-settlement-census --file "$F" --path-in-repo "dry/dry-$D.jsonl" --config-name "dry-$D" 2>&1 | tail -1)"
+# The .done marker means "this day's release is PUBLISHED", not "the rows were written".
+# It used to be written BEFORE the upload, so an upload that failed left the day marked
+# done and the release never reached the Hub — a silent non-publication that every later
+# run skipped. Measured 3 Nov 2026: 316 rows written, upload died on the LANES default,
+# .done written anyway, the release absent from the dataset.
+up=$(python3 "$LOOPS/hf_upload.py" --repo csoai/x402-settlement-census --file "$F" --path-in-repo "dry/dry-$D.jsonl" --config-name "dry-$D" 2>&1 | tail -1)
+log settlement-dry "UPLOAD $up"
+case "$up" in
+  UPLOADED*)
+    echo "$(now)" > "$F.done" ;;
+  *)
+    # The day's stamp is released, so the release can still be published today.
+    log settlement-dry "NOT PUBLISHED (the upload did not report UPLOADED) — $F.done not written"
+    rm -f "$STATE/settlement-dry.stamp"
+    exit 1 ;;
+esac

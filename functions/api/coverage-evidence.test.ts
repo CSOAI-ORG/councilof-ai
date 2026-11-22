@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { KIND, onRequestGet } from "./coverage-evidence";
+import { KIND, onRequestGet, onRequestPost } from "./coverage-evidence";
 import { COVERAGE } from "./_coverage_rows";
 
 const call = async (u = "https://councilof.ai/api/coverage-evidence?asset=tether") =>
@@ -36,6 +36,52 @@ describe("/api/coverage-evidence — the TUI-2 assembled row as a paid door", ()
     expect(b.preview).toBe(true);
     expect(b.state).toBe("DEEP_MEASURED");
     expect(b.canonical.sha256).toBe(COVERAGE.canonical_sha256);
+  });
+
+  // POST answers as GET. Without onRequestPost a POST fell through to the /api 404, so a free
+  // preview sent as POST (which functions/_middleware.ts passes through) never reached it.
+  it("answers POST as GET: the free preview on POST, the 402 for the paid row", async () => {
+    expect(onRequestPost).toBe(onRequestGet);
+    const post = (u: string) =>
+      (onRequestPost as unknown as (c: unknown) => Promise<Response>)({
+        request: new Request(u, { method: "POST", body: "" }),
+        env: {},
+      });
+    const preview = await post("https://councilof.ai/api/coverage-evidence?asset=tether&preview=1");
+    expect(preview.status).toBe(200);
+    expect(((await preview.json()) as { preview: boolean }).preview).toBe(true);
+    expect((await post("https://councilof.ai/api/coverage-evidence?asset=tether")).status).toBe(402);
+  });
+
+  // The machine-readable discovery sample must describe what its own preview returns.
+  it("matches its Bazaar example to the declared free preview", async () => {
+    const challenge = await call();
+    const body = (await challenge.json()) as {
+      extensions: { bazaar: { info: {
+        input: { queryParams: { asset: string; preview: string } };
+        output: { example: { asset: unknown; state: string; as_of: string } };
+      } } };
+    };
+    const sample = body.extensions.bazaar.info;
+    expect(sample.input.queryParams.preview).toBe("1");
+    const preview = await call(
+      `https://councilof.ai/api/coverage-evidence?asset=${encodeURIComponent(sample.input.queryParams.asset)}&preview=1`,
+    );
+    expect(preview.status).toBe(200);
+    const actual = (await preview.json()) as { asset: unknown; state: string; as_of: string };
+    expect(sample.output.example.asset).toEqual(actual.asset);
+    expect(sample.output.example.state).toBe(actual.state);
+    expect(sample.output.example.as_of).toBe(actual.as_of);
+  });
+
+  it("keeps the requested asset in the challenge preview", async () => {
+    const challenge = await call("https://councilof.ai/api/coverage-evidence?asset=373");
+    expect(challenge.status).toBe(402);
+    const body = (await challenge.json()) as { csoai: { free_preview: string } };
+    const preview = await call(body.csoai.free_preview);
+    const actual = (await preview.json()) as { asset: { defillama_id: string } };
+    expect(preview.status).toBe(200);
+    expect(actual.asset.defillama_id).toBe("373");
   });
 
   // The three states never collapse: the embedded record carries exactly the canonical counts.

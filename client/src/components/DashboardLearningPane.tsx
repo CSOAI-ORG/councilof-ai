@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { axisHref } from "@/lib/axisHref";
 import {
   BookOpenCheck,
   Check,
@@ -816,7 +817,7 @@ export default function DashboardLearningPane() {
                     <div className="mt-3 flex flex-wrap gap-3 text-xs font-semibold">
                       {/* This axis's own page (rendered from the board), not the whole board. */}
                       <a
-                        href={`/axis/${encodeURIComponent(selected.axis.id)}`}
+                        href={axisHref(selected.axis) ?? undefined}
                         className="inline-flex min-h-11 items-center text-emerald-900 underline underline-offset-2"
                       >
                         See the published evidence for this axis

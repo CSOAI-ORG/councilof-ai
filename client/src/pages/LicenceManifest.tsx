@@ -50,8 +50,8 @@ export default function LicenceManifest() {
             /licensing-agreement
           </Link>
           . Enquiry:{" "}
-          <a href="mailto:nicholas@csoai.org" className="text-emerald-700 underline">
-            nicholas@csoai.org
+          <a href="mailto:contact@csoai.org" className="text-emerald-700 underline">
+            contact@csoai.org
           </a>
           . Filled ids are private (`MAN-YYYYMMDD-001`) — not in the public card.
         </p>

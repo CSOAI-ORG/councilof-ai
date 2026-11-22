@@ -117,6 +117,14 @@ export function recordToolReceipt(input: {
     const list = readAll();
     list.push(receipt);
     writeAll(list);
+    // Live-refresh signal (QA fix, 2026-11-04): the receipts pane reads once on mount, so a run
+    // that happened after mount left the pane saying "Nothing yet" over a stored receipt — found
+    // by walking the real journey. The pane listens for this event and re-reads.
+    try {
+      window.dispatchEvent(new CustomEvent("coai:receipts-changed"));
+    } catch {
+      // a blocked event dispatch must not fail the recording
+    }
     return receipt;
   } catch {
     return null;
@@ -126,8 +134,9 @@ export function recordToolReceipt(input: {
 export function clearToolReceipts(): void {
   try {
     localStorage.removeItem(RECEIPTS_KEY);
+    window.dispatchEvent(new CustomEvent("coai:receipts-changed"));
   } catch {
-    // a blocked store is already "cleared" as far as this page can know
+    // a blocked event dispatch must not fail the clearing
   }
 }
 

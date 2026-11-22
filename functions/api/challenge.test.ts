@@ -21,7 +21,7 @@ describe("/api/challenge does not imply a challenge is recorded", () => {
     expect(d.recorded).toBe(false);
     expect(d.detail).toBe(NOT_RECORDED);
     expect(NOT_RECORDED).toMatch(/not yet recorded/i);
-    expect(NOT_RECORDED).toContain("nicholas@csoai.org");
+    expect(NOT_RECORDED).toContain("contact@csoai.org");
     expect(JSON.stringify(d)).not.toMatch(/Value Ledger|until KV binds/);
   });
 
@@ -35,7 +35,7 @@ describe("/api/challenge does not imply a challenge is recorded", () => {
   it("the /challenge page tells the reader it is not recorded and where to email", () => {
     const page = readFileSync(resolve(__dirname, "../../client/src/pages/Challenge.tsx"), "utf8");
     expect(page).toMatch(/not yet recorded/);
-    expect(page).toContain("nicholas@csoai.org");
+    expect(page).toContain("contact@csoai.org");
     expect(page).not.toMatch(/Submit a challenge \(signed receipt\)/);
   });
 

@@ -1,0 +1,68 @@
+{
+  "version": "1",
+  "exercise_id": "verify-card",
+  "title": "What does a verified record establish?",
+  "lesson": [
+    "A digest identifies exact bytes. Recompute it from the documented canonical form. If one byte changes, a matching digest from the earlier copy no longer describes the new copy.",
+    "Choose the trusted verification key before examining the signature. A key supplied only by the record cannot establish that the record came from the intended publisher.",
+    "A valid signature establishes that the signed bytes verify under that key. It does not establish that every statement is true, that a person learned the material, or that someone may execute an action.",
+    "Keep VALID, INVALID and UNCHECKABLE separate. A mismatch is evidence of failure of that check. An unavailable input or unsupported verification algorithm means the check could not be completed.",
+    "Try the existing verify-card exercise below. It recomputes the identifier, checks the signature under the published key and changes a copy to test that the check can detect tampering. Its transcript is separate from your answers here."
+  ],
+  "rubric": {
+    "id": "academy-record-meaning-exact-choice",
+    "version": "1",
+    "rule": "One first response per task. The declared reference choice yields PASS; another choice yields FAIL; skipping yields ABSTAIN. Public practice tasks have not been calibrated for comparable difficulty or blinded transfer.",
+    "feedback": "Reference choices are shown only after all phases have been recorded."
+  },
+  "tasks": [
+    {
+      "id": "pre-key",
+      "phase": "PRE",
+      "prompt": "A record includes a signature and its own public key. The signature verifies, but you have no separate trusted key for its claimed publisher. What can you conclude?",
+      "choices": ["The named publisher has been authenticated.", "The signature matches the supplied key; the claimed publisher is still unverified.", "Every statement inside the record is correct."],
+      "reference_choice": 1,
+      "explanation": "Checking a signature with a self-supplied key does not bind that key to the intended publisher."
+    },
+    {
+      "id": "pre-unavailable",
+      "phase": "PRE",
+      "prompt": "Your verifier cannot fetch a required record because the server returns HTTP 503. Which result describes the attempted check?",
+      "choices": ["INVALID: the record's signature is wrong.", "VALID: an earlier copy once passed.", "UNCHECKABLE: the required input was unavailable."],
+      "reference_choice": 2,
+      "explanation": "An unavailable input prevents this check; it is not a cryptographic mismatch."
+    },
+    {
+      "id": "post-tamper",
+      "phase": "POST",
+      "prompt": "A measurement record verified under a pinned key. A copy now contains a changed subject name while keeping the old digest and signature. What should verification of the changed copy do?",
+      "choices": ["Reject the changed copy because its canonical body no longer matches the retained digest.", "Accept it because the original record verified.", "Treat the edit as a new permission to act."],
+      "reference_choice": 0,
+      "explanation": "The old digest and signature bind the earlier bytes, including the earlier subject name."
+    },
+    {
+      "id": "post-meaning",
+      "phase": "POST",
+      "prompt": "You recompute a record's digest and verify its signature under the intended publisher's pinned key. What has this check established?",
+      "choices": ["The system described by the record is suitable for every use.", "The signed bytes verify under that key; the underlying claims still need their own evidence.", "The reader has professional authority to approve the system."],
+      "reference_choice": 1,
+      "explanation": "Byte integrity and signature verification do not evaluate every claim or appoint a reviewer."
+    },
+    {
+      "id": "transfer-permission",
+      "phase": "TRANSFER",
+      "prompt": "A signed delivery note covers yesterday's harmless test action. Today an operator proposes a different action on a different resource. May yesterday's valid note authorize today's action?",
+      "choices": ["Yes, any valid signature grants continuing authority.", "Yes, if the operator types the same name.", "No. The new action needs its own current scope and authority; yesterday's signature is insufficient."],
+      "reference_choice": 2,
+      "explanation": "A signature does not expand the action, resource, scope or validity period of a decision."
+    },
+    {
+      "id": "transfer-archive",
+      "phase": "TRANSFER",
+      "prompt": "An archived manifest names the digest of one software package. The same download address now returns bytes with a different digest. What does the comparison establish?",
+      "choices": ["The current bytes differ from those named in the archived manifest; the cause still needs investigation.", "The publisher acted maliciously.", "The current package is automatically approved because its address is unchanged."],
+      "reference_choice": 0,
+      "explanation": "A changed digest identifies a byte difference, not its cause, intent or acceptability."
+    }
+  ]
+}

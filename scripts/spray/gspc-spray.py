@@ -27,11 +27,16 @@ RULES this script enforces on itself
   * Every number is DERIVED at run time from the live GET, root.json and the frozen banks. Nothing is typed.
   * If /api/gspc (or root.json) cannot be read the script REFUSES to publish. Absent is not zero.
   * Idempotent: a surface already carrying this as_of, or this content fingerprint, is left alone
-    (--force overrides the fingerprint check, never the as_of check).
-  * Each push prints the LIVE URL and re-reads it until the as_of appears there, or reports that it did not.
+    (--force overrides the fingerprint check, never the as_of check). The HF dataset and Space, Kaggle
+    and the GitHub mirror then also compare every snapshot file, and republish when the bytes differ:
+    a board change can land without a new root.
+  * Each push prints the LIVE URL and re-reads it until the pushed bytes (HF, Kaggle, GitHub) or the
+    as_of (Zenodo, PyPI) appear there, or reports that they did not.
   * No prices. Never "certified", "BFT" or "sovereign" — the README is scanned before anything is pushed.
   * Owner-gated actions are not taken: no accounts, no payments, no deletions outside the snapshot folder
-    each surface owns, no email. npm is reported as BLOCKED (WebAuthn account needs a Bypass-2FA token).
+    each surface owns, no email. This script does not publish npm; its BLOCKED row describes only
+    this script. npm-gspc-release.yml owns trusted OIDC publication; inspect that run and registry
+    readback for the package release state.
 
 Measurement, not certification.
 """
@@ -1149,6 +1154,8 @@ def kaggle_page_text(tr: dict) -> tuple[str, str]:
 
 A dated export of the Council of AI public GSPC measurement board. Each row describes one declared axis: what was measured, the evidence type, the published result and its limitations. Use it to explore coverage and inspect evidence in a notebook.
 
+Council of AI is an operating AI measurement and evidence organisation run by CSOAI Ltd. Its [external-use and distribution records](https://councilof.ai/traction/) distinguish documented technical reuse from download counters.
+
 [Explore the interactive board](https://huggingface.co/spaces/csoai/gspc-board) · [Live source JSON]({BOARD_URL}) · [Verify a signed record — free]({VERIFY_URL}) · [Methodology](https://councilof.ai/methodology/)
 
 {overview}
@@ -1484,7 +1491,31 @@ def spray_github(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
         status, body, _ = http(f"{api}/contents/SNAPSHOT.json", headers=hdr, timeout=30)
         return json.loads(body) if status == 200 else None
 
+    def remote_files() -> dict[str, bytes]:
+        """The mirror's copy of each snapshot file, raw from the contents API. A 404 is left out."""
+        files = {}
+        for name in SNAPSHOT_FILES:
+            status, body, _ = http(f"{api}/contents/{name}", headers=hdr, timeout=30)
+            if status == 200:
+                files[name] = body
+            elif status != 404:
+                raise RuntimeError(f"GET contents/{name} -> HTTP {status}")
+        return files
+
+    # The push below copies SNAPSHOT_FILES and nothing else, so those are the bytes the mirror must carry.
+    built = {name: data for name, data in built_files(snap).items() if name in SNAPSHOT_FILES}
     why = unchanged(remote(), tr, force)
+    if why:
+        # as_of/fingerprint match is not byte parity. A board change can land without a new root:
+        # on 2026-11-19 two held axes were released under root as_of 2026-11-19T03:15:46Z, the HF
+        # and Kaggle surfaces republished on their byte check, and this mirror kept the old board.
+        try:
+            bp = byte_parity_reason(built, remote_files())
+        except Exception as e:  # noqa: BLE001
+            bp = f"remote unreadable file-by-file ({type(e).__name__})"
+        if bp:
+            log(f"[github] {why} — but byte parity fails ({bp}); republishing")
+            why = None
     if why:
         return [result("github", "UNCHANGED", page, tr["as_of"], why)]
     if dry_run:
@@ -1528,9 +1559,11 @@ def spray_github(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
     if not want <= have:
         http(f"{api}/topics", method="PUT", data=json.dumps({"names": sorted(have | want)}).encode(),
              headers={**hdr, "Accept": "application/vnd.github+json", "Content-Type": "application/json"}, timeout=30)
-    seen = wait_for(lambda: (remote() or {}).get("as_of") == tr["as_of"] and tr["as_of"], tries=6, delay=5)
+    # Byte-strict confirmation: a republish under an unchanged root lands on a mirror that already
+    # carries this as_of, so an as_of re-read would confirm before the push is visible.
+    seen = wait_for(lambda: byte_parity_reason(built, remote_files()) is None and tr["as_of"], tries=6, delay=5)
     return [result("github", "PUBLISHED" if seen else "PUBLISHED-UNCONFIRMED", page, seen or None,
-                   None if seen else "pushed; contents API did not return the new SNAPSHOT.json yet")]
+                   None if seen else "pushed; contents API did not return the pushed snapshot bytes yet")]
 
 
 def zenodo_token() -> str | None:
@@ -1953,8 +1986,26 @@ def spray_pypi(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict
         return [result("pypi", "FAILED", page, detail=f"pypi JSON HTTP {status}")]
     proj = json.loads(body)
     if version in proj.get("releases", {}):
-        return [result("pypi", "UNCHANGED", f"{page}{version}/", tr["as_of"],
-                       f"release {version} already exists (one release per snapshot day; a second board change on the same day waits for tomorrow's run)")]
+        # One release per root DATE, not per run day: a later root or board under the same date waits
+        # for a root dated later. Report what that release bundles instead of this run's as_of.
+        try:
+            s, b, _ = http(f"https://pypi.org/pypi/{PYPI_PROJECT}/{version}/json", headers={"Cache-Control": "no-cache"}, timeout=30)
+            text = (json.loads(b)["info"].get("description") or "") if s == 200 else ""
+        except Exception:  # noqa: BLE001 — an unreadable release page is reported as such, not as a failure
+            text = ""
+        fp_m = re.search(r"spray-fingerprint: ([0-9a-f]{64})", text)
+        as_of_m = re.search(r"Bundled snapshot — as of (\S+)", text)
+        bundled_fp = fp_m.group(1) if fp_m else None
+        bundled_as_of = as_of_m.group(1) if as_of_m else None
+        if bundled_fp == tr["fingerprint"]:
+            return [result("pypi", "UNCHANGED", f"{page}{version}/", bundled_as_of,
+                           f"release {version} already bundles fingerprint {tr['fingerprint'][:16]}…")]
+        held = f"fingerprint {bundled_fp[:16]}…" if bundled_fp else "a fingerprint this run could not read"
+        return [result("pypi", "UNCHANGED", f"{page}{version}/", bundled_as_of,
+                       f"release {version} already exists and bundles {held}"
+                       + (f" as of {bundled_as_of}" if bundled_as_of else "")
+                       + f", not this build's {tr['fingerprint'][:16]}… as of {tr['as_of']}. One release per root date: "
+                       f"this board waits for a root dated after {tr['as_of'][:10]}")]
     if not force and tr["fingerprint"] in (proj["info"].get("description") or ""):
         return [result("pypi", "UNCHANGED", f"{page}{proj['info']['version']}/", None,
                        f"latest release {proj['info']['version']} already bundles fingerprint {tr['fingerprint'][:16]}… — use --force")]
@@ -2016,9 +2067,9 @@ def spray_pypi(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict
 
 def spray_npm(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
     return [result("npm", "BLOCKED", f"https://www.npmjs.com/package/{NPM_PACKAGE}",
-                   detail="the npm account is WebAuthn (not TOTP): `npm publish --otp=` can never work and web login returns "
-                          "EOTP. Owner action: mint a granular access token with Bypass 2FA at npmjs.com → Access Tokens, "
-                          "store it as the NPM_TOKEN secret; this script does not attempt npm until then.")]
+                   detail="this script does not publish npm. BLOCKED describes this spray path, not the registry release state. "
+                          "The separate .github/workflows/npm-gspc-release.yml publishes through trusted OIDC; "
+                          "inspect that workflow run and the npm registry readback to establish the published version.")]
 
 
 SURFACES = {"hf": spray_hf, "kaggle": spray_kaggle, "github": spray_github, "zenodo": spray_zenodo,

@@ -44,7 +44,7 @@ export default function Contact() {
     try {
       await navigator.clipboard.writeText(emailDraft.copyText);
       if (revision !== copyRevision.current) return;
-      setCopyFeedback("Enquiry copied. Paste it into an email to nicholas@csoai.org. Nothing has been sent.");
+      setCopyFeedback("Enquiry copied. Paste it into an email to contact@csoai.org. Nothing has been sent.");
     } catch {
       if (revision !== copyRevision.current) return;
       setCopyFeedback("Clipboard access is unavailable. Use the selectable enquiry text below to copy manually.");

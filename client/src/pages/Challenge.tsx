@@ -87,7 +87,7 @@ export default function Challenge() {
           <p className="mt-1 text-xs text-emerald-100/80" data-testid="challenge-not-recorded">
             This form issues a receipt only. Challenges sent here are not yet recorded, so nobody will
             see one unless you also email it to{" "}
-            <a className="underline" href="mailto:nicholas@csoai.org?subject=Measurement%20challenge">nicholas@csoai.org</a>.
+            <a className="underline" href="mailto:contact@csoai.org?subject=Measurement%20challenge">contact@csoai.org</a>.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {["card", "crosswalk", "board", "findings"].map((t) => (
@@ -132,7 +132,7 @@ export default function Challenge() {
           {receipt && (
             <p className="mt-2 font-mono text-xs text-emerald-300">
               receipt · content_id: {receipt.content_id} ·{" "}
-              {receipt.stored ? "recorded" : "not yet recorded: email nicholas@csoai.org with this content_id"}
+              {receipt.stored ? "recorded" : "not yet recorded: email contact@csoai.org with this content_id"}
             </p>
           )}
         </div>
@@ -140,7 +140,7 @@ export default function Challenge() {
         <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-sm">
           <p className="font-semibold text-emerald-900">How to file</p>
           <p className="mt-2 text-emerald-800">
-            Email <a className="underline" href="mailto:nicholas@csoai.org?subject=East-West%20measurement%20challenge">nicholas@csoai.org</a> with
+            Email <a className="underline" href="mailto:contact@csoai.org?subject=East-West%20measurement%20challenge">contact@csoai.org</a> with
             the content_id, URL of the contested artefact, and the specific claim. Or use the general{" "}
             <Link href="/dispute" className="underline font-semibold">appeals &amp; dispute resolution</Link> path —
             Charter Article 18 applies to every published result.

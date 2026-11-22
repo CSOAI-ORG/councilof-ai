@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildDeliveryRecord, deliveryTxKey, markPaidUndeliveredResponse, readDeliveryByTransaction, storeDeliveryRecord } from "./_x402_delivery_record";
+import { buildDeliveryRecord, deliveryTxKey, markPaidUndeliveredResponse, readDeliveryByTransaction, recordPaidResponse, storeDeliveryRecord } from "./_x402_delivery_record";
 
 class KV {
   rows = new Map<string,string>();
@@ -16,6 +16,43 @@ describe("append-only x402 delivery record",()=>{
   it("missing KV is explicit",async()=>expect(await storeDeliveryRecord(undefined,base())).toMatchObject({stored:false,existing:false,conflict:false,reason:"no REVENUE_KV bound"}));
   it("rejects malformed digest, byte count and transaction",()=>{expect(()=>buildDeliveryRecord({...base(),response_sha256:"ABC"} as any)).toThrow(/response_sha256/);expect(()=>buildDeliveryRecord({...base(),response_bytes:-1} as any)).toThrow(/response_bytes/);expect(()=>buildDeliveryRecord({...base(),transaction:"bad tx"} as any)).toThrow(/transaction/);});
   it("does not treat unreadable existing bytes as safe to replace",async()=>{const kv=new KV();kv.rows.set(deliveryTxKey("0xabc"),"not-json");const out=await storeDeliveryRecord(kv,base());expect(out).toMatchObject({stored:false,existing:true,conflict:true});expect(kv.puts).toBe(0);});
+});
+
+describe("successful paid response header exposure", () => {
+  it.each([
+    { name: "exposes the receipt already on the response", echo: "existing-receipt", expose: "X-Artifact" },
+    { name: "keeps one existing mixed-case receipt exposure", echo: "existing-receipt", expose: "X-Artifact, X-PAYMENT-RESPONSE" },
+    { name: "does not advertise an absent receipt", echo: undefined, expose: "X-Artifact" },
+  ])("$name", async ({ echo, expose }) => {
+    const body = "unchanged paid body café 雪";
+    const input = new Response(body, {
+      status: 201,
+      statusText: "Fixture response",
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-origin": "*",
+        "access-control-expose-headers": expose,
+        "x-artifact": "unchanged",
+        ...(echo ? { "x-payment-response": echo } : {}),
+      },
+    });
+    const out = await recordPaidResponse(input, {
+      confirmedPaid: true,
+      successfulOutput: true,
+      resource: "https://example.test/paid",
+    });
+    expect(out.status).toBe(201);
+    expect(out.statusText).toBe("Fixture response");
+    expect(await out.text()).toBe(body);
+    expect(out.headers.get("x-payment-response")).toBe(echo ?? null);
+    expect(out.headers.get("x-artifact")).toBe("unchanged");
+    expect(out.headers.get("access-control-allow-origin")).toBe("*");
+    const exposed = (out.headers.get("access-control-expose-headers") || "")
+      .split(",").map(name => name.trim().toLowerCase());
+    expect(exposed.filter(name => name === "x-artifact")).toHaveLength(1);
+    expect(exposed.filter(name => name === "x-csoai-delivery-record-state")).toHaveLength(1);
+    expect(exposed.filter(name => name === "x-payment-response")).toHaveLength(echo ? 1 : 0);
+  });
 });
 
 describe("paid-undelivered response header exposure", () => {

@@ -1,0 +1,35 @@
+{
+ "schema": "csoai.feed.model/0.1",
+ "feed": "model/m-4ad120e7c197",
+ "as_of": "2026-08-19T09:24:39.174226+00:00",
+ "model_ref": "4ad120e7c197de01",
+ "identity_note": "the model identifier resolves via the signed card corpus (public/signed/cards, card-matrix.json); raw identifiers are not published on this surface",
+ "cards": 3,
+ "axes_covered": [
+  "jail-escape-detection",
+  "swag-30",
+  "swarm-candidates"
+ ],
+ "variation_note": "same-fixture runs across this model's variations live here; deltas between models are the variation evidence",
+ "measurements": [
+  {
+   "id": "4eb8ffdb407800ec5ff64bfdd8c5e3359ae06c2381190edb52bd543ab8c540c9",
+   "axis": "swarm-candidates",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.156345+00:00"
+  },
+  {
+   "id": "5756982cf8e16adbe44a28a1f1cfb813feb35917908c5ae0de65d67499615bcc",
+   "axis": "swag-30",
+   "accuracy": 1,
+   "created": "2026-08-19T09:24:39.156487+00:00"
+  },
+  {
+   "id": "cff1aaf070acb97c224177809856bc20310f4958eb44bdffab7d4b04836535f4",
+   "axis": "jail-escape-detection",
+   "accuracy": 0.4789,
+   "created": "2026-08-19T09:24:39.156415+00:00"
+  }
+ ],
+ "verify": "https://councilof.ai/gspc-verify/"
+}

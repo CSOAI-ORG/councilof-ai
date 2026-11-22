@@ -1,0 +1,14 @@
+{
+  "slug": "dora-art28-30",
+  "title": "DORA Art 28–30 — ICT third-party risk oversight (AI vendors)",
+  "doctrine": "human-in-the-loop attestation of evidence — NOT conformity certification; feeds a Register of Information, never replaces it",
+  "segments": ["banks", "enterprise", "government", "lfx-orgs"],
+  "checkpoints": [
+    {"id": "dora.vendor-cards", "requirement": "AI vendor's public model carries signed measurement cards", "mode": "machine", "evidence": {"kind": "bundle", "obligation": "dora", "subjectFilter": "model_cards"}},
+    {"id": "dora.drift-watched", "requirement": "Vendor policy/safety/pricing drift under continuous signed watch", "mode": "machine", "evidence": {"kind": "bundle", "obligation": "dora", "subjectFilter": "safety_policy|usage_policy|pricing|provider-diff"}},
+    {"id": "dora.exit-plan", "requirement": "Documented exit strategy for the ICT third-party arrangement (Art 28)", "mode": "human"},
+    {"id": "dora.contract-terms", "requirement": "Contract covers Art 29 mandatory provisions", "mode": "human"},
+    {"id": "dora.register-entry", "requirement": "Register of Information entry updated with this evidence pack reference", "mode": "human"},
+    {"id": "dora.accountable-owner", "requirement": "Named accountable owner (DORA-eligible role) signs", "mode": "human"}
+  ]
+}

@@ -3,12 +3,46 @@
  * Test control is Node-side only; product/public endpoint code never imports this file.
  * The browser receives a real same-origin HTTP response, with unmodified native reads.
  */
+import { errorMonitor } from "node:events";
+import { createHash } from "node:crypto";
+
 export function createFirstAskHttpFixture() {
   const controlPath = "/__e2e/first-ask-fixture";
   const runPath = "/api/agui/run";
   const responseLimit = 512 * 1024;
   const requestLimit = 4096;
   let pending = null, active = false, release = null, activeResponse = null;
+
+
+  // These observations do not consume ordinary "error" events or prove browser delivery.
+  const diagnostic = { schema: "csoai.first-ask-producer-diagnostic/1", producerOnly: true,
+    eventLimit: 128, requestLimit: 32, eventsTruncated: false, requestsTruncated: false,
+    faults: 0, receiveSequence: 0, requests: [], events: [] };
+  const observeResponse = (req, res, question, body) => {
+    try {
+      if (diagnostic.requests.length >= diagnostic.requestLimit) { diagnostic.requestsTruncated = true; return; }
+      const request = { id: diagnostic.requests.length + 1, method: "POST", path: runPath,
+        requestBytes: question.length, requestSHA256: createHash("sha256").update(question).digest("hex"),
+        responseBytes: body.length, responseSHA256: createHash("sha256").update(body).digest("hex") };
+      diagnostic.requests.push(request);
+      const record = (event, error) => {
+        const sequence = ++diagnostic.receiveSequence;
+        try {
+          if (diagnostic.events.length >= diagnostic.eventLimit) { diagnostic.eventsTruncated = true; return; }
+          diagnostic.events.push({ receiveSequence: sequence, requestId: request.id, event,
+            requestComplete: req.complete, requestAborted: req.aborted,
+            statusCode: res.statusCode, headersSent: res.headersSent,
+            writableEnded: res.writableEnded, writableFinished: res.writableFinished, destroyed: res.destroyed,
+            error: error ? { name: typeof error.name === "string" ? error.name.slice(0, 80) : null,
+              code: typeof error.code === "string" ? error.code.slice(0, 80) : null } : null });
+        } catch { diagnostic.faults++; }
+      };
+      res.once("finish", () => record("response-finish"));
+      res.once("close", () => record("response-close"));
+      res.once(errorMonitor, error => record("response-error-monitor", error));
+      record("response-observer-attached");
+    } catch { diagnostic.faults++; }
+  };
 
   const reply = (res, status, text) => {
     const body = Buffer.from(text);
@@ -43,6 +77,20 @@ export function createFirstAskHttpFixture() {
   };
 
   return (req, res) => {
+    // Read-only diagnostics never arm, release or otherwise mutate the one-use fixture.
+    if (req.url === controlPath + "-diagnostics" && req.method === "GET") {
+      req.resume();
+      if (req.headers.origin !== undefined || req.headers["sec-fetch-mode"] !== undefined ||
+        req.headers["sec-fetch-site"] !== undefined || req.headers["sec-fetch-dest"] !== undefined ||
+        req.headers["x-csoai-e2e-fixture"] !== "first-ask") {
+        reply(res, 403, "Node-side shell fixture diagnostics required."); return true;
+      }
+      const bytes = Buffer.from(JSON.stringify(diagnostic));
+      if (bytes.length > 131072) { reply(res, 500, "Fixture diagnostic exceeds its byte bound."); return true; }
+      res.writeHead(200, { "content-type": "application/json; charset=utf-8",
+        "content-length": bytes.length, "cache-control": "no-store" });
+      res.end(bytes); return true;
+    }
     // Node-only continuation of the same one-use fixture, never a product action.
     if (req.url === controlPath && req.method === "POST") {
       req.resume();
@@ -86,6 +134,7 @@ export function createFirstAskHttpFixture() {
     active = true;
     receive(req, res, requestLimit, (question) => {
       if (question === null) { active = false; return; }
+      observeResponse(req, res, question, body);
       activeResponse = res;
       let timer;
       const finish = () => {

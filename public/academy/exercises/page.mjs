@@ -2,6 +2,7 @@
 // Page wiring for /academy/exercises/: runs the same module Node runs and renders what it read.
 // Every value shown is produced by a run; nothing numeric is written into the page.
 import { EXERCISES, TRANSCRIPT_SCHEMA, runExercise } from "./run-exercises.mjs";
+import { mountStudy } from "./learning-study.mjs";
 
 // A local review copy (127.0.0.1 / localhost) reads the public site; everything it reads sends CORS
 // headers except the charter files, so charter-hash is UNCHECKABLE there and REPRODUCED in production.
@@ -104,3 +105,7 @@ $("#download").addEventListener("click", () => {
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
+
+// A separate, optional answer sequence. Exercise verdicts never become a
+// learner score or a human assessment, and study responses are never posted.
+mountStudy(document.querySelector("#self-study"));

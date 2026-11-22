@@ -26,7 +26,7 @@ describe("RAS booking button on /assess", () => {
     expect(b.live).toBe(false);
     expect(b.href).toBe(RAS_BOOKING_MAILTO);
     const u = new URL(b.href);
-    expect(u.pathname).toBe("nicholas@csoai.org");
+    expect(u.pathname).toBe("contact@csoai.org");
     expect(u.searchParams.get("subject")).toBe("RAS booking request (ras-booking)");
     const body = u.searchParams.get("body")!;
     for (const w of ["System", "Scope", "Window", "measurement only, not certification"]) expect(body).toContain(w);

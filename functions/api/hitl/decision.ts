@@ -2,7 +2,7 @@
  * POST /api/hitl/decision — record a human decision: APPROVED, HOLD or REJECTED.
  *
  * THE OPERATOR TOKEN NEVER ENTERS THE MODEL. The decision path requires an operator token, read
- * from the environment variable `COUNCIL_HITL_DECIDE_TOKEN` and never from the request body. A
+ * from the environment variable `HITL_DECIDE_TOKEN` and never from the request body. A
  * body field travels through the model's context and into every transcript that holds it; an
  * environment variable does not. With no token configured, this door says the decision path is
  * locked and names the variable — and it does not decide anything.

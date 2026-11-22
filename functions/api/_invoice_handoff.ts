@@ -20,7 +20,7 @@
  */
 
 /** Contact of record for commercial requests. Never a different address. */
-export const INVOICE_CONTACT = "nicholas@csoai.org";
+export const INVOICE_CONTACT = "contact@csoai.org";
 
 export type InvoiceHandoff = {
   recorded: false;

@@ -27,6 +27,9 @@ import {
   index402For,
   listingFor,
   payDoor,
+  paidOutputBlob,
+  reportedSuccessfulSettlement,
+  type PaidOutput,
   quoteDoor,
   relayedFetch,
   remainingDoors,
@@ -63,7 +66,7 @@ import {
  * only the signed payment payload, and only to the door that issued the challenge.
  *
  * THREE OUTCOMES AND NO FOURTH. DELIVERED with whatever settle reference the door echoed;
- * UNSETTLED when the door answered 402 again, with the facilitator's reason verbatim; REJECTED
+ * Post-dispatch402 leaves payment effects unconfirmed; REJECTED
  * when the wallet declined, in which case nothing was sent and nothing was charged.
  *
  * THE STATUS COLUMN (2026-09-22, the owner's build spec §D). Three cells per door, each from its
@@ -191,8 +194,9 @@ const DELIST_RISK_TEXT = "delist risk";
  * on this page in this session shows that settle instead: it is newer than anything on record.
  */
 export function SettleCell({ settle, state, now }: { settle: SettleReading; state: DoorState; now: number }) {
-  if (state.kind === "delivered") {
-    const tx = state.settlement?.transaction ?? null;
+  const currentSettlement = reportedSuccessfulSettlement(state);
+  if (currentSettlement) {
+    const tx = currentSettlement.transaction;
     return (
       <p className="text-[11px] leading-relaxed text-emerald-800" data-testid="pay-status-settle" data-risk="false">
         <span className="font-semibold">Settled this session</span>
@@ -256,6 +260,27 @@ export function SettleCell({ settle, state, now }: { settle: SettleReading; stat
 }
 
 /** The three outcomes, plus the states on the way to them. */
+
+/** Preserve the response and echoed payment reference as originally received. */
+export function RawResponseDownloads({ output, paymentResponse }: { output?: PaidOutput; paymentResponse?: string | null }) {
+  const saveOutput = () => {
+    if (!output) return;
+    const url = URL.createObjectURL(paidOutputBlob(output));
+    const link = document.createElement("a");
+    link.href = url; link.download = "csoai-original-response.json";
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  };
+  if (!output && !paymentResponse) return null;
+  return (
+    <div className="mt-2 flex flex-wrap gap-4 text-[12px]">
+      {output ? <button type="button" className="min-h-11 underline" onClick={saveOutput}>Save received response bytes</button> : null}
+      {paymentResponse ? <button type="button" className="min-h-11 underline"
+        onClick={() => downloadText(paymentResponse, "csoai-payment-response.txt")}>Save payment response</button> : null}
+    </div>
+  );
+}
+
 export function OutcomeLine({ state, saved }: { state: DoorState; saved?: SaveOutcome | null }) {
   switch (state.kind) {
     case "idle":
@@ -308,6 +333,7 @@ export function OutcomeLine({ state, saved }: { state: DoorState; saved?: SaveOu
           <p className="mt-1 text-[11px] text-slate-600">
             The reference above is the facilitator's claim as the door relayed it, verified by nothing on this page.
           </p>
+          <RawResponseDownloads output={state.output} paymentResponse={state.paymentResponse} />
           <DeliveredRecord body={state.body} saved={saved} />
         </div>
       );
@@ -358,6 +384,7 @@ export function OutcomeLine({ state, saved }: { state: DoorState; saved?: SaveOu
             </p>
           ) : null}
           {state.refund ? <p className="mt-1 text-[11px]">{state.refund}</p> : null}
+          <RawResponseDownloads output={state.output} paymentResponse={state.paymentResponse} />
         </div>
       );
     }
@@ -373,7 +400,7 @@ export function OutcomeLine({ state, saved }: { state: DoorState; saved?: SaveOu
 /**
  * What the payer bought, kept (paid-route lane, 7 Oct 2026). The door's 200 body used to be dropped
  * here, so a paid art50 pack was shown as DELIVERED with nothing to keep or check. Now: the signed
- * record's id, a download of exactly what the door returned, the free check, and My results (where
+ * record's id, a formatted JSON copy, the free check, and My results (where
  * payOne has already saved it, in this browser only).
  */
 export function DeliveredRecord({ body, saved }: { body: unknown; saved?: SaveOutcome | null }) {
@@ -651,7 +678,11 @@ export default function PayEveryDoor() {
   const walkingNow = walking !== null;
   const tally = walkTally(walkQueue, states);
   const atRisk = doors
-    ? visible.filter((d) => states[d.url]?.kind !== "delivered" && delistRisk(settleFor(d, settlesValue).lastSettle, now)).length
+    ? visible.filter((d) => {
+      const state = states[d.url];
+      const observed = reportedSuccessfulSettlement(state);
+      return !observed && delistRisk(settleFor(d, settlesValue).lastSettle, now);
+    }).length
     : null;
 
   const setDoorState = (url: string, state: DoorState) => {

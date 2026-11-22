@@ -67,6 +67,7 @@ type Data = {
     frozen_at: string;
     state: string;
     source_database_state: string;
+    source_texts?: { path: string; rows: number; hashes_reproduced: number; texts_at_frozen_cap: string[]; licence: string } | null;
     watcher: string;
     limitation: string;
   };
@@ -398,7 +399,16 @@ export default function Mechanism() {
               Provisions with a deterministic predicate: {d.totals.PREDICATE}. Provisions that are hashes nothing tests:{" "}
               {d.totals.HASH_ONLY} of {c.provisions}.
             </li>
-            <li>The source text behind the provision hashes was not recovered, so a hash cannot yet be regenerated from text.</li>
+            {c.source_texts ? (
+              <li>
+                The source text behind every provision hash is published at <A href={c.source_texts.path}>{c.source_texts.path}</A>{" "}
+                and regenerates {c.source_texts.hashes_reproduced} of {c.provisions} hashes and the root. It was recovered after the
+                freeze; {c.source_texts.texts_at_frozen_cap.length} texts are cut at the frozen length cap. Readable text is not
+                measured text. {c.source_texts.licence}
+              </li>
+            ) : (
+              <li>The source text behind the provision hashes was not recovered, so a hash cannot yet be regenerated from text.</li>
+            )}
           </ul>
         </Section>
 
@@ -547,8 +557,8 @@ export default function Mechanism() {
             A wrong row is corrected in the source file and the producer re-run; the change is recorded in the{" "}
             <L href="/corrections/">corrections ledger</L>. To contest a published result, use the{" "}
             <L href="/dispute/">dispute route</L>. Or email{" "}
-            <a href="mailto:nicholas@csoai.org" className="font-medium text-emerald-800 underline underline-offset-2">
-              nicholas@csoai.org
+            <a href="mailto:contact@csoai.org" className="font-medium text-emerald-800 underline underline-offset-2">
+              contact@csoai.org
             </a>
             .
           </p>

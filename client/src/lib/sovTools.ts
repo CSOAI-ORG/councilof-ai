@@ -1,3 +1,4 @@
+import { purchaseSessionSnapshot, samePurchaseSession } from "./buyerPurchases";
 // sovTools — the bridge from the front end to the published MCP server.
 //
 // WHAT WAS WRONG (found by operating it, 2026-08-26): every call went to POST /api/mcp,
@@ -78,7 +79,10 @@ export async function listTools(door: McpDoor = "/mcp"): Promise<ToolListing> {
 // Actually run a tool and get a real, governed result back.
 export async function callTool(name: string, args: Record<string, any>): Promise<ToolResult> {
   try {
-    const d = await mcpRpc("tools/call", { name, arguments: args });
+    const session=purchaseSessionSnapshot();
+    if(!session.readable && typeof args.x_payment==="string" && args.x_payment)throw new Error("Session storage unavailable before payment dispatch");
+    const d = await mcpRpc("tools/call",{name,arguments:args},{...(session.readable&&session.token?{buyerToken:session.token}:{})});
+    if(session.token&&!samePurchaseSession(session.token))return {ok:false,state:"unreachable",text:"The session changed; this result was discarded. Inspect the original account\'s saved purchases before signing or retrying."};
     if (d && d.error) return { ok: false, state: "unreachable", text: "The MCP runtime declined: " + (d.error.message || "unknown"), raw: d };
     const content = Array.isArray(d?.result?.content) ? d.result.content : [];
     const text = content.map((c: any) => c && c.text).filter(Boolean).join("\n") || JSON.stringify(d && d.result ? d.result : d);
@@ -100,25 +104,32 @@ export async function callTool(name: string, args: Record<string, any>): Promise
   }
 }
 
-// Seal any text to Layer 0 (Ed25519) → SOV: fingerprint. Real cryptographic proof.
-// Uses the /sign endpoint (the one that actually returns a signature); falls back
-// to a real in-browser SHA-256 content hash if the brain is unreachable — never faked.
+// Seal text at the estate's signing door (POST /api/sign: Ed25519 over a canonical envelope).
+// A seal is the server's signature or nothing. When the door does not sign, this returns
+// ok:false with what the door said: 503 SIGNER_UNAVAILABLE while its key is not provisioned,
+// any other status, or no answer at all. It used to fall back to a SHA-256 computed in the
+// browser and return ok:true, so on 21 Nov 2026, with /api/sign answering 503, the checklist
+// workbench showed "Sealed." and "the estate's server saw exactly these bytes" for bytes the
+// server never saw. A hash the server never saw is not a seal, so none stands in for one.
+const NOTHING_CLAIMED = "Nothing was claimed in its place.";
 export async function sealArtifact(artifact: string): Promise<ToolResult> {
+  let status = 0;
+  let code = "";
   try {
     const r = await fetch(GW + "/sign", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: artifact }) });
-    if (r.ok) {
-      const d = await r.json();
-      const sig = String((d && (d.signature || d.sig)) || "");
-      const fp = String((d && (d.fingerprint || d.publicKey || d.key)) || "");
-      if (sig || fp) return { ok: true, text: "COAI:" + fp.slice(0, 40) + "\nsig " + sig.slice(0, 56) + " · Ed25519 · Layer 0", raw: d };
-    }
+    status = r.status;
+    const d = await r.json().catch(() => null);
+    const sig = String((d && (d.signature || d.sig)) || "");
+    const fp = String((d && (d.fingerprint || d.publicKey || d.key)) || "");
+    if (r.ok && sig && fp) return { ok: true, text: "COAI:" + fp.slice(0, 40) + "\nsig " + sig.slice(0, 56) + " · Ed25519 · Layer 0", raw: d };
+    code = String((d && d.error) || "");
   } catch (e) {}
-  try {
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(artifact));
-    const hex = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
-    return { ok: true, text: "sha256:" + hex.slice(0, 48) + " · content hash (offline, brain unreachable)" };
-  } catch (e) {}
-  return { ok: false, text: "Seal unavailable." };
+  if (!status) return { ok: false, state: "unreachable", text: `Not sealed: the signing door (/api/sign) could not be reached. ${NOTHING_CLAIMED}` };
+  if (status === 503 && code === "SIGNER_UNAVAILABLE") {
+    return { ok: false, text: `Not sealed: the signing door is not running (/api/sign answered 503 SIGNER_UNAVAILABLE). ${NOTHING_CLAIMED}` };
+  }
+  if (status >= 200 && status < 300) return { ok: false, text: `Not sealed: /api/sign answered ${status} without a signature and public key. ${NOTHING_CLAIMED}` };
+  return { ok: false, text: `Not sealed: /api/sign answered HTTP ${status}${code ? " " + code : ""}. ${NOTHING_CLAIMED}` };
 }
 
 // Friendly labels for the well-known fleet tools, used by ToolRunner as display sugar.

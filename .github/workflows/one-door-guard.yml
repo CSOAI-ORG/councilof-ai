@@ -24,6 +24,10 @@ on:
       - ".github/workflows/one-door-guard.yml"
       - ".github/workflows/deploy.yml"
 
+concurrency:
+  group: one-door-guard-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   one-door:
     runs-on: ubuntu-latest

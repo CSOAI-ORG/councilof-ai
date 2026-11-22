@@ -1,3 +1,4 @@
+import { bookkeepingBudget, bookkeepingGap, type BookkeepingBudget } from "./_bookkeeping_budget";
 /**
  * _x402_receipt — server-signed RECEIPTS per the x402 Offer & Receipt extension
  * (specs/extensions/extension-offer-and-receipt.md, x402-foundation/x402
@@ -148,19 +149,20 @@ export const receiptPayerKey = (payer: string, issuedAt: number, transaction: st
  * storeReceipt — append-only, two keys per receipt (by tx, and by payer for /api/receipts?payer=).
  * Never throws; returns whether it wrote so the caller can surface a gap rather than infer silence.
  */
-export async function storeReceipt(kv: KvLike | undefined, record: ReceiptRecord): Promise<{ stored: boolean; reason: string }> {
+export async function storeReceipt(kv: KvLike | undefined, record: ReceiptRecord,sharedBudget?:BookkeepingBudget): Promise<{ stored: boolean; reason: string }> {
   if (!kv) return { stored: false, reason: "no REVENUE_KV bound" };
+  const budget=sharedBudget??bookkeepingBudget();
   try {
     const ts = record.payload.issuedAt;
     const byTx = receiptTxKey(record.payload.transaction, ts);
     const byPayer = receiptPayerKey(record.payload.payer, ts, record.payload.transaction);
     const json = JSON.stringify(record);
-    if ((await kv.get(byTx)) == null) await kv.put(byTx, json);
-    if ((await kv.get(byPayer)) == null) await kv.put(byPayer, json);
+    if ((await budget.run(()=>kv.get(byTx),"get")) == null) await budget.run(()=>kv.put(byTx,json),"put");
+    if ((await budget.run(()=>kv.get(byPayer),"get")) == null) await budget.run(()=>kv.put(byPayer,json),"put");
     return { stored: true, reason: "written" };
   } catch (e) {
-    return { stored: false, reason: `kv write failed: ${(e as Error).message}` };
-  }
+    return { stored: false, reason: bookkeepingGap(e) };
+  } finally {if(!sharedBudget)budget.clear();}
 }
 
 /** readReceiptsByPayer — null when no store is bound (UNRECORDED), [] when bound and empty. Newest first. */

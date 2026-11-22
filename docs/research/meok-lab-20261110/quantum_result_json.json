@@ -1,0 +1,40 @@
+{
+  "pennylane": "0.45.1",
+  "backend": "classical simulator",
+  "cases": [
+    {
+      "qubits": 2,
+      "test": "GHZ probability",
+      "max_error": 1.1102230246251565e-16,
+      "seconds": 0.0026012607850134373,
+      "simulated": true
+    },
+    {
+      "qubits": 4,
+      "test": "GHZ probability",
+      "max_error": 1.1102230246251565e-16,
+      "seconds": 0.003754878416657448,
+      "simulated": true
+    },
+    {
+      "qubits": 8,
+      "test": "GHZ probability",
+      "max_error": 1.1102230246251565e-16,
+      "seconds": 0.00483687175437808,
+      "simulated": true
+    },
+    {
+      "test": "QAOA p1 4-cycle MaxCut",
+      "parameter_settings": 169,
+      "best_expected_cut": 2.9999999999999973,
+      "exact_classical_optimum": 4,
+      "uniform_expected_cut": 2.0,
+      "best_gamma_beta": [
+        0.7853981633974483,
+        1.1780972450961724
+      ],
+      "seconds": 0.6167395496740937,
+      "quantum_advantage_claimed": false
+    }
+  ]
+}

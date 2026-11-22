@@ -32,7 +32,7 @@ const PATHS: Path[] = [
   { n: 4, title: "Attest", blurb: "Reproduce a published measurement to earn a free, signed completion record (issuance is not open yet). It records what you reproduced, not conformity — we certify nothing.", ring: "border-violet-300", chip: "bg-violet-100 text-violet-800", modules: [
     { name: "Completion records — how they work", href: "#completion-records" },
     { name: "Verify a signed card in your browser", href: "/gspc-verify/" },
-    { name: "H.I.M. — where a named human decides", href: "/him" },
+    { name: "H.I.M. — how an authorised human decision is established", href: "/him" },
   ] },
 ];
 
@@ -60,10 +60,11 @@ export default function CouncilAcademy() {
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-amber-700">MEOK H.I.M. · the last door on every path</p>
           <p className="mt-2 text-sm leading-relaxed text-amber-950">
-            Whoever you are — regulator, builder, buyer — the journey ends at the same gate: AI proposes, a named human decides.
-            H.I.M. is that layer, named: the escalation, the competence check, the operator authority, the receipt.
+            AI can propose; consequential actions require separately authenticated human authority, a scope-bound enforcement decision and independent evidence of the effect.
+            The live Council HITL service holds challenges and decision records, but its shared operator token does not verify a person or grant execution authority. This public endpoint is not connected to the private MEOK H.I.M. runtime.
           </p>
-          <a href="/him" className="mt-3 inline-flex items-center rounded-xl border border-amber-300 bg-white px-4 py-2 text-sm font-bold text-amber-900 hover:bg-amber-100">Meet H.I.M. →</a>
+          <a href="/him" className="mt-3 inline-flex items-center rounded-xl border border-amber-300 bg-white px-4 py-2 text-sm font-bold text-amber-900 hover:bg-amber-100">Meet H.I.M. →</a> <a href="/api/hitl/record" className="mt-3 ml-2 inline-flex items-center rounded-xl border border-amber-300 bg-white px-4 py-2 text-sm font-bold text-amber-900 hover:bg-amber-100">Inspect bounded public decision records →</a>
+          <a href="/watchdog/?view=groups" className="mt-3 ml-2 inline-flex items-center rounded-xl border border-amber-300 bg-white px-4 py-2 text-sm font-bold text-amber-900 hover:bg-amber-100">Human oversight measurement in working groups →</a>
         </div>
       </section>
 

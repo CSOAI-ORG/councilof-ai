@@ -14,6 +14,10 @@ on:
       - '.github/workflows/honest-board-floor.yml'
       - 'scripts/signed-json-guard.mjs'
   workflow_dispatch:
+concurrency:
+  group: reject-335-board-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:

@@ -1,0 +1,266 @@
+{
+  "observed_date": "2026-11-11",
+  "base_source": "fd97145b10c6d60de102bb5439235b02357a560a",
+  "scope": "Public report-to-commerce and index maintenance, not exhaustive estate qualification.",
+  "reads": [
+    {
+      "name": "revenue",
+      "url": "https://councilof.ai/api/revenue",
+      "http_status": 200,
+      "checked_at": "2026-11-11T06:28:45.061388+00:00",
+      "sha256": "76f9e1f977ff73452a880ce11994e83c0501a310abc919186297ce7966f4d650"
+    },
+    {
+      "name": "merchant",
+      "url": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/merchant?payTo=0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31&limit=100&offset=0",
+      "http_status": 200,
+      "checked_at": "2026-11-11T06:28:44.031377+00:00",
+      "sha256": "52b06d5326e7976a850f413d63b5bf65ac42913837fde49f460ea5f9c3023f3f",
+      "returned_total": 0,
+      "returned_resources": 0
+    },
+    {
+      "name": "validate-gpai",
+      "url": "https://api.cdp.coinbase.com/platform/v2/x402/validate",
+      "http_status": 200,
+      "checked_at": "2026-11-11T06:28:44.808584+00:00",
+      "sha256": "733431f456c0a2e5d5bfec991a12218f7b983ed5589956ae410ab5bdc3bba345",
+      "resource": "https://councilof.ai/api/evidence-bundle?obligation=article-53&bundle=1",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index_result": null,
+      "settlement_performed": false
+    },
+    {
+      "name": "validate-provider",
+      "url": "https://api.cdp.coinbase.com/platform/v2/x402/validate",
+      "http_status": 200,
+      "checked_at": "2026-11-11T06:28:44.485872+00:00",
+      "sha256": "b858b040e05725fc7d8675a025d90f0b4d1ecebce8948b9c9b318925993cbbe6",
+      "resource": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index_result": null,
+      "settlement_performed": false
+    },
+    {
+      "name": "validate-ras",
+      "url": "https://api.cdp.coinbase.com/platform/v2/x402/validate",
+      "http_status": 200,
+      "checked_at": "2026-11-11T06:28:44.910107+00:00",
+      "sha256": "a5a5645d743ff464a04d6b0e9872766cfde62fccb2310a832058764e929fe036",
+      "resource": "https://councilof.ai/api/ras/mcp-probe",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index_result": null,
+      "settlement_performed": false
+    }
+  ],
+  "catalogue": {
+    "concrete_manifest_resources": 32,
+    "manifest_body_sha256": "851cb7f800daecf7029936dbe5600c3b3de8ff324b8750e21ad361efa864eb62",
+    "directory_exact_host_rows_before": 37,
+    "directory_distinct_owned_urls_before": 37,
+    "directory_descriptions_with_expired_october_offer_before": 9,
+    "twenty_two_commercial_loops_established": false,
+    "counts_are_not_customers_or_products": true
+  },
+  "revenue_as_reported": {
+    "nonself_wallets_all_time": 4,
+    "nonself_wallets_last_30d": 2,
+    "nonzero_nonself_settlements": 5,
+    "settled_usdc_atomic_6dp": 60000,
+    "repeat_nonself_wallets_all_time": 1,
+    "repeat_nonself_wallets_last_30d": 0,
+    "self_settlements_excluded": 22,
+    "zero_value_settlements_excluded": 9,
+    "records_unreadable": 0,
+    "independent_customer_identity_not_established": true,
+    "independent_chain_reconciliation_performed": false
+  },
+  "freshness": {
+    "provider_diff_as_of": "2026-11-02T13:40:17Z",
+    "gpai_corpus_as_of": "2026-11-07T20:54:37Z",
+    "claim_registry_as_of": "2026-09-28",
+    "claim_rows_all_published_versions": 206,
+    "claim_rows_current_registry_set": 99,
+    "live_daily_delivery_not_inferred_from_http_200": true
+  },
+  "directory_changes": [
+    {
+      "attempted_at": "2026-11-11T06:45:00.490490+00:00",
+      "listing_id": "d1e944ac-ce39-4fd6-a794-2181fab89526",
+      "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "payload_sha256": "0da034a7e50b07481b072adca5f2bcf80f0fe4259f0c2bc0dd53fcc2b2c0b826",
+      "prewrite_body_sha256": "1e41be90836f8619986708e57e8f7ec8241001aae297bb10f8a217871da246d3",
+      "changed": true,
+      "state": "PUBLIC_METADATA_UPDATED",
+      "registration_http_status": 201,
+      "registration_body_sha256": "97db377128a1906a8e8c4519aff5f61834ab5e62e8082cc763075c89232de444",
+      "response_status": null,
+      "readback_http_status": 200,
+      "readback_body_sha256": "0ed03ee3e5c8d0c0e4e6712c151e3da478fb769e7aeeea0215ad6244f37f3348",
+      "observed": {
+        "same_listing_identity": true,
+        "metadata_matches": true,
+        "directory_state": "active",
+        "active_listing_confirmed": true
+      }
+    },
+    {
+      "attempted_at": "2026-11-11T06:45:02.047907+00:00",
+      "listing_id": "1205263a-43d0-431f-b861-66bc2292b575",
+      "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+      "payload_sha256": "79da7f633e31cb3dab96f5c4c1d513eab84e428cb9aa8f4b20929462b0494b9a",
+      "prewrite_body_sha256": "0329f22811a9f521e122b55d83a6db56f3fa598d49086d565410c88b585af298",
+      "changed": true,
+      "state": "PUBLIC_METADATA_UPDATED",
+      "registration_http_status": 201,
+      "registration_body_sha256": "2a48bc81aee685cf0b128bbada4eaecda5484ce4361d18c2c796db003df72914",
+      "response_status": null,
+      "readback_http_status": 200,
+      "readback_body_sha256": "e0ab349ecd72502603747ef186f94fd927ecbc6b28aab667a772d4c7af21077a",
+      "observed": {
+        "same_listing_identity": true,
+        "metadata_matches": true,
+        "directory_state": "active",
+        "active_listing_confirmed": true
+      }
+    },
+    {
+      "attempted_at": "2026-11-11T06:45:03.745380+00:00",
+      "listing_id": "37594c23-d5c7-4c79-a289-f087af06a7af",
+      "url": "https://councilof.ai/api/proof?bundle=1",
+      "payload_sha256": "3835914a206bbefa75a9c921375bddf387ca4db836336ca74d77ce57b6a5a06a",
+      "prewrite_body_sha256": "0995d9acf6fbec7f74594171b60762cb96351e733600bf63620928314f7d7a9b",
+      "changed": true,
+      "state": "PUBLIC_METADATA_UPDATED",
+      "registration_http_status": 201,
+      "registration_body_sha256": "d10faaf3fbd0b9137e8e1bf5faf4dd23d4d17c894ec652d6597ec49bb7a9f9fd",
+      "response_status": null,
+      "readback_http_status": 200,
+      "readback_body_sha256": "92064b373c73eae7bdba6e7a2751fe05fc57a7fa834456c93bf197121d88bb03",
+      "observed": {
+        "same_listing_identity": true,
+        "metadata_matches": true,
+        "directory_state": "active",
+        "active_listing_confirmed": true
+      }
+    }
+  ],
+  "directory_independent_readback": [
+    {
+      "checked_at": "2026-11-11T06:47:34.772604+00:00",
+      "route": "https://402index.io/api/v1/services/d1e944ac-ce39-4fd6-a794-2181fab89526",
+      "http_status": 200,
+      "body_sha256": "0ed03ee3e5c8d0c0e4e6712c151e3da478fb769e7aeeea0215ad6244f37f3348",
+      "listing_id": "d1e944ac-ce39-4fd6-a794-2181fab89526",
+      "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "description": "Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free.",
+      "directory_price_usd": 0.01,
+      "updated_at": "2026-11-11 06:45:01",
+      "domain_verified": 0,
+      "same_listing_identity": true,
+      "metadata_matches": true,
+      "directory_state": "active",
+      "active_listing_confirmed": true
+    },
+    {
+      "checked_at": "2026-11-11T06:47:34.880191+00:00",
+      "route": "https://402index.io/api/v1/services/1205263a-43d0-431f-b861-66bc2292b575",
+      "http_status": 200,
+      "body_sha256": "e0ab349ecd72502603747ef186f94fd927ecbc6b28aab667a772d4c7af21077a",
+      "listing_id": "1205263a-43d0-431f-b861-66bc2292b575",
+      "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+      "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination.",
+      "directory_price_usd": 0.01,
+      "updated_at": "2026-11-11 06:45:03",
+      "domain_verified": 0,
+      "same_listing_identity": true,
+      "metadata_matches": true,
+      "directory_state": "active",
+      "active_listing_confirmed": true
+    },
+    {
+      "checked_at": "2026-11-11T06:47:36.202744+00:00",
+      "route": "https://402index.io/api/v1/services/37594c23-d5c7-4c79-a289-f087af06a7af",
+      "http_status": 200,
+      "body_sha256": "92064b373c73eae7bdba6e7a2751fe05fc57a7fa834456c93bf197121d88bb03",
+      "listing_id": "37594c23-d5c7-4c79-a289-f087af06a7af",
+      "url": "https://councilof.ai/api/proof?bundle=1",
+      "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json.",
+      "directory_price_usd": 0.01,
+      "updated_at": "2026-11-11 06:45:04",
+      "domain_verified": 0,
+      "same_listing_identity": true,
+      "metadata_matches": true,
+      "directory_state": "active",
+      "active_listing_confirmed": true
+    }
+  ],
+  "tests": {
+    "checked_at": "2026-11-11T06:47:34.500841+00:00",
+    "tests": 37,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "source_hashes": {
+      "index402_refresh.py": "032b4c2eb965804cef0ee31bddbd40f5909660e48d647f6cd76a3b8fcdb77a6b",
+      "register-402index.py": "a3e74909b170e11e7b9aad3a1a07aaf37e2089333e727ad01daa54d9aef49962",
+      "test_index402_refresh.py": "a91b793a31a8284ca6557ce9b00c35fe1ce6522a816ae14d04a5fc97f53c60b4"
+    },
+    "scope": "Offline synthetic controls; no model runs or payments."
+  },
+  "payments_attempted": 0,
+  "new_revenue_generated_by_this_work_not_established": true,
+  "scheduler_changes": false,
+  "production_payment_route_changes": false,
+  "private_runtime_changes": false,
+  "x402scan_registration": {
+    "started_at": "2026-11-11T06:48:26.263370+00:00",
+    "ended_at": "2026-11-11T06:48:33.009202+00:00",
+    "submitted_resource": "https://councilof.ai/api/evidence-bundle?obligation=article-53&bundle=1",
+    "actions": [
+      {
+        "time": "2026-11-11T06:48:31.201421+00:00",
+        "button": "Add"
+      }
+    ],
+    "ui_success_message_observed": true,
+    "public_server_url": "https://www.x402scan.com/server/9b8bcb34-6c9f-45d6-b881-9a6afe7bf6b5",
+    "merchant_link_observed": "https://tryponcho.com/m/councilof.ai",
+    "not_claimed_all_discovered_operations_registered": true,
+    "earlier_attempts": "Domain discovery remained in progress. The first Add click timed out disabled; no success was inferred."
+  },
+  "x402scan_public_readback": {
+    "checked_at": "2026-11-11T06:52:37.500622+00:00",
+    "url": "https://www.x402scan.com/server/9b8bcb34-6c9f-45d6-b881-9a6afe7bf6b5",
+    "status": 200,
+    "title": "UK AI measurement & evidence — Council of AI | x402scan",
+    "evidence_bundle_text_present": true,
+    "error_type": null,
+    "relevant_lines": [
+      "UK AI measurement & evidence",
+      "UK AI measurement & evidence",
+      "/api/art50/marking-evidence",
+      "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Detects C2PA and IPTC metadata only (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark is read. States: DETECTED, NOT_DETECTED (not proof the output is unmarked) or UNCHECKABLE; never a legal determination. CSOAI is a C2PA member. Free unsigned preview; verification is free.",
+      "atlas — retired until its response can be derived from current evidence.",
+      "atlas — retired until its response can be derived from current evidence.",
+      "/api/bank-complete — evidence-derived reader for the bank × chain × stablecoin census. Data is embedded at build time (zero-drift with public/interop/bank-registry.json).",
+      "/api/coverage-evidence",
+      "Subject discovery links for Chainlink / LINK: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify.",
+      "Subject discovery links for Ondo Finance / ONDO: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify.",
+      "Subject discovery links for Ondo Finance OUSG on XRPL: identity, evidence routes, board and verify links. States: DISCOVERY_ONLY; the door reads nothing new and mints no measurement, and settling its zero-amount challenge charges nothing. Verification is free at /gspc-verify.",
+      "/api/eu-ai-act — evidence summary for the EU AI Act regime (Art 50, high-risk, GPAI). Obligation map is the same one the evidence-bundle assembler uses (see ./_obligations).",
+      "/api/evidence-bundle",
+      "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination.",
+      "/api/evidence-bundle",
+      "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination.",
+      "/api/evidence-intake",
+      "POST /api/evidence-intake — explicit candidate measurement intake.",
+      "/api/evidence-pack",
+      "/api/evidence/github"
+    ],
+    "raw_capture_sha256": "1d3633f7b7e6a6d0103985251ef1d9856a96ab2e5c3eb5b778815cc3ababac2d"
+  }
+}

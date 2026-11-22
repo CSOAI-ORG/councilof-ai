@@ -57,6 +57,13 @@ let m;
     rows.push({ path: p, comp, title });
   }
   if (rows.length < 50) {
+    if (process.argv.includes("--check")) {
+      // In check mode a parse that yields almost nothing is UNCHECKABLE, not
+      // clean. Passing here would report "up to date" about a manifest nobody
+      // can vouch for.
+      console.error(`[route-manifest] only ${rows.length} routes parsed — cannot verify the committed manifest.`);
+      process.exit(1);
+    }
     console.warn(`[route-manifest] only ${rows.length} routes parsed — leaving existing manifest untouched.`);
     process.exit(0);
   }
@@ -68,6 +75,34 @@ let m;
     "export const ROUTE_MANIFEST: RouteEntry[] = " +
     JSON.stringify(rows, null, 1) +
     ";\n";
+
+  // --check: the committed manifest must still be what the producer yields.
+  //
+  // WHY THIS NEEDED A MODE. The manifest is generated during build:client, so
+  // by the time any gate reads the file on disk it has already been
+  // regenerated and can never be stale. But the COMMITTED copy is a different
+  // artefact: it is what link-gate's model of "what the app serves" is built
+  // from when it runs against a checkout, and it is what a reader of the
+  // repository sees.
+  //
+  // It was stale. On 2026-11-06 the committed manifest was missing /brand,
+  // /him, /refund-policy and /refunds, and still named GpaiObligations for
+  // /gpai while App.tsx had moved to GpaiMatrix — because the lane that added
+  // those routes (#3938) did not regenerate the file, and nothing anywhere
+  // checked.
+  if (process.argv.includes("--check")) {
+    const current = existsSync(OUT) ? readFileSync(OUT, "utf8") : "";
+    if (current !== body) {
+      console.error(
+        "✗ route-manifest: client/src/data/route-manifest.ts is stale — " +
+        "run node scripts/generate-route-manifest.mjs and commit the result."
+      );
+      process.exit(1);
+    }
+    console.log(`✓ route-manifest: up to date (${rows.length} routes)`);
+    process.exit(0);
+  }
+
   const prev = existsSync(OUT) ? readFileSync(OUT, "utf8") : "";
   if (prev !== body) writeFileSync(OUT, body);
   console.log(`[route-manifest] ${rows.length} routes -> client/src/data/route-manifest.ts`);

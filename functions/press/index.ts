@@ -13,6 +13,7 @@ import { build } from "../api/press.json";
 import { caughtOf, remedyOf } from "../_lib/corrections-fields";
 import type { RevenueEnv } from "../api/revenue";
 import { headFromGet } from "../api/_head";
+import { OPERATING_ORGANISATION_SUMMARY } from "../../client/src/data/external-use";
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 // Each command block scrolls sideways on a phone, so it is a keyboard stop with a name: a
@@ -53,6 +54,7 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
       { "@type": "PropertyValue", propertyID: "DID", value: "did:web:csoai.org" },
     ],
     url: "https://councilof.ai/",
+    description: OPERATING_ORGANISATION_SUMMARY,
   });
   const faqLd = JSON.stringify({
     "@context": "https://schema.org",
@@ -109,6 +111,8 @@ footer{margin-top:3rem;color:var(--mut);font-size:.85rem;border-top:1px solid va
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 </style></head><body><main>
 <h1>Press</h1>
+<p class="lede">${esc(OPERATING_ORGANISATION_SUMMARY)}</p>
+<p><a href="/traction/#external-use">Operation and documented external use</a>: dated examples of outside execution, implementation and technical citation, with primary sources and scope limits. These examples are separate from the measurement window and commercial records below.</p>
 <div style="border-left:3px solid #b45309;padding-left:1rem;margin:0 0 1.4rem">
 <p><strong>Press contact:</strong> Nicholas Templeman, founder — <a href="mailto:contact@csoai.org?subject=Press">contact@csoai.org</a></p>
 <p class="n">For deadline queries, include <strong>PRESS URGENT</strong> in the subject.</p>

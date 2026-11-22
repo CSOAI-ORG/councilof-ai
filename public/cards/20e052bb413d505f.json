@@ -1,0 +1,119 @@
+{
+  "card": {
+    "as_of": "2026-11-08T00:30:59Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:bIB01:base",
+      "symbol": "bIB01",
+      "product": "Backed IB01 $ Treasury Bond 0-1yr",
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "block": 54537420,
+      "block_hash": "0x6277b85780f3187a7a4c37da6d53307dbe6c59e384b0aca9e46866697422518b",
+      "block_time": "2026-11-08T00:30:59Z",
+      "rpc": "base-rpc.publicnode.com",
+      "checked": {
+        "name": "Backed IB01 $ Treasury Bond 0-1yr",
+        "symbol": "bIB01",
+        "decimals": 18,
+        "totalSupply": "10000000000000000000000",
+        "isPaused": false,
+        "owner": "0xd1966bd72695789ec9c245f0bf5a8512b56c1d80",
+        "sanctionsList": "0xba0d02c2afddb571d1f54b5bea1b57fe01424587",
+        "pauser": "0x20eb617cc8e8bf3c9b53fc2cf2444cf026da704f",
+        "terms": "https://www.backedassets.fi/legal-documentation",
+        "eip1967_implementation": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+        "eip1967_admin": "0xf2057bdff8439dbffce073e14a9854945d5e5644"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+      ],
+      "attests": "historical permission state at block 54537420 on base, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "20e052bb413d505fc5ed2222ec608f156bc3ea26e66dc1f1df0410da2d34ec56",
+    "sig_ed25519": "dfb356b2742405ac35e4f987717975fcce8c978909a2f69c1a08f86e817d7db2b5ffa45031c5ab32dbf0d5fbae093cda4c815afa5b9750325b0156a5224dc60f",
+    "source_urls": [
+      "https://base-rpc.publicnode.com",
+      "https://basescan.org/token/0xca30c93b02514f86d5c86a6e375e3a330b435fb5"
+    ],
+    "subject": "evm:bIB01:base permission state at block 54537420",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:base",
+      "coverage:permission-state",
+      "subject:bIB01"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "01459fba31c038bd08d3bf88151ea066097bdfce2945fd5f251b58e2fba323d5",
+    "fc267ace62eb7b8429d8fb915e6d3b0c8958461be9afc57605a85ffedfdae1ad",
+    "f99df12e3cfd9512aae28e57269cac8a50cf65f2bd20de70b5f7ea1667b86c42",
+    "1c3e1fd1d6bd7e057617d4a5137113df2f318303df1ec53304dc67e9b387ec30",
+    "5e9410740f0ddc64c1d190dfe81666383533055c6ad9254657120a5b0cb360d1",
+    "360b30ce3ee63bcd6c847eaeb383f3413cc5889fa20be504856afb505d8d770e",
+    "3bcf10b8f97700497fffc6bfd3f88a47a6b1fa80602f2ec2d524c59a32b08fce",
+    "7e77d1fcb1a770dfaf9c237ef819063da211dd6547b4e29db8a395bd8f5a154b",
+    "cec0ade3e6b95e387d4590c7411922e54d1c7cb7d959942770cbd04c2fa90f66"
+  ]
+}

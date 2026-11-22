@@ -81,7 +81,7 @@ export default function CorrectionsPane() {
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-8 sm:py-8" data-testid="corrections-pane">
       <p className="t-kicker text-emerald-800">Corrections</p>
-      <h2 className="mt-2 text-2xl font-black tracking-tight text-foreground">What we got wrong, and what changed</h2>
+      <h2 className="mt-2 text-2xl font-black tracking-tight text-foreground">Published corrections and changes</h2>
       <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
         Every entry says what was wrong, how it was caught and what changed. Signed records are superseded, never edited.
       </p>

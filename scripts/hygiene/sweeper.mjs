@@ -26,7 +26,7 @@
  * Usage: node scripts/hygiene/sweeper.mjs [--mode dry-run|apply] [--repo OWNER/REPO]
  */
 import { execFileSync } from "node:child_process";
-import { plan } from "./sweeper-plan.mjs";
+import { plan, logPayloadsIn, supersedeVerdict, gcVerdict } from "./sweeper-plan.mjs";
 
 const args = process.argv.slice(2);
 const modeArg = args.indexOf("--mode");
@@ -60,6 +60,7 @@ function listPulls(state) {
   return out.map((p) => ({
     number: p.number,
     headRefName: p.head?.ref ?? p.headRefName,
+    headSha: p.head?.sha ?? null,
     title: p.title,
     draft: p.draft ?? false,
     state: p.state === "open" ? "OPEN" : "CLOSED",
@@ -68,10 +69,90 @@ function listPulls(state) {
   }));
 }
 
+// ── the append-log evidence ───────────────────────────────────────────────────
+//
+// A close and a branch delete are both claims: "nothing is lost". For the
+// replace families (x402, mill, coverage) the claim is true by construction —
+// each run REWRITES the same output paths. For the canary family the payload is
+// an append log and the claim is FALSE until shown: measured 3 Nov 2026, eight
+// of #3392's rows are absent from #3565, so closing it drops dated observations.
+//
+// So the claim is CHECKED, not asserted, and it is checked against the bytes:
+// the older run's rows must be present in the keeper. If they cannot be read,
+// the verdict is UNPROVABLE and nothing is closed or deleted.
+
+const filesCache = new Map();
+function changedFiles(number) {
+  if (filesCache.has(number)) return filesCache.get(number);
+  let files = [];
+  try {
+    const raw = gh(["api", `repos/${REPO}/pulls/${number}/files?per_page=100`]);
+    files = JSON.parse(raw).map((f) => f.filename);
+  } catch {
+    files = [];
+  }
+  filesCache.set(number, files);
+  return files;
+}
+
+const rowsCache = new Map();
+/** The non-empty lines of a file at a ref, or null when it cannot be read. */
+function fileRows(path, ref) {
+  const key = `${ref}:${path}`;
+  if (rowsCache.has(key)) return rowsCache.get(key);
+  let rows = null;
+  try {
+    const raw = gh(["api", `repos/${REPO}/contents/${path}?ref=${encodeURIComponent(ref)}`]);
+    const j = JSON.parse(raw);
+    if (j && j.type === "file" && typeof j.content === "string") {
+      rows = Buffer.from(j.content, "base64")
+        .toString("utf8")
+        .split("\n")
+        .map((l) => l.trim())
+        .filter((l) => l.length > 0);
+    }
+  } catch {
+    rows = null;
+  }
+  rowsCache.set(key, rows);
+  return rows;
+}
+
+const shaCache = new Map();
+function headShaOf(number) {
+  if (shaCache.has(number)) return shaCache.get(number);
+  let sha = null;
+  try {
+    sha = JSON.parse(gh(["pr", "view", String(number), "--repo", REPO, "--json", "headRefOid"])).headRefOid || null;
+  } catch {
+    sha = null;
+  }
+  shaCache.set(number, sha);
+  return sha;
+}
+
+/**
+ * The log payloads to compare for a PR, against a keeper ref. Every .jsonl the
+ * PR changed is a log; each is compared against the keeper's copy of the same
+ * path. A payload the keeper does not have at all is UNPROVABLE, not empty.
+ */
+function logPayloadsFor(number, keeperRef) {
+  const payloads = [];
+  for (const path of logPayloadsIn(changedFiles(number))) {
+    const olderRows = fileRows(path, headShaOf(number) || "HEAD");
+    const keeperRows = fileRows(path, keeperRef);
+    payloads.push({ path, olderRows, keeperRows });
+  }
+  return payloads;
+}
+
+// The comment a close carries. It used to ASSERT "nothing is lost"; now it is
+// only ever said after the bytes were compared (see the verdict gate above), so
+// the sentence is a checked statement rather than a hope.
 const SUPERSEDE_COMMENT = (s) =>
   s.mergedKeep
-    ? `Closing as superseded: this family's newest run is #${s.keep}, already MERGED — master holds that run's data, so this older branch can only regress it. Nothing is lost — the source datasets retain everything (mill landings stay staged; probes regenerate from the live doors). Standing rule: issue #3746.`
-    : `Closing as superseded: the newest open run of this family is #${s.keep}. Each run writes the same output paths, so an older conflicting branch can only regress master. Nothing is lost — the source datasets retain everything (mill landings stay staged; probes regenerate from the live doors). Standing rule: issue #3746.`;
+    ? `Closing as superseded: this family's newest run is #${s.keep}, already MERGED — master holds that run's data, and the payload comparison found no row of this run that master lacks, so this older branch can only regress it. Standing rule: issue #3746.`
+    : `Closing as superseded: the newest open run of this family is #${s.keep}, and the payload comparison found no row of this run that #${s.keep} lacks, so an older conflicting branch can only regress master. Standing rule: issue #3746.`;
 
 const summary = { supersedeClosed: [], millAutoMerge: [], gcDeleted: [], skipped: [], dryRun: mode === "dry-run" };
 
@@ -81,6 +162,16 @@ const p = plan({ open, closed, now: Date.now() });
 
 // ── supersede-close ─────────────────────────────────────────────────────────
 for (const s of p.supersede) {
+  // The keeper is the newer OPEN sibling, or — when the newest is already
+  // MERGED — master's tip, because master is where that run's data lives.
+  const keeperRef = s.mergedKeep ? "master" : headShaOf(s.keep);
+  const payloads = logPayloadsFor(s.number, keeperRef || "master");
+  const verdict = supersedeVerdict({ payloads });
+  if (!verdict.ok) {
+    console.log(`[sweeper] supersede: NOT closing #${s.number} (newest of ${s.family} is #${s.keep}) — ${verdict.reason}`);
+    summary.skipped.push({ number: s.number, reason: verdict.reason });
+    continue;
+  }
   console.log(`[sweeper] supersede: close #${s.number} (newest of ${s.family} is #${s.keep}${s.mergedKeep ? ", merged" : ""})`);
   if (mode === "apply") {
     gh(["pr", "close", String(s.number), "--repo", REPO, "--comment", SUPERSEDE_COMMENT(s)]);
@@ -119,6 +210,18 @@ for (const n of p.millAutoMerge) {
 
 // ── branch GC ───────────────────────────────────────────────────────────────
 for (const g of p.gc) {
+  // The same question, asked of a BRANCH: does it still hold rows master does
+  // not? MEASURED 3 Nov 2026 — the sweeper closed six canary PRs and deleted
+  // all six branches in the same pass, so the branch that held a dated
+  // observation went with it. The PR ref keeps the COMMITS, but a branch that
+  // is the only keeper of rows master does not have is not garbage.
+  const payloads = logPayloadsFor(g.number, "master");
+  const verdict = gcVerdict({ payloads });
+  if (!verdict.ok) {
+    console.log(`[sweeper] gc: NOT deleting branch ${g.branch} (closed PR #${g.number}) — ${verdict.reason}`);
+    summary.skipped.push({ number: g.number, reason: verdict.reason });
+    continue;
+  }
   console.log(`[sweeper] gc: delete branch ${g.branch} (closed PR #${g.number}, >7d, unmerged)`);
   if (mode === "apply") {
     try {

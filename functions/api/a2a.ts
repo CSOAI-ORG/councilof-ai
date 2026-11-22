@@ -17,6 +17,15 @@
  *                              reproduce the stale token: a guard that reads this file would match it.
  *                              Each skill calls a fixed same-origin, free handler. The legacy
  *                              one-part text "board" request remains a narrow compatibility alias.
+ *   SendMessage, per tool   -> Part.data {skill:<tool>,input}, where <tool> is a tool POST /mcp serves
+ *                              and has its own card at /.well-known/agents/<tool>.json (2026-11-16).
+ *                              The input is validated against that tool's inputSchema with the
+ *                              validator /mcp uses, and the tool runs through functions/mcp/_dispatch.ts,
+ *                              the dispatch POST /mcp tools/call runs. The metered (x402) tools answer
+ *                              with their payment challenge and charge nothing until input.x_payment
+ *                              carries a payment; the tool's route settles it (functions/api/_x402.ts),
+ *                              fail closed. Until that date every per-tool card named this door and
+ *                              the router answered every one of them "unknown skill".
  *   GetTask / CancelTask    -> TaskNotFoundError (-32001): this agent keeps no task store.
  *   ListTasks               -> UnsupportedOperationError (-32004): nothing to list.
  *   SendStreamingMessage / SubscribeToTask -> UnsupportedOperationError (-32004), which §3.3.4
@@ -47,6 +56,9 @@ import { routeSummary } from "../_lib/route/route";
 import { evidenceDeliveryMessage, validateEvidenceDeliveryInput } from "../_lib/evidenceDelivery";
 import { axisSpecialistResult, validateAxisSpecialistInput } from "../_lib/axisSpecialist";
 import { headFromGet } from "./_head";
+import { dispatchTool, TOOL_DEFINITIONS, toolInputError } from "../mcp/_dispatch";
+import { metaPaymentHeader, PAID_TOOL_NAMES, X402_META_PAYMENT, X402_META_PAYMENT_RESPONSE, type PaidCallerContext } from "../mcp/_paid";
+import type { McpToolResult } from "../mcp/_handlers";
 
 type Json = Record<string, unknown>;
 
@@ -89,7 +101,9 @@ export const METHODS: Record<string, string> = {
     "answered with a Message from one explicit {skill,input} selector, or from one plain-text Part that the shared " +
     "deterministic router (functions/_lib/talkRouter.ts, also behind POST /api/chat and POST /api/agui/run) places on a " +
     "POST /mcp tool, quoting that tool's output with a citation; text it cannot place is refused. Every card skill routes to a fixed, free, " +
-    "same-origin handler. The set is the skills array on this response - read it rather than a number: this " +
+    "same-origin handler. A per-tool skill - a tool name from /.well-known/agents/index.json - runs that tool through the " +
+    "dispatch POST /mcp tools/call runs; the metered ones answer with their x402 challenge until input.x_payment carries a " +
+    "payment. The set is the skills array on this response - read it rather than a number: this " +
     "string once named a smaller figure than SKILL_IDS actually held, and scripts/capability-registry.mjs --check " +
     "now fails on any skill count typed into this file.",
   SendStreamingMessage: "UnsupportedOperationError -32004 (streaming is false on the card)",
@@ -229,10 +243,25 @@ const SKILL_ID_SET = new Set<string>(SKILL_IDS);
  */
 export const LEGACY_SKILL_IDS: Readonly<Record<string, SkillId>> = { "measured-badge": "card-status-link" };
 
+/**
+ * The per-tool skills (2026-11-16): the tools POST /mcp serves, each published as its own A2A card
+ * at /.well-known/agents/<tool>.json and listed in /.well-known/agents/index.json. DERIVED from the
+ * registry /mcp registers (functions/mcp/_dispatch.ts), never typed. They are not on the main card,
+ * whose skills stay equal to SKILL_IDS (scripts/capability-registry.mjs holds that pair);
+ * a2a.tool-skills.test.ts holds every per-tool card on disk equal to this set, both ways.
+ */
+export const TOOL_SKILL_IDS: readonly string[] = TOOL_DEFINITIONS.map((d) => d.name);
+const TOOL_SKILL_SET = new Set<string>(TOOL_SKILL_IDS);
+/** The metered subset: these answer with their x402 challenge until input.x_payment carries a payment. */
+export const METERED_TOOL_SKILL_IDS: readonly string[] = TOOL_SKILL_IDS.filter((id) => PAID_TOOL_NAMES.has(id));
+const TOOL_CARDS_PATH = "/.well-known/agents/index.json";
+
 type SkillSelection = { skill: SkillId; input: Json };
 type CapabilityHelp = { kind: "CAPABILITY_HELP" };
 /** A plain-text question the shared router places on one of the /mcp tools (2026-09-29). */
 type TalkSelection = { kind: "TALK"; text: string; plan: Plan };
+/** A per-tool skill: a tool POST /mcp serves, selected by the name on its own card. */
+type ToolSelection = { kind: "TOOL"; tool: string; input: Json };
 
 class SourceError extends Error {
   constructor(
@@ -419,7 +448,7 @@ export function isCapabilityGreeting(text: string): boolean {
   return false;
 }
 
-function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | TalkSelection | string {
+function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | TalkSelection | ToolSelection | string {
   const parts = Array.isArray(message.parts) ? message.parts : [];
   if (parts.length !== 1) {
     return "exactly one Part is required; additional semantic parts are not ignored";
@@ -455,8 +484,16 @@ function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | T
   if (!selector) return "Part.data must be an object containing {skill,input}";
   if (!exactKeys(selector, ["skill", "input"])) return "selector must contain exactly {skill,input}";
   const asked = str(selector.skill);
+  // A per-tool skill is the tool's own name, as its card at /.well-known/agents/<tool>.json gives it.
+  if (asked && TOOL_SKILL_SET.has(asked)) {
+    const toolInput = record(selector.input);
+    if (!toolInput) return "selector.input must be an object";
+    return { kind: "TOOL", tool: asked, input: toolInput };
+  }
   const skill = asked && Object.prototype.hasOwnProperty.call(LEGACY_SKILL_IDS, asked) ? LEGACY_SKILL_IDS[asked] : asked;
-  if (!skill || !SKILL_ID_SET.has(skill)) return `unknown skill; choose one of: ${SKILL_IDS.join(", ")}`;
+  if (!skill || !SKILL_ID_SET.has(skill)) {
+    return `unknown skill; choose one of: ${SKILL_IDS.join(", ")}; or a per-tool skill, by the tool names listed at ${TOOL_CARDS_PATH}`;
+  }
   const input = record(selector.input);
   if (!input) return "selector.input must be an object";
   return { skill: skill as SkillId, input };
@@ -604,6 +641,8 @@ export interface DerivedBoard {
     separation: string | null;
     leader: string | null;
     public_leader_state: string | null;
+    /** What the axis's score does not show, as the row states it (axes[].limit). Absent when the row states none. */
+    limit?: string;
   }>;
 }
 
@@ -644,6 +683,8 @@ export async function deriveBoard(origin: string): Promise<DerivedBoard> {
           separation: str(a.separation),
           leader: str(a.leader),
           public_leader_state: str(a.public_leader_state),
+          // Copied verbatim when the row states a limit (C-2026-1120-02); a row with none gets no limit key.
+          ...(typeof a.limit === "string" ? { limit: a.limit } : {}),
         };
       }),
     };
@@ -725,7 +766,7 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
       text: [
         `evidence-bundle: ${String(payload.state)} — ${String(payload.relevant_signed_cards ?? 0)} already-signed card(s) relevant-to ${String((payload.obligation as Json | undefined)?.id ?? input.obligation)}, read from ${origin}/api/evidence-bundle (the same module as the MCP tool evidence_bundle_preview).`,
         payload.review_note ? String(payload.review_note) : "Observations only; relevant-to is never a determination.",
-        `Doctrine: ${DOCTRINE}. This skill never charges; the assembled bundle is the x402 MCP tool evidence_bundle.`,
+        `Doctrine: ${DOCTRINE}. This skill never charges; the assembled bundle is the x402 tool evidence_bundle (POST /mcp, or the per-tool skill evidence_bundle on this door).`,
         REGISTER,
       ].join("\n"),
       data: { state: payload.state, skill, as_of: new Date().toISOString(), doctrine: DOCTRINE, register: REGISTER, payload },
@@ -811,7 +852,141 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
   };
 }
 
-async function sendMessage(id: unknown, params: unknown, origin: string): Promise<Response> {
+/** The x402 A2A transport's payment field (x402 specs/transports-v2/a2a.md, "Payment Payload Transmission"). */
+export const A2A_PAYMENT_PAYLOAD_KEY = "x402.payment.payload";
+const A2A_PAYMENT_FIELD = `message.metadata["${A2A_PAYMENT_PAYLOAD_KEY}"]`;
+
+/** The PaymentPayload a message carries in its metadata, or undefined (a null field is no payment). */
+function a2aMetaPayment(message: Json): unknown {
+  const payload = record(message.metadata)?.[A2A_PAYMENT_PAYLOAD_KEY];
+  return payload === null ? undefined : payload;
+}
+
+/**
+ * The x402 A2A transport's status fields on the reply message: the challenge in
+ * "x402.payment.required", or the settlement the route reported in "x402.payment.receipts". This
+ * door answers SendMessage with a Message, not a Task, so only the metadata half of that transport
+ * is carried here; the data part stays the full tool result.
+ */
+function a2aPaymentMetadata(result: McpToolResult): Json | null {
+  const settlement = record(record(result._meta)?.[X402_META_PAYMENT_RESPONSE]);
+  if (settlement)
+    return {
+      "x402.payment.status": settlement.success === false ? "payment-failed" : "payment-completed",
+      "x402.payment.receipts": [settlement],
+    };
+  const structured = record(result.structuredContent);
+  if (structured?.status !== "PAYMENT_REQUIRED") return null;
+  return {
+    "x402.payment.status": structured.payment_presented === true ? "payment-failed" : "payment-required",
+    "x402.payment.required": structured.payment_required ?? null,
+  };
+}
+
+/**
+ * A per-tool skill. The input is validated against the tool's inputSchema first, so a refused
+ * input calls no route and forwards no payment. The tool then runs through the dispatch POST /mcp
+ * tools/call runs, and its result (content, structuredContent, isError) is quoted unchanged in
+ * the data part: a client reads exactly what /mcp would have answered. Payment is read from
+ * input.x_payment, as the MCP tool reads its x_payment argument, or from the x402 A2A transport's
+ * PaymentPayload in message.metadata["x402.payment.payload"], which reaches the paid wrapper by
+ * the same path as the MCP door's params._meta["x402/payment"] (caller.metaPayment). One channel
+ * per call. Never from text, part metadata or an HTTP header.
+ */
+async function sendToolMessage(
+  id: unknown,
+  selection: ToolSelection,
+  contextId: string | null,
+  origin: string,
+  caller?: PaidCallerContext,
+  metaPayment?: unknown,
+): Promise<Response> {
+  const { tool, input } = selection;
+  const invalid = await toolInputError(tool, input);
+  if (invalid) {
+    return rpcError(id, A2A_ERROR.INVALID_PARAMS, invalid, "INVALID_SKILL_INPUT", { skill: tool });
+  }
+  const metered = PAID_TOOL_NAMES.has(tool);
+  // The x402 A2A transport's PaymentPayload goes to the paid wrapper only for a metered skill. It is
+  // refused here, before any route is called, when it is not one PaymentPayload object or when
+  // input.x_payment is also set; the wording names this door's field, not the MCP door's.
+  if (metered && metaPayment !== undefined) {
+    const twice = typeof input.x_payment === "string" && input.x_payment.trim() !== "";
+    const encoded = twice ? null : metaPaymentHeader(metaPayment);
+    const refusal = twice
+      ? `payment was sent twice: use input.x_payment or ${A2A_PAYMENT_FIELD}, not both`
+      : encoded && "error" in encoded
+        ? encoded.error.replace(`_meta["${X402_META_PAYMENT}"]`, A2A_PAYMENT_FIELD)
+        : null;
+    if (refusal)
+      return rpcError(id, A2A_ERROR.INVALID_PARAMS, `${refusal}. Nothing was forwarded; nothing was charged.`, "INVALID_SKILL_INPUT", {
+        skill: tool,
+        field: A2A_PAYMENT_FIELD,
+      });
+    caller = { ...caller, metaPayment };
+  }
+  let result: McpToolResult;
+  try {
+    result = await dispatchTool(tool, input, origin, { paid: true }, caller);
+  } catch {
+    return rpcError(
+      id,
+      A2A_ERROR.INTERNAL,
+      metered
+        ? `${tool} failed before it answered. Delivery and settlement are unconfirmed; inspect receipts before retrying paid work.`
+        : `${tool} failed before it answered. Nothing was written.`,
+      "SKILL_SOURCE_UNAVAILABLE",
+      { skill: tool, source: "functions/mcp/_dispatch.ts", source_state: "FETCH_FAILED" },
+    );
+  }
+  const structured = record(result.structuredContent);
+  const state = str(structured?.status) ?? str(structured?.state) ?? (result.isError ? "TOOL_ERROR" : "ANSWERED");
+  const texts = result.content.map((c) => c.text);
+  // paidToolResult's 402 answer carries the machine JSON first and its human line second.
+  const human = (texts.length > 1 && texts[0].trimStart().startsWith("{") ? texts[1] : texts[0]) ?? "";
+  const summary = human.split("\n\n")[0].slice(0, 2_000);
+  const paymentMetadata = metered ? a2aPaymentMetadata(result) : null;
+  return reply(id, {
+    result: {
+      message: {
+        messageId: crypto.randomUUID(),
+        contextId: contextId ?? crypto.randomUUID(),
+        role: "ROLE_AGENT",
+        ...(paymentMetadata ? { metadata: paymentMetadata } : {}),
+        parts: [
+          {
+            text: [
+              `${tool}: ${state} — run by the dispatch POST /mcp tools/call runs (functions/mcp/_dispatch.ts).`,
+              summary,
+              metered
+                ? "Metered (x402): payment is read from input.x_payment, or from the x402 A2A transport's PaymentPayload in message.metadata[\"x402.payment.payload\"] (one channel per call), and the tool's route settles it, fail closed. With neither, nothing is charged."
+                : "Free: no payment is read or asked for.",
+              REGISTER,
+            ].filter(Boolean).join("\n"),
+            mediaType: "text/plain",
+          },
+          {
+            data: {
+              kind: "TOOL_RESULT",
+              skill: tool,
+              tool,
+              state,
+              metered,
+              door: "POST /api/a2a",
+              same_as: `POST /mcp tools/call ${tool}`,
+              card: new URL(`/.well-known/agents/${tool}.json`, origin).toString(),
+              register: REGISTER,
+              result,
+            },
+            mediaType: "application/json",
+          },
+        ],
+      },
+    },
+  });
+}
+
+async function sendMessage(id: unknown, params: unknown, origin: string, caller?: PaidCallerContext): Promise<Response> {
   const p = record(params);
   const message = record(p?.message);
   if (!message) {
@@ -871,6 +1046,9 @@ async function sendMessage(id: unknown, params: unknown, origin: string): Promis
       },
     });
   }
+  if ("kind" in selection && selection.kind === "TOOL") {
+    return sendToolMessage(id, selection, str(message.contextId), origin, caller, a2aMetaPayment(message));
+  }
   if ("kind" in selection) {
     return reply(id, {
       result: {
@@ -880,7 +1058,7 @@ async function sendMessage(id: unknown, params: unknown, origin: string): Promis
           role: "ROLE_AGENT",
           parts: [
             {
-              text: `I publish AI-governance measurements and evidence. For a result, send one Part.data {skill,input}; available skill IDs: ${SKILL_IDS.join(", ")}. This capability description is not a measurement or certification.`,
+              text: `I publish AI-governance measurements and evidence. For a result, send one Part.data {skill,input}; available skill IDs: ${SKILL_IDS.join(", ")}. Each tool POST /mcp serves is also a skill here, by its own name: ${new URL(TOOL_CARDS_PATH, origin).toString()} lists them. This capability description is not a measurement or certification.`,
               mediaType: "text/plain",
             },
             {
@@ -889,6 +1067,7 @@ async function sendMessage(id: unknown, params: unknown, origin: string): Promis
                 state: "DESCRIPTIVE_ONLY",
                 protocolVersion: A2A_PROTOCOL_VERSION,
                 skills: [...SKILL_IDS],
+                tool_skills: new URL(TOOL_CARDS_PATH, origin).toString(),
                 selector: { skill: "gspc-board", input: {} },
                 register: REGISTER,
               },
@@ -967,6 +1146,15 @@ export const onRequestGet: PagesFunction = async (context) => {
     // Derived, never typed: the skill ids this router accepts. A reader counts this array; no
     // sentence on this endpoint states how many there are.
     skills: [...SKILL_IDS],
+    // The per-tool skills, derived the same way: one for each tool POST /mcp serves (2026-11-16).
+    tool_skills: {
+      cards: new URL(TOOL_CARDS_PATH, origin).toString(),
+      ids: [...TOOL_SKILL_IDS],
+      metered: [...METERED_TOOL_SKILL_IDS],
+      selector: 'Part.data {"skill":"<tool>","input":{...}}: input is the MCP tool\'s arguments, validated against its inputSchema',
+      payment:
+        "A metered tool answers with its x402 challenge (result.structuredContent.accepts) and charges nothing. To pay, send the same selector again with input.x_payment set to the base64 payment payload, or with the PaymentPayload object in message.metadata[\"x402.payment.payload\"] (x402 A2A transport); the tool's route verifies and settles it, fail closed. Payment is never read from text, part metadata or HTTP headers. Verification stays free.",
+    },
     version_rule:
       "Send `A2A-Version: 1.0`; a patch number (1.0.1) is ignored, as A2A v1.0 section 3.6 requires. Per A2A v1.0, an absent or empty header means 0.3. A v1.0 method name sent as 0.3 returns VersionNotSupportedError -32009; any other name that is not an A2A 0.3 method returns -32601. The 0.3 wire shape itself is served: a 0.3 method name (message/send, tasks/get, ...) with no header or a 0.x one is mapped onto the 1.0 handler and answered as a 0.3 Message; a request that declares 1.0 must use the 1.0 names. A body that is not JSON-RPC returns -32600; to ask in plain words, POST {\"message\": \"...\"} to /api/chat.",
     compat_0_3: Object.keys(V03_METHODS),
@@ -988,8 +1176,13 @@ export const onRequestGet: PagesFunction = async (context) => {
   return new Response(JSON.stringify(body, null, 2), { status: 200, headers: HEADERS });
 };
 
-export async function handlePost(request: Request): Promise<Response> {
+export async function handlePost(request: Request, env?: unknown): Promise<Response> {
   const origin = new URL(request.url).origin;
+  // The caller context POST /mcp builds, built the same way: only a request that carries
+  // Authorization has one, and only a paid tool's purchase actions and its route read it.
+  const caller: PaidCallerContext | undefined = request.headers.has("authorization")
+    ? { authorization: request.headers.get("authorization") || undefined, env: (env || {}) as PaidCallerContext["env"] }
+    : undefined;
 
   let parsed: unknown;
   let text: string;
@@ -1030,7 +1223,7 @@ export async function handlePost(request: Request): Promise<Response> {
   const requested = normalizeA2aVersion(rawVersion);
   // The 0.3 wire shape: a 0.3 method name with no version header (or a 0.x one).
   if (isLegacyVersionHeader(rawVersion) && Object.prototype.hasOwnProperty.call(V03_METHODS, method)) {
-    return serveV03(id, method, req.params, origin);
+    return serveV03(id, method, req.params, origin, caller);
   }
   if (isLegacyVersionHeader(rawVersion)) {
     // An absent header means 0.3 (A2A v1.0 section 3.6.2), and the 0.3 names ARE served above.
@@ -1081,13 +1274,13 @@ export async function handlePost(request: Request): Promise<Response> {
     );
   }
 
-  return dispatchV1(id, method, req.params, origin);
+  return dispatchV1(id, method, req.params, origin, caller);
 }
 
-async function dispatchV1(id: unknown, method: string, params: unknown, origin: string): Promise<Response> {
+async function dispatchV1(id: unknown, method: string, params: unknown, origin: string, caller?: PaidCallerContext): Promise<Response> {
   switch (method) {
     case "SendMessage":
-      return sendMessage(id, params, origin);
+      return sendMessage(id, params, origin, caller);
     case "GetTask":
     case "CancelTask": {
       const taskId = str(record(params)?.id) ?? null;
@@ -1114,7 +1307,7 @@ async function dispatchV1(id: unknown, method: string, params: unknown, origin: 
  * `result` of message/send is the Message itself). Errors keep their JSON-RPC codes, which 0.3
  * and 1.0 share.
  */
-async function serveV03(id: unknown, method: string, params: unknown, origin: string): Promise<Response> {
+async function serveV03(id: unknown, method: string, params: unknown, origin: string, caller?: PaidCallerContext): Promise<Response> {
   const p = record(params);
   let v1Params: unknown = params;
   if (method === "message/send" || method === "message/stream") {
@@ -1122,7 +1315,7 @@ async function serveV03(id: unknown, method: string, params: unknown, origin: st
     const normalized = m && !str(m.messageId) ? { ...m, messageId: crypto.randomUUID() } : m;
     v1Params = normalized ? { message: v03MessageToV1(normalized) } : {};
   }
-  const res = await dispatchV1(id, V03_METHODS[method], v1Params, origin);
+  const res = await dispatchV1(id, V03_METHODS[method], v1Params, origin, caller);
   const body = record(await res.json()) ?? {};
   const result = record(body.result);
   const message = record(result?.message);
@@ -1152,7 +1345,7 @@ export function a2aUsageShape(rawVersionHeader: string | null, servedAs03: boole
 }
 
 export const onRequestPost: PagesFunction = async (context) => {
-  const res = await handlePost(context.request);
+  const res = await handlePost(context.request, (context as { env?: unknown }).env);
   // Aggregate usage (functions/_lib/usage.ts): declared version + ok / error code, and for a body
   // that was not a JSON-RPC request its shape (key names only). No text, no caller id.
   const ctx = context as unknown as { request: Request; env?: unknown; waitUntil?: (p: Promise<unknown>) => void };

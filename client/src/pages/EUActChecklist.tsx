@@ -45,7 +45,7 @@ export default function EUActChecklist() {
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - free readiness checklist</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">EU AI Act: the 2 August 2026 duties are live. Are you ready?</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Article 50 transparency and the enforcement regime have applied since 2 Aug 2026. Legacy generative systems have <b>{left} days</b> left of the machine-readable-marking grace period (to 2 Dec 2026). Tick off what you have done and see your readiness score - then close the gaps with the Council.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Article 50 transparency and the enforcement regime have applied since 2 Aug 2026. Legacy generative systems have <b>{left} days</b> left of the machine-readable-marking grace period (to 2 Dec 2026). Use the checklist to organise your evidence and questions. The percentage counts the items you select; it is not a compliance or readiness assessment.</p>
           <div className="mt-6 inline-flex items-center gap-3 rounded-2xl bg-white/10 px-5 py-3">
             <span className="text-3xl font-black text-emerald-300">{left}</span>
             <span className="text-sm text-emerald-50/80">days to the legacy-marking cliff<br />(2 Dec 2026, Art. 111(4))</span>
@@ -55,7 +55,7 @@ export default function EUActChecklist() {
       <section className="max-w-5xl mx-auto px-6 py-10">
         <div className="flex items-center gap-4">
           <div className="h-3 flex-1 rounded-full bg-gray-100 overflow-hidden"><div className="h-full bg-emerald-500 transition-all" style={{ width: pct + "%" }} /></div>
-          <span className="text-lg font-black text-emerald-700">{pct}%</span>
+          <span className="text-lg font-black text-emerald-700">{pct}% selected</span>
         </div>
         {CATS.map((c) => (
           <div key={c} className="mt-8">
@@ -64,7 +64,7 @@ export default function EUActChecklist() {
               {ITEMS.filter((i) => i.cat === c).map((i) => {
                 const on = !!done[i.id];
                 return (
-                  <button key={i.id} onClick={() => setDone((d) => ({ ...d, [i.id]: !d[i.id] }))} className={"flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-colors " + (on ? "border-emerald-400 bg-emerald-50" : "border-gray-200 hover:bg-gray-50")}>
+                  <button key={i.id} type="button" aria-pressed={on} onClick={() => setDone((d) => ({ ...d, [i.id]: !d[i.id] }))} className={"flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-colors " + (on ? "border-emerald-400 bg-emerald-50" : "border-gray-200 hover:bg-gray-50")}>
                     <span className={"mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 text-xs font-black " + (on ? "border-emerald-500 bg-emerald-500 text-white" : "border-gray-300 text-transparent")}>X</span>
                     <span className={on ? "text-emerald-900" : "text-gray-700"}>{i.text}</span>
                   </button>
@@ -74,10 +74,10 @@ export default function EUActChecklist() {
           </div>
         ))}
         <div className="mt-10 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          {pct === 100 ? "Fully ticked - now make it provable. The Council signs your evidence with an Ed25519 passport." : "Every unticked box is live exposure - the Art. 50 regime has applied since 2 Aug 2026. The Council can generate the evidence and the documentation for you."}
+          {pct === 100 ? "All checklist items selected. Review the underlying evidence and applicable obligations; selecting an item does not verify it." : "Use unselected items as prompts for further review. Applicability and evidence need to be assessed for your system."}
         </div>
         <div className="mt-6 flex flex-wrap gap-3">
-          <a href="/readiness" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Run a full readiness scan -&gt;</a>
+          <a href="/readiness" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Read the transparency guidance -&gt;</a>
           <a href="/gpai" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">GPAI obligations -&gt;</a>
           <a href="/penalties" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">What are the fines? -&gt;</a>
         </div>

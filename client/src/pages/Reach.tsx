@@ -34,7 +34,7 @@ import { Link } from "wouter";
 import LiveCounters from "@/components/LiveCounters";
 import {
   FULL_FUNNEL_STAGES,
-  FUNNEL_LABELS,
+  stageLabel,
   type FootprintPayload,
   type FootprintRow,
   type StageKey,
@@ -77,7 +77,9 @@ export interface StageLine {
 
 /**
  * One line per funnel stage, in funnel order. A stage the payload does not carry says so; it is
- * never dropped, because a stage that quietly disappears is how a funnel flatters itself.
+ * never dropped, because a stage that quietly disappears is how a funnel flatters itself. The
+ * label carries the scope the row states, as the pills do ("Downloads, CSOAI packages"), so the
+ * state beside it is never read as the whole account's.
  */
 export function stageLines(payload: FootprintPayload | null): StageLine[] {
   return FULL_FUNNEL_STAGES.map((key) => {
@@ -85,7 +87,7 @@ export function stageLines(payload: FootprintPayload | null): StageLine[] {
     const reason = typeof row?.reason === "string" && row.reason.trim() !== "" ? row.reason : null;
     return {
       key,
-      label: FUNNEL_LABELS[key],
+      label: stageLabel(key, row),
       meaning: STAGE_MEANING[key],
       state: typeof row?.state === "string" ? row.state : payload ? "absent from the payload" : "reading",
       reason,
@@ -155,6 +157,11 @@ export default function Distribution() {
             You will not find a conversion rate on this page. Dividing one of these stages by
             another would invent a ratio nobody measured — it is the most common way an adoption
             figure stops being true, and we would rather publish four blanks than one of those.
+          </p>
+          <p className="measure mt-5 text-[15px] leading-relaxed ink-muted">
+            Dated examples of outside execution, implementation and citation are recorded separately on our{" "}
+            <Link href="/traction/#external-use" className="font-semibold text-emerald-300 underline underline-offset-4">operation and external-use page</Link>.
+            {" "}Those specific cases do not establish estate-wide execution or institutional-adoption totals.
           </p>
         </div>
       </section>

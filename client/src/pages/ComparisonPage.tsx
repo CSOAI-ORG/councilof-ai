@@ -1,960 +1,327 @@
-/*
- * CSOAI Comparison Page
- * Compare CSOAI against alternative approaches and platforms
- * Highlights unique value propositions and differentiators
- */
-
-import { useState } from "react";
-import { motion } from "framer-motion";
-import {
-  Globe,
-  CheckCircle2,
-  X,
-  Users,
-  Shield,
-  TrendingUp,
-  BookOpen,
-  Zap,
-  Lock,
-  Eye,
-  DollarSign,
-  Award,
-  GitBranch,
-  Briefcase,
-  Heart,
-  ChevronDown,
-  ChevronUp,
-  ArrowRight,
-  Lightbulb,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+/** Buyer-facing comparison of evidence needs, available Council capabilities and scope. */
 import { Link } from "wouter";
+import {
+  ArrowRight,
+  FileCheck2,
+  BookOpen,
+  Code2,
+  History,
+  Users,
+  Search,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5 },
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-// Key differentiators
-const differentiators = [
+const capabilities = [
   {
-    icon: Globe,
-    title: "Global Coverage",
-    csoai: "40+ Nations",
-    competitors: "Single jurisdiction",
-    description: "Regulate across EU AI Act, NIST RMF, ISO 42001, TC260 and more",
+    icon: Search,
+    title: "Inspect a published measurement",
+    text: "Read a result's subject, method, date, sample and limitations. An absent measurement stays UNMEASURED; a statistical tie is not presented as a winner.",
+    href: "/gspc-scoreboard",
+    action: "Explore the board",
+  },
+  {
+    icon: FileCheck2,
+    title: "Check the evidence yourself",
+    text: "Verify supported signed records in your browser or with the published offline checker. Integrity, signature and inclusion checks have distinct results; a valid signature does not prove the claim is true.",
+    href: "/gspc-verify",
+    action: "Verify a record",
+  },
+  {
+    icon: Code2,
+    title: "Connect evidence to your workflow",
+    text: "Use documented HTTP, MCP and A2A interfaces to read published evidence. The integration guide names supported paths, tested examples and what remains unmeasured.",
+    href: "/connect",
+    action: "Inspect the interfaces",
+  },
+  {
+    icon: History,
+    title: "Follow corrections",
+    text: "Review dated corrections and the sources behind them. A correction stays visible beside the evidence trail, so a later reader can reconstruct what changed.",
+    href: "/corrections",
+    action: "Read the correction record",
   },
   {
     icon: BookOpen,
-    title: "Training + Credential",
-    csoai: "Included",
-    competitors: "Separate cost",
-    description: "Free training tier plus a professional measurement credential",
-  },
-  {
-    icon: DollarSign,
-    title: "Pricing Model",
-    csoai: "Free — no tiers",
-    competitors: "Enterprise only",
-    description: "Accessibility for teams of all sizes, no pricing walls",
-  },
-  {
-    icon: GitBranch,
-    title: "Governance",
-    csoai: "Open standards",
-    competitors: "Proprietary/closed",
-    description: "Designed council workflow with public experiment records",
-  },
-];
-
-// Detailed feature comparison
-const comparisonFeatures = [
-  {
-    category: "Coverage & Compliance",
-    features: [
-      {
-        name: "Global Regulation Coverage",
-        csoai: "✓",
-        traditional: "Partial",
-        aiTools: "Partial",
-        consulting: "✓",
-      },
-      {
-        name: "40+ Nations Support",
-        csoai: "✓",
-        traditional: "✗",
-        aiTools: "✗",
-        consulting: "Partial",
-      },
-      {
-        name: "Multi-Framework Support",
-        csoai: "✓",
-        traditional: "✓",
-        aiTools: "Partial",
-        consulting: "✓",
-      },
-      {
-        name: "EU AI Act",
-        csoai: "✓",
-        traditional: "✓",
-        aiTools: "✓",
-        consulting: "✓",
-      },
-      {
-        name: "NIST AI RMF",
-        csoai: "✓",
-        traditional: "Partial",
-        aiTools: "✓",
-        consulting: "✓",
-      },
-      {
-        name: "ISO 42001",
-        csoai: "✓",
-        traditional: "Partial",
-        aiTools: "Partial",
-        consulting: "✓",
-      },
-    ],
-  },
-  {
-    category: "Training & Education",
-    features: [
-      {
-        name: "Training & Credential",
-        csoai: "✓",
-        traditional: "✗",
-        aiTools: "✗",
-        consulting: "✓",
-      },
-      {
-        name: "Free Training Tier",
-        csoai: "✓",
-        traditional: "✗",
-        aiTools: "✗",
-        consulting: "✗",
-      },
-      {
-        name: "Professional Measurement Credential",
-        csoai: "✓",
-        traditional: "✗",
-        aiTools: "✗",
-        consulting: "✓",
-      },
-      {
-        name: "Job Marketplace",
-        csoai: "✓",
-        traditional: "✗",
-        aiTools: "✗",
-        consulting: "✗",
-      },
-      {
-        name: "Content Library",
-        csoai: "✓",
-        traditional: "Partial",
-        aiTools: "Partial",
-        consulting: "✓",
-      },
-    ],
-  },
-  {
-    category: "Monitoring & Oversight",
-    features: [
-      {
-        name: "Real-time Monitoring",
-        csoai: "Not live",
-        traditional: "✗",
-        aiTools: "Partial",
-        consulting: "✗",
-      },
-      {
-        name: "Council (33-seat design)",
-        csoai: "Design only",
-        traditional: "✗",
-        aiTools: "✗",
-        consulting: "✗",
-      },
-      {
-        name: "AI Safety Watchdog",
-        csoai: "Intake only",
-        traditional: "✗",
-        aiTools: "✗",
-        consulting: "✗",
-      },
-      {
-        name: "Crowdsourced Oversight",
-        csoai: "✓",
-        traditional: "✗",
-        aiTools: "✗",
-        consulting: "✗",
-      },
-      {
-        name: "Incident Reporting",
-        csoai: "✓",
-        traditional: "Partial",
-        aiTools: "Partial",
-        consulting: "✓",
-      },
-    ],
-  },
-  {
-    category: "Compliance Automation",
-    features: [
-      {
-        name: "SOAI-PDCA Loop",
-        csoai: "✓",
-        traditional: "Partial",
-        aiTools: "Partial",
-        consulting: "✗",
-      },
-      {
-        name: "Automated Assessment",
-        csoai: "✓",
-        traditional: "Partial",
-        aiTools: "✓",
-        consulting: "✗",
-      },
-      {
-        name: "Run-scoped Recommendations",
-        csoai: "✓",
-        traditional: "Partial",
-        aiTools: "✓",
-        consulting: "✗",
-      },
-      {
-        name: "Compliance Scoring",
-        csoai: "✓",
-        traditional: "✓",
-        aiTools: "✓",
-        consulting: "Partial",
-      },
-    ],
-  },
-  {
-    category: "Economic Benefits",
-    features: [
-      {
-        name: "Prosperity Fund Access",
-        csoai: "✓",
-        traditional: "✗",
-        aiTools: "✗",
-        consulting: "✗",
-      },
-      {
-        name: "UBI/Economic Redistribution",
-        csoai: "✓",
-        traditional: "✗",
-        aiTools: "✗",
-        consulting: "✗",
-      },
-      {
-        name: "Analyst Marketplace",
-        csoai: "✓",
-        traditional: "✗",
-        aiTools: "Partial",
-        consulting: "✗",
-      },
-    ],
-  },
-  {
-    category: "Pricing & Accessibility",
-    features: [
-      {
-        name: "Free to use",
-        csoai: "✓",
-        traditional: "✗",
-        aiTools: "Partial",
-        consulting: "✗",
-      },
-      {
-        name: "Enterprise Pricing",
-        csoai: "✓",
-        traditional: "✓",
-        aiTools: "✓",
-        consulting: "✓",
-      },
-      {
-        name: "Pay-as-you-go",
-        csoai: "Partial",
-        traditional: "Partial",
-        aiTools: "✓",
-        consulting: "✗",
-      },
-    ],
-  },
-  {
-    category: "Platform Architecture",
-    features: [
-      {
-        name: "Open Standards",
-        csoai: "✓",
-        traditional: "✗",
-        aiTools: "Partial",
-        consulting: "✗",
-      },
-      {
-        name: "Vendor-Independent",
-        csoai: "Not established",
-        traditional: "✓",
-        aiTools: "Partial",
-        consulting: "✓",
-      },
-      {
-        name: "API Access",
-        csoai: "✓",
-        traditional: "Partial",
-        aiTools: "✓",
-        consulting: "✗",
-      },
-      {
-        name: "Integration Ecosystem",
-        csoai: "✓",
-        traditional: "✓",
-        aiTools: "Partial",
-        consulting: "✗",
-      },
-    ],
-  },
-];
-
-// Why CSOAI is different
-const uniqueAdvantages = [
-  {
-    icon: Heart,
-    title: "The Maternal Covenant",
-    description:
-      "Care-based AI governance that prioritizes human flourishing over compliance checkbox. We believe AI should serve humanity with compassion and relationship-first thinking.",
+    title: "Learn from published examples",
+    text: "Use the open learning material and exercises to inspect and reproduce a bounded result. Completing an exercise is not a professional qualification or a promise of employment.",
+    href: "/learn",
+    action: "Open the learning material",
   },
   {
     icon: Users,
-    title: "Council",
-    description:
-      "A 33-seat review architecture is designed, not live. The latest independence experiment was fully correlated, so no unbiased-consensus or capture-resistance claim is made.",
-  },
-  {
-    icon: DollarSign,
-    title: "Prosperity Fund",
-    description:
-      "Economic redistribution model that ensures AI benefits reach everyone. Create jobs, enable UBI, and build sustainable prosperity alongside compliance.",
-  },
-  {
-    icon: Eye,
-    title: "Crowdsourced Watchdog",
-    description:
-      "Public incident intake is available. A staffed global analyst network and real-time safety monitoring are not yet offered.",
-  },
-  {
-    icon: Globe,
-    title: "Global-First Design",
-    description:
-      "Built from day one to serve 30+ jurisdictions with their unique regulatory requirements. Not retrofitted compliance, but native multi-jurisdiction support.",
-  },
-  {
-    icon: Lightbulb,
-    title: "Integration-Ready",
-    description:
-      "Works alongside existing tools. We complement your GRC platform, enhance your AI-specific tools, and reduce reliance on expensive consultants.",
+    title: "Commission a defined piece of work",
+    text: "Discuss a named system, evidence question and deliverable. Agree the method, access, capacity, acceptance criteria and commercial terms before work starts.",
+    href: "/services",
+    action: "Explore scoped services",
   },
 ];
 
-// Evidence cards — real artefacts, signed and verifiable. No testimonials until real customers
-// give us quotes in writing. [Register: numbers trace to signed artefacts]
-const testimonials = [
+const buyingQuestions = [
   {
-    name: "0 of 108",
-    role: "Article-50 provenance markings",
-    company: "Source: ProvBench manifest (signed)",
-    quote:
-      "Zero of 108 provenance markings survived real-world transformation in our measurements. This is the gap proofof attestations are built to close.",
-    avatar: "0/108",
+    need: "A result another person can inspect",
+    ask: "Does it include the source records, method version, date and a reproducible check?",
+    council:
+      "Published measurement records, methods and verification tools provide an inspectable starting point. Check the specific record's completeness and scope.",
   },
   {
-    name: "127 provisions",
-    role: "Published regulation snapshot",
-    company: "Source: corpus-watch signed delta reports",
-    quote:
-      "Signed baseline and delta artefacts record what a run observed. They do not constitute continuous legal monitoring. Unmeasured provisions are marked, never scored.",
-    avatar: "127",
+    need: "Evidence inside an existing product or process",
+    ask: "Which interfaces and deployment paths have been tested, and who operates the integration?",
+    council:
+      "Public APIs, MCP tools and documented integration examples are available. Production installation, permissions and support must be assessed for your environment.",
   },
   {
-    name: "9 refutations",
-    role: "Published — 4 killed our own bets",
-    company: "Source: Refutation Ledger",
-    quote:
-      "We publish the experiments that kill our own theses. An instrument that can refute itself is one you can audit. Every entry is signed and recomputable.",
-    avatar: "7R",
+    need: "Evidence for procurement or a release decision",
+    ask: "What question will the work answer, what will be delivered, and how will limitations be recorded?",
+    council:
+      "Scoped evidence work can be discussed through the services enquiry. Payment funds agreed work; it does not buy a favourable result.",
+  },
+  {
+    need: "A legal determination, certification or continuing managed service",
+    ask: "Who has the required authority, qualifications and accepted service obligations?",
+    council:
+      "A Council measurement is evidence, not certification or a legal determination. Any recurring service needs separately agreed scope, people, capacity and terms.",
   },
 ];
-
-interface ExpandedSectionState {
-  [key: string]: boolean;
-}
 
 export default function ComparisonPage() {
-  const [expandedCategories, setExpandedCategories] = useState<ExpandedSectionState>({});
-
-  const toggleCategory = (categoryName: string) => {
-    setExpandedCategories((prev) => ({
-      ...prev,
-      [categoryName]: !prev[categoryName],
-    }));
-  };
-
-  const renderComparisonCell = (value: string) => {
-    if (value === "✓") {
-      return (
-        <div className="flex justify-center">
-          <CheckCircle2 className="h-5 w-5 text-emerald-600" />
-        </div>
-      );
-    }
-    if (value === "✗") {
-      return (
-        <div className="flex justify-center">
-          <X className="h-5 w-5 text-red-500" />
-        </div>
-      );
-    }
-    return (
-      <div className="flex justify-center">
-        <span className="text-sm text-amber-700 font-medium bg-amber-100 px-2 py-1 rounded">
-          {value}
-        </span>
-      </div>
-    );
-  };
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-primary/10 via-background to-emerald-500/10">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="max-w-4xl mx-auto text-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <Badge variant="outline" className="mb-4">
-              <Shield className="h-3 w-3 mr-1" />
-              Comparison
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Why Organizations Choose CSOAI
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              More than just compliance software. A complete AI governance platform with training,
-              the measurement credential, dated evidence records, and economic design—all built for a global audience.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link href="/signup">
-                <Button size="lg">
-                  Start Free
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/demo">
-                <Button variant="outline" size="lg">
-                  Request Demo
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Quick Differentiators */}
-      <section className="py-16 bg-muted/50">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl font-bold mb-4">Key Differentiators</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              What sets CSOAI apart from every other approach
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-          >
-            {differentiators.map((diff, index) => {
-              const Icon = diff.icon;
-              return (
-                <motion.div key={index} variants={fadeInUp}>
-                  <Card className="h-full border-l-4 border-l-primary hover:shadow-lg transition-shadow">
-                    <CardContent className="pt-6">
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="p-2 bg-primary/10 rounded-lg">
-                          <Icon className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-base">{diff.title}</h3>
-                        </div>
-                      </div>
-                      <div className="space-y-3">
-                        <div>
-                          <p className="text-sm text-muted-foreground">CSOAI</p>
-                          <p className="font-semibold text-emerald-700">{diff.csoai}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">Others</p>
-                          <p className="text-gray-600">{diff.competitors}</p>
-                        </div>
-                        <p className="text-sm text-muted-foreground border-t pt-3 mt-3">
-                          {diff.description}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Detailed Feature Comparison Table */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl font-bold mb-4">Detailed Feature Comparison</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              How CSOAI compares across all major capability areas
-            </p>
-          </motion.div>
-
-          <div className="space-y-6 max-w-6xl mx-auto">
-            {comparisonFeatures.map((category, categoryIndex) => (
-              <motion.div
-                key={categoryIndex}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                <Card>
-                  <CardHeader
-                    className="cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={() => toggleCategory(category.category)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{category.category}</CardTitle>
-                      {expandedCategories[category.category] ? (
-                        <ChevronUp className="h-5 w-5 text-muted-foreground" />
-                      ) : (
-                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                      )}
-                    </div>
-                  </CardHeader>
-
-                  {expandedCategories[category.category] && (
-                    <CardContent>
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                          <thead>
-                            <tr className="border-b border-border">
-                              <th className="text-left py-3 px-4 font-semibold">Feature</th>
-                              <th className="text-center py-3 px-4 font-semibold text-primary">
-                                CSOAI
-                              </th>
-                              <th className="text-center py-3 px-4 font-semibold text-gray-600">
-                                Traditional GRC
-                              </th>
-                              <th className="text-center py-3 px-4 font-semibold text-gray-600">
-                                AI-Specific Tools
-                              </th>
-                              <th className="text-center py-3 px-4 font-semibold text-gray-600">
-                                Consulting Firms
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {category.features.map((feature, featureIndex) => (
-                              <tr
-                                key={featureIndex}
-                                className="border-b border-border/50 hover:bg-muted/30 transition-colors"
-                              >
-                                <td className="py-3 px-4 font-medium text-foreground">
-                                  {feature.name}
-                                </td>
-                                <td className="py-3 px-4">
-                                  {renderComparisonCell(feature.csoai)}
-                                </td>
-                                <td className="py-3 px-4">
-                                  {renderComparisonCell(feature.traditional)}
-                                </td>
-                                <td className="py-3 px-4">{renderComparisonCell(feature.aiTools)}</td>
-                                <td className="py-3 px-4">
-                                  {renderComparisonCell(feature.consulting)}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </CardContent>
-                  )}
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="mt-8 p-6 bg-primary/5 border border-primary/20 rounded-lg max-w-6xl mx-auto">
-            <p className="text-center text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">Legend:</span> ✓ = Full support •
-              Partial = Limited or partial functionality • ✗ = Not available
-            </p>
+    <div className="min-h-screen bg-background text-foreground">
+      <section className="bg-gradient-to-br from-primary/10 via-background to-emerald-500/10 px-5 py-16">
+        <div className="mx-auto max-w-4xl">
+          <p className="text-sm font-semibold uppercase tracking-wider text-primary">
+            Choosing evidence infrastructure
+          </p>
+          <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
+            AI measurement you can inspect and bring into your workflow.
+          </h1>
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-muted-foreground">
+            Council of AI publishes measurements, methods, software and
+            verification tools, and offers enquiries for scoped evidence work.
+            Use the public record to assess whether the capability fits your
+            decision, alongside the software and specialist advice you already
+            use.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/traction">
+              <Button size="lg">
+                Inspect the operating evidence{" "}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/services">
+              <Button variant="outline" size="lg">
+                Discuss a defined engagement
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* What Makes CSOAI Different */}
-      <section className="py-16 bg-muted/50">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl font-bold mb-4">What Makes CSOAI Different</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Revolutionary approach to AI governance that goes beyond compliance
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-          >
-            {uniqueAdvantages.map((advantage, index) => {
-              const Icon = advantage.icon;
-              return (
-                <motion.div key={index} variants={fadeInUp}>
-                  <Card className="h-full hover:shadow-lg transition-shadow">
-                    <CardContent className="pt-6">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 bg-primary/10 rounded-lg">
-                          <Icon className="h-5 w-5 text-primary" />
-                        </div>
-                        <h3 className="font-bold">{advantage.title}</h3>
-                      </div>
-                      <p className="text-muted-foreground">{advantage.description}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Value Proposition */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto p-6 bg-emerald-50 border border-emerald-200 rounded-lg">
-            <div className="flex gap-3">
-              <Zap className="h-5 w-5 text-emerald-700 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-emerald-900 mb-1">CSOAI's Value Proposition</p>
-                <p className="text-sm text-emerald-800">
-                  Start free with 3 AI systems. Get training, the measurement credential, and access
-                  to the Prosperity Fund—benefits competitors don't offer.
+      <section
+        className="mx-auto max-w-6xl px-5 py-14"
+        aria-labelledby="available-capabilities"
+      >
+        <h2 id="available-capabilities" className="text-3xl font-bold">
+          Start with what you can inspect today
+        </h2>
+        <p className="mt-3 max-w-3xl leading-7 text-muted-foreground">
+          Free public evidence makes an evaluation possible before an enquiry.
+          Follow the source for each capability.
+        </p>
+        <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {capabilities.map(({ icon: Icon, title, text, href, action }) => (
+            <Card key={title} className="h-full">
+              <CardContent className="pt-6">
+                <Icon className="h-7 w-7 text-primary" aria-hidden="true" />
+                <h3 className="mt-4 text-lg font-semibold">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  {text}
                 </p>
-              </div>
+                <Link
+                  href={href}
+                  className="mt-4 inline-block font-semibold text-primary underline underline-offset-4"
+                >
+                  {action}
+                </Link>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section
+        className="bg-muted/40 px-5 py-14"
+        aria-labelledby="compare-options"
+      >
+        <div className="mx-auto max-w-6xl">
+          <h2 id="compare-options" className="text-3xl font-bold">
+            Compare options against the job you need done
+          </h2>
+          <p className="mt-3 max-w-3xl leading-7 text-muted-foreground">
+            Ask these questions of Council and any alternative provider. This is
+            a buying checklist, not a ranking of unnamed competitors.
+          </p>
+          <div
+            className="mt-7 overflow-x-auto rounded-lg border bg-background"
+            role="region"
+            aria-label="Evidence provider buying checklist"
+            tabIndex={0}
+          >
+            <table className="w-full min-w-[640px] text-left text-sm">
+              <caption className="sr-only">
+                Buyer needs, questions to ask and the relevant Council
+                capability
+              </caption>
+              <thead>
+                <tr className="border-b bg-muted/50">
+                  <th scope="col" className="p-4">
+                    Your need
+                  </th>
+                  <th scope="col" className="p-4">
+                    Ask each provider
+                  </th>
+                  <th scope="col" className="p-4">
+                    Council's available starting point
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {buyingQuestions.map((row) => (
+                  <tr key={row.need} className="border-b last:border-0">
+                    <th scope="row" className="p-4 align-top font-semibold">
+                      {row.need}
+                    </th>
+                    <td className="p-4 align-top leading-6">{row.ask}</td>
+                    <td className="p-4 align-top leading-6 text-muted-foreground">
+                      {row.council}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section
+        className="mx-auto max-w-5xl px-5 py-14"
+        aria-labelledby="first-engagement"
+      >
+        <h2 id="first-engagement" className="text-3xl font-bold">
+          A practical first engagement
+        </h2>
+        <ol className="mt-7 grid gap-5 sm:grid-cols-2">
+          {[
+            [
+              "Name the decision",
+              "Identify the system, workflow or claim, and the question the evidence should help answer.",
+            ],
+            [
+              "Inspect existing evidence",
+              "Read the relevant published records and methods. Identify missing evidence and any source or data-use permissions.",
+            ],
+            [
+              "Agree the work",
+              "Set the scope, responsible people, deliverables, acceptance criteria, timing and commercial terms.",
+            ],
+            [
+              "Receive and review",
+              "Check the delivered records and findings against the agreed scope, including unresolved questions and limits.",
+            ],
+          ].map(([title, text], index) => (
+            <li key={title} className="rounded-lg border p-5">
+              <h3 className="font-semibold">
+                {index + 1}. {title}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {text}
+              </p>
+            </li>
+          ))}
+        </ol>
+        <p className="mt-6 leading-7 text-muted-foreground">
+          Integration and delivery time depend on the agreed scope and
+          environment. A published interface does not establish a migration time
+          or a support commitment.
+        </p>
+      </section>
+
+      <section
+        className="bg-muted/40 px-5 py-14"
+        aria-labelledby="common-questions"
+      >
+        <div className="mx-auto max-w-4xl">
+          <h2 id="common-questions" className="text-3xl font-bold">
+            Questions before you begin
+          </h2>
+          <div className="mt-7 space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold">
+                What is free, and what can be commissioned?
+              </h3>
+              <p className="mt-2 leading-7 text-muted-foreground">
+                Public measurements, verification and learning material are open
+                to inspect. Defined evidence work is agreed separately.
+                Supported metered endpoints state their current terms in the
+                endpoint response; check the named service before ordering.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">
+                Can this work with an existing stack?
+              </h3>
+              <p className="mt-2 leading-7 text-muted-foreground">
+                Start with the{" "}
+                <Link href="/connect" className="underline underline-offset-4">
+                  documented HTTP, MCP and A2A routes
+                </Link>
+                . Assess the specific connector, data flow, permissions and
+                operational responsibility before production use.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">
+                Are all Charter proposals operating services?
+              </h3>
+              <p className="mt-2 leading-7 text-muted-foreground">
+                No. The 33-seat Council is a design, and the Prosperity Fund is
+                a proposal. Neither establishes an operating review network,
+                available fund payments, a job marketplace or staffed global
+                incident monitoring. Published measurements and tools have their
+                own evidence and status.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">
+                How is evidence reuse handled?
+              </h3>
+              <p className="mt-2 leading-7 text-muted-foreground">
+                Check the licence for the exact component or dataset. For
+                commissioned work, agree access, retention, export,
+                confidentiality and publication terms before sharing material.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Evidence — signed artefacts, not testimonials */}
-      <section className="py-16 bg-muted/50">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl font-bold mb-4">We Show, We Don't Tell</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Every number below traces to a signed, verifiable artefact
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto"
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-          >
-            {testimonials.map((testimonial, index) => (
-              <motion.div key={index} variants={fadeInUp}>
-                <Card className="h-full">
-                  <CardContent className="pt-6">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
-                        <span className="font-semibold text-sm text-primary">
-                          {testimonial.avatar}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-sm">{testimonial.name}</p>
-                        <p className="text-xs text-muted-foreground">{testimonial.role}</p>
-                      </div>
-                    </div>
-                    <p className="text-muted-foreground italic mb-3">"{testimonial.quote}"</p>
-                    <p className="text-xs font-semibold text-primary">{testimonial.company}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Easy to Get Started */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl font-bold mb-4">Easy to Get Started</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Switch from traditional tools to CSOAI in minutes, not months
-            </p>
-          </motion.div>
-
-          <div className="max-w-4xl mx-auto grid md:grid-cols-4 gap-6 relative">
-            {/* Connecting line */}
-            <div className="hidden md:block absolute top-20 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary to-emerald-500 -z-10" />
-
-            {[
-              {
-                number: "1",
-                title: "Import Data",
-                description: "Bring your AI systems and compliance data from existing tools",
-              },
-              {
-                number: "2",
-                title: "Map Frameworks",
-                description: "Automatically map to EU AI Act, NIST RMF, and 40+ regulations",
-              },
-              {
-                number: "3",
-                title: "Request a Measurement",
-                description: "Run a scoped review and retain its dated result",
-              },
-              {
-                number: "4",
-                title: "Expand Globally",
-                description: "Extend compliance coverage across all your operating regions",
-              },
-            ].map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="text-center relative z-10 bg-card">
-                  <CardContent className="pt-6">
-                    <div className="h-12 w-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-4">
-                      {step.number}
-                    </div>
-                    <h3 className="font-bold mb-2">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground">{step.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            className="mt-12 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <p className="text-muted-foreground mb-6">
-              Average migration time: <span className="font-semibold text-foreground">2-4 weeks</span>
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link href="/compare">
-                <Button variant="outline">
-                  <Briefcase className="h-4 w-4 mr-2" />
-                  View Migration Guide
-                </Button>
-              </Link>
-              <Link href="/start">
-                <Button>
-                  <ArrowRight className="h-4 w-4 mr-2" />
-                  Talk to Migration Team
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-16 bg-muted/50">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl font-bold mb-4">Common Questions</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Answers to help you decide if CSOAI is right for your organization
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="max-w-3xl mx-auto space-y-4"
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-          >
-            {[
-              {
-                q: "How does CSOAI integrate with existing GRC tools?",
-                a: "CSOAI offers REST APIs and pre-built integrations with popular GRC platforms. We work alongside your existing stack rather than replacing it entirely.",
-              },
-              {
-                q: "What does it cost to start?",
-                a: "Nothing. Verification is free and there is no tier to sit in — training materials and the community watchdog reports are open. Where a route is metered it is x402, and the amount is quoted at the 402 itself, never on a page.",
-              },
-              {
-                q: "What's included in the Prosperity Fund?",
-                a: "The Prosperity Fund pools revenues to provide UBI-style payments to Academy-trained analysts, create job opportunities, and support research in AI safety.",
-              },
-              {
-                q: "How is CSOAI different from hiring consultants?",
-                a: "CSOAI publishes dated measurements and evidence workflows across its published mappings. Continuous monitoring and legal-compliance automation are not currently offered.",
-              },
-              {
-                q: "Is the Council approach proven?",
-                a: "Multi-agent review mechanisms are established research patterns. Our 33-seat council is a design for reviewable decisions; it is not live, and the latest experiment was fully correlated, so fault tolerance remains unproven.",
-              },
-              {
-                q: "What happens to our data if we leave?",
-                a: "You can export all your data in standard formats. We maintain complete data portability and transparency about how your information is stored.",
-              },
-            ].map((item, index) => (
-              <motion.div key={index} variants={fadeInUp}>
-                <Card>
-                  <CardContent className="pt-6">
-                    <h3 className="font-semibold mb-2">{item.q}</h3>
-                    <p className="text-sm text-muted-foreground">{item.a}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary/10 to-emerald-500/10">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="max-w-3xl mx-auto text-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-4xl font-bold mb-4">Ready to Transform Your AI Governance?</h2>
-            <p className="text-xl text-muted-foreground mb-8">
-              Join organizations worldwide who've chosen CSOAI for its comprehensive, global, and
-              care-based approach to AI safety.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link href="/signup">
-                <Button size="lg" className="px-8">
-                  Start Your Free Trial
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/demo">
-                <Button variant="outline" size="lg" className="px-8">
-                  Schedule a Demo
-                </Button>
-              </Link>
-              <Link href="/start">
-                <Button variant="ghost" size="lg" className="px-8">
-                  Contact Sales
-                </Button>
-              </Link>
-            </div>
-            <p className="text-sm text-muted-foreground mt-8">
-              No card, no account, no tier. Free includes training, the measurement credential path, and
-              watchdog access.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Trust Indicators */}
-      <section className="py-12 bg-muted/50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            <motion.div
-              className="grid md:grid-cols-5 gap-6 text-center"
-              variants={staggerContainer}
-              initial="initial"
-              animate="animate"
-            >
-              {[
-                { label: "40+ Nations", icon: Globe },
-                { label: "33-seat council (design)", icon: Users },
-                { label: "Open Standards", icon: GitBranch },
-                { label: "Free Training", icon: BookOpen },
-                { label: "Job Marketplace", icon: Award },
-              ].map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <motion.div key={index} variants={fadeInUp}>
-                    <div className="p-4">
-                      <Icon className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <p className="text-sm font-semibold">{item.label}</p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          </div>
+      <section className="mx-auto max-w-4xl px-5 py-14">
+        <h2 className="text-3xl font-bold">Bring one evidence question</h2>
+        <p className="mt-4 leading-7 text-muted-foreground">
+          Start with a public example, or tell us what decision your
+          organisation needs to make. The services page explains the existing
+          enquiry routes and the scope to agree.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link href="/quickstart">
+            <Button variant="outline">Try the public workflow</Button>
+          </Link>
+          <Link href="/services">
+            <Button>
+              Explore services <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
         </div>
       </section>
     </div>

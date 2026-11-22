@@ -1,0 +1,11 @@
+# Completion candidate — public route and semantic acceptance
+
+The named research Preview and a separate Version URL both returned404/1042 before the application. Production deployments of the isolated csoai-process-replay Worker were empty. Official current docs require applying Preview URL settings through deploy; a separate issue reports the same zero-base-deployment symptom, but automated upstream triage did not reproduce it. The root cause is not established.
+
+Next bounded experiment: deploy a deny-all base version for **only csoai-process-replay**, with workers_dev=false, routes=[], preview_urls=true and no bindings, then read the existing Preview URLs again. This creates a base deployment record for the isolated research Worker, not a councilof.ai/csoai-site release. Its base script has no model/data and always503. The production hostname must remain disabled. If Preview routing still fails, retain the failure; do not enable production traffic or change account/zone security controls.
+
+A separate proven verifier gap was reproduced against the exact earlier Python client: self-hashed responses claiming the correct row count but containing an empty outputs array could be labelled CROSS_RUNTIME_PARITY_PASSED with zero actual compared rows. Existing historical runs explicitly compared560rows and are not invalidated by this simulated probe. The new strict response contract rejects the gap and40negative cases, binds exact result cardinality and research metadata, and validates all outputs against local pinned references. No model weights or numerical core change.
+
+Complete acceptance needs a public endpoint response, current source/model pins, raw-byte response digest, exact input binding, complete row/vector verification, refusal/recovery and consumer-source readback. A deployment receipt alone is insufficient. The research deadline remains12November2026 00:00UTC; this is not a permanent production service.
+
+Official sources inspected11November2026: https://developers.cloudflare.com/workers/previews/custom-domains/ and https://developers.cloudflare.com/workers/versions-and-deployments/version-urls/ . Upstream issue: https://github.com/cloudflare/developer-platform/issues/81 .

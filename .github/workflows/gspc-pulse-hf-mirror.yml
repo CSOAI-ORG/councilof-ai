@@ -1,0 +1,40 @@
+name: GSPC Pulse Hugging Face dataset mirror
+
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gspc-pulse-hf-mirror
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout public GSPC pulse source
+        uses: actions/checkout@v4
+        with:
+          repository: CSOAI-ORG/gspc-pulse
+          ref: main
+          path: gspc-pulse
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install mirror dependencies
+        run: python -m pip install --disable-pip-version-check --quiet cryptography pyyaml huggingface_hub
+      - name: Validate signed prefix, feed consistency and Dataset Viewer configs
+        working-directory: gspc-pulse
+        run: python ci/hf_dataset_mirror.py --check
+      - name: Publish only when the public source revision changes
+        working-directory: gspc-pulse
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: python ci/hf_dataset_mirror.py --publish

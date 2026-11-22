@@ -60,9 +60,9 @@ const INSTRUMENTS = coverage.instruments.map((i: { name: string }) => i.name);
 
 export const PREDICATE_HERO = {
   kicker: "The method — from statute to predicate",
-  title: "A law is prose. A test has to be a boolean.",
+  title: "From legal text to a reproducible test",
   lede:
-    "Between a published provision and a score there is a step most assurance skips: turning legal text into something a stranger can run and get the same answer. This page shows that step in full — the frozen corpus it starts from, the structure it is cut into, the boolean it ends as, and the signed record it produces.",
+    "This page explains how a versioned provision is mapped to a scoped, reproducible test: the source corpus, structured interpretation, scoring rule and resulting record. The mapping requires review; a test result is not a legal determination.",
   bg: {
     src: "/images/method/foundry.webp",
     alt: "A block of stone split by a green beam, a machined channel revealed inside it",
@@ -78,7 +78,7 @@ export const PREDICATE_SLIDES: Slide[] = [
     kicker: "Design law 1",
     title: "The verdict comes from a deterministic predicate. Never a vote. Never a model.",
     body:
-      "This is the rule the rest of the pipeline exists to serve. A human-in-the-loop audit varies by assessor and by mood; a language model asked to grade another language model varies by temperature and cannot show its working. Neither can be recomputed by someone who does not trust us — which makes both useless as evidence. A predicate can be handed to a stranger, run, and checked against our answer.",
+      "A fixed scoring rule makes the same inputs reproducible for another reviewer. Human review remains important for the interpretation, scope and suitability of that rule. Model-based and human assessments answer different questions and should disclose their methods and limitations; they are not interchangeable with deterministic scoring.",
     points: [
       { tag: "pain", text: "An assessor's opinion cannot be re-run by the person relying on it" },
       { tag: "pain", text: "A model grading a model inherits the grader's failure modes silently" },
@@ -90,7 +90,7 @@ export const PREDICATE_SLIDES: Slide[] = [
     kicker: "The raw material",
     title: "We do not invent rules. We parse frozen ones.",
     body:
-      `The corpus is a frozen manifest of ${CORPUS.provisions} published provisions from ${INSTRUMENTS.length} EU instruments: ${INSTRUMENTS.join(", ")}. Each provision is pinned by the SHA-256 of its frozen text, under one root anyone can recompute. The source text bytes behind those hashes were not recovered, so the manifest is a set of pinned hashes, not yet an inspectable legal text; frameworks such as NIST AI RMF and ISO/IEC 42001 are mapped in crosswalks, not held in it. The board those predicates feed publishes both a slot count and a measured count, read live from /api/gspc and never typed into this page.`,
+      `The corpus is a frozen manifest of ${CORPUS.provisions} published provisions from ${INSTRUMENTS.length} EU instruments: ${INSTRUMENTS.join(", ")}. Each provision is pinned by the SHA-256 of its frozen text, under one root anyone can recompute. ${CORPUS.source_texts ? `The source texts behind those hashes are published at ${CORPUS.source_texts.path} and regenerate ${CORPUS.source_texts.hashes_reproduced} of ${CORPUS.provisions} hashes, so the text can be read; reading it is not measuring it` : "The source text bytes behind those hashes were not recovered, so the manifest is a set of pinned hashes, not yet an inspectable legal text"}; frameworks such as NIST AI RMF and ISO/IEC 42001 are mapped in crosswalks, not held in it. The board those predicates feed publishes both a slot count and a measured count, read live from /api/gspc and never typed into this page.`,
     points: [
       { tag: "benefit", text: `${CORPUS.provisions} frozen provision hashes, frozen ${CORPUS.frozen_at.slice(0, 10)}, coverage counted at /mechanism/` },
       { tag: "pain", text: "No watcher is built yet: a change to a provision is not detected automatically, so nothing expires on its own" },
@@ -159,5 +159,5 @@ export const PREDICATE_RELATED = [
   { href: "/methodology", label: "The method in full", what: "Determinism, n≥30, and why no model ever judges another." },
   { href: "/metrology", label: "The metrology apparatus", what: "The procedural-environment doctrine — published as design, not as shipped." },
   { href: "/gspc-verify", label: "Verify a card", what: "Run the chain yourself, in your browser, with no account." },
-  { href: "/honesty", label: "The honesty gate", what: "Where our own fine-tunes lose our own arena, published in full." },
+  { href: "/honesty", label: "Measurement scope and limitations", what: "Internal model evaluation results, source records and measurement limits." },
 ];

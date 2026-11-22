@@ -1,0 +1,188 @@
+name: Interop Index Drift
+# The published interop index (/interop/file-index.json) is a MEASUREMENT of the corpus it
+# names: every path under /interop/, with its size, its sha256 and how it is served. Two
+# things make it drift. The corpus carries auto-generated daily snapshots (watchdog-intake,
+# x402-trust, mcp-trust/latest.json, hf-census, the stablecoin-deep mirrors), and nothing
+# enforced the builder's own rule — "regenerate and commit the index in the SAME pull request
+# that changes the corpus".
+#
+# MEASURED 2026-11-07: between source_commit 86cf30bb (2026-11-06T07:17Z) and master
+# (2026-11-07T03:05Z, 19.8 h) 128 of 16,340 rows had drifted — about 6.5 rows an hour. Eleven
+# published files were not named in the index AT ALL, and 117 carried a digest the site no
+# longer served. One of those 117 was /interop/ots/manifest.json: the SAME byte count
+# (226,387 B) with a different digest, which a size-based check cannot see.
+#
+# WHY THIS DOES NOT BLOCK A PULL REQUEST. A rule that fails when the corpus moved would be red
+# on master constantly, because the corpus churns on almost every merge — and a gate that
+# cries wolf protects nothing. So this measures and REPORTS, into one issue, and never fails a
+# pull request. The repair belongs in the PRODUCER: regenerate the index and its derived files.
+# The owner's open ruling (grammar or scheduled rebuild) decides who does that and when; this
+# workflow makes the drift visible with a number on it in the meantime.
+#
+# ABSENCE IS A STATE. The index can be missing, unreadable or unmeasurable. Each is reported as
+# itself and never as "no drift": a check that cannot see must say so rather than pass.
+
+on:
+  schedule:
+    - cron: "41 5 * * *"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "public/interop/**"
+      - "scripts/build-interop-file-index.py"
+      - ".github/workflows/interop-index-drift.yml"
+
+concurrency:
+  group: interop-index-drift-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  interop-index-drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Measure the corpus and compare it with the committed index
+        id: measure
+        run: |
+          # GitHub runs a `run:` block with `bash -e`, so a non-zero exit ABORTSS the step.
+          # The measurement's exit code IS its result -- aligned is 0, drifted is 1 -- so it
+          # must be CAPTURED, not fatal. (This workflow failed its own first run for exactly
+          # this reason, which is the estate's own lesson applied to my own gate.)
+          set -uo pipefail
+          set +e
+          python3 scripts/build-interop-file-index.py --check \
+            public/interop public/interop/file-index.json scripts/deploy-exclusions.json \
+            > drift.txt 2>&1
+          RC=$?
+          set -e
+          cat drift.txt
+          echo "rc=$RC" >> "$GITHUB_OUTPUT"
+
+          # The producer prints ONE verdict line and exits 0, 1 or 2 with it:
+          #   exit 0  "...the committed index matches (N rows)."
+          #   exit 1  "...the committed index is STALE — K row(s) differ:", then either
+          #           "  <row count A vs B>" (A rows in the index, B in the corpus, not itemised)
+          #           or the K paths that differ
+          #   exit 2  MISSING / UNREADABLE: it could not measure
+          # Until 2026-11-16 this step looked for a line starting "check: ", which the producer has
+          # never printed. So every run recorded state=unknown, and the comment on a pull request
+          # said the drift "could not be MEASURED" while the log beside it carried the measurement.
+          # UNKNOWN is still a state and not a zero: it is kept for the runs that truly cannot see.
+          MATCH="$(sed -n 's/^build-interop-file-index: the committed index matches (\([0-9]*\) rows).*/\1/p' drift.txt | head -1)"
+          STALE="$(sed -n 's/^build-interop-file-index: the committed index is STALE[^0-9]*\([0-9]*\) row(s) differ.*/\1/p' drift.txt | head -1)"
+          COUNTS="$(sed -n 's/^ *<row count \([0-9]*\) vs \([0-9]*\)>.*/\1 \2/p' drift.txt | head -1)"
+          if [ "$RC" = "0" ] && [ -n "$MATCH" ]; then
+            state=aligned; corpus="$MATCH"; published="$MATCH"; added=0; removed=0; changed=0
+            headline="the index describes the corpus, $MATCH rows"
+          elif [ "$RC" = "1" ] && [ -n "$STALE" ] && [ -n "$COUNTS" ]; then
+            # Different row counts: the producer names the two counts and does not itemise the rows.
+            state=drifted; published="${COUNTS% *}"; corpus="${COUNTS#* }"
+            added="not itemised"; removed="not itemised"; changed="not itemised"
+            headline="the index names $published rows, the corpus has $corpus"
+          elif [ "$RC" = "1" ] && [ -n "$STALE" ]; then
+            # Same row count: each listed row differs in digest, size or route, or is absent from the other set.
+            state=drifted; published=unknown; corpus=unknown
+            added="not itemised"; removed="not itemised"; changed="$STALE"
+            headline="$STALE row(s) differ"
+          else
+            state=unknown; corpus=unknown; published=unknown; added=unknown; removed=unknown; changed=unknown
+            headline="drift could not be measured"
+            echo "::warning::the index drift check printed no verdict it could read (exit $RC) — the state is unknown, not zero"
+          fi
+          echo "state=$state" >> "$GITHUB_OUTPUT"
+          echo "corpus=$corpus" >> "$GITHUB_OUTPUT"
+          echo "published=$published" >> "$GITHUB_OUTPUT"
+          echo "added=$added" >> "$GITHUB_OUTPUT"
+          echo "removed=$removed" >> "$GITHUB_OUTPUT"
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          echo "headline=$headline" >> "$GITHUB_OUTPUT"
+
+      - name: Report the drift into one issue
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATE: ${{ steps.measure.outputs.state }}
+          CORPUS: ${{ steps.measure.outputs.corpus }}
+          PUBLISHED: ${{ steps.measure.outputs.published }}
+          ADDED: ${{ steps.measure.outputs.added }}
+          REMOVED: ${{ steps.measure.outputs.removed }}
+          CHANGED: ${{ steps.measure.outputs.changed }}
+          HEADLINE: ${{ steps.measure.outputs.headline }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- interop-index-drift -->"
+          # Until 2026-11-16 the BODY line below closed its quotes in the wrong order -- `'no output'))"`
+          # instead of `'no output')")"` -- so bash refused the whole step ("line 19: unexpected EOF
+          # while looking for matching `)'", exit 2) and this workflow never filed its issue: red on
+          # every scheduled run since it was added, for a reason that was not drift.
+          if [ "$STATE" = "unknown" ]; then
+            TITLE="interop index: drift could not be measured (state: unknown)"
+          else
+            TITLE="interop index: ${HEADLINE} (state: ${STATE})"
+          fi
+          BODY="$(printf '%s\n\n_Measured by `.github/workflows/interop-index-drift.yml` on %s at %s (%s)._\n\nThe published index `/interop/file-index.json` is a measurement of the corpus under `/interop/`. This run compared the corpus with the index committed beside it.\n\n| | rows |\n|---|---:|\n| corpus | %s |\n| published index | %s |\n| added (in the corpus, not named in the index) | %s |\n| removed (named in the index, not in the corpus) | %s |\n| changed (named with a digest that no longer matches) | %s |\n\nState: **%s**.\n\n```\n%s\n```\n\nThe repair belongs in the PRODUCER: regenerate the index and its derived files with `python3 scripts/build-interop-file-index.py --check public/interop public/interop/file-index.json scripts/deploy-exclusions.json` and commit both together. The digests are of the bytes AS PUBLISHED. Without a built tree the producer asks the injector what it would write for each HTML page, which is the same transform the build uses; with a built tree it reads the built file. Either way the comparison is faithful. `UNCHECKABLE` is what it says only if the injector itself cannot be run. The measurement never certifies the corpus; it only says whether the index still describes it.\n' "$MARKER" "$(date -u +%FT%TZ)" "$GITHUB_REF" "${GITHUB_SHA:0:12}" "$CORPUS" "$PUBLISHED" "$ADDED" "$REMOVED" "$CHANGED" "$STATE" "$(cat drift.txt 2>/dev/null || echo 'no output')")"
+
+          NUM="$(gh issue list --state open --limit 100 --json number,body \
+                  --jq "map(select(.body != null and (.body | contains(\"$MARKER\")))) | .[0].number // empty" || true)"
+          if [ -n "$NUM" ]; then
+            gh issue edit "$NUM" --title "$TITLE" --body "$BODY"
+            echo "refreshed issue #$NUM -> $TITLE"
+          else
+            gh issue create --title "$TITLE" --body "$BODY" || true
+            echo "opened the drift issue"
+          fi
+
+      - name: Say what drifted on the pull request (never blocks it)
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATE: ${{ steps.measure.outputs.state }}
+          ADDED: ${{ steps.measure.outputs.added }}
+          REMOVED: ${{ steps.measure.outputs.removed }}
+          CHANGED: ${{ steps.measure.outputs.changed }}
+          HEADLINE: ${{ steps.measure.outputs.headline }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- interop-index-drift-comment -->"
+          if [ "$STATE" = "unknown" ]; then
+            BODY="$(printf '%s\n\nThe drift between the published interop index and the corpus under `/interop/` could not be MEASURED (state: unknown). An unmeasured state is not a clean one: the measurement is in the workflow log.\n' "$MARKER")"
+            NUM="$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+                    --jq "map(select(.body != null and (.body | contains(\"$MARKER\")))) | .[0].id // empty" | head -1 || true)"
+            if [ -n "$NUM" ]; then
+              gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$NUM" -f body="$BODY" > /dev/null
+              echo "refreshed comment $NUM"
+            else
+              gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$BODY" > /dev/null
+              echo "commented on #$PR"
+            fi
+            exit 0
+          fi
+          BODY="$(printf '%s\n\nThe published interop index and the corpus under `/interop/` disagree: **%s** (state: %s).\n\nRegenerating the index and its derived files in this same pull request clears it:\n\n```bash\npython3 scripts/build-interop-file-index.py public/interop public/interop/file-index.json scripts/deploy-exclusions.json\n```\n\nThis comment does not block the pull request: the corpus carries auto-generated daily snapshots, so a blocking rule would be red on master constantly. The measurement is in the workflow log.\n' "$MARKER" "$HEADLINE" "$STATE")"
+
+          if [ "$STATE" = "aligned" ]; then
+            echo "the index describes the corpus — nothing to say"
+            exit 0
+          fi
+          NUM="$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+                  --jq "map(select(.body != null and (.body | contains(\"$MARKER\")))) | .[0].id // empty" | head -1 || true)"
+          if [ -n "$NUM" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$NUM" -f body="$BODY" > /dev/null
+            echo "refreshed comment $NUM"
+          else
+            gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$BODY" > /dev/null
+            echo "commented on #$PR"
+          fi

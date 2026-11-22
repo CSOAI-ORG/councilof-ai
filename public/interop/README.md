@@ -14,6 +14,7 @@ root-as-index. Not a second board, second scorer, or TS.
 
 | Bank | Path | Surface | Role |
 | --- | --- | --- | --- |
+| Machine-readable file index | [`file-index.json`](./file-index.json) | (index) | Every file under `public/interop/` with its path, its size, its sha256 and how it is served — the Pages build, or the evidence mirror for the four directories that leave it. The index carries its own file count and as_of. |
 | Regulatory open doors | [`regulatory-open-doors-2026-09/`](./regulatory-open-doors-2026-09/) | `public.notice` | Official-source registry of consultations, application windows and open-source contribution routes. Presence is not participation, endorsement or approval; every route is rechecked before submission. |
 | Financial market universe gap map | [`market-universe-2026-09/`](./market-universe-2026-09/) | (discovery index) | Public directory counts + explicit CSOAI gaps across DeFi, DEXs, lending, yields, derivatives, bridges, NFTs, exchanges, payments and controls. `INDEXED` is not `MEASURED`. |
 | Route Receipt open door | [`/route-receipts`](https://councilof.ai/route-receipts) · [`route-receipt.schema.json`](./route-receipt.schema.json) · [`route-receipt.synthetic.example.json`](./route-receipt.synthetic.example.json) | `csoai.route-receipt/0.1` | Vendor-neutral declared-vs-observed orchestration evidence. The example is synthetic and unsigned; no partnership implied. |

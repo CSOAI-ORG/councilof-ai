@@ -1,9 +1,9 @@
 import { Link, useLocation } from 'wouter';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Search, Award, MessageSquareText } from 'lucide-react';
 // Signed-in only, and it pulls the tRPC notification client: loaded on demand, not in every first paint.
 const NotificationCenter = lazy(() => import('@/pages/NotificationCenter').then((m) => ({ default: m.NotificationCenter })));
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSiteChromeHidden } from '@/lib/osChrome';
 import {
@@ -32,6 +32,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const mobileTriggerRef = useRef<HTMLButtonElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hideChrome = useSiteChromeHidden();
 
@@ -73,6 +74,17 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [activeDropdown]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setMobileMenuOpen(false);
+      mobileTriggerRef.current?.focus();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     setActiveDropdown(null);
@@ -248,14 +260,14 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
           <div className="2xl:hidden flex shrink-0 items-center gap-2">
             <button type="button" onClick={() => openAsk()} className="inline-flex min-h-10 items-center gap-1 rounded-lg px-2 text-sm font-semibold text-emerald-900 hover:bg-muted" aria-label="Ask about the results" data-testid="ask-launcher-mobile"><MessageSquareText className="h-5 w-5" aria-hidden="true" /><span className="sr-only sm:not-sr-only">Ask</span></button>
             <button type="button" onClick={() => openPalette()} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label="Search pages and ask"><Search className="h-5 w-5" aria-hidden="true" /></button>
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}>
+            <button ref={mobileTriggerRef} type="button" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 text-muted-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600" aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'} aria-expanded={mobileMenuOpen} aria-controls="mobile-site-navigation">
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
 
         {mobileMenuOpen && (
-          <div className="2xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div id="mobile-site-navigation" className="2xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="space-y-1">
               <a href="/" className={`block px-4 py-3 rounded-lg font-medium ${
                 location === '/' ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'

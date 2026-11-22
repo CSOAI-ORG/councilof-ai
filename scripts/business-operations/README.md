@@ -57,14 +57,24 @@ boundary is changed. Monitoring the pod from outside remains necessary to detect
 pod or scheduler downtime.
 
 `indexes.py` reuses the monorepo's `scripts/interop/x402-bazaar-audit.py` reader,
-shipped with the installed release and included in its hash manifest. It walks
-both PayAI and Coinbase CDP through their advertised totals, comparing observed
+shipped with the installed release and included in its hash manifest. By default the collector walks PayAI only through its advertised total, comparing observed
 entries with the live x402 catalogue. Multi-page offset reads are mutable and do
 not prove absence; unseen routes stay indeterminate. An hourly cron checks whether a daily scan is due;
 failed scans retry no more than once per six hours, retain last-good results as
 historical, and have a 15-minute process timeout. No challenge, purchase, listing
-submission or upload is made. `indexes.json` records attempts and last-good
-observation separately. This does not classify index metadata as current or stale.
+submission or upload is made. The selection-specific `indexes-<hash>.json` records attempts and last-good
+observation separately; the business report reads the PayAI selection and reports unavailable until it exists. Legacy `indexes.json` is retained as historical state. This does not classify index metadata as current or stale.
+
+To scan only PayAI against the live catalogue without writing state:
+
+```sh
+python3 scripts/business-operations/indexes.py --state /tmp/csoai-observations --collect --index PayAI
+```
+
+Omit `--collect` to store this selected scan in a selection-specific state
+file. Selected scans cannot suppress the schedule or replace the historical
+result of another selected scan. The default uses selection-specific PayAI state, leaving earlier all-index state untouched. Index names are those exposed by the
+installed reader; repeat `--index` to select more than one.
 
 Source-change flags remain pending across later unchanged or failed reads. After
 reviewing the changed official text, an operator can clear that source's `changed`

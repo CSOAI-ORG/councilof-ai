@@ -26,6 +26,12 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { vscodeInstallAction } from "./vscode-install.mjs";
 import { cursorInstallAction } from "./cursor-install.mjs";
+import {
+  CAPTURE_PATH,
+  cardNote,
+  npmReleaseState,
+  stdioAdvertisement,
+} from "./npm-release-state.mjs";
 import { workingGroupKit } from "../working-groups/render-kit.mjs";
 import { charterKit } from "../charter-federation/render-kit.mjs";
 
@@ -66,18 +72,41 @@ const free = tools.filter((t) => t.payment === "free");
 const paid = tools.filter((t) => t.payment !== "free");
 const toolNames = tools.map((t) => t.id);
 
+// The fleet the door SERVES, read from the two definition files the door itself serves from. It is
+// read here (not at the point of use) because the npm stdio decision below compares the published
+// package's tool names against the fleet this render publishes — and every surface must compare
+// against the fleet IT serves, never against a number typed in prose.
+const SERVED_FREE_DEFS = readJson("functions/mcp/gspc-tools.json").tools;
+const SERVED_PAID_DEFS = readJson("functions/mcp/paid-tools.json").tools;
+const SERVED_FREE = SERVED_FREE_DEFS.map((t) => t.name);
+const SERVED_PAID = SERVED_PAID_DEFS.map((t) => t.name);
+const SERVED = [...SERVED_FREE, ...SERVED_PAID];
+
 const mcpServer = readJson("mcp/gspc-server/server.json");
 const REMOTE_VERSION = mcpServer.version;
 const npmPkg = (mcpServer.packages || []).find((p) => p.registryType === "npm");
 const NPM_ID = npmPkg.identifier;
 const NPM_VERSION = npmPkg.version;
-// T14 (6 Oct 2026): every published csoai-gspc-mcp release (0.1.1-0.2.2) is marked deprecated on npm
-// and carries fewer tools than the HTTP door, so the one-command stdio install led a developer to a
-// deprecated package with a different tool set. Until a non-deprecated release carries the SERVED tool
-// set, no discovery document advertises the stdio pin; each names the free door instead. Flip this to
-// true only after `npm view csoai-gspc-mcp@latest deprecated` prints nothing AND that release's
-// tools/list equals SERVED (scripts/harness-x/parity_live.py checks the second).
-const NPM_STDIO_ADVERTISED = false;
+// The stdio pin is WITHHELD or ADVERTISED by measurement, not by a typed constant.
+//
+// T14 (6 Oct 2026) withheld it by hand because every published csoai-gspc-mcp release then was
+// marked deprecated on npm. That observation aged: npm deprecates 0.1.0, 0.1.1, 0.2.0, 0.2.1 and
+// 0.2.2, and the estate's own later releases are not deprecated. So the typed reason became FALSE
+// while the decision stayed right for a different reason — the repository PREPARES 0.2.6 while npm's
+// latest published release is 0.2.5, so a pin at the prepared version would name a version nobody
+// can install, and the published tarball carries 53 tool names against the 54 the door serves.
+//
+// So the decision is now derived from the dated capture (distribution/npm/npm-publish-check.json,
+// written by scripts/harness-x/npm-publish-live.mjs) against the fleet THIS render serves:
+// advertised only when the prepared version IS the published one, npm does not mark that release
+// deprecated, and the release's tool names equal SERVED. When the estate publishes a release that
+// carries the served tool set, the pin appears by itself — no human has to notice a stale sentence.
+const NPM_STATE = npmReleaseState(readJson(CAPTURE_PATH));
+const NPM_ADVERTISEMENT = stdioAdvertisement(NPM_STATE, {
+  preparedVersion: NPM_VERSION,
+  doorTools: SERVED.length,
+});
+const NPM_STDIO_ADVERTISED = NPM_ADVERTISEMENT.advertise;
 const pyClientVersion = /^version\s*=\s*"([^"]+)"/m.exec(read("scripts/spray/pypi/csoai-gspc/pyproject.toml"))[1];
 const APACHE = read("scripts/spray/pypi/csoai-gspc/LICENSE");
 const layer0Version = readJson("packages/layer0-js/package.json").version;
@@ -151,6 +180,31 @@ emit("distribution/mcp-registry/ai.councilof-gspc/server.json", j({
   websiteUrl: ID.website,
   remotes: [{ type: "streamable-http", url: DOMAIN_REMOTE }],
   _meta: regMeta,
+}));
+// The free door's own name, ai.councilof/gspc-free. Its 1.4.3 and 1.4.4 were published from a
+// descriptor this renderer did not own, so the listing still said "14 free read-only tools" (read
+// 20 Nov 2026) while /mcp/free served 49. Rendered here, the count is the length of the definitions
+// the free door serves (functions/mcp/gspc-tools.json), like every other count. The remote is the
+// free door itself, which registers no payment tool; the same domain login publishes it.
+const FREE_REGISTRY_NAME = dist.registry_names.domain_free;
+if (!FREE_REGISTRY_NAME) throw new Error("council-os/distribution.json registry_names.domain_free is missing");
+const regFreeDescription = `${SERVED_FREE.length} free read-only tools: GSPC board, signed card and capsule verify, Merkle proofs, route.`;
+if (regFreeDescription.length > 100) throw new Error(`free registry description is ${regFreeDescription.length} chars; the 2025-12-11 schema allows 100`);
+emit("distribution/mcp-registry/ai.councilof-gspc-free/server.json", j({
+  $schema: mcpServer.$schema,
+  name: FREE_REGISTRY_NAME,
+  title: `${ID.short_name} (free)`,
+  description: regFreeDescription,
+  version: REMOTE_VERSION,
+  websiteUrl: ID.website,
+  remotes: [{ type: "streamable-http", url: FREE_DOOR }],
+  _meta: {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "ai.councilof/doctrine": DOCTRINE,
+      "ai.councilof/fleet": { free: SERVED_FREE, paid: [] },
+      "ai.councilof/generator": "scripts/harness-x/render.mjs from council-os/distribution.json",
+    },
+  },
 }));
 
 // ── 2. One plugin manifest, three platform flavours ─────────────────────────────────────────
@@ -1107,11 +1161,6 @@ if __name__ == "__main__":
 // compares exactly these fields with a live tools/list. The registry must name the same fleet; if it
 // does not, this render refuses rather than publish either version. The digest is the instrument's
 // own: sha256 of the sorted tool names joined by "\n".
-const SERVED_FREE_DEFS = readJson("functions/mcp/gspc-tools.json").tools;
-const SERVED_PAID_DEFS = readJson("functions/mcp/paid-tools.json").tools;
-const SERVED_FREE = SERVED_FREE_DEFS.map((t) => t.name);
-const SERVED_PAID = SERVED_PAID_DEFS.map((t) => t.name);
-const SERVED = [...SERVED_FREE, ...SERVED_PAID];
 const namesSha = (names) => sha256([...names].sort().join("\n"));
 const NAMES_SHA_RULE = 'sha256 of the tool names from tools/list, sorted, joined by "\\n" (UTF-8)';
 if (SERVED.join(",") !== toolNames.join(",") || SERVED_FREE.join(",") !== free.map((t) => t.id).join(",")) {
@@ -1131,7 +1180,12 @@ if (HTTP_VERSION !== REMOTE_VERSION) {
 }
 const SERVER_NAME = "csoai-gspc-mcp"; // serverInfo.name, as initialize answers it
 const stdio = NPM_STDIO_ADVERTISED ? `npx -y ${NPM_ID}@${NPM_VERSION}` : null;
-const STDIO_NOTE = `npm ${NPM_ID}: published releases are deprecated on npm and carry fewer tools; use the free door ${FREE_DOOR}`;
+const STDIO_NOTE = cardNote(NPM_STATE, {
+  npmId: NPM_ID,
+  freeDoor: FREE_DOOR,
+  doorTools: SERVED.length,
+  preparedVersion: NPM_VERSION,
+});
 const stdioFields = NPM_STDIO_ADVERTISED ? { stdio } : { stdio, stdio_note: STDIO_NOTE };
 const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} x402-metered evidence tools`;
 // The one tool-count sentence the site, /mcp and these documents share (fix #19). Array lengths.
@@ -1514,7 +1568,14 @@ ${LINKS}
 {
   const DF = "distribution/dify/gspc";
   const yq = (s) => JSON.stringify(s);
+  // MCP names retain their public spelling; only the local Python class is normalized.
+  // Hyphenated axis ids previously produced invalid class declarations in the archive.
   const cls = (n) => n.split(/[^A-Za-z0-9]+/).filter(Boolean).map(cap).join("") + "Tool";
+  const classNames = freeDefs.map((t) => cls(t.name));
+  if (classNames.some((name) => !/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) ||
+      new Set(classNames).size !== classNames.length) {
+    throw new Error("Dify tool names must produce valid, distinct Python class identifiers");
+  }
   const pyDoor = (name) => `"""GSPC ${name} for Dify. Generated by scripts/harness-x/render.mjs — do not hand-edit."""
 import json
 import urllib.request
@@ -1525,13 +1586,16 @@ from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 
 DOOR = ${yq(FREE_URL)}
+USER_AGENT = "csoai-gspc-dify (+https://councilof.ai/connect/)"
 
 
 class ${cls(name)}(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
         args = {k: v for k, v in tool_parameters.items() if v not in (None, "")}
         body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": ${yq(name)}, "arguments": args}}).encode()
-        req = urllib.request.Request(DOOR, data=body, headers={"content-type": "application/json", "accept": "application/json, text/event-stream"})
+        # An identifying User-Agent. urllib's default ("Python-urllib/3.x") is refused at the edge
+        # with HTTP 403 "error code: 1010" before the request reaches the door (measured 2026-11-16).
+        req = urllib.request.Request(DOOR, data=body, headers={"content-type": "application/json", "accept": "application/json, text/event-stream", "user-agent": USER_AGENT})
         with urllib.request.urlopen(req, timeout=60) as r:
             text = r.read().decode("utf-8")
         frames = [line[5:].strip() for line in text.splitlines() if line.startswith("data:")]
@@ -1698,6 +1762,12 @@ const STEPS = {
     "`mcp-publisher publish distribution/mcp-registry/ai.councilof-gspc/server.json`.",
     "CANONICAL NAME (owner ruling 2026-09-26). The live entry is remote-only; add the npm package to it only after an npm release that carries `mcpName: ai.councilof/gspc`.",
     `The remote is \`${DOMAIN_REMOTE}\` (the door plus one slash): the bare door is registered under the io.github name and the registry refuses one remote URL under two names. Publish a version above the registry's current isLatest; registry versions are immutable.`,
+  ],
+  "mcp-registry-domain-free": [
+    "The same login as mcp-registry-domain: `mcp-publisher login http --domain councilof.ai --private-key <64-hex Ed25519 seed>`.",
+    "`mcp-publisher publish distribution/mcp-registry/ai.councilof-gspc-free/server.json`.",
+    `The free door's own name, at the same version as mcp-registry-domain. The remote is \`${FREE_DOOR}\`, which serves the ${word(SERVED_FREE.length)} free tools and no payment tool. Publish a version above this name's current isLatest; registry versions are immutable.`,
+    `Read the exact version back: \`SERVER_JSON=distribution/mcp-registry/ai.councilof-gspc-free/server.json VER=${REMOTE_VERSION} EXPECTED_NAME=${FREE_REGISTRY_NAME} node scripts/mcp-registry-publish.cjs --check\` (exit 0 is an active match, is_latest reported separately; exit 2 is absent). A publish whose readback fails is unconfirmed (docs/operations/MCP-REGISTRY-PUBLICATION.md).`,
   ],
   "claude-plugin": [
     "Create a public repo on CouncilofAI-CSOAI (not CSOAI-ORG); copy distribution/plugin/ to its root.",
@@ -1926,12 +1996,14 @@ Generated by scripts/harness-x/render.mjs from council-os/distribution.json (tar
 - Schema: OASF ${OR.oasf.schema_version} (https://schema.oasf.outshift.com/schema/${OR.oasf.schema_version}/objects/record), validated by scripts/harness-x/check.mjs.
 - Evaluation module \`core/evaluation\` (102): pointers to signed evidence; no overall_rating, no overall_scores.
   Event-level modules are rendered by packages/evidence-fabric/render/oasf_eval.py.
-- Signature: each record has \`<name>.attestation.json\` beside it: a detached Ed25519 signature under
-  did:web:csoai.org#board-attestation-1 over an attestation that carries sha256(JCS(record)). Produce it with
-  \`node scripts/harness-x/sign-oasf.mjs --token-file <pod caller token>\`; check.mjs verifies both halves.
-  ADS's own signing (sigstore, \`dirctl sign\`) is done by the identity that pushes, at push time.
+- Signature: one combined \`public/oasf/attestation.json\` beside the records: a detached Ed25519 signature under
+  did:web:csoai.org#board-attestation-1 over an attestation that carries sha256(JCS(record)) and the version of each record.
+  Re-sign whenever a record version changes — \`node scripts/harness-x/sign-oasf.mjs --token-file <pod caller token>\`;
+  check.mjs reports STALE otherwise. ADS's own signing (sigstore, \`dirctl sign\`) is done by the identity that pushes, at push time.
 - Extends: ${OR.oasf.extends}.
-- Pushing to the public directory is an owner step (directory identity; federation joins by a merged PR). Nothing here is pushed.
+- Pushing to the public directory is an owner step (directory identity; federation joins by a merged PR). Nothing here is pushed;
+  the records above are served from ${ID.website} only. Publication decision, gated commands, and the readback that would prove
+  discovery: \`distribution/agntcy/PUBLISH-PLAN.md\`. Store ≠ announce ≠ discovery — stored-only records are never called published or connected.
 
 ${LINKS}
 

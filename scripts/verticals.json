@@ -1,0 +1,78 @@
+{
+  "schema": "csoai.verticals/0.1",
+  "note": "Industry vertical definitions: which measured GSPC axes each industry's buyers need. Sourced from CLAUDE_UNIFIED_CAPTURE_STRATEGY_20261104.md §4, which mines the estate's own plans (aquaculture ladder 2026-05-21, EU AI Act packs, board coverage). Axes are board slot names; unmeasured axes stay UNMEASURED in feeds.",
+  "updated": "2026-11-08",
+  "verticals": [
+    {
+      "id": "aquaculture",
+      "name": "Aquaculture & Fish Farming",
+      "audiences": ["koi keepers", "ornamental retailers", "fish farms", "RSPCA-assured farms", "retail-supplying farms"],
+      "axes": ["conformance", "care", "provenance", "provenance-controls", "company-practice", "claim-maintenance"],
+      "packs": ["EU AI Act Assessment Pack", "Growth Pack"],
+      "planned_ladder": "AQUACULTURE_STRIPE_PRODUCTS.json (Hobby £29 → Flagship £999/mo)"
+    },
+    {
+      "id": "ai-vendors",
+      "name": "AI Vendors & Model Publishers",
+      "audiences": ["model publishers", "AI startups", "API providers"],
+      "axes": ["governance", "safety", "claim-maintenance", "serving-fidelity", "harness-fidelity", "openness"],
+      "packs": ["Article 50 Transparency Kit", "EU AI Act Assessment Pack"]
+    },
+    {
+      "id": "fintech",
+      "name": "Financial Services & Fintech",
+      "audiences": ["neobanks", "exchanges", "payment processors"],
+      "axes": ["reserve-attestation", "continuity", "custody-disclosure", "regulatory-framework", "distribution-integrity"],
+      "packs": ["Finance / COBOL Bridge Pack"]
+    },
+    {
+      "id": "robotics",
+      "name": "Robotics & Embodied AI",
+      "audiences": ["robotics manufacturers", "warehouse operators", "humanoid deployers"],
+      "axes": ["machinery-conformity", "humanoid-deployment", "swarm", "labour-components", "humanoid-labour-index", "safety"],
+      "packs": ["EU AI Act Assessment Pack"]
+    },
+    {
+      "id": "care",
+      "name": "Health, Care & Education Tech",
+      "audiences": ["care platforms", "health tech", "edtech"],
+      "axes": ["care", "affect", "safety", "custody-disclosure"],
+      "packs": ["Article 50 Transparency Kit"]
+    },
+    {
+      "id": "media",
+      "name": "Media, Publishing & Supply Chain",
+      "audiences": ["publishers", "retailers", "logistics"],
+      "axes": ["provenance", "provenance-controls", "distribution-integrity", "detector-interop"],
+      "packs": ["Growth Pack"]
+    },
+    {
+      "id": "inference",
+      "name": "Inference & Hosting Providers",
+      "audiences": ["inference APIs", "GPU clouds", "hosting"],
+      "axes": ["harness-fidelity", "serving-fidelity", "interpretability-reproducibility", "continuity"],
+      "packs": ["EU AI Act Assessment Pack"]
+    },
+    {
+      "id": "research",
+      "name": "Research Labs & Auditors",
+      "audiences": ["AI labs", "audit firms", "universities"],
+      "axes": ["lab-practice", "measurer-integrity", "interpretability-reproducibility", "regulator-transparency", "labour-components"],
+      "packs": ["EU AI Act Assessment Pack", "Finance / COBOL Bridge Pack"]
+    },
+    {
+      "id": "security",
+      "name": "Security Operations",
+      "audiences": ["SOC teams", "security vendors", "red teams"],
+      "axes": ["watchdog-ingest", "jail", "art5-safeguard", "effect-binding"],
+      "packs": ["Article 50 Transparency Kit"]
+    },
+    {
+      "id": "regulated",
+      "name": "Regulated Industries (general)",
+      "audiences": ["legal", "compliance teams", "regulated firms"],
+      "axes": ["regulatory-framework", "art5-safeguard", "regulator-transparency", "ai-adoption-components", "company-practice", "conformance"],
+      "packs": ["EU AI Act Assessment Pack", "Article 50 Transparency Kit", "Finance / COBOL Bridge Pack", "Growth Pack"]
+    }
+  ]
+}

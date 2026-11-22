@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import ToolRunner from "./ToolRunner";
 import ToolReceiptsPane from "./ToolReceiptsPane";
+import ChecklistWorkbench from "./ChecklistWorkbench";
 import { FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { useSearch } from "wouter";
 
@@ -179,6 +180,12 @@ export default function DashboardToolsPane() {
           initialToolName={selectedTool}
           initialArguments={initialArguments}
         />
+        {/* The in-browser checklist workbench (U1, 2026-11-03): when the readiness tool is the
+            selected tool, offer the fetch/tick/seal flow beside the raw runner. It uses the same
+            door (callTool) and the same seal (/api/sign) — no second implementation. */}
+        {selectedTool === "framework_readiness" ? (
+          <ChecklistWorkbench framework={params.get("framework") || undefined} />
+        ) : null}
         {/* Your local run receipts (P5, 2026-11-02): the runner records each execution and this
             pane shows the log. A localStorage list, stated as not signed evidence on its face. */}
         <ToolReceiptsPane />

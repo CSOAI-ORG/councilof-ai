@@ -38,7 +38,7 @@
         "x402"
       ],
       "examples": [
-        "SendMessage with Part.data {\"skill\":\"receipts_batch\",\"input\":{}}",
+        "SendMessage with Part.data {\"skill\":\"receipts_batch\",\"input\":{\"from\":\"2026-11-01T00:00:00Z\",\"preview\":true}} (free preview; without preview it answers with the x402 challenge, and charges nothing until input.x_payment carries a payment)",
         "POST https://councilof.ai/mcp"
       ]
     }

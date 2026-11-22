@@ -332,7 +332,7 @@ function InsurersEvidencePack() {
             </p>
           </div>
           <div className="rounded-xl border border-emerald-600/15 bg-white p-5">
-            <p className="font-bold text-gray-900">The honesty gate</p>
+            <p className="font-bold text-gray-900">Measurement scope and limitations</p>
             <p className="mt-1 text-sm text-gray-600">
               At{" "}
               <Link
@@ -548,7 +548,7 @@ function InsurersEvidencePack() {
             The measurement/remediation firewall →
           </Link>
           <a
-            href="mailto:nicholas@csoai.org"
+            href="mailto:contact@csoai.org"
             className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50"
           >
             Talk to us about an evidence pack →
@@ -558,8 +558,8 @@ function InsurersEvidencePack() {
         <p className="mt-10 text-xs text-gray-600">
           Measurement, not certification. CSOAI Ltd · UK Companies House
           16939677 ·{" "}
-          <a href="mailto:nicholas@csoai.org" className="underline">
-            nicholas@csoai.org
+          <a href="mailto:contact@csoai.org" className="underline">
+            contact@csoai.org
           </a>
           . Every MEASURED number on this page is recomputable from{" "}
           <code>GET /api/gspc</code>; every REPORTED figure carries its source

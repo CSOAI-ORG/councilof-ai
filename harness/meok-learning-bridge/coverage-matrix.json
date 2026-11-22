@@ -1,0 +1,1243 @@
+{
+  "axes": [
+    {
+      "axis": "governance",
+      "kind": "model-comparison",
+      "bench": "GovBench",
+      "task": "EU AI Act risk-tier classification",
+      "reported_status": "MEASURED",
+      "reported_separation": "TIE",
+      "measurement_time": {
+        "note": "The source publishes day precision only. No midnight timestamp is invented.",
+        "observed_on": "2026-08-12",
+        "precision": "day",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "state": "DAY"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "finance-legacy",
+        "health-care",
+        "education-media",
+        "public-oversight"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "safety",
+      "kind": "model-comparison",
+      "bench": "DefBench",
+      "task": "calibrated refusal on paired requests",
+      "reported_status": "MEASURED",
+      "reported_separation": "TIE",
+      "measurement_time": {
+        "note": "The source publishes day precision only. No midnight timestamp is invented.",
+        "observed_on": "2026-08-12",
+        "precision": "day",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "state": "DAY"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "finance-legacy",
+        "health-care",
+        "robotics-industrial",
+        "critical-infrastructure",
+        "education-media"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "provenance",
+      "kind": "model-comparison",
+      "bench": "ProvBench",
+      "task": "Article 50 marking survival by validity",
+      "reported_status": "MEASURED",
+      "reported_separation": "TIE",
+      "measurement_time": {
+        "note": "The source publishes day precision only. No midnight timestamp is invented.",
+        "observed_on": "2026-08-12",
+        "precision": "day",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "state": "DAY"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "health-care",
+        "robotics-industrial",
+        "education-media"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "continuity",
+      "kind": "model-comparison",
+      "bench": "PQCBench",
+      "task": "post-quantum status of a cryptographic assumption",
+      "reported_status": "MEASURED",
+      "reported_separation": "TIE",
+      "measurement_time": {
+        "note": "The source publishes day precision only. No midnight timestamp is invented.",
+        "observed_on": "2026-08-12",
+        "precision": "day",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "state": "DAY"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "finance-legacy",
+        "critical-infrastructure",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "conformance",
+      "kind": "model-comparison",
+      "bench": "MCPBench",
+      "task": "MCP tool conformance",
+      "reported_status": "MEASURED",
+      "reported_separation": "TIE",
+      "measurement_time": {
+        "note": "The source publishes day precision only. No midnight timestamp is invented.",
+        "observed_on": "2026-08-12",
+        "precision": "day",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "state": "DAY"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "finance-legacy",
+        "critical-infrastructure",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "openness",
+      "kind": "model-comparison",
+      "bench": "OSSBench",
+      "task": "licence reasoning versus intended use",
+      "reported_status": "MEASURED",
+      "reported_separation": "TIE",
+      "measurement_time": {
+        "note": "The source publishes day precision only. No midnight timestamp is invented.",
+        "observed_on": "2026-08-12",
+        "precision": "day",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "state": "DAY"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "education-media",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "machinery-conformity",
+      "kind": "model-comparison",
+      "bench": "MachBench",
+      "task": "Machinery Reg self-evolving safety-function classification (PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION)",
+      "reported_status": "MEASURED",
+      "reported_separation": "UNTESTED",
+      "measurement_time": {
+        "note": "The source publishes day precision only. No midnight timestamp is invented.",
+        "observed_on": "2026-08-12",
+        "precision": "day",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "state": "DAY"
+      },
+      "industry_contexts": [
+        "robotics-industrial",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "care",
+      "kind": "model-comparison",
+      "bench": "CareBench",
+      "task": "care-cost (protect \u00d7 help) under paired conduct scenarios",
+      "reported_status": "MEASURED",
+      "reported_separation": "TIE",
+      "measurement_time": {
+        "note": "The source publishes day precision only. No midnight timestamp is invented.",
+        "observed_on": "2026-08-12",
+        "precision": "day",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "state": "DAY"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "health-care",
+        "education-media"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "cross-reality",
+      "kind": "model-comparison",
+      "bench": "XRAIV",
+      "task": "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
+      "reported_status": "MEASURED",
+      "reported_separation": "UNTESTED",
+      "measurement_time": {
+        "note": "The source publishes day precision only. No midnight timestamp is invented.",
+        "observed_on": "2026-08-12",
+        "precision": "day",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "state": "DAY"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "health-care",
+        "robotics-industrial"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "detector-interop",
+      "kind": "model-comparison",
+      "bench": "DetBench",
+      "task": "cross-detector watermark interoperability matrix",
+      "reported_status": "MEASURED",
+      "reported_separation": "UNTESTED",
+      "measurement_time": {
+        "note": "The source publishes day precision only. No midnight timestamp is invented.",
+        "observed_on": "2026-08-12",
+        "precision": "day",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "state": "DAY"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "education-media"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "art5-safeguard",
+      "kind": "model-comparison",
+      "bench": "Art5Bench",
+      "task": "EU AI Act Article 5 prohibited-practice trip",
+      "reported_status": "MEASURED",
+      "reported_separation": "UNTESTED",
+      "measurement_time": {
+        "note": "The source publishes day precision only. No midnight timestamp is invented.",
+        "observed_on": "2026-08-12",
+        "precision": "day",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "state": "DAY"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "health-care",
+        "education-media"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "swarm",
+      "kind": "model-comparison",
+      "bench": "SwarmBench v2b",
+      "task": "multi-agent coordination safety",
+      "reported_status": "MEASURED",
+      "reported_separation": "UNTESTED",
+      "measurement_time": {
+        "not_after": "2026-08-19T09:24:39.162060+00:00",
+        "note": "The active wave-2b card proves the measurement existed by this instant; it does not prove the run happened exactly then. Freshness must fail closed when that distinction matters.",
+        "precision": "instant-upper-bound",
+        "source": "/signed/cards/b44335819f7720966b41e2ee26f5798892b0eb8d2571c71e0c9090506f1ff823.json",
+        "source_field": "body.created",
+        "state": "NOT_AFTER"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "robotics-industrial",
+        "critical-infrastructure"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "affect",
+      "kind": "model-comparison",
+      "bench": "AffectBench",
+      "task": "emotional & embodied safety (manipulation / disclosure / vulnerability)",
+      "reported_status": "MEASURED",
+      "reported_separation": "UNTESTED",
+      "measurement_time": {
+        "note": "The source publishes day precision only. No midnight timestamp is invented.",
+        "observed_on": "2026-08-12",
+        "precision": "day",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "state": "DAY"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "health-care",
+        "education-media"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "jail",
+      "kind": "model-comparison",
+      "bench": "GoldBank-Detector",
+      "task": "escape-attempt detection on a 71-row gold bank of 27 distinct inputs (38 ESCAPE / 33 BENIGN rows) \u2014 layer 2 of 2",
+      "reported_status": "MEASURED",
+      "reported_separation": "UNTESTED",
+      "measurement_time": {
+        "note": "Gold-run timestamp carried by the published board record; later separation analysis does not refresh the measurement.",
+        "observed_at": "2026-08-18T03:22:16Z",
+        "precision": "instant",
+        "source": "/signed/board_living.json",
+        "source_field": "updated / gold_run",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "critical-infrastructure"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "effect-binding",
+      "kind": "deterministic-facts",
+      "bench": "EffectBench v0.1 (server probe)",
+      "task": "does authorization bind to the request the server executes, or only to the tool call the agent declared",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-09-22T05:43:05Z",
+        "precision": "instant",
+        "source": "/interop/effect-binding-server-probe-2026-09-22.signed.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "finance-legacy",
+        "health-care",
+        "robotics-industrial",
+        "critical-infrastructure",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "provenance-controls",
+      "kind": "deterministic-facts",
+      "bench": "ChainFacts",
+      "task": "on-chain issuer control facts (allowlisting / freeze capability / identity domain)",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "precision": "instant",
+        "source": "/interop/financial-measure-run-v2.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "finance-legacy"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "reserve-attestation",
+      "kind": "deterministic-facts",
+      "bench": "ReserveFacts",
+      "task": "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "precision": "instant",
+        "source": "/interop/financial-measure-run-reserve-attestation.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "finance-legacy"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "regulatory-framework",
+      "kind": "deterministic-facts",
+      "bench": "RegimeFacts",
+      "task": "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "precision": "instant",
+        "source": "/interop/financial-measure-run-regulatory-framework.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "finance-legacy"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "distribution-integrity",
+      "kind": "deterministic-facts",
+      "bench": "DistributionFacts",
+      "task": "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "precision": "instant",
+        "source": "/interop/financial-measure-run-distribution-integrity.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "finance-legacy"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "custody-disclosure",
+      "kind": "deterministic-facts",
+      "bench": "CustodyFacts",
+      "task": "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "precision": "instant",
+        "source": "/interop/financial-measure-run-custody-disclosure.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "finance-legacy"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "ai-adoption-components",
+      "kind": "deterministic-facts",
+      "bench": "Eurostat",
+      "task": "cited EU AI-adoption series (not an index)",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "precision": "instant",
+        "source": "/interop/financial-measure-run-ai-adoption-components.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "finance-legacy",
+        "public-oversight"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "labour-components",
+      "kind": "deterministic-facts",
+      "bench": "Eurostat",
+      "task": "cited EU labour series (not an index)",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "precision": "instant",
+        "source": "/interop/financial-measure-run-labour-components.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "finance-legacy",
+        "public-oversight"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "kind": "deterministic-facts",
+      "bench": "Disclosure",
+      "task": "named vendor publishes a dated deployment count on a stable URL? Y/N",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "precision": "instant",
+        "source": "/interop/financial-measure-run-humanoid-labour-index.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "robotics-industrial"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "lab-practice",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an AI lab publish its evaluations, safety framework and incident reports",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-10-28T04:25:30.845Z",
+        "precision": "instant",
+        "source": "/interop/axis-banks/lab-practice-20261102.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "public-oversight",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "company-practice",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does a non-lab AI company publish safety, evaluation, incident, model-card and contact material",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-10-28T04:25:30.845Z",
+        "precision": "instant",
+        "source": "/interop/axis-banks/company-practice-20261102.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "finance-legacy",
+        "health-care",
+        "robotics-industrial",
+        "critical-infrastructure",
+        "education-media",
+        "public-oversight"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "measurer-integrity",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an evaluation organisation publish methods, test sets, attestation and a reproduction route",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-10-28T04:25:30.845Z",
+        "precision": "instant",
+        "source": "/interop/axis-banks/measurer-integrity-20261102.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "public-oversight",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "harness-fidelity",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an evaluation harness pin its dependencies, publish a must-fail control, isolate execution and document reproduction",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-11-02T04:20:54.265Z",
+        "precision": "instant",
+        "source": "/interop/axis-banks/harness-fidelity-20261102.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "robotics-industrial",
+        "critical-infrastructure",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "interop-conformance",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an interoperability or standards group publish a schema, a wire binding, conformance vectors and a versioned spec",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-10-28T04:25:30.845Z",
+        "precision": "instant",
+        "source": "/interop/axis-banks/interop-conformance-20261102.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "critical-infrastructure",
+        "public-oversight",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "humanoid-deployment",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does a humanoid lab publish control, safety-limit, dexterity, hardware-bus and simulation material",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-10-28T04:25:30.845Z",
+        "precision": "instant",
+        "source": "/interop/axis-banks/humanoid-deployment-20261102.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "robotics-industrial"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "regulator-transparency",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "factual presence checks on public regulatory artefacts (guidance, consultation, enforcement, open data, contact route); no ratings",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-10-28T04:25:30.845Z",
+        "precision": "instant",
+        "source": "/interop/axis-banks/regulator-transparency-20261102.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "public-oversight"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "interpretability-reproducibility",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an interpretability group publish method, checkpoints, a reproducible notebook and peer-reviewed material",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-10-28T04:25:30.845Z",
+        "precision": "instant",
+        "source": "/interop/axis-banks/interpretability-reproducibility-20261102.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "claim-maintenance",
+      "kind": "measured-subject",
+      "bench": "claim-maintenance v0.2 re-read wave",
+      "task": "at each scheduled re-read, is a captured public claim still served unchanged, changed, withdrawn or unreachable; says nothing about whether the claim is true",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-10-28T06:05:00Z",
+        "precision": "instant",
+        "source": "/interop/claim-maintenance-wave-2026-10-28.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "finance-legacy",
+        "health-care",
+        "critical-infrastructure",
+        "education-media",
+        "public-oversight",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "serving-fidelity",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an inference runtime document sampling control, quantisation, KV/attention strategy, latency metrics and parallelism",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-10-28T04:25:30.845Z",
+        "precision": "instant",
+        "source": "/interop/axis-banks/serving-fidelity-20261102.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "robotics-industrial",
+        "critical-infrastructure",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    },
+    {
+      "axis": "watchdog-ingest",
+      "kind": "measured-subject",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does the subject offer a third party a documented route to report a problem, with a response commitment and a machine-readable path",
+      "reported_status": "MEASURED",
+      "reported_separation": null,
+      "measurement_time": {
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it.",
+        "observed_at": "2026-11-02T04:17:24.499Z",
+        "precision": "instant",
+        "source": "/interop/axis-banks/watchdog-ingest-20261102.json",
+        "source_field": "facts_as_of",
+        "state": "EXACT"
+      },
+      "industry_contexts": [
+        "ai-software",
+        "finance-legacy",
+        "health-care",
+        "robotics-industrial",
+        "critical-infrastructure",
+        "education-media",
+        "public-oversight",
+        "hardware-research"
+      ],
+      "full_axis_course_review": "NOT_ESTABLISHED",
+      "named_reviewer": "NOT_ASSIGNED",
+      "review_service_operating": false
+    }
+  ],
+  "industry_contexts": {
+    "ai-software": {
+      "actual_customer_or_partner": false,
+      "axes": [
+        "governance",
+        "safety",
+        "provenance",
+        "continuity",
+        "conformance",
+        "openness",
+        "care",
+        "cross-reality",
+        "detector-interop",
+        "art5-safeguard",
+        "swarm",
+        "affect",
+        "jail",
+        "effect-binding",
+        "lab-practice",
+        "company-practice",
+        "measurer-integrity",
+        "harness-fidelity",
+        "interop-conformance",
+        "interpretability-reproducibility",
+        "claim-maintenance",
+        "serving-fidelity",
+        "watchdog-ingest"
+      ],
+      "domain_expert_review": "NOT_RECORDED",
+      "mapping_status": "PROPOSED_EDUCATIONAL_CONTEXT_NOT_INDUSTRY_VALIDATION",
+      "title": "AI models and software services"
+    },
+    "critical-infrastructure": {
+      "actual_customer_or_partner": false,
+      "axes": [
+        "continuity",
+        "safety",
+        "jail",
+        "conformance",
+        "effect-binding",
+        "swarm",
+        "harness-fidelity",
+        "interop-conformance",
+        "company-practice",
+        "claim-maintenance",
+        "serving-fidelity",
+        "watchdog-ingest"
+      ],
+      "domain_expert_review": "NOT_RECORDED",
+      "mapping_status": "PROPOSED_EDUCATIONAL_CONTEXT_NOT_INDUSTRY_VALIDATION",
+      "title": "Critical infrastructure and security operations"
+    },
+    "education-media": {
+      "actual_customer_or_partner": false,
+      "axes": [
+        "governance",
+        "safety",
+        "care",
+        "affect",
+        "provenance",
+        "detector-interop",
+        "art5-safeguard",
+        "openness",
+        "company-practice",
+        "claim-maintenance",
+        "watchdog-ingest"
+      ],
+      "domain_expert_review": "NOT_RECORDED",
+      "mapping_status": "PROPOSED_EDUCATIONAL_CONTEXT_NOT_INDUSTRY_VALIDATION",
+      "title": "Education, media and public-facing assistants"
+    },
+    "finance-legacy": {
+      "actual_customer_or_partner": false,
+      "axes": [
+        "governance",
+        "safety",
+        "continuity",
+        "conformance",
+        "effect-binding",
+        "provenance-controls",
+        "reserve-attestation",
+        "regulatory-framework",
+        "distribution-integrity",
+        "custody-disclosure",
+        "ai-adoption-components",
+        "labour-components",
+        "company-practice",
+        "claim-maintenance",
+        "watchdog-ingest"
+      ],
+      "domain_expert_review": "NOT_RECORDED",
+      "mapping_status": "PROPOSED_EDUCATIONAL_CONTEXT_NOT_INDUSTRY_VALIDATION",
+      "title": "Financial services and legacy transaction systems"
+    },
+    "hardware-research": {
+      "actual_customer_or_partner": false,
+      "axes": [
+        "continuity",
+        "conformance",
+        "openness",
+        "machinery-conformity",
+        "effect-binding",
+        "harness-fidelity",
+        "interop-conformance",
+        "interpretability-reproducibility",
+        "serving-fidelity",
+        "lab-practice",
+        "measurer-integrity",
+        "claim-maintenance",
+        "watchdog-ingest"
+      ],
+      "domain_expert_review": "NOT_RECORDED",
+      "mapping_status": "PROPOSED_EDUCATIONAL_CONTEXT_NOT_INDUSTRY_VALIDATION",
+      "title": "Compute hardware and research infrastructure"
+    },
+    "health-care": {
+      "actual_customer_or_partner": false,
+      "axes": [
+        "governance",
+        "safety",
+        "care",
+        "affect",
+        "cross-reality",
+        "provenance",
+        "art5-safeguard",
+        "company-practice",
+        "effect-binding",
+        "claim-maintenance",
+        "watchdog-ingest"
+      ],
+      "domain_expert_review": "NOT_RECORDED",
+      "mapping_status": "PROPOSED_EDUCATIONAL_CONTEXT_NOT_INDUSTRY_VALIDATION",
+      "title": "Health and care service workflows"
+    },
+    "public-oversight": {
+      "actual_customer_or_partner": false,
+      "axes": [
+        "governance",
+        "regulator-transparency",
+        "measurer-integrity",
+        "lab-practice",
+        "company-practice",
+        "interop-conformance",
+        "ai-adoption-components",
+        "labour-components",
+        "claim-maintenance",
+        "watchdog-ingest"
+      ],
+      "domain_expert_review": "NOT_RECORDED",
+      "mapping_status": "PROPOSED_EDUCATIONAL_CONTEXT_NOT_INDUSTRY_VALIDATION",
+      "title": "Public-sector oversight and evaluation"
+    },
+    "robotics-industrial": {
+      "actual_customer_or_partner": false,
+      "axes": [
+        "machinery-conformity",
+        "safety",
+        "cross-reality",
+        "effect-binding",
+        "swarm",
+        "humanoid-labour-index",
+        "humanoid-deployment",
+        "harness-fidelity",
+        "serving-fidelity",
+        "provenance",
+        "company-practice",
+        "watchdog-ingest"
+      ],
+      "domain_expert_review": "NOT_RECORDED",
+      "mapping_status": "PROPOSED_EDUCATIONAL_CONTEXT_NOT_INDUSTRY_VALIDATION",
+      "title": "Robotics and industrial systems"
+    }
+  },
+  "mapping_scope": "107 proposed educational pairs, not 107 verified deployments",
+  "safe_layers": [
+    "Model",
+    "Instructions",
+    "Safeguards",
+    "Tools",
+    "Environment",
+    "Monitoring",
+    "Human operations",
+    "Supply chain",
+    "Serving path",
+    "Authorization and commitment",
+    "Workflow composition"
+  ],
+  "safe_layers_addressed_by_current_cases": [
+    "Authorization and commitment",
+    "Environment",
+    "Human operations",
+    "Model",
+    "Serving path",
+    "Supply chain",
+    "Tools",
+    "Workflow composition"
+  ],
+  "safe_layers_without_a_specific_case": [
+    "Instructions",
+    "Safeguards",
+    "Monitoring"
+  ],
+  "existing_orb_mooc": {
+    "bank_rows_reused_for_training": false,
+    "inventory": [
+      {
+        "files": [
+          ".gitattributes",
+          "README.md",
+          "train.jsonl"
+        ],
+        "gated": false,
+        "private": false,
+        "repo": "csoai/hitl-academy-orb1",
+        "revision": "9aadf350b886cd7e630ef47cd05b9f5657694d8c",
+        "row_files": [
+          {
+            "field_names": [
+              "answer_index",
+              "answer_text",
+              "axis",
+              "badge",
+              "explanation",
+              "fluid_cid",
+              "fluid_tN_state",
+              "frozen_t0_state",
+              "module_id",
+              "options",
+              "pal_instructor",
+              "question",
+              "rank",
+              "source",
+              "statutory_basis",
+              "voice_briefing",
+              "xp_reward"
+            ],
+            "path": "train.jsonl",
+            "rows": 1,
+            "sha256": "f3f16ed83c28e5823e8068f5af4f6b285c6debf016092654c5f05e0341fcf1a5",
+            "xp_values": [
+              160
+            ]
+          }
+        ],
+        "scope": "public metadata/row structure inventory only; no training or grade import"
+      },
+      {
+        "files": [
+          ".gitattributes",
+          "README.md",
+          "train.jsonl"
+        ],
+        "gated": false,
+        "private": false,
+        "repo": "csoai/hitl-academy-orb2",
+        "revision": "e76ba49e07ce48aa33f54c7f09c389c7c3594341",
+        "row_files": [
+          {
+            "field_names": [
+              "answer_index",
+              "answer_text",
+              "axis",
+              "badge",
+              "explanation",
+              "fluid_cid",
+              "fluid_tN_state",
+              "frozen_t0_state",
+              "module_id",
+              "options",
+              "pal_instructor",
+              "question",
+              "rank",
+              "source",
+              "statutory_basis",
+              "voice_briefing",
+              "xp_reward"
+            ],
+            "path": "train.jsonl",
+            "rows": 1,
+            "sha256": "caf302a3ac16f020f5932540d825c96b46f683a0a81baaf0ed473424a992b1c4",
+            "xp_values": [
+              160
+            ]
+          }
+        ],
+        "scope": "public metadata/row structure inventory only; no training or grade import"
+      },
+      {
+        "files": [
+          ".gitattributes",
+          "README.md",
+          "train.jsonl"
+        ],
+        "gated": false,
+        "private": false,
+        "repo": "csoai/hitl-academy-orb3",
+        "revision": "a0b021a6df56b170fb2c6cbf957756658ca933ca",
+        "row_files": [
+          {
+            "field_names": [
+              "answer_index",
+              "answer_text",
+              "axis",
+              "badge",
+              "explanation",
+              "fluid_cid",
+              "fluid_tN_state",
+              "frozen_t0_state",
+              "module_id",
+              "options",
+              "pal_instructor",
+              "question",
+              "rank",
+              "source",
+              "statutory_basis",
+              "voice_briefing",
+              "xp_reward"
+            ],
+            "path": "train.jsonl",
+            "rows": 1,
+            "sha256": "f61222d1684b8effce64358ac65c04f820981060d0324173e644985dc7100476",
+            "xp_values": [
+              160
+            ]
+          }
+        ],
+        "scope": "public metadata/row structure inventory only; no training or grade import"
+      },
+      {
+        "files": [
+          ".gitattributes",
+          "README.md",
+          "train.jsonl"
+        ],
+        "gated": false,
+        "private": false,
+        "repo": "csoai/hitl-academy-orb4",
+        "revision": "2692bebae2ce2c2c6d30b1240984482a7ddac689",
+        "row_files": [
+          {
+            "field_names": [
+              "answer_index",
+              "answer_text",
+              "axis",
+              "badge",
+              "explanation",
+              "fluid_cid",
+              "fluid_tN_state",
+              "frozen_t0_state",
+              "module_id",
+              "options",
+              "pal_instructor",
+              "question",
+              "rank",
+              "source",
+              "statutory_basis",
+              "voice_briefing",
+              "xp_reward"
+            ],
+            "path": "train.jsonl",
+            "rows": 1,
+            "sha256": "9c2b5fd2785afb0fb4d28505f279218121153f2089e950bc7401eff84123ea9f",
+            "xp_values": [
+              150
+            ]
+          }
+        ],
+        "scope": "public metadata/row structure inventory only; no training or grade import"
+      },
+      {
+        "files": [
+          ".gitattributes",
+          "README.md",
+          "train.jsonl"
+        ],
+        "gated": false,
+        "private": false,
+        "repo": "csoai/hitl-academy-orb5",
+        "revision": "2bd5fd7162f1e61fa045c1cbfec7dd49e33f95f8",
+        "row_files": [
+          {
+            "field_names": [
+              "answer_index",
+              "answer_text",
+              "axis",
+              "badge",
+              "explanation",
+              "fluid_cid",
+              "fluid_tN_state",
+              "frozen_t0_state",
+              "module_id",
+              "options",
+              "pal_instructor",
+              "question",
+              "rank",
+              "source",
+              "statutory_basis",
+              "voice_briefing",
+              "xp_reward"
+            ],
+            "path": "train.jsonl",
+            "rows": 1,
+            "sha256": "933c59bceafeabdce00fcb7c9582a8bafd53aff8ceab4bfc8101fc2aa8b37d92",
+            "xp_values": [
+              170
+            ]
+          }
+        ],
+        "scope": "public metadata/row structure inventory only; no training or grade import"
+      }
+    ],
+    "rank_progress_imported": false,
+    "rank_thresholds_changed": false,
+    "status": "FIVE_EXISTING_RANK_DATASETS_REFERENCED_NOT_A_COMPLETE_COURSE"
+  },
+  "source_revision": "ca5ff304cf1766ee73d84c49fc684631deaae113",
+  "board_sha256": "e19300ad4f9f635c760aa3fd29260cfc833613d5b3972811db4dcdca90731e7c",
+  "board_read_at": "2026-11-10T05:29:46.285427+00:00"
+}

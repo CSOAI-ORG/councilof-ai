@@ -10,6 +10,7 @@
  */
 
 import { BOARD_COUNT_OBSERVED, BOARD_OBSERVATION, BOARD_OBSERVED_AT } from "./boardCount";
+import { TOOL_COUNT_SENTENCE, toolSummary } from "./mcpTools";
 
 export type AuditVerdict = "keep" | "stale" | "false" | "forbidden";
 
@@ -51,7 +52,7 @@ export const LIVE_PIN = {
   board_dataset: "csoai/gspc-board",
   boards_alias_note:
     "csoai/gspc-boards exists as a separate benchmark-register tree. It is not the living board mirror.",
-  mcp_planted: "board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion",
+  mcp_planted: toolSummary(7),
   x402: "csoai.x402/0.1 — pay for pack assembly. The board stays free. Public card does not carry a payTo.",
 } as const;
 
@@ -144,7 +145,10 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
     id: "mcp-three-hundred",
     claim: "The planted GSPC product is a suite of hundreds of MCP servers.",
     verdict: "false",
-    live: "Official registry io.github.CSOAI-ORG/gspc. HTTP /mcp is seven read tools. Extra catalogues are not this product.",
+    // Read 18 Nov 2026: the registry lists ai.councilof/gspc 1.4.4 as active and the older
+    // io.github.CSOAI-ORG/gspc as deprecated, and /mcp lists 54 tools, where this line said seven.
+    // The count is the one derived sentence (lib/mcpTools), so it cannot go stale here again.
+    live: `Official registry ai.councilof/gspc (the older io.github.CSOAI-ORG/gspc entry is deprecated). One server: ${TOOL_COUNT_SENTENCE} Extra catalogues are not this product.`,
   },
   {
     id: "iso-42001",

@@ -1,0 +1,80 @@
+{
+  "card": {
+    "as_of": "2026-11-07T20:51:29Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "regulatory-framework",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "is the governing regime declared and confirmable?"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "8509066bf7b79379acb56eea0b753fbb185b3be3e5d63c889ec988db3484e957",
+    "sig_ed25519": "ec94a3ec1119b2d87291db48fd92f9a79ea7ef725e3cc246a5ba8190b0ba801cae7c3825675a31a77db8e7766a0da5f4b32f50509deabf82bc67d1e08899aa0f",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-regulatory-framework"
+    ],
+    "subject": "GSPC regulatory-framework UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "regulatory-framework",
+      "n=0"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "1d14dbe57a506995c34b5a78b660dc464d46ed0aa801a502e24ccce72fba84ad",
+    "d81fd7250626c5a8501db15fd951b0bd153d7ccb9092f7cb3c864cf5006370ac",
+    "27784616eb2dfc779863c71fd50cae209f7425c694ffed0864b64cae11676552",
+    "409fd839acfc58cc2374bf5b607f79361eb3b9b9268c99d7c632d4575b37b167",
+    "47e82207ed926bb459877de2022332940282cddd7e6d9f4ee99d266f6d66839e",
+    "231451ce04bc2cb9baf3cba5b6dfbaa1e7ac4b90e640fd939112b3b10f0ef330",
+    "6029be87a01ac854c910b85f0458c5c63696980847bfdf2412bb2ed9b875c6e6",
+    "bc684cc0db4dc624e1ebfec04e37f60951dba4004b5d8a67e1c88b62db521bcd",
+    "d597ef7d16c1efe2952119b07c89a3d92ef2b8e287b8dbb4c4665d92174104ad"
+  ]
+}

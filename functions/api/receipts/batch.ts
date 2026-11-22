@@ -1,3 +1,4 @@
+import { postSettlementStore, postObservationState } from "../_bookkeeping_budget";
 import { recordPaidResponse, markPaidUndeliveredResponse } from "../_x402_delivery_record";
 /**
  * GET /api/receipts/batch?from=<iso>&to=<iso> — a historical batch of the estate's measurement
@@ -13,7 +14,7 @@ import { recordPaidResponse, markPaidUndeliveredResponse } from "../_x402_delive
  * static assets (/cards-bundle.json for the leaves, /receipts/root-history.json for the roots —
  * the git history of public/root.json indexed at build time by scripts/build-root-history.mjs).
  *
- *   ?from=&to=&preview=1   FREE: count, span, root count, cap/truncation, and the sha256 of the
+ *   ?from=&to=&preview=1   FREE (also preview=true): count, span, root count, cap/truncation, and the sha256 of the
  *                          exact canonical batch bytes the paid path returns. No leaves.
  *   ?from=&to=             402 challenge (the amount lives ONLY here) + the same preview in csoai.
  *   + settled X-PAYMENT    200 on delivery: the batch (sha256 matches the preview) + one manifest
@@ -174,12 +175,13 @@ export function assembleBatch(opts: {
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
-  const preview = url.searchParams.get("preview") === "1";
+  const previewValue = url.searchParams.get("preview");
+  const preview = previewValue === "1" || previewValue === "true";
   const fromRaw = url.searchParams.get("from");
   const toRaw = url.searchParams.get("to");
   const usage = {
     get: `${origin}/api/receipts/batch?from=<iso>&to=<iso>[&preview=1]`,
-    note: "from is required; to defaults to now. preview=1 is free and returns the batch sha256 without the leaves.",
+    note: "from is required; to defaults to now. preview=1 (or preview=true) is free and returns the batch sha256 without the leaves.",
     recent_free: [`${origin}/root.json`, `${origin}/cards/<sha16>.json`, `${origin}/api/proof?sha=<64-hex>`, `${origin}/receipts/root-history.json`],
   };
   const from = parseIso(fromRaw);
@@ -188,6 +190,10 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   if (preview && !to) return json({ schema: SCHEMA, error: "bad_request", reason: "to: not an ISO-8601 instant", usage }, 400);
   if (preview && from && to && to.getTime() < from.getTime()) return json({ schema: SCHEMA, error: "bad_request", reason: "to is before from", usage }, 400);
 
+  // A window that was asked for but cannot be read is a bad request, paid or not. Only a request that
+  // names no window at all gets the discovery 402 below, so a challenge never offers a window nobody
+  // asked for.
+  if (!preview && fromRaw && !from) return json({ schema: SCHEMA, error: "bad_request", reason: "from: not an ISO-8601 instant", usage }, 400);
   if (!preview && (!fromRaw || !from)) {
     if (hasPaymentHeader(request)) {
       return json({ schema: SCHEMA, error: "bad_request", reason: "from: an ISO-8601 instant is required before presenting payment", usage }, 400);
@@ -236,6 +242,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   if (!to) return json({ schema: SCHEMA, error: "bad_request", reason: "to: not an ISO-8601 instant", usage }, 400);
   if (from && to.getTime() < from.getTime()) return json({ schema: SCHEMA, error: "bad_request", reason: "to is before from", usage }, 400);
+  // A paid batch names its window end. The default end is "now", which moves on every request, so a
+  // payment bound to the challenge's resource could never match it and the paid bytes would not hash to
+  // the preview's batch_sha256. Refused before any payment is verified.
+  if (!preview && !toRaw && hasPaymentHeader(request))
+    return json({ schema: SCHEMA, error: "bad_request", reason: "to: required when presenting payment; use the window.to that the preview or the 402 challenge names", usage }, 400);
 
   // Sources — read, never typed. Two subrequests regardless of corpus size.
   const [bundle, history, root] = await Promise.all([
@@ -273,7 +284,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const resourceUrl = `${origin}/api/receipts/batch?from=${encodeURIComponent(batch.window.from)}&to=${encodeURIComponent(batch.window.to)}`;
 
   if (preview) {
-    return json({ schema: SCHEMA, kind: "preview", ...previewBody, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT; the paid bytes hash to batch_sha256", invoice: "or quote batch_sha256 to nicholas@csoai.org for a CSOAI LTD invoice (owner-decision; nothing is granted on a claim)", catalog: `${origin}/api/x402` }, rail: railMode(env), lid: CSOAI_LID });
+    return json({ schema: SCHEMA, kind: "preview", ...previewBody, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT; the paid bytes hash to batch_sha256", invoice: "or quote batch_sha256 to contact@csoai.org for a CSOAI LTD invoice (owner-decision; nothing is granted on a claim)", catalog: `${origin}/api/x402` }, rail: railMode(env), lid: CSOAI_LID });
   }
 
   const description = RECEIPTS_BATCH_DESCRIPTION;
@@ -359,8 +370,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   if (env.REVENUE_KV) {
     try {
-      const n = Number((await env.REVENUE_KV.get("count:receipts_batches")) || "0") + 1;
-      await env.REVENUE_KV.put("count:receipts_batches", String(n));
+      const n = Number((await postSettlementStore(env.REVENUE_KV,payment).get("count:receipts_batches")) || "0") + 1;
+      await postSettlementStore(env.REVENUE_KV,payment).put("count:receipts_batches", String(n));
     } catch {
       /* never blocks a paid deliverable */
     }
@@ -370,7 +381,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     { schema: SCHEMA, kind: "batch", batch, batch_sha256, manifest_card, manifest_bytes: leaf.bytes, unsigned_reason: leaf.unsigned_reason, sources, settle: payment.settlement || null, verify: `${origin}/gspc-verify` },
     200,
     payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+  ), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

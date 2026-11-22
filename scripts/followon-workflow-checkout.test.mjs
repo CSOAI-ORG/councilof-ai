@@ -22,6 +22,15 @@ const WORKFLOWS = [
     path: ".github/workflows/kaggle-community-cells.yml",
     relative: "../.github/workflows/kaggle-community-cells.yml",
     checkout: "      - uses: actions/checkout@v4",
+    // RE-PINNED 2026-11-03. #3823 changed this workflow on master (qualified
+    // kaggle==2.2.4+six pins and fail-closed on empty status polls), so the
+    // whole-byte pins below no longer described the reviewed file and the
+    // contract failed closed on a workflow change that was itself reviewed.
+    // The STRUCTURAL contract is unchanged and still holds: exactly one
+    // unchanged `actions/checkout@v4`, the explicit deploy-head `with: ref:`,
+    // and nothing after it. Only the byte counts and digests moved, and they
+    // were recomputed from the reviewed file — not copied from anywhere.
+    // An independent lane landed the same re-pin; both derivations agree.
     before: { bytes: 6340, sha256: "9e0d0cbfe8d903a1afe79a7609726c2a07bac808a56fe733aa643bec4b666809" },
     after: { bytes: 6464, sha256: "c08c0b9bc4a2fd563591d06d1038fbb53da2962d1d7a0d10627ba97c066b58eb" },
   },

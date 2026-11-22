@@ -1,0 +1,147 @@
+{
+  "card": {
+    "as_of": "2026-11-08T00:30:47Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:USCC:ethereum",
+      "symbol": "USCC",
+      "product": "Bitwise Crypto Carry Fund (formerly Superstate USCC)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x14d60e7fdc0d71d8611742720e4c50e7a974020c",
+      "block": 26366577,
+      "block_hash": "0x78e809c9f3bf13d19d5594c2e093d23d602d6f12f23fcc478a9c1abdcf7515b4",
+      "block_time": "2026-11-08T00:30:47Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "Bitwise Crypto Carry Fund",
+        "symbol": "USCC",
+        "decimals": 6,
+        "totalSupply": 4117341594052,
+        "paused": false,
+        "owner": "0x8abc89d9b56dfd90da18e8e18cfac9111100bdd1",
+        "allowlist": "0xbcbc2b4fb2abe1c598c9ea91e0b03338e4728d1f",
+        "eip1967_implementation": "0x7e906c0006d3f08be94ef4685c59b5cde4fb4fef",
+        "eip1967_admin": "0x2bb7b8b4df7fd96baf7cb9a2ce9e292ecd5baf3d"
+      },
+      "absent": [
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "ae8f12ac4cfe792439963f6c6e9a9f02c14da872ef46fdd8b0a88d71d2cb4f87",
+        "bytes": 11654,
+        "url": "/archive/proofs/eip1186/ae8f12ac4cfe7924.json",
+        "rpc": "eth.drpc.org",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0x1086fe743fb1aa179d50052d13bbc956ce369140ce02f558911372cd6949c635",
+          "storageHash": "0xdc9a52b15629cbc21e803c0cb48f255944ee3611979a17b9fca4da64662d92eb",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x7e906c0006d3f08be94ef4685c59b5cde4fb4fef",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x2bb7b8b4df7fd96baf7cb9a2ce9e292ecd5baf3d",
+            "nodes": 4
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 26366577 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d84a409f4405798b60686240569eb155279f6ecf518c0ada55ccf43b77ab8a26",
+    "sig_ed25519": "c70a43bb1dc36fbc9c6782aaa119ed80e3ecc5c65c7cd72d1ed97e983ac658a604fdd6d6190ee1896865e538de0052ac32fb78f2cd46b5e4a7cc304fa387c80c",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://docs.superstate.com/investors/smart-contracts",
+      "https://eth.drpc.org"
+    ],
+    "subject": "evm:USCC:ethereum permission state at block 26366577",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:USCC"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "48860e63a2de3dab1875371d92fe4e59f09dec67fa3ac1ddb4367e952ac1980e",
+    "2eb227674752a69b804b347af8429224d15c38eebd22de6dc996deb92fb228b6",
+    "1c6e1307cbed356dcc42fe5d3325f933bf855f2094d29a3769f63b722b3afa09",
+    "ea1934c57341f6a513335c1104effd7371d63bf01b5f2b6f07b1b3f5360210c5",
+    "8e74d9450f066a5dd9f1e5ab5499263cd83c404b67520c3e765f43f91ffe98ff",
+    "1ed0e6df1d42d5cf4167d0e47d3d67f42bcc6c1769309ebd70e385aedea0c546",
+    "3f6a8c321b6a867134a9fb644beb189d2e468e06ca88aab0c23eccadcbcc5810",
+    "88dc5970d6f2859bddeb2345f08a77484e5652a695b9590ceb1206da26f878c0",
+    "cec0ade3e6b95e387d4590c7411922e54d1c7cb7d959942770cbd04c2fa90f66"
+  ]
+}

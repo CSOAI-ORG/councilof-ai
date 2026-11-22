@@ -1,3 +1,6 @@
+import { handlePurchases } from "../api/purchases/[[path]]";
+import { purchaseBody, type BuyerEnv } from "../api/_buyer_purchase";
+import { purchaseSha256 } from "../../shared/buyerPurchase";
 /**
  * Paid MCP tools on Pages /mcp — thin, honest wrappers over the x402-metered routes.
  *
@@ -18,15 +21,22 @@
  *         2026-09-26 this returned isError:false with the challenge nested under
  *         `payment_required`, which an x402 MCP client (checks structuredContent.x402Version +
  *         accepts) could not recognise. `payment_required` is kept for existing readers.
- *         PAYMENT SEMANTICS UNCHANGED: payment is still read only from the `x_payment` argument and
- *         forwarded as X-PAYMENT; `_meta["x402/payment"]` is not read, so a client that sends only
- *         that receives the same challenge and is charged nothing (paid-tools.test.ts pins both).
+ *         PAYMENT, TWO CHANNELS, ONE HEADER (2026-11-20). Until then payment was read only from the
+ *         `x_payment` argument, so a client following the same transport spec's "Payment Payload
+ *         Transmission" (it retries the call with its PaymentPayload in `_meta["x402/payment"]`)
+ *         was sent the challenge again on every retry and could never buy. Now POST /mcp hands that
+ *         object to this module, which base64s its JSON into the same X-PAYMENT header the argument
+ *         becomes; the route decodes exactly that (functions/api/_x402.ts) and still verifies and
+ *         settles, fail closed. Both channels at once are refused and nothing is forwarded. When the
+ *         route reports settlement, the decoded X-PAYMENT-RESPONSE is also returned as
+ *         `_meta["x402/payment-response"]` ("Settlement Response Delivery"), never invented.
  *   2xx → status DELIVERED: delivery is separate from settlement and receipt state. A free preview,
  *         a paid delivery with no settle echo, a settle echo with a receipt gap, and a settle echo
  *         carrying an unverified JWS receipt are four different structured states.
  *   404 → status NOT_DEPLOYED: the route is not on this origin — said plainly, never a fabricated
- *         result.
- *   other → status = the HTTP status, body passed through.
+ *         result. A 404 that carries the route's own JSON body (its `schema` field) is NOT this: the
+ *         route is deployed and answered "not found", so it is reported as HTTP_404 with its reason.
+ *   other → status = the HTTP status, body passed through, isError:true — nothing was delivered.
  * Same-origin fetch: one subrequest per call. Routes are forwarded to by exact path from the
  * definitions file; a caller cannot steer the tool to any other URL.
  */
@@ -122,6 +132,10 @@ export function buildPaidRequest(
   const headers: Record<string, string> = { accept: "application/json" };
   const xp = str("x_payment");
   if (xp) headers["x-payment"] = xp;
+  // A free preview never verifies a payment, so a preview sent with x_payment would come back as a
+  // delivery with "settlement unconfirmed" for an authorization no route ever looked at.
+  if (flag("preview") && xp)
+    return { error: "preview is free: omit x_payment for a preview, or drop preview to buy" };
   const u = new URL(route, origin);
   let method = "GET";
   let body: string | undefined;
@@ -158,6 +172,11 @@ export function buildPaidRequest(
     }
     case "receipts_batch": {
       if (!str("from")) return { error: "from is required (ISO-8601)" };
+      // A paid batch names its window end. The route's default end is "now", which moves on every
+      // call, so the paid bytes could never hash to the preview's batch_sha256 or match the
+      // resource the challenge named.
+      if (xp && !str("to"))
+        return { error: "to is required when paying: pass the window.to that the free preview (preview=true) or the 402 challenge names" };
       u.searchParams.set("from", str("from"));
       if (str("to")) u.searchParams.set("to", str("to"));
       if (flag("preview")) u.searchParams.set("preview", "1");
@@ -186,10 +205,128 @@ export function buildPaidRequest(
   };
 }
 
+/** x402 MCP transport field names (x402-foundation/x402 specs/transports-v2/mcp.md). */
+export const X402_META_PAYMENT = "x402/payment";
+export const X402_META_PAYMENT_RESPONSE = "x402/payment-response";
+// A PaymentPayload is a signature and an authorization. This bounds what becomes a request header.
+export const META_PAYMENT_MAX_BYTES = 16 * 1024;
+
+/**
+ * `_meta["x402/payment"]` as the X-PAYMENT header value: base64 of the PaymentPayload's JSON, the
+ * form the metered routes decode. Only the shape is checked here; whether the payment is good is
+ * the route's question (facilitator verify, then settle).
+ */
+export function metaPaymentHeader(meta: unknown): { header: string } | { error: string } {
+  if (!meta || typeof meta !== "object" || Array.isArray(meta))
+    return { error: `_meta["${X402_META_PAYMENT}"] must be an x402 PaymentPayload object` };
+  // Every non-ASCII character is written as a JSON \uXXXX escape, so the header is base64 of pure
+  // ASCII. The route decodes with atob then JSON.parse (functions/api/_x402.ts), which reads bytes
+  // as Latin-1: base64 of UTF-8 would hand it altered strings wherever the payload's resource
+  // description carries a dash or an accent. Escaped, both decoders read the same object.
+  const json = JSON.stringify(meta).replace(
+    /[\u0080-\uffff]/g,
+    (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`,
+  );
+  if (json.length > META_PAYMENT_MAX_BYTES)
+    return { error: `_meta["${X402_META_PAYMENT}"] exceeds ${META_PAYMENT_MAX_BYTES} bytes` };
+  return { header: btoa(json) };
+}
+
+/**
+ * receipts_batch only. An unpaid call may omit `to`: the route then ends the window at "now" and
+ * names that end in the challenge's resource URL. A client following the x402 MCP transport
+ * retries with the SAME arguments, so its paid call would be refused for a missing `to`. Its
+ * PaymentPayload carries the resource it signed for; when that is this tool's route on this
+ * origin with the same `from`, its `to` is the window the caller is paying for.
+ */
+function challengedWindowEnd(meta: unknown, route: string, origin: string, from: unknown): string | undefined {
+  if (typeof from !== "string" || !from.trim()) return undefined;
+  const payload = meta as { resource?: unknown; accepted?: { resource?: unknown } };
+  const named =
+    typeof payload.resource === "string"
+      ? payload.resource
+      : payload.resource && typeof payload.resource === "object"
+        ? (payload.resource as { url?: unknown }).url
+        : payload.accepted?.resource;
+  if (typeof named !== "string") return undefined;
+  try {
+    const url = new URL(named);
+    if (url.origin !== origin || url.pathname !== route) return undefined;
+    if (url.searchParams.get("from") !== from.trim()) return undefined;
+    return url.searchParams.get("to") || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** The route's X-PAYMENT-RESPONSE as an object, or null when it is not base64 of a JSON object. */
+function settlementResponse(header: unknown): Record<string, unknown> | null {
+  if (typeof header !== "string" || !header) return null;
+  try {
+    const normalized = header.replace(/-/g, "+").replace(/_/g, "/");
+    const binary = atob(normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "="));
+    const decoded: unknown = JSON.parse(new TextDecoder().decode(Uint8Array.from(binary, (c) => c.charCodeAt(0))));
+    return decoded && typeof decoded === "object" && !Array.isArray(decoded) ? (decoded as Record<string, unknown>) : null;
+  } catch {
+    return null;
+  }
+}
+
+export type PaidCallerContext={authorization?:string;env?:BuyerEnv;
+  /** params._meta["x402/payment"] of the tools/call, when the caller sent one (POST /mcp only). */
+  metaPayment?:unknown};
+
+/**
+ * Run a paid tool. Payment arrives as the `x_payment` argument or as `_meta["x402/payment"]`
+ * (caller.metaPayment); either way it reaches the route as one X-PAYMENT header. A settlement the
+ * route reports is returned in `_meta["x402/payment-response"]` beside the existing fields.
+ */
 export async function paidToolResult(
   name: string,
   args: Record<string, unknown>,
   origin: string,
+  caller?:PaidCallerContext,
+): Promise<McpToolResult> {
+  let paidArgs = args;
+  const meta = caller?.metaPayment;
+  if (meta !== undefined && meta !== null) {
+    const refused = (reason: string): McpToolResult => ({
+      content: [{ type: "text", text: `BAD_ARGUMENTS — ${reason}. Nothing was forwarded to the route; nothing was charged by this request.` }],
+      structuredContent: {
+        tool: name,
+        status: "BAD_ARGUMENTS",
+        reason,
+        payment_presented: true,
+        payment_forwarded: false,
+        settlement_state: "NOT_REQUESTED",
+        nothing_charged: true,
+        delivery_state: "NOT_DELIVERED",
+        doctrine: DOCTRINE,
+        not_a_certification: true,
+      },
+      isError: true,
+    });
+    if (typeof args.x_payment === "string" && args.x_payment.trim() !== "")
+      return refused(`payment was sent twice: use the x_payment argument or _meta["${X402_META_PAYMENT}"], not both`);
+    const encoded = metaPaymentHeader(meta);
+    if ("error" in encoded) return refused(encoded.error);
+    paidArgs = { ...args, x_payment: encoded.header };
+    if (name === "receipts_batch" && !(typeof args.to === "string" && args.to.trim())) {
+      const route = TOOLS.find((t) => t.name === name)?.csoai.route;
+      const to = route ? challengedWindowEnd(meta, route, origin, args.from) : undefined;
+      if (to) paidArgs.to = to;
+    }
+  }
+  const result = await paidToolCall(name, paidArgs, origin, caller);
+  const settled = settlementResponse(result.structuredContent?.payment_response_header);
+  return settled ? { ...result, _meta: { [X402_META_PAYMENT_RESPONSE]: settled } } : result;
+}
+
+async function paidToolCall(
+  name: string,
+  args: Record<string, unknown>,
+  origin: string,
+  caller?:PaidCallerContext,
 ): Promise<McpToolResult> {
   const paymentPresented =
     typeof args.x_payment === "string" && args.x_payment.trim() !== "";
@@ -252,6 +389,29 @@ export async function paidToolResult(
     isError,
   });
 
+  if("purchase_action" in args){
+    if(paymentPresented)return reply({...base,status:"BAD_ARGUMENTS",reason:"Recovery and decisions must omit payment authorization."},"No payment was attempted.",true);
+    const action=args.purchase_action,tx=typeof args.purchase_transaction==="string"?args.purchase_transaction:"";
+    if(typeof action!=="string"||!["history","recover","decisions","accept","reject","request_correction"].includes(action)||
+      (action!=="history"&&(!tx||tx.length>256)))
+      return reply({...base,status:"BAD_ARGUMENTS",reason:"A supported purchase action and owned transaction are required."},"No payment was attempted.",true);
+    const decision=!["history","recover","decisions"].includes(action);
+    const url=new URL(action==="history"?"/api/purchases":"/api/purchases/"+encodeURIComponent(tx)+(action==="recover"?"?include_body=1":"/decisions"),origin);
+    if(typeof args.purchase_cursor==="string")url.searchParams.set("cursor",args.purchase_cursor);
+    if(action==="decisions"&&typeof args.purchase_request_id==="string")url.searchParams.set("request_id",args.purchase_request_id);
+    const headers=new Headers(decision?{"content-type":"application/json"}:{});
+    if(caller?.authorization)headers.set("authorization",caller.authorization);
+    const request=new Request(url,{method:decision?"POST":"GET",headers,...(decision?{body:JSON.stringify({
+      action,result_sha256:args.purchase_result_sha256,result_version:args.purchase_result_version,
+      request_id:args.purchase_request_id,reason:args.purchase_reason,
+    })}:{})});
+    const response=await handlePurchases(request,caller?.env||{}),result=await response.json();
+    return reply({...base,status:response.ok?(action==="history"?"PURCHASE_HISTORY":action==="recover"?"ORIGINAL_RECOVERED":action==="decisions"?"BUYER_DECISIONS":"BUYER_DECISION_RECORDED"):"PURCHASE_UNAVAILABLE",
+      http_status:response.status,purchase:result,payment_presented:false,settlement_state:"NOT_REQUESTED",
+      no_new_payment_or_provider_call:true,acceptance_inferred:false},
+      response.ok?"Owned original data or explicit buyer declaration read. No new payment, provider/model call or signature.":"Purchase access or decision could not be qualified. No new payment was attempted.",!response.ok);
+  }
+
   if ("error" in built)
     return reply(
       { ...base, status: "BAD_ARGUMENTS", reason: built.error },
@@ -259,6 +419,8 @@ export async function paidToolResult(
       true,
     );
 
+  if(caller?.authorization)built.req.headers.set("authorization",caller.authorization);
+  const identityRequest=paymentPresented?null:built.req.clone();
   let res: Response;
   try {
     res = await fetch(built.req);
@@ -304,7 +466,23 @@ export async function paidToolResult(
       body && typeof body === "object" && !Array.isArray(body)
         ? (body as Record<string, unknown>)
         : {};
+    const advertised=typeof paymentRequired.resource==="object"&&paymentRequired.resource!==null
+      ?(paymentRequired.resource as {url?:unknown}).url:typeof paymentRequired.resource==="string"?paymentRequired.resource
+      :Array.isArray(paymentRequired.accepts)&&typeof paymentRequired.accepts[0]?.resource==="string"?paymentRequired.accepts[0].resource:undefined;
+    let purchaseRequest: Record<string, unknown> | undefined;
+    let purchaseRequestUnavailable: string | undefined;
+    if (identityRequest) {
+      try {
+        purchaseRequest={url:identityRequest.url,resource:typeof advertised==="string"?advertised:identityRequest.url,
+          method:identityRequest.method,body_sha256:await purchaseSha256(await purchaseBody(identityRequest))};
+      } catch (e) {
+        // A body too large to hash for purchase binding must not swallow the challenge itself.
+        purchaseRequestUnavailable = e instanceof Error ? e.message : String(e);
+      }
+    }
     const payload = {
+      ...(purchaseRequest?{purchase_request:purchaseRequest}:{}),
+      ...(purchaseRequestUnavailable?{purchase_request_unavailable:purchaseRequestUnavailable}:{}),
       // x402 MCP transport: the PaymentRequired object sits at the top level of structuredContent.
       ...paymentRequired,
       ...base,
@@ -316,7 +494,7 @@ export async function paidToolResult(
       ...settlementFields(),
       how_to_pay: paymentPresented
         ? "A payment authorization was presented, but this response does not prove settlement. Inspect the returned reason, wallet, chain and facilitator before signing or retrying."
-        : "sign accepts[0] (x402 exact scheme, EIP-3009 transferWithAuthorization under extra.name/version) with your wallet, base64 the payload, and call this tool again with x_payment=<that value>. The free preview, if any, is in payment_required.csoai.preview.",
+        : "sign accepts[0] (x402 exact scheme, EIP-3009 transferWithAuthorization under extra.name/version) with your wallet, then call this tool again with the same arguments and either x_payment=<base64 of the payload> or the payload object in _meta[\"x402/payment\"] (x402 MCP transport), not both. The free preview, if any, is in payment_required.csoai.preview.",
     };
     // T11 (6 Oct 2026): a dated amount is said in the human line, built from the challenge itself so it
     // disappears once accepts[0] no longer carries an end date. No amount is typed here.
@@ -340,7 +518,13 @@ export async function paidToolResult(
       isError: true,
     };
   }
-  if (res.status === 404) {
+  // A deployed route answers with its own JSON, which always names its `schema`. Without that, a 404
+  // means the route itself is missing from this origin.
+  const routeBody =
+    body && typeof body === "object" && !Array.isArray(body) && typeof (body as { schema?: unknown }).schema === "string"
+      ? (body as Record<string, unknown>)
+      : null;
+  if (res.status === 404 && !routeBody) {
     return reply(
       {
         ...base,
@@ -393,17 +577,26 @@ export async function paidToolResult(
     );
   }
   const reportedPayment = res.headers.get("x-payment-response");
+  const routeReason = typeof routeBody?.reason === "string" ? routeBody.reason : undefined;
+  const refusedNote = reportedPayment
+    ? "Settlement was reported by the route; inspect the receipt before retrying."
+    : paymentPresented && res.status >= 400 && res.status < 500
+      ? "The route refused the request and reported no settlement; nothing was delivered. Correct the arguments before paying again, and inspect the wallet if in doubt."
+      : retryWarning;
   return reply(
     {
       ...base,
       status: `HTTP_${res.status}`,
       http_status: res.status,
+      ...(routeReason ? { reason: routeReason } : {}),
       delivery_state: "NOT_DELIVERED",
       ...settlementFields(reportedPayment),
       body,
     },
-    `HTTP ${res.status} from ${tool.csoai.route} — passed through, nothing invented. ${reportedPayment ? "Settlement was reported by the route; inspect the receipt before retrying." : retryWarning}`,
-    res.status >= 500,
+    `HTTP ${res.status} from ${tool.csoai.route}${routeReason ? `: ${routeReason}` : ""} — not delivered; the route's body is passed through, nothing invented. ${refusedNote}`,
+    // Nothing was delivered, so this is a failed call whatever the status: an x402 MCP client and a
+    // model both read isError to decide whether to correct the arguments.
+    true,
   );
 }
 

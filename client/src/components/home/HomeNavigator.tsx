@@ -57,7 +57,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "/signed/HOW-TO-VERIFY.md", label: "The rule, written out", what: "read the supported format's method; offline checks need original bytes and a pinned issuer key", raw: true },
       { href: "/root.json", label: "The public evidence root", what: "its dated record list and stated signing status, separate from individual card verification", raw: true },
       { href: "/.well-known/did.json", label: "Our public key", what: "pin this first — a record that signs itself proves nothing", raw: true },
-      { href: "/honesty", label: "What we hold back, and why", what: "the limits, stated by us before anyone else states them" },
+      { href: "/honesty", label: "Measurement scope and limitations", what: "measurement coverage and the boundaries of verification" },
     ],
   },
   {

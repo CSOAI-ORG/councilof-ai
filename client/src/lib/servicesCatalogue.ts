@@ -65,6 +65,11 @@ export const GROUPS: ServiceGroup[] = [
   },
 ];
 
+/** Individually published endpoints match exactly; new siblings remain ungrouped. */
+const EXACT_ROUTES: Readonly<Record<string, GroupId>> = {
+  "/api/coverage-evidence": "finance-rwa",
+};
+
 /** Path → group. Ordered: the first matching prefix wins. */
 const ROUTES: ReadonlyArray<[string, GroupId]> = [
   ["/api/rwa/", "finance-rwa"],
@@ -112,6 +117,7 @@ export function pathOf(url: string): string {
 
 export function groupFor(url: string): GroupId | null {
   const path = pathOf(url);
+  if (Object.prototype.hasOwnProperty.call(EXACT_ROUTES, path)) return EXACT_ROUTES[path];
   for (const [prefix, id] of ROUTES) if (path.startsWith(prefix)) return id;
   return null;
 }

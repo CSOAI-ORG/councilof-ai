@@ -1,0 +1,90 @@
+--- a/csoai/meok-process-world-partial-transitions-v1/README.md (live)
++++ b/csoai/meok-process-world-partial-transitions-v1/README.md (proposed)
+@@ -7,6 +7,42 @@
+ - process-model
+ - partial-observation
+ - meok
++- council-of-ai
++pretty_name: MEOK partial-observation process transitions v1
++size_categories:
++- 1K<n<10K
++configs:
++- config_name: train
++  data_files:
++  - split: train
++    path: train.jsonl
++  default: true
++- config_name: test-predictions
++  data_files:
++  - split: train
++    path: test-predictions.jsonl
++- config_name: test
++  data_files:
++  - split: train
++    path: test.jsonl
++- config_name: validation
++  data_files:
++  - split: train
++    path: validation.jsonl
++- config_name: source
++  data_files:
++  - split: train
++    path: SOURCE.json
++- config_name: manifest
++  data_files:
++  - split: train
++    path: manifest.json
++- config_name: training-report
++  data_files:
++  - split: train
++    path: training-report.json
++language:
++- en
+ ---
+ 
+ # MEOK partial-observation process transitions v1
+@@ -36,3 +72,44 @@
+ Model: https://huggingface.co/csoai/meok-process-world-partial-v1
+ 
+ Source and CI: https://github.com/CSOAI-ORG/councilof-ai/pull/4285
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `train` (default) | `train.jsonl` | 1600 |
++| `test-predictions` | `test-predictions.jsonl` | 560 |
++| `test` | `test.jsonl` | 560 |
++| `validation` | `validation.jsonl` | 400 |
++| `source` | `SOURCE.json` | 1 |
++| `manifest` | `manifest.json` | 1 |
++| `training-report` | `training-report.json` | 1 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/meok-process-world-partial-transitions-v1", "train", split="train")
++```
++
++## Front door
++
++Council of AI publishes its live measurement board and methods at [https://councilof.ai](https://councilof.ai).
++
++## Citation
++
++```bibtex
++@misc{csoai_meok_process_world_partial_transitions_v1_2026,
++  title        = {MEOK partial-observation process transitions v1},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/csoai/meok-process-world-partial-transitions-v1}},
++  url          = {https://huggingface.co/datasets/csoai/meok-process-world-partial-transitions-v1}
++}
++```
++
++<!-- csoai-card-fixes:end -->

@@ -16,6 +16,10 @@ on:
       - 'scripts/hf/**'
       - '.github/workflows/gspc-product-qualification.yml'
 
+concurrency:
+  group: gspc-product-qualification-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -43,3 +47,4 @@ jobs:
           scripts/hf/test_cite_block.py
           scripts/hf/test_catalogue_publication.py
           scripts/hf/test_kaggle_licences.py
+          scripts/hf/test_reliable_snapshot.py

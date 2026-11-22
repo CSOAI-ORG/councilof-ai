@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import evidenceNotes from "@/data/evidence-notes.json";
+import { OPERATING_ORGANISATION_SUMMARY, EXTERNAL_USE_SUMMARY } from "@/data/external-use";
 
 type BazaarFinding =
   | { state: "loading" }
@@ -25,19 +26,19 @@ function readNumber(text: string, pattern: RegExp): number | null {
 const FACTS = [
   {
     k: "What it is",
-    v: "An independent AI-measurement body. We measure AI systems against statute, sign the result, and publish what cannot be measured.",
+    v: OPERATING_ORGANISATION_SUMMARY,
   },
   {
-    k: "The Council",
-    v: "Designed multi-provider review. Live independence is published on the Refutation Ledger — a designed council, not a live claim.",
+    k: "Accountability",
+    v: "CSOAI Ltd, UK Companies House 16939677, operates Council of AI. Published measurements name their method, scope, date and attestation state.",
   },
   {
     k: "Coverage",
-    v: "Statute-anchored instruments. Slot counts, dates and sample sizes live at GET councilof.ai/api/gspc — we do not type them here.",
+    v: "Published measurement instruments and evidence registers. Slot counts, dates and sample sizes live at GET councilof.ai/api/gspc — we do not type them here.",
   },
   {
-    k: "The lineage",
-    v: "Governance rediscovered from 4,000 years of human history - Athens to Bitcoin to AI.",
+    k: "Outside use",
+    v: EXTERNAL_USE_SUMMARY,
   },
   {
     k: "The proof",
@@ -49,8 +50,8 @@ const FACTS = [
   },
 ];
 const QUOTES = [
-  "We did not invent AI governance. We rediscovered it - and built it in digital form.",
-  "No single agent can decide. That is the point.",
+  "A result should name what was checked, how, and when.",
+  "Evidence should be open to inspection, challenge and correction.",
   "Measurement, not certification. Empty cells stay empty.",
 ];
 
@@ -174,9 +175,13 @@ export default function Pressroom() {
             </div>
           ))}
         </div>
+        <p className="mt-5 max-w-3xl text-sm leading-6 text-gray-700">
+          <a href="/traction/#external-use" className="font-semibold text-emerald-800 underline underline-offset-4">Inspect the dated evidence of outside use</a>.
+          {" "}Each example states what was run, implemented or cited and what it establishes. Institutional adoption and commercial demand are separate questions.
+        </p>
         <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
           <div className="text-xs font-bold uppercase tracking-wide text-emerald-800">
-            Live commercial proof
+            Commercial evidence from the settlement ledger
           </div>
           {revenue.state === "measured" ? (
             <p className="mt-2 text-sm text-emerald-950">
@@ -275,26 +280,22 @@ export default function Pressroom() {
         </div>
         <h2 className="mt-12 text-xl font-bold text-gray-900">Boilerplate</h2>
         <p className="mt-2 max-w-3xl text-sm text-gray-700 leading-relaxed">
-          Council of AI (CSOAI Ltd, UK Companies House 16939677) is an
-          independent measurement body for AI behaviour. We run systems against
-          frozen, published tests drawn from statute, sign the result, and
-          publish the parts we could not measure. We do not certify or
-          remediate. A grade is never sold. Verify stays free at
-          councilof.ai/gspc-verify. Live board counts are at GET
-          councilof.ai/api/gspc.
+          {OPERATING_ORGANISATION_SUMMARY} Results retain their method, scope, date and attestation state.
+          {" "}The public corrections record documents changes to published claims. Measurement is not certification.
+          {" "}Inspect documented external use at councilof.ai/traction and live board counts at councilof.ai/api/gspc.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a
-            href="/try"
+            href="/traction/"
             className="rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-800"
           >
-            See the Council live -&gt;
+            Operation and external use -&gt;
           </a>
           <a
             href="/lineage"
             className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50"
           >
-            The story -&gt;
+            Design inspiration -&gt;
           </a>
           <a
             href="/sectors"

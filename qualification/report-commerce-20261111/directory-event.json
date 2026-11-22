@@ -1,0 +1,165 @@
+{
+  "schema": "csoai.evidence-event/0.1",
+  "subject": {
+    "kind": "route",
+    "locator": "https://402index.io/api/v1/services"
+  },
+  "claim": {
+    "text": "Three selected existing directory descriptions matched the observed canonical manifest after bounded metadata refresh and remained active on a separate public readback.",
+    "source_url": "https://councilof.ai/.well-known/x402.json",
+    "source_sha256": "851cb7f800daecf7029936dbe5600c3b3de8ff324b8750e21ad361efa864eb62",
+    "read_at": "2026-11-11T06:47:36.202744+00:00"
+  },
+  "method": {
+    "id": "selected-existing-directory-metadata-refresh",
+    "version": "1.0.0",
+    "holder": "csoai",
+    "code_sha256": "032b4c2eb965804cef0ee31bddbd40f5909660e48d647f6cd76a3b8fcdb77a6b"
+  },
+  "declared": {
+    "selected_urls": [
+      "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+      "https://councilof.ai/api/proof?bundle=1"
+    ]
+  },
+  "observed": {
+    "readbacks": [
+      {
+        "checked_at": "2026-11-11T06:47:34.772604+00:00",
+        "route": "https://402index.io/api/v1/services/d1e944ac-ce39-4fd6-a794-2181fab89526",
+        "http_status": 200,
+        "body_sha256": "0ed03ee3e5c8d0c0e4e6712c151e3da478fb769e7aeeea0215ad6244f37f3348",
+        "listing_id": "d1e944ac-ce39-4fd6-a794-2181fab89526",
+        "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+        "description": "Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free.",
+        "directory_price_usd": 0.01,
+        "updated_at": "2026-11-11 06:45:01",
+        "domain_verified": 0,
+        "same_listing_identity": true,
+        "metadata_matches": true,
+        "directory_state": "active",
+        "active_listing_confirmed": true
+      },
+      {
+        "checked_at": "2026-11-11T06:47:34.880191+00:00",
+        "route": "https://402index.io/api/v1/services/1205263a-43d0-431f-b861-66bc2292b575",
+        "http_status": 200,
+        "body_sha256": "e0ab349ecd72502603747ef186f94fd927ecbc6b28aab667a772d4c7af21077a",
+        "listing_id": "1205263a-43d0-431f-b861-66bc2292b575",
+        "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+        "description": "OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination.",
+        "directory_price_usd": 0.01,
+        "updated_at": "2026-11-11 06:45:03",
+        "domain_verified": 0,
+        "same_listing_identity": true,
+        "metadata_matches": true,
+        "directory_state": "active",
+        "active_listing_confirmed": true
+      },
+      {
+        "checked_at": "2026-11-11T06:47:36.202744+00:00",
+        "route": "https://402index.io/api/v1/services/37594c23-d5c7-4c79-a289-f087af06a7af",
+        "http_status": 200,
+        "body_sha256": "92064b373c73eae7bdba6e7a2751fe05fc57a7fa834456c93bf197121d88bb03",
+        "listing_id": "37594c23-d5c7-4c79-a289-f087af06a7af",
+        "url": "https://councilof.ai/api/proof?bundle=1",
+        "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json.",
+        "directory_price_usd": 0.01,
+        "updated_at": "2026-11-11 06:45:04",
+        "domain_verified": 0,
+        "same_listing_identity": true,
+        "metadata_matches": true,
+        "directory_state": "active",
+        "active_listing_confirmed": true
+      }
+    ],
+    "registration_responses": [
+      {
+        "attempted_at": "2026-11-11T06:45:00.490490+00:00",
+        "listing_id": "d1e944ac-ce39-4fd6-a794-2181fab89526",
+        "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+        "payload_sha256": "0da034a7e50b07481b072adca5f2bcf80f0fe4259f0c2bc0dd53fcc2b2c0b826",
+        "prewrite_body_sha256": "1e41be90836f8619986708e57e8f7ec8241001aae297bb10f8a217871da246d3",
+        "changed": true,
+        "state": "PUBLIC_METADATA_UPDATED",
+        "registration_http_status": 201,
+        "registration_body_sha256": "97db377128a1906a8e8c4519aff5f61834ab5e62e8082cc763075c89232de444",
+        "response_status": null,
+        "readback_http_status": 200,
+        "readback_body_sha256": "0ed03ee3e5c8d0c0e4e6712c151e3da478fb769e7aeeea0215ad6244f37f3348",
+        "observed": {
+          "same_listing_identity": true,
+          "metadata_matches": true,
+          "directory_state": "active",
+          "active_listing_confirmed": true
+        }
+      },
+      {
+        "attempted_at": "2026-11-11T06:45:02.047907+00:00",
+        "listing_id": "1205263a-43d0-431f-b861-66bc2292b575",
+        "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+        "payload_sha256": "79da7f633e31cb3dab96f5c4c1d513eab84e428cb9aa8f4b20929462b0494b9a",
+        "prewrite_body_sha256": "0329f22811a9f521e122b55d83a6db56f3fa598d49086d565410c88b585af298",
+        "changed": true,
+        "state": "PUBLIC_METADATA_UPDATED",
+        "registration_http_status": 201,
+        "registration_body_sha256": "2a48bc81aee685cf0b128bbada4eaecda5484ce4361d18c2c796db003df72914",
+        "response_status": null,
+        "readback_http_status": 200,
+        "readback_body_sha256": "e0ab349ecd72502603747ef186f94fd927ecbc6b28aab667a772d4c7af21077a",
+        "observed": {
+          "same_listing_identity": true,
+          "metadata_matches": true,
+          "directory_state": "active",
+          "active_listing_confirmed": true
+        }
+      },
+      {
+        "attempted_at": "2026-11-11T06:45:03.745380+00:00",
+        "listing_id": "37594c23-d5c7-4c79-a289-f087af06a7af",
+        "url": "https://councilof.ai/api/proof?bundle=1",
+        "payload_sha256": "3835914a206bbefa75a9c921375bddf387ca4db836336ca74d77ce57b6a5a06a",
+        "prewrite_body_sha256": "0995d9acf6fbec7f74594171b60762cb96351e733600bf63620928314f7d7a9b",
+        "changed": true,
+        "state": "PUBLIC_METADATA_UPDATED",
+        "registration_http_status": 201,
+        "registration_body_sha256": "d10faaf3fbd0b9137e8e1bf5faf4dd23d4d17c894ec652d6597ec49bb7a9f9fd",
+        "response_status": null,
+        "readback_http_status": 200,
+        "readback_body_sha256": "92064b373c73eae7bdba6e7a2751fe05fc57a7fa834456c93bf197121d88bb03",
+        "observed": {
+          "same_listing_identity": true,
+          "metadata_matches": true,
+          "directory_state": "active",
+          "active_listing_confirmed": true
+        }
+      }
+    ]
+  },
+  "state": "CONSISTENT",
+  "value": null,
+  "negative_control": {
+    "id": "pending-registration-is-not-active",
+    "expected": "NOT_ACTIVE",
+    "got": "NOT_ACTIVE"
+  },
+  "limits": [
+    "Metadata parity is not payment settlement, paid delivery, demand or independent validation of product claims.",
+    "Cached directory price fields still showed 0.01; live payment challenges remain authoritative and no pricing fields were written.",
+    "Domain verification was not established by these reads. Existing source and payment owners retain their authority.",
+    "No money, wallet signature, model inference, customer contact or new scheduler was used.",
+    "The directory API supplies no transactional compare-and-swap guarantee; prewrite reads reduce, but cannot eliminate, concurrent-writer races."
+  ],
+  "supersedes": null,
+  "signature": null,
+  "anchors": {
+    "ots": "none",
+    "rekor": {
+      "log_index": null,
+      "uuid": null
+    }
+  },
+  "maintenance": null,
+  "event_id": "sha256:4f9470f5969275122408eb8892eb3f03817a8e887b1652d2581a380194e16990"
+}

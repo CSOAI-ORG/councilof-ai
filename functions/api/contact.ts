@@ -26,5 +26,5 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     await ctx.env.LEADS.put(`contact:${record.at}:${crypto.randomUUID()}`, JSON.stringify(record));
     return Response.json({ ok: true, stored: true });
   }
-  return Response.json({ ok: true, stored: false, reason: "no datastore bound yet", fallback: "email nicholas@csoai.org directly" });
+  return Response.json({ ok: true, stored: false, reason: "no datastore bound yet", fallback: "email contact@csoai.org directly" });
 };

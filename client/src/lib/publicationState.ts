@@ -12,6 +12,7 @@
  * does a stale entry here. Pickers call isWithdrawnPath() before promoting.
  */
 import manifest from "@/data/publication-state.json";
+import { reviewedBlogRecord } from "./reviewedBlog";
 
 export const WITHDRAWN_ROUTES: readonly string[] = manifest.withdrawn_routes;
 
@@ -34,5 +35,7 @@ export function routePatternMatches(pattern: string, path: string): boolean {
 /** True when the path renders the withdrawal notice instead of the promised page. */
 export function isWithdrawnPath(path: string): boolean {
   if (/^https?:\/\//i.test(path)) return false;
+  // Exact reviewed articles are routed before the generic withdrawal family.
+  if (reviewedBlogRecord(path)) return false;
   return WITHDRAWN_ROUTES.some((pattern) => routePatternMatches(pattern, path));
 }

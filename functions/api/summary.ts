@@ -124,7 +124,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
     contact_for_reply: {
       press: CONTACT_MAILBOX,
       disputes: CONTACT_MAILBOX,
-      partnership: "nicholas@csoai.org",
+      partnership: "contact@csoai.org",
       approval_review: "PRIORITY-GATED — owner approval required for outbound.",
     },
   };

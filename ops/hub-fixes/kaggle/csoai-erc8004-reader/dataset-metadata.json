@@ -1,0 +1,68 @@
+{
+  "title": "GSPC · ERC-8004 Reader — Council of AI",
+  "id": "nicktempleman/csoai-erc8004-reader",
+  "id_no": 12264939,
+  "subtitle": "Independent measurement of ERC-8004 agent registries. Not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-erc8004-reader`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-erc8004-reader -p ./dataset --unzip\n```\n\nStart by inspecting `erc8004_agents.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `probes.json`\n- `manifest.jsonl`\n- `tokenuris.json`\n- `census_snapshot.json`\n- `erc8004_agents.jsonl`\n- `erc8004_live_atoms.json`\n- `erc8004_live_filter_census.json`\n- See the Data tab for all 10 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement of ERC-8004 agent registries. Not a certification.**\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/erc8004-reader at revision `788d48d46855b995781e9e687f0b293b1ba73db9`, made 2026-10-06. The Hugging Face copy is the original; if the two differ, it wins.\n\n# ERC-8004 reader\n\nDISCOVERED — reader facts from the ERC-8004 Identity registry (CREATE2 `0x8004a169fb4a3325136eb29fa0ceb6d2e539a432`, live on mainnets): registrations read via keyless public RPC (`eth_call tokenURI`), declared service endpoints probed three-state for liveness. Nothing minted, no transactions ever, Validation mainnet PENDING. The live board is `GET https://councilof.ai/api/gspc`. [![GSPC](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc&query=%24.totals.public_count&label=GSPC&color=0B1F33)](https://councilof.ai/gspc-scoreboard)\n\n**The headline: we measured the REAL agents, not the registry noise.** The 8004scan\nindexer reports ~785,000 registrations. Filtered to agents that have actually received\non-chain feedback (`min_feedbacks>=1`), that drops to **138,967**. We drew a defensible\nsample of that real population, resolved each agent's on-chain `tokenURI(uint256)` keylessly,\ndecoded the registration-v1 descriptor, and probed its declared service endpoint three-state.\n\n## Live-filter result (`erc8004_live_filter_census.json`)\n\n- **45 real agents probed** (ranked from the feedback-bearing + x402 pool, on chains with a\n  keyless public RPC so every selected agent was actually probed).\n- **25 LIVE / 14 PLACEHOLDER / 6 DEAD → live-fraction 0.556.** Roughly **half** of the real\n  agents have a genuinely reachable service; the other half are placeholders or dead endpoints.\n- `LIVE` = declared endpoint answers HTTP 2xx/3xx (or 401/402/403 auth-gated) ·\n  `PLACEHOLDER` = registration resolves + declares an endpoint but it answers 4xx/5xx ·\n  `DEAD` = no endpoint declared, or DNS/connection fails.\n\n## Files\n\n- `erc8004_agents.jsonl` — flat viewer table, one row per probed identity (45): `agent_id`,\n  `token_id`, `name`, `chain_id`, `endpoint_state` (LIVE/PLACEHOLDER/DEAD), `registry_address`,\n  `http_status`, `as_of`. Registry totals stay in `erc8004_live_filter_census.json`.\n- `erc8004_live_filter_census.json` — the full 45-agent probe: per-row chain, token_id,\n  tokenURI sha256, declared endpoint, three-state, HTTP code; plus registry totals.\n- `erc8004_live_atoms.json` — the 25 genuinely-LIVE agents (the callable set).\n- `ledger-card-erc8004-callable-unsigned.json` — the `erc8004.callable` card-v0 atom\n  (aggregate census summary; `sig_ed25519=null` — NO_LAPTOP_SIGN, queued for GHA OIDC signing\n  under `did:web:csoai.org#board-attestation-1`).\n- `census_snapshot.json`, `tokenuris.json`, `probes.json` — the earlier n=3 snapshot, retained.\n\n## What this is not\n\n- Not a GSPC axis. No GSPC measure fields on any card.\n- Not 785k minted identities — we registered nothing and never will from a ledger script.\n- Not a Validation-registry result — Validation mainnet is PENDING; testnet skipped.\n- `is_verified` filter returns the full set unchanged (indexer quirk) — treated as untrusted.\n- High-feedback agents on chains without a keyless RPC (e.g. 5042002, 196) were logged\n  UNRESOLVED, never counted as DEAD.\n\n**Measurement, not certification.** Verify a card (free, no account): https://councilof.ai/gspc-verify\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 3, last updated 2026-10-06.\n- 10 files, 86,929 bytes. File types: .json (7), .jsonl (2), .md (1).\n- Hugging Face twin: [csoai/erc8004-reader](https://huggingface.co/datasets/csoai/erc8004-reader). 9 of 10 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_erc8004_reader,\n  title        = {ERC-8004 reader},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  note         = {DOI record unavailable since 29 Sep 2026 (Zenodo account blocked; appeal pending)},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/erc8004-reader}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "finance",
+    "internet"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 9 of 10 files have the same byte size as files in the Hugging Face dataset [csoai/erc8004-reader](https://huggingface.co/datasets/csoai/erc8004-reader) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "4301 — card. Dataset README (Markdown). 15,996 bytes."
+    },
+    {
+      "path": "census_snapshot.json",
+      "description": "6790 — JSON document. JSON document. top-level keys: census, as_of, source, status, measured, totals, chains_indexed, chains_mainnet, chains_testnet, chains, caveat. `chains` holds 62 records with fields: chain_id (integer), name (string), is_testnet (boolean). Same byte size as `census_snapshot.json` in huggingface.co/datasets/csoai/erc8004-reader (checked 2026-11-20). 6,790 bytes."
+    },
+    {
+      "path": "erc8004_agents.jsonl",
+      "description": "flat viewer table, one row per probed identity (45): `agent_id`,. Newline-delimited JSON (one record per line). 45 rows; fields: agent_id (string), token_id (string), name (string), chain_id (integer), endpoint_state (string), registry_address (string), http_status (string), as_of (datetime). Same byte size as `erc8004_agents.jsonl` in huggingface.co/datasets/csoai/erc8004-reader (checked 2026-11-20). 13,109 bytes."
+    },
+    {
+      "path": "erc8004_live_atoms.json",
+      "description": "the 25 genuinely-LIVE agents (the callable set). JSON document. 25 rows; fields: agent_id (string), chain_id (integer), token_id (string), reg_name (string), endpoint (url), http (integer), token_uri_sha256 (string), x402Support (boolean). Same byte size as `erc8004_live_atoms.json` in huggingface.co/datasets/csoai/erc8004-reader (checked 2026-11-20). 9,467 bytes."
+    },
+    {
+      "path": "erc8004_live_filter_census.json",
+      "description": "the full 45-agent probe: per-row chain, token_id,. JSON document. top-level keys: census, as_of, source_urls, status, method, registry_totals, sample, rows, note. `rows` holds 45 records with fields: agent_id (string), chain_id (integer), token_id (string), name (string), total_feedbacks (integer), average_score (numeric), is_verified (boolean), x402_supported (boolean), token_uri_sha256 (string), token_uri_kind (string), endpoint_from (string), endpoint (url), state (string), http (string), reg_name (string), … (+1 more). Same byte size as `erc8004_live_filter_census.json` in huggingface.co/datasets/csoai/erc8004-reader (checked 2026-11-20). 28,268 bytes."
+    },
+    {
+      "path": "ledger-card-erc8004-callable-unsigned.json",
+      "description": "the `erc8004.callable` card-v0 atom. JSON document. top-level keys: schema, surface, subject, as_of, source_urls, payload, sha256, unmeasured, did, sig_ed25519, note. Same byte size as `ledger-card-erc8004-callable-unsigned.json` in huggingface.co/datasets/csoai/erc8004-reader (checked 2026-11-20). 2,227 bytes."
+    },
+    {
+      "path": "ledger-card-erc8004-callable.json",
+      "description": "2449 — JSON document. JSON document. top-level keys: as_of, did, payload, schema, sha256, sig_ed25519, surface, subject, source_urls, unmeasured. Same byte size as `ledger-card-erc8004-callable.json` in huggingface.co/datasets/csoai/erc8004-reader (checked 2026-11-20). 2,449 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "10 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 10 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/erc8004-reader (checked 2026-11-20). 3,543 bytes."
+    },
+    {
+      "path": "probes.json",
+      "description": "1222 — JSON document. JSON document. top-level keys: as_of, grammar, method, probes, registry, never. `probes` holds 3 records with fields: token_id (integer), name (string), chain_id (integer), endpoint (url), http (integer), state (string), note (string). Same byte size as `probes.json` in huggingface.co/datasets/csoai/erc8004-reader (checked 2026-11-20). 1,222 bytes."
+    },
+    {
+      "path": "tokenuris.json",
+      "description": "3858 — JSON document. JSON document. top-level keys: 25975, 56260, 56249, 55985, 82835. Same byte size as `tokenuris.json` in huggingface.co/datasets/csoai/erc8004-reader (checked 2026-11-20). 3,858 bytes."
+    }
+  ]
+}

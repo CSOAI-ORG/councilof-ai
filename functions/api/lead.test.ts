@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { onRequestGet, onRequestPost } from "./lead";
 
 // LEADS holds contact:, lead: and subscribe: records keyed `<kind>:<ISO timestamp>:<uuid>`.
@@ -12,13 +12,13 @@ const SEEDED_KEYS = [
   "subscribe:2026-09-12T07:06:05.000Z:2d9e9c4a-3f4b-4a5c-9d0e-9f8a7b6c5d4e",
 ];
 
-type FakeKV = { kv: KVNamespace; store: Map<string, string>; listCalls: number; getCalls: number };
+type FakeKV = { kv: KVNamespace; store: Map<string, string>; listCalls: number; getCalls: number; ttls: number[] };
 
 function fakeKV(seed: string[] = SEEDED_KEYS): FakeKV {
   const store = new Map<string, string>(seed.map((k) => [k, "{}"]));
-  const f: FakeKV = { kv: undefined as unknown as KVNamespace, store, listCalls: 0, getCalls: 0 };
+  const f: FakeKV = { kv: undefined as unknown as KVNamespace, store, listCalls: 0, getCalls: 0, ttls: [] };
   f.kv = {
-    put: async (k: string, v: string) => void store.set(k, v),
+    put: async (k: string, v: string, options?: { expirationTtl?: number }) => { store.set(k, v); f.ttls.push(options?.expirationTtl ?? -1); },
     get: async (k: string) => {
       f.getCalls++;
       return store.get(k) ?? null;
@@ -42,6 +42,7 @@ function postCtx(body: unknown, LEADS?: KVNamespace) {
   return {
     request: new Request("https://councilof.ai/api/lead", {
       method: "POST",
+      headers: { "content-type": "application/json" },
       body: typeof body === "string" ? body : JSON.stringify(body),
     }),
     env: { LEADS },
@@ -95,7 +96,7 @@ describe("GET /api/lead never returns LEADS key names", () => {
   });
 });
 
-describe("POST /api/lead is unchanged", () => {
+describe("POST /api/lead stores bounded, traceable enquiries without implying delivery", () => {
   it("stores the form under lead:<timestamp>:<uuid> and says stored:true", async () => {
     const f = fakeKV([]);
     const r = await onRequestPost(postCtx({ email: "a@example.org", name: "A", report_id: "r1" }, f.kv));
@@ -106,13 +107,53 @@ describe("POST /api/lead is unchanged", () => {
     const rec = JSON.parse(f.store.get(key)!);
     expect(rec.email).toBe("a@example.org");
     expect(rec.report_id).toBe("r1");
+    expect(rec.notification_state).toBe("NOT_CONFIGURED");
+    expect(f.ttls).toEqual([-1]);
   });
 
   it("says stored:false with a fallback, never a silent 200, when LEADS is unbound", async () => {
     const r = await onRequestPost(postCtx({ email: "a@example.org" }));
     const b = await r.json();
     expect(b.stored).toBe(false);
-    expect(b.fallback).toContain("nicholas@csoai.org");
+    expect(b.fallback).toContain("contact@csoai.org");
+  });
+
+  it("persists the result_id the live assessment form actually sends", async () => {
+    const f = fakeKV([]);
+    const r = await onRequestPost(postCtx({
+      email: "buyer@example.org", name: "Example Buyer",
+      result_id: "assessment-ref-42", wants: "measurement_enquiry",
+    }, f.kv));
+    expect(r.status).toBe(200);
+    expect((await r.json()).stored).toBe(true);
+    const record = JSON.parse([...f.store.values()][0]);
+    expect(record.report_id).toBe("assessment-ref-42");
+    expect(record.wants).toBe("measurement_enquiry");
+    expect(record.notification_state).toBe("NOT_CONFIGURED");
+  });
+
+  it("never writes a malformed or excessive enquiry", async () => {
+    const f = fakeKV([]);
+    for (const payload of [
+      { email: "missing-at" },
+      { email: "a@example.org", result_id: "x".repeat(10000) },
+      { email: "a@example.org", report_id: "one", result_id: "two" },
+      { email: "a@example.org", name: "bad" + String.fromCharCode(10) + "name" },
+      { email: "x".repeat(300) + "@example.org" },
+    ]) {
+      const response = await onRequestPost(postCtx(payload, f.kv));
+      expect(response.status).toBeGreaterThanOrEqual(400);
+    }
+    expect(f.store.size).toBe(0);
+  });
+
+  it("does not return a false success when KV put rejects", async () => {
+    const kv = { put: vi.fn(async () => { throw new Error("KV not available"); }) } as unknown as KVNamespace;
+    const response = await onRequestPost(postCtx({ email: "buyer@example.org" }, kv));
+    expect(response.status).toBe(503);
+    const result = await response.json();
+    expect(result).toMatchObject({ stored: false, ok: false });
+    expect(result.fallback).toContain("contact@csoai.org");
   });
 
   it("rejects a missing email and a non-JSON body with 400", async () => {

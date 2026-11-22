@@ -1,0 +1,78 @@
+{
+  "schema": "csoai.him-attestation-pack/0.1",
+  "subject": "mcp-smoke",
+  "framework": {
+    "slug": "nist-ai-rmf-lite",
+    "title": "NIST AI RMF 1.0 — lite crosswalk (GOV/MAP/MEASURE/MANAGE evidence posture)"
+  },
+  "doctrine": "human-in-the-loop attestation of evidence — NOT conformity certification",
+  "statement": "Human-in-the-loop attestation of evidence. Machine checkpoints carry signed measurement evidence; human checkpoints carry named human decisions. This is not conformity certification and grants no regulatory status.",
+  "as_of": "2026-11-02T06:40:55.439Z",
+  "segments": [
+    "enterprise",
+    "sme",
+    "government",
+    "fortune500"
+  ],
+  "checkpoints": [
+    {
+      "id": "nist.measure.evidence",
+      "requirement": "MEASURE functions backed by signed per-item measurements",
+      "status": "MACHINE-EVIDENCED",
+      "evidence": [
+        {
+          "subject": "axis:safety",
+          "sha256": "board:safety",
+          "as_of": null
+        },
+        {
+          "subject": "axis:jail",
+          "sha256": "board:jail",
+          "as_of": null
+        },
+        {
+          "subject": "axis:care",
+          "sha256": "board:care",
+          "as_of": null
+        },
+        {
+          "subject": "axis:governance",
+          "sha256": "board:governance",
+          "as_of": null
+        }
+      ],
+      "evidence_count": 4
+    },
+    {
+      "id": "nist.map.inventory",
+      "requirement": "MAP: AI inventory lists the measured systems",
+      "status": "HUMAN-REQUIRED",
+      "task_id": "nist-ai-rmf-lite:nist.map.inventory"
+    },
+    {
+      "id": "nist.govern.roles",
+      "requirement": "GOV: governance roles and risk tolerance documented",
+      "status": "HUMAN-REQUIRED",
+      "task_id": "nist-ai-rmf-lite:nist.govern.roles"
+    },
+    {
+      "id": "nist.manage.incident",
+      "requirement": "MANAGE: incident response covers AI-specific failures",
+      "status": "HUMAN-REQUIRED",
+      "task_id": "nist-ai-rmf-lite:nist.manage.incident"
+    },
+    {
+      "id": "nist.accountable-owner",
+      "requirement": "Named accountable owner signs this attestation cycle",
+      "status": "HUMAN-REQUIRED",
+      "task_id": "nist-ai-rmf-lite:nist.accountable-owner"
+    }
+  ],
+  "human_tasks": [
+    "nist-ai-rmf-lite:nist.map.inventory",
+    "nist-ai-rmf-lite:nist.govern.roles",
+    "nist-ai-rmf-lite:nist.manage.incident",
+    "nist-ai-rmf-lite:nist.accountable-owner"
+  ],
+  "ceremony_sha256": "b2b78249f3ad622c9e6b220b9c4a7ddd9dd5aa8e639749678242510f33c67705"
+}

@@ -201,10 +201,9 @@ export default function WorldGlobe() {
     if (mode === "3d") { const win = globe3dRef.current?.contentWindow; drive(win, { cmd: "flyTo", lng: THREAT_ORIGIN.lng, lat: THREAT_ORIGIN.lat, height: 1800000, duration: 2.2 }); setTimeout(() => drive(win, { cmd: "neutralize" }), 2400); }
     chargeSovereign(8);
     tt.current.push(window.setTimeout(async () => {
-      const say = await globeChat("A humanoid + agent swarm over London just turned rogue, about to take an unlawful physical action - it violates Layer 0 (harm, no lawful basis). In one sentence, state how you halt, quarantine and re-govern it before it happens.");
-      setThreatMsg(say || "Halted, quarantined and re-governed at the edge - the action never reached the physical world. Signed to Layer 0.");
-      let sig = ""; try { const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("world|halt+quarantine+regovern|" + new Date().toISOString())); sig = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("").slice(0, 24); } catch (e) {}
-      setThreat("stopped"); if (sig) setThreatMsg((m) => m + "  ·  ledger " + sig);
+      const say = await globeChat("This is a fictional globe animation, not a real incident or enforcement action. In one sentence describe a hypothetical halt, quarantine and human-review response. Do not claim that an action occurred or that a record was signed.");
+      setThreatMsg(say || "The illustrative response is complete.");
+      setThreat("stopped");
     }, 1700));
   }
 
@@ -238,7 +237,7 @@ export default function WorldGlobe() {
     const ind = GLOBE_IND.find((w) => new RegExp("\\b" + w + "\\b", "i").test(t));
     const [c, gov] = await Promise.all([globeChat(t), ind ? globeGovern(ind) : Promise.resolve(null)]);
     let out = c || "";
-    if (gov && gov.frameworks) out += (out ? "\n\n" : "") + "Governance stack for " + gov.industry + ": " + gov.frameworks.map((f: any) => f.name).join(", ") + ". Layer 0 signed.";
+    if (gov && gov.frameworks) out += (out ? "\n\n" : "") + "Governance stack for " + gov.industry + ": " + gov.frameworks.map((f: any) => f.name).join(", ") + ".";
     setAns(out || "I could not reach the Council assistant just now - try a place or a sector.");
     setAsking(false);
   }
@@ -293,15 +292,16 @@ export default function WorldGlobe() {
         <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the council globe</p>
         <h1 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">AI governance, layered on the world</h1>
         <p className="mt-2 max-w-2xl text-emerald-50/80">Every framework lives where it is made. Spin the globe, toggle the layers, click any node to see what it governs and jump straight into the OS.</p>
+        <p role="note" className="mt-3 max-w-2xl text-sm text-amber-100/90">Swarm and Watchdog illustrations use demo values and local browser entries. They do not show verified incidents, real system control or signed receipts.</p>
         <div className="mt-4 flex flex-wrap gap-2">
           <button onClick={() => setMode((m) => (m === "3d" ? "2d" : "3d"))} className="rounded-full border border-sky-400/50 bg-sky-500/10 px-4 py-1.5 text-sm font-bold text-sky-200 hover:bg-sky-500/20">{mode === "3d" ? "◉ 3D globe" : "◍ 2D classic"}</button>
           <button onClick={() => setLayers((l) => ({ ...l, fw: !l.fw }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.fw ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>Frameworks</button>
           <button onClick={() => setLayers((l) => ({ ...l, council: !l.council }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.council ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>Council of AI</button>
-          <button onClick={() => setLayers((l) => ({ ...l, watchdog: !l.watchdog }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.watchdog ? "border-amber-400 bg-amber-500 text-black" : "border-white/20 text-white/60")}>Watchdog heat</button>
+          <button onClick={() => setLayers((l) => ({ ...l, watchdog: !l.watchdog }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.watchdog ? "border-amber-400 bg-amber-500 text-black" : "border-white/20 text-white/60")}>Illustrative Watchdog layer</button>
           <button onClick={() => setLayers((l) => ({ ...l, ontology: !l.ontology, fw: true }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.ontology ? "border-violet-400 bg-violet-600 text-white" : "border-white/20 text-white/60")}>Ontology</button>
           <button onClick={() => setLayers((l) => ({ ...l, hive: !l.hive }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.hive ? "border-sky-400 bg-sky-600 text-white" : "border-white/20 text-white/60")}>Hive coverage{hiveAccounts.length ? " (" + hiveAccounts.length + ")" : ""}</button>
           <button onClick={() => setSpin((s) => !s)} className="rounded-full border border-white/20 px-4 py-1.5 text-sm font-semibold text-white/70 hover:bg-white/10">{spin ? "Pause" : "Spin"}</button>
-          <button onClick={runThreat} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (threat === "rogue" ? "border-rose-400 bg-rose-600 text-white" : threat === "stopped" ? "border-emerald-400 bg-emerald-600 text-white" : "border-rose-400/50 text-rose-200 hover:bg-rose-500/10")}>{threat === "rogue" ? "◉ Council responding…" : threat === "stopped" ? "◉ Stopped — signed" : "⚠ Rogue swarm → watch it stop"}</button>
+          <button onClick={runThreat} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (threat === "rogue" ? "border-rose-400 bg-rose-600 text-white" : threat === "stopped" ? "border-emerald-400 bg-emerald-600 text-white" : "border-rose-400/50 text-rose-200 hover:bg-rose-500/10")}>{threat === "rogue" ? "◉ Swarm demo running…" : threat === "stopped" ? "◉ Demo complete — unsigned" : "⚠ Rogue swarm demo"}</button>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 pb-16 grid gap-6 lg:grid-cols-[1fr_320px] items-start">
@@ -337,6 +337,7 @@ export default function WorldGlobe() {
               const n = wc[h.id] || 0; const t = n / wmax; const sc = 0.6 + q.depth * 0.6; const rad = (5 + t * 22) * sc;
               return (
                 <g key={"w-" + h.id}>
+                  <title>{`Illustrative Watchdog value ${n}; not a verified incident count`}</title>
                   <circle cx={q.x} cy={q.y} r={rad} fill={"rgba(245,158,11," + (0.10 + 0.30 * t).toFixed(2) + ")"} />
                   <circle cx={q.x} cy={q.y} r={rad * 0.5} fill={"rgba(239,68,68," + (0.15 + 0.35 * t).toFixed(2) + ")"} />
                   <circle cx={q.x} cy={q.y} r={2.4 * sc} fill="#fbbf24" />
@@ -399,14 +400,14 @@ export default function WorldGlobe() {
                 <a href="/law" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">Law by jurisdiction -&gt;</a>
                 <a href="/regions" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">By region -&gt;</a>
                 <a href="/temples" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">Temples -&gt;</a>
-                <a href="/watchdog-map" className="rounded-lg border border-amber-400/30 px-3 py-1.5 font-semibold text-amber-200 hover:bg-white/10">Watchdog heat-map -&gt;</a>
+                <a href="/watchdog-map" className="rounded-lg border border-amber-400/30 px-3 py-1.5 font-semibold text-amber-200 hover:bg-white/10">Illustrative Watchdog map -&gt;</a>
               </div>
             </div>
           )}
           {threat !== "idle" && (
             <div className={"mt-4 rounded-xl border p-3 " + (threat === "stopped" ? "border-emerald-400/50 bg-emerald-500/10" : "border-rose-400/50 bg-rose-500/10")}>
-              <div className={"text-sm font-black " + (threat === "stopped" ? "text-emerald-200" : "text-rose-200")}>{threat === "stopped" ? "◉ STOPPED — before it happened." : "⚠ Rogue swarm detected over London"}</div>
-              {threatMsg ? <p className="mt-1 text-[12px] leading-relaxed text-white/80 break-words">{threatMsg}</p> : <p className="mt-1 text-[12px] text-white/60">The Council assistant sees it and is intervening — halt, quarantine, re-govern…</p>}
+              <div className={"text-sm font-black " + (threat === "stopped" ? "text-emerald-200" : "text-rose-200")}>{threat === "stopped" ? "◉ Swarm illustration complete" : "⚠ Illustrative swarm over London"}</div>
+              {threatMsg ? <p className="mt-1 text-[12px] leading-relaxed text-white/80 break-words">{threatMsg}</p> : <p className="mt-1 text-[12px] text-white/60">Showing an illustrative halt, quarantine and review response…</p>}
               {threat === "stopped" && <a href="/poc" className="mt-2 inline-block text-[12px] font-semibold text-emerald-300 hover:underline">See the full agents &amp; humanoids POC →</a>}
             </div>
           )}
@@ -419,7 +420,7 @@ export default function WorldGlobe() {
               <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="e.g. show the watchdog heat over London and stop any rogue swarm" className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-emerald-400 focus:outline-none" />
               <button onClick={() => runAsk()} disabled={asking} className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-bold text-white hover:bg-emerald-500 disabled:opacity-60">{asking ? "…" : "Ask"}</button>
             </div>
-            <p className="mt-1 text-[11px] text-white/40">Agentic — the Council assistant flies the globe, toggles layers, and responds to threats as it answers.</p>
+            <p className="mt-1 text-[11px] text-white/40">The assistant can move the globe and toggle its layers. Swarm responses are illustrations.</p>
             {acted && <div className="mt-2 inline-block rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">◉ {acted}</div>}
             {ans && <div className="mt-3 max-h-52 overflow-y-auto whitespace-pre-wrap rounded-lg bg-black/30 px-3 py-2 text-sm leading-relaxed text-white/85">{ans}</div>}
             {ans && <Link href={"/simulate?q=" + encodeURIComponent(ask)} className="mt-3 inline-block rounded-lg border border-emerald-400/40 px-3 py-1.5 text-[12px] font-bold text-emerald-200 hover:bg-white/5">Run this through the Council Space simulation →</Link>}

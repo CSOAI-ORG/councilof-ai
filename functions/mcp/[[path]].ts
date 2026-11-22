@@ -17,20 +17,22 @@ import {
 } from "@modelcontextprotocol/server";
 import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/server/validators/cf-worker";
 import GSPC_TOOLS from "./gspc-tools.json";
+import { toolsListResult } from "./_tools_list";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
-import { sharedToolResult, verifyToolResult } from "./_handlers";
-import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
+import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
+import { doorInstallLine, npmReleaseState } from "../../scripts/harness-x/npm-release-state.mjs";
+import { verifyToolResult } from "./_handlers";
+import { MCP_MAX_JSON_DEPTH, MCP_MAX_JSON_TOKENS, withinJsonBudget } from "./_input_budget";
+import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, X402_META_PAYMENT, type PaidCallerContext } from "./_paid";
+import { dispatchTool, FREE_TOOL_DEFINITIONS, TOOL_DEFINITIONS } from "./_dispatch";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
-import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
-import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
-import { ROUTE_TOOL_NAMES, routeToolResult } from "./_route";
-import { READINESS_TOOL_NAMES, readinessToolResult } from "./_readiness";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
 import { recordUsage } from "../_lib/usage";
 import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
+import { registerCouncilPanel } from "./_panel";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
-export const MCP_HTTP_SERVER_VERSION = "1.4.4";
+export const MCP_HTTP_SERVER_VERSION = "1.5.0";
 const SERVER_INFO = {
   name: "csoai-gspc-mcp",
   version: MCP_HTTP_SERVER_VERSION,
@@ -57,6 +59,39 @@ export const TOOL_COUNTS = toolCountSentence(FREE_TOOL_COUNT, PAID_TOOL_COUNT);
 export const STDIO_LITE_LINE = `${String(STDIO_PACKAGE.version).split(".").slice(0, 2).join(".")}.x`;
 
 /**
+ * The npm package's release state, DERIVED from the dated capture
+ * (distribution/npm/npm-publish-check.json, written by scripts/harness-x/npm-publish-live.mjs).
+ *
+ * It used to be typed prose here — "deprecated on npm; npx -y csoai-gspc-mcp (stdio-lite …: fewer
+ * tools…)" — and it was FALSE: npm deprecates 0.1.0-0.2.2, and the estate's own later releases
+ * (0.2.5) are not deprecated. The reason the stdio line is still a warning is a DIFFERENT measured
+ * one: the repository prepares 0.2.6, npm's latest published release is 0.2.5, and the published
+ * tarball carries 53 tool names against the 54 this door serves.
+ *
+ * The fallback below is a sentence that makes NO claim it cannot back, so a damaged capture
+ * degrades the line instead of taking the door down. The capture's health is a GATE
+ * (scripts/llms-txt.mjs --check and scripts/harness-x/render.mjs --check both read it), and
+ * functions/mcp/npm-release-state.test.ts asserts this line equals the derived one, so the
+ * fallback can never be the silent answer.
+ */
+function stdioInstallLine(origin: string): string {
+  try {
+    return doorInstallLine(npmReleaseState(NPM_CAPTURE), {
+      npmId: "csoai-gspc-mcp",
+      stdioLiteLine: STDIO_LITE_LINE,
+      freeDoor: `${origin}/mcp/free`,
+      doorTools: FREE_TOOL_COUNT + PAID_TOOL_COUNT,
+      preparedVersion: STDIO_PACKAGE.version,
+    });
+  } catch {
+    return (
+      `npm csoai-gspc-mcp@${STDIO_PACKAGE.version} (stdio-lite ${STDIO_LITE_LINE}: versioned separately ` +
+      `from this door; ask it for its tools/list, or use the free door ${origin}/mcp/free)`
+    );
+  }
+}
+
+/**
  * GET /mcp install block. ONE default line, and it is the free door: no key, no sign-in, read-only.
  * The metered door and the npm stdio package are alternatives, each labelled for what it is.
  */
@@ -64,8 +99,7 @@ export function fullDoorInstall(origin: string): Record<string, string> {
   return {
     default: `claude mcp add --transport http council-of-ai ${origin}/mcp/free`,
     this_door: `claude mcp add --transport http council-of-ai-metered ${origin}/mcp (the ${FREE_TOOL_COUNT} free tools plus ${PAID_TOOL_COUNT} x402 tools)`,
-    // Every published npm release is marked deprecated on npm (T14, 6 Oct 2026); say so first.
-    stdio_lite: `deprecated on npm; npx -y csoai-gspc-mcp (stdio-lite ${STDIO_LITE_LINE}: fewer tools, versioned separately; ask it for its tools/list)`,
+    stdio_lite: stdioInstallLine(origin),
     no_install_at_all: "curl -s https://councilof.ai/api/gspc",
     python: 'pip install "csoai-gspc[verify]" && csoai-gspc check',
   };
@@ -80,16 +114,44 @@ const CORS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, HEAD, POST, OPTIONS",
   "access-control-allow-headers":
-    "Content-Type, Accept, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Session-Id, Last-Event-ID",
+    "Authorization, Content-Type, Accept, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Session-Id, Last-Event-ID",
   "access-control-expose-headers":
     "MCP-Protocol-Version, Mcp-Session-Id, x-otel-trace-id",
 };
+/**
+ * The Server Card routes' own CORS set (SEP-2127, ext-server-card docs/discovery.md, "CORS Requirements":
+ * "This is safe because Server Cards contain only public metadata and are read-only."). It is sent on
+ * the card's 204, 200, 304 and 405 answers. The JSON-RPC endpoints keep CORS above, without If-None-Match.
+ */
+const SERVER_CARD_CORS = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, HEAD, OPTIONS",
+  "access-control-allow-headers": "Content-Type, If-None-Match, Accept",
+  "access-control-expose-headers": "ETag",
+};
+/** The card's entity tag: the first 32 lower-case hex characters of the SHA-256 of the exact GET body, quoted. */
+async function serverCardEtag(body: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(body));
+  const hex = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `"${hex.slice(0, 32)}"`;
+}
+/**
+ * If-None-Match by the weak comparison of RFC 9110 section 13.1.2: "*" matches; otherwise each listed tag,
+ * trimmed and with a leading W/ removed, is compared with the current tag. An edge that compresses the
+ * response may serve the strong tag as W/"...", and that form still matches.
+ */
+function ifNoneMatchHits(header: string | null, etag: string): boolean {
+  if (header === null) return false;
+  if (header.trim() === "*") return true;
+  return header.split(",").some((part) => part.trim().replace(/^W\//, "") === etag);
+}
 // Wire cap accommodates 20 MiB base64 input; this is not a concurrency SLA.
 export const MCP_MAX_REQUEST_BYTES = 28 * 1024 * 1024;
 const BODY_TIMEOUT_MS = 10_000;
 const HOSTS = [
   "councilof.ai",
   "www.councilof.ai",
+  "mcp.meok.ai",
   "csoai.org",
   "www.csoai.org",
   "localhost",
@@ -100,9 +162,10 @@ const BROWSER_ORIGINS = [...HOSTS, "chatgpt.com", "claude.ai"];
 // The measurement-capsule readers (measurement_index, verify_capsule, server_evidence) are ordinary
 // free tools in gspc-tools.json since 2026-09-26, when /measurement-capsules/ was published; the
 // MEASUREMENT_CAPSULE_TOOLS env gate that held them back is gone. One list, one fleet (the lock).
-const DEFINITIONS = [...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[];
-// The free door's registry: the same definitions, filtered. Never a second catalog.
-export const FREE_DEFINITIONS = DEFINITIONS.filter((d) => !PAID_TOOL_NAMES.has(d.name));
+// The registry and the dispatch live in ./_dispatch.ts since 2026-11-16, so POST /api/a2a runs a tool
+// through exactly what this door runs. The free door's registry is the same definitions, filtered.
+const DEFINITIONS = TOOL_DEFINITIONS;
+export const FREE_DEFINITIONS = FREE_TOOL_DEFINITIONS;
 // The SDK's no-eval adapter retains the canonical JSON Schema. No parallel catalog.
 const validator = new CfWorkerJsonSchemaValidator();
 type JsonSchema = Parameters<typeof fromJsonSchema>[0];
@@ -120,24 +183,39 @@ const compile = (defs: Tool[]) => defs.map((definition) => ({
     : undefined,
 }));
 
+/**
+ * A door alias answers with the same tools as councilof.ai/mcp, and its tools read and buy from the
+ * canonical origin. A paid call's challenge, resource and settlement then name the resources the
+ * x402 catalog (/.well-known/x402.json) lists. Measured 20 Nov 2026: a challenge from mcp.meok.ai
+ * named https://mcp.meok.ai/api/request-attestation, a resource no catalogue carries. Preview and
+ * local origins are not aliases and stay same-origin.
+ */
+export const DOOR_ALIAS_ORIGINS: Readonly<Record<string, string>> = { "mcp.meok.ai": "https://councilof.ai" };
+
 function buildMcp(
   definitions: Tool[],
   door: { instructions: string; paid: boolean },
+  caller?:PaidCallerContext,
 ) {
   const TOOLS = compile(definitions);
   return createMcpHandler(
   ({ requestInfo }) => {
     if (!requestInfo) throw new Error("HTTP request context required");
-    const origin = new URL(requestInfo.url).origin;
+    const requestUrl = new URL(requestInfo.url);
+    const origin = DOOR_ALIAS_ORIGINS[requestUrl.host] ?? requestUrl.origin;
     const server = new McpServer(SERVER_INFO, {
       instructions: door.instructions,
-      capabilities: { tools: { listChanged: false } },
+      // No subscriptions are served here (maxSubscriptions: 0), so no list_changed is ever sent.
+      // SDK 2 defaults an undeclared bit to true once a resource or prompt is registered.
+      capabilities: { tools: { listChanged: false }, resources: { listChanged: false }, prompts: { listChanged: false } },
       cacheHints: {
         "server/discover": { ttlMs: 300_000, cacheScope: "public" },
-        "tools/list": { ttlMs: 300_000, cacheScope: "public" },
+        // Named selections and the full catalogue must never share a cached result.
+        "tools/list": { ttlMs: 0, cacheScope: "public" },
       },
     });
     registerWorkingGroups(server);
+    registerCouncilPanel(server);
     for (const { definition, inputSchema, outputSchema } of TOOLS) {
       server.registerTool(
         definition.name,
@@ -149,21 +227,18 @@ function buildMcp(
           // readOnlyHint for the free readers; the paid tools spend the caller's funds when called
           // with x_payment, so they are neither read-only nor idempotent (paid-tools.json).
           ...(definition.annotations ? { annotations: definition.annotations } : {}),
+          ...(definition._meta ? { _meta: definition._meta } : {}),
         },
-        (args) =>
+        (args, ctx) => {
+          // x402 MCP transport: a paying client retries the same call with its PaymentPayload in
+          // params._meta["x402/payment"]. Only the paid door passes it on, and only a paid tool reads it.
+          const metaPayment = door.paid
+            ? (ctx?.mcpReq?._meta as Record<string, unknown> | undefined)?.[X402_META_PAYMENT]
+            : undefined;
           // door.paid guards the dispatch as well as the registry: the free door never reaches
           // the paid wrapper even if a paid definition were ever passed to it by mistake.
-          door.paid && PAID_TOOL_NAMES.has(definition.name)
-            ? paidToolResult(definition.name, args, origin)
-            : MEASUREMENT_TOOL_NAMES.has(definition.name)
-              ? measurementToolResult(definition.name, args, origin)
-              : EVIDENCE_TOOL_NAMES.has(definition.name)
-                ? evidenceToolResult(definition.name, args, origin)
-                : ROUTE_TOOL_NAMES.has(definition.name)
-                  ? routeToolResult(args, origin)
-                  : READINESS_TOOL_NAMES.has(definition.name)
-                    ? readinessToolResult(args)
-                    : sharedToolResult(definition.name, args, origin),
+          return dispatchTool(definition.name, args, origin, door, metaPayment === undefined ? caller : { ...caller, metaPayment });
+        },
       );
     }
     // Historical unlisted alias; it is not in tools/list and does not inflate the canonical count.
@@ -180,12 +255,51 @@ function buildMcp(
         },
         (args) => verifyToolResult(args, origin),
       );
-    server.server.setRequestHandler("tools/list", () => ({
-      tools: definitions,
-    }));
+    server.server.setRequestHandler("tools/list", (request) => toolsListResult(definitions, request.params));
     return server;
   },
-  { legacy: "stateless", maxSubscriptions: 0 },
+  // SDK 2.1.0 and later stop reading a POST body at 4 MiB unless told otherwise (#2698). The door
+  // has already read and capped the body at MCP_MAX_REQUEST_BYTES, so the SDK gets the same bound
+  // and the 20 MiB base64 argument still reaches its tool.
+  { legacy: "stateless", maxSubscriptions: MAX_SUBSCRIPTIONS, maxRequestBodySize: MCP_MAX_REQUEST_BYTES },
+  );
+}
+/** No subscriptions are served on these doors. Raise it only together with the capability bits. */
+const MAX_SUBSCRIPTIONS: number = 0;
+
+/**
+ * subscriptions/listen on doors that serve no subscriptions (MCP 2026-07-28).
+ *
+ * With MAX_SUBSCRIPTIONS at 0 and no listChanged or subscribe bit advertised, the SDK's listen
+ * router can only refuse, and it refuses with -32603 "Subscription limit reached" under HTTP 200:
+ * an internal-error code for a deliberate absence. The 2026-07-28 Streamable HTTP transport says a
+ * server that does not implement the requested method MUST answer 404 Not Found with -32601, which
+ * is how `ping` is already answered here, and the official conformance suite (server-stateless,
+ * @modelcontextprotocol/conformance 0.2.0-alpha.12) scores -32601 on listen as a legitimate feature
+ * absence when server/discover advertises no subscription capability.
+ *
+ * Only that refusal is rewritten. The SDK's header, envelope and client-capability checks run first,
+ * and their answers (400 with -32020 or -32602, among others) pass through unchanged. If
+ * MAX_SUBSCRIPTIONS is ever raised, a real limit refusal is no longer rewritten.
+ */
+async function listenNotServed(
+  method: string,
+  response: Response,
+  id: string | number | undefined,
+): Promise<Response> {
+  if (MAX_SUBSCRIPTIONS !== 0 || method !== "subscriptions/listen" || response.status !== 200) return response;
+  if (!(response.headers.get("content-type") ?? "").includes("application/json")) return response;
+  try {
+    const answer = (await response.clone().json()) as { error?: { code?: unknown } };
+    if (answer.error?.code !== -32603) return response;
+  } catch {
+    return response;
+  }
+  return jsonError(
+    404,
+    -32601,
+    "Method not found: this door serves no subscriptions (server/discover advertises no listChanged or subscribe capability).",
+    id,
   );
 }
 const mcp = buildMcp(DEFINITIONS, { instructions: INSTRUCTIONS, paid: true });
@@ -287,12 +401,10 @@ function object(value: unknown): value is Record<string, unknown> {
 /**
  * True when a GET is a browser page load: `text/html` is accepted and preferred over JSON.
  *
- * WHY. /mcp/ is a sitemap URL (App.tsx declares a /mcp route) and the address people are told
- * to paste into a client, so people open it in a browser. It used to answer every GET with the
- * discovery JSON: no title, no lang, no heading (ux-gauntlet 2026-09-26). Agents DO read that JSON
- * (llms.txt tells them to quote paid_tools.names from it), so it stays exactly where it is for any
- * request that does not ask for HTML (curl's default, fetch's default, SDK clients). Only a
- * browser navigation, which sends Accept: text/html first, gets the same document as a page.
+ * WHY. /mcp is both the protocol endpoint and the address people open in a browser. Keep the
+ * human catalogue under /mcps so it cannot shadow this function. Agents read the JSON discovery
+ * document (llms.txt points them to paid_tools.names); browser navigation gets the same endpoint
+ * information rendered as an accessible page.
  */
 export function prefersHtml(accept: string | null): boolean {
   const a = (accept ?? "").toLowerCase();
@@ -411,32 +523,42 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
     return jsonError(403, -32600, "Request host is not allowed.");
   if (!guardHeaders.has("host")) guardHeaders.set("host", url.host);
   const guardRequest = new Request(request.url, { headers: guardHeaders });
-  const rejected =
-    hostHeaderValidationResponse(guardRequest, hosts) ??
-    originValidationResponse(request, [...BROWSER_ORIGINS, ...hosts]);
-  if (rejected) return withHeaders(rejected);
+  const hostRejected = hostHeaderValidationResponse(guardRequest, hosts);
+  if (hostRejected) return withHeaders(hostRejected);
   // SEP-2127 (draft) Server Card at <streamable-http-url>/server-card, one per door (functions/mcp/_server_card.ts).
   // Built per request from the same definitions arrays tools/list returns, so its tool snapshot cannot drift.
+  // Answered after the host checks and before the Origin allowlist: the card is the same for every Origin,
+  // for "null" and for none. The allowlist still guards every other path, the JSON-RPC endpoints included.
   const cardDoor = serverCardDoor(url.pathname);
   if (cardDoor) {
-    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
+    if (request.method === "OPTIONS")
+      return new Response(null, { status: 204, headers: { ...SERVER_CARD_CORS, "access-control-max-age": "86400" } });
     if (request.method !== "GET" && request.method !== "HEAD")
-      return new Response(null, { status: 405, headers: { ...CORS, allow: "GET, HEAD, OPTIONS" } });
+      return new Response(null, { status: 405, headers: { ...SERVER_CARD_CORS, allow: "GET, HEAD, OPTIONS" } });
     const defs = cardDoor === "free" ? FREE_DEFINITIONS : DEFINITIONS;
     const card = await buildServerCard(cardDoor, url.origin, {
       version: MCP_HTTP_SERVER_VERSION,
       toolNames: defs.map((d) => d.name),
       toolCounts: cardDoor === "free" ? `${FREE_TOOL_COUNT} read-only tools at /mcp/free.` : TOOL_COUNTS,
     });
-    return new Response(request.method === "HEAD" ? null : JSON.stringify(card, null, 2), {
-      headers: {
-        ...CORS,
-        "content-type": SERVER_CARD_MEDIA_TYPE,
-        "cache-control": "public, max-age=300",
-        vary: "Accept",
-      },
+    // The body holds no per-request value: it depends on the door and the request's origin only, so
+    // each address has one body and one tag, and HEAD carries the tag of the body GET returns.
+    const body = JSON.stringify(card, null, 2);
+    const etag = await serverCardEtag(body);
+    const headers = {
+      ...SERVER_CARD_CORS,
+      etag,
+      "cache-control": "public, max-age=300",
+      vary: "Accept",
+    };
+    if (ifNoneMatchHits(request.headers.get("if-none-match"), etag))
+      return new Response(null, { status: 304, headers });
+    return new Response(request.method === "HEAD" ? null : body, {
+      headers: { ...headers, "content-type": SERVER_CARD_MEDIA_TYPE },
     });
   }
+  const originRejected = originValidationResponse(request, [...BROWSER_ORIGINS, ...hosts]);
+  if (originRejected) return withHeaders(originRejected);
   const door = doorFor(url.pathname);
   if (!door)
     return jsonError(404, -32601, "MCP endpoints are /mcp and /mcp/free; their server cards are /mcp/server-card and /mcp/free/server-card.");
@@ -536,6 +658,14 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       "Request body exceeds the size/time limit or is not valid UTF-8.",
     );
   }
+  // Bytes are capped above; structure is capped here, before this door's JSON.parse and the SDK's
+  // (functions/mcp/_input_budget.ts). One long string is one token, so 20 MiB of base64 still fits.
+  if (!withinJsonBudget(body))
+    return jsonError(
+      413,
+      -32600,
+      `Request JSON exceeds the structure limit (${MCP_MAX_JSON_TOKENS} tokens, ${MCP_MAX_JSON_DEPTH} levels).`,
+    );
   let call: unknown;
   try {
     call = JSON.parse(body);
@@ -566,8 +696,8 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
   if (id === undefined && !call.method.startsWith("notifications/"))
     return jsonError(400, -32600, "A request id is required for this method.");
   const params = object(call.params) ? call.params : {};
-  // Published SDK 2.0.0 accepts a modern body without its version header.
-  // Keep the normative HTTP requirement at our mount until upstream closes it.
+  // A modern body needs its version header. SDK 2.0.0 accepted one without it; 2.1.0 and later
+  // refuse it too (#2590). This mount answers first, so the answer does not move with the SDK.
   if (
     object(params._meta) &&
     "io.modelcontextprotocol/protocolVersion" in params._meta &&
@@ -609,7 +739,9 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       body,
       signal: request.signal,
     });
-    const upstream = await (door === "free" ? mcpFree : mcp).fetch(boundedRequest);
+    const handler=door==="free"?mcpFree:request.headers.has("authorization")
+      ?buildMcp(DEFINITIONS,{instructions:INSTRUCTIONS,paid:true},{authorization:request.headers.get("authorization")||undefined,env:(env||{}) as PaidCallerContext["env"]}):mcp;
+    const upstream=await listenNotServed(call.method,await handler.fetch(boundedRequest),id);
     const response = withTraceHeader(
       withHeaders(wantsSse ? upstream : await sseToJson(upstream)),
       trace?.traceId ?? null,

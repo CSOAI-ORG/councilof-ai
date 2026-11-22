@@ -138,7 +138,7 @@ export default function CouncilConsole() {
       } else if (lower.includes("charter")) {
         say({ role: "console", kind: "escort", label: "Open the Firewall Charter", path: "/firewall-charter" });
       } else if (lower.includes("honest")) {
-        say({ role: "console", kind: "escort", label: "Open the honesty gate", path: "/honesty" });
+        say({ role: "console", kind: "escort", label: "Open measurement scope and limitations", path: "/honesty" });
       } else if (lower.includes("insur")) {
         say({ role: "console", kind: "escort", label: "Open the insurer evidence pack", path: "/insurers" });
       } else {

@@ -112,3 +112,11 @@ describe("measurement-board run and fallback truth", () => {
     expect(loaded.provenance).toMatch(/signed snapshot whose status document marks it CURRENT/);
   });
 });
+
+describe("public board count scope", () => {
+  it("explains why the visible row count can differ from the public API total", () => {
+    expect(boardSet.relation).toContain("only rows cleared for public-page display");
+    expect(boardSet.relation).toContain("If the owner holds a row back, the full GET /api/gspc count still includes it");
+    expect(boardSet.relation).toContain("API itself remains public");
+  });
+});
