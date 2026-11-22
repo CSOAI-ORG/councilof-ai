@@ -6,6 +6,8 @@ on:
       - 'packages/evidence-fabric/**'
       - 'scripts/security/dataset_delta_guard.py'
       - 'scripts/security/test_dataset_delta_guard.py'
+      - 'scripts/security/dataset_delta_pipeline.py'
+      - 'scripts/security/test_dataset_delta_pipeline.py'
       - 'scripts/build-daily-*.mjs'
       - 'scripts/daily-maintenance-*.mjs'
       - 'scripts/build-axis-reports*.mjs'
@@ -41,6 +43,8 @@ on:
       - 'packages/evidence-fabric/**'
       - 'scripts/security/dataset_delta_guard.py'
       - 'scripts/security/test_dataset_delta_guard.py'
+      - 'scripts/security/dataset_delta_pipeline.py'
+      - 'scripts/security/test_dataset_delta_pipeline.py'
       - 'scripts/build-daily-*.mjs'
       - 'scripts/daily-maintenance-*.mjs'
       - 'scripts/build-axis-reports*.mjs'
@@ -152,6 +156,7 @@ jobs:
       - name: Dataset revision integrity and Evidence Fabric boundary (offline, no network)
         run: |
           python -B -m unittest discover -s scripts/security -p 'test_dataset_delta_guard.py' -v
+          python -B -m unittest discover -s scripts/security -p 'test_dataset_delta_pipeline.py' -v
           python -B -m unittest discover -s packages/evidence-fabric/tests -p 'test_dataset_delta_in.py' -v
       - name: Held referee continuity and discriminating mutation controls
         run: python -B -m unittest discover -s packages/evidence-fabric/tests -p 'test_axis_referee*.py' -v
