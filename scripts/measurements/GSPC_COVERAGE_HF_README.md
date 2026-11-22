@@ -28,3 +28,18 @@ Run the canonical board snapshot, then pass the snapshot and public/interop/gspc
 The feed keeps the distinction between MEASURED and method-qualified; between a tie, separated leader and UNTESTED; between no record and proven absence; and between changed bytes and evidence of an attack. A hash that changes while the number of rows stays fixed requires source review but does not by itself diagnose data poisoning. Hashes alone cannot authenticate a record against an attacker able to rewrite both record and digest. Verifying signed root inclusion and independent replication is a separate step.
 
 This is an unsigned, single-run projection. Public Hugging Face publication is distribution, not institutional adoption or verified identity.
+
+
+## Portable lineage adapter (static, not transmitted)
+
+The OpenLineage-compatible `openlineage.json` is a **JobEvent** stating the
+declared input/output relationships of this source-bound coverage projection.
+It carries immutable Git revision links and a project-qualified custom facet
+(`csoai_coverage`) whose source digests, uncertainty states and nonclaims can
+be inspected by external data catalogues. The matching
+`openlineage-facet.schema.json` describes the facet for independent tooling.
+
+It is **not** a RunEvent: exporting source metadata does not prove that a remote
+job ran, a receiver ingested an event, or a signer or reviewer accepted the
+underlying model evidence. No OpenLineage endpoint is contacted by the workflow.
+See https://openlineage.io/docs/spec/object-model/ for event semantics.
