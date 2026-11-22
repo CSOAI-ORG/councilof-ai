@@ -107,10 +107,12 @@ export default function Investors() {
   }, []);
 
   const show = (value: number | null) => (value === null ? "unavailable" : value.toLocaleString("en-GB"));
-  const usdc = live.settledAtomic === null ? "unavailable" : `$${(live.settledAtomic / 1_000_000).toFixed(2)}`;
+  // The amount is settled USDC, shown in its own unit. A dollar figure reads as a price, and the deploy-only
+  // price gate refuses it (22 Nov 2026: it blocked every production deploy after this page landed).
+  const usdc = live.settledAtomic === null ? "unavailable" : `${(live.settledAtomic / 1_000_000).toFixed(2)} USDC`;
   const counters = [
     { value: show(live.payers), label: "Distinct outside payers", note: "All time · self-tests excluded", href: "/api/revenue" },
-    { value: usdc, label: "Settled outside value", note: "USDC · self and zero-value tests excluded", href: "/api/revenue" },
+    { value: usdc, label: "Settled outside value", note: "Received from outside payers · self and zero-value tests excluded", href: "/api/revenue" },
     { value: show(live.outsideCommissions), label: "Outside commissions", note: "Paid measurement commissions from outside parties", href: "/api/commissions" },
     { value: show(live.cards), label: "Admitted records in the current root", note: live.rootAsOf ? `as of ${live.rootAsOf}` : "Signed evidence root", href: "/root.json" },
     { value: show(live.corrections), label: "Published corrections", note: "Dated entries in the public ledger", href: "/api/corrections" },
