@@ -62,7 +62,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Mirror public synthetic research from trusted master only
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
