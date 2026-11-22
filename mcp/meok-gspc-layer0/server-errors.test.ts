@@ -67,38 +67,48 @@ it('surfaces coordinator connection failure as an outer MCP error', async () => 
 
 it.each([true, false])('preserves downstream desktop tool isError=%s at the outer MCP boundary', async isError => {
   const downstream = { isError, content: [{ type: 'text', text: isError ? 'permission denied' : 'fixture output' }] };
-  const result = await callBridge('zcode_desktop', { op: 'call', tool: 'fixture' }, jsonReply({ jsonrpc: '2.0', id: 2, result: downstream }));
+  const result = await callBridge('zcode_desktop', { op: 'call', tool: 'list_devices' }, jsonReply({ jsonrpc: '2.0', id: 2, result: downstream }));
   expect(Boolean(result.isError)).toBe(isError);
   expect(body(result).result).toEqual(downstream);
 });
 
 it.each(['list', 'call'])('preserves desktop JSON-RPC errors for %s', async op => {
-  const result = await callBridge('zcode_desktop', { op, tool: 'fixture' }, jsonReply({ jsonrpc: '2.0', id: 2, error: { code: -32000, message: 'private-desktop-detail' } }));
+  const result = await callBridge('zcode_desktop', op === 'list' ? { op: 'list' } : { op: 'call', tool: 'list_devices' }, jsonReply({ jsonrpc: '2.0', id: 2, error: { code: -32000, message: 'private-desktop-detail' } }));
   expect(result.isError).toBe(true);
   expect(body(result).reason).toBe('DESKTOP_RPC_ERROR');
   expect(JSON.stringify(result)).not.toContain('private-desktop-detail');
 });
 
 it('does not treat an HTTP desktop failure containing result-shaped JSON as successful execution', async () => {
-  const result = await callBridge('zcode_desktop', { op: 'call', tool: 'fixture' }, jsonReply({ result: { content: [] } }, 503));
+  const result = await callBridge('zcode_desktop', { op: 'call', tool: 'list_devices' }, jsonReply({ result: { content: [] } }, 503));
   expect(result.isError).toBe(true);
   expect(body(result)).toMatchObject({ reason: 'DESKTOP_HTTP_ERROR', http_status: 503 });
 });
 
 it('rejects a desktop response with no result', async () => {
-  const result = await callBridge('zcode_desktop', { op: 'call', tool: 'fixture' }, jsonReply({ jsonrpc: '2.0', id: 2 }));
+  const result = await callBridge('zcode_desktop', { op: 'call', tool: 'list_devices' }, jsonReply({ jsonrpc: '2.0', id: 2 }));
   expect(result.isError).toBe(true);
   expect(body(result).reason).toBe('DESKTOP_RESPONSE_INVALID');
 });
 
-it('marks bridge argument errors as outer MCP errors without making a request', async () => {
+it.each([
+  { op: 'call' },
+  { op: 'call', tool: 'start_process', arguments: { command: 'some command' } },
+  { op: 'call', tool: 'read_file', arguments: { path: '/private' } },
+  { op: 'call', tool: 'list_devices', arguments: { extra: true } },
+  { op: 'call', tool: 'list_devices', arguments: null },
+  { op: 'list', tool: 'start_process' },
+  { op: 'call', tool: 'list_devices', grant: 'asserted-by-model' },
+])('refuses unqualified desktop call before contacting the host: %j', async args => {
   let requested = false;
-  const result = await callBridge('zcode_desktop', { op: 'call' }, (_req, res) => { requested = true; res.end('{}'); });
-  expect(result.isError).toBe(true); expect(requested).toBe(false);
+  const result = await callBridge('zcode_desktop', args, (_req, res) => { requested = true; res.end('{}'); });
+  expect(result.isError).toBe(true);
+  expect(body(result).state).toBe('REFUSED');
+  expect(requested).toBe(false);
 });
 
 it('surfaces a desktop connection failure as an outer MCP error', async () => {
-  const result = await callBridge('zcode_desktop', { op: 'call', tool: 'fixture' }, req => { req.socket.destroy(); });
+  const result = await callBridge('zcode_desktop', { op: 'call', tool: 'list_devices' }, req => { req.socket.destroy(); });
   expect(result.isError).toBe(true);
   expect(body(result).reason).toBe('DESKTOP_REQUEST_FAILED');
 });
