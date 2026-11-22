@@ -23,7 +23,13 @@ export async function waitForGlobeDriveReady(page, { timeout = 10000 } = {}) {
         ), undefined, { timeout: Math.max(1, deadline - Date.now()) });
       if (ready) return;
     } catch (error) {
-      if (!/Frame was detached|Execution context was destroyed/i.test(error.message)) throw error;
+      // Each evaluate gets the time left before the deadline, at least 1 ms. When that runs out
+      // mid-evaluate, Playwright throws TimeoutError ("Timeout 1ms exceeded") before the loop can
+      // report it, so a missing readiness message surfaced as a timeout instead of the error below
+      // (sov-stack-e2e runs 44869063299, 44915858751, 44971112062). Fall through to the deadline check.
+      const retryable = error?.name === "TimeoutError"
+        || /Frame was detached|Execution context was destroyed/i.test(error.message);
+      if (!retryable) throw error;
     }
     await page.waitForTimeout(Math.min(100, Math.max(1, deadline - Date.now())));
   }
