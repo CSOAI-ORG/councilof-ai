@@ -17,6 +17,13 @@ const THIS = fileURLToPath(import.meta.url);
 const BASE = fileURLToPath(new URL("../../harness/hitl/approval-effect-demo.mjs", import.meta.url));
 const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
 const GAP_IDS = Object.freeze(["effect_present_receipt_missing", "receipt_present_effect_missing"]);
+// Exact bank identity is part of the measurement, not just the reported denominator.
+const V1_CASE_IDS = Object.freeze([
+  "pass", "revoked", "unknown_revocation", "stale_claim", "expired",
+  "not_yet_valid", "wrong_scope", "tampered_request", "invalid_signature",
+  "wrong_epoch", "deny", "substituted_trust_key",
+  "unrevoked_by_folder_writer", "missing_pin",
+]);
 const refuse = reason => { throw Error("HITL v2 candidate rejected: " + reason); };
 
 export function runEvidenceGap(id) {
@@ -61,10 +68,13 @@ export function deriveV2(base, gaps, asOf = new Date().toISOString()) {
       base.production_authority !== false ||
       !Array.isArray(base.cases) || base.cases.length !== 14 ||
       !/^[a-f0-9]{64}$/.test(base.source_sha256)) refuse("v1 precondition absent");
+  const observedBaseIds = base.cases.map(c => c?.scenario);
+  if (new Set(observedBaseIds).size !== V1_CASE_IDS.length ||
+      V1_CASE_IDS.some(id => !observedBaseIds.includes(id))) refuse("v1 scenario identity mismatch");
   if (!Array.isArray(gaps) || gaps.length !== 2 ||
       new Set(gaps.map(g => g?.case_id)).size !== 2 ||
       GAP_IDS.some(id => !gaps.some(g => g?.case_id === id))) refuse("wrong v2 gap denominator");
-  const positives = base.cases.filter(c => c.scenario === "pass" && c.execution === "EXECUTED" && c.observer === "EFFECT_READBACK_MATCHED");
+  const positives = base.cases.filter(c => c.scenario === "pass" && c.execution === "EXECUTED" && c.observer === "EFFECT_READBACK_MATCHED" && c.actual_effect_written === true && c.replay === "DENIED" && c.replay_does_not_append === true && c.modified_effect_observer === "EFFECT_READBACK_MISMATCH");
   const refusals = base.cases.filter(c => c.scenario !== "pass" && c.execution === "DENIED" && c.observer === "NO_EFFECT" && c.actual_effect_written === false);
   if (positives.length !== 1 || refusals.length !== 13) refuse("v1 control result changed");
   for (const id of GAP_IDS) {
