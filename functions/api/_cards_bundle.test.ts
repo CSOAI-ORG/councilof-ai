@@ -172,6 +172,8 @@ describe("readCardsBundle — the whole 0.1 file", () => {
     expect(await readCardsBundle(ORIGIN)).toMatchObject({ ok: true, cards_object: false, cards: {}, as_of: "a" });
     vi.stubGlobal("fetch", vi.fn(async () => Response.json([])));
     expect(await readCardsBundle(ORIGIN)).toMatchObject({ ok: true, layout: "whole", cards_object: false, cards: {} });
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json(null)));
+    await expect(readCardsBundle(ORIGIN)).rejects.toThrow(/JSON null/);
     vi.stubGlobal("fetch", vi.fn(async () => new Response("down", { status: 503 })));
     expect(await readCardsBundle(ORIGIN)).toMatchObject({ ok: false, status: 503, reason: "HTTP 503", failed: `${ORIGIN}/cards-bundle.json` });
     vi.stubGlobal("fetch", vi.fn(async () => { throw new Error("offline"); }));

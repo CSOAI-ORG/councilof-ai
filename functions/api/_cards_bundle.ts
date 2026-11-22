@@ -122,7 +122,11 @@ export async function readCardsBundle(origin: string, opts: { keep?: Keep } = {}
 
   const got = await getJson(source);
   if (!got.ok) return fail(got.reason, got.status, source);
-  // JSON that is not an object carries no cards object; it is passed on as such, like the 0.1 read.
+  // A JSON null is neither a corpus nor an absence. The single-file readers threw on it (they read
+  // `cards` of null), and the paid-delivery harness pins that an evidence purchase rejects before any
+  // payment step on it ("null response body"), so it still throws here.
+  if (got.body === null) throw new TypeError("the cards bundle body is JSON null");
+  // Other JSON that is not an object carries no cards object; it is passed on as such, like the 0.1 read.
   const index: Record<string, unknown> = isObject(got.body) ? got.body : {};
   const as_of = typeof index.as_of === "string" ? index.as_of : null;
   const merkle_root = typeof index.merkle_root === "string" ? index.merkle_root : null;
