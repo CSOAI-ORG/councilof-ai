@@ -1,6 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { produceEvidenceEngineIndex } from "./gspc-evidence-engine-index.mjs";
+import { produceEvidenceEngineIndex, verifyCurrentCheckoutPins } from "./gspc-evidence-engine-index.mjs";
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
+import { createHash } from "node:crypto";
 
 const H=s=>s.repeat(64);
 function sources(){
@@ -97,4 +101,69 @@ test("unverifiable artifact hashes and fake signed coverage are not accepted",()
 test("run metadata requires real positive GitHub run IDs, never an arbitrary web URL",()=>{
   const x=sources();
   assert.throws(()=>produceEvidenceEngineIndex(x.coverage,x.repeat,x.mutation,x.hashes,{coverage:12,repeat:13,mutation:0}),/successful GitHub run id absent/);
+});
+
+
+test("current-master checkout pin guard detects same-count, same-size source substitution",()=>{
+  const root=mkdtempSync(join(tmpdir(),"csoai-index-current-master-"));
+  try {
+    const source=join(root,"cells");
+    mkdirSync(source);
+    const file="items-safety-aabbccdd0011.jsonl";
+    const original='{"axis":"safety","item_id":"one","ok":true}\n';
+    const altered='{"axis":"safety","item_id":"one","ok":null}\n';
+    const hash=x=>createHash("sha256").update(x).digest("hex");
+    const sourcePath=join(source,file);
+    const manifestPath=join(root,"MANIFEST.json");
+    const referencePath=join(root,"baseline.sha256");
+    writeFileSync(sourcePath,original);
+    const sourceDigest=hash(file+" "+hash(original));
+    const manifest={source:{source_digest:sourceDigest,cell_files:1,source_rows:1}};
+    const manifestRaw=JSON.stringify(manifest);
+    writeFileSync(manifestPath,manifestRaw);
+    const baseline="a".repeat(64);
+    writeFileSync(referencePath,baseline+"\n");
+    const report={
+      sources:{fact_manifest_digest:hash(manifestRaw),physical_cell_source_digest:sourceDigest},
+      measurements:{source_cells:1},
+      separate_synthetic_research:{baseline_sha256:baseline},
+    };
+    const opts={manifestPath,evidenceDir:source,referencePath};
+    assert.equal(verifyCurrentCheckoutPins(report,opts).state,
+      "SOURCE_BYTES_MATCH_CURRENT_CHECKOUT_UNWITNESSED");
+    writeFileSync(sourcePath,altered);
+    assert.throws(()=>verifyCurrentCheckoutPins(report,opts),/physical cell digest differs/);
+    writeFileSync(sourcePath,original);
+    writeFileSync(referencePath,"b".repeat(64)+"\n");
+    assert.throws(()=>verifyCurrentCheckoutPins(report,opts),/synthetic control reference changed/);
+    writeFileSync(referencePath,baseline+"\n");
+    writeFileSync(manifestPath,JSON.stringify({...manifest,source:{...manifest.source,source_digest:"0".repeat(64)}}));
+    assert.throws(()=>verifyCurrentCheckoutPins(report,opts),/historical Actions fact manifest differs/);
+  } finally {rmSync(root,{recursive:true,force:true});}
+});
+
+test("missing current source index and malformed raw item can never pass the master freshness gate",()=>{
+  const root=mkdtempSync(join(tmpdir(),"csoai-index-missing-cell-"));
+  try {
+    const src=join(root,"cells");mkdirSync(src);
+    const name="items-safety-aabbccdd0011.jsonl";
+    const raw='{"axis":"safety","item_id":"one","ok":true}\n';
+    const hash=x=>createHash("sha256").update(x).digest("hex");
+    const digest=hash(name+" "+hash(raw));
+    const manifest={source:{source_digest:digest,cell_files:1,source_rows:1}};
+    const manifestRaw=JSON.stringify(manifest);
+    const manifestPath=join(root,"MANIFEST.json");
+    const referencePath=join(root,"baseline.sha256");
+    writeFileSync(manifestPath,manifestRaw);
+    writeFileSync(referencePath,"a".repeat(64)+"\n");
+    const report={
+      sources:{fact_manifest_digest:hash(manifestRaw),physical_cell_source_digest:digest},
+      measurements:{source_cells:1},
+      separate_synthetic_research:{baseline_sha256:"a".repeat(64)},
+    };
+    const options={manifestPath,evidenceDir:src,referencePath};
+    assert.throws(()=>verifyCurrentCheckoutPins(report,options),/current source cells differ|current source inventory/);
+    writeFileSync(join(src,name),'{');
+    assert.throws(()=>verifyCurrentCheckoutPins(report,options),/invalid source JSON/);
+  }finally{rmSync(root,{recursive:true,force:true});}
 });
