@@ -1,0 +1,99 @@
+name: GSPC repeated-observation integrity audit
+
+on:
+  pull_request:
+    paths:
+      - "scripts/measurements/gspc-repeat-integrity.mjs"
+      - "scripts/measurements/gspc-repeat-integrity.node-test.mjs"
+      - "scripts/measurements/GSPC_REPEAT_HF_README.md"
+      - "public/interop/gspc-fact-table/**"
+      - "public/interop/mill-evidence/**"
+      - ".github/workflows/gspc-repeat-integrity.yml"
+  push:
+    branches: [master]
+    paths:
+      - "scripts/measurements/gspc-repeat-integrity.mjs"
+      - "scripts/measurements/gspc-repeat-integrity.node-test.mjs"
+      - "public/interop/gspc-fact-table/**"
+      - "public/interop/mill-evidence/**"
+      - ".github/workflows/gspc-repeat-integrity.yml"
+  schedule: [{cron: "47 5 * * *"}]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+concurrency:
+  group: gspc-repeat-integrity
+  cancel-in-progress: false
+
+jobs:
+  source-qualified-observation-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - name: Exercise negative controls and full real corpus
+        run: node --test scripts/measurements/gspc-repeat-integrity.node-test.mjs
+      - name: Emit bounded source-bound aggregate report
+        run: |
+          mkdir -p "$RUNNER_TEMP/gspc-repeat"
+          node scripts/measurements/gspc-repeat-integrity.mjs --manifest public/interop/gspc-fact-table/MANIFEST.json --evidence public/interop/mill-evidence --out "$RUNNER_TEMP/gspc-repeat/report.json"
+          cp scripts/measurements/GSPC_REPEAT_HF_README.md "$RUNNER_TEMP/gspc-repeat/README.md"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os,json
+          p=Path(os.environ["RUNNER_TEMP"])/"gspc-repeat"/"report.json"
+          d=json.loads(p.read_text())
+          assert d["state"]=="EXPLORATORY_SOURCE_RECONCILED_NOT_A_MODEL_GRADE"
+          assert d["source_authentication"]=="DIGESTED_SOURCE_BYTES_NOT_SIGNED_OR_INDEPENDENTLY_REPRODUCED"
+          assert d["rows"]["rows"]==d["rows"]["rows_with_attributed_model"]+d["rows"]["rows_without_model"]
+          for key,denominator in [
+            ("coarse_identity",d["rows"]["rows_with_attributed_model"]),
+            ("pinned_identity",d["rows"]["rows_with_complete_pinned_identity"]),
+          ]:
+            g=d[key]
+            assert g["distinct_keys"]+g["extra_rows_above_one_per_key"]==denominator
+          print("SOURCE_BOUND_REPEAT_AUDIT_OK",d["rows"]["rows"],"rows",d["coarse_identity"]["distinct_keys"],"distinct attributed keys")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gspc-repeat-source-reconciled-candidate
+          path: |
+            ${{ runner.temp }}/gspc-repeat/report.json
+            ${{ runner.temp }}/gspc-repeat/README.md
+          if-no-files-found: error
+          retention-days: 30
+      - name: Mirror aggregate public research to HF only on trusted runs
+        if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if test -z "$HF_TOKEN"; then
+            echo "HF_TOKEN_NOT_CONFIGURED: Actions artifact remains accessible; no external publishing"
+            exit 0
+          fi
+          python3 -m pip install -q "huggingface_hub>=0.25"
+          python3 - <<'PY'
+          import os,json
+          from pathlib import Path
+          from huggingface_hub import HfApi,hf_hub_download
+          d=Path(os.environ["RUNNER_TEMP"])/"gspc-repeat"
+          new=json.loads((d/"report.json").read_text())
+          repo="csoai/gspc-repeat-observation-integrity"
+          api=HfApi(token=os.environ["HF_TOKEN"])
+          try:
+            old=json.loads(Path(hf_hub_download(repo_id=repo,repo_type="dataset",
+              filename="report.json",token=os.environ["HF_TOKEN"])).read_text())
+            if old==new:
+              print("NO_CHANGE: source/report unchanged, avoiding duplicate public release")
+              raise SystemExit(0)
+          except Exception as exc:
+            if isinstance(exc,SystemExit):raise
+            print("NO_COMPARABLE_PREVIOUS_REPORT:",type(exc).__name__)
+          api.create_repo(repo,repo_type="dataset",private=False,exist_ok=True)
+          api.upload_folder(folder_path=str(d),repo_id=repo,repo_type="dataset",
+            commit_message="Source-qualified repeated-observation evidence report")
+          print("HF_PUBLIC_RESEARCH_UPDATED: unsigned aggregate data, not an accepted GSPC score")
+          PY
