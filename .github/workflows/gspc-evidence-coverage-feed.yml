@@ -4,6 +4,9 @@ on:
     paths:
       - "scripts/measurements/gspc-coverage-feed.mjs"
       - "scripts/measurements/gspc-coverage-feed.node-test.mjs"
+      - "scripts/measurements/gspc-coverage-openlineage.mjs"
+      - "scripts/measurements/gspc-coverage-openlineage.node-test.mjs"
+      - "schemas/gspc-coverage-openlineage-job-facet.schema.json"
       - "scripts/measurements/GSPC_COVERAGE_HF_README.md"
       - "scripts/gspc-board-snapshot.mjs"
       - "public/interop/gspc-fact-table/MANIFEST.json"
@@ -13,6 +16,9 @@ on:
     paths:
       - "scripts/measurements/gspc-coverage-feed.mjs"
       - "scripts/measurements/gspc-coverage-feed.node-test.mjs"
+      - "scripts/measurements/gspc-coverage-openlineage.mjs"
+      - "scripts/measurements/gspc-coverage-openlineage.node-test.mjs"
+      - "schemas/gspc-coverage-openlineage-job-facet.schema.json"
       - "public/interop/gspc-fact-table/MANIFEST.json"
       - ".github/workflows/gspc-evidence-coverage-feed.yml"
   schedule: [{cron: "11 5 * * *"}]
@@ -81,12 +87,19 @@ jobs:
           assert j["counts"]["board_axes_with_fact_rows"] + j["counts"]["board_axes_without_fact_rows"] == len(j["axes"])
           print("COVERAGE_REPLAYED",j["counts"]["board_axes"],j["counts"]["fact_rows"],j["delta"]["state"])
           PY
+      - name: Produce portable OpenLineage static JobEvent without transmitting it
+        run: |
+          node --test scripts/measurements/gspc-coverage-openlineage.node-test.mjs
+          node scripts/measurements/gspc-coverage-openlineage.mjs --coverage "$RUNNER_TEMP/gspc-coverage/coverage.json" --commit "$GITHUB_SHA" --out "$RUNNER_TEMP/gspc-coverage/openlineage.json"
+          cp schemas/gspc-coverage-openlineage-job-facet.schema.json "$RUNNER_TEMP/gspc-coverage/openlineage-facet.schema.json"
       - uses: actions/upload-artifact@v4
         with:
           name: gspc-source-bound-coverage
           path: |
             ${{ runner.temp }}/gspc-coverage/README.md
             ${{ runner.temp }}/gspc-coverage/coverage.json
+            ${{ runner.temp }}/gspc-coverage/openlineage.json
+            ${{ runner.temp }}/gspc-coverage/openlineage-facet.schema.json
             ${{ runner.temp }}/gspc-coverage/source-board.json
             ${{ runner.temp }}/gspc-coverage/source-fact-manifest.json
           if-no-files-found: error
