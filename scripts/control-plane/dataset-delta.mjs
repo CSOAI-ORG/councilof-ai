@@ -14,7 +14,7 @@ export function datasetManifest(files) {
     if (!(bytes instanceof Uint8Array) && typeof bytes !== "string") throw new TypeError("bytes must be string or Uint8Array");
     const b = typeof bytes === "string" ? Buffer.from(bytes, "utf8") : Buffer.from(bytes);
     return { path, sha256: sha(b), size: b.length };
-  }).sort((x,y) => x.path.localeCompare(y.path, "en"));
+  }).sort((x,y) => x.path < y.path ? -1 : x.path > y.path ? 1 : 0);
   for (let i=1;i<rows.length;i++) if (rows[i].path === rows[i-1].path) throw new Error("duplicate path");
   const root = sha(Buffer.from(rows.map(r=>JSON.stringify([r.path,r.size,r.sha256])).join("\n"), "utf8"));
   return { schema:"csoai.dataset-manifest/0.1", digest_algorithm:"SHA-256", entries:rows, manifest_sha256:root };
@@ -25,7 +25,7 @@ export function compareDatasetManifests(before, after) {
       throw new Error("bad manifest");
     for (const r of m.entries) if (!validPath(r.path) || !HASH.test(r.sha256) || !Number.isSafeInteger(r.size) || r.size < 0)
       throw new Error("bad manifest entry");
-    const expected = sha(Buffer.from([...m.entries].sort((x,y)=>x.path.localeCompare(y.path,"en")).map(r=>JSON.stringify([r.path,r.size,r.sha256])).join("\n"), "utf8"));
+    const expected = sha(Buffer.from([...m.entries].sort((x,y)=>x.path < y.path ? -1 : x.path > y.path ? 1 : 0).map(r=>JSON.stringify([r.path,r.size,r.sha256])).join("\n"), "utf8"));
     if (m.manifest_sha256 !== expected) throw new Error("tampered manifest");
     if (new Set(m.entries.map(r=>r.path)).size !== m.entries.length) throw new Error("duplicate path");
   };
