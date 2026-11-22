@@ -1,6 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { deriveCoverage, SCHEMA } from "./gspc-coverage-feed.mjs";
+import { deriveCoverage, readCellSourceDigest, readCoverage, SCHEMA } from "./gspc-coverage-feed.mjs";
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from "node:fs";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
+import { createHash } from "node:crypto";
 
 const hash=(c)=>c.repeat(64);
 function input() {
@@ -84,4 +88,65 @@ test("unknown prior source digest cannot manufacture a clean delta", () => {
   const prior=deriveCoverage(board,fact,digests);
   prior.sources.fact_cell_source_digest=null;
   assert.throws(()=>deriveCoverage(board,fact,digests,prior),/previous source pins uncheckable/);
+});
+
+test("a changed manifest projection is not mistaken for NO_SOURCE_BYTES_CHANGED", () => {
+  const {board,fact,digests}=input();
+  const before=deriveCoverage(board,fact,digests);
+  // A corrected generator can change model attribution with identical raw cells.
+  fact.by_model["vendor/model"]=1;
+  fact.by_model["(unattributed)"]=2;
+  fact.counts.rows_without_a_model=2;
+  digests.fact_manifest_sha256=hash("e");
+  const after=deriveCoverage(board,fact,digests,before);
+  assert.equal(after.delta.rows_change,0);
+  assert.equal(after.delta.source_changed,false);
+  assert.equal(after.delta.fact_manifest_changed,true);
+  assert.equal(after.delta.state,"FACT_PROJECTION_CHANGED_REEVALUATE");
+});
+
+test("previous manifest hash is required to claim a clean delta", () => {
+  const {board,fact,digests}=input();
+  const before=deriveCoverage(board,fact,digests);
+  delete before.sources.fact_manifest_sha256;
+  assert.throws(()=>deriveCoverage(board,fact,digests,before),/previous source pins uncheckable/);
+});
+
+test("the consumer independently hashes the source file bytes, and detects substitutions with equal row counts", () => {
+  const root=mkdtempSync(join(tmpdir(),"csoai-gspc-cell-source-"));
+  const source=join(root,"cells");
+  const boardFile=join(root,"board.json");
+  const manifestFile=join(root,"manifest.json");
+  try {
+    mkdirSync(source);
+    const file=join(source,"items-safety-abcd1234.jsonl");
+    writeFileSync(file,'{"axis":"safety","model":"fixture/model","item_id":"one","ok":true}\n');
+    const cells=readCellSourceDigest(source);
+    const {board,fact}=input();
+    fact.source={...fact.source,...cells,cell_files:cells.cell_files,source_rows:cells.source_rows};
+    fact.counts.cells=cells.cell_files;
+    fact.counts.measurements=cells.source_rows;
+    fact.counts.items=1;
+    fact.counts.axes=1;
+    fact.counts.models=1;
+    fact.counts.rows_without_a_model=0;
+    fact.counts.rows_not_graded=0;
+    fact.by_axis={safety:1};
+    fact.by_model={"fixture/model":1};
+    fact.tables.measurements.rows=1;
+    fact.tables.measurements.parts[0].rows=1;
+    writeFileSync(boardFile,JSON.stringify(board));
+    writeFileSync(manifestFile,JSON.stringify(fact));
+    const present=readCoverage({board:boardFile,manifest:manifestFile,evidence:source});
+    assert.equal(present.sources.fact_cell_source_digest,cells.source_digest);
+    // Same number of rows: only bytes changed. A count-only audit misses this.
+    writeFileSync(file,'{"axis":"safety","model":"fixture/model","item_id":"one","ok":false}\n');
+    assert.throws(()=>readCoverage({board:boardFile,manifest:manifestFile,evidence:source}),/independent raw cell hash\/count/);
+  } finally { rmSync(root,{recursive:true,force:true}); }
+});
+
+test("the consumer refuses to report a trusted result if raw evidence cannot be accessed", () => {
+  const root=mkdtempSync(join(tmpdir(),"csoai-gspc-empty-source-"));
+  try {assert.throws(()=>readCellSourceDigest(root),/no source item cells/);}
+  finally {rmSync(root,{recursive:true,force:true});}
 });
