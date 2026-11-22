@@ -22,6 +22,7 @@ ACCEPT={
  "trajectory":("csoai.meok-trajectory-control-research/0.1","evidence_state","SYNTHETIC"),
  "blind":("csoai.blind-target-control/0.1","state","SYNTHETIC"),
  "jspace":("csoai.jspace-public-feature-audit/0.1","state","PUBLIC_THIRD_PARTY_REANALYSIS"),
+ "transfer":("csoai.jspace-public-stage-transfer/0.1","evidence_state","RETROSPECTIVE_PUBLIC_TRANSFER"),
 }
 
 
@@ -45,6 +46,8 @@ def validate_record(kind, report):
         raise ValueError("historical public bank must declare not blind")
     if kind=="jspace" and report.get("source_revision")!="b176b283b82f5b7fa786bc0c67842299cadf1803":
         raise ValueError("unexpected third-party J-space source revision")
+    if kind=="transfer" and (report.get("train_revision")!="b176b283b82f5b7fa786bc0c67842299cadf1803" or report.get("train",{}).get("n_valid",0)<100 or report.get("test",{}).get("n_valid",0)<100):
+        raise ValueError("stage-transfer revision or sample-size mismatch")
     if kind=="two_path" and report.get("independent_referee_established") is not False:
         raise ValueError("unsupported independent referee claim")
     if kind=="trajectory" and report.get("not_live_agent") is not True:
@@ -60,7 +63,7 @@ def validate_record(kind, report):
 
 def compose(reports):
     if set(reports)!=set(ACCEPT):
-        raise ValueError(f"need exactly six supported kinds: {sorted(ACCEPT)}")
+        raise ValueError(f"need exactly seven supported kinds: {sorted(ACCEPT)}")
     entries=[]
     for kind,record in sorted(reports.items()):
         checked=validate_record(kind,record)
@@ -79,7 +82,7 @@ def compose(reports):
         "n_entries":len(entries),
         "entries":entries,
         "assertion_boundary":[
-            "Six report types joined, NOT six independent scientific confirmations",
+            "Seven report types joined, NOT seven independent scientific confirmations",
             "Synthetic controls remain synthetic; archived public model outputs remain public",
             "No consciousness or extrasensory-access conclusion follows from this index",
             "Candidate only: existing csoai.evidence-event/0.1 admission and HITL policy remain separate",
