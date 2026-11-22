@@ -1,0 +1,70 @@
+name: hub-fixes
+
+# Applies the reviewed Hugging Face / Kaggle fix bundles in ops/hub-fixes/ (see ops/hub-fixes/README.md).
+# Manual only. Dry run unless apply=true. Secret values are never echoed.
+#   Hugging Face: one pull request per repo (create_pr=True); never commits to main.
+#   Kaggle has no pull requests (live publish), so it also needs confirm_publish=true.
+#   Collections and the flagship also need confirm_publish=true; the flagship is created PRIVATE.
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "What to run"
+        type: choice
+        options: [probe, hf-card-prs, collections, flagship, kaggle-metadata]
+        default: probe
+      wave:
+        description: "HF manifest wave (hf-card-prs only)"
+        type: choice
+        options: [wave1, wave2-owner]
+        default: wave1
+      limit:
+        description: "Max HF repos this run (0 = all in the wave)"
+        default: "0"
+      apply:
+        description: "Actually write (otherwise dry run)"
+        type: boolean
+        default: false
+      confirm_publish:
+        description: "Required for Kaggle, collections and flagship writes"
+        type: boolean
+        default: false
+      report_pr:
+        description: "PR number to post the run report on (optional)"
+        default: ""
+
+concurrency: { group: hub-fixes, cancel-in-progress: false }
+permissions: { contents: read, pull-requests: write }
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+      HF_HUB_DISABLE_XET: "1"
+      TASK: ${{ inputs.task }}
+      WAVE: ${{ inputs.wave }}
+      LIMIT: ${{ inputs.limit }}
+      APPLY: ${{ inputs.apply }}
+      CONFIRM: ${{ inputs.confirm_publish }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install -q "huggingface_hub>=0.26" "kaggle>=1.7" pyyaml datasets
+      - name: probe token identity and scopes (no values printed)
+        run: python3 ops/hub-fixes/probe_tokens.py | tee -a report.md
+      - name: run task
+        if: env.TASK != 'probe'
+        working-directory: ops/hub-fixes
+        run: bash run_task.sh 2>&1 | tee -a "$GITHUB_WORKSPACE/report.md"
+      - name: post report to PR
+        if: always() && inputs.report_pr != ''
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          { echo "### hub-fixes: task=$TASK wave=$WAVE apply=$APPLY confirm=$CONFIRM"; echo '```'; tail -c 60000 report.md 2>/dev/null; echo '```'; } > body.md
+          gh pr comment "${{ inputs.report_pr }}" --body-file body.md

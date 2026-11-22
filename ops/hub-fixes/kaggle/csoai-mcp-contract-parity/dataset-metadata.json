@@ -1,0 +1,371 @@
+{
+  "title": "MCP contract parity",
+  "id": "nicktempleman/csoai-mcp-contract-parity",
+  "id_no": 12264115,
+  "subtitle": "Mirror of Hugging Face csoai/mcp-contract-parity",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-mcp-contract-parity`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-mcp-contract-parity -p ./dataset --unzip\n```\n\nStart by inspecting `rows.v0.1.2.viewer.parquet`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `hold.jsonl`\n- `rows.jsonl`\n- `record.json`\n- `record.json.ots`\n- `record.ots.json`\n- `rows.v0.1.1.jsonl`\n- `rows.v0.1.2.jsonl`\n- See the Data tab for all 41 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/mcp-contract-parity at revision `eb931f3b80087013b1eae757e40bee2a37ca93d3`, made 2026-10-15. The Hugging Face copy is the original; if the two differ, it wins.\n\n## MCP contract parity — dated evidence package\n\nThis snapshot records whether public discovery surfaces and a service's observed MCP contract agreed at the time of the probe. Its scope is contract consistency, not general agent capability or safety.\n\nThe mirrored record is version 0.1.2, dated 26 September 2026. Earlier records and the correction evidence remain in the files. The source reports a PARTIAL read state. Read the method, limitations and corrections in `README.md` before using a per-endpoint finding; a historical mismatch must not be presented as an unresolved current defect.\n\nThe previous Kaggle description was cut off during its corrections section. The complete source documentation, including historical records and verification instructions, is available in the downloaded `README.md` and the pinned source below.\n\n[Complete source README at the mirrored revision](https://huggingface.co/datasets/csoai/mcp-contract-parity/blob/eb931f3b80087013b1eae757e40bee2a37ca93d3/README.md).\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 2, last updated 2026-10-15.\n- 41 files, 54,768,276 bytes. File types: .json (22), .ots (10), .jsonl (6), .md (1), .txt (1), .parquet (1).\n- Hugging Face twin: [csoai/mcp-contract-parity](https://huggingface.co/datasets/csoai/mcp-contract-parity). 34 of 41 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_mcp_contract_parity_2026,\n  author       = {{Council of AI (CSOAI)}},\n  title        = {MCP contract parity: measured read of 2026-09-25, record 0.1.2},\n  year         = {2026},\n  publisher    = {Hugging Face},\n  howpublished = {\\url{https://huggingface.co/datasets/csoai/mcp-contract-parity}},\n  note         = {record.v0.1.2.json sha256 5a9bedff1b6facbd9e19a1db1282b37fb6cedd9bf6c7dd14aeeeff387eae77ed}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software",
+    "computer vision",
+    "tabular"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 34 of 41 files have the same byte size as files in the Hugging Face dataset [csoai/mcp-contract-parity](https://huggingface.co/datasets/csoai/mcp-contract-parity) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 105,694 bytes."
+    },
+    {
+      "path": "correction.v0.1.1.evidence.json",
+      "description": "0.1.1 (superseded) — `2f9f1c7d6da86da5ba9e4b00f271eb6750908dc744f4f92e0d0bbc278d2382e4`. JSON document. top-level keys: immersivecommons, augenix, klarix, transloadit, toolforte. Same byte size as `correction.v0.1.1.evidence.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 4,183 bytes."
+    },
+    {
+      "path": "correction.v0.1.2.evidence.json",
+      "description": "current — `4aeb29819d605c018e51e656898a430deb1972e9f3728ef5affcd4f984e60fc2`. JSON document. top-level keys: findings, inputs, schema, source. Same byte size as `correction.v0.1.2.evidence.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 3,037 bytes."
+    },
+    {
+      "path": "hold.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 119,053 bytes."
+    },
+    {
+      "path": "ots-bitcoin-check-2026-09-25.json",
+      "description": "0.1 (superseded) — `1579b97378406ff46e4f0c1a9925b5c0dcf42e817c8a6292c5844b5235bb68a8`. JSON document. top-level keys: schema, repo, read_at_revision, checked_utc, method, not_a_claim, proofs. `proofs` holds 1 records with fields: file (string), target (string), target_sha256 (string), file_digest (string), binds_to_target (boolean), orig_sha256 (string), upgraded_sha256 (string), state (string), bitcoin (string), pending (string), bitcoin_ots (string). Same byte size as `ots-bitcoin-check-2026-09-25.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 2,710 bytes."
+    },
+    {
+      "path": "ots-bitcoin-check-2026-09-26.json",
+      "description": "current — `cb4df3c004adb4b67b90599870a4b4cf46cbaae2e1bf1877ef6b51bde9a3bc3f`. JSON document. top-level keys: schema, checked_utc, method, files. Same byte size as `ots-bitcoin-check-2026-09-26.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 4,452 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-26/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 4 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-26/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 4,196 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-26/probe/record.firstparty-2026-09-25.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-26/probe/record.firstparty-2026-09-25.json.ots` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 1,636 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-26/record.json.ots",
+      "description": "0.1 (superseded) — `c168264381e3f2ed4af313c9315834c875dc62cb0b223c3020b8e8498fa505dd`. OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-26/record.json.ots` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 1,671 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-26/record.v0.1.1.json.ots",
+      "description": "0.1.1 (superseded) — `8b8190b7fa2cb07a777a6d77f631d6b2ad47bbc27f1e0279bfa16bf0cd747a51`. OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-26/record.v0.1.1.json.ots` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 1,567 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-26/record.v0.1.2.json.ots",
+      "description": "current — `8425658e4921988f61841f4b6408d7533670fc311cfd8322e2d61bfd4bc55162`. OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-26/record.v0.1.2.json.ots` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 1,707 bytes."
+    },
+    {
+      "path": "probe/census-firstparty-2026-09-25.not_attempted.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 130,971 bytes."
+    },
+    {
+      "path": "probe/census-firstparty-2026-09-25.plan.json",
+      "description": "current — `1ec209dc4401777924d11bb8b87c9b50f6aec57da45012ce240c8811b6defefa`. JSON document. top-level keys: schema, as_of, frame, psl, top20_plan, candidates, ineligible, tier_n, tier_by_basis, tier_already_in_top20_plan, tier_added_to_plan, tier_added_by_basis, tier_hosts, tier_registrable_domains, top_registrable_domains, rule, why, what_a_row_is, what_it_never_proves, probing. Same byte size as `probe/census-firstparty-2026-09-25.plan.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 2,857 bytes."
+    },
+    {
+      "path": "probe/census-firstparty-2026-09-25.results.public.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 4,751,071 bytes."
+    },
+    {
+      "path": "probe/census-firstparty-2026-09-25.summary.json",
+      "description": "current — `6b0b5ca7757b2952202bd5dc854918427dbd7692d1f83aaa61dbfc589eb35379`. JSON document. top-level keys: schema, started, finished, user_agent, plan, n_planned, n_attempted, n_not_attempted, not_attempted_by_reason, read_state, read_state_rule, states, own_estate_endpoints, auth_required_http_status, mcp_request_not_sent, responded, requests, limits, sent_to_endpoints, never_sent …. Same byte size as `probe/census-firstparty-2026-09-25.summary.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 5,877 bytes."
+    },
+    {
+      "path": "probe/record.firstparty-2026-09-25.json",
+      "description": "current — `f338012c259fe9790fc5cbb338447fae15078970b35b80cd037aa25fe3f7c212`. JSON document. top-level keys: as_of, cited_by_parity, exclusions, not_published, probe, public_fields, published_files, published_utc, rights_gate, schema, verify, what. Same byte size as `probe/record.firstparty-2026-09-25.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 3,551 bytes."
+    },
+    {
+      "path": "probe/record.firstparty-2026-09-25.json.ots",
+      "description": "current — `159adde3f00bcd02600f2093cbcf6d6f40cf335a87ca5208ec5cb4c63dc6e9f7`. OpenTimestamps proof file for `probe/record.firstparty-2026-09-25.json` (included in this dataset). Same byte size as `probe/record.firstparty-2026-09-25.json.ots` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "probe/record.firstparty-2026-09-25.ots.json",
+      "description": "current — `67cab2c46d3b5a7b45fc9abddaa56e3ea86bbe05f3e5e0480806064397167498`. JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning. Same byte size as `probe/record.firstparty-2026-09-25.ots.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 940 bytes."
+    },
+    {
+      "path": "probe/record.firstparty-2026-09-25.signed.json",
+      "description": "current — `165b534d70669e98c244c4aaee898c8548b1b7b1560d6be3c83441efa419c5c4`. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `probe/record.firstparty-2026-09-25.signed.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 2,116 bytes."
+    },
+    {
+      "path": "record.json",
+      "description": "0.1 (superseded) — `45e3fd63fc98ad251a4f9fe5fdb705ed7fbc28321d5c205d10114a21730cc323`. JSON document. top-level keys: as_of, dimension_states, endpoints_with_any_inconsistent, hf_dataset, hold, inconsistent_dimensions_per_endpoint, inconsistent_pairs_top, instrument, never_sent, own_result_first, published_files, question, run, schema, states, surface_fetch_states, timing, uncheckable_reasons, verify, version_namespaces …. Same byte size as `record.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 25,111 bytes."
+    },
+    {
+      "path": "record.json.bitcoin.ots",
+      "description": "0.1 (superseded) — `e38d524655a32a8acdca3be872165b3933dbfcdff8ea1ca3354d61a7f6d2e989`. OpenTimestamps proof file. Same byte size as `record.json.bitcoin.ots` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 1,636 bytes."
+    },
+    {
+      "path": "record.json.ots",
+      "description": "0.1 (superseded) — `c168264381e3f2ed4af313c9315834c875dc62cb0b223c3020b8e8498fa505dd`. OpenTimestamps proof file for `record.json` (included in this dataset). Same byte size as `record.json.ots` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "record.ots.json",
+      "description": "0.1 (superseded) — `6478a681448ee98800ea3cd35acac77b6c7c51e3d427acedecb31c71a00f4d70`. JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning. Same byte size as `record.ots.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 884 bytes."
+    },
+    {
+      "path": "record.signed.json",
+      "description": "0.1 (superseded) — `58458051bb7b1db6a5d32f22ee08ad345434c8e57df74e4d62deab713904d5fa`. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `record.signed.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 2,599 bytes."
+    },
+    {
+      "path": "record.v0.1.1.json",
+      "description": "0.1.1 (superseded) — `9cd02be424bf608d41f40522e48188f5a9ef4d13c8de6e28023b20a941fd4ef8`. JSON document. top-level keys: as_of, correction, dimension_states, endpoints_with_any_inconsistent, hf_dataset, hold, inconsistent_dimensions_per_endpoint, inconsistent_pairs_top, instrument, never_sent, own_result_first, published_files, question, reclassified_utc, record_version, run, schema, states, supersedes, surface_fetch_states …. Same byte size as `record.v0.1.1.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 39,222 bytes."
+    },
+    {
+      "path": "record.v0.1.1.json.bitcoin.ots",
+      "description": "0.1.1 (superseded) — `7d163760e8304f4b64825cb44080a2022d2a7abe57bd195cc785421fb62b4209`. OpenTimestamps proof file. Same byte size as `record.v0.1.1.json.bitcoin.ots` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 3,641 bytes."
+    },
+    {
+      "path": "record.v0.1.1.json.ots",
+      "description": "0.1.1 (superseded) — `8b8190b7fa2cb07a777a6d77f631d6b2ad47bbc27f1e0279bfa16bf0cd747a51`. OpenTimestamps proof file for `record.v0.1.1.json` (included in this dataset). Same byte size as `record.v0.1.1.json.ots` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "record.v0.1.1.ots.json",
+      "description": "0.1.1 (superseded) — `5b3ee53081188bc937a3017c5dcac26721d020512a2baabb84947055f05c21f3`. JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning. Same byte size as `record.v0.1.1.ots.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 898 bytes."
+    },
+    {
+      "path": "record.v0.1.1.signed.json",
+      "description": "0.1.1 (superseded) — `87e624558cd5b45df9357c6893e2f5dccdff1ea95b859375f03ae98465564e71`. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `record.v0.1.1.signed.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 3,027 bytes."
+    },
+    {
+      "path": "record.v0.1.2.json",
+      "description": "current — `5a9bedff1b6facbd9e19a1db1282b37fb6cedd9bf6c7dd14aeeeff387eae77ed`. JSON document. top-level keys: as_of, correction, corrections_history, dimension_states, endpoints_with_any_inconsistent, hf_dataset, hold, inconsistent_dimensions_per_endpoint, inconsistent_pairs_top, instrument, never_sent, own_result_first, published_files, question, reclassified_utc, record_version, run, schema, states, supersedes …. Same byte size as `record.v0.1.2.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 168,376 bytes."
+    },
+    {
+      "path": "record.v0.1.2.json.ots",
+      "description": "current — `8425658e4921988f61841f4b6408d7533670fc311cfd8322e2d61bfd4bc55162`. OpenTimestamps proof file for `record.v0.1.2.json` (included in this dataset). Same byte size as `record.v0.1.2.json.ots` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 600 bytes."
+    },
+    {
+      "path": "record.v0.1.2.ots.json",
+      "description": "current — `76befd3d81c4e5a68a8ae12f2530e893573dc9a278edd782faf3a50a090de926`. JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning. Same byte size as `record.v0.1.2.ots.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 898 bytes."
+    },
+    {
+      "path": "record.v0.1.2.signed.json",
+      "description": "current — `e3cf8123c13ac9a6ddc494f93f8fbfcb2901c00f5fee5897e400e3cbbc46d096`. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `record.v0.1.2.signed.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 3,129 bytes."
+    },
+    {
+      "path": "rereads/2026-09-30/zensched.initialize.txt",
+      "description": "Plain-text file. Same byte size as `rereads/2026-09-30/zensched.initialize.txt` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 266 bytes."
+    },
+    {
+      "path": "rereads/2026-09-30/zensched.registry.json",
+      "description": "JSON document. top-level keys: servers, metadata. `servers` holds 1 records with fields: server (string), _meta (string). Same byte size as `rereads/2026-09-30/zensched.registry.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 853 bytes."
+    },
+    {
+      "path": "rereads/2026-09-30/zensched.reread.json",
+      "description": "JSON document. top-level keys: schema, endpoint, registry_id, dimension, read_at, reader, prior_finding, surfaces, state_now, note. Same byte size as `rereads/2026-09-30/zensched.reread.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 1,619 bytes."
+    },
+    {
+      "path": "rereads/2026-09-30/zensched.server-card.json",
+      "description": "JSON document. top-level keys: serverInfo, authentication, tools, resources, prompts. `tools` holds 74 records with fields: name (string), description (string), inputSchema (string). Same byte size as `rereads/2026-09-30/zensched.server-card.json` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 54,097 bytes."
+    },
+    {
+      "path": "rows.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 15,828,700 bytes."
+    },
+    {
+      "path": "rows.v0.1.1.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 15,832,193 bytes."
+    },
+    {
+      "path": "rows.v0.1.2.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 15,933,293 bytes."
+    },
+    {
+      "path": "rows.v0.1.2.viewer.parquet",
+      "description": "current — `3f502531b211d528a382bb948d238be6ddd145c3f6e2fa19ed988b2a4402ceae`. Parquet table. 5828 rows; fields: endpoint (url), host (string), inclusion (string), in_watch_list (boolean), own_estate (boolean), shared_origin (boolean), attempted (boolean), registry_ids (string), live_state (string), live_http_status (integer), live_protocol_version (datetime), live_protocol_version_requested (datetime), live_n_tools (integer), live_tools_complete (boolean), live_tools_list_status (string), live_tool_names_sha256 (string), live_server_version (string), live_probe_source (string), live_finished (datetime), VERSION_state (string), VERSION_reason (string), VERSION_detail (string), TOOLS_state (string), TOOLS_reason (string), TOOLS_detail (string), … (+10 more). Same byte size as `rows.v0.1.2.viewer.parquet` in huggingface.co/datasets/csoai/mcp-contract-parity (checked 2026-11-20). 1,718,04…",
+      "schema": {
+        "fields": [
+          {
+            "name": "endpoint",
+            "description": "Observed type url; non-null in 2000/2000 rows read; example: https://councilof.ai/mcp",
+            "type": "url"
+          },
+          {
+            "name": "host",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: councilof.ai",
+            "type": "string"
+          },
+          {
+            "name": "inclusion",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: responded",
+            "type": "string"
+          },
+          {
+            "name": "in_watch_list",
+            "description": "Observed type boolean; non-null in 2000/2000 rows read; example: false",
+            "type": "boolean"
+          },
+          {
+            "name": "own_estate",
+            "description": "Observed type boolean; non-null in 2000/2000 rows read; example: true",
+            "type": "boolean"
+          },
+          {
+            "name": "shared_origin",
+            "description": "Observed type boolean; non-null in 2000/2000 rows read; example: true",
+            "type": "boolean"
+          },
+          {
+            "name": "attempted",
+            "description": "Observed type boolean; non-null in 2000/2000 rows read; example: true",
+            "type": "boolean"
+          },
+          {
+            "name": "registry_ids",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: io.github.CSOAI-ORG/gspc",
+            "type": "string"
+          },
+          {
+            "name": "live_state",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: RESPONDED",
+            "type": "string"
+          },
+          {
+            "name": "live_http_status",
+            "description": "Observed type integer; non-null in 2000/2000 rows read; example: 200",
+            "type": "integer"
+          },
+          {
+            "name": "live_protocol_version",
+            "description": "Observed type datetime; non-null in 1992/2000 rows read; example: 2025-11-25",
+            "type": "datetime"
+          },
+          {
+            "name": "live_protocol_version_requested",
+            "description": "Observed type datetime; non-null in 23/2000 rows read; example: 2026-07-28",
+            "type": "datetime"
+          },
+          {
+            "name": "live_n_tools",
+            "description": "Observed type integer; non-null in 1963/2000 rows read; example: 13",
+            "type": "integer"
+          },
+          {
+            "name": "live_tools_complete",
+            "description": "Observed type boolean; non-null in 1963/2000 rows read; example: true",
+            "type": "boolean"
+          },
+          {
+            "name": "live_tools_list_status",
+            "description": "Observed type string; non-null in 1992/2000 rows read; example: ok",
+            "type": "string"
+          },
+          {
+            "name": "live_tool_names_sha256",
+            "description": "Observed type string; non-null in 1963/2000 rows read; example: 57ac629337a17b448cf21113e7c405a1d039990078986698f88fc78cd8a1…",
+            "type": "string"
+          },
+          {
+            "name": "live_server_version",
+            "description": "Observed type string; non-null in 1976/2000 rows read; example: 1.4.2",
+            "type": "string"
+          },
+          {
+            "name": "live_probe_source",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: census-probe-2026-09-25",
+            "type": "string"
+          },
+          {
+            "name": "live_finished",
+            "description": "Observed type datetime; non-null in 2000/2000 rows read; example: 2026-09-25T06:39:27Z",
+            "type": "datetime"
+          },
+          {
+            "name": "VERSION_state",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: CONSISTENT",
+            "type": "string"
+          },
+          {
+            "name": "VERSION_reason",
+            "description": "Observed type string; non-null in 0/2000 rows read",
+            "type": "string"
+          },
+          {
+            "name": "VERSION_detail",
+            "description": "Observed type string; non-null in 1051/2000 rows read; example: live initialize serverInfo.version = 1.0.0 vs registry ai.ad…",
+            "type": "string"
+          },
+          {
+            "name": "TOOLS_state",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: CONSISTENT",
+            "type": "string"
+          },
+          {
+            "name": "TOOLS_reason",
+            "description": "Observed type string; non-null in 65/2000 rows read; example: LIVE_TOOL_LIST_UNAVAILABLE",
+            "type": "string"
+          },
+          {
+            "name": "TOOLS_detail",
+            "description": "Observed type string; non-null in 1701/2000 rows read; example: no surface declares a tool list or count",
+            "type": "string"
+          },
+          {
+            "name": "AUTH_state",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: CONSISTENT",
+            "type": "string"
+          },
+          {
+            "name": "AUTH_reason",
+            "description": "Observed type string; non-null in 186/2000 rows read; example: DECLARED_REQUIRED_SCOPE_UNSTATED",
+            "type": "string"
+          },
+          {
+            "name": "AUTH_detail",
+            "description": "Observed type string; non-null in 1644/2000 rows read; example: no surface declares an auth requirement; only the observed b…",
+            "type": "string"
+          },
+          {
+            "name": "PAYMENT_state",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: CONSISTENT",
+            "type": "string"
+          },
+          {
+            "name": "PAYMENT_reason",
+            "description": "Observed type string; non-null in 1764/2000 rows read; example: NO_PAYMENT_SURFACE",
+            "type": "string"
+          },
+          {
+            "name": "PAYMENT_detail",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: all 13 tools the x402 manifest names are in the live tools/l…",
+            "type": "string"
+          },
+          {
+            "name": "PROTOCOL_state",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: SINGLE_SURFACE",
+            "type": "string"
+          },
+          {
+            "name": "PROTOCOL_reason",
+            "description": "Observed type string; non-null in 172/2000 rows read; example: DECLARED_VERSION_NOT_REQUESTED",
+            "type": "string"
+          },
+          {
+            "name": "PROTOCOL_detail",
+            "description": "Observed type string; non-null in 1865/2000 rows read; example: no surface declares an MCP protocol version",
+            "type": "string"
+          },
+          {
+            "name": "row_json",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: {\"attempted\": true, \"dimensions\": {\"AUTH\": {\"declared\": [{\"p…",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ]
+}

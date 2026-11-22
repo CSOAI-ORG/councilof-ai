@@ -1,0 +1,88 @@
+{
+  "title": "GSPC · Index: presence — Council of AI",
+  "id": "nicktempleman/csoai-gspc-index-presence",
+  "id_no": 12621360,
+  "subtitle": "Mirror of HF csoai/index-presence. Measurement, not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-index-presence`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-index-presence -p ./dataset --unzip\n```\n\nStart by inspecting `2026-09-22/mcp-registry-servers.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `2026-09-22/PRESENCE-BOARD.md`\n- `2026-09-22/anchors-2026-09-22.json`\n- `2026-09-22/listings-2026-09-22.json`\n- `2026-09-22/deadlinks-2026-09-22.json`\n- `2026-09-22/mcp-registry-servers.jsonl`\n- `2026-09-22/wayback-cdx-2026-09-22.json`\n- `2026-09-22/402index-walk-2026-09-22.json`\n- See the Data tab for all 15 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement: presence. Not a certification.**\n\n> **Mirror.** Copy of https://huggingface.co/datasets/csoai/index-presence at revision `06dd0d8f97258a0fb82c0efc54d2154a649844f6`, made 2026-10-16. The Hugging Face copy is the original; if the two differ, it wins.\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n# Index-presence board — measured 2026-09-22 from the pod (`rp-3090-now`)\n\n> **Start here — free verify:**\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-10-16.\n- 15 files, 128,962,697 bytes. File types: .json (12), .md (2), .jsonl (1).\n- Hugging Face twin: [csoai/index-presence](https://huggingface.co/datasets/csoai/index-presence). 14 of 15 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_index_presence,\n  title        = {Index-presence board — measured 2026-09-22 from the pod (`rp-3090-now`)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/index-presence},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "other"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 14 of 15 files have the same byte size as files in the Hugging Face dataset [csoai/index-presence](https://huggingface.co/datasets/csoai/index-presence) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "2026-09-22/402index-walk-2026-09-22.json",
+      "description": "JSON document. top-level keys: as_of, api, probes, finding. `probes` holds 4 records with fields: probe (string), reported_total (integer), rows_walked (integer), pages (integer), stopped (string), distinct_councilof_ai_urls (integer), walk_complete (boolean), sample (string). Same byte size as `2026-09-22/402index-walk-2026-09-22.json` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 6,155 bytes."
+    },
+    {
+      "path": "2026-09-22/PRESENCE-BOARD.md",
+      "description": "Markdown document. Same byte size as `2026-09-22/PRESENCE-BOARD.md` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 25,916 bytes."
+    },
+    {
+      "path": "2026-09-22/anchors-2026-09-22.json",
+      "description": "JSON document. top-level keys: as_of, rekor, dois, ots. `dois` holds 3 records with fields: doi (string), doi_org_url (url), http (integer), resolves_to (url), landing_excerpt (string), mentions_us (boolean), datacite_http (integer), title (string), publisher (string), published (string), state (string), url (url), registered (datetime). Same byte size as `2026-09-22/anchors-2026-09-22.json` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 5,668 bytes."
+    },
+    {
+      "path": "2026-09-22/deadlinks-2026-09-22.json",
+      "description": "JSON document. top-level keys: as_of, source_list, method, rows. `rows` holds 20 records with fields: registry (string), package (string), version (string), field (string), declared_url (url), http (integer), final_url (url), dead (boolean). Same byte size as `2026-09-22/deadlinks-2026-09-22.json` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 6,269 bytes."
+    },
+    {
+      "path": "2026-09-22/directory-presence-2026-09-22.json",
+      "description": "JSON document. top-level keys: as_of, method, terms, results. `results` holds 16 records with fields: site (string), route (url), http (integer), final_url (url), title (string), rendered_chars (integer), hits (string), our_links (string), wall (boolean), screenshot (string). Same byte size as `2026-09-22/directory-presence-2026-09-22.json` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 15,804 bytes."
+    },
+    {
+      "path": "2026-09-22/listings-2026-09-22.json",
+      "description": "JSON document. top-level keys: as_of, method, results. `results` holds 21 records with fields: id (string), route (url), http (integer), final_url (url), title (string), chars (integer), wall (boolean), zero_results (boolean), hits (string), entry_links (string), screenshot (string), error (string). Same byte size as `2026-09-22/listings-2026-09-22.json` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 25,394 bytes."
+    },
+    {
+      "path": "2026-09-22/listings-pass3-2026-09-22.json",
+      "description": "JSON document. top-level keys: as_of, results. `results` holds 5 records with fields: id (string), url (url), term (string), method (string), http (integer), final_url (url), chars (integer), excerpt (string), hit (boolean), zero (boolean), our_links (string), error (string), full_text (string), nav (string). Same byte size as `2026-09-22/listings-pass3-2026-09-22.json` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 10,189 bytes."
+    },
+    {
+      "path": "2026-09-22/mcp-registry-census-2026-09-22.json",
+      "description": "JSON document. top-level keys: as_of, window_start, window_end, endpoint, page_size, pages_read, version_rows_read, distinct_server_names, walk_complete, stopped_at, our_server_names, note. Same byte size as `2026-09-22/mcp-registry-census-2026-09-22.json` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 504 bytes."
+    },
+    {
+      "path": "2026-09-22/mcp-registry-servers.jsonl",
+      "description": "Newline-delimited JSON (one record per line). ≥1287 rows (first 2 MB read); fields: server (string), _meta (string). Same byte size as `2026-09-22/mcp-registry-servers.jsonl` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 128,758,550 bytes."
+    },
+    {
+      "path": "2026-09-22/mcp-remote-health-2026-09-22.json",
+      "description": "JSON document. top-level keys: as_of, source, our_version_rows, our_servers_with_isLatest, servers_whose_latest_declares_a_remote, servers_whose_every_latest_remote_is_dead, dead_hosts, canonical_live_remote, method, broken, all_rows. `all_rows` holds 40 records with fields: name (string), version (string), status (string), updatedAt (datetime), remotes (string), packages (string), repository (url), websiteUrl (url), remote_states (string), all_remotes_dead (boolean), any_dead (boolean). Same byte size as `2026-09-22/mcp-remote-health-2026-09-22.json` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 60,593 bytes."
+    },
+    {
+      "path": "2026-09-22/search-index-presence-2026-09-22.json",
+      "description": "JSON document. top-level keys: as_of, method, results. `results` holds 6 records with fields: engine (string), url (url), http (integer), final_url (url), error (string), chars (integer), wall (boolean), count_line (string), result_urls (string), no_results (boolean), excerpt (string). Same byte size as `2026-09-22/search-index-presence-2026-09-22.json` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 4,748 bytes."
+    },
+    {
+      "path": "2026-09-22/software-heritage-ledger.json",
+      "description": "JSON document. top-level keys: https://huggingface.co/datasets/csoai/councilof-ai-mirror, https://huggingface.co/datasets/csoai/councilof-ai-source, https://huggingface.co/datasets/csoai/gspc-board, https://huggingface.co/datasets/csoai/gspc-boards, https://huggingface.co/datasets/csoai/gspc-hub-cards, https://huggingface.co/datasets/csoai/gspc-swarm, https://huggingface.co/datasets/csoai/hub-queue, https://huggingface.co/datasets/csoai/index-presence, https://huggingface.co/datasets/csoai/mcp-registry-self-audit, https://huggingface.co/datasets/csoai/x402-bazaar-conformance. Same byte size as `2026-09-22/software-heritage-ledger.json` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 4,822 bytes."
+    },
+    {
+      "path": "2026-09-22/wayback-cdx-2026-09-22.json",
+      "description": "JSON document. top-level keys: as_of, method, results. `results` holds 9 records with fields: url (url), captures (integer), latest_timestamp (string), capture_http_status (string), archived_url (url), readback_http (integer), readback_bytes (integer), readback_head (string), first_timestamp (string). Same byte size as `2026-09-22/wayback-cdx-2026-09-22.json` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 9,507 bytes."
+    },
+    {
+      "path": "2026-09-22/wayback-spn-settled-2026-09-22.json",
+      "description": "JSON document. top-level keys: as_of, results. `results` holds 2 records with fields: url (url), before (string), window_start (string), spn_get_http (integer), spn_get_final_url (url), spn_post_http (integer), spn_post_body (string), after (string), new_captures (string), verdict (string). Same byte size as `2026-09-22/wayback-spn-settled-2026-09-22.json` in huggingface.co/datasets/csoai/index-presence (checked 2026-11-20). 1,168 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 27,410 bytes."
+    }
+  ]
+}

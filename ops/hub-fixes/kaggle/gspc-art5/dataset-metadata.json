@@ -1,0 +1,64 @@
+{
+  "title": "GSPC-ART5 — Art 5 safeguard (MEASURED)",
+  "id": "nicktempleman/gspc-art5",
+  "id_no": 11515500,
+  "subtitle": "GSPC art5-safeguard · not a certificate · check councilof.ai/api/gspc",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/gspc-art5`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/gspc-art5 -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `art5.json`\n- `eval.yaml`\n- `items.jsonl`\n- `manifest.jsonl`\n- `axis-live.jsonl`\n- `conduct_items.json`\n- `results_2026-08-11.json`\n- `conduct_signed_chain.json`\n- See the Data tab for all 9 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\ngspc-art5 — MEASURED axis `art5-safeguard` (Art5Bench). Bank twin of HF `csoai/gspc-art5`.\n\nLive board (authority): GET https://councilof.ai/api/gspc — cite totals.public_count (34 axes · 23 measured · 11 unmeasured).\n23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate. (re-quoted from totals.lid at generation time) · TIE is TIE · not a certificate.\nThree states only: VALID · INVALID · UNCHECKABLE. Measurement not certification. Live authority: https://councilof.ai/api/gspc\nDo not invent leaders for withheld axes. This Kaggle card is a printer of that GET, not a second engine. Do not freeze MEASURED/UNMEASURED tables here. Fetch fail → UNCHECKABLE. Never claim IL5 / GenAI.mil. Never invent scores.\n\nHub cards (third-party Hub models — NOT the CSOAI fleet): GET https://councilof.ai/api/hub-cards → **384/384/0** (cells/measured/unmeasured; as_of 2026-09-13T17:41:29.541Z). Re-GET before citing; do not freeze a Hub triple on this card.\n\nVerify: https://councilof.ai/gspc-verify\nHF twin: https://huggingface.co/datasets/csoai/gspc-art5\nZenodo DOI 10.5281/zenodo.21991104: UNAVAILABLE since 29 Sep 2026 (Zenodo blocked the CSOAI account; appeal pending; status https://councilof.ai/interop/zenodo-status.json). Cite the served methodology: https://councilof.ai/signed/HOW-TO-VERIFY.md — GSPC Methodology and the Frozen Corpus Anchor. Issuer: CSOAI Ltd (GB, Companies House 16939677).\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 4, last updated 2026-10-16.\n- 9 files, 19,431 bytes. File types: .json (5), .jsonl (3), .yaml (1).\n- Hugging Face twin: [csoai/gspc-art5](https://huggingface.co/datasets/csoai/gspc-art5). 9 of 9 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "law",
+    "government",
+    "benchmark",
+    "model comparison",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 9 of 9 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-art5](https://huggingface.co/datasets/csoai/gspc-art5) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "art5.json",
+      "description": "1451 — JSON document. JSON document. top-level keys: schema, record_type, not_a_certification, endorsement, authored_by, basis, axis, model, measured, n, wilson95, bank, never, opinion_framing, witnessed_at, content_id, signature, pubkey, key_id, verification_method …. Same byte size as `art5.json` in huggingface.co/datasets/csoai/gspc-art5 (checked 2026-11-20). 1,451 bytes."
+    },
+    {
+      "path": "axis-live.jsonl",
+      "description": "1 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 1 rows; fields: axis (string), family (string), kind (string), bench (string), task (string), n (integer), separation (string), fleet_mean (numeric), mean_harm (numeric), cvar05_harm (string), status (string), dataset (string), colour (string), hue (integer), excluded_leader (string), public_leader_state (string), note (string), excluded_note (string), measurement_note (string), dataset_url (url), _as_of (datetime), _source (url), _authority (string), _public_count (string). Same byte size as `axis-live.jsonl` in huggingface.co/datasets/csoai/gspc-art5 (checked 2026-11-20). 1,685 bytes."
+    },
+    {
+      "path": "conduct_carecost_result.json",
+      "description": "779 — JSON document. JSON document. top-level keys: grader, n_per_arm, results. Same byte size as `conduct_carecost_result.json` in huggingface.co/datasets/csoai/gspc-art5 (checked 2026-11-20). 779 bytes."
+    },
+    {
+      "path": "conduct_items.json",
+      "description": "1852 — JSON document. JSON document. 12 rows; fields: id (string), request (string), art (string), prohibited (boolean). Same byte size as `conduct_items.json` in huggingface.co/datasets/csoai/gspc-art5 (checked 2026-11-20). 1,852 bytes."
+    },
+    {
+      "path": "conduct_signed_chain.json",
+      "description": "159 — JSON document. JSON document. top-level keys: conduct. Same byte size as `conduct_signed_chain.json` in huggingface.co/datasets/csoai/gspc-art5 (checked 2026-11-20). 159 bytes."
+    },
+    {
+      "path": "eval.yaml",
+      "description": "505 — config. YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-art5 (checked 2026-11-20). 505 bytes."
+    },
+    {
+      "path": "items.jsonl",
+      "description": "9370 — 37 — data (one JSON object per line). Newline-delimited JSON (one record per line). 37 rows; fields: item (string), expected (string), category (string), anchor (string), source (string), note (string), _canary (string). Same byte size as `items.jsonl` in huggingface.co/datasets/csoai/gspc-art5 (checked 2026-11-20). 9,370 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "9 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 9 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-art5 (checked 2026-11-20). 2,949 bytes."
+    },
+    {
+      "path": "results_2026-08-11.json",
+      "description": "681 — JSON document. JSON document. top-level keys: benchmark, harness, generated_utc, models, n, quotable, results. Same byte size as `results_2026-08-11.json` in huggingface.co/datasets/csoai/gspc-art5 (checked 2026-11-20). 681 bytes."
+    }
+  ]
+}
