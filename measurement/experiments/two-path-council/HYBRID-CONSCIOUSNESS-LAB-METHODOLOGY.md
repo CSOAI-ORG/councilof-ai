@@ -148,6 +148,15 @@ Current public fact table \`csoai/gspc-fact-table\` has 20,517 frozen measuremen
 
 Our consolidation index intentionally **refuses stronger statuses**: it can join validated-format synthetic and read-only public projections, not silently promote them to canonical GSPC grades. \`consolidate_research.py\` is not a second event authority.
 
+
+### New 19 November 2026 research: Multimodal Concept Lens (MC-Lens) — E13
+
+A fresh **arXiv preprint**, *Probing the "Conscious" Mind: Selective Access and Global Workspace in Vision-Language Models* (submitted 19 November 2026, https://arxiv.org/abs/2611.26590), describes a multimodal Jacobian lens. The proposed MC-Lens maps intermediate **vision encoder and text decoder** representations to a shared decoder-vocabulary concept space, with concept-set readouts and controlled interventions. The authors report selective access and cross-modal alignment signatures; as a preprint, its findings require independent replication. These are functional mechanisms **not subjective-experience evidence**.
+
+**E13 — visually mediated selective access vs hidden target control.** Freeze a licensed, open-weight VLM; present the same randomized target image with either (a) image absent, (b) image visible, (c) image visible but question irrelevant, or (d) image deliberately replaced with an equally plausible distractor. Randomize targets and questions, mask file names/metatags, reset contexts, and hold answers solely with an independent grader. Compare correctness and workspace concept readouts, then causal concept swapping vs equal-norm random/shuffled interventions. A hidden image must not leak through candidate text, captions, hashes or API tools. Measure leakage rate, concept accessibility, selective access and causal effect. Visual performance is **ordinary multimodal perception**; a model's successful perception of supplied images is not remote viewing. Any above-chance result with an absent image is first a leakage/shortcut investigation, not proof of anomalous perception. Log the real model revision, rights, actual instrument readings, null controls and confidence intervals. GPU-enabled replication is **planned, not performed**.
+
+This is especially suitable as a bounded cross-reality/interpretability research *mapping* to existing GSPC axes, without creating a new signed axis or relabeling historical public banks.
+
 ## Provenance / compute placement and release route
 
 - **GitHub:** source of truth, preregistration, tests, code review, PR evidence; use a unique research subdirectory. Do not edit other workers' files.
