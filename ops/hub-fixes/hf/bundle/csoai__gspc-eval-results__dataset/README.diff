@@ -1,0 +1,39 @@
+--- a/csoai/gspc-eval-results/README.md (live)
++++ b/csoai/gspc-eval-results/README.md (proposed)
+@@ -9,6 +9,7 @@
+ - ai-governance
+ - ai-safety
+ - measurement
++- council-of-ai
+ size_categories:
+ - n<1K
+ configs:
+@@ -77,6 +78,8 @@
+   - split: test
+     path: results/axes.jsonl
+ # TODO task_categories: Growth proposes question-answering (verify against content)
++task_categories:
++- text-classification
+ ---
+ 
+ <p align="center">
+@@ -308,3 +311,19 @@
+ 
+ A citation or signature is not certification. If you believe a measurement, source, or interpretation is wrong, use the correction route above; the historical record is retained when a correction is made.
+ 
++<!-- csoai-card-fixes:start -->
++
++## Citation
++
++```bibtex
++@misc{csoai_gspc_eval_results_2026,
++  title        = {GSPC measurement axes (Council of AI)},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/csoai/gspc-eval-results}},
++  url          = {https://huggingface.co/datasets/csoai/gspc-eval-results}
++}
++```
++
++<!-- csoai-card-fixes:end -->

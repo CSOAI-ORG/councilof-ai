@@ -1,0 +1,203 @@
+{
+  "title": "CSOAI Open Stack Evidence Adapters",
+  "id": "nicktempleman/csoai-open-stack-evidence-adapters",
+  "id_no": 12248501,
+  "subtitle": "Source-only OpenBMC and OpenShell adapters for GSPC evidence intake",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-open-stack-evidence-adapters`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-open-stack-evidence-adapters -p ./dataset --unzip\n```\n\nStart by inspecting `release-manifest.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `LICENSE`\n- `README.md`\n- `release-manifest.json`\n- `open-stack-integration-candidate-20260928/SECURITY.md`\n- `open-stack-integration-candidate-20260928/CONTRIBUTING.md`\n- `source-watch-20260928-v2/source-watch/watch.py`\n- `source-watch-20260928-v2/source-watch/README.md`\n- `source-watch-20260928-v2/source-watch/sources.json`\n- See the Data tab for all 44 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n# CSOAI Open Stack Evidence Adapters\n\nThis is a **source-only integration candidate**, published on 28 September 2026 for reproducible review. It connects a bounded OpenBMC Redfish observation adapter and an OpenShell policy declaration to Council of AI's GSPC evidence vocabulary. It does not represent an OpenBMC, OpenShell, LFX, Open Secure AI Alliance, or vendor deployment or endorsement.\n\nKaggle unpacks the submitted tarball under `open-stack-integration-candidate-20260928/`. The 32 publicly downloadable files there match the 32 archive members byte for byte: 31 manifested source files plus the package manifest. For the **exact tarball bytes**, use the [version-pinned Hugging Face release](https://huggingface.co/datasets/csoai/gspc-board/resolve/d31e6707ae7b7b901e75a34081a723060e7d86be/examples/open-stack-integration-candidate-20260928.tar.gz), SHA-256 `2352f0170ddc5345827983c139f7bebe136c04a31f63465b802f66bdf4c9ef56`. Read the [scope and reproduction guide](https://huggingface.co/datasets/csoai/gspc-board/blob/b288079620fcc651fe8070dcbb6a9237426ac345/examples/open-stack-integration-candidate-20260928.md) before running it.\n\nThe local package verifier checked all 31 files, and nine bounded OpenBMC collector unit tests passed. The OpenShell policy declaration was checked against the live Council MCP inventory (16 tools: 12 free reads allowed, four paid names denied by the policy). Enforcement inside a real OpenShell sandbox and access to a consenting real BMC remain untested.\n\n## Public-source watcher addendum\n\n`source-watch-20260928-v2.zip` contains a small runnable change watcher, eight source/reference profiles, three unit tests, and three dated readbacks. Kaggle may display the ZIP as unpacked `source-watch/` files. On the second readback, all eight public sources were reachable: seven unchanged from the first pass and one first observation after replacing a blocked Red Hat documentation URL with Red Hat's public operator source. This is source-change observation only. It does not connect to any vendor tenancy, ingest confidential SAFE incidents, admit a GSPC measurement, or prove partnership. First or changed bytes produce a `STATIC_OBSERVED` review item; unchanged bytes produce no review work. The addendum manifest lists exact file hashes. Version 2 also treats a changed source URL as a review event even when its bytes match; the prior URL and digest are retained. [The same exact archive is on Hugging Face](https://huggingface.co/datasets/csoai/gspc-board/resolve/be749e02d28c422a96fa5eef37981246b1214b6b/examples/open-stack-source-watch-20260928-v2.zip).\n\nUse the [live GSPC board](https://councilof.ai/api/gspc) for current measurements. This archive is not itself an admitted board measurement, a signature, a Bitcoin timestamp, a security certification, or evidence of customer use. The source is MIT licensed; see `LICENSE`. No external party's confidential telemetry or credentials are included.\n\nTo reproduce, change into Kaggle's `open-stack-integration-candidate-20260928/` folder or extract the pinned Hugging Face archive, then run:\n\n```text\npython3 packaging/lfx-gspc/verify-local.py\npython3 -m unittest discover -s integrations/openbmc-gspc/tests -v\npython3 integrations/openshell-gspc/verify-package.py\n```\n\nThe third command needs access to the public Council MCP endpoint. Do not point the collector at a BMC without its operator's authorization.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 6, last updated 2026-09-28.\n- 44 files, 498,671 bytes. File types: .md (16), .json (12), (none) (6), .py (5), .conf (1), .bb (1), .cfg (1), .yaml (1).\n- Related Hugging Face repository: [csoai/gspc-board](https://huggingface.co/datasets/csoai/gspc-board). No byte-identical files were found, so treat it as related, not a mirror.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{templeman_csoaiopenstackevidenceadapters_2026,\n  author       = {Templeman, Nick and {Council of AI (CSOAI Ltd)}},\n  title        = {CSOAI Open Stack Evidence Adapters},\n  year         = {2026},\n  publisher    = {Kaggle},\n  howpublished = {\\url{https://www.kaggle.com/datasets/nicktempleman/csoai-open-stack-evidence-adapters}},\n  note         = {Version 6}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "other"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "government",
+    "benchmark",
+    "cyber security",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. Related Hugging Face repository: [csoai/gspc-board](https://huggingface.co/datasets/csoai/gspc-board) (no byte-identical files found on 2026-11-20).",
+  "resources": [
+    {
+      "path": "LICENSE",
+      "description": "Licence text file. 1,083 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 3,415 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/.github/CODEOWNERS",
+      "description": "File. 239 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/CONTRIBUTING.md",
+      "description": "Markdown document. 1,803 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/SECURITY.md",
+      "description": "Markdown document. 1,449 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openbmc-gspc/CLA-GATE.md",
+      "description": "Markdown document. 806 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openbmc-gspc/DESIGN-PROPOSAL.md",
+      "description": "Markdown document. 5,218 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openbmc-gspc/README.md",
+      "description": "Dataset README (Markdown). 1,263 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openbmc-gspc/gspc-openbmc-collector",
+      "description": "File. 4,628 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openbmc-gspc/meta-gspc/conf/layer.conf",
+      "description": "Configuration file. 217 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openbmc-gspc/meta-gspc/recipes-csoai/gspc-openbmc/files/LICENSE",
+      "description": "Licence text file. 1,083 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openbmc-gspc/meta-gspc/recipes-csoai/gspc-openbmc/files/gspc-openbmc-collector",
+      "description": "File. 4,133 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openbmc-gspc/meta-gspc/recipes-csoai/gspc-openbmc/gspc-openbmc_0.1.0.bb",
+      "description": "BitBake recipe. 588 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openbmc-gspc/setup.cfg",
+      "description": "Configuration file. 35 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openbmc-gspc/tests/test_collector.py",
+      "description": "Python source file. 3,654 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openshell-gspc/Dockerfile",
+      "description": "File. 111 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openshell-gspc/README.md",
+      "description": "Dataset README (Markdown). 954 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openshell-gspc/RUNTIME-QUALIFICATION.md",
+      "description": "Markdown document. 1,828 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openshell-gspc/UPSTREAM-HANDOFF.md",
+      "description": "Markdown document. 2,385 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openshell-gspc/policy.yaml",
+      "description": "YAML file. 1,336 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openshell-gspc/probe.mjs",
+      "description": "JavaScript (ES module) source. 1,783 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openshell-gspc/toolset.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 550 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/integrations/openshell-gspc/verify-package.py",
+      "description": "Python source file. 1,774 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/measurement/crosswalk/sources/osaia-safe.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 2,576 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/packaging/lfx-gspc/INTEGRATION-CANDIDATE-20260928.md",
+      "description": "Markdown document. 3,577 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/packaging/lfx-gspc/LFX-PCC-CHECKLIST.md",
+      "description": "Markdown document. 1,570 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/packaging/lfx-gspc/OPENSSF-READINESS.md",
+      "description": "Markdown document. 1,215 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/packaging/lfx-gspc/OSAI-SAFE-REUSE.md",
+      "description": "Markdown document. 703 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/packaging/lfx-gspc/PACKAGE-MANIFEST.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 5,619 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/packaging/lfx-gspc/SAFE-RFC-ACCEPTANCE.md",
+      "description": "Markdown document. 2,373 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/packaging/lfx-gspc/UPSTREAM-MATRIX.md",
+      "description": "Markdown document. 1,471 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/packaging/lfx-gspc/lfx-onboarding.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,287 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/packaging/lfx-gspc/sbom.spdx.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 406,305 bytes."
+    },
+    {
+      "path": "open-stack-integration-candidate-20260928/packaging/lfx-gspc/verify-local.py",
+      "description": "Python source file. 1,372 bytes."
+    },
+    {
+      "path": "release-manifest.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,539 bytes."
+    },
+    {
+      "path": "source-watch-20260928-v2/source-watch/MANIFEST.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 994 bytes."
+    },
+    {
+      "path": "source-watch-20260928-v2/source-watch/README.md",
+      "description": "Dataset README (Markdown). 4,234 bytes."
+    },
+    {
+      "path": "source-watch-20260928-v2/source-watch/live-first.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 3,418 bytes."
+    },
+    {
+      "path": "source-watch-20260928-v2/source-watch/live-second.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 3,807 bytes."
+    },
+    {
+      "path": "source-watch-20260928-v2/source-watch/live-third.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 3,883 bytes."
+    },
+    {
+      "path": "source-watch-20260928-v2/source-watch/profiles.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 2,689 bytes."
+    },
+    {
+      "path": "source-watch-20260928-v2/source-watch/sources.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,615 bytes."
+    },
+    {
+      "path": "source-watch-20260928-v2/source-watch/test_watch.py",
+      "description": "Python source file. 2,773 bytes."
+    },
+    {
+      "path": "source-watch-20260928-v2/source-watch/watch.py",
+      "description": "Python source file. 5,316 bytes."
+    }
+  ]
+}
