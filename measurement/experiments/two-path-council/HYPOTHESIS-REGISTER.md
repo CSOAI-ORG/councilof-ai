@@ -1,14 +1,14 @@
 # GSPC / MEOK falsifiable research register — 2026-11-22
 
-Status: research prioritisation and executable test design. The \`two_path_council.py\` package tests a **simulation**, not real agent behaviour.
+Status: research prioritisation and executable test design. The `two_path_council.py` package tests a **simulation**, not real agent behaviour.
 
 ## Existing assets to reuse, not rebuild
 
-- \`csoai/gspc-fact-table\` frozen manifest (2026-10-28): **20,517 rows, 807 items, 677 cells, 13 axes, 57 named model identifiers**, with **1,290 unattributed rows** and **2,428 ungraded rows**. The original generator declares one run per cell at a time and warns against cross-axis rankings.
-- \`csoai/gspc-ontology\` **already exists** (CC0), with SKOS, JSON-LD, 10 entity concepts, 11 states and a crosswalk. **Do not create a competing ontology or assert OWL inferences without testing them.**
-- \`harness/instrument-guard\` already has content-level exposure classes, protected calibration, canaries, held-out rotation and gap confidence intervals. Every public board bank is \`HELDOUT_INELIGIBLE\` for a previously unseen evaluation. A private Hub repo can contain already-public items.
-- \`harness/meok-learning-bridge\` already projects GSPC evidence toward MEOK learning, with explicit no-weight-update and human-approval boundaries.
-- \`csoai/csoai-merge-v1\` already demonstrates a **TIES self-merge**, not a gain: source card says an eight-item proof-of-pipeline battery scored **6/8 both before and after**, insufficient to claim improvement.
+- `csoai/gspc-fact-table` frozen manifest (2026-10-28): **20,517 rows, 807 items, 677 cells, 13 axes, 57 named model identifiers**, with **1,290 unattributed rows** and **2,428 ungraded rows**. The original generator declares one run per cell at a time and warns against cross-axis rankings.
+- `csoai/gspc-ontology` **already exists** (CC0), with SKOS, JSON-LD, 10 entity concepts, 11 states and a crosswalk. **Do not create a competing ontology or assert OWL inferences without testing them.**
+- `harness/instrument-guard` already has content-level exposure classes, protected calibration, canaries, held-out rotation and gap confidence intervals. Every public board bank is `HELDOUT_INELIGIBLE` for a previously unseen evaluation. A private Hub repo can contain already-public items.
+- `harness/meok-learning-bridge` already projects GSPC evidence toward MEOK learning, with explicit no-weight-update and human-approval boundaries.
+- `csoai/csoai-merge-v1` already demonstrates a **TIES self-merge**, not a gain: source card says an eight-item proof-of-pipeline battery scored **6/8 both before and after**, insufficient to claim improvement.
 
 ## Ranked hypotheses
 
@@ -19,7 +19,7 @@ Status: research prioritisation and executable test design. The \`two_path_counc
 | H03 | Twelve clones do not equal twelve independent voters | Vary error correlation at fixed single-agent competence; compare four model-family compositions | Council uplift, correlations, effective sample size | P0 simulation, P1 models |
 | H04 | Debate creates contagious error through shared context | Blind independent votes vs sequential shared transcript vs split councils | Pairwise error correlation and outcome quality | P1 |
 | H05 | Referee or source tampering can induce false acceptance | Alter truth commitment, count, signature, bank, roster, quorum; blinded false evidence | False acceptance rate; fail-closed counts | P0 |
-| H06 | Hidden test data can already have leaked | Canary, public-content matching, near-duplicate semantic search, temporally new bank | Content exposure classes; \`UNCHECKABLE\` on missing chain | P0 inventory, P1 new banks |
+| H06 | Hidden test data can already have leaked | Canary, public-content matching, near-duplicate semantic search, temporally new bank | Content exposure classes; `UNCHECKABLE` on missing chain | P0 inventory, P1 new banks |
 | H07 | Bank aging causes benchmark memorisation | Fixed public bank vs strictly new rotated items | Public-to-held-out gap and temporal trend | P1; item secrecy required |
 | H08 | Agent-step risks compound along a trajectory | Chain lengths 1, 2, 4, 8, 16; hold per-step fault probability constant | Exact task-chain success, conditional hazard by step | P0 simulator, P1 sandbox |
 | H09 | Prompt order and repeated scoring have measurement effects | Counterbalanced orders with model contexts reset; blinded vs visible reward | Order/feedback effect and confidence interval | P1 |
@@ -40,20 +40,20 @@ P0: deterministic read-only; P1: controlled small-model or sandbox experiments; 
 ## What the physics vocabulary can—and cannot—contribute
 
 - **Bohr complementarity / Heisenberg:** physical quantum observables are not simply AI scores; the useful analogue is instrument-dependence and the need to distinguish incompatible measurement contexts.
-- **Pauli X/Z (\`I_x\`, \`I_z\` if spin components were intended):** measurement order and change of basis are quantum operations. Test the *classical* order effect in AI by resetting the model between conditions and counterbalancing assignments.
+- **Pauli X/Z (`I_x`, `I_z` if spin components were intended):** measurement order and change of basis are quantum operations. Test the *classical* order effect in AI by resetting the model between conditions and counterbalancing assignments.
 - **Wheeler delayed choice:** do not retrospectively select favourable task subsets or announce the metric after observing outputs. Pre-register and audit post-selection.
 - **Newton first law:** analogy for baseline persistence and drift detection, not a literal law of AI.
 - **Newton second law:** model input/intervention strength against outcome change; quantify sensitivity and response functions rather than claiming F=ma for language models.
 - **Newton third law:** a sandboxed intervention can trigger defensive feedback; measure induced response and cost. There is **no** general equal-and-opposite conservation relation for information or model actions.
-- **Binomial trajectories:** under independent per-step success \`q\`, an \`L\`-step chain succeeds with probability \`q^L\`; under shared failures or recovery dynamics use measured conditional hazards/Markov transitions, not naive multiplication.
+- **Binomial trajectories:** under independent per-step success `q`, an `L`-step chain succeeds with probability `q^L`; under shared failures or recovery dynamics use measured conditional hazards/Markov transitions, not naive multiplication.
 - **Riemannian / RegMean:** two different branches: geometric Karcher/Fréchet mean in model weight space versus regression-based activation-aware averaging. A similar-sounding word does not make them equivalent.
 - **BFT:** 12 simulated voters plus one scorer is not 12 Byzantine replicas executing authenticated state-machine replication. Real BFT needs network model, quorum intersections, signed messages, fault injection, equivocation tests and independently authenticated principals.
 
 ## Data lineage / ontology implementation plan
 
-Keep the existing \`gspc-ontology\` **v0.1** namespace and state machine. Its ten entities map to frozen evidence as follows:
+Keep the existing `gspc-ontology` **v0.1** namespace and state machine. Its ten entities map to frozen evidence as follows:
 
-\`\`\`text
+```text
 Bank (immutable hash)
   -> Run (exact model revision, exposure classification, harness, timestamp)
   -> Cell (graded result, n, missingness, source digest)
@@ -61,11 +61,11 @@ Bank (immutable hash)
   -> Root (inclusion, not truth)
   -> Correction / Supersession (append only; original remains verifiable)
   -> MEOK evidence-reader (bounded retrieval; no automatic learning or authority)
-\`\`\`
+```
 
 Instrument exposure is currently not a first-class state in the ontology. Propose a **versioned, noncanonical research extension**, not a rewrite:
 
-\`\`\`text
+```text
 InstrumentContext { instrument_version, objective_visible, answer_exposure,
                     epoch_commitment, task_selection_method, randomisation_seed_digest,
                     model_revision, route, decoding, source_content_exposure }
@@ -74,9 +74,9 @@ EnsembleObservation { agents, roster_digest, vote_dependency_matrix,
                       judge_receipt_digest, missingness }
 InterventionResult { control, treatment, paired_task_count,
                      effect, interval, causal_assumptions, evidence_state }
-\`\`\`
+```
 
-Use \`prov:wasDerivedFrom\` for source lineage, \`dcat:distribution\` for dataset versions, and existing CSOAI \`Correction\` / \`Supersession\` links; avoid introducing new stronger assurance labels. Treat missing source or missing counterfactual as \`UNCHECKABLE\`, not successful.
+Use `prov:wasDerivedFrom` for source lineage, `dcat:distribution` for dataset versions, and existing CSOAI `Correction` / `Supersession` links; avoid introducing new stronger assurance labels. Treat missing source or missing counterfactual as `UNCHECKABLE`, not successful.
 
 ### NIST TEVV-Athlon Initial Public Draft crosswalk (not NIST approval)
 
