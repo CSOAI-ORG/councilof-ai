@@ -1,0 +1,94 @@
+{
+  "card": {
+    "as_of": "2026-11-21T12:57:04Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:mantle",
+      "chain": "mantle",
+      "chain_id": 5000,
+      "head": {
+        "block": 103567756,
+        "block_hash": "0x9b87ea6c853d5c5fda8841cebeb5b23ddc8c917a648d239fbed3b862b3becd09",
+        "block_time": "2026-11-21T12:57:04Z"
+      },
+      "n_contracts": 1,
+      "coverage": [
+        {
+          "subject": "evm-events:USDY:mantle",
+          "from": 101153202,
+          "to": 101165201,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 100099850,
+          "rpc": "rpc.mantle.xyz"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on mantle that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c87e56eed14a66406a9aa6a781635fcb16bbcbf6da3c31fdad4b41ca1ae6e8e4",
+    "sig_ed25519": "f8314b32286679b4d816856eeb57651fd25a97b473f1e82d81ff759c3ce69f10f25cce187cb72239a21e10294c4dfce5cfa2b815997fba4e318df6f170fed501",
+    "source_urls": [
+      "https://rpc.mantle.xyz"
+    ],
+    "subject": "evm-events:scan:mantle coverage at block 103567756",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:mantle",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "28316ed7cea4a60bc1a20906fd18d15fa4421df9799a4a4db3450ef7a9c55e17",
+    "3ac409c7221afe7fc64e62e6359983d19b3bdaf66bf41ed95633da0298d2dbc6",
+    "18637bc5b4e19fea534dc7e3ef84b79d604ce519a67c05ed0cd7b88321c977a0",
+    "8ac17e9e963ca84df16a046e5adb2ba2c5dfb9d23a699e453f3ac33dcb670646",
+    "566d2fbbd99c381fcd93a6cddcdd14a8d9321d7770658e6f44d3b236e3c4937b",
+    "411de6c95054b4c728fbae9584e85c2baafc56bfea1c4b4a06341f4a7e75e338",
+    "46ddbeeabdd2bdbbb5dd4714aad379d8d766cf91b5212ec22f4115a649014d10",
+    "aa8b9800f3bdca1c26d8d66dff3086614d8b9a8674a0c642c1cf2b157fb7efd4",
+    "fe0452c57e8f0e82385e891a9f6b799fca4fc6e7dfd7698cfd32e1ea784f0c69"
+  ]
+}
