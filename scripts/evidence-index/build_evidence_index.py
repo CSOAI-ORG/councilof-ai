@@ -30,7 +30,9 @@ import verify as V  # noqa: E402  (the stranger's verifier is the library: one c
 SCHEMA = "csoai.evidence-index/0.1"
 INDEX_PATH = "index.json"
 SIG_PAT = re.compile(r"(signed|attest|provenance_signed|\.sig$)", re.I)
-MIRRORS = {"csoai/councilof-ai-source", "csoai/councilof-ai-mirror"}
+# csoai/councilof-ai-mirror was deleted on 21 Nov 2026, so the enumeration no longer finds it. Earlier
+# indexes list it as it was when they were built.
+MIRRORS = {"csoai/councilof-ai-source"}
 SIGCAP, OTSCAP, BYTECAP, SMALL = 150, 60, 40, 2_000_000
 SURFACES = [
     ("trust-anchor", "https://csoai.org/.well-known/did.json", "DID document holding the Ed25519 keys every signature here is pinned to"),
