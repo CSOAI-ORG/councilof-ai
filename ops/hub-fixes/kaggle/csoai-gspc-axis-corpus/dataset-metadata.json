@@ -1,0 +1,52 @@
+{
+  "title": "GSPC · Axis Transcripts — Council of AI",
+  "id": "nicktempleman/csoai-gspc-axis-corpus",
+  "id_no": 12265020,
+  "subtitle": "Independent measurement of GSPC axis prompts and responses. Not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-axis-corpus`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-axis-corpus -p ./dataset --unzip\n```\n\nStart by inspecting `gspc-axis.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `eval.yaml`\n- `dataset.sig`\n- `dataset.json`\n- `manifest.jsonl`\n- `gspc-axis.jsonl`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement of GSPC axis prompts and responses. Not a certification.**\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-axis-corpus at revision `e7a5bcbaa5ad79a2be3e8446bfd73173c43361d2`, made 2026-10-07. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC axis transcripts — prompts and full responses\n\nThe transcript corpus behind graded runs. Each row of `gspc-axis.jsonl` carries the\n`axis`, the `model`, the `prompt` it was given and the full `response` it returned. This is the raw material\na grader reads — publishing it is what lets a stranger re-grade our runs instead of trusting our grades.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 4, last updated 2026-10-07.\n- 6 files, 7,599,665 bytes. File types: .jsonl (2), .md (1), .json (1), .sig (1), .yaml (1).\n- Hugging Face twin: [csoai/gspc-axis-corpus](https://huggingface.co/datasets/csoai/gspc-axis-corpus). 5 of 6 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_gspc_axis_corpus,\n  title        = {GSPC axis transcripts — prompts and full responses},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/gspc-axis-corpus}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "nlp",
+    "internet"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 5 of 6 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-axis-corpus](https://huggingface.co/datasets/csoai/gspc-axis-corpus) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "1499 — card. Dataset README (Markdown). 13,171 bytes."
+    },
+    {
+      "path": "dataset.json",
+      "description": "2277 — JSON document. JSON document. top-level keys: content_id, corpus_disclosure, doctrine, generated, not_a_certification, note, schema, signature, stats, version. Same byte size as `dataset.json` in huggingface.co/datasets/csoai/gspc-axis-corpus (checked 2026-11-20). 2,277 bytes."
+    },
+    {
+      "path": "dataset.sig",
+      "description": "357 — file. Detached signature file. Same byte size as `dataset.sig` in huggingface.co/datasets/csoai/gspc-axis-corpus (checked 2026-11-20). 357 bytes."
+    },
+    {
+      "path": "eval.yaml",
+      "description": "512 — config. YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-axis-corpus (checked 2026-11-20). 512 bytes."
+    },
+    {
+      "path": "gspc-axis.jsonl",
+      "description": "7581331 — data (one JSON object per line). Newline-delimited JSON (one record per line). 10226 rows; fields: axis (string), model (string), prompt (string), response (string), source (string), ts (datetime). Same byte size as `gspc-axis.jsonl` in huggingface.co/datasets/csoai/gspc-axis-corpus (checked 2026-11-20). 7,581,331 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "6 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 6 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-axis-corpus (checked 2026-11-20). 2,017 bytes."
+    }
+  ]
+}

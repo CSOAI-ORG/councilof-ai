@@ -1,0 +1,60 @@
+--- a/csoai/gspc-academy-prv/README.md (live)
++++ b/csoai/gspc-academy-prv/README.md (proposed)
+@@ -13,6 +13,20 @@
+ pretty_name: "GSPC Academy — Provenance"
+ size_categories:
+ - n<1K
++configs:
++- config_name: items
++  data_files:
++  - split: train
++    path: items.jsonl
++  default: true
++- config_name: board-card
++  data_files:
++  - split: train
++    path: board-card.json
++- config_name: mooc-map
++  data_files:
++  - split: train
++    path: mooc-map.json
+ ---
+ 
+ <p align="center">
+@@ -110,3 +124,36 @@
+ Part of the [GSPC Academy](https://huggingface.co/csoai) series — one dataset per measurement
+ axis, patterned after the topic-partitioned JSONL + high-quality card format, with per-model
+ measured outcomes on every item.
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `items` (default) | `items.jsonl` | 32 |
++| `board-card` | `board-card.json` | 1 |
++| `mooc-map` | `mooc-map.json` | 1 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/gspc-academy-prv", "items", split="train")
++```
++
++## Citation
++
++```bibtex
++@misc{csoai_gspc_academy_prv_2026,
++  title        = {GSPC Academy — Provenance},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/csoai/gspc-academy-prv}},
++  url          = {https://huggingface.co/datasets/csoai/gspc-academy-prv}
++}
++```
++
++<!-- csoai-card-fixes:end -->

@@ -1,0 +1,56 @@
+{
+  "title": "Hub queue — the census, never a measured count",
+  "id": "nicktempleman/csoai-hub-queue",
+  "id_no": 12265470,
+  "subtitle": "Mirror of Hugging Face csoai/hub-queue",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-hub-queue`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-hub-queue -p ./dataset --unzip\n```\n\nStart by inspecting `queue.parquet`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `queue.jsonl`\n- `SUMMARY.json`\n- `queue.parquet`\n- `manifest.jsonl`\n- `locks/HF2200.lock.json`\n- `locks/FLEET-B.lock.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/hub-queue at revision `936bc309387766dc70b0443de2a7981a9917af66`, made 2026-09-29. The Hugging Face copy is the original; if the two differ, it wins.\n\n# Hub queue — the census, never a measured count\n\n\n**In one line:** Popular Hugging Face models, in order of their Hub download count, each marked with whether Council of AI holds a signed measurement of it. Most rows are UNMEASURED. For anyone checking whether a model they use has been measured. The `rank` column is download order, not a judgement of the model.\n\n### Use it\n\n```python\nfrom datasets import load_dataset\nds = load_dataset(\"csoai/hub-queue\", split=\"train\")\nprint(ds[0])\n```\n\n- **Verify a signed card in your browser, free, no account:**\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-09-29.\n- 7 files, 2,344,142 bytes. File types: .json (3), .jsonl (2), .md (1), .parquet (1).\n- Hugging Face twin: [csoai/hub-queue](https://huggingface.co/datasets/csoai/hub-queue). 2 of 7 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_hub_queue,\n  title        = {Hub queue — the census, never a measured count},\n  author       = {{CSOAI Ltd (Council of AI)}},\n  year         = {2026},\n  publisher    = {Hugging Face},\n  url          = {https://huggingface.co/datasets/csoai/hub-queue},\n  note         = {Methodology: https://councilof.ai/methodology/. Measurement, not certification.}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software",
+    "pre-trained model",
+    "computer vision"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 2 of 7 files have the same byte size as files in the Hugging Face dataset [csoai/hub-queue](https://huggingface.co/datasets/csoai/hub-queue) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "2914 — card. Dataset README (Markdown). 16,285 bytes."
+    },
+    {
+      "path": "SUMMARY.json",
+      "description": "562 — JSON document. JSON document. Provisional, from a differently-sized HF copy: top-level keys: kind, n, n_measured, n_unmeasured, subject_card_counts, coverage_counts, n_models_with_measured_axes, n_measured_axes, as_of, org, produced_by, rewritten_when, board_truth, columns, flipped_this_run, note, expanded_this_run, expansion_source. 1,074 bytes."
+    },
+    {
+      "path": "locks/FLEET-B.lock.json",
+      "description": "13802 — JSON document. JSON document. top-level keys: kind, fleet, as_of, n_target, n_locked, status_all, enters_board_means, note, source_queue, live_board, public_count, census_n, census_n_measured, models, halt. `models` holds 40 records with fields: slug (string), queue_rank (integer), downloads_at_queue (integer), pipeline_tag (string), status (string), card_id (string), license (string), reason_in (string). Same byte size as `locks/FLEET-B.lock.json` in huggingface.co/datasets/csoai/hub-queue (checked 2026-11-20). 13,802 bytes."
+    },
+    {
+      "path": "locks/HF2200.lock.json",
+      "description": "527637 — JSON document. JSON document. Provisional, from a differently-sized HF copy: top-level keys: kind, fleet, as_of, queue_as_of, n_target, n_locked, n_measured, n_practice_probed, measurement_definition, status_all, mill, writes_board, do_not_mill_today, enters_board_means, models, after_fleet_b, source_queue, queue_subset, census_n, census_n_measured …. `models` holds 2200 records with fields: slug (string), queue_rank (integer), downloads_at_queue (integer), pipeline_tag (string), status (string), card_id (string), reason_in (string), last_mill (datetime), n (integer), reason (string), route_kind (string), providers_live (string). 967,041 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "7 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 7 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/hub-queue (checked 2026-11-20). 2,300 bytes."
+    },
+    {
+      "path": "queue.jsonl",
+      "description": "522273 — 2410 — data (one JSON object per line). Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 4086 rows; fields: rank (integer), id (string), downloads (integer), pipeline_tag (string), status (string), card_id (string), as_of (datetime), coverage_state (string), measured_axes (string). 1,085,197 bytes."
+    },
+    {
+      "path": "queue.parquet",
+      "description": "147065 — data (Parquet). Parquet table. Provisional, from a differently-sized HF copy: 4086 rows; fields: rank (integer), id (string), downloads (integer), pipeline_tag (string), status (string), card_id (string), as_of (datetime), coverage_state (string), measured_axes (string). 258,443 bytes."
+    }
+  ]
+}

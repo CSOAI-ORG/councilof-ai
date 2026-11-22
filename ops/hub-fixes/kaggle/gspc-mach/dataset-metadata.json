@@ -1,0 +1,35 @@
+{
+  "title": "GSPC-MACH — machinery-conformity (MEASURED)",
+  "id": "nicktempleman/gspc-mach",
+  "id_no": 11514551,
+  "subtitle": "GSPC machinery-conformity · not a certificate · check councilof.ai/api/gspc",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/gspc-mach`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/gspc-mach -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `items.jsonl`\n- `results_2026-08-11.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\ngspc-mach — MEASURED axis `machinery-conformity` (MachBench). Bank twin of HF `csoai/gspc-mach`.\n\nLive board (authority): GET https://councilof.ai/api/gspc — cite totals.public_count (34 axes · 23 measured · 11 unmeasured).\n23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate. (re-quoted from totals.lid at generation time)\nThree states only: VALID · INVALID · UNCHECKABLE. Measurement not certification. Live authority: https://councilof.ai/api/gspc\nDo not invent leaders for withheld axes. This Kaggle card is a printer of that GET, not a second engine. Do not freeze MEASURED/UNMEASURED tables here. Fetch fail → UNCHECKABLE. Never claim IL5 / GenAI.mil. Never invent scores.\n\nHub cards (third-party Hub models — NOT the CSOAI fleet): GET https://councilof.ai/api/hub-cards → **384/384/0** (cells/measured/unmeasured; re-GET live). Re-GET before citing; do not freeze a Hub triple on this card.\n\nVerify: https://councilof.ai/gspc-verify\nHF twin: https://huggingface.co/datasets/csoai/gspc-mach\nZenodo DOI 10.5281/zenodo.21991104: UNAVAILABLE since 29 Sep 2026 (Zenodo blocked the CSOAI account; appeal pending; status https://councilof.ai/interop/zenodo-status.json). Cite the served methodology: https://councilof.ai/signed/HOW-TO-VERIFY.md — GSPC Methodology and the Frozen Corpus Anchor. Issuer: CSOAI Ltd (GB, Companies House 16939677).\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 4, last updated 2026-08-11.\n- 2 files, 10,788 bytes. File types: .jsonl (1), .json (1).\n- Hugging Face twin: [csoai/gspc-mach](https://huggingface.co/datasets/csoai/gspc-mach). 2 of 2 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "government",
+    "benchmark",
+    "model comparison",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 2 of 2 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-mach](https://huggingface.co/datasets/csoai/gspc-mach) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "items.jsonl",
+      "description": "10104 — 34 — data (one JSON object per line). Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). Same byte size as `items.jsonl` in huggingface.co/datasets/csoai/gspc-mach (checked 2026-11-20). 10,104 bytes."
+    },
+    {
+      "path": "results_2026-08-11.json",
+      "description": "684 — JSON document. JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). Same byte size as `results_2026-08-11.json` in huggingface.co/datasets/csoai/gspc-mach (checked 2026-11-20). 684 bytes."
+    }
+  ]
+}
