@@ -19,6 +19,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 import shutil
 import tarfile
 import tempfile
@@ -410,23 +411,77 @@ class Wiring(unittest.TestCase):
               "kaggle models instances", "create_commit(", "push_to_hub(")
     GATE = "scripts/privacy/publication_gate.py"
 
+    @classmethod
+    def _unguarded_jobs(cls, lines):
+        """Small indentation-based workflow guard: compare upload/gate within each job.
+
+        This is a static linter, not proof that a gate's shell command ran on
+        exact published bytes. Conditional execution needs runtime receipts.
+        """
+        jobs = []
+        in_jobs = False
+        current = None
+        for line in lines:
+            if line == "jobs:":
+                in_jobs = True
+                continue
+            if not in_jobs:
+                continue
+            if line and not line[0].isspace() and not line.startswith("#"):
+                break
+            m = re.fullmatch(r"  ([A-Za-z_][A-Za-z0-9_-]*):\s*(?:#.*)?", line)
+            if m:
+                current = [m.group(1), []]
+                jobs.append(current)
+            elif current is not None:
+                current[1].append(line)
+        def code_line(line):
+            return not line.strip().startswith(("#", "name:", "- name:", "description:", "pretty_name:"))
+        bad = []
+        for name, job_lines in jobs:
+            ups = [i for i, line in enumerate(job_lines)
+                   if code_line(line) and any(term in line for term in cls.UPLOAD)]
+            if not ups:
+                continue
+            gates = [i for i, line in enumerate(job_lines)
+                     if code_line(line) and cls.GATE in line]
+            if not gates or min(gates) > min(ups):
+                bad.append(name)
+        # If an upload exists but no parsable jobs block, reject the workflow.
+        if not jobs and any(code_line(line) and any(term in line for term in cls.UPLOAD) for line in lines):
+            bad.append("UNPARSEABLE_JOBS")
+        return bad
+
     def test_every_workflow_upload_is_behind_the_gate(self):
         import glob
         bad = []
         for path in sorted(glob.glob(os.path.join(self.ROOT, ".github", "workflows", "*.yml"))):
             with open(path, encoding="utf-8") as f:
                 lines = f.read().split("\n")
-            # command lines only: not comments, step names or input descriptions
-            code = [i for i, l in enumerate(lines)
-                    if not l.strip().startswith(("#", "name:", "- name:", "description:", "pretty_name:"))]
-            ups = [i for i in code if any(k in lines[i] for k in self.UPLOAD)]
-            if not ups:
-                continue
-            gates = [i for i in code if self.GATE in lines[i]]
-            if not gates or min(gates) > min(ups):
-                bad.append(os.path.relpath(path, self.ROOT))
-        self.assertEqual(bad, [], "these workflows upload to Hugging Face or Kaggle without the publication gate "
-                         "running earlier in the file: " + ", ".join(bad))
+            for job in self._unguarded_jobs(lines):
+                bad.append(os.path.relpath(path, self.ROOT) + ":" + job)
+        self.assertEqual(bad, [], "these workflows contain a Hugging Face or Kaggle upload "
+                         "without the publication gate earlier in the SAME job: " + ", ".join(bad))
+
+    def test_wiring_lint_catches_cross_job_gate(self):
+        lines = [
+            "name: synthetic", "jobs:",
+            "  scan:", "    steps:", "      - run: python scripts/privacy/publication_gate.py out",
+            "  publish:", "    steps:", "      - run: kaggle datasets create out",
+        ]
+        self.assertEqual(self._unguarded_jobs(lines), ["publish"])
+
+    def test_wiring_lint_accepts_guarded_upload_in_one_job(self):
+        lines = ["jobs:", "  publish:", "    steps:",
+                 "      - run: python scripts/privacy/publication_gate.py out",
+                 "      - run: kaggle datasets create out"]
+        self.assertEqual(self._unguarded_jobs(lines), [])
+
+    def test_wiring_lint_rejects_upload_before_guard(self):
+        lines = ["jobs:", "  publish:", "    steps:",
+                 "      - run: huggingface-cli upload out",
+                 "      - run: python scripts/privacy/publication_gate.py out"]
+        self.assertEqual(self._unguarded_jobs(lines), ["publish"])
 
     def test_python_uploaders_call_the_gate(self):
         for rel in ("scripts/pod-loops/hf_upload.py", "scripts/mirror_to_hf.py"):
