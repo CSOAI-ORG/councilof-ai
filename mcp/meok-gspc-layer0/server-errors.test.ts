@@ -79,6 +79,32 @@ it.each(['list', 'call'])('preserves desktop JSON-RPC errors for %s', async op =
   expect(JSON.stringify(result)).not.toContain('private-desktop-detail');
 });
 
+it('discovery never advertises ungranted host execution or file access', async () => {
+  const result = await callBridge('zcode_desktop', { op: 'list' },
+    jsonReply({ jsonrpc: '2.0', id: 1, result: { tools: [
+      { name: 'start_process' }, { name: 'read_file' }, { name: 'list_devices' },
+    ] } }));
+  expect(result.isError).not.toBe(true);
+  expect(body(result)).toMatchObject({ tools: ['list_devices'], authority: 'READ_ONLY_METADATA' });
+  expect(JSON.stringify(result)).not.toContain('start_process');
+  expect(JSON.stringify(result)).not.toContain('read_file');
+});
+
+it('empty desktop discovery fails closed rather than advertising a capability', async () => {
+  const result = await callBridge('zcode_desktop', { op: 'list' },
+    jsonReply({ jsonrpc: '2.0', id: 1, result: { tools: [] } }));
+  expect(result.isError).toBe(true);
+  expect(body(result).reason).toBe('DESKTOP_READ_ONLY_TOOL_UNAVAILABLE');
+});
+
+it('oversized desktop response fails closed without exposing payload', async () => {
+  const result = await callBridge('zcode_desktop', { op: 'list' },
+    (_req, res) => { res.writeHead(200, { 'content-type': 'application/json' }); res.end('x'.repeat(1_048_577)); });
+  expect(result.isError).toBe(true);
+  expect(body(result).reason).toBe('DESKTOP_REQUEST_FAILED');
+  expect(JSON.stringify(result).length).toBeLessThan(1000);
+});
+
 it('does not treat an HTTP desktop failure containing result-shaped JSON as successful execution', async () => {
   const result = await callBridge('zcode_desktop', { op: 'call', tool: 'list_devices' }, jsonReply({ result: { content: [] } }, 503));
   expect(result.isError).toBe(true);
