@@ -11,6 +11,28 @@
  },
  "notes": [
   {
+   "id": "live-ai-rules-frozen-as-checkable-text",
+   "date": "2026-11-22",
+   "title": "264 of 573 live AI rules are frozen as text anyone can re-check",
+   "summary": "For 65 more in-force or enacted AI rules in corpus v3, the official publisher's own site was the obstacle; 42 of those refused automated clients.",
+   "body": "Corpus v3 lists 678 AI-relevant instruments across 135 jurisdiction codes, and 573 of them are in force, enacted or partly applicable. This note sorts those 573 by the reason each build wave recorded for freezing, or not freezing, the text. 264 are frozen as full text: every provision is published with a hash anyone can recompute. For 196 the limit is our own build: the host was not attempted in the time budget, was not allowlisted in our sandbox, or the status still rests on a source we have not checked. For 65 the official publisher's site was the obstacle: 42 refused automated clients with 403, 429, 451 or bot challenges, 9 render the law text by JavaScript with no text endpoint we could find, 9 documents could not be located, 4 are scans or carry an unusable text layer, and 1 was rejected by a firewall. 23 more failed on TLS errors or time-outs where the cause is not established, 14 wait on a reuse licence check, and 11 are kept as registry rows by design. We do not bypass bot challenges. A rule a machine cannot fetch is a rule a machine cannot check, so the coverage notes name a human route for each blocked host. Every one of the 196 is listed in the table as work still to do.",
+   "artifacts": [
+    {
+     "label": "Corpus v3 README (counts, root, what it does not claim)",
+     "url": "https://councilof.ai/interop/corpus-v3/README.md"
+    },
+    {
+     "label": "Freeze-outcome table for this note",
+     "url": "https://councilof.ai/interop/insights/corpus-freeze-outcomes-2026-11-22.json"
+    },
+    {
+     "label": "Producer script (standard library only)",
+     "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/insights/corpus_freeze_outcomes.py"
+    }
+   ],
+   "social": "264 of 573 live AI rules in our corpus are frozen as text anyone can re-check. For 65 more, the official publisher's site was the obstacle; 42 refused automated clients. Method and table: https://councilof.ai/notes/live-ai-rules-frozen-as-checkable-text/"
+  },
+  {
    "id": "model-gaps-too-small-to-call",
    "date": "2026-11-22",
    "title": "Too small to call: most top-two gaps on the board need far larger tests",
