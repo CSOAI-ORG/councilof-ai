@@ -321,8 +321,15 @@ function main(argv) {
     if (existsSync(path.join(out, "gspc_measurements.jsonl"))) {
       problems.push("gspc_measurements.jsonl is the pre-shard single file and must be removed: the table is now written in parts");
     }
-    if (JSON.stringify(committedManifest.counts) !== JSON.stringify(manifest.counts)) {
-      problems.push("MANIFEST.json counts differ from a fresh build");
+    // The previous gate compared table bytes and headline counts but trusted the
+    // stored source_digest and by_axis/by_model summaries. A tampered manifest
+    // could therefore say SOURCE_REPLAY_MATCHED with an invented digest even
+    // while the raw rows and counts were unchanged. Re-derive all deterministic
+    // manifest fields from the actual source cells, not from stored claims.
+    for (const field of ["source", "counts", "by_axis", "by_model", "tables"]) {
+      if (JSON.stringify(committedManifest[field]) !== JSON.stringify(manifest[field])) {
+        problems.push("MANIFEST.json " + field + " differs from a fresh build");
+      }
     }
     rmSync(scratch, { recursive: true, force: true });
     if (problems.length) {
