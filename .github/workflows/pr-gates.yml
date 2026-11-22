@@ -798,6 +798,10 @@ jobs:
             echo "::error::/investors was not prerendered; refusing an empty price-gate pass"
             exit 1
           }
+          grep -q 'data-testid="investors-page"' dist/client/investors/index.html || {
+            echo "::error::/investors did not render its actual React page; refusing an SPA-shell pass"
+            exit 1
+          }
           node scripts/price-gate.mjs --selftest
           node scripts/price-gate.mjs dist/client
 
