@@ -1,0 +1,232 @@
+{
+  "title": "GSPC · Census: a2a card — Council of AI",
+  "id": "nicktempleman/csoai-gspc-census-a2a-card",
+  "id_no": 12621199,
+  "subtitle": "Mirror of HF csoai/a2a-card-census. Measurement, not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-census-a2a-card`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-census-a2a-card -p ./dataset --unzip\n```\n\nStart by inspecting `data/cards.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `record.json`\n- `record.json.ots`\n- `record.ots.json`\n- `record.signed.json`\n- `record.v0.1.1.json`\n- `record.2026-09-27.json`\n- `record.2026-10-04.json`\n- See the Data tab for all 51 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement: a2a card. Not a certification.**\n\n> **Mirror.** Copy of https://huggingface.co/datasets/csoai/a2a-card-census at revision `a7dfbac107eeb029cc40116a80c1621882afa707`, made 2026-10-16. The Hugging Face copy is the original; if the two differ, it wins.\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n\n> **Current record: 0.1.1** — `record.v0.1.1.json`, sha256 `4a2b46bb42aa727363ca04d8a2cc21ed76b50a4c6937a62f80d6fcfda191af91`, supersedes `record.json` (0.1, sha256 `b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662176c`), which stays published unchanged. Figures in sections 1–3 are 0.1 unless the Corrections section below restates them; the dataset viewer loads the 0.1.1 rows (`data/cards.v0.1.1.jsonl.gz`).\n\n# A2A agent card census - measured read, 2026-09-25\n\n> **Start here — free verify:**\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-10-16.\n- 51 files, 1,583,859 bytes. File types: .json (30), .ots (11), .jsonl (8), .md (1), .txt (1).\n- Hugging Face twin: [csoai/a2a-card-census](https://huggingface.co/datasets/csoai/a2a-card-census). 42 of 51 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_a2a_card_census_2026,\n  author       = {{Council of AI (CSOAI)}},\n  title        = {A2A agent card census: measured read of 2026-09-25},\n  year         = {2026},\n  publisher    = {Hugging Face},\n  howpublished = {\\url{https://huggingface.co/datasets/csoai/a2a-card-census}}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 42 of 51 files have the same byte size as files in the Hugging Face dataset [csoai/a2a-card-census](https://huggingface.co/datasets/csoai/a2a-card-census) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "CHANGES.2026-09-27.json",
+      "description": "JSON document. top-level keys: schema, dataset, date, current, previous, rules, frame_read_states, counts, key, added, dropped, state_changed, out_of_plan, not_compared_not_attempted_in_one_run, unchanged, transitions. `state_changed` holds 9 records with fields: name (string), from (string), to (string). Same byte size as `CHANGES.2026-09-27.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 4,400 bytes."
+    },
+    {
+      "path": "CHANGES.2026-10-04.json",
+      "description": "JSON document. top-level keys: schema, dataset, date, current, previous, rules, frame_read_states, counts, key, added, dropped, state_changed, out_of_plan, not_compared_not_attempted_in_one_run, unchanged, transitions. `added` holds 72 records with fields: name (string), state (string), order (integer). Same byte size as `CHANGES.2026-10-04.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 12,517 bytes."
+    },
+    {
+      "path": "CHANGES.2026-10-11.json",
+      "description": "JSON document. top-level keys: schema, dataset, date, current, previous, rules, frame_read_states, counts, key, added, dropped, state_changed, out_of_plan, not_compared_not_attempted_in_one_run, unchanged, transitions. `dropped` holds 44 records with fields: name (string), previous_state (string), why (string). Same byte size as `CHANGES.2026-10-11.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 13,165 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 21,055 bytes."
+    },
+    {
+      "path": "correction.v0.1.1.evidence.json",
+      "description": "JSON document. top-level keys: rechecked, schema. `rechecked` holds 19 records with fields: card_sha256 (string), declared (string), id (string), note (string), rule (string), sig_state_0_1 (string), sig_state_0_1_1 (string), sig_state_0_1_rule_same_keys (string), sig_state_under_1x_rules (string), signatures (string). Same byte size as `correction.v0.1.1.evidence.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 13,966 bytes."
+    },
+    {
+      "path": "data/cards.2026-09-27.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 249,725 bytes."
+    },
+    {
+      "path": "data/cards.2026-10-04.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 283,185 bytes."
+    },
+    {
+      "path": "data/cards.2026-10-11.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 283,075 bytes."
+    },
+    {
+      "path": "data/cards.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 249,375 bytes."
+    },
+    {
+      "path": "data/cards.not_attempted.2026-09-27.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 424 bytes."
+    },
+    {
+      "path": "data/cards.not_attempted.2026-10-04.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 212 bytes."
+    },
+    {
+      "path": "data/cards.not_attempted.2026-10-11.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 212 bytes."
+    },
+    {
+      "path": "data/cards.v0.1.1.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 310,852 bytes."
+    },
+    {
+      "path": "ots-bitcoin-check-2026-09-25.json",
+      "description": "JSON document. top-level keys: schema, repo, read_at_revision, checked_utc, method, not_a_claim, proofs. `proofs` holds 1 records with fields: file (string), target (string), target_sha256 (string), file_digest (string), binds_to_target (boolean), orig_sha256 (string), upgraded_sha256 (string), state (string), bitcoin (string), pending (string), bitcoin_ots (string). Same byte size as `ots-bitcoin-check-2026-09-25.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 5,220 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-25/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,513 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/record.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/record.json.ots` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,672 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-26/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-26/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,534 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-26/record.v0.1.1.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-26/record.v0.1.1.json.ots` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,777 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-27/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-27/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,546 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-27/record.2026-09-27.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-27/record.2026-09-27.json.ots` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,567 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-04/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-10-04/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,546 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-04/record.2026-10-04.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-10-04/record.2026-10-04.json.ots` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,497 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-11/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-10-11/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,546 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-11/record.2026-10-11.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-10-11/record.2026-10-11.json.ots` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,707 bytes."
+    },
+    {
+      "path": "record.2026-09-27.json",
+      "description": "JSON document. top-level keys: schema, record_id, revision_date, as_of, built_utc, publisher, licence, what_this_is, revision_of, producer, frame, run, summary_cross_checks, changes, not_evidence_of, verify, rights_gate, published_files. Same byte size as `record.2026-09-27.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 10,280 bytes."
+    },
+    {
+      "path": "record.2026-09-27.json.ots",
+      "description": "OpenTimestamps proof file for `record.2026-09-27.json` (included in this dataset). Same byte size as `record.2026-09-27.json.ots` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 530 bytes."
+    },
+    {
+      "path": "record.2026-09-27.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning. Same byte size as `record.2026-09-27.ots.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,046 bytes."
+    },
+    {
+      "path": "record.2026-09-27.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `record.2026-09-27.signed.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 2,484 bytes."
+    },
+    {
+      "path": "record.2026-10-04.json",
+      "description": "JSON document. top-level keys: schema, record_id, revision_date, as_of, built_utc, publisher, licence, what_this_is, revision_of, producer, frame, run, summary_cross_checks, changes, not_evidence_of, verify, rights_gate, published_files. Same byte size as `record.2026-10-04.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 10,255 bytes."
+    },
+    {
+      "path": "record.2026-10-04.json.ots",
+      "description": "OpenTimestamps proof file for `record.2026-10-04.json` (included in this dataset). Same byte size as `record.2026-10-04.json.ots` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 495 bytes."
+    },
+    {
+      "path": "record.2026-10-04.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning. Same byte size as `record.2026-10-04.ots.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,046 bytes."
+    },
+    {
+      "path": "record.2026-10-04.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `record.2026-10-04.signed.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 2,503 bytes."
+    },
+    {
+      "path": "record.2026-10-11.json",
+      "description": "JSON document. top-level keys: schema, record_id, revision_date, as_of, built_utc, publisher, licence, what_this_is, revision_of, producer, frame, run, summary_cross_checks, changes, not_evidence_of, verify, rights_gate, published_files. Same byte size as `record.2026-10-11.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 10,240 bytes."
+    },
+    {
+      "path": "record.2026-10-11.json.ots",
+      "description": "OpenTimestamps proof file for `record.2026-10-11.json` (included in this dataset). Same byte size as `record.2026-10-11.json.ots` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 705 bytes."
+    },
+    {
+      "path": "record.2026-10-11.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning. Same byte size as `record.2026-10-11.ots.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,046 bytes."
+    },
+    {
+      "path": "record.2026-10-11.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `record.2026-10-11.signed.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 2,486 bytes."
+    },
+    {
+      "path": "record.json",
+      "description": "`b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662176c`. JSON document. top-level keys: schema, record_id, as_of, built_utc, publisher, licence, family, what_this_is, read_state_vocabulary, units, producer, inputs, summary_cross_checks, read, states, states_zero, state_meanings, not_contacted, cards_served, signatures …. `anomalies` holds 5 records with fields: id (string), kind (string), what_we_say (string), run1_row (string), run2_row (string), space_stage_per_hub_api (string), run1_vs_run2_state_changes (string), fix (string). Same byte size as `record.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 13,926 bytes."
+    },
+    {
+      "path": "record.json.bitcoin.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `record.json.bitcoin.ots` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 3,745 bytes."
+    },
+    {
+      "path": "record.json.ots",
+      "description": "OpenTimestamps proof file for `record.json` (included in this dataset). Same byte size as `record.json.ots` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 740 bytes."
+    },
+    {
+      "path": "record.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning, signing_is_separate. Same byte size as `record.ots.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 1,099 bytes."
+    },
+    {
+      "path": "record.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `record.signed.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 2,417 bytes."
+    },
+    {
+      "path": "record.v0.1.1.json",
+      "description": "JSON document. top-level keys: schema, record_id, as_of, built_utc, publisher, licence, family, what_this_is, read_state_vocabulary, units, producer, inputs, summary_cross_checks, read, states, states_zero, state_meanings, not_contacted, cards_served, signatures …. `anomalies` holds 5 records with fields: id (string), kind (string), what_we_say (string), run1_row (string), run2_row (string), space_stage_per_hub_api (string), run1_vs_run2_state_changes (string), fix (string). Same byte size as `record.v0.1.1.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 24,329 bytes."
+    },
+    {
+      "path": "record.v0.1.1.json.ots",
+      "description": "OpenTimestamps proof file for `record.v0.1.1.json` (included in this dataset). Same byte size as `record.v0.1.1.json.ots` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 670 bytes."
+    },
+    {
+      "path": "record.v0.1.1.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning. Same byte size as `record.v0.1.1.ots.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 983 bytes."
+    },
+    {
+      "path": "record.v0.1.1.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `record.v0.1.1.signed.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 2,729 bytes."
+    },
+    {
+      "path": "run/2026-09-27/summary.json",
+      "description": "JSON document. top-level keys: schema, started, finished, user_agent, frame, n_planned, n_attempted, read_state, read_state_rule, states, cards_served, signatures, registry_is_healthy_but_no_card_served, requests, limits, sent, never_sent, what_a_row_is, what_it_never_proves. Same byte size as `run/2026-09-27/summary.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 5,285 bytes."
+    },
+    {
+      "path": "run/2026-10-04/summary.json",
+      "description": "JSON document. top-level keys: schema, started, finished, user_agent, frame, n_planned, n_attempted, read_state, read_state_rule, states, cards_served, signatures, registry_is_healthy_but_no_card_served, requests, limits, sent, never_sent, what_a_row_is, what_it_never_proves. Same byte size as `run/2026-10-04/summary.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 5,567 bytes."
+    },
+    {
+      "path": "run/2026-10-11/summary.json",
+      "description": "JSON document. top-level keys: schema, started, finished, user_agent, frame, n_planned, n_attempted, read_state, read_state_rule, states, cards_served, signatures, registry_is_healthy_but_no_card_served, requests, limits, sent, never_sent, what_a_row_is, what_it_never_proves. Same byte size as `run/2026-10-11/summary.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 5,258 bytes."
+    },
+    {
+      "path": "run/summary.json",
+      "description": "`f32890d749cde7c15dafd61ce848661b5a0aeac440b0289a32ff7796c3651c34`. JSON document. top-level keys: schema, started, finished, user_agent, frame, n_planned, n_attempted, read_state, read_state_rule, states, cards_served, signatures, registry_is_healthy_but_no_card_served, requests, limits, sent, never_sent, what_a_row_is, what_it_never_proves. Same byte size as `run/summary.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 5,268 bytes."
+    },
+    {
+      "path": "run/superseded-run1-SUPERSEDED.txt",
+      "description": "`a773870ff1cdf49a5206da354a0cf3f742c42e40cff8c77e3aa35e42d48eb2f4`. Plain-text file. Same byte size as `run/superseded-run1-SUPERSEDED.txt` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 466 bytes."
+    },
+    {
+      "path": "run/superseded-run1-summary.json",
+      "description": "`ac4a25a88a9a5b9280b26cbee90aa8b9642ce3d4a15caa80d63d6513bbec990d`. JSON document. top-level keys: schema, started, finished, user_agent, frame, n_planned, n_attempted, read_state, read_state_rule, states, cards_served, signatures, registry_is_healthy_but_no_card_served, requests, limits, sent, never_sent, what_a_row_is, what_it_never_proves. Same byte size as `run/superseded-run1-summary.json` in huggingface.co/datasets/csoai/a2a-card-census (checked 2026-11-20). 4,973 bytes."
+    }
+  ]
+}

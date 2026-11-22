@@ -1,0 +1,181 @@
+---
+title: CSOAI Measurement Cards (signed, self-attested)
+doi: 10.5281/zenodo.21991104
+license: cc-by-4.0
+pretty_name: csoai measurement cards
+size_categories:
+- n<1K
+configs:
+- config_name: cards-axis-evals-axis-eval-agent-economy
+  data_files:
+  - split: train
+    path: cards/axis-evals/axis-eval-agent-economy.json
+  default: true
+- config_name: cards-axis-evals-axis-eval-anti-gaming
+  data_files:
+  - split: train
+    path: cards/axis-evals/axis-eval-anti-gaming.json
+- config_name: cards-axis-evals-axis-eval-arc-reasoning
+  data_files:
+  - split: train
+    path: cards/axis-evals/axis-eval-arc-reasoning.json
+- config_name: cards-axis-evals-axis-eval-bond-router
+  data_files:
+  - split: train
+    path: cards/axis-evals/axis-eval-bond-router.json
+- config_name: cards-axis-evals-axis-eval-data-dao
+  data_files:
+  - split: train
+    path: cards/axis-evals/axis-eval-data-dao.json
+- config_name: cards-axis-evals-axis-eval-oversight
+  data_files:
+  - split: train
+    path: cards/axis-evals/axis-eval-oversight.json
+- config_name: cards-axis-evals-axis-eval-stock-market
+  data_files:
+  - split: train
+    path: cards/axis-evals/axis-eval-stock-market.json
+- config_name: cards-discovery-agent-card-affect
+  data_files:
+  - split: train
+    path: cards/discovery/agent-card-affect.json
+- config_name: cards-discovery-agent-card-care
+  data_files:
+  - split: train
+    path: cards/discovery/agent-card-care.json
+- config_name: cards-discovery-agent-card-conformance
+  data_files:
+  - split: train
+    path: cards/discovery/agent-card-conformance.json
+- config_name: cards-discovery-agent-card-continuity
+  data_files:
+  - split: train
+    path: cards/discovery/agent-card-continuity.json
+- config_name: cards-discovery-agent-card-governance
+  data_files:
+  - split: train
+    path: cards/discovery/agent-card-governance.json
+- config_name: cards-discovery-agent-card-jail
+  data_files:
+  - split: train
+    path: cards/discovery/agent-card-jail.json
+- config_name: cards-discovery-agent-card-openness
+  data_files:
+  - split: train
+    path: cards/discovery/agent-card-openness.json
+- config_name: cards-discovery-agent-card-provenance
+  data_files:
+  - split: train
+    path: cards/discovery/agent-card-provenance.json
+- config_name: cards-discovery-agent-card-safety
+  data_files:
+  - split: train
+    path: cards/discovery/agent-card-safety.json
+- config_name: cards-discovery-agent-card-swarm
+  data_files:
+  - split: train
+    path: cards/discovery/agent-card-swarm.json
+- config_name: cards-discovery-agent-card
+  data_files:
+  - split: train
+    path: cards/discovery/agent-card.json
+- config_name: cards-discovery-arena-elo
+  data_files:
+  - split: train
+    path: cards/discovery/arena-elo.json
+- config_name: cards-discovery-court-of-record
+  data_files:
+  - split: train
+    path: cards/discovery/court-of-record.json
+- config_name: cards-discovery-crosswalk-anthropic-rsp
+  data_files:
+  - split: train
+    path: cards/discovery/crosswalk-anthropic-rsp.json
+- config_name: cards-discovery-crosswalk-gpaicp
+  data_files:
+  - split: train
+    path: cards/discovery/crosswalk-gpaicp.json
+- config_name: cards-discovery-crosswalk-mitre-atlas
+  data_files:
+  - split: train
+    path: cards/discovery/crosswalk-mitre-atlas.json
+- config_name: cards-discovery-sample
+  data_files:
+  - split: train
+    path:
+    - cards/discovery/agent-card-cross-reality.json
+    - cards/discovery/agent-card-detector-interop.json
+    - cards/discovery/agent-card-machinery-conformity.json
+- config_name: cards-discovery-v2-sample
+  data_files:
+  - split: train
+    path:
+    - cards/discovery/crosswalk-ca-sb53.json
+    - cards/discovery/crosswalk-iso-23894.json
+    - cards/discovery/crosswalk-iso-42001.json
+tags:
+- council-of-ai
+language:
+- en
+---
+Signed, self-attested measurement cards from the Council of AI (CSOAI Ltd 16939677).
+Measurement, not certification. Every card carries a canonical content_id + the register discipline.
+
+<!-- csoai-card-fixes:start -->
+
+## Subsets (configs)
+
+The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table.
+
+| subset | files | rows (as verified) |
+|---|---|---|
+| `cards-axis-evals-axis-eval-agent-economy` (default) | `cards/axis-evals/axis-eval-agent-economy.json` | 1 |
+| `cards-axis-evals-axis-eval-anti-gaming` | `cards/axis-evals/axis-eval-anti-gaming.json` | 1 |
+| `cards-axis-evals-axis-eval-arc-reasoning` | `cards/axis-evals/axis-eval-arc-reasoning.json` | 1 |
+| `cards-axis-evals-axis-eval-bond-router` | `cards/axis-evals/axis-eval-bond-router.json` | 1 |
+| `cards-axis-evals-axis-eval-data-dao` | `cards/axis-evals/axis-eval-data-dao.json` | 1 |
+| `cards-axis-evals-axis-eval-oversight` | `cards/axis-evals/axis-eval-oversight.json` | 1 |
+| `cards-axis-evals-axis-eval-stock-market` | `cards/axis-evals/axis-eval-stock-market.json` | 1 |
+| `cards-discovery-agent-card-affect` | `cards/discovery/agent-card-affect.json` | 1 |
+| `cards-discovery-agent-card-care` | `cards/discovery/agent-card-care.json` | 1 |
+| `cards-discovery-agent-card-conformance` | `cards/discovery/agent-card-conformance.json` | 1 |
+| `cards-discovery-agent-card-continuity` | `cards/discovery/agent-card-continuity.json` | 1 |
+| `cards-discovery-agent-card-governance` | `cards/discovery/agent-card-governance.json` | 1 |
+| `cards-discovery-agent-card-jail` | `cards/discovery/agent-card-jail.json` | 1 |
+| `cards-discovery-agent-card-openness` | `cards/discovery/agent-card-openness.json` | 1 |
+| `cards-discovery-agent-card-provenance` | `cards/discovery/agent-card-provenance.json` | 1 |
+| `cards-discovery-agent-card-safety` | `cards/discovery/agent-card-safety.json` | 1 |
+| `cards-discovery-agent-card-swarm` | `cards/discovery/agent-card-swarm.json` | 1 |
+| `cards-discovery-agent-card` | `cards/discovery/agent-card.json` | 1 |
+| `cards-discovery-arena-elo` | `cards/discovery/arena-elo.json` | 1 |
+| `cards-discovery-court-of-record` | `cards/discovery/court-of-record.json` | 1 |
+| `cards-discovery-crosswalk-anthropic-rsp` | `cards/discovery/crosswalk-anthropic-rsp.json` | 1 |
+| `cards-discovery-crosswalk-gpaicp` | `cards/discovery/crosswalk-gpaicp.json` | 1 |
+| `cards-discovery-crosswalk-mitre-atlas` | `cards/discovery/crosswalk-mitre-atlas.json` | 1 |
+| `cards-discovery-sample` | `cards/discovery/agent-card-cross-reality.json`, `cards/discovery/agent-card-detector-interop.json`, `cards/discovery/agent-card-machinery-conformity.json` | 3 |
+| `cards-discovery-v2-sample` | `cards/discovery/crosswalk-ca-sb53.json`, `cards/discovery/crosswalk-iso-23894.json`, `cards/discovery/crosswalk-iso-42001.json` | 3 |
+
+```python
+from datasets import load_dataset
+
+ds = load_dataset("Nicholastempleman/csoai-measurement-cards", "cards-axis-evals-axis-eval-agent-economy", split="train")
+```
+
+## Front door
+
+Council of AI publishes its live measurement board and methods at [https://councilof.ai](https://councilof.ai).
+
+## Citation
+
+```bibtex
+@misc{nicholastempleman_csoai_measurement_cards_2026,
+  title        = {csoai measurement cards},
+  author       = {{CSOAI Ltd (Council of AI)}},
+  year         = {2026},
+  publisher    = {Hugging Face},
+  howpublished = {\url{https://huggingface.co/datasets/Nicholastempleman/csoai-measurement-cards}},
+  url          = {https://huggingface.co/datasets/Nicholastempleman/csoai-measurement-cards}
+}
+```
+
+<!-- csoai-card-fixes:end -->

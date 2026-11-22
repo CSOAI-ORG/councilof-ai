@@ -36,7 +36,7 @@ No API key required for the public governance surface. Override the backend with
 > - `csoai_catalog` → `GET /api/tools?q=` (200; probes the published GSPC MCP tools, 38 entries; a query with no match returns an empty list).
 > - `csoai_verify` → `POST /api/verify` (200; returns a `csoai.verify/0.1` verdict).
 > - `csoai_govern` → `POST /api/chat` (200; the councilof.ai concierge answers, which routes to measurement tools rather than giving free-form compliance advice; 0.1.0 reads the wrong reply field and always reports the Sovereign unavailable).
-> - `csoai_sign` → `POST /api/sign` is **not deployed** (404, not in `/openapi.json`); sealing returns an explicit error and never a fake seal.
+> - `csoai_sign` → `POST /api/sign` is deployed but **not running** (re-read 2026-11-21): it answers 503 `SIGNER_UNAVAILABLE` because its key (`ARTIFACT_SIGN_KEY_PKCS8_B64`) is not provisioned. Sealing returns an explicit error and never a fake seal.
 >
 > The GSPC MCP at `https://councilof.ai/mcp` (free door `https://councilof.ai/mcp/free`) is the distributed Council OS plugin and works today.
 

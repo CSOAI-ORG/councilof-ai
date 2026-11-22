@@ -61,7 +61,7 @@ nicholas@csoai.org
 
 ## 3. Joel Hillier — standards advisor (map only)
 
-**To:** jhillier@certisyn.com  
+**To:** [address removed]  
 **Subject:** DIGITAL-2026-AI-DATA-10 — VRO as a map, not an implementation
 
 Joel,

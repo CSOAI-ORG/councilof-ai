@@ -271,6 +271,7 @@ const Quickstart = lazy(() => import("./pages/Quickstart"));
 // reader who never leaves the home page should not pay for LivingStages or the film band.
 const HowWeWork = lazy(() => import("./pages/HowWeWork"));
 const ClaimMaintenance = lazy(() => import("./pages/ClaimMaintenance"));
+const Engagements = lazy(() => import("./pages/Engagements"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const GamesRuler = lazy(() => import("./pages/GamesRuler"));
 const Insurers = lazy(() => import("./pages/Insurers"));
@@ -775,6 +776,7 @@ function AppShell() {
                   <Route path="/quickstart" component={Quickstart} />
                   <Route path="/how-we-work" component={HowWeWork} />
                   <Route path="/claim-maintenance" component={ClaimMaintenance} />
+                  <Route path="/engagements" component={Engagements} />
                   <Route path="/games/ruler" component={GamesRuler} />
                   <Route path="/evaluator-access" component={EvaluatorAccess} />
                   <Route path="/gspc/jail" component={JailFolder} />
