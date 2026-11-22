@@ -26,6 +26,7 @@
 
 import { useEffect, useState } from "react";
 import { rasBookingFromCatalog, RAS_BOOKING_MAILTO } from "@/lib/rasBooking";
+import { acknowledgedLeadStorage } from "@/lib/leadReceipt";
 import { motion } from "framer-motion";
 import { ShieldCheck, SearchCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -84,7 +85,7 @@ export default function AssessTool() {
         setLeadError("Storage was not confirmed. The request may have reached the server; please contact contact@csoai.org directly for a reply.");
         return;
       }
-      if (!j || typeof j !== "object" || !("stored" in j) || j.stored !== true) {
+      if (!acknowledgedLeadStorage(res.status, j)) {
         setLeadError("No storage receipt was confirmed. For a written scope and a reply, email contact@csoai.org directly.");
         return;
       }
