@@ -1,0 +1,644 @@
+{
+  "schema": "council.revocation-trial/1",
+  "measured_at": "2026-11-21T01:55:01.009Z",
+  "source": {
+    "file": "scripts/hitl/revocation-latency.mjs",
+    "sha256": "bba4b67dc2c6a7675e0902c0ed2416293a5bc9dfae1a4932e793d2ecf248f192",
+    "git_commit": "6a70421b90db842fd6bcabb7f96f01f323d87374",
+    "matches_commit": true,
+    "node": "v26.0.0"
+  },
+  "independent_review": "PENDING",
+  "scope": "Four owned synthetic controls; not production halt latency or a distributed shutdown guarantee",
+  "observations": [
+    {
+      "trace": {
+        "schema": "council.revocation-observation/1",
+        "scenario": "cooperative",
+        "synthetic": true,
+        "scope": "one Node process, local cooperative admission, owned temporary-file effects",
+        "clock": {
+          "id": "4fd60ebd-1060-42b6-98a8-40487801cc15",
+          "kind": "monotonic",
+          "unit": "ms",
+          "source": "performance.now",
+          "calibration": "not independently calibrated; no distributed-clock claim"
+        },
+        "expected_attempt_ids": [
+          "inflight",
+          "queued-child",
+          "retry-child",
+          "restored-checkpoint"
+        ],
+        "enforcement_points": [
+          "local-admission"
+        ],
+        "quiescence_bound_ms": 5000,
+        "effect_readback": {
+          "text": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "events": [
+          {
+            "seq": 0,
+            "type": "action_started",
+            "t_ms": 0.02045799999999076,
+            "clock_id": "4fd60ebd-1060-42b6-98a8-40487801cc15",
+            "action_id": "inflight"
+          },
+          {
+            "seq": 1,
+            "type": "revocation_issued",
+            "t_ms": 0.03999999999999204,
+            "clock_id": "4fd60ebd-1060-42b6-98a8-40487801cc15"
+          },
+          {
+            "seq": 2,
+            "type": "enforcement_observed",
+            "t_ms": 0.041249999999990905,
+            "clock_id": "4fd60ebd-1060-42b6-98a8-40487801cc15",
+            "enforcement_id": "local-admission"
+          },
+          {
+            "seq": 3,
+            "type": "action_rejected",
+            "t_ms": 0.21974999999999056,
+            "clock_id": "4fd60ebd-1060-42b6-98a8-40487801cc15",
+            "action_id": "queued-child",
+            "reason": "revoked"
+          },
+          {
+            "seq": 4,
+            "type": "action_rejected",
+            "t_ms": 0.22162499999998886,
+            "clock_id": "4fd60ebd-1060-42b6-98a8-40487801cc15",
+            "action_id": "retry-child",
+            "reason": "revoked"
+          },
+          {
+            "seq": 5,
+            "type": "action_rejected",
+            "t_ms": 0.2225830000000002,
+            "clock_id": "4fd60ebd-1060-42b6-98a8-40487801cc15",
+            "action_id": "restored-checkpoint",
+            "reason": "revoked"
+          },
+          {
+            "seq": 6,
+            "type": "action_settled",
+            "t_ms": 0.24141600000000096,
+            "clock_id": "4fd60ebd-1060-42b6-98a8-40487801cc15",
+            "action_id": "inflight",
+            "outcome": "cancelled"
+          },
+          {
+            "seq": 7,
+            "type": "quiescence_observed",
+            "t_ms": 0.27462500000000034,
+            "clock_id": "4fd60ebd-1060-42b6-98a8-40487801cc15"
+          },
+          {
+            "seq": 8,
+            "type": "observation_closed",
+            "t_ms": 0.2766249999999957,
+            "clock_id": "4fd60ebd-1060-42b6-98a8-40487801cc15",
+            "complete": true
+          }
+        ]
+      },
+      "result": {
+        "state": "PASS",
+        "errors": [],
+        "rules": [
+          {
+            "id": "OBSERVATION_COMPLETE",
+            "state": "PASS",
+            "detail": {
+              "missing_attempts": [],
+              "unresolved_actions": [],
+              "missing_enforcement_points": []
+            }
+          },
+          {
+            "id": "NO_NEW_ADMISSION_AFTER_ISSUE",
+            "state": "PASS",
+            "detail": []
+          },
+          {
+            "id": "QUIESCENCE_WITHIN_DECLARED_BOUND",
+            "state": "PASS",
+            "detail": "Nominal elapsed time on the declared single clock"
+          },
+          {
+            "id": "EFFECT_READBACK_MATCHES_EVENTS",
+            "state": "PASS",
+            "detail": "Compare retained owned-file bytes with attributed effect events"
+          }
+        ],
+        "metrics": {
+          "revocation_issued_ms": 0.03999999999999204,
+          "propagation_ms": {
+            "local-admission": 0.0012499999999988631
+          },
+          "last_action_settled_ms": 0.24141600000000096,
+          "post_issue_settlement_tail_ms": 0.20141600000000892,
+          "last_effect_completed_ms": null,
+          "post_issue_effect_tail_ms": null,
+          "post_issue_effect_count": 0,
+          "post_issue_admission_count": 0,
+          "observed_quiescence_ms": 0.27462500000000034,
+          "issue_to_quiescence_ms": 0.2346250000000083,
+          "observation_closed_ms": 0.2766249999999957,
+          "declared_quiescence_bound_ms": 5000
+        }
+      }
+    },
+    {
+      "trace": {
+        "schema": "council.revocation-observation/1",
+        "scenario": "non-cancellable",
+        "synthetic": true,
+        "scope": "one Node process, local cooperative admission, owned temporary-file effects",
+        "clock": {
+          "id": "7c7e4699-c954-4423-9a22-cea865f371db",
+          "kind": "monotonic",
+          "unit": "ms",
+          "source": "performance.now",
+          "calibration": "not independently calibrated; no distributed-clock claim"
+        },
+        "expected_attempt_ids": [
+          "inflight",
+          "queued-child",
+          "retry-child",
+          "restored-checkpoint"
+        ],
+        "enforcement_points": [
+          "local-admission"
+        ],
+        "quiescence_bound_ms": 5,
+        "effect_readback": {
+          "text": "{\"effect_id\":\"effect-inflight\",\"action_id\":\"inflight\"}\n",
+          "sha256": "9183a73041c0710260337076ffb4a074424773644aa3af375a900b2637096042"
+        },
+        "events": [
+          {
+            "seq": 0,
+            "type": "action_started",
+            "t_ms": 0.006791999999990139,
+            "clock_id": "7c7e4699-c954-4423-9a22-cea865f371db",
+            "action_id": "inflight"
+          },
+          {
+            "seq": 1,
+            "type": "revocation_issued",
+            "t_ms": 0.012082999999989852,
+            "clock_id": "7c7e4699-c954-4423-9a22-cea865f371db"
+          },
+          {
+            "seq": 2,
+            "type": "enforcement_observed",
+            "t_ms": 0.01274999999999693,
+            "clock_id": "7c7e4699-c954-4423-9a22-cea865f371db",
+            "enforcement_id": "local-admission"
+          },
+          {
+            "seq": 3,
+            "type": "action_rejected",
+            "t_ms": 0.02820799999999224,
+            "clock_id": "7c7e4699-c954-4423-9a22-cea865f371db",
+            "action_id": "queued-child",
+            "reason": "revoked"
+          },
+          {
+            "seq": 4,
+            "type": "action_rejected",
+            "t_ms": 0.02879199999999571,
+            "clock_id": "7c7e4699-c954-4423-9a22-cea865f371db",
+            "action_id": "retry-child",
+            "reason": "revoked"
+          },
+          {
+            "seq": 5,
+            "type": "action_rejected",
+            "t_ms": 0.029124999999993406,
+            "clock_id": "7c7e4699-c954-4423-9a22-cea865f371db",
+            "action_id": "restored-checkpoint",
+            "reason": "revoked"
+          },
+          {
+            "seq": 6,
+            "type": "effect_completed",
+            "t_ms": 31.815749999999994,
+            "clock_id": "7c7e4699-c954-4423-9a22-cea865f371db",
+            "effect_id": "effect-inflight",
+            "action_id": "inflight"
+          },
+          {
+            "seq": 7,
+            "type": "action_settled",
+            "t_ms": 31.81816699999999,
+            "clock_id": "7c7e4699-c954-4423-9a22-cea865f371db",
+            "action_id": "inflight",
+            "outcome": "completed"
+          },
+          {
+            "seq": 8,
+            "type": "quiescence_observed",
+            "t_ms": 31.843374999999995,
+            "clock_id": "7c7e4699-c954-4423-9a22-cea865f371db"
+          },
+          {
+            "seq": 9,
+            "type": "observation_closed",
+            "t_ms": 31.844291999999996,
+            "clock_id": "7c7e4699-c954-4423-9a22-cea865f371db",
+            "complete": true
+          }
+        ]
+      },
+      "result": {
+        "state": "FAIL",
+        "errors": [],
+        "rules": [
+          {
+            "id": "OBSERVATION_COMPLETE",
+            "state": "PASS",
+            "detail": {
+              "missing_attempts": [],
+              "unresolved_actions": [],
+              "missing_enforcement_points": []
+            }
+          },
+          {
+            "id": "NO_NEW_ADMISSION_AFTER_ISSUE",
+            "state": "PASS",
+            "detail": []
+          },
+          {
+            "id": "QUIESCENCE_WITHIN_DECLARED_BOUND",
+            "state": "FAIL",
+            "detail": "Nominal elapsed time on the declared single clock"
+          },
+          {
+            "id": "EFFECT_READBACK_MATCHES_EVENTS",
+            "state": "PASS",
+            "detail": "Compare retained owned-file bytes with attributed effect events"
+          }
+        ],
+        "metrics": {
+          "revocation_issued_ms": 0.012082999999989852,
+          "propagation_ms": {
+            "local-admission": 0.0006670000000070786
+          },
+          "last_action_settled_ms": 31.81816699999999,
+          "post_issue_settlement_tail_ms": 31.806084,
+          "last_effect_completed_ms": 31.815749999999994,
+          "post_issue_effect_tail_ms": 31.803667000000004,
+          "post_issue_effect_count": 1,
+          "post_issue_admission_count": 0,
+          "observed_quiescence_ms": 31.843374999999995,
+          "issue_to_quiescence_ms": 31.831292000000005,
+          "observation_closed_ms": 31.844291999999996,
+          "declared_quiescence_bound_ms": 5
+        }
+      }
+    },
+    {
+      "trace": {
+        "schema": "council.revocation-observation/1",
+        "scenario": "disabled-enforcement",
+        "synthetic": true,
+        "scope": "one Node process, local cooperative admission, owned temporary-file effects",
+        "clock": {
+          "id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+          "kind": "monotonic",
+          "unit": "ms",
+          "source": "performance.now",
+          "calibration": "not independently calibrated; no distributed-clock claim"
+        },
+        "expected_attempt_ids": [
+          "inflight",
+          "queued-child",
+          "retry-child",
+          "restored-checkpoint"
+        ],
+        "enforcement_points": [
+          "local-admission"
+        ],
+        "quiescence_bound_ms": 5000,
+        "effect_readback": {
+          "text": "{\"effect_id\":\"effect-queued-child\",\"action_id\":\"queued-child\"}\n{\"effect_id\":\"effect-retry-child\",\"action_id\":\"retry-child\"}\n{\"effect_id\":\"effect-restored-checkpoint\",\"action_id\":\"restored-checkpoint\"}\n{\"effect_id\":\"effect-inflight\",\"action_id\":\"inflight\"}\n",
+          "sha256": "c94c301e7e8aeb800b65083a9cd09a2a37b33bedc5182283af1196d8883b5324"
+        },
+        "events": [
+          {
+            "seq": 0,
+            "type": "action_started",
+            "t_ms": 0.0025420000000053733,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "action_id": "inflight"
+          },
+          {
+            "seq": 1,
+            "type": "revocation_issued",
+            "t_ms": 0.004457999999999629,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a"
+          },
+          {
+            "seq": 2,
+            "type": "enforcement_observed",
+            "t_ms": 0.004874999999998408,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "enforcement_id": "local-admission"
+          },
+          {
+            "seq": 3,
+            "type": "action_started",
+            "t_ms": 0.02008299999999963,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "action_id": "queued-child"
+          },
+          {
+            "seq": 4,
+            "type": "effect_completed",
+            "t_ms": 0.09649999999999181,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "effect_id": "effect-queued-child",
+            "action_id": "queued-child"
+          },
+          {
+            "seq": 5,
+            "type": "action_settled",
+            "t_ms": 0.09741699999999298,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "action_id": "queued-child",
+            "outcome": "completed"
+          },
+          {
+            "seq": 6,
+            "type": "action_started",
+            "t_ms": 0.09816700000000367,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "action_id": "retry-child"
+          },
+          {
+            "seq": 7,
+            "type": "effect_completed",
+            "t_ms": 0.13391699999999673,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "effect_id": "effect-retry-child",
+            "action_id": "retry-child"
+          },
+          {
+            "seq": 8,
+            "type": "action_settled",
+            "t_ms": 0.13445799999999508,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "action_id": "retry-child",
+            "outcome": "completed"
+          },
+          {
+            "seq": 9,
+            "type": "action_started",
+            "t_ms": 0.13554200000000094,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "action_id": "restored-checkpoint"
+          },
+          {
+            "seq": 10,
+            "type": "effect_completed",
+            "t_ms": 0.16695799999999394,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "effect_id": "effect-restored-checkpoint",
+            "action_id": "restored-checkpoint"
+          },
+          {
+            "seq": 11,
+            "type": "action_settled",
+            "t_ms": 0.16758299999999338,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "action_id": "restored-checkpoint",
+            "outcome": "completed"
+          },
+          {
+            "seq": 12,
+            "type": "effect_completed",
+            "t_ms": 31.325375000000008,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "effect_id": "effect-inflight",
+            "action_id": "inflight"
+          },
+          {
+            "seq": 13,
+            "type": "action_settled",
+            "t_ms": 31.326416999999992,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "action_id": "inflight",
+            "outcome": "completed"
+          },
+          {
+            "seq": 14,
+            "type": "quiescence_observed",
+            "t_ms": 31.350792000000013,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a"
+          },
+          {
+            "seq": 15,
+            "type": "observation_closed",
+            "t_ms": 31.351666999999992,
+            "clock_id": "b0e62659-39a4-44f6-9f28-7a1602330c1a",
+            "complete": true
+          }
+        ]
+      },
+      "result": {
+        "state": "FAIL",
+        "errors": [],
+        "rules": [
+          {
+            "id": "OBSERVATION_COMPLETE",
+            "state": "PASS",
+            "detail": {
+              "missing_attempts": [],
+              "unresolved_actions": [],
+              "missing_enforcement_points": []
+            }
+          },
+          {
+            "id": "NO_NEW_ADMISSION_AFTER_ISSUE",
+            "state": "FAIL",
+            "detail": [
+              "queued-child",
+              "retry-child",
+              "restored-checkpoint"
+            ]
+          },
+          {
+            "id": "QUIESCENCE_WITHIN_DECLARED_BOUND",
+            "state": "PASS",
+            "detail": "Nominal elapsed time on the declared single clock"
+          },
+          {
+            "id": "EFFECT_READBACK_MATCHES_EVENTS",
+            "state": "PASS",
+            "detail": "Compare retained owned-file bytes with attributed effect events"
+          }
+        ],
+        "metrics": {
+          "revocation_issued_ms": 0.004457999999999629,
+          "propagation_ms": {
+            "local-admission": 0.00041699999999877946
+          },
+          "last_action_settled_ms": 31.326416999999992,
+          "post_issue_settlement_tail_ms": 31.321958999999993,
+          "last_effect_completed_ms": 31.325375000000008,
+          "post_issue_effect_tail_ms": 31.32091700000001,
+          "post_issue_effect_count": 4,
+          "post_issue_admission_count": 3,
+          "observed_quiescence_ms": 31.350792000000013,
+          "issue_to_quiescence_ms": 31.346334000000013,
+          "observation_closed_ms": 31.351666999999992,
+          "declared_quiescence_bound_ms": 5000
+        }
+      }
+    },
+    {
+      "trace": {
+        "schema": "council.revocation-observation/1",
+        "scenario": "unknown-effect",
+        "synthetic": true,
+        "scope": "one Node process, local cooperative admission, owned temporary-file effects",
+        "clock": {
+          "id": "58992f08-33bf-47fb-b9dd-5c1ef3c89abf",
+          "kind": "monotonic",
+          "unit": "ms",
+          "source": "performance.now",
+          "calibration": "not independently calibrated; no distributed-clock claim"
+        },
+        "expected_attempt_ids": [
+          "inflight",
+          "queued-child",
+          "retry-child",
+          "restored-checkpoint"
+        ],
+        "enforcement_points": [
+          "local-admission"
+        ],
+        "quiescence_bound_ms": 5000,
+        "effect_readback": {
+          "text": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "events": [
+          {
+            "seq": 0,
+            "type": "action_started",
+            "t_ms": 0.0035829999999918982,
+            "clock_id": "58992f08-33bf-47fb-b9dd-5c1ef3c89abf",
+            "action_id": "inflight"
+          },
+          {
+            "seq": 1,
+            "type": "revocation_issued",
+            "t_ms": 0.005416999999994232,
+            "clock_id": "58992f08-33bf-47fb-b9dd-5c1ef3c89abf"
+          },
+          {
+            "seq": 2,
+            "type": "enforcement_observed",
+            "t_ms": 0.005832999999995536,
+            "clock_id": "58992f08-33bf-47fb-b9dd-5c1ef3c89abf",
+            "enforcement_id": "local-admission"
+          },
+          {
+            "seq": 3,
+            "type": "action_rejected",
+            "t_ms": 0.02095800000000736,
+            "clock_id": "58992f08-33bf-47fb-b9dd-5c1ef3c89abf",
+            "action_id": "queued-child",
+            "reason": "revoked"
+          },
+          {
+            "seq": 4,
+            "type": "action_rejected",
+            "t_ms": 0.021707999999989624,
+            "clock_id": "58992f08-33bf-47fb-b9dd-5c1ef3c89abf",
+            "action_id": "retry-child",
+            "reason": "revoked"
+          },
+          {
+            "seq": 5,
+            "type": "action_rejected",
+            "t_ms": 0.021958000000012134,
+            "clock_id": "58992f08-33bf-47fb-b9dd-5c1ef3c89abf",
+            "action_id": "restored-checkpoint",
+            "reason": "revoked"
+          },
+          {
+            "seq": 6,
+            "type": "action_settled",
+            "t_ms": 0.023167000000000826,
+            "clock_id": "58992f08-33bf-47fb-b9dd-5c1ef3c89abf",
+            "action_id": "inflight",
+            "outcome": "unknown"
+          },
+          {
+            "seq": 7,
+            "type": "observation_closed",
+            "t_ms": 0.04620800000000713,
+            "clock_id": "58992f08-33bf-47fb-b9dd-5c1ef3c89abf",
+            "complete": false
+          }
+        ]
+      },
+      "result": {
+        "state": "INCONCLUSIVE",
+        "errors": [],
+        "rules": [
+          {
+            "id": "OBSERVATION_COMPLETE",
+            "state": "INCONCLUSIVE",
+            "detail": {
+              "missing_attempts": [],
+              "unresolved_actions": [
+                "inflight"
+              ],
+              "missing_enforcement_points": []
+            }
+          },
+          {
+            "id": "NO_NEW_ADMISSION_AFTER_ISSUE",
+            "state": "INCONCLUSIVE",
+            "detail": []
+          },
+          {
+            "id": "QUIESCENCE_WITHIN_DECLARED_BOUND",
+            "state": "INCONCLUSIVE",
+            "detail": "Nominal elapsed time on the declared single clock"
+          },
+          {
+            "id": "EFFECT_READBACK_MATCHES_EVENTS",
+            "state": "PASS",
+            "detail": "Compare retained owned-file bytes with attributed effect events"
+          }
+        ],
+        "metrics": {
+          "revocation_issued_ms": 0.005416999999994232,
+          "propagation_ms": {
+            "local-admission": 0.0004160000000013042
+          },
+          "last_action_settled_ms": 0.023167000000000826,
+          "post_issue_settlement_tail_ms": 0.017750000000006594,
+          "last_effect_completed_ms": null,
+          "post_issue_effect_tail_ms": null,
+          "post_issue_effect_count": 0,
+          "post_issue_admission_count": 0,
+          "observed_quiescence_ms": null,
+          "issue_to_quiescence_ms": null,
+          "observation_closed_ms": 0.04620800000000713,
+          "declared_quiescence_bound_ms": 5000
+        }
+      }
+    }
+  ]
+}
