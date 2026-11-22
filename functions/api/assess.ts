@@ -106,6 +106,8 @@ export const onRequestGet: PagesFunction<Env> = async () => {
         explanation: "Human-readable scope and match rationale",
         claimed_control_coverage: "Caller-asserted controls divided by the fixed Art 9–15/50 list; not verified and not a compliance score",
         unclaimed_controls: "string[] — controls the caller did not claim; not established deficiencies",
+        unrecognised_claimed_controls: "string[] — identifiers the caller sent in claimed_controls that are not on the fixed list; they change no count (at most 20, each cut to 64 characters)",
+        accepted_control_identifiers: "string[] — the identifiers claimed_controls accepts",
         sig: "Ed25519 hex signature (or empty if UNSIGNED)",
         alg: "Ed25519 | UNSIGNED",
       },
@@ -168,8 +170,16 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const claimed = new Set<string>();
   if (body.human_oversight) claimed.add("art14_human_oversight");
   if (body.logging) claimed.add("art12_logging");
-  for (const c of Array.isArray(body.claimed_controls) ? body.claimed_controls : [])
-    claimed.add(String(c));
+  // An identifier that is not on the fixed list changes no count. It is returned to the caller,
+  // because dropping it silently reads as "you claimed nothing" (22 Nov 2026: three identifiers
+  // from our own test scenario came back as 0 of 7 claimed with no word that none was recognised).
+  const known = new Set<string>(CONTROLS.map(([id]) => id));
+  const unrecognised: string[] = [];
+  for (const c of Array.isArray(body.claimed_controls) ? body.claimed_controls : []) {
+    const id = String(c);
+    if (known.has(id)) claimed.add(id);
+    else if (unrecognised.length < 20 && !unrecognised.includes(id.slice(0, 64))) unrecognised.push(id.slice(0, 64));
+  }
 
   const unclaimedControls = CONTROLS.filter(([id]) => !claimed.has(id)).map(([, label]) => label);
   const claimedPercent = Math.round(((CONTROLS.length - unclaimedControls.length) / CONTROLS.length) * 100);
@@ -189,6 +199,9 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     basis = "Limited keyword set only; no legal conclusion";
   }
 
+  if (unrecognised.length)
+    explanation += ` ${unrecognised.length} identifier(s) sent in claimed_controls are not on the fixed list and were not counted; see unrecognised_claimed_controls and accepted_control_identifiers.`;
+
   const payload = {
     result_id: crypto.randomUUID(),
     screened_at: new Date().toISOString(),
@@ -207,6 +220,8 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       note: "This percentage is not a compliance score and does not test control design or operation.",
     },
     unclaimed_controls: unclaimedControls,
+    unrecognised_claimed_controls: unrecognised,
+    accepted_control_identifiers: CONTROLS.map(([id]) => id),
     legal_determination: false,
     facts_checked: false,
     urls_fetched: false,
