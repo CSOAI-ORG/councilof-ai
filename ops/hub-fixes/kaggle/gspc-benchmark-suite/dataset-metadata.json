@@ -1,0 +1,75 @@
+{
+  "title": "GSPC Benchmark - 13 governance axes",
+  "id": "nicktempleman/gspc-benchmark-suite",
+  "id_no": 13173100,
+  "subtitle": "JSONL measurement banks for 13 AI governance and safety axes",
+  "description": "# GSPC Benchmark Suite\n\nStatute- and standard-anchored measurement banks for 13 AI governance/safety axes, published by CSOAI (Council for the Safety of Artificial Intelligence). JSONL: one item per line with text + expected label.\n\n## Axes\ngovernance (EU AI Act tiering) - care/safeguarding - safety refusal - detector interop (C2PA) - affect (manipulation/sycophancy) - provenance - cross-reality - machinery (Reg 2023/1230) - openness (licence) - continuity (PQC agility) - conformance (MCP/A2A) - Article 5 - counter-bank (held-out governance) + per-axis banks.\n\n## Run\nTasks for EleutherAI lm-evaluation-harness + UK AISI Inspect: github.com/CSOAI-ORG/gspc-benchmark (upstream PRs #4527, #2824). HF: huggingface.co/datasets/csoai/gspc-benchmark-suite\n\nLive signed board: councilof.ai/api/gspc - 34 axes, all measured.\n\nMeasurement, not certification. CC-BY-4.0.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-11-08.\n- 12 files, 92,432 bytes. File types: .jsonl (12).\n- Related Hugging Face repository: [csoai/gspc-benchmark-suite](https://huggingface.co/datasets/csoai/gspc-benchmark-suite). No byte-identical files were found, so treat it as related, not a mirror.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{templeman_gspcbenchmarksuite_2026,\n  author       = {Templeman, Nick and {Council of AI (CSOAI Ltd)}},\n  title        = {GSPC Benchmark - 13 governance axes},\n  year         = {2026},\n  publisher    = {Kaggle},\n  howpublished = {\\url{https://www.kaggle.com/datasets/nicktempleman/gspc-benchmark-suite}},\n  note         = {Version 1}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "law",
+    "government",
+    "benchmark",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. Related Hugging Face repository: [csoai/gspc-benchmark-suite](https://huggingface.co/datasets/csoai/gspc-benchmark-suite) (no byte-identical files found on 2026-11-20).",
+  "resources": [
+    {
+      "path": "affect.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 6,702 bytes."
+    },
+    {
+      "path": "agi.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 5,229 bytes."
+    },
+    {
+      "path": "art5.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 4,828 bytes."
+    },
+    {
+      "path": "asi.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 3,203 bytes."
+    },
+    {
+      "path": "det.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 5,169 bytes."
+    },
+    {
+      "path": "gspc-care-bank.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 21,969 bytes."
+    },
+    {
+      "path": "gspc-gov-counter-bank.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 23,516 bytes."
+    },
+    {
+      "path": "mach.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 4,314 bytes."
+    },
+    {
+      "path": "mcp.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 5,109 bytes."
+    },
+    {
+      "path": "oss.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 4,394 bytes."
+    },
+    {
+      "path": "prv.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 4,269 bytes."
+    },
+    {
+      "path": "xr.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 3,730 bytes."
+    }
+  ]
+}

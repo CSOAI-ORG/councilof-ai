@@ -1,0 +1,40 @@
+{
+  "datasetSlugNullable": "gspc-one",
+  "ownerUserNullable": "nicktempleman",
+  "usabilityRatingNullable": 0.625,
+  "titleNullable": "GSPC one: Council of AI (CSOAI) measurements",
+  "subtitleNullable": "Measurements by subject and axis, with evidence links and comparison rules",
+  "descriptionNullable": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/gspc-one`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/gspc-one -p ./dataset --unzip\n```\n\nStart by inspecting `gspc-one.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `gspc-one.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n## GSPC One — measurements and evidence by subject and axis\n\n`gspc-one.json` is a complete JSON document. Its `rows` array holds the observations; the surrounding fields contain the schema, rules, planned classes and axis manifest.\n\n```python\nimport json\nfrom pathlib import Path\ndocument = json.loads(Path(\"dataset/gspc-one.json\").read_text(encoding=\"utf-8\"))\nrows = document[\"rows\"]\nprint(document[\"rules\"])\nprint(rows[0][\"subject\"], rows[0][\"axis\"], rows[0][\"evidence_url\"])\n```\n\nEach row includes `subject_class`, `subject`, `axis`, `result`, `lane`, `group`, `evidence_url` and `as_of`. Some rows also carry `n`, `distinct_items`, `wilson95` and `kind`; absent values are not zero.\n\nKeep comparison groups separate. Signed and unsigned lanes, model comparisons, deterministic facts and census states must not be pooled into a single ranking. Census grids have no population totals or ordering. Read the original document's `rules`, `planned_classes`, `axes_manifest` and `no_aggregate` fields before analysis.\n\nThe file's observation dates remain authoritative for this snapshot. The related [Hugging Face GSPC One repository](https://huggingface.co/datasets/csoai/gspc-one) has a configured table view. A page or viewer repair does not create a new measurement or signature.\n",
+  "expectedUpdateFrequencyNullable": "not specified",
+  "datasetId": 12622486,
+  "datasetSlug": "gspc-one",
+  "hasDatasetSlug": true,
+  "ownerUser": "nicktempleman",
+  "hasOwnerUser": true,
+  "usabilityRating": 0.625,
+  "hasUsabilityRating": true,
+  "totalViews": 19,
+  "totalVotes": 0,
+  "totalDownloads": 48,
+  "title": "GSPC one: Council of AI (CSOAI) measurements",
+  "hasTitle": true,
+  "subtitle": "Measurements by subject and axis, with evidence links and comparison rules",
+  "hasSubtitle": true,
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/gspc-one`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/gspc-one -p ./dataset --unzip\n```\n\nStart by inspecting `gspc-one.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `gspc-one.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n## GSPC One — measurements and evidence by subject and axis\n\n`gspc-one.json` is a complete JSON document. Its `rows` array holds the observations; the surrounding fields contain the schema, rules, planned classes and axis manifest.\n\n```python\nimport json\nfrom pathlib import Path\ndocument = json.loads(Path(\"dataset/gspc-one.json\").read_text(encoding=\"utf-8\"))\nrows = document[\"rows\"]\nprint(document[\"rules\"])\nprint(rows[0][\"subject\"], rows[0][\"axis\"], rows[0][\"evidence_url\"])\n```\n\nEach row includes `subject_class`, `subject`, `axis`, `result`, `lane`, `group`, `evidence_url` and `as_of`. Some rows also carry `n`, `distinct_items`, `wilson95` and `kind`; absent values are not zero.\n\nKeep comparison groups separate. Signed and unsigned lanes, model comparisons, deterministic facts and census states must not be pooled into a single ranking. Census grids have no population totals or ordering. Read the original document's `rules`, `planned_classes`, `axes_manifest` and `no_aggregate` fields before analysis.\n\nThe file's observation dates remain authoritative for this snapshot. The related [Hugging Face GSPC One repository](https://huggingface.co/datasets/csoai/gspc-one) has a configured table view. A page or viewer repair does not create a new measurement or signature.\n",
+  "hasDescription": true,
+  "isPrivate": false,
+  "keywords": [],
+  "licenses": [
+    {
+      "nameNullable": "Attribution 4.0 International (CC BY 4.0)",
+      "name": "Attribution 4.0 International (CC BY 4.0)",
+      "hasName": true
+    }
+  ],
+  "collaborators": [],
+  "data": [],
+  "expectedUpdateFrequency": "not specified",
+  "hasExpectedUpdateFrequency": true,
+  "userSpecifiedSources": "",
+  "hasUserSpecifiedSources": false
+}
