@@ -15,7 +15,7 @@
 #
 # SIGNING. Job `index` asks GitHub for its own OIDC token and posts each payload to https://councilof.ai/api/board-sign.
 # The signer admits this file only at refs/heads/master (functions/api/board-sign.ts, EXACT_WORKFLOW_REFS), so a branch
-# dispatch cannot sign: run it on a branch with dry_run=true. Job `index` cannot write the repository; job `land`
+# dispatch cannot sign; a pull request that changes the producer gets a dry run. Job `index` cannot write the repository; job `land`
 # cannot ask for a token. The actions in `index` are pinned by commit for that reason (same commits as
 # hf-fin-shells-attest.yml).
 #
@@ -35,12 +35,18 @@ on:
         description: "true: build the day's index unsigned and lay it out in scratch space only (no signature, no HF, no PR)"
         type: boolean
         default: true
+  pull_request: # a change to the producer gets a dry run (a workflow file that is not on master yet cannot be dispatched)
+    paths:
+      - .github/workflows/capsule-index-daily.yml
+      - packages/venturi-capsule/**
+      - scripts/measurement_capsule_layout.py
+      - scripts/measurement_capsule_page.py
 
 permissions:
   contents: read
 
 concurrency:
-  group: capsule-index-daily
+  group: capsule-index-daily-${{ github.event_name == 'pull_request' && github.ref || 'publish' }}
   cancel-in-progress: false
 
 jobs:
@@ -54,7 +60,8 @@ jobs:
       state: ${{ steps.run.outputs.state }}
       date: ${{ steps.run.outputs.date }}
     env:
-      DRY_RUN: ${{ github.event_name == 'schedule' && 'false' || (inputs.dry_run && 'true' || 'false') }}
+      # schedule = a real run; workflow_dispatch = real only with dry_run=false; pull_request = always a dry run
+      DRY_RUN: ${{ (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && !inputs.dry_run)) && 'false' || 'true' }}
       PYTHONUNBUFFERED: "1"
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
