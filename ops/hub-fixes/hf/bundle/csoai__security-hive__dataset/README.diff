@@ -1,0 +1,50 @@
+--- a/csoai/security-hive/README.md (live)
++++ b/csoai/security-hive/README.md (proposed)
+@@ -4,6 +4,12 @@
+ pretty_name: Security hive — nightly attack loop, signed
+ tags: [gspc, council-of-ai, security, serving-fidelity, owasp-asi, signed-evidence]
+ size_categories: [n<1K]
++configs:
++- config_name: owasp-asi-asi-gspc-axis-map
++  data_files:
++  - split: train
++    path: owasp-asi/asi-gspc-axis-map.json
++  default: true
+ ---
+ 
+ <p align="center">
+@@ -32,3 +38,34 @@
+ declared-UNMEASURED board slot elsewhere; this hive is the evidence source for flipping it.
+ 
+ Measurement, not certification. Free verification: https://councilof.ai/gspc-verify
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `owasp-asi-asi-gspc-axis-map` (default) | `owasp-asi/asi-gspc-axis-map.json` | 1 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/security-hive", "owasp-asi-asi-gspc-axis-map", split="train")
++```
++
++## Citation
++
++```bibtex
++@misc{csoai_security_hive_2026,
++  title        = {Security hive — nightly attack loop, signed},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/csoai/security-hive}},
++  url          = {https://huggingface.co/datasets/csoai/security-hive}
++}
++```
++
++<!-- csoai-card-fixes:end -->

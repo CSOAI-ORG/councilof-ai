@@ -1,0 +1,46 @@
+{
+  "title": "CSOAI Public Signal Index",
+  "id": "nicktempleman/csoai-public-signal-index",
+  "id_no": 12269756,
+  "subtitle": "Timestamped hashes of canonical CSOAI public measurement surfaces",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-public-signal-index`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-public-signal-index -p ./dataset --unzip\n```\n\nStart by inspecting `surface-gspc.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `surface-gspc.json`\n- `N-SITES-CATALOG.md`\n- `surface-state.json`\n- `signal-eat-refresh.json`\n- `REAL-SIGNALS-INDEX-2026-10-01.md`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n## What this is\n\nCSOAI Public Signal Index — Timestamped hashes of canonical CSOAI public measurement surfaces.\n\n## Verify free · pay-per-call API (x402)\n\n- Free verify — no account, forever: https://councilof.ai/gspc-verify · POST https://councilof.ai/api/verify · method: https://councilof.ai/signed/HOW-TO-VERIFY.md\n- Paid API (x402, pay-per-call, USDC on Base): https://councilof.ai/api/x402 — $0.01 launch rate runs to 11 Jan 2027. A 402 is a price challenge, not delivery.\n- Machine-readable pricing: https://councilof.ai/.well-known/x402.json (amounts are quoted only in the live 402 challenge).\n- Living board (authority): GET https://councilof.ai/api/gspc\n\n---\n\n*Measurement vocabulary: Council of AI is the public name of CSOAI Ltd (UK Companies House 16939677), an independent measurement body. It MEASURES; it does not certify, accredit, or issue conformity assessments — there is no mark or badge to buy. MEASURED means a real run exists behind the slot and its artifact is published; measured is not scored, and UNMEASURED stays honestly UNMEASURED. Signed capsules are point-in-time measurements, not certifications. 23 axes · 23 measured · 10,737 signed capsules · free verification forever.*\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 11, last updated 2026-10-01.\n- 5 files, 217,214 bytes. File types: .json (3), .md (2).\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{templeman_csoaipublicsignalindex_2026,\n  author       = {Templeman, Nick and {Council of AI (CSOAI Ltd)}},\n  title        = {CSOAI Public Signal Index},\n  year         = {2026},\n  publisher    = {Kaggle},\n  howpublished = {\\url{https://www.kaggle.com/datasets/nicktempleman/csoai-public-signal-index}},\n  note         = {Version 11}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "benchmark",
+    "finance",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai.",
+  "resources": [
+    {
+      "path": "N-SITES-CATALOG.md",
+      "description": "Markdown document. 5,451 bytes."
+    },
+    {
+      "path": "REAL-SIGNALS-INDEX-2026-10-01.md",
+      "description": "Markdown document. 9,220 bytes."
+    },
+    {
+      "path": "signal-eat-refresh.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 513 bytes."
+    },
+    {
+      "path": "surface-gspc.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 130,496 bytes."
+    },
+    {
+      "path": "surface-state.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 71,534 bytes."
+    }
+  ]
+}

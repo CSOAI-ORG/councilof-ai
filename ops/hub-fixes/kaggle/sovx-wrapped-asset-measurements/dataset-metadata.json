@@ -1,0 +1,358 @@
+{
+  "title": "SovX wrapped-asset measurements (Council of AI)",
+  "id": "nicktempleman/sovx-wrapped-asset-measurements",
+  "id_no": 12263644,
+  "subtitle": "Mirror of Hugging Face csoai/sovx-wrapped-asset-measurements",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/sovx-wrapped-asset-measurements`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/sovx-wrapped-asset-measurements -p ./dataset --unzip\n```\n\nStart by inspecting `sovx_wrapper_pairs.parquet`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `SHA256SUMS`\n- `croissant.json`\n- `sovx_wrapper_pairs.csv`\n- `sovx_wrapper_pairs.parquet`\n- `records/cross-ledger-xl-2026-09-29.json`\n- `records/measured-wrappers.tokenlist.json`\n- `records/wrapped-asset-parity-2026-09-14.json`\n- See the Data tab for all 33 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements at revision `4f40490db7006a45d99b0d4d59093c83a1eef233`, made 2026-10-15. The Hugging Face copy is the original; if the two differ, it wins.\n\n# SovX wrapped-asset measurements (Council of AI)\n\n> **Start here — free verify:** [https://councilof.ai/gspc-verify/](https://councilof.ai/gspc-verify/) (or the free MCP tool `verify_card` at `https://councilof.ai/mcp`) · **Full catalog:** [https://councilof.ai/catalog.json](https://councilof.ai/catalog.json) · Methodology: [https://councilof.ai/methodology/](https://councilof.ai/methodology/) · Measurement, not certification.\n\nThis dataset reports measurements only. It makes no claim about reserves, solvency or suitability.\n\nSovX is the Council of AI (CSOAI) record of wrapped and bridged token pairs. Each record is a point-in-time read of a wrapped token's on-chain supply and, where one exists, the origin-chain escrow balance that backs it. This dataset republishes records that are already served publicly on councilof.ai, byte for byte, with the SHA-256 of each file. Nothing in it is new: no state, pair or issuer has been added or re-judged for this release.\n\n## What is measured\n\nSupply parity at pinned finalized blocks. For each wrapped/origin pair the reader called `totalSupply()` on the wrapped token and `balanceOf(escrow)` on the origin-chain token, at a block pinned per chain by the RPC `finalized` tag. Each raw return value is kept with its own SHA-256, and `escrow_over_wrapped` is the ratio of the two decimal-normalised values.\n\nOperators. The published ledger in this release (as_of 2026-09-14T10:51:51Z) records one public RPC endpoint per chain for each read, and its finality label is `RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL`. The two-operator method, where a second RPC operator must return the same block hash, is used by the live preview endpoint listed below and by a newer ledger that has not been published yet. It is not claimed for the rows in this release.\n\n## What is NOT measured\n\n- No reserve adequacy. A ratio of two on-chain numbers says nothing about off-chain reserves.\n- No solvency, no redemption, no custody controls.\n- No attestation of any issuer's claims; no audit.\n- Not financial advice, not a rating, not a ranking and not a recommendation. A state is not a grade.\n- Blocks on two chains are never simultaneous; each read is at its own pinned block.\n- No light client: block headers are not checked against validator signatures.\n\n## States (as served; vocabulary of the 2026-09-14 ledger)\n\n| state | rows | meaning |\n|---|---|---|\n| `ESCROW_PARITY_READ` | 8 | both reads returned a value at the pinned blocks; a read, not a grade |\n| `UNCHECKABLE_NATIVE_ISSUANCE` | 6 | issued natively on this chain, so no escrow exists to read; supply read, no ratio claimed |\n| `INDEXED_CUSTODIAL` | 8 | reserve held by a custodian off this chain; supply read, no reserve readable here, no ratio claimed |\n| `UNMEASURED` | 2 | a read returned no value; the error is recorded and nothing is inferred |\n\nUNMEASURED is a first-class result. It is never filled in or estimated.\n\n## Files\n\n| path | what it is |\n|---|---|\n| `sovx_wrapper_pairs.csv` / `.parquet` | flat view, one row per wrapper pair (24 rows) |\n| `records/wrapped-asset-parity-2026-09-14.json` | the published ledger, verbatim |\n| `records/wrapped-asset-parity-2026-09-14.json.ots` | its OpenTimestamps proof, verbatim |\n| `records/evidence/*.json` | the per-pair evidence record served at `https://councilof.ai/w/ID`, verbatim |\n| `records/measured-wrappers.tokenlist.json` | the token list served at `https://councilof.ai/wallet/measured-wrappers.tokenlist.json`, verbatim |\n| `records/cross-ledger-xl-2026-09-29.json` | the cross-ledger supply record served at `https://councilof.ai/api/xl` on 2026-09-29, verbatim; a separate method with its own states, see its `what_this_is` field |\n| `SHA256SUMS` | SHA-256 of every file above |\n| `croissant.json` | Croissant 1.0 metadata |\n\n### Columns of the flat view\n\n`record_id`, `caip19` (CAIP-19 asset id of the wrapped token), `chain`, `chain_id`, `symbol`, `state`, `as_of`, `block` (pinned block on the wrapped chain), `block_hash`, `canonical_chain`, `canonical_block` (pinned block on the origin chain), `backing_model`, `escrow_over_wrapped`, `wrapped_total_supply`, `escrow_balance`, `evidence_url`, `ledger_url`, `record_sha256` (SHA-256 of the ledger record object serialised as JSON with sorted keys and no whitespace), `evidence_sha256` (SHA-256 of the evidence file bytes as served).\n\n## Verify\n\n1. `sha256sum -c SHA256SUMS`\n2. Compare `records/wrapped-asset-parity-2026-09-14.json` with `https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json`; the bytes should be identical.\n3. `ots verify records/wrapped-asset-parity-2026-09-14.json.ots` checks the Bitcoin timestamp over the ledger bytes.\n4. Re-read any pair yourself: every record names its contract, escrow, block number and block hash, and keeps the raw `eth_call` return value.\n\nThe ledger records carry an OpenTimestamps proof, not an Ed25519 signature. For Council of AI signed cards the verify door is `https://councilof.ai/api/verify` (rule: `https://councilof.ai/signed/HOW-TO-VERIFY.md`). Verification is free.\n\nLive, per-asset preview (fresh two-operator reads, not part of this snapshot): `https://councilof.ai/api/wrapper/caip19/CAIP19`.\n\n## Corrections\n\nReport an error at `https://councilof.ai/api/corrections`. Corrections are published there; this dataset is re-versioned, never edited silently.\n\n## Licence\n\nCC-BY-4.0. Attribution: Council of AI, CSOAI Ltd (company 16939677), councilof.ai.\n\n## How to cite\n\n```bibtex\n@misc{csoai_sovx_2026,\n  title        = {SovX wrapped-asset measurements (Council of AI)},\n  author       = {{Council of AI (CSOAI Ltd)}},\n  year         = {2026},\n  note         = {Ledger as\\_of 2026-09-14T10:51:51Z; released 2026-09-29},\n  howpublished = {\\url{https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json}},\n  license      = {CC-BY-4.0}\n}\n```\n\nPlain text: Council of AI (CSOAI Ltd). *SovX wrapped-asset measurements*, ledger as_of 2026-09-14T10:51:51Z, released 2026-09-29. CC-BY-4.0. https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json\n\n\n## Objections, contact and corrections\n\nTo object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.\n\n## How to cite\n\nCSOAI Ltd (Council of AI). *SovX wrapped-asset measurements (Council of AI)*. 2026. Hugging Face dataset `csoai/sovx-wrapped-asset-measurements`. https://huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements\n\n```bibtex\n@misc{csoai_sovx_wrapped_asset_measurements,\n  title        = {SovX wrapped-asset measurements (Council of AI)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n\nLicence: CC-BY-4.0. Attribute Council of AI, CSOAI Ltd (16939677), https://councilof.ai.\n\n## Corrections and verification\n\n- Corrections ledger (signed): https://councilof.ai/api/corrections. Corrections to CSOAI's published records are logged there with what changed and when.\n- Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).\n- Conformance kit for signed-receipts/v1, with test vectors for implementers: https://councilof.ai/spec/signed-receipts/v1/conformance/\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 3, last updated 2026-10-15.\n- 33 files, 351,689 bytes. File types: .json (28), .md (1), (none) (1), .ots (1), .csv (1), .parquet (1).\n- Hugging Face twin: [csoai/sovx-wrapped-asset-measurements](https://huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements). 32 of 33 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "cyber security",
+    "finance",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Council of AI / CSOAI Ltd (16939677). Original dataset: https://huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements at revision 199b86b7359700d96b15671661f779584bae42ad. This Kaggle mirror was made on 29 September 2026. Historical wrapped-asset ledger: https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json, observed 14 September 2026 at 10:51:51.468 UTC. Data licence: CC BY 4.0; retain attribution, source revision and original observation dates.",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 7,890 bytes."
+    },
+    {
+      "path": "SHA256SUMS",
+      "description": "SHA-256 of every file above. File. Same byte size as `SHA256SUMS` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 3,320 bytes."
+    },
+    {
+      "path": "croissant.json",
+      "description": "Croissant 1.0 metadata. JSON document. top-level keys: @context, @type, conformsTo, name, description, license, url, creator, datePublished, version, citeAs, distribution, recordSet. `distribution` holds 2 records with fields: @type (string), @id (string), name (string), contentUrl (string), encodingFormat (string), sha256 (string). Same byte size as `croissant.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 9,147 bytes."
+    },
+    {
+      "path": "records/cross-ledger-xl-2026-09-29.json",
+      "description": "the cross-ledger supply record served at `https://councilof.ai/api/xl` on 2026-09-29, verbatim; a separate method with its own states, see its `what_this_is` field. JSON document. top-level keys: schema, date, as_of, started_at, finished_at, producer, what_this_is, measurement_only, selection, assets, deployments, parity, unmeasured_selected, uncheckable, evidence_kind_legend, consensus_check, totals_rule, files, changes. `deployments` holds 125 records with fields: asset_key (string), product (string), ledger (string), deployment_id (string), evidence_kind (string), supply_decimal (string), height (integer), two_operators_agree (string), header_hash_recomputed (boolean), second_operator_same_block (boolean), consensus_check (string). Same byte size as `records/cross-ledger-xl-2026-09-29.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 122,1…"
+    },
+    {
+      "path": "records/evidence/buidl__ethereum.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/buidl__ethereum.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 4,410 bytes."
+    },
+    {
+      "path": "records/evidence/cbbtc__base.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/cbbtc__base.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 3,446 bytes."
+    },
+    {
+      "path": "records/evidence/cbbtc__ethereum.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/cbbtc__ethereum.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 3,464 bytes."
+    },
+    {
+      "path": "records/evidence/cbxrp__base.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/cbxrp__base.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 4,049 bytes."
+    },
+    {
+      "path": "records/evidence/dai__base.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/dai__base.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 3,328 bytes."
+    },
+    {
+      "path": "records/evidence/dai__optimism.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/dai__optimism.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 3,360 bytes."
+    },
+    {
+      "path": "records/evidence/dai__polygon.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/dai__polygon.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 3,368 bytes."
+    },
+    {
+      "path": "records/evidence/fxrp__flare.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/fxrp__flare.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 4,174 bytes."
+    },
+    {
+      "path": "records/evidence/jpmd__base.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/jpmd__base.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 4,002 bytes."
+    },
+    {
+      "path": "records/evidence/usdbc__base.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/usdbc__base.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 3,285 bytes."
+    },
+    {
+      "path": "records/evidence/usdc.e__arbitrum.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/usdc.e__arbitrum.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 4,402 bytes."
+    },
+    {
+      "path": "records/evidence/usdc.e__optimism.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/usdc.e__optimism.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 4,384 bytes."
+    },
+    {
+      "path": "records/evidence/usdc.e__polygon.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/usdc.e__polygon.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 4,405 bytes."
+    },
+    {
+      "path": "records/evidence/usdc__arbitrum.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/usdc__arbitrum.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 2,933 bytes."
+    },
+    {
+      "path": "records/evidence/usdc__base.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/usdc__base.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 2,918 bytes."
+    },
+    {
+      "path": "records/evidence/usdc__zksync-era.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/usdc__zksync-era.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 2,488 bytes."
+    },
+    {
+      "path": "records/evidence/usdt0__arbitrum.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/usdt0__arbitrum.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 4,671 bytes."
+    },
+    {
+      "path": "records/evidence/usdt0__optimism.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/usdt0__optimism.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 4,552 bytes."
+    },
+    {
+      "path": "records/evidence/usdt__arbitrum.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/usdt__arbitrum.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 3,094 bytes."
+    },
+    {
+      "path": "records/evidence/usdt__optimism.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/usdt__optimism.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 3,306 bytes."
+    },
+    {
+      "path": "records/evidence/usdt__polygon.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/usdt__polygon.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 3,094 bytes."
+    },
+    {
+      "path": "records/evidence/wbtc__ethereum.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/wbtc__ethereum.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 3,779 bytes."
+    },
+    {
+      "path": "records/evidence/weth__arbitrum.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/weth__arbitrum.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 2,657 bytes."
+    },
+    {
+      "path": "records/evidence/wxrp__ethereum.json",
+      "description": "JSON document. top-level keys: schema, id, state, as_of, state_definition, caip19, same_contract_records, record, ledger, live_preview, token_list, note. Same byte size as `records/evidence/wxrp__ethereum.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 4,405 bytes."
+    },
+    {
+      "path": "records/measured-wrappers.tokenlist.json",
+      "description": "the token list served at `https://councilof.ai/wallet/measured-wrappers.tokenlist.json`, verbatim. JSON document. top-level keys: name, timestamp, version, keywords, tags, tokens. `tokens` holds 21 records with fields: chainId (integer), address (string), name (string), symbol (string), decimals (integer), tags (string), extensions (string). Same byte size as `records/measured-wrappers.tokenlist.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 14,515 bytes."
+    },
+    {
+      "path": "records/wrapped-asset-parity-2026-09-14.json",
+      "description": "the published ledger, verbatim. JSON document. top-level keys: schema, reader_revision, as_of, attests, states, terms_boundary, correction_link, license, pins, counts, records, profile_rule, documentary. `records` holds 24 records with fields: id (string), wrapped (string), canonical (string), backing_model (string), escrow (string), escrow_name (string), note (string), reads (string), state (string), error (string), escrow_over_wrapped (string), profile (string). Same byte size as `records/wrapped-asset-parity-2026-09-14.json` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 77,263 bytes."
+    },
+    {
+      "path": "records/wrapped-asset-parity-2026-09-14.json.ots",
+      "description": "its OpenTimestamps proof, verbatim. OpenTimestamps proof file for `records/wrapped-asset-parity-2026-09-14.json` (included in this dataset). Same byte size as `records/wrapped-asset-parity-2026-09-14.json.ots` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 3,956 bytes."
+    },
+    {
+      "path": "sovx_wrapper_pairs.csv",
+      "description": "CSV table. 24 rows; fields: record_id (string), caip19 (string), chain (string), chain_id (integer), symbol (string), state (string), as_of (datetime), block (integer), block_hash (string), canonical_chain (string), canonical_block (integer), backing_model (string), escrow_over_wrapped (numeric), wrapped_total_supply (numeric), escrow_balance (numeric), evidence_url (url), ledger_url (url), record_sha256 (string), evidence_sha256 (string). Same byte size as `sovx_wrapper_pairs.csv` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 12,145 bytes.",
+      "schema": {
+        "fields": [
+          {
+            "name": "record_id",
+            "description": "Observed type string; non-null in 24/24 rows read; example: usdc.e:arbitrum",
+            "type": "string"
+          },
+          {
+            "name": "caip19",
+            "description": "Observed type string; non-null in 24/24 rows read; example: eip155:42161/erc20:0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC…",
+            "type": "string"
+          },
+          {
+            "name": "chain",
+            "description": "Observed type string; non-null in 24/24 rows read; example: arbitrum",
+            "type": "string"
+          },
+          {
+            "name": "chain_id",
+            "description": "Observed type integer; non-null in 24/24 rows read; example: 42161",
+            "type": "integer"
+          },
+          {
+            "name": "symbol",
+            "description": "Observed type string; non-null in 24/24 rows read; example: USDC.e",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "description": "Observed type string; non-null in 24/24 rows read; example: ESCROW_PARITY_READ",
+            "type": "string"
+          },
+          {
+            "name": "as_of",
+            "description": "Observed type datetime; non-null in 24/24 rows read; example: 2026-09-14T10:51:51.468Z",
+            "type": "datetime"
+          },
+          {
+            "name": "block",
+            "description": "Observed type integer; non-null in 24/24 rows read; example: 505048166",
+            "type": "integer"
+          },
+          {
+            "name": "block_hash",
+            "description": "Observed type string; non-null in 24/24 rows read; example: 0xb8795eb49da592664b08eced27415a63314f4f25a6a0f52e5651147934…",
+            "type": "string"
+          },
+          {
+            "name": "canonical_chain",
+            "description": "Observed type string; non-null in 24/24 rows read; example: ethereum",
+            "type": "string"
+          },
+          {
+            "name": "canonical_block",
+            "description": "Observed type integer; non-null in 16/24 rows read; example: 25975142",
+            "type": "integer"
+          },
+          {
+            "name": "backing_model",
+            "description": "Observed type string; non-null in 24/24 rows read; example: escrow",
+            "type": "string"
+          },
+          {
+            "name": "escrow_over_wrapped",
+            "description": "Observed type numeric; non-null in 8/24 rows read; example: 1.080848",
+            "type": "numeric"
+          },
+          {
+            "name": "wrapped_total_supply",
+            "description": "Observed type numeric; non-null in 22/24 rows read; example: 48331267.900248",
+            "type": "numeric"
+          },
+          {
+            "name": "escrow_balance",
+            "description": "Observed type numeric; non-null in 8/24 rows read; example: 52238762.917301",
+            "type": "numeric"
+          },
+          {
+            "name": "evidence_url",
+            "description": "Observed type url; non-null in 24/24 rows read; example: https://councilof.ai/w/usdc.e:arbitrum",
+            "type": "url"
+          },
+          {
+            "name": "ledger_url",
+            "description": "Observed type url; non-null in 24/24 rows read; example: https://councilof.ai/interop/wrapped-asset-parity-2026-09-14…",
+            "type": "url"
+          },
+          {
+            "name": "record_sha256",
+            "description": "Observed type string; non-null in 24/24 rows read; example: 003fdc36efa89e60005db8c5a1e52388c3dc3e497ec5418e9d22a55a7845…",
+            "type": "string"
+          },
+          {
+            "name": "evidence_sha256",
+            "description": "Observed type string; non-null in 24/24 rows read; example: 50d076b79eb19512418f617ad57b9ba007b2b422ed045d360298c651981a…",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "path": "sovx_wrapper_pairs.parquet",
+      "description": "Parquet table. 24 rows; fields: record_id (string), caip19 (string), chain (string), chain_id (integer), symbol (string), state (string), as_of (datetime), block (integer), block_hash (string), canonical_chain (string), canonical_block (integer), backing_model (string), escrow_over_wrapped (string), wrapped_total_supply (string), escrow_balance (string), evidence_url (url), ledger_url (url), record_sha256 (string), evidence_sha256 (string). Same byte size as `sovx_wrapper_pairs.parquet` in huggingface.co/datasets/csoai/sovx-wrapped-asset-measurements (checked 2026-11-20). 13,353 bytes.",
+      "schema": {
+        "fields": [
+          {
+            "name": "record_id",
+            "description": "Observed type string; non-null in 24/24 rows read; example: usdc.e:arbitrum",
+            "type": "string"
+          },
+          {
+            "name": "caip19",
+            "description": "Observed type string; non-null in 24/24 rows read; example: eip155:42161/erc20:0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC…",
+            "type": "string"
+          },
+          {
+            "name": "chain",
+            "description": "Observed type string; non-null in 24/24 rows read; example: arbitrum",
+            "type": "string"
+          },
+          {
+            "name": "chain_id",
+            "description": "Observed type integer; non-null in 24/24 rows read; example: 42161",
+            "type": "integer"
+          },
+          {
+            "name": "symbol",
+            "description": "Observed type string; non-null in 24/24 rows read; example: USDC.e",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "description": "Observed type string; non-null in 24/24 rows read; example: ESCROW_PARITY_READ",
+            "type": "string"
+          },
+          {
+            "name": "as_of",
+            "description": "Observed type datetime; non-null in 24/24 rows read; example: 2026-09-14T10:51:51.468Z",
+            "type": "datetime"
+          },
+          {
+            "name": "block",
+            "description": "Observed type integer; non-null in 24/24 rows read; example: 505048166",
+            "type": "integer"
+          },
+          {
+            "name": "block_hash",
+            "description": "Observed type string; non-null in 24/24 rows read; example: 0xb8795eb49da592664b08eced27415a63314f4f25a6a0f52e5651147934…",
+            "type": "string"
+          },
+          {
+            "name": "canonical_chain",
+            "description": "Observed type string; non-null in 24/24 rows read; example: ethereum",
+            "type": "string"
+          },
+          {
+            "name": "canonical_block",
+            "description": "Observed type integer; non-null in 16/24 rows read; example: 25975142",
+            "type": "integer"
+          },
+          {
+            "name": "backing_model",
+            "description": "Observed type string; non-null in 24/24 rows read; example: escrow",
+            "type": "string"
+          },
+          {
+            "name": "escrow_over_wrapped",
+            "description": "Observed type string; non-null in 8/24 rows read; example: 1.080848",
+            "type": "string"
+          },
+          {
+            "name": "wrapped_total_supply",
+            "description": "Observed type string; non-null in 22/24 rows read; example: 48331267.900248",
+            "type": "string"
+          },
+          {
+            "name": "escrow_balance",
+            "description": "Observed type string; non-null in 8/24 rows read; example: 52238762.917301",
+            "type": "string"
+          },
+          {
+            "name": "evidence_url",
+            "description": "Observed type url; non-null in 24/24 rows read; example: https://councilof.ai/w/usdc.e:arbitrum",
+            "type": "url"
+          },
+          {
+            "name": "ledger_url",
+            "description": "Observed type url; non-null in 24/24 rows read; example: https://councilof.ai/interop/wrapped-asset-parity-2026-09-14…",
+            "type": "url"
+          },
+          {
+            "name": "record_sha256",
+            "description": "Observed type string; non-null in 24/24 rows read; example: 003fdc36efa89e60005db8c5a1e52388c3dc3e497ec5418e9d22a55a7845…",
+            "type": "string"
+          },
+          {
+            "name": "evidence_sha256",
+            "description": "Observed type string; non-null in 24/24 rows read; example: 50d076b79eb19512418f617ad57b9ba007b2b422ed045d360298c651981a…",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ]
+}

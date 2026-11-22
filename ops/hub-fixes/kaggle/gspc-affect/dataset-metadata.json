@@ -1,0 +1,55 @@
+{
+  "title": "GSPC-AFFECT — embodied safety (MEASURED)",
+  "id": "nicktempleman/gspc-affect",
+  "id_no": 11622205,
+  "subtitle": "Mirror of Hugging Face csoai/gspc-affect",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/gspc-affect`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/gspc-affect -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `NOTICE`\n- `README.md`\n- `eval.yaml`\n- `affect.json`\n- `items.jsonl`\n- `manifest.jsonl`\n- `axis-live.jsonl`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-affect at revision `5a93f9e9de9245ded3d8a6cf62d6a373522e2b47`, made 2026-10-06. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC — affect bank (AffectBench)\n\nCouncil of AI measurement bank. Measurement, not certification.\n\n**Bank.** Frozen split. Live `n` is the matching axis on `GET https://councilof.ai/api/gspc`, not a Hub score. **Not a certificate.** Art 50 (EUR-Lex): 2 August 2026 live; marking grace 2 December 2026.\n\n\n**Live measurement.** This bank stands behind the `affect` row of the live GSPC board: `GET https://councilof.ai/api/gspc?axis=affect` (family, kind, status and n are on that row, never typed here; the whole board is `GET https://councilof.ai/api/gspc`). Measurement, not certification.\n\n\n## What is in this repository\n\n| file | bytes | rows | what |\n|---|---:|---:|---|\n| `items.jsonl` | 17438 | 42 | data (one JSON object per line) |\n| `README.md` | 2007 |  | card |\n| `affect.json` | 1459 |  | JSON document |\n| `eval.yaml` | 507 |  | config |\n| `NOTICE` | 356 |  | file |\n| `manifest.jsonl` | | 6 | derived at 2026-09-04T04:33:29Z |\n| `axis-live.jsonl` | | 1 | derived at 2026-09-04T04:33:29Z |\n\n`manifest.jsonl` is derived from this repository's own file tree at 2026-09-04T04:33:29Z; it lists every file with its\nsize, its blob hash and a direct URL, so an agent can enumerate the repo without cloning it.\n`axis-live.jsonl` is a one-row snapshot of this axis as the live board returned it at that moment. It is a snapshot, not the authority.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_gspc_affect,\n  title        = {GSPC — affect bank (AffectBench)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  doi          = {10.5281/zenodo.21991104},\n  note         = {DOI record unavailable since 29 Sep 2026 (Zenodo account blocked; appeal pending)},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/gspc-affect}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n\n\n\n## Objections, contact and corrections\n\nTo object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.\n\n## How to cite\n\nCSOAI Ltd (Council of AI). *GSPC — affect bank (AffectBench)*. 2026. Hugging Face dataset `csoai/gspc-affect`. https://huggingface.co/datasets/csoai/gspc-affect\n\n```bibtex\n@misc{csoai_gspc_affect,\n  title        = {GSPC — affect bank (AffectBench)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/gspc-affect},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n\nLicence: CC-BY-4.0. Attribute Council of AI, CSOAI Ltd (16939677), https://councilof.ai.\n\n## Corrections and verification\n\n- Corrections ledger (signed): https://councilof.ai/api/corrections. Corrections to CSOAI's published records are logged there with what changed and when.\n- Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).\n- Conformance kit for signed-receipts/v1, with test vectors for implementers: https://councilof.ai/spec/signed-receipts/v1/conformance/\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 4, last updated 2026-10-06.\n- 7 files, 38,426 bytes. File types: .jsonl (3), (none) (1), .md (1), .json (1), .yaml (1).\n- Hugging Face twin: [csoai/gspc-affect](https://huggingface.co/datasets/csoai/gspc-affect). 6 of 7 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software",
+    "computer vision"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 6 of 7 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-affect](https://huggingface.co/datasets/csoai/gspc-affect) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "NOTICE",
+      "description": "356 — file. File. Same byte size as `NOTICE` in huggingface.co/datasets/csoai/gspc-affect (checked 2026-11-20). 356 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "2007 — card. Dataset README (Markdown). 14,456 bytes."
+    },
+    {
+      "path": "affect.json",
+      "description": "1459 — JSON document. JSON document. top-level keys: schema, record_type, not_a_certification, endorsement, authored_by, basis, axis, model, measured, n, wilson95, bank, never, opinion_framing, witnessed_at, content_id, signature, pubkey, key_id, verification_method …. Same byte size as `affect.json` in huggingface.co/datasets/csoai/gspc-affect (checked 2026-11-20). 1,459 bytes."
+    },
+    {
+      "path": "axis-live.jsonl",
+      "description": "1 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 1 rows; fields: axis (string), family (string), kind (string), bench (string), task (string), n (integer), separation (string), fleet_mean (numeric), mean_harm (numeric), cvar05_harm (string), status (string), dataset (string), colour (string), hue (integer), excluded_leader (string), public_leader_state (string), note (string), excluded_note (string), measurement_note (string), dataset_url (url), _as_of (datetime), _source (url), _authority (string), _public_count (string). Same byte size as `axis-live.jsonl` in huggingface.co/datasets/csoai/gspc-affect (checked 2026-11-20). 2,303 bytes."
+    },
+    {
+      "path": "eval.yaml",
+      "description": "507 — config. YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-affect (checked 2026-11-20). 507 bytes."
+    },
+    {
+      "path": "items.jsonl",
+      "description": "17438 — 42 — data (one JSON object per line). Newline-delimited JSON (one record per line). 42 rows; fields: item (string), expected (string), category (string), anchor (string), source (string), note (string), _canary (string), severity (integer), severity_basis (string). Same byte size as `items.jsonl` in huggingface.co/datasets/csoai/gspc-affect (checked 2026-11-20). 17,438 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "6 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 6 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-affect (checked 2026-11-20). 1,907 bytes."
+    }
+  ]
+}

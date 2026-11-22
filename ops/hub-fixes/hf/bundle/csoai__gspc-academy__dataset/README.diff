@@ -1,0 +1,42 @@
+--- a/csoai/gspc-academy/README.md (live)
++++ b/csoai/gspc-academy/README.md (proposed)
+@@ -6,6 +6,14 @@
+   data_files:
+   - split: lessons
+     path: lessons.jsonl
++license: cc-by-4.0
++pretty_name: Council Academy — source-linked lesson index
++size_categories:
++- n<1K
++task_categories:
++- text-classification
++tags:
++- council-of-ai
+ ---
+ 
+ # Council Academy — source-linked lesson index
+@@ -59,3 +67,24 @@
+ 2. **Expertise** — the judgment the number teaches; precise instrument terms used correctly (challenge ≠ delivery, PENDING ≠ attested).
+ 3. **Authoritativeness** — source of record: the origin URL of every claim, plus the instrument that produced it.
+ 4. **Trustworthiness** — verify-yourself commands (free, no account) AND a what-would-falsify-this block. If a lesson cannot state what would falsify it, it is not a lesson — it is marketing, and it does not ship.
++
++<!-- csoai-card-fixes:start -->
++
++## Front door
++
++Council of AI publishes its live measurement board and methods at [https://councilof.ai](https://councilof.ai).
++
++## Citation
++
++```bibtex
++@misc{csoai_gspc_academy_2026,
++  title        = {Council Academy — source-linked lesson index},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/csoai/gspc-academy}},
++  url          = {https://huggingface.co/datasets/csoai/gspc-academy}
++}
++```
++
++<!-- csoai-card-fixes:end -->

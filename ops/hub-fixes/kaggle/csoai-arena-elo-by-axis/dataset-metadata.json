@@ -1,0 +1,40 @@
+{
+  "title": "GSPC · Arena Elo by Axis — Council of AI",
+  "id": "nicktempleman/csoai-arena-elo-by-axis",
+  "id_no": 12264850,
+  "subtitle": "Measurement of public Arena Elo split by GSPC axis. Not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-arena-elo-by-axis`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-arena-elo-by-axis -p ./dataset --unzip\n```\n\nStart by inspecting `elo_reference.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `manifest.jsonl`\n- `elo_reference.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement of public Arena Elo split by GSPC axis. Not a certification.**\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/arena-elo-by-axis at revision `5a363fbc8eb2852c444a25331110a076d7570505`, made 2026-10-06. The Hugging Face copy is the original; if the two differ, it wins.\n\n# Arena Elo by axis (not a board score)\n\nA pairwise-arena Elo reference computed per axis. `elo_reference.json` carries the\naxis list, a `content_id` over the payload, and a leaderboard row per model: `elo`, `games`, `winrate` and a\nconfidence interval. This is an **arena** number over head-to-head rounds — it is not a GSPC board score and\ndoes not write to any slot.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 3, last updated 2026-10-06.\n- 3 files, 42,180 bytes. File types: .md (1), .json (1), .jsonl (1).\n- Hugging Face twin: [csoai/arena-elo-by-axis](https://huggingface.co/datasets/csoai/arena-elo-by-axis). 2 of 3 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_arena_elo_by_axis,\n  title        = {Arena Elo by axis (not a board score)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  note         = {DOI record unavailable since 29 Sep 2026 (Zenodo account blocked; appeal pending)},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/arena-elo-by-axis}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "model comparison",
+    "internet"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 2 of 3 files have the same byte size as files in the Hugging Face dataset [csoai/arena-elo-by-axis](https://huggingface.co/datasets/csoai/arena-elo-by-axis) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "1500 — card. Dataset README (Markdown). 12,897 bytes."
+    },
+    {
+      "path": "elo_reference.json",
+      "description": "28282 — JSON document. JSON document. top-level keys: axes, content_id, generated, leaderboard, method, models, per_axis, register, schema, signature. `leaderboard` holds 12 records with fields: ci (string), elo (numeric), games (integer), model (string), winrate (numeric). Same byte size as `elo_reference.json` in huggingface.co/datasets/csoai/arena-elo-by-axis (checked 2026-11-20). 28,282 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "3 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 3 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/arena-elo-by-axis (checked 2026-11-20). 1,001 bytes."
+    }
+  ]
+}
