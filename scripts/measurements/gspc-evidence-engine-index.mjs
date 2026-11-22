@@ -6,8 +6,8 @@
  * unsupported states and promotion of synthetic controls into board axes.
  */
 import { createHash } from "node:crypto";
-import { readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const sha=b=>createHash("sha256").update(b).digest("hex");
@@ -134,6 +134,7 @@ export function produceEvidenceEngineIndex(coverage,repeat,mutation,hashes,runId
     },
     separate_synthetic_research:{
       baseline_documents:mutation.document_count,
+      baseline_sha256:mutation.baseline_sha256,
       mutation_counts:mutation.cases.map(x=>x.changed_documents),
       byte_source_revisions_detected:mutation.cases.map(x=>x.exact_changed_documents),
       model_poisoning_effect:"NOT_TESTED",
@@ -155,6 +156,64 @@ export function produceEvidenceEngineIndex(coverage,repeat,mutation,hashes,runId
     ],
   };
 }
+/**
+ * Master-only current-checkout guard. Historic successful Actions artifacts can
+ * be internally consistent but already STALE against today's master branch.
+ * Reconcile actual source bytes, not just manifest head-counts, before mirror.
+ * This is local checkout identity, NEVER an independent external signature.
+ */
+export function verifyCurrentCheckoutPins(index,{manifestPath,evidenceDir,referencePath}) {
+  check(rec(index?.sources)&&rec(index?.measurements)&&rec(index?.separate_synthetic_research),
+    "index source manifest/data absent");
+  check(typeof manifestPath==="string"&&typeof evidenceDir==="string"&&typeof referencePath==="string",
+    "master checkout paths are required");
+  const bytes=readFileSync(resolve(manifestPath));
+  check(sha(bytes)===index.sources.fact_manifest_digest,
+    "historical Actions fact manifest differs from current checkout");
+  const manifest=JSON.parse(bytes);
+  check(rec(manifest.source)&&hex(manifest.source.source_digest),
+    "current fact manifest source pin absent");
+  const files=readdirSync(resolve(evidenceDir))
+    .filter(f=>f.startsWith("items-")&&f.endsWith(".jsonl")).sort();
+  check(files.length>0&&files.every(f=>/^items-[a-z0-9-]+-[a-f0-9]+\.jsonl$/.test(f)),
+    "current source inventory has invalid cell filenames");
+  check(files.length===manifest.source.cell_files &&
+    files.length===index.measurements.source_cells,
+    "current source cells differ from historic qualified evidence");
+  let observedRows=0;
+  const parts=[];
+  for(const file of files){
+    const buf=readFileSync(join(resolve(evidenceDir),file));
+    const lines=buf.toString("utf8").split("\n").filter(x=>x.trim());
+    check(lines.length>0,"current evidence has an empty source cell "+file);
+    for(const [i,line] of lines.entries()){
+      let record;
+      try{record=JSON.parse(line);}
+      catch{check(false,"current evidence has invalid source JSON "+file+":"+(i+1));}
+      check(rec(record),"current source cell contains a non-object row");
+    }
+    observedRows+=lines.length;
+    parts.push(file+" "+sha(buf));
+  }
+  const currentDigest=sha(parts.join("\n"));
+  check(observedRows===manifest.source.source_rows,
+    "current physical row denominator differs from source manifest");
+  check(currentDigest===manifest.source.source_digest &&
+    currentDigest===index.sources.physical_cell_source_digest,
+    "current physical cell digest differs from successful Actions artifact");
+  const pinned=readFileSync(resolve(referencePath),"utf8").trim();
+  check(hex(pinned) && pinned===index.separate_synthetic_research.baseline_sha256,
+    "synthetic control reference changed since successful Actions artifact");
+  return {
+    state:"SOURCE_BYTES_MATCH_CURRENT_CHECKOUT_UNWITNESSED",
+    manifest_sha256:sha(bytes),
+    physical_cell_source_digest:currentDigest,
+    physical_cell_files:files.length,
+    physical_source_rows:observedRows,
+    synthetic_reference_digest:pinned,
+  };
+}
+
 export function readEvidenceIndex({coverage,repeat,mutation,runIds=null}){
   const files={coverage,repeat,mutation};
   const body={},hashes={};
@@ -174,6 +233,16 @@ if(process.argv[1]&&resolve(process.argv[1])===self){
     check(flags.coverage&&flags.repeat&&flags.mutation&&flags.out,"required --coverage --repeat --mutation --out");
     const runIds=flags["run-metadata"]?JSON.parse(readFileSync(resolve(flags["run-metadata"]),"utf8")):null;
     const index=readEvidenceIndex({...flags,runIds});
+    const freshnessFlags=["current-manifest","current-evidence","synthetic-reference"];
+    const present=freshnessFlags.filter(k=>Boolean(flags[k]));
+    check(present.length===0 || present.length===freshnessFlags.length,
+      "checkout verification requires --current-manifest --current-evidence --synthetic-reference together");
+    if(present.length===freshnessFlags.length) {
+      index.checkout_validation=verifyCurrentCheckoutPins(index,{
+        manifestPath:flags["current-manifest"],evidenceDir:flags["current-evidence"],
+        referencePath:flags["synthetic-reference"],
+      });
+    }
     writeFileSync(resolve(flags.out),JSON.stringify(index,null,2)+"\n");
     console.log(JSON.stringify({state:index.state,
       board_axes:index.measurements.board_axes,
