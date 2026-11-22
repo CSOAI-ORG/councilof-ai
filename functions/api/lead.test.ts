@@ -138,7 +138,7 @@ describe("POST /api/lead stores bounded, traceable enquiries without implying de
       { email: "missing-at" },
       { email: "a@example.org", result_id: "x".repeat(10000) },
       { email: "a@example.org", report_id: "one", result_id: "two" },
-      { email: "a@example.org", name: "bad\\nname" },
+      { email: "a@example.org", name: "bad" + String.fromCharCode(10) + "name" },
       { email: "x".repeat(300) + "@example.org" },
     ]) {
       const response = await onRequestPost(postCtx(payload, f.kv));
