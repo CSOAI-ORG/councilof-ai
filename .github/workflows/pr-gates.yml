@@ -689,6 +689,14 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+      # The immutable 22 Nov HF overflow uploader has a credential-free negative-control
+      # suite. Keep it on protected PR checks: path traversal, altered source bytes,
+      # duplicate destinations and false anonymous-success must fail before the
+      # workflow is permitted to run against the write-token mirror.
+      - name: HF overflow staging — immutable source and refusal controls (offline)
+        if: steps.scope.outputs.gated == 'true'
+        run: PYTHONPATH=scripts/pod-loops python3 -m unittest discover -s scripts/pod-loops -p test_mill_evidence_overflow.py -v
+
       - name: HF mirror gate — excluded dirs must exist on HF before merge
         if: steps.scope.outputs.gated == 'true'
         run: |

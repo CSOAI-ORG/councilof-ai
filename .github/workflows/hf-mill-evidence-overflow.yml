@@ -1,0 +1,90 @@
+name: HF mill-evidence overflow — exact source, no historical deletion
+
+# Separate candidate-stage operation. This does NOT redirect existing paths,
+# mark cards measured, merge a PR, alter the root, or configure a GPU worker.
+# The 2026-11-22 source and every target digest are immutable and review-pinned.
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Publish approved immutable overflow bytes to HF (default false)"
+        type: boolean
+        required: true
+        default: false
+      full_anonymous:
+        description: "Anonymous GET + SHA-256 for all 3608 paths instead of one per shard"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hf-mill-evidence-overflow-20261122
+  cancel-in-progress: false
+
+jobs:
+  exact-overflow:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout reviewed upload tooling
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/pod-loops
+            .github/workflows/hf-mill-evidence-overflow.yml
+
+      - name: Checkout exact source branch commit — data only
+        uses: actions/checkout@v4
+        with:
+          repository: CSOAI-ORG/councilof-ai
+          ref: 5b7502e7432da957d59ba93f5b3b603c0db7932c
+          path: source
+          sparse-checkout: |
+            public/interop/mill-evidence
+          fetch-depth: 1
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Offline refusal, SHA-binding and replay controls
+        run: PYTHONPATH=scripts/pod-loops python3 -m unittest discover -s scripts/pod-loops -p test_mill_evidence_overflow.py -v
+
+      - name: Plan without write
+        if: inputs.apply != true
+        run: |
+          set -euo pipefail
+          python3 scripts/pod-loops/mill_evidence_overflow.py \
+            --source-repo source \
+            --source-dir source/public/interop/mill-evidence \
+            --receipt "$RUNNER_TEMP/mill-overflow-receipt.json"
+
+      - name: Upload immutable, reviewed source bytes — no overwrites
+        if: inputs.apply == true
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          FULL_ANONYMOUS: ${{ inputs.full_anonymous }}
+        run: |
+          set -euo pipefail
+          extra=()
+          if [ "$FULL_ANONYMOUS" = "true" ]; then extra+=(--full-anonymous); fi
+          python3 scripts/pod-loops/mill_evidence_overflow.py \
+            --source-repo source \
+            --source-dir source/public/interop/mill-evidence \
+            --receipt "$RUNNER_TEMP/mill-overflow-receipt.json" \
+            --apply "${extra[@]}"
+
+      - name: Retain immutable source and anonymous readback receipt even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mill-overflow-20261122-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/mill-overflow-receipt.json
+          if-no-files-found: warn
+          retention-days: 30
