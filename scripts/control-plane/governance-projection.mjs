@@ -2,6 +2,7 @@
 // Read-only projection of existing Council working-group proposals and
 // external charter-reference register. No authority or adoption is inferred.
 import { createHash } from "node:crypto";
+import { reviewBftCapabilityEvidence, HISTORICAL_BFT_EVIDENCE } from "./hf-bft-evidence.mjs";
 const SHA = /^[0-9a-f]{64}$/;
 const ID = /^[a-z0-9][a-z0-9-]{1,79}$/;
 const hash = b => createHash("sha256").update(b).digest("hex");
@@ -26,7 +27,7 @@ export function classifyLegacyBftObservation(value) {
     note:"Use an independently audited vote-identity, signing-key, fault-model and transport verifier before any authority promotion.",
   };
 }
-export function projectGovernanceSpine({groupsBytes, charterSourcesBytes, bftObservationBytes=null}) {
+export function projectGovernanceSpine({groupsBytes, charterSourcesBytes, bftObservationBytes=null, hfBftEvidenceBytes=null, hfBftPins=HISTORICAL_BFT_EVIDENCE}) {
   const groups=bytesAsObject(groupsBytes,"working-groups"), sources=bytesAsObject(charterSourcesBytes,"charter-sources");
   if(groups.value?.schema!=="csoai.public-watchdog-working-groups/1" || !Array.isArray(groups.value.groups))
     throw Error("unrecognized working group schema");
@@ -57,6 +58,18 @@ export function projectGovernanceSpine({groupsBytes, charterSourcesBytes, bftObs
   }
   const bft=bftObservationBytes===null ? {review_state:"NO_BFT_OBSERVATION_SUPPLIED",authority:"NONE"} :
     classifyLegacyBftObservation(bytesAsObject(bftObservationBytes,"bft-observation").value);
+  const historicalBft=hfBftEvidenceBytes===null ? null : reviewBftCapabilityEvidence(hfBftEvidenceBytes,hfBftPins);
+  if(historicalBft){
+    const artifact="artifact:meok-hf-bft-20261027";
+    nodes.push({id:artifact,kind:"SIGNED_HISTORICAL_CAPABILITY_EVIDENCE",state:"INTEGRITY_VALID_AUTHORITY_NOT_ESTABLISHED",
+      source_sha256:historicalBft.source_sha256,issuer_binding:historicalBft.institutional_signer_binding,
+      reported_outcomes:{corpora:historicalBft.track1_reported,fault_sweep:historicalBft.track2_reported,
+        heldout:historicalBft.track3_reported,frontier:historicalBft.track4_reported},
+      source_url:hfBftPins.url??null});
+    for(const target of ["evaluation","provenance","agent-control"]){
+      if(groupIds.has(target))edges.push({from:artifact,to:"wg:"+target,kind:"REVIEW_CANDIDATE",authority:"NONE"});
+    }
+  }
   const ids=new Set(nodes.map(n=>n.id));
   if(ids.size!==nodes.length||edges.some(e=>!ids.has(e.from)||!ids.has(e.to))) throw Error("graph referential integrity failed");
   nodes.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
@@ -64,7 +77,7 @@ export function projectGovernanceSpine({groupsBytes, charterSourcesBytes, bftObs
   return {schema:"csoai.governance-dependency-projection/0.1",status:"READ_ONLY_CANDIDATE",
     inputs:{groups_sha256:groups.sha256,charter_sources_sha256:sources.sha256,
       bft_observation_sha256:bftObservationBytes===null?null:hash(typeof bftObservationBytes==="string"?Buffer.from(bftObservationBytes):Buffer.from(bftObservationBytes))},
-    nodes,edges,bft,controls:{
+    nodes,edges,bft,historical_bft:historicalBft,controls:{
       gspc_scores_changed:false,human_authority_conferred:false,external_groups_contacted:false,
       charter_adopted:false,private_records_exposed:false
     },limitations:[
