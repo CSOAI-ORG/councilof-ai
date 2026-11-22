@@ -292,7 +292,7 @@ rl.on('line', async (line) => {
         process.stdout.write(JSON.stringify({
           jsonrpc: '2.0', id,
           result: { isError: true, content: [{ type: 'text', text: JSON.stringify({
-            state: 'UNCHECKABLE', reason: 'TOOL_EXECUTION_ERROR', message: error.message,
+            state: 'UNCHECKABLE', reason: 'TOOL_EXECUTION_ERROR',
           }) }] },
         }) + '\n');
       }
