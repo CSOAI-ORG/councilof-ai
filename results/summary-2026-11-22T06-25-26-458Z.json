@@ -1,0 +1,188 @@
+{
+  "run_id": "2026-11-22T06-25-26-458Z",
+  "engine": "gspc-continuous",
+  "lane": "governance",
+  "repo": "CSOAI-ORG/gspc-board",
+  "bank": {
+    "dataset": "csoai/gspc-master",
+    "source_dir": "fleets",
+    "file_sha256": null,
+    "unique_pairs": 237,
+    "sha256_16": "cc4cc01deab47aa9"
+  },
+  "labels": [
+    "PROHIBITED",
+    "HIGH_RISK",
+    "LIMITED_RISK",
+    "MINIMAL_RISK"
+  ],
+  "prompt_frame": "eu-ai-act-risk-tier-v1",
+  "grader": "last-occurrence-over-four-labels",
+  "comparable_to_board": false,
+  "panel": {
+    "limit": 5,
+    "offset": 0,
+    "n": 5
+  },
+  "started_at": "2026-11-22T06-25-26-458Z",
+  "finished_at": "2026-11-22T06-25-29-108Z",
+  "providers": {
+    "hf:moonshotai/Kimi-K3": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "hf:deepseek-ai/DeepSeek-V4.1-Flash": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "hf:MiniMaxAI/MiniMax-M3.1-Flash": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "hf:Qwen/Qwen3.8-2.4T-A95B": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "hf:zai-org/GLM-5.3": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "deepseek": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "gemini": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 403",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "grok": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 400 invalid key",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "cf:@cf/zai-org/glm-5.3": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 401",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "cf:@cf/deepseek-ai/deepseek-v4.1-flash-1017": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 401",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "cf:@cf/meta/llama-4-scout-17b-16e-instruct": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 401",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "cf:@cf/google/gemma-4-26b-a4b-it": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 401",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "cf:@cf/mistralai/mistral-small-3.1-24b-instruct": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 401",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    }
+  },
+  "live_providers": []
+}
