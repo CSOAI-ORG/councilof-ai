@@ -1,0 +1,111 @@
+name: GSPC source-bound coverage feed
+on:
+  pull_request:
+    paths:
+      - "scripts/measurements/gspc-coverage-feed.mjs"
+      - "scripts/measurements/gspc-coverage-feed.node-test.mjs"
+      - "scripts/measurements/GSPC_COVERAGE_HF_README.md"
+      - "scripts/gspc-board-snapshot.mjs"
+      - "public/interop/gspc-fact-table/MANIFEST.json"
+      - ".github/workflows/gspc-evidence-coverage-feed.yml"
+  push:
+    branches: [master]
+    paths:
+      - "scripts/measurements/gspc-coverage-feed.mjs"
+      - "scripts/measurements/gspc-coverage-feed.node-test.mjs"
+      - "public/interop/gspc-fact-table/MANIFEST.json"
+      - ".github/workflows/gspc-evidence-coverage-feed.yml"
+  schedule: [{cron: "11 5 * * *"}]
+  workflow_dispatch: {}
+permissions:
+  contents: read
+concurrency:
+  group: gspc-source-bound-feed
+  cancel-in-progress: false
+jobs:
+  bounded-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22", cache: "npm"}
+      - name: Install board snapshot dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Run corpus and negative controls
+        run: |
+          node --test scripts/measurements/gspc-coverage-feed.node-test.mjs
+          node scripts/measurements/build-gspc-fact-table.mjs --check --out public/interop/gspc-fact-table
+      - name: Produce unsigned offline board and fact-table sources
+        run: |
+          mkdir -p "$RUNNER_TEMP/gspc-coverage"
+          node scripts/gspc-board-snapshot.mjs "$RUNNER_TEMP/gspc-coverage/source-board.json"
+          cp public/interop/gspc-fact-table/MANIFEST.json "$RUNNER_TEMP/gspc-coverage/source-fact-manifest.json"
+          cp scripts/measurements/GSPC_COVERAGE_HF_README.md "$RUNNER_TEMP/gspc-coverage/README.md"
+      - name: Read prior Hub source pin when authorized
+        if: github.event_name != 'pull_request' && env.HF_TOKEN != ''
+        run: |
+          python3 -m pip install -q "huggingface_hub>=0.25"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          from huggingface_hub import hf_hub_download
+          try:
+            p=hf_hub_download(repo_id="csoai/gspc-evidence-coverage-feed",repo_type="dataset",
+              filename="coverage.json",token=os.environ["HF_TOKEN"])
+            Path(os.environ["RUNNER_TEMP"],"gspc-coverage","previous.json").write_bytes(Path(p).read_bytes())
+            print("PREVIOUS_SOURCE_PIN_READ")
+          except Exception as exc:
+            print("PREVIOUS_UNAVAILABLE: baseline only ("+type(exc).__name__+")")
+          PY
+      - name: Derive source-qualified coverage and delta
+        run: |
+          set -euo pipefail
+          DIR="$RUNNER_TEMP/gspc-coverage"
+          if test -s "$DIR/previous.json"; then
+            node scripts/measurements/gspc-coverage-feed.mjs --board "$DIR/source-board.json" --manifest "$DIR/source-fact-manifest.json" --previous "$DIR/previous.json" --out "$DIR/coverage.json"
+          else
+            node scripts/measurements/gspc-coverage-feed.mjs --board "$DIR/source-board.json" --manifest "$DIR/source-fact-manifest.json" --out "$DIR/coverage.json"
+          fi
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"gspc-coverage"/"coverage.json"
+          j=json.loads(p.read_text())
+          assert j["schema"]=="csoai.gspc-evidence-coverage/1"
+          assert j["state"]=="READ_ONLY_SOURCE_COVERAGE_NOT_AN_ADMISSION"
+          assert j["source_authentication"]=="DIGESTED_BYTES_NOT_SIGNATURE_VERIFIED"
+          assert j["counts"]["board_axes"] == len(j["axes"])
+          assert j["counts"]["board_axes_with_fact_rows"] + j["counts"]["board_axes_without_fact_rows"] == len(j["axes"])
+          print("COVERAGE_REPLAYED",j["counts"]["board_axes"],j["counts"]["fact_rows"],j["delta"]["state"])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gspc-source-bound-coverage
+          path: |
+            ${{ runner.temp }}/gspc-coverage/README.md
+            ${{ runner.temp }}/gspc-coverage/coverage.json
+            ${{ runner.temp }}/gspc-coverage/source-board.json
+            ${{ runner.temp }}/gspc-coverage/source-fact-manifest.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Mirror qualified feed to HF only on trusted runs
+        if: github.event_name != 'pull_request' && env.HF_TOKEN != ''
+        run: |
+          python3 - <<'PY'
+          import os,json
+          from pathlib import Path
+          from huggingface_hub import HfApi
+          d=Path(os.environ["RUNNER_TEMP"])/"gspc-coverage"
+          curr=json.loads((d/"coverage.json").read_text())
+          if curr["delta"]["state"]=="NO_SOURCE_BYTES_CHANGED":
+            print("SOURCE_UNCHANGED: no Hub update");raise SystemExit(0)
+          api=HfApi(token=os.environ["HF_TOKEN"])
+          api.create_repo("csoai/gspc-evidence-coverage-feed",repo_type="dataset",private=False,exist_ok=True)
+          api.upload_folder(folder_path=str(d),repo_id="csoai/gspc-evidence-coverage-feed",
+            repo_type="dataset",ignore_patterns=["previous.json"],
+            commit_message="Source-qualified GSPC coverage: "+curr["delta"]["state"])
+          print("HF_COVERAGE_PUBLISHED: unsigned source readback, not a new grade")
+          PY
