@@ -72,6 +72,8 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   // card body now lives in ONE build-time aggregate (/cards-bundle.json, written by
   // scripts/generate-cards-bundle.mjs and shipped alongside this root), so the cost is a
   // fixed 2 fetches (root + bundle) no matter how many cards the root grows to.
+  // Since the 22 Nov split that file is an index whose `cards` holds exactly the wrappers on
+  // this root (the 16 shards hold the rest of history), which is every hash this reader asks for.
   const bundleRes = await fetch(u("/cards-bundle.json"));
   if (!bundleRes.ok) return four(`live /cards-bundle.json HTTP ${bundleRes.status}`, { unmeasured: ["cards-bundle.json"] });
   let bundle: { cards?: Record<string, { card?: Card } | undefined> };

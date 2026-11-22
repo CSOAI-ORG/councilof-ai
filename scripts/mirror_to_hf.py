@@ -154,6 +154,9 @@ def main():
     if a.dry_run:
         print(f"DRY RUN: would mirror {ok} file(s), {failed} unfetchable, to {a.repo}")
     else:
+        import subprocess, sys  # privacy gate: read the exact bytes before they leave; fails closed
+        subprocess.run([sys.executable, "-I", os.path.join(os.path.dirname(os.path.abspath(__file__)), "privacy", "publication_gate.py"),
+                        "--label", "mirror_to_hf", str(tmp)], check=True)
         api.upload_folder(folder_path=str(tmp), repo_id=a.repo, repo_type="dataset",
                           commit_message=f"mirror {ok} public artifacts from {ORIGIN}")
         print(f"mirrored {ok} file(s), {failed} unfetchable, to {a.repo}")
