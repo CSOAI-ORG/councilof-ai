@@ -33,7 +33,7 @@ permissions:
 jobs:
   land:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 75
     env:
       # gh (pr create, workflow run, pr comment) needs the token in the job env — hub-queue-land
       # sets it the same way; without it run 34800987085 pushed the branch and died at gh (exit 4).
@@ -152,7 +152,7 @@ jobs:
           set -euo pipefail
           BR="${{ steps.pr.outputs.branch }}"
           python3 scripts/sign_land_branch.py wait --target mill --land-branch "$BR" --run-id "${RUN_ID}" \
-            --mode "$SIGNER_MODE" --after "$SIGNER_AFTER" --initial-sleep 20 --tries 40 --interval 15
+            --mode "$SIGNER_MODE" --after "$SIGNER_AFTER" --initial-sleep 20 --tries 160 --interval 15
           git fetch origin "$BR"
           git checkout -q FETCH_HEAD -- public/interop/mill-cards-signed || true
           curl -fsSL -A "Mozilla/5.0 csoai-mill-jobs-land" https://councilof.ai/.well-known/did.json -o did.json
