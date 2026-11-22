@@ -18,6 +18,8 @@ on:
   pull_request:
     paths:
       - "public/cards-bundle.json"
+      - "public/cards-bundle/**"
+      - "scripts/cards-bundle-shards.mjs"
       - "functions/api/_obligations.ts"
       - "functions/api/evidence-bundle.ts"
       - "scripts/check-evidence-bundle-freshness.mjs"

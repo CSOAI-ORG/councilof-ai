@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildCardFeedIndex } from './card-feed-index.mjs';
+import { readCardsBundleFile } from './cards-bundle-shards.mjs';
 
 const project = join(dirname(fileURLToPath(import.meta.url)), '..');
 const sha = n => String(n).repeat(64);
@@ -32,7 +33,7 @@ function withRepo(fn) {
   try {
     mkdirSync(join(repo, 'scripts'), { recursive: true });
     mkdirSync(join(repo, 'public/cards'), { recursive: true });
-    for (const name of ['generate-cards-bundle.mjs', 'card-feed-index.mjs', 'producers-check.mjs']) {
+    for (const name of ['generate-cards-bundle.mjs', 'card-feed-index.mjs', 'cards-bundle-shards.mjs', 'pages-limits.mjs', 'producers-check.mjs']) {
       copyFileSync(join(project, 'scripts', name), join(repo, 'scripts', name));
     }
     const data = corpus();
@@ -94,14 +95,18 @@ test('unexpected metadata types fail instead of silently coercing public content
   }
 });
 
-test('the existing default producer writes the full bundle plus a deterministic root-only index', () => withRepo((repo, data) => {
+test('the existing default producer writes the split bundle (root index + shards of every wrapper) plus a deterministic root-only index', () => withRepo((repo, data) => {
   producer(repo);
   const bundle = JSON.parse(readFileSync(join(repo, 'public/cards-bundle.json')));
   const first = readFileSync(join(repo, 'public/card-feed-index.json'));
-  assert.equal(bundle.schema, 'csoai.cards-bundle/0.1');
+  assert.equal(bundle.schema, 'csoai.cards-bundle/0.2');
   assert.equal(bundle.card_count, 5);
   assert.equal(bundle.root_card_count, 4);
-  assert.deepEqual(bundle.cards, data.cards);
+  // The index holds the root's wrappers; the shards hold every wrapper, as the 0.1 file did.
+  assert.equal(bundle.cards_scope, 'root');
+  assert.deepEqual(Object.keys(bundle.cards), [sha(1), sha(2), sha(3), sha(4)]);
+  for (const h of data.root.card_sha256) assert.deepEqual(bundle.cards[h], data.cards[h]);
+  assert.deepEqual(readCardsBundleFile(join(repo, 'public/cards-bundle.json')).cards, data.cards);
   assert.deepEqual(JSON.parse(first), buildCardFeedIndex(data.root, data.cards));
   producer(repo);
   assert.deepEqual(readFileSync(join(repo, 'public/card-feed-index.json')), first);

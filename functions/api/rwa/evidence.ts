@@ -37,6 +37,7 @@ import {
 import { railMode } from "../_x402_config";
 import { signPayload, canonicalBytes, sha256Hex, PAYLOAD_CAP_BYTES } from "../../_lib/cardSign";
 import { RWA_EVIDENCE_DESCRIPTION } from "../_x402_descriptions";
+import { readCardsBundle } from "../_cards_bundle";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
@@ -143,9 +144,11 @@ async function resolveAsset(origin: string, asset: string): Promise<{ row: Reade
     const assets = d.assets || [];
     return { row: assets.find(match) || null, reader_as_of: d.as_of || null, known: assets.map((a) => String(a.symbol)), source: `${origin}/api/xrpl`, answered: Array.isArray(d.assets) && assets.length > 0 };
   }
-  const b = await fetch(`${origin}/cards-bundle.json`);
-  if (!b.ok) return { row: null, reader_as_of: null, known: [], source: `${origin}/api/xrpl HTTP ${r.status}; cards-bundle HTTP ${b.status}`, answered: false };
-  const bundle = (await b.json()) as { as_of?: string; cards?: Record<string, { card?: { surface?: string; sig_ed25519?: string | null; unmeasured?: string[]; payload?: Record<string, unknown> } }> };
+  // Every xrpl.asset.state wrapper on disk, through the index and its shards since the 22 Nov split
+  // (functions/api/_cards_bundle.ts); the rest are dropped as each shard arrives.
+  const corpus = await readCardsBundle(origin, { keep: (_sha, w) => !!(w && w.card && w.card.surface === "xrpl.asset.state") });
+  if (!corpus.ok) return { row: null, reader_as_of: null, known: [], source: `${origin}/api/xrpl HTTP ${r.status}; cards-bundle ${corpus.reason}`, answered: false };
+  const bundle = corpus as { as_of: string | null; cards: Record<string, { card?: { surface?: string; sig_ed25519?: string | null; unmeasured?: string[]; payload?: Record<string, unknown> } }> };
   const rows: ReaderAsset[] = Object.values(bundle.cards || {})
     .map((w) => w.card)
     .filter((c) => c && c.surface === "xrpl.asset.state")
