@@ -5,13 +5,13 @@ import { createInterface } from 'node:readline';
 import { fileURLToPath } from 'node:url';
 
 // Isolated localhost fixtures only: no active coordinator, model or desktop tool executes.
-async function callBridge(name: string, args: object, respond: (req: IncomingMessage, res: ServerResponse) => void) {
+async function callBridge(name: string, args: object, respond: (req: IncomingMessage, res: ServerResponse) => void, envOverride: Record<string, string> = {}) {
   const server = createServer((req, res) => { req.resume(); respond(req, res); });
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
   const address = server.address() as { port: number };
   const endpoint = `http://127.0.0.1:${address.port}`;
   const child = spawn(process.execPath, [fileURLToPath(new URL('./server.mjs', import.meta.url))], {
-    env: { ...process.env, HIM_URL: endpoint, DC_BRIDGE_URL: endpoint }, stdio: ['pipe', 'pipe', 'pipe'],
+    env: { ...process.env, HIM_URL: endpoint, DC_BRIDGE_URL: endpoint, ...envOverride }, stdio: ['pipe', 'pipe', 'pipe'],
   });
   const lines = createInterface({ input: child.stdout });
   try {
@@ -88,6 +88,21 @@ it('discovery never advertises ungranted host execution or file access', async (
   expect(body(result)).toMatchObject({ tools: ['list_devices'], authority: 'READ_ONLY_METADATA' });
   expect(JSON.stringify(result)).not.toContain('start_process');
   expect(JSON.stringify(result)).not.toContain('read_file');
+});
+
+it.each([
+  'http://example.test/mcp',
+  'http://localhost.evil.test/mcp',
+  'http://127.0.0.1:8765/not-mcp',
+  'http://user:pass@127.0.0.1:8765/mcp',
+  'http://127.0.0.1:8765/mcp?tool=call',
+])('refuses an unqualified desktop bridge origin: %s', async badOrigin => {
+  let contacted = false;
+  const result = await callBridge('zcode_desktop', { op: 'call', tool: 'list_devices' },
+    (_req, res) => { contacted = true; res.end('{}'); }, { DC_BRIDGE_URL: badOrigin });
+  expect(result.isError).toBe(true);
+  expect(body(result).error).toBe('desktop_bridge_origin_not_qualified');
+  expect(contacted).toBe(false);
 });
 
 it('empty desktop discovery fails closed rather than advertising a capability', async () => {
