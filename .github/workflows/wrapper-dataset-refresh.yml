@@ -131,6 +131,9 @@ jobs:
           echo "Files to upload:"
           ls -la /tmp/wrapper-upload/
 
+          # Privacy gate: read the exact bytes before they leave; fails closed (set -e)
+          python3 scripts/privacy/publication_gate.py --label wrapper-dataset /tmp/wrapper-upload/
+
           # Upload through the existing dataset producer; preserve unrelated remote files.
           hf upload \
             --repo-type dataset \

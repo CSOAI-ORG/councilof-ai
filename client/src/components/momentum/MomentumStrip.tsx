@@ -164,7 +164,9 @@ export default function MomentumStrip({
               <div className="min-w-0">
                 <Header payload={read.payload} origin={read.origin} />
                 <h2 id="momentum-h" className="t-band mt-3 max-w-3xl text-[var(--ink-foreground)]">
-                  Measured in public. Published every day.
+                  {/* 22 Nov 2026: the old headline claimed daily publication while the daily report PRs sat unmerged.
+                      Each figure below prints its own as_of, which is the claim the strip can keep. */}
+                  Measured in public. Every figure shows when it was read.
                 </h2>
               </div>
               <a

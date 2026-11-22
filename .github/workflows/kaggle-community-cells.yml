@@ -114,6 +114,7 @@ jobs:
           KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_ACCESS_TOKEN }}
         run: |
           set -euo pipefail
+          python3 "$GITHUB_WORKSPACE/scripts/privacy/publication_gate.py" --label kaggle-community-cells .
           kaggle kernels push -p .
           echo "pushed nicktempleman/csoai-kaggle-community-cells"
 

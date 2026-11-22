@@ -135,7 +135,7 @@ valid. Where a decision depends on revocation state, the key-resolution path and
 deployment accepts are operational parameters of that deployment and **MUST** be stated by it; the
 attestation does not carry them.
 
-Recorded against our own published verification rule as correction `C-2026-0902-09`.
+Recorded against our own published verification rule as correction `C-2026-0902-10`.
 
 ## 7. Conformance
 
