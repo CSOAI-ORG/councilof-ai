@@ -6,12 +6,14 @@ on:
       - "scripts/experiments/gspc-dataset-mutation-probe.mjs"
       - "scripts/experiments/gspc-dataset-mutation-probe.node-test.mjs"
       - "scripts/experiments/GSPC_MUTATION_HF_README.md"
+      - "scripts/experiments/fixtures/gspc-dataset-mutation-baseline.sha256"
       - ".github/workflows/gspc-dataset-mutation-sensitivity.yml"
   push:
     branches: [master]
     paths:
       - "scripts/experiments/gspc-dataset-mutation-probe.mjs"
       - "scripts/experiments/gspc-dataset-mutation-probe.node-test.mjs"
+      - "scripts/experiments/fixtures/gspc-dataset-mutation-baseline.sha256"
       - ".github/workflows/gspc-dataset-mutation-sensitivity.yml"
   schedule: [{cron: "53 5 * * 1"}]
   workflow_dispatch: {}
@@ -48,7 +50,7 @@ jobs:
           for c in d["cases"]:
             assert c["row_count_only_detection"]=="MISSED_SAME_COUNT"
             assert c["size_only_detection"]=="MISSED_SAME_SIZE"
-            assert c["external_baseline_digest_comparison"]=="DETECTED_CHANGED_SOURCE_BYTES"
+            assert c["versioned_reference_digest_comparison"]=="DETECTED_CHANGED_SOURCE_BYTES"
             assert c["behavioral_model_inference"]=="NOT_RUN"
             assert c["semantic_poison_detection"]=="NOT_TESTED"
           print("CONTROLLED_MUTATION_VERIFIED",[(c["changed_documents"],c["altered_documents_within_sample"]) for c in d["cases"]])
