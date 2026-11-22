@@ -2348,12 +2348,12 @@
     "derived_from": "bound_in_capsule counts published capsules that carry the 0.3 provisions field, each checked as pinned to the frozen manifest; bound_by_sidecar counts the rows of the sidecar, which this producer re-derives from the same batches and the backfill map and requires byte-for-byte. CAPSULE_BOUND is their sum and counts reviewed mappings only. CAPSULE_BOUND_DRAFT counts the capsules that a DRAFT proposal in the proposals file would bind if the owner reviewed it (the sidecar's draft_bound_by_sidecar); it is never part of CAPSULE_BOUND.",
     "sidecar": {
       "path": "/mechanism/capsule-provision-bindings.json",
-      "sha256": "ad91c9f6431ea55a0d7ae5e2472e6d81204d6c3d1823065d3e59d8a09614dda4",
+      "sha256": "d19d55fdeae3ef021aa0d1b3c1974310c1f4aaeb546163c466d4fd4a6f2719ae",
       "producer": "scripts/mechanism/backfill-capsule-provisions.mjs"
     },
     "map": {
       "path": "/mechanism/capsule-provision-map.json",
-      "sha256": "1960d2d698967b6e69b9f59c9426d86f1ab2516bcc44a09560f50e07004fa0dc"
+      "sha256": "c28b1118dfb554f55a3f108bc7a9210959c2823c167df7b1860a847ac0df3590"
     },
     "note": "A bound capsule names a provision of the frozen manifest. It is not a finding that the capsule measures what the provision requires, and never a compliance determination."
   },

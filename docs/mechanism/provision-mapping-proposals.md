@@ -19,7 +19,7 @@ Every proposal points a measurement at a provision of frozen corpus v3 (root `8d
 * `REVIEWED` adapter proposal: the sidecar `capsule-provision-bindings.json` gains a binding row per matched capsule, pinned to the corpus v3 manifest, and CAPSULE_BOUND rises by those capsules. A proposal with `match` binds only capsules whose claim field equals the value (contract_parity: `claim.dimension = TOOLS`).
 * `DRAFT`: counted in CAPSULE_BOUND_DRAFT only. `REJECTED`: counted nowhere.
 * Predicate and axis proposals bind no capsule (no capsule batch carries them); they are pointers for the review only.
-* The capsule library (`packages/venturi-capsule`) still writes in-capsule 0.3 bindings from `capsule-provision-map.json` only, whose ids are CELEX ids of the v1 manifest; a REVIEWED corpus v3 proposal binds through the sidecar.
+* The capsule library still writes in-capsule 0.3 bindings from `capsule-provision-map.json` only, whose ids are CELEX ids of the v1 manifest; a REVIEWED corpus v3 proposal binds through the sidecar.
 
 ## Left unmapped, with the reason
 
