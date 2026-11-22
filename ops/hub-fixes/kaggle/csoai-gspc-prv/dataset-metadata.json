@@ -1,0 +1,82 @@
+{
+  "title": "CSOAI gspc-prv (provenance)",
+  "id": "nicktempleman/csoai-gspc-prv",
+  "id_no": 11811187,
+  "subtitle": "GSPC provenance · not a certificate · check councilof.ai/api/gspc",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-prv`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-prv -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `prv.json`\n- `eval.yaml`\n- `POINTER.txt`\n- `items.jsonl`\n- `provbench.py`\n- `manifest.jsonl`\n- `axis-live.jsonl`\n- `provbench-n20.json`\n- See the Data tab for all 14 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\ngspc-prv — MEASURED axis `provenance` (ProvBench). Bank twin of HF `csoai/gspc-prv`.\n\nLive board (authority): GET https://councilof.ai/api/gspc — cite totals.public_count (23 axes · 23 measured).\nLid: 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.\nThree states only: VALID · INVALID · UNCHECKABLE. Measurement not certification. Live authority: https://councilof.ai/api/gspc\nDo not invent leaders for withheld axes. This Kaggle card is a printer of that GET, not a second engine. Do not freeze MEASURED/UNMEASURED tables here. Fetch fail → UNCHECKABLE. Never claim IL5 / GenAI.mil. Never invent scores.\n\nHub cards (third-party Hub models — NOT the CSOAI fleet): GET https://councilof.ai/api/hub-cards → **384/384/0** (cells/measured/unmeasured; as_of 2026-09-13T17:41:29.541Z). Re-GET before citing; do not freeze a Hub triple on this card.\n\nVerify: https://councilof.ai/gspc-verify\nHF twin: https://huggingface.co/datasets/csoai/gspc-prv\nZenodo DOI 10.5281/zenodo.21991104: UNAVAILABLE since 29 Sep 2026 (Zenodo blocked the CSOAI account; appeal pending; status https://councilof.ai/interop/zenodo-status.json). Cite the served methodology: https://councilof.ai/signed/HOW-TO-VERIFY.md — GSPC Methodology and the Frozen Corpus Anchor. Issuer: CSOAI Ltd (GB, Companies House 16939677).\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 2, last updated 2026-10-16.\n- 14 files, 159,790 bytes. File types: .json (4), .jsonl (3), .md (2), .txt (1), .pdf (1), .yaml (1), .py (1), .tex (1).\n- Hugging Face twin: [csoai/gspc-prv](https://huggingface.co/datasets/csoai/gspc-prv). 12 of 14 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "government",
+    "benchmark",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 12 of 14 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-prv](https://huggingface.co/datasets/csoai/gspc-prv) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "POINTER.txt",
+      "description": "Plain-text file. 100 bytes."
+    },
+    {
+      "path": "PROVBENCH_ARXIV_PREPRINT_2026-07-30.md",
+      "description": "11296 — card. Markdown document. Same byte size as `PROVBENCH_ARXIV_PREPRINT_2026-07-30.md` in huggingface.co/datasets/csoai/gspc-prv (checked 2026-11-20). 11,296 bytes."
+    },
+    {
+      "path": "PROVBENCH_PAPER.pdf",
+      "description": "5009 — file. PDF document. Same byte size as `PROVBENCH_PAPER.pdf` in huggingface.co/datasets/csoai/gspc-prv (checked 2026-11-20). 5,009 bytes."
+    },
+    {
+      "path": "axis-live.jsonl",
+      "description": "1 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 1 rows; fields: axis (string), family (string), kind (string), bench (string), task (string), n (integer), separation (string), fleet_mean (numeric), mean_harm (numeric), cvar05_harm (string), status (string), dataset (string), colour (string), hue (integer), excluded_leader (string), public_leader_state (string), note (string), excluded_note (string), measurement_note (string), dataset_url (url), _as_of (datetime), _source (url), _authority (string), _public_count (string), separation_basis (string), … (+2 more). 1,669 bytes."
+    },
+    {
+      "path": "eval.yaml",
+      "description": "YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-prv (checked 2026-11-20). 504 bytes."
+    },
+    {
+      "path": "items.jsonl",
+      "description": "8036 — 33 — data (one JSON object per line). Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). Same byte size as `items.jsonl` in huggingface.co/datasets/csoai/gspc-prv (checked 2026-11-20). 8,036 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "13 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 13 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-prv (checked 2026-11-20). 4,273 bytes."
+    },
+    {
+      "path": "provbench-canonical-bound.json",
+      "description": "628 — JSON document. JSON document. top-level keys: canonical, reconciliation. Same byte size as `provbench-canonical-bound.json` in huggingface.co/datasets/csoai/gspc-prv (checked 2026-11-20). 628 bytes."
+    },
+    {
+      "path": "provbench-n20.json",
+      "description": "72613 — JSON document. JSON document. top-level keys: benchmark, version, generated, question, pre_registered_prediction, environment, n_assets_marked, assets_unsigned, transforms, checks, configs, cells, pooled_by_check, config_comparison, prediction_disagreements, unmeasured_reasons, caveats, corpus_anchor. `cells` holds 110 records with fields: config (string), transform (string), check (string), survived (integer), destroyed (integer), unmeasured (integer), n_measured (integer), rate (numeric), ci (string), outcome (string), predicted (string), desc (string). Same byte size as `provbench-n20.json` in huggingface.co/datasets/csoai/gspc-prv (checked 2026-11-20). 72,613 bytes."
+    },
+    {
+      "path": "provbench.py",
+      "description": "51959 — file. Python source file. Same byte size as `provbench.py` in huggingface.co/datasets/csoai/gspc-prv (checked 2026-11-20). 51,959 bytes."
+    },
+    {
+      "path": "provbench_table.md",
+      "description": "644 — card. Markdown document. Same byte size as `provbench_table.md` in huggingface.co/datasets/csoai/gspc-prv (checked 2026-11-20). 644 bytes."
+    },
+    {
+      "path": "provbench_table.tex",
+      "description": "908 — file. LaTeX source. Same byte size as `provbench_table.tex` in huggingface.co/datasets/csoai/gspc-prv (checked 2026-11-20). 908 bytes."
+    },
+    {
+      "path": "prv.json",
+      "description": "1469 — JSON document. JSON document. top-level keys: schema, record_type, not_a_certification, endorsement, authored_by, basis, axis, model, measured, n, wilson95, bank, never, opinion_framing, witnessed_at, content_id, signature, pubkey, key_id, verification_method …. Same byte size as `prv.json` in huggingface.co/datasets/csoai/gspc-prv (checked 2026-11-20). 1,469 bytes."
+    },
+    {
+      "path": "results_2026-08-11.json",
+      "description": "682 — JSON document. JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). Same byte size as `results_2026-08-11.json` in huggingface.co/datasets/csoai/gspc-prv (checked 2026-11-20). 682 bytes."
+    }
+  ]
+}

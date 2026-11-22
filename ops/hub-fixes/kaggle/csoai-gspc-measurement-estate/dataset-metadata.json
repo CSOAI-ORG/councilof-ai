@@ -1,0 +1,288 @@
+{
+  "title": "GSPC · Measurement Estate — Council of AI",
+  "id": "nicktempleman/csoai-gspc-measurement-estate",
+  "id_no": 12138467,
+  "subtitle": "Measurement of signed GSPC measurements and banks. Not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-measurement-estate`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-measurement-estate -p ./dataset --unzip\n```\n\nStart by inspecting `arena/rounds.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `summary.json`\n- `manifest.jsonl`\n- `chain/did.json`\n- `chain/root.json`\n- `harness/README.md`\n- `arena/rounds.jsonl`\n- `figures/FIGURES.md`\n- See the Data tab for all 65 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement of signed GSPC measurements and banks. Not a certification.**\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read today's counts there)\n\nAs published in the 2026-09-22 snapshot, not today: 23 axes measured · 14 model fleets · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.\n\nAUTHORITY: GET https://councilof.ai/api/gspc. This Kaggle copy is a snapshot built 2026-09-22T17:30:34Z from councilof-ai commit c3ae4680f. If the live GET and these files disagree, the live GET wins. A fetch that fails is UNCHECKABLE, never a fabricated 0.\n\nRUN THE REPRODUCTION FIRST. python3 repro/verify_estate.py fetches one signed card live, recomputes id == sha256(canonical(body)), verifies the Ed25519 signature against the key in the live DID document at csoai.org/.well-known/did.json, checks the frozen bank and per-item evidence against the digests pinned in the card, recomputes every prompt, re-derives every graded label with the published rule, and recomputes the accuracy: 9/9 PASS. python3 repro/verify_estate.py --tamper alters one field by 0.0001 and 3 checks FAIL. Both transcripts are in repro/. No dependencies; Ed25519 is implemented in the file from RFC 8032.\n\nWHAT IS HERE: the board as of 2026-09-22 (23 axes, 23 measured on that date) one row per axis · 2433 signed measurement cards with their full bodies and a flat index · 1010 supersessions (a signed card is never edited) · 61 corrections · 1883 arena rounds and the Elo reference with its intervals · 14 frozen banks with their sha256 · every .ots proof with its real state · the ten population doors' free previews · the harness that produces a measurement · six figures, each with the code that drew it · a findings report · the measurement vocabulary as JSON-LD and SKOS (CC0).\n\nWHAT IS NOT HERE: the 1113 per-item evidence files (18 MB) are NOT duplicated onto Kaggle, because Kaggle uploads file by file. evidence/evidence-manifest.jsonl carries every one with its sha256 and its live URL at councilof.ai/interop/mill-evidence/, and the complete 1176-file corpus is at huggingface.co/datasets/csoai/gspc-estate.\n\nFOOTPRINT, with its states: 833 packages across three registries (PyPI, npm, Hugging Face — three populations, never added). 395,977 downloads in the last 30 days and 2,635,813 since first release, BOTH state PARTIAL: 832 of 833 counters answered, so each is a lower bound over those, not a total. One PyPI counter returns 404 and its row says so rather than contributing a 0. The two windows are never added to each other, and a download is not a person: mirrors, CI and crawlers are inside both. 34 memberships (32 VERIFIED, 2 PENDING), each naming its evidence and what it does not prove, plus 12 bodies listed as excluded with the reason. 213 capability surfaces declared, 16 of them recorded as an OpenAPI gap.\n\nWHAT THE BOARD SHOWS: 14 model-comparison axes, 0 with a statistically separated leader, 2 TIE, 12 untested. 8 financial/domain axes are deterministic-fact runs with no fleet, no leader and no accuracy: measured is not the same as scored. TIE is a result, not a missing result.\n\nWHAT THIS DOES NOT PROVE: not that any model is best at anything (zero axes separate) · not that a signature makes a measurement correct (a signature over a wrong number is a signed wrong number) · not a certification, conformity assessment, grade or endorsement · not a Bitcoin timestamp for most artifacts (553 of 609 proofs are submitted and calendar-pending, which is a request, not evidence of a time) · not a general ability score (one model, one frozen bank, one day, temperature 0, seed 0).\n\nVERIFY: https://councilof.ai/gspc-verify (free, no account) · https://councilof.ai/signed/HOW-TO-VERIFY.md · keys resolve via did:web:csoai.org.\n\nLICENCES, named per artifact because they differ. Kaggle's licence menu has no plain CC-BY-4.0 entry, so the field reads \"other\" and the real terms are here: this data CC-BY-4.0 (attribute Council of AI, CSOAI Ltd 16939677, councilof.ai) · the vocabulary in ontology/ CC0-1.0 · the harness, copied verbatim from CSOAI-ORG/councilof-ai, MIT · the csoai-gspc and csoai-gspc-mcp packages Apache-2.0.\n\nZenodo DOI 10.5281/zenodo.21991104: UNAVAILABLE since 29 Sep 2026 (Zenodo blocked the CSOAI account; appeal pending; status https://councilof.ai/interop/zenodo-status.json). Cite the served methodology: https://councilof.ai/signed/HOW-TO-VERIFY.md\nIssuer: CSOAI Ltd (GB, Companies House 16939677). Measurement, not certification.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 3, last updated 2026-09-22.\n- 65 files, 8,209,357 bytes. File types: .jsonl (20), .py (14), .json (11), .md (8), .svg (7), .txt (2), .mjs (1), .jsonld (1).\n- Hugging Face twin: [csoai/gspc-estate](https://huggingface.co/datasets/csoai/gspc-estate). 31 of 65 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "other"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "cyber security",
+    "model comparison"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 31 of 65 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-estate](https://huggingface.co/datasets/csoai/gspc-estate) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 18,062 bytes."
+    },
+    {
+      "path": "arena/elo_reference.json",
+      "description": "JSON document. Provisional, from a differently-sized HF copy: top-level keys: as_of, axes, axis_meta, content_id, generated, leaderboard, method, models, n_rounds, per_axis, rank_rule, register, rounds, schema, signature, sources, supersedes. `leaderboard` holds 7 records with fields: ci (string), elo (numeric), games (integer), model (string), winrate (numeric). 21,289 bytes."
+    },
+    {
+      "path": "arena/rounds.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 3163 rows; fields: round (integer), ts (datetime), axis (string), qwen2.5:1.5b (string), deepseek-r1:8b (string), winner (string), qwen2.5:7b (string), nemotron-3-nano:30b (string), gemma3:12b (string), phi4:14b (string), qwen3:4b (string), mistral:7b (string), qwen3:8b (string), bank_path (string), bank_sha256 (string), bank_items (integer), bank_canary_rows (integer), item (integer), expected (string), prompt_sha256 (string), grader (string), seed (integer), answers (string), phi3.5:3.8b (string), bank_textless_rows (integer), … (+1 more). 365,295 bytes."
+    },
+    {
+      "path": "banks/frozen-banks.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 14 rows; fields: axis (string), bytes (integer), file (string), hf_dataset (string), items (integer), note (string), sha256 (string), state (string), url (url). Same byte size as `banks/frozen-banks.jsonl` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 6,002 bytes."
+    },
+    {
+      "path": "board/board-axes.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 23 rows; fields: _board_as_of (string), _fetched_at (datetime), accuracy (numeric), axis (string), bench (string), colour (string), cvar05_harm (numeric), dataset (string), dataset_url (url), excluded_leader (string), family (string), fleet_mean (numeric), historical_measurement_record (string), hue (integer), interval (string), kind (string), leader (string), leader_card (string), leader_card_note (string), leader_card_state (string), leader_card_url (string), leader_source (string), mean_harm (numeric), n (integer), note (string), … (+33 more). 40,590 bytes."
+    },
+    {
+      "path": "board/board-longitudinal.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 3 rows; fields: axes (integer), committed_at (datetime), git_commit (string), measured_axes (integer), measured_on_date (string), note (string), public_count (string), sha256 (string), source (string), unmeasured_axes (integer). Same byte size as `board/board-longitudinal.jsonl` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 1,621 bytes."
+    },
+    {
+      "path": "board/board-snapshot.json",
+      "description": "JSON document. Provisional, from a differently-sized HF copy: top-level keys: schema, issuer, doi, doi_note, measured_on, note, state_enum, totals, peritem_rows, bank_host, banked_axes, banked_axes_resolvable, banked_axes_unresolvable, bank_note, axes, measured_in_lane, domains, limitations, site_attestation. `axes` holds 23 records with fields: axis (string), family (string), kind (string), bench (string), task (string), n (integer), separation (string), fleet_mean (numeric), mean_harm (numeric), cvar05_harm (numeric), status (string), dataset (string), colour (string), hue (integer), excluded_leader (string), … (+41 more). 71,889 bytes."
+    },
+    {
+      "path": "cards/CARD-CORPORA.md",
+      "description": "Markdown document. Same byte size as `cards/CARD-CORPORA.md` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 5,422 bytes."
+    },
+    {
+      "path": "cards/card-corpora.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 5 rows; fields: artifact (string), as_of (datetime), corpus (string), field (string), identifier_overlap_with_other_corpora (integer), in_api_state (boolean), kind (string), means (string), name (string), relationship (string), value (integer). Same byte size as `cards/card-corpora.jsonl` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 2,187 bytes."
+    },
+    {
+      "path": "cards/mill-cards-index.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 2825 rows; fields: accuracy (numeric), alg (string), axis (string), bank_dataset (string), bank_file (string), bank_sha256 (string), card_url (url), did (string), file (string), id (string), items_file (string), items_sha256 (string), model (string), n (integer), not_a_certificate (boolean), preimage_rule (string), quotable (boolean), route (string), run_id (string), sha256_of_file_bytes (string), signature (string), status (string), unmeasured (string). 2,307,089 bytes."
+    },
+    {
+      "path": "cards/mill-cards-signed.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 2825 rows; fields: _file (string), _sha256_of_file_bytes (string), alg (string), body (string), did (string), id (string), n (integer), not_a_certificate (boolean), preimage_rule (string), quotable (boolean), signature (string). 2,969,017 bytes."
+    },
+    {
+      "path": "cards/superseded.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 1402 rows; fields: at (datetime), axis (string), by_file (string), by_id (string), model (string), reason (string), superseded_file (string), superseded_id (string), by_run_id (string), superseded_run_id (string). 483,266 bytes."
+    },
+    {
+      "path": "chain/card_index.json",
+      "description": "JSON document. top-level keys: cards, created, head, kind, n_cards, n_cells, packaged_at, pubkey, schema, verification, what_this_does_not_establish. `cards` holds 335 records with fields: alg (string), axis (string), card (string), card_url (string), kid (string), pubkey (string), sig (string), signed (boolean), ts (datetime). Same byte size as `chain/card_index.json` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 197,471 bytes."
+    },
+    {
+      "path": "chain/did.json",
+      "description": "JSON document. Provisional, from a differently-sized HF copy: top-level keys: @context, id, verificationMethod, assertionMethod, authentication, service, _serviceNote, _keyContinuity, _boardAttestationNote, _gspcBoardKeyNote, _pqcNote. `verificationMethod` holds 6 records with fields: id (string), type (string), controller (string), publicKeyJwk (string). 5,059 bytes."
+    },
+    {
+      "path": "chain/gsr-rekor-entry.json",
+      "description": "JSON document. top-level keys: schema, name, description, as_of. Same byte size as `chain/gsr-rekor-entry.json` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 132 bytes."
+    },
+    {
+      "path": "chain/ots-manifest-as-published.json",
+      "description": "JSON document. Provisional, from a differently-sized HF copy: top-level keys: as_of, bitcoin_attested_means, counts, dirs_scanned, how_this_was_built, pending_is_not_anchored, proofs, schema, subject_absent_means, supersedes. `proofs` holds 643 records with fields: file (string), path (string), sha256_of_proof (string), state (string), subject (string), subject_present (boolean). 180,563 bytes."
+    },
+    {
+      "path": "chain/ots-proof-states.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 675 rows; fields: anchor_state (string), bitcoin_block (integer), covers_named_file (boolean), file_digest (string), naming (string), note (string), path (string), proof (string). 275,363 bytes."
+    },
+    {
+      "path": "chain/rekor-entry.json",
+      "description": "JSON document. top-level keys: 108e9186e8c5677ab4e7b3a794e2c00462e22d27f2a5d0e00cdc9c764615153b07736e5280084770. Same byte size as `chain/rekor-entry.json` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 2,633 bytes."
+    },
+    {
+      "path": "chain/root.json",
+      "description": "JSON document. top-level keys: as_of, card_count, card_sha256, did_intended, kind, leaf_definition, node_definition, tree_caveat, language, merkle_root, note, schema, sources, xrpl_asset_count_attempted, xrpl_basket_merkle, xrpl_fi_assetCount, xrpl_fi_updatedAt, sig_ed25519, sig_preimage. Same byte size as `chain/root.json` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 24,505 bytes."
+    },
+    {
+      "path": "corrections/corrections.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 74 rows; fields: _license (string), _policy (string), _publisher (string), date (datetime), detected_at (string), detected_by (string), evidence (string), how_caught (string), id (string), published_at (string), reached_the_public (boolean), status (string), timing_evidence (string), what_changed (string), what_was_wrong (string), detected_window (string), first_observed_at (datetime), supersedes_text (string), note (string), text_superseded_by (string), why_it_was_wrong (string), fix (string), error_introduced_at (datetime), corrected_at (datetime). 103,678 bytes."
+    },
+    {
+      "path": "evidence/evidence-manifest.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 1542 rows; fields: bytes (integer), file (string), kind (string), live_url (url), sha256 (string). 280,285 bytes."
+    },
+    {
+      "path": "figures/01-board-at-a-glance.svg",
+      "description": "SVG image. 19,595 bytes."
+    },
+    {
+      "path": "figures/02-per-axis-n-and-separation.svg",
+      "description": "SVG image. 7,902 bytes."
+    },
+    {
+      "path": "figures/03-elo-reference-with-intervals.svg",
+      "description": "SVG image. 7,116 bytes."
+    },
+    {
+      "path": "figures/04-supersession-timeline.svg",
+      "description": "SVG image. 5,140 bytes."
+    },
+    {
+      "path": "figures/05-ots-proof-states.svg",
+      "description": "SVG image. 2,959 bytes."
+    },
+    {
+      "path": "figures/06-card-corpora-never-a-sum.svg",
+      "description": "SVG image. Same byte size as `figures/06-card-corpora-never-a-sum.svg` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 5,631 bytes."
+    },
+    {
+      "path": "figures/FIGURES.md",
+      "description": "Markdown document. Same byte size as `figures/FIGURES.md` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 481 bytes."
+    },
+    {
+      "path": "findings/FINDINGS-2026-09-22.md",
+      "description": "Markdown document. Same byte size as `findings/FINDINGS-2026-09-22.md` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 12,276 bytes."
+    },
+    {
+      "path": "findings/grading-honesty.json",
+      "description": "JSON document. top-level keys: rows, rows_carrying_a_label_field, rows_carrying_finish_reason, schema, total_rows, truncated, unreadable_label, what_this_is, why_it_matters. `rows` holds 4 records with fields: note (string), rows (integer), rows_carrying_a_label_field (integer), rows_carrying_finish_reason (integer), schema (string), truncated_at_token_limit (integer), truncation_rate (string), unreadable_label (integer), unreadable_rate (string). Same byte size as `findings/grading-honesty.json` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 2,546 bytes."
+    },
+    {
+      "path": "footprint/README.md",
+      "description": "Dataset README (Markdown). Same byte size as `footprint/README.md` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 3,163 bytes."
+    },
+    {
+      "path": "footprint/capabilities.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 227 rows; fields: audience (string), description (string), description_state (string), id (string), kind (string), lifecycle (string), name (string), payment (string), surfaces (string), tags (string). 76,675 bytes."
+    },
+    {
+      "path": "footprint/distribution-latest.json",
+      "description": "JSON document. Provisional, from a differently-sized HF copy: top-level keys: schema, as_of, measurement_started, max_age_hours, stale_after, generator, host, package_list, window_rule, state_rule, requests, registries, totals, by_entity, packages. `packages` holds 837 records with fields: registry (string), repo_type (string), name (string), entity (string), downloads_30d (integer), downloads_all_time (integer), source_url (url), all_time_covers_all_time (boolean), days_in_window (integer), series_starts (datetime), window_note (string), reason (string). 268,000 bytes."
+    },
+    {
+      "path": "footprint/distribution.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 8 rows; fields: as_of (datetime), attempted (integer), covered (integer), kind (string), metric (string), reason (string), scope (string), state (string), state_rule (string), unit (string), value (integer), window (string), window_rule (string). Same byte size as `footprint/distribution.jsonl` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 6,926 bytes."
+    },
+    {
+      "path": "footprint/memberships-excluded.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 13 rows; fields: _why_this_list (string), evidence (url), org (string), reason (string), why (string). 9,307 bytes."
+    },
+    {
+      "path": "footprint/memberships.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 33 rows; fields: _honesty_line (string), answer (string), check (string), evidence (string), evidence_kind (string), group (string), id (string), kind (string), org (string), public_evidence (boolean), question (string), short (string), since (datetime), since_basis (string), state (string), verified_on (datetime), what_it_does_not_prove (string), what_it_proves (string), deadline (datetime). 41,417 bytes."
+    },
+    {
+      "path": "harness/HOW-TO-VERIFY.md",
+      "description": "Markdown document. Same byte size as `harness/HOW-TO-VERIFY.md` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 21,392 bytes."
+    },
+    {
+      "path": "harness/README.md",
+      "description": "Dataset README (Markdown). Same byte size as `harness/README.md` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 3,058 bytes."
+    },
+    {
+      "path": "harness/board_sign.py",
+      "description": "Python source file. Same byte size as `harness/board_sign.py` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 5,768 bytes."
+    },
+    {
+      "path": "harness/elo_reference.py",
+      "description": "Python source file. Same byte size as `harness/elo_reference.py` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 11,163 bytes."
+    },
+    {
+      "path": "harness/generate_runpod_gspc_playlist.py",
+      "description": "Python source file. Same byte size as `harness/generate_runpod_gspc_playlist.py` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 15,513 bytes."
+    },
+    {
+      "path": "harness/grade_financial_ledgers.py",
+      "description": "Python source file. Same byte size as `harness/grade_financial_ledgers.py` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 12,248 bytes."
+    },
+    {
+      "path": "harness/harness-manifest.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 17 rows; fields: from (string), published_as (string), sha256 (string). Same byte size as `harness/harness-manifest.jsonl` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 2,891 bytes."
+    },
+    {
+      "path": "harness/measurement_root.py",
+      "description": "Python source file. Same byte size as `harness/measurement_root.py` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 5,616 bytes."
+    },
+    {
+      "path": "harness/mill_hub_queue.py",
+      "description": "Python source file. Same byte size as `harness/mill_hub_queue.py` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 56,270 bytes."
+    },
+    {
+      "path": "harness/ots-coverage-audit.py",
+      "description": "Python source file. Same byte size as `harness/ots-coverage-audit.py` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 4,014 bytes."
+    },
+    {
+      "path": "harness/runpod_gspc_worker.py",
+      "description": "Python source file. 71,401 bytes."
+    },
+    {
+      "path": "harness/runpod_reviewed_control.py",
+      "description": "Python source file. Same byte size as `harness/runpod_reviewed_control.py` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 7,342 bytes."
+    },
+    {
+      "path": "harness/test_arena_controls.py",
+      "description": "Python source file. 6,710 bytes."
+    },
+    {
+      "path": "harness/verify-card.mjs",
+      "description": "JavaScript (ES module) source. Same byte size as `harness/verify-card.mjs` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 10,572 bytes."
+    },
+    {
+      "path": "harness/verify_hub_mill_evidence.py",
+      "description": "Python source file. Same byte size as `harness/verify_hub_mill_evidence.py` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 11,032 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "every generated bundle file except this manifest, with its sha256; Hub metadata such as `.gitattributes` is excluded — 1605 files, 28.4 MB. Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 1605 rows; fields: bytes (integer), path (string), sha256 (string). 8,508 bytes."
+    },
+    {
+      "path": "ontology/README.md",
+      "description": "Dataset README (Markdown). 9,869 bytes."
+    },
+    {
+      "path": "ontology/context.jsonld",
+      "description": "JSON-LD document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 3,178 bytes."
+    },
+    {
+      "path": "ontology/crosswalk.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 9,258 bytes."
+    },
+    {
+      "path": "ontology/gspc.skos.ttl",
+      "description": "RDF Turtle file. 11,425 bytes."
+    },
+    {
+      "path": "ontology/make_ontology.py",
+      "description": "Python source file. 22,112 bytes."
+    },
+    {
+      "path": "ontology/state-machine.svg",
+      "description": "SVG image. 5,256 bytes."
+    },
+    {
+      "path": "ontology/terms.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 10,474 bytes."
+    },
+    {
+      "path": "populations/populations.jsonl",
+      "description": "Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 10 rows; fields: as_of (datetime), door (url), http_status_without_payment (integer), id (string), n (integer), n_unit (string), note (string), reason (string), source (string), state (string), unmeasured (string). 6,468 bytes."
+    },
+    {
+      "path": "repro/REPRO-PASS.txt",
+      "description": "Plain-text file. Same byte size as `repro/REPRO-PASS.txt` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 1,837 bytes."
+    },
+    {
+      "path": "repro/REPRO-TAMPER-FAIL.txt",
+      "description": "Plain-text file. Same byte size as `repro/REPRO-TAMPER-FAIL.txt` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 1,935 bytes."
+    },
+    {
+      "path": "repro/make_figures.py",
+      "description": "Python source file. Same byte size as `repro/make_figures.py` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 18,055 bytes."
+    },
+    {
+      "path": "repro/verify_estate.py",
+      "description": "Python source file. Same byte size as `repro/verify_estate.py` in huggingface.co/datasets/csoai/gspc-estate (checked 2026-11-20). 14,401 bytes."
+    },
+    {
+      "path": "summary.json",
+      "description": "JSON document. Provisional, from a differently-sized HF copy: top-level keys: arena_rounds, bank_items_total, banks_resolvable, banks_total, board_lid, board_totals, built_at, card_corpora, corrections, evidence_files, footprint, mill_cards, ots, populations, repo_commit, schema, superseded_entries. `populations` holds 10 records with fields: as_of (datetime), id (string), n (integer), state (string). 11,039 bytes."
+    }
+  ]
+}

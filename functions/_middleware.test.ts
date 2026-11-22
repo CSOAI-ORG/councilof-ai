@@ -3,10 +3,11 @@
  * *.pages.dev host (production alias and per-deploy previews) must fall through untouched.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { onRequest } from "./_middleware";
+import { onRequest, PROBE_BODY_CAP_BYTES } from "./_middleware";
 import { wwwToApex } from "./_lib/wwwRedirect";
 import { mcpDoorRootRequest } from "./_lib/mcpDoorRoot";
 import { onRequest as mcpDoor } from "./mcp/[[path]]";
+import { onRequestGet as x402Listing } from "./.well-known/x402.json";
 
 function run(url: string, method = "GET") {
   const passthrough = new Response("next", { status: 200 });
@@ -278,3 +279,340 @@ describe("root middleware: mcp.meok.ai/ is the MCP door, not the homepage", () =
     expect(mcpDoorRootRequest(new Request("https://councilof.ai/"))).toBeNull();
   });
 });
+
+/**
+ * THE PAYMENTLESS-PROBE GATE: an indexer's empty-body POST to an x402 door gets the 402 envelope
+ * before any handler runs (x402-foundation/x402#2156). Two defects in it, found 2026-11-19:
+ *
+ * 1. It never asked what the query selected. POST /api/proof?sha=<64-hex> with no body got an
+ *    issuance:reserve challenge for one inclusion proof, which is free (proof.ts answers POST as it
+ *    answers GET), and every door's free preview was challenged the same way.
+ * 2. It read every paymentless POST body in full, with no size limit, before it asked whether the
+ *    path was a door at all — so every POST to /mcp and /api/a2a was buffered by the middleware.
+ */
+describe("root middleware: the paymentless probe gate", () => {
+  const ORIGIN = "https://councilof.ai";
+  const SHA = "a".repeat(64);
+  const CHUNK = 256;
+
+  async function gate(request: Request) {
+    const next = vi.fn(async () => new Response("route", { status: 200 }));
+    const res = await onRequest({ request, next });
+    return { res, next };
+  }
+  const emptyPost = (url: string) =>
+    new Request(url, { method: "POST", headers: { "content-type": "application/json" }, body: "" });
+
+  /** What /.well-known/x402.json lists, read from its own handler, never retyped here. */
+  async function listing() {
+    const res = await (x402Listing as unknown as (c: unknown) => Promise<Response>)({
+      request: new Request(`${ORIGIN}/.well-known/x402.json`),
+      env: {},
+    });
+    return (await res.json()) as { resources: { url: string; free_preview?: string }[]; free_doors: { url: string }[] };
+  }
+
+  /** A streamed body that counts every byte anyone pulls from it, pulled only on demand. */
+  function countedBody(chunks: number) {
+    let pulled = 0;
+    const total = chunks * CHUNK;
+    const stream = new ReadableStream<Uint8Array>(
+      {
+        pull(controller) {
+          if (pulled >= total) return controller.close();
+          pulled += CHUNK;
+          controller.enqueue(new Uint8Array(CHUNK).fill(0x78)); // "x": never an empty probe
+        },
+      },
+      { highWaterMark: 0 },
+    );
+    return { stream, total, pulled: () => pulled };
+  }
+  const streamedPost = (url: string, stream: ReadableStream<Uint8Array>, headers: Record<string, string> = {}) =>
+    new Request(url, {
+      method: "POST",
+      headers: { "content-type": "application/json", ...headers },
+      body: stream,
+      duplex: "half",
+    } as RequestInit);
+
+  it("every resource the listing sells still answers a paymentless empty POST with 402", async () => {
+    const { resources } = await listing();
+    expect(resources.length).toBeGreaterThan(20);
+    for (const { url } of resources) {
+      const { res, next } = await gate(emptyPost(url));
+      expect(res.status, url).toBe(402);
+      expect(next, url).not.toHaveBeenCalled();
+    }
+  });
+
+  it("every free preview and free door the listing names passes through to the route", async () => {
+    const { resources, free_doors } = await listing();
+    const previews = resources.flatMap((r) => (r.free_preview ? [r.free_preview] : []));
+    expect(previews.length).toBeGreaterThan(10);
+    for (const url of [...previews, ...free_doors.map((d) => d.url)]) {
+      const { res, next } = await gate(emptyPost(url));
+      expect(res.status, url).toBe(200);
+      expect(next, url).toHaveBeenCalledOnce();
+    }
+  });
+
+  it("every door whose free preview the gate passes through answers POST, so the preview is reachable", async () => {
+    // Passing a POST through is only half of it: a door that exports no onRequestPost sends it on
+    // to the /api 404. coverage-evidence.ts and wrapper/changes.ts did, until 2026-11-19.
+    const { resources } = await listing();
+    for (const { url } of resources.filter((r) => r.free_preview)) {
+      const path = new URL(url).pathname;
+      const door = (await import(/* @vite-ignore */ `./api${path.replace(/^\/api/, "")}`)) as { onRequestPost?: unknown };
+      expect(typeof door.onRequestPost, path).toBe("function");
+    }
+  });
+
+  it("a query that asks only for a door's free part passes through, as each handler defines it", async () => {
+    for (const url of [
+      `${ORIGIN}/api/proof?sha=${SHA}`, // proof.ts: one inclusion is free
+      `${ORIGIN}/api/evidence-bundle?obligation=dora`, // the obligation preview
+      `${ORIGIN}/api/evidence-bundle?obligation=article-53&format=procurement`,
+      `${ORIGIN}/api/rwa/evidence?asset=RLUSD&preview=1`,
+      `${ORIGIN}/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1`,
+      `${ORIGIN}/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=true`,
+      `${ORIGIN}/api/signed-data-feed`, // the bare path is the free preview
+      `${ORIGIN}/api/signed-data-feed?manifest=1`,
+      `${ORIGIN}/api/feeds/provider-diff`, // the bare path is the free recent feed
+      `${ORIGIN}/api/feeds/provider-diff?provider=openai`,
+      `${ORIGIN}/api/pop/xrpl?manifest=1`,
+      `${ORIGIN}/api/wrapper/asset/usdc?preview=1`,
+    ]) {
+      const { res, next } = await gate(emptyPost(url));
+      expect(res.status, url).toBe(200);
+      expect(next, url).toHaveBeenCalledOnce();
+    }
+  });
+
+  it("the paid part, and a query that selects no free part, still get the probe's 402", async () => {
+    for (const url of [
+      `${ORIGIN}/api/proof?bundle=1`,
+      `${ORIGIN}/api/proof?bundle=1&sha=${SHA}`, // bundle=1 wins in proof.ts
+      `${ORIGIN}/api/proof`, // proof.ts redirects the bare path to bundle=1
+      `${ORIGIN}/api/evidence-bundle?obligation=dora&bundle=1`,
+      `${ORIGIN}/api/evidence-bundle`,
+      `${ORIGIN}/api/evidence-bundle?obligation=dora&invoice=gbp&commissioned_by=Acme`,
+      `${ORIGIN}/api/rwa/evidence?asset=RLUSD`,
+      `${ORIGIN}/api/receipts/batch?from=2026-01-01T00:00:00Z`,
+      `${ORIGIN}/api/signed-data-feed?feed=1`,
+      `${ORIGIN}/api/signed-data-feed?x402=1`,
+      `${ORIGIN}/api/feeds/provider-diff?history=1`,
+      `${ORIGIN}/api/feeds/provider-diff?invoice=gbp`,
+      `${ORIGIN}/api/pop/xrpl`,
+      `${ORIGIN}/api/wrapper/asset/usdc`,
+      `${ORIGIN}/api/free-door?preview=1`, // no free part a query can select
+      `${ORIGIN}/api/request-attestation?subject=qwen3&preview=1`,
+    ]) {
+      const { res, next } = await gate(emptyPost(url));
+      expect(res.status, url).toBe(402);
+      expect(next, url).not.toHaveBeenCalled();
+      const body = (await res.json()) as {
+        resource: { url: string };
+        extensions: { bazaar: { info: { input: { method: string } } } };
+      };
+      expect(body.resource.url, url).toContain(new URL(url).pathname);
+      expect(body.extensions.bazaar.info.input.method, url).toBe("POST");
+    }
+  });
+
+  it("POSTs to /mcp and /api/a2a are never read by the middleware", async () => {
+    for (const url of [`${ORIGIN}/mcp`, "https://mcp.meok.ai/mcp", `${ORIGIN}/api/a2a`]) {
+      const body = countedBody(4096);
+      const request = streamedPost(url, body.stream);
+      let pulledBeforeRoute = -1;
+      const next = vi.fn(async () => {
+        pulledBeforeRoute = body.pulled();
+        return new Response("route", { status: 200 });
+      });
+      const res = await onRequest({ request, next });
+      expect(res.status, url).toBe(200);
+      expect(next, url).toHaveBeenCalledOnce();
+      expect(pulledBeforeRoute, url).toBe(0);
+      expect(body.pulled(), url).toBe(0);
+      expect(request.bodyUsed, url).toBe(false);
+    }
+  });
+
+  it("a door's body is read only up to the cap, and the route still receives every byte", async () => {
+    const body = countedBody(4096); // 1 MiB
+    const request = streamedPost(`${ORIGIN}/api/art50/marking-evidence`, body.stream);
+    let pulledBeforeRoute = -1;
+    let routeBytes = -1;
+    const next = vi.fn(async () => {
+      pulledBeforeRoute = body.pulled();
+      routeBytes = (await request.arrayBuffer()).byteLength;
+      return new Response("route", { status: 200 });
+    });
+    const res = await onRequest({ request, next });
+    expect(res.status).toBe(200);
+    expect(next).toHaveBeenCalledOnce();
+    expect(pulledBeforeRoute).toBeGreaterThan(PROBE_BODY_CAP_BYTES);
+    // The clone is read until it crosses the cap; the tee may pull a chunk or two ahead of it.
+    expect(pulledBeforeRoute).toBeLessThanOrEqual(PROBE_BODY_CAP_BYTES + 4 * CHUNK);
+    expect(routeBytes).toBe(body.total);
+  });
+
+  it("a declared content-length past the cap is not read at all", async () => {
+    const body = countedBody(4096);
+    const request = streamedPost(`${ORIGIN}/api/proof?bundle=1`, body.stream, { "content-length": String(body.total) });
+    let pulledBeforeRoute = -1;
+    const next = vi.fn(async () => {
+      pulledBeforeRoute = body.pulled();
+      return new Response("route", { status: 200 });
+    });
+    const res = await onRequest({ request, next });
+    expect(res.status).toBe(200);
+    expect(next).toHaveBeenCalledOnce();
+    expect(pulledBeforeRoute).toBe(0);
+  });
+
+  it("an empty probe up to the cap is still a probe; one byte past it is a real request", async () => {
+    const door = `${ORIGIN}/api/proof?bundle=1`;
+    const padded = (bytes: number) => `{${" ".repeat(bytes - 2)}}`;
+    for (const body of ["", "{}", "[]", " { } ", padded(PROBE_BODY_CAP_BYTES)]) {
+      const { res, next } = await gate(new Request(door, { method: "POST", body }));
+      expect(res.status, `${body.length} bytes`).toBe(402);
+      expect(next).not.toHaveBeenCalled();
+    }
+    const { res: noBody } = await gate(new Request(door, { method: "POST" }));
+    expect(noBody.status).toBe(402);
+    const { res, next } = await gate(new Request(door, { method: "POST", body: padded(PROBE_BODY_CAP_BYTES + 1) }));
+    expect(res.status).toBe(200);
+    expect(next).toHaveBeenCalledOnce();
+  });
+});
+
+// lane x402-http-v2-headers-20261120. x402 HTTP transport (specs/transports-v2/http.md): the
+// settlement rides in PAYMENT-RESPONSE, and a browser reads the payment headers and sends
+// PAYMENT-SIGNATURE only if CORS lets it. Measured live on 20 Nov 2026: X-PAYMENT-RESPONSE only,
+// nothing exposed, and a door's preflight answered 404.
+describe("root middleware: the x402 HTTP transport's headers", () => {
+  const ORIGIN = "https://councilof.ai";
+  const DOOR = `${ORIGIN}/api/evidence-bundle?obligation=article-50&bundle=1`;
+  const SETTLED = btoa(JSON.stringify({ success: true, transaction: `0x${"a".repeat(64)}`, network: "eip155:8453" }));
+  const through = async (request: Request, reply: Response) => {
+    const next = vi.fn(async () => reply);
+    return { res: await onRequest({ request, next }), next };
+  };
+  const list = (value: string | null) => (value ?? "").split(",").map((v) => v.trim().toLowerCase()).filter(Boolean);
+
+  async function listing() {
+    const res = await (x402Listing as unknown as (c: unknown) => Promise<Response>)({
+      request: new Request(`${ORIGIN}/.well-known/x402.json`),
+      env: {},
+    });
+    return (await res.json()) as { resources: { url: string }[]; free_doors: { url: string }[] };
+  }
+
+  it("a settled reply carries the settlement under PAYMENT-RESPONSE as well, byte for byte", async () => {
+    const { res } = await through(
+      new Request(DOOR, { headers: { "payment-signature": "e30=" } }),
+      new Response("{}", { status: 200, headers: { "x-payment-response": SETTLED, "access-control-allow-origin": "*", "access-control-expose-headers": "x-csoai-delivery-record-state, x-payment-response" } }),
+    );
+    expect(res.headers.get("payment-response")).toBe(SETTLED);
+    expect(res.headers.get("x-payment-response")).toBe(SETTLED);
+    const exposed = list(res.headers.get("access-control-expose-headers"));
+    expect(exposed).toEqual(expect.arrayContaining(["payment-response", "payment-required", "x-payment-response", "x-csoai-delivery-record-state"]));
+    expect(exposed.filter((v) => v === "x-payment-response")).toHaveLength(1);
+  });
+
+  it("a route that already sets PAYMENT-RESPONSE keeps its own value", async () => {
+    const { res } = await through(
+      new Request(DOOR),
+      new Response("{}", { status: 200, headers: { "x-payment-response": SETTLED, "payment-response": "route-own" } }),
+    );
+    expect(res.headers.get("payment-response")).toBe("route-own");
+  });
+
+  it("a 402 names PAYMENT-REQUIRED and PAYMENT-RESPONSE for a browser, and its body and status are unchanged", async () => {
+    const { res } = await through(
+      new Request(DOOR),
+      new Response('{"x402Version":2}', { status: 402, headers: { "PAYMENT-REQUIRED": "e30=", "access-control-allow-origin": "*" } }),
+    );
+    expect(res.status).toBe(402);
+    expect(await res.text()).toBe('{"x402Version":2}');
+    expect(res.headers.get("payment-required")).toBe("e30=");
+    expect(res.headers.has("payment-response")).toBe(false);
+    expect(list(res.headers.get("access-control-expose-headers"))).toEqual(expect.arrayContaining(["payment-required", "payment-response"]));
+  });
+
+  it("the probe gate's own 402 is exposed the same way", async () => {
+    const next = vi.fn(async () => new Response("route", { status: 200 }));
+    const res = await onRequest({ request: new Request(DOOR, { method: "POST", headers: { "content-type": "application/json" }, body: "" }), next });
+    expect(res.status).toBe(402);
+    expect(res.headers.has("payment-required")).toBe(true);
+    expect(list(res.headers.get("access-control-expose-headers"))).toEqual(expect.arrayContaining(["payment-required", "payment-response"]));
+  });
+
+  it("a reply with no x402 header gains none: the free reads are untouched", async () => {
+    for (const path of ["/api/gspc", "/api/corrections", "/api/a2a/key", "/api/usage"]) {
+      const { res } = await through(new Request(`${ORIGIN}${path}`), new Response("{}", { status: 200, headers: { "access-control-allow-origin": "*" } }));
+      expect(res.headers.has("payment-response"), path).toBe(false);
+      expect(res.headers.has("payment-required"), path).toBe(false);
+      expect(res.headers.has("access-control-expose-headers"), path).toBe(false);
+    }
+  });
+
+  it("a preflight of every listed door is answered 204 and lets a browser send its payment", async () => {
+    const { resources } = await listing();
+    expect(resources.length).toBeGreaterThan(20);
+    for (const { url } of resources) {
+      const { res, next } = await through(
+        new Request(url, { method: "OPTIONS", headers: { origin: "https://example.com", "access-control-request-method": "GET", "access-control-request-headers": "payment-signature" } }),
+        new Response("not found", { status: 404 }),
+      );
+      expect(res.status, url).toBe(204);
+      expect(next, url).not.toHaveBeenCalled();
+      expect(res.headers.get("access-control-allow-origin"), url).toBe("*");
+      expect(list(res.headers.get("access-control-allow-headers")), url).toEqual(expect.arrayContaining(["payment-signature", "x-payment", "content-type"]));
+      expect(list(res.headers.get("access-control-allow-methods")), url).toEqual(expect.arrayContaining(["get", "post"]));
+      expect(list(res.headers.get("access-control-expose-headers")), url).toEqual(expect.arrayContaining(["payment-required", "payment-response"]));
+    }
+  });
+
+  it("a preflight allows the headers it asks for, but not a malformed or endless list", async () => {
+    const asked = ["x-csoai-expected-feed", "bad header", "x".repeat(65), ...Array.from({ length: 40 }, (_, i) => `x-extra-${i}`)].join(", ");
+    const { res } = await through(
+      new Request(DOOR, { method: "OPTIONS", headers: { origin: "https://example.com", "access-control-request-method": "POST", "access-control-request-headers": asked } }),
+      new Response(null, { status: 404 }),
+    );
+    const allowed = list(res.headers.get("access-control-allow-headers"));
+    expect(allowed).toContain("x-csoai-expected-feed");
+    expect(allowed).not.toContain("bad header");
+    expect(allowed.some((v) => v.length > 64)).toBe(false);
+    expect(allowed.length).toBeLessThanOrEqual(4 + 16);
+  });
+
+  it("an OPTIONS that is not a preflight, or not on a door, goes to its route as before", async () => {
+    const cases: [string, Record<string, string>][] = [
+      [DOOR, {}], // no Access-Control-Request-Method: not a preflight
+      [`${ORIGIN}/api/gspc`, { "access-control-request-method": "GET" }],
+      [`${ORIGIN}/api/corrections`, { "access-control-request-method": "GET" }],
+      [`${ORIGIN}/api/a2a`, { "access-control-request-method": "POST" }],
+      [`${ORIGIN}/mcp`, { "access-control-request-method": "POST" }],
+    ];
+    for (const [url, headers] of cases) {
+      const { res, next } = await through(new Request(url, { method: "OPTIONS", headers }), new Response("route", { status: 200 }));
+      expect(next, url).toHaveBeenCalledTimes(1);
+      expect(await res.text(), url).toBe("route");
+    }
+  });
+
+  it("the free doors the listing names are not doors to this gate: their preflight is the route's own", async () => {
+    const { free_doors } = await listing();
+    expect(free_doors.length).toBeGreaterThan(0);
+    for (const { url } of free_doors) {
+      const { next } = await through(
+        new Request(url, { method: "OPTIONS", headers: { "access-control-request-method": "GET" } }),
+        new Response("route", { status: 200 }),
+      );
+      expect(next, url).toHaveBeenCalledTimes(1);
+    }
+  });
+});
+

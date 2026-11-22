@@ -1,0 +1,38 @@
+--- a/csoai/gspc-pulse/README.md (live)
++++ b/csoai/gspc-pulse/README.md (proposed)
+@@ -15,6 +15,10 @@
+   data_files:
+   - split: train
+     path: timeseries.csv
++size_categories:
++- n<1K
++tags:
++- council-of-ai
+ ---
+ # GSPC Live Pulse — public measurement evidence
+ 
+@@ -74,3 +78,24 @@
+ **License:** CC BY 4.0. The source lane also offers CC0-1.0 as described in
+ `LICENSE-EVIDENCE.md`; attribute the source as *GSPC live pulse — CSOAI / Council
+ of AI (councilof.ai)*.
++
++<!-- csoai-card-fixes:start -->
++
++## Limitations
++
++**Measurement is not certification.** Values in this repository are measurements recorded by Council of AI (CSOAI Ltd) under the method, instrument version and observation date stated in each file. They are not a certification, audit opinion, conformity assessment or legal determination (including under the EU AI Act). Results depend on the instrument version, the sampled items and the date, and a re-measurement can change them. Repository updates and download counts are not new measurements.
++
++## Citation
++
++```bibtex
++@misc{csoai_gspc_pulse_2026,
++  title        = {GSPC Live Pulse},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/csoai/gspc-pulse}},
++  url          = {https://huggingface.co/datasets/csoai/gspc-pulse}
++}
++```
++
++<!-- csoai-card-fixes:end -->

@@ -1,8 +1,25 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 import ExternalUseEvidence from "@/components/ExternalUseEvidence";
 import { OPERATING_ORGANISATION_SUMMARY } from "@/data/external-use";
+import INSTITUTIONS_REGISTER from "../../../public/interop/institutions-register.json";
+
+// The register's kinds, labelled for readers; the artifact's own kind strings stay authoritative.
+const KIND_LABELS: Record<string, string> = {
+  external_execution: "External execution",
+  outside_implementation: "Outside implementation",
+  independent_reproduction: "Independent reproduction",
+  technical_citation: "Technical citation",
+  listing: "Listing",
+};
+
+// Pure formatting of the artifact's date_or_since value ("2026-11-03" / "since 2026-07-23").
+function formatDateOrSince(value: string): string {
+  const match = /^(since )?(\d{4}-\d{2}-\d{2})$/.exec(value);
+  if (!match) return value;
+  const long = new Date(`${match[2]}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+  return match[1] ? `Since ${long}` : long;
+}
 
 type State = {
   root: { cards: number; asOf: string } | null;
@@ -66,7 +83,6 @@ export default function Traction() {
   const usdc = live.revenue ? `$${(live.revenue.atomic / 1_000_000).toFixed(2)}` : undefined;
 
   return <section className="min-h-screen bg-slate-950 text-slate-100">
-    <Helmet><title>Operation and external use | Council of AI</title><meta name="description" content="Council of AI's evidence services, operating infrastructure, external use and business model. Information for organisations, partners and investors." /></Helmet>
     <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,.18),transparent_36%)]">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <p className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-300">Operating work and documented external use</p>
@@ -104,6 +120,12 @@ export default function Traction() {
 
     <div id="external-use" className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-14">
       <ExternalUseEvidence inverted />
+      <aside className="mt-6 rounded-xl border border-slate-700 p-5" aria-label="Published CMA consultation response">
+        <h3 className="text-lg font-bold">Our published response to the CMA's search-choice consultation</h3>
+        <p className="mt-3 leading-7 text-slate-300">On 8 October 2026, Council of AI (CSOAI LTD) prepared a non-confidential six-page response to the UK Competition and Markets Authority's consultation on Google's proposed general-search user-choice requirement. The response is available on the UK government's document host. It proposes versioned assessment criteria and outcome measures for informed choice, effective control, fairness, accessibility and follow-up.</p>
+        <p className="mt-3 leading-7 text-slate-300">This establishes a publicly available consultation contribution, <strong>not</strong> CMA adoption of our proposals, regulatory accreditation, an evaluation commission or evidence that the CMA has used our measurement service.</p>
+        <p className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm"><a href="https://assets.publishing.service.gov.uk/media/6adb87142263175ac2aca3e0/Council_of_AI.pdf" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">Read the original response (PDF, 6 pages)</a><Link href="/methodology" className="text-emerald-300 underline">Inspect our current methods</Link><Link href="/contact/?arm=run" className="text-emerald-300 underline">Discuss a scoped evidence project</Link></p>
+      </aside>
       <aside className="mt-6 rounded-xl border border-slate-700 p-5" aria-label="Additional external artifact">
         <h3 className="text-lg font-bold">A public API contract reused in an external catalogue</h3>
         <p className="mt-3 leading-7 text-slate-300">API Evangelist generated an OpenAPI overlay from Council of AI's published read-surfaces contract. The <a href="https://apis.io/overlays/councilof-ai/councilof-ai-gspc-read-surfaces-overlay/" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">APIs.io record</a> dates the generated artifact to 19 September 2026 and identifies it as an external derivative. This supports discoverability and reuse of the contract; it is not a customer deployment, endorsement or validation of the measurement service.</p>
@@ -117,6 +139,38 @@ export default function Traction() {
         <p className="mt-3 leading-7 text-slate-300">A <a href="https://www.kaggle.com/code/hosseinbadrnezhad/csoai-gspc-living-board-etl-eda-visualize-model" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">public Kaggle notebook</a> published under another account names the <a href="https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">GSPC Living Board dataset</a> as its data source and reads <code>gspc-axes.csv</code>. Kaggle's record dates the notebook's last run to 14 November 2026. Its code applies general-purpose data cleaning, charts and model fitting to a small table. This shows the published data was loaded outside the publishing account; it is not a review of the measurement method, a validation of any result or a customer deployment. Sources reviewed 17 November 2026.</p>
       </aside>
     </div>
+
+    <section id="institutions-register" aria-labelledby="institutions-register-h" className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-14">
+      <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">One machine-readable register</p>
+      <h2 id="institutions-register-h" className="mt-3 text-2xl font-bold">Institutions register</h2>
+      <p className="mt-4 max-w-3xl leading-7 text-slate-300">
+        The outside evidence above, as one dated register: <code>public/interop/institutions-register.json</code> (schema <code>{INSTITUTIONS_REGISTER.schema}</code>, as of {INSTITUTIONS_REGISTER.as_of}). Each row is a dated, sourced observation of outside use or engagement. A row is not adoption, not endorsement and not a customer count; rows are never added into a count of customers, and every row records its relationship state.
+      </p>
+      <div className="mt-6 grid gap-5 lg:grid-cols-2">
+        {INSTITUTIONS_REGISTER.rows.map((row) => (
+          <article key={row.actor} className="min-w-0 rounded-2xl border border-slate-700 bg-slate-900 p-5">
+            <p className="text-xs font-bold uppercase tracking-wider text-emerald-300">{KIND_LABELS[row.kind] ?? row.kind}</p>
+            <h3 className="mt-3 text-lg font-bold leading-snug">{row.actor}</h3>
+            <p className="mt-2 text-xs leading-5 text-slate-400">
+              {/^\d{4}-\d{2}-\d{2}$/.test(row.date_or_since)
+                ? <time dateTime={row.date_or_since}>{formatDateOrSince(row.date_or_since)}</time>
+                : formatDateOrSince(row.date_or_since)}
+            </p>
+            <p className="mt-3 text-sm leading-6 text-slate-300">{row.what}</p>
+            <p className="mt-3 text-sm leading-6 text-slate-400">{row.claim_boundary}</p>
+            <p className="mt-3 font-mono text-xs text-slate-400">relationship_state: {row.relationship_state.replace(/_/g, " ")} · a registered interest is not a customer</p>
+            <ul className="mt-4 space-y-2">
+              {row.sources.map((href) => (
+                <li key={href} className="break-all"><a href={href} target="_blank" rel="noopener noreferrer" className="text-sm underline underline-offset-4 text-emerald-300">{href}</a></li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+      <p className="mt-5 max-w-3xl text-sm leading-6 text-slate-300">
+        Machine surface: <a href="/api/institutions" className="font-mono text-emerald-300 underline">/api/institutions</a> derives from the committed register in-process. Its totals are counts of the register's own rows by kind, labelled catalogued — counts of register rows, never a count of customers.
+      </p>
+    </section>
 
     <section className="border-y border-white/10 bg-slate-900/70"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 md:grid-cols-2">
       <div><p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">Published software, methods and datasets</p><h2 className="mt-3 text-2xl font-black">An inspectable portfolio</h2><p className="mt-4 leading-7 text-slate-300">GSPC combines measurement instruments, software, datasets and evidence-handling methods. Public code and publication histories let a reviewer examine how the work developed. Rights, licence terms and commercial reuse depend on the specific component and version.</p><Link href="/licensing-agreement" className="mt-5 inline-block font-semibold text-emerald-300 underline">Inspect licensing and reuse conditions</Link></div>

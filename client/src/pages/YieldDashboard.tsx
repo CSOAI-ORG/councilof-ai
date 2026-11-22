@@ -77,11 +77,6 @@ export default function YieldDashboard() {
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
-        <title>Yield Dashboard | Council of AI</title>
-        <meta
-          name="description"
-          content="One number per family per week: yield = proofs sold + feed subs + attributed inbound. Derived from settlement data, never typed."
-        />
         <meta name="robots" content="noindex,nofollow,noarchive" />
       </Helmet>
       <section className="mx-auto max-w-4xl">

@@ -1,11 +1,6 @@
-import { Helmet } from "react-helmet-async";
-
 export default function RlusdSpecimen() {
   return (
     <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
-      <Helmet>
-        <title>RLUSD gap specimen (unsigned) | Council of AI</title>
-      </Helmet>
       <section className="mx-auto max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-amber-300">
           Unsigned · publisher queue · THIN

@@ -2405,6 +2405,35 @@
       "paid_for": "assembly"
     },
     {
+      "id": "api-coverage-evidence-post",
+      "kind": "http",
+      "path": "/api/coverage-evidence",
+      "method": "POST",
+      "name": "Coverage evidence (POST)",
+      "description": "GET /api/coverage-evidence — the TUI-2 coverage evidence row, as an x402 paid door.",
+      "description_state": "DOCUMENTED",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.coverage-evidence/0.1"
+      ],
+      "surfaces": [
+        "llms",
+        "nav"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/coverage-evidence",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "source": "functions/api/coverage-evidence.ts"
+    },
+    {
       "id": "api-coverage-truth",
       "kind": "http",
       "path": "/api/coverage-truth",
@@ -3815,6 +3844,33 @@
         "safe": true
       },
       "source": "functions/api/include.ts"
+    },
+    {
+      "id": "api-institutions",
+      "kind": "http",
+      "path": "/api/institutions",
+      "method": "GET",
+      "name": "Institutions register",
+      "description": "GET /api/institutions — the dated institutions register, derived in-process from the committed artifact public/interop/institutions-register.json (schema csoai.institutions-register/0.1). Totals count the register's own rows by kind, labelled catalogued; rows are observations, never a count of customers.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.institutions/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/institutions",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/institutions.ts"
     },
     {
       "id": "api-interop-bulk",
@@ -7321,6 +7377,35 @@
       "source": "functions/api/wrapper/changes.ts",
       "free_preview": "/api/wrapper/changes?id=usdc.e:arbitrum&preview=1",
       "paid_for": "assembly"
+    },
+    {
+      "id": "api-wrapper-changes-post",
+      "kind": "http",
+      "path": "/api/wrapper/changes",
+      "method": "POST",
+      "name": "Wrapper changes (POST)",
+      "description": "GET /api/wrapper/changes?id=<pair> — delta of wrapped supply and escrow since the previous ledger snapshot (from public/interop/wrapped-asset-parity-*.json).",
+      "description_state": "DOCUMENTED",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.wrapper.changes/0.1"
+      ],
+      "surfaces": [
+        "llms",
+        "nav"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/wrapper/changes",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "source": "functions/api/wrapper/changes.ts"
     },
     {
       "id": "api-wrapper-index-json",

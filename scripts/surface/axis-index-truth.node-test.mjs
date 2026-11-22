@@ -228,10 +228,12 @@ test("the commit board renders exactly its public canonical axes without promoti
     .map((row) => row.axis)
     .sort();
   // The owner-held count is whatever the board says it is. Typing "1" here froze the
-  // public count at 32 and broke the moment a second slot was held back.
-  assert.ok(gatedIds.length > 0, "the owner is still holding at least one slot");
+  // public count at 32 and broke the moment a second slot was held back; asserting
+  // that a slot IS held broke the moment the owner released them (2026-11-18,
+  // "Release both"). Which slots are held is the owner's live decision, so this test
+  // follows the commit board either way. The fixture tests above hold slot-8 by
+  // default, so the hold itself stays exercised when the live board holds nothing.
   assert.equal(publicIds.length, allIds.length - gatedIds.length);
-  assert.ok(!publicIds.includes("regulator-transparency"));
 
   const out = renderAll(live);
   const renderedIds = Object.keys(out)
@@ -239,11 +241,19 @@ test("the commit board renders exactly its public canonical axes without promoti
     .map((path) => path.slice("axis/".length, -".html".length))
     .sort();
   assert.deepEqual(renderedIds, publicIds);
-  assert.equal(out["axis/regulator-transparency.html"], undefined);
+  // regulator-transparency has a page exactly when the board does not hold it.
+  assert.equal(
+    out["axis/regulator-transparency.html"] === undefined,
+    gatedIds.includes("regulator-transparency"),
+  );
   // Every owner-held slot gets no page and no row in the index — named, not counted.
   for (const id of gatedIds) {
     assert.equal(out[`axis/${id}.html`], undefined);
     assert.doesNotMatch(out["axes.html"], new RegExp(`data-axis="${id}"`));
+  }
+  // And every public axis gets its row, so a released slot cannot go missing either.
+  for (const id of publicIds) {
+    assert.match(out["axes.html"], new RegExp(`data-axis="${id}"`));
   }
   // The headings count the PUBLIC axes, so they are derived from the board too.
   const publicSlots = live.axes.filter(
@@ -291,4 +301,23 @@ test("a deterministic-fact page keeps saying that no separation test applies", (
   const fact = out["axis/fact-0.html"];
   assert.doesNotMatch(fact, /data-glossary="separation"/);
   assert.match(fact, /facts, no separation test/);
+});
+
+test("the governance page renders the row's limit in a labelled Limit block citing C-2026-1120-02, and no other page has one", async () => {
+  const live = await loadBoard();
+  const row = live.axes.find((a) => a.axis === "governance");
+  // The text is the row's own (axes[].limit), so the test reads it from the commit board.
+  assert.equal(typeof row?.limit, "string");
+  assert.match(row.limit, /\b225 of 237\b/);
+  const block =
+    `\n  <h2>Limit</h2>\n  <div class="note" data-limit="governance">${row.limit}</div>` +
+    `\n  <p class="muted">Recorded in the corrections ledger: <a href="/corrections/#C-2026-1120-02">C-2026-1120-02</a>.</p>`;
+  const out = renderAll(live);
+  assert.ok(out["axis/governance.html"].includes(block), "rendered governance page carries the Limit block");
+  // The committed page is the one the site serves; build-axis-pages --check holds the rest of it.
+  const committed = readFileSync(new URL("../../public/axis/governance.html", import.meta.url), "utf8");
+  assert.ok(committed.includes(block), "committed public/axis/governance.html carries the Limit block");
+  // Only a row that states a limit gets the block.
+  const withBlock = Object.keys(out).filter((path) => out[path].includes("<h2>Limit</h2>"));
+  assert.deepEqual(withBlock, ["axis/governance.html"]);
 });

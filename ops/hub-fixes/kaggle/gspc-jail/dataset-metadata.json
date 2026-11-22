@@ -1,0 +1,56 @@
+{
+  "title": "GSPC-JAIL — measured floor, not a 16th pane",
+  "id": "nicktempleman/gspc-jail",
+  "id_no": 11653332,
+  "subtitle": "Mirror of Hugging Face csoai/gspc-jail",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/gspc-jail`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/gspc-jail -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `NOTICE`\n- `README.md`\n- `eval.yaml`\n- `jail.json`\n- `items.jsonl`\n- `manifest.jsonl`\n- `axis-live.jsonl`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-jail at revision `7d71065d83584edb7e28760853ce18fdaae561bf`, made 2026-10-06. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC jail — alias of the goldbank\n\n- SWIFT census (live): https://councilof.ai/api/swift\n- XRPL reader (live): https://councilof.ai/api/xrpl\n\nAlias/sibling of jail bank — canonical measured bank is `csoai/gspc-jail-goldbank`. Cite live jail row.\n\n**Not a certificate.** Hub is a printer of live GET, not a second engine. Fetch fail → **UNCHECKABLE**.\n\n## What is in this repository\n\n| file | bytes | rows | what |\n|---|---:|---:|---|\n| `items.jsonl` | 21100 | 37 | data (one JSON object per line) |\n| `README.md` | 1508 |  | card |\n| `jail.json` | 922 |  | JSON document |\n| `eval.yaml` | 505 |  | config |\n| `NOTICE` | 320 |  | file |\n| `manifest.jsonl` | | 6 | derived at 2026-09-04T04:33:29Z |\n| `axis-live.jsonl` | | 1 | derived at 2026-09-04T04:33:29Z |\n\n`manifest.jsonl` is derived from this repository's own file tree at 2026-09-04T04:33:29Z; it lists every file with its\nsize, its blob hash and a direct URL, so an agent can enumerate the repo without cloning it.\n`axis-live.jsonl` is a one-row snapshot of this axis as the live board returned it at that moment. It is a snapshot, not the authority.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_gspc_jail,\n  title        = {GSPC jail — alias of the goldbank},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  doi_status   = {Zenodo DOI 10.5281/zenodo.21991104: UNAVAILABLE since 29 Sep 2026 (Zenodo blocked the CSOAI account; appeal pending; status https://councilof.ai/interop/zenodo-status.json). Cite the served methodology: https://councilof.ai/signed/HOW-TO-VERIFY.md},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/gspc-jail}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n\n\n\n## Inspect scaffold + living GET (Stage68 free densify 2026-09-14)\n\n```\nLive board: GET https://councilof.ai/api/gspc → 23 axes · 23 measured (23·23·0)\n23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate. (re-quoted from totals.lid at generation time) · TIE is TIE · not a certificate.\nHub cards: GET https://councilof.ai/api/hub-cards → quote counts.cells/measured/unmeasured LIVE (no typed triple)\nCard index canon: GET https://councilof.ai/signed/card_index.json → n_cards=335 (NOT /api/card_index — 404)\nWrappers ledger: https://councilof.ai/wrappers/ · preview https://councilof.ai/api/wrapper?id=usdc.e:arbitrum&preview=1\nFree verify: https://councilof.ai/gspc-verify\ncobolbridge.ai: 200 (MEOK cert scrub LIVE — cite only)\nOpenX402: Council of AI LIVE projects — cite only, no spend (https://openx402.ai)\nMeasurement, never certification. Spaces = printers only (no mill). No invent scores. Never certify.\n```\n\n### Inspect / Jobs honesty\n- Jail goldbank / swarm: Inspect samples + Jobs UV stubs LIVE where Hub files exist — verified badge only after real Hub Jobs; do not invent scores.\n- Provenance-controls: ChainFacts reader only · n=6 instruments · `items.jsonl` HTTP 404 · no invent bank n≥30 · Hub `eval.yaml` stays printer shell until fact-rows wire — Jobs stub SIT.\n- Authority remains GET `/api/gspc` — Hub listing is not a grade.\n\n\n\n## Objections, contact and corrections\n\nTo object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.\n\n## How to cite\n\nCSOAI Ltd (Council of AI). *GSPC jail — alias of the goldbank*. 2026. Hugging Face dataset `csoai/gspc-jail`. https://huggingface.co/datasets/csoai/gspc-jail\n\n```bibtex\n@misc{csoai_gspc_jail,\n  title        = {GSPC jail — alias of the goldbank},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/gspc-jail},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n\nLicence: CC-BY-4.0. Attribute Council of AI, CSOAI Ltd (16939677), https://councilof.ai.\n\n## Corrections and verification\n\n- Corrections ledger (signed): https://councilof.ai/api/corrections. Corrections to CSOAI's published records are logged there with what changed and when.\n- Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).\n- Conformance kit for signed-receipts/v1, with test vectors for implementers: https://councilof.ai/spec/signed-receipts/v1/conformance/\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 4, last updated 2026-10-06.\n- 7 files, 43,365 bytes. File types: .jsonl (3), (none) (1), .md (1), .yaml (1), .json (1).\n- Hugging Face twin: [csoai/gspc-jail](https://huggingface.co/datasets/csoai/gspc-jail). 6 of 7 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "apache-2.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "cyber security",
+    "model comparison",
+    "finance",
+    "internet"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 6 of 7 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-jail](https://huggingface.co/datasets/csoai/gspc-jail) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "NOTICE",
+      "description": "320 — file. File. Same byte size as `NOTICE` in huggingface.co/datasets/csoai/gspc-jail (checked 2026-11-20). 320 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "1508 — card. Dataset README (Markdown). 15,159 bytes."
+    },
+    {
+      "path": "axis-live.jsonl",
+      "description": "1 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 1 rows; fields: axis (string), family (string), kind (string), bench (string), task (string), n (integer), n_note (string), accuracy (numeric), leader (string), separation (string), interval (string), fleet_mean (numeric), separation_method (string), separation_evidence (string), quotable_models (string), quotable_note (string), fleet (string), per_model (string), status (string), dataset (string), dataset_note (string), colour (string), hue (integer), null_grammar (string), note (string), … (+5 more). Same byte size as `axis-live.jsonl` in huggingface.co/datasets/csoai/gspc-jail (checked 2026-11-20). 3,491 bytes."
+    },
+    {
+      "path": "eval.yaml",
+      "description": "505 — config. YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-jail (checked 2026-11-20). 505 bytes."
+    },
+    {
+      "path": "items.jsonl",
+      "description": "21100 — 37 — data (one JSON object per line). Newline-delimited JSON (one record per line). 37 rows; fields: item (string), expected (string), category (string), trap_class (string), anchor (string), source (string), note (string), _canary (boolean), severity (integer), severity_basis (string), id (string). Same byte size as `items.jsonl` in huggingface.co/datasets/csoai/gspc-jail (checked 2026-11-20). 21,100 bytes."
+    },
+    {
+      "path": "jail.json",
+      "description": "922 — JSON document. JSON document. top-level keys: schema, record_type, not_a_certification, endorsement, authored_by, axis, status, basis, witnessed_at, grammar, content_id, signature, pubkey, key_id, verification_method, did_resolver. Same byte size as `jail.json` in huggingface.co/datasets/csoai/gspc-jail (checked 2026-11-20). 922 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "6 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 6 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-jail (checked 2026-11-20). 1,868 bytes."
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "title": "GSPC · A2A Census — Council of AI",
+  "id": "nicktempleman/csoai-a2a-census",
+  "id_no": 12012879,
+  "subtitle": "Independent measurement of A2A agent-card endpoints. Not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-a2a-census`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-a2a-census -p ./dataset --unzip\n```\n\nStart by inspecting `a2a_census.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `a2a_atoms.json`\n- `manifest.jsonl`\n- `a2a_census.json`\n- `a2a_census.jsonl`\n- `ledger-card-a2a-agent-unsigned.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement of A2A agent-card endpoints. Not a certification.**\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/a2a-census at revision `868571083fa6544558a62e2cb99ba8bd8ba18a97`, made 2026-10-06. The Hugging Face copy is the original; if the two differ, it wins.\n\n# A2A agent census\n\nDISCOVERED — read-only census of A2A (Agent2Agent) agent cards. Keyless crawl of `/.well-known/agent-card.json` + A2A v1.0 conformance + ONE controlled deterministic capability probe per agent. No real task was ever sent to a stranger agent; nothing published. The live board is `GET https://councilof.ai/api/gspc`. [![GSPC](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc&query=%24.totals.public_count&label=GSPC&color=0B1F33)](https://councilof.ai/gspc-scoreboard)\n\n**Defensible seed list:** the agent domains discovered genuinely on-chain-live in the\nERC-8004 live-filter (their declared service endpoints), plus a curated set of well-known\nA2A domains. We fetched `/.well-known/agent-card.json` (legacy `agent.json` fallback),\nchecked it against the A2A **v1.0 AgentCard** shape (frozen Mar 2026), and ran one probe.\n\n## Result (`a2a_census.json`)\n\n- **18 seeds crawled.** Only **5 serve a conformant AgentCard**; 13 serve no card\n  (many return an HTML lander at the well-known path). *Most on-chain-\"live\" agents do\n  not publish a conformant A2A card.*\n- **Capability-honesty axis** — ONE deterministic probe I control: a JSON-RPC\n  `tasks/get` with a random nonexistent id (read-only; asks the agent to do no real work,\n  triggers no payment). Graded declared-vs-actual **transport**:\n  - `TRANSPORT_HONEST` — declares A2A JSON-RPC and answered with a well-formed JSON-RPC\n    envelope (e.g. A-Identity Trust Oracle, Brain On BNB).\n  - `TRANSPORT_MISMATCH` — declares an A2A card but the transport did not answer JSON-RPC\n    correctly (a real declared-vs-actual gap).\n\n## Reported context (cited, not endorsed, not A2A-specific)\n\nCarnegie Mellon **TheAgentCompany** benchmark (arXiv:2412.14161, May 2025) reported the\nworst model (Llama-3.1-405b) failed **92.6%** of real-world office tasks; the best\n(Gemini 2.5 Pro) still failed 70%. This is a general agent-task-completion benchmark,\n**not** an A2A-protocol measurement — cited to motivate measuring declared-vs-actual\ncapability. https://arxiv.org/abs/2412.14161\n\n## Files\n\n- `a2a_census.jsonl` — flat viewer table, one row per crawled seed (18): `agent_name`,\n  `domain`, `seed`, `card_state` (CONFORMANT/NO_CARD), `capability_honesty_verdict`,\n  `skill_count`, `as_of`. Field-presence lists live in `a2a_census.json`, not this table.\n- `a2a_census.json` — per-seed card URL, conformance, field presence, honesty probe verdict.\n- `a2a_atoms.json` — the unique conformant agents with their honesty verdict.\n- `ledger-card-a2a-agent-unsigned.json` — the `a2a.agent` card-v0 atom\n  (`sig_ed25519=null` — NO_LAPTOP_SIGN, queued for GHA OIDC signing).\n\n## What this is not\n\n- No real A2A task was sent — only one controlled protocol-level probe per agent.\n- Skill **execution correctness** is `unmeasured[]`. Streaming/push actuals unmeasured.\n- Not a GSPC axis. No GSPC measure fields on any card.\n\n**Measurement, not certification.** Verify a card (free, no account): https://councilof.ai/gspc-verify\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 5, last updated 2026-10-06.\n- 6 files, 34,541 bytes. File types: .json (3), .jsonl (2), .md (1).\n- Hugging Face twin: [csoai/a2a-census](https://huggingface.co/datasets/csoai/a2a-census). 5 of 6 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "finance",
+    "internet"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 5 of 6 files have the same byte size as files in the Hugging Face dataset [csoai/a2a-census](https://huggingface.co/datasets/csoai/a2a-census) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "4217 — card. Dataset README (Markdown). 16,534 bytes."
+    },
+    {
+      "path": "a2a_atoms.json",
+      "description": "the unique conformant agents with their honesty verdict. JSON document. 4 rows; fields: surface (string), seed (url), card_url (url), declared_name (string), declared_url (url), conformance (string), v1_markers (string), skill_count (integer), capability_honesty_verdict (string). Same byte size as `a2a_atoms.json` in huggingface.co/datasets/csoai/a2a-census (checked 2026-11-20). 2,116 bytes."
+    },
+    {
+      "path": "a2a_census.json",
+      "description": "per-seed card URL, conformance, field presence, honesty probe verdict. JSON document. top-level keys: census, as_of, status, method, citation_reported, conformance_spec, sample, results. `results` holds 18 records with fields: seed (url), state (string), http (integer), card_url (url), fields_present (string), fields_missing (string), v1_markers (string), declared_name (string), declared_url (url), skill_count (integer), declared_streaming (boolean), declared_push (boolean), conformance (string), capability_honesty (string), fetch_err (string). Same byte size as `a2a_census.json` in huggingface.co/datasets/csoai/a2a-census (checked 2026-11-20). 7,658 bytes."
+    },
+    {
+      "path": "a2a_census.jsonl",
+      "description": "flat viewer table, one row per crawled seed (18): `agent_name`,. Newline-delimited JSON (one record per line). 18 rows; fields: agent_name (string), domain (string), seed (url), card_state (string), capability_honesty_verdict (string), skill_count (integer), as_of (datetime). Same byte size as `a2a_census.jsonl` in huggingface.co/datasets/csoai/a2a-census (checked 2026-11-20). 4,034 bytes."
+    },
+    {
+      "path": "ledger-card-a2a-agent-unsigned.json",
+      "description": "the `a2a.agent` card-v0 atom. JSON document. top-level keys: schema, surface, subject, as_of, source_urls, payload, sha256, unmeasured, did, sig_ed25519, note. Same byte size as `ledger-card-a2a-agent-unsigned.json` in huggingface.co/datasets/csoai/a2a-census (checked 2026-11-20). 2,218 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "6 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 6 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/a2a-census (checked 2026-11-20). 1,981 bytes."
+    }
+  ]
+}

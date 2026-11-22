@@ -1,0 +1,55 @@
+--- a/csoai/axis-specialists/README.md (live)
++++ b/csoai/axis-specialists/README.md (proposed)
+@@ -4,6 +4,16 @@
+ pretty_name: GSPC axis specialists — registry + in-lane results
+ tags: [gspc, council-of-ai, agentic-specialists, measurement, prompt-overlays]
+ size_categories: [n<1K]
++configs:
++- config_name: root-json
++  data_files:
++  - split: train
++    path: axis-specialists-registry.json
++  default: true
++- config_name: in-lane-results
++  data_files:
++  - split: train
++    path: in-lane-results.json
+ ---
+ 
+ <p align="center">
+@@ -28,3 +38,35 @@
+ TIE/UNTESTED — specialists join no board mean and are never board leaders.
+ 
+ Measurement, not certification. Verify everything: https://councilof.ai/gspc-verify
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `root-json` (default) | `axis-specialists-registry.json` | 1 |
++| `in-lane-results` | `in-lane-results.json` | 1 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/axis-specialists", "root-json", split="train")
++```
++
++## Citation
++
++```bibtex
++@misc{csoai_axis_specialists_2026,
++  title        = {GSPC axis specialists — registry + in-lane results},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/csoai/axis-specialists}},
++  url          = {https://huggingface.co/datasets/csoai/axis-specialists}
++}
++```
++
++<!-- csoai-card-fixes:end -->

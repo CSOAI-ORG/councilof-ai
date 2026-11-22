@@ -5,17 +5,26 @@ on:
       - "harness/hitl/approval-effect-demo.mjs"
       - "harness/hitl/approval-effect-demo.test.mjs"
       - "scripts/pilot/approval-effect-replay.mjs"
+      - "scripts/pilot/render-approval-proof-card.mjs"
+      - "scripts/pilot/render-approval-proof-card.test.mjs"
+      - "scripts/pilot/self-run-evidence-event.py"
+      - "scripts/pilot/self-run-hitl-profiles.py"
+      - "scripts/pilot/test_self_run_evidence_event.py"
+      - "packages/evidence-fabric/event.py"
       - "docs/commercial/APPROVAL-EFFECT-PILOT.md"
       - ".github/workflows/approval-effect-pilot-demo.yml"
   workflow_dispatch:
+  # Only begins automatically after approved merge to the default branch.
+  schedule:
+    - cron: "23 5 * * *"
 
 permissions:
   contents: read
 
 jobs:
-  reproduce:
+  self-replay:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,13 +32,101 @@ jobs:
           node-version: "22"
       - name: Original regression suite
         run: node --test harness/hitl/approval-effect-demo.test.mjs
-      - name: Create synthetic pilot receipt
+      - name: Install canonical HITL schema validator
+        run: python3 -m pip install --disable-pip-version-check jsonschema==4.23.0
+      - name: Evidence translation and tamper controls
+        run: python3 -m unittest discover -s scripts/pilot -p test_self_run_evidence_event.py -v
+      - name: Generate fresh synthetic effect receipt
         run: node scripts/pilot/approval-effect-replay.mjs --out pilot-demo-result.json
-      - name: Fail if trial or scope labels are wrong
+      - name: Verify existing trial scope and expected outcome
         run: |
           node --input-type=module -e "import fs from 'node:fs'; const r=JSON.parse(fs.readFileSync('pilot-demo-result.json')); if(r.outcome!=='PASS'||r.fixture_count!==14||r.production_authority!==false||r.independent_review!=='NOT_CONDUCTED'||Object.values(r.results).some(v=>v!==true))process.exit(1)"
+      - name: Existing proof-card denial tests
+        run: node --test scripts/pilot/render-approval-proof-card.test.mjs
+      - name: Retain 14 schema-validated synthetic HITL 0.1 authority-effect records
+        run: |
+          python3 scripts/pilot/self-run-hitl-profiles.py make \
+            --receipt pilot-demo-result.json \
+            --commit "$(git rev-parse HEAD)" \
+            --profiles synthetic-hitl-profiles.json
+      - name: Create canonical self-run evidence event
+        run: |
+          python3 scripts/pilot/self-run-evidence-event.py make \
+            --receipt pilot-demo-result.json \
+            --commit "$(git rev-parse HEAD)" \
+            --event synthetic-evidence-event.json \
+            --profiles synthetic-hitl-profiles.json
+      - name: Rebuild and validate canonical event
+        run: |
+          python3 scripts/pilot/self-run-evidence-event.py verify \
+            --receipt pilot-demo-result.json \
+            --commit "$(git rev-parse HEAD)" \
+            --event synthetic-evidence-event.json \
+            --profiles synthetic-hitl-profiles.json
+      - name: Render claim-bounded report
+        run: |
+          node scripts/pilot/render-approval-proof-card.mjs \
+            pilot-demo-result.json "$(git rev-parse HEAD)" proof-card
+          cat proof-card/pilot-proof-card.md >> "$GITHUB_STEP_SUMMARY"
+          printf '\n**Evidence scope:** Self-run, unsigned and unanchored. No GSPC score, independent third-party review or human approval is claimed.\n' >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: synthetic-approval-effect-demo
-          path: pilot-demo-result.json
+          name: synthetic-approval-effect-self-run
+          path: |
+            pilot-demo-result.json
+            synthetic-evidence-event.json
+            synthetic-hitl-profiles.json
+            proof-card/pilot-proof-card.json
+            proof-card/pilot-proof-card.md
+          if-no-files-found: warn
           retention-days: 30
+
+  separate-verification:
+    needs: self-replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: synthetic-approval-effect-self-run
+          path: evidence
+      - name: Install same canonical HITL profile validator
+        run: python3 -m pip install --disable-pip-version-check jsonschema==4.23.0
+      - name: Reconstruct process record pack from original receipt in another job
+        run: |
+          python3 scripts/pilot/self-run-hitl-profiles.py verify \
+            --receipt evidence/pilot-demo-result.json \
+            --commit "$(git rev-parse HEAD)" \
+            --profiles evidence/synthetic-hitl-profiles.json
+      - name: Reconstruct in another job, fail closed on changes
+        run: |
+          python3 scripts/pilot/self-run-evidence-event.py verify \
+            --receipt evidence/pilot-demo-result.json \
+            --commit "$(git rev-parse HEAD)" \
+            --event evidence/synthetic-evidence-event.json \
+            --profiles evidence/synthetic-hitl-profiles.json
+      - name: Proof-card claims must match original evidence
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path('evidence/pilot-demo-result.json').read_text())
+          c = json.loads(Path('evidence/proof-card/pilot-proof-card.json').read_text())
+          e = json.loads(Path('evidence/synthetic-evidence-event.json').read_text())
+          profiles = json.loads(Path('evidence/synthetic-hitl-profiles.json').read_text())
+          assert len(profiles) == 14 and e['observed']['profile_count'] == 14
+          assert len(e['observed']['hitl_process_profiles']) == 14
+          assert all(p['profile'] == 'csoai.hitl-authority-effect/0.1' for p in profiles)
+          assert all(p['authority']['principal_ref'].startswith('synthetic-test-principal:') for p in profiles)
+          assert c['source_commit'] == e['subject']['locator'].split('@',1)[1].split('#',1)[0]
+          assert c['harness_sha256'] == p['source_sha256']
+          assert c['observed_at'] == p['ran_at']
+          assert c['invalid_fixtures_denied_without_effect'] == e['observed']['denied_without_effect'] == 13
+          assert c['model_attack_detection_tested'] is False
+          assert c['production_authority'] is False and p['production_authority'] is False
+          assert c['independent_review'] == p['independent_review'] == 'NOT_CONDUCTED'
+          assert e['signature'] is None
+          print('SEPARATE_JOB_VERIFICATION: CONSISTENT, SYNTHETIC, UNSIGNED')
+          PY

@@ -71,8 +71,6 @@ export default function EvaluatorAccess() {
   return (
     <section className="min-h-screen bg-slate-50 px-5 py-14 text-slate-950">
       <Helmet>
-        <link rel="canonical" href={CANONICAL} />
-        <meta name="description" content={PAGE_DESCRIPTION} />
         <script type="application/ld+json">{JSON.stringify(PAGE_LD)}</script>
       </Helmet>
       <article className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">

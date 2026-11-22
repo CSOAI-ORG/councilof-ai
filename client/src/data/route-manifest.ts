@@ -683,6 +683,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Energy Ai Act"
  },
  {
+  "path": "/engagements",
+  "comp": "Engagements",
+  "title": "Engagements"
+ },
+ {
   "path": "/enter",
   "comp": "OsEnter",
   "title": "Os Enter"
@@ -1221,6 +1226,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/interop/a2a-jcs-2026-09-27",
   "comp": "A2aJcs20260927",
   "title": "A2a Jcs20260927"
+ },
+ {
+  "path": "/investors",
+  "comp": "Investors",
+  "title": "Investors"
  },
  {
   "path": "/iso-42001",

@@ -43,7 +43,8 @@ class Schema(unittest.TestCase):
     def test_public_schema_strings(self):
         self.assertEqual(v.SCHEMA, "csoai.measurement-capsule/0.2")
         self.assertEqual(v.RECORD_SCHEMA, "csoai.measurement-capsule-batch/0.2")
-        self.assertEqual(v.INDEX_SCHEMA, "csoai.measurement-capsule-index/0.2")
+        self.assertEqual(v.INDEX_SCHEMA, "csoai.measurement-capsule-index/0.3")  # 0.3: the hash-chained daily index
+        self.assertEqual(v.INDEX_SCHEMA_V02, "csoai.measurement-capsule-index/0.2")
 
     def test_no_internal_name_in_any_capsule(self):
         for name, mk in ALL_FIXTURES.items():
