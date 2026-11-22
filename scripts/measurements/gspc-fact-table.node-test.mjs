@@ -174,3 +174,33 @@ test("empty evidence cell and empty evidence directory are UNCHECKABLE, not zero
     assert.equal(a.outputCreated, false);
   }
 });
+
+
+test("manifest source digests, per-axis/model totals and shard descriptors are not trusted by --check", () => {
+  const good='{"axis":"safety","model":"fixture/model","item_id":"one","expected":"SAFE","ok":true}';
+  for (const [label, mutate] of [
+    ["source", m => { m.source.source_digest = "0".repeat(64); }],
+    ["by_axis", m => { m.by_axis.safety += 1; }],
+    ["by_model", m => { m.by_model["fixture/model"] += 1; }],
+    ["tables", m => { m.tables.measurements.parts[0].bytes += 1; }],
+  ]) {
+    const dir = mkdtempSync(path.join(tmpdir(), "csoai-gspc-manifest-drift-"));
+    const source = path.join(dir, "source");
+    const out = path.join(dir, "out");
+    mkdirSync(source);
+    writeFileSync(path.join(source, "items-safety-abcd1234.jsonl"), good + "\n");
+    const script = path.join(ROOT, "scripts/measurements/build-gspc-fact-table.mjs");
+    const options = ["--evidence", source, "--out", out];
+    try {
+      const built = spawnSync(process.execPath, [script, ...options], { encoding:"utf8", timeout:10000 });
+      assert.equal(built.status, 0, built.stderr);
+      const p = path.join(out, "MANIFEST.json");
+      const m = JSON.parse(readFileSync(p,"utf8"));
+      mutate(m);
+      writeFileSync(p, JSON.stringify(m,null,2)+"\n");
+      const result = spawnSync(process.execPath, [script, "--check", ...options], { encoding:"utf8", timeout:10000 });
+      assert.equal(result.status, 1, label + " mutation was accepted: " + result.stdout);
+      assert.match(result.stderr, new RegExp("MANIFEST\\.json " + label + " differs"), label);
+    } finally { rmSync(dir,{recursive:true,force:true}); }
+  }
+});
