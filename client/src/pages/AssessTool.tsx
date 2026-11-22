@@ -26,6 +26,7 @@
 
 import { useEffect, useState } from "react";
 import { rasBookingFromCatalog, RAS_BOOKING_MAILTO } from "@/lib/rasBooking";
+import { acknowledgedLeadStorage } from "@/lib/leadReceipt";
 import { motion } from "framer-motion";
 import { ShieldCheck, SearchCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -79,14 +80,19 @@ export default function AssessTool() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...lead, result_id: report?.result_id, screening_state: report?.screening_state, explanation: report?.explanation, wants: "measurement_enquiry" }),
       });
-      const j = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(`Could not save (${res.status})`);
-      if (j && j.stored === false) {
-        setLeadError(j.fallback || "No datastore bound — email contact@csoai.org with your report_id.");
+      const j: unknown = await res.json().catch(() => null);
+      if (!res.ok) {
+        setLeadError("Storage was not confirmed. The request may have reached the server; please contact contact@csoai.org directly for a reply.");
+        return;
+      }
+      if (!acknowledgedLeadStorage(res.status, j)) {
+        setLeadError("No storage receipt was confirmed. For a written scope and a reply, email contact@csoai.org directly.");
         return;
       }
       setLeadSent(true);
-    } catch (e: any) { setLeadError(e.message || "Could not save your details."); }
+    } catch {
+      setLeadError("No storage receipt was returned. The request may have reached the server. Email contact@csoai.org for a reply.");
+    }
   }
 
   async function run() {
@@ -207,20 +213,23 @@ export default function AssessTool() {
                 </p>
 
                 {leadSent ? (
-                  <div className="rounded-lg border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-800">
-                    Thanks — we'll email your signed report and next steps. We'll be in touch personally.
+                  <div role="status" className="rounded-lg border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-800">
+                    Your enquiry details were stored. No email was sent to the Council team and no report or reply has been booked. To request a response, use the email link below.
+                    <a href="mailto:contact@csoai.org?subject=Measurement%20scope%20request" className="mt-2 block font-semibold underline">Open an email draft to contact Council</a>
                   </div>
                 ) : (
                   <div className="rounded-lg border p-4 space-y-3">
                     <p className="text-sm font-semibold">Ask about a scoped measurement engagement</p>
+                    <p className="text-xs text-muted-foreground">This form only stores a copy. It does not email our team, send a signed report or book a reply.</p>
+                    <a href="mailto:contact@csoai.org?subject=Measurement%20scope%20request" className="text-sm font-semibold underline">Email Council directly for a response</a>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <input className="flex-1 rounded-lg border px-3 py-2 text-sm" placeholder="you@company.com"
                         value={lead.email} onChange={(e) => setLead({ ...lead, email: e.target.value })} />
                       <input className="flex-1 rounded-lg border px-3 py-2 text-sm" placeholder="Name (optional)"
                         value={lead.name} onChange={(e) => setLead({ ...lead, name: e.target.value })} />
-                      <Button onClick={sendLead} disabled={!lead.email}>Send it</Button>
+                      <Button onClick={sendLead} disabled={!lead.email}>Store enquiry (no email sent)</Button>
                     </div>
-                    {leadError && <p className="text-xs text-red-600">{leadError}</p>}
+                    {leadError && <p role="status" className="text-xs text-red-600">{leadError}</p>}
                   </div>
                 )}
               </CardContent>
