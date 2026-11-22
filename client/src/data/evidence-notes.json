@@ -11,6 +11,28 @@
  },
  "notes": [
   {
+   "id": "model-gaps-too-small-to-call",
+   "date": "2026-11-22",
+   "title": "Too small to call: most top-two gaps on the board need far larger tests",
+   "summary": "On 11 of the 12 comparison axes that publish discordant counts, the gap between the top two models would need at least six times more test items to be told apart from chance.",
+   "body": "The board names no separated leader on any of its model-comparison axes. This note asks how large each test would have to be before the gap between its top two models could be detected. For every axis whose entry on GET /api/gspc publishes discordant counts, we took the items where one of the two models was right and the other wrong, and computed how many items a paired exact McNemar test would need to detect that gap 80 percent of the time at the 5 percent level, if the observed discordant rates are the true ones. Jail and swarm carry legacy method status, publish no discordant counts and are left out. A simulation of the exact test at the computed sizes returned 82 and 79 percent power on two axes. On 11 of the 12 remaining axes the answer is at least six times the current bank, and the median multiple is close to nine. Cross-reality is the nearest: 32 items, 9 against 2 discordant, about 54 items needed. Read the sizes as order of magnitude: they rest on few disagreements, and picking the top two after the fact inflates the gap. On governance, more items of the same bank would not help, because its wording gives the labels away (correction C-2026-1120-02). We will size the next bank releases from this table.",
+   "artifacts": [
+    {
+     "label": "GSPC board (separation_basis per axis)",
+     "url": "https://councilof.ai/api/gspc"
+    },
+    {
+     "label": "Sample-size table for this note",
+     "url": "https://councilof.ai/interop/insights/model-gap-sample-size-2026-11-22.json"
+    },
+    {
+     "label": "Producer script (standard library only)",
+     "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/insights/gspc_separation_sample_size.py"
+    }
+   ],
+   "social": "11 of 12 model comparisons on our board would need at least six times more test items before the top-two gap could be told apart from chance. Method, limits and data: https://councilof.ai/notes/model-gaps-too-small-to-call/"
+  },
+  {
    "id": "governance-same-bank-gap",
    "date": "2026-09-14",
    "title": "Governance: two models, one frozen bank, a gap in point estimates",
