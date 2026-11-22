@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'packages/evidence-fabric/**'
+      - 'scripts/security/dataset_delta_guard.py'
+      - 'scripts/security/test_dataset_delta_guard.py'
       - 'scripts/build-daily-*.mjs'
       - 'scripts/daily-maintenance-*.mjs'
       - 'scripts/build-axis-reports*.mjs'
@@ -37,6 +39,8 @@ on:
     branches: [master]
     paths:
       - 'packages/evidence-fabric/**'
+      - 'scripts/security/dataset_delta_guard.py'
+      - 'scripts/security/test_dataset_delta_guard.py'
       - 'scripts/build-daily-*.mjs'
       - 'scripts/daily-maintenance-*.mjs'
       - 'scripts/build-axis-reports*.mjs'
@@ -145,6 +149,10 @@ jobs:
           packages/evidence-fabric/tests/test_doctrine.py
           packages/evidence-fabric/tests/test_event.py
           packages/evidence-fabric/tests/test_verify_qualification.py
+      - name: Dataset revision integrity and Evidence Fabric boundary (offline, no network)
+        run: |
+          python -B -m unittest discover -s scripts/security -p 'test_dataset_delta_guard.py' -v
+          python -B -m unittest discover -s packages/evidence-fabric/tests -p 'test_dataset_delta_in.py' -v
       - name: Held referee continuity and discriminating mutation controls
         run: python -B -m unittest discover -s packages/evidence-fabric/tests -p 'test_axis_referee*.py' -v
       - name: Full registry routing and GPAI packet controls
