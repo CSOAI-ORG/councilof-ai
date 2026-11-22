@@ -486,3 +486,133 @@ describe("root middleware: the paymentless probe gate", () => {
     expect(next).toHaveBeenCalledOnce();
   });
 });
+
+// lane x402-http-v2-headers-20261120. x402 HTTP transport (specs/transports-v2/http.md): the
+// settlement rides in PAYMENT-RESPONSE, and a browser reads the payment headers and sends
+// PAYMENT-SIGNATURE only if CORS lets it. Measured live on 20 Nov 2026: X-PAYMENT-RESPONSE only,
+// nothing exposed, and a door's preflight answered 404.
+describe("root middleware: the x402 HTTP transport's headers", () => {
+  const ORIGIN = "https://councilof.ai";
+  const DOOR = `${ORIGIN}/api/evidence-bundle?obligation=article-50&bundle=1`;
+  const SETTLED = btoa(JSON.stringify({ success: true, transaction: `0x${"a".repeat(64)}`, network: "eip155:8453" }));
+  const through = async (request: Request, reply: Response) => {
+    const next = vi.fn(async () => reply);
+    return { res: await onRequest({ request, next }), next };
+  };
+  const list = (value: string | null) => (value ?? "").split(",").map((v) => v.trim().toLowerCase()).filter(Boolean);
+
+  async function listing() {
+    const res = await (x402Listing as unknown as (c: unknown) => Promise<Response>)({
+      request: new Request(`${ORIGIN}/.well-known/x402.json`),
+      env: {},
+    });
+    return (await res.json()) as { resources: { url: string }[]; free_doors: { url: string }[] };
+  }
+
+  it("a settled reply carries the settlement under PAYMENT-RESPONSE as well, byte for byte", async () => {
+    const { res } = await through(
+      new Request(DOOR, { headers: { "payment-signature": "e30=" } }),
+      new Response("{}", { status: 200, headers: { "x-payment-response": SETTLED, "access-control-allow-origin": "*", "access-control-expose-headers": "x-csoai-delivery-record-state, x-payment-response" } }),
+    );
+    expect(res.headers.get("payment-response")).toBe(SETTLED);
+    expect(res.headers.get("x-payment-response")).toBe(SETTLED);
+    const exposed = list(res.headers.get("access-control-expose-headers"));
+    expect(exposed).toEqual(expect.arrayContaining(["payment-response", "payment-required", "x-payment-response", "x-csoai-delivery-record-state"]));
+    expect(exposed.filter((v) => v === "x-payment-response")).toHaveLength(1);
+  });
+
+  it("a route that already sets PAYMENT-RESPONSE keeps its own value", async () => {
+    const { res } = await through(
+      new Request(DOOR),
+      new Response("{}", { status: 200, headers: { "x-payment-response": SETTLED, "payment-response": "route-own" } }),
+    );
+    expect(res.headers.get("payment-response")).toBe("route-own");
+  });
+
+  it("a 402 names PAYMENT-REQUIRED and PAYMENT-RESPONSE for a browser, and its body and status are unchanged", async () => {
+    const { res } = await through(
+      new Request(DOOR),
+      new Response('{"x402Version":2}', { status: 402, headers: { "PAYMENT-REQUIRED": "e30=", "access-control-allow-origin": "*" } }),
+    );
+    expect(res.status).toBe(402);
+    expect(await res.text()).toBe('{"x402Version":2}');
+    expect(res.headers.get("payment-required")).toBe("e30=");
+    expect(res.headers.has("payment-response")).toBe(false);
+    expect(list(res.headers.get("access-control-expose-headers"))).toEqual(expect.arrayContaining(["payment-required", "payment-response"]));
+  });
+
+  it("the probe gate's own 402 is exposed the same way", async () => {
+    const next = vi.fn(async () => new Response("route", { status: 200 }));
+    const res = await onRequest({ request: new Request(DOOR, { method: "POST", headers: { "content-type": "application/json" }, body: "" }), next });
+    expect(res.status).toBe(402);
+    expect(res.headers.has("payment-required")).toBe(true);
+    expect(list(res.headers.get("access-control-expose-headers"))).toEqual(expect.arrayContaining(["payment-required", "payment-response"]));
+  });
+
+  it("a reply with no x402 header gains none: the free reads are untouched", async () => {
+    for (const path of ["/api/gspc", "/api/corrections", "/api/a2a/key", "/api/usage"]) {
+      const { res } = await through(new Request(`${ORIGIN}${path}`), new Response("{}", { status: 200, headers: { "access-control-allow-origin": "*" } }));
+      expect(res.headers.has("payment-response"), path).toBe(false);
+      expect(res.headers.has("payment-required"), path).toBe(false);
+      expect(res.headers.has("access-control-expose-headers"), path).toBe(false);
+    }
+  });
+
+  it("a preflight of every listed door is answered 204 and lets a browser send its payment", async () => {
+    const { resources } = await listing();
+    expect(resources.length).toBeGreaterThan(20);
+    for (const { url } of resources) {
+      const { res, next } = await through(
+        new Request(url, { method: "OPTIONS", headers: { origin: "https://example.com", "access-control-request-method": "GET", "access-control-request-headers": "payment-signature" } }),
+        new Response("not found", { status: 404 }),
+      );
+      expect(res.status, url).toBe(204);
+      expect(next, url).not.toHaveBeenCalled();
+      expect(res.headers.get("access-control-allow-origin"), url).toBe("*");
+      expect(list(res.headers.get("access-control-allow-headers")), url).toEqual(expect.arrayContaining(["payment-signature", "x-payment", "content-type"]));
+      expect(list(res.headers.get("access-control-allow-methods")), url).toEqual(expect.arrayContaining(["get", "post"]));
+      expect(list(res.headers.get("access-control-expose-headers")), url).toEqual(expect.arrayContaining(["payment-required", "payment-response"]));
+    }
+  });
+
+  it("a preflight allows the headers it asks for, but not a malformed or endless list", async () => {
+    const asked = ["x-csoai-expected-feed", "bad header", "x".repeat(65), ...Array.from({ length: 40 }, (_, i) => `x-extra-${i}`)].join(", ");
+    const { res } = await through(
+      new Request(DOOR, { method: "OPTIONS", headers: { origin: "https://example.com", "access-control-request-method": "POST", "access-control-request-headers": asked } }),
+      new Response(null, { status: 404 }),
+    );
+    const allowed = list(res.headers.get("access-control-allow-headers"));
+    expect(allowed).toContain("x-csoai-expected-feed");
+    expect(allowed).not.toContain("bad header");
+    expect(allowed.some((v) => v.length > 64)).toBe(false);
+    expect(allowed.length).toBeLessThanOrEqual(4 + 16);
+  });
+
+  it("an OPTIONS that is not a preflight, or not on a door, goes to its route as before", async () => {
+    const cases: [string, Record<string, string>][] = [
+      [DOOR, {}], // no Access-Control-Request-Method: not a preflight
+      [`${ORIGIN}/api/gspc`, { "access-control-request-method": "GET" }],
+      [`${ORIGIN}/api/corrections`, { "access-control-request-method": "GET" }],
+      [`${ORIGIN}/api/a2a`, { "access-control-request-method": "POST" }],
+      [`${ORIGIN}/mcp`, { "access-control-request-method": "POST" }],
+    ];
+    for (const [url, headers] of cases) {
+      const { res, next } = await through(new Request(url, { method: "OPTIONS", headers }), new Response("route", { status: 200 }));
+      expect(next, url).toHaveBeenCalledTimes(1);
+      expect(await res.text(), url).toBe("route");
+    }
+  });
+
+  it("the free doors the listing names are not doors to this gate: their preflight is the route's own", async () => {
+    const { free_doors } = await listing();
+    expect(free_doors.length).toBeGreaterThan(0);
+    for (const { url } of free_doors) {
+      const { next } = await through(
+        new Request(url, { method: "OPTIONS", headers: { "access-control-request-method": "GET" } }),
+        new Response("route", { status: 200 }),
+      );
+      expect(next, url).toHaveBeenCalledTimes(1);
+    }
+  });
+});
+
