@@ -41,3 +41,15 @@ node scripts/measurements/gspc-evidence-engine-index.mjs \
 The CI workflow reads the latest successful **protected-master** artifacts for each input, verifies source agreement and emits a single unsigned research index. If an upstream producer is missing, it records SOURCE_DEPENDENCY_NOT_READY and does not publish a partial success. Trusted master jobs can mirror this public aggregate to Hugging Face; no pull-request workflow gets the HF token.
 
 For current usage, see source-run URLs and exact artifact hashes in engine-index.json. Absence of these artifacts means the index is unavailable, never that the model or instrument is safe.
+
+
+## Current-checkout freshness gate
+
+The automatic publication path also hashes every canonical raw source cell in
+the protected checkout, verifies physical row and file counts, independently
+reconstructs the source digest, compares today's actual manifest SHA-256
+against the downloaded Actions artifacts, and verifies the synthetic baseline
+against the version-controlled reference. Three historic but internally
+consistent green CI artifacts are not sufficient if master has changed
+underlying source bytes. This is proof of source agreement in the checkout,
+not an independently witnessed external signature or new model measurement.
