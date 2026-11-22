@@ -296,6 +296,9 @@ def scan_archive(res: Result, place: str, ext: str, fh, size, depth: int):
 def scan_path(res: Result, path: str):
     if not os.path.lexists(path):
         res.unc(path, "path does not exist"); return
+    # The root argument also must not be a symlink: isfile/isdir follow it.
+    if os.path.islink(path):
+        res.unc(path, "symlink input is not an approved publication source"); return
     if os.path.isfile(path):
         with open(path, "rb") as fh:
             scan_file_obj(res, path, os.path.basename(path), fh, os.path.getsize(path), 0)
@@ -304,12 +307,17 @@ def scan_path(res: Result, path: str):
         res.unc(path, "neither a file nor a folder"); return
     for dirpath, dirnames, filenames in os.walk(path, followlinks=False):
         dirnames.sort()
-        for d in dirnames:
+        for d in list(dirnames):
             rel = os.path.relpath(os.path.join(dirpath, d), path)
             scan_text(res, rel, rel.encode("utf-8", "surrogateescape"), names_only=True)
             why = shaped_like_a_secret_or_backup(rel)
             if why:
                 res.hit(rel, why)
+            if os.path.islink(os.path.join(dirpath, d)):
+                # os.walk(followlinks=False) silently skips nested symlink folders.
+                # Fail closed instead of treating an unexamined subtree as clean.
+                res.unc(rel, "symlink directory was not scanned")
+                dirnames.remove(d)
         for fn in sorted(filenames):
             full = os.path.join(dirpath, fn)
             rel = os.path.relpath(full, path)
