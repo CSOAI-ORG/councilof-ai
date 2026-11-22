@@ -19,13 +19,16 @@ def fixtures():
     reports["blind"]["randomisation"]="deterministic synthetic PRNG"
     reports["jspace"]["source_revision"]="b176b283b82f5b7fa786bc0c67842299cadf1803"
     reports["trajectory"]["not_live_agent"]=True
+    reports["transfer"]["train_revision"]="b176b283b82f5b7fa786bc0c67842299cadf1803"
+    reports["transfer"]["train"]={"n_valid":120}
+    reports["transfer"]["test"]={"n_valid":120}
     return reports
 
 
 class TestConsolidation(unittest.TestCase):
     def test_compose_exact_supported_inputs(self):
         output=compose(fixtures())
-        self.assertEqual(output["n_entries"],6)
+        self.assertEqual(output["n_entries"],7)
         self.assertEqual(output["state"],"RESEARCH_COMPOSITE_UNVERIFIED")
         self.assertEqual(output["gspc_board_mutations"],0)
         self.assertEqual(output["independent_external_verifications"],0)
@@ -54,6 +57,12 @@ class TestConsolidation(unittest.TestCase):
         with self.assertRaises(ValueError):
             compose(rows)
 
+    def test_transfer_revision_rejected(self):
+        rows=fixtures()
+        rows["transfer"]["train_revision"]="main"
+        with self.assertRaises(ValueError):
+            compose(rows)
+
     def test_wrong_source_revision_rejected(self):
         rows=fixtures()
         rows["jspace"]["source_revision"]="main"
@@ -67,7 +76,7 @@ class TestConsolidation(unittest.TestCase):
             compose(rows)
         rows["trajectory"].pop("receipt_sha256")
         rows["trajectory"]["receipt_sha256"]=digest(canonical(rows["trajectory"]))
-        self.assertEqual(compose(rows)["n_entries"],6)
+        self.assertEqual(compose(rows)["n_entries"],7)
 
     def test_false_referee_independence_rejected(self):
         rows=fixtures()
