@@ -107,7 +107,9 @@ export default function Investors() {
   }, []);
 
   const show = (value: number | null) => (value === null ? "unavailable" : value.toLocaleString("en-GB"));
-  const usdc = live.settledAtomic === null ? "unavailable" : `$${(live.settledAtomic / 1_000_000).toFixed(2)}`;
+  // Use the actual settlement unit, not a bare currency amount that looks like a
+  // service price in a standalone metric card. Revenue is observational, not an offer.
+  const usdc = live.settledAtomic === null ? "unavailable" : `${(live.settledAtomic / 1_000_000).toFixed(2)} USDC`;
   const counters = [
     { value: show(live.payers), label: "Distinct outside payers", note: "All time · self-tests excluded", href: "/api/revenue" },
     { value: usdc, label: "Settled outside value", note: "USDC · self and zero-value tests excluded", href: "/api/revenue" },
