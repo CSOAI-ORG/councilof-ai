@@ -6,7 +6,7 @@
  */
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, readdirSync } from "node:fs";
-import { resolve, join } from "node:path";
+import { resolve, join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const SCHEMA = "csoai.gspc-evidence-coverage/1";
@@ -39,12 +39,69 @@ export function readCellSourceDigest(dir) {
   return {cell_files:files.length,source_rows:physicalRows,source_digest:sha(lines.join("\n"))};
 }
 
+/** Reconstruct each axis/model attribution from the real sharded fact rows.
+ * The source digest alone does not bind a manifest's by_axis map: a falsified
+ * mapping can preserve all source counts and still misreport coverage.
+ * This check also rejects missing, extra, non-object and incomplete rows.
+ */
+export function readFactShardAttribution(manifest, manifestPath) {
+  const table=manifest?.tables?.measurements;
+  check(table?.layout==="sharded" && Array.isArray(table.parts) && table.parts.length>0,
+    "measurement shard layout missing");
+  const axes=Object.create(null);
+  const models=Object.create(null);
+  const seen=new Set();
+  let rows=0,bytes=0,ungraded=0,missingModel=0;
+  const root=dirname(resolve(manifestPath));
+  for (const part of table.parts) {
+    check(typeof part.file==="string" &&
+      /^gspc_measurements\/part-[0-9]{3}\.jsonl$/.test(part.file) &&
+      !seen.has(part.file), "invalid or duplicate fact shard path");
+    seen.add(part.file);
+    const blob=readFileSync(join(root,part.file));
+    check(blob.length===part.bytes,"fact shard byte length mismatch "+part.file);
+    bytes+=blob.length;
+    let partRows=0;
+    for(const [i,line] of blob.toString("utf8").split("\n").entries()) {
+      if(!line.trim())continue;
+      let r;
+      try{r=JSON.parse(line);}
+      catch{throw Error("UNCHECKABLE GSPC coverage: invalid fact JSONL "+part.file+":"+(i+1));}
+      check(rec(r) && typeof r.axis==="string" && r.axis.length>0 &&
+        typeof r.item_id==="string" && r.item_id.length>0 &&
+        (r.model===null || (typeof r.model==="string" && r.model.length>0)) &&
+        (r.ok===null || r.ok===true || r.ok===false),
+        "missing/invalid axis, model, item or grade in "+part.file+":"+(i+1));
+      const model=r.model??"(unattributed)";
+      axes[r.axis]=(axes[r.axis]??0)+1;
+      models[model]=(models[model]??0)+1;
+      if(r.model===null)missingModel++;
+      if(r.ok===null)ungraded++;
+      rows++;partRows++;
+    }
+    check(partRows===part.rows,"fact shard row count mismatch "+part.file);
+  }
+  check(rows===manifest.counts.measurements && bytes===table.bytes,"fact shard totals differ");
+  const normalized=v=>JSON.stringify(Object.entries(v).sort(([a],[b])=>a.localeCompare(b)));
+  check(normalized(axes)===normalized(manifest.by_axis),"by_axis attribution does not match source fact rows");
+  check(normalized(models)===normalized(manifest.by_model),"by_model attribution does not match source fact rows");
+  check(ungraded===manifest.counts.rows_not_graded && missingModel===manifest.counts.rows_without_a_model,
+    "ungraded/unattributed row totals do not match source fact rows");
+  return {axes,models,rows,bytes,ungraded,missingModel};
+}
+
 export function deriveCoverage(board, fact, inputs, previous = null) {
   check(rec(board) && Array.isArray(board.axes) && rec(board.totals), "board axes or totals absent");
   check(rec(fact) && fact.schema === "csoai.gspc-fact-table/0.1", "fact manifest schema absent");
   check(rec(inputs) && HEX.test(inputs.board_sha256) && HEX.test(inputs.fact_manifest_sha256), "input byte digests absent");
   const t = board.totals, c = fact.counts, source = fact.source;
   check(rec(c) && rec(source) && rec(fact.by_axis) && rec(fact.by_model) && rec(fact.tables), "fact source/counts absent");
+  if(inputs.independent_table!==undefined) {
+    const observed=inputs.independent_table;
+    check(rec(observed) && observed.rows===c.measurements && observed.ungraded===c.rows_not_graded &&
+      observed.missingModel===c.rows_without_a_model,
+      "independent fact shard reconciliation failed");
+  }
   if(inputs.independent_source!==undefined) {
     const observed=inputs.independent_source;
     check(rec(observed) &&
@@ -166,7 +223,8 @@ export function readCoverage(args) {
   check(args.evidence, "independent --evidence directory is required; manifest digest alone is not proof");
   return deriveCoverage(JSON.parse(boardBytes),JSON.parse(manifestBytes),
     {board_sha256:sha(boardBytes),fact_manifest_sha256:sha(manifestBytes),
-      independent_source:readCellSourceDigest(args.evidence)},prev);
+      independent_source:readCellSourceDigest(args.evidence),
+      independent_table:readFactShardAttribution(JSON.parse(manifestBytes),args.manifest)},prev);
 }
 
 const SELF=fileURLToPath(import.meta.url);
