@@ -24,8 +24,9 @@ describe("/how-we-work measured-run route", () => {
     expect(contact).toContain("import PlainEmail, { CONTACT_MAILBOX } from '@/components/PlainEmail'");
     // Durable KV submission is now explicit; local email fallback remains separate.
     expect(contact).toContain('fetch("/api/contact"');
-    expect(contact).toContain('data.stored !== true');
-    expect(contact).toContain("Open email draft instead");
+    expect(contact).toContain('classifyContactResponse(res.status, data)');
+    expect(contact).toContain('outcome.kind === "stored"');
+    expect(contact).toContain("Open email draft to contact Council");
     expect(contact).toContain("Store a copy (no email sent)");
     expect(contact).toContain("The Council team has NOT been notified");
     expect(contact).toContain("copyEnquiry");
