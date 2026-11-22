@@ -1,8 +1,11 @@
+import { verifyContactChallenge } from "./_contact-turnstile";
+import { readBoundedContactBody } from "./_contact-body";
+
 /**
  * POST /api/contact — durable enquiry intake.
  * A stored record is not an email notification, a confirmed commission, or a booking.
  */
-interface Env { LEADS?: KVNamespace }
+interface Env { LEADS?: KVNamespace; CONTACT_TURNSTILE_SECRET?: string }
 const LIMITS = { name: 100, email: 254, subject: 160, message: 5000 } as const;
 type Field = keyof typeof LIMITS;
 const reply = (body: unknown, status: number) => Response.json(body, {
@@ -16,10 +19,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         return reply({ stored: false, code: "CROSS_ORIGIN" }, 403);
     } catch { return reply({ stored: false, code: "CROSS_ORIGIN" }, 403); }
   }
-  if (!/application\/json/i.test(request.headers.get("content-type") || ""))
+  if (!/^application\/json(?:\s*;|\s*$)/i.test(request.headers.get("content-type") || ""))
     return reply({ stored: false, code: "JSON_REQUIRED" }, 415);
-  const raw = await request.text();
-  if (raw.length > 8500) return reply({ stored: false, code: "TOO_LARGE" }, 413);
+  const bounded = await readBoundedContactBody(request);
+  if (bounded.state !== "OK") {
+    const oversized = bounded.state === "TOO_LARGE";
+    return reply({ stored: false, code: oversized ? "TOO_LARGE" : "BAD_JSON" }, oversized ? 413 : 400);
+  }
+  const raw = bounded.text;
   let body: Record<string, unknown>;
   try {
     const parsed = JSON.parse(raw);
@@ -41,6 +48,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (!env.LEADS) return reply({
     stored: false, code: "INTAKE_UNAVAILABLE", fallback: "contact@csoai.org",
   }, 503);
+  if (!env.CONTACT_TURNSTILE_SECRET) return reply({
+    stored: false, code: "CHALLENGE_NOT_CONFIGURED", fallback: "contact@csoai.org",
+  }, 503);
+  const challenge = await verifyContactChallenge(body.turnstile_token, env.CONTACT_TURNSTILE_SECRET, new URL(request.url).hostname);
+  if (challenge !== "VALID") return reply({
+    stored: false, code: challenge === "DENIED" ? "CHALLENGE_DENIED" : "CHALLENGE_UNAVAILABLE",
+    fallback: "contact@csoai.org",
+  }, challenge === "DENIED" ? 403 : 503);
   const id = crypto.randomUUID();
   const at = new Date().toISOString();
   try {
