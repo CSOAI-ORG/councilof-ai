@@ -74,3 +74,9 @@ test("reader failure stays UNVERIFIED without claiming origin outage", async () 
   assert.equal(r.get("graph"), "UNVERIFIED");
   assert.equal(r.get("gspc"), "34 axes · 34 measured");
 });
+
+// The Corrections pane is a top-level CouncilOS destination, not a subheading.
+test("Corrections workspace carries a semantic primary heading", () => {
+  const source = readFileSync(new URL("../../client/src/components/gspc/CorrectionsPane.tsx", import.meta.url), "utf8");
+  assert.match(source, /<h1\b[^>]*>Published corrections and changes<\/h1>/);
+});
