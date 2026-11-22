@@ -6,6 +6,8 @@ import { Mail, MapPin, Clock, Send } from 'lucide-react';
 import PlainEmail, { CONTACT_MAILBOX } from '@/components/PlainEmail';
 import { enquiryPreset, prepareContactEmail } from '@/lib/pilotEnquiry';
 import { BUYING_LINES } from '@/lib/buying';
+import { classifyContactResponse, formatRejectedContactSubmission, formatStoredContactReceipt, formatUnconfirmedContactSubmission } from '@/lib/contactReceipt';
+import ContactTurnstile from '@/components/ContactTurnstile';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -15,7 +17,12 @@ export default function Contact() {
     message: '',
   });
   const [copyFeedback, setCopyFeedback] = useState("");
+  const [submitFeedback, setSubmitFeedback] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [challengeToken, setChallengeToken] = useState('');
+  const [challengeResetRevision, setChallengeResetRevision] = useState(0);
   const copyRevision = useRef(0);
+  const formRevision = useRef(0);
 
   useEffect(() => {
     document.title = 'Contact — Council of AI';
@@ -34,9 +41,39 @@ export default function Contact() {
   };
 
   const emailDraft = prepareContactEmail(formData);
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (emailDraft.mailto) window.location.href = emailDraft.mailto;
+    if (submitting) return;
+    if (!challengeToken) {
+      setSubmitFeedback("Optional storage verification is not ready. Use the email draft to contact Council.");
+      return;
+    }
+    const submittedRevision = formRevision.current;
+    const submittedForm = { ...formData, website: "", turnstile_token: challengeToken };
+    setSubmitting(true);
+    setSubmitFeedback("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(submittedForm),
+      });
+      const data: unknown = await res.json().catch(() => null);
+      const outcome = classifyContactResponse(res.status, data);
+      if (outcome.kind === "stored") {
+        setSubmitFeedback(formatStoredContactReceipt(outcome.receiptId, submittedRevision === formRevision.current, CONTACT_MAILBOX));
+      } else if (outcome.kind === "rejected") {
+        setSubmitFeedback(formatRejectedContactSubmission(CONTACT_MAILBOX));
+      } else {
+        setSubmitFeedback(formatUnconfirmedContactSubmission(CONTACT_MAILBOX));
+      }
+    } catch {
+      setSubmitFeedback(formatUnconfirmedContactSubmission(CONTACT_MAILBOX));
+    } finally {
+      setSubmitting(false);
+      setChallengeToken('');
+      setChallengeResetRevision(n => n + 1);
+    }
   };
 
   const copyEnquiry = async () => {
@@ -54,6 +91,8 @@ export default function Contact() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     ++copyRevision.current;
+    ++formRevision.current;
+    setSubmitFeedback("");
     setFormData(prev => ({ ...prev, [name]: value }));
     setCopyFeedback("");
   };
@@ -201,10 +240,22 @@ export default function Contact() {
                     data-testid="contact-message-input"
                   />
                 </div>
-                <Button type="submit" size="lg" className="w-full bg-primary hover:bg-brand-institutional" data-testid="contact-submit-button">
+                {emailDraft.mailto ? (
+                  <a
+                    href={emailDraft.mailto}
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground hover:bg-brand-institutional focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    data-testid="contact-primary-email-link"
+                  >
+                    <Mail className="h-4 w-4 mr-2" aria-hidden="true" />
+                    Open email draft to contact Council (press Send in your email app)
+                  </a>
+                ) : null}
+                <ContactTurnstile onToken={setChallengeToken} resetRevision={challengeResetRevision} />
+                <Button type="submit" disabled={submitting || !challengeToken} variant="outline" size="lg" className="w-full" data-testid="contact-submit-button">
                   <Send className="h-4 w-4 mr-2" />
-                  {emailDraft.mailto ? "Open email draft" : "Copy draft below"}
+                  {submitting ? "Storing…" : "Store a copy (no email sent)"}
                 </Button>
+                {submitFeedback ? <p role="status" aria-live="polite" className="rounded-lg border border-border p-3 text-sm text-foreground" data-testid="contact-submission-status">{submitFeedback}</p> : null}
                 <div className="flex flex-wrap items-center gap-3">
                   <Button type="button" variant="outline" onClick={() => void copyEnquiry()} data-testid="contact-copy-button">
                     Copy enquiry text
@@ -212,7 +263,7 @@ export default function Contact() {
                   {copyFeedback ? <p role="status" aria-live="polite" className="text-sm text-muted-foreground">{copyFeedback}</p> : null}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  This form opens your email client when the draft fits safely in an email link. There is no silent backend, and nothing you type here is stored by this site.
+                  A successful submission stores your enquiry for up to 30 days in Council intake storage; it does not automatically notify the team, book a service or take payment. Only a receipt reference confirms storage. Do not submit confidential files or credentials.
                 </p>
                 {!emailDraft.mailto && <p role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">This draft is too long or cannot be encoded safely for an email link. Copy the full text below into your email app.</p>}
                 <details open={!emailDraft.mailto} className="rounded-lg border border-border bg-card p-4">

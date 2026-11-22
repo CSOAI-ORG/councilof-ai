@@ -318,6 +318,26 @@ for (const c of merged) {
     continue;
   }
 
+  // A private Access-authenticated operator route must be accounted for by the
+  // capability registry but NEVER promoted into public OpenAPI, llms or nav.
+  // It is not safe for the unattended public probe to enumerate or call it.
+  if (String(c.path ?? "").startsWith("/api/private/")) {
+    c.audience = "agent";
+    c.surfaces = [];
+    c.probe = {
+      ...c.probe,
+      safe: false,
+      unsafe_reason: "Private operator route requires approved Cloudflare Access identity; no unauthenticated or daily public probe",
+    };
+    openapiGap.push({
+      id: c.id,
+      path: c.path,
+      method: c.method,
+      reason: "Access-authenticated private operator route; excluded from public OpenAPI, llms and navigation",
+    });
+    continue;
+  }
+
   const httpish = c.kind === "http" || c.kind === "population_door";
   const source = String(c.source ?? "");
   // Mirrors the recursive walker's fixed-route boundary: functions/api source, no private path

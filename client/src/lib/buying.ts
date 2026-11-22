@@ -30,7 +30,7 @@ export const BUYING_FAQ_URL = "/faq/#buying";
 export const BUYING_LINES: readonly string[] = [
   "Checking a result is free, always.",
   "Article 50 pack: a dated record of marking checks on a public output. Evidence bundle: the published evidence for a named subject. Provider-diff feed: provider changes and signed history where available.",
-  `A GBP invoice from CSOAI LTD can be arranged by email for the Article 50 pack, the evidence bundle and the provider-diff feed. The site records nothing when you ask. Email the product and scope to ${CONTACT_MAILBOX}; include an invoice reference if you already have one.`,
+  `A GBP invoice from CSOAI LTD can be arranged by email for the Article 50 pack, the evidence bundle and the provider-diff feed. The contact form stores your enquiry only after it shows a receipt; no email notification is automatically sent. Alternatively email the product and scope to ${CONTACT_MAILBOX}; include an invoice reference if you already have one.`,
   "Ask for a written scope before ordering: name the product, link the public output or subject, and say which dates or history you need. Scope, delivery and invoice terms are agreed by email.",
   "Pay per call from your own wallet (x402): live at the paid doors listed at GET /api/x402. You see the terms before anything is paid.",
   "Scoped fresh measurement runs: booking is not live. You can ask about one by email.",
@@ -57,4 +57,4 @@ export const INVOICE_NEXT_STEP = `We do not send the invoice automatically. Afte
 export const BUYING_FAQ_ANSWER =
   `Checking a result is free; a grade is never sold. Agents pay per call by wallet at the x402 doors listed at GET /api/x402. ` +
   `The Article 50 pack, evidence bundle and provider-diff feed can be invoiced in GBP: email your requirements to ${CONTACT_MAILBOX} ` +
-  `(the site records nothing). VAT details are confirmed on the invoice. Fresh-run booking is not live.`;
+  `(the form retains an enquiry only after confirming storage; sending email is an alternative). VAT details are confirmed on the invoice. Fresh-run booking is not live.`;

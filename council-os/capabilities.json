@@ -215,6 +215,12 @@
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
+      "id": "api-private-contact-review",
+      "path": "/api/private/contact-review",
+      "method": "GET",
+      "reason": "Access-authenticated private operator route; excluded from public OpenAPI, llms and navigation"
+    },
+    {
       "id": "api-prod-readiness",
       "path": "/api/prod-readiness",
       "method": "GET",
@@ -5008,6 +5014,30 @@
         "safe": true
       },
       "source": "functions/api/press.json.ts"
+    },
+    {
+      "id": "api-private-contact-review",
+      "kind": "http",
+      "path": "/api/private/contact-review",
+      "method": "GET",
+      "name": "Private contact review",
+      "description": "GET /api/private/contact-review — operator-only, read-only contact receipts.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [],
+      "probe": {
+        "method": "GET",
+        "request": "/api/private/contact-review",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "Private operator route requires approved Cloudflare Access identity; no unauthenticated or daily public probe"
+      },
+      "source": "functions/api/private/contact-review.ts"
     },
     {
       "id": "api-prod-readiness",

@@ -1,0 +1,42 @@
+name: contact-intake-regression
+on:
+  pull_request:
+    paths:
+      - "functions/api/contact.ts"
+      - "functions/api/_contact-turnstile.ts"
+      - "functions/api/_contact-body.ts"
+      - "functions/api/_contact-body.test.ts"
+      - "functions/api/contact.test.ts"
+      - "functions/api/contact-journey.integration.test.ts"
+      - "client/src/pages/Contact.tsx"
+      - "client/src/components/ContactTurnstile.tsx"
+      - "client/src/components/ContactTurnstile.test.tsx"
+      - "client/src/lib/contactReceipt.ts"
+      - "client/src/lib/contactReceipt.test.ts"
+      - "client/src/pages/Contact.receipt-interaction.test.tsx"
+      - "functions/api/_contact-operator.ts"
+      - "functions/api/private/contact-review.ts"
+      - "functions/api/private/contact-review.test.ts"
+      - "tsconfig.contact-operator.json"
+      - "client/src/pages/Services.tsx"
+      - ".github/workflows/contact-intake-regression.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install locked dev dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify Pages Functions types
+        run: npx tsc -p tsconfig.contact-operator.json --noEmit
+      - name: Exercise happy path, nonstorage, invalid and cross-origin cases
+        run: npx vitest run functions/api/contact.test.ts functions/api/_contact-body.test.ts functions/api/contact-journey.integration.test.ts client/src/lib/contactReceipt.test.ts client/src/pages/Contact.receipt-interaction.test.tsx client/src/components/ContactTurnstile.test.tsx functions/api/private/contact-review.test.ts

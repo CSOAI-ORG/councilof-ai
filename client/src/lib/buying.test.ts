@@ -20,7 +20,9 @@ describe("how to buy: one statement, one mailbox", () => {
     expect(all).not.toMatch(/[£$€]\s?\d/);
     expect(all).not.toMatch(/certif|complian|guarantee/i);
     expect(all).toMatch(/booking is not live/);
-    expect(all).toMatch(/records nothing/);
+    expect(all).toMatch(/contact form stores your enquiry only after it shows a receipt/i);
+    expect(all).toMatch(/no email notification is automatically sent/i);
+    expect(all).not.toMatch(/the site records nothing/i);
   });
 
   it("every surface uses the one mailbox the invoice handoff names", () => {

@@ -478,6 +478,10 @@ def compose(fix: Path = FIX) -> dict:
     paths: dict[str, dict] = {}
     withdrawn: set[str] = set()  # paths with at least one withdrawn operation, for the door guard below
     for p, item in base["paths"].items():
+        # Operator/private APIs are authenticated data paths, not public discovery.
+        # Never publish a private URL or implicitly classify it as free/open.
+        if p.startswith("/api/private/"):
+            continue
         # A withdrawn operation is enumerated by the walker and NOT published (WITHDRAWN_LIFECYCLES).
         kept = {m: op for m, op in item.items() if op.get("x-csoai-lifecycle") not in WITHDRAWN_LIFECYCLES}
         if len(kept) != len(item):
