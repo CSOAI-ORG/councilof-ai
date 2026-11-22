@@ -530,6 +530,18 @@ jobs:
       # K-1 fleet-size lock (2026-09-22). One door carried three tool counts (8 · 12 · 13)
       # because each surface typed its own. functions/mcp/tool-fleet.lock.json is the one
       # committed list of NAMES; this compares it with what the deployed door actually serves.
+      # Source capability declarations are not delivery. A merged API route can remain
+      # absent from production when a deploy is cancelled or fails an earlier gate.
+      # This independently probes the three *public* doors AFTER the gated apex
+      # has held its prerender: OpenAPI HTTP method/path/lifecycle, MCP tools/list,
+      # and A2A agent-card skills must match the generated canonical registry.
+      # Unreachable or undisclosed operations fail; never use --warn here.
+      - name: Live capability parity — HTTP, MCP and A2A must match registry
+        timeout-minutes: 3
+        run: |
+          node scripts/capability-drift-guard.mjs --selftest
+          node scripts/capability-drift-guard.mjs
+
       # Only here is the live half of the lock test switched on — offline it reports SKIPPED,
       # never a silent pass. An unreachable door fails this step: unchecked is not checked.
       - name: MCP tool fleet lock — live tools/list must equal the committed lock
