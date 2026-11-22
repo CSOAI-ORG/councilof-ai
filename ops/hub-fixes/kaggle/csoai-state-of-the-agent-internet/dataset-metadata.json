@@ -1,0 +1,170 @@
+{
+  "title": "State of the Agent Internet: September 2026",
+  "id": "nicktempleman/csoai-state-of-the-agent-internet",
+  "id_no": 12264141,
+  "subtitle": "Mirror of Hugging Face csoai/state-of-the-agent-internet",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-state-of-the-agent-internet`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-state-of-the-agent-internet -p ./dataset --unzip\n```\n\nStart by inspecting `data/numbers-2026-09.parquet`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `verify.py`\n- `croissant.json`\n- `manifest.jsonl`\n- `2026-09/numbers.json`\n- `2026-09/numbers.json.ots`\n- `2026-09/numbers.signed.json`\n- `data/numbers-2026-09.parquet`\n- See the Data tab for all 11 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/state-of-the-agent-internet at revision `39788fe47fd551e25bb3bcf83ac728d5c9fcefae`, made 2026-10-15. The Hugging Face copy is the original; if the two differ, it wins.\n\n# State of the Agent Internet: September 2026 (numbers and sources)\n\n> **Start here — free verify:** [https://councilof.ai/gspc-verify/](https://councilof.ai/gspc-verify/) (or the free MCP tool `verify_card` at `https://councilof.ai/mcp`) · **Full catalog:** [https://councilof.ai/catalog.json](https://councilof.ai/catalog.json) · Methodology: [https://councilof.ai/methodology/](https://councilof.ai/methodology/) · Measurement, not certification.\n\nThe machine-readable record behind the report page https://councilof.ai/state/2026-09/: Every number on the page, each with the record it was recomputed from (path and sha256 on the measuring host, board signature state, and a public copy where one exists).\n\nRead from the signed payload (`2026-09/numbers.signed.json` → `payload`): **174 numbers from\n28 source records**, as of `2026-09-26T10:34:15Z`, bound to the measurement index root\n`85533b833d36f8a4165da34206ee6e39f7434c646c8a2c381d251391ceec366d` (the same root as the capsule index at\nhttps://councilof.ai/measurement-capsules/v0.2/).\n\nOf the 28 source records, 18 carry a board signature that verifies and 18 name a\npublic copy (column `public_copy` in `data/sources-2026-09.parquet`). A number is quoted only with the\nrecord it was recomputed from; the recompute rule is in each row.\n\n## What this is not\n\n- Not a population total across catalogues (one catalogue was read only in part).\n- Not a statement about which of two disagreeing public statements is true.\n- Not a statement about reserves, backing, redeemability or ownership of any asset.\n- Not a grade, rank or approval of any service, operator, issuer or model.\n- Outside findings the page mentions are listed in `external_context_not_ours`; they are other parties'\n  work and never enter any number here.\n\n## Files\n\n| file | bytes | sha256 | what |\n|---|---:|---|---|\n| `2026-09/numbers.json` | 47,952 | `6a9c3f05b54a4cd1a9af051aca4722ee6245ac32a7fdb46e49632b6aec11b595` | every number on the report page with its source record and recompute rule |\n| `2026-09/numbers.json.ots` | 910 | `1c9362f80cdfbf6ac98f483f2b815cf2a278297363ae3829321630981880fa42` | OpenTimestamps proof over numbers.json |\n| `2026-09/numbers.signed.json` | 1,458 | `e8f64dc67cac6b405f761bd198f6b53101f891213bef57fe32692dae4fdca4a9` | Ed25519 signature over a payload pinning numbers.json by sha256 |\n\n`data/numbers-2026-09.parquet` flattens `numbers` (one row per number, joined to its source);\n`data/sources-2026-09.parquet` flattens `sources`. `verify.py` re-derives both.\n\n## Timestamps\n\n- `2026-09/numbers.json.ots` commits to the sha256 of `2026-09/numbers.json`; its state is pending (4 calendar commitments, no Bitcoin block-header attestation in these bytes yet). A pending proof dates nothing until a block attests it.\n\n## How to verify\n\n```bash\npip install cryptography pyarrow\npython3 verify.py\n```\n\n```python\n# Signature check in a few lines. did.json refuses the default Python User-Agent, so this names one.\nimport json, hashlib, base64, urllib.request\nfrom cryptography.hazmat.primitives.asymmetric import ed25519\nreq = urllib.request.Request(\"https://csoai.org/.well-known/did.json\",\n                             headers={\"User-Agent\": \"csoai-dataset-verify/1.0 (+https://huggingface.co/datasets/csoai)\"})\ndid = json.load(urllib.request.urlopen(req, timeout=30))\nx = [m for m in did[\"verificationMethod\"] if m[\"id\"].endswith(\"#board-attestation-1\")][0][\"publicKeyJwk\"][\"x\"]\nkey = ed25519.Ed25519PublicKey.from_public_bytes(base64.urlsafe_b64decode(x + \"==\"))\nfor f in [\"2026-09/numbers.signed.json\"]:\n    s = json.load(open(f))\n    c = json.dumps(s[\"payload\"], sort_keys=True, separators=(\",\", \":\"), ensure_ascii=False).encode()\n    assert hashlib.sha256(c).hexdigest() == s[\"signature\"][\"payload_sha256\"]\n    key.verify(bytes.fromhex(s[\"signature\"][\"sig_ed25519\"]), c)   # raises if the bytes were altered\n    print(\"VERIFIES\", f)\n```\n\nSigned by `did:web:csoai.org#board-attestation-1`. The signature proves who signed these bytes; it\ndoes not prove any claim beyond what the source records' own instruments measured.\n\n## Objections, contact and corrections\n\nContact, corrections and objections (including a request to re-check or withdraw a specific row):\n**nicholas@csoai.org**, or the \"Object or opt out\" route at https://councilof.ai/census/. A correction\nis published as a new, linked version and logged in the signed corrections ledger at\nhttps://councilof.ai/api/corrections; signed files are never edited in place. CSOAI Ltd (company\nno. 16939677, England and Wales) is the accountable publisher.\n\n\n## How to cite\n\nCSOAI Ltd (Council of AI). *State of the Agent Internet: September 2026 (numbers and sources)*. 2026. Hugging Face dataset `csoai/state-of-the-agent-internet`. https://huggingface.co/datasets/csoai/state-of-the-agent-internet\n\n```bibtex\n@misc{csoai_state_agent_internet_2026_09,\n  title        = {State of the Agent Internet: September 2026 (numbers and sources)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/state-of-the-agent-internet},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n\nLicence: CC-BY-4.0. Attribute Council of AI, CSOAI Ltd (16939677), https://councilof.ai.\n\n## Corrections and verification\n\n- Corrections ledger (signed): https://councilof.ai/api/corrections. Corrections to CSOAI's published records are logged there with what changed and when.\n- Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).\n- Conformance kit for signed-receipts/v1, with test vectors for implementers: https://councilof.ai/spec/signed-receipts/v1/conformance/\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 3, last updated 2026-10-15.\n- 11 files, 102,175 bytes. File types: .json (4), .ots (2), .parquet (2), .md (1), .jsonl (1), .py (1).\n- Hugging Face twin: [csoai/state-of-the-agent-internet](https://huggingface.co/datasets/csoai/state-of-the-agent-internet). 10 of 11 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software",
+    "computer vision",
+    "tabular"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 10 of 11 files have the same byte size as files in the Hugging Face dataset [csoai/state-of-the-agent-internet](https://huggingface.co/datasets/csoai/state-of-the-agent-internet) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "2026-09/numbers.json",
+      "description": "47,952 — `6a9c3f05b54a4cd1a9af051aca4722ee6245ac32a7fdb46e49632b6aec11b595` — every number on the report page with its source record and recompute rule. JSON document. top-level keys: as_of, built_at, doctrine, external_context_not_ours, ledgers_by_evidence_level, measurement_index, numbers, page, producer, publisher, schema, sources, title, what_this_is, what_this_is_not. `external_context_not_ours` holds 2 records with fields: source (string), url (url). Same byte size as `2026-09/numbers.json` in huggingface.co/datasets/csoai/state-of-the-agent-internet (checked 2026-11-20). 47,952 bytes."
+    },
+    {
+      "path": "2026-09/numbers.json.ots",
+      "description": "910 — `1c9362f80cdfbf6ac98f483f2b815cf2a278297363ae3829321630981880fa42` — OpenTimestamps proof over numbers.json. OpenTimestamps proof file for `2026-09/numbers.json` (included in this dataset). Same byte size as `2026-09/numbers.json.ots` in huggingface.co/datasets/csoai/state-of-the-agent-internet (checked 2026-11-20). 910 bytes."
+    },
+    {
+      "path": "2026-09/numbers.signed.json",
+      "description": "1,458 — `e8f64dc67cac6b405f761bd198f6b53101f891213bef57fe32692dae4fdca4a9` — Ed25519 signature over a payload pinning numbers.json by sha256. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `2026-09/numbers.signed.json` in huggingface.co/datasets/csoai/state-of-the-agent-internet (checked 2026-11-20). 1,458 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 5,963 bytes."
+    },
+    {
+      "path": "croissant.json",
+      "description": "JSON document. top-level keys: @context, @type, conformsTo, name, alternateName, description, url, license, keywords, creator, publisher, dateModified, isAccessibleForFree, inLanguage, citeAs, distribution, recordSet. `distribution` holds 5 records with fields: @type (string), @id (string), name (string), contentUrl (url), encodingFormat (string), contentSize (string), sha256 (string), description (string). Same byte size as `croissant.json` in huggingface.co/datasets/csoai/state-of-the-agent-internet (checked 2026-11-20). 10,004 bytes."
+    },
+    {
+      "path": "data/numbers-2026-09.parquet",
+      "description": "Parquet table. 174 rows; fields: key (string), what (string), value_int (integer), value_text (string), source (string), recompute (string), source_path (string), source_sha256 (string), source_public_copy (url), source_board_signature (string). Same byte size as `data/numbers-2026-09.parquet` in huggingface.co/datasets/csoai/state-of-the-agent-internet (checked 2026-11-20). 13,713 bytes.",
+      "schema": {
+        "fields": [
+          {
+            "name": "key",
+            "description": "Observed type string; non-null in 174/174 rows read; example: a2a.0x_VERIFIED",
+            "type": "string"
+          },
+          {
+            "name": "what",
+            "description": "Observed type string; non-null in 174/174 rows read; example: 0.x cards that verify",
+            "type": "string"
+          },
+          {
+            "name": "value_int",
+            "description": "Observed type integer; non-null in 172/174 rows read; example: 5",
+            "type": "integer"
+          },
+          {
+            "name": "value_text",
+            "description": "Observed type string; non-null in 2/174 rows read; example: 97.2",
+            "type": "string"
+          },
+          {
+            "name": "source",
+            "description": "Observed type string; non-null in 174/174 rows read; example: a2a_v0_1_1_rows",
+            "type": "string"
+          },
+          {
+            "name": "recompute",
+            "description": "Observed type string; non-null in 174/174 rows read; example: canonicalisation_rule x sig_state",
+            "type": "string"
+          },
+          {
+            "name": "source_path",
+            "description": "Observed type string; non-null in 174/174 rows read; example: cp-fix-20260926/a2a-corr/out/data/cards.v0.1.1.jsonl.gz",
+            "type": "string"
+          },
+          {
+            "name": "source_sha256",
+            "description": "Observed type string; non-null in 174/174 rows read; example: 93f9865008531a9cb5c44bc8c8d32a1bf1dc775c4e3ec9880128f13c6ab2…",
+            "type": "string"
+          },
+          {
+            "name": "source_public_copy",
+            "description": "Observed type url; non-null in 132/174 rows read; example: https://huggingface.co/datasets/csoai/a2a-card-census/blob/m…",
+            "type": "url"
+          },
+          {
+            "name": "source_board_signature",
+            "description": "Observed type string; non-null in 90/174 rows read; example: VERIFIES",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "path": "data/sources-2026-09.parquet",
+      "description": "Parquet table. 28 rows; fields: source (string), what (string), path (string), sha256 (string), public_copy (url), board_signature (string), signature_pins_this_sha256 (boolean), signed_at (datetime). Same byte size as `data/sources-2026-09.parquet` in huggingface.co/datasets/csoai/state-of-the-agent-internet (checked 2026-11-20). 6,301 bytes.",
+      "schema": {
+        "fields": [
+          {
+            "name": "source",
+            "description": "Observed type string; non-null in 28/28 rows read; example: a2a_v0_1",
+            "type": "string"
+          },
+          {
+            "name": "what",
+            "description": "Observed type string; non-null in 28/28 rows read; example: A2A signed agent-card census, record v0.1 (superseded, kept)",
+            "type": "string"
+          },
+          {
+            "name": "path",
+            "description": "Observed type string; non-null in 28/28 rows read; example: census-universes-publish-2026-09-25/a2a/record.json",
+            "type": "string"
+          },
+          {
+            "name": "sha256",
+            "description": "Observed type string; non-null in 28/28 rows read; example: b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662…",
+            "type": "string"
+          },
+          {
+            "name": "public_copy",
+            "description": "Observed type url; non-null in 18/28 rows read; example: https://huggingface.co/datasets/csoai/a2a-card-census/blob/m…",
+            "type": "url"
+          },
+          {
+            "name": "board_signature",
+            "description": "Observed type string; non-null in 18/28 rows read; example: VERIFIES",
+            "type": "string"
+          },
+          {
+            "name": "signature_pins_this_sha256",
+            "description": "Observed type boolean; non-null in 18/28 rows read; example: true",
+            "type": "boolean"
+          },
+          {
+            "name": "signed_at",
+            "description": "Observed type datetime; non-null in 18/28 rows read; example: 2026-09-25T08:22:33.567Z",
+            "type": "datetime"
+          }
+        ]
+      }
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 8 rows; fields: bytes (integer), kind (string), path (string), sha256 (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/state-of-the-agent-internet (checked 2026-11-20). 1,156 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/2026-09/numbers.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-29/2026-09/numbers.json.ots` in huggingface.co/datasets/csoai/state-of-the-agent-internet (checked 2026-11-20). 2,017 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-29/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/state-of-the-agent-internet (checked 2026-11-20). 1,552 bytes."
+    },
+    {
+      "path": "verify.py",
+      "description": "Python source file. Same byte size as `verify.py` in huggingface.co/datasets/csoai/state-of-the-agent-internet (checked 2026-11-20). 11,149 bytes."
+    }
+  ]
+}
