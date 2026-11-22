@@ -26,6 +26,14 @@ test("external warning remains allegation, not Council finding", () => {
  assert.equal(r.evidence.sample_listed,true);
  assert.match(r.limitation,/Unverified third-party allegation/);
 });
+test("independent uptime is captured from observed days, not hard-coded 30-day claim", () => {
+ const page = '<title>csoai-org/gspc MCP server</title><div aria-label="Availability 100%. 67 of 67 days answered."></div>';
+ const got = interpret(src("external_mcp_monitor"), 200, page);
+ assert.equal(got.evidence.availability_answered_days, 67);
+ assert.equal(got.evidence.availability_observed_days, 67);
+ const changed = interpret(src("external_mcp_monitor"), 200, "<title>csoai-org/gspc</title>");
+ assert.equal(changed.evidence.availability_observed_days, null);
+});
 test("one broken source does not fabricate counts or abort capture", async () => {
  const d=await capture({at:"2026-11-22T07:00:00.000Z",fetcher:async()=>{throw Error("offline")}});
  assert.equal(d.sources.length,ENDPOINTS.length);

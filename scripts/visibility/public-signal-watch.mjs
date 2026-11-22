@@ -42,9 +42,13 @@ export function interpret(source, status, body) {
       if (d.number !== 25 || d.base?.repo?.full_name !== "w3c-cg/aikr") throw Error("PR identity mismatch");
       return { state: "OBSERVED", evidence: { merged_at: d.merged_at ?? null, state: d.state ?? null }, limitation: "Community Group repo merge, not a W3C Recommendation or customer adoption." };
     }
-    if (source.id === "external_mcp_monitor")
-      return { state: "OBSERVED", evidence: { server_named: /csoai-org\/gspc|Council of AI GSPC/i.test(body), monitor_30_of_30: /30 of 30 counted days/i.test(body), tools_54: /54 tools observed/i.test(body) },
-        limitation: "External availability observation; not independent buyers or integrations." };
+    if (source.id === "external_mcp_monitor") {
+      const uptime = body.match(/aria-label="Availability\s+\d+(?:\.\d+)?%\.\s+(\d+)\s+of\s+(\d+)\s+days answered\."/i);
+      const answered = uptime ? nOrNull(Number(uptime[1])) : null;
+      const observed = uptime ? nOrNull(Number(uptime[2])) : null;
+      return { state: "OBSERVED", evidence: { server_named: /csoai-org\/gspc|Council of AI GSPC/i.test(body), availability_answered_days: answered, availability_observed_days: observed, tools_54: /54 tools observed/i.test(body) },
+        limitation: "Third-party observed endpoint availability over its sample window. This does not prove production reliability, unique integrations or customers." };
+    }
     if (source.id === "directory_flag")
       return { state: "OBSERVED", evidence: { mentions_operator: /MEOK AI Labs\s*\/\s*CSOAI/i.test(body), mentions_self_issued_badge: /self-issued trust signal/i.test(body), sample_listed: /io\.github\.CSOAI-ORG\/regex-ai-mcp/i.test(body) },
         limitation: "Unverified third-party allegation; check actual code and badge issuer. Do not publish as a verdict." };
