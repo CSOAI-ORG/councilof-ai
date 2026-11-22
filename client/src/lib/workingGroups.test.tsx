@@ -154,18 +154,23 @@ describe("Public Watchdog contribution path", () => {
     root = createRoot(el);
     await act(async () => root!.render(<Watchdog />));
     expect(el.querySelector("#working-groups-heading")).not.toBeNull();
-    expect(fetch).not.toHaveBeenCalled();
+    const requestUrls = () => fetch.mock.calls.map(([url]) => String(url));
+    const claimRequests = () => requestUrls().filter(url => url !== "/api/hitl" && url !== "/api/gspc");
+    expect(requestUrls()).toEqual(["/api/hitl", "/api/gspc"]);
+    expect(claimRequests()).toHaveLength(0);
     const buttons = () => [...el.querySelectorAll("button")];
     expect(buttons().find(b => b.textContent === "Claims")?.getAttribute("aria-pressed")).toBe("false");
     expect(buttons().find(b => b.textContent === "Working groups")?.getAttribute("aria-pressed")).toBe("true");
     await act(async () => buttons().find(b => b.textContent === "Claims")!.click());
     expect(window.location.search).toBe("");
     expect(el.querySelector("#working-groups-heading")).toBeNull();
-    expect(fetch).toHaveBeenCalled();
+    const claimsLoaded = claimRequests().length;
+    expect(claimsLoaded).toBeGreaterThan(0);
     await act(async () => {
       window.history.replaceState(null, "", "/watchdog/?view=groups");
       window.dispatchEvent(new PopStateEvent("popstate"));
     });
     expect(el.querySelector("#working-groups-heading")).not.toBeNull();
+    expect(claimRequests()).toHaveLength(claimsLoaded);
   });
 });

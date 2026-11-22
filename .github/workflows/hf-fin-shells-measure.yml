@@ -61,7 +61,8 @@ permissions:
 jobs:
   sign:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # RunPod/HF mill backlog signing exceeded 15m; retain signer identity and admission rules.
+    timeout-minutes: 45
     env:
       BOARD_SIGN_URL: https://councilof.ai/api/board-sign
     steps:

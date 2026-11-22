@@ -108,7 +108,7 @@ export function Footer() {
       links: [
         { name: 'About', href: '/about/' },
         { name: 'Operation and external use', href: '/traction/' },
-        { name: 'Partners and investors', href: '/traction/#partners' },
+        { name: 'Partners and investors', href: '/investors/' },
         { name: 'Brand & impostor notice', href: '/brand/' },
         { name: 'Evidence and reuse rights', href: '/licensing-agreement/#rights' },
         { name: 'Independence and conflicts', href: '/independence/' },
