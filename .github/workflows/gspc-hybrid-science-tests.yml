@@ -27,7 +27,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install pinned numerical dependency
+        run: python -m pip install --disable-pip-version-check 'numpy==2.2.6'
       - name: Unit and negative-control suites
+        env:
+          OPENBLAS_NUM_THREADS: '1'
         run: |
           python -B -m unittest discover -s measurement/experiments/two-path-council -p 'test_*.py' -v
       - name: Deterministic four-arm synthetic smoke
