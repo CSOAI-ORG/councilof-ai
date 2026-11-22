@@ -5,8 +5,8 @@
  * The mill fact table covers SOME axes and is not a replacement for the board.
  */
 import { createHash } from "node:crypto";
-import { readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const SCHEMA = "csoai.gspc-evidence-coverage/1";
@@ -16,12 +16,43 @@ const int = x => Number.isSafeInteger(x) && x >= 0;
 const rec = x => x && typeof x === "object" && !Array.isArray(x);
 const check = (yes, message) => { if (!yes) throw Error("UNCHECKABLE GSPC coverage: " + message); };
 
+/** Independently derive the manifest's source pin from the *actual* item-cell
+ * bytes. Both a missing file and a changed file must block claimed completeness.
+ * Only the per-item items-*.jsonl cells are the input universe, not every asset
+ * in mill-evidence (e.g. frozen canary banks).
+ */
+export function readCellSourceDigest(dir) {
+  const files=readdirSync(resolve(dir)).filter(n=>n.startsWith("items-") && n.endsWith(".jsonl")).sort();
+  check(files.length>0, "no source item cells available for independent source check");
+  let physicalRows=0;
+  const lines=[];
+  for(const name of files) {
+    const bytes=readFileSync(join(resolve(dir),name));
+    const text=bytes.toString("utf8").split("\n");
+    const rows=text.filter(line=>line.trim());
+    check(rows.length>0,"empty source cell: "+name);
+    // The fact-table parser separately verifies the JSON row schema; here the
+    // source byte digest and physical denominator are independently verified.
+    physicalRows+=rows.length;
+    lines.push(name+" "+sha(bytes));
+  }
+  return {cell_files:files.length,source_rows:physicalRows,source_digest:sha(lines.join("\n"))};
+}
+
 export function deriveCoverage(board, fact, inputs, previous = null) {
   check(rec(board) && Array.isArray(board.axes) && rec(board.totals), "board axes or totals absent");
   check(rec(fact) && fact.schema === "csoai.gspc-fact-table/0.1", "fact manifest schema absent");
   check(rec(inputs) && HEX.test(inputs.board_sha256) && HEX.test(inputs.fact_manifest_sha256), "input byte digests absent");
   const t = board.totals, c = fact.counts, source = fact.source;
   check(rec(c) && rec(source) && rec(fact.by_axis) && rec(fact.by_model) && rec(fact.tables), "fact source/counts absent");
+  if(inputs.independent_source!==undefined) {
+    const observed=inputs.independent_source;
+    check(rec(observed) &&
+      observed.source_digest===source.source_digest &&
+      observed.source_rows===source.source_rows &&
+      observed.cell_files===source.cell_files,
+      "independent raw cell hash/count does not match the published manifest");
+  }
   for (const key of ["axes","measured_axes","comparison_axes","separated_leads","ties","untested_separations"])
     check(int(t[key]), "board total " + key + " absent");
   for (const key of ["measurements","items","cells","axes","models","rows_without_a_model","rows_without_an_axis","rows_not_graded","rows_dropped_as_malformed"])
@@ -81,16 +112,20 @@ export function deriveCoverage(board, fact, inputs, previous = null) {
   if(previous!==null) {
     check(rec(previous) && previous.schema===SCHEMA && rec(previous.sources) && rec(previous.counts),
       "previous coverage artifact unsupported");
-    check(HEX.test(previous.sources.fact_cell_source_digest) && HEX.test(previous.sources.board_sha256) && int(previous.counts.fact_rows),
+    check(HEX.test(previous.sources.fact_cell_source_digest) &&
+      HEX.test(previous.sources.fact_manifest_sha256) &&
+      HEX.test(previous.sources.board_sha256) && int(previous.counts.fact_rows),
       "previous source pins uncheckable");
     const factChanged=previous.sources.fact_cell_source_digest !== sources.fact_cell_source_digest;
+    const manifestChanged=previous.sources.fact_manifest_sha256 !== sources.fact_manifest_sha256;
     const boardChanged=previous.sources.board_sha256 !== sources.board_sha256;
     const rowDelta=c.measurements-previous.counts.fact_rows;
     delta={
       state:factChanged ?
         (rowDelta===0 ? "SOURCE_CHANGED_SAME_ROW_COUNT_REEVALUATE" : "SOURCE_CHANGED_REEVALUATE") :
-        (boardChanged ? "BOARD_BYTES_CHANGED_REVIEW" : "NO_SOURCE_BYTES_CHANGED"),
-      rows_change:rowDelta, source_changed:factChanged, board_bytes_changed:boardChanged,
+        (manifestChanged ? "FACT_PROJECTION_CHANGED_REEVALUATE" :
+        (boardChanged ? "BOARD_BYTES_CHANGED_REVIEW" : "NO_SOURCE_BYTES_CHANGED")),
+      rows_change:rowDelta, source_changed:factChanged, fact_manifest_changed:manifestChanged, board_bytes_changed:boardChanged,
       note:"Byte change is a revision requiring validation; it does not establish poisoning, improvement, safe behavior or a new admitted score",
     };
   }
@@ -128,8 +163,10 @@ export function readCoverage(args) {
   const boardBytes=readFileSync(resolve(args.board));
   const manifestBytes=readFileSync(resolve(args.manifest));
   const prev=args.previous ? JSON.parse(readFileSync(resolve(args.previous),"utf8")) : null;
+  check(args.evidence, "independent --evidence directory is required; manifest digest alone is not proof");
   return deriveCoverage(JSON.parse(boardBytes),JSON.parse(manifestBytes),
-    {board_sha256:sha(boardBytes),fact_manifest_sha256:sha(manifestBytes)},prev);
+    {board_sha256:sha(boardBytes),fact_manifest_sha256:sha(manifestBytes),
+      independent_source:readCellSourceDigest(args.evidence)},prev);
 }
 
 const SELF=fileURLToPath(import.meta.url);
@@ -138,7 +175,7 @@ if(process.argv[1] && resolve(process.argv[1])===SELF){
     const [k,...rest]=v.trim().split(/\s+/);return [k,rest.join(" ")];
   }));
   try {
-    check(flags.board && flags.manifest && flags.out, "required --board --manifest --out");
+    check(flags.board && flags.manifest && flags.evidence && flags.out, "required --board --manifest --evidence --out");
     const output=readCoverage(flags);
     writeFileSync(resolve(flags.out),JSON.stringify(output,null,2)+"\n");
     console.log(JSON.stringify({state:output.state,counts:output.counts,delta:output.delta,out:flags.out}));
