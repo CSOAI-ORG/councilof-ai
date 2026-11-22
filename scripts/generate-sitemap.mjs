@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { SUBMISSION_GUIDE_ROUTE } from "./surface/build-bench-suite.mjs";
 import { noindexPatterns, noindexRuleFor } from "./surface/headers-noindex.mjs";
+import { prerenderGspcRoutes, routeFor } from "./surface/axis-route-gate.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const APP_TSX = join(ROOT, "client/src/App.tsx");
@@ -740,6 +741,51 @@ for (const id of noteIds) {
   if (!seen.has(np)) { seen.add(np); paths.push(np); }
 }
 
+// --- GSPC axis deep-dives: /gspc/<axis>/ -------------------------------------
+// /gspc/:axis is a :param route (skipped above), so until 2026-11-22 the only axis deep-dive in
+// this file was /gspc/jail/ — it has a route of its own in App.tsx. Measured live that day: the
+// sitemap had 524 URLs and one /gspc/<axis>/ page, while every model-comparison axis page
+// answered 200 with a self-canonical and `index, follow`. Dataset search engines and answer
+// engines that work from the sitemap never learned the other thirteen existed.
+//
+// Two sources have to agree, and neither is typed here:
+//   1. public/interop/axis-routes.json — the route map build-axis-pages.mjs publishes from the
+//      same board payload it renders the axis pages from. routeFor() (shared with
+//      scripts/surface/axis-route-gate.mjs and client/src/lib/axisHref.ts) names each axis's ONE
+//      published route: /gspc/<axis>/ for a model-comparison axis, /axis/<axis> for every other
+//      kind (already listed as a static public/axis/*.html page), and null for an owner-gated
+//      row (public_pages HIDDEN_PENDING_OWNER_GO), which therefore never reaches this file.
+//   2. scripts/prerender.mjs — the route is actually snapshotted, so the static host serves it.
+// The /gspc/<axis>/ pages of the non-comparison axes are still prerendered so inbound links
+// resolve, but their published route is /axis/<axis>; listing both would advertise two URLs for
+// one axis. The served form is the trailing-slash one: the bare form 308s to it.
+let gspcAxisAdded = 0;
+{
+  const routesFile = join(ROOT, "public/interop/axis-routes.json");
+  let rows;
+  try {
+    rows = JSON.parse(readFileSync(routesFile, "utf8")).axes;
+  } catch {
+    console.error("[sitemap] ERROR: public/interop/axis-routes.json unreadable — cannot tell which /gspc/<axis>/ pages are published.");
+    process.exit(process.argv.includes("--check") ? 2 : 1);
+  }
+  if (!Array.isArray(rows) || !rows.length) {
+    console.error("[sitemap] ERROR: public/interop/axis-routes.json has no axes — the source shape changed.");
+    process.exit(1);
+  }
+  const prerendered = prerenderGspcRoutes(readFileSync(PRERENDER_MJS, "utf8"));
+  for (const row of rows) {
+    const route = routeFor(row);
+    if (!route || !route.startsWith("/gspc/") || !prerendered.has(route)) continue;
+    if (isJunk(route) || seen.has(route)) continue;
+    seen.add(route); paths.push(route); gspcAxisAdded++;
+  }
+  if (!rows.some((r) => { const rt = routeFor(r); return !!rt && rt.startsWith("/gspc/") && prerendered.has(rt); })) {
+    console.error("[sitemap] ERROR: derived 0 published /gspc/<axis>/ routes — the route map or the prerender list changed shape.");
+    process.exit(1);
+  }
+}
+
 // --- Static pages under public/ ---------------------------------------------
 // This generator derives its routes from App.tsx <Route> declarations, so a page that is a
 // PLAIN HTML FILE under public/ is structurally invisible to it. Measured live 2026-09-05:
@@ -775,6 +821,7 @@ for (const sp of collectStaticPages(join(ROOT, "public"))) {
   seen.add(sp); paths.push(sp); staticAdded++;
 }
 console.log(`[sitemap] static public/*.html pages considered: +${staticAdded} before canonicalise`);
+console.log(`[sitemap] published /gspc/<axis>/ routes considered: ${gspcAxisAdded} (from interop/axis-routes.json ∩ prerender.mjs)`);
 
 // --- Emit XML ---------------------------------------------------------------
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");

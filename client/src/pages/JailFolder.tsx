@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { setMetaDescription } from "@/lib/utils";
+import { gspcAxisPageDataset } from "@/lib/datasetSchema";
+import { useHeadJsonLd } from "@/lib/headJsonLd";
 import { useGspcBoard, type GspcBoardState } from "@/components/board/useGspcBoard";
 import { fetchJailArchive, jailVerifyHref, JAIL_INDEX_TIMEOUT_MS, JAIL_INDEX_URL,
   readJailBoard, type JailArchive } from "./jailEvidence";
@@ -93,7 +95,11 @@ export function JailEvidenceContent({ board, archive, retry }: {
   );
 }
 
+/** /gspc/jail/ is this page, not GspcScoreboard, so it carries the jail axis's own Dataset node here. */
+const JAIL_DATASET_LD = gspcAxisPageDataset("jail");
+
 export default function JailFolder() {
+  useHeadJsonLd("dataset", JAIL_DATASET_LD);
   const board = useGspcBoard();
   const [attempt, setAttempt] = useState(0);
   const [archive, setArchive] = useState<ArchiveState>({ status: "loading", data: null });
