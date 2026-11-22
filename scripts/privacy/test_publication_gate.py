@@ -377,6 +377,30 @@ class NameAndSasRegressions(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertFalse(result.findings)
 
+
+    def test_top_level_file_symlink_fails_closed_before_read(self):
+        materialise(self.tmp, {"safe.txt": b"ordinary text"})
+        link = os.path.join(self.tmp, "file-link.txt")
+        os.symlink(os.path.join(self.tmp, "safe.txt"), link)
+        code, result = pg.gate([link])
+        self.assertEqual(code, 2)
+        self.assertTrue(any("symlink input" in reason for _, reason in result.unchecked))
+
+    def test_top_level_directory_symlink_fails_closed(self):
+        materialise(self.tmp, {"source/clean.txt": b"ordinary text"})
+        link = os.path.join(self.tmp, "dir-link")
+        os.symlink(os.path.join(self.tmp, "source"), link)
+        code, result = pg.gate([link])
+        self.assertEqual(code, 2)
+        self.assertTrue(any("symlink input" in reason for _, reason in result.unchecked))
+
+    def test_nested_symlink_directory_is_not_silently_ignored(self):
+        materialise(self.tmp, {"source/clean.txt": b"ordinary text", "outside/clean.txt": b"ordinary"})
+        os.symlink(os.path.join(self.tmp, "outside"), os.path.join(self.tmp, "source", "unscanned"))
+        code, result = pg.gate([os.path.join(self.tmp, "source")])
+        self.assertEqual(code, 2)
+        self.assertTrue(any("symlink directory" in reason for _, reason in result.unchecked))
+
 class Wiring(unittest.TestCase):
     """Every upload to Hugging Face or Kaggle in a workflow must run the gate first (same job, earlier step)."""
 
