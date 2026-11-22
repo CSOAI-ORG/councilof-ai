@@ -41,6 +41,28 @@ describe("HITL v2 incompletely observed effects", () => {
     altered.cases.find(c=>c.scenario==="expired").execution="EXECUTED";
     assert.throws(() => deriveV2(altered,gaps),/v1 control result changed/);
   });
+  it("rejects a duplicate v1 scenario even if all 13 refusal outcomes still appear valid", () => {
+    const a=runTrial();
+    const gaps=["effect_present_receipt_missing","receipt_present_effect_missing"].map(runEvidenceGap);
+    const missing=a.cases.find(c=>c.scenario==="revoked");
+    const substitute=a.cases.find(c=>c.scenario==="expired");
+    Object.assign(missing, structuredClone(substitute));
+    // Old validator merely counted 13 denials; this mutation still supplies 13 DENIED outcomes.
+    assert.equal(a.cases.filter(c=>c.execution==="DENIED").length,13);
+    assert.throws(()=>deriveV2(a,gaps),/scenario identity mismatch/);
+  });
+  it("rejects an unknown v1 scenario replacing one expected denial", () => {
+    const a=runTrial();
+    const gaps=["effect_present_receipt_missing","receipt_present_effect_missing"].map(runEvidenceGap);
+    a.cases.find(c=>c.scenario==="wrong_scope").scenario="invented_case";
+    assert.throws(()=>deriveV2(a,gaps),/scenario identity mismatch/);
+  });
+  it("refuses a success claim when replay denial is absent", () => {
+    const a=runTrial();
+    const gaps=["effect_present_receipt_missing","receipt_present_effect_missing"].map(runEvidenceGap);
+    a.cases.find(c=>c.scenario==="pass").replay="EXECUTED";
+    assert.throws(()=>deriveV2(a,gaps),/v1 control result changed/);
+  });
   it("rejects any fabricated institutional review", () => {
     const a = runTrial();
     const gaps=["effect_present_receipt_missing","receipt_present_effect_missing"].map(runEvidenceGap);
