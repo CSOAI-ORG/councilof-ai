@@ -204,4 +204,36 @@ describe("the producer prints a figure only when the home page would", () => {
     const recent = figureLines(distributionSection(d))[1];
     expect(recent).toContain("514,000 gross downloads — state PARTIAL, 211 of 212 counters answered, so it is a LOWER BOUND over those, never a total over all of them.");
   });
+
+  it("gives the llms.txt lead CSOAI's own figure only, a PARTIAL one as a lower bound, an unreadable census none", async () => {
+    const { distributionLead } = await producer();
+    const lead = distributionLead(census());
+    expect(lead).toContain("CSOAI's own packages show 890,521 gross downloads since first release (state READ, 212 of 212 counters answered, as_of 2026-11-16T04:40:31Z;");
+    for (const other of ["2,746,597", "228,554", "3,852,241", "771,433", "3,637,118"]) expect(lead).not.toContain(other);
+    expect(lead).toContain("A download is distribution, not adoption, and MEOK AI Labs is counted on its own line below and never added.");
+    const partial = census();
+    partial.by_entity.downloads_all_time.csoai = row(890000, 211, 212, "PARTIAL");
+    expect(distributionLead(partial)).toContain("890,000 gross downloads since first release (state PARTIAL, 211 of 212 counters answered, so it is a LOWER BOUND");
+    const broken = census();
+    broken.schema = "csoai.distribution/0.0";
+    expect(distributionLead(broken)).toMatch(/^Distribution: no download figure is printed from the census \(its schema is not csoai\.distribution\/0\.1;/);
+    expect(distributionLead(broken)).not.toMatch(/\d{1,3}(?:,\d{3})+/);
+  });
+});
+
+describe("the lead of llms.txt states distribution by the section's rule (21 Nov 2026)", () => {
+  it("the published lead line is the producer's lead for the committed census, and nothing else", async () => {
+    const { distributionLead, distributionRead } = await producer();
+    const lead = distributionLead(dist);
+    const head = R("public/llms.txt").split("\n## ")[0];
+    expect(head.split("\n"), "the lead carries the distribution line once, as a summary line").toContain(`> ${lead}`);
+    const read = distributionRead(dist);
+    expect(read.reason).toBeUndefined();
+    expect(lead).toContain(`${fmt(read.csoai.lifetime.value)} gross downloads since first release`);
+    for (const key of WINDOWS) {
+      expect(head, `the lead must not print MEOK AI Labs' ${key}`).not.toContain(fmt(dist.by_entity[key].meok.value));
+      expect(head, `the lead must not print the account's ${key}`).not.toContain(fmt(dist.totals[key].value));
+    }
+    expect(R("scripts/llms/llms.txt.tmpl")).toContain("> {{DISTRIBUTION_LEAD}}\n");
+  });
 });

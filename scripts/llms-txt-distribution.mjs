@@ -75,6 +75,22 @@ const stated = (row) =>
   `state ${row.state}, ${fmtN(row.covered)} of ${fmtN(row.attempted)} counters answered` +
   (row.state === "PARTIAL" ? ", so it is a LOWER BOUND over those, never a total over all of them" : "");
 
+/**
+ * The one-line distribution claim in the lead of llms.txt (21 Nov 2026, front-door lane): CSOAI's
+ * own cumulative figure, with its state, coverage and as_of on the same line, read by the same
+ * rule as the section. MEOK AI Labs' figure is never printed here or added in; the lead points to
+ * its own line in the section. When the census is not readable the lead says so and prints nothing.
+ */
+export function distributionLead(d) {
+  const src = "https://councilof.ai/interop/distribution-latest.json";
+  const read = distributionRead(d);
+  if (read.reason) {
+    return `Distribution: no download figure is printed from the census (${read.reason}; source ${src}). Read it live before quoting one.`;
+  }
+  const r = read.csoai.lifetime;
+  return `Distribution: CSOAI's own packages show ${fmtN(r.value)} gross downloads since first release (${stated(r)}, as_of ${read.asOf}; source ${src}). A download is distribution, not adoption, and MEOK AI Labs is counted on its own line below and never added.`;
+}
+
 // Every figure carries the artifact's own state, coverage and as_of.
 //
 // WHY EVERY LINE NAMES covered/attempted. A distribution figure was once published here that was a

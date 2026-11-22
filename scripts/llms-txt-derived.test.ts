@@ -466,3 +466,43 @@ describe("a frozen candidate re-checks green at a later wall-clock time", () => 
     expect(otsAsOfVerdict(null, LATER_WALL_CLOCK)).toBeTruthy();
   });
 });
+
+/**
+ * The lead (the blockquote under the title) is what an answer engine quotes first (front-door lane,
+ * 21 Nov 2026). It makes each claim plainly, with its live source on the same line, and it carries
+ * no word the outward gate refuses: the claim boundary right below it states what we do not do.
+ */
+describe("the llms.txt lead puts a source beside every claim", () => {
+  const lead = () => R("public/llms.txt").split("\n").slice(1).filter((l) => l.startsWith("> "));
+  const LEAD_SOURCES: [string, RegExp, string][] = [
+    ["what we measure", /measures AI models, agents and the systems they call/, "https://councilof.ai/methodology/"],
+    ["the company record", /UK Companies House 16939677/, "https://find-and-update.company-information.service.gov.uk/company/16939677"],
+    ["the live board", /The live board is GET/, "https://councilof.ai/api/gspc"],
+    ["free verification", /re-check a signed measurement card for free, with no account/, "https://councilof.ai/gspc-verify/"],
+    ["the public keys", /public keys/, "https://csoai.org/.well-known/did.json"],
+    ["the corrections ledger", /public, signed corrections ledger/, "https://councilof.ai/api/corrections"],
+    ["distribution", /CSOAI's own packages/, "https://councilof.ai/interop/distribution-latest.json"],
+    ["the IETF drafts", /two Internet-Drafts on the IETF Datatracker/, "https://datatracker.ietf.org/doc/draft-templeman-scitt-measurement-capsule/"],
+    ["the drafts that cite them", /cited by three Internet-Drafts from another author/, "https://datatracker.ietf.org/doc/draft-templeman-scitt-framing-space/referencedby/"],
+    ["the W3C test set", /W3C AI KR Community Group/, "https://github.com/w3c-cg/aikr/pull/25"],
+    ["the x402 proposal", /x402 Foundation/, "https://github.com/x402-foundation/x402/issues/4127"],
+    ["the dispute route", /To object to, dispute or request a correction/, "https://councilof.ai/dispute/"],
+  ];
+
+  it("each claim sits on the same line as its source", () => {
+    const lines = lead();
+    expect(lines.length).toBeGreaterThanOrEqual(5);
+    for (const [name, claim, source] of LEAD_SOURCES) {
+      const line = lines.find((l) => claim.test(l));
+      expect(line, `the lead no longer says ${name}`).toBeTruthy();
+      expect(line, `${name} has lost its source`).toContain(source);
+    }
+  });
+
+  it("types no board count and carries no word the outward gate refuses", () => {
+    const text = lead().join("\n");
+    expect(text, "board counts are read from GET /api/gspc, never frozen into the lead").not.toMatch(/\b\d+\s+(?:axes|axis|measured)\b/i);
+    expect(text).not.toMatch(/certif|accredit|endorse|compliant/i);
+    expect(text, "a membership label waits on /interop/memberships.json").not.toMatch(/Linux Foundation|\bLF\b/);
+  });
+});

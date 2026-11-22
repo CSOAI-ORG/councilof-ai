@@ -20,6 +20,8 @@
  *   {{SEPARATED_LEADS}} {{TIES}} {{UNTESTED_SEPARATIONS}} {{COMPARISON_AXES}}  GET /api/gspc -> totals.*
  *   {{DISTRIBUTION_SECTION}}                                          public/interop/distribution-latest.json -> by_entity
  *                                                                      (scripts/llms-txt-distribution.mjs)
+ *   {{DISTRIBUTION_LEAD}}                                             the same file -> CSOAI's own by_entity row, for the
+ *                                                                      llms.txt lead (distributionLead, same module and rule)
  *   {{OTS_SECTION}}                                                   public/interop/ots/manifest.json
  *   {{EVIDENCE_RECORDS_SECTION}}                                      public/evidence/published-records.json (scripts/pubbus)
  *   {{FILE_INDEX_SECTION}}                                          public/interop/file-index.json -> the published interop tree
@@ -66,7 +68,7 @@ import { createHash } from "node:crypto";
 import path from "path";
 import { fileURLToPath } from "url";
 import { isPlaceholderLink } from "./internal-links-check.mjs";
-import { distributionSection } from "./llms-txt-distribution.mjs";
+import { distributionLead, distributionSection } from "./llms-txt-distribution.mjs";
 import {
   CAPTURE_PATH,
   llmsStdioSentence,
@@ -478,6 +480,7 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
     SEPARATED_LEADS: t.separated_leads, TIES: t.ties,
     UNTESTED_SEPARATIONS: t.untested_separations, COMPARISON_AXES: t.comparison_axes,
     DISTRIBUTION_SECTION: distributionSection(readJSON("public/interop/distribution-latest.json")),
+    DISTRIBUTION_LEAD: distributionLead(readJSON("public/interop/distribution-latest.json")),
     OTS_SECTION: otsSection(),
     EVIDENCE_RECORDS_SECTION: evidenceRecordsSection(),
     FILE_INDEX_SECTION: fileIndexSection(),
