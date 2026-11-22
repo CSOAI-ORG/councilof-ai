@@ -44,7 +44,7 @@ export function readCellSourceDigest(dir) {
  * mapping can preserve all source counts and still misreport coverage.
  * This check also rejects missing, extra, non-object and incomplete rows.
  */
-export function readFactShardAttribution(manifest, manifestPath) {
+export function readFactShardAttribution(manifest, manifestPath, sourceTableDir = dirname(resolve(manifestPath))) {
   const table=manifest?.tables?.measurements;
   check(table?.layout==="sharded" && Array.isArray(table.parts) && table.parts.length>0,
     "measurement shard layout missing");
@@ -52,7 +52,7 @@ export function readFactShardAttribution(manifest, manifestPath) {
   const models=Object.create(null);
   const seen=new Set();
   let rows=0,bytes=0,ungraded=0,missingModel=0;
-  const root=dirname(resolve(manifestPath));
+  const root=resolve(sourceTableDir);
   for (const part of table.parts) {
     check(typeof part.file==="string" &&
       /^gspc_measurements\/part-[0-9]{3}\.jsonl$/.test(part.file) &&
@@ -220,11 +220,17 @@ export function readCoverage(args) {
   const boardBytes=readFileSync(resolve(args.board));
   const manifestBytes=readFileSync(resolve(args.manifest));
   const prev=args.previous ? JSON.parse(readFileSync(resolve(args.previous),"utf8")) : null;
+  const tableDir=resolve(args.table ?? dirname(resolve(args.manifest)));
+  if (args.table) {
+    const canonical=readFileSync(join(tableDir,"MANIFEST.json"));
+    check(sha(canonical)===sha(manifestBytes),
+      "staged manifest bytes differ from source table-root manifest");
+  }
   check(args.evidence, "independent --evidence directory is required; manifest digest alone is not proof");
   return deriveCoverage(JSON.parse(boardBytes),JSON.parse(manifestBytes),
     {board_sha256:sha(boardBytes),fact_manifest_sha256:sha(manifestBytes),
       independent_source:readCellSourceDigest(args.evidence),
-      independent_table:readFactShardAttribution(JSON.parse(manifestBytes),args.manifest)},prev);
+      independent_table:readFactShardAttribution(JSON.parse(manifestBytes),args.manifest,tableDir)},prev);
 }
 
 const SELF=fileURLToPath(import.meta.url);
