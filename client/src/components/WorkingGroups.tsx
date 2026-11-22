@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { WORKING_GROUPS, WORKING_GROUPS_AS_OF, WORKING_GROUPS_CHARTER, REVOCATION_REVIEW_PROTOCOL, workingGroupBrief, workingGroupEnquiryHref } from "@/lib/workingGroups";
+import { WORKING_GROUPS, WORKING_GROUPS_AS_OF, WORKING_GROUPS_CHARTER, REVOCATION_REVIEW_PROTOCOL, REVOCATION_REVIEW_OBSERVATION, REVOCATION_REVIEW_SUMMARY, workingGroupBrief, workingGroupEnquiryHref } from "@/lib/workingGroups";
 import { axisRoute } from "@/lib/axisRoutes";
 
 import WorkingGroupTracker from "./WorkingGroupTracker";
+import WorkingGroupHITLOversight from "./WorkingGroupHITLOversight";
 
 const LINK = "underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4";
 
@@ -53,6 +54,7 @@ export default function WorkingGroups() {
         <p className="mt-2">Council of AI is an evidence and measurement project. Participation in another working group is not its endorsement. These groups do not certify compliance or speak for regulators.</p>
         <p className="mt-3"><a className={LINK} href={WORKING_GROUPS_CHARTER}>Read the full draft charter</a></p>
       </div>
+      <WorkingGroupHITLOversight />
       {view === "tracker" ? <WorkingGroupTracker /> : <div className="grid gap-4 md:grid-cols-2">
         {WORKING_GROUPS.map(group => (
           <article key={group.id} id={group.id} className="rounded-xl border border-border p-5">
@@ -60,7 +62,17 @@ export default function WorkingGroups() {
             <p className="mt-1 text-sm text-muted-foreground">Forming · chair and independent reviewer to be appointed</p>
             <p className="mt-3">{group.purpose}</p>
             <p className="mt-3"><strong>First task:</strong> {group.firstTask}</p>
-            {group.id === "agent-control" && <p className="mt-3"><a className={LINK} href={REVOCATION_REVIEW_PROTOCOL}>Open the runnable revocation trial</a><span className="block text-sm text-muted-foreground">Four local controls, including failures and unknown effects. Independent review is pending; production halt latency is unmeasured.</span></p>}
+            {group.id === "agent-control" && <div className="mt-3 space-y-2">
+              <p><a className={LINK} href={REVOCATION_REVIEW_PROTOCOL}>Open the runnable revocation trial</a></p>
+              <p><a className={LINK} href={REVOCATION_REVIEW_SUMMARY}>Read the M4 run results (2026-11-21)</a> · <a className={LINK} href={REVOCATION_REVIEW_OBSERVATION}>Open raw JSON</a></p>
+              <ul className="list-disc space-y-1 pl-5 text-sm">
+                <li>Cooperative: quiescence 0.235 ms after revocation.</li>
+                <li>Non-cancellable: effect completed 31.804 ms after issue; quiescence at 31.831 ms, beyond the fixture's 5 ms bound.</li>
+                <li>Disabled enforcement: 3 actions were admitted after revocation.</li>
+                <li>Unknown effect: still unresolved; no quiescence time was observed.</li>
+              </ul>
+              <p className="text-sm text-muted-foreground">One-process synthetic controls only. Production halt latency is unmeasured; independent review is pending.</p>
+            </div>}
             <details className="mt-3">
               <summary className="cursor-pointer font-medium focus-visible:outline focus-visible:outline-2">Axes in this group</summary>
               <ul className="mt-2 list-disc space-y-1 pl-5">
