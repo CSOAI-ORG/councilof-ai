@@ -16,6 +16,7 @@ import {
   a2aX402Extension,
   onRequestPost,
   x402PaymentErrorCode,
+  x402TaskContextId,
   x402TaskId,
   x402TaskSelection,
 } from "./a2a";
@@ -36,13 +37,15 @@ const CHALLENGE = {
 const REFUSAL = "facilitator rejected receipt: invalid_exact_evm_insufficient_balance";
 
 /** The paid route: 402 with no payment; with one, it delivers, or refuses when told to. */
-const stubRoute = (opts: { refuse?: boolean } = {}) => {
+const stubRoute = (opts: { refuse?: boolean; missing?: boolean } = {}) => {
   const seen: Request[] = [];
   vi.stubGlobal(
     "fetch",
     vi.fn(async (input: RequestInfo | URL) => {
       const req = input instanceof Request ? input : new Request(String(input));
       seen.push(req);
+      // A route that is not on this origin: the paid wrapper answers NOT_DEPLOYED, isError false.
+      if (opts.missing) return new Response("not found", { status: 404, headers: { "content-type": "text/plain" } });
       if (req.headers.get("x-payment") && !opts.refuse) {
         return new Response(JSON.stringify({ bundle: "assembled" }), {
           status: 200,
@@ -172,6 +175,20 @@ describe("the client pays with a Message that names the Task", () => {
     expect(task.artifacts).toBeUndefined();
   });
 
+  it("a paying follow-up that reaches a route which is not deployed fails the Task: no verification, no artifact", async () => {
+    stubRoute({ missing: true });
+    const taskId = x402TaskId("evidence_bundle", { obligation: "article-50" }) as string;
+    const { body } = await send({ taskId, parts: [{ text: "pay" }], metadata: { [STATUS_KEY]: "payment-submitted", [PAYLOAD_KEY]: PAYMENT } });
+    const task = body.result.task;
+    const structured = task.status.message.parts[1].data.result.structuredContent;
+    expect(structured.status).toBe("NOT_DEPLOYED");
+    expect(task.status.message.parts[1].data.result.isError).toBe(false); // a state, not a fault: so isError cannot decide
+    expect(task.status.state).toBe("TASK_STATE_FAILED");
+    expect(task.status.message.metadata[STATUS_KEY]).toBe("payment-submitted");
+    expect(task.status.message.metadata["x402.payment.receipts"]).toBeUndefined();
+    expect(task.artifacts).toBeUndefined();
+  });
+
   it("a follow-up with no payment gets the challenge again, as input-required", async () => {
     const seen = stubRoute();
     const taskId = x402TaskId("evidence_bundle", { obligation: "article-50" }) as string;
@@ -187,6 +204,9 @@ describe("the client pays with a Message that names the Task", () => {
     expect(seen).toHaveLength(0);
     expect(body.result.task.status.state).toBe("TASK_STATE_FAILED");
     expect(body.result.task.status.message.metadata[STATUS_KEY]).toBe("payment-rejected");
+    // No tool was dispatched, so the reply is not a TOOL_RESULT and writes no paid_call usage row.
+    expect(body.result.task.status.message.parts[1].data.kind).toBe("X402_PAYMENT_REJECTED");
+    expect(a2aPaidCallName(body)).toBeNull();
   });
 
   it("a payment that is not an object is refused before any route is called", async () => {
@@ -195,6 +215,51 @@ describe("the client pays with a Message that names the Task", () => {
     const { body } = await send({ taskId, parts: [{ text: "pay" }], metadata: { [PAYLOAD_KEY]: "e30=" } });
     expect(seen).toHaveLength(0);
     expect(body.error.code).toBe(-32602);
+  });
+});
+
+describe("the Task keeps the context it was issued in", () => {
+  it("a follow-up that names only the task answers in the challenge's context", async () => {
+    stubRoute();
+    const first = await send({ contextId: "ctx-issued", parts: [{ data: SELECT }] }, { "x-a2a-extensions": V02 });
+    const taskId = first.body.result.task.id;
+    expect(x402TaskContextId(taskId)).toBe("ctx-issued");
+    const { body } = await send({ taskId, parts: [{ text: "pay" }], metadata: { [PAYLOAD_KEY]: PAYMENT } });
+    expect(body.result.task.contextId).toBe("ctx-issued");
+    expect(body.result.task.status.message.contextId).toBe("ctx-issued");
+    expect(body.result.task.status.state).toBe("TASK_STATE_COMPLETED");
+  });
+
+  it("a challenge with no contextId is issued one, and the follow-up keeps it", async () => {
+    stubRoute();
+    const first = await send({ parts: [{ data: SELECT }] }, { "x-a2a-extensions": V02 });
+    const issued = first.body.result.task.contextId;
+    expect(typeof issued).toBe("string");
+    const { body } = await send({ taskId: first.body.result.task.id, parts: [{ text: "pay" }], metadata: { [PAYLOAD_KEY]: PAYMENT } });
+    expect(body.result.task.contextId).toBe(issued);
+  });
+
+  it("a follow-up that names the same context is served; one that names another is refused before any route", async () => {
+    const seen = stubRoute();
+    const taskId = x402TaskId("evidence_bundle", { obligation: "article-50" }, "ctx-issued") as string;
+    const same = await send({ taskId, contextId: "ctx-issued", parts: [{ text: "pay" }], metadata: { [PAYLOAD_KEY]: PAYMENT } });
+    expect(same.body.result.task.contextId).toBe("ctx-issued");
+    const before = seen.length;
+    const other = await send({ taskId, contextId: "ctx-other", parts: [{ text: "pay" }], metadata: { [PAYLOAD_KEY]: PAYMENT } });
+    expect(other.body.error.code).toBe(-32602);
+    expect(other.body.error.message).toMatch(/does not match the context/);
+    expect(seen.length).toBe(before);
+    // A rejection is held to the same rule.
+    const rejected = await send({ taskId, contextId: "ctx-other", parts: [{ text: "no" }], metadata: { [STATUS_KEY]: "payment-rejected" } });
+    expect(rejected.body.error.code).toBe(-32602);
+  });
+
+  it("an id whose context is not a string is not one this door issued", async () => {
+    const seen = stubRoute();
+    const b64 = (v: unknown) => btoa(JSON.stringify(v)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    const { body } = await send({ taskId: `x402-${b64({ t: "evidence_bundle", i: { obligation: "article-50" }, c: 7 })}`, parts: [{ text: "pay" }], metadata: { [PAYLOAD_KEY]: PAYMENT } });
+    expect(body.error.code).toBe(-32001);
+    expect(seen).toHaveLength(0);
   });
 });
 

@@ -937,8 +937,9 @@ function a2aPaymentMetadata(result: McpToolResult): Json | null {
  *   - Only a request that activates the extension (X-A2A-Extensions, or A2A-Extensions, naming
  *     one of A2A_X402_EXTENSION_URIS) gets a Task, and only for a metered skill's unpaid
  *     challenge. Every other reply is the Message it was before.
- *   - No task store. The Task's id is "x402-" + base64url of {tool, input}: the client carries
- *     its own request back. Nothing is trusted from it that the first call did not also send -
+ *   - No task store. The Task's id is "x402-" + base64url of {tool, input, contextId}: the client
+ *     carries its own request back, and the context it belongs to, so a follow-up that names
+ *     only the task stays in the conversation the challenge was issued in. Nothing is trusted from it that the first call did not also send -
  *     the input is validated against the tool's schema again, and the route verifies the payment
  *     against its own requirements for that input - so a forged id buys nothing a plain call
  *     would not. KV was not used: it is eventually consistent, and the paying message follows
@@ -970,13 +971,13 @@ export const X402_TASK_ID_MAX = 2048;
 const X402_TASK_EXCLUDED_ARGS = ["x_payment", "preview", "purchase_action"];
 
 /** The id of the payment Task for this call, or null when the input is too large to carry. */
-export function x402TaskId(tool: string, input: Json): string | null {
+export function x402TaskId(tool: string, input: Json, contextId?: string): string | null {
   // A blank x_payment and preview:false say nothing; anything else in that list is not a purchase.
   const carried: Json = { ...input };
   if (typeof carried.x_payment === "string" && carried.x_payment.trim() === "") delete carried.x_payment;
   if (carried.preview === false) delete carried.preview;
   if (X402_TASK_EXCLUDED_ARGS.some((key) => key in carried)) return null;
-  const json = JSON.stringify({ t: tool, i: carried }).replace(
+  const json = JSON.stringify({ t: tool, i: carried, ...(contextId ? { c: contextId } : {}) }).replace(
     /[\u0080-\uffff]/g,
     (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`,
   );
@@ -984,12 +985,26 @@ export function x402TaskId(tool: string, input: Json): string | null {
   return id.length <= X402_TASK_ID_MAX ? id : null;
 }
 
-/** The call an x402 Task id carries, or null when it is not one this door could have issued. */
-export function x402TaskSelection(taskId: string): ToolSelection | null {
+/** What an x402 Task id carries, decoded; null when it is not base64url JSON of an object. */
+function x402TaskBody(taskId: string): Json | null {
   if (!taskId.startsWith(X402_TASK_PREFIX) || taskId.length > X402_TASK_ID_MAX) return null;
   try {
-    const body = taskId.slice(X402_TASK_PREFIX.length).replace(/-/g, "+").replace(/_/g, "/");
-    const decoded = record(JSON.parse(atob(body)));
+    return record(JSON.parse(atob(taskId.slice(X402_TASK_PREFIX.length).replace(/-/g, "+").replace(/_/g, "/"))));
+  } catch {
+    return null;
+  }
+}
+
+/** The context an x402 Task was issued in, when its id carries one. */
+export function x402TaskContextId(taskId: string): string | null {
+  return str(x402TaskBody(taskId)?.c) ?? null;
+}
+
+/** The call an x402 Task id carries, or null when it is not one this door could have issued. */
+export function x402TaskSelection(taskId: string): ToolSelection | null {
+  try {
+    const decoded = x402TaskBody(taskId);
+    if (decoded && "c" in decoded && !str(decoded.c)) return null;
     const tool = str(decoded?.t);
     const input = record(decoded?.i);
     if (!tool || !input || !PAID_TOOL_NAMES.has(tool) || !TOOL_SKILL_SET.has(tool)) return null;
@@ -1036,9 +1051,13 @@ function x402TaskReply(
   let metadata: Json | null = args.paymentStatus
     ? { "x402.payment.status": args.paymentStatus }
     : a2aPaymentMetadata(result);
+  // Delivery is what the paid wrapper says was delivered, never the absence of an error: a route
+  // that is not deployed answers NOT_DEPLOYED / NOT_DELIVERED with isError false (a state, not a
+  // fault), and nothing was verified or delivered there.
+  const delivered = structured.status === "DELIVERED" && structured.delivery_state === "DELIVERED";
   if (!metadata) {
     metadata =
-      args.presented && !result.isError
+      args.presented && delivered
         ? // Delivered, and the route settles before it delivers, but it reported no settlement here.
           { "x402.payment.status": "payment-verified", "x402.payment.receipts": [] }
         : // A payload was received and its outcome is not established, or none was and none was taken.
@@ -1056,9 +1075,9 @@ function x402TaskReply(
   const state =
     metadata["x402.payment.status"] === "payment-required" && structured.status === "PAYMENT_REQUIRED"
       ? "TASK_STATE_INPUT_REQUIRED"
-      : result.isError
-        ? "TASK_STATE_FAILED"
-        : "TASK_STATE_COMPLETED";
+      : delivered
+        ? "TASK_STATE_COMPLETED"
+        : "TASK_STATE_FAILED";
   const completed = state === "TASK_STATE_COMPLETED";
   const body = {
     result: {
@@ -1192,15 +1211,16 @@ async function sendToolMessage(
   // X402 TASK (above): a follow-up on a payment Task always answers with that Task; a first call
   // gets one only when the extension is activated and the answer is the unpaid challenge.
   if (metered && x402Task) {
+    const taskContext = contextId ?? crypto.randomUUID();
     const taskId =
       x402Task.taskId ??
       (x402Task.extension && paymentChannel === "none" && structured?.status === "PAYMENT_REQUIRED"
-        ? x402TaskId(tool, input)
+        ? x402TaskId(tool, input, taskContext)
         : null);
     if (taskId) {
       return x402TaskReply(id, {
         taskId,
-        contextId: contextId ?? crypto.randomUUID(),
+        contextId: taskContext,
         extension: x402Task.extension,
         result,
         presented: paymentChannel !== "none",
@@ -1256,7 +1276,14 @@ async function sendMessage(id: unknown, params: unknown, origin: string, caller?
     if (!paying) {
       return rpcError(id, A2A_ERROR.TASK_NOT_FOUND, "task not found: this is not an x402 payment Task this door issues", "TASK_NOT_FOUND", { taskId: taskId.slice(0, 64) });
     }
-    const contextId = str(message.contextId) ?? crypto.randomUUID();
+    // A follow-up that names only the task stays in the task's context (A2A: the agent infers it
+    // from the task). One that names a different context is refused before anything runs.
+    const issuedIn = x402TaskContextId(taskId);
+    const named = str(message.contextId);
+    if (issuedIn && named && named !== issuedIn) {
+      return rpcError(id, A2A_ERROR.INVALID_PARAMS, "message.contextId does not match the context this task was issued in; omit it or send the task's contextId. Nothing was forwarded; nothing was charged.", "INVALID_PARAMS", { field: "params.message.contextId" });
+    }
+    const contextId = issuedIn ?? named ?? crypto.randomUUID();
     if (record(message.metadata)?.["x402.payment.status"] === "payment-rejected") {
       // The client declined the terms. Nothing is run, forwarded or charged.
       return x402TaskReply(id, {
@@ -1267,7 +1294,8 @@ async function sendMessage(id: unknown, params: unknown, origin: string, caller?
         paymentStatus: "payment-rejected",
         result: { content: [], structuredContent: { status: "PAYMENT_REJECTED_BY_CLIENT", nothing_charged: true }, isError: true },
         textPart: { text: `${paying.tool}: the client rejected the payment requirements. Nothing was run and nothing was charged.`, mediaType: "text/plain" },
-        dataPart: { data: { kind: "TOOL_RESULT", skill: paying.tool, tool: paying.tool, state: "PAYMENT_REJECTED_BY_CLIENT", metered: true, payment_channel: "none", door: "POST /api/a2a", register: REGISTER }, mediaType: "application/json" },
+        // Not a TOOL_RESULT: no tool was dispatched, so a2aPaidCallName writes no paid_call row.
+        dataPart: { data: { kind: "X402_PAYMENT_REJECTED", skill: paying.tool, tool: paying.tool, state: "PAYMENT_REJECTED_BY_CLIENT", dispatched: false, door: "POST /api/a2a", register: REGISTER }, mediaType: "application/json" },
       });
     }
     return sendToolMessage(id, paying, contextId, origin, caller, a2aMetaPayment(message), { extension: x402Extension, taskId });
