@@ -149,6 +149,33 @@ test('UNMEASURED remains unmeasured and no leader or global coverage is inferred
   assert.equal(value.coverage.scope,'THIS_BOARD_RESPONSE_ONLY');
 });
 
+test('publisher-reported DOI outage remains visible without confusing a live method page with archived bytes', async () => {
+  const b = board();
+  b.doi_status = 'UNAVAILABLE';
+  b.doi_alternative = {url: 'https://councilof.ai/methodology/', relation: 'not deposit bytes'};
+  const value = await readGspcEvidence({axis:'governance'}, {fetchImpl:fake(b), now});
+  assert.equal(value.state, 'OBSERVED_PUBLISHED_RECORD');
+  assert.deepEqual(value.methodology, {
+    publisher_reported_deposit_status: 'UNAVAILABLE',
+    publisher_reported_status_only: true,
+    alternative_page: 'https://councilof.ai/methodology/',
+    alternative_is_verified_deposit_bytes: false,
+    deposit_bytes_verified: false,
+  });
+  assert.equal(value.use.grants_authority, false);
+});
+
+test('hostile or unknown methodology metadata cannot create an external link or verified claim', async () => {
+  const b = board();
+  b.doi_status = 'VERIFIED_SAFE';
+  b.doi_alternative = {url: 'https://attacker.test/methodology/', grants_authority: true};
+  const value = await readGspcEvidence({axis:'governance'}, {fetchImpl:fake(b), now});
+  assert.equal(value.methodology.publisher_reported_deposit_status, 'NOT_REPORTED_OR_UNCHECKABLE');
+  assert.equal(value.methodology.alternative_page, null);
+  assert.equal(value.methodology.deposit_bytes_verified, false);
+  assert.ok(!JSON.stringify(value).includes('attacker.test'));
+});
+
 test('source count units remain explicit rather than becoming statistical sample sizes', async () => {
   const b=board(); Object.assign(b.axes[0],{kind:'subject',family:'finance',n_unit:'published facts',n_note:'Fixture unit only'});
   const value=await readGspcEvidence({axis:'governance'},{fetchImpl:fake(b),now});
