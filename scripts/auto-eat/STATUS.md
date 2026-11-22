@@ -1,15 +1,15 @@
 # EAT — retained input status
 
-Report generated 2026-11-17T22:24:28Z; saved-source liveness is not established.
+Report generated 2026-11-22T03:15:55Z; saved-source liveness is not established.
 
 | Field | Value |
 |---|---|
-| Discovered queue rows | 13297 |
-| Probed identities | 13297 |
+| Discovered queue rows | 13336 |
+| Probed identities | 13336 |
 | Validated unsigned staged atoms | 8 |
-| Retained LIVE/probed sample | 42/42 (1.0) |
+| Retained LIVE/probed sample | 40/41 (0.9756) |
 | Earliest retained staged observation | 2026-09-01 |
-| Latest retained staged observation | 2026-11-17T22:24:28Z |
+| Latest retained staged observation | 2026-11-22T03:15:55Z |
 | Signature verification | NOT PERFORMED |
 | Files with signature text | 8 (not verified signatures) |
 
@@ -17,12 +17,12 @@ Report generated 2026-11-17T22:24:28Z; saved-source liveness is not established.
 
 | Kind | Count |
 |---|---|
-| erc8004 | 1763 |
-| hf-model | 4116 |
-| hf-space | 4094 |
+| erc8004 | 1773 |
+| hf-model | 4125 |
+| hf-space | 4104 |
 | mcp-server | 668 |
 | npm-registry | 2409 |
-| xrpl-account | 247 |
+| xrpl-account | 257 |
 
 ## Scope
 
