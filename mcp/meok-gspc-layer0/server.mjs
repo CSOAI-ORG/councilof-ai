@@ -76,15 +76,17 @@ const TOOLS = [
   },
   {
     name: 'zcode_desktop',
-    description: 'Bridge to the ZCode Desktop Commander MCP bridge (127.0.0.1:8765) on the host Mac. op="list" returns DC tool names; op="call" forwards a tool call (tool + arguments) and returns its result. This executes with the HOST\'s authority — house law: stage never fire; no sends/money/deletes without the owner.',
+    description: 'Read-only Desktop Commander metadata bridge. op="list" discovers names; op="call" is restricted to list_devices with empty arguments. A listed tool is not a grant. For any effectful host action use a separately authenticated, operator-approved workflow; this bridge cannot execute it.',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     inputSchema: {
       type: 'object',
       properties: {
         op: { type: 'string', enum: ['list', 'call'], description: 'list = enumerate DC tools; call = invoke one' },
-        tool: { type: 'string', description: 'DC tool name (for op=call)' },
-        arguments: { type: 'object', description: 'DC tool arguments (for op=call)' },
+        tool: { type: 'string', const: 'list_devices', description: 'Only read-only list_devices is eligible for op=call' },
+        arguments: { type: 'object', properties: {}, additionalProperties: false, description: 'Must be empty for list_devices' },
       },
       required: ['op'],
+      additionalProperties: false,
     },
   },
 ];
@@ -97,7 +99,25 @@ async function handleToolCall(name, args = {}) {
     return JSON.stringify(await readGspcEvidence(args), null, 2);
   }
   if (name === 'zcode_desktop') {
-    // Stateless bridge to the ZCode Desktop Commander MCP bridge on this host (127.0.0.1:8765).
+    // MCP discovery is not authority. No caller-selected effectful host tool may cross
+    // this bridge without an independent authenticated operator grant. Such a grant
+    // does not exist here; keep this source candidate read-only and fail closed.
+    if (!args || typeof args !== 'object' || Array.isArray(args) ||
+        Object.keys(args).some(k => !['op', 'tool', 'arguments'].includes(k)) ||
+        !['list', 'call'].includes(args.op)) {
+      return JSON.stringify({ state: 'REFUSED', error: 'invalid_desktop_request' });
+    }
+    if (args.op === 'call' && (args.tool !== 'list_devices' ||
+        (Object.hasOwn(args, 'arguments') &&
+          (!args.arguments || typeof args.arguments !== 'object' || Array.isArray(args.arguments) ||
+           Object.keys(args.arguments).length !== 0)))) {
+      return JSON.stringify({ state: 'REFUSED', error: 'desktop_capability_not_authorized',
+        execution_authority: 'NOT_GRANTED', request_dispatched: false });
+    }
+    if (args.op === 'list' && (Object.hasOwn(args, 'tool') || Object.hasOwn(args, 'arguments'))) {
+      return JSON.stringify({ state: 'REFUSED', error: 'invalid_desktop_request', request_dispatched: false });
+    }
+    // Stateless read-only bridge to local Desktop Commander MCP (127.0.0.1:8765).
     const DC = process.env.DC_BRIDGE_URL || 'http://127.0.0.1:8765/mcp';
     const rpc = (payload) => fetch(DC, {
       method: 'POST',
@@ -118,7 +138,7 @@ async function handleToolCall(name, args = {}) {
         return JSON.stringify({ bridge: DC, tools: reply.result.tools.map((t) => t.name) });
       }
       if (args.op === 'call') {
-        if (!args.tool) return JSON.stringify({ error: 'op=call requires tool' });
+        // The exact tool/argument allowlist was checked before constructing any RPC.
         const r = await rpc({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: args.tool, arguments: args.arguments || {} } });
         if (!r.ok) {
           await r.body?.cancel().catch(() => {});
@@ -133,7 +153,7 @@ async function handleToolCall(name, args = {}) {
         }
         return JSON.stringify({ bridge: DC, tool: args.tool, result: reply.result });
       }
-      return JSON.stringify({ error: 'op must be list|call' });
+      return JSON.stringify({ state: 'REFUSED', error: 'invalid_desktop_request' });
     } catch (e) {
       return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_REQUEST_FAILED' });
     }
