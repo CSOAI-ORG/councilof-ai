@@ -258,7 +258,10 @@ function buildMcp(
     server.server.setRequestHandler("tools/list", (request) => toolsListResult(definitions, request.params));
     return server;
   },
-  { legacy: "stateless", maxSubscriptions: MAX_SUBSCRIPTIONS },
+  // SDK 2.1.0 and later stop reading a POST body at 4 MiB unless told otherwise (#2698). The door
+  // has already read and capped the body at MCP_MAX_REQUEST_BYTES, so the SDK gets the same bound
+  // and the 20 MiB base64 argument still reaches its tool.
+  { legacy: "stateless", maxSubscriptions: MAX_SUBSCRIPTIONS, maxRequestBodySize: MCP_MAX_REQUEST_BYTES },
   );
 }
 /** No subscriptions are served on these doors. Raise it only together with the capability bits. */
@@ -708,8 +711,8 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
   if (id === undefined && !call.method.startsWith("notifications/"))
     return jsonError(400, -32600, "A request id is required for this method.");
   const params = object(call.params) ? call.params : {};
-  // Published SDK 2.0.0 accepts a modern body without its version header.
-  // Keep the normative HTTP requirement at our mount until upstream closes it.
+  // A modern body needs its version header. SDK 2.0.0 accepted one without it; 2.1.0 and later
+  // refuse it too (#2590). This mount answers first, so the answer does not move with the SDK.
   if (
     object(params._meta) &&
     "io.modelcontextprotocol/protocolVersion" in params._meta &&

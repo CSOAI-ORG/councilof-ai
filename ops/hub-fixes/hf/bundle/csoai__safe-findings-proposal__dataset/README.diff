@@ -1,0 +1,112 @@
+--- a/csoai/safe-findings-proposal/README.md (live)
++++ b/csoai/safe-findings-proposal/README.md (proposed)
+@@ -10,26 +10,59 @@
+ - reverification
+ - json-schema
+ - transparency
+-viewer: false
+-# TODO task_categories: Growth proposes question-answering (verify against content)
++- council-of-ai
+ size_categories:
+ - n<1K
+ configs:
+-- config_name: default
+-  data_files:
+-  - out/C-2026-0928-01.post-fix.safe-rv.json
+-  - out/C-2026-0928-01.pre-fix.safe-rv.json
+-  - out/C-2026-0928-02.post-fix.safe-rv.json
+-  - out/C-2026-0928-02.pre-fix.safe-rv.json
+-  - out/corrections-ledger.integrity.safe-rv.json
+-  - out/corrections-ledger.timing.safe-rv.json
+-  - out/disclosure-lag.activity-stopped.safe-rv.json
+-  - out/disclosure-lag.incident-to-notification.safe-rv.json
+-  - out/index.json
+-  - out/mcp-contract-parity.v0.1.2.safe-rv.json
+-  - out/measurement-capsules.index.safe-rv.json
+-  - safe-rfc-fieldmap.json
+-  - schema/safe-reverification-record-v0.1.schema.json
++- config_name: out-corrections-ledger-integrity-safe-rv
++  data_files:
++  - split: train
++    path: out/corrections-ledger.integrity.safe-rv.json
++  default: true
++- config_name: out-corrections-ledger-timing-safe-rv
++  data_files:
++  - split: train
++    path: out/corrections-ledger.timing.safe-rv.json
++- config_name: out-disclosure-lag-activity-stopped-safe-rv
++  data_files:
++  - split: train
++    path: out/disclosure-lag.activity-stopped.safe-rv.json
++- config_name: out-disclosure-lag-incident-to-notification-safe-rv
++  data_files:
++  - split: train
++    path: out/disclosure-lag.incident-to-notification.safe-rv.json
++- config_name: out-index
++  data_files:
++  - split: train
++    path: out/index.json
++- config_name: out-safe-rv
++  data_files:
++  - split: train
++    path: out/mcp-contract-parity.v0.1.2.safe-rv.json
++- config_name: out-measurement-capsules-index-safe-rv
++  data_files:
++  - split: train
++    path: out/measurement-capsules.index.safe-rv.json
++- config_name: safe-rfc-fieldmap
++  data_files:
++  - split: train
++    path: safe-rfc-fieldmap.json
++- config_name: out-post-fix-safe-rv
++  data_files:
++  - split: train
++    path: out/C-2026-0928-01.post-fix.safe-rv.json
++- config_name: out-post-fix-safe-rv-v2
++  data_files:
++  - split: train
++    path: out/C-2026-0928-02.post-fix.safe-rv.json
++- config_name: out-pre-fix-safe-rv
++  data_files:
++  - split: train
++    path: out/C-2026-0928-01.pre-fix.safe-rv.json
++- config_name: out-pre-fix-safe-rv-v2
++  data_files:
++  - split: train
++    path: out/C-2026-0928-02.pre-fix.safe-rv.json
+ ---
+ 
+ <p align="center">
+@@ -138,3 +171,32 @@
+ - Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).
+ - Conformance kit for signed-receipts/v1, with test vectors for implementers: https://councilof.ai/spec/signed-receipts/v1/conformance/
+ <!-- csoai-cite-v1:end -->
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table. The viewer was previously disabled (`viewer: false`); it is re-enabled now that every subset loads.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `out-corrections-ledger-integrity-safe-rv` (default) | `out/corrections-ledger.integrity.safe-rv.json` | 1 |
++| `out-corrections-ledger-timing-safe-rv` | `out/corrections-ledger.timing.safe-rv.json` | 1 |
++| `out-disclosure-lag-activity-stopped-safe-rv` | `out/disclosure-lag.activity-stopped.safe-rv.json` | 1 |
++| `out-disclosure-lag-incident-to-notification-safe-rv` | `out/disclosure-lag.incident-to-notification.safe-rv.json` | 1 |
++| `out-index` | `out/index.json` | 1 |
++| `out-safe-rv` | `out/mcp-contract-parity.v0.1.2.safe-rv.json` | 1 |
++| `out-measurement-capsules-index-safe-rv` | `out/measurement-capsules.index.safe-rv.json` | 1 |
++| `safe-rfc-fieldmap` | `safe-rfc-fieldmap.json` | 1 |
++| `out-post-fix-safe-rv` | `out/C-2026-0928-01.post-fix.safe-rv.json` | 1 |
++| `out-post-fix-safe-rv-v2` | `out/C-2026-0928-02.post-fix.safe-rv.json` | 1 |
++| `out-pre-fix-safe-rv` | `out/C-2026-0928-01.pre-fix.safe-rv.json` | 1 |
++| `out-pre-fix-safe-rv-v2` | `out/C-2026-0928-02.pre-fix.safe-rv.json` | 1 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/safe-findings-proposal", "out-corrections-ledger-integrity-safe-rv", split="train")
++```
++
++<!-- csoai-card-fixes:end -->

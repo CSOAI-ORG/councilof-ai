@@ -1,0 +1,324 @@
+{
+  "title": "GSPC · Census: mcp remote — Council of AI",
+  "id": "nicktempleman/csoai-gspc-census-mcp-remote",
+  "id_no": 12621189,
+  "subtitle": "Mirror of HF csoai/mcp-remote-census. Measurement, not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-census-mcp-remote`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-census-mcp-remote -p ./dataset --unzip\n```\n\nStart by inspecting `results.v0.2.public.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `record.json`\n- `record.json.ots`\n- `record.ots.json`\n- `record.v0.2.json`\n- `record.signed.json`\n- `record.v0.1.1.json`\n- `record.v0.2.1.json`\n- See the Data tab for all 74 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement: mcp remote. Not a certification.**\n\n> **Mirror.** Copy of https://huggingface.co/datasets/csoai/mcp-remote-census at revision `e8fce109eed4a795950e1faf2dddf92bad360573`, made 2026-10-16. The Hugging Face copy is the original; if the two differ, it wins.\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n\n# Remote MCP endpoint census - measured read, 2026-09-25\n\n> **Start here — free verify:**\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-10-16.\n- 74 files, 44,178,977 bytes. File types: .json (48), .ots (16), .jsonl (9), .md (1).\n- Hugging Face twin: [csoai/mcp-remote-census](https://huggingface.co/datasets/csoai/mcp-remote-census). 64 of 74 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_mcp_remote_census_v02_2026,\n  title        = {Remote MCP endpoint census, v0.2 (2026-09-26)},\n  author       = {{CSOAI Ltd (Council of AI)}},\n  year         = {2026},\n  howpublished = {\\url{https://huggingface.co/datasets/csoai/mcp-remote-census}},\n  note         = {record.v0.2.json, sha256 a18447e5bb27decbc7d20c1542994811f47dee94b4650faed7b231af5c5d72bd; CC-BY-4.0}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 64 of 74 files have the same byte size as files in the Hugging Face dataset [csoai/mcp-remote-census](https://huggingface.co/datasets/csoai/mcp-remote-census) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "CHANGES.2026-09-27.json",
+      "description": "JSON document. top-level keys: schema, dataset, date, current, previous, rules, frame_read_states, counts, key, added, dropped, state_changed, out_of_plan, not_compared_not_attempted_in_one_run, unchanged, transitions. `added` holds 7714 records with fields: name (url), state (string), ranked_by (string), rank (integer). Same byte size as `CHANGES.2026-09-27.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,157,315 bytes."
+    },
+    {
+      "path": "CHANGES.2026-10-04.json",
+      "description": "JSON document. top-level keys: schema, dataset, date, current, previous, rules, frame_read_states, counts, key, added, dropped, state_changed, out_of_plan, not_compared_not_attempted_in_one_run, unchanged, transitions. `added` holds 1600 records with fields: name (url), state (string), ranked_by (string), rank (integer). Same byte size as `CHANGES.2026-10-04.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 281,651 bytes."
+    },
+    {
+      "path": "CHANGES.2026-10-11.json",
+      "description": "JSON document. top-level keys: schema, dataset, date, current, previous, rules, frame_read_states, counts, key, added, dropped, state_changed, out_of_plan, not_compared_not_attempted_in_one_run, unchanged, transitions. `added` holds 1617 records with fields: name (url), state (string), ranked_by (string), rank (integer). Same byte size as `CHANGES.2026-10-11.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 297,585 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 35,385 bytes."
+    },
+    {
+      "path": "frame/plan-top20.json",
+      "description": "`493c81c10a2b91c0707e2df3e6e6c07f614898d881282ae18766b703c8d53565`. JSON document. top-level keys: schema, as_of, frame_run, candidates, excluded, fraction, top_n, signal_mix_top, signal_mix_all, endpoints_with_signal, endpoints_with_any_signal, npm_weekly_downloads, pypi_downloads_7d, dockerhub_pull_count, smithery_use_count, github_stars, ranking_rule, probing, frame_population_total_null. Same byte size as `frame/plan-top20.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,900 bytes."
+    },
+    {
+      "path": "frame/summary.json",
+      "description": "`ce4bb52a70a6077c3f2ab004e04da616578bcad362bf712e86f63c9da48428e2`. JSON document. top-level keys: schema, run_started, run_finished, user_agent, min_interval_s, requests, retry_after_waits, sources, union, overlap, canonicalisation, not_read_by_this_frame, what_a_row_is, what_it_never_proves, files. Same byte size as `frame/summary.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 5,534 bytes."
+    },
+    {
+      "path": "ots-bitcoin-check-2026-09-25.json",
+      "description": "JSON document. top-level keys: schema, repo, read_at_revision, checked_utc, method, not_a_claim, proofs. `proofs` holds 2 records with fields: file (string), target (string), target_sha256 (string), file_digest (string), binds_to_target (boolean), orig_sha256 (string), upgraded_sha256 (string), state (string), bitcoin (string), pending (string), bitcoin_ots (string). Same byte size as `ots-bitcoin-check-2026-09-25.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 7,215 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 2 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-25/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,387 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/record.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/record.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,777 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/record.v0.1.1.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/record.v0.1.1.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,777 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-26/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 2 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-26/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,402 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-26/record.v0.2.1.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-26/record.v0.2.1.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,637 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-26/record.v0.2.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-26/record.v0.2.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,602 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-27/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-27/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,548 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-27/record.2026-09-27.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-27/record.2026-09-27.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,602 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-04/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-10-04/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,548 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-04/record.2026-10-04.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-10-04/record.2026-10-04.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,707 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-11/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 1 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-10-11/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,548 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-10-11/record.2026-10-11.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-10-11/record.2026-10-11.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,532 bytes."
+    },
+    {
+      "path": "probe/not_attempted.2026-09-27.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 141,500 bytes."
+    },
+    {
+      "path": "probe/not_attempted.2026-10-04.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 162,525 bytes."
+    },
+    {
+      "path": "probe/not_attempted.2026-10-11.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 183,810 bytes."
+    },
+    {
+      "path": "probe/not_attempted.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 45,712 bytes."
+    },
+    {
+      "path": "probe/results.public.2026-09-27.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 6,390,989 bytes."
+    },
+    {
+      "path": "probe/results.public.2026-10-04.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 7,217,722 bytes."
+    },
+    {
+      "path": "probe/results.public.2026-10-11.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 8,017,729 bytes."
+    },
+    {
+      "path": "probe/results.public.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,920,046 bytes."
+    },
+    {
+      "path": "probe/summary.json",
+      "description": "`991ef00bf40c6c56960ff08110fdf3ebceb366f5d1f8b15aadf3f85cb8ef9ae1`. JSON document. top-level keys: schema, started, finished, user_agent, plan, n_planned, n_attempted, n_not_attempted, not_attempted_by_reason, read_state, read_state_rule, states, states_by_rank_tier, own_estate_endpoints, auth_required_http_status, mcp_request_not_sent, responded, requests, limits, sent_to_endpoints …. `corrections` holds 1 records with fields: what (string), endpoints_reprobed (integer), reprobe_window (string), transitions (string), first_run_kept_as (string). Same byte size as `probe/summary.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 5,650 bytes."
+    },
+    {
+      "path": "record.2026-09-27.json",
+      "description": "JSON document. top-level keys: schema, record_id, revision_date, as_of, built_utc, publisher, licence, what_this_is, revision_of, producer, frame, run, summary_cross_checks, changes, not_evidence_of, verify, plan, published_files. Same byte size as `record.2026-09-27.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 10,866 bytes."
+    },
+    {
+      "path": "record.2026-09-27.json.ots",
+      "description": "OpenTimestamps proof file for `record.2026-09-27.json` (included in this dataset). Same byte size as `record.2026-09-27.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 565 bytes."
+    },
+    {
+      "path": "record.2026-09-27.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning. Same byte size as `record.2026-09-27.ots.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,046 bytes."
+    },
+    {
+      "path": "record.2026-09-27.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `record.2026-09-27.signed.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,987 bytes."
+    },
+    {
+      "path": "record.2026-10-04.json",
+      "description": "JSON document. top-level keys: schema, record_id, revision_date, as_of, built_utc, publisher, licence, what_this_is, revision_of, producer, frame, run, summary_cross_checks, changes, not_evidence_of, verify, plan, published_files. Same byte size as `record.2026-10-04.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 10,917 bytes."
+    },
+    {
+      "path": "record.2026-10-04.json.ots",
+      "description": "OpenTimestamps proof file for `record.2026-10-04.json` (included in this dataset). Same byte size as `record.2026-10-04.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 705 bytes."
+    },
+    {
+      "path": "record.2026-10-04.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning. Same byte size as `record.2026-10-04.ots.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,046 bytes."
+    },
+    {
+      "path": "record.2026-10-04.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `record.2026-10-04.signed.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,989 bytes."
+    },
+    {
+      "path": "record.2026-10-11.json",
+      "description": "JSON document. top-level keys: schema, record_id, revision_date, as_of, built_utc, publisher, licence, what_this_is, revision_of, producer, frame, run, summary_cross_checks, changes, not_evidence_of, verify, plan, published_files. Same byte size as `record.2026-10-11.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 10,920 bytes."
+    },
+    {
+      "path": "record.2026-10-11.json.ots",
+      "description": "OpenTimestamps proof file for `record.2026-10-11.json` (included in this dataset). Same byte size as `record.2026-10-11.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 565 bytes."
+    },
+    {
+      "path": "record.2026-10-11.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning. Same byte size as `record.2026-10-11.ots.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,046 bytes."
+    },
+    {
+      "path": "record.2026-10-11.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `record.2026-10-11.signed.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,991 bytes."
+    },
+    {
+      "path": "record.json",
+      "description": "BITCOIN_ATTESTED at block 968519 (checked against 2 header sources: blockstream.info, mempool.space). Upgraded proof: `record.json.bitcoin.ots` (sha256 `7ba5fd4a0b39cd188b4b0df0eaa4426046790303391f4080ae943c22e15d1170`); the published pending proof `record.json.ots` is unchanged. JSON document. top-level keys: schema, record_id, as_of, built_utc, publisher, licence, what_this_is, read_state_vocabulary, units, producer, inputs, summary_cross_checks, independent_reads, frame, plan, probe, measured_tool_surface, protocol_version, anomalies, own_entries …. `anomalies` holds 3 records with fields: id (string), host (string), measured (string), what_we_say (string), what_we_do_not_say (string), correction_to_the_brief (string), stage (string). Same byte size as `record.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 23,574 bytes."
+    },
+    {
+      "path": "record.json.bitcoin.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `record.json.bitcoin.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,637 bytes."
+    },
+    {
+      "path": "record.json.ots",
+      "description": "OpenTimestamps proof file for `record.json` (included in this dataset). Same byte size as `record.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 670 bytes."
+    },
+    {
+      "path": "record.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning, signing_is_separate. Same byte size as `record.ots.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,099 bytes."
+    },
+    {
+      "path": "record.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `record.signed.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,494 bytes."
+    },
+    {
+      "path": "record.v0.1.1.json",
+      "description": "BITCOIN_ATTESTED at block 968527 (also blocks 968533, 968537, via other calendars) (checked against 2 header sources: blockstream.info, mempool.space). Upgraded proof: `record.v0.1.1.json.bitcoin.ots` (sha256 `b95f283e37d1e7624302b01ed823c96576eec0320eef286c9faa5808061a5a55`); the published pending . JSON document. top-level keys: schema, record_id, as_of, built_utc, publisher, licence, what_this_is, read_state_vocabulary, units, producer, inputs, summary_cross_checks, independent_reads, frame, plan, probe, measured_tool_surface, protocol_version, anomalies, own_entries …. `anomalies` holds 3 records with fields: id (string), host (string), measured (string), what_we_say (string), what_we_do_not_say (string), correction_to_the_brief (string), stage (string). Same byte size as `record.v0.1.1.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 32,867 bytes."
+    },
+    {
+      "path": "record.v0.1.1.json.bitcoin.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `record.v0.1.1.json.bitcoin.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 3,745 bytes."
+    },
+    {
+      "path": "record.v0.1.1.json.ots",
+      "description": "OpenTimestamps proof file for `record.v0.1.1.json` (included in this dataset). Same byte size as `record.v0.1.1.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 705 bytes."
+    },
+    {
+      "path": "record.v0.1.1.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning, signing_is_separate. Same byte size as `record.v0.1.1.ots.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,113 bytes."
+    },
+    {
+      "path": "record.v0.1.1.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `record.v0.1.1.signed.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,777 bytes."
+    },
+    {
+      "path": "record.v0.2.1.json",
+      "description": "JSON document. top-level keys: schema, record_version, record_id, as_of, built_utc, publisher, licence, what_this_is, read_state, read_state_rule, population, states, states_contacted_share, not_attempted_by_reason, rows_by_observation, states_by_observation, reuse, rights_gate, probe_run_2026-09-26, protocol_version …. Same byte size as `record.v0.2.1.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 21,257 bytes."
+    },
+    {
+      "path": "record.v0.2.1.json.ots",
+      "description": "OpenTimestamps proof file for `record.v0.2.1.json` (included in this dataset). Same byte size as `record.v0.2.1.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 530 bytes."
+    },
+    {
+      "path": "record.v0.2.1.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning, signing_is_separate. Same byte size as `record.v0.2.1.ots.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,113 bytes."
+    },
+    {
+      "path": "record.v0.2.1.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `record.v0.2.1.signed.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,373 bytes."
+    },
+    {
+      "path": "record.v0.2.json",
+      "description": "JSON document. top-level keys: schema, record_version, record_id, as_of, built_utc, publisher, licence, what_this_is, read_state, read_state_rule, population, states, states_contacted_share, not_attempted_by_reason, rows_by_observation, states_by_observation, reuse, rights_gate, probe_run_2026-09-26, protocol_version …. Same byte size as `record.v0.2.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 18,624 bytes."
+    },
+    {
+      "path": "record.v0.2.json.ots",
+      "description": "OpenTimestamps proof file for `record.v0.2.json` (included in this dataset). Same byte size as `record.v0.2.json.ots` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 600 bytes."
+    },
+    {
+      "path": "record.v0.2.ots.json",
+      "description": "JSON document. top-level keys: schema, file, sha256, ots_file, ots_sha256, stamped_utc, calendars_accepted, calendars_failed, proof_parses, proof_binds_to_file_digest, attestations, state, state_meaning, signing_is_separate. Same byte size as `record.v0.2.ots.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 1,109 bytes."
+    },
+    {
+      "path": "record.v0.2.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification, verify. Same byte size as `record.v0.2.signed.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,225 bytes."
+    },
+    {
+      "path": "results.v0.2.public.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 18,011,716 bytes."
+    },
+    {
+      "path": "run/2026-09-27/frame-summary.json",
+      "description": "JSON document. top-level keys: schema, run_started, run_finished, user_agent, min_interval_s, requests, retry_after_waits, sources, union, overlap, canonicalisation, not_read_by_this_frame, what_a_row_is, what_it_never_proves, files. Same byte size as `run/2026-09-27/frame-summary.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 5,541 bytes."
+    },
+    {
+      "path": "run/2026-09-27/plan-firstparty.json",
+      "description": "JSON document. top-level keys: schema, as_of, frame, psl, top20_plan, candidates, ineligible, tier_n, tier_by_basis, tier_already_in_top20_plan, tier_added_to_plan, tier_added_by_basis, tier_hosts, tier_registrable_domains, top_registrable_domains, rule, why, what_a_row_is, what_it_never_proves, probing. Same byte size as `run/2026-09-27/plan-firstparty.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,876 bytes."
+    },
+    {
+      "path": "run/2026-09-27/plan-union.json",
+      "description": "JSON document. top-level keys: schema, as_of, top20_n, firstparty_tier_n, firstparty_added, union_n, rights_gate_removed_n, rights_gate_removed, planned_n, rule, inputs. Same byte size as `run/2026-09-27/plan-union.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 835 bytes."
+    },
+    {
+      "path": "run/2026-09-27/probe-summary.json",
+      "description": "JSON document. top-level keys: schema, started, finished, user_agent, plan, n_planned, n_attempted, n_not_attempted, not_attempted_by_reason, read_state, read_state_rule, states, states_by_rank_tier, own_estate_endpoints, auth_required_http_status, mcp_request_not_sent, responded, requests, limits, sent_to_endpoints …. Same byte size as `run/2026-09-27/probe-summary.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 5,793 bytes."
+    },
+    {
+      "path": "run/2026-09-27/rights-gate-summary.json",
+      "description": "JSON document. top-level keys: schema, run_started, run_finished, frame, what_a_row_is, n_subjects, population_total, population_total_null_because, decisions, unknown_share, decision_reasons, decisions_by_source, effective_licence_by_spdx_subjects, effective_licence_by_category_subjects, subjects_by_licence_evidence_kind, packages_by_spdx, packages_looked_up, package_lookup_status, hf_space_cards, github_sample …. Same byte size as `run/2026-09-27/rights-gate-summary.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 20,412 bytes."
+    },
+    {
+      "path": "run/2026-10-04/frame-summary.json",
+      "description": "JSON document. top-level keys: schema, run_started, run_finished, user_agent, min_interval_s, requests, retry_after_waits, sources, union, overlap, canonicalisation, not_read_by_this_frame, what_a_row_is, what_it_never_proves, files. Same byte size as `run/2026-10-04/frame-summary.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 5,541 bytes."
+    },
+    {
+      "path": "run/2026-10-04/plan-firstparty.json",
+      "description": "JSON document. top-level keys: schema, as_of, frame, psl, top20_plan, candidates, ineligible, tier_n, tier_by_basis, tier_already_in_top20_plan, tier_added_to_plan, tier_added_by_basis, tier_hosts, tier_registrable_domains, top_registrable_domains, rule, why, what_a_row_is, what_it_never_proves, probing. Same byte size as `run/2026-10-04/plan-firstparty.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,900 bytes."
+    },
+    {
+      "path": "run/2026-10-04/plan-union.json",
+      "description": "JSON document. top-level keys: schema, as_of, top20_n, firstparty_tier_n, firstparty_added, union_n, rights_gate_removed_n, rights_gate_removed, planned_n, rule, inputs. Same byte size as `run/2026-10-04/plan-union.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 835 bytes."
+    },
+    {
+      "path": "run/2026-10-04/probe-summary.json",
+      "description": "JSON document. top-level keys: schema, started, finished, user_agent, plan, n_planned, n_attempted, n_not_attempted, not_attempted_by_reason, read_state, read_state_rule, states, states_by_rank_tier, own_estate_endpoints, auth_required_http_status, mcp_request_not_sent, responded, requests, limits, sent_to_endpoints …. Same byte size as `run/2026-10-04/probe-summary.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 5,902 bytes."
+    },
+    {
+      "path": "run/2026-10-04/rights-gate-summary.json",
+      "description": "JSON document. top-level keys: schema, run_started, run_finished, frame, what_a_row_is, n_subjects, population_total, population_total_null_because, decisions, unknown_share, decision_reasons, decisions_by_source, effective_licence_by_spdx_subjects, effective_licence_by_category_subjects, subjects_by_licence_evidence_kind, packages_by_spdx, packages_looked_up, package_lookup_status, hf_space_cards, github_sample …. Same byte size as `run/2026-10-04/rights-gate-summary.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 21,043 bytes."
+    },
+    {
+      "path": "run/2026-10-11/frame-summary.json",
+      "description": "JSON document. top-level keys: schema, run_started, run_finished, user_agent, min_interval_s, requests, retry_after_waits, sources, union, overlap, canonicalisation, not_read_by_this_frame, what_a_row_is, what_it_never_proves, files. Same byte size as `run/2026-10-11/frame-summary.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 5,543 bytes."
+    },
+    {
+      "path": "run/2026-10-11/plan-firstparty.json",
+      "description": "JSON document. top-level keys: schema, as_of, frame, psl, top20_plan, candidates, ineligible, tier_n, tier_by_basis, tier_already_in_top20_plan, tier_added_to_plan, tier_added_by_basis, tier_hosts, tier_registrable_domains, top_registrable_domains, rule, why, what_a_row_is, what_it_never_proves, probing. Same byte size as `run/2026-10-11/plan-firstparty.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 2,887 bytes."
+    },
+    {
+      "path": "run/2026-10-11/plan-union.json",
+      "description": "JSON document. top-level keys: schema, as_of, top20_n, firstparty_tier_n, firstparty_added, union_n, rights_gate_removed_n, rights_gate_removed, planned_n, rule, inputs. Same byte size as `run/2026-10-11/plan-union.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 835 bytes."
+    },
+    {
+      "path": "run/2026-10-11/probe-summary.json",
+      "description": "JSON document. top-level keys: schema, started, finished, user_agent, plan, n_planned, n_attempted, n_not_attempted, not_attempted_by_reason, read_state, read_state_rule, states, states_by_rank_tier, own_estate_endpoints, auth_required_http_status, mcp_request_not_sent, responded, requests, limits, sent_to_endpoints …. Same byte size as `run/2026-10-11/probe-summary.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 5,899 bytes."
+    },
+    {
+      "path": "run/2026-10-11/rights-gate-summary.json",
+      "description": "JSON document. top-level keys: schema, run_started, run_finished, frame, what_a_row_is, n_subjects, population_total, population_total_null_because, decisions, unknown_share, decision_reasons, decisions_by_source, effective_licence_by_spdx_subjects, effective_licence_by_category_subjects, subjects_by_licence_evidence_kind, packages_by_spdx, packages_looked_up, package_lookup_status, hf_space_cards, github_sample …. Same byte size as `run/2026-10-11/rights-gate-summary.json` in huggingface.co/datasets/csoai/mcp-remote-census (checked 2026-11-20). 20,929 bytes."
+    }
+  ]
+}

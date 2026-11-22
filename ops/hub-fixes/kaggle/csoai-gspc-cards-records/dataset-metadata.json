@@ -1,0 +1,76 @@
+{
+  "title": "GSPC · Cards: records — Council of AI",
+  "id": "nicktempleman/csoai-gspc-cards-records",
+  "id_no": 12621172,
+  "subtitle": "Mirror of HF csoai/signed-measurement-records. Measurement, not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-cards-records`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-cards-records -p ./dataset --unzip\n```\n\nStart by inspecting `estate-board.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `manifest.jsonl`\n- `estate-board.json`\n- `regulation-feed.json`\n- `corrections-feed.json`\n- `evidence-reports.json`\n- `opensource-stack.json`\n- `orbital-ai-record.json`\n- See the Data tab for all 12 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement: records. Not a certification.**\n\n> **Mirror.** Copy of https://huggingface.co/datasets/csoai/signed-measurement-records at revision `eb428b480fe97cf1c237fc70281a9447e1c138cc`, made 2026-10-16. The Hugging Face copy is the original; if the two differ, it wins.\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n\n# Signed measurement records\n\n> **Start here — free verify:**\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-10-16.\n- 12 files, 153,146 bytes. File types: .json (8), .ots (2), .md (1), .jsonl (1).\n- Hugging Face twin: [csoai/signed-measurement-records](https://huggingface.co/datasets/csoai/signed-measurement-records). 11 of 12 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_signed_measurement_records,\n  title        = {Signed measurement records},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/signed-measurement-records}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 11 of 12 files have the same byte size as files in the Hugging Face dataset [csoai/signed-measurement-records](https://huggingface.co/datasets/csoai/signed-measurement-records) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "1809 — card. Dataset README (Markdown). 16,739 bytes."
+    },
+    {
+      "path": "benchmark-quality-feed.json",
+      "description": "33501 — JSON document. JSON document. top-level keys: schema, generated, doctrine, criteria, max_score, records. `records` holds 6 records with fields: schema (string), record_type (string), not_a_certification (boolean), endorsement (string), authored_by (string), benchmark (string), owner (string), url (url), license (string), as_of (datetime), solicited (boolean), party_participated (boolean), access (string), score (numeric), max_score (numeric), … (+7 more). Same byte size as `benchmark-quality-feed.json` in huggingface.co/datasets/csoai/signed-measurement-records (checked 2026-11-20). 33,501 bytes."
+    },
+    {
+      "path": "corrections-feed.json",
+      "description": "8569 — JSON document. JSON document. top-level keys: schema, generated, doctrine, note, corrections. `corrections` holds 10 records with fields: id (string), title (string), what_was_wrong (string), how_caught (string), fix (string), status (string), date (datetime), tags (string), evidence (string). Same byte size as `corrections-feed.json` in huggingface.co/datasets/csoai/signed-measurement-records (checked 2026-11-20). 8,569 bytes."
+    },
+    {
+      "path": "estate-board.json",
+      "description": "27553 — JSON document. JSON document. top-level keys: schema, board_stamp, measured_period, grading, n_per_cell, models, banks, note, cells. Same byte size as `estate-board.json` in huggingface.co/datasets/csoai/signed-measurement-records (checked 2026-11-20). 27,553 bytes."
+    },
+    {
+      "path": "evidence-reports.json",
+      "description": "2555 — JSON document. JSON document. top-level keys: schema, generated, doctrine, note, reports. `reports` holds 3 records with fields: agent (string), role (string), as_of (datetime), cells (string), headline (string), evidence_chain (string). Same byte size as `evidence-reports.json` in huggingface.co/datasets/csoai/signed-measurement-records (checked 2026-11-20). 2,555 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "10 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 12 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/signed-measurement-records (checked 2026-11-20). 4,889 bytes."
+    },
+    {
+      "path": "opensource-stack.json",
+      "description": "2859 — JSON document. JSON document. top-level keys: schema, generated, doctrine, note, packages. `packages` holds 3 records with fields: name (string), version (string), repo (url), license (string), what (string), why (string), receipt_schema (string), verified (string), honest_unsigned (boolean). Same byte size as `opensource-stack.json` in huggingface.co/datasets/csoai/signed-measurement-records (checked 2026-11-20). 2,859 bytes."
+    },
+    {
+      "path": "orbital-ai-record.json",
+      "description": "5993 — JSON document. JSON document. top-level keys: schema, generated, doctrine, note, gap, records. `records` holds 5 records with fields: subject (string), class (string), claim (string), deployed (boolean), independent_verification (string), orbit_km (string), power_kw (string), predicates (string), content_id (string), prev (string), pubkey (string), signature (string). Same byte size as `orbital-ai-record.json` in huggingface.co/datasets/csoai/signed-measurement-records (checked 2026-11-20). 5,993 bytes."
+    },
+    {
+      "path": "records/measurements/disclosure-lag/2026-09-gemini-evaluation/record.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `records/measurements/disclosure-lag/2026-09-gemini-evaluation/record.json.ots` in huggingface.co/datasets/csoai/signed-measurement-records (checked 2026-11-20). 4,795 bytes."
+    },
+    {
+      "path": "records/measurements/disclosure-lag/2026-09-medicare-agent/record.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `records/measurements/disclosure-lag/2026-09-medicare-agent/record.json.ots` in huggingface.co/datasets/csoai/signed-measurement-records (checked 2026-11-20). 3,711 bytes."
+    },
+    {
+      "path": "regulation-feed.json",
+      "description": "20251 — JSON document. JSON document. top-level keys: schema, generated, doctrine, note, regulations, count, last_updated. `regulations` holds 19 records with fields: id (string), title (string), instrument (string), celex (string), date (datetime), effective (boolean), what (string), why_it_matters (string), status (string), tags (string), penalty_exposure (string), underwriting_use (string), correction_ref (string). Same byte size as `regulation-feed.json` in huggingface.co/datasets/csoai/signed-measurement-records (checked 2026-11-20). 20,251 bytes."
+    },
+    {
+      "path": "regulatory-deadline-record.json",
+      "description": "21731 — JSON document. JSON document. top-level keys: schema, generated, doctrine, note, records. `records` holds 19 records with fields: schema (string), record_type (string), not_a_certification (boolean), endorsement (string), authored_by (string), regime (string), instrument (string), celex (string), stated_deadline (datetime), deadline_status (string), current_status (string), legal_basis (string), source (string), as_of (datetime), solicited (boolean), … (+6 more). Same byte size as `regulatory-deadline-record.json` in huggingface.co/datasets/csoai/signed-measurement-records (checked 2026-11-20). 21,731 bytes."
+    }
+  ]
+}

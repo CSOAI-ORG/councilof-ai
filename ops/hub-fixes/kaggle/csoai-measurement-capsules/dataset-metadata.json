@@ -1,0 +1,413 @@
+{
+  "title": "Signed measurement capsules v0.2",
+  "id": "nicktempleman/csoai-measurement-capsules",
+  "id_no": 12264129,
+  "subtitle": "Mirror of Hugging Face csoai/measurement-capsules",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-measurement-capsules`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-measurement-capsules -p ./dataset --unzip\n```\n\nStart by inspecting `data/batches.parquet`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `verify.py`\n- `latest.json`\n- `croissant.json`\n- `manifest.jsonl`\n- `v0.2/index.json`\n- `v0.2/anchors.json`\n- `v0.2/index.json.ots`\n- See the Data tab for all 68 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/measurement-capsules at revision `e52b6e9788c42513d510f3dc439a45b145dc7f4d`, made 2026-10-15. The Hugging Face copy is the original; if the two differ, it wins.\n\n## Signed measurement capsules — v0.2 snapshot\n\nThis package mirrors the 26 September 2026 capsule index and its supporting records. A capsule describes one instrument's observation about one subject at one time, including its declared value, observed value, limitations and state. Batch records bind capsule identifiers through a Merkle root; the daily index binds the batches.\n\n**Publication erratum:** the files' `private_until: \"owner approves publication\"` field was superseded by `v0.2/publication/2026-09-26-erratum.json` after publication was approved. That erratum does not change capsule content or signatures.\n\nStart with `data/capsules.parquet` for observations and `data/batches.parquet` for batch context. Read the original signed records, timestamp status and verification instructions in the downloaded `README.md`. A signature establishes integrity of the signed statement; it is not certification or proof that an external subject is safe. The previous page was truncated; the complete source remains at the pinned revision below.\n\n[Complete source README at the mirrored revision](https://huggingface.co/datasets/csoai/measurement-capsules/blob/e52b6e9788c42513d510f3dc439a45b145dc7f4d/README.md).\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 2, last updated 2026-10-15.\n- 68 files, 34,365,002 bytes. File types: .json (34), .ots (21), .jsonl (9), .parquet (2), .md (1), .py (1).\n- Hugging Face twin: [csoai/measurement-capsules](https://huggingface.co/datasets/csoai/measurement-capsules). 59 of 68 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_measurement_capsules_v0_2,\n  title        = {Signed measurement capsules v0.2 (2026-09-26 index)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/measurement-capsules},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software",
+    "time series analysis",
+    "computer vision"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 59 of 68 files have the same byte size as files in the Hugging Face dataset [csoai/measurement-capsules](https://huggingface.co/datasets/csoai/measurement-capsules) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 20,824 bytes."
+    },
+    {
+      "path": "croissant.json",
+      "description": "JSON document. top-level keys: @context, @type, conformsTo, name, alternateName, description, url, license, keywords, creator, publisher, dateModified, isAccessibleForFree, inLanguage, citeAs, distribution, recordSet. `distribution` holds 53 records with fields: @type (string), @id (string), name (string), contentUrl (url), encodingFormat (string), contentSize (string), sha256 (string), description (string). Same byte size as `croissant.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 36,521 bytes."
+    },
+    {
+      "path": "data/batches.parquet",
+      "description": "Parquet table. 8 rows; fields: adapter (string), batch (string), kind (string), n_capsules (integer), states_json (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), as_of (datetime). Same byte size as `data/batches.parquet` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 5,825 bytes.",
+      "schema": {
+        "fields": [
+          {
+            "name": "adapter",
+            "description": "Observed type string; non-null in 8/8 rows read; example: a2a_card",
+            "type": "string"
+          },
+          {
+            "name": "batch",
+            "description": "Observed type string; non-null in 8/8 rows read; example: a2a_card",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "description": "Observed type string; non-null in 8/8 rows read; example: measurement.a2a_card_signature",
+            "type": "string"
+          },
+          {
+            "name": "n_capsules",
+            "description": "Observed type integer; non-null in 8/8 rows read; example: 33",
+            "type": "integer"
+          },
+          {
+            "name": "states_json",
+            "description": "Observed type string; non-null in 8/8 rows read; example: {\"FAILED\": 8, \"UNCHECKABLE\": 12, \"VERIFIED\": 13}",
+            "type": "string"
+          },
+          {
+            "name": "merkle_root",
+            "description": "Observed type string; non-null in 8/8 rows read; example: bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441ba…",
+            "type": "string"
+          },
+          {
+            "name": "record_sha256",
+            "description": "Observed type string; non-null in 8/8 rows read; example: 180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116c…",
+            "type": "string"
+          },
+          {
+            "name": "capsules_sha256",
+            "description": "Observed type string; non-null in 8/8 rows read; example: ba413e8160120205d8b9ec87fec95fa9e0f3ac2e6c858d4e6e807851882c…",
+            "type": "string"
+          },
+          {
+            "name": "as_of",
+            "description": "Observed type datetime; non-null in 8/8 rows read; example: 2026-09-26T06:19:20Z",
+            "type": "datetime"
+          }
+        ]
+      }
+    },
+    {
+      "path": "data/capsules.parquet",
+      "description": "Parquet table. 13184 rows; fields: adapter (string), batch (string), batch_merkle_root (string), batch_record_sha256 (string), capsule_id (string), kind (string), measurement_state (string), subject_id (url), observed_at (datetime), statement (string), has_correction_pointer (boolean), capsule_json (string). Same byte size as `data/capsules.parquet` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 3,366,328 bytes.",
+      "schema": {
+        "fields": [
+          {
+            "name": "adapter",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: a2a_card",
+            "type": "string"
+          },
+          {
+            "name": "batch",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: a2a_card",
+            "type": "string"
+          },
+          {
+            "name": "batch_merkle_root",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441ba…",
+            "type": "string"
+          },
+          {
+            "name": "batch_record_sha256",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: 180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116c…",
+            "type": "string"
+          },
+          {
+            "name": "capsule_id",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: 00b9165af4ad2d520ca216482aaf283bd7de03f9e76bafd8dd68f6ef2a6a…",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: measurement.a2a_card_signature",
+            "type": "string"
+          },
+          {
+            "name": "measurement_state",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: FAILED",
+            "type": "string"
+          },
+          {
+            "name": "subject_id",
+            "description": "Observed type url; non-null in 2000/2000 rows read; example: https://agent.co-legal.be/.well-known/agent-card.json",
+            "type": "url"
+          },
+          {
+            "name": "observed_at",
+            "description": "Observed type datetime; non-null in 2000/2000 rows read; example: 2026-09-25T07:25:59Z",
+            "type": "datetime"
+          },
+          {
+            "name": "statement",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: the agent card is signed by the key it references",
+            "type": "string"
+          },
+          {
+            "name": "has_correction_pointer",
+            "description": "Observed type boolean; non-null in 2000/2000 rows read; example: true",
+            "type": "boolean"
+          },
+          {
+            "name": "capsule_json",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: {\"authority_state\":\"NONE: measurement only; this capsule gra…",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "path": "latest.json",
+      "description": "196 — `52e0e2855098aec4ec17d830951cdb7d974e0a612978d44c9d5081d6610ebfd0` — pointer to the current version. JSON document. top-level keys: schema, version, versions, index, doctrine. Same byte size as `latest.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 196 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 56 rows; fields: bytes (integer), kind (string), path (string), sha256 (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 8,928 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 10 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-29/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 9,867 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/v0.2/a2a_card/record.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-29/v0.2/a2a_card/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,637 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/v0.2/contract_parity/record.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-29/v0.2/contract_parity/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,706 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/v0.2/cross_ledger/record.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-29/v0.2/cross_ledger/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,671 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/v0.2/mill_cross_runtime-5ae00c1f4c2e/record.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-29/v0.2/mill_cross_runtime-5ae00c1f4c2e/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,777 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/v0.2/mill_cross_runtime-78226433e9e4/record.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-29/v0.2/mill_cross_runtime-78226433e9e4/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,812 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/v0.2/public_signals/record.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-29/v0.2/public_signals/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,672 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/v0.2/publication/2026-09-26-erratum.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-29/v0.2/publication/2026-09-26-erratum.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,742 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/v0.2/publication/2026-09-26.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-29/v0.2/publication/2026-09-26.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,567 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/v0.2/self_parity/record.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-29/v0.2/self_parity/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,742 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-29/v0.2/tool_drift/record.json.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-29/v0.2/tool_drift/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,532 bytes."
+    },
+    {
+      "path": "v0.2/a2a_card/capsules.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 79,076 bytes."
+    },
+    {
+      "path": "v0.2/a2a_card/leaves.json",
+      "description": "2,812 — `d509c87797581f871dfcca872c55449623f862e9a7058c51d7a5a2abbc4446fe` — the batch's Merkle leaves (capsule ids). JSON document. top-level keys: schema, adapter, batch, kind, merkle_root, rule, n, leaves. Same byte size as `v0.2/a2a_card/leaves.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 2,812 bytes."
+    },
+    {
+      "path": "v0.2/a2a_card/record.json",
+      "description": "3,338 — `180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6` — the batch record: adapter, states, Merkle root, capsule file hashes. JSON document. top-level keys: schema, as_of, capsule_schema, adapter, kind, n_capsules, states, merkle_root, merkle, canonicalisation, capsules_file, authority_state, what_this_is, what_this_is_not, source, listing_states, served_unsigned_not_capsuled, capsules_by_rule_state, observed_at_rule, private_until. Same byte size as `v0.2/a2a_card/record.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 3,338 bytes."
+    },
+    {
+      "path": "v0.2/a2a_card/record.json.ots",
+      "description": "635 — `5243568f0fb91879c58b21e8e350a45d7090c39c32984e80800f6aee8bf55acf` — OpenTimestamps proof. OpenTimestamps proof file for `v0.2/a2a_card/record.json` (included in this dataset). Same byte size as `v0.2/a2a_card/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "v0.2/a2a_card/record.signed.json",
+      "description": "1,557 — `d379b0096adf4537af48b3c046c65a76c2b4a45c371943985e1e8193d2f93e2f` — Ed25519 signature over a payload pinning record.json, the capsule file and the Merkle root. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `v0.2/a2a_card/record.signed.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,557 bytes."
+    },
+    {
+      "path": "v0.2/anchors.json",
+      "description": "3,674 — `99788acf2317092b0cecf47e52cb74ac88f55f6a89fcfd5c7be47faef0ce8ad3` — where the index bytes are anchored, read from the anchor files. JSON document. top-level keys: schema, as_of, date, what_this_is, index, opentimestamps, rekor, xrpl, publication, copies. `rekor` holds 3 records with fields: subject (string), file (string), subject_sha256 (string), signed_payload_sha256 (string), state (string), logIndex (integer), uuid (string), integratedTime (integer), entry_url (url), search_url (url). Same byte size as `v0.2/anchors.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 3,674 bytes."
+    },
+    {
+      "path": "v0.2/contract_parity/capsules.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 20,201,526 bytes."
+    },
+    {
+      "path": "v0.2/contract_parity/leaves.json",
+      "description": "613,530 — `4f0903244ae0aa20b9cd569de5dd7fcdfa572d4038c1b5a6d4d370618d295ee2` — the batch's Merkle leaves (capsule ids). JSON document. top-level keys: schema, adapter, batch, kind, merkle_root, rule, n, leaves. Same byte size as `v0.2/contract_parity/leaves.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 613,530 bytes."
+    },
+    {
+      "path": "v0.2/contract_parity/record.json",
+      "description": "5,150 — `1b9186699b27ac5bc13c4b211f7a5f1317aee96e0c85c27668ac21b9214af357` — the batch record: adapter, states, Merkle root, capsule file hashes. JSON document. top-level keys: schema, as_of, capsule_schema, adapter, kind, n_capsules, states, merkle_root, merkle, canonicalisation, capsules_file, authority_state, what_this_is, what_this_is_not, source, rows, included_states, inclusion_rule, capsules_by_dimension_state, skipped_not_capsuled …. Same byte size as `v0.2/contract_parity/record.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 5,150 bytes."
+    },
+    {
+      "path": "v0.2/contract_parity/record.json.ots",
+      "description": "705 — `47a09989614e81efe78c59ead13e8ed9aa2fcc915091f80b52386352c0cf252e` — OpenTimestamps proof. OpenTimestamps proof file for `v0.2/contract_parity/record.json` (included in this dataset). Same byte size as `v0.2/contract_parity/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 705 bytes."
+    },
+    {
+      "path": "v0.2/contract_parity/record.signed.json",
+      "description": "1,584 — `84b4d17bb7056960e00789056fdc27f5ed5ecaec1d7495440d7815b9e9ce74c2` — Ed25519 signature over a payload pinning record.json, the capsule file and the Merkle root. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `v0.2/contract_parity/record.signed.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,584 bytes."
+    },
+    {
+      "path": "v0.2/cross_ledger/capsules.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 791,290 bytes."
+    },
+    {
+      "path": "v0.2/cross_ledger/leaves.json",
+      "description": "24,262 — `091e9609bca4f2dccb74fe73256cca801ced2b51250f16f764ff0fce8e849057` — the batch's Merkle leaves (capsule ids). JSON document. top-level keys: schema, adapter, batch, kind, merkle_root, rule, n, leaves. Same byte size as `v0.2/cross_ledger/leaves.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 24,262 bytes."
+    },
+    {
+      "path": "v0.2/cross_ledger/record.json",
+      "description": "12,130 — `ace6cbe3697ed1f6715ea2f921eaad07c82cab795fb86609a3d16b3c956465df` — the batch record: adapter, states, Merkle root, capsule file hashes. JSON document. top-level keys: schema, as_of, capsule_schema, adapter, kind, n_capsules, states, merkle_root, merkle, canonicalisation, capsules_file, authority_state, what_this_is, what_this_is_not, source, capsules_by_asset_state, label_rule, daily_loop, claim_types, observed_at_rule …. Same byte size as `v0.2/cross_ledger/record.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 12,130 bytes."
+    },
+    {
+      "path": "v0.2/cross_ledger/record.json.ots",
+      "description": "705 — `13ed380424d7386aee72de5bbdc26152bf0731c9ae9c1915902863c26a86a371` — OpenTimestamps proof. OpenTimestamps proof file for `v0.2/cross_ledger/record.json` (included in this dataset). Same byte size as `v0.2/cross_ledger/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 705 bytes."
+    },
+    {
+      "path": "v0.2/cross_ledger/record.signed.json",
+      "description": "1,803 — `9f16a1d677bca6d96720ec39fad8494805f7444d5d79e2824413f91bf91f1385` — Ed25519 signature over a payload pinning record.json, the capsule file and the Merkle root. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `v0.2/cross_ledger/record.signed.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,803 bytes."
+    },
+    {
+      "path": "v0.2/index.json",
+      "description": "34,150 — `ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a` — the day's index over every batch: roots, counts, index root. JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, authority_state, batches, n_capsules_total, index_root, index_root_rule, merkle, capsule_schema, batch_schema, root_over_batch_merkle_roots, pending_source, verify, private_until. `batches` holds 8 records with fields: dir (string), adapter (string), kind (string), n_capsules (integer), states (string), merkle_root (string), record_sha256 (string), capsules_sha256 (string), signature_state (string), signed_at (datetime), ots_state (string), ots_attestations (string), source (string). Same byte size as `v0.2/index.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 34,150 bytes."
+    },
+    {
+      "path": "v0.2/index.json.ots",
+      "description": "1,532 — `e2843a3682e31fa153250a41525d7e2844496b2ac945934927cd3c6e66b731fd` — OpenTimestamps proof. OpenTimestamps proof file for `v0.2/index.json` (included in this dataset). Same byte size as `v0.2/index.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,532 bytes."
+    },
+    {
+      "path": "v0.2/index.signed.json",
+      "description": "2,934 — `18be27315446e0f543e62a4e516cce10976a07ef770dbdb839e8bf9329546415` — Ed25519 signature over the index. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `v0.2/index.signed.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 2,934 bytes."
+    },
+    {
+      "path": "v0.2/mill_cross_runtime-5ae00c1f4c2e/capsules.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 42,857 bytes."
+    },
+    {
+      "path": "v0.2/mill_cross_runtime-5ae00c1f4c2e/leaves.json",
+      "description": "1,580 — `00111f3e8fa28132c6a2d8bfea15149a017291bf54f64cddc54e353e3d50ef30` — the batch's Merkle leaves (capsule ids). JSON document. top-level keys: schema, adapter, batch, kind, merkle_root, rule, n, leaves. Same byte size as `v0.2/mill_cross_runtime-5ae00c1f4c2e/leaves.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,580 bytes."
+    },
+    {
+      "path": "v0.2/mill_cross_runtime-5ae00c1f4c2e/record.json",
+      "description": "3,613 — `32ece857c94062f41a03aad9e269532cdbe5dc0a576ed20110edc4ecacb0468d` — the batch record: adapter, states, Merkle root, capsule file hashes. JSON document. top-level keys: schema, as_of, capsule_schema, adapter, kind, n_capsules, states, merkle_root, merkle, canonicalisation, capsules_file, authority_state, what_this_is, what_this_is_not, source, private_until. Same byte size as `v0.2/mill_cross_runtime-5ae00c1f4c2e/record.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 3,613 bytes."
+    },
+    {
+      "path": "v0.2/mill_cross_runtime-5ae00c1f4c2e/record.json.ots",
+      "description": "670 — `18a726ece04b3b550f985f68cd767b4a283e430eb1e3102b2ceb3e26202c5203` — OpenTimestamps proof. OpenTimestamps proof file for `v0.2/mill_cross_runtime-5ae00c1f4c2e/record.json` (included in this dataset). Same byte size as `v0.2/mill_cross_runtime-5ae00c1f4c2e/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 670 bytes."
+    },
+    {
+      "path": "v0.2/mill_cross_runtime-5ae00c1f4c2e/record.signed.json",
+      "description": "1,616 — `4bd0799e4b01be5794733510030c021438957e490bf0108e7ef2424f08f55ad8` — Ed25519 signature over a payload pinning record.json, the capsule file and the Merkle root. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `v0.2/mill_cross_runtime-5ae00c1f4c2e/record.signed.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,616 bytes."
+    },
+    {
+      "path": "v0.2/mill_cross_runtime-78226433e9e4/capsules.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 454,008 bytes."
+    },
+    {
+      "path": "v0.2/mill_cross_runtime-78226433e9e4/leaves.json",
+      "description": "10,023 — `20f5ba19f13643bb6905f1e6693761b5c3a72dd41c77e92399758c8ffce8b2ff` — the batch's Merkle leaves (capsule ids). JSON document. top-level keys: schema, adapter, batch, kind, merkle_root, rule, n, leaves. Same byte size as `v0.2/mill_cross_runtime-78226433e9e4/leaves.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 10,023 bytes."
+    },
+    {
+      "path": "v0.2/mill_cross_runtime-78226433e9e4/record.json",
+      "description": "19,318 — `422fa6377b274bab095e8e875f67d087a275417c14c90a4c4e4cedb56ca9a5ff` — the batch record: adapter, states, Merkle root, capsule file hashes. JSON document. top-level keys: schema, as_of, capsule_schema, adapter, kind, n_capsules, states, merkle_root, merkle, canonicalisation, capsules_file, authority_state, what_this_is, what_this_is_not, source, private_until. Same byte size as `v0.2/mill_cross_runtime-78226433e9e4/record.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 19,318 bytes."
+    },
+    {
+      "path": "v0.2/mill_cross_runtime-78226433e9e4/record.json.ots",
+      "description": "705 — `0eeb913f7e36161c2e46dedefc68997de65294db5c515e03176bd38f4e483607` — OpenTimestamps proof. OpenTimestamps proof file for `v0.2/mill_cross_runtime-78226433e9e4/record.json` (included in this dataset). Same byte size as `v0.2/mill_cross_runtime-78226433e9e4/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 705 bytes."
+    },
+    {
+      "path": "v0.2/mill_cross_runtime-78226433e9e4/record.signed.json",
+      "description": "1,637 — `12522ad5cab221f1c7291401d21e5b0c29750adec829387ca6f43d3ac93de2c3` — Ed25519 signature over a payload pinning record.json, the capsule file and the Merkle root. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `v0.2/mill_cross_runtime-78226433e9e4/record.signed.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,637 bytes."
+    },
+    {
+      "path": "v0.2/public_signals/capsules.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 189,296 bytes."
+    },
+    {
+      "path": "v0.2/public_signals/leaves.json",
+      "description": "8,515 — `3c79d8555bef3cb10a16fb8f2a6247f8dbb0d5457416bece04b1521bc0f2c610` — the batch's Merkle leaves (capsule ids). JSON document. top-level keys: schema, adapter, batch, kind, merkle_root, rule, n, leaves. Same byte size as `v0.2/public_signals/leaves.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 8,515 bytes."
+    },
+    {
+      "path": "v0.2/public_signals/record.json",
+      "description": "2,603 — `abbcec606003f5eab774c6990f32b6c95c4eca692e5467c5e987fe5d426c8690` — the batch record: adapter, states, Merkle root, capsule file hashes. JSON document. top-level keys: schema, as_of, capsule_schema, adapter, kind, n_capsules, states, merkle_root, merkle, canonicalisation, capsules_file, authority_state, what_this_is, what_this_is_not, source, capsules_by_state, capsules_by_self_or_external, private_until. Same byte size as `v0.2/public_signals/record.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 2,603 bytes."
+    },
+    {
+      "path": "v0.2/public_signals/record.json.ots",
+      "description": "670 — `49b8ea5ed8259bdef6aed4c2c69012a5aff4628cf47d78acc5ffd7585084e83a` — OpenTimestamps proof. OpenTimestamps proof file for `v0.2/public_signals/record.json` (included in this dataset). Same byte size as `v0.2/public_signals/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 670 bytes."
+    },
+    {
+      "path": "v0.2/public_signals/record.signed.json",
+      "description": "1,567 — `e12dfa01e8cd21ae6f00583b8c14e5d159076af2f59f0c5f7844954666e5adae` — Ed25519 signature over a payload pinning record.json, the capsule file and the Merkle root. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `v0.2/public_signals/record.signed.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,567 bytes."
+    },
+    {
+      "path": "v0.2/publication/2026-09-26-erratum.json",
+      "description": "12,759 — `068f1c9b9f029f46a46d0fe6306a83491254f8d69c5dd01605c3214ec02eeec9` — dated erratum: the private_until field in the listed files is obsolete. JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, date, index_file, index_sha256, index_root, erratum, field_superseded, publication, index_publication_record, from_now_on, n_files, files, files_sha256, files_sha256_rule, signed_fields. `files` holds 16 records with fields: file (string), role (string), schema (string), sha256 (string), private_until (string), public_at (string). Same byte size as `v0.2/publication/2026-09-26-erratum.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 12,759 bytes."
+    },
+    {
+      "path": "v0.2/publication/2026-09-26-erratum.json.ots",
+      "description": "635 — `da7d8646a8429e45d131715b0857945581926569908bbfcec6961722d4d8ec0d` — OpenTimestamps proof. OpenTimestamps proof file for `v0.2/publication/2026-09-26-erratum.json` (included in this dataset). Same byte size as `v0.2/publication/2026-09-26-erratum.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "v0.2/publication/2026-09-26-erratum.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `v0.2/publication/2026-09-26-erratum.signed.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,860 bytes."
+    },
+    {
+      "path": "v0.2/publication/2026-09-26.json",
+      "description": "2,069 — `effd4713967cff6e03e548f752c87cbb7405a869f15871b00ac92c950201a804` — publication state of the index (PUBLIC, owner-approved 2026-09-26). JSON document. top-level keys: schema, as_of, what_this_is, what_this_is_not, date, index_file, index_sha256, index_root, index_schema, index_signed_payload_sha256, index_field_superseded, publication, published_at, signed_fields. `published_at` holds 2 records with fields: url (url), sha256_at_check (string), checked_at (datetime), same_bytes (boolean). Same byte size as `v0.2/publication/2026-09-26.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 2,069 bytes."
+    },
+    {
+      "path": "v0.2/publication/2026-09-26.json.ots",
+      "description": "635 — `a86b67fb4f08b002fcf23eeb31a76645b3bcb6a83bc3ed532391839e08a64ebb` — OpenTimestamps proof. OpenTimestamps proof file for `v0.2/publication/2026-09-26.json` (included in this dataset). Same byte size as `v0.2/publication/2026-09-26.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "v0.2/publication/2026-09-26.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `v0.2/publication/2026-09-26.signed.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,785 bytes."
+    },
+    {
+      "path": "v0.2/self_parity/capsules.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 254,402 bytes."
+    },
+    {
+      "path": "v0.2/self_parity/leaves.json",
+      "description": "9,847 — `f1e773743b8fad3434572a740a42deac9a4e431e01412dd4f6f3075d1782d133` — the batch's Merkle leaves (capsule ids). JSON document. top-level keys: schema, adapter, batch, kind, merkle_root, rule, n, leaves. Same byte size as `v0.2/self_parity/leaves.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 9,847 bytes."
+    },
+    {
+      "path": "v0.2/self_parity/record.json",
+      "description": "2,412 — `57d697af67fc40fc4ce206aec5407e1e6873684ae7e4387cb3a06c125a700337` — the batch record: adapter, states, Merkle root, capsule file hashes. JSON document. top-level keys: schema, as_of, capsule_schema, adapter, kind, n_capsules, states, merkle_root, merkle, canonicalisation, capsules_file, authority_state, what_this_is, what_this_is_not, source, capsules_by_state, private_until. Same byte size as `v0.2/self_parity/record.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 2,412 bytes."
+    },
+    {
+      "path": "v0.2/self_parity/record.json.ots",
+      "description": "635 — `0504f41051179f3c74a2adc9c81e0fe8373e6eb5ba190ed9ce2b1d1d0b860638` — OpenTimestamps proof. OpenTimestamps proof file for `v0.2/self_parity/record.json` (included in this dataset). Same byte size as `v0.2/self_parity/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "v0.2/self_parity/record.signed.json",
+      "description": "1,608 — `697f2fa62243841e5cd48976c3f70a1e1fbc9b59b7a81ad5dc45bc57132addee` — Ed25519 signature over a payload pinning record.json, the capsule file and the Merkle root. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `v0.2/self_parity/record.signed.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,608 bytes."
+    },
+    {
+      "path": "v0.2/tool_drift/capsules.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 7,855,013 bytes."
+    },
+    {
+      "path": "v0.2/tool_drift/leaves.json",
+      "description": "217,679 — `06f5e6aca407f1f1947d1815527b76d5fbc5723768ce66962fc37c8fc4e9c99a` — the batch's Merkle leaves (capsule ids). JSON document. top-level keys: schema, adapter, batch, kind, merkle_root, rule, n, leaves. Same byte size as `v0.2/tool_drift/leaves.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 217,679 bytes."
+    },
+    {
+      "path": "v0.2/tool_drift/record.json",
+      "description": "3,184 — `a7a13dab161631d0557726fd64c0dee82bd0b95cb54e2749d96aaddc93fef473` — the batch record: adapter, states, Merkle root, capsule file hashes. JSON document. top-level keys: schema, as_of, capsule_schema, adapter, kind, n_capsules, states, merkle_root, merkle, canonicalisation, capsules_file, authority_state, what_this_is, what_this_is_not, granularity_available, granularity_note, source, capsules_by_state, changes_by_version_state, private_until. Same byte size as `v0.2/tool_drift/record.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 3,184 bytes."
+    },
+    {
+      "path": "v0.2/tool_drift/record.json.ots",
+      "description": "635 — `d1ef2d355459afae33bed898cfd4576c0da1362cd15ec9714e9958c6275456c6` — OpenTimestamps proof. OpenTimestamps proof file for `v0.2/tool_drift/record.json` (included in this dataset). Same byte size as `v0.2/tool_drift/record.json.ots` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 635 bytes."
+    },
+    {
+      "path": "v0.2/tool_drift/record.signed.json",
+      "description": "1,564 — `de12c6b4aa1e785ec5b1a3c7ed55f23eb385f126d7ae91b851a4607b43ec5147` — Ed25519 signature over a payload pinning record.json, the capsule file and the Merkle root. Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `v0.2/tool_drift/record.signed.json` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 1,564 bytes."
+    },
+    {
+      "path": "verify.py",
+      "description": "Python source file. Same byte size as `verify.py` in huggingface.co/datasets/csoai/measurement-capsules (checked 2026-11-20). 11,862 bytes."
+    }
+  ]
+}
