@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Mistral AI — safety_policy: bytes changed 2026-11-06",
+ "as_of": "2026-11-06T13:02:50Z",
+ "source_urls": [
+  "https://docs.mistral.ai/capabilities/guardrailing/"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "mistral",
+  "surface": "safety_policy",
+  "url": "https://docs.mistral.ai/capabilities/guardrailing/",
+  "prev_sha256": "a2d9b03e69aa2602bb9a56933192da5be9f4fd07d009c4c8ba696f089432ddfd",
+  "new_sha256": "ae56004174490cf69b69821ebe468a7c63a5eace87322f2d46b84ecab5dc9cbd",
+  "prev_bytes_sha256": "6621c19a7083d14f1472256fe7f1b0765837ef817dafa3d5df07ad53d4b5b989",
+  "new_bytes_sha256": "c839350c0a4e6ed0ec13c108f9fb226cc305a2779fddc803874cbee8886bee9d",
+  "prev_fetched_at": "2026-11-03T12:53:00Z",
+  "fetched_at": "2026-11-06T13:02:50Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 857089,
+   "new": 961578
+  },
+  "etag": {
+   "prev": "\"jxhv6gpaxxicth\"",
+   "new": "\"zljr152u9sklft\""
+  },
+  "last_modified": {
+   "prev": null,
+   "new": null
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "d03a0b0522f00b38a0722b7d1a484c36b62e9817bb1643d9a6a1941724f502c4",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:mistral",
+  "surface:safety_policy",
+  "hash-only"
+ ]
+}
