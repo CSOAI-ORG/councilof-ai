@@ -76,8 +76,19 @@ export async function readGspcEvidence(args = {}, {fetchImpl = fetch, now = () =
   const row = board.axes.find(axis => axis.axis === args.axis);
   if (!row) return {...base, reason: 'AXIS_NOT_IN_OBSERVED_BOARD'};
   const boundedText = (value, limit) => typeof value === 'string' && value.length <= limit ? value : null;
+  // Methodology deposit availability is a publisher-reported qualification, not
+  // independent verification. A live methodology page is not the archived bytes.
+  const methodology = {
+    publisher_reported_deposit_status: ['AVAILABLE', 'UNAVAILABLE'].includes(board.doi_status)
+      ? board.doi_status : 'NOT_REPORTED_OR_UNCHECKABLE',
+    publisher_reported_status_only: true,
+    alternative_page: board.doi_alternative?.url === 'https://councilof.ai/methodology/'
+      ? 'https://councilof.ai/methodology/' : null,
+    alternative_is_verified_deposit_bytes: false,
+    deposit_bytes_verified: false,
+  };
   // Positive allowlist: do not copy arbitrary source properties or asserted permissions.
-  return {...base, state: 'OBSERVED_PUBLISHED_RECORD', reason: null,
+  return {...base, methodology, state: 'OBSERVED_PUBLISHED_RECORD', reason: null,
     coverage: {published_axes: board.axes.length,
       published_measured_axes: board.axes.filter(axis => axis.status === 'MEASURED').length,
       scope: 'THIS_BOARD_RESPONSE_ONLY'},
