@@ -23,7 +23,7 @@ Reproduce with code at:
 - https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/measurements/gspc-coverage-feed.node-test.mjs
 - https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/gspc-board-snapshot.mjs
 
-Run the canonical board snapshot, then pass the snapshot and public/interop/gspc-fact-table/MANIFEST.json to gspc-coverage-feed.mjs with --board, --manifest and --out. Supply --previous for source-delta comparison.
+Run the canonical board snapshot, then pass the snapshot and public/interop/gspc-fact-table/MANIFEST.json to gspc-coverage-feed.mjs with --board, --manifest, --evidence public/interop/mill-evidence and --out. Supply --previous for source-delta comparison.
 
 The feed keeps the distinction between MEASURED and method-qualified; between a tie, separated leader and UNTESTED; between no record and proven absence; and between changed bytes and evidence of an attack. A hash that changes while the number of rows stays fixed requires source review but does not by itself diagnose data poisoning. Hashes alone cannot authenticate a record against an attacker able to rewrite both record and digest. Verifying signed root inclusion and independent replication is a separate step.
 
