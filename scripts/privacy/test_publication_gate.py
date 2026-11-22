@@ -306,6 +306,77 @@ class Gate(unittest.TestCase):
         self.assertEqual(run(self.tmp), 1)
 
 
+
+class NameAndSasRegressions(unittest.TestCase):
+    """Synthetic regressions for the public registry's exposed SAS credential class."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp(prefix="name-sas-private-")
+        self.old = os.environ.get("THIRD_PARTY_GUARD_IDS")
+        os.environ["THIRD_PARTY_GUARD_IDS"] = "Zorblat Quimby"
+
+    def tearDown(self):
+        if self.old is None:
+            os.environ.pop("THIRD_PARTY_GUARD_IDS", None)
+        else:
+            os.environ["THIRD_PARTY_GUARD_IDS"] = self.old
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def rendered(self, code, result):
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            pg.report(code, result)
+        return buf.getvalue()
+
+    def test_private_person_in_directory_name_is_blocked_and_redacted(self):
+        materialise(self.tmp, {"Zorblat Quimby/data.jsonl": b'{"id":"synthetic"}\n'})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 1)
+        self.assertTrue(any("private-list-entry" in kind for _, kind in result.findings))
+        self.assertNotIn("Zorblat Quimby", self.rendered(code, result))
+
+    def test_private_person_in_archive_member_name_is_blocked(self):
+        materialise(self.tmp, {"safe.zip": zip_bytes([("Zorblat Quimby/clean.txt", b"okay")])})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 1)
+        self.assertTrue(any("private-list-entry" in kind for _, kind in result.findings))
+
+    def test_hf_credential_in_filename_cannot_escape_name_only_scan(self):
+        materialise(self.tmp, {f"receipt-{FAKE_HF}.txt": b"fine"})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 1)
+        self.assertTrue(any(kind == "credential:huggingface-token" for _, kind in result.findings))
+        self.assertNotIn(FAKE_HF, self.rendered(code, result))
+
+    def test_azure_sas_url_in_registry_jsonl_is_blocked_without_echo(self):
+        signature = "F4k3S1gn4tur3P4yl04d" * 3
+        url = ("https://fictional.blob.core.windows.net/public/object.json"
+               "?sv=2023-11-03&se=2099-01-01T00:00:00Z&sp=r&sig=" + signature)
+        materialise(self.tmp, {"server.jsonl": (json.dumps({"url": url}) + "\n").encode()})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 1)
+        self.assertTrue(any(kind == "credential:azure-sas-url" for _, kind in result.findings))
+        self.assertNotIn(signature, self.rendered(code, result))
+
+    def test_html_escaped_sas_and_sas_filename_are_blocked(self):
+        signature = "S1gn4tur3B4se64" * 3
+        sas = "?sv=2023-11-03&amp;se=2099-01-01T00:00:00Z&amp;sp=r&amp;sig=" + signature
+        materialise(self.tmp, {"escape.html": ("<a href='https://fictional.blob.core.windows.net/a" + sas + "'>x</a>").encode()})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 1)
+        materialise(self.tmp, {"name" + sas.replace("&amp;", "&") + ".txt": b"fine"})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 1)
+        self.assertTrue(any(kind == "credential:azure-sas-url" for _, kind in result.findings))
+        self.assertNotIn(signature, self.rendered(code, result))
+
+    def test_ordinary_sas_documentation_fields_without_signature_not_flagged(self):
+        materialise(self.tmp, {"docs.txt": b"sv=2023-11-03, se=2099-01-01, sig=EXAMPLE\n"})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 0)
+        self.assertFalse(result.findings)
+
 class Wiring(unittest.TestCase):
     """Every upload to Hugging Face or Kaggle in a workflow must run the gate first (same job, earlier step)."""
 
