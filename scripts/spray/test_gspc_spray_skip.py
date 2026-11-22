@@ -669,3 +669,41 @@ def test_pypi_same_root_date_release_that_bundles_this_board_says_so(monkeypatch
     [row] = spray.spray_pypi(tr, tmp_path, dry_run=True, force=False)
     assert row["status"] == "UNCHANGED" and row["as_of_seen"] == "2026-11-19T13:03:53Z"
     assert "already bundles fingerprint 9999999999999999" in row["detail"]
+
+
+def _zenodo_run_due(monkeypatch, tmp_path, newversion_status, newversion_body):
+    """A scheduled run that is due to mint a version; Zenodo answers the first write as given."""
+    monkeypatch.setattr(spray, "zenodo_token", lambda: "test-token")
+    hit = _hit("2026-09-05T09:00:28Z")
+    monkeypatch.setattr(spray, "zenodo_versions", lambda: [hit])
+    monkeypatch.setattr(spray, "zenodo_previous", lambda hits: {})
+    monkeypatch.setattr(spray, "zenodo_cadence", lambda hits, as_of, prev, counts: {"state": "DUE", "why": "test"})
+    monkeypatch.setattr(spray, "stage_zenodo", lambda tr, snap, out, hits=None: {"files": [], "metadata": {}})
+    calls = []
+
+    def fake_http(url, *, method="GET", data=None, headers=None, timeout=60.0):
+        calls.append((method, url))
+        assert method == "POST" and url.endswith("/actions/newversion"), f"nothing may follow a refused newversion: {method} {url}"
+        return newversion_status, newversion_body, {}
+
+    monkeypatch.setattr(spray, "http", fake_http)
+    snap = tmp_path / "snap"
+    snap.mkdir()
+    (snap / "SNAPSHOT.json").write_text(json.dumps({"counts": _counts()}))
+    tr = {"as_of": "2026-11-22T00:00:00Z", "fingerprint": "f" * 64}
+    return spray.spray_zenodo(tr, snap, dry_run=False, force=False), calls
+
+
+def test_zenodo_permission_denied_is_blocked_not_failed(monkeypatch, tmp_path):
+    """Every scheduled spray since 29 Sep 2026 ended red on newversion HTTP 403 "Permission denied." (run
+    44927284819, for one). A credential that cannot write is an owner action, so the row is BLOCKED, as for
+    every other surface without a working credential, and the run stops crying wolf over it."""
+    rows, calls = _zenodo_run_due(monkeypatch, tmp_path, 403, b'{"status": 403, "message": "Permission denied."}')
+    assert [r["status"] for r in rows] == ["BLOCKED"]
+    assert "HTTP 403" in rows[0]["detail"] and "Nothing was written" in rows[0]["detail"]
+    assert len(calls) == 1, "the refusal came on the first write; nothing else may be sent"
+
+
+def test_zenodo_server_error_on_newversion_still_fails(monkeypatch, tmp_path):
+    rows, _ = _zenodo_run_due(monkeypatch, tmp_path, 500, b'{"status": 500, "message": "Internal error"}')
+    assert [r["status"] for r in rows] == ["FAILED"]
