@@ -85,7 +85,7 @@ def run(cmd):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--bundle", default=str(Path(__file__).with_name("kaggle_fix_bundle")))
+    ap.add_argument("--bundle", default=str(Path(__file__).resolve().parent))
     ap.add_argument("--manifest", default=str(Path(__file__).with_name("kaggle_fix_manifest.csv")))
     ap.add_argument("--only", nargs="*", help="dataset slugs to include (default: all)")
     ap.add_argument("--dry-run", action="store_true", default=True, help="default; print only")
@@ -142,8 +142,9 @@ def main():
         pend = rulings.get(ref, [])
         if pend:
             print(f"    needs_owner_ruling: {', '.join(pend)}")
-        if "security_hold" in pend:
-            print("    [skip] security_hold: never published by this script"); n_skip += 1; continue
+        held = [x for x in pend if x.endswith("_hold")]
+        if held:
+            print(f"    [skip] {', '.join(held)}: never published by this script"); n_skip += 1; continue
         live = None
         if a.diff or publish:
             live = live_metadata(ref); time.sleep(a.sleep)
@@ -172,6 +173,8 @@ def main():
         n_ok += ok; n_fail += (not ok)
     print(f"\n{len(folders)} dataset folders; published={n_ok} skipped={n_skip} failed={n_fail}"
           + ("" if publish else " (dry run)"))
+    if n_fail:
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

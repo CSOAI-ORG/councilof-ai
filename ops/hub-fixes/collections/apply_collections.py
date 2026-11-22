@@ -61,12 +61,16 @@ def main() -> None:
                 return it.item_object_id
         return None
 
-    done = skipped = 0
+    done = skipped = errors = 0
     for r in plan:
         act, slug = r["action"], r["collection_slug"]
         tag = f"[{r['step']:>3}] {act:21s} {slug.split('/')[-1][:48]:48s} {r.get('item_id') or ''}"
         if r["requires_flagship"] and not flagship_exists:
             print(tag, "SKIP (csoai/gspc does not exist yet)"); skipped += 1; continue
+        if act == "delete_collection" and errors:
+            print(tag, f"SKIP delete: {errors} earlier step(s) failed; fix those first"); skipped += 1; continue
+        if act == "delete_collection" and not flagship_exists and any(x.get("requires_flagship") in ("True", True) for x in plan):
+            print(tag, "SKIP delete: flagship-dependent items are not in place yet"); skipped += 1; continue
         if act == "delete_collection" and not a.delete:
             print(tag, "SKIP (needs --delete)"); skipped += 1; continue
         try:
@@ -100,9 +104,12 @@ def main() -> None:
                     api.delete_collection(slug, missing_ok=True)
             done += 1
         except Exception as e:  # noqa: BLE001 — report and continue; nothing is retried blindly
+            errors += 1
             print(tag, f"ERROR {type(e).__name__}: {str(e)[:200]}")
-    print(f"{'APPLIED' if write else 'DRY RUN'}: {done} steps checked/applied, {skipped} skipped. "
+    print(f"{'APPLIED' if write else 'DRY RUN'}: {done} steps checked/applied, {skipped} skipped, {errors} errors. "
           f"flagship_exists={flagship_exists}")
+    if errors:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
