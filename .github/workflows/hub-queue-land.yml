@@ -35,7 +35,7 @@ jobs:
   land:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 70
     env:
       GH_TOKEN: ${{ github.token }}
       RUN_ID: ${{ github.event.inputs.run_id || github.event.workflow_run.id }}
@@ -127,7 +127,7 @@ jobs:
           set -euo pipefail
           BR="${{ steps.pr.outputs.branch }}"
           python3 scripts/sign_land_branch.py wait --target mill --land-branch "$BR" --run-id "${RUN_ID}" \
-            --mode "$SIGNER_MODE" --after "$SIGNER_AFTER" --initial-sleep 20 --tries 40 --interval 15
+            --mode "$SIGNER_MODE" --after "$SIGNER_AFTER" --initial-sleep 20 --tries 160 --interval 15
           git fetch origin "$BR"
           git checkout -q FETCH_HEAD -- public/interop/mill-cards-signed || true
           curl -fsSL -A "Mozilla/5.0 csoai-hub-queue-land" https://councilof.ai/.well-known/did.json -o did.json
