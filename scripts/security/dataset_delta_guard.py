@@ -9,6 +9,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import stat
 import re
 import sys
 from pathlib import Path
@@ -43,15 +45,27 @@ def unique_pairs(pairs: list[tuple[str, object]]) -> dict:
 
 
 def load_file(path: Path) -> bytes:
-    if not path.is_file() or path.is_symlink():
-        raise Uncheckable("MISSING_OR_NONREGULAR_FILE")
-    if path.stat().st_size > MAX_BYTES:
-        raise Uncheckable("FILE_EXCEEDS_2MB_BOUND")
-    with path.open("rb") as handle:
-        raw = handle.read(MAX_BYTES + 1)
-    if len(raw) > MAX_BYTES:
-        raise Uncheckable("FILE_EXCEEDS_2MB_BOUND")
-    return raw
+    """Open only an existing regular file, refusing final-component symlink swaps."""
+    nofollow = getattr(os, "O_NOFOLLOW", None)
+    if nofollow is None:
+        raise Uncheckable("NOFOLLOW_UNAVAILABLE")
+    try:
+        fd = os.open(path, os.O_RDONLY | nofollow | getattr(os, "O_NONBLOCK", 0))
+    except OSError as exc:
+        raise Uncheckable("MISSING_SYMLINK_OR_UNREADABLE_FILE") from exc
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode):
+            raise Uncheckable("MISSING_OR_NONREGULAR_FILE")
+        if info.st_size > MAX_BYTES:
+            raise Uncheckable("FILE_EXCEEDS_2MB_BOUND")
+        with os.fdopen(fd, "rb", closefd=False) as handle:
+            raw = handle.read(MAX_BYTES + 1)
+        if len(raw) > MAX_BYTES:
+            raise Uncheckable("FILE_EXCEEDS_2MB_BOUND")
+        return raw
+    finally:
+        os.close(fd)
 
 
 def parse_rows(raw: bytes, id_field: str) -> dict[str, str]:
