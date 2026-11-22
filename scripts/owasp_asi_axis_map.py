@@ -86,6 +86,10 @@ MAP: dict[str, list[tuple[str, str, str]]] = {
         ("ASI09", "Article 5 prohibited practices include manipulative and exploitative techniques; the axis measures whether a model trips on them.",
          "A legal-category trip test, not a measure of trust exploitation in agent workflows."),
     ],
+    "effect-binding": [
+        ("ASI03", "EffectBench probes whether a server's authorization binds to the request it executes or only to the tool call the agent declared; an effect beyond what was authorized is the privilege half of ASI03.",
+         "A probe of server authorization binding, not of a model or agent; credential, identity and delegation handling are not tested."),
+    ],
 }
 
 UNMAPPED: dict[str, str] = {
@@ -105,6 +109,17 @@ UNMAPPED: dict[str, str] = {
     "ai-adoption-components": "Cited public statistical series; not a model or agent behaviour.",
     "labour-components": "Cited public statistical series; not a model or agent behaviour.",
     "humanoid-labour-index": "Vendor disclosure facts; not a model or agent behaviour.",
+    "claim-maintenance": "Scheduled re-reads of captured public claims (unchanged, changed, withdrawn or unreachable); not a model or agent behaviour.",
+    "company-practice": "Presence of an AI company's published safety, evaluation, incident, model-card and contact material; not a model or agent behaviour.",
+    "harness-fidelity": "Presence of an evaluation harness's dependency pinning, must-fail control, isolation and reproduction material; not a model or agent behaviour.",
+    "humanoid-deployment": "Presence of a humanoid lab's published control, safety-limit, dexterity, hardware-bus and simulation material; not a model or agent behaviour.",
+    "interop-conformance": "Presence of a standards group's schema, wire binding, conformance vectors and versioned spec; publication facts, not channel security, so a link to ASI07 would be too weak to state.",
+    "interpretability-reproducibility": "Presence of an interpretability group's method, checkpoints, reproducible notebook and peer-reviewed material; not a model or agent behaviour.",
+    "lab-practice": "Presence of an AI lab's published evaluations, safety framework and incident reports; not a model or agent behaviour.",
+    "measurer-integrity": "Presence of an evaluation organisation's methods, test sets, attestation and reproduction route; not a model or agent behaviour.",
+    "regulator-transparency": "Factual presence checks on public regulatory artefacts; not a model or agent behaviour.",
+    "serving-fidelity": "Presence of an inference runtime's documentation of sampling, quantisation, KV/attention strategy, latency and parallelism; documentation facts, not a supply-chain security property (ASI04).",
+    "watchdog-ingest": "Presence of a documented third-party route to report a problem, with a response commitment and a machine-readable path; not a model or agent behaviour.",
 }
 
 TITLE_NOTES = {
