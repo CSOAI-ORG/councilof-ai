@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, rmSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdtempSync, rmSync, readFileSync, writeFileSync, existsSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawn, spawnSync } from 'node:child_process';
@@ -25,6 +25,45 @@ describe('bounded approval-to-effect demonstration', () => {
       assert.equal(result.observer, 'NO_EFFECT');
     });
   }
+  it('a receipt can disappear after effect bytes were written without becoming NO_EFFECT', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'csoai-approval-effect-'));
+    try {
+      const at = Date.now();
+      const pin = prepare(dir, at).authority_sha256;
+      assert.equal(execute(dir, at, pin).state, 'EXECUTED');
+      const before = readFileSync(join(dir, 'effects.jsonl'), 'utf8');
+      unlinkSync(join(dir, 'effect-receipt.json'));
+      const observed = observe(dir, pin);
+      assert.equal(observed.state, 'UNCHECKABLE');
+      assert.equal(observed.reason, 'EFFECT_PRESENT_RECEIPT_MISSING');
+      assert.equal(observed.effect_present, true);
+      assert.equal(observed.receipt_present, false);
+      assert.match(observed.effect_sha256, /^[a-f0-9]{64}$/);
+      assert.equal(readFileSync(join(dir, 'effects.jsonl'), 'utf8'), before);
+      const harness = fileURLToPath(new URL('./approval-effect-demo.mjs', import.meta.url));
+      const fresh = spawnSync(process.execPath, [harness, '--observe', dir, String(at), pin], { encoding: 'utf8', timeout: 10000 });
+      assert.equal(fresh.status, 0, fresh.stderr);
+      assert.equal(JSON.parse(fresh.stdout).state, 'UNCHECKABLE');
+      assert.equal(JSON.parse(fresh.stdout).reason, 'EFFECT_PRESENT_RECEIPT_MISSING');
+    } finally { rmSync(dir, { recursive: true, force: true }); }
+  });
+
+  it('a receipt without its effect file is also UNCHECKABLE and never called NO_EFFECT', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'csoai-approval-effect-'));
+    try {
+      const at = Date.now();
+      const pin = prepare(dir, at).authority_sha256;
+      assert.equal(execute(dir, at, pin).state, 'EXECUTED');
+      unlinkSync(join(dir, 'effects.jsonl'));
+      const observed = observe(dir, pin);
+      assert.equal(observed.state, 'UNCHECKABLE');
+      assert.equal(observed.reason, 'RECEIPT_PRESENT_EFFECT_MISSING');
+      assert.equal(observed.effect_present, false);
+      assert.equal(observed.receipt_present, true);
+      assert.equal(observed.effect_sha256, null);
+    } finally { rmSync(dir, { recursive: true, force: true }); }
+  });
+
   // The authority record is trusted by a digest the caller holds, never by what the folder says.
   // Found 2026-11-16: with the key read from the folder, a swapped key plus a re-signed approval
   // executed and passed readback, and no control covered it.
