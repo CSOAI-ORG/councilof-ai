@@ -1,0 +1,30 @@
+{
+  "title": "GSPC one: Council of AI (CSOAI) measurements",
+  "id": "nicktempleman/gspc-one",
+  "id_no": 12622486,
+  "subtitle": "Measurements by subject and axis, with evidence links and comparison rules",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/gspc-one`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/gspc-one -p ./dataset --unzip\n```\n\nStart by inspecting `gspc-one.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `gspc-one.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n## GSPC One — measurements and evidence by subject and axis\n\n`gspc-one.json` is a complete JSON document. Its `rows` array holds the observations; the surrounding fields contain the schema, rules, planned classes and axis manifest.\n\n```python\nimport json\nfrom pathlib import Path\ndocument = json.loads(Path(\"dataset/gspc-one.json\").read_text(encoding=\"utf-8\"))\nrows = document[\"rows\"]\nprint(document[\"rules\"])\nprint(rows[0][\"subject\"], rows[0][\"axis\"], rows[0][\"evidence_url\"])\n```\n\nEach row includes `subject_class`, `subject`, `axis`, `result`, `lane`, `group`, `evidence_url` and `as_of`. Some rows also carry `n`, `distinct_items`, `wilson95` and `kind`; absent values are not zero.\n\nKeep comparison groups separate. Signed and unsigned lanes, model comparisons, deterministic facts and census states must not be pooled into a single ranking. Census grids have no population totals or ordering. Read the original document's `rules`, `planned_classes`, `axes_manifest` and `no_aggregate` fields before analysis.\n\nThe file's observation dates remain authoritative for this snapshot. The related [Hugging Face GSPC One repository](https://huggingface.co/datasets/csoai/gspc-one) has a configured table view. A page or viewer repair does not create a new measurement or signature.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 40, last updated 2026-11-19.\n- 1 files, 353,214 bytes. File types: .json (1).\n- Hugging Face twin: [csoai/gspc-one](https://huggingface.co/datasets/csoai/gspc-one). 1 of 1 files have the same byte size there.\n- Expected update frequency: weekly.\n\n## Citation\n\n```bibtex\n@misc{templeman_gspcone_2026,\n  author       = {Templeman, Nick and {Council of AI (CSOAI Ltd)}},\n  title        = {GSPC one: Council of AI (CSOAI) measurements},\n  year         = {2026},\n  publisher    = {Kaggle},\n  howpublished = {\\url{https://www.kaggle.com/datasets/nicktempleman/gspc-one}},\n  note         = {Version 40}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "benchmark",
+    "model comparison",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "weekly",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 1 of 1 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-one](https://huggingface.co/datasets/csoai/gspc-one) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "gspc-one.json",
+      "description": "JSON document. top-level keys: schema, source, rules, mcp_endpoint_key_scheme, planned_classes, rows, axes_manifest, no_aggregate. `rows` holds 929 records with fields: subject_class (string), subject (string), axis (string), result (string), lane (string), group (string), evidence_url (url), as_of (string), n (integer), distinct_items (integer), wilson95 (string), kind (string). Same byte size as `gspc-one.json` in huggingface.co/datasets/csoai/gspc-one (checked 2026-11-20). 353,214 bytes."
+    }
+  ]
+}

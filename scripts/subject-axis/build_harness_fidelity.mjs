@@ -13,13 +13,14 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { homedir } from "node:os";
+import { presence as presenceV2, presenceCorpus, compileAxis, discriminatingSelfTest } from "./presence-v2.mjs";
 
 const AXIS_DIR = join(homedir(), "_alignment", "axis-runs-20261024");
 const OUT_DIR = join(homedir(), "jewel-audit-20261027", "out");
 const AXIS = "harness-fidelity";
 const RUN_ID = "subject-axis-live-run-20261102";
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36";
-const TIMEOUT_MS = 12000, MAX_BYTES = 400_000, CONCURRENCY = 6, BAR = 3;
+const TIMEOUT_MS = 12000, MAX_BYTES = 2_000_000, CONCURRENCY = 6, BAR = 3;
 
 // Frozen population: named evaluation harnesses, in a fixed order. Every entry attempted once.
 const POP = [
@@ -69,7 +70,8 @@ const PATTERNS = {
   pinned_dependency_or_lockfile: "lockfile|requirements\\.txt|uv\\.lock|poetry\\.lock|pinned|commit hash|pyproject\\.toml",
   must_fail_or_negative_control: "must.?fail|negative control|expected to fail|control task|canary|tamper|sanity check",
   isolation_or_container: "docker|container|sandbox|virtualenv|conda|uv run|venv",
-  reproduction_command: "pip install|uv pip|git clone|python -m|make |uvx |npx ",
+  // presence/2.0: bare `make ` matched "make sure"; trailing spaces were the only delimiter in v1.
+  reproduction_command: "pip install|uv pip|git clone|python -m|make test|make install|make reproduc*|uvx|npx",
   published_result_digest: "sha256|checksum|digest|manifest|\\.json\\b|lock file",
 };
 
@@ -87,8 +89,8 @@ async function fetchSubject(url) {
   const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {
     const res = await fetch(url, { redirect: "follow", signal: ctrl.signal, headers: { "User-Agent": UA, "Accept": "text/html,*/*" } });
-    const buf = Buffer.from(await res.arrayBuffer()).subarray(0, MAX_BYTES);
-    return { reachable: true, status: res.status, final_url: res.url, bytes: buf.length, sha256: sha256hex(buf), body: buf.toString("utf8") };
+    const full = Buffer.from(await res.arrayBuffer()); const buf = full.subarray(0, MAX_BYTES);
+    return { reachable: true, status: res.status, final_url: res.url, bytes: buf.length, truncated: full.length > MAX_BYTES, sha256: sha256hex(buf), body: buf.toString("utf8") };
   } catch (e) { return { reachable: false, error: `${e.name}: ${e.message}` }; }
   finally { clearTimeout(t); }
 }
@@ -114,21 +116,23 @@ const live = await pool(rows, r => fetchSubject(r.url), CONCURRENCY);
 const observedAt = new Date().toISOString();
 
 const classes = Object.keys(PATTERNS);
+// presence/2.0: refuse to run if the detector cannot return both outcomes.
+const SELF_TEST = discriminatingSelfTest({ [AXIS]: PATTERNS }, BAR);
+if (!SELF_TEST.ok) { console.error(JSON.stringify(SELF_TEST, null, 2)); process.exit(2); }
 const census = Object.fromEntries(classes.map(c => [c, 0]));
 const hist = {}; const items = []; let negCaught = 0, posOk = 0;
 
 rows.forEach((r, i) => {
   const res = live[i];
   if (!res || !res.reachable || res.status >= 400) return;
-  const text = extractText(res.body).toLowerCase();
-  const checks = Object.fromEntries(classes.map(c => [c, new RegExp(PATTERNS[c], "i").test(text)]));
+  const checks = presenceV2(presenceCorpus(res.body), compileAxis(PATTERNS));
   const present = Object.values(checks).filter(Boolean).length;
   classes.forEach(c => { if (checks[c]) census[c]++; });
   hist[present] = (hist[present] || 0) + 1;
   const itemId = `${AXIS}-live-${String(items.length + 1).padStart(3, "0")}`;
   const payload = {
     axis_id: AXIS, item_id: itemId, subject: r.subject, url: r.url, final_url: res.final_url,
-    http_status: res.status, bytes: res.bytes, content_sha256: res.sha256,
+    http_status: res.status, bytes: res.bytes, truncated: res.truncated, content_sha256: res.sha256,
     text_sha256: sha256hex(Buffer.from(extractText(res.body), "utf8")), observed_at: observedAt,
     presence_checks: checks, checks_present: present, meets_disclosure_bar: present >= BAR,
     previous_grid_sha256: null, bytes_match_previous_grid: false,
@@ -161,7 +165,8 @@ const bank = {
   admission_state: "CANDIDATE_FINDING", public_board_slot_state: "UNMEASURED",
   method_sha256: methodSha, source_grid_file: gridPath, source_grid_sha256: gridSha,
   source_grid_observed_at: observedAt,
-  disclosure_bar: { rule: `presence of at least ${BAR} of 5 link classes`, classes, patterns: PATTERNS },
+  disclosure_bar: { rule: `presence of at least ${BAR} of 5 link classes`, classes, patterns: PATTERNS,
+    presence_method: "csoai.subject-axis-presence/2.0", discriminating_self_test: SELF_TEST.results[AXIS] },
   frame: {
     population_description: `${rows.length} named evaluation harnesses, fixed order`,
     inclusion_rule: "Every entry in the frozen list was attempted exactly once at run time; none added, dropped, substituted or re-ordered. The grid digest is published.",

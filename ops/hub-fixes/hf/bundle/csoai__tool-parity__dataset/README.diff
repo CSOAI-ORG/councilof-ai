@@ -1,0 +1,67 @@
+--- a/csoai/tool-parity/README.md (live)
++++ b/csoai/tool-parity/README.md (proposed)
+@@ -1,6 +1,26 @@
+ ---
+ license: cc-by-4.0
+-viewer: false
++pretty_name: tool-parity — the open-source estate behind every industry MEOK touches
++size_categories:
++- n<1K
++configs:
++- config_name: manifest
++  data_files:
++  - split: train
++    path: MANIFEST.json
++  default: true
++- config_name: parity-card-signed
++  data_files:
++  - split: train
++    path: parity.card.signed.json
++- config_name: parity-snapshot
++  data_files:
++  - split: train
++    path: parity_snapshot.json
++tags:
++- council-of-ai
++language:
++- en
+ ---
+ 
+ <p align="center">
+@@ -86,3 +106,36 @@
+ 
+ For reproducible reuse, pass the repository commit SHA as `revision` and retain the downloaded bytes. Loading a file does not verify its signature; follow this card's verification instructions before relying on a claim. Dated snapshots remain historical measurements.
+ <!-- DATA-ACCESS:END -->
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table. The viewer was previously disabled (`viewer: false`); it is re-enabled now that every subset loads.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `manifest` (default) | `MANIFEST.json` | 1 |
++| `parity-card-signed` | `parity.card.signed.json` | 1 |
++| `parity-snapshot` | `parity_snapshot.json` | 1 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/tool-parity", "manifest", split="train")
++```
++
++## Citation
++
++```bibtex
++@misc{csoai_tool_parity_2026,
++  title        = {tool-parity — the open-source estate behind every industry MEOK touches},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/csoai/tool-parity}},
++  url          = {https://huggingface.co/datasets/csoai/tool-parity}
++}
++```
++
++<!-- csoai-card-fixes:end -->

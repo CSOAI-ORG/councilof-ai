@@ -1,0 +1,43 @@
+{
+  "datasetSlugNullable": "csoai-mcp-scoreboard",
+  "ownerUserNullable": "nicktempleman",
+  "usabilityRatingNullable": 0.625,
+  "titleNullable": "MCP tool-conformance bank",
+  "subtitleNullable": "Mirror of Hugging Face csoai/mcp-scoreboard",
+  "descriptionNullable": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-mcp-scoreboard`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-mcp-scoreboard -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `LICENSE`\n- `README.md`\n- `items.jsonl`\n- `mcpbench.json`\n- `LEADERBOARD.md`\n- `manifest.jsonl`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/mcp-scoreboard at revision `02ee0d4e187d7be339d795c39a4348bc66377ce4`, made 2026-09-29. The Hugging Face copy is the original; if the two differ, it wins.\n\n# MCP tool-conformance bank\n\nA frozen conformance bank for MCP tools. Each row of `items.jsonl` describes a tool's\ndeclared behaviour against its actual behaviour and gives the `expected` verdict with a rule `anchor` —\n`DECLARED_READONLY` (annotated read-only, mutates state), `BOUNDED_EGRESS` (traffic outside the declared\nscope), silent clamping of a declared schema bound, and so on. The rows carry `\"axis\": \"conformance\"`.\n\nSuperseded as the live bank — the conformance slot is published as\n[`csoai/gspc-mcp`](https://huggingface.co/datasets/csoai/gspc-mcp). Kept so inbound links resolve.\n",
+  "expectedUpdateFrequencyNullable": "not specified",
+  "datasetId": 12265531,
+  "datasetSlug": "csoai-mcp-scoreboard",
+  "hasDatasetSlug": true,
+  "ownerUser": "nicktempleman",
+  "hasOwnerUser": true,
+  "usabilityRating": 0.625,
+  "hasUsabilityRating": true,
+  "totalViews": 65,
+  "totalVotes": 0,
+  "totalDownloads": 17,
+  "title": "MCP tool-conformance bank",
+  "hasTitle": true,
+  "subtitle": "Mirror of Hugging Face csoai/mcp-scoreboard",
+  "hasSubtitle": true,
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-mcp-scoreboard`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-mcp-scoreboard -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `LICENSE`\n- `README.md`\n- `items.jsonl`\n- `mcpbench.json`\n- `LEADERBOARD.md`\n- `manifest.jsonl`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/mcp-scoreboard at revision `02ee0d4e187d7be339d795c39a4348bc66377ce4`, made 2026-09-29. The Hugging Face copy is the original; if the two differ, it wins.\n\n# MCP tool-conformance bank\n\nA frozen conformance bank for MCP tools. Each row of `items.jsonl` describes a tool's\ndeclared behaviour against its actual behaviour and gives the `expected` verdict with a rule `anchor` —\n`DECLARED_READONLY` (annotated read-only, mutates state), `BOUNDED_EGRESS` (traffic outside the declared\nscope), silent clamping of a declared schema bound, and so on. The rows carry `\"axis\": \"conformance\"`.\n\nSuperseded as the live bank — the conformance slot is published as\n[`csoai/gspc-mcp`](https://huggingface.co/datasets/csoai/gspc-mcp). Kept so inbound links resolve.\n",
+  "hasDescription": true,
+  "isPrivate": false,
+  "keywords": [
+    "artificial intelligence",
+    "computer science"
+  ],
+  "licenses": [
+    {
+      "nameNullable": "Attribution 4.0 International (CC BY 4.0)",
+      "name": "Attribution 4.0 International (CC BY 4.0)",
+      "hasName": true
+    }
+  ],
+  "collaborators": [],
+  "data": [],
+  "expectedUpdateFrequency": "not specified",
+  "hasExpectedUpdateFrequency": true,
+  "userSpecifiedSources": "",
+  "hasUserSpecifiedSources": false
+}
