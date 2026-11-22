@@ -46,7 +46,7 @@ State: RESEARCH_COMPOSITE_UNVERIFIED. No independent external acceptance, signat
 
 Run from this research directory, using pinned source files and NumPy:
 
-\`\`\`sh
+```sh
 OPENBLAS_NUM_THREADS=1 python3 -B -m unittest discover -s . -p 'test_*.py' -v
 OPENBLAS_NUM_THREADS=1 python3 -B stage1_stage2_transfer.py > stage-transfer.json
 python3 -B consolidate_research.py \
@@ -57,7 +57,7 @@ python3 -B consolidate_research.py \
  --report blind=blind-demo.json \
  --report jspace=jspace-public-audit.json \
  --report transfer=stage-transfer.json > hybrid-seven.json
-\`\`\`
+```
 
 The other six reports must be generated separately as documented in this directory; the example fact report filename is environment-dependent.
 
