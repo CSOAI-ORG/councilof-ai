@@ -35,7 +35,7 @@ process.stdin.setEncoding('utf8');
 process.stdin.on('data', (data) => {
   buf += data;
   let end;
-  while ((end = buf.indexOf('\\n')) >= 0) {
+  while ((end = buf.indexOf('\n')) >= 0) {
     const line = buf.slice(0, end).trim();
     buf = buf.slice(end + 1);
     if (!line) continue;
@@ -58,7 +58,7 @@ async function handle({ id, method, params }) {
     if (params?.name === 'him_attest_run') {
       if (typeof a.subject !== 'string' || !SUBJECT.test(a.subject)) throw new Error('INVALID_SUBJECT_SLUG');
       if (!FRAMEWORKS.has(a.framework)) throw new Error('INVALID_FRAMEWORK');
-      const { pack, tasks } = await runCeremony({ frameworkSlug: a.framework, frameworksDir: DIR.replace(/\\/$/, ''), subject: a.subject });
+      const { pack, tasks } = await runCeremony({ frameworkSlug: a.framework, frameworksDir: DIR.replace(/\/$/, ''), subject: a.subject });
       const out = path.join(process.cwd(), `${a.subject}.${a.framework}.pack.json`);
       // Do not overwrite previous research evidence or follow symlinks.
       fs.writeFileSync(out, JSON.stringify(pack, null, 2), { flag: 'wx', mode: 0o600 });
