@@ -7,11 +7,12 @@ test("real 10,000-document synthetic run detects every exact edit with identical
   assert.equal(r.document_count,BASELINE_RECORDS);
   assert.deepEqual(r.cases.map(x=>x.changed_documents),CHANGE_COUNTS);
   assert.equal(r.record_ids_unique,true);
+  assert.equal(r.reference_pin_state,"GIT_REVIEWABLE_REFERENCE_NO_EXTERNAL_SIGNATURE");
   for(const c of r.cases){
     assert.equal(c.exact_changed_documents,c.changed_documents);
     assert.equal(c.row_count_only_detection,"MISSED_SAME_COUNT");
     assert.equal(c.size_only_detection,"MISSED_SAME_SIZE");
-    assert.equal(c.external_baseline_digest_comparison,"DETECTED_CHANGED_SOURCE_BYTES");
+    assert.equal(c.versioned_reference_digest_comparison,"DETECTED_CHANGED_SOURCE_BYTES");
     assert.equal(c.item_hash_reconciliation,"DETECTED_ALL_CHANGED_DOCUMENTS");
     assert.equal(c.semantic_poison_detection,"NOT_TESTED");
     assert.equal(c.behavioral_model_inference,"NOT_RUN");
@@ -21,18 +22,18 @@ test("recomputing a self-consistent untrusted manifest does not establish source
   const b=syntheticDocuments(150);
   const m=mutateDocuments(b,[9]);
   const withoutPin=compareSnapshots(b,m);
-  assert.equal(withoutPin.trusted_baseline_pin_matches,"UNCHECKABLE_NO_EXTERNAL_PIN");
+  assert.equal(withoutPin.reference_baseline_digest_matches,"UNCHECKABLE_NO_EXTERNAL_PIN");
   assert.equal(withoutPin.untrusted_rehashed_manifest_self_consistent,true);
   const baseline=compareSnapshots(b,b);
   const withPin=compareSnapshots(b,m,{baselinePin:baseline.source_sha256_before});
-  assert.equal(withPin.trusted_baseline_pin_matches,false);
+  assert.equal(withPin.reference_baseline_digest_matches,false);
 });
 test("benign byte changes are detected as revisions, never auto-diagnosed as poison",()=>{
   const b=syntheticDocuments(150);
   const m=b.map((r,i)=>i===0?{...r,body:r.body.replace("Governance","governance")}:r);
   const diff=compareSnapshots(b,m,{baselinePin:compareSnapshots(b,b).source_sha256_before});
   assert.equal(diff.change_count,1);
-  assert.equal(diff.trusted_baseline_pin_matches,false);
+  assert.equal(diff.reference_baseline_digest_matches,false);
   assert.equal(diff.row_count_only_detected,false);
   assert.equal(diff.file_size_only_detected,false);
 });
