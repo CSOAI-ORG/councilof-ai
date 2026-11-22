@@ -1,0 +1,96 @@
+name: GSPC synthetic dataset mutation sensitivity
+
+on:
+  pull_request:
+    paths:
+      - "scripts/experiments/gspc-dataset-mutation-probe.mjs"
+      - "scripts/experiments/gspc-dataset-mutation-probe.node-test.mjs"
+      - "scripts/experiments/GSPC_MUTATION_HF_README.md"
+      - "scripts/experiments/fixtures/gspc-dataset-mutation-baseline.sha256"
+      - ".github/workflows/gspc-dataset-mutation-sensitivity.yml"
+  push:
+    branches: [master]
+    paths:
+      - "scripts/experiments/gspc-dataset-mutation-probe.mjs"
+      - "scripts/experiments/gspc-dataset-mutation-probe.node-test.mjs"
+      - "scripts/experiments/fixtures/gspc-dataset-mutation-baseline.sha256"
+      - ".github/workflows/gspc-dataset-mutation-sensitivity.yml"
+  schedule: [{cron: "53 5 * * 1"}]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gspc-synthetic-dataset-mutation
+  cancel-in-progress: false
+
+jobs:
+  prove-exact-source-integrity-controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - name: Run controlled mutation negatives and repeatability checks
+        run: node --test scripts/experiments/gspc-dataset-mutation-probe.node-test.mjs
+      - name: Emit bounded synthetic research artifact
+        run: |
+          mkdir -p "$RUNNER_TEMP/gspc-mutation"
+          node scripts/experiments/gspc-dataset-mutation-probe.mjs --out "$RUNNER_TEMP/gspc-mutation/report.json"
+          cp scripts/experiments/GSPC_MUTATION_HF_README.md "$RUNNER_TEMP/gspc-mutation/README.md"
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          d=json.loads((Path(os.environ["RUNNER_TEMP"])/"gspc-mutation"/"report.json").read_text())
+          assert d["study_type"]=="DETERMINISTIC_SYNTHETIC_SOURCE_INTEGRITY"
+          assert d["source_real"] is False and d["document_count"]==10000
+          assert [x["changed_documents"] for x in d["cases"]]==[1,5,25,150]
+          for c in d["cases"]:
+            assert c["row_count_only_detection"]=="MISSED_SAME_COUNT"
+            assert c["size_only_detection"]=="MISSED_SAME_SIZE"
+            assert c["versioned_reference_digest_comparison"]=="DETECTED_CHANGED_SOURCE_BYTES"
+            assert c["behavioral_model_inference"]=="NOT_RUN"
+            assert c["semantic_poison_detection"]=="NOT_TESTED"
+          print("CONTROLLED_MUTATION_VERIFIED",[(c["changed_documents"],c["altered_documents_within_sample"]) for c in d["cases"]])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gspc-synthetic-mutation-integrity-candidate
+          path: |
+            ${{ runner.temp }}/gspc-mutation/report.json
+            ${{ runner.temp }}/gspc-mutation/README.md
+          if-no-files-found: error
+          retention-days: 30
+      - name: Mirror public synthetic research from trusted master only
+        if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if test -z "$HF_TOKEN"; then
+            echo "HF_TOKEN_NOT_CONFIGURED: only CI artifact is published"
+            exit 0
+          fi
+          python3 -m pip install -q "huggingface_hub>=0.25"
+          python3 - <<'PY'
+          from pathlib import Path
+          from huggingface_hub import HfApi,hf_hub_download
+          import os
+          root=Path(os.environ["RUNNER_TEMP"])/"gspc-mutation"
+          repo="csoai/gspc-synthetic-dataset-mutation"
+          api=HfApi(token=os.environ["HF_TOKEN"])
+          try:
+            old=Path(hf_hub_download(repo_id=repo,repo_type="dataset",filename="report.json",
+              token=os.environ["HF_TOKEN"])).read_bytes()
+            if old==(root/"report.json").read_bytes():
+              print("SAME_REPORT: no duplicate public publication")
+              raise SystemExit(0)
+          except Exception as e:
+            if isinstance(e,SystemExit):raise
+            print("BASELINE_OR_READ_UNAVAILABLE:",type(e).__name__)
+          api.create_repo(repo,repo_type="dataset",exist_ok=True,private=False)
+          api.upload_folder(repo_id=repo,repo_type="dataset",folder_path=str(root),
+            commit_message="Synthetic fixed-size mutation controls (not model poisoning measurement)")
+          print("PUBLIC_SYNTHETIC_EXPERIMENT_MIRRORED: no model inference, no certification")
+          PY
