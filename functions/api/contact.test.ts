@@ -106,6 +106,40 @@ describe("POST /api/contact", () => {
     expect(kv.put).not.toHaveBeenCalled();
   });
 
+  it("rejects an unbounded streamed POST before Siteverify and LEADS writes", async () => {
+    let consumed = 0;
+    let canceled = false;
+    const body = new ReadableStream<Uint8Array>({
+      pull(controller) {
+        consumed++;
+        controller.enqueue(new Uint8Array(4096).fill(65));
+      },
+      cancel() { canceled = true; },
+    }, { highWaterMark: 0 });
+    const request = new Request("https://councilof.ai/api/contact", {
+      method: "POST",
+      headers: { "content-type": "application/json", origin: "https://councilof.ai" },
+      body, duplex: "half",
+    } as RequestInit & { duplex: "half" });
+    const kv = { put: vi.fn() };
+    const response = await call(request, { ...protectedEnv, LEADS: kv });
+    expect(response.status).toBe(413);
+    expect((await response.json()).code).toBe("TOO_LARGE");
+    expect(canceled).toBe(true);
+    expect(consumed).toBeLessThanOrEqual(10);
+    expect(fetch).not.toHaveBeenCalled();
+    expect(kv.put).not.toHaveBeenCalled();
+  });
+
+  it("does not admit a false application/json MIME prefix", async () => {
+    const request = req(valid, { "content-type": "text/application/json-malformed" });
+    const kv = { put: vi.fn() };
+    const response = await call(request, { ...protectedEnv, LEADS: kv });
+    expect(response.status).toBe(415);
+    expect(fetch).not.toHaveBeenCalled();
+    expect(kv.put).not.toHaveBeenCalled();
+  });
+
   it("sends the verification token only to Siteverify and not to LEADS", async () => {
     const kv = { put: vi.fn(async () => {}) };
     const response = await call(req(valid), { ...protectedEnv, LEADS: kv });
