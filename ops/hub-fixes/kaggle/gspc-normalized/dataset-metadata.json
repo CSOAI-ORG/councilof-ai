@@ -1,0 +1,36 @@
+{
+  "title": "GSPC-NORMALIZED — governance schema",
+  "id": "nicktempleman/gspc-normalized",
+  "id_no": 11653335,
+  "subtitle": "GSPC dated evidence export · check councilof.ai/api/gspc",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/gspc-normalized`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/gspc-normalized -p ./dataset --unzip\n```\n\nStart by inspecting `train.parquet`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `train.parquet`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\nGSPC-NORMALIZED — governance schema\n\nPrinter / sibling twin for GSPC. Live board (authority): GET https://councilof.ai/api/gspc — cite totals.public_count (34 axes · 23 measured · 11 unmeasured).\n23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate. (re-quoted from totals.lid at generation time) · TIE is TIE · not a certificate.\nThree states only: VALID · INVALID · UNCHECKABLE. Measurement not certification. Live authority: https://councilof.ai/api/gspc\nThis Kaggle card is a printer of that GET, not a second engine. Do not freeze MEASURED/UNMEASURED tables here. Fetch fail → UNCHECKABLE. Never claim IL5 / GenAI.mil. Never invent scores.\n\nHub cards (third-party Hub models — NOT the CSOAI fleet): GET https://councilof.ai/api/hub-cards → **384/384/0** (cells/measured/unmeasured; as_of 2026-09-13T17:41:29.541Z). Re-GET before citing; do not freeze a Hub triple on this card.\n\nVerify: https://councilof.ai/gspc-verify\nZenodo DOI 10.5281/zenodo.21991104: UNAVAILABLE since 29 Sep 2026 (Zenodo blocked the CSOAI account; appeal pending; status https://councilof.ai/interop/zenodo-status.json). Cite the served methodology: https://councilof.ai/signed/HOW-TO-VERIFY.md. Issuer: CSOAI Ltd (GB, Companies House 16939677).\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-08-14.\n- 2 files, 59,009 bytes. File types: .md (1), .parquet (1).\n- Related Hugging Face repository: [csoai/gspc-normalized](https://huggingface.co/datasets/csoai/gspc-normalized). No byte-identical files were found, so treat it as related, not a mirror.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "apache-2.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "government",
+    "benchmark",
+    "model comparison",
+    "internet",
+    "software",
+    "tabular"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. Related Hugging Face repository: [csoai/gspc-normalized](https://huggingface.co/datasets/csoai/gspc-normalized) (no byte-identical files found on 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "1498 — card. Dataset README (Markdown). 2,192 bytes."
+    },
+    {
+      "path": "train.parquet",
+      "description": "Parquet table. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 56,817 bytes."
+    }
+  ]
+}

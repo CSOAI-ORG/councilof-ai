@@ -1,0 +1,18 @@
+--- a/csoai/gspc-organism/README.md (live)
++++ b/csoai/gspc-organism/README.md (proposed)
+@@ -13,12 +13,15 @@
+ - provenance
+ - opentimestamps
+ - rekor
++- council-of-ai
+ configs:
+ - config_name: default
+   data_files:
+   - split: train
+     path: "organism/index.json"
+   field: "integration_targets"
++size_categories:
++- n<1K
+ ---
+ 
+ <p align="center">

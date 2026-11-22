@@ -1,0 +1,47 @@
+--- a/csoai/meok-process-world-transitions-v0/README.md (live)
++++ b/csoai/meok-process-world-transitions-v0/README.md (proposed)
+@@ -10,6 +10,7 @@
+ - synthetic
+ - process-model
+ - experimental
++- council-of-ai
+ configs:
+ - config_name: default
+   data_files:
+@@ -19,6 +20,7 @@
+     path: validation.jsonl
+   - split: test
+     path: test.jsonl
++pretty_name: MEOK synthetic process transitions v0
+ ---
+ # MEOK synthetic process transitions v0
+ 
+@@ -29,3 +31,28 @@
+ Episode-disjoint splits: train episodes 0–199 (1,600 rows); validation 200–249 (400 rows); test 250–319 (560 rows). Features are previous aggregate state, full synthetic profile proportions, evidence-revocation state, remaining permit ticks, policy mode and tick. Targets are the next aggregate A/B/C/undecided proportions. The full simulator profile counts are privileged observables; performance with partial observation has not been established.
+ 
+ Model: https://huggingface.co/csoai/meok-process-world-v0 . No third-party model outputs or personal data were used. The deterministic fixture is not a validated behavioural forecast. Preserve all splits: tuning against the public test set requires a new untouched evaluation bank. This dataset is not a canonical GSPC benchmark, authority record or signed measurement.
++
++<!-- csoai-card-fixes:start -->
++
++## Front door
++
++Council of AI publishes its live measurement board and methods at [https://councilof.ai](https://councilof.ai).
++
++## Limitations
++
++**Measurement is not certification.** Values in this repository are measurements recorded by Council of AI (CSOAI Ltd) under the method, instrument version and observation date stated in each file. They are not a certification, audit opinion, conformity assessment or legal determination (including under the EU AI Act). Results depend on the instrument version, the sampled items and the date, and a re-measurement can change them. Repository updates and download counts are not new measurements.
++
++## Citation
++
++```bibtex
++@misc{csoai_meok_process_world_transitions_v0_2026,
++  title        = {MEOK synthetic process transitions v0},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/csoai/meok-process-world-transitions-v0}},
++  url          = {https://huggingface.co/datasets/csoai/meok-process-world-transitions-v0}
++}
++```
++
++<!-- csoai-card-fixes:end -->
