@@ -219,6 +219,26 @@ export default function Layer0() {
       </section>
 
       <div className="mx-auto max-w-4xl px-6 py-12 space-y-16">
+        <section aria-labelledby="external-evidence-layer0" className="rounded-2xl border border-emerald-500/20 bg-[#051b13] p-5 sm:p-7">
+          <h2 id="external-evidence-layer0" className="text-2xl font-bold">From identity to independently inspectable evidence</h2>
+          <p className="mt-3 text-sm leading-7 text-emerald-100/80">
+            This trust floor is not a shortcut around review or an execution tunnel. The external-use records below are
+            dated references to other people&apos;s work. They are not signed Layer0 action receipts, new GSPC results
+            or proof of a buying customer.
+          </p>
+          <ol className="mt-4 grid gap-3 sm:grid-cols-3 text-sm">
+            <li className="rounded-lg border border-emerald-500/15 p-3"><strong className="block">1. Inspect the source</strong><span className="text-emerald-100/70">Original outside URL, event date, exact scope and correction boundary.</span></li>
+            <li className="rounded-lg border border-emerald-500/15 p-3"><strong className="block">2. Verify the artifact</strong><span className="text-emerald-100/70">Reuse the existing verifier where signed evidence is actually supplied.</span></li>
+            <li className="rounded-lg border border-emerald-500/15 p-3"><strong className="block">3. Qualify the outcome</strong><span className="text-emerald-100/70">A receiver must separately confirm delivery, acceptance and any repeat use.</span></li>
+          </ol>
+          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 text-sm font-semibold">
+            <Link href="/traction/#external-use" className="underline underline-offset-4 text-emerald-300">Inspect outside-use cases</Link>
+            <a href="/interop/external-use.json" className="underline underline-offset-4 text-emerald-300">Read the source-bound JSON</a>
+            <Link href="/gspc-verify/" className="underline underline-offset-4 text-emerald-300">Open the existing verifier</Link>
+            <a href="/api/route/execute" className="underline underline-offset-4 text-emerald-300">Read route-execution restrictions</a>
+          </div>
+          <p className="mt-3 text-xs text-emerald-100/55">The route link is a GET description, not an instruction to execute POST. No new Layer0 identity, signer, authority or tool call is created by this evidence view.</p>
+        </section>
         {/* THE BENCH */}
         <section>
           <h2 className="text-2xl font-bold text-emerald-50">The bench</h2>

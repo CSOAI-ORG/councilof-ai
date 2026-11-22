@@ -1,0 +1,64 @@
+--- a/Nicholastempleman/csoai-layer0-discovery-cuts/README.md (live)
++++ b/Nicholastempleman/csoai-layer0-discovery-cuts/README.md (proposed)
+@@ -10,6 +10,25 @@
+ - ai-governance
+ - a2a
+ - agent-discovery
++- council-of-ai
++license: cc-by-4.0
++size_categories:
++- n<1K
++configs:
++- config_name: root-json-sample
++  data_files:
++  - split: train
++    path:
++    - c4ebe4561e4f22245bd33c0841643057c87de83fcc77a812ead3357a8ea23dbd-ots-status.json
++    - dc4cdb25e8641cd36a64f7748bd0f5cb1117c524336ad36e48c28f16ff4c27df-ots-status.json
++    - e9c4df4e9383af62c5970cc3680cfcb5e3f095b93e8ad5824c807e74495fe145-ots-status.json
++  default: true
++- config_name: root-json-v2-sample
++  data_files:
++  - split: train
++    path:
++    - dc4cdb25e8641cd36a64f7748bd0f5cb1117c524336ad36e48c28f16ff4c27df.json
++    - e9c4df4e9383af62c5970cc3680cfcb5e3f095b93e8ad5824c807e74495fe145.json
+ ---
+ 
+ # CSOAI Layer 0 public discovery cuts
+@@ -51,3 +70,35 @@
+ The second [content-addressed discovery cut](dc4cdb25e8641cd36a64f7748bd0f5cb1117c524336ad36e48c28f16ff4c27df.json) records the five public-facing Layer 0 lane states after publication of the separate [Linux Foundation agent-infrastructure capability index](https://huggingface.co/datasets/Nicholastempleman/csoai-lf-agent-infrastructure-index). That dated index distinguishes 30 individually researched project records from 1,270 directory/preflight-only records; zero production CSOAI integrations qualify. The cut also snapshots the then-served MCP tool names and x402 resource IDs. Local lane states are self-reported and require their underlying receipts.
+ 
+ The cut's [original OpenTimestamps sidecar, base64 encoded](dc4cdb25e8641cd36a64f7748bd0f5cb1117c524336ad36e48c28f16ff4c27df.json.ots.b64) and [binding/status receipt](dc4cdb25e8641cd36a64f7748bd0f5cb1117c524336ad36e48c28f16ff4c27df-ots-status.json) are published with it. Four calendars accepted the proof; Bitcoin confirmation is pending for this cut. Run the [portable exact-byte verifier](verify_latest_discovery_cut.py) with `python3 verify_latest_discovery_cut.py --live` to compare its MCP and x402 discovery lists with current public endpoints. This helper checks published bytes and the receipt's binding, not the timestamp's cryptographic path. Nothing here claims GSPC admission, a production signature, a partner endorsement, general search-engine inclusion, buyer settlement, or revenue.
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `root-json-sample` (default) | `c4ebe4561e4f22245bd33c0841643057c87de83fcc77a812ead3357a8ea23dbd-ots-status.json`, `dc4cdb25e8641cd36a64f7748bd0f5cb1117c524336ad36e48c28f16ff4c27df-ots-status.json`, `e9c4df4e9383af62c5970cc3680cfcb5e3f095b93e8ad5824c807e74495fe145-ots-status.json` | 3 |
++| `root-json-v2-sample` | `dc4cdb25e8641cd36a64f7748bd0f5cb1117c524336ad36e48c28f16ff4c27df.json`, `e9c4df4e9383af62c5970cc3680cfcb5e3f095b93e8ad5824c807e74495fe145.json` | 2 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("Nicholastempleman/csoai-layer0-discovery-cuts", "root-json-sample", split="train")
++```
++
++## Citation
++
++```bibtex
++@misc{nicholastempleman_csoai_layer0_discovery_cuts_2026,
++  title        = {CSOAI Layer 0 public discovery cuts},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/Nicholastempleman/csoai-layer0-discovery-cuts}},
++  url          = {https://huggingface.co/datasets/Nicholastempleman/csoai-layer0-discovery-cuts}
++}
++```
++
++<!-- csoai-card-fixes:end -->

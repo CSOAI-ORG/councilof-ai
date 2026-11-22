@@ -4,6 +4,8 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { renderToStaticMarkup } from "react-dom/server";
 import snapshot from "../../../council-os/axis-specialists/board-2026-10-28.snapshot.json";
+import { AXES_D } from "../../../functions/api/_gspc_axes_d";
+import { isOwnerGated } from "./ownerGated";
 import { WORKING_GROUPS, REVOCATION_REVIEW_COMMIT, REVOCATION_REVIEW_PROTOCOL, workingGroup, workingGroupBrief, workingGroupEnquiryHref } from "./workingGroups";
 import { enquiryPreset, prepareContactEmail, CONTACT_ENQUIRY_EMAIL } from "./pilotEnquiry";
 import WorkingGroups from "../components/WorkingGroups";
@@ -116,10 +118,16 @@ describe("Public Watchdog contribution path", () => {
     // axis's own kind: model-comparison keeps the /gspc/ deep dive, every
     // other published axis goes to its own axis page, and an owner-held axis
     // gets no link.
-    const ownerHeld = snapshot.axes.filter((a) => a.public_pages === "HIDDEN_PENDING_OWNER_GO");
+    //
+    // Which axes the owner holds is a live decision, not a fact about the dated
+    // board above: read it from the registry GET /api/gspc serves, the rows the
+    // route map and the axis pages are generated from. (On 2026-11-18 the owner
+    // released both held slots, so today no axis is held.)
+    const heldNow = new Set(AXES_D.filter(isOwnerGated).map((a) => a.axis));
+    const ownerHeld = snapshot.axes.filter((a) => heldNow.has(a.axis));
     const modelComparison = snapshot.axes.filter((a) => a.kind === "model-comparison");
     const ownPage = snapshot.axes.filter(
-      (a) => a.kind !== "model-comparison" && a.public_pages !== "HIDDEN_PENDING_OWNER_GO",
+      (a) => a.kind !== "model-comparison" && !heldNow.has(a.axis),
     );
     expect(doc.querySelectorAll('a[href^="/gspc/"]')).toHaveLength(modelComparison.length);
     expect(doc.querySelectorAll('a[href^="/axis/"]')).toHaveLength(ownPage.length);
@@ -146,18 +154,23 @@ describe("Public Watchdog contribution path", () => {
     root = createRoot(el);
     await act(async () => root!.render(<Watchdog />));
     expect(el.querySelector("#working-groups-heading")).not.toBeNull();
-    expect(fetch).not.toHaveBeenCalled();
+    const requestUrls = () => fetch.mock.calls.map(([url]) => String(url));
+    const claimRequests = () => requestUrls().filter(url => url !== "/api/hitl" && url !== "/api/gspc");
+    expect(requestUrls()).toEqual(["/api/hitl", "/api/gspc"]);
+    expect(claimRequests()).toHaveLength(0);
     const buttons = () => [...el.querySelectorAll("button")];
     expect(buttons().find(b => b.textContent === "Claims")?.getAttribute("aria-pressed")).toBe("false");
     expect(buttons().find(b => b.textContent === "Working groups")?.getAttribute("aria-pressed")).toBe("true");
     await act(async () => buttons().find(b => b.textContent === "Claims")!.click());
     expect(window.location.search).toBe("");
     expect(el.querySelector("#working-groups-heading")).toBeNull();
-    expect(fetch).toHaveBeenCalled();
+    const claimsLoaded = claimRequests().length;
+    expect(claimsLoaded).toBeGreaterThan(0);
     await act(async () => {
       window.history.replaceState(null, "", "/watchdog/?view=groups");
       window.dispatchEvent(new PopStateEvent("popstate"));
     });
     expect(el.querySelector("#working-groups-heading")).not.toBeNull();
+    expect(claimRequests()).toHaveLength(claimsLoaded);
   });
 });

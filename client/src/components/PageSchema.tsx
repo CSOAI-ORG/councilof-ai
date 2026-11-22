@@ -2,6 +2,9 @@ import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { classify, isLibraried, prettifyTitle, PRIMARY_PATHS } from "../data/library-ia";
 import { ROUTE_MANIFEST } from "../data/route-manifest";
+import { councilMcpServerNode } from "../lib/mcpServerSchema";
+import { COUNCIL_ORG } from "../lib/orgNode";
+import { canonicalFor } from "../lib/seoHead";
 
 // PageSchema — mounted once globally. Emits per-route JSON-LD so answer engines (and Google)
 // can place every page in the site's hierarchy and cite it:
@@ -12,13 +15,15 @@ import { ROUTE_MANIFEST } from "../data/route-manifest";
 // Honesty constraint: no fabricated dates — per-page datePublished is unknowable, so it is
 // OMITTED rather than invented. FAQPage/Dataset on the same page coexist fine with both nodes.
 const BASE = "https://councilof.ai";
-// The estate's canonical publisher node (matches NewHome-v3's Organization schema).
-const PUBLISHER = {
-  "@type": "Organization",
-  name: "CSOAI Ltd",
-  url: BASE,
-  identifier: "UK Companies House 16939677",
-};
+// The estate's canonical publisher node: the same @id as the Organization in client/index.html
+// ("Council of AI", legalName CSOAI LTD). Until 2026-11-17 this was a separate, id-less
+// Organization named "CSOAI Ltd", so every Article named a second organisation that nothing
+// connected to the first.
+const PUBLISHER = COUNCIL_ORG;
+// Every URL in a node is the URL the edge serves the page at — the canonical RouteHead writes
+// ("<route>/"). The bare form 308s to it, so a breadcrumb or Article naming the bare form named
+// a redirect (measured 2026-11-17 on /board/: item https://councilof.ai/board).
+const served = (p: string) => (p === "/" ? `${BASE}/` : canonicalFor(p));
 const titleFor = (path: string): string => {
   const hit = ROUTE_MANIFEST.find((r) => r.path === path);
   if (hit) return prettifyTitle(hit.title);
@@ -33,6 +38,8 @@ export default function PageSchema() {
   useEffect(() => {
     if (path === "/") return; // home is the breadcrumb root, no trail of its own
     const added: HTMLScriptElement[] = [];
+    // Set on navigation away, so a node loaded on demand never lands on the next page.
+    let cancelled = false;
     // Inject after a short delay + re-check: a page that ships its OWN schema (via its mount
     // effect) renders slightly after this global route-change effect. Waiting, then checking,
     // guarantees we never double up. 400ms sits well inside the 1800ms prerender wait window,
@@ -80,6 +87,20 @@ export default function PageSchema() {
         }
       }
 
+      // /board is the page the board Dataset names as its url (client/src/lib/datasetSchema.ts),
+      // and it carried no Dataset node: the node lived only on the home page. Same builder, so
+      // the two copies cannot disagree. Loaded on demand: the builder imports the axis registry,
+      // which must not ride in the main bundle for every other route.
+      if (path === "/board" && !pageLd.includes('"Dataset"')) {
+        import("../lib/datasetSchema").then(({ gspcBoardDataset }) => {
+          if (!cancelled) inject("dataset", gspcBoardDataset());
+        });
+      }
+      // /connect documents the free MCP door; the WebAPI node names the endpoint itself.
+      if (path === "/connect" && !pageLd.includes('"WebAPI"')) {
+        inject("webapi", councilMcpServerNode());
+      }
+
       const libraried = isLibraried(path);
       const sector = libraried ? classify(path) : null;
       const title = titleFor(path);
@@ -89,12 +110,12 @@ export default function PageSchema() {
       const known = ROUTE_MANIFEST.some((r) => r.path === path);
 
       if (!pageLd.includes('"BreadcrumbList"')) {
-        const items: { name: string; item: string }[] = [{ name: "Home", item: BASE + "/" }];
+        const items: { name: string; item: string }[] = [{ name: "Home", item: served("/") }];
         if (sector) {
-          items.push({ name: "Library", item: BASE + "/library" });
-          items.push({ name: sector.title, item: `${BASE}/library/${sector.id}` });
+          items.push({ name: "Library", item: served("/library") });
+          items.push({ name: sector.title, item: served(`/library/${sector.id}`) });
         }
-        items.push({ name: title, item: BASE + path });
+        items.push({ name: title, item: served(path) });
         inject("breadcrumb", {
           "@type": "BreadcrumbList",
           itemListElement: items.map((it, i) => ({
@@ -109,12 +130,12 @@ export default function PageSchema() {
         inject("article", {
           "@type": "Article",
           headline: title,
-          url: BASE + path,
+          url: served(path),
           articleSection: sector.title,
           isPartOf: {
             "@type": "CollectionPage",
             name: `${sector.title} — Library`,
-            url: `${BASE}/library/${sector.id}`,
+            url: served(`/library/${sector.id}`),
           },
           publisher: PUBLISHER,
           author: PUBLISHER,
@@ -122,6 +143,7 @@ export default function PageSchema() {
       }
     }, 400);
     return () => {
+      cancelled = true;
       clearTimeout(t);
       for (const sc of added) { try { document.head.removeChild(sc); } catch { /* gone */ } }
     };

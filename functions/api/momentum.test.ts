@@ -113,11 +113,17 @@ function upstream(): Record<string, Route> {
     // A pin on one version (22811459, "22 axes") would not be answered here and the figure would be omitted.
     "https://zenodo.org/api/records/22293340": () =>
       json({ doi: "10.5281/zenodo.22987453", metadata: { title: "GSPC board snapshot", publication_date: "2026-09-22" }, stats: { unique_downloads: 223 } }),
-    "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG/gspc&version=latest": () =>
-      json({ servers: [{ server: { name: "io.github.CSOAI-ORG/gspc", version: "1.4.2" } }] }),
+    // Shape read from the live registry on 2026-11-18: the search also returns the -free entry.
+    "https://registry.modelcontextprotocol.io/v0/servers?search=ai.councilof/gspc&version=latest": () =>
+      json({
+        servers: [
+          { server: { name: "ai.councilof/gspc", version: "1.4.4" }, _meta: { "io.modelcontextprotocol.registry/official": { status: "active" } } },
+          { server: { name: "ai.councilof/gspc-free", version: "1.4.4" }, _meta: { "io.modelcontextprotocol.registry/official": { status: "active" } } },
+        ],
+      }),
     "https://raw.githubusercontent.com/EthicalML/awesome-artificial-intelligence-regulation/master/README.md": () => text("# list\n* one\n* [Council of AI](https://councilof.ai) - measurement\n"),
     "https://raw.githubusercontent.com/awesomedata/awesome-public-datasets/master/README.rst": () => text("x\n* GSPC <https://huggingface.co/datasets/csoai/gspc-board>\n"),
-    "https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc": () => text("<html>io.github.CSOAI-ORG/gspc</html>"),
+    "https://glama.ai/mcp/connectors/ai.councilof/gspc": () => text("<html>ai.councilof/gspc</html>"),
     "https://smithery.ai/servers/csoai/gspc": () => text("<html>gspc https://councilof.ai/api-docs/</html>"),
     "https://402index.io/api/v1/services?q=councilof.ai&limit=100": () => json({ total: 1, services: [{ url: "https://councilof.ai/api/free-door" }] }),
     "https://raw.githubusercontent.com/api-evangelist/councilof-ai/main/README.md": () => text("profile of https://councilof.ai/openapi.json"),
@@ -322,7 +328,7 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
   });
 
   it("shows a listing only when the index names us on this read, with the endorsement line", async () => {
-    const p = await buildMomentum(deps({ "https://smithery.ai/servers/csoai/gspc": () => text("<html>some other server</html>"), "https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc": () => json({}, 403) }));
+    const p = await buildMomentum(deps({ "https://smithery.ai/servers/csoai/gspc": () => text("<html>some other server</html>"), "https://glama.ai/mcp/connectors/ai.councilof/gspc": () => json({}, 403) }));
     const l = p.listings.map((x) => x.id);
     expect(l).toContain("ethicalml-awesome-ai-regulation");
     expect(p.listings.find((x) => x.id === "ethicalml-awesome-ai-regulation")?.evidence).toBe("README line 3 names councilof.ai");
@@ -331,6 +337,26 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
     expect(p.omitted.map((o) => o.id)).toEqual(expect.arrayContaining(["listing:smithery", "listing:glama"]));
     expect(p.listing_line).toBe(LISTING_LINE);
     expect(LISTING_LINE).toBe("A listing is not an endorsement.");
+  });
+
+  // Read on 18 Nov 2026: /about/ said "io.github.CSOAI-ORG/gspc 1.4.4 is listed" and named the same alias on Glama,
+  // while the registry lists that alias as "deprecated" and ai.councilof/gspc 1.4.4 as active.
+  it("names the canonical registry entry, and a deprecated entry is not a listing", async () => {
+    const p = await buildMomentum(deps());
+    const registry = p.listings.find((x) => x.id === "mcp-registry");
+    expect(registry?.evidence).toBe("ai.councilof/gspc 1.4.4 is listed");
+    expect(registry?.url).toContain("search=ai.councilof/gspc");
+    expect(p.listings.find((x) => x.id === "glama")?.evidence).toBe("the connector page names ai.councilof/gspc");
+    for (const l of p.listings) expect(`${l.url} ${l.evidence}`, l.id).not.toContain("io.github.CSOAI-ORG");
+
+    const deprecated = await buildMomentum(
+      deps({
+        "https://registry.modelcontextprotocol.io/v0/servers?search=ai.councilof/gspc&version=latest": () =>
+          json({ servers: [{ server: { name: "ai.councilof/gspc", version: "1.4.4" }, _meta: { "io.modelcontextprotocol.registry/official": { status: "deprecated" } } }] }),
+      }),
+    );
+    expect(deprecated.listings.map((x) => x.id)).not.toContain("mcp-registry");
+    expect(deprecated.omitted.map((o) => o.id)).toContain("listing:mcp-registry");
   });
 
   it("every recent-work href is a page the sitemap lists", async () => {

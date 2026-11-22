@@ -17,7 +17,8 @@ import { negotiateMarkdown, prefersMarkdown } from "./_lib/markdownNegotiation";
 import { serveDashboardSnapshot, snapshotDirectVisit } from "./_lib/dashboardTabSnapshot";
 import { hasPaymentHeader, paymentlessProbe402, type X402Env } from "./api/_x402";
 import { isEmptyProbeBody } from "./api/_x402_discovery";
-import { offerFor } from "./.well-known/x402.json";
+import { offerFor, type ListingOffer } from "./.well-known/x402.json";
+import { PATH as FRESH_CAPSULE_PATH } from "./api/measurement/fresh-capsule";
 import { mcpDoorRootRequest } from "./_lib/mcpDoorRoot";
 import { onRequest as mcpDoor } from "./mcp/[[path]]";
 
@@ -60,25 +61,208 @@ export const onRequest = async (context: Ctx): Promise<Response> => {
   // empty-body POST gets the complete 402 envelope — accepts[] plus extensions.bazaar from
   // declareDiscoveryExtension — before any handler runs. A POST carrying a real body or a
   // payment header falls through to the route untouched; GET is never intercepted.
-  if (context.request.method === "POST" && !hasPaymentHeader(context.request)) {
-    const bodyText = await context.request.clone().text();
-    if (isEmptyProbeBody(bodyText)) {
-      const offer = offerFor(context.request.url);
-      if (offer) {
-        return withApiSecurityHeaders(
-          context.request,
-          await paymentlessProbe402({
-            request: context.request,
-            env: (context.env ?? {}) as unknown as X402Env,
-            offer,
-          }),
-        );
-      }
-    }
+  //
+  // 2026-11-19: the path and query decide BEFORE any byte of the body is read. The gate used to
+  // read every paymentless POST body in full, with no size limit, and only then ask whether the
+  // path was a door — so every POST to /mcp and /api/a2a was buffered here first. It also
+  // challenged a door's FREE part: POST /api/proof?sha=<64-hex> got an issuance:reserve 402 for
+  // an inclusion proof that is free. probeOffer() now leaves alone every path that is not a door
+  // and every query that asks only for a door's free part (FREE_PART below); only a door query
+  // that selects no free part reaches isEmptyProbe(), which reads a clone up to a size cap.
+  // A browser's CORS preflight for an x402 door is answered here (doorPreflight below).
+  const preflight = doorPreflight(context.request);
+  if (preflight) return withApiSecurityHeaders(context.request, preflight);
+  const offer = probeOffer(context.request);
+  if (offer && (await isEmptyProbe(context.request))) {
+    return withApiSecurityHeaders(
+      context.request,
+      await paymentlessProbe402({
+        request: context.request,
+        env: (context.env ?? {}) as unknown as X402Env,
+        offer,
+      }),
+    );
   }
   const response = await context.next();
   return withApiSecurityHeaders(context.request, response);
 };
+
+/**
+ * THE FREE PART OF EACH PAID DOOR, read from that door's own handler (2026-11-19).
+ *
+ * A door in offerFor() is not paid all the way through. proof.ts serves one inclusion (?sha=)
+ * free and sells only ?bundle=1; most doors serve ?preview=1 free; signed-data-feed.ts and
+ * provider-diff.ts serve their bare path free. A query listed here goes to the door untouched,
+ * and every one of these handlers answers POST as it answers GET, so the free part stays free on
+ * POST (functions/_middleware.test.ts holds every listed free preview to that).
+ *
+ * Not listed — free-door, discover/*, request-attestation, ras/*: no query selects a free part.
+ * A query that selects nothing (the bare path of most doors, or input the door refuses) is still
+ * challenged, which is the probe this gate exists for. invoice=gbp is not a free part either and
+ * is challenged exactly as before.
+ */
+type Query = URLSearchParams;
+const one = (q: Query, key: string) => q.get(key) === "1";
+const given = (q: Query, key: string) => (q.get(key) ?? "").trim() !== "";
+const preview = (q: Query) => one(q, "preview");
+const FREE_PART: Record<string, (q: Query) => boolean> = {
+  // proof.ts: one inclusion is free; bundle=1 is the paid bundle; the bare path redirects to it.
+  "/api/proof": (q) => given(q, "sha") && !one(q, "bundle"),
+  // evidence-bundle.ts: an obligation without bundle=1 is the free preview (format=procurement too).
+  "/api/evidence-bundle": (q) => given(q, "obligation") && !one(q, "bundle") && q.get("invoice") !== "gbp",
+  // signed-data-feed.ts: the bare path is the free preview and manifest=1 the free delivery
+  // manifest; feed=1 (or the legacy x402=1) is the paid pull.
+  "/api/signed-data-feed": (q) => one(q, "manifest") || (!one(q, "feed") && !one(q, "x402")),
+  // provider-diff.ts: the bare path, filtered or not, is the free recent feed; history=1 is paid.
+  "/api/feeds/provider-diff": (q) => !one(q, "history") && (q.get("invoice") ?? "").toLowerCase() !== "gbp",
+  // receipts/batch.ts takes preview=true as well as preview=1.
+  "/api/receipts/batch": (q) => preview(q) || q.get("preview") === "true",
+  "/api/rwa/evidence": preview,
+  "/api/coverage-evidence": preview,
+  "/api/wrapper": preview,
+  "/api/wrapper/changes": preview,
+  "/api/art50/marking-evidence": preview,
+  [FRESH_CAPSULE_PATH]: preview,
+};
+
+function asksOnlyForFreePart(url: URL): boolean {
+  const q = url.searchParams;
+  // _population_door.ts: preview=1 and the delivery manifest (manifest=1) are free.
+  if (/^\/api\/pop\/[^/]+$/.test(url.pathname)) return preview(q) || one(q, "manifest");
+  // wrapper/asset/[asset].ts: preview=1 is free.
+  if (/^\/api\/wrapper\/asset\/[^/]+$/.test(url.pathname)) return preview(q);
+  return FREE_PART[url.pathname]?.(q) ?? false;
+}
+
+/**
+ * The offer a paymentless probe of this request is answered with, or null to leave the request
+ * alone. Decided on the method, the payment header, the path and the query only: no byte of the
+ * body has been read when this returns, so /mcp, /api/a2a and every other path that is not a door
+ * are never read by this middleware.
+ */
+function probeOffer(request: Request): ListingOffer | null {
+  if (request.method !== "POST" || hasPaymentHeader(request)) return null;
+  const offer = offerFor(request.url);
+  if (!offer || asksOnlyForFreePart(new URL(request.url))) return null;
+  return offer;
+}
+
+/**
+ * The most body an indexer's probe can carry: "", "{}" or "[]" with JSON whitespace
+ * (isEmptyProbeBody). A body longer than this is a real request, so the gate reads no further.
+ */
+export const PROBE_BODY_CAP_BYTES = 1024;
+
+/**
+ * True when the body is an empty probe. Reads a clone, never more than PROBE_BODY_CAP_BYTES of it
+ * (plus the chunk that crosses the cap): a declared or streamed body past the cap goes to the
+ * route unread. The route always receives the original body, every byte of it.
+ */
+async function isEmptyProbe(request: Request): Promise<boolean> {
+  if (Number(request.headers.get("content-length")) > PROBE_BODY_CAP_BYTES) return false;
+  if (!request.body) return true;
+  const reader = request.clone().body!.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > PROBE_BODY_CAP_BYTES) return false;
+      chunks.push(value);
+    }
+  } catch {
+    // A body the gate cannot read is not an empty probe; the route answers it.
+    return false;
+  } finally {
+    // Stop the clone so the tee stops copying into it. Not awaited: cancelling one branch of a
+    // tee settles only when the other branch ends, and the route has not read that branch yet.
+    reader.cancel().catch(() => {});
+  }
+  const bytes = new Uint8Array(size);
+  let at = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, at);
+    at += chunk.byteLength;
+  }
+  return isEmptyProbeBody(new TextDecoder().decode(bytes));
+}
+
+/**
+ * THE x402 HTTP TRANSPORT'S HEADERS, FOR A BROWSER AND FOR A v2 CLIENT (2026-11-20).
+ *
+ * x402-foundation/x402 specs/transports-v2/http.md names three headers: PAYMENT-REQUIRED on the
+ * 402, PAYMENT-SIGNATURE on the paid request, PAYMENT-RESPONSE on the settled reply. Measured on
+ * the live doors that day:
+ *   - a settled reply carried the settlement only as X-PAYMENT-RESPONSE, the v1 name;
+ *   - no reply named PAYMENT-REQUIRED or PAYMENT-RESPONSE in Access-Control-Expose-Headers, so a
+ *     browser could read neither (the spec's "CORS" section asks for exactly that);
+ *   - a preflight OPTIONS of a door answered 404, so a browser could never send PAYMENT-SIGNATURE.
+ * The doors answered correctly to a server-side client and could not be bought from a page on
+ * another origin. Fixed here, on the one wrapper every /api/ response passes, instead of in each
+ * of the door files: nothing about payment changes, only which names carry what the doors
+ * already send and which of them a browser may read.
+ */
+const X402_EXPOSED_HEADERS = ["PAYMENT-REQUIRED", "PAYMENT-RESPONSE", "X-PAYMENT-RESPONSE"];
+// What a paying browser sends: the v2 header, the v1 header these doors also read, and JSON.
+const X402_REQUEST_HEADERS = ["PAYMENT-SIGNATURE", "X-PAYMENT", "Content-Type", "Accept"];
+
+/** A comma-separated header list with `add` appended, case-insensitively, keeping what is there. */
+function mergeHeaderList(existing: string | null, add: readonly string[]): string {
+  const have = (existing ?? "").split(",").map((v) => v.trim()).filter(Boolean);
+  if (have.includes("*")) return have.join(", ");
+  for (const name of add) if (!have.some((v) => v.toLowerCase() === name.toLowerCase())) have.push(name);
+  return have.join(", ");
+}
+
+/**
+ * On a reply that carries an x402 header: the settlement also under its v2 name, and both payment
+ * headers named for a browser. A reply with no x402 header is left exactly as it was, so the free
+ * reads (/api/gspc, /api/corrections, key verification) are untouched.
+ */
+function withX402TransportHeaders(headers: Headers): void {
+  const settled = headers.get("x-payment-response");
+  if (settled && !headers.has("payment-response")) headers.set("PAYMENT-RESPONSE", settled);
+  if (!headers.has("payment-required") && !headers.has("payment-response")) return;
+  headers.set(
+    "access-control-expose-headers",
+    mergeHeaderList(headers.get("access-control-expose-headers"), X402_EXPOSED_HEADERS),
+  );
+}
+
+/**
+ * The answer to a CORS preflight of an x402 door, or null. Only a real preflight (OPTIONS with
+ * Access-Control-Request-Method) of a path offerFor() knows is answered; every other OPTIONS goes
+ * to its route as before. A preflight never reaches a door's handler, so it can never be
+ * challenged, charged or counted as a probe. It grants nothing a non-browser client lacks: these
+ * doors already answer any origin (Access-Control-Allow-Origin: *) and carry no cookie.
+ */
+function doorPreflight(request: Request): Response | null {
+  if (request.method !== "OPTIONS" || !request.headers.has("access-control-request-method")) return null;
+  if (!offerFor(request.url)) return null;
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "access-control-allow-origin": "*",
+      "access-control-allow-methods": "GET, HEAD, POST, OPTIONS",
+      // The door's own names first, then whatever this preflight asks for: a door reads only the
+      // headers it knows, and allowing a header a browser asks to send grants it nothing here.
+      "access-control-allow-headers": mergeHeaderList(
+        X402_REQUEST_HEADERS.join(", "),
+        (request.headers.get("access-control-request-headers") ?? "")
+          .split(",")
+          .map((v) => v.trim())
+          .filter((v) => /^[A-Za-z0-9-]{1,64}$/.test(v))
+          .slice(0, 16),
+      ),
+      "access-control-expose-headers": X402_EXPOSED_HEADERS.join(", "),
+      "access-control-max-age": "600",
+      "cache-control": "no-store",
+      vary: "Access-Control-Request-Headers",
+    },
+  });
+}
 
 /**
  * /api/* responses carry the security headers the static rules never reach.
@@ -123,6 +307,7 @@ function withApiSecurityHeaders(request: Request, response: Response): Response 
   if (!path.startsWith("/api/")) return response;
 
   const headers = new Headers(response.headers);
+  withX402TransportHeaders(headers);
   headers.set("X-Content-Type-Options", "nosniff");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");

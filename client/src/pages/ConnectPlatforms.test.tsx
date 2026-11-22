@@ -6,6 +6,7 @@
  * snippet names only the two doors, and the committed live check (scripts/harness-x/connect-live.mjs) covered every
  * block and passed. The 375 px layout is checked in a real browser at preview time, not here.
  */
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -45,6 +46,23 @@ describe("/connect: GSPC in your platform", () => {
     expect(check.clients.map((c) => c.id).sort()).toEqual(PLATFORMS.map((c) => c.id).sort());
     expect(check.clients.filter((c) => c.state !== "PASS")).toEqual([]);
     expect(Object.keys(check.doors).sort()).toEqual([FULL_DOOR, FREE_DOOR].sort());
+  });
+
+  // connect-live.mjs records the sha256 of the matrix it probed. A matrix re-rendered after the check has no
+  // live check of its own: on 18 Nov the committed check was a 28 Oct run of an older matrix (47 free tools).
+  it("the committed live check was run against these exact matrix bytes", () => {
+    const check = json("distribution/connect/connect-live-check.json") as { matrix_sha256: string; clients: { id: string; docs: string }[] };
+    const bytes = readFileSync(resolve(root, "distribution/connect/connect-matrix.json"));
+    expect(check.matrix_sha256).toBe(createHash("sha256").update(bytes).digest("hex"));
+    expect(Object.fromEntries(check.clients.map((c) => [c.id, c.docs]))).toEqual(Object.fromEntries(PLATFORMS.map((c) => [c.id, c.docs])));
+  });
+
+  // Measured 18 Nov 2026: block.github.io/goose/docs/... answers 404 (the Goose docs moved to goose-docs.ai), and
+  // llama-stack.readthedocs.io redirects to llamastack.github.io, which answers 404.
+  it("no vendor documentation link points at a docs host measured dead", () => {
+    const retired = ["https://block.github.io/goose/", "https://llama-stack.readthedocs.io/"];
+    const dead = PLATFORMS.filter((c) => retired.some((p) => c.docs.startsWith(p))).map((c) => `${c.id}: ${c.docs}`);
+    expect(dead).toEqual([]);
   });
 
   it("no price and no status claim in any block", () => {

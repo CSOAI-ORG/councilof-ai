@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import AboutNumbers from "@/components/about/AboutNumbers";
 import ExternalUseEvidence from "@/components/ExternalUseEvidence";
+import MembershipStrip from "@/components/MembershipStrip";
 import { useBoardCount } from "@/lib/boardCount";
 import { useEstateFacts } from "@/lib/estateFacts";
 
@@ -195,7 +196,7 @@ export default function About() {
             >
               16939677
             </a>
-            , founded by Nicholas Templeman. The company is accountable for everything published on this site.{" "}
+            . The company is accountable for everything published on this site.{" "}
             <Link href="/team" className="text-emerald-300 underline">Meet the team and the AI agents</Link>.
           </p>
           <p className="text-xl text-gray-300 leading-relaxed mb-6">
@@ -207,6 +208,16 @@ export default function About() {
           <LiveModelCount />
           <HeroStatsBar />
         </div>
+      </div>
+
+      {/* The Council first: the bodies it takes part in, every row read from /interop/memberships.json. */}
+      <div className="bg-white border-b border-border pb-12 sm:pb-16" data-testid="about-takes-part">
+        <div className="container max-w-6xl pt-10 sm:pt-12">
+          <p className="text-lg text-gray-700 leading-relaxed max-w-3xl">
+            Council of AI works inside the standards bodies, policy programmes and open-source commons that shape how AI is measured. Each entry names the body, our role in it and the evidence for it.
+          </p>
+        </div>
+        <MembershipStrip variant="home" />
       </div>
 
       <div className="surface-base border-b border-border py-12 sm:py-16">
@@ -721,14 +732,13 @@ export default function About() {
             </Card>
 
             <Card className="p-6 bg-white border-l-4 border-emerald-500 hover:shadow-lg transition-shadow">
-              <h3 className="text-xl font-bold mb-3">How long does the attestation exam take?</h3>
+              <h3 className="text-xl font-bold mb-3">Is there an attestation exam?</h3>
               <p className="text-gray-600 leading-relaxed">
-                The exam is 50 questions in 90 minutes with a 70% passing threshold, and you can
-                retake it as often as you need. We have not published completion times or a
-                first-attempt pass rate, so we are not going to quote either — there is no cohort
-                record behind those figures. Use the Academy exercises to practise and check the
-                material. Completion-record issuance is not currently open. Learning progress is
-                not a certification or accreditation and gives no regulatory status.
+                No. The attestation exam has been retracted, and its old address now redirects to
+                /honesty/, so there is no exam length, question count or pass mark to quote. Use the
+                Academy exercises to practise and check the material.
+                Completion-record issuance is not currently open. Learning progress is not a
+                certification or accreditation and gives no regulatory status.
               </p>
             </Card>
 
@@ -792,6 +802,16 @@ export default function About() {
               </p>
             </Card>
           </div>
+        </div>
+      </div>
+
+      {/* Accountable entity: the founder, stated once. */}
+      <div className="bg-white pt-12">
+        <div className="container max-w-4xl">
+          <p className="text-base text-gray-600" data-testid="about-founder">
+            CSOAI Ltd was founded by Nicholas Templeman.{" "}
+            <Link href="/team" className="underline underline-offset-4">Meet the team and the AI agents</Link>.
+          </p>
         </div>
       </div>
 

@@ -1,0 +1,42 @@
+{
+  "title": "GSPC Sim Cards — CSOAI simulation cards",
+  "id": "nicktempleman/gspc-sim-cards",
+  "id_no": 11754441,
+  "subtitle": "GSPC dated evidence export · check councilof.ai/api/gspc",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/gspc-sim-cards`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/gspc-sim-cards -p ./dataset --unzip\n```\n\nStart by inspecting `sim_cards.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `eval.yaml`\n- `manifest.jsonl`\n- `sim_cards.jsonl`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\nGSPC Sim Cards — CSOAI simulation cards\n\nPrinter / sibling twin for GSPC. Live board (authority): GET https://councilof.ai/api/gspc — cite totals.public_count (34 axes · 23 measured · 11 unmeasured). Living GET 23·23·0 (axes·measured·empty).\n23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate. (re-quoted from totals.lid at generation time) · TIE is TIE · not a certificate.\nHub cards (third-party Hub models — NOT the CSOAI fleet): GET https://councilof.ai/api/hub-cards → **384/384/0** (cells/measured/unmeasured; re-GET live). Re-GET before citing; do not freeze a Hub triple on this card.\nThree states only: VALID · INVALID · UNCHECKABLE. Measurement not certification. Live authority: https://councilof.ai/api/gspc\nThis Kaggle card is a printer of that GET, not a second engine. Do not freeze MEASURED/UNMEASURED tables here. Fetch fail → UNCHECKABLE. Never invent scores. Never certify.\n\nVerify: https://councilof.ai/gspc-verify\nZenodo DOI 10.5281/zenodo.21991104: UNAVAILABLE since 29 Sep 2026 (Zenodo blocked the CSOAI account; appeal pending; status https://councilof.ai/interop/zenodo-status.json). Cite the served methodology: https://councilof.ai/signed/HOW-TO-VERIFY.md. Issuer: CSOAI Ltd (GB, Companies House 16939677).\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 3, last updated 2026-10-16.\n- 4 files, 734,958 bytes. File types: .jsonl (2), .md (1), .yaml (1).\n- Hugging Face twin: [csoai/gspc-sim-cards](https://huggingface.co/datasets/csoai/gspc-sim-cards). 3 of 4 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "benchmark",
+    "model comparison",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 3 of 4 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-sim-cards](https://huggingface.co/datasets/csoai/gspc-sim-cards) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "1497 — card. Dataset README (Markdown). 207 bytes."
+    },
+    {
+      "path": "eval.yaml",
+      "description": "510 — config. YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-sim-cards (checked 2026-11-20). 510 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "4 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 4 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-sim-cards (checked 2026-11-20). 1,306 bytes."
+    },
+    {
+      "path": "sim_cards.jsonl",
+      "description": "732935 — 2228 — data (one JSON object per line). Newline-delimited JSON (one record per line). 2228 rows; fields: card (string), ts (datetime), axis (string), q (string), a (string), ah (string), signed (boolean). Same byte size as `sim_cards.jsonl` in huggingface.co/datasets/csoai/gspc-sim-cards (checked 2026-11-20). 732,935 bytes."
+    }
+  ]
+}

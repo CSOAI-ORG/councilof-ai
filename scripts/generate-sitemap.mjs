@@ -13,6 +13,7 @@ import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { SUBMISSION_GUIDE_ROUTE } from "./surface/build-bench-suite.mjs";
+import { noindexPatterns, noindexRuleFor } from "./surface/headers-noindex.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const APP_TSX = join(ROOT, "client/src/App.tsx");
@@ -410,12 +411,15 @@ const FOR_PATHS = PERSONA_KEYS.map((k) => `/for/${k}`);
 // /industries/:slug — the canonical industry pages, from the data module IndustryTemplate reads.
 const INDUSTRY_PATHS = derived("industry", INDUSTRIES_TS, /^\s*slug:\s*"([a-z0-9-]+)"/gm, "/industries/");
 
-// /vs/:slug — one canonical page per named competitor. Compare.tsx's FOCUS map carries an
-// ALIAS ("credo" and "credo-ai" both resolve to Credo AI); listing both would put two URLs
-// with identical content in the sitemap, so only canonical slugs are emitted.
-const VS_PATHS = ["/vs/vanta", "/vs/drata", "/vs/credo-ai", "/vs/onetrust"];
+// /vs/:slug is NOT listed (2026-11-17). Measured live with a full sitemap crawl: each of
+// /vs/vanta/, /vs/drata/, /vs/credo-ai/ and /vs/onetrust/ is served with the title and
+// description of /compare/ and a canonical naming https://councilof.ai/compare/, so listing
+// them asked crawlers to index four URLs whose own HTML names another page as the original.
+// The indexable comparison pages are /compare/ and the /<competitor>-alternative/ pages.
+// If the /vs/ pages are ever given their own title, description and self-canonical, list
+// them again here.
 
-for (const p of [...FOR_PATHS, ...INDUSTRY_PATHS, ...VS_PATHS]) {
+for (const p of [...FOR_PATHS, ...INDUSTRY_PATHS]) {
   if (!seen.has(p) && !isJunk(p)) { seen.add(p); paths.push(p); }
 }
 paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
@@ -429,6 +433,7 @@ paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 // they only leave the sitemap. Owner-authorised 2026-09-24; each removal is recorded in the
 // release guard's baseline under delistings[], and the guard re-checks the built page.
 const DELISTED = new Map([
+  ["/pilots/agent-authority", "noindex: pre-launch pilot candidate with unaccepted service readiness"],
   ...["agent-rails", "care", "critical-infrastructure", "defence", "emotion-ai", "government", "humanoid",
       "insurance", "legal", "machinery", "media", "multi-agent-commerce", "open-source", "security", "xr"]
     .map((s) => [`/industries/${s}`, "noindex: withdrawn industry page"]),
@@ -551,18 +556,41 @@ const DELISTED = new Map([
   ["/real-world", "canonical: /world-3d/"],
   ["/regulator-atlas", "canonical: /regulators/"],
   ["/x402-leaderboard", "canonical: /x402-board/"],
+  // Full sitemap crawl 2026-11-17 (browser user agent, no JavaScript): served pages whose own
+  // <link rel="canonical"> names another page.
+  ["/assess", "canonical: /dashboard/"],
+  ["/assessment", "canonical: /dashboard/"],
+  ["/library/axes", "canonical: /library/"],
 ]);
-// These captured copies self-canonicalise to third-party owners. Other
-// /mirrors/ pages are original CSOAI evidence and must stay listed.
-const CROSS_CANONICAL_MIRRORS = new Set(
-  ["118", "120", "129", "14", "195", "2", "246", "250", "262", "286", "347"]
-    .map((id) => `/interop/stablecoin-deep-2026-09/mirrors/${id}`),
-);
-// Only captured copies that self-canonicalise to third-party owners leave the
-// sitemap. Other /mirrors/ pages are original CSOAI evidence and stay listed.
+// Exact served forms whose twin at the other slash form is the canonical one. DELISTED above
+// matches with the trailing slash stripped, so it cannot hold a slash-form-only entry.
+// /measure/ (public/measure/index.html) declares <link rel="canonical" href=".../measure">,
+// and /measure is itself a 200 page in this sitemap: listing both advertised a duplicate.
+const DELISTED_SERVED_FORM = new Map([
+  ["/measure/", "canonical: /measure"],
+]);
+// Edge noindex: every path pattern that public/_headers answers with `X-Robots-Tag: noindex`.
+// It covers /interop/:report/mirrors/* — captured copies of third-party pages kept as evidence,
+// which the edge has served noindex since 2026-09-24. Until 2026-11-17 this generator excluded a
+// hand-kept list of mirror ids and kept 13 others listed (Tether, Franklin Templeton, Circle and
+// other owners' pages); every one of them answered `X-Robots-Tag: noindex, nofollow`. Reading the
+// rule the edge applies keeps the sitemap and the edge from disagreeing again.
+const HEADERS_FILE = join(ROOT, "public/_headers");
+let NOINDEX_RULES = [];
+try {
+  NOINDEX_RULES = noindexPatterns(readFileSync(HEADERS_FILE, "utf8"));
+} catch {
+  // Without _headers the generator cannot know which paths the edge marks noindex. In --check
+  // mode that is UNCHECKABLE, as for _redirects above.
+  if (process.argv.includes("--check")) {
+    console.error("? sitemap: UNCHECKABLE — public/_headers is absent, so edge noindex rules are unknown");
+    process.exit(2);
+  }
+  console.warn("[sitemap] no public/_headers to read noindex rules from");
+}
 const isDelisted = (p) => DELISTED.has(p.replace(/\/+$/, "") || "/") ||
-  CROSS_CANONICAL_MIRRORS.has(p.replace(/\/+$/, "")) ||
-  p.startsWith("/interop/rwa-reconciliation-2026-09/mirrors/rwa-xyz-");
+  DELISTED_SERVED_FORM.has(p) ||
+  noindexRuleFor(NOINDEX_RULES, p) !== null;
 
 // Prerendered as <path>/index.html with no bare->slash rule in _redirects, so Pages answers the
 // bare form with a 308. Emit the served form.

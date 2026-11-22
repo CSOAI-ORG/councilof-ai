@@ -6,6 +6,8 @@ export const WORKING_GROUPS_AS_OF = registry.asOf;
 export const WORKING_GROUPS_CHARTER = "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/governance/public-watchdog-working-groups.md";
 export const REVOCATION_REVIEW_COMMIT = "19ccbd406714f6c2b9e11e9f25fb14aafc478fba";
 export const REVOCATION_REVIEW_PROTOCOL = `https://github.com/CSOAI-ORG/councilof-ai/blob/${REVOCATION_REVIEW_COMMIT}/docs/governance/revocation-latency-trial.md`;
+export const REVOCATION_REVIEW_OBSERVATION = "https://github.com/CSOAI-ORG/councilof-ai/blob/master/evidence/research/controlai/revocation-observation-2026-11-21.json";
+export const REVOCATION_REVIEW_SUMMARY = "https://github.com/CSOAI-ORG/councilof-ai/blob/master/evidence/research/controlai/revocation-observation-2026-11-21.md";
 
 export function workingGroup(id: string | null) {
   return WORKING_GROUPS.find(group => group.id === id) ?? null;
@@ -43,6 +45,10 @@ export function workingGroupBrief(id: string) {
       "## Runnable local review packet",
       `Pinned protocol: ${REVOCATION_REVIEW_PROTOCOL}`,
       `Source commit: ${REVOCATION_REVIEW_COMMIT}`,
+      "Latest local replay (2026-11-21, Apple M4 / Node 26.0.0): cooperative quiescence 0.235 ms; non-cancellable effect tail 31.804 ms and quiescence 31.831 ms against a 5 ms fixture bound; disabled enforcement admitted 3 actions after revocation; unknown effect remained INCONCLUSIVE.",
+      `Readable results: ${REVOCATION_REVIEW_SUMMARY}`,
+      `Raw observation: ${REVOCATION_REVIEW_OBSERVATION}`,
+      "These are single-process synthetic results. Production halt latency remains unmeasured; independent review is pending.",
       "Expected controls: cooperative PASS; non-cancellable FAIL; disabled-enforcement FAIL; unknown-effect INCONCLUSIVE.",
       "The fixture command exits 0 when those expected outcomes occur. Checking the full record exits 1 because it includes negative controls.",
       "These are one-process synthetic controls, not production halt latency or a recommended SLA.",
@@ -58,6 +64,21 @@ export function workingGroupBrief(id: string) {
     "Missing evidence or unknown effects:",
     "Disagreement / proposed correction / reasoned no-change:",
     "What this result does not establish:",
+    "",
+    "## Proposed human review and GSPC measurement checks (not a certification)",
+    "Case ID and frozen source revision / SHA-256:",
+    "GSPC instrument / bank / grader / tested axis and measurement date, if applicable:",
+    "Population and attempted / valid / excluded / unknown denominators:",
+    "Negative control, expected refusal and observed outcome:",
+    "Reviewer role acceptance, professional competence, conflicts and independence (verified in a non-public channel):",
+    "Human approval status, scope digest, authority epoch, expiry and any revocation:",
+    "Invocation acknowledgement distinct from independently observed effect:",
+    "Independent second-review result, disagreement and public correction reference:",
+    "Any absent evidence must stay UNMEASURED / UNCHECKABLE / NOT_TESTED. A typed name or shared operator token is not verified human authority.",
+    "Council H.I.M. explanation: https://councilof.ai/him/",
+    "Live GSPC measurement state: https://councilof.ai/api/gspc",
+    "Live HITL recording scope: https://councilof.ai/api/hitl",
+    "",
     "Attribution and public-listing permissions (separate agreement):",
     "",
     "## Return and follow-up",

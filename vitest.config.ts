@@ -24,6 +24,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // every PR. They are named one by one, not globbed, and pr-gates.yml runs exactly this list under
 // `node --test` in its own step, so excluding them here removes no coverage.
 export const NODE_TEST_FILES = [
+  'scripts/build-external-use-feed.test.mjs',
   'scripts/build-daily-signal.node-test.mjs',
   'scripts/daily-maintenance-metadata.node-test.mjs',
   'scripts/daily-mapping-review-queue/build.test.mjs',
@@ -93,6 +94,10 @@ export const NODE_TEST_FILES = [
   'scripts/watchdog/source-status.test.mjs',
   // This bounded synthetic approval demo uses node:test; the same source list is executed by pr-gates.
   'harness/hitl/approval-effect-demo.test.mjs',
+  // Separate synthetic process capsule uses node:test, not the Vitest collector.
+  'scripts/hitl/oversight-measurement-capsule.test.mjs',
+  // Claim-bounded proof cards use the same standalone node:test runner.
+  'scripts/pilot/render-approval-proof-card.test.mjs',
   // 2026-11-02: seven more node:test files that no gate ran. mcp/gspc-server/wired-tools was
   // already excluded from vitest but was never executed anywhere; the other six were collected
   // by a bare vitest run and reported as failed suites. Two of them were also RED: the
