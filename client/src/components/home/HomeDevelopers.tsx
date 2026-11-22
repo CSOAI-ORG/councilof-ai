@@ -87,6 +87,10 @@ export default function HomeDevelopers() {
             does not place an order.
           </p>
           <div className="hp-dev-links">
+            <a href="/interop/living-signal-plane.html">
+              Regulatory &amp; security signal desk{" "}
+              <ArrowUpRight size={14} aria-hidden="true" />
+            </a>
             <a href="/connect/#agent-skills">
               Portable Agent Skills{" "}
               <ArrowUpRight size={14} aria-hidden="true" />
