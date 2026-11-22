@@ -135,10 +135,23 @@ test("the consumer independently hashes the source file bytes, and detects subst
     fact.by_model={"fixture/model":1};
     fact.tables.measurements.rows=1;
     fact.tables.measurements.parts[0].rows=1;
+    const factPartDir=join(root,"gspc_measurements");
+    mkdirSync(factPartDir);
+    const factPart=JSON.stringify({cell:"items-safety-abcd1234.jsonl",axis:"safety",model:"fixture/model",item_id:"one",ok:true})+"\n";
+    writeFileSync(join(factPartDir,"part-000.jsonl"),factPart);
+    fact.tables.measurements.parts[0].bytes=Buffer.byteLength(factPart);
+    fact.tables.measurements.bytes=Buffer.byteLength(factPart);
     writeFileSync(boardFile,JSON.stringify(board));
     writeFileSync(manifestFile,JSON.stringify(fact));
     const present=readCoverage({board:boardFile,manifest:manifestFile,evidence:source});
     assert.equal(present.sources.fact_cell_source_digest,cells.source_digest);
+    // An incorrect by-axis map, even with a genuine source hash and same rows,
+    // must be rejected. This is the review's axis-attribution repro.
+    const forged=structuredClone(fact);
+    forged.by_axis={jail:1};
+    writeFileSync(manifestFile,JSON.stringify(forged));
+    assert.throws(()=>readCoverage({board:boardFile,manifest:manifestFile,evidence:source}),/by_axis attribution does not match/);
+    writeFileSync(manifestFile,JSON.stringify(fact));
     // Same number of rows: only bytes changed. A count-only audit misses this.
     writeFileSync(file,'{"axis":"safety","model":"fixture/model","item_id":"one","ok":false}\n');
     assert.throws(()=>readCoverage({board:boardFile,manifest:manifestFile,evidence:source}),/independent raw cell hash\/count/);
