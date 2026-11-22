@@ -1618,6 +1618,19 @@
       "payment": "free"
     },
     {
+      "id": "api-institutions",
+      "protocols": [
+        "http"
+      ],
+      "title": "Institutions register",
+      "description": "GET /api/institutions — the dated institutions register, derived in-process from the committed artifact public/interop/institutions-register.json (schema csoai.institutions-register/0.1). Totals count the register's own rows by kind, labelled catalogued; rows are observations, never a count of customers.",
+      "endpoint": "/api/institutions",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-interop-bulk",
       "protocols": [
         "http"

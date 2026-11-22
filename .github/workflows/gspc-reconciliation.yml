@@ -4,6 +4,11 @@ name: gspc-reconciliation
 # check red instead of waiting for someone to notice.
 on:
   workflow_dispatch:
+  # Read-only, event-driven backstop when weekly GitHub cron silently drops.
+  # Do not use this pattern for signing, payment, deployment or other side effects.
+  workflow_run:
+    workflows: ["GSPC Continuous Measurement"]
+    types: [completed]
   schedule:
     - cron: "17 5 * * 1"
 
