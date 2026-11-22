@@ -22,6 +22,21 @@ function safePackPath(value) {
   if (!stat.isFile() || stat.isSymbolicLink()) throw new Error('PACK_FILE_NOT_REGULAR');
   return file;
 }
+function readManagedPack(value) {
+  const file = safePackPath(value);
+  // O_NOFOLLOW prevents following a last-component symlink swapped after lstat.
+  let fd;
+  try {
+    fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW);
+  } catch (error) {
+    if (error?.code === 'ELOOP') throw new Error('PACK_FILE_NOT_REGULAR');
+    throw error;
+  }
+  try {
+    if (!fs.fstatSync(fd).isFile()) throw new Error('PACK_FILE_NOT_REGULAR');
+    return JSON.parse(fs.readFileSync(fd, 'utf8'));
+  } finally { fs.closeSync(fd); }
+}
 const TOOLS = [
   { name: 'him_attest_run', description: 'Build a human-in-the-loop attestation ceremony pack (machine evidence + human task queue) for subject × framework', inputSchema: { type: 'object', properties: { subject: { type: 'string' }, framework: { type: 'string', enum: ['eu-ai-act-art50', 'eu-ai-act-art53', 'dora-art28-30', 'cra', 'iso-42001-lite', 'nist-ai-rmf-lite'] } }, required: ['subject', 'framework'] } },
   { name: 'him_attest_queue', description: 'List pending human tasks in a ceremony pack', inputSchema: { type: 'object', properties: { pack: { type: 'string' } }, required: ['pack'] } },
@@ -65,7 +80,7 @@ async function handle({ id, method, params }) {
       return reply(id, { content: [{ type: 'text', text: `pack=${path.basename(out)} ceremony_sha256=${pack.ceremony_sha256} human_tasks=${pack.human_tasks.length} ${JSON.stringify(tasks.map(t => t.task_id))} authority=NOT_ENROLLED` }] });
     }
     if (params?.name === 'him_attest_queue') {
-      const pack = JSON.parse(fs.readFileSync(safePackPath(a.pack), 'utf8'));
+      const pack = readManagedPack(a.pack);
       const done = new Set((pack.human_decisions || []).map(d => d.task_id));
       return reply(id, { content: [{ type: 'text', text: JSON.stringify((pack.human_tasks || []).filter(t => !done.has(t)), null, 2) }] });
     }
