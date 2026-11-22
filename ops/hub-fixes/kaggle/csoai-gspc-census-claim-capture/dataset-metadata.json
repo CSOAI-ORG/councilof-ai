@@ -1,0 +1,540 @@
+{
+  "title": "GSPC · Census: claim capture — Council of AI",
+  "id": "nicktempleman/csoai-gspc-census-claim-capture",
+  "id_no": 12621339,
+  "subtitle": "Mirror of HF csoai/claim-capture-census. Measurement, not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-census-claim-capture`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-census-claim-capture -p ./dataset --unzip\n```\n\nStart by inspecting `records/a2a-registry/2026-09-22.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `verify_anon.py`\n- `SCALE-LIMITS.md`\n- `runs/2026-09-22.json`\n- `runs/2026-09-23.json`\n- `index/2026-09-22.json`\n- `index/2026-09-23.json`\n- `records/a2a-registry/2026-09-22.jsonl`\n- See the Data tab for all 128 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement: claim capture. Not a certification.**\n\n> **Mirror.** Copy of https://huggingface.co/datasets/csoai/claim-capture-census at revision `b37d2538a6215ed393762c329986e057375d3b7c`, made 2026-10-16. The Hugging Face copy is the original; if the two differ, it wins.\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n\n# Claim-capture census\n\n> **Start here — free verify:**\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-10-16.\n- 128 files, 70,493,703 bytes. File types: .json (53), .ots (36), .txt (18), .jsonl (18), .md (2), .py (1).\n- Hugging Face twin: [csoai/claim-capture-census](https://huggingface.co/datasets/csoai/claim-capture-census). 127 of 128 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_claim_capture_census,\n  title        = {Claim-capture census},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/claim-capture-census},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "finance",
+    "internet"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 127 of 128 files have the same byte size as files in the Hugging Face dataset [csoai/claim-capture-census](https://huggingface.co/datasets/csoai/claim-capture-census) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 6,382 bytes."
+    },
+    {
+      "path": "SCALE-LIMITS.md",
+      "description": "Markdown document. Same byte size as `SCALE-LIMITS.md` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 22,469 bytes."
+    },
+    {
+      "path": "artifacts/402index-services/402index-services-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/402index-services/402index-services-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 8,549 bytes."
+    },
+    {
+      "path": "artifacts/402index-services/402index-services-2026-09-22.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/402index-services/402index-services-2026-09-22.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/402index-services/402index-services-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/402index-services/402index-services-2026-09-22.root.txt` (included in this dataset). Same byte size as `artifacts/402index-services/402index-services-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 875 bytes."
+    },
+    {
+      "path": "artifacts/402index-services/402index-services-2026-09-22.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/402index-services/402index-services-2026-09-22.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,611 bytes."
+    },
+    {
+      "path": "artifacts/402index-services/402index-services-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/402index-services/402index-services-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 8,500 bytes."
+    },
+    {
+      "path": "artifacts/402index-services/402index-services-2026-09-23.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/402index-services/402index-services-2026-09-23.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/402index-services/402index-services-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/402index-services/402index-services-2026-09-23.root.txt` (included in this dataset). Same byte size as `artifacts/402index-services/402index-services-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 805 bytes."
+    },
+    {
+      "path": "artifacts/402index-services/402index-services-2026-09-23.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/402index-services/402index-services-2026-09-23.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,611 bytes."
+    },
+    {
+      "path": "artifacts/a2a-registry/a2a-registry-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/a2a-registry/a2a-registry-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 9,362 bytes."
+    },
+    {
+      "path": "artifacts/a2a-registry/a2a-registry-2026-09-22.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/a2a-registry/a2a-registry-2026-09-22.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/a2a-registry/a2a-registry-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/a2a-registry/a2a-registry-2026-09-22.root.txt` (included in this dataset). Same byte size as `artifacts/a2a-registry/a2a-registry-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 770 bytes."
+    },
+    {
+      "path": "artifacts/a2a-registry/a2a-registry-2026-09-22.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/a2a-registry/a2a-registry-2026-09-22.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,607 bytes."
+    },
+    {
+      "path": "artifacts/a2a-registry/a2a-registry-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/a2a-registry/a2a-registry-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 9,314 bytes."
+    },
+    {
+      "path": "artifacts/a2a-registry/a2a-registry-2026-09-23.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/a2a-registry/a2a-registry-2026-09-23.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/a2a-registry/a2a-registry-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/a2a-registry/a2a-registry-2026-09-23.root.txt` (included in this dataset). Same byte size as `artifacts/a2a-registry/a2a-registry-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 840 bytes."
+    },
+    {
+      "path": "artifacts/a2a-registry/a2a-registry-2026-09-23.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/a2a-registry/a2a-registry-2026-09-23.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,607 bytes."
+    },
+    {
+      "path": "artifacts/defillama-chains/defillama-chains-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/defillama-chains/defillama-chains-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 7,644 bytes."
+    },
+    {
+      "path": "artifacts/defillama-chains/defillama-chains-2026-09-22.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/defillama-chains/defillama-chains-2026-09-22.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/defillama-chains/defillama-chains-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/defillama-chains/defillama-chains-2026-09-22.root.txt` (included in this dataset). Same byte size as `artifacts/defillama-chains/defillama-chains-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 735 bytes."
+    },
+    {
+      "path": "artifacts/defillama-chains/defillama-chains-2026-09-22.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/defillama-chains/defillama-chains-2026-09-22.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,643 bytes."
+    },
+    {
+      "path": "artifacts/defillama-chains/defillama-chains-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/defillama-chains/defillama-chains-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 7,595 bytes."
+    },
+    {
+      "path": "artifacts/defillama-chains/defillama-chains-2026-09-23.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/defillama-chains/defillama-chains-2026-09-23.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/defillama-chains/defillama-chains-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/defillama-chains/defillama-chains-2026-09-23.root.txt` (included in this dataset). Same byte size as `artifacts/defillama-chains/defillama-chains-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 910 bytes."
+    },
+    {
+      "path": "artifacts/defillama-chains/defillama-chains-2026-09-23.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/defillama-chains/defillama-chains-2026-09-23.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,643 bytes."
+    },
+    {
+      "path": "artifacts/defillama-hacks/defillama-hacks-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/defillama-hacks/defillama-hacks-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 7,859 bytes."
+    },
+    {
+      "path": "artifacts/defillama-hacks/defillama-hacks-2026-09-22.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/defillama-hacks/defillama-hacks-2026-09-22.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/defillama-hacks/defillama-hacks-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/defillama-hacks/defillama-hacks-2026-09-22.root.txt` (included in this dataset). Same byte size as `artifacts/defillama-hacks/defillama-hacks-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 875 bytes."
+    },
+    {
+      "path": "artifacts/defillama-hacks/defillama-hacks-2026-09-22.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/defillama-hacks/defillama-hacks-2026-09-22.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,642 bytes."
+    },
+    {
+      "path": "artifacts/defillama-hacks/defillama-hacks-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/defillama-hacks/defillama-hacks-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 7,811 bytes."
+    },
+    {
+      "path": "artifacts/defillama-hacks/defillama-hacks-2026-09-23.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/defillama-hacks/defillama-hacks-2026-09-23.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/defillama-hacks/defillama-hacks-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/defillama-hacks/defillama-hacks-2026-09-23.root.txt` (included in this dataset). Same byte size as `artifacts/defillama-hacks/defillama-hacks-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,190 bytes."
+    },
+    {
+      "path": "artifacts/defillama-hacks/defillama-hacks-2026-09-23.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/defillama-hacks/defillama-hacks-2026-09-23.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,642 bytes."
+    },
+    {
+      "path": "artifacts/defillama-protocols/defillama-protocols-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/defillama-protocols/defillama-protocols-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 8,298 bytes."
+    },
+    {
+      "path": "artifacts/defillama-protocols/defillama-protocols-2026-09-22.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/defillama-protocols/defillama-protocols-2026-09-22.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/defillama-protocols/defillama-protocols-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/defillama-protocols/defillama-protocols-2026-09-22.root.txt` (included in this dataset). Same byte size as `artifacts/defillama-protocols/defillama-protocols-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 875 bytes."
+    },
+    {
+      "path": "artifacts/defillama-protocols/defillama-protocols-2026-09-22.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/defillama-protocols/defillama-protocols-2026-09-22.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,650 bytes."
+    },
+    {
+      "path": "artifacts/defillama-protocols/defillama-protocols-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/defillama-protocols/defillama-protocols-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 8,249 bytes."
+    },
+    {
+      "path": "artifacts/defillama-protocols/defillama-protocols-2026-09-23.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/defillama-protocols/defillama-protocols-2026-09-23.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/defillama-protocols/defillama-protocols-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/defillama-protocols/defillama-protocols-2026-09-23.root.txt` (included in this dataset). Same byte size as `artifacts/defillama-protocols/defillama-protocols-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 840 bytes."
+    },
+    {
+      "path": "artifacts/defillama-protocols/defillama-protocols-2026-09-23.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/defillama-protocols/defillama-protocols-2026-09-23.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,650 bytes."
+    },
+    {
+      "path": "artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 7,821 bytes."
+    },
+    {
+      "path": "artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-22.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-22.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-22.root.txt` (included in this dataset). Same byte size as `artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 875 bytes."
+    },
+    {
+      "path": "artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-22.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-22.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,653 bytes."
+    },
+    {
+      "path": "artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 7,772 bytes."
+    },
+    {
+      "path": "artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-23.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-23.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-23.root.txt` (included in this dataset). Same byte size as `artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 945 bytes."
+    },
+    {
+      "path": "artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-23.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-23.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,653 bytes."
+    },
+    {
+      "path": "artifacts/defillama-yields/defillama-yields-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/defillama-yields/defillama-yields-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 7,929 bytes."
+    },
+    {
+      "path": "artifacts/defillama-yields/defillama-yields-2026-09-22.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/defillama-yields/defillama-yields-2026-09-22.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/defillama-yields/defillama-yields-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/defillama-yields/defillama-yields-2026-09-22.root.txt` (included in this dataset). Same byte size as `artifacts/defillama-yields/defillama-yields-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 735 bytes."
+    },
+    {
+      "path": "artifacts/defillama-yields/defillama-yields-2026-09-22.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/defillama-yields/defillama-yields-2026-09-22.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,645 bytes."
+    },
+    {
+      "path": "artifacts/defillama-yields/defillama-yields-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/defillama-yields/defillama-yields-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 7,880 bytes."
+    },
+    {
+      "path": "artifacts/defillama-yields/defillama-yields-2026-09-23.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/defillama-yields/defillama-yields-2026-09-23.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/defillama-yields/defillama-yields-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/defillama-yields/defillama-yields-2026-09-23.root.txt` (included in this dataset). Same byte size as `artifacts/defillama-yields/defillama-yields-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 840 bytes."
+    },
+    {
+      "path": "artifacts/defillama-yields/defillama-yields-2026-09-23.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/defillama-yields/defillama-yields-2026-09-23.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,645 bytes."
+    },
+    {
+      "path": "artifacts/mcp-registry/mcp-registry-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/mcp-registry/mcp-registry-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 8,185 bytes."
+    },
+    {
+      "path": "artifacts/mcp-registry/mcp-registry-2026-09-22.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/mcp-registry/mcp-registry-2026-09-22.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/mcp-registry/mcp-registry-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/mcp-registry/mcp-registry-2026-09-22.root.txt` (included in this dataset). Same byte size as `artifacts/mcp-registry/mcp-registry-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 805 bytes."
+    },
+    {
+      "path": "artifacts/mcp-registry/mcp-registry-2026-09-22.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/mcp-registry/mcp-registry-2026-09-22.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,609 bytes."
+    },
+    {
+      "path": "artifacts/mcp-registry/mcp-registry-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/mcp-registry/mcp-registry-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 8,136 bytes."
+    },
+    {
+      "path": "artifacts/mcp-registry/mcp-registry-2026-09-23.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/mcp-registry/mcp-registry-2026-09-23.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/mcp-registry/mcp-registry-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/mcp-registry/mcp-registry-2026-09-23.root.txt` (included in this dataset). Same byte size as `artifacts/mcp-registry/mcp-registry-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 735 bytes."
+    },
+    {
+      "path": "artifacts/mcp-registry/mcp-registry-2026-09-23.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/mcp-registry/mcp-registry-2026-09-23.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,609 bytes."
+    },
+    {
+      "path": "artifacts/openrouter-models/openrouter-models-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/openrouter-models/openrouter-models-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 7,937 bytes."
+    },
+    {
+      "path": "artifacts/openrouter-models/openrouter-models-2026-09-22.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/openrouter-models/openrouter-models-2026-09-22.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/openrouter-models/openrouter-models-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/openrouter-models/openrouter-models-2026-09-22.root.txt` (included in this dataset). Same byte size as `artifacts/openrouter-models/openrouter-models-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 770 bytes."
+    },
+    {
+      "path": "artifacts/openrouter-models/openrouter-models-2026-09-22.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/openrouter-models/openrouter-models-2026-09-22.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,645 bytes."
+    },
+    {
+      "path": "artifacts/openrouter-models/openrouter-models-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, profile, population, revision, captured_utc, source, coverage, freshness, evidence, identity, self_test, redaction, claim_boundary, records_ref. Same byte size as `artifacts/openrouter-models/openrouter-models-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 7,888 bytes."
+    },
+    {
+      "path": "artifacts/openrouter-models/openrouter-models-2026-09-23.root.txt",
+      "description": "Plain-text file. Same byte size as `artifacts/openrouter-models/openrouter-models-2026-09-23.root.txt` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 65 bytes."
+    },
+    {
+      "path": "artifacts/openrouter-models/openrouter-models-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file for `artifacts/openrouter-models/openrouter-models-2026-09-23.root.txt` (included in this dataset). Same byte size as `artifacts/openrouter-models/openrouter-models-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 805 bytes."
+    },
+    {
+      "path": "artifacts/openrouter-models/openrouter-models-2026-09-23.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, verify. Same byte size as `artifacts/openrouter-models/openrouter-models-2026-09-23.signed.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,645 bytes."
+    },
+    {
+      "path": "changes/402index-services/402index-services-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, population, date, semantics, byte_sources, watched_fields, excluded_from_review, count, changes, truncated. `changes` holds 4 records with fields: kind (string), change (string), note (string), record_id (string), previous_value (string), current_value (string). Same byte size as `changes/402index-services/402index-services-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 5,030 bytes."
+    },
+    {
+      "path": "changes/402index-services/402index-services-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, population, date, semantics, byte_sources, watched_fields, excluded_from_review, count, changes, truncated. `changes` holds 105 records with fields: kind (string), change (string), note (string), record_id (string), previous_value (string), current_value (string), fields (string). Same byte size as `changes/402index-services/402index-services-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 62,104 bytes."
+    },
+    {
+      "path": "changes/a2a-registry/a2a-registry-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, population, date, semantics, byte_sources, watched_fields, excluded_from_review, count, changes, truncated. `changes` holds 16 records with fields: kind (string), change (string), note (string), record_id (string), previous_value (string), current_value (string), fields (string). Same byte size as `changes/a2a-registry/a2a-registry-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 354,378 bytes."
+    },
+    {
+      "path": "changes/defillama-hacks/defillama-hacks-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, population, date, semantics, byte_sources, watched_fields, excluded_from_review, count, changes, truncated. `changes` holds 4 records with fields: kind (string), change (string), record_id (string), previous_value (string), current_value (string). Same byte size as `changes/defillama-hacks/defillama-hacks-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 3,727 bytes."
+    },
+    {
+      "path": "changes/defillama-protocols/defillama-protocols-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, population, date, semantics, byte_sources, watched_fields, excluded_from_review, count, changes, truncated. `changes` holds 6 records with fields: kind (string), change (string), record_id (string), previous_value (string), current_value (string), fields (string). Same byte size as `changes/defillama-protocols/defillama-protocols-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 6,305 bytes."
+    },
+    {
+      "path": "changes/defillama-protocols/defillama-protocols-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, population, date, semantics, byte_sources, watched_fields, excluded_from_review, count, changes, truncated. `changes` holds 13 records with fields: kind (string), change (string), record_id (string), previous_value (string), current_value (string), fields (string). Same byte size as `changes/defillama-protocols/defillama-protocols-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 15,927 bytes."
+    },
+    {
+      "path": "changes/defillama-yields/defillama-yields-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, population, date, semantics, byte_sources, watched_fields, excluded_from_review, count, changes, truncated. `changes` holds 109 records with fields: kind (string), change (string), note (string), record_id (string), previous_value (string), current_value (string), fields (string). Same byte size as `changes/defillama-yields/defillama-yields-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 54,926 bytes."
+    },
+    {
+      "path": "changes/defillama-yields/defillama-yields-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, population, date, semantics, byte_sources, watched_fields, excluded_from_review, count, changes, truncated. `changes` holds 396 records with fields: kind (string), change (string), note (string), record_id (string), previous_value (string), current_value (string), fields (string). Same byte size as `changes/defillama-yields/defillama-yields-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 249,620 bytes."
+    },
+    {
+      "path": "changes/mcp-registry/mcp-registry-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, population, date, semantics, byte_sources, watched_fields, excluded_from_review, count, changes, truncated. `changes` holds 6 records with fields: kind (string), change (string), note (string), record_id (string), previous_value (string), current_value (string), fields (string). Same byte size as `changes/mcp-registry/mcp-registry-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 8,071 bytes."
+    },
+    {
+      "path": "changes/mcp-registry/mcp-registry-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, population, date, semantics, byte_sources, watched_fields, excluded_from_review, count, changes, truncated. `changes` holds 67 records with fields: kind (string), change (string), note (string), record_id (string), previous_value (string), current_value (string), fields (string). Same byte size as `changes/mcp-registry/mcp-registry-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 92,243 bytes."
+    },
+    {
+      "path": "changes/openrouter-models/openrouter-models-2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, population, date, semantics, byte_sources, watched_fields, excluded_from_review, count, changes, truncated. `changes` holds 2 records with fields: kind (string), change (string), record_id (string), fields (string). Same byte size as `changes/openrouter-models/openrouter-models-2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 2,352 bytes."
+    },
+    {
+      "path": "changes/openrouter-models/openrouter-models-2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, population, date, semantics, byte_sources, watched_fields, excluded_from_review, count, changes, truncated. `changes` holds 30 records with fields: kind (string), change (string), record_id (string), previous_value (string), current_value (string), fields (string). Same byte size as `changes/openrouter-models/openrouter-models-2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 34,895 bytes."
+    },
+    {
+      "path": "index/2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, date, completeness, rule, populations, endpoint_host_overlap. Same byte size as `index/2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 5,884 bytes."
+    },
+    {
+      "path": "index/2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, date, completeness, rule, populations, endpoint_host_overlap. Same byte size as `index/2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 5,885 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/OTS-UPGRADE.json",
+      "description": "JSON document. top-level keys: schema, date, repo, what_this_is, how_to_verify, proofs. `proofs` holds 18 records with fields: original (string), original_oid (string), original_sha256 (string), upgraded (string), upgraded_sha256 (string), file_digest (string), target_file (string), target_digest_matches_proof (boolean), bitcoin (string). Same byte size as `ots-upgraded/2026-09-25/OTS-UPGRADE.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 18,813 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/402index-services/402index-services-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/402index-services/402index-services-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,876 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/402index-services/402index-services-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/402index-services/402index-services-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,737 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/a2a-registry/a2a-registry-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/a2a-registry/a2a-registry-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,771 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/a2a-registry/a2a-registry-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/a2a-registry/a2a-registry-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,772 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/defillama-chains/defillama-chains-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/defillama-chains/defillama-chains-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,806 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/defillama-chains/defillama-chains-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/defillama-chains/defillama-chains-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,842 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/defillama-hacks/defillama-hacks-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/defillama-hacks/defillama-hacks-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 2,017 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/defillama-hacks/defillama-hacks-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/defillama-hacks/defillama-hacks-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 2,227 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/defillama-protocols/defillama-protocols-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/defillama-protocols/defillama-protocols-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,981 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/defillama-protocols/defillama-protocols-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/defillama-protocols/defillama-protocols-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,947 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,946 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/defillama-stablecoins/defillama-stablecoins-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,877 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/defillama-yields/defillama-yields-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/defillama-yields/defillama-yields-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,841 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/defillama-yields/defillama-yields-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/defillama-yields/defillama-yields-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,877 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/mcp-registry/mcp-registry-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/mcp-registry/mcp-registry-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,806 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/mcp-registry/mcp-registry-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/mcp-registry/mcp-registry-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,667 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/openrouter-models/openrouter-models-2026-09-22.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/openrouter-models/openrouter-models-2026-09-22.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,771 bytes."
+    },
+    {
+      "path": "ots-upgraded/2026-09-25/artifacts/openrouter-models/openrouter-models-2026-09-23.root.txt.ots",
+      "description": "OpenTimestamps proof file. Same byte size as `ots-upgraded/2026-09-25/artifacts/openrouter-models/openrouter-models-2026-09-23.root.txt.ots` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 1,947 bytes."
+    },
+    {
+      "path": "records/402index-services/2026-09-22.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 6000 rows; fields: category (string), description (string), domain_verified (integer), featured (integer), health_status (string), http_method (string), id (string), l402_compliant (string), l402_degrade_reason (string), l402_format (string), last_checked (datetime), latency_p50_ms (integer), lnget_compatible (integer), name (string), payment_asset (string), payment_network (string), price_sats (integer), price_usd (numeric), probe_status (string), protocol (string), provider (string), registered_at (datetime), related_protocols (string), reliability_score (numeric), source (string), … (+5 more). Same byte size as `records/402index-services/2026-09-22.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 5,424,979 bytes."
+    },
+    {
+      "path": "records/402index-services/2026-09-23.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 6000 rows; fields: category (string), description (string), domain_verified (integer), featured (integer), health_status (string), http_method (string), id (string), l402_compliant (string), l402_degrade_reason (string), l402_format (string), last_checked (datetime), latency_p50_ms (integer), lnget_compatible (integer), name (string), payment_asset (string), payment_network (string), price_sats (integer), price_usd (numeric), probe_status (string), protocol (string), provider (string), registered_at (datetime), related_protocols (string), reliability_score (numeric), source (string), … (+5 more). Same byte size as `records/402index-services/2026-09-23.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 5,425,037 bytes."
+    },
+    {
+      "path": "records/a2a-registry/2026-09-22.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 427 rows; fields: author (string), avg_response_time_ms (integer), capabilities (string), conformance (boolean), conformance_errors (string), contact (string), created_at (datetime), defaultInputModes (string), defaultOutputModes (string), description (string), documentationUrl (url), flag_count (integer), hidden (boolean), homepage (string), iconUrl (url), id (string), is_healthy (boolean), last_health_check (datetime), license (string), maintainer_notes (string), name (string), pricing (string), protocolVersion (string), provider (string), repository (string), … (+11 more). Same byte size as `records/a2a-registry/2026-09-22.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 2,429,450 bytes."
+    },
+    {
+      "path": "records/a2a-registry/2026-09-23.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 430 rows; fields: author (string), avg_response_time_ms (integer), capabilities (string), conformance (boolean), conformance_errors (string), contact (string), created_at (datetime), defaultInputModes (string), defaultOutputModes (string), description (string), documentationUrl (url), flag_count (integer), hidden (boolean), homepage (string), iconUrl (url), id (string), is_healthy (boolean), last_health_check (datetime), license (string), maintainer_notes (string), name (string), pricing (string), protocolVersion (string), provider (string), repository (string), … (+11 more). Same byte size as `records/a2a-registry/2026-09-23.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 2,501,860 bytes."
+    },
+    {
+      "path": "records/defillama-chains/2026-09-22.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 467 rows; fields: chainId (string), cmcId (string), gasTokenGeckoId (string), gecko_id (string), name (string), tokenSymbol (string), tvl (numeric). Same byte size as `records/defillama-chains/2026-09-22.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 64,116 bytes."
+    },
+    {
+      "path": "records/defillama-chains/2026-09-23.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 467 rows; fields: chainId (string), cmcId (string), gasTokenGeckoId (string), gecko_id (string), name (string), tokenSymbol (string), tvl (numeric). Same byte size as `records/defillama-chains/2026-09-23.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 64,122 bytes."
+    },
+    {
+      "path": "records/defillama-hacks/2026-09-22.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 1276 rows; fields: amount (numeric), bridgeHack (boolean), chain (string), classification (string), date (integer), defillamaId (string), language (string), name (string), returnedFunds (integer), source (string), targetType (string), technique (string), parentProtocolId (string). Same byte size as `records/defillama-hacks/2026-09-22.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 347,449 bytes."
+    },
+    {
+      "path": "records/defillama-hacks/2026-09-23.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 1280 rows; fields: amount (numeric), bridgeHack (boolean), chain (string), classification (string), date (integer), defillamaId (string), language (string), name (string), returnedFunds (integer), source (string), targetType (string), technique (string), parentProtocolId (string). Same byte size as `records/defillama-hacks/2026-09-23.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 348,474 bytes."
+    },
+    {
+      "path": "records/defillama-protocols/2026-09-22.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 8330 rows; fields: address (string), audit_links (string), audits (string), category (string), chain (string), chainTvls (string), chains (string), change_1d (numeric), change_1h (numeric), change_7d (numeric), cmcId (string), deadUrl (boolean), description (string), gecko_id (string), hallmarks (string), id (string), listedAt (integer), logo (url), mcap (numeric), methodology (string), misrepresentedTokens (boolean), module (string), name (string), slug (string), symbol (string), … (+32 more). Same byte size as `records/defillama-protocols/2026-09-22.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 8,899,638 bytes."
+    },
+    {
+      "path": "records/defillama-protocols/2026-09-23.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 8338 rows; fields: address (string), audit_links (string), audits (string), category (string), chain (string), chainTvls (string), chains (string), change_1d (numeric), change_1h (numeric), change_7d (numeric), cmcId (string), deadUrl (boolean), description (string), gecko_id (string), hallmarks (string), id (string), listedAt (integer), logo (url), mcap (numeric), methodology (string), misrepresentedTokens (boolean), module (string), name (string), slug (string), symbol (string), … (+32 more). Same byte size as `records/defillama-protocols/2026-09-23.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 8,908,230 bytes."
+    },
+    {
+      "path": "records/defillama-stablecoins/2026-09-22.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 427 rows; fields: chainCirculating (string), chains (string), circulating (string), circulatingPrevDay (string), circulatingPrevMonth (string), circulatingPrevWeek (string), gecko_id (string), id (string), name (string), pegMechanism (string), pegType (string), price (numeric), priceSource (string), symbol (string), deadFrom (datetime), deprecated (boolean), yieldBearing (boolean), delisted (boolean). Same byte size as `records/defillama-stablecoins/2026-09-22.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 536,549 bytes."
+    },
+    {
+      "path": "records/defillama-stablecoins/2026-09-23.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 427 rows; fields: chainCirculating (string), chains (string), circulating (string), circulatingPrevDay (string), circulatingPrevMonth (string), circulatingPrevWeek (string), gecko_id (string), id (string), name (string), pegMechanism (string), pegType (string), price (numeric), priceSource (string), symbol (string), deadFrom (datetime), deprecated (boolean), yieldBearing (boolean), delisted (boolean). Same byte size as `records/defillama-stablecoins/2026-09-23.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 536,493 bytes."
+    },
+    {
+      "path": "records/defillama-yields/2026-09-22.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 17262 rows; fields: apy (numeric), apyBase (numeric), apyBase7d (numeric), apyBaseInception (string), apyMean30d (numeric), apyPct1D (numeric), apyPct30D (numeric), apyPct7D (numeric), apyReward (numeric), chain (string), count (integer), exposure (string), il7d (string), ilRisk (string), mu (numeric), outlier (boolean), pool (string), poolMeta (string), predictions (string), project (string), rewardTokens (string), sigma (numeric), stablecoin (boolean), symbol (string), tvlUsd (integer), … (+3 more). Same byte size as `records/defillama-yields/2026-09-22.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 11,865,938 bytes."
+    },
+    {
+      "path": "records/defillama-yields/2026-09-23.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 17325 rows; fields: apy (numeric), apyBase (numeric), apyBase7d (numeric), apyBaseInception (string), apyMean30d (numeric), apyPct1D (numeric), apyPct30D (numeric), apyPct7D (numeric), apyReward (numeric), chain (string), count (integer), exposure (string), il7d (string), ilRisk (string), mu (numeric), outlier (boolean), pool (string), poolMeta (string), predictions (string), project (string), rewardTokens (string), sigma (numeric), stablecoin (boolean), symbol (string), tvlUsd (integer), … (+3 more). Same byte size as `records/defillama-yields/2026-09-23.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 11,910,543 bytes."
+    },
+    {
+      "path": "records/mcp-registry/2026-09-22.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 4000 rows; fields: _meta (string), server (string). Same byte size as `records/mcp-registry/2026-09-22.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 4,279,034 bytes."
+    },
+    {
+      "path": "records/mcp-registry/2026-09-23.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 4000 rows; fields: _meta (string), server (string). Same byte size as `records/mcp-registry/2026-09-23.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 4,274,859 bytes."
+    },
+    {
+      "path": "records/openrouter-models/2026-09-22.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 444 rows; fields: architecture (string), canonical_slug (string), context_length (integer), created (integer), default_parameters (string), description (string), expiration_date (datetime), hugging_face_id (string), id (string), knowledge_cutoff (datetime), links (string), name (string), per_request_limits (string), pricing (string), reasoning (string), supported_parameters (string), supported_voices (string), top_provider (string), benchmarks (string), alias_target (string). Same byte size as `records/openrouter-models/2026-09-22.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 730,182 bytes."
+    },
+    {
+      "path": "records/openrouter-models/2026-09-23.jsonl",
+      "description": "Newline-delimited JSON (one record per line). 454 rows; fields: architecture (string), canonical_slug (string), context_length (integer), created (integer), default_parameters (string), description (string), expiration_date (datetime), hugging_face_id (string), id (string), knowledge_cutoff (datetime), links (string), name (string), per_request_limits (string), pricing (string), reasoning (string), supported_parameters (string), supported_voices (string), top_provider (string), benchmarks (string), alias_target (string). Same byte size as `records/openrouter-models/2026-09-23.jsonl` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 746,141 bytes."
+    },
+    {
+      "path": "runs/2026-09-22.json",
+      "description": "JSON document. top-level keys: schema, profile, date, started_utc, ceiling_sec, disk_floor_gb, raw_replay, sources, finished_utc, seconds, ceiling_hit, bytes_written, disk_free_gb_after. Same byte size as `runs/2026-09-22.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 10,763 bytes."
+    },
+    {
+      "path": "runs/2026-09-23.json",
+      "description": "JSON document. top-level keys: schema, profile, date, started_utc, ceiling_sec, disk_floor_gb, raw_replay, sources, finished_utc, seconds, ceiling_hit, bytes_written, disk_free_gb_after. Same byte size as `runs/2026-09-23.json` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 11,030 bytes."
+    },
+    {
+      "path": "verify_anon.py",
+      "description": "Python source file. Same byte size as `verify_anon.py` in huggingface.co/datasets/csoai/claim-capture-census (checked 2026-11-20). 3,563 bytes."
+    }
+  ]
+}
