@@ -119,11 +119,36 @@ async function handleToolCall(name, args = {}) {
     }
     // Stateless read-only bridge to local Desktop Commander MCP (127.0.0.1:8765).
     const DC = process.env.DC_BRIDGE_URL || 'http://127.0.0.1:8765/mcp';
+    const MAX_DESKTOP_RESPONSE = 1_048_576;
     const rpc = (payload) => fetch(DC, {
       method: 'POST',
       headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' },
       body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(8000),
     });
+    const boundedRead = async (response) => {
+      const declared = response.headers.get('content-length');
+      if (declared !== null && (!/^\\d+$/.test(declared) || Number(declared) > MAX_DESKTOP_RESPONSE)) {
+        void response.body?.cancel().catch(() => {});
+        throw new Error('DESKTOP_RESPONSE_TOO_LARGE');
+      }
+      const stream = response.body?.getReader();
+      if (!stream) throw new Error('DESKTOP_RESPONSE_UNREADABLE');
+      const chunks = []; let bytes = 0; let finished = false;
+      try {
+        for (;;) {
+          const next = await stream.read();
+          if (next.done) { finished = true; break; }
+          bytes += next.value.byteLength;
+          if (bytes > MAX_DESKTOP_RESPONSE) throw new Error('DESKTOP_RESPONSE_TOO_LARGE');
+          chunks.push(Buffer.from(next.value));
+        }
+        return new TextDecoder('utf-8', { fatal: true }).decode(Buffer.concat(chunks, bytes));
+      } finally {
+        if (finished) stream.releaseLock();
+        else void stream.cancel().catch(() => {});
+      }
+    };
     try {
       if (args.op === 'list') {
         const r = await rpc({ jsonrpc: '2.0', id: 1, method: 'tools/list' });
@@ -131,11 +156,17 @@ async function handleToolCall(name, args = {}) {
           await r.body?.cancel().catch(() => {});
           return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_HTTP_ERROR', http_status: r.status });
         }
-        const txt = await r.text();
+        const txt = await boundedRead(r);
         const line = txt.split('\n').find((l) => l.startsWith('data: ') && l.includes('"tools"')) || txt;
         const reply = JSON.parse(line.replace(/^data: /, ''));
         if (reply.error) return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_RPC_ERROR' });
-        return JSON.stringify({ bridge: DC, tools: reply.result.tools.map((t) => t.name) });
+        if (!Array.isArray(reply.result?.tools)) {
+          return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_RESPONSE_INVALID' });
+        }
+        const available = reply.result.tools.some(t => t && typeof t === 'object' && t.name === 'list_devices');
+        if (!available) return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_READ_ONLY_TOOL_UNAVAILABLE' });
+        // Only the callable read-only metadata operation may appear in discovery.
+        return JSON.stringify({ bridge: DC, tools: ['list_devices'], authority: 'READ_ONLY_METADATA' });
       }
       if (args.op === 'call') {
         // The exact tool/argument allowlist was checked before constructing any RPC.
@@ -144,7 +175,7 @@ async function handleToolCall(name, args = {}) {
           await r.body?.cancel().catch(() => {});
           return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_HTTP_ERROR', http_status: r.status });
         }
-        const txt = await r.text();
+        const txt = await boundedRead(r);
         const line = txt.split('\n').find((l) => l.startsWith('data: ') && l.includes('"result"')) || txt;
         const reply = JSON.parse(line.replace(/^data: /, ''));
         if (reply.error) return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_RPC_ERROR' });
