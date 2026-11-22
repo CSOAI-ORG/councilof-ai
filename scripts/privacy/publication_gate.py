@@ -175,7 +175,7 @@ def scan_text(res: Result, place: str, data: bytes, first_line: int = 1, names_o
     # SAS URLs often appear in JSONL registry crawls and tool cards. Recognise
     # a complete sv/se/sig trio even when HTML escaped, never echo the token.
     for i, line in enumerate(data.splitlines(), first_line):
-        q = line.replace(b"&amp;", b"&").replace(b"\u0026", b"&")
+        q = line.replace(b"&amp;", b"&").replace(b"\\u0026", b"&")
         if AZURE_SAS_SIG.search(q) and AZURE_SAS_VERSION.search(q) and AZURE_SAS_EXPIRY.search(q):
             res.hit(f"{place}:{i}", "credential:azure-sas-url")
 
