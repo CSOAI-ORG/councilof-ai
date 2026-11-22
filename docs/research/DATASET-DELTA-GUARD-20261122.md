@@ -35,3 +35,48 @@ No actual customer data, model weights or unsafe prompt payloads are needed to r
 - **To advance:** retain a rights-cleared frozen method and dataset manifest, compare known controlled mutations versus real held-out model behaviour, collect false positives/negatives and actual tool-effect observations under independent witness, use existing admission and protected release gates. Keep compiler/weight provenance, MCP schema mutation and runtime enforcement as separate tests.
 
 An additive, manual **source-only Evidence Fabric adapter** now exists at `packages/evidence-fabric/ingest/dataset_delta_in.py`. It maps a bounded unsigned comparison to one `csoai.evidence-event/0.1` with `PARTIAL` state, `value: null`, and declared source-authentication limitations. It does not validate the upstream revision, rerun the producer, execute a model, create a signed event, or connect to a production queue. Reproduce with `python3 -B -m unittest discover -s packages/evidence-fabric/tests -p test_dataset_delta_in.py -v` in the full repository. Venturi could consume a subsequently owner-qualified event, SovSpace could display a reviewed changed-identity record, and Claim Maintenance could reopen a source-bound claim; **none is automatically wired or executed** by this candidate. No payments, new catalogue entry, spend, signing or claims about preventing ARTEX, MiniMax prompt exposure, A2A misuse or model poisoning follow from this test.
+
+
+## Single-command offline evidence packet
+
+The combined `scripts/security/dataset_delta_pipeline.py` requires **both**
+original JSONL bytes and the baseline manifest. It regenerates the entire
+unsigned baseline from those original bytes before comparing a candidate; a
+manifest that does not match fails closed. The resulting packet contains the
+reported delta and one existing Evidence Fabric event, always `PARTIAL`
+with `value: null`. It does not elevate the caller's unverified repo revision.
+
+```sh
+python3 -B -m unittest discover -s scripts/security -p 'test_dataset_delta_pipeline.py' -v
+python3 -B scripts/security/dataset_delta_pipeline.py \
+  --baseline-manifest /local/approved-manifest.json \
+  --baseline-file /local/approved-baseline.jsonl \
+  --candidate-file /local/candidate.jsonl \
+  --candidate-revision 89abcdef0123456789abcdef0123456789abcdef \
+  --read-at 2026-11-22T05:50:00Z
+```
+
+Exit 0: same canonical records or raw-only changes. Exit 1: source records
+changed, added or removed and human review is needed. Exit 2: an `UNCHECKABLE`
+error on stderr, no packet on stdout. **These are CLI process exit codes,
+not a pass/fail safety grade.** Inputs must be existing small local regular
+files, not symlinks; the source reader uses no-follow descriptor checks.
+Nothing is written to GSPC, the signed evidence board, a model or a wallet.
+Retaining a packet is a separate operator-authorised action.
+
+## Interaction with the Living Signal Plane
+
+The existing owner-held [PR #4652](https://github.com/CSOAI-ORG/councilof-ai/pull/4652)
+measures **whole-file** byte changes by named file paths. This PR measures
+**per-record** identity and canonical-content changes inside one small JSONL
+file and projects the resulting *claim-limited* event through existing Evidence
+Fabric. These are complementary scopes. Neither should become a second
+canonical dataset registry, model-security grade or automatic publishing lane.
+If the owner integrates both, the file-level manifest can identify which
+pinned JSONL file warrants a bounded per-record comparison; that transition
+must have explicit source and rights review. No cross-PR live wiring is claimed.
+
+The existing [PR #4649](https://github.com/CSOAI-ORG/councilof-ai/pull/4649)
+owns broad 34-axis evidence coverage/projections, and [PR #4644](https://github.com/CSOAI-ORG/councilof-ai/pull/4644)
+owns the separate 16-case human-effect synthetic research bank. This tool does
+not assume either was released, merge their methods or change their custody.
