@@ -58,8 +58,9 @@ type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespa
 export const KIND = "csoai.art50.marking-evidence/0.1";
 /**
  * The frozen provision this check is the predicate of, from the committed capsule-provision map (never typed
- * here). It rides beside the measurement and the signed leaf, never inside the signed bytes, so the leaf, its
- * size cap and its signature are unchanged.
+ * here). The free preview carries it beside the measurement. It is never inside the signed leaf (its bytes,
+ * size cap and signature are unchanged), and the paid response is left byte-identical: that seam is frozen by
+ * scripts/test_paid_delivery_records.mjs.
  */
 export const PROVISIONS = mapBindingsFor(null, KIND);
 const provisionsBlock = { provisions: PROVISIONS, provisions_note: BINDING_NOTE };
@@ -611,7 +612,6 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       mode: payment.mode,
       scope: ART50_SCOPE,
       card,
-      ...provisionsBlock,
       law,
       detail: m.detail,
       ...(fitted.level > 0
