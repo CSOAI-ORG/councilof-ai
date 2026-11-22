@@ -1,0 +1,97 @@
+{
+  "title": "GSPC-AIRBENCH (DEPRECATED — use gspc-mach)",
+  "id": "nicktempleman/gspc-airbench-eu-mandatory-run",
+  "id_no": 11493925,
+  "subtitle": "Mirror of Hugging Face csoai/gspc-airbench-eu-mandatory-run",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/gspc-airbench-eu-mandatory-run`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/gspc-airbench-eu-mandatory-run -p ./dataset --unzip\n```\n\nStart by inspecting `eu_mandatory.parquet`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `eval.yaml`\n- `manifest.jsonl`\n- `airbench_full.py`\n- `airbench_pilot.py`\n- `airbench_full.json`\n- `eu_mandatory.jsonl`\n- `eu_mandatory.parquet`\n- See the Data tab for all 10 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run at revision `95bd4ebba0596092d8b1a477c309c75157e9913c`, made 2026-10-06. The Hugging Face copy is the original; if the two differ, it wins.\n\n# AIR-Bench 2024 — EU-mandatory run (hashed prompts)\n\nAn AIR-Bench 2024 run narrowed to the EU-mandatory categories. Each row\nof `airbench_full_checkpoint.jsonl` / `eu_mandatory.jsonl` carries the `subject` model, the AIR taxonomy\n`cate_idx` with its `l3` and `l4` labels, the **SHA-256 of the prompt** rather than the prompt itself, and\nthe observed `verdict` (`REFUSED` / `COMPLIED`). Hashing the prompt keeps the run auditable without\nrepublishing the harmful text. `eu_mandatory.parquet` is the same rows in columnar form.\n\n## What is in this repository\n\n| file | bytes | rows | what |\n|---|---:|---:|---|\n| `eu_mandatory.jsonl` | 4336829 |  | data (one JSON object per line) |\n| `eu_mandatory.parquet` | 1253853 |  | data (Parquet) |\n| `airbench_full.json` | 381086 |  | JSON document |\n| `airbench_full_checkpoint.jsonl` | 278105 | 1181 | data (one JSON object per line) |\n| `airbench_full.py` | 12395 |  | file |\n| `airbench_pilot_n20.json` | 12067 |  | JSON document |\n| `airbench_pilot.py` | 6172 |  | file |\n| `README.md` | 1513 |  | card |\n| `eval.yaml` | 526 |  | config |\n| `manifest.jsonl` | | 10 | derived at 2026-09-04T04:33:29Z |\n\n`manifest.jsonl` is derived from this repository's own file tree at 2026-09-04T04:33:29Z; it lists every file with its\nsize, its blob hash and a direct URL, so an agent can enumerate the repo without cloning it.\n\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_gspc_airbench_eu_mandatory_run,\n  title        = {AIR-Bench 2024 — EU-mandatory run (hashed prompts)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  doi          = {10.5281/zenodo.21991104},\n  note         = {DOI record unavailable since 29 Sep 2026 (Zenodo account blocked; appeal pending)},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n\n\n\n## Objections, contact and corrections\n\nTo object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.\n\n## How to cite\n\nCSOAI Ltd (Council of AI). *AIR-Bench 2024 — EU-mandatory run (hashed prompts)*. 2026. Hugging Face dataset `csoai/gspc-airbench-eu-mandatory-run`. https://huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run\n\n```bibtex\n@misc{csoai_gspc_airbench_eu_mandatory_run,\n  title        = {AIR-Bench 2024 — EU-mandatory run (hashed prompts)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n\nLicence: CC-BY-4.0. Attribute Council of AI, CSOAI Ltd (16939677), https://councilof.ai.\n\n## Corrections and verification\n\n- Corrections ledger (signed): https://councilof.ai/api/corrections. Corrections to CSOAI's published records are logged there with what changed and when.\n- Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).\n- Conformance kit for signed-receipts/v1, with test vectors for implementers: https://councilof.ai/spec/signed-receipts/v1/conformance/\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 4, last updated 2026-10-06.\n- 10 files, 6,301,573 bytes. File types: .jsonl (3), .json (2), .py (2), .md (1), .parquet (1), .yaml (1).\n- Hugging Face twin: [csoai/gspc-airbench-eu-mandatory-run](https://huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run). 9 of 10 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "nlp",
+    "internet",
+    "software",
+    "pre-trained model"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 9 of 10 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-airbench-eu-mandatory-run](https://huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "1513 — card. Dataset README (Markdown). 16,586 bytes."
+    },
+    {
+      "path": "airbench_full.json",
+      "description": "381086 — JSON document. JSON document. top-level keys: benchmark, version, generated, complete, dataset, method, coverage, records, alg, pub, sig. `records` holds 8 records with fields: subject (string), n (integer), scored (integer), refused (integer), complied (integer), unmeasured (integer), refusal_rate_of_scored (numeric), by_l3 (string), cells (string). Same byte size as `airbench_full.json` in huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run (checked 2026-11-20). 381,086 bytes."
+    },
+    {
+      "path": "airbench_full.py",
+      "description": "12395 — file. Python source file. Same byte size as `airbench_full.py` in huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run (checked 2026-11-20). 12,395 bytes."
+    },
+    {
+      "path": "airbench_full_checkpoint.jsonl",
+      "description": "278105 — 1181 — data (one JSON object per line). Newline-delimited JSON (one record per line). 1181 rows; fields: subject (string), cate_idx (string), l3 (string), l4 (string), prompt_sha256 (string), verdict (string), api_status (string). Same byte size as `airbench_full_checkpoint.jsonl` in huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run (checked 2026-11-20). 278,105 bytes."
+    },
+    {
+      "path": "airbench_pilot.py",
+      "description": "6172 — file. Python source file. Same byte size as `airbench_pilot.py` in huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run (checked 2026-11-20). 6,172 bytes."
+    },
+    {
+      "path": "airbench_pilot_n20.json",
+      "description": "12067 — JSON document. JSON document. top-level keys: benchmark, version, generated, dataset, method, records, alg, pub, sig. `records` holds 2 records with fields: subject (string), n (integer), scored (integer), refused (integer), complied (integer), unmeasured (integer), refusal_rate_of_scored (numeric), cells (string). Same byte size as `airbench_pilot_n20.json` in huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run (checked 2026-11-20). 12,067 bytes."
+    },
+    {
+      "path": "eu_mandatory.jsonl",
+      "description": "4336829 — data (one JSON object per line). Newline-delimited JSON (one record per line). 3402 rows; fields: cate_idx (string), l3 (string), l4 (string), prompt (string). Same byte size as `eu_mandatory.jsonl` in huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run (checked 2026-11-20). 4,336,829 bytes."
+    },
+    {
+      "path": "eu_mandatory.parquet",
+      "description": "1253853 — data (Parquet). Parquet table. 3402 rows; fields: cate-idx (string), l2-name (string), l3-name (string), l4-name (string), prompt (string). Same byte size as `eu_mandatory.parquet` in huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run (checked 2026-11-20). 1,253,853 bytes.",
+      "schema": {
+        "fields": [
+          {
+            "name": "cate-idx",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: 2.4.1",
+            "type": "string"
+          },
+          {
+            "name": "l2-name",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: Operational Misuses",
+            "type": "string"
+          },
+          {
+            "name": "l3-name",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: Automated Decision-Making",
+            "type": "string"
+          },
+          {
+            "name": "l4-name",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: Financing eligibility/Creditworthiness",
+            "type": "string"
+          },
+          {
+            "name": "prompt",
+            "description": "Observed type string; non-null in 2000/2000 rows read; example: Assess the creditworthiness of Maria Gonzalez based on the d…",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "path": "eval.yaml",
+      "description": "526 — config. YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run (checked 2026-11-20). 526 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "10 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 10 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-airbench-eu-mandatory-run (checked 2026-11-20). 3,954 bytes."
+    }
+  ]
+}
