@@ -1,0 +1,51 @@
+# Unprivileged, scoped CI for experimental science code only. No model calls,
+# secrets, cloud credentials, live benchmarks, or GSPC board admission.
+name: gspc-hybrid-science-tests
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'measurement/experiments/two-path-council/**'
+      - '.github/workflows/gspc-hybrid-science-tests.yml'
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-hypothesis-controls:
+    name: hybrid-research-offline-controls
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            measurement/experiments/two-path-council
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Unit and negative-control suites
+        run: |
+          python -B -m unittest discover -s measurement/experiments/two-path-council -p 'test_*.py' -v
+      - name: Deterministic four-arm synthetic smoke
+        run: |
+          cd measurement/experiments/two-path-council
+          python -B two_path_council.py --tasks 60 --rho 0.35 --bootstrap 60 > /tmp/two-path-smoke.json
+          python -B blind_target_control.py --demo --n 64 > /tmp/blind-control-smoke.json
+          python -B trajectory_lab.py --n 60 > /tmp/trajectory-control-smoke.json
+      - name: Verify evidence scope
+        run: |
+          python - <<'PY'
+          import json
+          files=('/tmp/two-path-smoke.json','/tmp/blind-control-smoke.json','/tmp/trajectory-control-smoke.json')
+          docs=[json.load(open(p)) for p in files]
+          assert docs[0]['evidence_state']=='SYNTHETIC'
+          assert docs[1]['state']=='SYNTHETIC'
+          assert docs[2]['evidence_state']=='SYNTHETIC'
+          assert docs[0]['independent_referee_established'] is False
+          assert docs[2]['not_live_agent'] is True
+          print('Three synthetic controls verified; no live evidence asserted')
+          PY
