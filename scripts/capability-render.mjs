@@ -162,7 +162,9 @@ function renderLegacy() {
     superseded_by: "council-os/capabilities.json",
     seeded_from_live_doors: "2026-09-04",
     generated_by: "scripts/capability-render.mjs legacy",
-    capabilities: caps.map((c) => ({
+    // Authenticated operator routes belong in the source audit registry but
+    // must never appear in the legacy public discovery catalogue.
+    capabilities: caps.filter((c) => !String(c.path ?? "").startsWith("/api/private/")).map((c) => ({
       id: c.id,
       protocols: protocolOf(c),
       title: c.name,
