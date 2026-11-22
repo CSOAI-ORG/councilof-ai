@@ -41,18 +41,19 @@ const canonical = canonicalBytes;
 // Which GitHub Actions workflows may ask for a board signature. Two lists:
 //  - EXACT_WORKFLOW_REFS (22 Nov 2026): one workflow file at refs/heads/master, compared whole. A branch copy of the
 //    file, a longer ref, or a file whose name only contains these words does not match.
-//  - WORKFLOW_SUBSTRINGS: the older rule, unchanged by that addition (any ref whose text contains one of the words).
+//  - allowedWf: the older rule, unchanged by that addition (any ref whose text contains one of the words). Its name
+//    and one-line form are read by scripts/sign-attest/workflow-shape.test.mjs and scripts/public_root_workflow.test.mjs.
 // The capsule-index entry is the daily measurement-capsule index producer, moved here from oracle-micro-2.
 export const EXACT_WORKFLOW_REFS: ReadonlySet<string> = new Set([
   "CSOAI-ORG/councilof-ai/.github/workflows/capsule-index-daily.yml@refs/heads/master",
 ]);
-const WORKFLOW_SUBSTRINGS = ["public-root", "hf-fin-shells", "hf-inference-mill", "auto-eat-sign"];
+const allowedWf = ["public-root", "hf-fin-shells", "hf-inference-mill", "auto-eat-sign"];
 
 export function workflowAdmitted(claims: Record<string, unknown>): boolean {
   const jobRef = typeof claims.job_workflow_ref === "string" ? claims.job_workflow_ref : "";
   if (jobRef && EXACT_WORKFLOW_REFS.has(jobRef)) return true;
   const wf = String(claims.job_workflow_ref || claims.workflow || claims.workflow_ref || "");
-  return WORKFLOW_SUBSTRINGS.some((w) => wf.includes(w));
+  return allowedWf.some((w) => wf.includes(w));
 }
 
 async function verifyOidc(token: string): Promise<void> {
