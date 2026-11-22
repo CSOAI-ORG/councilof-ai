@@ -2,7 +2,7 @@
   "schema": "csoai.capsule-provision-bindings/0.1",
   "what_this_is": "The provision bindings of published capsules, held beside their signed batches. Each row names a capsule by capsule_id inside a batch pinned by its record bytes and Merkle root, with the binding rows the backfill map gives it, each pinned to the frozen provision manifest.",
   "what_this_is_not": "Not a re-emission of any capsule: no published capsule, batch, Merkle root or signature changes. Not a finding that a capsule measures what a provision requires, and never a compliance determination.",
-  "rule": "A capsule is bound when the backfill map maps its producer: a mapping with source adapter matches the batch adapter, a mapping with source route matches the capsule kind. Capsules that already carry the 0.3 provisions field are counted as bound in the capsule and are not repeated here. Unmapped and unclassified adapters bind nothing.",
+  "rule": "A capsule is bound when the backfill map maps its producer: a mapping with source adapter matches the batch adapter, a mapping with source route matches the capsule kind. A REVIEWED adapter proposal also binds, with a row pinned to the corpus v3 manifest (only capsules whose claim field equals the proposal's match, when it has one). Capsules that already carry the 0.3 provisions field are counted as bound in the capsule and are not repeated here. Unmapped and unclassified adapters bind nothing. DRAFT proposals bind nothing: draft_bound_by_sidecar counts the capsules a DRAFT proposal would bind if the owner reviewed it.",
   "generated_from": {
     "producer": "scripts/mechanism/backfill-capsule-provisions.mjs",
     "map": {
@@ -14,13 +14,23 @@
       "sha256": "e43c9bd52adeeda96b67a3ae63700c44f0aae3a44c74a0dac46fbed5f8008788",
       "corpus_root": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7"
     },
+    "proposals": {
+      "path": "/mechanism/provision-mapping-proposals.json",
+      "sha256": "34c4a703faf8e289e07d13b86f46f6ee3308b143d8f9e693707b70b2ed9ae885"
+    },
+    "corpus_v3": {
+      "path": "/interop/corpus-v3/manifest.json",
+      "sha256": "c2752667cd5e1bf495768a62da3dd77bf6c49527fffdfc625ed4693af3be959b",
+      "corpus_root": "8d057a301973ec0307566152362cf711a661eea956426fe960ee9e28a49c25c0"
+    },
     "capsule_root": "/measurement-capsules/v0.2"
   },
   "totals": {
     "batches": 12,
     "capsules": 11529,
     "bound_in_capsule": 0,
-    "bound_by_sidecar": 0
+    "bound_by_sidecar": 0,
+    "draft_bound_by_sidecar": 1779
   },
   "batches": [
     {
@@ -38,6 +48,10 @@
       "bound_in_capsule": 0,
       "bound_by_sidecar": 0,
       "provision_ids": [],
+      "reviewed_proposals": [],
+      "draft_bound_by_sidecar": 0,
+      "draft_provision_ids": [],
+      "draft_proposals": [],
       "bindings": []
     },
     {
@@ -55,6 +69,10 @@
       "bound_in_capsule": 0,
       "bound_by_sidecar": 0,
       "provision_ids": [],
+      "reviewed_proposals": [],
+      "draft_bound_by_sidecar": 0,
+      "draft_provision_ids": [],
+      "draft_proposals": [],
       "bindings": []
     },
     {
@@ -72,6 +90,10 @@
       "bound_in_capsule": 0,
       "bound_by_sidecar": 0,
       "provision_ids": [],
+      "reviewed_proposals": [],
+      "draft_bound_by_sidecar": 0,
+      "draft_provision_ids": [],
+      "draft_proposals": [],
       "bindings": []
     },
     {
@@ -89,6 +111,14 @@
       "bound_in_capsule": 0,
       "bound_by_sidecar": 0,
       "provision_ids": [],
+      "reviewed_proposals": [],
+      "draft_bound_by_sidecar": 1129,
+      "draft_provision_ids": [
+        "INTL-owasp-llm-top10-2026:LLM01"
+      ],
+      "draft_proposals": [
+        "adapter:contract_parity->INTL-owasp-llm-top10-2026:LLM01"
+      ],
       "bindings": []
     },
     {
@@ -106,6 +136,10 @@
       "bound_in_capsule": 0,
       "bound_by_sidecar": 0,
       "provision_ids": [],
+      "reviewed_proposals": [],
+      "draft_bound_by_sidecar": 0,
+      "draft_provision_ids": [],
+      "draft_proposals": [],
       "bindings": []
     },
     {
@@ -123,6 +157,10 @@
       "bound_in_capsule": 0,
       "bound_by_sidecar": 0,
       "provision_ids": [],
+      "reviewed_proposals": [],
+      "draft_bound_by_sidecar": 0,
+      "draft_provision_ids": [],
+      "draft_proposals": [],
       "bindings": []
     },
     {
@@ -140,6 +178,14 @@
       "bound_in_capsule": 0,
       "bound_by_sidecar": 0,
       "provision_ids": [],
+      "reviewed_proposals": [],
+      "draft_bound_by_sidecar": 14,
+      "draft_provision_ids": [
+        "US-NIST-AIRMF-1.0-2023:MEASURE-2.13"
+      ],
+      "draft_proposals": [
+        "adapter:mill_cross_runtime->US-NIST-AIRMF-1.0-2023:MEASURE-2.13"
+      ],
       "bindings": []
     },
     {
@@ -157,6 +203,14 @@
       "bound_in_capsule": 0,
       "bound_by_sidecar": 0,
       "provision_ids": [],
+      "reviewed_proposals": [],
+      "draft_bound_by_sidecar": 140,
+      "draft_provision_ids": [
+        "US-NIST-AIRMF-1.0-2023:MEASURE-2.13"
+      ],
+      "draft_proposals": [
+        "adapter:mill_cross_runtime->US-NIST-AIRMF-1.0-2023:MEASURE-2.13"
+      ],
       "bindings": []
     },
     {
@@ -174,6 +228,10 @@
       "bound_in_capsule": 0,
       "bound_by_sidecar": 0,
       "provision_ids": [],
+      "reviewed_proposals": [],
+      "draft_bound_by_sidecar": 0,
+      "draft_provision_ids": [],
+      "draft_proposals": [],
       "bindings": []
     },
     {
@@ -191,6 +249,10 @@
       "bound_in_capsule": 0,
       "bound_by_sidecar": 0,
       "provision_ids": [],
+      "reviewed_proposals": [],
+      "draft_bound_by_sidecar": 0,
+      "draft_provision_ids": [],
+      "draft_proposals": [],
       "bindings": []
     },
     {
@@ -208,6 +270,10 @@
       "bound_in_capsule": 0,
       "bound_by_sidecar": 0,
       "provision_ids": [],
+      "reviewed_proposals": [],
+      "draft_bound_by_sidecar": 0,
+      "draft_provision_ids": [],
+      "draft_proposals": [],
       "bindings": []
     },
     {
@@ -225,6 +291,14 @@
       "bound_in_capsule": 0,
       "bound_by_sidecar": 0,
       "provision_ids": [],
+      "reviewed_proposals": [],
+      "draft_bound_by_sidecar": 496,
+      "draft_provision_ids": [
+        "INTL-owasp-llm-top10-2026:LLM01"
+      ],
+      "draft_proposals": [
+        "adapter:tool_drift->INTL-owasp-llm-top10-2026:LLM01"
+      ],
       "bindings": []
     }
   ]

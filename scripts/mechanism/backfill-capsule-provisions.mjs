@@ -9,7 +9,12 @@
 // (packages/venturi-capsule/provision_binding.py): a mapping with source "adapter" matches the batch adapter,
 // a mapping with source "route" matches the capsule kind. Unmapped and unclassified adapters bind nothing.
 //
-// Reads:  the map, the frozen provision manifest, every published v0.2 capsule batch.
+// Proposals (public/mechanism/provision-mapping-proposals.json) point an adapter at a corpus v3 provision. Only
+// status REVIEWED binds (as sidecar rows pinned to the corpus v3 manifest); DRAFT proposals are counted per batch as
+// draft_bound_by_sidecar and bind nothing; REJECTED counts nowhere.
+//
+// Reads:  the map, the frozen provision manifest, the proposals and the corpus v3 manifest, every published v0.2
+//         capsule batch.
 // Output: public/mechanism/capsule-provision-bindings.json. No clock time: unchanged inputs give identical bytes.
 //
 //   node scripts/mechanism/backfill-capsule-provisions.mjs          write
@@ -27,6 +32,11 @@ export const MAP = "public/mechanism/capsule-provision-map.json";
 export const MANIFEST = "public/interop/frozen-provision-hashes.json";
 export const CAPSULE_ROOT = "public/measurement-capsules/v0.2";
 export const SCHEMA_03 = "csoai.measurement-capsule/0.3";
+export const PROPOSALS = "public/mechanism/provision-mapping-proposals.json";
+export const CORPUS_V3 = "public/interop/corpus-v3/manifest.json";
+export const PROPOSAL_STATUSES = ["DRAFT", "REVIEWED", "REJECTED"];
+export const PROPOSAL_RELATIONS = ["partial", "related"];
+export const PROPOSAL_SOURCES = ["adapter", "predicate", "axis"];
 const PROVISION_ID = /^3\d{4}[RLD]\d{4}:-?\d+$/;
 const HEX64 = /^[0-9a-f]{64}$/;
 const RELATIONS = ["PREDICATE", "RELEVANT_TO"];
@@ -75,12 +85,53 @@ export function bindingsFor(adapter, kind, map, manifest) {
   return [...rows.keys()].sort().map((k) => rows.get(k));
 }
 
+/** Problems with the proposals file against the corpus v3 manifest; [] when every proposal is well formed and pinned. */
+export function proposalProblems(proposals, v3) {
+  const out = [];
+  if (proposals.corpus?.corpus_root !== v3.corpus_root) out.push("proposals corpus_root is not the corpus v3 manifest's root");
+  const ids = new Set();
+  for (const p of proposals.proposals ?? []) {
+    const who = p.id ?? "(no id)";
+    if (p.id !== `${p.source}:${p.subject}->${p.provision_id}`) out.push(`${who}: id is not source:subject->provision_id`);
+    if (ids.has(p.id)) out.push(`${who}: repeated`);
+    ids.add(p.id);
+    if (!PROPOSAL_SOURCES.includes(p.source)) out.push(`${who}: source ${p.source}`);
+    if (!PROPOSAL_STATUSES.includes(p.status)) out.push(`${who}: status ${p.status}`);
+    if (!PROPOSAL_RELATIONS.includes(p.relation)) out.push(`${who}: relation ${p.relation}`);
+    if (v3.anchors[p.provision_id] === undefined) out.push(`${who}: ${p.provision_id} is not in corpus v3`);
+    else if (v3.anchors[p.provision_id] !== p.provision_sha256) out.push(`${who}: not pinned to the corpus v3 anchor`);
+    if (typeof p.span !== "string" || !p.span.trim() || typeof p.rationale !== "string" || !p.rationale.trim()) out.push(`${who}: span and rationale are required`);
+    if (p.match !== undefined && (typeof p.match?.field !== "string" || typeof p.match?.equals !== "string")) out.push(`${who}: match must be {field, equals}`);
+  }
+  return out;
+}
+
+/** The value at a dotted path of a capsule ("claim.dimension"), or undefined. */
+const at = (obj, path) => path.split(".").reduce((o, k) => (o && typeof o === "object" ? o[k] : undefined), obj);
+
+/** The adapter proposals of a given status that match this capsule. */
+export function proposalsFor(adapter, capsule, proposals, status) {
+  return (proposals.proposals ?? []).filter(
+    (p) => p.source === "adapter" && p.subject === adapter && p.status === status && (!p.match || at(capsule, p.match.field) === p.match.equals),
+  );
+}
+
+const EMPTY_PROPOSALS = { corpus: null, proposals: [] };
+
 export function derive(io) {
   const mapBytes = io.readBytes(MAP);
   const manifestBytes = io.readBytes(MANIFEST);
   const map = JSON.parse(mapBytes.toString("utf8"));
   const manifest = JSON.parse(manifestBytes.toString("utf8"));
   if (map.corpus_root !== manifest.corpus_root) fail("map corpus_root is not the frozen manifest's root");
+  const proposalBytes = io.exists(PROPOSALS) ? io.readBytes(PROPOSALS) : null;
+  const v3Bytes = io.readBytes(CORPUS_V3);
+  const proposals = proposalBytes ? JSON.parse(proposalBytes.toString("utf8")) : EMPTY_PROPOSALS;
+  const v3 = JSON.parse(v3Bytes.toString("utf8"));
+  if (proposalBytes) {
+    const bad = proposalProblems(proposals, v3);
+    if (bad.length) fail(`${PROPOSALS}: ${bad.slice(0, 3).join("; ")}`);
+  }
 
   const batches = io
     .listDirs(CAPSULE_ROOT)
@@ -97,6 +148,10 @@ export function derive(io) {
       let inCapsule = 0;
       const ids = new Set();
       const bindings = [];
+      let draftBound = 0;
+      const draftIds = new Set();
+      const draftProposals = new Set();
+      const reviewedProposals = new Set();
       for (const line of gunzipSync(gz).toString("utf8").split("\n")) {
         if (!line.trim()) continue;
         n++;
@@ -109,7 +164,18 @@ export function derive(io) {
           inCapsule++;
           continue;
         }
+        const drafts = proposalsFor(rec.adapter, c, proposals, "DRAFT");
+        if (drafts.length) {
+          draftBound++;
+          for (const p of drafts) (draftIds.add(p.provision_id), draftProposals.add(p.id));
+        }
         const rows = bindingsFor(rec.adapter, c.kind, map, manifest);
+        for (const p of proposalsFor(rec.adapter, c, proposals, "REVIEWED")) {
+          reviewedProposals.add(p.id);
+          if (!rows.some((r) => r.provision_id === p.provision_id && r.relation === p.relation))
+            rows.push({ corpus_root: v3.corpus_root, provision_id: p.provision_id, provision_sha256: p.provision_sha256, relation: p.relation });
+        }
+        rows.sort((a, b) => (`${a.provision_id}|${a.relation}` < `${b.provision_id}|${b.relation}` ? -1 : 1));
         if (rows.length) bindings.push({ capsule_id: c.capsule_id, provisions: rows });
       }
       if (n !== rec.n_capsules) fail(`${dir}: ${n} capsules read, record says ${rec.n_capsules}`);
@@ -126,6 +192,10 @@ export function derive(io) {
         bound_in_capsule: inCapsule,
         bound_by_sidecar: bindings.length,
         provision_ids: [...new Set(bindings.flatMap((b) => b.provisions.map((p) => p.provision_id)))].sort(),
+        reviewed_proposals: [...reviewedProposals].sort(),
+        draft_bound_by_sidecar: draftBound,
+        draft_provision_ids: [...draftIds].sort(),
+        draft_proposals: [...draftProposals].sort(),
         bindings,
       };
     });
@@ -137,11 +207,13 @@ export function derive(io) {
       "The provision bindings of published capsules, held beside their signed batches. Each row names a capsule by capsule_id inside a batch pinned by its record bytes and Merkle root, with the binding rows the backfill map gives it, each pinned to the frozen provision manifest.",
     what_this_is_not:
       "Not a re-emission of any capsule: no published capsule, batch, Merkle root or signature changes. Not a finding that a capsule measures what a provision requires, and never a compliance determination.",
-    rule: "A capsule is bound when the backfill map maps its producer: a mapping with source adapter matches the batch adapter, a mapping with source route matches the capsule kind. Capsules that already carry the 0.3 provisions field are counted as bound in the capsule and are not repeated here. Unmapped and unclassified adapters bind nothing.",
+    rule: "A capsule is bound when the backfill map maps its producer: a mapping with source adapter matches the batch adapter, a mapping with source route matches the capsule kind. A REVIEWED adapter proposal also binds, with a row pinned to the corpus v3 manifest (only capsules whose claim field equals the proposal's match, when it has one). Capsules that already carry the 0.3 provisions field are counted as bound in the capsule and are not repeated here. Unmapped and unclassified adapters bind nothing. DRAFT proposals bind nothing: draft_bound_by_sidecar counts the capsules a DRAFT proposal would bind if the owner reviewed it.",
     generated_from: {
       producer: PRODUCER,
       map: { path: publicPath(MAP), sha256: sha256(mapBytes) },
       manifest: { path: publicPath(MANIFEST), sha256: sha256(manifestBytes), corpus_root: manifest.corpus_root },
+      proposals: proposalBytes ? { path: publicPath(PROPOSALS), sha256: sha256(proposalBytes) } : null,
+      corpus_v3: { path: publicPath(CORPUS_V3), sha256: sha256(v3Bytes), corpus_root: v3.corpus_root },
       capsule_root: publicPath(CAPSULE_ROOT),
     },
     totals: {
@@ -149,6 +221,7 @@ export function derive(io) {
       capsules: sum("n_capsules"),
       bound_in_capsule: sum("bound_in_capsule"),
       bound_by_sidecar: sum("bound_by_sidecar"),
+      draft_bound_by_sidecar: sum("draft_bound_by_sidecar"),
     },
     batches,
   };
