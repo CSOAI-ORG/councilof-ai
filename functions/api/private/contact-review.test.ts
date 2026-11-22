@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT, type JWTVerifyGetKey } from "jose";
-import { readContactReview } from "./contact-review";
+import { onRequestHead, readContactReview } from "./contact-review";
 
 const issuer = "https://csoai-test.cloudflareaccess.com";
 const audience = "test-contact-operator-app";
@@ -59,6 +59,19 @@ describe("private operator contact-review API", () => {
     expect(kv.list).not.toHaveBeenCalled();
     expect(kv.get).not.toHaveBeenCalled();
     expect((await response.json()).state).toBe("UNAVAILABLE_OR_UNAUTHORIZED");
+  });
+
+  it("HEAD on the operator route denies anonymous access without reading LEADS or exposing a body", async () => {
+    const kv = { list: vi.fn(), get: vi.fn() };
+    const response = await onRequestHead({
+      request: new Request("https://councilof.ai/api/private/contact-review", { method: "HEAD" }),
+      env: env(kv),
+    } as any);
+    expect(response.status).toBe(401);
+    expect(await response.text()).toBe("");
+    expect(response.headers.get("cache-control")).toContain("no-store");
+    expect(kv.list).not.toHaveBeenCalled();
+    expect(kv.get).not.toHaveBeenCalled();
   });
 
   it("rejects missing/forged tokens and does not trust user email headers", async () => {
