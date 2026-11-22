@@ -7,6 +7,7 @@
  */
 import { authorizeContactOperator, type ContactReviewEnv } from "../_contact-operator";
 import type { JWTVerifyGetKey } from "jose";
+import { headFromGet } from "../_head";
 
 const headers = {
   "cache-control": "private, no-store, max-age=0",
