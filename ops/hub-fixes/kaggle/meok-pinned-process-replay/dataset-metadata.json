@@ -1,0 +1,93 @@
+{
+  "title": "MEOK Pinned Process Replay",
+  "id": "nicktempleman/meok-pinned-process-replay",
+  "id_no": 13250286,
+  "subtitle": "Pinned synthetic checkpoints and data for offline CPU result reproduction",
+  "description": "# MEOK pinned process replay\n\nPublic synthetic research inputs from csoai/meok-oowm-hybrid-lab at `1c2395b61d8d45955b28f05f971e759ddc799b49`. Six small checkpoint variants, 560 original and 640 later same-generator evaluation transitions, and their retained reference metrics.\n\nMIT licensing and original model/data notices are retained in the accompanying files. Kaggle metadata uses Other (specified in description) only if the platform does not expose MIT; no CC0 or relicensing is claimed.\n\nThe supplied manifest maps logical source paths to flat Kaggle filenames and SHA-256 digests. The separately authored standard-library Python notebook pins the manifest digest `9ad0d91f9f6a80e89252c897b20dc689b4e6cba0a73babc0a5967c41289b58b2` before reading data. No credentials, internet access, GPU, model-provider API or package installation is needed during replay.\n\nThese are already public synthetic banks, not customer data, human evidence, a fresh blind benchmark or a GSPC-admitted result. The fitted head and worst-case failures stay as published; no training or promotion occurs.\n\nOriginal source ownership: https://github.com/CSOAI-ORG/councilof-ai/pull/4176 .\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-11-11.\n- 17 files, 746,434 bytes. File types: .json (11), (none) (5), .md (1).\n- Expected update frequency: never.\n- Publisher: Council of AI (CSOAI Ltd), https://councilof.ai.\n\n## Citation\n\n```bibtex\n@misc{templeman_meokpinnedprocessreplay_2026,\n  author       = {Templeman, Nick and {Council of AI (CSOAI Ltd)}},\n  title        = {MEOK Pinned Process Replay},\n  year         = {2026},\n  publisher    = {Kaggle},\n  howpublished = {\\url{https://www.kaggle.com/datasets/nicktempleman/meok-pinned-process-replay}},\n  note         = {Version 1}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "other"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "benchmark",
+    "internet",
+    "software",
+    "pre-trained model"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai.",
+  "resources": [
+    {
+      "path": "DATA_LICENSE",
+      "description": "Licence text file. 1,083 bytes."
+    },
+    {
+      "path": "DATA_NOTICE",
+      "description": "Notice file. 198 bytes."
+    },
+    {
+      "path": "MODEL_LICENSE",
+      "description": "Licence text file. 1,083 bytes."
+    },
+    {
+      "path": "MODEL_NOTICE",
+      "description": "Notice file. 198 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 1,168 bytes."
+    },
+    {
+      "path": "WRAPPER_LICENSE",
+      "description": "Licence text file. 1,066 bytes."
+    },
+    {
+      "path": "manifest.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 2,568 bytes."
+    },
+    {
+      "path": "research-v03__fresh-stress-results.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,607 bytes."
+    },
+    {
+      "path": "research-v03__fresh-stress-rows.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 223,531 bytes."
+    },
+    {
+      "path": "research-v03__models__original_float64.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 21,522 bytes."
+    },
+    {
+      "path": "research-v03__models__refitted_head.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 21,194 bytes."
+    },
+    {
+      "path": "research-v03__models__shuffled_head_control.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 21,193 bytes."
+    },
+    {
+      "path": "research-v03__models__weight_float32.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 21,226 bytes."
+    },
+    {
+      "path": "research-v03__models__weight_int4.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 14,387 bytes."
+    },
+    {
+      "path": "research-v03__models__weight_int8.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 20,302 bytes."
+    },
+    {
+      "path": "research-v03__prediction-cases.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 387,334 bytes."
+    },
+    {
+      "path": "research-v03__results.json",
+      "description": "JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 6,774 bytes."
+    }
+  ]
+}
