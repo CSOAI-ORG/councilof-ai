@@ -2,8 +2,10 @@
 //   node --test scripts/measurements/gspc-fact-table.node-test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, writeFileSync, mkdtempSync, mkdirSync, rmSync } from "node:fs";
 import { createHash } from "node:crypto";
+import { spawnSync } from "node:child_process";
+import { tmpdir } from "node:os";
 import path from "node:path";
 
 const ROOT = path.resolve(new URL("../../", import.meta.url).pathname);
@@ -129,4 +131,46 @@ test("the manifest counts agree with the tables", opt, () => {
   const unattributed = measurements.filter((m) => !m.model).length;
   assert.equal(manifest.counts.rows_without_a_model, unattributed,
     "the manifest must say how many rows carry no model — a cell whose model is only knowable by opening the file");
+});
+
+
+// Fail-closed controls for precisely the missing-receipt class of finding: a
+// source line or cell that cannot be read must not disappear into a clean table.
+function negativeSourceFixture(lines, filename = "items-safety-abcd1234.jsonl") {
+  const root = mkdtempSync(path.join(tmpdir(), "csoai-gspc-corrupt-"));
+  const evidence = path.join(root, "source");
+  const out = path.join(root, "out");
+  mkdirSync(evidence);
+  if (lines !== null) writeFileSync(path.join(evidence, filename), lines.join("\n") + "\n");
+  const result = spawnSync(process.execPath, [
+    path.join(ROOT, "scripts/measurements/build-gspc-fact-table.mjs"),
+    "--evidence", evidence, "--out", out,
+  ], { encoding: "utf8", timeout: 10000 });
+  try {
+    return { result, outputCreated: existsSync(path.join(out, "MANIFEST.json")) };
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+test("a malformed source line is UNCHECKABLE, not silently excluded from the denominator", () => {
+  const row = '{"axis":"safety","model":"fixture/model","item_id":"one","expected":"SAFE","ok":true}';
+  const a = negativeSourceFixture([row, '{"axis":']);
+  assert.equal(a.result.status, 2, a.result.stderr);
+  assert.match(a.result.stderr, /UNCHECKABLE: malformed JSONL.*line 2/);
+  assert.equal(a.outputCreated, false, "must not materialise a partial normal-looking fact table");
+});
+test("a source row with a non-object JSON value is UNCHECKABLE", () => {
+  const a = negativeSourceFixture(['{"axis":"safety","model":"fixture/model","item_id":"one","expected":"SAFE","ok":true}', "null"]);
+  assert.equal(a.result.status, 2, a.result.stderr);
+  assert.match(a.result.stderr, /UNCHECKABLE: non-object JSONL.*line 2/);
+  assert.equal(a.outputCreated, false);
+});
+test("empty evidence cell and empty evidence directory are UNCHECKABLE, not zero measurements", () => {
+  for (const lines of [[], null]) {
+    const a = negativeSourceFixture(lines);
+    assert.equal(a.result.status, 2, a.result.stderr);
+    assert.match(a.result.stderr, /UNCHECKABLE:/);
+    assert.equal(a.outputCreated, false);
+  }
 });
