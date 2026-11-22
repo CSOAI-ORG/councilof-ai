@@ -160,7 +160,12 @@ jobs:
         run: node scripts/regulator-calendar.mjs --selftest
       - name: Regulator calendar — compute T-7/T-2/T-0 alerts
         id: calendar
-        run: node scripts/regulator-calendar.mjs --out "$RUNNER_TEMP/regulator-alerts.json"
+        run: |
+          # The live board gives each axis's newest measurement date. Best effort: without it
+          # the alert prints "not read" for that date and still fires.
+          curl -fsS -m 30 -A "csoai-reg-watch (+https://councilof.ai/contact)" https://councilof.ai/api/gspc -o "$RUNNER_TEMP/gspc.json" || rm -f "$RUNNER_TEMP/gspc.json"
+          node scripts/regulator-calendar.mjs --out "$RUNNER_TEMP/regulator-alerts.json" \
+            --board "$RUNNER_TEMP/gspc.json" --windows-out "$RUNNER_TEMP/regulator-windows.json" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Regulator calendar — open one issue per alert (deduplicated by title)
         if: steps.calendar.outputs.alerts != '0'
         env:
