@@ -24,6 +24,10 @@ so you can recognise the shape — **re-read them before you publish one.**
 under /cards/ and /proofs/; **signs nothing, measures nothing**." It is a build-time
 aggregate of files on disk. It is not an attestation, not a measurement, and not a board
 figure. It has no `as_of` of its own and is not carried in `/api/state`.
+Since 22 Nov 2026 the aggregate is split to stay under Cloudflare Pages' 25 MiB per-file
+cap: `public/cards-bundle.json` holds the root's wrappers and lists 16 shards
+(`public/cards-bundle/<c>.json`) that hold every wrapper. `card_count` still counts every
+wrapper on disk, so this number means what it meant.
 
 ### 2 — the public-root leaves (152). Signed, but scoped.
 `public/root.json` is a `csoai.public-root/v0` envelope signed under
