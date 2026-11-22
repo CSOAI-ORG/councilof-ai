@@ -83,5 +83,24 @@ class EvidenceAdapterTests(unittest.TestCase):
             D.ingest(b"{", read_at="2026-11-22T03:00:00Z")
 
 
+    def test_real_guard_output_is_renderable_partial_event(self):
+        import dataset_delta_guard as G
+        baseline_rows = [{"id": f"case-{i:04d}", "text": f"control {i}", "policy": "DENY"} for i in range(150)]
+        baseline_bytes = b"\\n".join(G.canonical(row) for row in baseline_rows) + b"\\n"
+        doc = G.parse_baseline(G.canonical(G.make_baseline(
+            baseline_bytes, dataset="csoai/synthetic", revision="a" * 40)))
+        baseline_rows[42]["policy"] = "ALLOW"
+        candidate_bytes = b"\\n".join(G.canonical(row) for row in baseline_rows) + b"\\n"
+        comparison = G.compare(doc, candidate_bytes, current_revision="b" * 40)
+        self.assertEqual(comparison["counts"]["changed"], 1)
+        event = D.ingest(G.canonical(comparison), read_at="2026-11-22T03:00:00Z")
+        self.assertEqual(event["state"], "PARTIAL")
+        self.assertEqual(event["observed"]["comparison_state"], "REVIEW_REQUIRED")
+        self.assertEqual(event["observed"]["counts"]["changed"], 1)
+        self.assertEqual(event["observed"]["producer_verified"], False)
+        self.assertEqual(E.validate(event), [])
+        self.assertIsNone(event["value"])
+
+
 if __name__ == "__main__":
     unittest.main()
