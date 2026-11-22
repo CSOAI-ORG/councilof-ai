@@ -7,6 +7,7 @@ import PlainEmail, { CONTACT_MAILBOX } from '@/components/PlainEmail';
 import { enquiryPreset, prepareContactEmail } from '@/lib/pilotEnquiry';
 import { BUYING_LINES } from '@/lib/buying';
 import { classifyContactResponse, formatRejectedContactSubmission, formatStoredContactReceipt, formatUnconfirmedContactSubmission } from '@/lib/contactReceipt';
+import ContactTurnstile from '@/components/ContactTurnstile';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,8 @@ export default function Contact() {
   const [copyFeedback, setCopyFeedback] = useState("");
   const [submitFeedback, setSubmitFeedback] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [challengeToken, setChallengeToken] = useState('');
+  const [challengeResetRevision, setChallengeResetRevision] = useState(0);
   const copyRevision = useRef(0);
   const formRevision = useRef(0);
 
@@ -41,8 +44,12 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
+    if (!challengeToken) {
+      setSubmitFeedback("Optional storage verification is not ready. Use the email draft to contact Council.");
+      return;
+    }
     const submittedRevision = formRevision.current;
-    const submittedForm = { ...formData, website: "" };
+    const submittedForm = { ...formData, website: "", turnstile_token: challengeToken };
     setSubmitting(true);
     setSubmitFeedback("");
     try {
@@ -64,6 +71,8 @@ export default function Contact() {
       setSubmitFeedback(formatUnconfirmedContactSubmission(CONTACT_MAILBOX));
     } finally {
       setSubmitting(false);
+      setChallengeToken('');
+      setChallengeResetRevision(n => n + 1);
     }
   };
 
@@ -241,7 +250,8 @@ export default function Contact() {
                     Open email draft to contact Council (press Send in your email app)
                   </a>
                 ) : null}
-                <Button type="submit" disabled={submitting} variant="outline" size="lg" className="w-full" data-testid="contact-submit-button">
+                <ContactTurnstile onToken={setChallengeToken} resetRevision={challengeResetRevision} />
+                <Button type="submit" disabled={submitting || !challengeToken} variant="outline" size="lg" className="w-full" data-testid="contact-submit-button">
                   <Send className="h-4 w-4 mr-2" />
                   {submitting ? "Storing…" : "Store a copy (no email sent)"}
                 </Button>
