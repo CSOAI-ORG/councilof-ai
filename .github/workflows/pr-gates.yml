@@ -155,6 +155,8 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_BODY: ${{ github.event.pull_request.body }}
         run: python3 scripts/privacy/test_outside_email_addresses.py -v
+      - name: Publication gate proves it catches planted personal data, and every Hugging Face / Kaggle upload runs it first
+        run: python3 scripts/privacy/test_publication_gate.py -v
 
   # 7 Nov 2026: .github/workflows/runpod-intake.yml called
   # scripts/resolve_runpod_trusted_bank.py with flags the script never had ("--index-out"

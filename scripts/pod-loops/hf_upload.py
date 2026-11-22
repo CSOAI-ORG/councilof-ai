@@ -171,10 +171,23 @@ def add_config(readme_text, name, path):
     return "---\n" + fm + "\n---" + body, True
 
 
+def privacy_gate(*paths):
+    """Fail closed: read the exact bytes that are about to leave (scripts/privacy/publication_gate.py).
+    If the gate script is missing the upload is refused, not waved through."""
+    import subprocess
+    gate = Path(__file__).resolve().parent.parent / "privacy" / "publication_gate.py"
+    if not gate.is_file():
+        raise RuntimeError("privacy gate not found next to this script: refusing to upload unchecked bytes")
+    r = subprocess.run([sys.executable, "-I", str(gate), "--label", "hf_upload", *map(str, paths)])
+    if r.returncode != 0:
+        raise RuntimeError(f"privacy gate refused the upload (exit {r.returncode}); nothing was uploaded")
+
+
 def do_upload_folder(job, tok):
     """One commit for a whole tree. Viewer configs are registered afterwards, from the
     same README-rewriting path single-file uploads use, so the two cannot disagree."""
     from huggingface_hub import HfApi, hf_hub_download
+    privacy_gate(job["folder"])
     api = HfApi(token=tok)
     repo = job["repo"]
     if job.get("create"):
@@ -199,6 +212,7 @@ def do_upload_folder(job, tok):
 def do_upload(job, tok):
     from huggingface_hub import HfApi, hf_hub_download
     from huggingface_hub.utils import HfHubHTTPError
+    privacy_gate(*[x for x in (job["file"], job.get("readme_if_absent")) if x])
     api = HfApi(token=tok)
     repo = job["repo"]
     if job.get("create"):
