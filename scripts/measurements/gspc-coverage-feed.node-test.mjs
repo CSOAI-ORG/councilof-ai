@@ -145,6 +145,18 @@ test("the consumer independently hashes the source file bytes, and detects subst
     writeFileSync(manifestFile,JSON.stringify(fact));
     const present=readCoverage({board:boardFile,manifest:manifestFile,evidence:source});
     assert.equal(present.sources.fact_cell_source_digest,cells.source_digest);
+    // CI stages a byte-for-byte copy of MANIFEST.json away from the shards.
+    // A separate --table root must resolve the actual on-disk shard inventory.
+    const stage=join(root,"staged");
+    mkdirSync(stage);
+    writeFileSync(join(root,"MANIFEST.json"),JSON.stringify(fact));
+    const staged=join(stage,"manifest.json");
+    writeFileSync(staged,JSON.stringify(fact));
+    const fromStage=readCoverage({board:boardFile,manifest:staged,evidence:source,table:root});
+    assert.equal(fromStage.sources.fact_cell_source_digest,cells.source_digest);
+    writeFileSync(staged,JSON.stringify({...fact,source:{...fact.source,source_digest:hash("f")}}));
+    assert.throws(()=>readCoverage({board:boardFile,manifest:staged,evidence:source,table:root}),
+      /staged manifest bytes differ/);
     // An incorrect by-axis map, even with a genuine source hash and same rows,
     // must be rejected. This is the review's axis-attribution repro.
     const forged=structuredClone(fact);
