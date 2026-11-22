@@ -1,0 +1,55 @@
+--- a/csoai/fleet-sweep-v0.2/README.md (live)
++++ b/csoai/fleet-sweep-v0.2/README.md (proposed)
+@@ -4,6 +4,16 @@
+ pretty_name: Fleet sweep v0.2 — six sovereign models on six GSPC banks (lane run)
+ tags: [gspc, council-of-ai, sovereign, fleet, lane-run]
+ size_categories: [n<1K]
++configs:
++- config_name: summary
++  data_files:
++  - split: train
++    path: SUMMARY.json
++  default: true
++- config_name: sweep-rows
++  data_files:
++  - split: train
++    path: sweep_rows.json
+ ---
+ 
+ <p align="center">
+@@ -68,3 +78,35 @@
+ 
+ ## Verify
+ Anything signed: [councilof.ai/gspc-verify](https://councilof.ai/gspc-verify) · MCP `verify_card`.
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `summary` (default) | `SUMMARY.json` | 1 |
++| `sweep-rows` | `sweep_rows.json` | 1 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/fleet-sweep-v0.2", "summary", split="train")
++```
++
++## Citation
++
++```bibtex
++@misc{csoai_fleet_sweep_v0_2_2026,
++  title        = {Fleet sweep v0.2 — six sovereign models on six GSPC banks (lane run)},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/csoai/fleet-sweep-v0.2}},
++  url          = {https://huggingface.co/datasets/csoai/fleet-sweep-v0.2}
++}
++```
++
++<!-- csoai-card-fixes:end -->

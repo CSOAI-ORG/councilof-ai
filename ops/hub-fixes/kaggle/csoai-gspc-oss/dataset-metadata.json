@@ -1,0 +1,54 @@
+{
+  "title": "CSOAI gspc-oss (openness)",
+  "id": "nicktempleman/csoai-gspc-oss",
+  "id_no": 11811192,
+  "subtitle": "Mirror of Hugging Face csoai/gspc-oss",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-oss`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-oss -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `oss.json`\n- `README.md`\n- `eval.yaml`\n- `items.jsonl`\n- `manifest.jsonl`\n- `axis-live.jsonl`\n- `results_2026-08-11.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-oss at revision `cf847cb2d20463be6ba03320d3d8a61d10c3ec79`, made 2026-09-30. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC — openness bank (OSSBench)\n\nCouncil of AI measurement bank. Measurement, not certification.\n\n**Bank.** Frozen split. Live `n` is the matching axis on `GET https://councilof.ai/api/gspc`, not a Hub score. **Not a certificate.** Art 50 (EUR-Lex): 2 August 2026 live; marking grace 2 December 2026.\n\n\n**Live measurement.** This bank stands behind the `openness` row of the live GSPC board: `GET https://councilof.ai/api/gspc?axis=openness` (family, kind, status and n are on that row, never typed here; the whole board is `GET https://councilof.ai/api/gspc`). Measurement, not certification.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 3, last updated 2026-09-30.\n- 7 files, 28,845 bytes. File types: .jsonl (3), .json (2), .md (1), .yaml (1).\n- Hugging Face twin: [csoai/gspc-oss](https://huggingface.co/datasets/csoai/gspc-oss). 5 of 7 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_gspc_oss,\n  title        = {GSPC — openness bank (OSSBench)},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/gspc-oss}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software",
+    "computer vision"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 5 of 7 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-oss](https://huggingface.co/datasets/csoai/gspc-oss) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "2003 — card. Dataset README (Markdown). 13,768 bytes."
+    },
+    {
+      "path": "axis-live.jsonl",
+      "description": "1 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). Provisional, from a differently-sized HF copy: 1 rows; fields: axis (string), family (string), kind (string), bench (string), task (string), n (integer), separation (string), fleet_mean (numeric), mean_harm (numeric), cvar05_harm (string), status (string), dataset (string), colour (string), hue (integer), excluded_leader (string), public_leader_state (string), note (string), excluded_note (string), measurement_note (string), dataset_url (url), _as_of (datetime), _source (url), _authority (string), _public_count (string), separation_basis (string), … (+2 more). 1,688 bytes."
+    },
+    {
+      "path": "eval.yaml",
+      "description": "504 — config. YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-oss (checked 2026-11-20). 504 bytes."
+    },
+    {
+      "path": "items.jsonl",
+      "description": "8852 — 33 — data (one JSON object per line). Newline-delimited JSON (one record per line). 33 rows; fields: item (string), expected (string), category (string), anchor (string), source (string), note (string), _canary (string). Same byte size as `items.jsonl` in huggingface.co/datasets/csoai/gspc-oss (checked 2026-11-20). 8,852 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "6 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 6 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-oss (checked 2026-11-20). 1,887 bytes."
+    },
+    {
+      "path": "oss.json",
+      "description": "1464 — JSON document. JSON document. top-level keys: schema, record_type, not_a_certification, endorsement, authored_by, basis, axis, model, measured, n, wilson95, bank, never, opinion_framing, witnessed_at, content_id, signature, pubkey, key_id, verification_method …. Same byte size as `oss.json` in huggingface.co/datasets/csoai/gspc-oss (checked 2026-11-20). 1,464 bytes."
+    },
+    {
+      "path": "results_2026-08-11.json",
+      "description": "682 — JSON document. JSON document. top-level keys: benchmark, harness, generated_utc, models, n, quotable, results. Same byte size as `results_2026-08-11.json` in huggingface.co/datasets/csoai/gspc-oss (checked 2026-11-20). 682 bytes."
+    }
+  ]
+}

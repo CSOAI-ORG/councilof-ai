@@ -1,0 +1,39 @@
+{
+  "title": "CSOAI Jail-Axis v2 Board",
+  "id": "nicktempleman/csoai-jail-axis-v2",
+  "id_no": 11731264,
+  "subtitle": "GSPC jail · not a certificate · check councilof.ai/api/gspc",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-jail-axis-v2`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-jail-axis-v2 -p ./dataset --unzip\n```\n\nStart by inspecting `gspc-jail-v2-bank.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `gspc-jail-v2-bank.jsonl`\n- `board_jail-v2-raw.signed.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\ngspc-jail-goldbank — MEASURED axis `jail` (GoldBank-Detector). Bank twin of HF `csoai/gspc-jail-goldbank`.\n\nLive board (authority): GET https://councilof.ai/api/gspc — cite totals.public_count (22 axis · 22 measured).\nLid: 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.\nThree states only: VALID · INVALID · UNCHECKABLE. Measurement not certification. Live authority: https://councilof.ai/api/gspc\nDo not invent leaders for withheld axes. This Kaggle card is a printer of that GET, not a second engine. Do not freeze MEASURED/UNMEASURED tables here. Fetch fail → UNCHECKABLE. Never claim IL5 / GenAI.mil. Never invent scores.\n\nHub cards (third-party Hub models — NOT the CSOAI fleet): GET https://councilof.ai/api/hub-cards → **885/885/0** (cells/measured/unmeasured; as_of 2026-09-07T05:44:17.454Z). Re-GET before citing; do not freeze a Hub triple on this card.\n\nVerify: https://councilof.ai/gspc-verify\nHF twin: https://huggingface.co/datasets/csoai/gspc-jail-goldbank\nDOI 10.5281/zenodo.21991104 — GSPC Methodology and the Frozen Corpus Anchor. Issuer: CSOAI Ltd (GB, Companies House 16939677).\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-08-21.\n- 3 files, 26,662 bytes. File types: .md (1), .json (1), .jsonl (1).\n- Related Hugging Face repository: [csoai/gspc-jail-goldbank](https://huggingface.co/datasets/csoai/gspc-jail-goldbank). No byte-identical files were found, so treat it as related, not a mirror.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "government",
+    "benchmark",
+    "cyber security",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. Related Hugging Face repository: [csoai/gspc-jail-goldbank](https://huggingface.co/datasets/csoai/gspc-jail-goldbank) (no byte-identical files found on 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "1924 — card. Dataset README (Markdown). 1,255 bytes."
+    },
+    {
+      "path": "board_jail-v2-raw.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 3,737 bytes."
+    },
+    {
+      "path": "gspc-jail-v2-bank.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 21,670 bytes."
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "title": "Layer O living board (councilof.ai presence)",
+  "id": "nicktempleman/layer-o-living-board",
+  "id_no": 12264375,
+  "subtitle": "Daily live reads of where councilof.ai is listed; UNMEASURED kept",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/layer-o-living-board`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/layer-o-living-board -p ./dataset --unzip\n```\n\nStart by inspecting `checks.csv`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `SHA256SUMS`\n- `chain.json`\n- `checks.csv`\n- `checks.jsonl`\n- `surfaces.csv`\n- `surfaces.jsonl`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n# Layer O living board: where councilof.ai is, read live (2026-10-18)\n\nA daily presence-and-measurement dataset about **our own distribution**: the catalogs, indexes, registries and\narchives where the Council of AI (councilof.ai, CSOAI Ltd) publishes, or could publish, and what a live public read\nshows there today. It is **not** a GSPC model axis. It **ranks nothing** and scores no one. A surface appearing here\nsays only what that surface's own public page or API returned to a read-only GET.\n\n## What is measured\n\n- `surfaces.csv` / `surfaces.jsonl`: one row per surface in the Layer O registry: `state`, `state_since`,\n  `presence` (MEASURED or UNMEASURED), `observed` (how many of our artifacts the live read showed; empty when\n  UNMEASURED), `as_of`, and two hashes: `state_event_hash` (the hash-chained registry event behind the state) and\n  `presence_evidence_sha256` (sha256 of the bytes read).\n- `checks.csv` / `checks.jsonl`: every deck-lang statement run on 2026-10-18 against these surfaces (hourly\n  read-only checks: HTTP status, JSON fields, presence counts): verdict, observed value, read time, evidence hash,\n  receipt hash.\n- `chain.json`: counts, and the heads of the registry event chain and of each deck receipt chain, so anyone\n  holding an earlier copy can check that nothing was rewritten.\n\nToday: **137 surfaces**, 67 MEASURED, 70 UNMEASURED; 834 checks.\nNot published (HELD): audit_target (108), vendor_marketplace (22).\n\n## States\n\nDISCOVERED, QUALIFIED, READY, AUTH_REQUIRED, BUILDING, CONNECTED, PUBLISHED, SUBMITTED, UNDER_REVIEW, ACCEPTED,\nREJECTED, BLOCKED, STALE, NEEDS_UPDATE, UNSUPPORTED. PUBLISHED, CONNECTED and ACCEPTED are set only by a live public\nread that showed our artifact (URL + sha256 recorded). A note, an email or a memory never sets them.\n\n## UNMEASURED\n\n**UNMEASURED means we could not see, not that we are absent.** A 401/403, a JavaScript-only page, a partial sitemap\nor a read path we have not got is UNMEASURED and stays UNMEASURED until a live read settles it. A check verdict of\nUNMEASURED means the read did not complete. OBSERVED means a value was recorded with no assertion (never a PASS).\n\n## Method\n\nRead-only GETs with a named user agent (`csoai-layer-o-registry/0.1`), robots.txt respected. We store only our own\nmeasurement plus the source URL and the sha256 of the bytes read, never a copy of a third party's record.\nThe same snapshot is published daily, as a new version, to Hugging Face (`csoai/layer-o-living-board`) and Kaggle\n(`nicktempleman/layer-o-living-board`), and each mirror is itself a watched surface in this board.\n\n## Licence\n\nCC-BY-4.0 (this dataset: our measurements). Third-party names and URLs are facts of where we read.\n\n## How to cite\n\nCouncil of AI (CSOAI Ltd). *Layer O living board: councilof.ai distribution presence*, snapshot 2026-10-18.\nHugging Face dataset `csoai/layer-o-living-board`, https://huggingface.co/datasets/csoai/layer-o-living-board. CC-BY-4.0.\n\n## Corrections\n\nIf a row is wrong about your surface, tell us: https://councilof.ai/corrections (or open a discussion on the\nHugging Face dataset). Corrections are applied by a new live read, recorded as a new hash-chained event; nothing is\nedited in place.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 18, last updated 2026-10-18.\n- 7 files, 726,347 bytes. File types: .csv (2), .jsonl (2), .md (1), (none) (1), .json (1).\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software",
+    "time series analysis",
+    "tabular"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai.",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 3,484 bytes."
+    },
+    {
+      "path": "SHA256SUMS",
+      "description": "File. 469 bytes."
+    },
+    {
+      "path": "chain.json",
+      "description": "counts, and the heads of the registry event chain and of each deck receipt chain, so anyone. JSON document. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,191 bytes."
+    },
+    {
+      "path": "checks.csv",
+      "description": "CSV table. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 246,528 bytes."
+    },
+    {
+      "path": "checks.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 375,750 bytes."
+    },
+    {
+      "path": "surfaces.csv",
+      "description": "CSV table. TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 36,003 bytes."
+    },
+    {
+      "path": "surfaces.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 62,922 bytes."
+    }
+  ]
+}

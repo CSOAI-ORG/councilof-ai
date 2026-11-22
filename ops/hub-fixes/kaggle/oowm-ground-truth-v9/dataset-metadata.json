@@ -1,0 +1,45 @@
+{
+  "title": "ARCHIVED historical ground-truth v9",
+  "id": "nicktempleman/oowm-ground-truth-v9",
+  "id_no": 11559899,
+  "subtitle": "ARCHIVED. Not a product. Living board = GET https://councilof.ai/api/gspc only.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/oowm-ground-truth-v9`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/oowm-ground-truth-v9 -p ./dataset --unzip\n```\n\nStart by inspecting `train/data.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `ARCHIVED-GET-ONLY.txt`\n- `README-LIVING-GET.txt`\n- `train/data.jsonl`\n- `sov_signal/data.jsonl`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\nARCHIVED historical bytes. Not a live product. Do not cite this slug as a product name.\n\nLiving measurement is the GET only — this card must not quote board counts or Hub card counts.\nAUTHORITY: GET https://councilof.ai/api/gspc (living). Archived Kaggle bytes are not a product.\nHub cards living GET: https://councilof.ai/api/hub-cards (do not freeze a triple here).\n\nVerify: https://councilof.ai/gspc-verify\n\nZenodo DOI 10.5281/zenodo.21991104: UNAVAILABLE since 29 Sep 2026 (Zenodo blocked the CSOAI account; appeal pending; status https://councilof.ai/interop/zenodo-status.json). Cite the served methodology: https://councilof.ai/signed/HOW-TO-VERIFY.md — GSPC Methodology and the Frozen Corpus Anchor.\nIssuer: CSOAI Ltd (GB, Companies House 16939677).\n\nMeasurement, not certification. Do not freeze a score table on this card.\n\n---\nLive board: GET https://councilof.ai/api/gspc → 23 axes · 23 measured (23·23·0). Quote totals.public_count / totals.lid — never invent MEASURED.\nHub cards: GET https://councilof.ai/api/hub-cards → cells/measured/unmeasured = 384/384/0 (re-GET before paste; kill stale 885/900/937/1113).\nLid: 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.\nVerify free: https://councilof.ai/gspc-verify\nMeasurement, never certification. Printer only. A100 COLD. No invent scores/buyers.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 3, last updated 2026-09-06.\n- 5 files, 389,055 bytes. File types: .txt (2), .jsonl (2), .md (1).\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai.",
+  "resources": [
+    {
+      "path": "ARCHIVED-GET-ONLY.txt",
+      "description": "Plain-text file. 158 bytes."
+    },
+    {
+      "path": "README-LIVING-GET.txt",
+      "description": "Plain-text file. 75 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 254 bytes."
+    },
+    {
+      "path": "sov_signal/data.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 266,297 bytes."
+    },
+    {
+      "path": "train/data.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 122,271 bytes."
+    }
+  ]
+}
