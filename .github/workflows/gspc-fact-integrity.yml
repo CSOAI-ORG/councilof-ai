@@ -47,10 +47,24 @@ jobs:
           p=Path("public/interop/gspc-fact-table/MANIFEST.json")
           m=json.loads(p.read_text())
           assert m["schema"]=="csoai.gspc-fact-table/0.1"
+          # A fresh independent Python hash of raw cells is required before any
+          # success receipt. Counting rows alone cannot detect a source swap.
+          cells=sorted(Path("public/interop/mill-evidence").glob("items-*.jsonl"))
+          cell_lines=[]
+          physical_rows=0
+          for cell in cells:
+            raw=cell.read_bytes()
+            cell_lines.append(cell.name+" "+hashlib.sha256(raw).hexdigest())
+            physical_rows+=sum(1 for line in raw.splitlines() if line.strip())
+          independent_digest=hashlib.sha256("\n".join(sorted(cell_lines)).encode()).hexdigest()
+          if independent_digest!=m["source"]["source_digest"]:
+            raise SystemExit("UNCHECKABLE: source digest does not match independent re-hash")
+          if len(cells)!=m["source"]["cell_files"] or physical_rows!=m["source"]["source_rows"]:
+            raise SystemExit("UNCHECKABLE: source physical cell/row counts disagree")
           receipt={
             "schema":"csoai.gspc-fact-integrity-receipt/1",
             "state":"SOURCE_REPLAY_MATCHED",
-            "source_digest_sha256":m["source"]["source_digest"],
+            "source_digest_sha256":independent_digest,
             "cell_files":m["source"]["cell_files"],
             "measurement_rows":m["counts"]["measurements"],
             "rows_not_graded":m["counts"]["rows_not_graded"],
