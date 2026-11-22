@@ -105,7 +105,7 @@ export function fullDoorInstall(origin: string): Record<string, string> {
   };
 }
 const INSTRUCTIONS =
-  `GSPC MCP. ${FREE_TOOL_COUNT} free read-only tools and ${PAID_TOOL_COUNT} paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT; each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.`;
+  `GSPC MCP. ${FREE_TOOL_COUNT} free read-only tools and ${PAID_TOOL_COUNT} paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT, or on this HTTP door as the x402 MCP transport's PaymentPayload object in _meta["x402/payment"] (one channel per call); each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.`;
 // The free door speaks to a person using a chat client, so it carries no operations notes and no
 // payment text (packet CR-6). The count is derived from the file, like the one above.
 export const FREE_INSTRUCTIONS =
@@ -620,7 +620,7 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       install: fullDoorInstall(origin),
       tool_counts: TOOL_COUNTS,
       stdio_alternative:
-        "npm csoai-gspc-mcp and the Pages HTTP implementation are released independently. Payment travels as the x_payment ARGUMENT; each door sets the X-PAYMENT header itself. Ask each installed version for its tools/list.",
+        "npm csoai-gspc-mcp and the Pages HTTP implementation are released independently. Payment travels as the x_payment ARGUMENT; each door sets the X-PAYMENT header itself. This HTTP door also reads the x402 MCP transport's PaymentPayload object in _meta[\"x402/payment\"]; an npm version reads it only if its own README says so. Ask each installed version for its tools/list.",
       paid_tools: {
         names: [...PAID_TOOL_NAMES],
         how: "Call without x_payment for a 402 challenge. A challenge is not settlement, delivery or revenue.",
