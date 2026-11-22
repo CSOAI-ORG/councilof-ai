@@ -1,7 +1,7 @@
 {
  "schema": "csoai.interop-file-index/0.2",
- "as_of": "2026-11-22T03:00:30Z",
- "source_commit": "964f3f691b5b7e92b9dcfc06fdf95b269de639f3",
+ "as_of": "2026-11-22T06:08:08Z",
+ "source_commit": "edfe20fc8281237520a7624e1556cfcf1c80236c",
  "what_this_is": "Every file the estate's committed tree publishes under /interop/, with its size, its sha256 and how it is served. Built by reading the tree, so it is a measurement, not a list of intentions. Three served states occur, because there are three \u2014 a path routed to the mirror is not the same path as one the estate serves from its retired-bytes archive, and a fourth state (retired-bytes-absent) is reserved for a retired record the archive does not hold, which is not emitted because the archive is a deploy-time artefact and naming its membership here would make this index stale on every deploy.",
  "how_to_verify": "sha256 is the digest of the file's bytes as published. Fetch the path and hash it; on a row whose served_bytes reads 'as-published', a match means you hold what the estate published. Three things to know when it does not match: the digest is of the bytes at THIS index's source_commit, and the live site serves the bytes of the currently DEPLOYED commit, so the two agree once that commit is deployed; for pages-served HTML the digest is over the BUILT file, which carries the workspace-launcher script the build injects; and the EDGE rewrites some HTML in transit, so on a row whose served_bytes reads 'edge-transformed' or 'edge-transformed-per-request' the bytes the site serves are NOT the bytes published here, and on a 'per-request' row they differ on every fetch, so no digest of them can be reproduced by anyone, including us. A row whose served state is hf-mirror is a different case again: the bytes come from the HuggingFace evidence mirror, which is a SEPARATE HOST whose membership this index does not record, so the row's digest is checkable only while the mirror still holds the file. For retired-bytes paths the digest is of the canonical bytes, which the archive copies verbatim.",
  "retired": "A retired record is HISTORICAL evidence of a past measurement, never current proof. The estate's server marks these with the response header x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE SAME AS BEING UNREACHABLE: a retired path that is served answers 200 and its bytes verify against the sha256 below; a retired path that is not served answers 404. The `served` field says which.",
@@ -17,18 +17,18 @@
   "edge-transformed-per-request": "the edge rewrites this markup and the rewrite is randomised per request, so the bytes the site serves differ on EVERY fetch; no digest of them can be reproduced, by a reader or by the estate"
  },
  "counts": {
-  "files": 16534,
-  "bytes": 287594904,
+  "files": 16536,
+  "bytes": 287895400,
   "by_served": {
-   "pages": 3288,
+   "pages": 3290,
    "retired-bytes": 6,
    "hf-mirror": 13240
   },
   "by_served_bytes": {
-   "as-published": 16533,
+   "as-published": 16535,
    "edge-transformed-per-request": 1
   },
-  "digests_taken_from_the_built_tree": 3288,
+  "digests_taken_from_the_built_tree": 3290,
   "digests_taken_from_the_injectors_transform": 0,
   "digests_taken_from_the_tree_bytes": 0,
   "digests_not_comparable_no_built_tree": 0,
@@ -5074,9 +5074,16 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/distribution-2026-11-21.json",
+   "bytes": 291176,
+   "sha256": "cc26463bca2d741c9a5bdefc9e7ef0cc85b17efb1f0d543d5619da0d4d3f43f0",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/distribution-latest.json",
-   "bytes": 291483,
-   "sha256": "575f9aac50b6c09f91ae5788894d29bbd94a0c7e2cfa936582856a806ef04fca",
+   "bytes": 291176,
+   "sha256": "cc26463bca2d741c9a5bdefc9e7ef0cc85b17efb1f0d543d5619da0d4d3f43f0",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -8129,6 +8136,13 @@
    "path": "/interop/institutional-underwriter-x402-ras-flywheel-v1.json",
    "bytes": 26583,
    "sha256": "958bfb1912d0c9150a82ef88c199b1cf386821fef7e25d61d988a2d1d5612479",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/institutions-register.json",
+   "bytes": 9711,
+   "sha256": "4f43a40482ba1532706fb51bb89491eff16ad6927beafa28ddc75ad3983c30c9",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -90956,7 +90970,7 @@
   {
    "path": "/interop/ots/manifest.json",
    "bytes": 232088,
-   "sha256": "7451aebfde024844abcc6265101dc6b3da35e4f8752fe432de0f59ad958bf471",
+   "sha256": "d45d4851c5380de78236ca9689111ec502d0be23356815fc53fdffb9c033c370",
    "served": "hf-mirror",
    "served_bytes": "as-published"
   },
@@ -110502,15 +110516,15 @@
   },
   {
    "path": "/interop/sbom-councilof-ai.json",
-   "bytes": 1219141,
-   "sha256": "1d182f52cb7fa63f4962034442f179068d4292e1e529feff4eea1e144bb136f4",
+   "bytes": 1219162,
+   "sha256": "7d4ee55395a8b3a9fcaece65026479254fc7dbd0ead30dcd4683761c6f4ef5bc",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/sbom-councilof-ai.json.ots",
-   "bytes": 756,
-   "sha256": "af93ba2b188d945d104bac8a2efb87cc3f8834553cceb822a81b248de5d4951b",
+   "bytes": 651,
+   "sha256": "a3f1ff9df1ad4d89f222be3f9e5c7737d1e2bcb3b6caadb1d5d476d82cc907ab",
    "served": "pages",
    "served_bytes": "as-published"
   },
