@@ -148,6 +148,14 @@ it.each([
   expect(requested).toBe(false);
 });
 
+it('never echoes private caller-selected identifiers from an unexpected tool exception', async () => {
+  const marker = 'private-caller-secret-marker';
+  const result = await callBridge(marker, {}, (_req, res) => { res.end('{}'); });
+  expect(result.isError).toBe(true);
+  expect(body(result)).toEqual({ state: 'UNCHECKABLE', reason: 'TOOL_EXECUTION_ERROR' });
+  expect(JSON.stringify(result)).not.toContain(marker);
+});
+
 it('surfaces a desktop connection failure as an outer MCP error', async () => {
   const result = await callBridge('zcode_desktop', { op: 'call', tool: 'list_devices' }, req => { req.socket.destroy(); });
   expect(result.isError).toBe(true);
