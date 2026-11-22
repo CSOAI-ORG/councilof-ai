@@ -1,0 +1,77 @@
+{
+  "card": {
+    "as_of": "2026-11-22T06:00:16.264Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Treasuries",
+      "holders": 4,
+      "issuer": "Ondo Finance",
+      "issuer_address": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1584220.172977341,
+      "symbol": "OUSG",
+      "verified_domain": "ondo.finance",
+      "verified_via": "Bidirectional domain match"
+    },
+    "product": {
+      "sku": "xrpl-asset-state",
+      "tier": "free",
+      "free_fields": [
+        "issuer",
+        "currency",
+        "holders",
+        "supply",
+        "trust_lines"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "a6b243d060b85a687eab6c052191f2da9a3094b274d9d935184b666fffae91f3",
+    "sig_ed25519": "d1fa91e164acaccecea61569559faa347966fc35b7b7876bb016734c065f86e395475d822b61558924ce16c054b8f9ac0965bb92e855b915a36eb3ad0d37580b",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL OUSG public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "6abdbccce721714b8291aed0ecd88448425747b1462d2cd7d980056736ae36e4",
+    "89a4ab0d5cde255ed9aabf5006c3cbd0de0ff5035cdbfdc8a6e84dda756f98b1",
+    "6acf6b4c7e7c28b007ae2870cd359cfffb3a0f111253a19ae9c2fa461bcaff27",
+    "cde9df2b8b0b4da13b417f16b73d34bd0b0cdb94a223d0346140406a9ae844a0",
+    "42bead95c24b1083352b01cd495fd9ab7ea2d695dce9a216d80f44f21aeb49f0",
+    "a297d897f434dff32ce50e7080d412641fc4ec5251e5e8b68dcaf6408f8955f2",
+    "70decc38751d28c0b1c7d94a93f6e9563d41ff86eb7907a71b41bd370d8fe6c6",
+    "07ab968a2e1af5dea896902f13c4bdda058c6b93c218f13f2d886c5fbfdb1679",
+    "daf6ad8f472f76209981d47658a7614501d175153627bff8126248cd8214af79"
+  ]
+}
