@@ -1,0 +1,136 @@
+{
+  "title": "csoai-gspc-normalized",
+  "id": "nicktempleman/csoai-gspc-normalized",
+  "id_no": 11558590,
+  "subtitle": "Mirror of Hugging Face csoai/gspc-normalized",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-normalized`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-normalized -p ./dataset --unzip\n```\n\nStart by inspecting `manifest.parquet`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `eval.yaml`\n- `manifest.jsonl`\n- `manifest.parquet`\n- `data/train-00000-of-00001.parquet`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-normalized at revision `3aa070c863324edaa9d82f762b8268ddb8e092a2`, made 2026-10-15. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC normalised — every bank in one schema\n\n> **Start here — free verify:** [https://councilof.ai/gspc-verify/](https://councilof.ai/gspc-verify/) (or the free MCP tool `verify_card` at `https://councilof.ai/mcp`) · **Full catalog:** [https://councilof.ai/catalog.json](https://councilof.ai/catalog.json) · Methodology: [https://councilof.ai/methodology/](https://councilof.ai/methodology/) · Measurement, not certification.\n\n**The one schema to read first.** 518 rows that flatten several GSPC banks into a\nsingle shape: `source` (the bank repository the row came from), `axis`, `category`, `anchor`, `prompt`,\n`expected`, `expected_is_list`, and `raw_keys` recording the original row's keys so nothing is silently\ndropped. If you want to reuse the banks without learning each one's native layout, start here.\n\n## What is in this repository\n\n| file | bytes | rows | what |\n|---|---:|---:|---|\n| `data/train-00000-of-00001.parquet` | 56817 |  | data (Parquet) |\n| `README.md` | 1498 |  | card |\n| `eval.yaml` | 511 |  | config |\n| `manifest.jsonl` | | 4 | derived at 2026-09-04T04:33:29Z |\n\n`manifest.parquet` is derived from this repository's own file tree at 2026-09-04T04:33:29Z; it lists every file with its\nsize, its blob hash and a direct URL, so an agent can enumerate the repo without cloning it.\n\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_gspc_normalized,\n  title        = {GSPC normalised — every bank in one schema},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/gspc-normalized}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n\n\n\n## Objections, contact and corrections\n\nTo object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.\n\n## How to cite\n\nCSOAI Ltd (Council of AI). *GSPC normalised — every bank in one schema*. 2026. Hugging Face dataset `csoai/gspc-normalized`. https://huggingface.co/datasets/csoai/gspc-normalized\n\n```bibtex\n@misc{csoai_gspc_normalized,\n  title        = {GSPC normalised — every bank in one schema},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/gspc-normalized},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n\nLicence: CC-BY-4.0. Attribute Council of AI, CSOAI Ltd (16939677), https://councilof.ai.\n\n## Corrections and verification\n\n- Corrections ledger (signed): https://councilof.ai/api/corrections. Corrections to CSOAI's published records are logged there with what changed and when.\n- Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).\n- Conformance kit for signed-receipts/v1, with test vectors for implementers: https://councilof.ai/spec/signed-receipts/v1/conformance/\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 5, last updated 2026-10-15.\n- 5 files, 75,031 bytes. File types: .parquet (2), .md (1), .yaml (1), .jsonl (1).\n- Hugging Face twin: [csoai/gspc-normalized](https://huggingface.co/datasets/csoai/gspc-normalized). 4 of 5 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "nlp",
+    "internet",
+    "software",
+    "computer vision"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 4 of 5 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-normalized](https://huggingface.co/datasets/csoai/gspc-normalized) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "1498 — card. Dataset README (Markdown). 12,986 bytes."
+    },
+    {
+      "path": "data/train-00000-of-00001.parquet",
+      "description": "56817 — data (Parquet). Parquet table. 518 rows; fields: source (string), axis (string), category (string), anchor (string), prompt (string), expected (string), expected_is_list (boolean), raw_keys (string). Same byte size as `data/train-00000-of-00001.parquet` in huggingface.co/datasets/csoai/gspc-normalized (checked 2026-11-20). 56,817 bytes.",
+      "schema": {
+        "fields": [
+          {
+            "name": "source",
+            "description": "Observed type string; non-null in 518/518 rows read; example: csoai/gspc-gov",
+            "type": "string"
+          },
+          {
+            "name": "axis",
+            "description": "Observed type string; non-null in 518/518 rows read; example: gov",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "description": "Observed type string; non-null in 506/518 rows read; example: 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,…",
+            "type": "string"
+          },
+          {
+            "name": "anchor",
+            "description": "Observed type string; non-null in 514/518 rows read; example: 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,…",
+            "type": "string"
+          },
+          {
+            "name": "prompt",
+            "description": "Observed type string; non-null in 518/518 rows read; example: A provider deploys Critical‑infrastructure grid management A…",
+            "type": "string"
+          },
+          {
+            "name": "expected",
+            "description": "Observed type string; non-null in 518/518 rows read; example: HIGH_RISK",
+            "type": "string"
+          },
+          {
+            "name": "expected_is_list",
+            "description": "Observed type boolean; non-null in 518/518 rows read; example: false",
+            "type": "boolean"
+          },
+          {
+            "name": "raw_keys",
+            "description": "Observed type string; non-null in 518/518 rows read; example: [\"_canary\",\"_note\",\"anchor\",\"expected\",\"licence\",\"scenario\",…",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "path": "eval.yaml",
+      "description": "511 — config. YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-normalized (checked 2026-11-20). 511 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "4 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 4 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-normalized (checked 2026-11-20). 1,378 bytes."
+    },
+    {
+      "path": "manifest.parquet",
+      "description": "Parquet table. 4 rows; fields: file (string), bytes (string), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.parquet` in huggingface.co/datasets/csoai/gspc-normalized (checked 2026-11-20). 3,339 bytes.",
+      "schema": {
+        "fields": [
+          {
+            "name": "file",
+            "description": "Observed type string; non-null in 4/4 rows read; example: README.md",
+            "type": "string"
+          },
+          {
+            "name": "bytes",
+            "description": "Observed type string; non-null in 3/4 rows read; example: 1498",
+            "type": "string"
+          },
+          {
+            "name": "sha",
+            "description": "Observed type string; non-null in 3/4 rows read; example: efa8cba3b9551fc2bea6ff837b09b0a569007642",
+            "type": "string"
+          },
+          {
+            "name": "ext",
+            "description": "Observed type string; non-null in 4/4 rows read; example: md",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "description": "Observed type url; non-null in 4/4 rows read; example: https://huggingface.co/datasets/csoai/gspc-normalized/resolv…",
+            "type": "url"
+          },
+          {
+            "name": "repo",
+            "description": "Observed type string; non-null in 4/4 rows read; example: csoai/gspc-normalized",
+            "type": "string"
+          },
+          {
+            "name": "as_of",
+            "description": "Observed type datetime; non-null in 4/4 rows read; example: 2026-09-04T04:33:29Z",
+            "type": "datetime"
+          },
+          {
+            "name": "source",
+            "description": "Observed type string; non-null in 4/4 rows read; example: https://huggingface.co/api/datasets/csoai/gspc-normalized/tr…",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ]
+}

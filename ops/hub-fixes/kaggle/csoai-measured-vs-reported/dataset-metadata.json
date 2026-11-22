@@ -1,0 +1,48 @@
+{
+  "title": "Measured vs reported — the empty table, on purpose",
+  "id": "nicktempleman/csoai-measured-vs-reported",
+  "id_no": 12265541,
+  "subtitle": "Mirror of Hugging Face csoai/measured-vs-reported",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-measured-vs-reported`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-measured-vs-reported -p ./dataset --unzip\n```\n\nStart by inspecting `overlap.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `overlap.json`\n- `manifest.jsonl`\n- `measured_elo.json`\n- `reported_rails.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/measured-vs-reported at revision `2e0a124845425bfb60ba0b6464c00342cdab6e92`, made 2026-09-29. The Hugging Face copy is the original; if the two differ, it wins.\n\n# Measured vs reported — the empty table, on purpose\n\nAn honesty artefact, and deliberately close to empty. `overlap.json` would map\nour measured Elo against third-party reported numbers, but its `state` reads *\"UNKNOWN — no verified\ncross-platform Elo for our fleet models yet (honest, not fabricated)\"*, `cells` is `[]`, and the `gate` is\nstated in the file: a reported cell is populated only when we hold a cited, attributed number for the **same\nmodel** we measured. Until that holds, the table stays empty rather than plausible.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-09-29.\n- 5 files, 45,496 bytes. File types: .json (3), .md (1), .jsonl (1).\n- Hugging Face twin: [csoai/measured-vs-reported](https://huggingface.co/datasets/csoai/measured-vs-reported). 4 of 5 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "model comparison",
+    "internet",
+    "software",
+    "computer vision"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 4 of 5 files have the same byte size as files in the Hugging Face dataset [csoai/measured-vs-reported](https://huggingface.co/datasets/csoai/measured-vs-reported) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "1503 — card. Dataset README (Markdown). 12,118 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "5 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 5 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/measured-vs-reported (checked 2026-11-20). 1,752 bytes."
+    },
+    {
+      "path": "measured_elo.json",
+      "description": "28282 — JSON document. JSON document. top-level keys: axes, content_id, generated, leaderboard, method, models, per_axis, register, schema, signature. `leaderboard` holds 12 records with fields: ci (string), elo (numeric), games (integer), model (string), winrate (numeric). Same byte size as `measured_elo.json` in huggingface.co/datasets/csoai/measured-vs-reported (checked 2026-11-20). 28,282 bytes."
+    },
+    {
+      "path": "overlap.json",
+      "description": "243 — JSON document. JSON document. top-level keys: state, cells, gate. Same byte size as `overlap.json` in huggingface.co/datasets/csoai/measured-vs-reported (checked 2026-11-20). 243 bytes."
+    },
+    {
+      "path": "reported_rails.json",
+      "description": "3101 — JSON document. JSON document. top-level keys: $schema, dataset, date_assessed, positioning, overlap_stance, rails, cross_rail_guard. `rails` holds 2 records with fields: source (string), rail (string), what (string), how (string), what_we_adopt (string), what_we_refuse (string), honest_unknowns (string), source_urls (string). Same byte size as `reported_rails.json` in huggingface.co/datasets/csoai/measured-vs-reported (checked 2026-11-20). 3,101 bytes."
+    }
+  ]
+}

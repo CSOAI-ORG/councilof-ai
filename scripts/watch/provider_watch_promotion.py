@@ -14,11 +14,21 @@ import os
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 from collections import Counter
 from typing import Any
 
 import provider_watch as pw
+
+# The pulls API's read-after-write lag after a push. The daily runs pushed their capture, read
+# the new head back with ls-remote, and were then refused with "PR head changed after promotion"
+# because the pull request still named the commit the push replaced. Run 44909414291 (21 Nov
+# 2026) pushed 85aca8ee to #3860 and was refused at 13:35:16Z; #3860 names 85aca8ee, updated
+# 13:35:17Z. Run 44750496389 (20 Nov) failed the same way with 6b355ad5. At most 12 reads,
+# 5 s apart, and only while the PR still names the exact head this run's push replaced.
+PR_HEAD_READS = 12
+PR_HEAD_INTERVAL = 5.0
 
 FEED = "public/feeds/provider-diff/"
 BRANCH = re.compile(r"automation/provider-watch-(?:\d{4}-\d{2}-\d{2}T\d{4,6}Z|run-\d+)$")
@@ -291,11 +301,21 @@ class Repository:
             == self.git("log", "-1", "--format=%B", expected)
         )
 
-    def ensure_pr(self, branch: str, head: str, bundle: Path) -> int:
+    def ensure_pr(self, branch: str, head: str, bundle: Path, previous: str | None = None) -> int:
         rows = self.pulls(branch)
         opened = [r for r in rows if r["state"] == "open"]
         require(len(opened) <= 1, "Multiple review PRs for provider branch")
         if opened:
+            # Read-after-write lag: for some seconds after a push, the pulls API can still name the
+            # head the push replaced, although ls-remote already shows the new one. Only that exact
+            # previous head is re-read, for a bounded time; any other head is refused at once.
+            reads = 1
+            while (previous is not None and previous != head and reads < PR_HEAD_READS
+                   and opened[0]["head"]["sha"] == previous):
+                time.sleep(PR_HEAD_INTERVAL)
+                opened = [r for r in self.pulls(branch) if r["state"] == "open"]
+                require(len(opened) == 1, "Review PR closed or duplicated during promotion")
+                reads += 1
             require(opened[0]["head"]["sha"] == head, "PR head changed after promotion")
             return opened[0]["number"]
         require(not rows, "Provider branch was closed or merged; retained capture needs fresh review")
@@ -450,6 +470,7 @@ def promote(repo: Repository, bundle: Path, artifact_id: str) -> dict[str, Any]:
         receipt.update(commit_sha=commit, artifact_id=artifact_id, state="COMMIT_PREPARED")
         write_json(bundle / "promotion.json", receipt)
     remote = repo.heads().get(branch)
+    replaced = None  # the head this run's push replaces, if it pushes
     if remote not in (commit, receipt["expected_remote_head"]):
         require(remote is not None, "Pending branch disappeared")
         repo.fetch(branch, remote)
@@ -461,10 +482,11 @@ def promote(repo: Repository, bundle: Path, artifact_id: str) -> dict[str, Any]:
         write_json(bundle / "promotion.json", receipt)
     elif remote != commit:
         repo.git("push", "origin", f"{commit}:refs/heads/{branch}")  # ordinary fast-forward only
+        replaced = remote
     require(repo.heads().get(branch) == commit, "Pushed provider commit could not be read back")
     receipt["state"] = "PUSHED"
     write_json(bundle / "promotion.json", receipt)
-    receipt["pr_number"] = repo.ensure_pr(branch, commit, bundle)
+    receipt["pr_number"] = repo.ensure_pr(branch, commit, bundle, previous=replaced)
     receipt["state"] = "REVIEW_PENDING"
     write_json(bundle / "promotion.json", receipt)
     return receipt
