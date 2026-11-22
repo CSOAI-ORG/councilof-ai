@@ -308,6 +308,56 @@ class PromotionTests(unittest.TestCase):
             promotion.promote(self.repo, second, "7302")
         self.assertEqual(self.repo.heads()[receipt["branch"]], other)
 
+    def lagging_pulls(self, stale_sha, reads):
+        """Serve `reads` post-push PR reads naming stale_sha, as GitHub's pulls API can after a push."""
+        real = self.repo.pulls
+        served = {"stale": 0}
+        pushes_before = self.push_count()
+
+        def pulls(branch=None):
+            rows = real(branch)
+            if branch is not None and self.push_count() > pushes_before and served["stale"] < reads:
+                served["stale"] += 1
+                for row in rows:
+                    row["head"]["sha"] = stale_sha
+            return rows
+        return pulls, served
+
+    def test_pull_request_head_lag_after_push_is_reread(self):
+        first, _ = self.completed("611", 3)
+        first_result = promotion.promote(self.repo, first, "7611")
+        second, _ = self.completed("612", 4)
+        pulls, served = self.lagging_pulls(first_result["commit_sha"], 2)
+        with mock.patch.object(self.repo, "pulls", side_effect=pulls), \
+                mock.patch.object(promotion, "PR_HEAD_INTERVAL", 0):
+            second_result = promotion.promote(self.repo, second, "7612")
+        self.assertEqual(served["stale"], 2)
+        self.assertEqual(second_result["state"], "REVIEW_PENDING")
+        self.assertEqual(second_result["pr_number"], first_result["pr_number"])
+        self.assertEqual(self.repo.heads()[second_result["branch"]], second_result["commit_sha"])
+
+    def test_pull_request_head_that_never_catches_up_is_refused(self):
+        first, _ = self.completed("621", 3)
+        first_result = promotion.promote(self.repo, first, "7621")
+        second, _ = self.completed("622", 4)
+        pulls, served = self.lagging_pulls(first_result["commit_sha"], 10_000)
+        with mock.patch.object(self.repo, "pulls", side_effect=pulls), \
+                mock.patch.object(promotion, "PR_HEAD_INTERVAL", 0):
+            with self.assertRaisesRegex(ValueError, "PR head changed after promotion"):
+                promotion.promote(self.repo, second, "7622")
+        self.assertEqual(served["stale"], promotion.PR_HEAD_READS)
+
+    def test_pull_request_naming_another_head_is_refused_without_rereading(self):
+        first, _ = self.completed("631", 3)
+        promotion.promote(self.repo, first, "7631")
+        second, _ = self.completed("632", 4)
+        pulls, served = self.lagging_pulls("f" * 40, 10_000)
+        with mock.patch.object(self.repo, "pulls", side_effect=pulls), \
+                mock.patch.object(promotion, "PR_HEAD_INTERVAL", 0):
+            with self.assertRaisesRegex(ValueError, "PR head changed after promotion"):
+                promotion.promote(self.repo, second, "7632")
+        self.assertEqual(served["stale"], 1)
+
     def test_missing_artifact_and_dry_run_cannot_publish(self):
         bundle, _ = self.completed("501", 3)
         with self.assertRaisesRegex(ValueError, "artifact id"):
