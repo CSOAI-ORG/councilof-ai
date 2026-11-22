@@ -1,55 +1,56 @@
 /**
- * POST /api/lead — accepts the "email me the signed report" form.
- *
- * HONESTY OVER APPEARANCE
- * The LEADS KV namespace is bound on this deployment (wrangler.jsonc, since 841ebbcde): a POST
- * writes the record there and says `stored: true`. If a deployment ever runs without that
- * binding, this endpoint does not pretend otherwise: it returns `stored: false` with the reason.
- * A 200 that silently drops a lead is the false-success pattern this estate keeps hunting in
- * itself; a 500 would block the user's flow for something that is our gap, not theirs.
- *
- * Nothing here is used for anything else: no analytics, no enrichment, no third party.
+ * POST /api/lead — bounded, explicitly acknowledged assessment enquiry.
+ * Storage is NOT an email notification, acceptance, or promise of a report.
  */
 import { headFromGet } from "./_head";
+import {
+  cleanEmail, cleanOptionalField, NEW_LEAD_RETENTION_SECONDS, readIntakeJson,
+} from "./_bounded-lead-body";
 
-interface Env {
-  LEADS?: KVNamespace;
-}
+interface Env { LEADS?: KVNamespace }
+const reply = (body: unknown, status = 200) => Response.json(body, {
+  status, headers: { "cache-control": "no-store", "x-content-type-options": "nosniff" },
+});
 
-export const onRequestPost: PagesFunction<Env> = async (ctx) => {
-  let body: Record<string, unknown>;
-  try {
-    body = await ctx.request.json();
-  } catch {
-    return Response.json({ error: "body must be JSON" }, { status: 400 });
-  }
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+  const parsed = await readIntakeJson(request, 8192);
+  if (parsed.ok === false) return reply({ error: parsed.error }, parsed.status);
+  const body = parsed.body;
 
-  const email = String(body.email ?? "").slice(0, 200);
-  if (!email.includes("@")) {
-    return Response.json({ error: "an email address is required" }, { status: 400 });
-  }
+  const email = cleanEmail(body.email);
+  if (!email) return reply({ error: "a valid email address is required" }, 400);
+
+  // The real assessment form sends result_id; earlier code ignored it and
+  // retained only report_id. Keep both clients compatible without a false join.
+  if (body.report_id !== undefined && body.result_id !== undefined &&
+      body.report_id !== body.result_id)
+    return reply({ error: "inconsistent result reference" }, 400);
+  const name = cleanOptionalField(body.name, 100);
+  const report_id = cleanOptionalField(body.report_id ?? body.result_id, 160);
+  const tier = cleanOptionalField(body.tier, 64);
+  const wants = cleanOptionalField(body.wants, 160);
+  if ([name, report_id, tier, wants].some(v => v === null))
+    return reply({ error: "invalid or oversized enquiry field" }, 400);
 
   const record = {
-    email,
-    name: String(body.name ?? "").slice(0, 200),
-    report_id: String(body.report_id ?? ""),
-    tier: String(body.tier ?? ""),
-    wants: String(body.wants ?? ""),
-    at: new Date().toISOString(),
+    email, name, report_id, tier, wants, at: new Date().toISOString(),
+    source: "councilof.ai/assess", notification_state: "NOT_CONFIGURED",
   };
 
-  if (ctx.env.LEADS) {
-    await ctx.env.LEADS.put(`lead:${record.at}:${crypto.randomUUID()}`, JSON.stringify(record));
-    return Response.json({ ok: true, stored: true });
-  }
-
-  // No store bound. Say so — the front can tell the user to email us directly instead.
-  return Response.json({
-    ok: true,
-    stored: false,
-    reason: "no datastore bound to this deployment yet",
+  if (!env.LEADS) return reply({
+    ok: true, stored: false, reason: "no datastore bound to this deployment yet",
     fallback: "email contact@csoai.org with your report_id",
   });
+  try {
+    await env.LEADS.put(`lead:${record.at}:${crypto.randomUUID()}`,
+      JSON.stringify(record), { expirationTtl: NEW_LEAD_RETENTION_SECONDS });
+    return reply({ ok: true, stored: true });
+  } catch {
+    return reply({
+      ok: false, stored: false, reason: "storage was not confirmed",
+      fallback: "email contact@csoai.org with your report_id",
+    }, 503);
+  }
 };
 
 /**
