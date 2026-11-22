@@ -5,8 +5,10 @@
     maintenance_due.py run   --data DIR --tools DIR [--register URL|FILE] [--no-upload] [--confirm-gap S]
     maintenance_due.py selftest
 
-WHERE IT RUNS. Inside the existing daily claim-watch job on the always-on Oracle host (cron 50 7 * * *,
-~/lanes/claim-watch-20260928/run.sh), after the pulse-verity watch. Before 2026-09-29 published
+WHERE IT RUNS. From 2026-11-22: .github/workflows/claim-maintenance-rechecks.yml (cron 50 7 * * *), which
+restores the published ledger first and stops if it cannot. Until 2026-10-25 (the last run, 08:00:22Z) it ran
+inside the daily claim-watch job on the always-on Oracle host (~/lanes/claim-watch-20260928/run.sh), after
+the pulse-verity watch; that host stopped running it and the day-30 check due 2026-10-28 was not run. Before 2026-09-29 published
 registries were re-read by a second job, scripts/pod-loops/claim-watch-measure.sh, on the 3090
 pod's scheduler (weekly, Mondays 09:20Z). That scheduler was stopped on 28 Sep, so the reads the
 register still lists as SCHEDULED for 2026-09-28T09:20Z did not happen. One scheduler now owns
