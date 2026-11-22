@@ -32,8 +32,6 @@ jobs:
   bounded-coverage:
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    env:
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -51,8 +49,11 @@ jobs:
           cp public/interop/gspc-fact-table/MANIFEST.json "$RUNNER_TEMP/gspc-coverage/source-fact-manifest.json"
           cp scripts/measurements/GSPC_COVERAGE_HF_README.md "$RUNNER_TEMP/gspc-coverage/README.md"
       - name: Read prior Hub source pin when authorized
-        if: github.event_name != 'pull_request' && env.HF_TOKEN != ''
+        if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          if test -z "$HF_TOKEN"; then echo "NO_HF_TOKEN: cannot read previous pin"; exit 0; fi
           python3 -m pip install -q "huggingface_hub>=0.25"
           python3 - <<'PY'
           import os
@@ -71,9 +72,9 @@ jobs:
           set -euo pipefail
           DIR="$RUNNER_TEMP/gspc-coverage"
           if test -s "$DIR/previous.json"; then
-            node scripts/measurements/gspc-coverage-feed.mjs --board "$DIR/source-board.json" --manifest "$DIR/source-fact-manifest.json" --evidence public/interop/mill-evidence --previous "$DIR/previous.json" --out "$DIR/coverage.json"
+            node scripts/measurements/gspc-coverage-feed.mjs --board "$DIR/source-board.json" --manifest "$DIR/source-fact-manifest.json" --evidence public/interop/mill-evidence --table public/interop/gspc-fact-table --previous "$DIR/previous.json" --out "$DIR/coverage.json"
           else
-            node scripts/measurements/gspc-coverage-feed.mjs --board "$DIR/source-board.json" --manifest "$DIR/source-fact-manifest.json" --evidence public/interop/mill-evidence --out "$DIR/coverage.json"
+            node scripts/measurements/gspc-coverage-feed.mjs --board "$DIR/source-board.json" --manifest "$DIR/source-fact-manifest.json" --evidence public/interop/mill-evidence --table public/interop/gspc-fact-table --out "$DIR/coverage.json"
           fi
           python3 - <<'PY'
           import json,os
@@ -105,8 +106,11 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Mirror qualified feed to HF only on trusted runs
-        if: github.event_name != 'pull_request' && env.HF_TOKEN != ''
+        if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          if test -z "$HF_TOKEN"; then echo "NO_HF_TOKEN: skip mirror"; exit 0; fi
           python3 - <<'PY'
           import os,json
           from pathlib import Path
