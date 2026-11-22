@@ -103,11 +103,26 @@ export function claimMaintenanceFigure(state: unknown, now: Date = new Date()): 
   };
 }
 
-/** /api/wrapper/index.json → counts.pairs (SovX roster pairs read). */
+/**
+ * /api/wrapper/index.json → public_ledger_read (pairs with a record in the published parity ledger,
+ * dated by that ledger's own as_of). The roster count (counts.pairs) is a static list with no read
+ * time, so it is printed only when the ledger read is absent, labelled as the roster, undated.
+ */
 export function sovxFigure(index: unknown): Figure | null {
+  const read = rec(rec(index)?.public_ledger_read);
+  const inLedger = int(read?.pairs_with_a_record);
+  const asOf = str(read?.as_of);
+  if (inLedger !== null && inLedger > 0 && asOf) {
+    return {
+      value: String(inLedger),
+      label: "wrapped-asset pairs read (reads, not ratings)",
+      source: "/api/wrapper/index.json → public_ledger_read.pairs_with_a_record (the published parity ledger)",
+      as_of: asOf,
+    };
+  }
   const n = int(rec(rec(index)?.counts)?.pairs);
   if (n === null) return null;
-  return { value: String(n), label: "wrapped-asset pairs read (reads, not ratings)", source: "/api/wrapper/index.json → counts.pairs", as_of: null };
+  return { value: String(n), label: "wrapped-asset pairs on the roster (a list, not a read)", source: "/api/wrapper/index.json → counts.pairs", as_of: null };
 }
 
 /** /academy/exercises/exercises.json → exercises.length. */

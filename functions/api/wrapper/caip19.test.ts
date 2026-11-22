@@ -158,6 +158,20 @@ describe("GET /api/wrapper/index.json", () => {
     expect(body.caip2.arbitrum).toBe("eip155:42161");
   });
 
+  it("dates the pairs-read figure by the published ledger's own as_of, and says so when the ledger is absent", async () => {
+    const withLedger = await (await indexGet(ctx("/api/wrapper/index.json", { ASSETS: assets() }))).json();
+    expect(withLedger.public_ledger_read.ledger).toBe("/interop/wrapped-asset-parity-latest.json");
+    expect(withLedger.public_ledger_read.as_of).toBe(LEDGER.as_of);
+    expect(withLedger.public_ledger_read.pairs_with_a_record).toBe(LEDGER.records.length);
+    expect(withLedger.counts.pairs).toBe((WRAPPER_ROSTER as unknown[]).length); // the roster count is the list, unchanged
+    const noFile = await (await indexGet(ctx("/api/wrapper/index.json", { ASSETS: assets(404) }))).json();
+    expect(noFile.public_ledger_read.as_of).toBeNull();
+    expect(noFile.public_ledger_read.pairs_with_a_record).toBe(0);
+    const noBinding = await (await indexGet()).json();
+    expect(noBinding.public_ledger_read.as_of).toBeNull();
+    expect(noBinding.public_ledger_read.pairs_with_a_record).toBe(0);
+  });
+
   it("keeps doctrine: no internal codename, no price, no certifying language", async () => {
     const text = await (await indexGet()).text();
     expect(text).not.toMatch(/pontius|venturi|sovos/i);
