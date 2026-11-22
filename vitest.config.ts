@@ -96,6 +96,8 @@ export const NODE_TEST_FILES = [
   'harness/hitl/approval-effect-demo.test.mjs',
   // Separate synthetic process capsule uses node:test, not the Vitest collector.
   'scripts/hitl/oversight-measurement-capsule.test.mjs',
+  // Versioned receipt-gap controls use node:test and are excluded from Vitest.
+  'scripts/hitl/receipt-gap-bank-v2.test.mjs',
   // Claim-bounded proof cards use the same standalone node:test runner.
   'scripts/pilot/render-approval-proof-card.test.mjs',
   // 2026-11-02: seven more node:test files that no gate ran. mcp/gspc-server/wired-tools was

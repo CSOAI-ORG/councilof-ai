@@ -1,0 +1,48 @@
+name: HITL v2 incomplete evidence controls
+on:
+  pull_request:
+    paths:
+      - "harness/hitl/approval-effect-demo.mjs"
+      - "scripts/hitl/receipt-gap-bank-v2.mjs"
+      - "scripts/hitl/receipt-gap-bank-v2.test.mjs"
+      - ".github/workflows/hitl-evidence-gap-v2.yml"
+      - "vitest.config.ts"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-evidence-gap-v2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run negative and mutation controls
+        run: node --test scripts/hitl/receipt-gap-bank-v2.test.mjs
+      - name: Emit source-bound 16-case candidate
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/hitl-evidence-v2"
+          node scripts/hitl/receipt-gap-bank-v2.mjs > "$RUNNER_TEMP/hitl-evidence-v2/candidate.json"
+          node -e '
+            const fs = require("node:fs");
+            const c = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+            if (c.schema !== "csoai.hitl-synthetic-bank/2" ||
+                c.state !== "CANDIDATE_NOT_GSPC_AXIS" ||
+                c.denominator.all_cases !== 16 ||
+                c.denominator.authorization_refusal_controls !== 13 ||
+                c.denominator.post_execution_evidence_gap_controls !== 2 ||
+                c.outcomes.incomplete_evidence_UNCHECKABLE !== 2 ||
+                c.claim_limits.human_approval !== "NOT_TESTED" ||
+                c.claim_limits.gspc_axis_admission !== false) process.exit(1);
+          ' "$RUNNER_TEMP/hitl-evidence-v2/candidate.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hitl-evidence-gap-v2-candidate
+          path: ${{ runner.temp }}/hitl-evidence-v2/candidate.json
+          if-no-files-found: error
+          retention-days: 14
