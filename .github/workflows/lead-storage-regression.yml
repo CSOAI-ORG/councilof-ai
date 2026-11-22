@@ -1,0 +1,38 @@
+name: lead-storage-regression
+
+on:
+  pull_request:
+    paths:
+      - "functions/api/_bounded-lead-body.ts"
+      - "functions/api/_bounded-lead-body.test.ts"
+      - "functions/api/lead.ts"
+      - "functions/api/lead.test.ts"
+      - "functions/api/subscribe.ts"
+      - "functions/api/subscribe.test.ts"
+      - "client/src/lib/leadReceipt.ts"
+      - "client/src/lib/leadReceipt.test.ts"
+      - "client/src/pages/AssessTool.tsx"
+      - "client/src/pages/AssessTool.lead-copy.test.ts"
+      - "client/src/pages/legal/PublicPrivacy.tsx"
+      - "tsconfig.lead-intake.json"
+      - ".github/workflows/lead-storage-regression.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install locked dev dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Typecheck both public storage handlers
+        run: npx tsc -p tsconfig.lead-intake.json --noEmit
+      - name: Exercise bounded input, storage outcomes and truthful buyer copy
+        run: npx vitest run functions/api/_bounded-lead-body.test.ts functions/api/lead.test.ts functions/api/subscribe.test.ts client/src/lib/leadReceipt.test.ts client/src/pages/AssessTool.lead-copy.test.ts
