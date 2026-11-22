@@ -102,7 +102,29 @@ export function execute(dir, at = Date.now(), authorityPin) {
 
 export function observe(dir, authorityPin) {
   guard(dir);
-  if (!existsSync(file(dir, 'effect-receipt.json')) || !existsSync(file(dir, 'effects.jsonl'))) return { state: 'NO_EFFECT', verified: false };
+  // A receipt is evidence of an effect, not the effect itself. A crash between the local
+  // effect write and receipt write can leave effect bytes behind without a receipt.
+  // Treat partial evidence as UNCHECKABLE, never as NO_EFFECT (WG reviewer repro, 22 Nov).
+  const receiptPresent = existsSync(file(dir, 'effect-receipt.json'));
+  const effectPresent = existsSync(file(dir, 'effects.jsonl'));
+  if (!receiptPresent && !effectPresent) return { state: 'NO_EFFECT', verified: false };
+  if (!receiptPresent || !effectPresent) {
+    let effectDigest = null;
+    if (effectPresent) {
+      try { effectDigest = sha256(readFileSync(file(dir, 'effects.jsonl'))); }
+      catch { return { state: 'UNCHECKABLE', verified: false, reason: 'EFFECT_FILE_UNREADABLE', effect_present: true, receipt_present: receiptPresent }; }
+    }
+    return {
+      state: 'UNCHECKABLE',
+      verified: false,
+      reason: effectPresent ? 'EFFECT_PRESENT_RECEIPT_MISSING' : 'RECEIPT_PRESENT_EFFECT_MISSING',
+      effect_present: effectPresent,
+      receipt_present: receiptPresent,
+      effect_sha256: effectDigest,
+      external_observer: false,
+      observation_process: 'separate-local-process',
+    };
+  }
   let receipt, body, approval, authority, request, authorityFile, requestFile, authorityPinned;
   try { receipt = read(file(dir, 'effect-receipt.json')); body = readFileSync(file(dir, 'effects.jsonl'), 'utf8'); approval = read(file(dir, 'approval.json')); authorityFile = loadOnce(dir, 'authority.json'); authorityPinned = pinned(authorityFile, authorityPin); authority = authorityPinned ? authorityFile.parse() : null; requestFile = loadOnce(dir, 'request.json'); request = requestFile.parse(); }
   catch { return { state: 'UNCHECKABLE', verified: false }; }
