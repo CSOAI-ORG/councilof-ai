@@ -46,10 +46,14 @@ def project(manifest, measurements, items, cells, *, source_bytes_sha256, revisi
          "dcterms:identifier": "csoai/gspc-fact-table@git:" + revision + "/gspc_cells.jsonl"}
     ]
     bank_refs = {}
+    missing_bank_digest_cells = 0
     for c in cells:
         b = c.get("bank_sha256")
+        if b is None or b == "":
+            missing_bank_digest_cells += 1
+            continue  # Unknown source identity stays unknown; never fabricate a bank.
         if not isinstance(b,str) or len(b)!=64 or any(k not in "0123456789abcdef" for k in b):
-            raise ValueError("invalid bank sha256")
+            raise ValueError("invalid nonempty bank sha256")
         bank_refs.setdefault(b,c.get("bank_dataset"))
         if bank_refs[b] != c.get("bank_dataset"):
             raise ValueError("bank has conflicting dataset sources")
@@ -76,7 +80,7 @@ def project(manifest, measurements, items, cells, *, source_bytes_sha256, revisi
             "@type":"gspc:Cell",
             "dcterms:identifier":c["cell"],
             "dcterms:subject":[str(c.get("axis","UNKNOWN")),str(c.get("model") or "UNATTRIBUTED")],
-            "source":"urn:sha256:"+c["bank_sha256"],
+            "source":"urn:sha256:"+c["bank_sha256"] if c.get("bank_sha256") else origin,
             "n":n,
         }
         if n:
@@ -93,6 +97,7 @@ def project(manifest, measurements, items, cells, *, source_bytes_sha256, revisi
         "ontology_namespace":GSPC_NS,
         "graph": {"@context":CONTEXT,"@graph":graph},
         "counts":{"banks":len(bank_refs),"cells":len(seen),
+                  "cells_missing_bank_digest":missing_bank_digest_cells,
                   "graded_rows":sum(c["n_graded"] for c in cells),
                   "source_rows":len(measurements),
                   "rows_ungraded":audit["rows_ungraded"],
@@ -100,7 +105,7 @@ def project(manifest, measurements, items, cells, *, source_bytes_sha256, revisi
         "known_limitations":[
             "Projection identity is derived from archived public cell digest; this is not a signature",
             "The publisher's frozen data are not independently verified ground truth",
-            "Missing grades and model identifiers remain explicitly missing",
+            "Missing grades, model identifiers and bank digests remain explicitly missing",
             "No normative MEASURED or VALID state is inferred from row counts",
             "No new ontology namespace or canonical vocabulary state is installed",
         ],
