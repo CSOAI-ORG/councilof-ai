@@ -330,6 +330,8 @@ describe("/mcp tools/list — the free list then the paid list, catalogue free, 
     // stdio_alternative must not assert what another package's current version ships — that drifts on
     // its release schedule. It states the mechanism instead.
     expect(g.stdio_alternative).toMatch(MECHANISM);
+    // The second channel this door reads since #4517 is named where a client reads how to pay.
+    expect(g.stdio_alternative).toContain('_meta["x402/payment"]');
     expect(g.stdio_alternative).not.toMatch(WRONG_REASON);
     const i = await call(
       rpc("initialize", {
@@ -348,6 +350,7 @@ describe("/mcp tools/list — the free list then the paid list, catalogue free, 
     expect(i.result.instructions).toMatch(/witness_hash is quarantined/);
     expect(i.result.instructions).toMatch(/Measurement, not certification/);
     expect(i.result.instructions).toMatch(MECHANISM);
+    expect(i.result.instructions).toContain('_meta["x402/payment"]');
     expect(i.result.instructions).not.toMatch(WRONG_REASON);
   });
 });
