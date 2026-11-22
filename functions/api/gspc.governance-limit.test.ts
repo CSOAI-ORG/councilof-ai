@@ -48,11 +48,28 @@ describe("governance row: the C-2026-1120-02 limit", () => {
     }
   });
 
-  it("no other row carries limit: the key is on governance alone, and absent (not empty) everywhere else", async () => {
+  it("limit is on governance and on the eleven subject rows held by G8, and absent (not empty) on every other row", async () => {
     const { axes } = await served();
     expect(axes.length).toBeGreaterThan(1);
-    expect(axes.filter((a) => Object.prototype.hasOwnProperty.call(a, "limit")).map((a) => a.axis)).toEqual(["governance"]);
-    const gov = axes.find((a) => a.axis === "governance");
-    expect(String(gov?.limit ?? "").trim().length).toBeGreaterThan(0);
+    // Until 2026-11-22 the key was on governance alone. The owner's G8 ruling of 2026-11-21 added the
+    // ten held subject axes (C-2026-1120-01) and claim-maintenance (C-2026-1120-03); their limits are
+    // held by gspc.held-subject-limits.test.ts. Board order.
+    expect(axes.filter((a) => Object.prototype.hasOwnProperty.call(a, "limit")).map((a) => a.axis)).toEqual([
+      "governance",
+      "lab-practice",
+      "company-practice",
+      "measurer-integrity",
+      "harness-fidelity",
+      "interop-conformance",
+      "humanoid-deployment",
+      "regulator-transparency",
+      "interpretability-reproducibility",
+      "claim-maintenance",
+      "serving-fidelity",
+      "watchdog-ingest",
+    ]);
+    for (const a of axes.filter((r) => Object.prototype.hasOwnProperty.call(r, "limit"))) {
+      expect(String(a.limit ?? "").trim().length, a.axis).toBeGreaterThan(0);
+    }
   });
 });
