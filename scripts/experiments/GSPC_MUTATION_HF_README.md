@@ -20,12 +20,12 @@ The 10,000 synthetic documents have stable IDs and one policy marker: HITL=REQUI
 The experiment compares:
 - Counting only document rows, which misses all four changes.
 - Checking only the total byte length, which also misses all four.
-- Comparing exact content digests against an **independently retained baseline pin**, which detects all four changes in this closed-world synthetic test.
+- Comparing exact content digests against a **separately checked-in Git reference digest**, which detects all four changes in this closed-world synthetic test.
 - Checking every per-document hash, which identifies each changed document.
 - A fixed 1% systematic sample, which may miss rare changes (not a statistical sensitivity estimate).
 - An **untrusted rehashed manifest**, which can appear internally consistent after modification and therefore cannot by itself authenticate unchanged source data.
 
-A SHA-256 digest mismatch is evidence that bytes changed relative to a known baseline, **not** proof of malicious intent, semantic data poisoning, model vulnerability, or a successful attack. A benign edit also triggers a digest change. Hashes must be bound to authenticated source identities or independently witnessed roots; attackers controlling both content and local manifest can replace both.
+A SHA-256 digest mismatch is evidence that bytes changed relative to a known baseline, **not** proof of malicious intent, semantic data poisoning, model vulnerability, or a successful attack. A benign edit also triggers a digest change. The reference is version-controlled in the SAME PROJECT, not independently witnessed or externally signed. Hashes must be bound to authenticated source identities or independent witnessed roots; attackers controlling both content and local manifest can replace both.
 
 No model was queried or retrained. Every scenario sets model-behavior and semantic-poison detection to NOT_TESTED or NOT_RUN. This is **stage one** of a proposed two-stage integrity/behavior research program, not a GSPC axis result, certification, or demonstrated defense against training-time manipulation.
 
@@ -40,3 +40,5 @@ node scripts/experiments/gspc-dataset-mutation-probe.mjs --out report.json
 ```
 
 The output is deterministic and aggregate-only. The CI workflow publishes an unsigned artifact; an optional trusted master run mirrors that report to Hugging Face if a token is configured. External adoption or independent verification is NOT established by publication.
+
+Baseline reference (project-controlled, not independently authenticated): scripts/experiments/fixtures/gspc-dataset-mutation-baseline.sha256
