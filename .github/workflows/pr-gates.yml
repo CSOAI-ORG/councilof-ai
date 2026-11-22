@@ -784,6 +784,23 @@ jobs:
           node scripts/brand-gate.mjs --selftest
           node scripts/brand-gate.mjs dist/client
 
+      # 22 Nov 2026: /investors rendered a standalone "$0.06" from the live revenue
+      # response. All PR checks were green, but the deploy-only price gate stopped
+      # every production release. The PR's one-route prerender never included
+      # /investors, so scanning dist without first rendering that route was false
+      # reassurance. scripts/dashboard-shell-routes.txt now includes /investors.
+      # This uses the same existing price gate as deploy (no exemptions or relaxed
+      # rules); a missing snapshot fails rather than reporting an empty pass.
+      - name: Price gate — prerendered investor and published source assets
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          test -s dist/client/investors/index.html || {
+            echo "::error::/investors was not prerendered; refusing an empty price-gate pass"
+            exit 1
+          }
+          node scripts/price-gate.mjs --selftest
+          node scripts/price-gate.mjs dist/client
+
       # Defect #14 (attack plan F-21): deploy.yml runs facts-gate on the prerendered output,
       # but pr-gates only ran brand-gate. A PR could introduce a typed fact that passes
       # brand-gate (which checks display strings) but contradicts facts.json. Running it
