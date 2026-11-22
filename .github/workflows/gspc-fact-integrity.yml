@@ -1,0 +1,74 @@
+name: GSPC fact-table evidence integrity
+
+on:
+  pull_request:
+    paths:
+      - "scripts/measurements/build-gspc-fact-table.mjs"
+      - "scripts/measurements/gspc-fact-table.node-test.mjs"
+      - "public/interop/mill-evidence/**"
+      - "public/interop/gspc-fact-table/**"
+      - ".github/workflows/gspc-fact-integrity.yml"
+  push:
+    branches: [master]
+    paths:
+      - "scripts/measurements/build-gspc-fact-table.mjs"
+      - "scripts/measurements/gspc-fact-table.node-test.mjs"
+      - "public/interop/mill-evidence/**"
+      - "public/interop/gspc-fact-table/**"
+      - ".github/workflows/gspc-fact-integrity.yml"
+  schedule: [{cron: "23 4 * * *"}]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gspc-fact-integrity-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-source-to-fact-table:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - name: Verify negative controls and all source-to-row invariants
+        run: node --test scripts/measurements/gspc-fact-table.node-test.mjs
+      - name: Rebuild into scratch and compare published fact-table shards
+        run: node scripts/measurements/build-gspc-fact-table.mjs --check --out public/interop/gspc-fact-table
+      - name: Emit bounded unsigned coverage receipt
+        run: |
+          mkdir -p "$RUNNER_TEMP/gspc-fact-integrity"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,hashlib,os
+          p=Path("public/interop/gspc-fact-table/MANIFEST.json")
+          m=json.loads(p.read_text())
+          assert m["schema"]=="csoai.gspc-fact-table/0.1"
+          receipt={
+            "schema":"csoai.gspc-fact-integrity-receipt/1",
+            "state":"SOURCE_REPLAY_MATCHED",
+            "source_digest_sha256":m["source"]["source_digest"],
+            "cell_files":m["source"]["cell_files"],
+            "measurement_rows":m["counts"]["measurements"],
+            "rows_not_graded":m["counts"]["rows_not_graded"],
+            "rows_without_model":m["counts"]["rows_without_a_model"],
+            "axes_with_per_cell_rows":m["counts"]["axes"],
+            "model_identifiers":m["counts"]["models"],
+            "manifest_sha256":hashlib.sha256(p.read_bytes()).hexdigest(),
+            "runner_commit":os.environ["GITHUB_SHA"],
+            "scope":"Single CI runner source/row parity only; unsigned and not independently replicated",
+            "not_claimed":["GSPC axis admission","model safety","statistical leader separation","human approval"]
+          }
+          out=Path(os.environ["RUNNER_TEMP"])/"gspc-fact-integrity"/"receipt.json"
+          out.write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n")
+          print("FACT_ROWS",receipt["measurement_rows"],"SOURCE_CELLS",receipt["cell_files"])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gspc-fact-integrity-receipt
+          path: ${{ runner.temp }}/gspc-fact-integrity/receipt.json
+          if-no-files-found: error
+          retention-days: 14
