@@ -26,6 +26,7 @@ v0.2 (2026-09-26) versus v0.1:
 verify reads the record's schema and applies the matching rule.
 """
 import argparse, base64, datetime, glob, gzip, hashlib, json, os, pathlib, re, sys, urllib.request
+import provision_binding
 
 SCHEMA = "csoai.measurement-capsule/0.2"
 RECORD_SCHEMA = "csoai.measurement-capsule-batch/0.2"
@@ -198,8 +199,11 @@ def non_digest_sources(o, path="sources"):
 
 
 def make_capsule(kind, subject_id, claim, declared, observed, differential, sources, measurement_state, limitations,
-                 observed_at, correction_pointer=None, effect_reference=None, runtime_declared=None, runtime_observed=None):
-    """The one generic constructor every adapter goes through. Refuses authority fields and non-digest sources."""
+                 observed_at, correction_pointer=None, effect_reference=None, runtime_declared=None, runtime_observed=None,
+                 provisions=None):
+    """The one generic constructor every adapter goes through. Refuses authority fields and non-digest sources.
+    provisions (optional): capsule 0.3 binding rows; when given they must be pinned to the frozen manifest and the
+    capsule becomes csoai.measurement-capsule/0.3. Adapters do not pass it: write_batch binds from the map."""
     c = {"schema": SCHEMA, "kind": kind, "subject_id": subject_id, "claim": claim, "declared": declared,
          "observed": observed, "differential": differential, "sources": sources,
          "measurement_state": measurement_state, "authority_state": AUTHORITY_STATE,
@@ -218,7 +222,31 @@ def make_capsule(kind, subject_id, claim, declared, observed, differential, sour
     if not isinstance(measurement_state, str) or not measurement_state:
         raise ValueError("measurement_state must be a non-empty string")
     c["capsule_id"] = capsule_id(c)
+    if provisions is not None:
+        _, manifest = provision_binding.load()
+        if manifest is None:
+            raise ValueError("PROVISION_MANIFEST_ABSENT: a binding cannot be pinned without the frozen manifest")
+        c = bind_capsule(c, provisions, manifest)
     return c
+
+
+def bind_capsule(c, bindings, manifest):
+    """A new capsule: c with schema 0.3 and the provisions binding, capsule_id recomputed. c itself is not changed.
+    Refuses a capsule that already carries a binding and any binding that is not PINNED to the manifest."""
+    if "provisions" in c:
+        raise ValueError(f"PROVISIONS_ALREADY_BOUND {c.get('capsule_id')}")
+    b = dict(c)
+    b.pop("capsule_id", None)
+    b["schema"] = provision_binding.SCHEMA_03
+    b["provisions"] = [dict(r) for r in bindings]
+    state, problems = provision_binding.check_binding(b["provisions"], b["schema"], manifest)
+    if state != "PINNED":
+        raise ValueError(f"PROVISION_BINDING_{state} {problems[:3]}")
+    bad = authority_violations(b)
+    if bad:
+        raise ValueError(f"AUTHORITY_FIELD_REFUSED {bad[:5]}")
+    b["capsule_id"] = capsule_id(b)
+    return b
 
 
 def utcnow():
@@ -261,14 +289,22 @@ def verify_sidecar(record_path, signed_path):
             "signed_at": s["signature"].get("signed_at")}
 
 
-def write_batch(out, adapter, kind, caps, meta):
-    """capsules.jsonl.gz (deterministic gzip, sorted by capsule_id) + record.json. Holds only (id, bytes) pairs."""
+def write_batch(out, adapter, kind, caps, meta, provision_map=None):
+    """capsules.jsonl.gz (deterministic gzip, sorted by capsule_id) + record.json. Holds only (id, bytes) pairs.
+    Every capsule the committed capsule-provision map maps (by adapter, or by kind for a route mapping) is bound
+    here, so a new batch of a mapped producer carries provision ids; an unmapped adapter's capsules are unchanged.
+    provision_map: (map, manifest) to use instead of the repo's committed files (tests)."""
     out = pathlib.Path(out)
     out.mkdir(parents=True, exist_ok=True)
-    items, states = [], {}
+    pmap, manifest = provision_map if provision_map is not None else provision_binding.load()
+    bindings = provision_binding.bindings_for(adapter, kind, pmap, manifest)
+    items, states, schemas = [], {}, set()
     for c in caps:
         if c["kind"] != kind:
             raise ValueError(f"adapter {adapter} emitted kind {c['kind']} != {kind}")
+        if bindings and "provisions" not in c:
+            c = bind_capsule(c, bindings, manifest)
+        schemas.add(c["schema"])
         b = canon(c)
         why = jcs_divergence(c, b)
         if why:
@@ -277,6 +313,9 @@ def write_batch(out, adapter, kind, caps, meta):
         states[c["measurement_state"]] = states.get(c["measurement_state"], 0) + 1
     if not items:
         sys.exit(f"NO_INPUT: adapter {adapter} produced no capsules")
+    if len(schemas) != 1:
+        sys.exit(f"MIXED_CAPSULE_SCHEMAS in {adapter}: {sorted(schemas)}")
+    capsule_schema = schemas.pop()
     items.sort()
     ids = [i for i, _ in items]
     if len(set(ids)) != len(ids):
@@ -290,7 +329,7 @@ def write_batch(out, adapter, kind, caps, meta):
     os.replace(tmp, out / "capsules.jsonl.gz")
     del items
     built = utcnow()
-    rec = {"schema": RECORD_SCHEMA, "as_of": built, "capsule_schema": SCHEMA, "adapter": adapter, "kind": kind,
+    rec = {"schema": RECORD_SCHEMA, "as_of": built, "capsule_schema": capsule_schema, "adapter": adapter, "kind": kind,
            "n_capsules": len(ids), "states": dict(sorted(states.items())),
            "merkle_root": merkle_root(ids), "merkle": MERKLE_V02,
            "canonicalisation": {"rule": CANON_RULE, "jcs_byte_equal": f"{len(ids)}/{len(ids)}", "checked_with": jcs_checker_id()},
@@ -300,6 +339,12 @@ def write_batch(out, adapter, kind, caps, meta):
                              "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"},
            "authority_state": AUTHORITY_STATE}
     rec.update(meta() if callable(meta) else meta)  # callable: adapters fill their stats while being consumed
+    if capsule_schema == provision_binding.SCHEMA_03:
+        rec["provision_binding"] = {
+            "map": provision_binding.MAP_PATH, "manifest": provision_binding.MANIFEST_PATH,
+            "corpus_root": manifest["corpus_root"], "provision_ids": sorted({b["provision_id"] for b in bindings}),
+            "note": "Each capsule names these provisions of the frozen manifest. Not a finding that the capsule "
+                    "measures what a provision requires, and never a compliance determination."}
     rec["private_until"] = "owner approves publication"
     (out / "record.json").write_bytes(json.dumps(rec, indent=1, ensure_ascii=False).encode() + b"\n")
     return rec
@@ -458,6 +503,7 @@ def verify_batch(out, check_signature=True):
     else:
         raise AssertionError(f"unknown batch schema {rec['schema']}")
     ids, bad, auth_bad, jcs_bad, h, n_raw = [], [], [], [], hashlib.sha256(), 0
+    bound, unpinned, manifest = 0, [], None
     for l in iter_capsule_lines(out, rec):
         h.update(l); n_raw += len(l)
         if not l.strip():
@@ -469,10 +515,19 @@ def verify_batch(out, check_signature=True):
             bad.append(c["capsule_id"])
         if authority_violations(c):
             auth_bad.append(c["capsule_id"])
+        if "provisions" in c:
+            bound += 1
+            if manifest is None:
+                _, manifest = provision_binding.load()
+            if manifest is not None:
+                state, _ = provision_binding.check_binding(c["provisions"], c.get("schema"), manifest)
+                if state != "PINNED":
+                    unpinned.append(c["capsule_id"])
         ids.append(c["capsule_id"])
     assert not bad, f"capsule id mismatch {bad[:5]}"
     assert not auth_bad, f"authority field in capsules {auth_bad[:5]}"
     assert not jcs_bad, f"capsule bytes differ from JCS {jcs_bad[:5]}"
+    assert not unpinned, f"provision binding not pinned to the frozen manifest {unpinned[:5]}"
     if "uncompressed_sha256" in rec["capsules_file"]:
         assert h.hexdigest() == rec["capsules_file"]["uncompressed_sha256"], "uncompressed sha mismatch"
     assert len(ids) == rec["n_capsules"], "n_capsules mismatch"
@@ -483,6 +538,9 @@ def verify_batch(out, check_signature=True):
            "record_sha256": sha(raw), "no_authority_fields": True}
     if jcs:
         res["jcs_byte_equal"] = f"{len(ids)}/{len(ids)}"
+    if bound:
+        res["provisions"] = f"{bound}/{len(ids)} capsules bind a provision; " + (
+            "every binding PINNED to the frozen manifest" if manifest is not None else "UNCHECKED: frozen manifest absent")
     sf = out / "record.signed.json"
     if check_signature and sf.exists():
         s = json.loads(sf.read_text())

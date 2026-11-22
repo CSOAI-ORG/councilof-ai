@@ -39,6 +39,10 @@ describe("evidence-bundle ?provision= door", () => {
     expect(p.ladder_state).toBe("PREDICATE");
     expect(p.predicates.map((x: { id: string }) => x.id)).toEqual(["art50-marking-evidence"]);
     expect(p.bound_capsules.via_map[0].kind).toBe("csoai.art50.marking-evidence/0.1");
+    // Sidecar-bound batches are listed beside in-capsule ones, both read from coverage.json (never typed).
+    const side = (COVERAGE.capsule_adapters as { batch: string; provision_ids_bound_by_sidecar: string[] }[]).filter((x) => x.provision_ids_bound_by_sidecar.includes("32024R1689:50")).map((x) => x.batch);
+    expect(p.bound_capsules.by_sidecar.map((x: { batch: string }) => x.batch)).toEqual(side);
+    expect(b.provision.corpus.capsule_bindings).toBe(`${ORIGIN}/mechanism/capsule-provision-bindings.json`);
     // The buy link is the obligation's own resource: same SKU, same URL as ?obligation=article-50.
     expect(b.buy.resource).toBe(`${ORIGIN}/api/evidence-bundle?obligation=article-50&bundle=1`);
   });

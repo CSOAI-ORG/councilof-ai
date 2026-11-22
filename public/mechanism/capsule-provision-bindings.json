@@ -1,0 +1,231 @@
+{
+  "schema": "csoai.capsule-provision-bindings/0.1",
+  "what_this_is": "The provision bindings of published capsules, held beside their signed batches. Each row names a capsule by capsule_id inside a batch pinned by its record bytes and Merkle root, with the binding rows the backfill map gives it, each pinned to the frozen provision manifest.",
+  "what_this_is_not": "Not a re-emission of any capsule: no published capsule, batch, Merkle root or signature changes. Not a finding that a capsule measures what a provision requires, and never a compliance determination.",
+  "rule": "A capsule is bound when the backfill map maps its producer: a mapping with source adapter matches the batch adapter, a mapping with source route matches the capsule kind. Capsules that already carry the 0.3 provisions field are counted as bound in the capsule and are not repeated here. Unmapped and unclassified adapters bind nothing.",
+  "generated_from": {
+    "producer": "scripts/mechanism/backfill-capsule-provisions.mjs",
+    "map": {
+      "path": "/mechanism/capsule-provision-map.json",
+      "sha256": "1960d2d698967b6e69b9f59c9426d86f1ab2516bcc44a09560f50e07004fa0dc"
+    },
+    "manifest": {
+      "path": "/interop/frozen-provision-hashes.json",
+      "sha256": "e43c9bd52adeeda96b67a3ae63700c44f0aae3a44c74a0dac46fbed5f8008788",
+      "corpus_root": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7"
+    },
+    "capsule_root": "/measurement-capsules/v0.2"
+  },
+  "totals": {
+    "batches": 12,
+    "capsules": 11529,
+    "bound_in_capsule": 0,
+    "bound_by_sidecar": 0
+  },
+  "batches": [
+    {
+      "batch": "a2a_card",
+      "adapter": "a2a_card",
+      "kind": "measurement.a2a_card_signature",
+      "classification": "UNMAPPED",
+      "record": {
+        "path": "/measurement-capsules/v0.2/a2a_card/record.json",
+        "sha256": "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6"
+      },
+      "merkle_root": "bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441bae436",
+      "capsules_file_sha256": "ba413e8160120205d8b9ec87fec95fa9e0f3ac2e6c858d4e6e807851882cd661",
+      "n_capsules": 33,
+      "bound_in_capsule": 0,
+      "bound_by_sidecar": 0,
+      "provision_ids": [],
+      "bindings": []
+    },
+    {
+      "batch": "busabase",
+      "adapter": "busabase",
+      "kind": "measurement.busabase_state",
+      "classification": "UNMAPPED",
+      "record": {
+        "path": "/measurement-capsules/v0.2/busabase/record.json",
+        "sha256": "c9dfb7b3a7bb33bd4a6feb068b82ce362cf539d1c99b24026491d9dfba85bd22"
+      },
+      "merkle_root": "b3d273e6cb723d22274a4632482db21206955040c27737dfdd803b3ad8d64ad5",
+      "capsules_file_sha256": "d6c96556d01775a393a3f3689e82d3087543a674b00bb06854c00e3bb238651d",
+      "n_capsules": 8,
+      "bound_in_capsule": 0,
+      "bound_by_sidecar": 0,
+      "provision_ids": [],
+      "bindings": []
+    },
+    {
+      "batch": "claim_watch",
+      "adapter": "claim_watch",
+      "kind": "measurement.claim_watch",
+      "classification": "UNMAPPED",
+      "record": {
+        "path": "/measurement-capsules/v0.2/claim_watch/record.json",
+        "sha256": "e29a804a9473ff279056e7c8b0e0828f974de41585023a0d0d27ae4d7517d3b4"
+      },
+      "merkle_root": "5309370a2877655b5a8372c6e48cee47004d10ed11dfa9bd932dec8edcad6ef7",
+      "capsules_file_sha256": "9debd4942cf745d695542b15a60ab8cbd556c9a00cbfde3d99ba837ed560968e",
+      "n_capsules": 1,
+      "bound_in_capsule": 0,
+      "bound_by_sidecar": 0,
+      "provision_ids": [],
+      "bindings": []
+    },
+    {
+      "batch": "contract_parity",
+      "adapter": "contract_parity",
+      "kind": "measurement.contract_parity",
+      "classification": "UNMAPPED",
+      "record": {
+        "path": "/measurement-capsules/v0.2/contract_parity/record.json",
+        "sha256": "1b9186699b27ac5bc13c4b211f7a5f1317aee96e0c85c27668ac21b9214af357"
+      },
+      "merkle_root": "70403984d857b7b167d0010608f79c5407bc8642435eb72e7644c83918b1a788",
+      "capsules_file_sha256": "7b24218a5616d4deb2461ddca0ff97dc7eafc5f094be77ca1f772f05ac862d6d",
+      "n_capsules": 9148,
+      "bound_in_capsule": 0,
+      "bound_by_sidecar": 0,
+      "provision_ids": [],
+      "bindings": []
+    },
+    {
+      "batch": "cross_ledger",
+      "adapter": "cross_ledger",
+      "kind": "measurement.cross_ledger_supply",
+      "classification": "UNMAPPED",
+      "record": {
+        "path": "/measurement-capsules/v0.2/cross_ledger/record.json",
+        "sha256": "56175163b5a5957ca6e584229597c9a0ee655897ee7b30c736f05123e013498e"
+      },
+      "merkle_root": "1185a9245626e0240f2ed689ea736f662e7be31b1849ae91bdd4622a07f7750f",
+      "capsules_file_sha256": "91deec9721739528777368353e780eb76a9449d9a1f86721bacc706c11d286f3",
+      "n_capsules": 388,
+      "bound_in_capsule": 0,
+      "bound_by_sidecar": 0,
+      "provision_ids": [],
+      "bindings": []
+    },
+    {
+      "batch": "meok",
+      "adapter": "meok",
+      "kind": "measurement.meok_state",
+      "classification": "UNMAPPED",
+      "record": {
+        "path": "/measurement-capsules/v0.2/meok/record.json",
+        "sha256": "7440da0251bdb956497067e4f5822b8cb4c05b244c526f50a64701c38aa37421"
+      },
+      "merkle_root": "79f0afd38cae2c6bdb18ea95a77e95bfc46e336f9f439c407bb9548ac7f30124",
+      "capsules_file_sha256": "a2dec93fe7daa624edd5b904f76176d4dbcc7b108e6eeca232069916898b9de1",
+      "n_capsules": 3,
+      "bound_in_capsule": 0,
+      "bound_by_sidecar": 0,
+      "provision_ids": [],
+      "bindings": []
+    },
+    {
+      "batch": "mill_cross_runtime-5ae00c1f4c2e",
+      "adapter": "mill_cross_runtime",
+      "kind": "measurement.cross_runtime_reproduction",
+      "classification": "UNMAPPED",
+      "record": {
+        "path": "/measurement-capsules/v0.2/mill_cross_runtime-5ae00c1f4c2e/record.json",
+        "sha256": "32ece857c94062f41a03aad9e269532cdbe5dc0a576ed20110edc4ecacb0468d"
+      },
+      "merkle_root": "5ae00c1f4c2ed290fb91206f29372d0df3e61478c568d4797855502e751ebff6",
+      "capsules_file_sha256": "a8dc6d18a2835c8bead883b17c5a71257da40faf63381bce2f0f98e6ab366c8d",
+      "n_capsules": 14,
+      "bound_in_capsule": 0,
+      "bound_by_sidecar": 0,
+      "provision_ids": [],
+      "bindings": []
+    },
+    {
+      "batch": "mill_cross_runtime-78226433e9e4",
+      "adapter": "mill_cross_runtime",
+      "kind": "measurement.cross_runtime_reproduction",
+      "classification": "UNMAPPED",
+      "record": {
+        "path": "/measurement-capsules/v0.2/mill_cross_runtime-78226433e9e4/record.json",
+        "sha256": "422fa6377b274bab095e8e875f67d087a275417c14c90a4c4e4cedb56ca9a5ff"
+      },
+      "merkle_root": "78226433e9e433b311e067ee56fcbaf415f6dc57301254f3bb4922a0b8053cf6",
+      "capsules_file_sha256": "cf7d3db1cf664b99ad89593dd44109263d14b28c2026c8c53b5c65cb949673f8",
+      "n_capsules": 140,
+      "bound_in_capsule": 0,
+      "bound_by_sidecar": 0,
+      "provision_ids": [],
+      "bindings": []
+    },
+    {
+      "batch": "operations",
+      "adapter": "operations",
+      "kind": "operations",
+      "classification": "UNMAPPED",
+      "record": {
+        "path": "/measurement-capsules/v0.2/operations/record.json",
+        "sha256": "91114d37d85d2f16160bec985b4f6038504dc94fa30e954cedc74da790c83e2e"
+      },
+      "merkle_root": "4e9f8c61ee90118f8ae3f8af1039e22498603faea703e9196972fe37f9df1d48",
+      "capsules_file_sha256": "dd308c4f9981d59317141d11ec40067f54c76bd254b32a2ee42cfcceddcb4ebd",
+      "n_capsules": 1006,
+      "bound_in_capsule": 0,
+      "bound_by_sidecar": 0,
+      "provision_ids": [],
+      "bindings": []
+    },
+    {
+      "batch": "public_signals",
+      "adapter": "public_signals",
+      "kind": "measurement.public_signal",
+      "classification": "UNMAPPED",
+      "record": {
+        "path": "/measurement-capsules/v0.2/public_signals/record.json",
+        "sha256": "4d037cbbedbfa3ca7bc971d99e9deea6fb271c2a818328e1c0605a61747a4ccb"
+      },
+      "merkle_root": "6786dd40b7bc0a4dda78d90cb04f08b61446c0b31f33fcc1ffdbf5a264106dbb",
+      "capsules_file_sha256": "ea6412e92287fb61abf04f036f4ff7a9a48598e80a217dfb28bdcb337bd39e12",
+      "n_capsules": 122,
+      "bound_in_capsule": 0,
+      "bound_by_sidecar": 0,
+      "provision_ids": [],
+      "bindings": []
+    },
+    {
+      "batch": "self_parity",
+      "adapter": "self_parity",
+      "kind": "measurement.self_parity",
+      "classification": "UNMAPPED",
+      "record": {
+        "path": "/measurement-capsules/v0.2/self_parity/record.json",
+        "sha256": "c2eaa667467e929ebfa7edb2493ed53a3801f97c6bbf59423c676a3a3bb617e2"
+      },
+      "merkle_root": "9d49eccd500733a464f5ca003b3332bf8ba659e6d6c6ddfa9054d32a290ea69d",
+      "capsules_file_sha256": "eb208f4961f6cae808395b2bdbef43d4041c1417eba48f87177a0f3ac0f79bb3",
+      "n_capsules": 170,
+      "bound_in_capsule": 0,
+      "bound_by_sidecar": 0,
+      "provision_ids": [],
+      "bindings": []
+    },
+    {
+      "batch": "tool_drift",
+      "adapter": "tool_drift",
+      "kind": "measurement.tool_drift",
+      "classification": "UNMAPPED",
+      "record": {
+        "path": "/measurement-capsules/v0.2/tool_drift/record.json",
+        "sha256": "5074ec35d880d5c927cc3c07df5e968c6858ad1ac2f1702e5cefa501ee353b0b"
+      },
+      "merkle_root": "3d9b8698ead5611d1b8246f76d4b53655ae8919b7a8993acb01bdba3b98a8f7e",
+      "capsules_file_sha256": "03d3cd4d3788542fa443bf1243878fff7538f608b6517d657df8e4af53c08297",
+      "n_capsules": 496,
+      "bound_in_capsule": 0,
+      "bound_by_sidecar": 0,
+      "provision_ids": [],
+      "bindings": []
+    }
+  ]
+}

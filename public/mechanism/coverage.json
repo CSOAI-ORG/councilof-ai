@@ -2101,6 +2101,9 @@
       "n_capsules": 33,
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
+      "provision_map": "UNMAPPED",
+      "capsules_bound_by_sidecar": 0,
+      "provision_ids_bound_by_sidecar": [],
       "owasp_checks": [
         "agent-card-signature"
       ],
@@ -2118,6 +2121,9 @@
       "n_capsules": 8,
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
+      "provision_map": "UNMAPPED",
+      "capsules_bound_by_sidecar": 0,
+      "provision_ids_bound_by_sidecar": [],
       "owasp_checks": [],
       "owasp_items": [],
       "record": "/measurement-capsules/v0.2/busabase/record.json"
@@ -2130,6 +2136,9 @@
       "n_capsules": 1,
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
+      "provision_map": "UNMAPPED",
+      "capsules_bound_by_sidecar": 0,
+      "provision_ids_bound_by_sidecar": [],
       "owasp_checks": [],
       "owasp_items": [],
       "record": "/measurement-capsules/v0.2/claim_watch/record.json"
@@ -2142,6 +2151,9 @@
       "n_capsules": 9148,
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
+      "provision_map": "UNMAPPED",
+      "capsules_bound_by_sidecar": 0,
+      "provision_ids_bound_by_sidecar": [],
       "owasp_checks": [
         "contract-parity.TOOLS",
         "contract-parity.VERSION",
@@ -2167,6 +2179,9 @@
       "n_capsules": 388,
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
+      "provision_map": "UNMAPPED",
+      "capsules_bound_by_sidecar": 0,
+      "provision_ids_bound_by_sidecar": [],
       "owasp_checks": [],
       "owasp_items": [],
       "record": "/measurement-capsules/v0.2/cross_ledger/record.json"
@@ -2179,6 +2194,9 @@
       "n_capsules": 3,
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
+      "provision_map": "UNMAPPED",
+      "capsules_bound_by_sidecar": 0,
+      "provision_ids_bound_by_sidecar": [],
       "owasp_checks": [],
       "owasp_items": [],
       "record": "/measurement-capsules/v0.2/meok/record.json"
@@ -2191,6 +2209,9 @@
       "n_capsules": 14,
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
+      "provision_map": "UNMAPPED",
+      "capsules_bound_by_sidecar": 0,
+      "provision_ids_bound_by_sidecar": [],
       "owasp_checks": [],
       "owasp_items": [],
       "record": "/measurement-capsules/v0.2/mill_cross_runtime-5ae00c1f4c2e/record.json"
@@ -2203,6 +2224,9 @@
       "n_capsules": 140,
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
+      "provision_map": "UNMAPPED",
+      "capsules_bound_by_sidecar": 0,
+      "provision_ids_bound_by_sidecar": [],
       "owasp_checks": [],
       "owasp_items": [],
       "record": "/measurement-capsules/v0.2/mill_cross_runtime-78226433e9e4/record.json"
@@ -2215,6 +2239,9 @@
       "n_capsules": 1006,
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
+      "provision_map": "UNMAPPED",
+      "capsules_bound_by_sidecar": 0,
+      "provision_ids_bound_by_sidecar": [],
       "owasp_checks": [],
       "owasp_items": [],
       "record": "/measurement-capsules/v0.2/operations/record.json"
@@ -2227,6 +2254,9 @@
       "n_capsules": 122,
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
+      "provision_map": "UNMAPPED",
+      "capsules_bound_by_sidecar": 0,
+      "provision_ids_bound_by_sidecar": [],
       "owasp_checks": [],
       "owasp_items": [],
       "record": "/measurement-capsules/v0.2/public_signals/record.json"
@@ -2239,6 +2269,9 @@
       "n_capsules": 170,
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
+      "provision_map": "UNMAPPED",
+      "capsules_bound_by_sidecar": 0,
+      "provision_ids_bound_by_sidecar": [],
       "owasp_checks": [],
       "owasp_items": [],
       "record": "/measurement-capsules/v0.2/self_parity/record.json"
@@ -2251,6 +2284,9 @@
       "n_capsules": 496,
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
+      "provision_map": "UNMAPPED",
+      "capsules_bound_by_sidecar": 0,
+      "provision_ids_bound_by_sidecar": [],
       "owasp_checks": [
         "tool-drift"
       ],
@@ -2262,6 +2298,28 @@
       "record": "/measurement-capsules/v0.2/tool_drift/record.json"
     }
   ],
+  "capsule_binding": {
+    "state": "NO_CAPSULE_BOUND",
+    "CAPSULE_BOUND": 0,
+    "capsules": 11529,
+    "bound_in_capsule": 0,
+    "bound_by_sidecar": 0,
+    "provision_ids_bound": [],
+    "capsules_by_map_classification": {
+      "UNMAPPED": 11529
+    },
+    "derived_from": "bound_in_capsule counts published capsules that carry the 0.3 provisions field, each checked as pinned to the frozen manifest; bound_by_sidecar counts the rows of the sidecar, which this producer re-derives from the same batches and the backfill map and requires byte-for-byte. CAPSULE_BOUND is their sum.",
+    "sidecar": {
+      "path": "/mechanism/capsule-provision-bindings.json",
+      "sha256": "3d8a57106853bf7df46d18b3c2062cd53be342e80340abef3918d904e78f249b",
+      "producer": "scripts/mechanism/backfill-capsule-provisions.mjs"
+    },
+    "map": {
+      "path": "/mechanism/capsule-provision-map.json",
+      "sha256": "1960d2d698967b6e69b9f59c9426d86f1ab2516bcc44a09560f50e07004fa0dc"
+    },
+    "note": "A bound capsule names a provision of the frozen manifest. It is not a finding that the capsule measures what the provision requires, and never a compliance determination."
+  },
   "routes_today": [
     {
       "id": "verify-server",

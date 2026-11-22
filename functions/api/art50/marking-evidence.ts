@@ -51,10 +51,18 @@ import { ART50_SOURCES, ART50_DATES, art50LawBlock, art50TextSha256 } from "../.
 import { invoiceHandoff, INVOICE_CONTACT } from "../_invoice_handoff";
 import { ART50_MARKING_EVIDENCE_DESCRIPTION } from "../_x402_descriptions";
 import { ART50_SCOPE, ART50_SCOPE_SIGNED } from "../../_lib/art50Scope";
+import { mapBindingsFor, BINDING_NOTE } from "../../_lib/provisionBinding";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
 export const KIND = "csoai.art50.marking-evidence/0.1";
+/**
+ * The frozen provision this check is the predicate of, from the committed capsule-provision map (never typed
+ * here). It rides beside the measurement and the signed leaf, never inside the signed bytes, so the leaf, its
+ * size cap and its signature are unchanged.
+ */
+export const PROVISIONS = mapBindingsFor(null, KIND);
+const provisionsBlock = { provisions: PROVISIONS, provisions_note: BINDING_NOTE };
 export const SURFACE = "art50.marking-evidence";
 const SKU = "art50_marking_evidence";
 const MAX_BYTES = 20 * 1024 * 1024;
@@ -428,6 +436,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       fetched_at,
       scope: ART50_SCOPE,
       measurement: m,
+      ...provisionsBlock,
       law,
       how_to_commission: {
         x402: `${resourceUrl} (same request without preview=1 — the 402 carries the price)`,
@@ -602,6 +611,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       mode: payment.mode,
       scope: ART50_SCOPE,
       card,
+      ...provisionsBlock,
       law,
       detail: m.detail,
       ...(fitted.level > 0
