@@ -1,0 +1,32 @@
+--- a/csoai/public-surface-watch/README.md (live)
++++ b/csoai/public-surface-watch/README.md (proposed)
+@@ -7,7 +7,7 @@
+ app_file: app.py
+ pinned: false
+ license: mit
+-on:
++"on":
+   schedule:
+     - cron: "7 */6 * * *"
+       command: "python /app/app.py"
+@@ -46,3 +46,20 @@
+ `cold_start_survey.py` is the estate's own script, mirrored from
+ `CSOAI-ORG/councilof-ai` → `tools/sites/cold_start_survey.py`. One source of truth; this Space
+ runs it, it does not re-implement it.
++
++<!-- csoai-card-fixes:start -->
++
++## Citation
++
++```bibtex
++@misc{csoai_public_surface_watch_2026,
++  title        = {CSOAI public-surface watcher},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/spaces/csoai/public-surface-watch}},
++  url          = {https://huggingface.co/spaces/csoai/public-surface-watch}
++}
++```
++
++<!-- csoai-card-fixes:end -->

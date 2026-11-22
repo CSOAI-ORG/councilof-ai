@@ -1,0 +1,60 @@
+--- a/csoai/eu-ecosystem-measurements/README.md (live)
++++ b/csoai/eu-ecosystem-measurements/README.md (proposed)
+@@ -1,8 +1,31 @@
+ ---
+ license: cc-by-4.0
+ pretty_name: EU ecosystem measurements (aggregate, signed)
+-tags: [measurement, data-spaces, gaia-x, pontus-x, endpoints]
+-viewer: false
++tags:
++- measurement
++- data-spaces
++- gaia-x
++- pontus-x
++- endpoints
++- council-of-ai
++size_categories:
++- n<1K
++configs:
++- config_name: ots-upgraded-ots-upgrade
++  data_files:
++  - split: train
++    path: ots-upgraded/*/OTS-UPGRADE.json
++  default: true
++- config_name: pontus-x-summary
++  data_files:
++  - split: train
++    path: pontus-x/*/summary.json
++- config_name: pontus-x-summary-signed
++  data_files:
++  - split: train
++    path: pontus-x/*/summary.signed.json
++language:
++- en
+ ---
+ 
+ <p align="center">
+@@ -151,3 +174,23 @@
+ 
+ For reproducible reuse, pass the repository commit SHA as `revision` and retain the downloaded bytes. Loading a file does not verify its signature; follow this card's verification instructions before relying on a claim. Dated snapshots remain historical measurements.
+ <!-- DATA-ACCESS:END -->
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table. The viewer was previously disabled (`viewer: false`); it is re-enabled now that every subset loads.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `ots-upgraded-ots-upgrade` (default) | `ots-upgraded/*/OTS-UPGRADE.json` | 1 |
++| `pontus-x-summary` | `pontus-x/*/summary.json` | 1 |
++| `pontus-x-summary-signed` | `pontus-x/*/summary.signed.json` | 1 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/eu-ecosystem-measurements", "ots-upgraded-ots-upgrade", split="train")
++```
++
++<!-- csoai-card-fixes:end -->

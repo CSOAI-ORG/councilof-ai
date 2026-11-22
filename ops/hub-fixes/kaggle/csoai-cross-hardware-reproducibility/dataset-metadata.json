@@ -1,0 +1,724 @@
+{
+  "title": "GSPC · Cross-Hardware Repro — Council of AI",
+  "id": "nicktempleman/csoai-cross-hardware-reproducibility",
+  "id_no": 12264082,
+  "subtitle": "Measurement of LLM eval reproducibility across hardware. Not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-cross-hardware-reproducibility`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-cross-hardware-reproducibility -p ./dataset --unzip\n```\n\nStart by inspecting `data/cards.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `verify.py`\n- `manifest.jsonl`\n- `paper/paper.pdf`\n- `data/cards.jsonl`\n- `data/items.jsonl`\n- `paper/numbers.json`\n- `data/runtimes.jsonl`\n- See the Data tab for all 174 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement of LLM eval reproducibility across hardware. Not a certification.**\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/cross-hardware-reproducibility at revision `21b97a09b3aa313eff8eea3030afd9e59d7f710a`, made 2026-10-15. The Hugging Face copy is the original; if the two differ, it wins.\n\n# Cross-hardware reproducibility of LLM evaluation results (item level)\n\n> **Start here — free verify:**\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 3, last updated 2026-10-16.\n- 174 files, 27,236,438 bytes. File types: .json (159), .jsonl (7), .py (4), .ots (2), .md (1), .pdf (1).\n- Hugging Face twin: [csoai/cross-hardware-reproducibility](https://huggingface.co/datasets/csoai/cross-hardware-reproducibility). 171 of 174 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{templeman2026crosshardware,\n  title  = {Same model, same prompts, different answers: item-level cross-hardware reproducibility of LLM evaluation results},\n  author = {Templeman, Nicholas},\n  year   = {2026},\n  note   = {CSOAI Ltd (Council of AI). Preprint and data: https://huggingface.co/datasets/csoai/cross-hardware-reproducibility}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "cyber security",
+    "nlp"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 171 of 174 files have the same byte size as files in the Hugging Face dataset [csoai/cross-hardware-reproducibility](https://huggingface.co/datasets/csoai/cross-hardware-reproducibility) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 12,468 bytes."
+    },
+    {
+      "path": "capsules/batch1/capsules.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 42,857 bytes."
+    },
+    {
+      "path": "capsules/batch1/record.json",
+      "description": "JSON document. top-level keys: schema, as_of, capsule_schema, adapter, kind, n_capsules, states, merkle_root, merkle, canonicalisation, capsules_file, authority_state, what_this_is, what_this_is_not, source, private_until. Same byte size as `capsules/batch1/record.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 3,613 bytes."
+    },
+    {
+      "path": "capsules/batch1/record.json.ots",
+      "description": "OpenTimestamps proof file for `capsules/batch1/record.json` (included in this dataset). Same byte size as `capsules/batch1/record.json.ots` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 1,777 bytes."
+    },
+    {
+      "path": "capsules/batch1/record.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `capsules/batch1/record.signed.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 1,616 bytes."
+    },
+    {
+      "path": "capsules/batch2/capsules.jsonl",
+      "description": "Newline-delimited JSON (one record per line). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 454,008 bytes."
+    },
+    {
+      "path": "capsules/batch2/record.json",
+      "description": "JSON document. top-level keys: schema, as_of, capsule_schema, adapter, kind, n_capsules, states, merkle_root, merkle, canonicalisation, capsules_file, authority_state, what_this_is, what_this_is_not, source, private_until. Same byte size as `capsules/batch2/record.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 19,318 bytes."
+    },
+    {
+      "path": "capsules/batch2/record.json.ots",
+      "description": "OpenTimestamps proof file for `capsules/batch2/record.json` (included in this dataset). Same byte size as `capsules/batch2/record.json.ots` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 1,672 bytes."
+    },
+    {
+      "path": "capsules/batch2/record.signed.json",
+      "description": "Signed record (JSON envelope). top-level keys: schema, payload, signature, local_verification. Same byte size as `capsules/batch2/record.signed.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 1,637 bytes."
+    },
+    {
+      "path": "code/figures/from_dataset.py",
+      "description": "Python source file. Same byte size as `code/figures/from_dataset.py` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 3,153 bytes."
+    },
+    {
+      "path": "code/figures/make_figures.py",
+      "description": "Python source file. Same byte size as `code/figures/make_figures.py` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 22,844 bytes."
+    },
+    {
+      "path": "code/figures/xhw.py",
+      "description": "Python source file. Same byte size as `code/figures/xhw.py` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 8,669 bytes."
+    },
+    {
+      "path": "data/cards.jsonl",
+      "description": "one row per card: counts on each run, agreement counts, flip/swap item ids, admission outcome under the counts-only and item-level rules. Newline-delimited JSON (one record per line). 154 rows; fields: batch (string), card_id (string), card_file (string), model (string), model_digest (string), axis (string), bank_sha256 (string), instrument_sha256 (string), declaration_file (string), declaration_sha256 (string), run_id_rtx3090 (string), run_id_t4_run1 (string), run_id_t4_run2 (string), counts_rtx3090 (string), counts_t4_run1 (string), counts_t4_run2 (string), n_items (integer), raw_equal (integer), label_equal (integer), grade_equal (integer), status_equal (integer), flips_up (integer), flips_down (integer), swaps (integer), totals_equal (boolean), … (+8 more). Same byte size as `data/cards.jsonl` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 24…"
+    },
+    {
+      "path": "data/items.jsonl",
+      "description": "one row per (card, item). Columns prefixed `rtx3090_`, `t4_run1_`, `t4_run2_` (run2 is null for 4 `gemma3:12b` cards the budget guard skipped). `xhw_*` compare 3090 vs T4 run 1; `repeat_*` compare T4 run 2 vs run 1. `expected` is the bank's reference answer. Newline-delimited JSON (one record per line). 9757 rows; fields: batch (string), card_id (string), model (string), model_digest (string), axis (string), bank_sha256 (string), instrument_sha256 (string), item_id (string), sequence (integer), prompt_sha256 (string), predicate (string), expected (string), rtx3090_run_id (string), rtx3090_raw_output (string), rtx3090_raw_output_sha256 (string), rtx3090_parsed_label (string), rtx3090_grade (boolean), rtx3090_status (string), rtx3090_done_reason (string), t4_run1_run_id (string), t4_run1_raw_output (string), t4_run1_raw_output_sha256 (string), t4_run1_parsed_label (string), t4_run1_grad…"
+    },
+    {
+      "path": "data/runtimes.jsonl",
+      "description": "one row per run: declared runtime. Fields not recorded at run time are the string `UNRECORDED`, never inferred. Newline-delimited JSON (one record per line). 458 rows; fields: card_id (string), run (string), run_id (string), substrate (string), gpu (string), driver (string), ollama (string), flash_attention (string), docker_image (string), bundle_sha256 (string), code_commit (string), decode (string). Same byte size as `data/runtimes.jsonl` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 347,946 bytes."
+    },
+    {
+      "path": "data/withheld.jsonl",
+      "description": "raw outputs withheld from this public copy (hash kept), with the reason; empty if none. Newline-delimited JSON (one record per line). Same byte size as `data/withheld.jsonl` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 0 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-affect.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 41 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-affect.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,682 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-art5-safeguard.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-art5-safeguard.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,615 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-care.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 199 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-care.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 71,942 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-conformance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 35 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-conformance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,725 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-continuity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-continuity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,399 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-cross-reality.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-cross-reality.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,189 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-detector-interop.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-detector-interop.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,199 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--affect.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 41 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--affect.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,281 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--art5-safeguard.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--art5-safeguard.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,591 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--care.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 199 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--care.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 71,988 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--conformance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 35 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--conformance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,233 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--continuity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--continuity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,838 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--cross-reality.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--cross-reality.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,224 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--detector-interop.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--detector-interop.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,634 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--governance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 237 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--governance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 82,896 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--jail.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 71 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--jail.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 26,131 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--machinery-conformity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--machinery-conformity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,548 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--openness.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--openness.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,296 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--provenance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--provenance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,261 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--safety.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--safety.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,934 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-12b--swarm.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 37 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-12b--swarm.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 33,239 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--affect.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 41 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--affect.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 18,635 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--art5-safeguard.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--art5-safeguard.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 16,582 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--care.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 199 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--care.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 87,172 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--conformance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 35 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--conformance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,723 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--continuity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--continuity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 18,878 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--cross-reality.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--cross-reality.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,701 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--detector-interop.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--detector-interop.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 16,639 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--governance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 237 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--governance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 101,600 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--jail.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 71 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--jail.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 31,795 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--machinery-conformity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--machinery-conformity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,549 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--openness.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--openness.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,220 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--provenance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--provenance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,752 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--safety.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--safety.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 18,303 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-gemma3-4b--swarm.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 37 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-gemma3-4b--swarm.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 33,185 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-governance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 237 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-governance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 81,248 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-jail.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 71 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-jail.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 26,576 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--affect.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 41 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--affect.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 21,266 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--art5-safeguard.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--art5-safeguard.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 16,542 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--care.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 199 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--care.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 92,460 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--conformance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 35 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--conformance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,723 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--continuity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--continuity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,224 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--cross-reality.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--cross-reality.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,690 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--detector-interop.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--detector-interop.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,557 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--governance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 237 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--governance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 84,437 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--jail.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 71 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--jail.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 27,056 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--machinery-conformity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--machinery-conformity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 16,228 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--openness.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--openness.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,301 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--provenance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--provenance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,504 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--safety.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--safety.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 21,537 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.1-8b--swarm.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 37 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.1-8b--swarm.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 30,695 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--affect.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 41 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--affect.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 19,476 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--art5-safeguard.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--art5-safeguard.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,031 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--care.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 199 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--care.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 82,413 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--conformance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 35 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--conformance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,239 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--continuity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--continuity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,261 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--cross-reality.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--cross-reality.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,192 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--detector-interop.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--detector-interop.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,174 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--governance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 237 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--governance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 84,139 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--jail.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 71 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--jail.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 26,096 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--machinery-conformity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--machinery-conformity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 18,113 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--openness.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--openness.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,729 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--provenance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--provenance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,936 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--safety.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--safety.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 23,409 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-llama3.2-3b--swarm.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 37 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-llama3.2-3b--swarm.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 31,635 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-machinery-conformity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-machinery-conformity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,524 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--affect.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 41 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--affect.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 26,413 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--art5-safeguard.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--art5-safeguard.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 16,914 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--care.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 199 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--care.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 112,339 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--conformance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 35 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--conformance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 16,598 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--continuity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--continuity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 18,782 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--cross-reality.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--cross-reality.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,590 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--detector-interop.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--detector-interop.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,750 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--governance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 237 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--governance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 95,185 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--jail.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 71 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--jail.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 27,431 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--machinery-conformity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--machinery-conformity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,693 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--openness.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--openness.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,012 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--provenance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--provenance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 16,083 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--safety.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--safety.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 23,415 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-mistral-7b--swarm.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 37 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-mistral-7b--swarm.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 31,643 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-openness.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-openness.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,314 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--affect.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 41 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--affect.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 20,025 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--art5-safeguard.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--art5-safeguard.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 19,340 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--care.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 199 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--care.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 114,021 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--conformance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 35 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--conformance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 23,626 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--continuity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--continuity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,287 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--cross-reality.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--cross-reality.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 24,978 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--detector-interop.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--detector-interop.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 18,403 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--governance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 237 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--governance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 185,531 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--jail.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 71 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--jail.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 27,470 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--machinery-conformity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--machinery-conformity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,280 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--openness.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--openness.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,766 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--provenance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--provenance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,655 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--safety.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--safety.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 20,586 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-phi3.5-3.8b--swarm.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 37 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-phi3.5-3.8b--swarm.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 33,142 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-provenance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-provenance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,273 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--affect.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 41 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--affect.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 19,147 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--art5-safeguard.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--art5-safeguard.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,612 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--care.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 199 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--care.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 70,032 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--conformance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 35 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--conformance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,249 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--continuity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--continuity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,803 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--cross-reality.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--cross-reality.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,249 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--detector-interop.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--detector-interop.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,645 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--governance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 237 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--governance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 85,183 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--jail.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 71 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--jail.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 26,122 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--machinery-conformity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--machinery-conformity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,971 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--openness.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--openness.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,299 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--provenance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--provenance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,301 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--safety.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--safety.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 18,269 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-0.5b-instruct--swarm.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 37 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-0.5b-instruct--swarm.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 33,072 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--affect.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 41 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--affect.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,237 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--art5-safeguard.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--art5-safeguard.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 16,124 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--care.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 199 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--care.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 100,258 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--conformance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 35 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--conformance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 16,207 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--continuity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--continuity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 16,221 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--cross-reality.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--cross-reality.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,175 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--detector-interop.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--detector-interop.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,635 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--governance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 237 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--governance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 81,246 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--jail.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 71 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--jail.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 26,113 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--machinery-conformity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--machinery-conformity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,917 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--openness.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--openness.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,272 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--provenance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--provenance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,749 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--safety.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--safety.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,859 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-1.5b--swarm.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 37 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-1.5b--swarm.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 32,580 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--affect.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 41 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--affect.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,642 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--art5-safeguard.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--art5-safeguard.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 16,574 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--care.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 199 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--care.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 76,717 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--conformance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 35 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--conformance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,233 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--continuity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--continuity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,793 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--cross-reality.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--cross-reality.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,697 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--detector-interop.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--detector-interop.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,556 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--governance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 237 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--governance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 87,015 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--jail.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 71 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--jail.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 26,099 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--machinery-conformity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--machinery-conformity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,714 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--openness.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--openness.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,783 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--provenance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--provenance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,257 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--safety.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--safety.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,471 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen2.5-7b--swarm.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 37 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen2.5-7b--swarm.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 32,567 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--affect.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 41 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--affect.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 19,156 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--art5-safeguard.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--art5-safeguard.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 16,087 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--care.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 199 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--care.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 69,542 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--conformance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 35 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--conformance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,225 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--continuity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--continuity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,840 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--cross-reality.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--cross-reality.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,215 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--detector-interop.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--detector-interop.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,694 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--governance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 237 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--governance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 84,447 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--jail.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 71 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--jail.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 26,077 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--machinery-conformity.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 33 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--machinery-conformity.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,117 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--openness.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--openness.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,754 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--provenance.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 32 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--provenance.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 14,255 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--safety.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--safety.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 15,454 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-qwen3-8b--swarm.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 37 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-qwen3-8b--swarm.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 33,056 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-safety.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 36 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-safety.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 17,361 bytes."
+    },
+    {
+      "path": "declarations/runtime-declaration-swarm.json",
+      "description": "JSON document. top-level keys: accuracy, axis, baseline_runtime, card_file, card_id, counts, instrument_sha256, intake_bundle_sha256, intake_state, items_sha256, n, parity, per_item_results, per_item_results_sha256, run_id, runtime, schema, status, subject. `per_item_results` holds 37 records with fields: done_reason (string), grade (boolean), item_id (string), parsed_label (string), prompt_sha256 (string), raw_output_sha256 (string), sequence (integer). Same byte size as `declarations/runtime-declaration-swarm.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 33,054 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "path, bytes and SHA-256 of every other file. Newline-delimited JSON (one record per line). 174 rows; fields: path (string), bytes (integer), sha256 (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 28,307 bytes."
+    },
+    {
+      "path": "paper/numbers.json",
+      "description": "every number in the paper, as generated by `make_figures.py`. JSON document. top-level keys: all_admit_count, all_admit_item, all_admit_item_n30, all_agg_only, all_axes, all_cards, all_flip_rate_ci, all_flip_rate_pct, all_flips, all_flips_down, all_flips_up, all_grade_eq, all_grade_eq_pct, all_itemwise, all_itemwise_not_agg, all_label_eq, all_label_eq_pct, all_models, all_n, all_n30 …. Same byte size as `paper/numbers.json` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 2,711 bytes."
+    },
+    {
+      "path": "paper/paper.pdf",
+      "description": "the preprint. PDF document. Same byte size as `paper/paper.pdf` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 337,808 bytes."
+    },
+    {
+      "path": "verify.py",
+      "description": "offline verifier (below). Python source file. Same byte size as `verify.py` in huggingface.co/datasets/csoai/cross-hardware-reproducibility (checked 2026-11-20). 8,263 bytes."
+    }
+  ]
+}

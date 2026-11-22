@@ -1228,6 +1228,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "A2a Jcs20260927"
  },
  {
+  "path": "/investors",
+  "comp": "Investors",
+  "title": "Investors"
+ },
+ {
   "path": "/iso-42001",
   "comp": "ISO42001Guide",
   "title": "ISO42001 Guide"

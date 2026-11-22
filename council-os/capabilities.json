@@ -3846,6 +3846,33 @@
       "source": "functions/api/include.ts"
     },
     {
+      "id": "api-institutions",
+      "kind": "http",
+      "path": "/api/institutions",
+      "method": "GET",
+      "name": "Institutions register",
+      "description": "GET /api/institutions — the dated institutions register, derived in-process from the committed artifact public/interop/institutions-register.json (schema csoai.institutions-register/0.1). Totals count the register's own rows by kind, labelled catalogued; rows are observations, never a count of customers.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.institutions/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/institutions",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/institutions.ts"
+    },
+    {
       "id": "api-interop-bulk",
       "kind": "http",
       "path": "/api/interop-bulk",
