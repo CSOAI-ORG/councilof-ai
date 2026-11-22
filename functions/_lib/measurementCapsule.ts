@@ -22,6 +22,8 @@
  */
 import { PINNED_ANCHORS, hexToBytes, bytesToHex, jsCanonical } from "./cardVerify";
 
+import { checkProvisionBinding } from "./provisionBinding";
+
 export const DOCTRINE = "measurement, not endorsement";
 export const DATA_ROOT = "/measurement-capsules";
 export const LATEST_PATH = `${DATA_ROOT}/latest.json`;
@@ -491,7 +493,17 @@ export async function verifyCapsule(origin: string, input: unknown): Promise<Jso
     state: claimedId === null ? "ABSENT" : claimedId === recomputed ? "RECOMPUTES" : "DOES_NOT_RECOMPUTE",
     input_form: read.exact ? "json_text (number lexemes kept byte-exact)" : "object (re-serialised by JavaScript; pass the JSON text for byte-exact v0.1 floats)",
   };
-  const base = { doctrine: DOCTRINE, schema: typeof schema === "string" ? schema : null, kind: typeof kind === "string" ? kind : null, capsule_id: id };
+  // The optional 0.3 provisions binding: reported beside the inclusion answer, never folded into it. Absent
+  // field, absent key, so a 0.2 answer is unchanged.
+  const provLex = lexGet(lex, "provisions");
+  const provisions = provLex === undefined ? null : checkProvisionBinding(JSON.parse(canonicalLex(provLex)), schema);
+  const base = {
+    doctrine: DOCTRINE,
+    schema: typeof schema === "string" ? schema : null,
+    kind: typeof kind === "string" ? kind : null,
+    capsule_id: id,
+    ...(provisions ? { provisions } : {}),
+  };
   if (!v) return { ...base, state: "UNCHECKABLE", reason: `unknown capsule schema ${String(typeof schema === "string" ? schema : "(none)")}` };
   if (id.state === "DOES_NOT_RECOMPUTE")
     return { ...base, state: "ID_MISMATCH", reason: "the capsule's bytes do not hash to the capsule_id it carries; inclusion was not checked" };
