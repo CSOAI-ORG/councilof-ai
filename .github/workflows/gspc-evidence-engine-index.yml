@@ -88,7 +88,15 @@ jobs:
         run: |
           set -euo pipefail
           BASE="$RUNNER_TEMP/gspc-engine"
-          node scripts/measurements/gspc-evidence-engine-index.mjs             --coverage "$BASE/coverage/coverage.json"             --repeat "$BASE/repeat/report.json"             --mutation "$BASE/mutation/report.json"             --run-metadata "$BASE/runs.json"             --out "$BASE/engine-index.json"
+          node scripts/measurements/gspc-evidence-engine-index.mjs \
+            --coverage "$BASE/coverage/coverage.json" \
+            --repeat "$BASE/repeat/report.json" \
+            --mutation "$BASE/mutation/report.json" \
+            --run-metadata "$BASE/runs.json" \
+            --current-manifest public/interop/gspc-fact-table/MANIFEST.json \
+            --current-evidence public/interop/mill-evidence \
+            --synthetic-reference scripts/experiments/fixtures/gspc-dataset-mutation-baseline.sha256 \
+            --out "$BASE/engine-index.json"
           cp scripts/measurements/GSPC_ENGINE_HF_README.md "$BASE/README.md"
           python3 - <<'PY'
           import os,json
@@ -96,6 +104,7 @@ jobs:
           d=json.loads((Path(os.environ["RUNNER_TEMP"])/"gspc-engine"/"engine-index.json").read_text())
           assert d["state"]=="SOURCE_RECONCILED_RESEARCH_INDEX_NOT_SIGNED_OR_ADMITTED"
           assert d["separate_synthetic_research"]["model_poisoning_effect"]=="NOT_TESTED"
+          assert d["checkout_validation"]["state"]=="SOURCE_BYTES_MATCH_CURRENT_CHECKOUT_UNWITNESSED"
           assert d["measurements"]["per_item_observation_rows"]>=d["measurements"]["distinct_attributed_model_axis_item_keys"]
           print("SOURCE_CONSISTENT_ENGINE_INDEX",d["measurements"]["board_axes"],d["measurements"]["per_item_observation_rows"])
           PY
