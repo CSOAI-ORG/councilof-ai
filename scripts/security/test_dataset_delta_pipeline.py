@@ -126,5 +126,30 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(json.loads(err.getvalue())["state"], "UNCHECKABLE")
 
 
+    def test_symlink_input_refused_without_reading_target(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            original = root / "data.jsonl"
+            original.write_bytes(as_jsonl(records(3)))
+            link = root / "linked.jsonl"
+            link.symlink_to(original)
+            with self.assertRaisesRegex(G.Uncheckable, "MISSING_SYMLINK_OR_UNREADABLE_FILE"):
+                G.load_file(link)
+
+    def test_nonregular_input_refused(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with self.assertRaisesRegex(G.Uncheckable, "MISSING_OR_NONREGULAR_FILE"):
+                G.load_file(root)
+
+    def test_too_large_input_refused_without_reading_all_bytes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            p = Path(directory) / "huge.jsonl"
+            with p.open("wb") as f:
+                f.write(b"x" * (G.MAX_BYTES + 1))
+            with self.assertRaisesRegex(G.Uncheckable, "FILE_EXCEEDS_2MB_BOUND"):
+                G.load_file(p)
+
+
 if __name__ == "__main__":
     unittest.main()
