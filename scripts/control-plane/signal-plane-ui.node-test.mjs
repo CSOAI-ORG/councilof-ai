@@ -1,0 +1,76 @@
+// SPDX-License-Identifier: MIT
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { runInNewContext } from "node:vm";
+
+const clientSource = readFileSync(new URL("../../public/interop/living-signal-plane.js", import.meta.url), "utf8");
+const graph = JSON.parse(readFileSync(new URL("../../public/interop/governance-dependency-projection.json", import.meta.url)));
+const dates = JSON.parse(readFileSync(new URL("../../public/interop/regulatory-window-research-20261122.json", import.meta.url)));
+const fixtures = {
+  "/api/gspc": { totals: { axes: 34, measured_axes: 34, public_count: "34 axes · 34 measured", separation_public_count: "0 of 14 model-comparison axes separated a leader" } },
+  "/interop/regulatory-inventory-latest.json": { schema: "csoai.regulatory-inventory-pointer/1", versioned_at: "2026-10-26T03:37:48.681Z", crosswalk_assets: 26 },
+  "/working-groups/catalog.json": { documents: [{ status: "draft" }, { status: "draft" }], asOf: "2026-10-30" },
+  "/interop/governance-dependency-projection.json": graph,
+  "/interop/regulatory-window-research-20261122.json": dates,
+};
+function domNode() {
+  return { textContent: "", children: [], className: "", listeners: {},
+    appendChild(child) { this.children.push(child); return child; },
+    replaceChildren() { this.children = []; },
+    addEventListener(name,fn) { this.listeners[name] = fn; },
+  };
+}
+async function render(overrides = {}) {
+  const elements = new Map();
+  const listeners = new Map();
+  const requests = [];
+  const document = {
+    getElementById(id) {
+      if (!elements.has(id)) elements.set(id, domNode());
+      return elements.get(id);
+    },
+    createElement() { return domNode(); },
+    addEventListener(name, fn) { listeners.set(name, fn); },
+  };
+  const fetch = async (path) => {
+    if (!path.startsWith("/")) throw new Error("unexpected network destination");
+    requests.push(path);
+    const value = Object.hasOwn(overrides, path) ? overrides[path] : fixtures[path];
+    return {
+      ok: value !== null && value !== undefined,
+      status: value === null || value === undefined ? 503 : 200,
+      async json() { return value; },
+    };
+  };
+  runInNewContext(clientSource, { document, fetch, Date, Promise }, { timeout: 1000 });
+  assert.equal(typeof listeners.get("DOMContentLoaded"), "function");
+  listeners.get("DOMContentLoaded")();
+  await new Promise(resolve => setImmediate(resolve));
+  return { elements, requests, get:(id) => elements.get(id)?.textContent ?? "" };
+}
+test("Signal Desk renders source-bound ontology and dated measurement state", async () => {
+  const r = await render();
+  assert.equal(r.get("graph"), graph.counts.total_nodes + " nodes · " + graph.counts.total_edges + " links");
+  assert.match(r.get("graph-note"), /candidate mappings/i);
+  assert.equal(r.get("gspc"), "34 axes · 34 measured");
+  assert.equal(r.get("groups"), "2 draft proposals");
+  assert.equal(r.elements.get("windows").children.length, dates.windows.length);
+  assert(r.requests.includes("/interop/governance-dependency-projection.json"));
+});
+test("wrong graph count and forged human authority fail closed", async () => {
+  const fake = structuredClone(graph);
+  fake.controls.human_authority_conferred = true;
+  const r = await render({ "/interop/governance-dependency-projection.json": fake });
+  assert.equal(r.get("graph"), "UNVERIFIED");
+  assert.match(r.get("graph-note"), /cannot be verified/);
+  const tampered = structuredClone(graph);
+  tampered.counts.total_edges += 1;
+  const r2 = await render({ "/interop/governance-dependency-projection.json": tampered });
+  assert.equal(r2.get("graph"), "UNVERIFIED");
+});
+test("reader failure stays UNVERIFIED without claiming origin outage", async () => {
+  const r = await render({ "/interop/governance-dependency-projection.json": null });
+  assert.equal(r.get("graph"), "UNVERIFIED");
+  assert.equal(r.get("gspc"), "34 axes · 34 measured");
+});

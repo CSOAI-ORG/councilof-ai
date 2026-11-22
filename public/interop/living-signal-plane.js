@@ -36,6 +36,14 @@
         text("groups-note","Catalog as of "+(wg.asOf||"unspecified")+"; none of these records establishes human acceptance or external authority.");
       },()=>{text("groups","UNVERIFIED");text("groups-note","Catalogue could not be read, not evidence that groups are closed.");}),
       checked(async () => {
+        const graph=await read("/interop/governance-dependency-projection.json");
+        if(graph?.schema!=="csoai.governance-dependency-projection/0.1" || !Array.isArray(graph.nodes) || !Array.isArray(graph.edges) ||
+           graph.counts?.total_nodes!==graph.nodes.length || graph.counts?.total_edges!==graph.edges.length ||
+           graph.controls?.human_authority_conferred!==false) throw Error("graph contract");
+        text("graph",graph.counts.total_nodes+" nodes · "+graph.counts.total_edges+" links");
+        text("graph-note",graph.counts.working_groups+" Council group references · "+graph.counts.gspc_axis_references+" GSPC axis references · "+graph.counts.external_source_references+" external source references. All candidate mappings; no delegated authority.");
+      },()=>{text("graph","UNVERIFIED");text("graph-note","Dependency projection cannot be verified from this client.");}),
+      checked(async () => {
         const doc=await read("/interop/regulatory-window-research-20261122.json");
         if(doc?.schema!=="csoai.regulatory-window-research/0.1" || !Array.isArray(doc.windows)) throw Error("schema");
         const list=q("windows");list.replaceChildren();
