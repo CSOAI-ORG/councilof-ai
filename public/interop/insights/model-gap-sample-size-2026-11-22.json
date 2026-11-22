@@ -1,0 +1,161 @@
+{
+  "schema": "csoai.insight.separation-sample-size/0.1",
+  "source": "https://councilof.ai/api/gspc",
+  "board_run_dates": "behavioural axes 2026-08-12 \u00b7 jail 2026-08-18 \u00b7 financial-fact axes: see each axis facts_as_of / measurement_time",
+  "method": "Connor (1987) paired-proportion sample size for an exact McNemar test; alpha 0.05, power 0.80; observed discordant rates taken as true.",
+  "limits": [
+    "Discordant rates come from few disagreements, so sizes are order-of-magnitude.",
+    "Selecting the top two after the fact inflates the observed gap, so true requirements are probably higher.",
+    "Enlarging a bank with a known label leak (governance, correction C-2026-1120-02) does not repair it."
+  ],
+  "axes_with_discordant_counts": 12,
+  "axes_needing_at_least_6x": 11,
+  "median_multiple": 8.75,
+  "rows": [
+    {
+      "axis": "cross-reality",
+      "items_today": 32,
+      "discordant_top": 9,
+      "discordant_second": 2,
+      "mcnemar_exact_p": 0.0654,
+      "separation": "UNTESTED",
+      "gap_points": 21.9,
+      "items_needed_80pct_power": 54,
+      "multiple_of_today": 1.7
+    },
+    {
+      "axis": "detector-interop",
+      "items_today": 33,
+      "discordant_top": 5,
+      "discordant_second": 2,
+      "mcnemar_exact_p": 0.4531,
+      "separation": "UNTESTED",
+      "gap_points": 9.1,
+      "items_needed_80pct_power": 200,
+      "multiple_of_today": 6.1
+    },
+    {
+      "axis": "openness",
+      "items_today": 32,
+      "discordant_top": 9,
+      "discordant_second": 5,
+      "mcnemar_exact_p": 0.424,
+      "separation": "TIE",
+      "gap_points": 12.5,
+      "items_needed_80pct_power": 218,
+      "multiple_of_today": 6.8
+    },
+    {
+      "axis": "conformance",
+      "items_today": 35,
+      "discordant_top": 3,
+      "discordant_second": 1,
+      "mcnemar_exact_p": 0.625,
+      "separation": "TIE",
+      "gap_points": 5.7,
+      "items_needed_80pct_power": 273,
+      "multiple_of_today": 7.8
+    },
+    {
+      "axis": "art5-safeguard",
+      "items_today": 36,
+      "discordant_top": 1,
+      "discordant_second": 0,
+      "mcnemar_exact_p": 1.0,
+      "separation": "UNTESTED",
+      "gap_points": 2.8,
+      "items_needed_80pct_power": 281,
+      "multiple_of_today": 7.8
+    },
+    {
+      "axis": "governance",
+      "items_today": 237,
+      "discordant_top": 70,
+      "discordant_second": 59,
+      "mcnemar_exact_p": 0.3787,
+      "separation": "TIE",
+      "gap_points": 4.6,
+      "items_needed_80pct_power": 1981,
+      "multiple_of_today": 8.4
+    },
+    {
+      "axis": "care",
+      "items_today": 199,
+      "discordant_top": 32,
+      "discordant_second": 25,
+      "mcnemar_exact_p": 0.427,
+      "separation": "TIE",
+      "gap_points": 3.5,
+      "items_needed_80pct_power": 1815,
+      "multiple_of_today": 9.1
+    },
+    {
+      "axis": "machinery-conformity",
+      "items_today": 33,
+      "discordant_top": 8,
+      "discordant_second": 5,
+      "mcnemar_exact_p": 0.5811,
+      "separation": "UNTESTED",
+      "gap_points": 9.1,
+      "items_needed_80pct_power": 372,
+      "multiple_of_today": 11.3
+    },
+    {
+      "axis": "safety",
+      "items_today": 36,
+      "discordant_top": 4,
+      "discordant_second": 2,
+      "mcnemar_exact_p": 0.6875,
+      "separation": "TIE",
+      "gap_points": 5.6,
+      "items_needed_80pct_power": 422,
+      "multiple_of_today": 11.7
+    },
+    {
+      "axis": "continuity",
+      "items_today": 33,
+      "discordant_top": 4,
+      "discordant_second": 2,
+      "mcnemar_exact_p": 0.6875,
+      "separation": "TIE",
+      "gap_points": 6.1,
+      "items_needed_80pct_power": 387,
+      "multiple_of_today": 11.7
+    },
+    {
+      "axis": "affect",
+      "items_today": 41,
+      "discordant_top": 5,
+      "discordant_second": 4,
+      "mcnemar_exact_p": 1.0,
+      "separation": "UNTESTED",
+      "gap_points": 2.4,
+      "items_needed_80pct_power": 2894,
+      "multiple_of_today": 70.6
+    },
+    {
+      "axis": "provenance",
+      "items_today": 32,
+      "discordant_top": 6,
+      "discordant_second": 5,
+      "mcnemar_exact_p": 1.0,
+      "separation": "TIE",
+      "gap_points": 3.1,
+      "items_needed_80pct_power": 2761,
+      "multiple_of_today": 86.3
+    }
+  ],
+  "excluded": [
+    {
+      "axis": "swarm",
+      "method_status": "legacy: bank sha points to retired bank",
+      "reason": "no discordant counts published"
+    },
+    {
+      "axis": "jail",
+      "method_status": "legacy: 27 distinct prompts, n<30",
+      "reason": "no discordant counts published"
+    }
+  ],
+  "not": "Measurement, not certification. Not a ranking, grade or endorsement of any model."
+}
