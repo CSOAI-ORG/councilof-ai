@@ -94,6 +94,29 @@ describe("mechanism coverage", () => {
     };
     expect(() => derive(read(SOURCE), tampered)).toThrow(/corpus_root does not recompute/);
   });
+
+  it("the source-bytes state comes from the published texts: an edited text fails the producer", () => {
+    const io = nodeIo(ROOT);
+    const src = readJson(SOURCE);
+    expect(out.corpus.source_database_state).toBe("SOURCE_BYTES_RECOVERED");
+    expect(out.corpus.inventory_source_database_state).toBe(inventory.frozen_provisions.source_database_state);
+    const edited = {
+      ...io,
+      readBytes: (p: string) => {
+        if (p !== src.sources.source_texts) return io.readBytes(p);
+        const lines = io.readBytes(p).toString("utf8").split("\n");
+        const r = JSON.parse(lines[0]);
+        r.text = `${r.text} `.replace(/a/, "b");
+        lines[0] = JSON.stringify(r);
+        return Buffer.from(lines.join("\n"));
+      },
+    };
+    expect(() => derive(read(SOURCE), edited)).toThrow(/does not reproduce the manifest/);
+    const without = { ...src, sources: { ...src.sources, source_texts: undefined } };
+    const prior = derive(Buffer.from(JSON.stringify(without)), io);
+    expect(prior.corpus.source_database_state).toBe(inventory.frozen_provisions.source_database_state);
+    expect(prior.corpus.source_texts).toBeNull();
+  });
 });
 
 describe("mechanism coverage reads the inventory through its pointer", () => {

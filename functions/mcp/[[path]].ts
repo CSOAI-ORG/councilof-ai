@@ -22,6 +22,7 @@ import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
 import { doorInstallLine, npmReleaseState } from "../../scripts/harness-x/npm-release-state.mjs";
 import { verifyToolResult } from "./_handlers";
+import { MCP_MAX_JSON_DEPTH, MCP_MAX_JSON_TOKENS, withinJsonBudget } from "./_input_budget";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, X402_META_PAYMENT, type PaidCallerContext } from "./_paid";
 import { dispatchTool, FREE_TOOL_DEFINITIONS, TOOL_DEFINITIONS } from "./_dispatch";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
@@ -257,7 +258,45 @@ function buildMcp(
     server.server.setRequestHandler("tools/list", (request) => toolsListResult(definitions, request.params));
     return server;
   },
-  { legacy: "stateless", maxSubscriptions: 0 },
+  { legacy: "stateless", maxSubscriptions: MAX_SUBSCRIPTIONS },
+  );
+}
+/** No subscriptions are served on these doors. Raise it only together with the capability bits. */
+const MAX_SUBSCRIPTIONS: number = 0;
+
+/**
+ * subscriptions/listen on doors that serve no subscriptions (MCP 2026-07-28).
+ *
+ * With MAX_SUBSCRIPTIONS at 0 and no listChanged or subscribe bit advertised, the SDK's listen
+ * router can only refuse, and it refuses with -32603 "Subscription limit reached" under HTTP 200:
+ * an internal-error code for a deliberate absence. The 2026-07-28 Streamable HTTP transport says a
+ * server that does not implement the requested method MUST answer 404 Not Found with -32601, which
+ * is how `ping` is already answered here, and the official conformance suite (server-stateless,
+ * @modelcontextprotocol/conformance 0.2.0-alpha.12) scores -32601 on listen as a legitimate feature
+ * absence when server/discover advertises no subscription capability.
+ *
+ * Only that refusal is rewritten. The SDK's header, envelope and client-capability checks run first,
+ * and their answers (400 with -32020 or -32602, among others) pass through unchanged. If
+ * MAX_SUBSCRIPTIONS is ever raised, a real limit refusal is no longer rewritten.
+ */
+async function listenNotServed(
+  method: string,
+  response: Response,
+  id: string | number | undefined,
+): Promise<Response> {
+  if (MAX_SUBSCRIPTIONS !== 0 || method !== "subscriptions/listen" || response.status !== 200) return response;
+  if (!(response.headers.get("content-type") ?? "").includes("application/json")) return response;
+  try {
+    const answer = (await response.clone().json()) as { error?: { code?: unknown } };
+    if (answer.error?.code !== -32603) return response;
+  } catch {
+    return response;
+  }
+  return jsonError(
+    404,
+    -32601,
+    "Method not found: this door serves no subscriptions (server/discover advertises no listChanged or subscribe capability).",
+    id,
   );
 }
 const mcp = buildMcp(DEFINITIONS, { instructions: INSTRUCTIONS, paid: true });
@@ -616,6 +655,14 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       "Request body exceeds the size/time limit or is not valid UTF-8.",
     );
   }
+  // Bytes are capped above; structure is capped here, before this door's JSON.parse and the SDK's
+  // (functions/mcp/_input_budget.ts). One long string is one token, so 20 MiB of base64 still fits.
+  if (!withinJsonBudget(body))
+    return jsonError(
+      413,
+      -32600,
+      `Request JSON exceeds the structure limit (${MCP_MAX_JSON_TOKENS} tokens, ${MCP_MAX_JSON_DEPTH} levels).`,
+    );
   let call: unknown;
   try {
     call = JSON.parse(body);
@@ -691,7 +738,7 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
     });
     const handler=door==="free"?mcpFree:request.headers.has("authorization")
       ?buildMcp(DEFINITIONS,{instructions:INSTRUCTIONS,paid:true},{authorization:request.headers.get("authorization")||undefined,env:(env||{}) as PaidCallerContext["env"]}):mcp;
-    const upstream=await handler.fetch(boundedRequest);
+    const upstream=await listenNotServed(call.method,await handler.fetch(boundedRequest),id);
     const response = withTraceHeader(
       withHeaders(wantsSse ? upstream : await sseToJson(upstream)),
       trace?.traceId ?? null,

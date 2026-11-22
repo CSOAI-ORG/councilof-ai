@@ -64,6 +64,7 @@ export default function CouncilAcademy() {
             The live Council HITL service holds challenges and decision records, but its shared operator token does not verify a person or grant execution authority. This public endpoint is not connected to the private MEOK H.I.M. runtime.
           </p>
           <a href="/him" className="mt-3 inline-flex items-center rounded-xl border border-amber-300 bg-white px-4 py-2 text-sm font-bold text-amber-900 hover:bg-amber-100">Meet H.I.M. →</a> <a href="/api/hitl/record" className="mt-3 ml-2 inline-flex items-center rounded-xl border border-amber-300 bg-white px-4 py-2 text-sm font-bold text-amber-900 hover:bg-amber-100">Inspect bounded public decision records →</a>
+          <a href="/watchdog/?view=groups" className="mt-3 ml-2 inline-flex items-center rounded-xl border border-amber-300 bg-white px-4 py-2 text-sm font-bold text-amber-900 hover:bg-amber-100">Human oversight measurement in working groups →</a>
         </div>
       </section>
 

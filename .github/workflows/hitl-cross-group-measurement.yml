@@ -1,0 +1,46 @@
+name: HITL cross-group reproducible process measurement
+on:
+  pull_request:
+    paths:
+      - "harness/hitl/approval-effect-demo.mjs"
+      - "scripts/hitl/oversight-measurement-capsule.mjs"
+      - "scripts/hitl/oversight-measurement-capsule.test.mjs"
+      - ".github/workflows/hitl-cross-group-measurement.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-process-measurement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Execute source-bound test and negative controls
+        run: node --test scripts/hitl/oversight-measurement-capsule.test.mjs
+      - name: Emit bounded machine-readable capsule (not a GSPC axis)
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/hitl-process"
+          node scripts/hitl/oversight-measurement-capsule.mjs > "$RUNNER_TEMP/hitl-process/candidate.json"
+          node -e '
+            const fs = require("node:fs");
+            const c = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+            if (c.schema !== "csoai.hitl-cross-group-process-measurement/0.1" ||
+                c.stage !== "CANDIDATE_UNPUBLISHED" ||
+                c.population.attempted !== 14 ||
+                c.results.negative_controls_refused !== 13 ||
+                c.effect_authority.actual_human_approval !== "NOT_TESTED" ||
+                c.gspc.is_axis !== false ||
+                c.gspc.actual_human_oversight_effectiveness !== "UNMEASURED") process.exit(1);
+          ' "$RUNNER_TEMP/hitl-process/candidate.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hitl-process-candidate
+          path: ${{ runner.temp }}/hitl-process/candidate.json
+          if-no-files-found: error
+          retention-days: 14

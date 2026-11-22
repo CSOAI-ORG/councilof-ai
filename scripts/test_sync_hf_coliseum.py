@@ -413,5 +413,183 @@ class MinimalConsumerCheckoutControls(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout)
             self.assertIn("Ran " + str(expected) + " tests", result.stdout)
 
+
+import gc
+import io
+import os
+import types
+import warnings
+from contextlib import redirect_stderr, redirect_stdout
+from unittest import mock
+from urllib.error import HTTPError
+
+STALE = "4" * 40  # what cached repo metadata (repo_info().sha) still reports
+TIP = "9" * 40    # what refs/heads/main points to
+LEASE_LOST = "The branch was updated since you opened this page. Please refresh and try again."
+
+
+def http_error(url, status, message):
+    error = HTTPError(url, status, message, {}, None)
+    error.close()  # Python 3.14 warns when an unclosed HTTPError body is collected
+    return error
+
+
+class HfHubHTTPError(Exception):
+    """Shape of huggingface_hub's HfHubHTTPError: .response, .server_message, .request_id."""
+    def __init__(self, status, server_message=None):
+        super().__init__(str(status) + " Client Error for url: https://huggingface.co/api/spaces/" +
+                         REPO + "/commit/main (Authorization: Bearer hf_SecretTokenValue123)")
+        self.response = SimpleNamespace(status_code=status, headers={})
+        self.server_message = server_message
+        self.request_id = "Root=1-test-request"
+
+
+class SplitMetadataApi:
+    """The Space as found on 20 Nov 2026: the branch ref moved on, cached metadata did not."""
+    def __init__(self):
+        self.revisions = {STALE: {}, TIP: {}}
+        self.tip = TIP
+        self.commits = []
+        self.auth_error = None
+
+    def auth_check(self, repo_id, repo_type, write):
+        self.assert_target(repo_id, repo_type)
+        if self.auth_error is not None:
+            raise self.auth_error
+
+    def repo_info(self, repo_id, repo_type):
+        return SimpleNamespace(sha=STALE)
+
+    def list_repo_refs(self, repo_id, repo_type):
+        self.assert_target(repo_id, repo_type)
+        return SimpleNamespace(branches=[SimpleNamespace(
+            name="main", ref="refs/heads/main", target_commit=self.tip)])
+
+    def create_commit(self, repo_id, repo_type, revision, parent_commit, commit_message, operations):
+        self.assert_target(repo_id, repo_type)
+        if revision != "main" or parent_commit != self.tip:
+            raise HfHubHTTPError(412, LEASE_LOST)
+        new = format(len(self.revisions) + 1, "040x")
+        self.revisions[new] = {**self.revisions[self.tip], **dict(operations)}
+        self.commits.append(parent_commit)
+        self.tip = new
+        return SimpleNamespace(oid=new)
+
+    def urlopen(self, url, timeout=None):
+        if url.startswith(publisher.HOST + "/"):
+            revision, name = self.tip, url[len(publisher.HOST) + 1:]
+        else:
+            prefix = "https://huggingface.co/spaces/" + REPO + "/resolve/"
+            assert url.startswith(prefix), url
+            revision, name = url[len(prefix):].split("/", 1)
+        data = self.revisions.get(self.tip if revision == "main" else revision, {}).get(unquote(name))
+        if data is None:
+            raise http_error(url, 404, "missing")
+        return io.BytesIO(data)
+
+    def assert_target(self, repo_id, repo_type):
+        assert (repo_id, repo_type) == (REPO, "space")
+
+
+class BranchRefControls(unittest.TestCase):
+    """The writer builds on the branch ref; a refusal names the call, HTTP status and repo."""
+
+    def hub(self, api):
+        module = types.ModuleType("huggingface_hub")
+        module.HfApi = lambda token: api
+        module.CommitOperationAdd = lambda path_in_repo, path_or_fileobj: (path_in_repo, path_or_fileobj)
+        for patch in (mock.patch.dict(sys.modules, {"huggingface_hub": module}),
+                      mock.patch.object(publisher, "urlopen", api.urlopen)):
+            patch.start()
+            self.addCleanup(patch.stop)
+        return publisher.HuggingFace("hf_test_token_value")
+
+    def run_main(self, api):
+        self.hub(api)
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for name, data in artifact().items():
+                (root / name).parent.mkdir(parents=True, exist_ok=True)
+                (root / name).write_bytes(data)
+            # The captured stream must hold only the report: no warning about another
+            # test's garbage that happens to be collected inside this window.
+            gc.collect()
+            with mock.patch.dict(os.environ, {"HF_TOKEN": "hf_test_token_value"}), \
+                    warnings.catch_warnings(), redirect_stdout(stdout), redirect_stderr(stderr):
+                warnings.simplefilter("ignore", ResourceWarning)
+                code = main(["--artifact", str(root), "--expected-sha", SHA, "--upstream-run-id", "12"])
+        return code, stdout.getvalue(), stderr.getvalue()
+
+    def test_parent_is_the_branch_ref_not_cached_repo_metadata(self):
+        api = SplitMetadataApi()
+        self.assertEqual(self.hub(api).head(), TIP)
+        code, out, err = self.run_main(api)
+        self.assertEqual((code, err), (0, ""))
+        self.assertEqual(json.loads(out)["state"], "PUBLISHED_AND_VERIFIED")
+        self.assertEqual(api.commits, [TIP])
+        self.assertEqual(json.loads(api.revisions[api.tip][RECEIPT])["upstream_run_id"], 12)
+
+    def test_cached_metadata_parent_is_refused_as_on_every_run_since_16_nov(self):
+        api = SplitMetadataApi()
+        with self.assertRaises(publisher.HubCallFailed) as caught:
+            self.hub(api).commit({"index.html": b"page"}, STALE)
+        report = publisher.refusal_report(caught.exception)
+        self.assertEqual((report["reason"], report["http_status"], report["repo"], report["stage"],
+                          report["parent"]), ("HfHubHTTPError", 412, REPO, "create_commit", STALE))
+        self.assertEqual(api.commits, [])
+
+    def test_lost_lease_report_names_call_status_repo_and_parent(self):
+        class Racing(SplitMetadataApi):
+            def create_commit(self, **arguments):
+                self.revisions["8" * 40] = dict(self.revisions[self.tip])
+                self.tip = "8" * 40  # another writer lands between head() and commit
+                return super().create_commit(**arguments)
+        code, out, err = self.run_main(Racing())
+        self.assertEqual((code, out), (2, ""))
+        self.assertEqual(json.loads(err), {
+            "state": "REFUSED", "reason": "HfHubHTTPError", "repo": REPO, "stage": "create_commit",
+            "parent": TIP, "http_status": 412, "server_message": LEASE_LOST,
+            "request_id": "Root=1-test-request"})
+        for private in ("hf_", "Authorization", "https://"):
+            self.assertNotIn(private, err)
+
+    def test_denied_write_names_status_and_redacts_private_text(self):
+        api = SplitMetadataApi()
+        api.auth_error = HfHubHTTPError(
+            403, "Token hf_AbCdEf123456 of owner@example.org cannot write to " + REPO)
+        code, _, err = self.run_main(api)
+        report = json.loads(err)
+        self.assertEqual((code, report["stage"], report["http_status"], report["repo"]),
+                         (2, "auth_check", 403, REPO))
+        self.assertEqual(report["server_message"], "Token [redacted] of [redacted] cannot write to " + REPO)
+        self.assertEqual(api.commits, [])
+
+    def test_missing_main_branch_refuses(self):
+        api = SplitMetadataApi()
+        for branches in ([], [SimpleNamespace(name="other", ref="refs/heads/other", target_commit=TIP)]):
+            api.list_repo_refs = lambda repo_id, repo_type: SimpleNamespace(branches=branches)
+            with self.subTest(branches=len(branches)), self.assertRaisesRegex(Refused, "main branch"):
+                self.hub(api).head()
+
+    def test_offline_refusals_and_odd_errors_keep_a_bounded_report(self):
+        self.assertEqual(publisher.refusal_report(Refused("artifact digest mismatch: x")),
+                         {"state": "REFUSED", "reason": "artifact digest mismatch: x"})
+        self.assertEqual(publisher.refusal_report(ConnectionError("hf_SecretTokenValue123")),
+                         {"state": "REFUSED", "reason": "ConnectionError"})
+        self.assertEqual(publisher.refusal_report(
+            http_error("https://public.invalid/", 503, "private-error-detail")),
+            {"state": "REFUSED", "reason": "HTTPError", "repo": REPO, "http_status": 503})
+
+        class Headers:
+            def get(self, _name):
+                raise RuntimeError("unreadable")
+        odd = HfHubHTTPError(500)
+        odd.response.headers = Headers()
+        report = publisher.refusal_report(publisher.HubCallFailed("list_repo_refs", odd))
+        self.assertEqual((report["reason"], report["stage"], report["http_status"]),
+                         ("HfHubHTTPError", "list_repo_refs", 500))
+
+
 if __name__ == "__main__":
     unittest.main()
