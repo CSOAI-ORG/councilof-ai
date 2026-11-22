@@ -28,6 +28,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
+import { presence as presenceV2, presenceCorpus, compileAxis, discriminatingSelfTest } from './presence-v2.mjs';
 
 const OUT_DIR = join(homedir(), 'jewel-audit-20261027', 'out');
 const AXIS_DIR = join(homedir(), '_alignment', 'axis-runs-20261024');
@@ -36,7 +37,7 @@ mkdirSync(OUT_DIR, { recursive: true });
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 ' +
   '(KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36';
 const TIMEOUT_MS = 12_000;
-const MAX_BYTES = 400_000;
+const MAX_BYTES = 2_000_000; // was 400_000: 117 of 440 pages hit the cap on 2026-11-02
 const CONCURRENCY = 8;
 const RUN_ID = 'subject-axis-live-run-20261027';
 
@@ -63,12 +64,14 @@ async function fetchSubject(url) {
     });
     const buf = Buffer.from(await res.arrayBuffer());
     const raw = buf.subarray(0, MAX_BYTES);
+    const truncated = buf.length > MAX_BYTES;
     return {
       reachable: res.status === 200,
       status: res.status,
       final_url: res.url,
       latency_ms: Math.round((Date.now() - t0) * 10) / 10,
       bytes: raw.length,
+      truncated,
       sha256: sha256hex(raw),
       body: raw.toString('utf8'),
       error: '',
@@ -114,10 +117,10 @@ async function pool(items, fn) {
 const PATTERNS = {
   'measurer-integrity': {
     frozen_digest_or_checksum: 'sha256|sha-256|checksum|digest|merkle|immutable|frozen',
-    contamination_or_canary: 'contamination|canary|negative control|decontaminat|holdout|leakage',
+    contamination_or_canary: 'contamination|canary|negative control|decontaminat*|holdout|leakage',
     statistical_uncertainty: 'confidence interval|wilson|mcnemar|bootstrap|p-value|standard error|stderr',
     cryptographic_attestation: 'ed25519|sigstore|cosign|attestation|signature|verifiable',
-    reproducibility_command: 'pip install|docker|git clone|pytest|reproduc',
+    reproducibility_command: 'pip install|docker|git clone|pytest|reproduc*',
   },
   'interop-conformance': {
     formal_schema_spec: 'json schema|draft-07|2020-12|openapi|protobuf|\\.schema\\.json|\\$schema',
@@ -137,32 +140,34 @@ const PATTERNS = {
     mechanistic_or_circuit_method: 'mechanistic|circuit|activation patching|causal tracing|logit lens|attribution|probing',
     sparse_autoencoder_or_features: 'sparse autoencoder|sae|dictionary learning|monosemantic|feature dashboard|transcoder|polysemantic',
     pretrained_checkpoints_or_hub: 'huggingface\\.co|from_pretrained|safetensors|checkpoint|weights|wandb',
-    reproducible_notebook_or_colab: 'colab|ipynb|jupyter|reproduc|tutorial|walkthrough|benchmark',
+    reproducible_notebook_or_colab: 'colab|ipynb|jupyter|reproduc*|tutorial|walkthrough|benchmark',
     peer_reviewed_or_arxiv: 'arxiv|bibtex|doi\\.org|iclr|neurips|icml|acl',
   },
   'company-practice': {
     safety: 'safety|safeguard|risk',
-    evaluations: 'eval|benchmark|red.?team|testing',
-    incidents: 'incident|transparency report|trust report|bug bounty|vulnerab',
+    evaluations: 'eval*|benchmark|red.?team*|testing',
+    incidents: 'incident|transparency report|trust report|bug bounty|vulnerab*',
     model_cards: 'model card|system card|technical report|model document',
-    contact: 'contact|report a concern|whistleblow|complaint',
+    contact: 'contact|report a concern|whistleblow*|complaint',
   },
   'lab-practice': {
     safety_or_alignment: 'safety|alignment|frontier risk|preparedness|responsible scaling|rsp',
-    evaluation_or_redteam: 'evaluation|benchmark|red.?team|capability|testing|audit',
+    evaluation_or_redteam: 'evaluation|benchmark|red.?team*|capability|testing|audit',
     model_or_system_card: 'system card|model card|technical report|arxiv|publication',
     incident_or_disclosure: 'disclosure|vulnerability|incident|bug bounty|security|report',
     governance_or_charter: 'governance|board|charter|policy|ethics|oversight',
   },
   'regulator-transparency': {
-    statutory_or_guidance_text: 'guidance|regulation|act|directive|framework|standard|statute',
-    consultation_or_docket: 'consultation|comment|docket|feedback|call for evidence|public input',
+    // presence/2.0 method change (ruling required): v1 'act|framework|standard|comment|feedback|contact'
+    // matched ordinary prose; the bounded detector's benign must-FAIL corpus still met the bar.
+    statutory_or_guidance_text: 'guidance|regulation|directive|statute|statutory|legislation|code of practice|ai act|article \\d+|section \\d+',
+    consultation_or_docket: 'consultation|docket|call for evidence|public input|request for comment|comment period|proposed rulemaking',
     enforcement_or_register: 'enforcement|decision|register|notice|penalty|compliance|supervision',
     machine_readable_or_open_data: 'json|xml|csv|api|dataset|open data|rss|download',
-    contact_or_redress: 'contact|complaint|enquiry|foi|freedom of information|ombudsman|appeal',
+    contact_or_redress: 'contact us|complaint|enquiry|foi|freedom of information|ombudsman|appeal|redress',
   },
   'harness-fidelity': {
-    deterministic_seed_or_temp: 'deterministic|seed|temperature=0|reproduc|frozen|sha256',
+    deterministic_seed_or_temp: 'deterministic|seed|temperature=0|reproduc*|frozen|sha256',
     sandbox_or_container_isolation: 'sandbox|docker|devcontainer|seccomp|firecracker|e2b|modal|isolated',
     opentelemetry_or_structured_trace: 'opentelemetry|otlp|trace_id|span|langfuse|phoenix|weave|transcript',
     statistical_or_exact_scorer: 'mcnemar|wilson|pass@k|exact match|f1|bootstrap|confidence interval|rubric',
@@ -170,7 +175,7 @@ const PATTERNS = {
   },
   'serving-fidelity': {
     logprobs_or_sampling_control: 'logprobs|top_logprobs|top_p|top_k|repetition_penalty|guided decoding|structured output',
-    low_bit_quantization: 'fp8|int8|int4|awq|gptq|gguf|marlin|exl2|bitsandbytes|quantiz',
+    low_bit_quantization: 'fp8|int8|int4|awq|gptq|gguf|marlin|exl2|bitsandbytes|quantiz*',
     kv_cache_or_paged_attention: 'pagedattention|kv cache|prefix caching|radixattention|continuous batching|speculative decoding',
     latency_and_throughput_metrics: 'prometheus|opentelemetry|ttft|tpot|itl|tokens/s|throughput|v1/metrics',
     multi_accelerator_or_tensor_parallel: 'tensor parallel|pipeline parallel|nccl|rocm|cuda|metal|vllm|triton',
@@ -178,11 +183,10 @@ const PATTERNS = {
 };
 const DISCLOSURE_BAR = 3; // of 5 link classes present — the rule is declared, not tuned.
 
-const presence = (textLower, pats) => {
-  const out = {};
-  for (const [k, p] of Object.entries(pats)) out[k] = new RegExp(p, 'i').test(textLower);
-  return out;
-};
+// presence/1 (raw HTML, unbounded alternatives) is retired; see presence-v2.mjs.
+// presence/2.0: refuse to run if the detector cannot return both outcomes.
+const SELF_TEST = discriminatingSelfTest(PATTERNS, DISCLOSURE_BAR);
+if (!SELF_TEST.ok) { console.error(JSON.stringify(SELF_TEST, null, 2)); process.exit(2); }
 
 const methodSha256 = sha256hex(readFileSync(new URL(import.meta.url)));
 const observedAt = new Date().toISOString();
@@ -331,7 +335,7 @@ async function partB() {
     rows.forEach((r, i) => {
       const res = live[i];
       if (!res.reachable) return; // a refusal is not an item; it is recorded in counts.
-      const checks = presence(res.body.toLowerCase(), pats);
+      const checks = presenceV2(presenceCorpus(res.body), compileAxis(pats));
       const checksPresent = Object.values(checks).filter(Boolean).length;
       const payload = {
         axis_id: g.axis,
@@ -341,6 +345,7 @@ async function partB() {
         final_url: res.final_url,
         http_status: res.status,
         bytes: res.bytes,
+        truncated: res.truncated,
         content_sha256: res.sha256,
         text_sha256: textSha256(res.body),
         observed_at: observedAt,
@@ -437,7 +442,8 @@ async function partB() {
       source_grid_file: p,
       source_grid_sha256: gridSha,
       source_grid_observed_at: grid.checked_at ?? null,
-      disclosure_bar: { rule: 'presence of at least 3 of 5 link classes', classes: Object.keys(pats), patterns: pats },
+      disclosure_bar: { rule: 'presence of at least 3 of 5 link classes', classes: Object.keys(pats), patterns: pats,
+        presence_method: 'csoai.subject-axis-presence/2.0', discriminating_self_test: SELF_TEST.results[g.axis] },
       frame,
       class_census: classCensus,
       checks_present_histogram: checksHistogram,
