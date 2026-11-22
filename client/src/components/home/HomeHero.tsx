@@ -62,6 +62,14 @@ export default function HomeHero() {
             Building with AI? Connect the free tools{" "}
             <ArrowUpRight size={15} aria-hidden="true" />
           </a>
+          <Link
+            href="/investors/"
+            className="hp-hero-developers"
+            data-testid="hero-cta-investors"
+          >
+            Investor or partner? Read the company brief{" "}
+            <ArrowUpRight size={15} aria-hidden="true" />
+          </Link>
         </div>
         <figure className="hp-hero-art">
           <img
