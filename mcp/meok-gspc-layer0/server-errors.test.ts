@@ -11,7 +11,7 @@ async function callBridge(name: string, args: object, respond: (req: IncomingMes
   const address = server.address() as { port: number };
   const endpoint = `http://127.0.0.1:${address.port}`;
   const child = spawn(process.execPath, [fileURLToPath(new URL('./server.mjs', import.meta.url))], {
-    env: { ...process.env, HIM_URL: endpoint, DC_BRIDGE_URL: endpoint, ...envOverride }, stdio: ['pipe', 'pipe', 'pipe'],
+    env: { ...process.env, HIM_URL: endpoint, DC_BRIDGE_URL: `${endpoint}/mcp`, ...envOverride }, stdio: ['pipe', 'pipe', 'pipe'],
   });
   const lines = createInterface({ input: child.stdout });
   try {
