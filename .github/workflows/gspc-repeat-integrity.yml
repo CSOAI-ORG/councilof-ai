@@ -34,6 +34,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: "22"}
+      - name: Fail closed on full source-to-fact projection replay
+        run: |
+          node scripts/measurements/build-gspc-fact-table.mjs --check --out public/interop/gspc-fact-table
+          node --test scripts/measurements/gspc-fact-table.node-test.mjs
       - name: Exercise negative controls and full real corpus
         run: node --test scripts/measurements/gspc-repeat-integrity.node-test.mjs
       - name: Emit bounded source-bound aggregate report

@@ -66,9 +66,11 @@ jobs:
           get_artifact() {
             local workflow="$1" artifact="$2" name="$3"
             local id
-            id="$(gh run list -R CSOAI-ORG/councilof-ai --workflow "$workflow" --branch master --status success --limit 1 --json databaseId --jq '.[0].databaseId // ""')"
+            # Do not skip a newer failed/pending upstream run to pick an
+            # older successful artifact. A failed privacy gate is a hard stop.
+            id="$(gh run list -R CSOAI-ORG/councilof-ai --workflow "$workflow" --branch master --limit 1 --json databaseId,status,conclusion --jq '.[0] | select(.status == "completed" and .conclusion == "success") | .databaseId // ""')"
             if test -z "$id"; then
-              echo "SOURCE_DEPENDENCY_NOT_READY: no successful master run for $workflow"
+              echo "SOURCE_DEPENDENCY_NOT_READY: latest master run not successful/complete for $workflow"
               return 1
             fi
             if ! gh run download "$id" -R CSOAI-ORG/councilof-ai --name "$artifact" -D "$BASE/$name"; then
