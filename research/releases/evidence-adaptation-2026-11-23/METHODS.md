@@ -87,7 +87,7 @@ note have merged. Its exact publication payload must pass
 binding the GitHub source commit and file digests.
 
 Publication uses the existing protected-master \`HF_TOKEN\` GitHub secret only
-during explicit release dispatch. Never expose it to pull-request jobs, logs,
+during reviewed protected-master source publication (or explicit manual re-dispatch). Never expose it to pull-request jobs, logs,
 the Mac shell history, or the dataset. The publishing program confirms the
 Hugging Face commit SHA and retrieves the exact uploaded files for SHA-256
 verification. A failed upload or failed byte-for-byte replay is a failed
