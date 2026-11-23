@@ -7,6 +7,10 @@
  * workflow-mirror checks are gone with them. What is pinned now is that each stays retired: no
  * wrangler, no build, no signing, no git, no push, and a non-zero exit.
  *
+ * mirror-refresh.sh is retired too (21 Nov 2026): its target, the Hugging Face dataset
+ * csoai/councilof-ai-mirror, was deleted, and `hf upload` would create a new dataset under that name.
+ * It is pinned the same way: no hf, no git, no bundle, and a non-zero exit.
+ *
  * Also pins the Dockerfile's Playwright tag against package-lock.json and that every runner
  * script still parses and never echoes a secret. public-root.yml's own invariants live in
  * scripts/public_root_workflow.test.mjs.
@@ -64,11 +68,19 @@ describe("retired HF Jobs runners stay retired", () => {
     expect(stderr).toContain(".github/workflows/public-root.yml");
   });
 
-  it("the README no longer offers an HF command that runs either retired runner", () => {
+  it("mirror-refresh.sh is retired: it bundles nothing, uploads nothing and refuses to run", () => {
+    const sh = read("ci/hf-jobs/mirror-refresh.sh");
+    expect(sh).toMatch(/RETIRED 2026-11-21/);
+    expect(codeOnly(sh)).not.toMatch(/\bhf |huggingface_hub|git |bundle create|curl|python|lib\.sh/);
+    expect(exitCode("mirror-refresh.sh", [])).toBe(3);
+  });
+
+  it("the README no longer offers an HF command that runs a retired script", () => {
     const readme = read("ci/hf-jobs/README.md");
-    expect(readme).not.toMatch(/bash ci\/hf-jobs\/(public-root|deploy)\.sh/);
+    expect(readme).not.toMatch(/bash ci\/hf-jobs\/(public-root|deploy|mirror-refresh)\.sh/);
     expect(readme).not.toMatch(/hf jobs scheduled run/);
     expect(readme).toMatch(/`public-root\.sh`[^\n]*RETIRED 2026-10-06/);
+    expect(readme).toMatch(/`mirror-refresh\.sh`[^\n]*RETIRED 2026-11-21/);
   });
 
   it("Dockerfile base tag matches the playwright version in package-lock.json", () => {

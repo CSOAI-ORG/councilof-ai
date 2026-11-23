@@ -10,10 +10,10 @@ measured quantity: how many days, per page, since notification.
 
 The public home of these files is the evidence dataset:
 https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/corrections-watch/latest.json
-(and `<date>.json`, `<date>.signed.json`, `<date>.json.ots` beside it). Link there. A copy also goes to
-`csoai/councilof-ai-mirror` at the same paths; that dataset was private from 29 Sep 2026, so a link into it
-can answer 401. The two source files named above (v0.2 and v0.3) are held in the mirror at
-`public/interop/`, not in the evidence dataset.
+(and `<date>.json`, `<date>.signed.json`, `<date>.json.ots` beside it). Link there. Until 21 Nov 2026 a copy
+also went to `csoai/councilof-ai-mirror`; that dataset was deleted that day, so a link into it no longer
+resolves. The two source files named above (v0.2 and v0.3) are in this repository at `public/interop/` and
+served at `https://councilof.ai/interop/`. Each run reads them at a pinned commit, not from the evidence dataset.
 
 ## What a reader sees
 
@@ -22,7 +22,7 @@ can answer 401. The two source files named above (v0.2 and v0.3) are held in the
 - `latest.json` — a byte-identical copy of the most recent dated file.
 - `README.md` — this note.
 
-Each file carries, per row (15 rows, the whole population of v0.2, read from the mirror at run time):
+Each file carries, per row (15 rows, the whole population of v0.2, read at the pinned commit at run time):
 
 | field | meaning |
 |---|---|

@@ -53,8 +53,9 @@ VIEWER_REPAIRS = {
     "csoai/index-presence": nested("2026-09-22/listings-2026-09-22.json", "results"),
     "csoai/fleet-status": nested("fleet_status.public.json", "jobs"),
     "csoai/gspc-organism": nested("organism/index.json", "integration_targets"),
+    # csoai/councilof-ai-mirror left both lists when the dataset was deleted on 21 Nov 2026.
     **{f"csoai/{name}": NO_VIEWER for name in (
-        "councilof-ai-evidence", "councilof-ai-mirror", "cross-ledger-supply",
+        "councilof-ai-evidence", "cross-ledger-supply",
         "evidence-index", "eu-ecosystem-measurements", "disclosure-completeness", "tool-parity")},
 }
 
@@ -117,7 +118,6 @@ TARGETS: dict[str, dict] = {
     "csoai/evidence-index": NO_VIEWER,
     "csoai/eu-ecosystem-measurements": NO_VIEWER,
     "csoai/safe-findings-proposal": NO_VIEWER,
-    "csoai/councilof-ai-mirror": NO_VIEWER,
     "csoai/disclosure-completeness": NO_VIEWER,
     "csoai/gspc-organism": NO_VIEWER,
     "csoai/gspc-board": {},  # live counts block only

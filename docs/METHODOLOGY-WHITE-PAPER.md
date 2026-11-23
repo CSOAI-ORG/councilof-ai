@@ -1,5 +1,12 @@
 # CSOAI / GSPC Measurement Methodology (White Paper)
 
+> **Superseded (note added 22 Nov 2026).** The live method is https://councilof.ai/methodology/ ; where the two differ, that page holds. Three statements below no longer describe what the board does:
+> - The axes in section 1 are not the board's axes. The live list is GET https://councilof.ai/api/gspc .
+> - A leader is not decided by interval overlap with the fleet mean. Since 13 Aug 2026 the rule is an exact two-sided McNemar test, the leader against the best base model, p < 0.05 (https://councilof.ai/methodology/#separation).
+> - No Benjamini-Hochberg or other multiple-testing correction is applied across axes. Each axis is tested on its own at α = 0.05 (https://councilof.ai/methodology/#decision-rule).
+>
+> The text below is left as it was published on 25 Aug 2026.
+
 *Measurement, not certification. Published methodology — the governance asset a stranger can audit.*
 
 ## 1. The instrument
