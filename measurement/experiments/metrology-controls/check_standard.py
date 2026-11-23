@@ -63,6 +63,7 @@ def assess(payload: object, now_iso: str) -> dict:
             "baseline_ref_sha256", "calibrated_from", "calibrated_until",
             "reference_value", "baseline_sigma", "cusum_k_sigma",
             "cusum_h_sigma", "shewhart_limit_sigma", "max_sample_gap_seconds",
+            "max_observation_age_seconds", "max_source_lag_seconds",
             "samples",
         }
         if set(payload) != required:
@@ -83,7 +84,9 @@ def assess(payload: object, now_iso: str) -> dict:
         h = number(payload["cusum_h_sigma"], "cusum_h_sigma", positive=True)
         limit = number(payload["shewhart_limit_sigma"], "shewhart_limit_sigma", positive=True)
         gap = number(payload["max_sample_gap_seconds"], "max_sample_gap_seconds", positive=True)
-        if not 0 < k < h or h > 100 or limit > 100 or gap > 86400 * 31:
+        max_age = number(payload["max_observation_age_seconds"], "max_observation_age_seconds", positive=True)
+        max_lag = number(payload["max_source_lag_seconds"], "max_source_lag_seconds", positive=True)
+        if not 0 < k < h or h > 100 or limit > 100 or max(gap, max_age, max_lag) > 86400 * 31:
             raise Uncheckable("INVALID_CONTROL_SETTINGS")
         samples = payload["samples"]
         if not isinstance(samples, list) or not 5 <= len(samples) <= 50000:
@@ -105,6 +108,8 @@ def assess(payload: object, now_iso: str) -> dict:
             measured, observed = utc(sample["measured_at"]), utc(sample["observed_at"])
             if measured < start or measured > observed or observed > now:
                 raise Uncheckable("BAD_MEASUREMENT_OBSERVATION_CLOCK")
+            if (observed - measured).total_seconds() > max_lag:
+                raise Uncheckable("EXCESSIVE_SOURCE_TO_OBSERVER_LAG")
             if last_measured is not None and (measured <= last_measured or observed < last_observed):
                 raise Uncheckable("NONMONOTONE_CLOCK")
             if last_measured is not None and (measured - last_measured).total_seconds() > gap:
@@ -114,6 +119,8 @@ def assess(payload: object, now_iso: str) -> dict:
             last_measured, last_observed = measured, observed
             seen_ids.add(m_id)
             seen_sources.add(source)
+        if (now - last_observed).total_seconds() > max_age:
+            raise Uncheckable("STALE_LAST_OBSERVATION")
         # This only evaluates an externally pinned reference/check standard.
         # Do not estimate mu or sigma on the same evaluated stream.
         positive, negative = 0.0, 0.0
