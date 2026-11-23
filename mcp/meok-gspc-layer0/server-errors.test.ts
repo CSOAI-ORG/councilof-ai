@@ -33,6 +33,18 @@ const jsonReply = (value: unknown, status = 200) => (_req: IncomingMessage, res:
 };
 const body = (result: any) => JSON.parse(result.content[0].text);
 
+it.each([
+  { name: 'him_say', args: { text: 'fixture' } },
+  { name: 'meok_route_to_clan', args: { prompt: 'fixture' } },
+  { name: 'meok_gspc_evaluate_work_step', args: { platform: 'fixture', task_summary: 'fixture' } },
+])('$name refuses a retired implicit HIM destination before any HTTP request', async ({ name, args }) => {
+  let requested = false;
+  const result = await callBridge(name, args, (_req, res) => { requested = true; res.end('{}'); }, { HIM_URL: '', MEOK_CHAT_BACKEND: 'him' });
+  expect(result.isError).toBe(true);
+  expect(body(result)).toEqual({ state: 'UNCHECKABLE', reason: 'COORDINATOR_NOT_CONFIGURED' });
+  expect(requested).toBe(false);
+});
+
 it.each(['him_say', 'meok_route_to_clan'])('%s exposes coordinator HTTP failure as an outer MCP error', async name => {
   const result = await callBridge(name, { text: 'fixture', prompt: 'fixture' }, jsonReply({ error: { message: 'private-provider-detail' } }, 503));
   expect(result.isError).toBe(true);
