@@ -116,9 +116,10 @@ export function auditHistoricalTriad(source,record,profile='local-historical') {
     recorded_combined_total_n:totalN,
     recorded_combined_correct:historyTriadCorrect+recordedCenterCorrect,
     by_rule_type:leakageByType,
-    max_observed_referee_claim:'ORACLE_LABEL_EXPOSURE'===('ORACLE_LABEL_EXPOSURE'), // stable boolean flag
+    answer_key_exposure_observed:answerMetaMatches===items.length,
+    original_script_bound_by_signed_record:false,
     not_independent_hidden_test:true,
-    never_scored_by_new_model:false===true,
+    new_model_calls_performed:false,
     conclusion:answerMetaMatches===items.length && forcedCorrect===items.length ?
       'PERFECT_REPORTED_REFEREE_ACCURACY_IS_FULLY_EXPLAINABLE_BY_ANSWER_BEARING_RULE_METADATA' :
       'META_ANSWER_OVERLAP_PARTIAL_IN_THIS_ARCHIVE',
@@ -126,6 +127,7 @@ export function auditHistoricalTriad(source,record,profile='local-historical') {
       'Signature verified only with public key embedded in the same artifact; outside signer/key custody not authenticated',
       'The original live Ollama calls were not repeated; frozen output correctness is a retrospective source assertion',
       'Questions and answer labels were available to the original fixed referee metadata before grading',
+      'The signed record does not include an authenticated hash of the original script; local source identity is independently observed only',
       'Removing the answer-bearing fields is a destructive counterfactual, not a repaired runtime or blind model study',
       'The historical ledger queries were source-authored cases; 20/20 on those does not confer hidden-task generalization',
       'The original 32/32 and its p value are not a valid independent blinded-council efficacy claim',
