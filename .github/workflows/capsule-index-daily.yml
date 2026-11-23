@@ -146,6 +146,13 @@ jobs:
           # fails on scripts/mechanism/build-coverage.test.ts for every capsule data PR.
           node scripts/mechanism/build-coverage.mjs
           node scripts/mechanism/build-coverage.mjs --check
+          # The charter register pins coverage.json by sha256, and render.mjs projects the register into
+          # /charter-register/ and the distribution kits. Rebuild both here, or `gates` fails on
+          # functions/mcp/tool-counts.test.ts ("Stale charter input: public/mechanism/coverage.json")
+          # and `integrity` fails on the register's byte-identity check.
+          (cd packages/charter-federation && python3 build.py --root ../..)
+          node scripts/harness-x/render.mjs
+          node scripts/harness-x/render.mjs --check
           python3 scripts/test_measurement_capsule_layout.py
           python3 scripts/test_measurement_capsule_page.py
       - name: Land the layout on a branch, open the PR, dispatch gates, close older capsule PRs
@@ -156,7 +163,8 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A public/measurement-capsules public/mechanism/vc.json public/mechanism/coverage.json
+          git add -A public/measurement-capsules public/mechanism/vc.json public/mechanism/coverage.json \
+            packages/charter-federation public/charter-register distribution/charter-federation distribution/MANIFEST.json
           if git diff --cached --quiet; then
             echo "laid out; the tree equals master; nothing to land"
             exit 0
