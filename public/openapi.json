@@ -9715,7 +9715,7 @@
     },
     "/api/worker": {
       "get": {
-        "description": "GET /api/worker \u2014 the GSPC compute engines' own health endpoints, read at request time.",
+        "description": "GET /api/worker \u2014 the GPU worker's state, read from the pod's own health endpoint at request time.",
         "operationId": "get__api_worker",
         "responses": {
           "200": {
@@ -9726,7 +9726,7 @@
           }
         },
         "security": [],
-        "summary": "GET /api/worker \u2014 the GSPC compute engines' own health endpoints, read at request time."
+        "summary": "GET /api/worker \u2014 the GPU worker's state, read from the pod's own health endpoint at request time."
       }
     },
     "/api/wrapper": {
