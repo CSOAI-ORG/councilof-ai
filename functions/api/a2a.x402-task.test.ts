@@ -16,6 +16,7 @@ import {
   a2aX402Extension,
   onRequestPost,
   x402PaymentErrorCode,
+  x402PublicTaskInput,
   x402TaskContextId,
   x402TaskId,
   x402TaskSelection,
@@ -103,6 +104,49 @@ describe("activation: only a request that names the a2a-x402 extension gets a Ta
     const { body } = await send({ parts: [{ data: { skill: "get_root", input: {} } }] }, { "x-a2a-extensions": V02 });
     expect(body.result?.task).toBeUndefined();
     expect(body.result?.message ?? body.error).toBeDefined();
+  });
+});
+
+describe("reversible Task ID privacy boundary: only enumerated public selectors", () => {
+  it("keeps the existing public Article 50 task flow", () => {
+    expect(x402PublicTaskInput("evidence_bundle", { obligation: "article-50" }, "ctx-issued")).toBe(true);
+    expect(x402TaskId("evidence_bundle", { obligation: "article-50" }, "ctx-issued")).toMatch(/^x402-/);
+  });
+
+  it("does not embed free-text subjects, raw URLs or encoded documents in task IDs", () => {
+    const secret = "SYNTHETIC_PRIVATE_SENTINEL_ONLY";
+    expect(x402TaskId("evidence_bundle", { obligation: "article-50", subject: secret })).toBeNull();
+    expect(x402TaskId("commission_card", { subject: secret })).toBeNull();
+    expect(x402TaskId("art50_marking_evidence", { url: "https://example.invalid/" + secret })).toBeNull();
+    expect(x402TaskId("art50_marking_evidence", { bytes_b64: btoa(secret) })).toBeNull();
+    expect(x402TaskId("rwa_evidence", { asset: secret })).toBeNull();
+    expect(x402TaskId("receipts_batch", { from: "2026-11-21T00:00:00Z" })).toBeNull();
+  });
+
+  it("rejects free-text context IDs and unknown selectors, even for the safe paid tool", () => {
+    expect(x402TaskId("evidence_bundle", { obligation: "article-50" }, "private context with spaces")).toBeNull();
+    expect(x402TaskId("evidence_bundle", { obligation: "article-50" }, "https://example.invalid/user")).toBeNull();
+    expect(x402TaskId("evidence_bundle", { obligation: "article-50", extra: "no" })).toBeNull();
+    expect(x402TaskId("evidence_bundle", { obligation: "unknown" })).toBeNull();
+  });
+
+  it("does not accept a forged base64url task whose decoded inputs would be denied", () => {
+    const forged = (v: unknown) => "x402-" + btoa(JSON.stringify(v)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    expect(x402TaskSelection(forged({ t: "evidence_bundle", i: { obligation: "article-50", subject: "PRIVATE" }, c: "ctx-1" }))).toBeNull();
+    expect(x402TaskSelection(forged({ t: "art50_marking_evidence", i: { url: "https://example.invalid" }, c: "ctx-1" }))).toBeNull();
+    expect(x402TaskSelection(forged({ t: "evidence_bundle", i: { obligation: "article-50" }, c: "context with spaces" }))).toBeNull();
+  });
+
+  it("uses the existing unpaid Message path for confidential input instead of issuing a Task ID", async () => {
+    const seen = stubRoute();
+    const { body } = await send(
+      { parts: [{ data: { skill: "evidence_bundle", input: { obligation: "article-50", subject: "SYNTHETIC_PRIVATE_SENTINEL_ONLY" } } }] },
+      { "x-a2a-extensions": V02 },
+    );
+    expect(body.result.task).toBeUndefined();
+    expect(body.result.message.metadata[STATUS_KEY]).toBe("payment-required");
+    expect(seen).toHaveLength(1);
+    expect(seen[0].headers.get("x-payment")).toBeNull();
   });
 });
 
