@@ -129,4 +129,45 @@ describe("/api/worker — the pod's own health, proxied, never remembered", () =
     expect(odd.status).toBe("OFFLINE");
     expect(odd.source).toBe("https://example.test/health");
   });
+
+  it("fails over to the backup engine when the primary is down", async () => {
+    const urls = ["https://primary.test/health", "https://backup.test/healthz"];
+    const fetcher = (async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url === urls[0]) return new Response(JSON.stringify({ error: "bad gateway" }), { status: 502 });
+      return new Response(JSON.stringify({ ok: true, writes_board: false }), { status: 200 });
+    }) as unknown as typeof fetch;
+    const out = await buildWorker({ WORKER_HEALTH_URLS: urls.join(",") }, fetcher);
+    expect(out.status).toBe("LIVE");
+    expect(out.source).toBe(urls[1]);
+    expect(out.engine).toBe(urls[1]);
+    expect(out.http).toBe(200);
+    expect(out.worker).toMatchObject({ state: "RUNNING", ok: true, writes_board: false });
+    expect(out.engines).toEqual([
+      { engine: urls[0], http: 502, status: "OFFLINE", note: `${urls[0]} answered HTTP 502 — this checks a URL, not proof the compute process stopped` },
+      { engine: urls[1], http: 200, status: "LIVE" },
+    ]);
+  });
+
+  it("accepts the probe health shape the HF engines serve (ok boolean, no state string)", async () => {
+    const out = await buildWorker(
+      { WORKER_HEALTH_URLS: "https://csoai-gspc-node.hf.space/health" },
+      fetcherWith(200, { ok: true, writes_board: false, router: "https://router.huggingface.co/v1/chat/completions" }),
+    );
+    expect(out.status).toBe("LIVE");
+    expect(out.worker).toMatchObject({ state: "RUNNING", ok: true, writes_board: false });
+    expect(out.worker).not.toHaveProperty("counters_scope");
+  });
+
+  it("names every engine it tried when none answers, and keeps the honest OFFLINE contract", async () => {
+    const out = await buildWorker(
+      { WORKER_HEALTH_URLS: "https://a.test/health,https://b.test/healthz" },
+      fetcherWith(503, { detail: "paused" }),
+    );
+    expect(out.status).toBe("OFFLINE");
+    expect(out.worker).toBeNull();
+    expect(out.note).toContain("no engine answered (2 configured)");
+    expect(out.note).toContain("HTTP 503");
+    expect(out.engines).toBeUndefined();
+  });
 });

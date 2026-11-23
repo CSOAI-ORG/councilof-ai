@@ -40,7 +40,6 @@ import {
 } from "./footprint";
 import packages from "../../public/interop/footprint-packages.json";
 import distribution from "../../public/interop/distribution-latest.json";
-import registryCensus from "../../public/interop/mcp-registry-2026-09-23/census.json";
 import registryLatest from "../../public/interop/mcp-registry-latest.json";
 
 const ORIGIN = "https://councilof.ai";
@@ -406,7 +405,7 @@ describe("registry_listings — read a dated, complete off-edge census", () => {
       measured_utc: registryLatest.measured_utc,
       completed_utc: registryLatest.completed_utc,
     });
-    expect(registryCensus.servers).toBe(registryLatest.servers);
+    expect(JSON.parse(raw.toString("utf8")).servers).toBe(registryLatest.servers);
   });
 
   it("makes no registry request when the whole footprint is built", async () => {

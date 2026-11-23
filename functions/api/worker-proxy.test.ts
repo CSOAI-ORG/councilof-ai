@@ -23,7 +23,7 @@ describe("GET /api/worker", () => {
     vi.unstubAllGlobals();
   });
 
-  it("delegates the bare route to the live pod proxy (worker-state schema, only known fields)", async () => {
+  it("delegates the bare route to the live engine proxy (worker-state schema, only known fields)", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () =>
