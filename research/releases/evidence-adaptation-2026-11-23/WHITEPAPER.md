@@ -95,6 +95,14 @@ An independently coded **synthetic** 3×2×2 human-information / candidate-polic
 
 No claim of human-AI cognitive co-evolution or recursive self-improvement follows. Those ideas require genuine consenting participants, independent outcomes and verified change channels.
 
+### 3.7. Three-arm MEOK adaptation: why a small apparent gain is not yet evidence of learning
+
+A separate **historical exploratory MEOK comparison**, reported in November but not independently reproduced in this release, described three arms on 24 held-out questions: (A) frozen Qwen2.5-0.5B with full records, (B) a LoRA-adapted model with the same records, and (C) the frozen model retrieving the most recent record. Reported totals were 8/24, 7/24 and 9/24 respectively. A follow-up numerical-stability/precision diagnostic reported 8/24 for its comparison baseline/adapter and 11/24 for compact retrieval. **The original item-level paired predictions and training-run artifacts were not recoverable during this review; these figures are historical reports, not new independently verified results.** In particular, the 11/24 diagnostic must not be pooled as though it used the same numerical conditions as the original arms.
+
+A useful exact mathematical check is possible even *conditional* on the reported 8/24 versus 11/24 scores being measured on the same 24 tasks. Let `x` be the number of tasks both arms answered correctly. The possible overlap is `0 <= x <= 8`; retrieval-only gains are `11-x`, baseline-only gains are `8-x`. Enumerating **all nine possible overlaps** and applying the exact two-sided paired McNemar/binomial test yields **p between 0.25 and approximately 0.647606**. Even the most favourable matching (three gains, zero regressions) does not reach the conventional 0.05 threshold. For 8/24 versus 9/24, the exact two-sided p-value is **1.0 at every possible matching**. No confidence interval or hypothesis test establishes superiority from these aggregate scores; the observations are too small, and the precision change introduces a confound in the diagnostic.
+
+The scientific next experiment therefore requires an **identical sealed task bank**, frozen source and model revisions, the same decoding and numeric precision for each arm, item-level predictions and validity flags (including NaNs/invalid outputs), per-case tool and retrieval traces, paired gain/loss accounting, repeat seeds, latency/cost, and a truly withheld answer key. A fourth, **sham/latest-record retrieval negative control** can help distinguish newer information from simple prompt length or route effects. Predeclare the primary metric and statistical test; keep human authorisation and externally verified downstream effects outside the model-learning score. Do not promote adapter weights, retrieval policies or model claims on this retrospective comparison.
+
 ## 4. A prospective research model
 
 An evidence cycle has **separable actors and states**:
