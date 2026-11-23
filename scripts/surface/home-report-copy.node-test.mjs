@@ -40,8 +40,8 @@ test("report archive and signup survive while the live strip belongs only to Hom
   assert.match(source, /target="_blank"\s+rel="noopener noreferrer"/);
   assert.match(source, /href="\/board\/"/);
   assert.match(source, /<NewsletterSignup\s*\/>/);
-  assert.match(resultsSource, /<LivingBoardStrip\s*\/>/);
-  assert.doesNotMatch(source, /<LivingBoardStrip\s*\/>/);
+  assert.match(resultsSource, /<LivingBoardStrip\b[^>]*\/>/);
+  assert.doesNotMatch(source, /<LivingBoardStrip\b/);
 });
 test("restored archive band does not reuse the HomeUpdates test selector", () => {
   assert.match(source, /data-testid="home-report-archive-band"/);
