@@ -138,6 +138,8 @@ describe("/api/x402 — URL fields are URLs, not sentences", () => {
     const doc = JSON.stringify(await catalog());
     expect(doc.match(WRONG_REASON)?.[0] ?? null).toBeNull();
     expect((await catalog()).mcp.how).toMatch(/x_payment ARGUMENT/);
+    // The MCP door reads a second channel since #4517; the catalog names it where it says how to pay.
+    expect((await catalog()).mcp.how).toContain('_meta["x402/payment"]');
   });
 
   // T14 (6 Oct 2026): this catalog typed four paid tools while /mcp served five (evidence_bundle was

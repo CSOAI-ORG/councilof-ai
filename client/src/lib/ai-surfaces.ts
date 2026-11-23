@@ -172,7 +172,7 @@ export const SURFACES: Surface[] = [
     mechanism: "CORRECTED 30 Sep 2026 — until then a question typed or spoken during the demo went to the /api/chat model. It now goes to POST /api/agui/run, the deterministic talk router Ask GSPC uses, and the demo reads back the cited tool summaries or says the question is not measured. The scripted steps are hard-coded in demoOsSteps.ts. No model call exists in this surface's code.",
     evidence: ["client/src/pages/DemoOS.tsx", "client/src/lib/aguiTalk.ts", "functions/_lib/talkRouter.ts"] },
   { route: "/me", label: "CouncilTwin", nature: "rule_based",
-    mechanism: "A canvas visualisation plus a passport-minting call to a signing endpoint (sha256 / Ed25519), not a model. No model call exists in this surface's code.",
+    mechanism: "A canvas visualisation plus a call to a signing endpoint that returns a signed record (sha256 / Ed25519), not a model. No model call exists in this surface's code.",
     evidence: ["client/src/pages/CouncilTwin.tsx"] },
   { route: "/enter", label: "OsEnter", nature: "rule_based",
     mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",

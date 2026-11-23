@@ -29,7 +29,7 @@ export async function buildUsage(kv: KV | undefined, days: number, now: Date = n
     schema: USAGE_SCHEMA,
     kind: "measured",
     as_of: now.toISOString(),
-    what: "Daily counts of calls at the agent doors: MCP initialize clientInfo.name (mcp_client), MCP tools/call names (mcp_tool), A2A outcomes (a2a_outcome), /api/chat reply states (chat_state), AG-UI run states (agui_state) and the body shape of a request a door refused as unreadable (reject_shape: content class and allowlisted key names, never a value).",
+    what: "Daily counts of calls at the agent doors: MCP initialize clientInfo.name (mcp_client), MCP tools/call names (mcp_tool), A2A outcomes (a2a_outcome), /api/chat reply states (chat_state), AG-UI run states (agui_state) the body shape of a request a door refused as unreadable (reject_shape: content class and allowlisted key names, never a value), and for each call of a metered tool whether and where a payment was presented (paid_call: door, tool, and none / preview / arg / meta / both / purchase; never the payment, and presented is not settled).",
     privacy: "No IP address, user-agent string, message text, arguments or identifier is stored. Rows expire after " + USAGE_RETENTION_DAYS + " days.",
     completeness: "LOWER_BOUND: each count is the rows actually written; a failed best-effort write is not retried, and our own traffic that does not identify itself is counted as external.",
     self_excluded: SELF_TOOLS.map((t) => ({ name: t.name, kind: t.kind, runs_on: t.runs_on, match: t.ua_token ? `User-Agent token ${t.ua_token}` : null })),

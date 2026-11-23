@@ -89,6 +89,14 @@ const declaredEvidenceUrl = (value) => {
 };
 const check = (id, state, detail, evidence = null) => ({ id, state, detail, ...(evidence === null ? {} : { evidence }) });
 
+/** What the axis's score does not show, as the CURRENT board slot states it (axes[].limit), in the
+ * board's own words. The audited snapshot row stays as captured, so the limit is read from the
+ * slot and stands beside that row, never inside it. A slot with no stated limit adds no key, so
+ * its audit and index entry stay byte-identical. */
+export function statedLimit(slot) {
+  return typeof slot?.limit === "string" && slot.limit.trim() !== "" ? slot.limit : null;
+}
+
 export function validateRegistry(registry, sourceSlots, snapshot, mcpTools) {
   const errors = [];
   if (registry?.schema !== "csoai.axis-specialist-registry/1.0") errors.push("registry schema mismatch");
@@ -142,7 +150,7 @@ export function validateRegistry(registry, sourceSlots, snapshot, mcpTools) {
   return errors;
 }
 
-export function auditSpecialist(spec, row, registry) {
+export function auditSpecialist(spec, row, registry, sourceSlot = null) {
   const checks = [];
   checks.push(check("AXIS_IDENTITY", spec.axis === row.axis ? "PASS" : "FINDING", `specialist ${spec.axis} audits only the ${spec.axis} row`, row.axis));
   checks.push(check("ISOLATED_CLUSTER", "PASS", `logical cluster meok-axis-${spec.axis}; no shared write access or cross-axis credentials`));
@@ -176,9 +184,11 @@ export function auditSpecialist(spec, row, registry) {
   else if (present(row.method_status)) checks.push(check("CURRENT_METHOD_RULE", "PASS", method));
 
   const findings = checks.filter((item) => item.state === "FINDING");
+  const limit = statedLimit(sourceSlot);
   const audit = {
     schema: AUDIT_SCHEMA,
     axis: spec.axis,
+    ...(limit === null ? {} : { limit }),
     specialist: {
       id: `meok-${spec.axis}-specialist`,
       cluster_id: `meok-axis-${spec.axis}`,
@@ -242,12 +252,14 @@ export function buildTree({ registry, sourceSlots, snapshot, mcpTools, charterCo
   const errors = [...validateRegistry(registry, sourceSlots, snapshot, mcpTools), ...validateCharterMap(charterContext, sourceSlots.map(r => r.axis))];
   if (errors.length) throw new Error(`axis specialist validation failed:\n- ${errors.join("\n- ")}`);
   const rowById = Object.fromEntries(snapshot.axes.map((row) => [row.axis, row]));
-  const audits = registry.specialists.map((spec) => attachCharter(auditSpecialist(spec, rowById[spec.axis], registry), charterContext, spec.required_fields));
+  const slotById = Object.fromEntries(sourceSlots.map((slot) => [slot.axis, slot]));
+  const audits = registry.specialists.map((spec) => attachCharter(auditSpecialist(spec, rowById[spec.axis], registry, slotById[spec.axis]), charterContext, spec.required_fields));
   const files = new Map();
   const indexRows = audits.map((audit) => {
     files.set(`${audit.axis}.json`, audit);
     return {
       axis: audit.axis,
+      ...(audit.limit === undefined ? {} : { limit: audit.limit }),
       specialist_id: audit.specialist.id,
       cluster_id: audit.specialist.cluster_id,
       cluster_state: audit.specialist.cluster_state,

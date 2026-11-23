@@ -90,7 +90,7 @@ PRODUCERS = {
     "scripts/spray/gspc-spray.py": "edits-live",             # hf_dataset_companions() line-edits the live card
     "scripts/pod-loops/gspc-spray.py": "edits-live",
     "scripts/pod-loops/durability_hf_publish.py": "private",  # csoai/councilof-ai-source; additive markers
-    "scripts/mirror_to_hf.py": "private",                    # csoai/councilof-ai-mirror
+    "scripts/mirror_to_hf.py": "private",                    # no default target; its old one, csoai/councilof-ai-mirror, was deleted 21 Nov 2026
     "scripts/pod-loops/corrections-watch.py": "not-a-card",  # sub-folder README (public/interop/corrections-watch/) in csoai/councilof-ai-evidence, not a dataset card
     "scripts/pod-loops/drift-draft.py": "private",           # csoai/corrections-watch, created --private
     "scripts/sync_hf_gspc.py": "not-a-card",                 # the gspc-board Space shell

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """corrections-watch: the daily re-check behind "Corrections that did not travel".
 
-Runs on oracle-micro-2 (cron 10 6 * * *). No GitHub anywhere in the loop: the row set is READ from the
-Hugging Face mirror (v0.2, never edited), every cited page is re-fetched with a browser user-agent, the stale
-string and the corrected string are looked for verbatim in the served bytes, and the result is published to
-the PUBLIC evidence dataset under public/interop/corrections-watch/ (one dated file per day + latest.json):
+Runs on oracle-micro-2 (cron 10 6 * * *). The row set is READ from this repository at a pinned commit (v0.2,
+never edited; an anonymous GitHub raw read with no token), every cited page is re-fetched with a browser user-agent,
+the stale string and the corrected string are looked for verbatim in the served bytes, and the result is published
+to the PUBLIC evidence dataset under public/interop/corrections-watch/ (one dated file per day + latest.json):
     https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/corrections-watch/
-A copy of the same files goes to the mirror as well. Every public link to the results points at the evidence
-dataset, never at the mirror (the mirror was private from 29 Sep 2026 and anonymous readers got 401).
+Every public link to the results points at the evidence dataset. Until 21 Nov 2026 the row set was read from, and
+a copy of the results written to, the Hugging Face dataset csoai/councilof-ai-mirror; it was deleted that day.
 
     corrections-watch.py                 # fetch, probe, write, upload
     corrections-watch.py --no-upload     # fetch, probe, write only (dry)
@@ -26,8 +26,9 @@ from pathlib import Path
 
 import requests
 
-MIRROR = "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/"
-REPO_ID = "csoai/councilof-ai-mirror"            # copy only; its visibility has changed (private 29 Sep 2026)
+# v0.2 and v0.3 are dated, OTS-stamped files that are never edited, so they are read at a pinned commit: the URL
+# names exact bytes, and the record below still stores their sha256.
+SOURCE = "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/f6fa2cc833d55dc52b5be81110b6abd325f4dab0/"
 PUBLIC_REPO_ID = "csoai/councilof-ai-evidence"   # public; THE home of the results and of every public link to them
 V02_PATH = "public/interop/corrections-that-did-not-travel-2026-09-17-v0.2.json"
 V03_PATH = "public/interop/corrections-that-did-not-travel-2026-09-22-v0.3.json"
@@ -135,13 +136,9 @@ def hf_token():
 
 def fetch(url):
     """One GET with a browser UA. Returns (response|None, error|None, elapsed_s).
-    The HF token is attached ONLY for our own mirror (private since 29 Sep); never for probed pages."""
+    No credential is attached to any request: the row set is public, and so are the probed pages."""
     t = time.time()
     headers = dict(UA)
-    if url.startswith(MIRROR):
-        tok = hf_token()
-        if tok:
-            headers["Authorization"] = f"Bearer {tok}"
     try:
         r = requests.get(url, headers=headers, timeout=TIMEOUT, allow_redirects=True)
         return r, None, round(time.time() - t, 2)
@@ -302,13 +299,13 @@ def main():
     if not ok:
         print("ABORT controls:", json.dumps(controls)); return 2
 
-    # 2. Read the row set from the mirror, never from disk, never from a hardcoded list.
-    r, err, _ = fetch(MIRROR + V02_PATH)
+    # 2. Read the row set from the pinned commit, never from disk, never from a hardcoded list.
+    r, err, _ = fetch(SOURCE + V02_PATH)
     if r is None or r.status_code != 200:
-        print("ABORT cannot read v0.2 from mirror:", err or r.status_code); return 3
+        print("ABORT cannot read v0.2 at the pinned commit:", err or r.status_code); return 3
     v02_bytes = r.content; v02 = json.loads(v02_bytes)
     rows_in = v02["did_not_travel"]
-    r3, _, _ = fetch(MIRROR + V03_PATH)
+    r3, _, _ = fetch(SOURCE + V03_PATH)
     v03_sha = sha256(r3.content) if (r3 is not None and r3.status_code == 200) else None
 
     # 3. Re-fetch every page.
@@ -370,8 +367,8 @@ def main():
         "generated_at": utcnow(),
         "run_host": {"kind": "Oracle VM", "hostname": socket.gethostname(), "scheduler": "cron 10 6 * * * ~/lanes/corrections-watch-oracle-20260928/run.sh"},
         "source": {
-            "rows_from": MIRROR + V02_PATH, "v02_sha256": sha256(v02_bytes), "v02_as_of": v02.get("as_of"),
-            "v03": MIRROR + V03_PATH, "v03_sha256": v03_sha,
+            "rows_from": SOURCE + V02_PATH, "v02_sha256": sha256(v02_bytes), "v02_as_of": v02.get("as_of"),
+            "v03": SOURCE + V03_PATH, "v03_sha256": v03_sha,
             "note": "v0.2 and v0.3 are read, never written. This file adds a day, it does not amend them."},
         "notification_date": NOTIFICATION_DATE.isoformat(),
         "what_a_reader_sees": (
@@ -441,19 +438,13 @@ def main():
         ops.append(CommitOperationAdd(path_in_repo=f"{FOLDER}/README.md", path_or_fileobj=str(readme)))
     msg = f"corrections-watch {today.isoformat()}: {totals['stale_still_served']}/{totals['rows_measured']} stale still served; hf DROP hits {hf_drop['total_hits']}"
     # 2026-09-29 (FU-2): the public evidence dataset is where the results live and where every public link points.
-    # It is written FIRST; if it fails the run fails (rc=4) and says so. The mirror copy is secondary: a failure
-    # there is reported on its own line and does not hide a successful public publication.
+    # If the upload fails the run fails (rc=4) and says so. The second copy to csoai/councilof-ai-mirror ended when
+    # that dataset was deleted on 21 Nov 2026.
     try:
         pinfo = api.create_commit(repo_id=PUBLIC_REPO_ID, repo_type="dataset", operations=ops, commit_message=msg)
     except Exception as e:
         print("ABORT public upload failed:", type(e).__name__, str(e)[:200]); return 4
     print("UPLOADED", pinfo.commit_url if hasattr(pinfo, "commit_url") else pinfo, "| read:", PUBLIC_RESULTS + "latest.json")
-    try:
-        mops = [CommitOperationAdd(path_in_repo=o.path_in_repo, path_or_fileobj=o.path_or_fileobj) for o in ops]
-        info = api.create_commit(repo_id=REPO_ID, repo_type="dataset", operations=mops, commit_message=msg)
-        print("MIRRORED", info.commit_url if hasattr(info, "commit_url") else info)
-    except Exception as e:
-        print("MIRROR-COPY-FAILED", type(e).__name__, str(e)[:200])
     return 0
 
 

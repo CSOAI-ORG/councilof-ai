@@ -57,9 +57,14 @@ def plain_client_status(url):
         return 0
 
 
+# The old default target, csoai/councilof-ai-mirror, was deleted on 21 Nov 2026. create_repo() below
+# would re-create it as a public dataset, so there is no default and that name is refused.
+DELETED_REPOS = {"csoai/councilof-ai-mirror"}
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--repo", default="csoai/councilof-ai-mirror")
+    ap.add_argument("--repo", help="target Hugging Face dataset; there is no default")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
@@ -76,6 +81,12 @@ def main():
                   "whether this mirror is still needed for that reason.")
         print("selftest OK")
         return 0
+
+    if not a.repo:
+        print("REFUSED: name the target dataset with --repo (the old default, csoai/councilof-ai-mirror, "
+              "was deleted on 21 Nov 2026)"); return 2
+    if a.repo in DELETED_REPOS:
+        print(f"REFUSED: {a.repo} was deleted on 21 Nov 2026 and is not re-created by this script"); return 2
 
     token = os.environ.get("HF_TOKEN")
     if not token:
@@ -143,6 +154,9 @@ def main():
     if a.dry_run:
         print(f"DRY RUN: would mirror {ok} file(s), {failed} unfetchable, to {a.repo}")
     else:
+        import subprocess, sys  # privacy gate: read the exact bytes before they leave; fails closed
+        subprocess.run([sys.executable, "-I", os.path.join(os.path.dirname(os.path.abspath(__file__)), "privacy", "publication_gate.py"),
+                        "--label", "mirror_to_hf", str(tmp)], check=True)
         api.upload_folder(folder_path=str(tmp), repo_id=a.repo, repo_type="dataset",
                           commit_message=f"mirror {ok} public artifacts from {ORIGIN}")
         print(f"mirrored {ok} file(s), {failed} unfetchable, to {a.repo}")

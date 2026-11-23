@@ -1,0 +1,217 @@
+name: GSPC joined evidence engine index
+
+on:
+  pull_request:
+    paths:
+      - "scripts/measurements/gspc-evidence-engine-index.mjs"
+      - "scripts/measurements/gspc-evidence-engine-index.node-test.mjs"
+      - "scripts/measurements/gspc-trusted-run.mjs"
+      - "scripts/measurements/gspc-trusted-run.node-test.mjs"
+      - "scripts/measurements/GSPC_ENGINE_HF_README.md"
+      - ".github/workflows/gspc-evidence-engine-index.yml"
+  workflow_run:
+    workflows:
+      - "GSPC source-bound coverage feed"
+      - "GSPC repeated-observation integrity audit"
+      - "GSPC synthetic dataset mutation sensitivity"
+    types: [completed]
+    branches: [master]
+  push:
+    branches: [master]
+    paths:
+      - "scripts/measurements/gspc-evidence-engine-index.mjs"
+      - "scripts/measurements/gspc-evidence-engine-index.node-test.mjs"
+      - "scripts/measurements/gspc-trusted-run.mjs"
+      - "scripts/measurements/gspc-trusted-run.node-test.mjs"
+      - ".github/workflows/gspc-evidence-engine-index.yml"
+  schedule: [{cron: "07 7 * * *"}]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: gspc-evidence-engine-index
+  cancel-in-progress: false
+
+jobs:
+  validate-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - name: Cross-feed contract and privacy publication wiring negative controls
+        run: |
+          node --test scripts/measurements/gspc-evidence-engine-index.node-test.mjs scripts/measurements/gspc-trusted-run.node-test.mjs
+          python3 scripts/privacy/test_publication_gate.py Wiring -v
+
+  assemble-source-bound-index:
+    # workflow_run executes using the default branch identity even when
+    # triggered by a fork PR called "master". Such an event MUST NOT get
+    # permission to use master publication credentials.
+    if: >-
+      github.ref == 'refs/heads/master' &&
+      github.event_name != 'pull_request' &&
+      (github.event_name != 'workflow_run' ||
+        (github.event.workflow_run.head_repository.full_name == 'CSOAI-ORG/councilof-ai' &&
+         github.event.workflow_run.head_branch == 'master' &&
+         github.event.workflow_run.conclusion == 'success' &&
+         (github.event.workflow_run.event == 'push' ||
+          github.event.workflow_run.event == 'schedule' ||
+          github.event.workflow_run.event == 'workflow_dispatch')))
+    needs: [validate-contract]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - name: Install deterministic GSPC board snapshot dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Download only successful master-branch CI artifacts
+        id: collect
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BASE="$RUNNER_TEMP/gspc-engine"
+          mkdir -p "$BASE/coverage" "$BASE/repeat" "$BASE/mutation"
+          get_artifact() {
+            local workflow="$1" artifact="$2" name="$3" workflow_name="$4"
+            local id sha compare_json run_json selection_json
+            # Branch name alone is insufficient: a fork PR can name its
+            # head branch "master". Select only latest qualified event kind
+            # from a bounded set. Never fall back past a more recent failed
+            # or running trusted production event.
+            selection_json="$(gh run list -R CSOAI-ORG/councilof-ai --workflow "$workflow" --branch master --limit 40 --json databaseId,event,status,conclusion --jq '[.[]|select(.event=="push" or .event=="schedule" or .event=="workflow_dispatch")][0] // {}')" || return 1
+            id="$(printf '%s' "$selection_json" | jq -r '.databaseId // empty')"
+            if test -z "$id"; then
+              echo "SOURCE_DEPENDENCY_NOT_READY: no trusted master event for $workflow"
+              return 1
+            fi
+            run_json="$BASE/$name/source-run.json"
+            compare_json="$BASE/$name/master-ancestry.json"
+            gh api "repos/CSOAI-ORG/councilof-ai/actions/runs/$id" > "$run_json" || return 1
+            sha="$(jq -r '.head_sha // empty' "$run_json")"
+            if [[ ! "$sha" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "SOURCE_DEPENDENCY_NOT_READY: malformed source commit hash"
+              return 1
+            fi
+            # Compare base=source commit, head=the checkout's protected
+            # current master SHA. A fork PR or detached branch is forbidden.
+            gh api "repos/CSOAI-ORG/councilof-ai/compare/$sha...$GITHUB_SHA" > "$compare_json" || return 1
+            if ! node scripts/measurements/gspc-trusted-run.mjs --run "$run_json" --compare "$compare_json" --id "$id" --workflow-name "$workflow_name"; then
+              echo "SOURCE_DEPENDENCY_NOT_READY: upstream event/source is untrusted or not latest-success"
+              return 1
+            fi
+            if ! gh run download "$id" -R CSOAI-ORG/councilof-ai --name "$artifact" -D "$BASE/$name"; then
+              echo "SOURCE_DEPENDENCY_NOT_READY: artifact $artifact absent from trusted run $id"
+              return 1
+            fi
+            printf '%s' "$id" > "$BASE/$name/run-id"
+          }
+          if ! get_artifact gspc-evidence-coverage-feed.yml gspc-source-bound-coverage coverage "GSPC source-bound coverage feed" ||
+             ! get_artifact gspc-repeat-integrity.yml gspc-repeat-source-reconciled-candidate repeat "GSPC repeated-observation integrity audit" ||
+             ! get_artifact gspc-dataset-mutation-sensitivity.yml gspc-synthetic-mutation-integrity-candidate mutation "GSPC synthetic dataset mutation sensitivity"; then
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo '{"state":"SOURCE_DEPENDENCY_NOT_READY","not_published":true}' > "$BASE/status.json"
+            exit 0
+          fi
+          python3 - <<'PY'
+          import os,json
+          from pathlib import Path
+          d=Path(os.environ["RUNNER_TEMP"])/"gspc-engine"
+          ids={k:int((d/k/"run-id").read_text()) for k in ("coverage","repeat","mutation")}
+          (d/"runs.json").write_text(json.dumps(ids,sort_keys=True)+"\n")
+          print("MASTER_ARTIFACT_RUNS",ids)
+          PY
+          echo 'ready=true' >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        if: steps.collect.outputs.ready == 'false'
+        with:
+          name: gspc-engine-source-not-ready
+          path: ${{ runner.temp }}/gspc-engine/status.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Reject source pin or evidence-denominator disagreements
+        if: steps.collect.outputs.ready == 'true'
+        run: |
+          set -euo pipefail
+          BASE="$RUNNER_TEMP/gspc-engine"
+          node scripts/gspc-board-snapshot.mjs "$BASE/current-board.json"
+          node scripts/measurements/gspc-evidence-engine-index.mjs \
+            --coverage "$BASE/coverage/coverage.json" \
+            --repeat "$BASE/repeat/report.json" \
+            --mutation "$BASE/mutation/report.json" \
+            --run-metadata "$BASE/runs.json" \
+            --current-manifest public/interop/gspc-fact-table/MANIFEST.json \
+            --current-evidence public/interop/mill-evidence \
+            --synthetic-reference scripts/experiments/fixtures/gspc-dataset-mutation-baseline.sha256 \
+            --current-board "$BASE/current-board.json" \
+            --out "$BASE/engine-index.json"
+          cp scripts/measurements/GSPC_ENGINE_HF_README.md "$BASE/README.md"
+          python3 - <<'PY'
+          import os,json
+          from pathlib import Path
+          d=json.loads((Path(os.environ["RUNNER_TEMP"])/"gspc-engine"/"engine-index.json").read_text())
+          assert d["state"]=="SOURCE_RECONCILED_RESEARCH_INDEX_NOT_SIGNED_OR_ADMITTED"
+          assert d["separate_synthetic_research"]["model_poisoning_effect"]=="NOT_TESTED"
+          assert d["checkout_validation"]["state"]=="SOURCE_BYTES_MATCH_CURRENT_CHECKOUT_UNWITNESSED"
+          assert d["checkout_validation"]["gspc_current_board_digest"]==d["sources"]["gspc_board_digest"]
+          assert d["measurements"]["per_item_observation_rows"]>=d["measurements"]["distinct_attributed_model_axis_item_keys"]
+          print("SOURCE_CONSISTENT_ENGINE_INDEX",d["measurements"]["board_axes"],d["measurements"]["per_item_observation_rows"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: steps.collect.outputs.ready == 'true'
+        with:
+          name: gspc-cross-source-engine-index
+          path: |
+            ${{ runner.temp }}/gspc-engine/engine-index.json
+            ${{ runner.temp }}/gspc-engine/README.md
+            ${{ runner.temp }}/gspc-engine/runs.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Mirror only the accepted aggregate to Hugging Face
+        if: steps.collect.outputs.ready == 'true' && github.ref == 'refs/heads/master'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
+        run: |
+          if test -z "$HF_TOKEN"; then
+            echo "HF_TOKEN_NOT_CONFIGURED: verified Actions artifact only"
+            exit 0
+          fi
+          python3 -m pip install -q "huggingface_hub>=0.25"
+          python3 - <<'PY'
+          import os,json
+          from pathlib import Path
+          from huggingface_hub import HfApi,hf_hub_download
+          root=Path(os.environ["RUNNER_TEMP"])/"gspc-engine"
+          repo="csoai/gspc-evidence-engine-index"
+          data=(root/"engine-index.json").read_bytes()
+          api=HfApi(token=os.environ["HF_TOKEN"])
+          try:
+            prior=Path(hf_hub_download(repo_id=repo,repo_type="dataset",
+              filename="engine-index.json",token=os.environ["HF_TOKEN"])).read_bytes()
+            if prior==data:
+              print("UNCHANGED: no duplicate external publication")
+              raise SystemExit(0)
+          except Exception as e:
+            if isinstance(e,SystemExit):raise
+            print("NO_COMPARABLE_PRIOR_INDEX:",type(e).__name__)
+          # Atomic single revision of the two public files: never mirror the
+          # downloaded source bundles, credentials, or partial assembly state.
+          public=root/"public-mirror"
+          public.mkdir(exist_ok=True)
+          (public/"engine-index.json").write_bytes(data)
+          (public/"README.md").write_bytes((root/"README.md").read_bytes())
+          import subprocess
+          subprocess.run(["python3","scripts/privacy/publication_gate.py","--require-ids",str(public)],check=True)
+          api.create_repo(repo,repo_type="dataset",exist_ok=True,private=False)
+          api.upload_folder(repo_id=repo,repo_type="dataset",folder_path=str(public),
+            commit_message="Bounded source-reconciled GSPC evidence engine index")
+          print("PUBLIC_AGGREGATE_INDEX_PUBLISHED: no model-safety certification")
+          PY

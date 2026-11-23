@@ -11,6 +11,50 @@
  },
  "notes": [
   {
+   "id": "live-ai-rules-frozen-as-checkable-text",
+   "date": "2026-11-22",
+   "title": "264 of 573 live AI rules are frozen as text anyone can re-check",
+   "summary": "For 65 more in-force or enacted AI rules in corpus v3, the official publisher's own site was the obstacle; 42 of those refused automated clients.",
+   "body": "Corpus v3 lists 678 AI-relevant instruments across 135 jurisdiction codes, and 573 of them are in force, enacted or partly applicable. This note sorts those 573 by the reason each build wave recorded for freezing, or not freezing, the text. 264 are frozen as full text: every provision is published with a hash anyone can recompute. For 196 the limit is our own build: the host was not attempted in the time budget, was not allowlisted in our sandbox, or the status still rests on a source we have not checked. For 65 the official publisher's site was the obstacle: 42 refused automated clients with 403, 429, 451 or bot challenges, 9 render the law text by JavaScript with no text endpoint we could find, 9 documents could not be located, 4 are scans or carry an unusable text layer, and 1 was rejected by a firewall. 23 more failed on TLS errors or time-outs where the cause is not established, 14 wait on a reuse licence check, and 11 are kept as registry rows by design. We do not bypass bot challenges. A rule a machine cannot fetch is a rule a machine cannot check, so the coverage notes name a human route for each blocked host. Every one of the 196 is listed in the table as work still to do.",
+   "artifacts": [
+    {
+     "label": "Corpus v3 README (counts, root, what it does not claim)",
+     "url": "https://councilof.ai/interop/corpus-v3/README.md"
+    },
+    {
+     "label": "Freeze-outcome table for this note",
+     "url": "https://councilof.ai/interop/insights/corpus-freeze-outcomes-2026-11-22.json"
+    },
+    {
+     "label": "Producer script (standard library only)",
+     "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/insights/corpus_freeze_outcomes.py"
+    }
+   ],
+   "social": "264 of 573 live AI rules in our corpus are frozen as text anyone can re-check. For 65 more, the official publisher's site was the obstacle; 42 refused automated clients. Method and table: https://councilof.ai/notes/live-ai-rules-frozen-as-checkable-text/"
+  },
+  {
+   "id": "model-gaps-too-small-to-call",
+   "date": "2026-11-22",
+   "title": "Too small to call: most top-two gaps on the board need far larger tests",
+   "summary": "On 11 of the 12 comparison axes that publish discordant counts, the gap between the top two models would need at least six times more test items to be told apart from chance.",
+   "body": "The board names no separated leader on any of its model-comparison axes. This note asks how large each test would have to be before the gap between its top two models could be detected. For every axis whose entry on GET /api/gspc publishes discordant counts, we took the items where one of the two models was right and the other wrong, and computed how many items a paired exact McNemar test would need to detect that gap 80 percent of the time at the 5 percent level, if the observed discordant rates are the true ones. Jail and swarm carry legacy method status, publish no discordant counts and are left out. A simulation of the exact test at the computed sizes returned 82 and 79 percent power on two axes. On 11 of the 12 remaining axes the answer is at least six times the current bank, and the median multiple is close to nine. Cross-reality is the nearest: 32 items, 9 against 2 discordant, about 54 items needed. Read the sizes as order of magnitude: they rest on few disagreements, and picking the top two after the fact inflates the gap. On governance, more items of the same bank would not help, because its wording gives the labels away (correction C-2026-1120-02). We will size the next bank releases from this table.",
+   "artifacts": [
+    {
+     "label": "GSPC board (separation_basis per axis)",
+     "url": "https://councilof.ai/api/gspc"
+    },
+    {
+     "label": "Sample-size table for this note",
+     "url": "https://councilof.ai/interop/insights/model-gap-sample-size-2026-11-22.json"
+    },
+    {
+     "label": "Producer script (standard library only)",
+     "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/insights/gspc_separation_sample_size.py"
+    }
+   ],
+   "social": "11 of 12 model comparisons on our board would need at least six times more test items before the top-two gap could be told apart from chance. Method, limits and data: https://councilof.ai/notes/model-gaps-too-small-to-call/"
+  },
+  {
    "id": "governance-same-bank-gap",
    "date": "2026-09-14",
    "title": "Governance: two models, one frozen bank, a gap in point estimates",

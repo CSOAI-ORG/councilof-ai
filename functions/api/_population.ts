@@ -864,7 +864,11 @@ const claimWatch: PopulationEntry = {
       reason: null,
       unmeasured: [
         ...unmeasured,
-        `${measured} of ${n} historical claim rows across all published registry versions are CLAIM_MEASURED, ${stillCaptured} remain CLAIM_CAPTURED and ${notMeasured} are UNMEASURED or UNCHECKABLE. ${liveN} claim rows are in the current non-superseded registry set. Counts are derived from served bytes at request time. A measured claim carries its method, window, denominator and sources. No claim of falsity is made about any entry.`,
+        // Kept short on purpose: this sentence rides in the 402 challenge, and the long form pushed
+        // claim-watch past the PAYMENT-REQUIRED header budget, so the signed offer was dropped from
+        // the whole response (observed live 2026-11-18: claim-watch was the only population door
+        // answering without extensions["offer-receipt"]). The full breakdown is free at ?preview=1.
+        `claim rows: ${measured} CLAIM_MEASURED, ${stillCaptured} CLAIM_CAPTURED, ${notMeasured} UNMEASURED/UNCHECKABLE of ${n} historical; ${liveN} current. No claim of falsity is made about any entry.`,
       ],
       head: {
         registries,

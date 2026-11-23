@@ -1,0 +1,104 @@
+{
+  "protocol_id": "csoai.silent-change-protocol/1",
+  "registered_on": "2026-11-22",
+  "status": "PRE_REGISTERED_NO_DATA_YET",
+  "items": {
+    "source": "frozen per-item lane banks, dataset csoai/gspc-peritem-rows-2026-08-12 (the same files ci/frontier-runner.py reads)",
+    "lanes": [
+      "provenance",
+      "conformance"
+    ],
+    "items_per_lane": 10,
+    "selection_rule": "sort the lane's (item, gold) pairs by sha256(lane + NUL + item_text) ascending, take the first items_per_lane",
+    "prompt": "harness/gspc-top100/mill_hub_queue.py::axis_prompt(lane, item, menu), unchanged",
+    "grader": "harness/gspc-top100/mill_hub_queue.py::read_label; an answer that is not one menu label is the category UNPARSED, which counts as its own category",
+    "item_visibility": "PUBLIC_BANK (the held-out question is open, see HELDOUT-DESIGN.md)"
+  },
+  "repeats_k": 30,
+  "call_rules": {
+    "one_request_per_repeat": true,
+    "order": "all (item, repeat) calls of one batch shuffled together with a seeded RNG, so time of day is spread across items",
+    "declared_sampling": {
+      "temperature": 0,
+      "max_tokens": 32,
+      "seed": "unset unless the provider requires one"
+    },
+    "system_prompt": "none (calibration condition C3 changes it on purpose)"
+  },
+  "statistic": {
+    "name": "mean_tv_permutation",
+    "definition": "for item i let p_i and q_i be the share of each answer category in the baseline batch and the new batch; TV_i = 0.5 * sum_c |p_ic - q_ic|; T = mean over items of TV_i",
+    "null": "within each item, pool the 2K answers and re-split them at random into K and K; recompute T",
+    "permutations_b": 2000,
+    "p_value": "(1 + number of permuted T >= observed T) / (1 + b)",
+    "rng_seed_rule": "integer from sha256(protocol_id + comparison_id), so a comparison can be recomputed byte for byte"
+  },
+  "flag_rule": {
+    "alpha": 0.01,
+    "t_floor": 0.03,
+    "flag": "p_value <= alpha AND T >= t_floor",
+    "meaning": "the answer distribution on the probe items moved against the baseline by more than the model's own run-to-run spread. It says THAT behaviour moved on these items. It does not say why, where, or whether it matters.",
+    "no_cause_no_verdict": true
+  },
+  "baseline": {
+    "first_run_for_a_model": "writes the baseline (K repeats), compares nothing, state BASELINE_SET",
+    "replacement": "never automatic; only by a person starting the workflow with rebaseline=true, which records the hash of the baseline it replaces",
+    "signed": "digest record signed in GitHub Actions only"
+  },
+  "calibration": {
+    "model_family": "one open model, size chosen so the run fits free compute; exact repo, revision and file hashes are written to calibration-pins.json and committed BEFORE any calibration run",
+    "conditions": {
+      "C0": {
+        "name": "same revision, run again",
+        "trials": 30,
+        "expected": "no flag"
+      },
+      "C1": {
+        "name": "different revision of the same model",
+        "trials": 10,
+        "expected": "flag"
+      },
+      "C2": {
+        "name": "quantised copy of the same revision",
+        "trials": 10,
+        "expected": "flag"
+      },
+      "C3": {
+        "name": "changed system prompt (one added neutral sentence, text fixed in calibration-pins.json)",
+        "trials": 10,
+        "expected": "flag"
+      },
+      "C4": {
+        "name": "changed sampling setting (temperature 0 to 0.5)",
+        "trials": 10,
+        "expected": "flag"
+      }
+    },
+    "trial": "one full batch (all items x K repeats) under the condition, compared to the one baseline batch with the unchanged statistic and flag rule",
+    "reported": "for each condition: flags / trials with an exact 95% (Wilson) interval, plus mean T. C0 is the false-flag rate; C1 to C4 are the detection rates. Every condition is reported, including those that go badly.",
+    "synthetic_checks": "unit tests with planted and unplanted synthetic data prove the code, not the method. They are never reported as calibration."
+  },
+  "watch": {
+    "paid_models_enabled": false,
+    "enable_conditions": [
+      "~/_alignment/provider-terms-20261122/CLAUSES.md exists (it does as of 2026-11-22)",
+      "a named person has confirmed, per provider, that the governing agreement permits benchmarking and publishing the result; recorded in scripts/silent-change/paid_models.json as confirmed_by_person and confirmed_on",
+      "C0 false-flag rate has been measured and published beside the watch"
+    ],
+    "schedule": "one batch per model per day at a random minute inside a fixed window",
+    "publication": "a flag is printed with the calibration rates beside it. It is never labelled a cause, a degradation, or a safety verdict. Own-council models are never ranked publicly; the watch has no ranking at all.",
+    "multiplicity": "no correction across models, banks and days is applied. The expected number of false flags per day is models x C0 rate and is stated beside every report."
+  },
+  "not_done_by_this_protocol": [
+    "weights, raw reasoning and training data of paid models (stay in unmeasured[])",
+    "any cause for a flag",
+    "any claim about items outside the probe items",
+    "any comparison of one model with another"
+  ],
+  "addendum_1": {
+    "added_on": "2026-11-22",
+    "before_any_data": true,
+    "data_quality_gate": "if more than 5 percent of the calls of a batch fail at the transport (network error, timeout, HTTP error other than a refusal of credentials), the batch is UNCHECKABLE: it is not compared, not counted as a flag and not counted in any rate. A failed fetch is never read as 'unchanged' or 'changed'. UNPARSED answers are not transport failures; they stay a category.",
+    "max_transport_error_share": 0.05
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "csoai.silent-change-paid-models/1",
+  "paid_models_enabled": false,
+  "why_off": "No person has confirmed any provider's benchmarking and publication terms. ~/_alignment/provider-terms-20261122/CLAUSES.md exists (22 Nov 2026) and lists what a person must still check. A model entry is runnable only when terms.confirmed_by_person and terms.confirmed_on are both set AND this file's paid_models_enabled is true.",
+  "models": [
+    {"key": "deepseek-chat", "provider": "deepseek", "public_name": "deepseek-chat", "transport": "openai-compat",
+     "base_url": "https://api.deepseek.com", "key_env": "DEEPSEEK_API_KEY", "secret_present_in_actions": true,
+     "own_council": false, "terms": {"confirmed_by_person": null, "confirmed_on": null, "clause_source": "CLAUSES.md section 8"}},
+    {"key": "grok-3-mini", "provider": "xai", "public_name": "grok-3-mini", "transport": "openai-compat",
+     "base_url": "https://api.x.ai/v1", "key_env": "GROK_TOKEN", "secret_present_in_actions": true,
+     "own_council": false, "terms": {"confirmed_by_person": null, "confirmed_on": null, "clause_source": "CLAUSES.md section 10 (no usable xAI terms text saved)"}},
+    {"key": "openai-owner-to-name", "provider": "openai", "public_name": null, "transport": "openai-compat",
+     "base_url": "https://api.openai.com/v1", "key_env": "OPENAI_API_KEY", "secret_present_in_actions": false,
+     "own_council": false, "terms": {"confirmed_by_person": null, "confirmed_on": null, "clause_source": "CLAUSES.md section 1"}},
+    {"key": "anthropic-owner-to-name", "provider": "anthropic", "public_name": null, "transport": "anthropic",
+     "base_url": "https://api.anthropic.com", "key_env": "ANTHROPIC_API_KEY", "secret_present_in_actions": false,
+     "own_council": false, "terms": {"confirmed_by_person": null, "confirmed_on": null, "clause_source": "CLAUSES.md section 3"}},
+    {"key": "gemini-flash", "provider": "google", "public_name": "gemini-2.0-flash", "transport": "not-implemented-generateContent",
+     "base_url": "https://generativelanguage.googleapis.com", "key_env": "GEMINI_TOKEN", "secret_present_in_actions": true,
+     "own_council": false, "terms": {"confirmed_by_person": null, "confirmed_on": null, "clause_source": "CLAUSES.md section 5"}}
+  ]
+}
