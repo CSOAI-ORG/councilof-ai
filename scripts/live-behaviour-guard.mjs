@@ -7,7 +7,8 @@
  * node scripts/live-behaviour-guard.mjs [--base https://councilof.ai]
  */
 import assert from 'node:assert/strict';
-import { pathToFileURL } from 'node:url';
+import { realpathSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 const MAX_BYTES = 2 * 1024 * 1024;
 const TIMEOUT_MS = 12000;
@@ -181,7 +182,7 @@ async function selftest() {
   }
   console.log('live-behaviour-guard selftest: PASS 10/10 (1 positive, 9 negative controls)');
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && realpathSync(fileURLToPath(import.meta.url)) === realpathSync(process.argv[1])) {
   if (process.argv.includes('--selftest')) await selftest();
   else {
     try {
