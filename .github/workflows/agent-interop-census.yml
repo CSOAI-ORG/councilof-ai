@@ -111,6 +111,7 @@ jobs:
       - name: Publish
         if: ${{ github.event_name == 'schedule' || inputs.publish }}
         run: |
+          python3 scripts/privacy/publication_gate.py --label agent-interop-census /tmp/census-ds
           hf auth whoami
           hf upload csoai/agent-interop-census /tmp/census-ds . --repo-type dataset \
             --commit-message "census rebuild ${{ github.run_id }} — derived at run time"

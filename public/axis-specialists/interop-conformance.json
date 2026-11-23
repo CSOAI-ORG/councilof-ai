@@ -1,6 +1,7 @@
 {
   "schema": "csoai.axis-specialist-audit/1.0",
   "axis": "interop-conformance",
+  "limit": "We matched this bank's patterns on the raw page source, not on the text a reader sees, so tag names, style rules and script code could match. We also matched each pattern as a plain run of letters, so it could match inside other words. We cut every page at 400,000 bytes before scoring it, and 2 of the 34 rows are recorded at exactly that size. Five of the 34 rows are our own endpoints; without them the bank has 29 rows, under our minimum of 30 for a measured axis. We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, count or single row of this axis should be relied on.",
   "specialist": {
     "id": "meok-interop-conformance-specialist",
     "cluster_id": "meok-axis-interop-conformance",
@@ -146,7 +147,7 @@
     "not autonomous self-improvement",
     "not a provisioned compute cluster"
   ],
-  "audit_sha256": "41694721528368d08b0acc2226590010054290ef7cd11dc57ae3a09c82314713",
+  "audit_sha256": "0563c1d55686a2ad3b7b58bc57f61a4a4aa48cce8be360906199689e2ec8bb9e",
   "charter": {
     "version": "0.1.0",
     "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",

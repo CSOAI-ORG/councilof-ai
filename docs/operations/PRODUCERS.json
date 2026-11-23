@@ -17,6 +17,33 @@
       "note": "The existing bundle producer writes the complete root-ordered metadata index for /feed. The root publisher stages it, and root-candidate reconciliation rebuilds and stages it after merging. build:client also regenerates it, so this gate checks committed bytes even after a build. The check is offline, deterministic, read-only and compares only this index; it does not claim parity for cards-bundle.json. Tier records published card/proof metadata, not mirror availability or cryptographic verification."
     },
     {
+      "id": "cards-bundle",
+      "command": "node scripts/generate-cards-bundle.mjs",
+      "check": "node scripts/generate-cards-bundle.mjs --check-bundle",
+      "outputs": [
+        "public/cards-bundle.json",
+        "public/cards-bundle/0.json",
+        "public/cards-bundle/1.json",
+        "public/cards-bundle/2.json",
+        "public/cards-bundle/3.json",
+        "public/cards-bundle/4.json",
+        "public/cards-bundle/5.json",
+        "public/cards-bundle/6.json",
+        "public/cards-bundle/7.json",
+        "public/cards-bundle/8.json",
+        "public/cards-bundle/9.json",
+        "public/cards-bundle/a.json",
+        "public/cards-bundle/b.json",
+        "public/cards-bundle/c.json",
+        "public/cards-bundle/d.json",
+        "public/cards-bundle/e.json",
+        "public/cards-bundle/f.json"
+      ],
+      "mode": "delegate-to-check-committed",
+      "gated": true,
+      "note": "Since 22 Nov 2026 the bundle is an index (public/cards-bundle.json: the root's wrappers, card_count of every wrapper, and the shard list with each shard's card_count, bytes and sha256) plus 16 shards (public/cards-bundle/<c>.json: every wrapper whose sha256 starts with c). The 0.1 single file was 24,635,449 of Pages' 26,214,400 bytes per file. The root publisher stages all 17 files, and root-candidate reconciliation treats the shard folder as derived and stages it after merging. build:client also regenerates them, so this gate checks committed bytes even after a build. The check is offline, deterministic and read-only; it also refuses any other file in the shard folder. It copies card bytes and signs nothing."
+    },
+    {
       "id": "evidence-event-spec",
       "command": "node scripts/build-evidence-event-spec.mjs",
       "check": "node scripts/build-evidence-event-spec.mjs --check",

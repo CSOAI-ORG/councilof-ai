@@ -10,9 +10,16 @@ on:
   schedule:
     - cron: "17 6 * * 1"
   workflow_dispatch:
+  # Event-driven backstop for a schedule GitHub silently dropped in October/November.
+  # This gate only reads committed bytes and a public endpoint; no signing or publishing.
+  workflow_run:
+    workflows: ["GSPC Continuous Measurement"]
+    types: [completed]
   pull_request:
     paths:
       - "public/cards-bundle.json"
+      - "public/cards-bundle/**"
+      - "scripts/cards-bundle-shards.mjs"
       - "functions/api/_obligations.ts"
       - "functions/api/evidence-bundle.ts"
       - "scripts/check-evidence-bundle-freshness.mjs"

@@ -1,0 +1,52 @@
+--- a/csoai/gspc-leaderboard-results/README.md (live)
++++ b/csoai/gspc-leaderboard-results/README.md (proposed)
+@@ -14,13 +14,20 @@
+ - n<1K
+ task_categories:
+ - text-classification
+-viewer: false
+ configs:
+-- config_name: default
++- config_name: manifest
+   data_files:
+-  - manifest.jsonl
+-  - results.csv
+-  - results.jsonl
++  - split: train
++    path: manifest.jsonl
++  default: true
++- config_name: results-csv
++  data_files:
++  - split: train
++    path: results.csv
++- config_name: results
++  data_files:
++  - split: train
++    path: results.jsonl
+ ---
+ 
+ <p align="center">
+@@ -123,3 +130,23 @@
+ 
+ Measurement is not certification. A repository, signed record or passing software test does not by itself establish current board admission, product acceptance or benchmark leadership.
+ <!-- /council-product-guide:v1 -->
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table. The viewer was previously disabled (`viewer: false`); it is re-enabled now that every subset loads.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `manifest` (default) | `manifest.jsonl` | 5 |
++| `results-csv` | `results.csv` | 2 |
++| `results` | `results.jsonl` | 1 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/gspc-leaderboard-results", "manifest", split="train")
++```
++
++<!-- csoai-card-fixes:end -->

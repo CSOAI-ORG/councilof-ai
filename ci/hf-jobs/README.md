@@ -7,7 +7,10 @@
 > - `public-root.sh` is a stub that refuses to run (exit 3); its old body is at `268dada7`. It was a
 >   second master writer: it signed with an HF-held copy of the board key and pushed master with a PAT.
 >
-> Nothing here may deploy councilof.ai or write master. What remains: the image and the mirror tools.
+> - `mirror-refresh.sh` is a stub that refuses to run (exit 3) since 21 Nov 2026, when its target
+>   dataset, `csoai/councilof-ai-mirror`, was deleted; its old body is at `961349b693eb`.
+>
+> Nothing here may deploy councilof.ai or write master. What remains: the image.
 
 GitHub limited the CSOAI-ORG account's Actions in September 2026 (support ticket #4720908: runs died
 at runner start). This directory was the insurance: the site deploy and the hourly signed public root
@@ -25,8 +28,8 @@ halt health as an artifact); a root from a second writer is not.
 | `lib.sh` | step ledger, fail-closed helpers, source resolution, token-free git credential helper; sourced by no runner since 6 Oct 2026 |
 | `Dockerfile` + `bootstrap.sh` | the `csoai/ci-runner` image (Playwright base + Python 3.11 + wrangler + git) |
 | `space-card.md` | README front-matter for the Docker Space that builds that image |
-| `mirror-refresh.sh` | refresh the private git-bundle mirror `csoai/councilof-ai-mirror` (a read-only backup) |
-| `steps-drift.test.mjs` | pins that both runners stay retired, the image tag, and no-secret-echo |
+| `mirror-refresh.sh` | **RETIRED 2026-11-21**. A stub that refuses to run; it uploaded git bundles to `csoai/councilof-ai-mirror`, deleted that day |
+| `steps-drift.test.mjs` | pins that both runners and the mirror refresh stay retired, the image tag, and no-secret-echo |
 
 ## What runs where
 
@@ -34,7 +37,7 @@ halt health as an artifact); a root from a second writer is not.
 |---|---|---|
 | site deploy | `deploy.yml` from GitHub master | **none** — retired 2026-10-06 |
 | public root | `public-root.yml` hourly (`7 * * * *`) → PR from `public-root/pending`; `public-root-candidate-upgrade.yml` promotes it after Bitcoin confirmation | **none** — retired 2026-10-06 |
-| mirror | — | `mirror-refresh.sh`, read-only bundles |
+| mirror | — | **none** — retired 2026-11-21 (the bundle dataset was deleted) |
 
 ### If an HF schedule for the root was ever created
 
@@ -73,18 +76,13 @@ hf upload csoai/ci-runner ci/hf-jobs/space-card.md README.md --repo-type space
 Rebuild whenever `package-lock.json` bumps `playwright` (the test tells you) — bump the
 `FROM` tag and re-upload.
 
-## Mirror — refresh and restore (read-only backup)
+## Mirror — retired 2026-11-21
 
-```bash
-bash ci/hf-jobs/mirror-refresh.sh              # bundles origin/master → hf://datasets/csoai/councilof-ai-mirror
-# restore anywhere:
-hf download csoai/councilof-ai-mirror --repo-type dataset --local-dir m --include '*.bundle'
-git init repo && git -C repo fetch "$(ls -1t m/*.bundle | head -1)" '+refs/*:refs/bundle/*'
-git -C repo checkout --detach refs/bundle/remotes/origin/master   # bundles made with --all use refs/bundle/heads/master
-```
-
-The dataset currently holds `councilof-ai-mirror-20260902.bundle` (private). A bundle is a
-snapshot; refresh it after every merge you would want to be able to deploy without GitHub.
+The bundle mirror, the Hugging Face dataset `csoai/councilof-ai-mirror`, was deleted on 21 Nov 2026
+with every bundle in it, so there is nothing to refresh or restore from. `mirror-refresh.sh` is a stub
+that exits 3, and `lib.sh` has no default `FALLBACK_SOURCE`: a failed clone from GitHub stops there
+unless a fallback is named explicitly. Restore from a bundle still works with any bundle you hold
+(`clone_from_bundle` in `lib.sh`).
 
 ## What was and was not tested here (2 Sep 2026, before retirement; kept as history)
 
