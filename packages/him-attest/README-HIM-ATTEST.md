@@ -1,4 +1,31 @@
 # H.I.M. ATTEST — human-in-the-loop attestation ceremonies (the seamless plugin)
+
+## Agent-facing authority boundary — 22 November 2026 candidate
+
+The generic MCP adapter lists **research-only** `him_attest_run` and `him_attest_queue`.
+It **does not** offer a decision/signing capability. A legacy `him_attest_decide`
+invocation returns `HUMAN_AUTHORITY_NOT_ENROLLED` before opening a pack or a
+key, with no automatic retry. Research pack creation accepts a restricted
+subject slug, a declared framework, and uses exclusive file creation. Queue
+reads are limited to regular, non-symlink, managed pack filenames in the
+current directory. The core ceremony loader refuses traversal-like framework names.
+
+The separate command-line demo remains **local-key / unverified-identity only**.
+A self-generated Ed25519 key proves possession of that key, not a real person's
+identity, enrolment, competence, present authority or permission to execute.
+Do not route a production effect, money movement or legal/compliance decision
+through the demo. Enrolled-human acceptance remains with the existing
+HITL/backend/release owners, not this adapter.
+
+Reproduce the new source-bound controls without network or dependencies:
+
+```sh
+node --test packages/him-attest/test/mcp-boundary.test.mjs
+```
+
+This source change requires protected review/merge and release qualification.
+It has no effect on historical signed bytes and grants no new signing authority.
+
 **Status: BUILT + TESTED (5/5) + LIVE (real ceremonies ran against councilof.ai evidence endpoints on 2026-11-02).**
 Fuses: the SOVEREIGN crosswalk's 12 solved framework mind-sets → the GSPC evidence corpus → the meok H.I.M. pattern (AI does the work with evidence, keeps the human in the loop when it can't know — never fakes).
 
