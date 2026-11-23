@@ -44,6 +44,7 @@ import {
 import { railMode } from "../_x402_config";
 import { RECEIPTS_BATCH_DESCRIPTION } from "../_x402_descriptions";
 import { signPayload, cardV0, canonicalBytes, sha256Hex } from "../../_lib/cardSign";
+import { readCardsBundle } from "../_cards_bundle";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
@@ -248,15 +249,29 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   if (!preview && !toRaw && hasPaymentHeader(request))
     return json({ schema: SCHEMA, error: "bad_request", reason: "to: required when presenting payment; use the window.to that the preview or the 402 challenge names", usage }, 400);
 
-  // Sources — read, never typed. Two subrequests regardless of corpus size.
-  const [bundle, history, root] = await Promise.all([
-    getJson<{ as_of?: string; merkle_root?: string; cards?: Record<string, Wrapper> }>(`${origin}/cards-bundle.json`),
+  // Sources — read, never typed. A fixed number of subrequests regardless of corpus size: the root,
+  // the root history, and the cards bundle (its index plus 16 shards since the 22 Nov split,
+  // functions/api/_cards_bundle.ts). Only leaves inside the window are kept as each shard arrives;
+  // assembleBatch applies the same window again, so the batch bytes cannot differ.
+  const fromMs = from ? from.getTime() : Number.NEGATIVE_INFINITY;
+  const toMs = to.getTime();
+  const inWindow = (_sha: string, w: Wrapper) => {
+    const t = w && w.card && typeof w.card.as_of === "string" ? Date.parse(w.card.as_of) : NaN;
+    return Number.isFinite(t) && t >= fromMs && t <= toMs;
+  };
+  const [corpus, history, root] = await Promise.all([
+    // As getJson does for the other two sources, a read that throws becomes a stated reason.
+    readCardsBundle(origin, { keep: inWindow }).then(
+      (r) => (r.ok ? { ok: true as const, read: r } : { ok: false as const, reason: String(r.reason) }),
+      (e: Error) => ({ ok: false as const, reason: e.message }),
+    ),
     getJson<{ roots?: RootEntry[] }>(`${origin}/receipts/root-history.json`),
     getJson<{ merkle_root?: string; card_sha256?: string[]; as_of?: string }>(`${origin}/root.json`),
   ]);
-  if (!bundle.ok) return json({ schema: SCHEMA, error: "not_found", reason: `static /cards-bundle.json ${bundle.reason}`, unmeasured: ["cards-bundle.json"], usage }, 404);
+  if (!corpus.ok) return json({ schema: SCHEMA, error: "not_found", reason: `static /cards-bundle.json ${corpus.reason}`, unmeasured: ["cards-bundle.json"], usage }, 404);
+  const bundle = { as_of: corpus.read.as_of ?? undefined, merkle_root: corpus.read.merkle_root ?? undefined, cards: corpus.read.cards as Record<string, Wrapper> };
 
-  const batch = assembleBatch({ from, to, bundle: bundle.body, history: history.ok ? history.body : null, currentRoot: root.ok ? root.body : null });
+  const batch = assembleBatch({ from: from as Date, to, bundle, history: history.ok ? history.body : null, currentRoot: root.ok ? root.body : null });
   const batchBytes = canonicalBytes(batch);
   const batch_sha256 = await sha256Hex(batchBytes);
   const sources = {

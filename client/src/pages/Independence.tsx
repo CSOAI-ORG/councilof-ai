@@ -9,10 +9,10 @@ import { Link } from "wouter";
 // never fills the gap. The own-model counts come from public/independence/own-model-disclosure.json,
 // which scripts/build-own-model-disclosure.mjs derives from the signed card index on every build.
 //
-// Companies House, read 2026-09-27 (UTC):
-//   https://find-and-update.company-information.service.gov.uk/company/16939677/officers        01:31:59Z
-//   https://find-and-update.company-information.service.gov.uk/company/16939677                 01:31:59Z
-//   https://find-and-update.company-information.service.gov.uk/company/16939677/persons-with-significant-control  01:32:10Z
+// Companies House, read 2026-11-22 (UTC), unchanged from the 2026-09-27 read:
+//   https://find-and-update.company-information.service.gov.uk/company/16939677/officers        04:47:39Z
+//   https://find-and-update.company-information.service.gov.uk/company/16939677                 04:47:39Z
+//   https://find-and-update.company-information.service.gov.uk/company/16939677/persons-with-significant-control  04:47:39Z
 // Re-read those pages before changing this block. Date of birth, nationality and residence are on
 // the register and deliberately left off this page: they say nothing about independence.
 
@@ -168,7 +168,7 @@ export default function Independence() {
           the page says so rather than filling the gap.
         </p>
         <p className="mt-3 text-sm text-slate-600">
-          Register facts read on 27 September 2026. Counts marked as read live are fetched by your browser when this page loads.
+          Register facts read on 22 November 2026. Counts marked as read live are fetched by your browser when this page loads.
         </p>
 
         <Section id="who" title="Who runs CSOAI Ltd">
@@ -187,8 +187,8 @@ export default function Independence() {
           </p>
           <Src>
             Source: Companies House, <A href={`${CH}/officers`}>officers</A> and{" "}
-            <A href={CH}>company overview</A> read 27 September 2026 at 01:31:59 UTC;{" "}
-            <A href={`${CH}/persons-with-significant-control`}>persons with significant control</A> read at 01:32:10 UTC.
+            <A href={CH}>company overview</A> and{" "}
+            <A href={`${CH}/persons-with-significant-control`}>persons with significant control</A> read 22 November 2026 at 04:47:39 UTC.
           </Src>
           <NotPublished>
             Roles, shareholdings or paid work that anyone at CSOAI holds with an AI developer whose models we measure: not yet
