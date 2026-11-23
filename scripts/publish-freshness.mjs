@@ -51,8 +51,26 @@ export function rotatingSample(items, n, seed) {
   return Array.from({ length: k }, (_, i) => items[(start + i * step) % items.length]);
 }
 
+/**
+ * Dated sources that the RSS handler actually renders. /root.json is a
+ * separate publisher heartbeat and must NOT manufacture an RSS item. Source
+ * unavailability or an invalid date is UNCHECKABLE, never evidence of quiet.
+ */
+export function newestEligibleSourceDate({ reports, findings, mill }) {
+  if (!Array.isArray(reports?.reports) ||
+      !findings || typeof findings !== "object" || !findings.counts ||
+      !mill || typeof mill !== "object" ||
+      !Number.isInteger(mill.n_leaves) || mill.n_leaves < 0 ||
+      typeof mill.root_sha256 !== "string" ||
+      !/^[a-f0-9]{64}$/i.test(mill.root_sha256)) return null;
+  const values = [mill.as_of, findings.as_of, ...reports.reports.map((r) => r?.as_of)];
+  const dates = values.map((v) => typeof v === "string" ? Date.parse(v) : NaN);
+  if (dates.some((t) => !Number.isFinite(t))) return null;
+  return Math.max(...dates);
+}
+
 /** Pure staleness verdicts. Every field that is missing is a failure, never a pass. */
-export function assessFreshness({ now, sitemapCount, feedNewest, rootAsOf, opts = DEFAULTS }) {
+export function assessFreshness({ now, sitemapCount, feedNewest, rootAsOf, eligibleSourceNewest = undefined, opts = DEFAULTS }) {
   const out = [];
   const o = { ...DEFAULTS, ...opts };
   if (!Number.isFinite(sitemapCount)) out.push({ ok: false, msg: "sitemap <loc> count unreadable" });
@@ -62,7 +80,23 @@ export function assessFreshness({ now, sitemapCount, feedNewest, rootAsOf, opts 
   if (!Number.isFinite(feedNewest)) out.push({ ok: false, msg: "feed carries no parseable item date" });
   else {
     const days = (now - feedNewest) / 86_400_000;
-    if (days > o.feedMaxAgeDays) out.push({ ok: false, msg: `feed newest item is ${days.toFixed(1)} days old (max ${o.feedMaxAgeDays}) — STALE` });
+    if (feedNewest - now > o.futureSkewMinutes * 60_000) {
+      out.push({ ok: false, msg: "feed item date is in the future" });
+    } else if (eligibleSourceNewest !== undefined) {
+      // Event feeds have no clock-following heartbeat. They may legitimately be
+      // quiet; compare their actual dated input events instead of forcing a
+      // fabricated fresh entry. Unavailable/invalid source is always red.
+      if (!Number.isFinite(eligibleSourceNewest)) {
+        out.push({ ok: false, msg: "feed source events UNCHECKABLE; cannot call feed quiet" });
+      } else if (eligibleSourceNewest - feedNewest > 1000) {
+        out.push({ ok: false, msg: `feed missed newer eligible source event: source ${new Date(eligibleSourceNewest).toISOString()}, feed ${new Date(feedNewest).toISOString()}` });
+      } else if (feedNewest - eligibleSourceNewest > 1000) {
+        out.push({ ok: false, msg: "feed contains a newer date than its eligible event sources" });
+      } else {
+        const state = days > o.feedMaxAgeDays ? "QUIET, SOURCE-MATCHED" : "SOURCE-MATCHED";
+        out.push({ ok: true, msg: `feed ${state}: newest eligible event ${new Date(feedNewest).toISOString()} (${days.toFixed(1)} days old; no fresher eligible source event)` });
+      }
+    } else if (days > o.feedMaxAgeDays) out.push({ ok: false, msg: `feed newest item is ${days.toFixed(1)} days old (max ${o.feedMaxAgeDays}) — STALE, no source check` });
     else out.push({ ok: true, msg: `feed newest item ${days.toFixed(1)} days old (max ${o.feedMaxAgeDays})` });
   }
 
@@ -84,7 +118,7 @@ export function assessFreshness({ now, sitemapCount, feedNewest, rootAsOf, opts 
 export async function runPublishChecks({ get, host, rehost = (u) => u, pass, fail, now = Date.now(), opts = {} }) {
   const o = { ...DEFAULTS, ...opts };
   const seed = Math.floor(now / 3_600_000);
-  let sitemapCount = NaN, feedNewest = null, rootAsOf = null;
+  let sitemapCount = NaN, feedNewest = null, rootAsOf = null, eligibleSourceNewest = null;
 
   try {
     const { status, body } = await get(host + "/sitemap.xml");
@@ -107,6 +141,23 @@ export async function runPublishChecks({ get, host, rehost = (u) => u, pass, fai
     if (status === 200) feedNewest = newestFeedDate(body);
     else fail(`/api/feed.xml returned HTTP ${status} (freshness unreadable)`);
   } catch (e) { fail(`/api/feed.xml fetch error: ${e.message}`); }
+
+  // This feed is a projection of dated source events, not a periodic blog.
+  // Each required input is checked independently. If any is unreadable, quiet
+  // cannot be established and the check stays red.
+  try {
+    const paths = ["/reports/index.json", "/signed/findings_index.json", "/interop/card-root-latest.json"];
+    const [a, b, c] = await Promise.all(paths.map((p) => get(host + p)));
+    if ([a, b, c].some((v) => v.status !== 200)) throw new Error(
+      paths.map((p, i) => p + "=" + [a, b, c][i].status).join(", ")
+    );
+    eligibleSourceNewest = newestEligibleSourceDate({
+      reports: JSON.parse(a.body), findings: JSON.parse(b.body), mill: JSON.parse(c.body),
+    });
+    if (!Number.isFinite(eligibleSourceNewest)) throw new Error("eligible source event timestamps or signed-pointer shape invalid");
+  } catch (e) {
+    fail(`feed source events UNCHECKABLE: ${e.message}`);
+  }
 
   try {
     const { status, body } = await get(host + "/signed/card_index.json");
@@ -137,7 +188,7 @@ export async function runPublishChecks({ get, host, rehost = (u) => u, pass, fai
     else rootAsOf = JSON.parse(body).as_of ?? null;
   } catch (e) { fail(`/root.json error: ${e.message}`); }
 
-  for (const v of assessFreshness({ now, sitemapCount, feedNewest, rootAsOf, opts: o })) (v.ok ? pass : fail)(v.msg);
+  for (const v of assessFreshness({ now, sitemapCount, feedNewest, rootAsOf, eligibleSourceNewest, opts: o })) (v.ok ? pass : fail)(v.msg);
 }
 
 function selftest() {
@@ -150,6 +201,24 @@ function selftest() {
     ["unreadable sitemap fails", bad({ sitemapCount: NaN }) === 1],
     ["stale feed fails", bad({ feedNewest: Date.parse("2026-07-01T00:00:00Z") }) === 1],
     ["dateless feed fails", bad({ feedNewest: null }) === 1],
+    ["old event feed source-matched quiet passes, not fresh", (() => {
+      const older = Date.parse("2026-08-01T10:00:00Z");
+      return assessFreshness({ ...fresh, feedNewest: older, eligibleSourceNewest: older })
+        .some((v) => v.ok && v.msg.includes("QUIET, SOURCE-MATCHED"));
+    })()],
+    ["newer source event than feed fails", bad({ feedNewest: Date.parse("2026-09-01"), eligibleSourceNewest: Date.parse("2026-09-02") }) === 1],
+    ["feed newer than its event sources fails", bad({ feedNewest: Date.parse("2026-09-02"), eligibleSourceNewest: Date.parse("2026-09-01") }) === 1],
+    ["unverifiable source event fails", bad({ eligibleSourceNewest: null }) === 1],
+    ["future-dated feed fails", bad({ feedNewest: Date.parse("2026-09-16") }) === 1],
+    ["eligible source parser matches dated input events", newestEligibleSourceDate({
+      reports: { reports: [{ as_of: "2026-09-12T00:00:00Z" }] },
+      findings: { as_of: "2026-09-10T00:00:00Z", counts: { findings: 1 } },
+      mill: { as_of: "2026-09-13T00:00:00Z", n_leaves: 1, root_sha256: "a".repeat(64) },
+    }) === Date.parse("2026-09-13T00:00:00Z")],
+    ["malformed signed-pointer source is uncheckable", newestEligibleSourceDate({
+      reports: { reports: [] }, findings: { counts: {}, as_of: "2026-09-10" },
+      mill: { as_of: "2026-09-13", n_leaves: 1, root_sha256: "INVALID" },
+    }) === null],
     ["root stale 7 days fails (the 09-06→09-14 gap)", bad({ rootAsOf: "2026-09-06T23:49:21Z" }) === 1],
     ["root as_of missing fails", bad({ rootAsOf: undefined }) === 1],
     ["root as_of in the future fails", bad({ rootAsOf: "2026-09-15T12:00:00Z" }) === 1],
