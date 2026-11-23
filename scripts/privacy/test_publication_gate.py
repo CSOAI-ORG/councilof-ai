@@ -19,6 +19,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 import shutil
 import tarfile
 import tempfile
@@ -306,6 +307,101 @@ class Gate(unittest.TestCase):
         self.assertEqual(run(self.tmp), 1)
 
 
+
+class NameAndSasRegressions(unittest.TestCase):
+    """Synthetic regressions for the public registry's exposed SAS credential class."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp(prefix="name-sas-private-")
+        self.old = os.environ.get("THIRD_PARTY_GUARD_IDS")
+        os.environ["THIRD_PARTY_GUARD_IDS"] = "Zorblat Quimby"
+
+    def tearDown(self):
+        if self.old is None:
+            os.environ.pop("THIRD_PARTY_GUARD_IDS", None)
+        else:
+            os.environ["THIRD_PARTY_GUARD_IDS"] = self.old
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def rendered(self, code, result):
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            pg.report(code, result)
+        return buf.getvalue()
+
+    def test_private_person_in_directory_name_is_blocked_and_redacted(self):
+        materialise(self.tmp, {"Zorblat Quimby/data.jsonl": b'{"id":"synthetic"}\n'})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 1)
+        self.assertTrue(any("private-list-entry" in kind for _, kind in result.findings))
+        self.assertNotIn("Zorblat Quimby", self.rendered(code, result))
+
+    def test_private_person_in_archive_member_name_is_blocked(self):
+        materialise(self.tmp, {"safe.zip": zip_bytes([("Zorblat Quimby/clean.txt", b"okay")])})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 1)
+        self.assertTrue(any("private-list-entry" in kind for _, kind in result.findings))
+
+    def test_hf_credential_in_filename_cannot_escape_name_only_scan(self):
+        materialise(self.tmp, {f"receipt-{FAKE_HF}.txt": b"fine"})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 1)
+        self.assertTrue(any(kind == "credential:huggingface-token" for _, kind in result.findings))
+        self.assertNotIn(FAKE_HF, self.rendered(code, result))
+
+    def test_azure_sas_url_in_registry_jsonl_is_blocked_without_echo(self):
+        signature = "F4k3S1gn4tur3P4yl04d" * 3
+        url = ("https://fictional.blob.core.windows.net/public/object.json"
+               "?sv=2023-11-03&se=2099-01-01T00:00:00Z&sp=r&sig=" + signature)
+        materialise(self.tmp, {"server.jsonl": (json.dumps({"url": url}) + "\n").encode()})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 1)
+        self.assertTrue(any(kind == "credential:azure-sas-url" for _, kind in result.findings))
+        self.assertNotIn(signature, self.rendered(code, result))
+
+    def test_html_escaped_sas_and_sas_filename_are_blocked(self):
+        signature = "S1gn4tur3B4se64" * 3
+        sas = "?sv=2023-11-03&amp;se=2099-01-01T00:00:00Z&amp;sp=r&amp;sig=" + signature
+        materialise(self.tmp, {"escape.html": ("<a href='https://fictional.blob.core.windows.net/a" + sas + "'>x</a>").encode()})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 1)
+        materialise(self.tmp, {"name" + sas.replace("&amp;", "&") + ".txt": b"fine"})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 1)
+        self.assertTrue(any(kind == "credential:azure-sas-url" for _, kind in result.findings))
+        self.assertNotIn(signature, self.rendered(code, result))
+
+    def test_ordinary_sas_documentation_fields_without_signature_not_flagged(self):
+        materialise(self.tmp, {"docs.txt": b"sv=2023-11-03, se=2099-01-01, sig=EXAMPLE\n"})
+        code, result = pg.gate([self.tmp])
+        self.assertEqual(code, 0)
+        self.assertFalse(result.findings)
+
+
+    def test_top_level_file_symlink_fails_closed_before_read(self):
+        materialise(self.tmp, {"safe.txt": b"ordinary text"})
+        link = os.path.join(self.tmp, "file-link.txt")
+        os.symlink(os.path.join(self.tmp, "safe.txt"), link)
+        code, result = pg.gate([link])
+        self.assertEqual(code, 2)
+        self.assertTrue(any("symlink input" in reason for _, reason in result.unchecked))
+
+    def test_top_level_directory_symlink_fails_closed(self):
+        materialise(self.tmp, {"source/clean.txt": b"ordinary text"})
+        link = os.path.join(self.tmp, "dir-link")
+        os.symlink(os.path.join(self.tmp, "source"), link)
+        code, result = pg.gate([link])
+        self.assertEqual(code, 2)
+        self.assertTrue(any("symlink input" in reason for _, reason in result.unchecked))
+
+    def test_nested_symlink_directory_is_not_silently_ignored(self):
+        materialise(self.tmp, {"source/clean.txt": b"ordinary text", "outside/clean.txt": b"ordinary"})
+        os.symlink(os.path.join(self.tmp, "outside"), os.path.join(self.tmp, "source", "unscanned"))
+        code, result = pg.gate([os.path.join(self.tmp, "source")])
+        self.assertEqual(code, 2)
+        self.assertTrue(any("symlink directory" in reason for _, reason in result.unchecked))
+
 class Wiring(unittest.TestCase):
     """Every upload to Hugging Face or Kaggle in a workflow must run the gate first (same job, earlier step)."""
 
@@ -315,23 +411,77 @@ class Wiring(unittest.TestCase):
               "kaggle models instances", "create_commit(", "push_to_hub(")
     GATE = "scripts/privacy/publication_gate.py"
 
+    @classmethod
+    def _unguarded_jobs(cls, lines):
+        """Small indentation-based workflow guard: compare upload/gate within each job.
+
+        This is a static linter, not proof that a gate's shell command ran on
+        exact published bytes. Conditional execution needs runtime receipts.
+        """
+        jobs = []
+        in_jobs = False
+        current = None
+        for line in lines:
+            if line == "jobs:":
+                in_jobs = True
+                continue
+            if not in_jobs:
+                continue
+            if line and not line[0].isspace() and not line.startswith("#"):
+                break
+            m = re.fullmatch(r"  ([A-Za-z_][A-Za-z0-9_-]*):\s*(?:#.*)?", line)
+            if m:
+                current = [m.group(1), []]
+                jobs.append(current)
+            elif current is not None:
+                current[1].append(line)
+        def code_line(line):
+            return not line.strip().startswith(("#", "name:", "- name:", "description:", "pretty_name:"))
+        bad = []
+        for name, job_lines in jobs:
+            ups = [i for i, line in enumerate(job_lines)
+                   if code_line(line) and any(term in line for term in cls.UPLOAD)]
+            if not ups:
+                continue
+            gates = [i for i, line in enumerate(job_lines)
+                     if code_line(line) and cls.GATE in line]
+            if not gates or min(gates) > min(ups):
+                bad.append(name)
+        # If an upload exists but no parsable jobs block, reject the workflow.
+        if not jobs and any(code_line(line) and any(term in line for term in cls.UPLOAD) for line in lines):
+            bad.append("UNPARSEABLE_JOBS")
+        return bad
+
     def test_every_workflow_upload_is_behind_the_gate(self):
         import glob
         bad = []
         for path in sorted(glob.glob(os.path.join(self.ROOT, ".github", "workflows", "*.yml"))):
             with open(path, encoding="utf-8") as f:
                 lines = f.read().split("\n")
-            # command lines only: not comments, step names or input descriptions
-            code = [i for i, l in enumerate(lines)
-                    if not l.strip().startswith(("#", "name:", "- name:", "description:", "pretty_name:"))]
-            ups = [i for i in code if any(k in lines[i] for k in self.UPLOAD)]
-            if not ups:
-                continue
-            gates = [i for i in code if self.GATE in lines[i]]
-            if not gates or min(gates) > min(ups):
-                bad.append(os.path.relpath(path, self.ROOT))
-        self.assertEqual(bad, [], "these workflows upload to Hugging Face or Kaggle without the publication gate "
-                         "running earlier in the file: " + ", ".join(bad))
+            for job in self._unguarded_jobs(lines):
+                bad.append(os.path.relpath(path, self.ROOT) + ":" + job)
+        self.assertEqual(bad, [], "these workflows contain a Hugging Face or Kaggle upload "
+                         "without the publication gate earlier in the SAME job: " + ", ".join(bad))
+
+    def test_wiring_lint_catches_cross_job_gate(self):
+        lines = [
+            "name: synthetic", "jobs:",
+            "  scan:", "    steps:", "      - run: python scripts/privacy/publication_gate.py out",
+            "  publish:", "    steps:", "      - run: kaggle datasets create out",
+        ]
+        self.assertEqual(self._unguarded_jobs(lines), ["publish"])
+
+    def test_wiring_lint_accepts_guarded_upload_in_one_job(self):
+        lines = ["jobs:", "  publish:", "    steps:",
+                 "      - run: python scripts/privacy/publication_gate.py out",
+                 "      - run: kaggle datasets create out"]
+        self.assertEqual(self._unguarded_jobs(lines), [])
+
+    def test_wiring_lint_rejects_upload_before_guard(self):
+        lines = ["jobs:", "  publish:", "    steps:",
+                 "      - run: huggingface-cli upload out",
+                 "      - run: python scripts/privacy/publication_gate.py out"]
+        self.assertEqual(self._unguarded_jobs(lines), ["publish"])
 
     def test_python_uploaders_call_the_gate(self):
         for rel in ("scripts/pod-loops/hf_upload.py", "scripts/mirror_to_hf.py"):
