@@ -104,6 +104,13 @@ export default function HomeResults({
           <Link href="/models-measured/" className="hp-text-link">
             Browse measured models <ArrowUpRight size={15} aria-hidden="true" />
           </Link>
+          <Link
+            href="/notes/model-gaps-too-small-to-call/"
+            className="hp-text-link"
+            data-testid="results-why-no-leader"
+          >
+            Why no leader is shown <ArrowUpRight size={15} aria-hidden="true" />
+          </Link>
         </div>
         <details className="hp-reading-guide">
           <summary>How to read the results</summary>

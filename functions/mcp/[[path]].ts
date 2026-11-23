@@ -27,7 +27,7 @@ import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, X402_META_PAYMENT, type PaidCallerCont
 import { dispatchTool, FREE_TOOL_DEFINITIONS, TOOL_DEFINITIONS } from "./_dispatch";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
-import { recordUsage } from "../_lib/usage";
+import { paidCallName, recordUsage, type PaidCallPayment } from "../_lib/usage";
 import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
 import { registerCouncilPanel } from "./_panel";
 
@@ -105,7 +105,7 @@ export function fullDoorInstall(origin: string): Record<string, string> {
   };
 }
 const INSTRUCTIONS =
-  `GSPC MCP. ${FREE_TOOL_COUNT} free read-only tools and ${PAID_TOOL_COUNT} paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT; each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.`;
+  `GSPC MCP. ${FREE_TOOL_COUNT} free read-only tools and ${PAID_TOOL_COUNT} paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT, or on this HTTP door as the x402 MCP transport's PaymentPayload object in _meta["x402/payment"] (one channel per call); each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.`;
 // The free door speaks to a person using a chat client, so it carries no operations notes and no
 // payment text (packet CR-6). The count is derived from the file, like the one above.
 export const FREE_INSTRUCTIONS =
@@ -304,6 +304,21 @@ async function listenNotServed(
 }
 const mcp = buildMcp(DEFINITIONS, { instructions: INSTRUCTIONS, paid: true });
 const mcpFree = buildMcp(FREE_DEFINITIONS, { instructions: FREE_INSTRUCTIONS, paid: false });
+
+/**
+ * How a tools/call of a metered tool presented payment: presence and place only, read off the
+ * request before anything runs. "meta" is _meta["x402/payment"], the x402 MCP transport's field.
+ */
+export function paidCallPayment(params: Record<string, unknown>): PaidCallPayment {
+  const args = object(params.arguments) ? params.arguments : {};
+  const arg = typeof args.x_payment === "string" && args.x_payment.trim() !== "";
+  const meta = object(params._meta) && params._meta["x402/payment"] != null;
+  if (arg && meta) return "both";
+  if (arg) return "arg";
+  if (meta) return "meta";
+  if ("purchase_action" in args) return "purchase";
+  return args.preview === true || args.preview === "1" || args.preview === "true" ? "preview" : "none";
+}
 
 /** Which door a path names: "/mcp" (full), "/mcp/free" (free tools only), or none. */
 export function doorFor(pathname: string): "full" | "free" | null {
@@ -605,7 +620,7 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       install: fullDoorInstall(origin),
       tool_counts: TOOL_COUNTS,
       stdio_alternative:
-        "npm csoai-gspc-mcp and the Pages HTTP implementation are released independently. Payment travels as the x_payment ARGUMENT; each door sets the X-PAYMENT header itself. Ask each installed version for its tools/list.",
+        "npm csoai-gspc-mcp and the Pages HTTP implementation are released independently. Payment travels as the x_payment ARGUMENT; each door sets the X-PAYMENT header itself. This HTTP door also reads the x402 MCP transport's PaymentPayload object in _meta[\"x402/payment\"]; an npm version reads it only if its own README says so. Ask each installed version for its tools/list.",
       paid_tools: {
         names: [...PAID_TOOL_NAMES],
         how: "Call without x_payment for a 402 challenge. A challenge is not settlement, delivery or revenue.",
@@ -717,6 +732,9 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
   } else if (call.method === "tools/call") {
     const tool = typeof params.name === "string" && KNOWN_TOOL_NAMES.has(params.name) ? params.name : "not-a-tool";
     recordUsage({ request, env, waitUntil }, "mcp_tool", tool);
+    // A metered tool on the door that serves it: whether and where a payment was presented.
+    if (door === "full" && PAID_TOOL_NAMES.has(tool))
+      recordUsage({ request, env, waitUntil }, "paid_call", paidCallName("mcp", tool, paidCallPayment(params)));
   }
   const trace =
     call.method === "tools/call" && typeof params.name === "string"

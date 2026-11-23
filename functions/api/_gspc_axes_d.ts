@@ -18,12 +18,93 @@
 // Ids are kebab-case and stable; never reused.
 import type { AxisScore } from "./_gspc_types";
 
+// ── G8: what eleven subject rows' figures do not show (2026-11-22) ──────────────────────────────
+// Owner ruling, 2026-11-21T02:12Z ("All as recommended" to OWNER-GATES-20261121 G8): the hold on
+// the subject-axis banks covers ten axes (C-2026-1120-01), and the claim-maintenance row rests on
+// neither re-read (C-2026-1120-03). Each row states that on itself, as `limit`: served as typed in
+// axes[<axis>].limit, printed on /axis/<axis>, and passed through MCP get_axis, axis_* and A2A
+// gspc-board (the C-2026-1120-02 pattern, #4550 and #4558).
+//
+// Status, n, rate and every other field of these rows are left as they were. The row model has no
+// held state, and scripts/board-production-anchor.mjs (a required check) refuses a pull request in
+// which an axis production measures is not measured, or in which a measured row's n or any other
+// number differs from production. So the rows keep the figures the board served, and the limit
+// says that none of them should be relied on. Taking a row off MEASURED needs a ruling on that
+// check first.
+//
+// Every figure in these texts is a count the committed files give:
+// functions/api/gspc.held-subject-limits.test.ts recounts each one from
+// public/interop/axis-banks/<axis>-20261102.json and from the two claim-maintenance re-read files.
+
+// The eight banks built by scripts/subject-axis/subject-axis-live-run.mjs (presence/1) tested their
+// patterns against the raw HTML of the page. build_missing_axes.mjs (watchdog-ingest) and
+// build_harness_fidelity.mjs (harness-fidelity) stripped script and style first, so their rows do
+// not carry this sentence. See the header of scripts/subject-axis/presence-v2.mjs.
+const RAW_PAGE_SOURCE =
+  "We matched this bank's patterns on the raw page source, not on the text a reader sees, so tag " +
+  "names, style rules and script code could match. We also matched each pattern as a plain run of " +
+  "letters, so it could match inside other words.";
+const PLAIN_RUN_OF_LETTERS =
+  "We matched each pattern in this bank as a plain run of letters, so it could match inside other words.";
+const cutAt400k = (cut: number, rows: number): string =>
+  `We cut every page at 400,000 bytes before scoring it, and ${cut} of the ${rows} rows are recorded ` +
+  "at exactly that size.";
+const NEAR_EMPTY_PAGE =
+  "We kept one page that answered with under 3,000 bytes as a row with all five checks false, not as " +
+  "unchecked.";
+const NOT_RUN_AGAIN =
+  "We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, " +
+  "count or single row of this axis should be relied on.";
+
+const HELD_SUBJECT_LIMITS = {
+  "lab-practice": [
+    RAW_PAGE_SOURCE,
+    cutAt400k(12, 37),
+    "Its 37 rows hold 36 distinct pages.",
+    NEAR_EMPTY_PAGE,
+    NOT_RUN_AGAIN,
+  ].join(" "),
+  "company-practice": [RAW_PAGE_SOURCE, cutAt400k(20, 40), NOT_RUN_AGAIN].join(" "),
+  "measurer-integrity": [RAW_PAGE_SOURCE, cutAt400k(13, 40), NOT_RUN_AGAIN].join(" "),
+  "harness-fidelity": [PLAIN_RUN_OF_LETTERS, cutAt400k(6, 36), NEAR_EMPTY_PAGE, NOT_RUN_AGAIN].join(" "),
+  "interop-conformance": [
+    RAW_PAGE_SOURCE,
+    cutAt400k(2, 34),
+    "Five of the 34 rows are our own endpoints; without them the bank has 29 rows, under our " +
+      "minimum of 30 for a measured axis.",
+    NOT_RUN_AGAIN,
+  ].join(" "),
+  "humanoid-deployment": [RAW_PAGE_SOURCE, cutAt400k(4, 35), NOT_RUN_AGAIN].join(" "),
+  "regulator-transparency": [RAW_PAGE_SOURCE, cutAt400k(2, 41), NOT_RUN_AGAIN].join(" "),
+  "interpretability-reproducibility": [RAW_PAGE_SOURCE, cutAt400k(6, 33), NOT_RUN_AGAIN].join(" "),
+  "serving-fidelity": [RAW_PAGE_SOURCE, cutAt400k(20, 38), NOT_RUN_AGAIN].join(" "),
+  "watchdog-ingest": [
+    PLAIN_RUN_OF_LETTERS,
+    "For example, the response-commitment alternative 'sla' matched inside words such as " +
+      "translation and legislation.",
+    cutAt400k(32, 106),
+    "Its 106 rows hold 104 distinct pages.",
+    NEAR_EMPTY_PAGE,
+    "Its security.txt check never requests /.well-known/security.txt.",
+    NOT_RUN_AGAIN,
+  ].join(" "),
+};
+
+const CLAIM_MAINTENANCE_LIMIT =
+  "The n of 174, the '174 of 182 captured claims' in the note and the outcome counts on this row " +
+  "come from our re-read of 2026-10-28. That file counts every claim twice: its 182 rows hold 91 " +
+  "distinct claims. Our re-read of 2026-10-30 reads the same 91 claims once and, against the newer " +
+  "capture in the earlier file, gives a different outcome for 40 of them (C-2026-1120-03). The row " +
+  "rests on neither re-read. Until a clean re-read exists, its status, n and counts stand only as " +
+  "the record of what the board served, and none of them should be relied on.";
+
 
 export const AXES_D: AxisScore[] = [
   {
     axis: "lab-practice", family: "subject", kind: "measured-subject", applies_to: "ai-labs",
     bench: "frozen presence bank (5 classes, 3-of-5 bar)",
     task: "does an AI lab publish its evaluations, safety framework and incident reports",
+    limit: HELD_SUBJECT_LIMITS["lab-practice"],
     n: 37, status: "MEASURED", method_status: "meets-rule",
     method: "scripts/subject-axis/subject-axis-live-run.mjs", method_sha: "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
     rate: 0.7027, rate_scale: "fraction", rate_rule: "presence of at least 3 of 5 declared classes",
@@ -40,6 +121,7 @@ export const AXES_D: AxisScore[] = [
     axis: "company-practice", family: "subject", kind: "measured-subject", applies_to: "ai-companies-non-lab",
     bench: "frozen presence bank (5 classes, 3-of-5 bar)",
     task: "does a non-lab AI company publish safety, evaluation, incident, model-card and contact material",
+    limit: HELD_SUBJECT_LIMITS["company-practice"],
     n: 40, status: "MEASURED", method_status: "meets-rule",
     method: "scripts/subject-axis/subject-axis-live-run.mjs", method_sha: "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
     rate: 0.675, rate_scale: "fraction", rate_rule: "presence of at least 3 of 5 declared classes",
@@ -56,6 +138,7 @@ export const AXES_D: AxisScore[] = [
     axis: "measurer-integrity", family: "subject", kind: "measured-subject", applies_to: "evaluation-orgs",
     bench: "frozen presence bank (5 classes, 3-of-5 bar)",
     task: "does an evaluation organisation publish methods, test sets, attestation and a reproduction route",
+    limit: HELD_SUBJECT_LIMITS["measurer-integrity"],
     n: 40, status: "MEASURED", method_status: "meets-rule",
     method: "scripts/subject-axis/subject-axis-live-run.mjs", method_sha: "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
     rate: 0.925, rate_scale: "fraction", rate_rule: "presence of at least 3 of 5 declared classes",
@@ -72,6 +155,7 @@ export const AXES_D: AxisScore[] = [
     axis: "harness-fidelity", family: "subject", kind: "measured-subject", applies_to: "harnesses",
     bench: "frozen presence bank (5 classes, 3-of-5 bar)",
     task: "does an evaluation harness pin its dependencies, publish a must-fail control, isolate execution and document reproduction",
+    limit: HELD_SUBJECT_LIMITS["harness-fidelity"],
     n: 36, status: "MEASURED", method_status: "meets-rule",
     method: "scripts/subject-axis/build_harness_fidelity.mjs", method_sha: "1ec4ee46eb119cae5832ed2ffeb1a203609e11c67523231d25be6240b3ff9ab4",
     rate: 0.6667, rate_scale: "fraction", rate_rule: "presence of at least 3 of 5 declared classes",
@@ -88,6 +172,7 @@ export const AXES_D: AxisScore[] = [
     axis: "interop-conformance", family: "subject", kind: "measured-subject", applies_to: "interop-standards-groups",
     bench: "frozen presence bank (5 classes, 3-of-5 bar)",
     task: "does an interoperability or standards group publish a schema, a wire binding, conformance vectors and a versioned spec",
+    limit: HELD_SUBJECT_LIMITS["interop-conformance"],
     n: 34, status: "MEASURED", method_status: "meets-rule",
     method: "scripts/subject-axis/subject-axis-live-run.mjs", method_sha: "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
     rate: 0.6471, rate_scale: "fraction", rate_rule: "presence of at least 3 of 5 declared classes",
@@ -104,6 +189,7 @@ export const AXES_D: AxisScore[] = [
     axis: "humanoid-deployment", family: "subject", kind: "measured-subject", applies_to: "humanoid-labs",
     bench: "frozen presence bank (5 classes, 3-of-5 bar)",
     task: "does a humanoid lab publish control, safety-limit, dexterity, hardware-bus and simulation material",
+    limit: HELD_SUBJECT_LIMITS["humanoid-deployment"],
     n: 35, status: "MEASURED", method_status: "meets-rule",
     method: "scripts/subject-axis/subject-axis-live-run.mjs", method_sha: "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
     rate: 0.4571, rate_scale: "fraction", rate_rule: "presence of at least 3 of 5 declared classes",
@@ -120,6 +206,7 @@ export const AXES_D: AxisScore[] = [
     axis: "regulator-transparency", family: "subject", kind: "measured-subject", applies_to: "regulators",
     bench: "frozen presence bank (5 classes, 3-of-5 bar)",
     task: "factual presence checks on public regulatory artefacts (guidance, consultation, enforcement, open data, contact route); no ratings",
+    limit: HELD_SUBJECT_LIMITS["regulator-transparency"],
     n: 41, status: "MEASURED", method_status: "meets-rule",
     method: "scripts/subject-axis/subject-axis-live-run.mjs", method_sha: "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
     rate: 0.9268, rate_scale: "fraction", rate_rule: "presence of at least 3 of 5 declared classes",
@@ -136,6 +223,7 @@ export const AXES_D: AxisScore[] = [
     axis: "interpretability-reproducibility", family: "subject", kind: "measured-subject", applies_to: "interpretability-groups",
     bench: "frozen presence bank (5 classes, 3-of-5 bar)",
     task: "does an interpretability group publish method, checkpoints, a reproducible notebook and peer-reviewed material",
+    limit: HELD_SUBJECT_LIMITS["interpretability-reproducibility"],
     n: 33, status: "MEASURED", method_status: "meets-rule",
     method: "scripts/subject-axis/subject-axis-live-run.mjs", method_sha: "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
     rate: 0.9091, rate_scale: "fraction", rate_rule: "presence of at least 3 of 5 declared classes",
@@ -170,6 +258,7 @@ export const AXES_D: AxisScore[] = [
     applies_to: "claimed-subjects",
     bench: "claim-maintenance v0.2 re-read wave",
     task: "at each scheduled re-read, is a captured public claim still served unchanged, changed, withdrawn or unreachable; says nothing about whether the claim is true",
+    limit: CLAIM_MAINTENANCE_LIMIT,
     n: 174, status: "MEASURED", method_status: "meets-rule",
     method: "claim-maintenance v0.2",
     method_sha: "32470d102112154b14a4d5530d71d7a30ecc2acdc5cd8c906c21f672b1deeef7",
@@ -188,6 +277,7 @@ export const AXES_D: AxisScore[] = [
     axis: "serving-fidelity", family: "subject", kind: "measured-subject", applies_to: "inference-endpoints-and-routers",
     bench: "frozen presence bank (5 classes, 3-of-5 bar)",
     task: "does an inference runtime document sampling control, quantisation, KV/attention strategy, latency metrics and parallelism",
+    limit: HELD_SUBJECT_LIMITS["serving-fidelity"],
     n: 38, status: "MEASURED", method_status: "meets-rule",
     method: "scripts/subject-axis/subject-axis-live-run.mjs", method_sha: "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
     rate: 0.7895, rate_scale: "fraction", rate_rule: "presence of at least 3 of 5 declared classes",
@@ -220,6 +310,7 @@ export const AXES_D: AxisScore[] = [
     axis: "watchdog-ingest", family: "subject", kind: "measured-subject", applies_to: "public-watchdog-and-incident-sources",
     bench: "frozen presence bank (5 classes, 3-of-5 bar)",
     task: "does the subject offer a third party a documented route to report a problem, with a response commitment and a machine-readable path",
+    limit: HELD_SUBJECT_LIMITS["watchdog-ingest"],
     n: 106, status: "MEASURED", method_status: "meets-rule",
     method: "scripts/subject-axis/build_missing_axes.mjs", method_sha: "eeabfeb8a0515d719840d33c2a9320bd8279b7da7db17fc537acd23632509b5b",
     rate: 0.1981, rate_scale: "fraction", rate_rule: "presence of at least 3 of 5 declared classes",

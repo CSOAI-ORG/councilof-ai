@@ -21,6 +21,7 @@ import { tmpdir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { fileViolations, distributionFiles } from "./doctrine-lint.mjs";
 import { CAPTURE_PATH, cardNote, npmReleaseState } from "./npm-release-state.mjs";
+import { PUBLISHED_WITH_COUNTS, namesNoNumber } from "./registry-text.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OFFLINE = process.argv.includes("--offline");
@@ -159,11 +160,19 @@ print(len(errs)); [print(e) for e in errs[:5]]; sys.exit(1 if errs else 0)`);
     const wantRemote = (dist.distribution.find((r) => r.id === id) || {}).remote_url || DOOR;
     rec(id, wantRemote === DOOR ? "remote == door" : "remote == door + trailing slash (declared remote_url)",
       wantRemote.replace(/\/$/, "") === DOOR && doc.remotes?.[0]?.url === wantRemote && doc.remotes[0].type === "streamable-http", doc.remotes?.[0]?.url);
-    const fl = doc._meta["io.modelcontextprotocol.registry/publisher-provided"]["ai.councilof/fleet"];
-    rec(id, "fleet names == locked", sameList([...fl.free, ...fl.paid], EXPECT_TOOLS), `${fl.free.length}+${fl.paid.length}`);
+    const pp = doc._meta["io.modelcontextprotocol.registry/publisher-provided"];
+    const fl = pp["ai.councilof/fleet"];
+    if (doc.version === PUBLISHED_WITH_COUNTS) {
+      rec(id, `fleet names == locked (the shape published as ${PUBLISHED_WITH_COUNTS})`,
+        !!fl && sameList([...fl.free, ...fl.paid], EXPECT_TOOLS), fl ? `${fl.free.length}+${fl.paid.length}` : "no fleet");
+    } else {
+      // after 1.5.0 the entries are count-free (registry-text.mjs): no list, no number, a pointer to tools/list
+      rec(id, "no tool list; points at tools/list", !fl && /tools\/list/.test(pp["ai.councilof/tools"] || ""), Object.keys(pp).join(","));
+      rec(id, "description names no number (Ed25519 and x402 aside)", namesNoNumber(doc.description), doc.description);
+    }
   }
   // what the public registry currently serves as latest for each name (read-only GET)
-  for (const [id, name] of [["mcp-registry-github", dist.registry_names.github], ["mcp-registry-domain", dist.registry_names.domain]]) {
+  for (const [id, name] of [["mcp-registry-github", dist.registry_names.github], ["mcp-registry-domain", dist.registry_names.domain], ["mcp-registry-domain-free", dist.registry_names.domain_free]]) {
     if (OFFLINE) { rec(id, "registry isLatest", null, "offline"); continue; }
     let latest = null, why = "";
     try {
