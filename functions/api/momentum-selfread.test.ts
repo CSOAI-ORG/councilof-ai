@@ -38,6 +38,15 @@ const NOT_READS: Record<string, Record<string, string>> = {
   "functions/api/_ledgers.ts": {
     "csoai/councilof-ai-evidence": "a curl command inside the ledgers index telling a reader how to fetch the claim-maintenance chain; _ledgers.ts does not fetch it",
   },
+  // The sharded evidence Pages Function returns only a 302 Location pointing at
+  // the immutable HF object. It never calls fetch() or downloads the evidence on
+  // CSOAI's server. Counting it as a request-time SELF_READ would incorrectly
+  // reclassify a stranger's redirected download as our own infrastructure use.
+  // Keep the literal dataset URL in the route and record the exception instead
+  // of weakening the detector that checks actual server-side reads.
+  "functions/interop/[[path]].ts": {
+    "csoai/councilof-ai-evidence": "a 302 Location header directs the visitor to an immutable HF object; this Pages Function does not fetch the dataset itself",
+  },
 };
 
 function walk(dir: string, out: string[] = []): string[] {

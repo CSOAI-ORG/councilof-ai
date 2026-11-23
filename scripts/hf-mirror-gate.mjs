@@ -47,6 +47,7 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
+import { execFileSync } from "node:child_process";
 
 import { hubToken } from "./surface/hub-fetch.mjs";
 
@@ -178,6 +179,17 @@ async function main() {
   }
 
   const manifest = JSON.parse(readFileSync(MANIFEST, "utf8"));
+  // Validate the exact candidate evidence tree before allowing new redirect
+  // mappings. A single successful sample cannot prove the other 3,607 objects.
+  // The helper checks every original and shard blob plus anonymous SHA-256 GET.
+  try {
+    execFileSync("python3", ["scripts/hf/verify_mill_evidence_overflow.py"], {
+      cwd: ROOT, stdio: "inherit", timeout: 180_000,
+    });
+  } catch {
+    console.error("✗ hf-mirror-gate: mill-evidence exact-byte mirror verification failed");
+    process.exit(1);
+  }
   // Only check directories that are NOT mirror_only (those are the ones being excluded)
   const dirs = manifest.entries.filter((e) => e.kind === "dir" && !e.mirror_only);
 
@@ -195,7 +207,22 @@ async function main() {
       continue;
     }
 
-    const hfUrl = HF_RESOLVE + entry.path + "/" + sample;
+    // Sample can be an overflow admission or items JSONL. Its physical HF
+    // location is source-locked in the map; never assume the old saturated dir.
+    let sampleRel = entry.path + "/" + sample;
+    if (entry.path === "interop/mill-evidence") {
+      const map = JSON.parse(readFileSync(resolve(ROOT, "scripts/hf/mill_evidence_overflow_map.json"), "utf8"));
+      if (Object.hasOwn(map.entries, sampleRel)) {
+        const basename = sampleRel.split("/").pop();
+        const digest = basename.match(/-([0-9a-f]{12})\.(?:json|jsonl)$/);
+        if (!digest) {
+          console.error("✗ hf-mirror-gate: invalid mapped filename");
+          process.exit(1);
+        }
+        sampleRel = map.destination_prefix + "/" + digest[1][0] + "/" + basename;
+      }
+    }
+    const hfUrl = HF_RESOLVE + sampleRel;
     const result = await probe(hfUrl, { token });
     if (result.retried) retried++;
     probes.push({ path: entry.path, url: hfUrl, sample, ...result });
