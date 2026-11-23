@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 
 const source = fs.readFileSync(new URL("../../client/src/components/home/HomeMine.tsx", import.meta.url), "utf8");
+const resultsSource = fs.readFileSync(new URL("../../client/src/components/home/HomeResults.tsx", import.meta.url), "utf8");
 // This is a source-copy regression test, not a browser or signature-verification test.
 function copyIssues(input) {
   const text = input.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\s+/g, " ");
@@ -34,12 +35,13 @@ test("report date, scope and evidence status remain explicit", () => {
   assert.match(source, /scope, sources and\s+evidence status/);
   assert.match(source, /Check the publication date/);
 });
-test("existing archive, board, signup and live strip remain wired", () => {
+test("report archive and signup survive while the live strip belongs only to HomeResults", () => {
   assert.match(source, /href="https:\/\/huggingface\.co\/datasets\/csoai\/gspc-daily-reports"/);
   assert.match(source, /target="_blank"\s+rel="noopener noreferrer"/);
   assert.match(source, /href="\/board\/"/);
   assert.match(source, /<NewsletterSignup\s*\/>/);
-  assert.match(source, /<LivingBoardStrip\s*\/>/);
+  assert.match(resultsSource, /<LivingBoardStrip\s*\/>/);
+  assert.doesNotMatch(source, /<LivingBoardStrip\s*\/>/);
 });
 test("restored archive band does not reuse the HomeUpdates test selector", () => {
   assert.match(source, /data-testid="home-report-archive-band"/);
