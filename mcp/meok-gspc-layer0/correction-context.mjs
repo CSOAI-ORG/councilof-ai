@@ -157,10 +157,10 @@ export async function readMeokCorrectionEvidence(args={}, {fetchImpl=fetch,now=(
       },
       witness_status_observed_at_source_claim:
         goodDate(v.witness_status_observed_at)?v.witness_status_observed_at:null,
-      rekor_state_source_claim:claimEnum(v.witnesses?.rekor,['WITNESSED','NOT_YET','UNAVAILABLE']),
-      ots_state_source_claim:claimEnum(v.witnesses?.ots,['CONFIRMED_BITCOIN','NOT_YET','UNAVAILABLE']),
+      rekor_state_source_claim:claimEnum(v.witnesses?.rekor,['WITNESSED','UNCHECKABLE','NOT_YET','UNAVAILABLE']),
+      ots_state_source_claim:claimEnum(v.witnesses?.ots,['CONFIRMED_BITCOIN','STAMPED_PENDING_BITCOIN','NO_ATTESTATION','PENDING','UNCHECKABLE','NOT_YET','UNAVAILABLE']),
       source_drift:{
-        status:claimEnum(drift.status,['DRIFTED','MATCHED','NO_DRIFT','UNAVAILABLE']),
+        status:claimEnum(drift.status,['DRIFTED','MATCH','UNCHECKABLE','UNAVAILABLE']),
         checked_at:goodDate(drift.checked_at)?drift.checked_at:null,
         witnessed_root_bytes_sha256:hex64(drift.witness_artifact_sha256)?drift.witness_artifact_sha256:null,
         checked_live_root_bytes_sha256:hex64(drift.live_root_sha256)?drift.live_root_sha256:null,
@@ -168,7 +168,7 @@ export async function readMeokCorrectionEvidence(args={}, {fetchImpl=fetch,now=(
         match_merkle_root:typeof drift.match_merkle_root==='boolean'?drift.match_merkle_root:null,
       },
       source_conflict:{
-        status:claimEnum(conflict.status,['NONE','CONFLICT','UNAVAILABLE']),
+        status:claimEnum(conflict.status,['NONE','CONFLICT','UNCHECKABLE','UNAVAILABLE']),
         as_of:goodDate(conflict.as_of)?conflict.as_of:null,
         merkle_root:hex64(conflict.merkle_root)?conflict.merkle_root:null,
       },
