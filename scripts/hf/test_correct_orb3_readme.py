@@ -5,14 +5,19 @@ import unittest
 from pathlib import Path
 from correct_orb3_readme import render,MARKER,LEGACY,GATE
 
-ROOT=Path(__file__).resolve().parents[2]
-SOURCE=ROOT/"ops/hub-fixes/hf/bundle/csoai__hitl-academy-orb3__dataset/README.md"
+from correct_orb3_readme import HEADER
+
+def legacy_fixture():
+    return ("---\nlicense: cc-by-4.0\n---\n" +
+         HEADER+"\n\n## The module in this dataset\n" +
+         LEGACY+"\n\n## Learning gate\n"+
+         GATE+"\nhuman-oversight decision on an axis you have not been briefed on.\n")
 
 
 class TestOrbCorrection(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.card=SOURCE.read_text(encoding="utf-8")
+        cls.card=legacy_fixture()
 
     def test_notice_and_original_data_claim_separately_exposed(self):
         x=render(self.card)
