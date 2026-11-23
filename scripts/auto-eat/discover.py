@@ -256,7 +256,7 @@ def discover_a2a(n: int) -> list[dict]:
             break
         try:
             data = json.loads(body)
-            items = data.get("items") or []
+            items = data.get("items", [])
             if not isinstance(items, list):
                 raise ValueError("items is not an array")
         except (ValueError, AttributeError):
