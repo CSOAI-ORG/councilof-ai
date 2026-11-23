@@ -74,8 +74,10 @@ test('modified record cannot pass signed evidence check',()=>{
 });
 
 test('original source gold must equal signed result gold',()=>{
-  const {source,record}=fixture(x=>x[1].gold='A');
-  assert.throws(()=>auditHistoricalTriad(source,record),/source\/result gold mismatch/);
+  const {source,record}=fixture();
+  const tamperedSource=source.replace('"gold": "C"', '"gold": "A"');
+  assert.notEqual(tamperedSource,source);
+  assert.throws(()=>auditHistoricalTriad(tamperedSource,record),/source\/result gold mismatch/);
 });
 
 test('source with partial meta answer overlap is not a perfect outcome',()=>{
