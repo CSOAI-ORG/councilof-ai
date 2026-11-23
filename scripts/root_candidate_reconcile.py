@@ -80,6 +80,7 @@ STAMPED_SUFFIX = ".ots"
 # it sits in. So the pointer follows the root.
 ROOT_PATH = "public/root.json"
 ROOT_POINTER = "public/interop/root-witness-pointer.json"
+ROOT_HEALTH = "public/publisher-health.json"
 RELEASE_GATE = "scripts/root-witness-release-gate.py"
 
 # The manifest is generated from the .ots files in the tree; the views quote it. This order is
@@ -245,6 +246,65 @@ def _pointer_side_for_merged_root(repo: Path, conflicted: list[str]) -> str | No
     return None
 
 
+def _health_binds_root(health_raw: bytes | str, root_raw: bytes | str) -> bool:
+    """Publisher health describes only the exact retained root, never another epoch.
+
+    The root signature/Merkle/witness gate runs separately after reconciliation.
+    This check is a typed *source report to source root* binding, not a
+    cryptographic signature on publisher-health.json itself.
+    """
+    try:
+        h = json.loads(_as_bytes(health_raw))
+        root = json.loads(_as_bytes(root_raw))
+    except (TypeError, ValueError):
+        return False
+    if not isinstance(h, dict) or not isinstance(root, dict):
+        return False
+    halt = h.get("halt")
+    if not isinstance(halt, dict):
+        return False
+    return (
+        root.get("kind") == "csoai.public-root/v1"
+        and isinstance(root.get("as_of"), str)
+        and isinstance(root.get("card_count"), int)
+        and root.get("card_count") >= 0
+        and h.get("kind") == "csoai.publisher-health/v0"
+        and h.get("writer") == "scripts/publish_public_root.py"
+        and h.get("as_of") == root["as_of"]
+        and type(h.get("card_count")) is int
+        and h["card_count"] == root["card_count"]
+        and h.get("dry_run") is False
+        and h.get("key") == "present"
+        and h.get("envelope") == "signed"
+        and halt.get("split") is False
+        and type(halt.get("unsigned_new_leaves")) is int
+        and halt["unsigned_new_leaves"] == 0
+        and halt.get("missing_key") is False
+    )
+
+
+def _health_side_for_merged_root(repo: Path, conflicted: list[str]) -> str | None:
+    """Select conflicted health *only* if it matches the merged root version.
+
+    No arbitrary favoring of the newer timestamp, no loss of independent
+    publisher/witness checks. If both sides fail, the conflict remains real.
+    """
+    if ROOT_HEALTH not in conflicted:
+        return None
+    root_raw = _merged_root_bytes(repo)
+    if root_raw is None:
+        return None
+    ours = git(repo, "show", f":2:{ROOT_HEALTH}", check=False)
+    theirs = git(repo, "show", f":3:{ROOT_HEALTH}", check=False)
+    ours_ok = ours.returncode == 0 and _health_binds_root(ours.stdout, root_raw)
+    theirs_ok = theirs.returncode == 0 and _health_binds_root(theirs.stdout, root_raw)
+    if ours_ok:
+        return "ours"
+    if theirs_ok:
+        return "theirs"
+    return None
+
+
 def rebuild_derived_views(repo: Path, builder: list[str], generator: list[str],
                           bundle: list[str] | None = None,
                           lifecycle: list[str] | None = None) -> list[str]:
@@ -353,7 +413,11 @@ def reconcile(
         # stays a real conflict and this fails closed exactly as it did before. The guarantee
         # this script exists to hold is not weakened; it is stated in terms of the artefact.
         pointer_side = _pointer_side_for_merged_root(repo, conflicted)
-        bound = [p for p in conflicted if pointer_side and p == ROOT_POINTER]
+        health_side = _health_side_for_merged_root(repo, conflicted)
+        bound = [p for p in conflicted if (
+            (pointer_side and p == ROOT_POINTER)
+            or (health_side and p == ROOT_HEALTH)
+        )]
         real = [p for p in conflicted
                 if not is_derived(p) and p not in stamped and p not in bound]
         if real:
@@ -372,8 +436,9 @@ def reconcile(
                     git(repo, "checkout", "--theirs", "--", proof, check=False)
                     git(repo, "add", "--", proof)
             elif path in bound:
-                # The pointer follows the root the merge kept.
-                checkout = git(repo, "checkout", f"--{pointer_side}", "--", path, check=False)
+                # Only the pointer OR health that binds the retained root is selected.
+                side = pointer_side if path == ROOT_POINTER else health_side
+                checkout = git(repo, "checkout", f"--{side}", "--", path, check=False)
                 if checkout.returncode != 0:
                     git(repo, "rm", "--quiet", "--", path)
             else:
