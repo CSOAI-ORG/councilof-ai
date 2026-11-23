@@ -1,0 +1,24 @@
+--- a/csoai/claim-registries/README.md (live)
++++ b/csoai/claim-registries/README.md (proposed)
+@@ -4,9 +4,7 @@
+ tags:
+ - ai-governance
+ - measurement
+-# TODO size_categories: row count unavailable (0); Growth guessed n<1K, unverified
+-# TODO task_categories: Growth proposes question-answering (verify against content)
+-# TODO language: Growth proposes en (verify)
++- council-of-ai
+ configs:
+ - config_name: json
+   data_files:
+@@ -18,6 +16,10 @@
+ - config_name: jsonl
+   data_files:
+   - ondo-chainlink/series/CL-1.jsonl
++size_categories:
++- n<1K
++language:
++- en
+ ---
+ 
+ <p align="center">

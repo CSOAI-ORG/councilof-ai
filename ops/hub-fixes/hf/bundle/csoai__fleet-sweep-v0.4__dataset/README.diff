@@ -1,0 +1,60 @@
+--- a/csoai/fleet-sweep-v0.4/README.md (live)
++++ b/csoai/fleet-sweep-v0.4/README.md (proposed)
+@@ -4,6 +4,20 @@
+ pretty_name: Fleet Sweep v0.4 — logprob ranking grading (method upgrade, lane run)
+ tags: [gspc, council-of-ai, fleet-sweep, logprob, measurement, lane-run]
+ size_categories: [1K<n<10K]
++configs:
++- config_name: separation-input
++  data_files:
++  - split: train
++    path: separation-input.jsonl
++  default: true
++- config_name: subject-rows
++  data_files:
++  - split: train
++    path: subject_rows.jsonl
++- config_name: sweep-rows
++  data_files:
++  - split: train
++    path: sweep_rows.jsonl
+ ---
+ 
+ <p align="center">
+@@ -63,3 +77,36 @@
+ Files: `sweep_rows.jsonl` (1206 lines; per-item ranked + greedy verdicts).
+ 
+ Measurement, not certification. Free verify: https://councilof.ai/gspc-verify
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `separation-input` (default) | `separation-input.jsonl` | 3179 |
++| `subject-rows` | `subject_rows.jsonl` | 1974 |
++| `sweep-rows` | `sweep_rows.jsonl` | 1206 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("csoai/fleet-sweep-v0.4", "separation-input", split="train")
++```
++
++## Citation
++
++```bibtex
++@misc{csoai_fleet_sweep_v0_4_2026,
++  title        = {Fleet Sweep v0.4 — logprob ranking grading (method upgrade, lane run)},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/csoai/fleet-sweep-v0.4}},
++  url          = {https://huggingface.co/datasets/csoai/fleet-sweep-v0.4}
++}
++```
++
++<!-- csoai-card-fixes:end -->

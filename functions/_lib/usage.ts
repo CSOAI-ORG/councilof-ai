@@ -24,6 +24,18 @@
  *                 "<door>.<content class>.<top-level key NAMES>", keys from a fixed allowlist in
  *                 functions/_lib/askInput.ts, anything else "other". Never a value. Written from
  *                 the deploy of lane chat-door-20261007; the name is not cut (USAGE_NAME_MAX).
+ *   paid_call   — a call of one of the x402-metered tools: "<door>.<tool>.<payment>". door is
+ *                 "mcp" (POST /mcp tools/call) or "a2a" (POST /api/a2a, a per-tool skill that
+ *                 reached the dispatch). payment says only WHETHER and WHERE a payment was
+ *                 presented: "none", "preview" (the free preview), "arg" (the x_payment
+ *                 argument; on a2a, input.x_payment), "meta" (the x402 transport's own field:
+ *                 _meta["x402/payment"] on mcp, message.metadata["x402.payment.payload"] on a2a),
+ *                 "both" (mcp only: a2a refuses both before the dispatch and writes no row), or
+ *                 "purchase" (a purchase_action on an owned purchase; no new payment).
+ *                 Never the payment, an amount, a wallet or an argument value. A row says a
+ *                 payment was PRESENTED, never that it settled: settlement is counted from
+ *                 facilitator records (GET /api/revenue), and this dimension is added to nothing.
+ *                 Written from the deploy of lane paid-call-usage-20261120.
  *
  * WHAT IS NEVER STORED: no IP address, no user-agent string, no message text, no arguments, no
  * cookie, no identifier of any kind. A stored key is `usage:v1:<day>:<dim>:<name>:<random>`; the
@@ -44,7 +56,7 @@ export const USAGE_PREFIX = "usage:v1:";
 /** Rows expire on their own; nothing is kept past this. */
 export const USAGE_RETENTION_DAYS = 400;
 
-export const USAGE_DIMS = ["mcp_client", "mcp_tool", "a2a_outcome", "chat_state", "agui_state", "reject_shape"] as const;
+export const USAGE_DIMS = ["mcp_client", "mcp_tool", "a2a_outcome", "chat_state", "agui_state", "reject_shape", "paid_call"] as const;
 export type UsageDim = (typeof USAGE_DIMS)[number];
 
 export type SelfTool = {
@@ -73,6 +85,9 @@ export const SELF_TOOLS: readonly SelfTool[] = [
   // Its User-Agent has carried this token since the script was written (22 Sep 2026); it was not
   // listed, so every run was counted as external use of /mcp and /api/a2a.
   { name: "axis-doors-probe", kind: "audit", runs_on: "scripts/axis-doors-probe.mjs (run by hand)", ua_token: "csoai-axis-doors-probe" },
+  // Added 20 Nov 2026. A lane's hand-run curl probes of the doors had no name to send, so they were
+  // counted as external use (USAGE_DAY_NOTES, 19 and 20 Nov 2026). A lane sends this token.
+  { name: "lane-probe", kind: "audit", runs_on: "a lane's hand-run probes of /mcp, /api/a2a and /api/chat (curl -A csoai-lane-probe/1)", ua_token: "csoai-lane-probe" },
 ];
 
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -112,7 +127,15 @@ export const USAGE_NAME_MAX: Readonly<Record<UsageDim, number>> = {
   chat_state: 48,
   agui_state: 48,
   reject_shape: 96,
+  paid_call: 48,
 };
+
+/** How a paid-tool call presented payment. Presence and place only; never the payment itself. */
+export const PAID_CALL_PAYMENTS = ["none", "preview", "arg", "meta", "both", "purchase"] as const;
+export type PaidCallPayment = (typeof PAID_CALL_PAYMENTS)[number];
+/** The paid_call label: "<door>.<tool>.<payment>". */
+export const paidCallName = (door: "mcp" | "a2a", tool: string, payment: PaidCallPayment): string =>
+  `${door}.${tool}.${payment}`;
 
 export const utcDay = (d: Date = new Date()): string => d.toISOString().slice(0, 10);
 
@@ -203,6 +226,13 @@ export const USAGE_LABEL_NOTES: readonly { effective: string; not_before: string
     dim: "reject_shape",
     note: "New dimension. Before the change the shape of a refused request was not recorded anywhere: UNMEASURED, not zero.",
   },
+  {
+    effective:
+      "From the production deploy that shipped lane paid-call-usage-20261120 (not before 2026-11-20; the deploy time is not recorded here). The day of that deploy carries both labellings: a metered call made before the deploy wrote no paid_call row, and one made after it wrote one. Every earlier day has none.",
+    not_before: "2026-11-20",
+    dim: "paid_call",
+    note: "New dimension. Before the change, how a call of a metered tool presented payment (not at all, as the x_payment argument, or in _meta x402/payment) was not recorded anywhere: UNMEASURED, not zero. A row says a payment was presented, never that it settled.",
+  },
 ];
 
 /**
@@ -215,6 +245,16 @@ export const USAGE_DAY_NOTES: readonly { day: string; dims: readonly UsageDim[];
     day: "2026-10-07",
     dims: ["chat_state", "a2a_outcome"],
     note: "Not a baseline. Lane chat-door-20261007 sent a 58-request reproduction to production before 04:00Z without the x-csoai-self header, so it was counted as external: its replies were 30 error, 9 grounded and 7 unknown on /api/chat, and on /api/a2a 8 errors (5 x -32009, 3 x -32600) of 12, all under the old labels. Other chat errors written between 04:00Z and 04:36Z that day have no matching A2A -32600 and are unattributed; they may also be our own unidentified probes. A reviewer's replay of the same 58 requests sent x-csoai-self and was not counted.",
+  },
+  {
+    day: "2026-11-19",
+    dims: ["mcp_tool", "a2a_outcome"],
+    note: "Not a baseline. A lane probing the MCP and A2A doors by hand at about 07:45Z sent no self token, so its calls were counted as external: about 5 mcp_tool rows (evidence_bundle 3, receipts_batch 1, get_root 1) and about 7 a2a_outcome rows. The figures are the lane's own count of what it sent, not a read of the stored rows, which nothing identifies.",
+  },
+  {
+    day: "2026-11-20",
+    dims: ["mcp_client", "mcp_tool", "a2a_outcome", "chat_state", "reject_shape"],
+    note: "Not a baseline. The same lane's probes between about 02:25Z and 03:00Z sent no self token and were counted as external: about 4 mcp_client rows (name probe), 6 mcp_tool rows (evidence_bundle 4, not-a-tool 2), 22 a2a_outcome rows, 1 chat_state row and 2 reject_shape rows (one a2a, one chat, both json.nokeys). The figures are the lane's own count of what it sent, not a read of the stored rows. The lane-probe token was added the same day so a lane's probes can be excluded by name.",
   },
 ];
 

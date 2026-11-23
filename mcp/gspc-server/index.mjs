@@ -71,6 +71,12 @@ const FREE_TOOLS = JSON.parse(readFileSync(TOOLS_PATH, "utf8")).tools;
  * classifies the opaque response's receipt shape. Settlement is the route's job, fail-closed.
  * Without `x_payment` the tool returns the route's own
  * 402 challenge, which is an answer and not a failure — and `preview` is free where a tool offers it.
+ *
+ * A client that follows the x402 MCP transport (x402-foundation/x402 specs/transports-v2/mcp.md)
+ * retries a challenged call with its PaymentPayload OBJECT in params._meta["x402/payment"]. That is
+ * read too, as the HTTP door reads it (functions/mcp/_paid.ts): the object is base64'd into the same
+ * X-PAYMENT header, one channel per call, and a settlement the route reports is also returned in the
+ * result's _meta["x402/payment-response"].
  */
 const PAID_TOOLS_PATH = firstExisting([
   "../../functions/mcp/paid-tools.json", // repo checkout: the canonical file
@@ -371,6 +377,10 @@ async function getAxis(args) {
       ? `${ORIGIN}${row.evidence_url}` : (row.evidence_url ?? null),
     row_url: `${ORIGIN}/api/gspc?axis=${encodeURIComponent(String(row.axis))}`,
     note: row.note ?? null,
+    // What this axis's score does not show, as the row states it (axes[].limit, C-2026-1120-02).
+    // Copied verbatim. A row that states no limit carries no key on the board and gets none here
+    // (not null).
+    ...(typeof row.limit === "string" ? { limit: row.limit } : {}),
     // Preserve per-axis measurement provenance; board/retrieval dates do not refresh it.
     facts_as_of: row.facts_as_of ?? null,
     measurement_time: row.measurement_time ?? null,
@@ -941,6 +951,65 @@ function inspectReceipt(paymentResponse) {
   }
 }
 
+const X402_META_PAYMENT = "x402/payment";
+const X402_META_PAYMENT_RESPONSE = "x402/payment-response";
+// A PaymentPayload is a signature and an authorization. This bounds what becomes a request header.
+const META_PAYMENT_MAX_BYTES = 16 * 1024;
+
+/**
+ * `_meta["x402/payment"]` as the X-PAYMENT header value, exactly as functions/mcp/_paid.ts builds
+ * it: base64 of the PaymentPayload's JSON with every non-ASCII character written as a \uXXXX
+ * escape, because the route decodes with atob then JSON.parse and has no UTF-8 step. Only the
+ * shape is checked here; whether the payment is good is the route's question.
+ */
+function metaPaymentHeader(meta) {
+  if (!meta || typeof meta !== "object" || Array.isArray(meta))
+    return { error: `_meta["${X402_META_PAYMENT}"] must be an x402 PaymentPayload object` };
+  const json = JSON.stringify(meta).replace(
+    /[\u0080-\uffff]/g,
+    (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`,
+  );
+  if (json.length > META_PAYMENT_MAX_BYTES)
+    return { error: `_meta["${X402_META_PAYMENT}"] exceeds ${META_PAYMENT_MAX_BYTES} bytes` };
+  return { header: Buffer.from(json, "latin1").toString("base64") };
+}
+
+/** The route's X-PAYMENT-RESPONSE as an object, or null. Never built from anything else. */
+function settlementResponse(header) {
+  if (typeof header !== "string" || !header.trim()) return null;
+  try {
+    const decoded = JSON.parse(Buffer.from(header.trim().replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("latin1"));
+    return decoded && typeof decoded === "object" && !Array.isArray(decoded) ? decoded : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * receipts_batch only, as on the HTTP door. An unpaid call may omit `to`; the challenge's resource
+ * URL names the window end, and a client following the x402 MCP transport retries with the same
+ * arguments. When its PaymentPayload names this tool's route on this origin with the same `from`,
+ * that resource's `to` is the window it is paying for.
+ */
+function challengedWindowEnd(meta, route, from) {
+  if (typeof from !== "string" || !from.trim()) return undefined;
+  const named =
+    typeof meta.resource === "string"
+      ? meta.resource
+      : meta.resource && typeof meta.resource === "object"
+        ? meta.resource.url
+        : meta.accepted?.resource;
+  if (typeof named !== "string") return undefined;
+  try {
+    const url = new URL(named);
+    if (url.origin !== new URL(ORIGIN).origin || url.pathname !== route) return undefined;
+    if (url.searchParams.get("from") !== from.trim()) return undefined;
+    return url.searchParams.get("to") || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function settlementFields(paymentPresented, paymentResponse) {
   if (paymentResponse) {
     return {
@@ -979,9 +1048,28 @@ function deliveryFields(paymentPresented, paymentResponse) {
  * Forward one paid tool to its route and report what came back, in the route's own words.
  * 402 is PAYMENT_REQUIRED and not an error; 404 is NOT_DEPLOYED and never a fabricated result.
  */
-async function callPaidTool(name, args) {
+async function callPaidTool(name, callArgs, metaPayment) {
   const tool = PAID_BY_NAME.get(name);
-  const paymentPresented = typeof args.x_payment === "string" && args.x_payment.trim().length > 0;
+  // _meta["x402/payment"] becomes the x_payment the rest of this function already carries.
+  let args = callArgs;
+  let metaRefusal;
+  const viaMeta = metaPayment !== undefined && metaPayment !== null;
+  if (viaMeta) {
+    if (typeof callArgs.x_payment === "string" && callArgs.x_payment.trim() !== "") {
+      metaRefusal = `payment was sent twice: use the x_payment argument or _meta["${X402_META_PAYMENT}"], not both`;
+    } else {
+      const encoded = metaPaymentHeader(metaPayment);
+      if (encoded.error) metaRefusal = encoded.error;
+      else {
+        args = { ...callArgs, x_payment: encoded.header };
+        if (name === "receipts_batch" && !(typeof callArgs.to === "string" && callArgs.to.trim())) {
+          const to = challengedWindowEnd(metaPayment, tool.csoai.route, callArgs.from);
+          if (to) args.to = to;
+        }
+      }
+    }
+  }
+  const paymentPresented = viaMeta || (typeof args.x_payment === "string" && args.x_payment.trim().length > 0);
   const base = {
     tool: name,
     route: tool.csoai.route,
@@ -991,6 +1079,16 @@ async function callPaidTool(name, args) {
     doctrine: PAID_DOCTRINE,
     not_a_certification: true,
   };
+  if (metaRefusal)
+    return {
+      ...base,
+      status: "BAD_ARGUMENTS",
+      reason: metaRefusal,
+      payment_forwarded: false,
+      settlement_state: "NOT_REQUESTED",
+      nothing_charged: true,
+      delivery_state: "NOT_DELIVERED",
+    };
   const built = buildPaidRequest(name, args);
   if (built.error) return { ...base, status: "BAD_ARGUMENTS", reason: built.error };
 
@@ -1052,7 +1150,7 @@ async function callPaidTool(name, args) {
         "A challenge is an answer, not a failure. " +
         (paymentPresented
           ? "A payment authorization was presented, but this response does not prove settlement. Inspect the wallet, chain and facilitator before signing or retrying."
-          : "Pay from your own wallet against accepts[] and call again with x_payment. No payment authorization was presented; nothing was charged by this request.") +
+          : "Pay from your own wallet against accepts[] and call again with x_payment, or with the PaymentPayload object in _meta[\"x402/payment\"] (x402 MCP transport). No payment authorization was presented; nothing was charged by this request.") +
         datedAmount,
     };
   }
@@ -1267,7 +1365,9 @@ async function handle(msg) {
 
   if (method === "tools/call") {
     const name = params?.name;
-    const fn = PAID_BY_NAME.has(name) ? (a) => callPaidTool(name, a) : HANDLERS[name];
+    // Only a metered tool is handed _meta["x402/payment"]; a free tool never reads it.
+    const metaPayment = params?._meta && typeof params._meta === "object" ? params._meta[X402_META_PAYMENT] : undefined;
+    const fn = PAID_BY_NAME.has(name) ? (a) => callPaidTool(name, a, metaPayment) : HANDLERS[name];
     if (!fn) return replyError(id, -32602, `unknown tool: ${name}`);
     try {
       const payload = await fn(params?.arguments ?? {});
@@ -1277,7 +1377,7 @@ async function handle(msg) {
       // x402 MCP transport (x402-foundation/x402 specs/transports-v2/mcp.md): a payment challenge is
       // a tool result with isError:true whose structuredContent IS the PaymentRequired object and
       // whose content[0].text is that object as JSON. Same shape as the HTTP door
-      // (functions/mcp/_paid.ts). Payment is still read only from the x_payment argument.
+      // (functions/mcp/_paid.ts). Payment is read from the x_payment argument or _meta["x402/payment"].
       if (payload?.status === "PAYMENT_REQUIRED") {
         const pr = payload.payment_required && typeof payload.payment_required === "object" && !Array.isArray(payload.payment_required)
           ? payload.payment_required
@@ -1295,10 +1395,13 @@ async function handle(msg) {
       // Same rule as the HTTP door: a paid call that delivered nothing is a failed call. NOT_DEPLOYED
       // stays a state, as there (functions/mcp/paid-tools.test.ts pins it).
       const paidFailed = PAID_BY_NAME.has(name) && !["DELIVERED", "NOT_DEPLOYED"].includes(payload?.status);
+      // x402 MCP transport: the settlement the route reported, where a spec client looks for it.
+      const settled = PAID_BY_NAME.has(name) ? settlementResponse(payload?.payment_response_header) : null;
       return reply(id, {
         content: [{ type: "text", text: `${summaryLine(name, payload)}\n\n${JSON.stringify(payload, null, 2)}` }],
         structuredContent: payload,
         isError: paidFailed,
+        ...(settled ? { _meta: { [X402_META_PAYMENT_RESPONSE]: settled } } : {}),
       });
     } catch (e) {
       return reply(id, {

@@ -1,0 +1,51 @@
+{
+  "title": "GSPC gap index",
+  "id": "nicktempleman/csoai-gspc-gap-index",
+  "id_no": 12265246,
+  "subtitle": "Mirror of Hugging Face csoai/gspc-gap-index",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-gap-index`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-gap-index -p ./dataset --unzip\n```\n\nStart by inspecting `current.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `eval.yaml`\n- `current.json`\n- `manifest.jsonl`\n- `weeks/2026-W35.json`\n- `weeks/2026-W36.json`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-gap-index at revision `eb6cbfdfa9651a868336ca2a8a373dac99a48d1b`, made 2026-10-06. The Hugging Face copy is the original; if the two differ, it wins.\n\n# GSPC gap index\n\nLive board: GET https://councilof.ai/api/gspc — quote `totals.public_count` and `totals.lid` only. Not certification.\n\nWeekly tape of material claims with **no stranger-recomputable row**.\n\n`current.json` tracks the live board. When `unmeasured_axes` is empty, the board has no declared hollow axis slots — the tape still records other hollow claims (stamps, indexes) without inventing scores.\n\nThis is not a ranking, not a rating, not a certification.\n\nFiles:\n\n- `current.json` — latest week (live)\n- `weeks/YYYY-Www.json` — dated snapshots\n\n**UNMEASURED catalog when the board has empties.** Empty stays empty. Not a certificate.\n\n## What is in this repository\n\n| file | bytes | rows | what |\n|---|---:|---:|---|\n| `weeks/2026-W35.json` | 3469 |  | JSON document |\n| `current.json` | 1741 |  | JSON document |\n| `weeks/2026-W36.json` | 1741 |  | JSON document |\n| `README.md` | 1363 |  | card |\n| `eval.yaml` | 510 |  | config |\n| `manifest.jsonl` | | 6 | derived at 2026-09-04T04:33:29Z |\n\n`manifest.jsonl` is derived from this repository's own file tree at 2026-09-04T04:33:29Z; it lists every file with its\nsize, its blob hash and a direct URL, so an agent can enumerate the repo without cloning it.\n\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_gspc_gap_index,\n  title        = {GSPC gap index},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  doi_status   = {Zenodo DOI 10.5281/zenodo.21991104: UNAVAILABLE since 29 Sep 2026 (Zenodo blocked the CSOAI account; appeal pending; status https://councilof.ai/interop/zenodo-status.json). Cite the served methodology: https://councilof.ai/signed/HOW-TO-VERIFY.md},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/gspc-gap-index}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n\n\n\n## Objections, contact and corrections\n\nTo object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.\n\n## How to cite\n\nCSOAI Ltd (Council of AI). *GSPC gap index*. 2026. Hugging Face dataset `csoai/gspc-gap-index`. https://huggingface.co/datasets/csoai/gspc-gap-index\n\n```bibtex\n@misc{csoai_gspc_gap_index,\n  title        = {GSPC gap index},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face dataset, https://huggingface.co/datasets/csoai/gspc-gap-index},\n  note         = {Corrections: https://councilof.ai/api/corrections}\n}\n```\n\nLicence: CC-BY-4.0. Attribute Council of AI, CSOAI Ltd (16939677), https://councilof.ai.\n\n## Corrections and verification\n\n- Corrections ledger (signed): https://councilof.ai/api/corrections. Corrections to CSOAI's published records are logged there with what changed and when.\n- Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).\n- Conformance kit for signed-receipts/v1, with test vectors for implementers: https://councilof.ai/spec/signed-receipts/v1/conformance/\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 3, last updated 2026-10-06.\n- 6 files, 24,017 bytes. File types: .json (3), .md (1), .yaml (1), .jsonl (1).\n- Hugging Face twin: [csoai/gspc-gap-index](https://huggingface.co/datasets/csoai/gspc-gap-index). 5 of 6 files have the same byte size there.\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "internet",
+    "software",
+    "computer vision"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 5 of 6 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-gap-index](https://huggingface.co/datasets/csoai/gspc-gap-index) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "1363 — card. Dataset README (Markdown). 14,551 bytes."
+    },
+    {
+      "path": "current.json",
+      "description": "latest week (live). JSON document. top-level keys: schema, kind, source, as_of, week, board_schema, public_count, lid, measured_axes, unmeasured_slots, unmeasured_axes, rows, doctrine, not_a_certification, supersedes, integrity. `rows` holds 2 records with fields: claim (string), kind (string), status (string), note (string), index_n_cards (string). Same byte size as `current.json` in huggingface.co/datasets/csoai/gspc-gap-index (checked 2026-11-20). 1,741 bytes."
+    },
+    {
+      "path": "eval.yaml",
+      "description": "510 — config. YAML file. Same byte size as `eval.yaml` in huggingface.co/datasets/csoai/gspc-gap-index (checked 2026-11-20). 510 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "6 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 6 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-gap-index (checked 2026-11-20). 2,005 bytes."
+    },
+    {
+      "path": "weeks/2026-W35.json",
+      "description": "3469 — JSON document. JSON document. top-level keys: schema, kind, source, as_of, week, board_schema, public_count, unmeasured_slots, unmeasured_axes, rows, doctrine, not_a_certification, integrity, superseded, superseded_by, superseded_note. `rows` holds 10 records with fields: claim (string), kind (string), status (string), n (integer), n_unit (string), note (string), index_n_cards (integer), index_rows (integer), store_count (string). Same byte size as `weeks/2026-W35.json` in huggingface.co/datasets/csoai/gspc-gap-index (checked 2026-11-20). 3,469 bytes."
+    },
+    {
+      "path": "weeks/2026-W36.json",
+      "description": "1741 — JSON document. JSON document. top-level keys: schema, kind, source, as_of, week, board_schema, public_count, lid, measured_axes, unmeasured_slots, unmeasured_axes, rows, doctrine, not_a_certification, supersedes, integrity. `rows` holds 2 records with fields: claim (string), kind (string), status (string), note (string), index_n_cards (string). Same byte size as `weeks/2026-W36.json` in huggingface.co/datasets/csoai/gspc-gap-index (checked 2026-11-20). 1,741 bytes."
+    }
+  ]
+}

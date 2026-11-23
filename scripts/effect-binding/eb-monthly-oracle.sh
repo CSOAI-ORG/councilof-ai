@@ -11,8 +11,9 @@
 #   2. pull  : stage/ -> /evac-bulk/eb-monthly/runs/DATE (floor: 512 MB free on /evac-bulk).
 #   3. sign  : eb_sign_run.py (JWT-shaped strings in the raw log redacted and counted first) -> POST /api/board-sign
 #              with ~/.secrets/board-sign-pod-token; the signature is verified against the DID and a tamper control.
-#   4. publish: HF csoai/councilof-ai-mirror public/interop/ (artifact, log, controls, bank, code, companion) and
-#              csoai/councilof-ai-evidence interop/<artifact> (the councilof.ai 302 target); anonymous read-back by sha256.
+#   4. publish: HF csoai/councilof-ai-evidence, in one commit: public/interop/ (artifact, log, controls, bank, code,
+#              companion) and interop/<artifact> (the councilof.ai 302 target); anonymous read-back by sha256. The
+#              public/interop/ set went to csoai/councilof-ai-mirror until that dataset was deleted on 21 Nov 2026.
 #   5. index : eb_census_index.py -> runs/DATE/effect-binding-census-index.json for the GSPC Route floor. Putting it on
 #              councilof.ai is a land (master accepts only "land:" merges); this job logs INDEX_READY and stops there.
 # One line per step to ~/lanes/logs/eb-monthly.log. Idempotent per DATE. The board is never written: slot 23 rests
@@ -59,16 +60,15 @@ from huggingface_hub import HfApi, CommitOperationAdd
 N = sys.argv[1]; api = HfApi()
 ops = [CommitOperationAdd(path_in_repo=f"public/interop/{f}", path_or_fileobj=f) for f in sorted(glob.glob(N + "*")) if os.path.isfile(f)]
 ops += [CommitOperationAdd(path_in_repo=f"public/interop/{N}.code/{os.path.basename(f)}", path_or_fileobj=f) for f in sorted(glob.glob(N + ".code/*.py"))]
-c1 = api.create_commit("csoai/councilof-ai-mirror", ops, repo_type="dataset",
-                       commit_message=f"effect-binding server probe {N[-10:]}: monthly re-probe of the 600-server frozen slice, signed companion")
-c2 = api.create_commit("csoai/councilof-ai-evidence", [CommitOperationAdd(path_in_repo=f"interop/{N}.json", path_or_fileobj=N + ".json")],
-                       repo_type="dataset", commit_message=f"interop: {N}.json (302 target; bytes pinned by the signed companion)")
+ops += [CommitOperationAdd(path_in_repo=f"interop/{N}.json", path_or_fileobj=N + ".json")]
+c = api.create_commit("csoai/councilof-ai-evidence", ops, repo_type="dataset",
+                      commit_message=f"effect-binding server probe {N[-10:]}: monthly re-probe of the 600-server frozen slice, signed companion; interop/{N}.json is the 302 target")
 want = hashlib.sha256(open(N + ".json", "rb").read()).hexdigest()
-for u in (f"https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/{N}.json",
+for u in (f"https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/{N}.json",
           f"https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/{N}.json"):
     got = hashlib.sha256(urllib.request.urlopen(u, timeout=60).read()).hexdigest()
     assert got == want, f"read-back mismatch {u}"
-print(f"mirror={c1.oid} evidence={c2.oid} readback=ok")
+print(f"evidence={c.oid} readback=ok")
 PY
 ) || { line "FAILED_PUBLISH $(echo "$PUB" | tail -1 | cut -c1-200)"; exit 1; }
 line "PUBLISHED $(echo "$PUB" | tail -1)"

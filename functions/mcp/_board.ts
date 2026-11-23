@@ -294,6 +294,10 @@ export async function getAxisTool(origin: string, args: Record<string, unknown>)
       ? `${origin}${row.evidence_url}` : (row.evidence_url ?? null),
     row_url: `${origin}/api/gspc?axis=${encodeURIComponent(String(row.axis))}`,
     note: row.note ?? null,
+    // What this axis's score does not show, as the row states it (axes[].limit, C-2026-1120-02).
+    // Copied verbatim. A row that states no limit carries no key on the board and gets none here
+    // (not null).
+    ...(typeof row.limit === "string" ? { limit: row.limit } : {}),
     // Preserve per-axis measurement provenance; board/retrieval dates do not refresh it.
     facts_as_of: row.facts_as_of ?? null,
     measurement_time: row.measurement_time ?? null,

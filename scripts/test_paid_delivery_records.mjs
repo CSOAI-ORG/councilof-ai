@@ -4,6 +4,7 @@ import vm from 'node:vm';
 import crypto from 'node:crypto';
 import { stripTypeScriptTypes } from 'node:module';
 import { execFileSync } from 'node:child_process';
+import { buildBundleFiles } from './cards-bundle-shards.mjs';
 // Run the independent buyer controls before retaining the foundation VM graph.
 // This keeps both suites within the existing aggregate memory limit.
 execFileSync(process.execPath,['--max-old-space-size=128','--experimental-vm-modules','scripts/paid_buyer_recovery_controls.mjs',process.cwd()],{stdio:'inherit',timeout:30000});
@@ -590,10 +591,14 @@ for(const [name,query,paid,status] of [['free','',true,200],['invoice','invoice=
 }
 const obligation={id:'fixture',control_id:'fixture',title:'fixture',counsel_confirmed:false,existing_pack:null,regulator:'fixture',obligation:'fixture',statutory_maximum:'fixture'};
 let failBundleSign=false,includeEvidenceFixture=false;
+// The real shard loader (22 Nov 2026 split), linked rather than mocked, so every paid evidence path
+// below reads its corpus through readCardsBundle: the whole 0.1 file and the split 0.2 layout alike.
+const cardsBundleModule=await moduleFrom(current('functions/api/_cards_bundle.ts'));
 const evidenceModule=await moduleFrom(current('functions/api/evidence-bundle.ts'),{
- './_bookkeeping_budget':bookkeepingModule,'./_buyer_purchase':buyerModule,
+ './_bookkeeping_budget':bookkeepingModule,'./_buyer_purchase':buyerModule,'./_cards_bundle':cardsBundleModule,
  './_head':headModule,'./_x402':x402,'./_x402_config':{railMode:()=> 'fixture'},
  './_obligations':{OBLIGATIONS:{fixture:obligation},resolveObligation:id=>id==='fixture'?obligation:null,isRelevant:()=>includeEvidenceFixture},
+ './_provisions':{resolveProvision:()=>null,provisionView:()=>({}),PROVISION_USAGE:'fixture'},
  './_invoice_handoff':{invoiceHandoff:()=>({state:'quotation-only'}),INVOICE_CONTACT:'fixture.invalid'},
  '../_lib/cardSign':{sha256Hex:cardSignModule.namespace.sha256Hex,cardV0:cardSignModule.namespace.cardV0,
   signPayload:async payload=>{if(failBundleSign)throw Error('fixture sign failure');return{sha256:digest(Buffer.from(JSON.stringify(payload))),bytes:100,sig_ed25519:null,unsigned_reason:'offline unsigned fixture',did:'did:fixture'};}},
@@ -689,6 +694,51 @@ await test('full nonempty evidence bundle records revised observation UTF8 bytes
   assert.deepEqual(Buffer.from(text,'utf8'),raw);
  }finally{includeEvidenceFixture=false;failBundleSign=false;}
 });
+// The split layout (csoai.cards-bundle/0.2): the same corpus served as an index plus 16 shards must
+// deliver byte-identical paid bytes and record the same row; a missing shard refuses before payment.
+const splitFixture=()=>{
+ const cards={};
+ for(let i=0;i<24;i++){
+  const sha=digest(Buffer.from('split-fixture-'+i));
+  cards[sha]={card:{schema:'fixture-card',sha256:sha,sig_ed25519:'synthetic-unverified-signature',as_of:'2026-11-0'+(1+i%9)+'T00:00:00Z',
+   surface:'fixture.synthetic',subject:'café 雪 '+i,tags:['fixture'],payload:{text:'café 雪'},unmeasured:[]},proof:['c'.repeat(64)]};
+ }
+ const root={as_of:'fixture-date',merkle_root:'a'.repeat(64),card_sha256:Object.keys(cards).slice(0,5)};
+ const built=buildBundleFiles({root,cards}),files={[built.index.path]:built.index.text};
+ for(const shard of built.shards)files[shard.path]=shard.text;
+ const whole=JSON.stringify({cards:Object.fromEntries(Object.keys(cards).sort().map(k=>[k,cards[k]])),merkle_root:root.merkle_root,as_of:root.as_of});
+ return{cards,files,whole};
+};
+const servingSplit=(files,reads,drop)=>async u=>{
+ const path=new URL(String(u)).pathname;reads.push(path);
+ return path===drop||!(path in files)?new Response('missing',{status:404}):new Response(files[path]);
+};
+await test('full nonempty evidence bundle through the split layout delivers the single-file bytes and row',async()=>{
+ failBundleSign=false;includeEvidenceFixture=true;
+ try{
+  const {files,whole}=splitFixture(),reads=[];
+  const before=await runEvidence('obligation=fixture&bundle=1',true,{},async()=>new Response(whole)),wholeRaw=await bytes(before.out);
+  const after=await runEvidence('obligation=fixture&bundle=1',true,{},servingSplit(files,reads)),splitRaw=await bytes(after.out);
+  assert.equal(after.out.status,200);assert.equal(JSON.parse(splitRaw).manifest_card.payload.card_count,24);
+  // Each purchase stamps its own manifest_card.as_of at request time; every other byte must match.
+  const unstamped=raw=>{const text=raw.toString('utf8'),at=JSON.stringify(JSON.parse(text).manifest_card.as_of);
+   assert.equal(text.split(at).length,2,'the request-time stamp appears exactly once');return text.replace(at,'"<request-time>"');};
+  assert.equal(unstamped(splitRaw),unstamped(wholeRaw),'the split layout must deliver exactly the bytes the single file delivered');
+  assert.deepEqual(reads,['/cards-bundle.json',...'0123456789abcdef'.split('').map(c=>'/cards-bundle/'+c+'.json')]);
+  assert.equal(after.settlements,1);assert.equal(after.out.headers.get(STATE),'WRITTEN');
+  const row=JSON.parse(after.kv.map.get(h.deliveryTxKey('tx-fixture')));
+  assert.equal(row.response_sha256,digest(splitRaw));assert.equal(row.response_bytes,splitRaw.length);
+ }finally{includeEvidenceFixture=false;failBundleSign=false;}
+});
+for(const [mode,query,paid] of [['preview','obligation=fixture',false],['presented payment','obligation=fixture&bundle=1',true]]){
+ await test('full evidence split layout missing shard refuses '+mode+' before payment',async()=>{
+  const {files}=splitFixture(),reads=[];
+  const actual=await runEvidence(query,paid,{},servingSplit(files,reads,'/cards-bundle/7.json')),body=await actual.out.json();
+  assert.equal(actual.out.status,503);assert.equal(body.status,'UNCHECKABLE');assert.equal(body.relevant_signed_cards,null);
+  assert.equal(body.corpus.read_from,'https://example.test/cards-bundle/7.json shard /cards-bundle/7.json HTTP 404');
+  assert.equal(actual.settlements,0);assert.equal(paymentVerifications,0);assert.equal(actual.kv.puts,0);
+ });
+}
 for(const [name,query,paid,status] of [['missing','bundle=1',true,400],['unknown','obligation=unknown&bundle=1',true,404],['preview','obligation=fixture',true,200],['invoice','obligation=fixture&invoice=gbp&commissioned_by=fixture',true,200],['decline','obligation=fixture&bundle=1',false,402]]){
  await test('full evidence '+name+' never creates success row',async()=>{
   failBundleSign=false;const actual=await runEvidence(query,paid);assert.equal(actual.out.status,status);assert.equal(actual.settlements,0);assert.equal(actual.kv.map.has(h.deliveryTxKey('tx-fixture')),false);
@@ -759,7 +809,7 @@ for (const name of retentionControls.cases) passed.push('retention: '+name);
 execFileSync('python3',['-B','scripts/test_recover_paid_output.py','--fixture-stdin'],{input:JSON.stringify(retentionControls.recoveryFixture),stdio:['pipe','inherit','inherit'],timeout:15000});
 passed.push('private operator recovery Python controls');
 const testedPaths=new Set([...Object.keys(FROZEN_SEAMS),'functions/api/_x402_delivery_record.ts','functions/api/_x402_receipt.ts','functions/api/receipts/index.ts','functions/mcp/_paid.ts','scripts/test_paid_delivery_records.mjs','scripts/fixtures/paid_delivery_seams.json','scripts/paid_output_retention_controls.mjs','scripts/recover_paid_output.py','scripts/test_recover_paid_output.py']);
-for(const p of ['shared/buyerPurchase.ts','functions/api/_authCrypto.ts','functions/api/_buyer_purchase.ts','functions/api/_bookkeeping_budget.ts','functions/api/purchases/[[path]].ts','client/src/lib/councilSession.ts','scripts/paid_buyer_recovery_controls.mjs'])testedPaths.add(p);
+for(const p of ['functions/api/_cards_bundle.ts','scripts/cards-bundle-shards.mjs','shared/buyerPurchase.ts','functions/api/_authCrypto.ts','functions/api/_buyer_purchase.ts','functions/api/_bookkeeping_budget.ts','functions/api/purchases/[[path]].ts','client/src/lib/councilSession.ts','scripts/paid_buyer_recovery_controls.mjs'])testedPaths.add(p);
 passed.push('buyer ownership, storage budget, session and MCP controls (count separately reported)');
 const source_sha256=Object.fromEntries([...testedPaths].sort().map(p=>[p,digest(Buffer.from(current(p)))]));
 const test_revision=execFileSync('git',['-c','protocol.allow=never','rev-parse','HEAD'],{encoding:'utf8'}).trim();

@@ -32,6 +32,60 @@ class Refused(RuntimeError):
     pass
 
 
+class HubCallFailed(Refused):
+    """One Hugging Face API call failed; the original error stays on .error."""
+
+    def __init__(self, stage: str, error: BaseException, **context: str):
+        self.stage = stage
+        self.error = error
+        self.context = context
+        super().__init__(stage + " failed: " + type(error).__name__)
+
+
+# Token- and address-shaped text never reaches the public job log, whatever a server says.
+PRIVATE_TEXT = re.compile(r"hf_[A-Za-z0-9]{6,}|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+
+
+def public_text(value, limit: int = 240):
+    if not isinstance(value, str) or not value.strip():
+        return None
+    return PRIVATE_TEXT.sub("[redacted]", " ".join(value.split()))[:limit]
+
+
+def refusal_report(error: BaseException) -> dict:
+    """Name the failed call, its HTTP status and the target repo, not only a class name.
+
+    Never echo credential-bearing library request details: no URL, request header or
+    str() of a library error. Only the status, the server's own error text and request ID.
+    """
+    if isinstance(error, Refused) and not isinstance(error, HubCallFailed):
+        return {"state": "REFUSED", "reason": str(error)}
+    cause = error.error if isinstance(error, HubCallFailed) else error
+    report = {"state": "REFUSED", "reason": type(cause).__name__}
+    try:
+        response = getattr(cause, "response", None)
+        status = getattr(response, "status_code", getattr(cause, "code", None))
+        if isinstance(error, HubCallFailed) or type(status) is int:
+            report["repo"] = REPO
+        if isinstance(error, HubCallFailed):
+            report["stage"] = error.stage
+            report.update(error.context)
+        if type(status) is int:
+            report["http_status"] = status
+        headers = getattr(response if response is not None else cause, "headers", None)
+        get_header = getattr(headers, "get", None)
+        for field, value in (("hub_error_code", get_header("X-Error-Code") if callable(get_header) else None),
+                             ("server_message", getattr(cause, "server_message", None)),
+                             ("request_id", getattr(cause, "request_id", None))):
+            text = public_text(value)
+            if text:
+                report[field] = text
+    except Exception:
+        # The class name, repo and stage already gathered still stand.
+        pass
+    return report
+
+
 def digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -196,11 +250,27 @@ class HuggingFace:
         from huggingface_hub import HfApi
         self.api = HfApi(token=token)
 
+    def call(self, stage, method, context=None, **arguments):
+        try:
+            return method(repo_id=REPO, repo_type="space", **arguments)
+        except Exception as error:
+            raise HubCallFailed(stage, error, **(context or {})) from error
+
     def check_write(self):
-        self.api.auth_check(repo_id=REPO, repo_type="space", write=True)
+        self.call("auth_check", self.api.auth_check, write=True)
 
     def head(self):
-        return self.api.repo_info(repo_id=REPO, repo_type="space").sha
+        # create_commit checks parent_commit against the branch ref, so read the ref.
+        # repo_info().sha is cached metadata and can lag it: from 16 Nov 2026 11:14Z
+        # refs/heads/main was 967db1d1 while repo_info() still said 4fd95fa7, and every
+        # later commit built on 4fd95fa7 was refused with HfHubHTTPError (a stale parent
+        # is HTTP 412 in huggingface_hub's own tests).
+        refs = self.call("list_repo_refs", self.api.list_repo_refs)
+        heads = [branch.target_commit for branch in refs.branches if branch.name == "main"]
+        if len(heads) != 1 or not isinstance(heads[0], str) or \
+                re.fullmatch(r"[0-9a-f]{40}", heads[0]) is None:
+            raise Refused("target has no single main branch ref")
+        return heads[0]
 
     def read(self, name, revision):
         if revision == "live":
@@ -222,9 +292,9 @@ class HuggingFace:
 
     def commit(self, changed, parent):
         from huggingface_hub import CommitOperationAdd
-        info = self.api.create_commit(
-            repo_id=REPO, repo_type="space", revision="main",
-            parent_commit=parent,
+        info = self.call(
+            "create_commit", self.api.create_commit, context={"parent": parent},
+            revision="main", parent_commit=parent,
             commit_message="Mirror Coliseum from successful Council deployment",
             operations=[CommitOperationAdd(path_in_repo=name, path_or_fileobj=data)
                         for name, data in sorted(changed.items())])
@@ -272,8 +342,7 @@ def main(argv=None):
         return 0
     except Exception as error:
         # Never echo credential-bearing library request details.
-        message = str(error) if isinstance(error, Refused) else type(error).__name__
-        print(json.dumps({"state": "REFUSED", "reason": message}), file=sys.stderr)
+        print(json.dumps(refusal_report(error)), file=sys.stderr)
         return 2
 
 

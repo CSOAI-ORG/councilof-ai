@@ -32,11 +32,11 @@ describe("GET /api/worker", () => {
     );
     const res = await (onRequest as unknown as (c: unknown) => Promise<Response>)({
       request: new Request("https://councilof.ai/api/worker"),
-      env: {},
+      env: { RUNPOD_WORKER_HEALTH_URL: "https://worker.example.test/health" },
     });
     expect(res.status).toBe(200);
     const body = (await res.json()) as Record<string, any>;
-    expect(body.schema).toBe("csoai.worker-state/0.2");
+    expect(body.schema).toBe("csoai.worker-state/0.1");
     expect(body.endpoint).toBe("/api/worker");
     expect(body.status).toBe("LIVE");
     expect(body.worker.jobs_total).toBe(182);
@@ -55,7 +55,8 @@ describe("GET /api/worker", () => {
       return Response.json({ state: "WAITING", jobs_total: 182 });
     }));
     const res = await (onRequest as unknown as (c: unknown) => Promise<Response>)({
-      request: new Request("https://councilof.ai/api/worker"), env: {},
+      request: new Request("https://councilof.ai/api/worker"),
+      env: { RUNPOD_WORKER_HEALTH_URL: "https://worker.example.test/health" },
     });
     const body = (await res.json()) as Record<string, any>;
     expect(body.commission_dispatch.queue_schema).toBe("csoai.commission-queue/0.1");
@@ -63,11 +64,23 @@ describe("GET /api/worker", () => {
     expect(JSON.stringify(body)).not.toContain("must-strip");
   });
 
-  it("is OFFLINE, never a stale artifact, when the pod does not answer", async () => {
+  it("is unconfigured and OFFLINE without contacting a retired pod", async () => {
+    const network = vi.fn(async () => { throw new Error("should not fetch retired pod"); });
+    vi.stubGlobal("fetch", network);
+    const res = await (onRequest as unknown as (c: unknown) => Promise<Response>)({
+      request: new Request("https://councilof.ai/api/worker"), env: {},
+    });
+    const body = (await res.json()) as Record<string, any>;
+    expect(body.status).toBe("OFFLINE");
+    expect(body.diagnostic_code).toBe("HEALTH_URL_NOT_CONFIGURED");
+    expect(network).not.toHaveBeenCalled();
+  });
+
+  it("is OFFLINE, never a stale artifact, when the configured pod does not answer", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("fetch failed"); }));
     const res = await (onRequest as unknown as (c: unknown) => Promise<Response>)({
       request: new Request("https://councilof.ai/api/worker"),
-      env: {},
+      env: { RUNPOD_WORKER_HEALTH_URL: "https://worker.example.test/health" },
     });
     const body = (await res.json()) as Record<string, any>;
     expect(body.status).toBe("OFFLINE");

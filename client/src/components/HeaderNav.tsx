@@ -71,6 +71,7 @@ export const navigation: NavGroup[] = [
       { name: 'Council Ledger', href: '/council-licensing', description: 'Signed evidence feed for insurers, procurement and deployers — never a purchased rank' },
       { name: 'Council Data', href: '/licensing-agreement', description: 'Ask about licensing published evidence data. A licence does not buy a score.' },
       { name: 'Claim maintenance', href: '/claim-maintenance/', description: 'Public claims register, dated corrections and an enquiry route; monitoring is scoped separately' },
+      { name: 'Engagements', href: '/engagements/', description: 'Scoped evidence work with a receipt: qualification, claim maintenance, change records and connection audits' },
       { section: 'Modules', name: 'Evidence for general-purpose AI providers', href: '/gpai-evidence', description: 'Independent third-party evidence a GPAI provider can hand the AI Office. Evidence, never a conformity mark' },
       { name: 'Check an AI output for a mark', href: '/dashboard/?tab=art50', description: 'Article 50(2): paste the link to an image, video, audio file or PDF; see whether a C2PA manifest or IPTC AI label is detected, and which watermarks cannot be checked. Free preview' },
       { name: 'Cybersecurity readiness guide', href: '/cra-readiness', description: 'Cybersecurity reporting guidance and a workflow for recording software components' },
@@ -151,7 +152,7 @@ export const navigation: NavGroup[] = [
     submenu: [
       { section: 'Who we are', name: 'About', href: '/about/', description: 'An operating UK AI measurement and evidence organisation, run by CSOAI Ltd' },
       { name: 'Operation and external use', href: '/traction/', description: 'Operating infrastructure, dated outside evidence and the separate commercial position' },
-      { name: 'Partners and investors', href: '/traction/#partners', description: 'The business model, evidence for diligence and a route to discuss working together' },
+      { name: 'Partners and investors', href: '/investors/', description: 'The business model, evidence for diligence and a route to discuss working together' },
       { name: 'Team', href: '/team', description: 'The people, and the AI agents you can ask (labelled as AI)' },
       { name: 'Independence and conflicts', href: '/independence/', description: 'Who runs us, who pays, and where we have an interest' },
       { name: 'Contact', href: '/contact/', description: 'CSOAI Ltd, UK company 16939677' },

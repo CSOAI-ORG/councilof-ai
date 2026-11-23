@@ -7,6 +7,28 @@ import MomentumStrip from "@/components/momentum/MomentumStrip";
 import MomentumMethodNote from "@/components/momentum/MomentumMethodNote";
 import DocMeta from "@/components/docs/DocMeta";
 
+interface SepTotals {
+  comparison_axes?: number;
+  separated_leads?: number;
+  ties?: number;
+  untested_separations?: number;
+}
+
+/** How many axes the fixed test was run on, and how many SEPARATED readings chance alone would give
+ *  at 0.05 each with no correction across axes. Read from the board's own totals: a count that is
+ *  missing, not a whole number, or that does not add up to comparison_axes prints no sentence. */
+export function decisionRisk(t: SepTotals | null | undefined) {
+  if (!t) return null;
+  const counts = [t.separated_leads, t.ties, t.untested_separations];
+  if (!counts.every((v) => typeof v === "number" && Number.isSafeInteger(v) && v >= 0)) return null;
+  const separated = t.separated_leads as number;
+  const ties = t.ties as number;
+  const untested = t.untested_separations as number;
+  const tested = separated + ties;
+  if (typeof t.comparison_axes === "number" && t.comparison_axes !== tested + untested) return null;
+  return { tested, separated, ties, untested, expected: (tested * 0.05).toFixed(2) };
+}
+
 interface SepRow {
   axis: string;
   kind?: string;
@@ -20,6 +42,7 @@ interface SepRow {
 function SeparationTable() {
   const [rows, setRows] = useState<SepRow[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [totals, setTotals] = useState<SepTotals | null>(null);
   useEffect(() => {
     let live = true;
     fetch("/api/gspc", { headers: { accept: "application/json" } })
@@ -28,6 +51,7 @@ function SeparationTable() {
         if (!live) return;
         const axes: SepRow[] = Array.isArray(d?.axes) ? d.axes : [];
         setRows(axes.filter((a) => a && a.kind === "model-comparison"));
+        setTotals(d?.totals && typeof d.totals === "object" ? d.totals : null);
       })
       .catch((e) => live && setErr(String(e?.message ?? e)));
     return () => {
@@ -46,6 +70,16 @@ function SeparationTable() {
         </p>
       )}
       {!err && !rows && <p className="mt-2 text-[13px] text-emerald-100/60">Reading the board…</p>}
+      {(() => {
+        const risk = rows ? decisionRisk(totals) : null;
+        return risk ? (
+          <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed" data-testid="methodology-decision-risk">
+            On this read, {risk.tested} model-comparison axes are tested ({risk.separated} SEPARATED, {risk.ties} TIE) and{" "}
+            {risk.untested} read UNTESTED. If no model truly differed on any tested axis, about {risk.expected} of those{" "}
+            {risk.tested} would still read SEPARATED by chance.
+          </p>
+        ) : null;
+      })()}
       {rows && (
         <div className="mt-2 overflow-x-auto">
           <table className="w-full min-w-[36rem] text-left text-[12px] text-emerald-100/80">
@@ -135,7 +169,7 @@ export default function Methodology() {
               measure.
             </span>
           </h1>
-          <div className="max-w-3xl"><DocMeta updated="2026-09-27" slug="methodology" /></div>
+          <div className="max-w-3xl"><DocMeta updated="2026-11-22" slug="methodology" /></div>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             Each published result identifies what was tested, the test material, the grading rule and its limits.{" "}
             <strong className="text-emerald-50">The published rule grades the result; another AI model does not act as judge.</strong>{" "}
@@ -231,6 +265,95 @@ export default function Methodology() {
                 (Miller, <em>Adding Error Bars to Evals</em>, arXiv:2411.00640).
               </p>
               <SeparationTable />
+            </div>
+            <div id="decision-rule" className="scroll-mt-24 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5" data-testid="methodology-decision-rule">
+              <h3 className="text-[15px] font-bold text-emerald-50">The decision rule, and how often it can be wrong</h3>
+              <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
+                Each model-comparison axis is tested on its own: an exact two-sided McNemar test on the items where the
+                two models disagree, at α = 0.05. No correction is made for testing several axes at once, so the chance
+                that at least one axis reads SEPARATED by luck grows with the number of axes tested; the line above the
+                table gives that number on today&apos;s board. A shuffled-label control run on 27 Sep 2026 came out
+                SEPARATED in 0 to 4.4% of 1,000 shuffles per axis, within the test&apos;s 5% (
+                <a href="/corrections/#C-2026-0927-03" className="text-emerald-300 underline">C-2026-0927-03</a>). So read
+                a single SEPARATED as a result to check, with its p and n, rather than a settled ranking. A TIE means this
+                test could not tell the leader from the next model at this sample size. It does not mean the two are equal.
+              </p>
+            </div>
+            <div id="uncertainty-budget" className="scroll-mt-24 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5" data-testid="methodology-uncertainty-budget">
+              <h3 className="text-[15px] font-bold text-emerald-50">Uncertainty budget: what the interval covers, and what it does not</h3>
+              <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
+                The Wilson interval on each row covers one source of error: which items the bank happens to contain.
+                These are the other sources we know of, with what we have measured about each.
+              </p>
+              <div className="mt-3 overflow-x-auto">
+                <table className="w-full min-w-[36rem] text-left text-[13px] text-emerald-100/80">
+                  <thead className="text-[12px] uppercase tracking-wide text-emerald-100/50">
+                    <tr>
+                      <th className="py-1 pr-3">Source of error</th>
+                      <th className="py-1 pr-3">How it was estimated</th>
+                      <th className="py-1">What we found</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-t border-emerald-500/10 align-top">
+                      <td className="py-1.5 pr-3">Which items the bank contains</td>
+                      <td className="py-1.5 pr-3">Wilson 95% score interval on the row&apos;s n</td>
+                      <td className="py-1.5">Printed on every row: the <code>interval</code> field in GET /api/gspc</td>
+                    </tr>
+                    <tr className="border-t border-emerald-500/10 align-top">
+                      <td className="py-1.5 pr-3">The machine and runtime</td>
+                      <td className="py-1.5 pr-3">154 published cards re-run on a second GPU (a Tesla T4 instead of an RTX 3090), with the same model digest, prompts, banks and greedy decoding</td>
+                      <td className="py-1.5">Grades agreed on 97.3% of 9,757 items. 260 flipped (2.66%, 95% CI 2.36–3.00), 122 up and 138 down; 54 of the 154 cards matched item by item.</td>
+                    </tr>
+                    <tr className="border-t border-emerald-500/10 align-top">
+                      <td className="py-1.5 pr-3">Running twice on the same machine</td>
+                      <td className="py-1.5 pr-3">The same T4 job, run again</td>
+                      <td className="py-1.5">Raw outputs were not byte-identical on 20 of 150 cards, and 16 of 9,209 items changed grade.</td>
+                    </tr>
+                    <tr className="border-t border-emerald-500/10 align-top">
+                      <td className="py-1.5 pr-3">Answers the grader could not parse</td>
+                      <td className="py-1.5 pr-3">Counted in the same study</td>
+                      <td className="py-1.5">83 items moved between &ldquo;parse error&rdquo; and &ldquo;wrong answer&rdquo;, which changes the accuracy&apos;s denominator.</td>
+                    </tr>
+                    <tr className="border-t border-emerald-500/10 align-top">
+                      <td className="py-1.5 pr-3">The grading rules and reference answers</td>
+                      <td className="py-1.5 pr-3">No independent review yet</td>
+                      <td className="py-1.5 font-mono text-amber-300">UNMEASURED</td>
+                    </tr>
+                    <tr className="border-t border-emerald-500/10 align-top">
+                      <td className="py-1.5 pr-3">Prompt wording and harness choices</td>
+                      <td className="py-1.5 pr-3">Not yet varied</td>
+                      <td className="py-1.5 font-mono text-amber-300">UNMEASURED</td>
+                    </tr>
+                    <tr className="border-t border-emerald-500/10 align-top">
+                      <td className="py-1.5 pr-3">Whether a bank represents the behaviour it is named for</td>
+                      <td className="py-1.5 pr-3">Not yet studied</td>
+                      <td className="py-1.5 font-mono text-amber-300">UNMEASURED</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
+                Only the first is inside the board&apos;s intervals today. Rows two to four come from{" "}
+                <Link href="/research/cross-hardware-reproducibility/" className="text-emerald-300 underline">
+                  the cross-hardware reproducibility study
+                </Link>{" "}
+                (preprint, September 2026; figures from its <code>paper/numbers.json</code> at dataset commit 57f1166), which scores no model and covers 11 open-weight models on 14 evaluation axes.
+              </p>
+            </div>
+            <div id="rule-changes" className="scroll-mt-24 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5" data-testid="methodology-rule-changes">
+              <h3 className="text-[15px] font-bold text-emerald-50">How the rules changed</h3>
+              <ul className="mt-2 space-y-1.5 text-[13px] text-emerald-100/70 leading-relaxed">
+                <li><strong className="text-emerald-50">13 Aug 2026.</strong> The separation rule above is fixed: exact McNemar, the leader against the best base model, p&lt;0.05.</li>
+                <li><strong className="text-emerald-50">12 Sep 2026.</strong> A separation needs published paired item rows; without them the row reads UNTESTED, as the swarm row now does (<a href="/corrections/#C-2026-0912-01" className="text-emerald-300 underline">C-2026-0912-01</a>).</li>
+                <li><strong className="text-emerald-50">27 Sep 2026.</strong> The per-item rows behind six axes are published, so anyone can recompute those determinations. Every one came out TIE (<a href="/corrections/#C-2026-0927-03" className="text-emerald-300 underline">C-2026-0927-03</a>).</li>
+                <li><strong className="text-emerald-50">29 Sep 2026.</strong> An axis&apos;s item count is counted from the served bank, never typed, and the jail axis reads UNTESTED (<a href="/corrections/#C-2026-0929-02" className="text-emerald-300 underline">C-2026-0929-02</a>).</li>
+                <li><strong className="text-emerald-50">6 Oct 2026.</strong> A cell at exactly 0.0, where every model on that bank, or that model on every bank, scored 0.0, is flagged not quotable and left out of averages and bests (<a href="/corrections/#C-2026-1006-12" className="text-emerald-300 underline">C-2026-1006-12</a>).</li>
+              </ul>
+              <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
+                Every other change to a published result is in the{" "}
+                <Link href="/corrections/" className="text-emerald-300 underline">corrections ledger</Link>.
+              </p>
             </div>
             <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
               <h3 className="text-[15px] font-bold text-emerald-50">What we have and have not measured about other raters</h3>

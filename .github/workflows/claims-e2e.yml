@@ -81,10 +81,18 @@ jobs:
           node-version: "20"
       - name: Hive recon/scoring gate (deterministic · honesty invariants · no network)
         run: node scripts/hive-recon.mjs
+      # Playwright comes from the lockfile, as in deploy.yml and pr-gates.yml. This step used
+      # to add its own pinned copy (npm i -D playwright@X) beside the locked @playwright/test.
+      # When #4429 locked 1.65.1 the pin stayed at 1.61.1: `npx playwright` fetched Chromium
+      # build 1255 for 1.65.1, scripts/claims-e2e.mjs loaded 1.61.1, which needs build 1228,
+      # and all 39 runs from 44232391571 (18 Nov) to 44683279844 (20 Nov) stopped at
+      # chromium.launch() before checking a claim, until #4441 moved the pin by hand. With
+      # npm ci there is one copy and no pin. --ignore-scripts: this job loads only playwright,
+      # which needs no install script. scripts/playwright-install-parity.node-test.mjs checks
+      # this step, and every workflow's Playwright install, against the lockfile at PR time.
       - name: Install Playwright (chromium)
         run: |
-          npm init -y >/dev/null 2>&1 || true
-          npm i -D playwright@1.61.1 >/dev/null 2>&1
+          npm ci --ignore-scripts --no-audit --no-fund
           npx playwright install --with-deps chromium
       # workflow_run fires when deploy.yml has finished, so the only wait needed is
       # Cloudflare's alias propagation, not the whole build.

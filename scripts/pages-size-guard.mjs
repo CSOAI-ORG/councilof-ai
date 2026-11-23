@@ -16,15 +16,23 @@
  * 2026-10-18: exclusions are loaded from deploy-exclusions.json automatically. Entries with
  * mirror_only=true are NOT excluded (they're synced to HF but kept in the bundle). The CLI flag
  * is still honoured for backwards compatibility.
+ *
+ * 2026-11-22: the per-file cap is PINNED in scripts/pages-limits.mjs, which the cards-bundle
+ * producer reads too, and scripts/pages-size-guard.test.ts holds it at 26,214,400 bytes. Until now
+ * this guard said nothing about a file until it was over: public/cards-bundle.json sat at 94% of
+ * the cap (24,635,449 bytes) with no line in any log. Any file above 80% of the cap is now named,
+ * with its share of the cap, while there is still room to act.
  */
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { projection } from "./retired-proof-archive.mjs";
+import { PAGES_FILE_BYTES_CAP, PAGES_FILE_BYTES_WARN, PAGES_FILE_COUNT_CAP, PAGES_FILE_COUNT_WARN } from "./pages-limits.mjs";
 
-const LIMIT = 25 * 1024 * 1024;
-const FILE_CAP = 20000;      // Cloudflare Pages: max files per deployment
-const FILE_WARN = 19000;     // print loudly once headroom is under 1,000 files
+const LIMIT = PAGES_FILE_BYTES_CAP;      // 25 MiB: Cloudflare Pages rejects any single file above this
+const NEAR = PAGES_FILE_BYTES_WARN;      // 80% of LIMIT: name the file before it is the one that fails
+const FILE_CAP = PAGES_FILE_COUNT_CAP;   // Cloudflare Pages: max files per deployment
+const FILE_WARN = PAGES_FILE_COUNT_WARN; // print loudly once headroom is under 1,000 files
 const dist = process.argv[2] || "dist/client";
 // `--exclude <top-level dir>[,dir…]`: directories that are NOT part of the deployment and must not
 // count toward the cap. 2026-09-22 owner decision: public/proofs (3,993 .ots) leaves the site for the
@@ -50,6 +58,7 @@ if (existsSync(manifestPath)) {
   }
 }
 const over = [];
+const near = [];
 let files = 0;
 let bytes = 0;
 const byTop = {};
@@ -77,6 +86,7 @@ const walk = (d, top) => {
       bytes += size;
       byTop[t] = (byTop[t] || 0) + 1;
       if (size > LIMIT) over.push({ path: relative(dist, p), size });
+      else if (size > NEAR) near.push({ path: relative(dist, p), size });
     }
   }
 };
@@ -96,6 +106,10 @@ if (files > FILE_CAP) {
   process.exit(1);
 }
 if (files > FILE_WARN) console.warn(`! pages-size-guard: ${FILE_CAP - files} files of headroom left under the Pages cap`);
+
+for (const f of near.sort((a, b) => b.size - a.size)) {
+  console.warn(`! pages-size-guard: ${f.path} — ${(f.size / 1048576).toFixed(1)} MiB, ${(100 * f.size / LIMIT).toFixed(1)}% of the 25 MiB per-file cap (${LIMIT - f.size} bytes left)`);
+}
 
 if (over.length) {
   console.error(`✗ pages-size-guard: ${over.length} file(s) exceed Cloudflare Pages' 25 MiB limit\n`);
