@@ -67,6 +67,13 @@ class TestRuleReferee(unittest.TestCase):
         bad=json.dumps(original).encode()
         self.assertEqual(judge(bad,proposal(bad,"axes",5))["verdict"],"CANNOT_REPRODUCE")
 
+    def test_nonmodel_axis_may_omit_separation(self):
+        original=json.loads(source())
+        del original["axes"][-1]["separation"]
+        raw=json.dumps(original).encode()
+        self.assertEqual(judge(raw,proposal(raw,"axes",4))["verdict"],"CONCUR")
+        self.assertEqual(judge(raw,proposal(raw,"separated_leaders",0))["verdict"],"CONCUR")
+
     def test_model_only_separation(self):
         original=json.loads(source())
         original["axes"][-1]["separation"]="SEPARATED"
