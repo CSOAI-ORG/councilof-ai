@@ -1,0 +1,60 @@
+name: Publish GSPC-MEOK research whitepaper (protected master)
+
+on:
+  workflow_dispatch:
+
+# Release uses one existing org-owned HF_TOKEN. No PR job receives it.
+permissions:
+  contents: read
+
+concurrency:
+  group: protected-gspc-research-hf-publish
+  cancel-in-progress: false
+
+jobs:
+  research-publish:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Release manifest / evidence-state / no-token unit tests
+        run: python3 scripts/hf/test_publish_evidence_adaptation.py
+
+      - name: Privacy gate and exact release preview (no HF token)
+        run: |
+          python3 scripts/hf/publish_evidence_adaptation.py --check
+
+      - name: Install Hugging Face publisher
+        run: python3 -m pip install 'huggingface_hub>=0.30,<2'
+
+      - name: Upload, read back at pinned HF revision and compare every file
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_EVENT_NAME: workflow_dispatch
+        run: |
+          python3 scripts/hf/publish_evidence_adaptation.py --publish \
+            --receipt-out hf-research-release-receipt.json
+
+      - name: Scan the exact publicly retained release receipt
+        run: |
+          python3 scripts/privacy/publication_gate.py \
+            --label gspc-meok-research-release-receipt hf-research-release-receipt.json
+
+      - name: Retain release receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: gspc-meok-research-hf-release-${{ github.run_id }}
+          path: hf-research-release-receipt.json
+          retention-days: 90
+          if-no-files-found: error
