@@ -58,7 +58,7 @@ function correctionCounts(rows){
     const day=goodDay(row.detected_at);
     const windowStart=isObject(row.detected_window)&&goodDate(row.detected_window.not_before);
     if(pub&&det)types.EXACT_SOURCE_DECLARED++;
-    else if(pub&&(day||windowStart))types.DAY_BOUNDED_SOURCE_DECLARED++;
+    else if(pub&&(day||windowStart))types.WINDOW_BOUNDED_SOURCE_DECLARED++;
     else types.UNMEASURED++;
   }
   return types;
