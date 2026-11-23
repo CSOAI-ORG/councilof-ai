@@ -31,10 +31,10 @@ const WORKFLOWS = [
     // and nothing after it. Only the byte counts and digests moved, and they
     // were recomputed from the reviewed file — not copied from anywhere.
     // An independent lane landed the same re-pin; both derivations agree.
-    // RE-PINNED 2026-11-23 for this privacy-gate PR: the only later change to
-    // kaggle-community-cells was the pre-push publication_gate.py invocation.
-    // The original checkout block is still unchanged, and the before/after
-    // digests were independently recomputed from this branch's exact bytes.
+    // RE-PINNED 2026-11-22. #4692 added one line to this workflow: the publication
+    // privacy gate runs on the kernel folder before the Kaggle push. The structural
+    // contract is unchanged and still holds; only the byte counts and digests
+    // moved, recomputed from the changed file.
     before: { bytes: 6447, sha256: "22f78284bb2643a70e3f6d96ddde0e1fd7c72c2145c41d65830581c512b9317a" },
     after: { bytes: 6571, sha256: "a8b0fc22b1ac4c73a76ea4c8fc989d0051824362b82671636db65d77544f43de" },
   },
