@@ -67,8 +67,8 @@ def classify_remote(current:bytes,expected:bytes)->str:
     return "BASELINE_ELIGIBLE"
 
 def publish(root:Path,expected:bytes)->dict:
-    if os.environ.get("GITHUB_REF")!="refs/heads/master" or os.environ.get("GITHUB_EVENT_NAME")!="workflow_dispatch":
-        raise ValueError("only explicit dispatch on protected master may publish")
+    if os.environ.get("GITHUB_REF")!="refs/heads/master" or os.environ.get("GITHUB_EVENT_NAME") not in ("workflow_dispatch","push"):
+        raise ValueError("only reviewed protected-master push or explicit dispatch may publish")
     token=(os.environ.get("HF_TOKEN") or "").strip()
     if not token:
         raise ValueError("HF_TOKEN absent")
