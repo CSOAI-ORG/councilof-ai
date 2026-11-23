@@ -35,6 +35,8 @@ def example(values):
         "cusum_h_sigma": 5.0,
         "shewhart_limit_sigma": 3.0,
         "max_sample_gap_seconds": 120,
+        "max_observation_age_seconds": 3600,
+        "max_source_lag_seconds": 60,
         "samples": [
             {
                 "measurement_id": f"synthetic-{i:02d}",
@@ -112,6 +114,17 @@ class CheckStandardTests(unittest.TestCase):
         x["samples"][3]["measured_at"] = "2026-11-23T09:05:00Z"
         x["samples"][3]["observed_at"] = "2026-11-23T09:05:02Z"
         self.assertEqual(self.state(x), "UNCHECKABLE")
+
+    def test_stale_final_reading_fails_even_with_valid_calibration(self):
+        x = example([100] * 8)
+        self.assertEqual(assess(x, "2026-11-23T10:30:00Z")["state"], "UNCHECKABLE")
+        self.assertEqual(assess(x, "2026-11-23T10:30:00Z")["reason"], "STALE_LAST_OBSERVATION")
+
+    def test_old_measurement_observed_late_fails(self):
+        x = example([100] * 8)
+        x["samples"][5]["observed_at"] = "2026-11-23T09:08:00Z"
+        self.assertEqual(self.state(x), "UNCHECKABLE")
+        self.assertEqual(assess(x, NOW)["reason"], "EXCESSIVE_SOURCE_TO_OBSERVER_LAG")
 
     def test_expired_reference_fails(self):
         x = example([100] * 8)
