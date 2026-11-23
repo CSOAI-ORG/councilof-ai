@@ -361,12 +361,16 @@ describe("the Task is not stored, and a forged id buys nothing", () => {
     expect(seen).toHaveLength(0);
   });
 
-  it("an id whose input the tool's schema refuses reaches no route", async () => {
+  it("a forged Task ID with input outside the public selector policy reaches no route", async () => {
     const seen = stubRoute();
-    const taskId = x402TaskId("evidence_bundle", { obligation: "not-an-obligation" }) as string;
+    // The normal constructor must already refuse this invalid obligation.
+    expect(x402TaskId("evidence_bundle", { obligation: "not-an-obligation" })).toBeNull();
+    // Even a caller that forges the reversible JSON must not dispatch it.
+    const taskId = "x402-" + btoa(JSON.stringify({ t: "evidence_bundle", i: { obligation: "not-an-obligation" } }))
+      .replace(/\\+/g, "-").replace(/\\//g, "_").replace(/=+$/, "");
     const { body } = await send({ taskId, parts: [{ text: "pay" }], metadata: { [PAYLOAD_KEY]: PAYMENT } });
     expect(seen).toHaveLength(0);
-    expect(body.error.code).toBe(-32602);
+    expect(body.error.code).toBe(-32001);
   });
 
   it("a taskId that is not an x402 one is left alone: the message is read as before", async () => {
@@ -382,12 +386,14 @@ describe("the Task is not stored, and a forged id buys nothing", () => {
     expect(body.error.message).toMatch(/not stored/);
   });
 
-  it("the id round-trips non-ASCII input, and an input too large to carry gets no Task", async () => {
+  it("public Task IDs round-trip; non-ASCII private subjects and oversized selectors are not encoded", async () => {
     const input = { subject: "modèle — 測定" };
-    expect(x402TaskSelection(x402TaskId("commission_card", input) as string)?.input).toEqual(input);
+    expect(x402TaskId("commission_card", input)).toBeNull();
     expect(x402TaskId("commission_card", { subject: "x".repeat(X402_TASK_ID_MAX) })).toBeNull();
+    const safe = x402TaskId("evidence_bundle", { obligation: "article-50" }) as string;
+    expect(x402TaskSelection(safe)?.input).toEqual({ obligation: "article-50" });
     expect(x402TaskId("evidence_bundle", { obligation: "article-50", preview: true })).toBeNull();
-    expect(x402TaskId("evidence_bundle", { obligation: "article-50", preview: false, x_payment: " " })).toBe(x402TaskId("evidence_bundle", { obligation: "article-50" }));
+    expect(x402TaskId("evidence_bundle", { obligation: "article-50", preview: false, x_payment: " " })).toBe(safe);
   });
 });
 
