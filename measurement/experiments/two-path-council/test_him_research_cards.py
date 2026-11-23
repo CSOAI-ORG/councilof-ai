@@ -10,6 +10,8 @@ from temporal_observatory import project
 from repeated_observations import analyse as repeats
 from error_complementarity import analyse as pairs
 from human_information_factorial import analyse as factorial,simulate
+from evidence_rule_referee import judge,RULE_ID,RULE_SHA256,sha
+from correction_timing_audit import reanalyse as correction_audit
 
 
 def fixtures():
@@ -29,14 +31,22 @@ def fixtures():
     r=repeats(repeat_rows,items,cells)
     p=pairs(rows,items)
     h=factorial(simulate(30),synthetic=True)
-    return {"temporal":t,"repeat":r,"complementarity":p,"human":h}
+    raw=json.dumps(public).encode()
+    proposal={"rule_id":RULE_ID,"rule_sha256":RULE_SHA256,"source_sha256":sha(raw),
+              "field":"separated_leaders","asserted":1}
+    referee=judge(raw,proposal,{"declared_votes":12,"advisory_concur":12})
+    corrections=correction_audit({"schema":"csoai.corrections/0.1","corrections":[
+        {"id":"t1","date":"2026-11-22","detected_at":"2026-11-22",
+         "published_at":"UNRECORDED"}]})
+    return {"temporal":t,"repeat":r,"complementarity":p,"human":h,
+            "referee":referee,"corrections":corrections}
 
 
 class TestHumanResearchProjection(unittest.TestCase):
-    def test_all_four_cards_have_source_receipts(self):
+    def test_all_six_cards_have_source_receipts(self):
         x=render(fixtures())
-        self.assertEqual(x["source_report_count"],4)
-        self.assertEqual(len(x["cards"]),4)
+        self.assertEqual(x["source_report_count"],6)
+        self.assertEqual(len(x["cards"]),6)
         self.assertTrue(all(len(c["source_receipt_sha256"])==64 for c in x["cards"]))
         self.assertEqual(x["human_authority"],"NOT_GRANTED")
         self.assertEqual(x["gspc_board_mutations"],0)
@@ -58,6 +68,24 @@ class TestHumanResearchProjection(unittest.TestCase):
     def test_fake_human_model_update_rejected(self):
         f=fixtures()
         f["human"]["human_authority_established"]=True
+        with self.assertRaises(ValueError):
+            render(f)
+
+    def test_unverified_votes_cannot_turn_referee_into_human_authority(self):
+        f=fixtures()
+        f["referee"]["ruling_authority"]="OWNER_APPROVED"
+        with self.assertRaises(ValueError):
+            render(f)
+
+    def test_tampered_corrections_record_rejected(self):
+        f=fixtures()
+        f["corrections"]["n_corrections"]=99
+        with self.assertRaises(ValueError):
+            render(f)
+
+    def test_claimed_append_only_corrections_rejected(self):
+        f=fixtures()
+        f["corrections"]["no_append_only_proof"]=False
         with self.assertRaises(ValueError):
             render(f)
 
