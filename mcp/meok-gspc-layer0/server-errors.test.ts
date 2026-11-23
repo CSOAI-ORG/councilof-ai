@@ -124,6 +124,27 @@ it('empty desktop discovery fails closed rather than advertising a capability', 
   expect(body(result).reason).toBe('DESKTOP_READ_ONLY_TOOL_UNAVAILABLE');
 });
 
+it.each(['list', 'call'])('accepts explicit Content-Length for desktop %s metadata responses', async op => {
+  const args = op === 'list' ? { op: 'list' } : { op: 'call', tool: 'list_devices' };
+  const result = await callBridge('zcode_desktop', args, (_req, res) => {
+    const reply = op === 'list'
+      ? { jsonrpc: '2.0', id: 1, result: { tools: [{ name: 'list_devices' }] } }
+      : { jsonrpc: '2.0', id: 2, result: { content: [{ type: 'text', text: 'safe metadata' }] } };
+    const payload = JSON.stringify(reply);
+    res.writeHead(200, {
+      'content-type': 'application/json',
+      'content-length': Buffer.byteLength(payload),
+    });
+    res.end(payload);
+  });
+  expect(result.isError).not.toBe(true);
+  if (op === 'list') {
+    expect(body(result)).toMatchObject({ tools: ['list_devices'], authority: 'READ_ONLY_METADATA' });
+  } else {
+    expect(body(result).result.content[0].text).toBe('safe metadata');
+  }
+});
+
 it('oversized desktop response fails closed without exposing payload', async () => {
   const result = await callBridge('zcode_desktop', { op: 'list' },
     (_req, res) => { res.writeHead(200, { 'content-type': 'application/json' }); res.end('x'.repeat(1_048_577)); });
