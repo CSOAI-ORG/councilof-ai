@@ -9,7 +9,7 @@
  * machine-contract-guard (drift-guard.yml, every 30 min) — no new cron.
  *
  *   a. /sitemap.xml   200, <loc> count >= floor, and a rotating sample of listed URLs answer 200
- *   b. /api/feed.xml  newest <pubDate>/<lastBuildDate>/<updated> no older than feedMaxAgeDays
+ *   b. /api/feed.xml  event timestamps agree with eligible dated source records; an old but source-matched feed is QUIET, not newly published
  *   c. card URLs      /signed/card_index.json n_cards == cards.length; a rotating sample of
  *                     card_url answer 200, parse, and carry the id the index lists
  *   d. /root.json     as_of parses, is not in the future, and is no older than rootMaxAgeHours
@@ -27,7 +27,7 @@ export const DEFAULTS = Object.freeze({
   sitemapFloor: 350,      // 518 <loc> live on 2026-09-14
   sitemapSample: 8,
   cardSample: 5,
-  feedMaxAgeDays: 21,     // newest item 2026-09-12 when written
+  feedMaxAgeDays: 21,     // conservative age check when eligibility sources are not supplied
   rootMaxAgeHours: 72,    // public-root publishes hourly when healthy
   futureSkewMinutes: 10,
 });
