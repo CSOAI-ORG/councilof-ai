@@ -3,7 +3,7 @@
 """Regression: latency counts and true median never imply independent publishing."""
 import copy
 import unittest
-from corrections_latency import analyse, time_to_correct
+from scripts.corrections_latency import analyse, time_to_correct
 
 
 def source():
