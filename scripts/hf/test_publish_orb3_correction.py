@@ -43,6 +43,21 @@ class CorrectionPublicationTests(unittest.TestCase):
         data=b"exact source-reviewed bytes"
         self.assertEqual(classify_remote(data,data),"ALREADY_CORRECTED")
 
+    def test_pull_request_event_cannot_use_master_ref_to_publish(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            prior_ref=os.environ.get("GITHUB_REF")
+            prior_event=os.environ.get("GITHUB_EVENT_NAME")
+            try:
+                os.environ["GITHUB_REF"]="refs/heads/master"
+                os.environ["GITHUB_EVENT_NAME"]="pull_request"
+                with self.assertRaises(ValueError):
+                    publish(Path(tmp),b"test")
+            finally:
+                if prior_ref is None:os.environ.pop("GITHUB_REF",None)
+                else:os.environ["GITHUB_REF"]=prior_ref
+                if prior_event is None:os.environ.pop("GITHUB_EVENT_NAME",None)
+                else:os.environ["GITHUB_EVENT_NAME"]=prior_event
+
     def test_protected_master_required_before_token_or_network(self):
         with tempfile.TemporaryDirectory() as tmp:
             prev=os.environ.get("GITHUB_REF")
