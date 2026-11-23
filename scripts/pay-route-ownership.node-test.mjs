@@ -43,7 +43,17 @@ test('browser-side offer picker is valid JS and keeps payments behind a second w
   for (const id of ['x402-door', 'inspect-x402', 'copy-x402']) elements[id].disabled = true;
   const resource = 'https://councilof.ai/api/request-attestation?subject=qwen3';
   let probes = [];
-  let shouldIncludeHeader = true;
+  let headerMode = 'valid';
+  let amount = '20000';
+  let decimals = 6;
+  let redirected = false;
+  const accept = () => ({
+    scheme: 'exact', network: 'eip155:8453', amount,
+    maxAmountRequired: amount, maxTimeoutSeconds: 300,
+    asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+    payTo: '0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31',
+    extra: {symbol: 'USDC', decimals},
+  });
   const fetchStub = async (url, options) => {
     probes.push({url: String(url), options});
     if (url === '/.well-known/x402.json') return {
@@ -56,27 +66,36 @@ test('browser-side offer picker is valid JS and keeps payments behind a second w
     assert.equal(String(url), resource);
     assert.equal(options.method, 'GET');
     assert.equal(options.credentials, 'omit');
+    assert.equal(options.redirect, 'error');
     assert.equal(options.headers['X-PAYMENT'], undefined);
+    const body = {
+      x402Version: 2, resource: {url: resource},
+      accepts: [accept()], extensions: {bazaar: {info: {}, schema: {}}},
+    };
+    const header = {
+      x402Version: 2, resource: {url: resource},
+      accepts: [{...accept()}],
+    };
+    delete header.accepts[0].maxAmountRequired; // canonical minimal v2 header
+    if (headerMode === 'amount-mismatch') header.accepts[0].amount = '30000';
+    if (headerMode === 'resource-mismatch') header.resource.url = 'https://wrong.example/pay';
+    const encoded = headerMode === 'missing' ? null :
+      headerMode === 'garbage' ? 'invalid===!' :
+      Buffer.from(JSON.stringify(header)).toString('base64');
     return {
-      status: 402,
-      headers: {get: key => key === 'PAYMENT-REQUIRED' && shouldIncludeHeader ? 'signed-challenge' : null},
-      json: async () => ({
-        x402Version: 2,
-        accepts: [{scheme: 'exact', network: 'eip155:8453',
-          amount: '20000', payTo: '0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31',
-          extra: {symbol: 'USDC', decimals: 6}}],
-        extensions: {bazaar: {info: {}, schema: {}}},
-      }),
+      status: 402, url: redirected ? 'https://wrong.example/pay' : resource, redirected,
+      headers: {get: key => key === 'PAYMENT-REQUIRED' ? encoded : null},
+      json: async () => body,
     };
   };
-  const document = {
+    const document = {
     getElementById: id => elements[id],
     createElement: () => node(),
   };
   const context = createContext({
     document, window: {location: {origin: 'https://councilof.ai'}},
     fetch: fetchStub, navigator: {clipboard: {writeText: async () => {}}},
-    URL, Number, BigInt,
+    URL, Number, BigInt, atob: value => Buffer.from(value, 'base64').toString('utf-8'),
   });
   script.runInContext(context);
   // The initial manifest is the only network call made on page load.
@@ -98,8 +117,35 @@ test('browser-side offer picker is valid JS and keeps payments behind a second w
   assert.match(elements['x402-offer'].textContent, /Amount: 0\.02 USDC/);
   assert.match(elements['x402-offer'].textContent, /not yet paid/);
 
-  shouldIncludeHeader = false;
+  headerMode = 'missing';
   await elements['inspect-x402'].listeners.click();
-  assert.equal(elements['wallet-x402'].hidden, true, 'missing payment header is a fail-closed offer');
-  assert.match(elements['x402-offer'].textContent, /required x402 v2\/Bazaar fields are missing/);
+  assert.equal(elements['wallet-x402'].hidden, true, 'missing payment header fails closed');
+  assert.match(elements['x402-offer'].textContent, /did not verify against the body/);
+  headerMode = 'garbage';
+  await elements['inspect-x402'].listeners.click();
+  assert.equal(elements['wallet-x402'].hidden, true, 'malformed base64 header fails closed');
+  headerMode = 'amount-mismatch';
+  await elements['inspect-x402'].listeners.click();
+  assert.equal(elements['wallet-x402'].hidden, true, 'header/body amount mismatch fails closed');
+  headerMode = 'resource-mismatch';
+  await elements['inspect-x402'].listeners.click();
+  assert.equal(elements['wallet-x402'].hidden, true, 'payment header resource mismatch fails closed');
+  headerMode = 'valid';
+  amount = 'garbage';
+  await elements['inspect-x402'].listeners.click();
+  assert.equal(elements['wallet-x402'].hidden, true, 'non-numeric amounts fail closed');
+  amount = 20000; // A JSON number can round: never accept numeric amount.
+  await elements['inspect-x402'].listeners.click();
+  assert.equal(elements['wallet-x402'].hidden, true, 'unsafe numeric amount type fails closed');
+  amount = '20000';
+  decimals = undefined;
+  await elements['inspect-x402'].listeners.click();
+  assert.equal(elements['wallet-x402'].hidden, true, 'unknown token decimals fail closed');
+  decimals = 6;
+  redirected = true;
+  await elements['inspect-x402'].listeners.click();
+  assert.equal(elements['wallet-x402'].hidden, true, 'redirected response fails closed');
+  redirected = false;
+  await elements['inspect-x402'].listeners.click();
+  assert.equal(elements['wallet-x402'].hidden, false, 'valid offer re-enables one-resource handoff');
 });
