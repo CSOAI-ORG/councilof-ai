@@ -542,6 +542,16 @@ jobs:
           node scripts/capability-drift-guard.mjs --selftest
           node scripts/capability-drift-guard.mjs
 
+      # Declaration parity alone cannot prove a handler serves real source-bound data.
+      # Non-mutating live checks include JSON schema, source-to-response equality,
+      # repeated output stability, and a deliberately missing-route negative control.
+      # Never turn this into --warn or infer payments/human authority from a PASS.
+      - name: Live public behaviour — source parity and negative controls
+        timeout-minutes: 3
+        run: |
+          node scripts/live-behaviour-guard.mjs --selftest
+          node scripts/live-behaviour-guard.mjs
+
       # Only here is the live half of the lock test switched on — offline it reports SKIPPED,
       # never a silent pass. An unreachable door fails this step: unchecked is not checked.
       - name: MCP tool fleet lock — live tools/list must equal the committed lock
