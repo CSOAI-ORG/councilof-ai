@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: master
+          ref: ${{ github.sha }}
           persist-credentials: false
 
       - uses: actions/setup-python@v5
