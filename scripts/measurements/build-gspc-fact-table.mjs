@@ -61,12 +61,20 @@ function readCells(dir) {
     const raw = readFileSync(path.join(dir, name));
     const token = name.slice("items-".length, name.length - ".jsonl".length).replace(/-[0-9a-f]+$/, "");
     const rows = [];
-    for (const line of raw.toString("utf8").split("\n")) {
+    for (const [i, line] of raw.toString("utf8").split("\n").entries()) {
       if (!line.trim()) continue;
-      try { rows.push(JSON.parse(line)); } catch { /* a malformed line is a finding, not a row */ }
+      let row;
+      try { row = JSON.parse(line); }
+      catch { throw new Error(`UNCHECKABLE: malformed JSONL in ${name} at line ${i + 1}; refusing partial evidence`); }
+      if (!row || typeof row !== "object" || Array.isArray(row)) {
+        throw new Error(`UNCHECKABLE: non-object JSONL in ${name} at line ${i + 1}; refusing partial evidence`);
+      }
+      rows.push(row);
     }
+    if (rows.length === 0) throw new Error(`UNCHECKABLE: empty evidence cell ${name}; refusing empty-as-measured`);
     cells.push({ name, digest: sha(raw), rows, filenameAxis: FILENAME_AXIS[token] || null });
   }
+  if (cells.length === 0) throw new Error("UNCHECKABLE: no items-*.jsonl evidence cells; refusing an empty corpus");
   return cells;
 }
 
@@ -131,9 +139,16 @@ function main(argv) {
     scratch = mkdtempSync(path.join(tmpdir(), "gspc-fact-table-"));
     target = path.join(scratch, "table");
   }
+  // Read and validate the *entire* source corpus before touching the output. A
+  // missing receipt, broken row or empty cell is UNKNOWN evidence, never zero rows.
+  let cells;
+  try { cells = readCells(evidence); }
+  catch (error) {
+    if (scratch) rmSync(scratch, { recursive: true, force: true });
+    console.error(error instanceof Error ? error.message : String(error));
+    return 2;
+  }
   mkdirSync(target, { recursive: true });
-
-  const cells = readCells(evidence);
   const measurements = [];
   const items = new Map();          // axis|item_id -> item row
   const cellRows = [];
@@ -306,8 +321,15 @@ function main(argv) {
     if (existsSync(path.join(out, "gspc_measurements.jsonl"))) {
       problems.push("gspc_measurements.jsonl is the pre-shard single file and must be removed: the table is now written in parts");
     }
-    if (JSON.stringify(committedManifest.counts) !== JSON.stringify(manifest.counts)) {
-      problems.push("MANIFEST.json counts differ from a fresh build");
+    // The previous gate compared table bytes and headline counts but trusted the
+    // stored source_digest and by_axis/by_model summaries. A tampered manifest
+    // could therefore say SOURCE_REPLAY_MATCHED with an invented digest even
+    // while the raw rows and counts were unchanged. Re-derive all deterministic
+    // manifest fields from the actual source cells, not from stored claims.
+    for (const field of ["source", "counts", "by_axis", "by_model", "tables"]) {
+      if (JSON.stringify(committedManifest[field]) !== JSON.stringify(manifest[field])) {
+        problems.push("MANIFEST.json " + field + " differs from a fresh build");
+      }
     }
     rmSync(scratch, { recursive: true, force: true });
     if (problems.length) {
