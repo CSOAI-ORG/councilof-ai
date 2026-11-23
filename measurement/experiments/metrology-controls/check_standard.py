@@ -23,13 +23,19 @@ class Uncheckable(ValueError):
 
 
 def utc(s: str) -> datetime:
-    if not isinstance(s, str) or not s.endswith("Z"):
+    # A trailing Z alone is not proof of a UTC timestamp: fromisoformat can
+    # interpret "2026-11-23+00:00" as a naive date/time after Z substitution.
+    # Require an explicit date, T separator and clock before interpreting Z.
+    if not isinstance(s, str) or not re.fullmatch(
+        r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,6})?)?Z", s
+    ):
         raise Uncheckable("TIME_NOT_EXPLICIT_UTC")
     try:
         result = datetime.fromisoformat(s[:-1] + "+00:00")
     except ValueError as exc:
         raise Uncheckable("INVALID_TIMESTAMP") from exc
-    if result.utcoffset().total_seconds() != 0:
+    offset = result.utcoffset()
+    if offset is None or offset.total_seconds() != 0:
         raise Uncheckable("TIME_NOT_UTC")
     return result
 
@@ -126,9 +132,15 @@ def assess(payload: object, now_iso: str) -> dict:
         positive, negative = 0.0, 0.0
         signals = []
         for i, value in enumerate(values):
+            # Finite source numbers can overflow subtraction or standardisation.
+            # Never emit NaN/Infinity, nor mislabel an overflowed CUSUM as ALARM.
             z = (value - mu) / sigma
+            if not math.isfinite(z):
+                raise Uncheckable("NONFINITE_STANDARDISED_RESIDUAL")
             positive = max(0.0, positive + z - k)
             negative = max(0.0, negative - z - k)
+            if not math.isfinite(positive) or not math.isfinite(negative):
+                raise Uncheckable("NONFINITE_CUSUM_STATISTIC")
             reasons = []
             if abs(z) >= limit:
                 reasons.append("SHEWHART_SINGLE_READING")

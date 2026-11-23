@@ -161,6 +161,70 @@ class CheckStandardTests(unittest.TestCase):
         self.assertEqual(digest(x), digest(copy.deepcopy(x)))
         self.assertEqual(len(digest(x)), 64)
 
+    def test_date_only_z_timestamp_fails_closed_in_now_and_measured_at(self):
+        x = example([100.0] * 8)
+        report = assess(x, "2026-11-23Z")
+        self.assertEqual(report["state"], "UNCHECKABLE")
+        self.assertEqual(report["reason"], "TIME_NOT_EXPLICIT_UTC")
+        x["samples"][0]["measured_at"] = "2026-11-23Z"
+        report = assess(x, NOW)
+        self.assertEqual(report["state"], "UNCHECKABLE")
+        self.assertEqual(report["reason"], "TIME_NOT_EXPLICIT_UTC")
+
+    def test_subnormal_baseline_sigma_never_emits_infinite_residual(self):
+        x = example([100.0] * 8)
+        x["baseline_sigma"] = 1e-320
+        x["samples"][0]["value"] = 101.0
+        report = assess(x, NOW)
+        self.assertEqual(report["state"], "UNCHECKABLE")
+        self.assertEqual(report["reason"], "NONFINITE_STANDARDISED_RESIDUAL")
+        json.dumps(report, allow_nan=False)
+
+    def test_finite_values_with_overflowing_subtraction_fail_closed(self):
+        x = example([100.0] * 8)
+        x["reference_value"] = -1e308
+        x["baseline_sigma"] = 1.0
+        x["samples"][0]["value"] = 1e308
+        report = assess(x, NOW)
+        self.assertEqual(report["state"], "UNCHECKABLE")
+        self.assertEqual(report["reason"], "NONFINITE_STANDARDISED_RESIDUAL")
+        json.dumps(report, allow_nan=False)
+
+    def test_finite_residuals_with_cusum_accumulator_overflow_fail_closed(self):
+        x = example([1e308] * 8)
+        x["baseline_sigma"] = 1.0
+        report = assess(x, NOW)
+        self.assertEqual(report["state"], "UNCHECKABLE")
+        self.assertEqual(report["reason"], "NONFINITE_CUSUM_STATISTIC")
+        json.dumps(report, allow_nan=False)
+
+    def test_cli_machine_readable_uncheckable_on_overflow_and_date_only(self):
+        p = Path(__file__).with_name("check_standard.py")
+        for kind in ("date_now", "date_sample", "sigma", "cusum"):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as root:
+                x = example([100.0] * 8)
+                now = NOW
+                if kind == "date_now":
+                    now = "2026-11-23Z"
+                elif kind == "date_sample":
+                    x["samples"][0]["measured_at"] = "2026-11-23Z"
+                elif kind == "sigma":
+                    x["baseline_sigma"] = 1e-320
+                    x["samples"][0]["value"] = 101.0
+                else:
+                    x["baseline_sigma"] = 1.0
+                    for sample in x["samples"]:
+                        sample["value"] = 1e308
+                input_file = Path(root) / "input.json"
+                input_file.write_text(json.dumps(x))
+                result = subprocess.run(
+                    [sys.executable, str(p), "--input", str(input_file), "--now", now],
+                    capture_output=True, text=True, check=False,
+                )
+                self.assertEqual(result.returncode, 4, result.stderr)
+                self.assertEqual(json.loads(result.stdout)["state"], "UNCHECKABLE")
+                self.assertEqual(result.stderr, "")
+
     def test_cli_exit_codes_and_machine_readable_json(self):
         p = Path(__file__).with_name("check_standard.py")
         for values, expected in [([100] * 8, 0), ([100] * 5 + [102] * 5, 3)]:
