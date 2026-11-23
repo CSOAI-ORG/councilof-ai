@@ -104,6 +104,29 @@ test('dated witness claims retain their exact root subject, drift and conflict s
   assert.ok(!JSON.stringify(claim).includes('APPROVED'));
 });
 
+test('canonical producer pending, match, uncheckable and conflict states survive source projection',async()=>{
+  const cases=[
+    {ots:'STAMPED_PENDING_BITCOIN',drift:'MATCH',conflict:'NONE'},
+    {ots:'NO_ATTESTATION',drift:'UNCHECKABLE',conflict:'UNCHECKABLE'},
+    {ots:'PENDING',drift:'DRIFTED',conflict:'CONFLICT'},
+    {ots:'UNCHECKABLE',drift:'MATCH',conflict:'NONE'},
+  ];
+  for(const expected of cases){
+    const w={witnesses:{rekor:'UNCHECKABLE',ots:expected.ots},
+      live_root:{sha256:'f'.repeat(64),merkle_root:'c'.repeat(64)},
+      drift:{status:expected.drift,checked_at:'2026-11-22T01:01:01Z'},
+      conflict:{status:expected.conflict}};
+    const out=await readMeokCorrectionEvidence({}, {fetchImpl:fake(corrections(),root(),w),now});
+    assert.equal(out.layer0.declared_witness.rekor_state_source_claim,'UNCHECKABLE');
+    assert.equal(out.layer0.declared_witness.ots_state_source_claim,expected.ots);
+    assert.equal(out.layer0.declared_witness.source_drift.status,expected.drift);
+    assert.equal(out.layer0.declared_witness.source_conflict.status,expected.conflict);
+    assert.equal(out.layer0.root_signature,'NOT_VERIFIED');
+    assert.equal(out.layer0.ots,'NOT_VERIFIED');
+    assert.equal(out.control.grants_tool_authority,false);
+  }
+});
+
 test('untrusted or malformed witness status and subject fields fail closed',async()=>{
   const w={witnesses:{rekor:'APPROVED',ots:'CERTIFIED'},
     live_root:{sha256:'https://evil.test/private',merkle_root:'invalid',card_count:-10,
