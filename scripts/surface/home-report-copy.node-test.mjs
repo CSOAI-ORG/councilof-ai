@@ -34,13 +34,36 @@ test("report date, scope and evidence status remain explicit", () => {
   assert.match(source, /scope, sources and\s+evidence status/);
   assert.match(source, /Check the publication date/);
 });
-test("existing archive, board, signup and live strip remain wired", () => {
+test("existing archive, board and signup remain wired without a duplicate live strip", () => {
   assert.match(source, /href="https:\/\/huggingface\.co\/datasets\/csoai\/gspc-daily-reports"/);
   assert.match(source, /target="_blank"\s+rel="noopener noreferrer"/);
   assert.match(source, /href="\/board\/"/);
   assert.match(source, /<NewsletterSignup\s*\/>/);
-  assert.match(source, /<LivingBoardStrip\s*\/>/);
+  assert.doesNotMatch(source, /<LivingBoardStrip\s*\/>/);
 });
+// One embedded Hugging Face board is owned by HomeResults, not duplicated by the archive band.
+const resultsSource = fs.readFileSync(new URL("../../client/src/components/home/HomeResults.tsx", import.meta.url), "utf8");
+const spaceSource = fs.readFileSync(new URL("../../spaces/gspc-board/index.html", import.meta.url), "utf8");
+
+test("one real GSPC Space embed is retained with direct public evidence navigation", () => {
+  assert.equal([...resultsSource.matchAll(/<iframe\b/g)].length, 1);
+  assert.match(resultsSource, /csoai-gspc-board\.static\.hf\.space\/index\.html/);
+  assert.match(resultsSource, /href=\{GSPC_SPACE\}/);
+  assert.match(resultsSource, /href="\/api\/gspc"/);
+  assert.doesNotMatch(source, /<iframe\b|<LivingBoardStrip\s*\/>/);
+});
+
+test("Space links that leave an embedded frame open a separate tab", () => {
+  for (const url of ["https://councilof.ai", "https://councilof.ai/gspc-verify", "https://huggingface.co/spaces/csoai/gspc-lookup"]) {
+    const links = [...spaceSource.matchAll(/<a\b[^>]*>/g)].map(m => m[0]).filter(tag => tag.includes(`href="${url}"`));
+    assert.ok(links.length > 0, "external Space link missing: " + url);
+    for (const link of links) {
+      assert.match(link, /target="_blank"/);
+      assert.match(link, /rel="noopener noreferrer"/);
+    }
+  }
+});
+
 test("restored archive band does not reuse the HomeUpdates test selector", () => {
   assert.match(source, /data-testid="home-report-archive-band"/);
   assert.doesNotMatch(source, /data-testid="home-daily-report-band"/);

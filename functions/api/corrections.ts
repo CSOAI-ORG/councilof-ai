@@ -2518,7 +2518,9 @@ export function correctionLatency(entries: TimingEntry[]) {
     detection_stamp_rule:
       "PRODUCER_STAMPED only when the entry carries the candidate_id its detector wrote at creation (from 2026-09-28); " +
       "every earlier entry is UNMEASURED here and is never backfilled.",
-    ...(exact.length ? { median_seconds_exact: exact[Math.floor(exact.length / 2)] } : {}),
+    ...(exact.length ? { median_seconds_exact: exact.length % 2 === 0
+      ? (exact[exact.length / 2 - 1] + exact[exact.length / 2]) / 2
+      : exact[Math.floor(exact.length / 2)] } : {}),
     per_entry: per.filter((x) => x.kind !== "UNMEASURED"),
     note:
       "Computed on this request from the two timestamps in each entry; nothing here is stored or signed. " +
