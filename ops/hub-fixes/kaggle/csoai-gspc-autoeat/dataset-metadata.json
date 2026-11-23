@@ -1,0 +1,92 @@
+{
+  "title": "GSPC · AutoEat Discovery Queue — Council of AI",
+  "id": "nicktempleman/csoai-gspc-autoeat",
+  "id_no": 12265006,
+  "subtitle": "Measurement of a discovery queue (not yet measured). Not a certification.",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-gspc-autoeat`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-gspc-autoeat -p ./dataset --unzip\n```\n\nStart by inspecting `queue.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `STATUS.md`\n- `probed.json`\n- `queue.jsonl`\n- `status.json`\n- `manifest.jsonl`\n- `cards-compact.json`\n- `verify-resign.json`\n- See the Data tab for all 16 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n**Independent measurement of a discovery queue (not yet measured). Not a certification.**\n\n- Verify any card free: https://councilof.ai/gspc-verify/ · Catalog: https://councilof.ai/catalog.json · Methodology: https://councilof.ai/methodology/\n- Live board: https://councilof.ai/api/gspc (read counts live; none are typed here)\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/gspc-autoeat at revision `feaca46631e8fa782fc31cd5ba00017a6ec42c24`, made 2026-10-07. The Hugging Face copy is the original; if the two differ, it wins.\n\n# AutoEat discovery queue — DISCOVERED, not measured\n\nThe discovery queue, not a scoreboard. Each row of `queue.jsonl` is something newly seen\nin public — a Hugging Face model or Space, an MCP registry entry, an npm package, an ERC-8004 agent — with\nits `as_of`, `kind`, `source` and a status of `DISCOVERED`. **DISCOVERED is not MEASURED**: nothing in this\nfile has been graded, and its `n` must never be pooled with a bank `n`. The `ledger-card-*.json` files are\nthe per-source ledger cards.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 4, last updated 2026-10-07.\n- 16 files, 2,231,604 bytes. File types: .json (12), .md (2), .jsonl (2).\n- Hugging Face twin: [csoai/gspc-autoeat](https://huggingface.co/datasets/csoai/gspc-autoeat). 15 of 16 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_gspc_autoeat,\n  title        = {AutoEat discovery queue — DISCOVERED, not measured},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/gspc-autoeat}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "government",
+    "law",
+    "artificial intelligence",
+    "computer science",
+    "benchmark",
+    "ml ethics",
+    "finance",
+    "internet"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 15 of 16 files have the same byte size as files in the Hugging Face dataset [csoai/gspc-autoeat](https://huggingface.co/datasets/csoai/gspc-autoeat) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 13,766 bytes."
+    },
+    {
+      "path": "STATUS.md",
+      "description": "Markdown document. Same byte size as `STATUS.md` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 1,141 bytes."
+    },
+    {
+      "path": "cards-compact.json",
+      "description": "4344 — JSON document. JSON document. top-level keys: autoeat.hf.newmodels, autoeat.mcp.registry, autoeat.erc8004.newagents, autoeat.xrpl.accounts. Same byte size as `cards-compact.json` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 4,344 bytes."
+    },
+    {
+      "path": "ledger-card-autoeat-erc8004-newagents.json",
+      "description": "2048 — JSON document. JSON document. top-level keys: as_of, did, payload, schema, sha256, sig_ed25519, surface, subject, source_urls, unmeasured. Same byte size as `ledger-card-autoeat-erc8004-newagents.json` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 2,048 bytes."
+    },
+    {
+      "path": "ledger-card-autoeat-hf-newmodels.json",
+      "description": "1790 — JSON document. JSON document. top-level keys: as_of, did, payload, schema, sha256, sig_ed25519, surface, subject, source_urls, unmeasured. Same byte size as `ledger-card-autoeat-hf-newmodels.json` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 1,790 bytes."
+    },
+    {
+      "path": "ledger-card-autoeat-hf-spaces.json",
+      "description": "1717 — JSON document. JSON document. top-level keys: as_of, did, payload, schema, sha256, sig_ed25519, surface, subject, source_urls, unmeasured. Same byte size as `ledger-card-autoeat-hf-spaces.json` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 1,717 bytes."
+    },
+    {
+      "path": "ledger-card-autoeat-mcp-registry.json",
+      "description": "1727 — JSON document. JSON document. top-level keys: as_of, did, payload, schema, sha256, sig_ed25519, surface, subject, source_urls, unmeasured. Same byte size as `ledger-card-autoeat-mcp-registry.json` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 1,727 bytes."
+    },
+    {
+      "path": "ledger-card-autoeat-npm-registry.json",
+      "description": "1624 — JSON document. JSON document. top-level keys: as_of, did, payload, schema, sha256, sig_ed25519, surface, subject, source_urls, unmeasured. Same byte size as `ledger-card-autoeat-npm-registry.json` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 1,624 bytes."
+    },
+    {
+      "path": "ledger-card-autoeat-xrpl-accounts.json",
+      "description": "1758 — JSON document. JSON document. top-level keys: as_of, did, payload, schema, sha256, sig_ed25519, surface, subject, source_urls, unmeasured. Same byte size as `ledger-card-autoeat-xrpl-accounts.json` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 1,758 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "16 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 16 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 5,638 bytes."
+    },
+    {
+      "path": "probed.json",
+      "description": "313417 — JSON document. JSON document. Same byte size as `probed.json` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 313,417 bytes."
+    },
+    {
+      "path": "queue.jsonl",
+      "description": "1876439 — 8466 — data (one JSON object per line). Newline-delimited JSON (one record per line). 8466 rows; fields: as_of (datetime), id (string), kind (string), meta (string), source (string), status (string). Same byte size as `queue.jsonl` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 1,876,439 bytes."
+    },
+    {
+      "path": "status.json",
+      "description": "JSON document. top-level keys: loop, as_of, queue_discovered_total, discovered_by_kind, probed_total, staged_live_of_probed, atoms_staged, surfaces_staged, last_signed_batch, invariant. Same byte size as `status.json` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 861 bytes."
+    },
+    {
+      "path": "verify-autoeat.json",
+      "description": "1752 — JSON document. JSON document. 6 rows; fields: file (string), surface (string), did (string), sha_ok (boolean), board (string), card (string), auto_measured (boolean), intern_as_measured (boolean). Same byte size as `verify-autoeat.json` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 1,752 bytes."
+    },
+    {
+      "path": "verify-interop.json",
+      "description": "2926 — JSON document. JSON document. 7 rows; fields: file (string), surface (string), did (string), auto_measured (boolean), card_attestation_1 (string), board_attestation_1 (string), intern_as_measured (boolean). Same byte size as `verify-interop.json` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 2,926 bytes."
+    },
+    {
+      "path": "verify-resign.json",
+      "description": "JSON document. 2 rows; fields: file (string), surface (string), did (string), sha_ok (boolean), board_attestation_1 (string), card_attestation_1 (string), auto_measured (boolean), intern_as_measured (boolean). Same byte size as `verify-resign.json` in huggingface.co/datasets/csoai/gspc-autoeat (checked 2026-11-20). 656 bytes."
+    }
+  ]
+}

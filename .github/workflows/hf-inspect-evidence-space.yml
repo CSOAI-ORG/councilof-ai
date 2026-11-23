@@ -65,6 +65,7 @@ jobs:
           GIT_SHA: ${{ github.sha }}
         working-directory: spaces/inspect-evidence
         run: |
+          python3 "$GITHUB_WORKSPACE/scripts/privacy/publication_gate.py" --label inspect-evidence-space .
           python - <<'PY'
           import hashlib, json, os, sys
           from huggingface_hub import HfApi, hf_hub_download

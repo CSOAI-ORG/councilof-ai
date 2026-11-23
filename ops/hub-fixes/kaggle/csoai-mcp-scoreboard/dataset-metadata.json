@@ -1,0 +1,52 @@
+{
+  "title": "MCP tool-conformance bank",
+  "id": "nicktempleman/csoai-mcp-scoreboard",
+  "id_no": 12265531,
+  "subtitle": "Mirror of Hugging Face csoai/mcp-scoreboard",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-mcp-scoreboard`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-mcp-scoreboard -p ./dataset --unzip\n```\n\nStart by inspecting `items.jsonl`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `LICENSE`\n- `README.md`\n- `items.jsonl`\n- `mcpbench.json`\n- `LEADERBOARD.md`\n- `manifest.jsonl`\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\n> **Mirror.** This is a copy of https://huggingface.co/datasets/csoai/mcp-scoreboard at revision `02ee0d4e187d7be339d795c39a4348bc66377ce4`, made 2026-09-29. The Hugging Face copy is the original; if the two differ, it wins.\n\n# MCP tool-conformance bank\n\nA frozen conformance bank for MCP tools. Each row of `items.jsonl` describes a tool's\ndeclared behaviour against its actual behaviour and gives the `expected` verdict with a rule `anchor` —\n`DECLARED_READONLY` (annotated read-only, mutates state), `BOUNDED_EGRESS` (traffic outside the declared\nscope), silent clamping of a declared schema bound, and so on. The rows carry `\"axis\": \"conformance\"`.\n\nSuperseded as the live bank — the conformance slot is published as\n[`csoai/gspc-mcp`](https://huggingface.co/datasets/csoai/gspc-mcp). Kept so inbound links resolve.\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 1, last updated 2026-09-29.\n- 6 files, 25,261 bytes. File types: .md (2), .jsonl (2), (none) (1), .json (1).\n- Hugging Face twin: [csoai/mcp-scoreboard](https://huggingface.co/datasets/csoai/mcp-scoreboard). 5 of 6 files have the same byte size there.\n- Expected update frequency: never.\n\n## Citation\n\n```bibtex\n@misc{csoai_gspc_mcp_scoreboard,\n  title        = {MCP tool-conformance bank},\n  author       = {{CSOAI Ltd}},\n  year         = {2026},\n  howpublished = {Hugging Face Hub, \\url{https://huggingface.co/datasets/csoai/mcp-scoreboard}},\n  note         = {Live board: https://councilof.ai/api/gspc. Measurement, not certification.}\n}\n```\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "computer science",
+    "ml ethics",
+    "benchmark",
+    "model comparison",
+    "internet",
+    "software",
+    "computer vision"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai. 5 of 6 files have the same byte size as files in the Hugging Face dataset [csoai/mcp-scoreboard](https://huggingface.co/datasets/csoai/mcp-scoreboard) (checked 2026-11-20).",
+  "resources": [
+    {
+      "path": "LEADERBOARD.md",
+      "description": "161 — card. Markdown document. Same byte size as `LEADERBOARD.md` in huggingface.co/datasets/csoai/mcp-scoreboard (checked 2026-11-20). 161 bytes."
+    },
+    {
+      "path": "LICENSE",
+      "description": "123 — file. Licence text file. Same byte size as `LICENSE` in huggingface.co/datasets/csoai/mcp-scoreboard (checked 2026-11-20). 123 bytes."
+    },
+    {
+      "path": "README.md",
+      "description": "1521 — card. Dataset README (Markdown). 13,026 bytes."
+    },
+    {
+      "path": "items.jsonl",
+      "description": "7682 — 30 — data (one JSON object per line). Newline-delimited JSON (one record per line). 30 rows; fields: tool (string), expected (string), anchor (string), axis (string). Same byte size as `items.jsonl` in huggingface.co/datasets/csoai/mcp-scoreboard (checked 2026-11-20). 7,682 bytes."
+    },
+    {
+      "path": "manifest.jsonl",
+      "description": "6 — derived at 2026-09-04T04:33:29Z. Newline-delimited JSON (one record per line). 6 rows; fields: file (string), bytes (integer), sha (string), ext (string), url (url), repo (string), as_of (datetime), source (string). Same byte size as `manifest.jsonl` in huggingface.co/datasets/csoai/mcp-scoreboard (checked 2026-11-20). 1,971 bytes."
+    },
+    {
+      "path": "mcpbench.json",
+      "description": "2298 — JSON document. JSON document. top-level keys: benchmark, version, generated, mcp_version, predicates, records, alg, pub, sig, signed_payload. `records` holds 2 records with fields: server (url), schema_valid (string), tool_declared (string), error_bounded (string), evidence (string). Same byte size as `mcpbench.json` in huggingface.co/datasets/csoai/mcp-scoreboard (checked 2026-11-20). 2,298 bytes."
+    }
+  ]
+}

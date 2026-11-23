@@ -1,0 +1,57 @@
+name: PyPI distribution footprint (daily)
+
+# The daily PyPI download record behind GET /api/momentum. It ran from cron on one
+# host (oracle-micro-2) and stopped when that host went offline: the last record in
+# csoai/distribution-footprint is dated 2026-10-25. This runs the same producer,
+# unchanged, on a schedule that does not depend on any one machine.
+# It measures and publishes a count. It posts, registers and signs nothing.
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "10 5 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pypi-footprint-daily
+  cancel-in-progress: false
+
+jobs:
+  footprint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run the producer and publish the day's record
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${HF_TOKEN:-}" ]; then
+            echo "::error::HF_TOKEN is not set; the record cannot be published"
+            exit 1
+          fi
+          python -m pip install --quiet huggingface_hub
+          # The producer reads its token from this path; the file lives only on the runner.
+          mkdir -p "$HOME/.secrets"
+          ( umask 077; printf '%s' "$HF_TOKEN" > "$HOME/.secrets/hf_token" )
+          python scripts/pypi-footprint/pypi_footprint.py --publish --out-dir out/pypi-footprint
+          rm -f "$HOME/.secrets/hf_token"
+
+      - name: Upload the record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pypi-footprint-${{ github.run_id }}
+          path: out/pypi-footprint/
+          retention-days: 30
+          if-no-files-found: warn

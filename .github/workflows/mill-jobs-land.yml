@@ -46,45 +46,13 @@ jobs:
       - name: Install the hub client only
         run: pip install --quiet "huggingface_hub>=0.25"
 
-      - name: Pull the staging dataset
+      - name: Pull the staging dataset with bounded retry and fail-closed provenance
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           set -euo pipefail
-          if [ -z "${HF_TOKEN}" ]; then
-            echo "HF_TOKEN absent — csoai/mill-jobs-staging is PRIVATE, so this cannot read it."
-            echo "That is UNCHECKABLE, not zero cards. Failing rather than landing nothing quietly."
-            exit 1
-          fi
-          python3 - <<'PY'
-          import os, pathlib, shutil
-          from huggingface_hub import snapshot_download
-          try:
-              p = snapshot_download("csoai/mill-jobs-staging", repo_type="dataset",
-                                    token=os.environ["HF_TOKEN"])
-          except Exception as e:
-              # A repo that does not exist yet is genuinely zero cards; anything else is not.
-              if "404" in str(e) or "Repository Not Found" in str(e):
-                  print("staging dataset does not exist yet — 0 cards, and that IS zero")
-                  pathlib.Path("staged").mkdir(exist_ok=True)
-                  raise SystemExit(0)
-              raise
-          dst = pathlib.Path("staged"); dst.mkdir(exist_ok=True)
-          n = e = 0
-          # The whole tree, paths preserved: the item-evidence bundles (items-<axis>-<hash>.jsonl)
-          # sit beside the cards and land_mill_cards.py binds each card to its bundle by sha256.
-          # Pulling only the cards (what this step did until 2026-09-14) made every card
-          # aggregate-only and therefore unsignable under the 2026-09-13 evidence ruling.
-          for f in pathlib.Path(p).rglob("*"):
-              if not f.is_file() or ".git" in f.parts or f.name == ".gitattributes":
-                  continue
-              rel = f.relative_to(p)
-              (dst / rel).parent.mkdir(parents=True, exist_ok=True)
-              shutil.copy(f, dst / rel)
-              if f.name.startswith("unsigned-"): n += 1
-              if f.name.startswith("items-"): e += 1
-          print(f"pulled {n} staged card(s) and {e} evidence bundle(s) from csoai/mill-jobs-staging")
-          PY
+          python3 -m unittest discover -s scripts/hf -p test_reliable_snapshot.py
+          python3 scripts/hf/reliable_snapshot.py
 
       - name: land (dedupe per (model, axis), bind run provenance, require the evidence bundle)
         id: land
