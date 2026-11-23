@@ -1,6 +1,12 @@
 name: Publish reviewed ORB-III correction to Hugging Face
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - 'ops/hub-fixes/hf/bundle/csoai__hitl-academy-orb3__dataset/README.md'
+      - 'scripts/hf/publish_orb3_correction.py'
+      - '.github/workflows/publish-orb3-correction.yml'
   workflow_dispatch:
 
 permissions:
@@ -36,7 +42,7 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           GITHUB_REF: ${{ github.ref }}
-          GITHUB_EVENT_NAME: workflow_dispatch
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_SHA: ${{ github.sha }}
         run: |
           python3 scripts/hf/publish_orb3_correction.py --publish \
