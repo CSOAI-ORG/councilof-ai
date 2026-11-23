@@ -1,6 +1,12 @@
 name: Publish GSPC-MEOK research whitepaper (protected master)
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - 'research/releases/evidence-adaptation-2026-11-23/**'
+      - 'scripts/hf/publish_evidence_adaptation.py'
+      - '.github/workflows/publish-gspc-meok-research.yml'
   workflow_dispatch:
 
 # Release uses one existing org-owned HF_TOKEN. No PR job receives it.
@@ -41,7 +47,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           GITHUB_REF: ${{ github.ref }}
           GITHUB_SHA: ${{ github.sha }}
-          GITHUB_EVENT_NAME: workflow_dispatch
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: |
           python3 scripts/hf/publish_evidence_adaptation.py --publish \
             --receipt-out hf-research-release-receipt.json
