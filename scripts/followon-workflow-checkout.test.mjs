@@ -31,8 +31,12 @@ const WORKFLOWS = [
     // and nothing after it. Only the byte counts and digests moved, and they
     // were recomputed from the reviewed file — not copied from anywhere.
     // An independent lane landed the same re-pin; both derivations agree.
-    before: { bytes: 6340, sha256: "9e0d0cbfe8d903a1afe79a7609726c2a07bac808a56fe733aa643bec4b666809" },
-    after: { bytes: 6464, sha256: "c08c0b9bc4a2fd563591d06d1038fbb53da2962d1d7a0d10627ba97c066b58eb" },
+    // RE-PINNED 2026-11-23 for this privacy-gate PR: the only later change to
+    // kaggle-community-cells was the pre-push publication_gate.py invocation.
+    // The original checkout block is still unchanged, and the before/after
+    // digests were independently recomputed from this branch's exact bytes.
+    before: { bytes: 6447, sha256: "22f78284bb2643a70e3f6d96ddde0e1fd7c72c2145c41d65830581c512b9317a" },
+    after: { bytes: 6571, sha256: "a8b0fc22b1ac4c73a76ea4c8fc989d0051824362b82671636db65d77544f43de" },
   },
 ];
 const digest = (text) => createHash("sha256").update(text, "utf8").digest("hex");
