@@ -134,6 +134,18 @@ export function viewTree(rawModel, opts = {}) {
     ),
   );
 
+  // Keep navigational paths inside the Council evidence ecosystem. These links are
+  // read-only discovery: opening a desk does not approve a measurement or dispatch a review.
+  nodes.push(
+    h("nav", { class: "actions panel-links", "data-region": "council-navigation",
+      "aria-label": "Related Council of AI tools" },
+      h("a", { href: "https://councilof.ai/dashboard?tab=board", target: "_blank", rel: "noopener noreferrer" }, "GSPC board"),
+      h("a", { href: "https://councilof.ai/dashboard?tab=staff", target: "_blank", rel: "noopener noreferrer" }, "Human review"),
+      h("a", { href: "https://councilof.ai/dashboard?tab=corrections", target: "_blank", rel: "noopener noreferrer" }, "Corrections"),
+      h("a", { href: "https://councilof.ai/interop/living-signal-plane.html", target: "_blank", rel: "noopener noreferrer" }, "Regulatory windows"),
+    ),
+  );
+
   nodes.push(
     h("section", { "data-region": "state", class: `state${hl("state", highlight)}`, "aria-label": "Subject state" },
       h("span", { class: `chip chip-${m.state.toLowerCase()}`, "data-state": m.state }, STATE_WORDS[m.state] ?? m.state),

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Read-only Council of AI signal desk: published GSPC measurements, dated regulatory research references and human-review availability.">
+  <title>Living Signal Desk — Council of AI</title>
+  <style>
+  :root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#071712;color:#e5f4e8}
+  *{box-sizing:border-box}body{margin:0}a{color:#9de9c3}a:focus-visible,button:focus-visible{outline:3px solid #f8c969;outline-offset:3px}
+  header,main,footer{max-width:1120px;margin:auto;padding:24px}header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .brand{font-weight:800;letter-spacing:.02em}.pill{border:1px solid #517b66;border-radius:40px;padding:7px 12px;color:#bbdfc7;font-size:.82rem}
+  h1{font-size:clamp(2rem,4vw,3.2rem);line-height:1.06;max-width:850px;margin:.2em 0}.lede{max-width:780px;color:#aec5b8;line-height:1.6}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:26px 0}
+  article,.panel{background:#10251c;border:1px solid #2b4e39;border-radius:16px;padding:20px}article h2{font-size:1rem;margin:0 0 15px;color:#adf1cb}
+  .value{font-size:1.45rem;font-weight:750;overflow-wrap:anywhere}.meta{color:#b0c8b9;font-size:.88rem;line-height:1.5}
+  h2{margin-top:28px}h3{font-size:1.05rem}.windows{display:grid;gap:10px;list-style:none;padding:0}
+  .window{border-bottom:1px solid #355343;padding:14px 0}.window:last-child{border:0}
+  .date{font-variant-numeric:tabular-nums;color:#f4d58e;font-weight:750}.state{display:inline-block;padding:3px 9px;border:1px solid #567660;border-radius:99px;font-size:.75rem;margin-left:8px}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;padding:8px 0 16px}.actions a,button{font:inherit;padding:10px 14px;background:#18382a;color:#e5f4e8;border:1px solid #3d7052;border-radius:9px;text-decoration:none;cursor:pointer}
+  .notice{background:#2d2819;border-left:4px solid #ebbe60;border-radius:6px;padding:13px 17px;color:#f7eacb;max-width:880px}
+  footer{color:#abc5b2;font-size:.85rem;border-top:1px solid #31513e}
+  </style>
+  <script src="/interop/living-signal-plane.js" defer></script>
+</head>
+<body>
+<header><a class="brand" href="/" aria-label="Council of AI homepage">COUNCIL OF AI</a><span class="pill">Evidence-first · read-only</span></header>
+<main>
+ <p class="pill" style="display:inline-block">CouncilOS / Signal Desk — preview</p>
+ <h1>Regulation changes. Models change. The evidence must keep up.</h1>
+ <p class="lede">Explore the existing measurement board, dated regulatory research windows and working-group proposals in one place. This page reads existing public data; it does not certify compliance, issue tokens, assign humans or update any GSPC scores.</p>
+ <nav class="actions" aria-label="Related Council tools">
+  <a href="/dashboard?tab=board">GSPC board</a><a href="/dashboard?tab=staff">H.I.M. review</a>
+  <a href="/dashboard?tab=corrections">Corrections</a><a href="/connect-gspc">MCP / integrations</a>
+ </nav>
+ <div class="notice" role="note">Status boundaries: the legal inventory is a stamped historical snapshot, not a current legal interpretation. A working-group catalogue is not a staffed reviewer roster. An agent trace is not a view into hidden reasoning. No automatic escalation to IETF, W3C, NIST or regulators is performed.</div>
+ <div class="grid" aria-live="polite">
+  <article><h2>GSPC board</h2><p id="gspc" class="value">Reading published board…</p><p id="gspc-note" class="meta">Source: /api/gspc. Measurements are dated; service reachability does not refresh them.</p></article>
+  <article><h2>Regulatory evidence inventory</h2><p id="inventory" class="value">Reading pointer…</p><p id="inventory-note" class="meta">Unsigned discovery pointer to an immutable version. Inspect proofs separately.</p></article>
+  <article><h2>Working-group proposals</h2><p id="groups" class="value">Reading catalogue…</p><p id="groups-note" class="meta">No accepted reviewer or delegated authority is inferred from a proposal.</p></article>
+  <article><h2>Governance dependency map</h2><p id="graph" class="value">Reading source-bound graph…</p><p id="graph-note" class="meta">Candidate Council WG, GSPC and external-source mappings only; no authority implied.</p></article>
+  <article><h2>Research source freshness</h2><p id="research" class="value">Reading evidence review window…</p><p id="research-note" class="meta">An expired source needs re-review; a refreshed clock does not create human authority.</p><p><a href="/working-groups/controlai.html">Inspect dated working-group research</a></p></article>
+ </div>
+ <section class="panel" aria-labelledby="windows-title">
+  <h2 id="windows-title">Regulatory windows · research references</h2>
+  <p class="meta">Dates are computed relative to your browser's current UTC date, using a curated 22 November 2026 reference file. This is not an automatic source-change monitor or a legal applicability assessment. Every date requires official-source revalidation.</p>
+  <ul id="windows" class="windows" aria-live="polite"><li>Loading dated references…</li></ul>
+  <button id="refresh" type="button">Re-read public sources</button>
+ </section>
+ <section class="panel" style="margin-top:18px">
+  <h2>What happens next?</h2>
+  <p>Official source observations should enter the existing regulatory review queue. Candidate mappings can be sent for authorised human assessment. Approved work can request a fresh GSPC run; no automated regulation-to-score promotion, outside-group dispatch or token issuance occurs here.</p>
+  <p><a href="/api/corrections">Corrections ledger</a> · <a href="/root.json">Public Merkle root</a> · <a href="/api/x402">x402 machine-readable catalogue</a></p>
+ </section>
+</main>
+<footer>Evidence by GSPC · Council of AI. Measurement is not certification. Source date, scope and uncertainty matter.</footer>
+</body></html>
