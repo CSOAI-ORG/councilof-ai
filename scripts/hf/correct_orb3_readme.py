@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Date and qualify the historical ORB-III card without modifying frozen rows."""
 from __future__ import annotations
-import argparse, hashlib, json, os, subprocess, sys, tempfile
+import argparse, hashlib, json, os, subprocess, sys, tempfile, urllib.request
 from pathlib import Path
 
 REPO="csoai/hitl-academy-orb3"
@@ -112,8 +112,14 @@ def main():
     if args.check==args.publish:a.error("choose exactly one operation")
     root=Path(__file__).resolve().parents[2]
     if args.check:
-        card=(root/"ops/hub-fixes/hf/bundle/csoai__hitl-academy-orb3__dataset/README.md").read_text()
-        output=render(card)
+        request=urllib.request.Request(URL+"/resolve/main/README.md",
+           headers={"User-Agent":"csoai-source-correction-preview/0.1","Cache-Control":"no-cache"})
+        with urllib.request.urlopen(request,timeout=25) as r:
+            if r.status!=200 or not r.headers.get("content-type","").startswith(("text/","application/octet-stream")):
+                raise ValueError("public source README unavailable")
+            raw=r.read(100_001)
+        if len(raw)>100_000:raise ValueError("public README exceeds limit")
+        output=render(raw.decode("utf-8"))
         with tempfile.TemporaryDirectory() as t:
             p=Path(t)/"README.md";p.write_text(output,encoding="utf-8")
             privacy(root,p)
