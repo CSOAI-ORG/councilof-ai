@@ -366,8 +366,8 @@ describe("the Task is not stored, and a forged id buys nothing", () => {
     // The normal constructor must already refuse this invalid obligation.
     expect(x402TaskId("evidence_bundle", { obligation: "not-an-obligation" })).toBeNull();
     // Even a caller that forges the reversible JSON must not dispatch it.
-    const taskId = "x402-" + btoa(JSON.stringify({ t: "evidence_bundle", i: { obligation: "not-an-obligation" } }))
-      .replace(/\\+/g, "-").replace(/\\//g, "_").replace(/=+$/, "");
+    const encoded = btoa(JSON.stringify({ t: "evidence_bundle", i: { obligation: "not-an-obligation" } }));
+    const taskId = "x402-" + encoded.replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "");
     const { body } = await send({ taskId, parts: [{ text: "pay" }], metadata: { [PAYLOAD_KEY]: PAYMENT } });
     expect(seen).toHaveLength(0);
     expect(body.error.code).toBe(-32001);
