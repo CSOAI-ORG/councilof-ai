@@ -99,6 +99,7 @@ export const NODE_TEST_FILES = [
   'scripts/measurements/gspc-repeat-integrity.node-test.mjs',
   'scripts/experiments/gspc-dataset-mutation-probe.node-test.mjs',
   'scripts/measurements/gspc-evidence-engine-index.node-test.mjs',
+  'scripts/measurements/gspc-trusted-run.node-test.mjs',
   // Claim-bounded proof cards use the same standalone node:test runner.
   'scripts/pilot/render-approval-proof-card.test.mjs',
   // 2026-11-02: seven more node:test files that no gate ran. mcp/gspc-server/wired-tools was

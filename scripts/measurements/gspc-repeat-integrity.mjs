@@ -15,6 +15,7 @@ import { createHash } from "node:crypto";
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { sourceFactGrade } from "./gspc-fact-row-contract.mjs";
 
 const digest = raw => createHash("sha256").update(raw).digest("hex");
 const rec = obj => obj !== null && typeof obj === "object" && !Array.isArray(obj);
@@ -240,6 +241,9 @@ export function auditRepeatIntegrity({manifestPath,evidenceDir}) {
     }
     check(integer(ordinal)&&ordinal<source.rawRows.length,"fact observation source index invalid: "+row.cell);
     const raw=source.rawRows[ordinal];
+    const expectedSourceGrade=sourceFactGrade(raw);
+    check(row.ok===expectedSourceGrade,
+      "fact normalized grade differs from source fact-row contract: "+row.cell);
     const unique=key(row.cell,ordinal);
     check(!used.has(unique),"fact duplicates a single raw source observation: "+row.cell);
     used.add(unique);

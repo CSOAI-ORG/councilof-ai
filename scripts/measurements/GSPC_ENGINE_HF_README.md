@@ -57,3 +57,8 @@ not an independently witnessed external signature or new model measurement.
 The repeat producer must declare `csoai.gspc-repeat-integrity/2` and a bijective raw-row join. Cells mixing provider routes cannot be grouped under only the first observation's route. The index rejects older pre-fix repeat artifacts.
 
 The master freshness gate regenerates the live 34-axis board snapshot from current checkout source, hashes that board, and rejects stale historical coverage artifacts even when raw cell and manifest bytes remain unchanged.
+
+
+## GitHub workflow input trust
+
+The index refuses pull-request artifacts, even when a fork calls its branch `master`. The publisher fetches the newest trusted push, schedule or manually dispatched event, checks the full GitHub Action API run's owning repository and source repository, expected workflow identity, successful completion, exact run ID, and GitHub compare ancestry from the producer's commit to current protected master. The latest failed or incomplete trusted producer run blocks publication; a historical green result cannot silently replace it. This is a **same-repository run-origin constraint**, not a third-party signature or institutional accreditation.

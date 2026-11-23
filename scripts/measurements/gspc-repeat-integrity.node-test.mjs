@@ -45,6 +45,15 @@ function withinFixture(run){
   finally{rmSync(f.root,{recursive:true,force:true});}
 }
 
+test("source boolean contract normalizes only exact raw grades, with fallback",async()=>{
+  const {sourceFactGrade}=await import("./gspc-fact-row-contract.mjs");
+  for(const [raw,grade] of [
+    [{ok:true},true],[{ok:false},false],[{ok:"true"},true],[{ok:"false"},false],
+    [{grade:true},true],[{grade:"false"},false],[{ok:null,grade:true},null],
+    [{ok:1},null],[{ok:"TRUE"},null],[{ok:undefined,grade:false},false],
+  ]) assert.equal(sourceFactGrade(raw),grade);
+});
+
 test("repeated grades are observations, not additional unique items",()=>{
   const cell={
     axis:"safety",axis_ambiguous:false,model_hf_revision:"a".repeat(40),bank_sha256:"b".repeat(64),
@@ -125,6 +134,14 @@ test("same-cell mixed inference providers are distinct pinned identities, not on
   assert.equal(x.source_route_audit.cells_with_multiple_provider_routes,1);
   assert.equal(x.source_route_audit.source_observations_on_nonfirst_provider_route,1);
   assert.equal(x.source_route_audit.join_state,"ALL_RAW_OBSERVATIONS_LINKED_BIJECTIVELY");
+  // The attacker can swap a true/false between observations without changing
+  // bytes, counts, source digest, route identities or source output hashes.
+  // This was a real reviewer repro; do not release forged contradiction counts.
+  const swapped=partRows.map((row,i)=>JSON.stringify({...row,ok:i===0?false:true})).join("\n")+"\n";
+  assert.equal(Buffer.byteLength(swapped),Buffer.byteLength(part));
+  writeFileSync(join(f.table,"gspc_measurements/part-000.jsonl"),swapped);
+  assert.throws(()=>auditRepeatIntegrity({manifestPath:f.manifestPath,evidenceDir:f.source}),
+    /fact normalized grade differs from source fact-row contract/);
 }));
 
 test("same-length fact item-id spoof cannot invent a new item when raw source lacks explicit id",()=>withinFixture(f=>{

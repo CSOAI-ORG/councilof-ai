@@ -32,6 +32,7 @@ import { tmpdir } from "node:os";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import path from "node:path";
+import { sourceFactGrade } from "./gspc-fact-row-contract.mjs";
 
 const ROOT = path.resolve(new URL("../../", import.meta.url).pathname);
 const sha = (b) => createHash("sha256").update(b).digest("hex");
@@ -52,7 +53,7 @@ const FILENAME_AXIS = {
   xr: "cross-reality",
 };
 
-const asBool = (v) => (v === true || v === "true" ? true : v === false || v === "false" ? false : null);
+// Boolean normalisation is shared with the source-bound audit consumer.
 
 function readCells(dir) {
   const cells = [];
@@ -172,7 +173,7 @@ function main(argv) {
       if (!model) unattributedModel++; else models.add(model);
       const itemId = r.item_id || r.prompt_sha256 || null;
       if (!itemId) { malformed++; nSkipped++; continue; }
-      const ok = asBool(r.ok !== undefined ? r.ok : r.grade);
+      const ok = sourceFactGrade(r);
       if (ok === null) { ungraded++; nUngraded++; } else { nGraded++; if (ok) nOk++; }
       measurements.push({
         cell: cell.name,
