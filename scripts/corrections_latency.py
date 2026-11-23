@@ -23,7 +23,7 @@ import statistics
 import sys
 import urllib.request
 from collections import Counter
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timezone, timedelta
 
 UA={"User-Agent":"csoai-corrections-latency/2 (+https://councilof.ai)"}
 LIVE="https://councilof.ai/api/corrections"
@@ -70,7 +70,7 @@ def time_to_correct(e):
     candidate_date=day(e.get("detected_at"))
     start_of_day=(datetime.combine(candidate_date,datetime.min.time(),tzinfo=timezone.utc)
                   if candidate_date else None)
-    end_of_day=(start_of_day.replace(hour=0)+__import__("datetime").timedelta(days=1)
+    end_of_day=(start_of_day + timedelta(days=1)
                 if start_of_day else None)
     earliest=[x for x in [start_of_day,instant(w.get("not_before"))] if x is not None]
     latest=[x for x in [end_of_day,instant(w.get("not_after"))] if x is not None]
