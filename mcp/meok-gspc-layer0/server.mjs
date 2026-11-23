@@ -5,6 +5,7 @@
 
 import { submitWorkStep, readCapabilitySnapshot } from './core.mjs';
 import { readGspcEvidence } from './evidence-context.mjs';
+import { readMeokCorrectionEvidence } from './correction-context.mjs';
 import { submitChat } from './chat-provider.mjs';
 import { HF_SITUATION_TOOL, reasonHfSituation } from './hf-situation.mjs';
 import path from 'node:path';
@@ -25,6 +26,16 @@ const TOOLS = [
     description: 'Read a selected axis from the fixed public GSPC board and retained daily report metadata. Returns source hashes, dates, coverage and limits. No private report ingestion, model training, human approval or execution.',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     inputSchema: { type: 'object', properties: { axis: { type: 'string', pattern: '^[a-z0-9][a-z0-9-]{0,79}$', description: 'Exact public GSPC axis ID.' } }, required: ['axis'], additionalProperties: false },
+  },
+  {
+    name: 'meok_read_correction_evidence',
+    description: 'Read fixed public correction, root and witness references with distinct timestamp and authority states. Does not sign, approve, score, deploy or anchor.',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
+    inputSchema: { type: 'object',
+      properties: { correction_id: { type: 'string',
+        pattern: '^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$',
+        description: 'Optional exact public correction ID; no URL or free text.' } },
+      additionalProperties: false },
   },
   {
     name: 'meok_gspc_evaluate_work_step',
@@ -99,6 +110,9 @@ async function handleToolCall(name, args = {}) {
   }
   if (name === 'meok_read_gspc_evidence') {
     return JSON.stringify(await readGspcEvidence(args), null, 2);
+  }
+  if (name === 'meok_read_correction_evidence') {
+    return JSON.stringify(await readMeokCorrectionEvidence(args), null, 2);
   }
   if (name === 'zcode_desktop') {
     // MCP discovery is not authority. No caller-selected effectful host tool may cross
