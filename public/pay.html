@@ -105,7 +105,7 @@
       const output = document.getElementById("x402-offer");
       let resources = [];
 
-      const selected = () => resources[Number(picker.value)] || null;
+      const selected = () => picker.value === "" ? null : (resources[Number(picker.value)] || null);
       const safeResource = (value) => {
         try {
           const url = new URL(value);
@@ -117,7 +117,7 @@
         output.textContent = message;
       };
       const asAmount = (raw, decimals) => {
-        if (!/^\\d+$/.test(String(raw)) || !Number.isInteger(decimals) || decimals < 0 || decimals > 18) return "Unknown — read accepts[]";
+        if (!/^\d+$/.test(String(raw)) || !Number.isInteger(decimals) || decimals < 0 || decimals > 18) return "Unknown — read accepts[]";
         const divisor = 10n ** BigInt(decimals);
         const atomic = BigInt(raw);
         const tail = (atomic % divisor).toString().padStart(decimals, "0").replace(/0+$/, "");
@@ -127,7 +127,7 @@
         inspect.disabled = !selected();
         copy.disabled = !selected();
         const row = selected();
-        reset(row ? "Selected: " + row.url + "\\nInspect the exact live challenge before paying." : "Choose a service.");
+        reset(row ? "Selected: " + row.url + "\nInspect the exact live challenge before paying." : "Choose a service.");
       });
       copy.addEventListener("click", async () => {
         const row = selected();
@@ -170,7 +170,7 @@
             "Scheme: " + (accept.scheme || "unconfirmed"),
             "Next: choose whether to authorise this exact amount in your wallet.",
             "Free verification remains available via /api/verify."
-          ].join("\\n");
+          ].join("\n");
           if (accept.scheme === "exact" && accept.network === "eip155:8453" && typeof accept.payTo === "string" && /^0x[0-9a-fA-F]{40}$/.test(accept.payTo)) {
             wallet.href = "/pay-all/?door=" + encodeURIComponent(url.toString());
             wallet.hidden = false;
@@ -190,7 +190,7 @@
           if (!Array.isArray(manifest.resources)) throw new Error("not a resource list");
           resources = manifest.resources
             .filter((r) => r && r.method === "GET" && typeof r.url === "string" && safeResource(r.url))
-            .map((r) => ({ url: r.url, name: new URL(r.url).pathname.replace(/^\\/api\\//, ""), what: r.paid_for || "evidence service" }));
+            .map((r) => ({ url: r.url, name: new URL(r.url).pathname.replace(/^\/api\//, ""), what: r.paid_for || "evidence service" }));
           picker.replaceChildren();
           const intro = document.createElement("option");
           intro.value = ""; intro.textContent = "Choose one of " + resources.length + " live GET services";
