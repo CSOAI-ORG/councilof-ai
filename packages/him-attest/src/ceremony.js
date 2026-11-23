@@ -12,6 +12,7 @@ import crypto from 'node:crypto';
 
 const COUNCIL = 'https://councilof.ai';
 const FORBIDDEN = /\b(certif|accredit|conformity (assessment|opinion)|approved complian)\w*/i;
+const FRAMEWORK_SLUG = /^(?:eu-ai-act-art50|eu-ai-act-art53|dora-art28-30|cra|iso-42001-lite|nist-ai-rmf-lite)$/;
 
 const stable = (o) => JSON.stringify(o, Object.keys(o).sort ? undefined : undefined);
 function canonicalize(o) {
@@ -45,6 +46,7 @@ async function fetchBoard(fetchImpl) {
 }
 
 export async function runCeremony({ frameworkSlug, frameworksDir, subject, fetchImpl = fetch, now = new Date().toISOString() }) {
+  if (typeof frameworkSlug !== 'string' || !FRAMEWORK_SLUG.test(frameworkSlug)) throw new Error('INVALID_FRAMEWORK');
   const fw = JSON.parse(await fsRead(`${frameworksDir}/${frameworkSlug}.json`));
   const checkpoints = [];
   const tasks = [];
