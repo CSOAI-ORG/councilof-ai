@@ -6,6 +6,8 @@
  *   Reads each obligation's selected signed cards (article-50, article-53, dora, cra)
  *   from public/cards-bundle.json and verifies that the newest card's `as_of`
  *   timestamp is <= maxAgeDays (default 14 days) relative to reference time.
+ *   Since the 22 Nov split the index holds only the root's wrappers, so every
+ *   wrapper is read through its 16 shards (scripts/cards-bundle-shards.mjs).
  *
  * Measurement, not certification. Anyone can re-check at https://councilof.ai/verify
  */
@@ -13,6 +15,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { readCardsBundleFile } from "./cards-bundle-shards.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, "..");
@@ -130,7 +133,8 @@ function main() {
       bundlePath = path.resolve(args[++i]);
     }
   }
-  const bundleObj = JSON.parse(fs.readFileSync(bundlePath, "utf8"));
+  // Whole (0.1) or split (0.2): every wrapper, with each shard checked against the index.
+  const bundleObj = readCardsBundleFile(bundlePath);
   const res = checkBundleFreshness(bundleObj, { maxAgeDays });
   for (const ob of res.obligations) {
     console.log(

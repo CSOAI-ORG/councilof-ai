@@ -11,9 +11,12 @@ class Tests(unittest.TestCase):
    def upload_folder(api,**k):raise AssertionError('No external upload in test')
   self.hf=types.SimpleNamespace(HfApi=FakeApi)
  def tearDown(self):self.t.cleanup()
- def build(self):
-  with patch.dict(sys.modules,{'huggingface_hub':self.hf}),patch.dict(os.environ,{'HF_TOKEN':'synthetic-test-only'}),patch.object(sys,'argv',['mirror','--dry-run']),patch.object(self.m,'plain_client_status',return_value=200),patch.object(self.m,'fetch',return_value=(b'{"synthetic":true}',200)),patch('tempfile.mkdtemp',return_value=str(self.destination)):
+ def build(self,argv=('--dry-run','--repo','example/dry-run-target')):
+  with patch.dict(sys.modules,{'huggingface_hub':self.hf}),patch.dict(os.environ,{'HF_TOKEN':'synthetic-test-only'}),patch.object(sys,'argv',['mirror',*argv]),patch.object(self.m,'plain_client_status',return_value=200),patch.object(self.m,'fetch',return_value=(b'{"synthetic":true}',200)),patch('tempfile.mkdtemp',return_value=str(self.destination)):
    return self.m.main()
+ def test_deleted_mirror_is_never_recreated(self):
+  # csoai/councilof-ai-mirror was deleted on 21 Nov 2026: no default target, and that name is refused before any write.
+  for argv in (('--dry-run',),('--repo','csoai/councilof-ai-mirror'),('--dry-run','--repo','csoai/councilof-ai-mirror')):self.assertEqual(self.build(argv),2)
  def test_readme_from_owned_template(self):
   self.assertEqual(self.build(),0);self.assertEqual((self.destination/'README.md').read_bytes(),(self.repo/'public/consumer-kit/v1/MIRROR_README.md').read_bytes())
  def test_kit_and_manifest_distributed_together(self):

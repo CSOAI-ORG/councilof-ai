@@ -83,3 +83,11 @@ Version 1.5.0 replaces the 1.4.4 records, whose text no longer matched the serve
   - `ai.councilof/gspc-free` 1.5.0 is latest and active, reading "49 free read-only tools…".
   - Both 1.4.4 records stay active and are no longer latest. Registry versions cannot be edited.
 - Still open: the OASF records need re-signing (`node scripts/harness-x/sign-oasf.mjs --token-file <pod caller token>`). `parity_live.py` does not read the free listing, because `published_channels` has no entry for it.
+
+## Next release: registry texts without counts (owner ruling, 21 November 2026)
+
+A published registry version cannot be edited, and its version string cannot be published twice. The 1.5.0 texts state counts and the gspc entry lists the tool names, so they stay true only until the next tool change. The owner ruled on 21 November ("Next version + entry"). The count-free texts start with the next gateway version, not with a release of their own. The period when the 1.4.4 texts were out of date gets an entry in the corrections ledger.
+
+- The texts are in `scripts/harness-x/registry-text.mjs`. While `mcp/gspc-server/server.json` says 1.5.0, the renderer writes exactly the 1.5.0 entries the registry holds. Once the version moves, it writes texts that name kinds of tool, with no number and no tool list. The entries then point at tools/list instead. `functions/mcp/registry-count-free.test.ts` holds this.
+- The next publish needs a new version. Move `mcp/gspc-server/server.json` and `MCP_HTTP_SERVER_VERSION` in `functions/mcp/[[path]].ts` together, then re-render. A publish of 1.5.0 is refused by the registry.
+- Publish both names in the same hour as the deploy that serves the new version, and read them back. Then deprecate 1.5.0 on both, with a message that points to tools/list.

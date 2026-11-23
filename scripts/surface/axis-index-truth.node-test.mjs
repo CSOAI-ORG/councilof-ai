@@ -303,7 +303,7 @@ test("a deterministic-fact page keeps saying that no separation test applies", (
   assert.match(fact, /facts, no separation test/);
 });
 
-test("the governance page renders the row's limit in a labelled Limit block citing C-2026-1120-02, and no other page has one", async () => {
+test("the governance page renders the row's limit in a labelled Limit block citing C-2026-1120-02, and only a row that states a limit gets one", async () => {
   const live = await loadBoard();
   const row = live.axes.find((a) => a.axis === "governance");
   // The text is the row's own (axes[].limit), so the test reads it from the commit board.
@@ -317,7 +317,41 @@ test("the governance page renders the row's limit in a labelled Limit block citi
   // The committed page is the one the site serves; build-axis-pages --check holds the rest of it.
   const committed = readFileSync(new URL("../../public/axis/governance.html", import.meta.url), "utf8");
   assert.ok(committed.includes(block), "committed public/axis/governance.html carries the Limit block");
-  // Only a row that states a limit gets the block.
-  const withBlock = Object.keys(out).filter((path) => out[path].includes("<h2>Limit</h2>"));
-  assert.deepEqual(withBlock, ["axis/governance.html"]);
+  // Only a row that states a limit gets the block. Until 2026-11-22 that was governance alone; the
+  // owner's G8 ruling added eleven subject rows (next test).
+  const withBlock = Object.keys(out).filter((path) => out[path].includes("<h2>Limit</h2>")).sort();
+  const stating = live.axes.filter((a) => typeof a.limit === "string").map((a) => `axis/${a.axis}.html`).sort();
+  assert.deepEqual(withBlock, stating);
+  assert.ok(stating.includes("axis/governance.html"));
+});
+
+test("the ten held subject axes and claim-maintenance print the row's limit in a Limit block linked to its correction, on the rendered and the committed page", async () => {
+  // Owner ruling G8, 2026-11-21: the subject-axis hold covers ten axes (C-2026-1120-01) and the
+  // claim-maintenance row rests on neither re-read (C-2026-1120-03).
+  const HELD = {
+    "lab-practice": "C-2026-1120-01",
+    "company-practice": "C-2026-1120-01",
+    "measurer-integrity": "C-2026-1120-01",
+    "harness-fidelity": "C-2026-1120-01",
+    "interop-conformance": "C-2026-1120-01",
+    "humanoid-deployment": "C-2026-1120-01",
+    "regulator-transparency": "C-2026-1120-01",
+    "interpretability-reproducibility": "C-2026-1120-01",
+    "serving-fidelity": "C-2026-1120-01",
+    "watchdog-ingest": "C-2026-1120-01",
+    "claim-maintenance": "C-2026-1120-03",
+  };
+  const live = await loadBoard();
+  const out = renderAll(live);
+  for (const [axis, id] of Object.entries(HELD)) {
+    const row = live.axes.find((a) => a.axis === axis);
+    assert.equal(typeof row?.limit, "string", `${axis} states a limit`);
+    assert.ok(row.limit.includes(`(${id})`), `${axis} limit cites ${id}`);
+    const block =
+      `\n  <h2>Limit</h2>\n  <div class="note" data-limit="${axis}">${row.limit}</div>` +
+      `\n  <p class="muted">Recorded in the corrections ledger: <a href="/corrections/#${id}">${id}</a>.</p>`;
+    assert.ok(out[`axis/${axis}.html`].includes(block), `rendered ${axis} page carries the Limit block`);
+    const committed = readFileSync(new URL(`../../public/axis/${axis}.html`, import.meta.url), "utf8");
+    assert.ok(committed.includes(block), `committed public/axis/${axis}.html carries the Limit block`);
+  }
 });

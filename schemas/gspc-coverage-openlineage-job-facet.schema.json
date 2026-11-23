@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CSOAI coverage source qualifications job facet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["_producer", "_schemaURL", "coverage_schema", "coverage_state", "source_authentication", "source_digests", "source_delta", "counts", "limits"],
+  "properties": {
+    "_producer": {"type": "string", "format": "uri"},
+    "_schemaURL": {"type": "string", "format": "uri"},
+    "coverage_schema": {"const": "csoai.gspc-evidence-coverage/1"},
+    "coverage_state": {"const": "READ_ONLY_SOURCE_COVERAGE_NOT_AN_ADMISSION"},
+    "source_authentication": {"const": "DIGESTED_BYTES_NOT_SIGNATURE_VERIFIED"},
+    "source_digests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["board_sha256", "fact_manifest_sha256", "fact_cell_source_digest"],
+      "properties": {
+        "board_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "fact_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "fact_cell_source_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "source_delta": {"type": "string", "minLength": 1},
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["board_axes", "fact_rows", "legacy_method_gaps", "untested_separations"],
+      "properties": {
+        "board_axes": {"type": "integer", "minimum": 0},
+        "fact_rows": {"type": "integer", "minimum": 0},
+        "legacy_method_gaps": {"type": "integer", "minimum": 0},
+        "untested_separations": {"type": "integer", "minimum": 0}
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grade", "signature_verified", "actual_human_approval", "data_transmission"],
+      "properties": {
+        "grade": {"const": "NOT_ASSERTED"},
+        "signature_verified": {"const": false},
+        "actual_human_approval": {"const": "NOT_TESTED"},
+        "data_transmission": {"const": "NO_EVENT_SENT"}
+      }
+    }
+  }
+}
