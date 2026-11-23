@@ -53,15 +53,15 @@ def aggregates(raw):
             raise ValueError("unknown public kind or measurement status")
         if a.get("separation") not in seps:
             raise ValueError("invalid separation state")
-        if a["kind"]!="model-comparison" and a["separation"] is not None:
+        if a["kind"]!="model-comparison" and a.get("separation") is not None:
             raise ValueError("separation improperly applied to nonmodel axis")
     values={
         "axes":len(axes),
         "measured_axes":sum(a["status"]=="MEASURED" for a in axes),
         "model_comparison_axes":sum(a["kind"]=="model-comparison" for a in axes),
-        "separated_leaders":sum(a["separation"]=="SEPARATED" for a in axes),
-        "ties":sum(a["separation"]=="TIE" for a in axes),
-        "untested":sum(a["separation"]=="UNTESTED" for a in axes),
+        "separated_leaders":sum(a.get("separation")=="SEPARATED" for a in axes),
+        "ties":sum(a.get("separation")=="TIE" for a in axes),
+        "untested":sum(a.get("separation")=="UNTESTED" for a in axes),
     }
     return values
 
