@@ -40,6 +40,7 @@ test('browser-side offer picker is valid JS and keeps payments behind a second w
     append(child) { this.children.push(child); },
   });
   const elements = Object.fromEntries(ids.map(id => [id, node()]));
+  for (const id of ['x402-door', 'inspect-x402', 'copy-x402']) elements[id].disabled = true;
   const resource = 'https://councilof.ai/api/request-attestation?subject=qwen3';
   let probes = [];
   let shouldIncludeHeader = true;
