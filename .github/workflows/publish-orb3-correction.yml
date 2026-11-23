@@ -1,0 +1,56 @@
+name: Publish reviewed ORB-III correction to Hugging Face
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: protected-orb3-curriculum-hf-correction
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Historical limitation and remote-change negative controls
+        run: python3 scripts/hf/test_publish_orb3_correction.py
+
+      - name: Source-reviewed card and privacy gate
+        run: python3 scripts/hf/publish_orb3_correction.py --check
+
+      - name: Install bounded Hugging Face uploader
+        run: python3 -m pip -q install 'huggingface_hub>=0.30,<2'
+
+      - name: Conditional overwrite with parent-commit and exact readback
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_EVENT_NAME: workflow_dispatch
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          python3 scripts/hf/publish_orb3_correction.py --publish \
+            --receipt-out hf-orb3-public-correction-receipt.json
+
+      - name: Scan exact outgoing release receipt
+        run: |
+          python3 scripts/privacy/publication_gate.py \
+            --label orb3-source-correction-receipt hf-orb3-public-correction-receipt.json
+
+      - name: Retain independently verifiable revision and source SHA
+        uses: actions/upload-artifact@v4
+        with:
+          name: orb3-hf-correction-${{ github.run_id }}
+          path: hf-orb3-public-correction-receipt.json
+          retention-days: 90
+          if-no-files-found: error
