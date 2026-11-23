@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { validateTrustedMasterRun } from "./gspc-trusted-run.mjs";
 
 const SHA="a".repeat(40),MASTER="b".repeat(40);
@@ -70,4 +71,18 @@ test("the result never claims external signature, regulator authority, or model 
   assert.equal(y.ancestry,"identical");
   assert.equal(y.status,"TRUSTED_MASTER_ACTION_RUN_SOURCE_ONLY_NOT_AN_EXTERNAL_SIGNATURE");
   assert.ok(!JSON.stringify(y).includes("CERTIFIED"));
+});
+
+test("master publication job rejects untrusted workflow_run dispatch at the job boundary",()=>{
+  const source=readFileSync(new URL("../../.github/workflows/gspc-evidence-engine-index.yml",import.meta.url),"utf8");
+  const job=source.split("  assemble-source-bound-index:")[1].split("    needs: [validate-contract]")[0];
+  for(const requirement of [
+    "github.event.workflow_run.head_repository.full_name",
+    "github.event.workflow_run.head_branch == 'master'",
+    "github.event.workflow_run.conclusion == 'success'",
+    "github.event.workflow_run.event == 'push'",
+    "github.event.workflow_run.event == 'schedule'",
+    "github.event.workflow_run.event == 'workflow_dispatch'",
+  ]) assert.ok(job.includes(requirement),requirement);
+  assert.ok(job.includes("github.event_name != 'pull_request'"));
 });
