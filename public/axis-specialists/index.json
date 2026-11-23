@@ -49,6 +49,7 @@
   "specialists": [
     {
       "axis": "governance",
+      "limit": "The item wording gives the risk tier away: a wording-only baseline, a word-count classifier trained on the other 102 scenarios, matches 225 of 237 labels (C-2026-1120-02). So this axis does not test how a system applies the EU AI Act. Until the bank is rebuilt and a qualified person has checked the labels, its scores show agreement with this bank's labels only.",
       "specialist_id": "meok-governance-specialist",
       "cluster_id": "meok-axis-governance",
       "cluster_state": "DECLARED_NOT_PROVISIONED",
@@ -81,7 +82,7 @@
         21,
         22
       ],
-      "audit_sha256": "a214a398e5cf4351fc0085fcdd7a40a994200f3ebbb7362999594c3a42ed51c0",
+      "audit_sha256": "68f751a7be033a52a81a75d510cb0e6ee92be9ca5547d7ad7a7a364c494add90",
       "path": "/axis-specialists/governance.json"
     },
     {
@@ -889,6 +890,7 @@
     },
     {
       "axis": "lab-practice",
+      "limit": "We matched this bank's patterns on the raw page source, not on the text a reader sees, so tag names, style rules and script code could match. We also matched each pattern as a plain run of letters, so it could match inside other words. We cut every page at 400,000 bytes before scoring it, and 12 of the 37 rows are recorded at exactly that size. Its 37 rows hold 36 distinct pages. We kept one page that answered with under 3,000 bytes as a row with all five checks false, not as unchecked. We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, count or single row of this axis should be relied on.",
       "specialist_id": "meok-lab-practice-specialist",
       "cluster_id": "meok-axis-lab-practice",
       "cluster_state": "DECLARED_NOT_PROVISIONED",
@@ -920,11 +922,12 @@
         21,
         22
       ],
-      "audit_sha256": "ee05a3fe155905f20223eb625dbf2ebed590637f6da5c91868baf539b1e655da",
+      "audit_sha256": "d9e68e036354452ca7ca1517c3dfed4595624f1d9159547fda6e96d04823953b",
       "path": "/axis-specialists/lab-practice.json"
     },
     {
       "axis": "company-practice",
+      "limit": "We matched this bank's patterns on the raw page source, not on the text a reader sees, so tag names, style rules and script code could match. We also matched each pattern as a plain run of letters, so it could match inside other words. We cut every page at 400,000 bytes before scoring it, and 20 of the 40 rows are recorded at exactly that size. We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, count or single row of this axis should be relied on.",
       "specialist_id": "meok-company-practice-specialist",
       "cluster_id": "meok-axis-company-practice",
       "cluster_state": "DECLARED_NOT_PROVISIONED",
@@ -956,11 +959,12 @@
         21,
         22
       ],
-      "audit_sha256": "f0a77260ee4d667d250d892711843a6664d51b29b13d53a30b0d1895766b8442",
+      "audit_sha256": "85571a1951b65a21dd92792a39e8b6269d68df1bb01b90cc91562f75fceb8b78",
       "path": "/axis-specialists/company-practice.json"
     },
     {
       "axis": "measurer-integrity",
+      "limit": "We matched this bank's patterns on the raw page source, not on the text a reader sees, so tag names, style rules and script code could match. We also matched each pattern as a plain run of letters, so it could match inside other words. We cut every page at 400,000 bytes before scoring it, and 13 of the 40 rows are recorded at exactly that size. We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, count or single row of this axis should be relied on.",
       "specialist_id": "meok-measurer-integrity-specialist",
       "cluster_id": "meok-axis-measurer-integrity",
       "cluster_state": "DECLARED_NOT_PROVISIONED",
@@ -992,11 +996,12 @@
         21,
         22
       ],
-      "audit_sha256": "5251ee3b43dae15ba6f1ae03c8979c578745cb02537293a91428274ba9f3de10",
+      "audit_sha256": "2fbac550b5e1c397549a2db4267b09cea2996955d0c978b50ea173fdcd22c5e9",
       "path": "/axis-specialists/measurer-integrity.json"
     },
     {
       "axis": "harness-fidelity",
+      "limit": "We matched each pattern in this bank as a plain run of letters, so it could match inside other words. We cut every page at 400,000 bytes before scoring it, and 6 of the 36 rows are recorded at exactly that size. We kept one page that answered with under 3,000 bytes as a row with all five checks false, not as unchecked. We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, count or single row of this axis should be relied on.",
       "specialist_id": "meok-harness-fidelity-specialist",
       "cluster_id": "meok-axis-harness-fidelity",
       "cluster_state": "DECLARED_NOT_PROVISIONED",
@@ -1030,11 +1035,12 @@
         21,
         22
       ],
-      "audit_sha256": "3fd807325003ac117158b203f999938799635e93b68702a11ad1f8e5ec0066a0",
+      "audit_sha256": "af43fcd4642f7317d99044bf2b2ed3f8a1bc923d7e5301f5e29d68525d5db482",
       "path": "/axis-specialists/harness-fidelity.json"
     },
     {
       "axis": "interop-conformance",
+      "limit": "We matched this bank's patterns on the raw page source, not on the text a reader sees, so tag names, style rules and script code could match. We also matched each pattern as a plain run of letters, so it could match inside other words. We cut every page at 400,000 bytes before scoring it, and 2 of the 34 rows are recorded at exactly that size. Five of the 34 rows are our own endpoints; without them the bank has 29 rows, under our minimum of 30 for a measured axis. We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, count or single row of this axis should be relied on.",
       "specialist_id": "meok-interop-conformance-specialist",
       "cluster_id": "meok-axis-interop-conformance",
       "cluster_state": "DECLARED_NOT_PROVISIONED",
@@ -1066,11 +1072,12 @@
         21,
         22
       ],
-      "audit_sha256": "41694721528368d08b0acc2226590010054290ef7cd11dc57ae3a09c82314713",
+      "audit_sha256": "0563c1d55686a2ad3b7b58bc57f61a4a4aa48cce8be360906199689e2ec8bb9e",
       "path": "/axis-specialists/interop-conformance.json"
     },
     {
       "axis": "humanoid-deployment",
+      "limit": "We matched this bank's patterns on the raw page source, not on the text a reader sees, so tag names, style rules and script code could match. We also matched each pattern as a plain run of letters, so it could match inside other words. We cut every page at 400,000 bytes before scoring it, and 4 of the 35 rows are recorded at exactly that size. We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, count or single row of this axis should be relied on.",
       "specialist_id": "meok-humanoid-deployment-specialist",
       "cluster_id": "meok-axis-humanoid-deployment",
       "cluster_state": "DECLARED_NOT_PROVISIONED",
@@ -1102,11 +1109,12 @@
         21,
         22
       ],
-      "audit_sha256": "9a4fa73e69befb853d2cff65023a35a6d7bd6e5f5605ca93eda62998f3397bca",
+      "audit_sha256": "85e1be235213db0af9985fdc8c3870177c19aa38478271a11e8160501e41e1ed",
       "path": "/axis-specialists/humanoid-deployment.json"
     },
     {
       "axis": "regulator-transparency",
+      "limit": "We matched this bank's patterns on the raw page source, not on the text a reader sees, so tag names, style rules and script code could match. We also matched each pattern as a plain run of letters, so it could match inside other words. We cut every page at 400,000 bytes before scoring it, and 2 of the 41 rows are recorded at exactly that size. We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, count or single row of this axis should be relied on.",
       "specialist_id": "meok-regulator-transparency-specialist",
       "cluster_id": "meok-axis-regulator-transparency",
       "cluster_state": "DECLARED_NOT_PROVISIONED",
@@ -1139,11 +1147,12 @@
         21,
         22
       ],
-      "audit_sha256": "00983a00c13090e26a206357773a01e3bdb9005de3ea43fed7581d3342649786",
+      "audit_sha256": "fb37e30bc6b63bfe9a604017e19059b8ba29b8216fa43a52d54da8fa6003ba63",
       "path": "/axis-specialists/regulator-transparency.json"
     },
     {
       "axis": "interpretability-reproducibility",
+      "limit": "We matched this bank's patterns on the raw page source, not on the text a reader sees, so tag names, style rules and script code could match. We also matched each pattern as a plain run of letters, so it could match inside other words. We cut every page at 400,000 bytes before scoring it, and 6 of the 33 rows are recorded at exactly that size. We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, count or single row of this axis should be relied on.",
       "specialist_id": "meok-interpretability-reproducibility-specialist",
       "cluster_id": "meok-axis-interpretability-reproducibility",
       "cluster_state": "DECLARED_NOT_PROVISIONED",
@@ -1175,11 +1184,12 @@
         21,
         22
       ],
-      "audit_sha256": "874c321d7869a84514b5f7eab758cdfe9d33e7da2bd92f306f6fd9a1c443c9ed",
+      "audit_sha256": "7a4c91e1ba91ca3eb6097e6a39376a51698bb355c1e476d1e3dcc1b3c5144ebe",
       "path": "/axis-specialists/interpretability-reproducibility.json"
     },
     {
       "axis": "claim-maintenance",
+      "limit": "The n of 174, the '174 of 182 captured claims' in the note and the outcome counts on this row come from our re-read of 2026-10-28. That file counts every claim twice: its 182 rows hold 91 distinct claims. Our re-read of 2026-10-30 reads the same 91 claims once and, against the newer capture in the earlier file, gives a different outcome for 40 of them (C-2026-1120-03). The row rests on neither re-read. Until a clean re-read exists, its status, n and counts stand only as the record of what the board served, and none of them should be relied on.",
       "specialist_id": "meok-claim-maintenance-specialist",
       "cluster_id": "meok-axis-claim-maintenance",
       "cluster_state": "DECLARED_NOT_PROVISIONED",
@@ -1211,11 +1221,12 @@
         21,
         22
       ],
-      "audit_sha256": "c0a486d207f47abe3043544c07c87a26afe063237d24bb69a5490d535466001c",
+      "audit_sha256": "0f103c599305038443d69e87e8b2d7847f3a59d1d4843ef49a72043318b1a5f7",
       "path": "/axis-specialists/claim-maintenance.json"
     },
     {
       "axis": "serving-fidelity",
+      "limit": "We matched this bank's patterns on the raw page source, not on the text a reader sees, so tag names, style rules and script code could match. We also matched each pattern as a plain run of letters, so it could match inside other words. We cut every page at 400,000 bytes before scoring it, and 20 of the 38 rows are recorded at exactly that size. We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, count or single row of this axis should be relied on.",
       "specialist_id": "meok-serving-fidelity-specialist",
       "cluster_id": "meok-axis-serving-fidelity",
       "cluster_state": "DECLARED_NOT_PROVISIONED",
@@ -1247,11 +1258,12 @@
         21,
         22
       ],
-      "audit_sha256": "6d089b2f472dee313420ce0d6d9ab558e83c0ddf2b1dc3bc61eb98d32e5d1a65",
+      "audit_sha256": "1af5cf72e5a89f1716783fb53d2089818b57b8e6d8626cc0b8f053004f4000f0",
       "path": "/axis-specialists/serving-fidelity.json"
     },
     {
       "axis": "watchdog-ingest",
+      "limit": "We matched each pattern in this bank as a plain run of letters, so it could match inside other words. For example, the response-commitment alternative 'sla' matched inside words such as translation and legislation. We cut every page at 400,000 bytes before scoring it, and 32 of the 106 rows are recorded at exactly that size. Its 106 rows hold 104 distinct pages. We kept one page that answered with under 3,000 bytes as a row with all five checks false, not as unchecked. Its security.txt check never requests /.well-known/security.txt. We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, count or single row of this axis should be relied on.",
       "specialist_id": "meok-watchdog-ingest-specialist",
       "cluster_id": "meok-axis-watchdog-ingest",
       "cluster_state": "DECLARED_NOT_PROVISIONED",
@@ -1284,10 +1296,10 @@
         21,
         22
       ],
-      "audit_sha256": "ba12a0bd03beda470e73c881213e4e4d0453575f625f06452a6219893c202185",
+      "audit_sha256": "334c61ffbb5f0c6dc74ee8360b5f43ee7767bb13604e5b674d24f9dc0d37348c",
       "path": "/axis-specialists/watchdog-ingest.json"
     }
   ],
-  "bundle_sha256": "8921a62df9b6ca363b0278b0e02ea0f9774abdf2dc261c7071816abfa8e528e1",
+  "bundle_sha256": "838fad88b3da4e16bf6b71e57a4c7e40658a884a1db395c7643f6602aa483531",
   "note": "Counts are derived from the specialist array. This is an unsigned deterministic audit and proposal queue, not a new measurement or certification."
 }

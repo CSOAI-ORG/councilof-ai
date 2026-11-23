@@ -64,7 +64,8 @@ fi
 export GIT_TERMINAL_PROMPT=0
 
 GITHUB_REPO_URL="${GITHUB_REPO_URL:-https://github.com/CSOAI-ORG/councilof-ai.git}"
-FALLBACK_SOURCE="${FALLBACK_SOURCE:-hf://datasets/csoai/councilof-ai-mirror}"
+# No default: the old one, hf://datasets/csoai/councilof-ai-mirror (git bundles), was deleted on 21 Nov 2026.
+FALLBACK_SOURCE="${FALLBACK_SOURCE:-}"
 
 newest_bundle_in() {
   # shellcheck disable=SC2012
@@ -110,7 +111,7 @@ clone_from_url() {
 #     /path/to/file.bundle
 #     /dir/containing/bundles      (e.g. an `hf jobs run -v hf://datasets/…:/mirror:ro` mount)
 #     hf://datasets/<org>/<name>   (downloaded with the hf CLI; needs HF_TOKEN for a private dataset)
-# On failure of a git URL, FALLBACK_SOURCE (default: the private HF mirror) is tried once.
+# On failure of a git URL, FALLBACK_SOURCE (no default) is tried once if it is set.
 resolve_source() {
   local src="$1" ref="$2" dest="$3"
   rm -rf "$dest"
