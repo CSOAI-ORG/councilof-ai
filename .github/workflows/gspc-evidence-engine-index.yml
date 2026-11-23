@@ -39,8 +39,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: "22"}
-      - name: Cross-feed contract and negative controls
-        run: node --test scripts/measurements/gspc-evidence-engine-index.node-test.mjs
+      - name: Cross-feed contract and privacy publication wiring negative controls
+        run: |
+          node --test scripts/measurements/gspc-evidence-engine-index.node-test.mjs
+          python3 scripts/privacy/test_publication_gate.py Wiring -v
 
   assemble-source-bound-index:
     if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
@@ -51,6 +53,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: "22"}
+      - name: Install deterministic GSPC board snapshot dependencies
+        run: npm ci --no-audit --no-fund
       - name: Download only successful master-branch CI artifacts
         id: collect
         env:
@@ -101,6 +105,7 @@ jobs:
         run: |
           set -euo pipefail
           BASE="$RUNNER_TEMP/gspc-engine"
+          node scripts/gspc-board-snapshot.mjs "$BASE/current-board.json"
           node scripts/measurements/gspc-evidence-engine-index.mjs \
             --coverage "$BASE/coverage/coverage.json" \
             --repeat "$BASE/repeat/report.json" \
@@ -109,6 +114,7 @@ jobs:
             --current-manifest public/interop/gspc-fact-table/MANIFEST.json \
             --current-evidence public/interop/mill-evidence \
             --synthetic-reference scripts/experiments/fixtures/gspc-dataset-mutation-baseline.sha256 \
+            --current-board "$BASE/current-board.json" \
             --out "$BASE/engine-index.json"
           cp scripts/measurements/GSPC_ENGINE_HF_README.md "$BASE/README.md"
           python3 - <<'PY'
@@ -118,6 +124,7 @@ jobs:
           assert d["state"]=="SOURCE_RECONCILED_RESEARCH_INDEX_NOT_SIGNED_OR_ADMITTED"
           assert d["separate_synthetic_research"]["model_poisoning_effect"]=="NOT_TESTED"
           assert d["checkout_validation"]["state"]=="SOURCE_BYTES_MATCH_CURRENT_CHECKOUT_UNWITNESSED"
+          assert d["checkout_validation"]["gspc_current_board_digest"]==d["sources"]["gspc_board_digest"]
           assert d["measurements"]["per_item_observation_rows"]>=d["measurements"]["distinct_attributed_model_axis_item_keys"]
           print("SOURCE_CONSISTENT_ENGINE_INDEX",d["measurements"]["board_axes"],d["measurements"]["per_item_observation_rows"])
           PY
@@ -135,6 +142,7 @@ jobs:
         if: steps.collect.outputs.ready == 'true' && github.ref == 'refs/heads/master'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
         run: |
           if test -z "$HF_TOKEN"; then
             echo "HF_TOKEN_NOT_CONFIGURED: verified Actions artifact only"
@@ -158,13 +166,15 @@ jobs:
           except Exception as e:
             if isinstance(e,SystemExit):raise
             print("NO_COMPARABLE_PRIOR_INDEX:",type(e).__name__)
-          api.create_repo(repo,repo_type="dataset",exist_ok=True,private=False)
           # Atomic single revision of the two public files: never mirror the
           # downloaded source bundles, credentials, or partial assembly state.
           public=root/"public-mirror"
           public.mkdir(exist_ok=True)
           (public/"engine-index.json").write_bytes(data)
           (public/"README.md").write_bytes((root/"README.md").read_bytes())
+          import subprocess
+          subprocess.run(["python3","scripts/privacy/publication_gate.py","--require-ids",str(public)],check=True)
+          api.create_repo(repo,repo_type="dataset",exist_ok=True,private=False)
           api.upload_folder(repo_id=repo,repo_type="dataset",folder_path=str(public),
             commit_message="Bounded source-reconciled GSPC evidence engine index")
           print("PUBLIC_AGGREGATE_INDEX_PUBLISHED: no model-safety certification")

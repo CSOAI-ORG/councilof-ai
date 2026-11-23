@@ -127,6 +127,35 @@ test("same-cell mixed inference providers are distinct pinned identities, not on
   assert.equal(x.source_route_audit.join_state,"ALL_RAW_OBSERVATIONS_LINKED_BIJECTIVELY");
 }));
 
+test("same-length fact item-id spoof cannot invent a new item when raw source lacks explicit id",()=>withinFixture(f=>{
+  const raw={...f.first,prompt_sha256:"a".repeat(64)};
+  delete raw.item_id;
+  const rawText=JSON.stringify(raw)+"\n";
+  const newName="items-safety-"+sha(rawText).slice(0,12)+".jsonl";
+  unlinkSync(join(f.source,f.name));
+  writeFileSync(join(f.source,newName),rawText);
+  const row={...f.row,cell:newName,i:0,item_id:raw.prompt_sha256,
+    prompt_sha256:raw.prompt_sha256};
+  const partFile=join(f.table,"gspc_measurements/part-000.jsonl");
+  const good=JSON.stringify(row)+"\n";
+  writeFileSync(partFile,good);
+  writeFileSync(join(f.table,"gspc_cells.jsonl"),JSON.stringify({...f.meta,
+    cell:newName,cell_sha256:sha(rawText)})+"\n");
+  const manifest={...f.manifest,source:{...f.manifest.source,
+    source_digest:sha(newName+" "+sha(rawText))},
+    tables:{measurements:{...f.manifest.tables.measurements,
+      bytes:Buffer.byteLength(good),
+      parts:[{file:"gspc_measurements/part-000.jsonl",rows:1,bytes:Buffer.byteLength(good)}]}}};
+  writeFileSync(f.manifestPath,JSON.stringify(manifest));
+  assert.equal(auditRepeatIntegrity({manifestPath:f.manifestPath,evidenceDir:f.source})
+    .coarse_identity.distinct_keys,1);
+  const forged=JSON.stringify({...row,item_id:"b".repeat(64)})+"\n";
+  assert.equal(Buffer.byteLength(forged),Buffer.byteLength(good));
+  writeFileSync(partFile,forged);
+  assert.throws(()=>auditRepeatIntegrity({manifestPath:f.manifestPath,evidenceDir:f.source}),
+    /fact derived item_id differs from raw prompt SHA/);
+}));
+
 test("reader reproduces a complete source-bound positive fixture",()=>withinFixture(f=>{
   const a=auditRepeatIntegrity({manifestPath:f.manifestPath,evidenceDir:f.source});
   assert.equal(a.rows.rows,1);

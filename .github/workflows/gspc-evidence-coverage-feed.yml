@@ -9,6 +9,8 @@ on:
       - "schemas/gspc-coverage-openlineage-job-facet.schema.json"
       - "scripts/measurements/GSPC_COVERAGE_HF_README.md"
       - "scripts/gspc-board-snapshot.mjs"
+      - "functions/api/gspc.ts"
+      - "functions/api/_gspc_*.ts"
       - "public/interop/gspc-fact-table/MANIFEST.json"
       - ".github/workflows/gspc-evidence-coverage-feed.yml"
   push:
@@ -19,6 +21,9 @@ on:
       - "scripts/measurements/gspc-coverage-openlineage.mjs"
       - "scripts/measurements/gspc-coverage-openlineage.node-test.mjs"
       - "schemas/gspc-coverage-openlineage-job-facet.schema.json"
+      - "scripts/gspc-board-snapshot.mjs"
+      - "functions/api/gspc.ts"
+      - "functions/api/_gspc_*.ts"
       - "public/interop/gspc-fact-table/MANIFEST.json"
       - ".github/workflows/gspc-evidence-coverage-feed.yml"
   schedule: [{cron: "11 5 * * *"}]
@@ -109,6 +114,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
         run: |
           if test -z "$HF_TOKEN"; then echo "NO_HF_TOKEN: skip mirror"; exit 0; fi
           python3 - <<'PY'
@@ -119,10 +125,18 @@ jobs:
           curr=json.loads((d/"coverage.json").read_text())
           if curr["delta"]["state"]=="NO_SOURCE_BYTES_CHANGED":
             print("SOURCE_UNCHANGED: no Hub update");raise SystemExit(0)
+          import shutil,subprocess
+          public=d/"public-mirror"
+          public.mkdir(exist_ok=True)
+          for name in ("README.md","coverage.json","openlineage.json",
+                       "openlineage-facet.schema.json","source-board.json","source-fact-manifest.json"):
+            shutil.copyfile(d/name,public/name)
+          # Fail closed on the precise files about to leave the runner.
+          subprocess.run(["python3","scripts/privacy/publication_gate.py","--require-ids",str(public)],check=True)
           api=HfApi(token=os.environ["HF_TOKEN"])
           api.create_repo("csoai/gspc-evidence-coverage-feed",repo_type="dataset",private=False,exist_ok=True)
-          api.upload_folder(folder_path=str(d),repo_id="csoai/gspc-evidence-coverage-feed",
-            repo_type="dataset",ignore_patterns=["previous.json"],
+          api.upload_folder(folder_path=str(public),repo_id="csoai/gspc-evidence-coverage-feed",
+            repo_type="dataset",
             commit_message="Source-qualified GSPC coverage: "+curr["delta"]["state"])
           print("HF_COVERAGE_PUBLISHED: unsigned source readback, not a new grade")
           PY

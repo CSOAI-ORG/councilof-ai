@@ -72,6 +72,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
         run: |
           if test -z "$HF_TOKEN"; then
             echo "HF_TOKEN_NOT_CONFIGURED: Actions artifact remains accessible; no external publishing"
@@ -95,6 +96,8 @@ jobs:
           except Exception as exc:
             if isinstance(exc,SystemExit):raise
             print("NO_COMPARABLE_PREVIOUS_REPORT:",type(exc).__name__)
+          import subprocess
+          subprocess.run(["python3","scripts/privacy/publication_gate.py","--require-ids",str(d)],check=True)
           api.create_repo(repo,repo_type="dataset",private=False,exist_ok=True)
           api.upload_folder(folder_path=str(d),repo_id=repo,repo_type="dataset",
             commit_message="Source-qualified repeated-observation evidence report")

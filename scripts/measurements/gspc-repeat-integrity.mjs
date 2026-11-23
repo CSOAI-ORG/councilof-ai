@@ -249,8 +249,17 @@ export function auditRepeatIntegrity({manifestPath,evidenceDir}) {
       check(raw.axis===row.axis,"fact axis differs from linked source observation: "+row.cell);
     if(raw.model!==null&&raw.model!==undefined)
       check(raw.model===row.model,"fact model differs from linked source observation: "+row.cell);
+    // Legacy mill rows lack explicit item_id; the canonical generator uses
+    // prompt_sha256 as their item identity. Reconcile that derived identity,
+    // otherwise a same-length fact-shard mutation can fabricate new samples.
     if(typeof raw.item_id==="string"&&raw.item_id.length>0)
       check(raw.item_id===row.item_id,"fact item_id differs from linked source observation: "+row.cell);
+    else {
+      check(typeof raw.prompt_sha256==="string"&&/^[0-9a-f]{64}$/.test(raw.prompt_sha256),
+        "raw item lacks both explicit ID and qualified prompt SHA: "+row.cell);
+      check(row.item_id===raw.prompt_sha256,
+        "fact derived item_id differs from raw prompt SHA: "+row.cell);
+    }
     if(typeof raw.prompt_sha256==="string"&&raw.prompt_sha256.length>0)
       check(raw.prompt_sha256===row.prompt_sha256,"fact prompt hash differs from linked raw observation: "+row.cell);
     if(typeof raw.raw_output_sha256==="string"&&raw.raw_output_sha256.length>0)

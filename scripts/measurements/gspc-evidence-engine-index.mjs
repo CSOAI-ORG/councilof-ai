@@ -173,11 +173,17 @@ export function produceEvidenceEngineIndex(coverage,repeat,mutation,hashes,runId
  * Reconcile actual source bytes, not just manifest head-counts, before mirror.
  * This is local checkout identity, NEVER an independent external signature.
  */
-export function verifyCurrentCheckoutPins(index,{manifestPath,evidenceDir,referencePath}) {
+export function verifyCurrentCheckoutPins(index,{manifestPath,evidenceDir,referencePath,boardPath}) {
   check(rec(index?.sources)&&rec(index?.measurements)&&rec(index?.separate_synthetic_research),
     "index source manifest/data absent");
-  check(typeof manifestPath==="string"&&typeof evidenceDir==="string"&&typeof referencePath==="string",
-    "master checkout paths are required");
+  check(typeof manifestPath==="string"&&typeof evidenceDir==="string"&&
+    typeof referencePath==="string"&&typeof boardPath==="string",
+    "master checkout paths including independently regenerated board are required");
+  const currentBoardBytes=readFileSync(resolve(boardPath));
+  const currentBoardDigest=sha(currentBoardBytes);
+  check(hex(index.sources.gspc_board_digest) &&
+    currentBoardDigest===index.sources.gspc_board_digest,
+    "historical Actions board snapshot differs from freshly generated current checkout board");
   const bytes=readFileSync(resolve(manifestPath));
   check(sha(bytes)===index.sources.fact_manifest_digest,
     "historical Actions fact manifest differs from current checkout");
@@ -222,6 +228,7 @@ export function verifyCurrentCheckoutPins(index,{manifestPath,evidenceDir,refere
     physical_cell_files:files.length,
     physical_source_rows:observedRows,
     synthetic_reference_digest:pinned,
+    gspc_current_board_digest:currentBoardDigest,
   };
 }
 
@@ -244,14 +251,14 @@ if(process.argv[1]&&resolve(process.argv[1])===self){
     check(flags.coverage&&flags.repeat&&flags.mutation&&flags.out,"required --coverage --repeat --mutation --out");
     const runIds=flags["run-metadata"]?JSON.parse(readFileSync(resolve(flags["run-metadata"]),"utf8")):null;
     const index=readEvidenceIndex({...flags,runIds});
-    const freshnessFlags=["current-manifest","current-evidence","synthetic-reference"];
+    const freshnessFlags=["current-manifest","current-evidence","synthetic-reference","current-board"];
     const present=freshnessFlags.filter(k=>Boolean(flags[k]));
     check(present.length===0 || present.length===freshnessFlags.length,
-      "checkout verification requires --current-manifest --current-evidence --synthetic-reference together");
+      "checkout verification requires --current-manifest --current-evidence --synthetic-reference --current-board together");
     if(present.length===freshnessFlags.length) {
       index.checkout_validation=verifyCurrentCheckoutPins(index,{
         manifestPath:flags["current-manifest"],evidenceDir:flags["current-evidence"],
-        referencePath:flags["synthetic-reference"],
+        referencePath:flags["synthetic-reference"],boardPath:flags["current-board"],
       });
     }
     writeFileSync(resolve(flags.out),JSON.stringify(index,null,2)+"\n");

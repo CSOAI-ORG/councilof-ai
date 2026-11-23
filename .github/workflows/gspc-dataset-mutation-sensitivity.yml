@@ -67,6 +67,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
         run: |
           if test -z "$HF_TOKEN"; then
             echo "HF_TOKEN_NOT_CONFIGURED: only CI artifact is published"
@@ -89,6 +90,8 @@ jobs:
           except Exception as e:
             if isinstance(e,SystemExit):raise
             print("BASELINE_OR_READ_UNAVAILABLE:",type(e).__name__)
+          import subprocess
+          subprocess.run(["python3","scripts/privacy/publication_gate.py","--require-ids",str(root)],check=True)
           api.create_repo(repo,repo_type="dataset",exist_ok=True,private=False)
           api.upload_folder(repo_id=repo,repo_type="dataset",folder_path=str(root),
             commit_message="Synthetic fixed-size mutation controls (not model poisoning measurement)")

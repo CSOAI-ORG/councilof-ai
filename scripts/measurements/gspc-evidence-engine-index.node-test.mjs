@@ -135,6 +135,9 @@ test("current-master checkout pin guard detects same-count, same-size source sub
     const sourcePath=join(source,file);
     const manifestPath=join(root,"MANIFEST.json");
     const referencePath=join(root,"baseline.sha256");
+    const boardPath=join(root,"source-board.json");
+    const board='{"axes":34,"snapshot":"A"}\n';
+    writeFileSync(boardPath,board);
     writeFileSync(sourcePath,original);
     const sourceDigest=hash(file+" "+hash(original));
     const manifest={source:{source_digest:sourceDigest,cell_files:1,source_rows:1}};
@@ -143,13 +146,20 @@ test("current-master checkout pin guard detects same-count, same-size source sub
     const baseline="a".repeat(64);
     writeFileSync(referencePath,baseline+"\n");
     const report={
-      sources:{fact_manifest_digest:hash(manifestRaw),physical_cell_source_digest:sourceDigest},
+      sources:{fact_manifest_digest:hash(manifestRaw),physical_cell_source_digest:sourceDigest,
+        gspc_board_digest:hash(board)},
       measurements:{source_cells:1},
       separate_synthetic_research:{baseline_sha256:baseline},
     };
-    const opts={manifestPath,evidenceDir:source,referencePath};
+    const opts={manifestPath,evidenceDir:source,referencePath,boardPath};
     assert.equal(verifyCurrentCheckoutPins(report,opts).state,
       "SOURCE_BYTES_MATCH_CURRENT_CHECKOUT_UNWITNESSED");
+    // Board-only mutation, identical source cells and manifest: must block
+    // a stale coverage artifact even before the scheduled coverage refresh.
+    writeFileSync(boardPath,board.replace('"A"','"B"'));
+    assert.throws(()=>verifyCurrentCheckoutPins(report,opts),
+      /board snapshot differs from freshly generated current checkout/);
+    writeFileSync(boardPath,board);
     writeFileSync(sourcePath,altered);
     assert.throws(()=>verifyCurrentCheckoutPins(report,opts),/physical cell digest differs/);
     writeFileSync(sourcePath,original);
@@ -173,14 +183,18 @@ test("missing current source index and malformed raw item can never pass the mas
     const manifestRaw=JSON.stringify(manifest);
     const manifestPath=join(root,"MANIFEST.json");
     const referencePath=join(root,"baseline.sha256");
+    const boardPath=join(root,"source-board.json");
+    const board='{"axes":34,"snapshot":"A"}\n';
+    writeFileSync(boardPath,board);
     writeFileSync(manifestPath,manifestRaw);
     writeFileSync(referencePath,"a".repeat(64)+"\n");
     const report={
-      sources:{fact_manifest_digest:hash(manifestRaw),physical_cell_source_digest:digest},
+      sources:{fact_manifest_digest:hash(manifestRaw),physical_cell_source_digest:digest,
+        gspc_board_digest:hash(board)},
       measurements:{source_cells:1},
       separate_synthetic_research:{baseline_sha256:"a".repeat(64)},
     };
-    const options={manifestPath,evidenceDir:src,referencePath};
+    const options={manifestPath,evidenceDir:src,referencePath,boardPath};
     assert.throws(()=>verifyCurrentCheckoutPins(report,options),/current source cells differ|current source inventory/);
     writeFileSync(join(src,name),'{');
     assert.throws(()=>verifyCurrentCheckoutPins(report,options),/invalid source JSON/);

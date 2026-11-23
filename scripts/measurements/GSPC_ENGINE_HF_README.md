@@ -55,3 +55,5 @@ underlying source bytes. This is proof of source agreement in the checkout,
 not an independently witnessed external signature or new model measurement.
 
 The repeat producer must declare `csoai.gspc-repeat-integrity/2` and a bijective raw-row join. Cells mixing provider routes cannot be grouped under only the first observation's route. The index rejects older pre-fix repeat artifacts.
+
+The master freshness gate regenerates the live 34-axis board snapshot from current checkout source, hashes that board, and rejects stale historical coverage artifacts even when raw cell and manifest bytes remain unchanged.
