@@ -48,6 +48,16 @@ python3 measurement/experiments/metrology-controls/check_standard.py \
 
 No example fixture is claimed to be a real calibrated instrument. Synthetic tests include a clean control, single spike, persistent upward/downward shift, duplicate source, future clock, missing time window, source replay and expired calibration.
 
+## Fixed-seed operating-characteristic experiment (synthetic, not field calibration)
+
+`simulate_operating_characteristics.py` draws 240 reproducible paired runs of 30 IID Gaussian readings from a fixed source-declared baseline, with a second condition adding a sustained +1 baseline standard-deviation shift starting at sample index 12. It uses the **same PRNG noise in paired conditions**, so the exercise compares the specified detector under controlled assumptions, not independent real-world populations. M4 execution at 23 Nov 2026 produced:
+
+- Unshifted: **27 / 240 windows alarmed (11.25%)** despite no injected shift. The descriptive 95% Wilson interval across these synthetic trials is approximately 7.85–15.87%.
+- Shifted: **220 / 240** detected an alarm after the shift and without a preceding alarm (**91.67%** of all trials; synthetic descriptive Wilson interval approximately 87.48–94.54%); **12 / 240** had an early pre-shift alarm. Median delay among the 220 detections was **8 readings**, not a population detection-time guarantee.
+- These are illustrative *operating characteristics for one artificial Gaussian setting*; they are not measured false-positive rates or sensitivity of any deployed GSPC grader. The ≈11% false-alarm frequency across a 30-reading window makes clear that a threshold that looks conventional per-reading can generate an unacceptable alert workload when repeatedly applied. Further design must preregister required false alarm / detection-delay tradeoffs, account for autocorrelation and nonstationarity, and validate prospectively on independent check-standard custodians.
+
+Run `python3 measurement/experiments/metrology-controls/simulate_operating_characteristics.py --trials 240` to reproduce. Its emitted JSON explicitly records its SYNTHETIC status and denies independent calibration or safety certification.
+
 ## Further experimental hypotheses — preregister *before* using live GSPC results
 
 1. **Instrument drift without model drift:** sentinel grader disagreement changes over time while frozen raw model outputs remain identical. Test with held-out labels; expected action: quarantine grader changes, not penalise models.
