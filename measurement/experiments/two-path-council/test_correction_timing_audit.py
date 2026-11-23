@@ -69,6 +69,15 @@ class TestTimingAudit(unittest.TestCase):
         with self.assertRaises(ValueError):
             reanalyse({"schema":"csoai.corrections/0.2","corrections":[]})
 
+    def test_dynamic_signature_check_metadata_does_not_mutate_stable_corrections_digest(self):
+        first=example()
+        second=copy.deepcopy(first)
+        second["signature_check"]={"runtime":"another time"}
+        a=reanalyse(first)
+        b=reanalyse(second)
+        self.assertEqual(a["corrections_content_sha256"],b["corrections_content_sha256"])
+        self.assertEqual(a["report_sha256"],b["report_sha256"])
+
     def test_repeatable_report(self):
         self.assertEqual(reanalyse(example()),reanalyse(example()))
 
