@@ -59,6 +59,21 @@ class ResearchReleaseTests(unittest.TestCase):
             self.assertEqual(len(x["file_sha256"]),len(FILE_NAMES))
             self.assertTrue((Path(a)/"manifest.json").is_file())
 
+    def test_pull_request_event_refused_even_if_ref_is_forged_master(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            prior_ref=os.environ.get("GITHUB_REF")
+            prior_event=os.environ.get("GITHUB_EVENT_NAME")
+            try:
+                os.environ["GITHUB_REF"]="refs/heads/master"
+                os.environ["GITHUB_EVENT_NAME"]="pull_request"
+                with self.assertRaises(RuntimeError):
+                    publish(Path(tmp),{"file_sha256":{}})
+            finally:
+                if prior_ref is None:os.environ.pop("GITHUB_REF",None)
+                else:os.environ["GITHUB_REF"]=prior_ref
+                if prior_event is None:os.environ.pop("GITHUB_EVENT_NAME",None)
+                else:os.environ["GITHUB_EVENT_NAME"]=prior_event
+
     def test_unprivileged_publish_refused_before_network(self):
         with tempfile.TemporaryDirectory() as tmp:
             prior=os.environ.get("GITHUB_REF")
