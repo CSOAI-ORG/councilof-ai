@@ -267,10 +267,33 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return Array.from(new Set(obligationWide.map(({ l }) => l.subject).filter(Boolean))).slice(0, 20);
   })();
 
+  // A free preview returns at most 40 cards to keep the response bounded.
+  // Compute temporal coverage from the ENTIRE selected set before slicing: the
+  // first 40 are ordered by SHA, not by as_of. A bounded list is not a random
+  // sample or the latest observation. This adds source-declared metadata only;
+  // it verifies neither a card signature nor a regulatory finding.
+  const sourceDated = selected.map(({ sha, l }) => ({
+    sha, as_of: l.as_of, ms: typeof l.as_of === "string" ? Date.parse(l.as_of) : NaN,
+  })).filter((x) => Number.isFinite(x.ms))
+    .sort((a, b) => b.ms - a.ms || a.sha.localeCompare(b.sha));
+  const newestCard = sourceDated[0] ?? null;
+  const freshness = {
+    scope: "ALL_RELEVANT_SIGNED_CARDS",
+    source_state: "SOURCE_DECLARED_NOT_INDEPENDENTLY_VERIFIED",
+    relevant_card_count: selected.length,
+    returned_card_count: Math.min(selected.length, 40),
+    card_list_truncated: selected.length > 40,
+    dated_card_count: sourceDated.length,
+    timing_coverage: selected.length === 0 ? "EMPTY" :
+      sourceDated.length === selected.length ? "COMPLETE" : "PARTIAL",
+    newest_relevant_card_as_of: newestCard?.as_of ?? null,
+    newest_relevant_card_sha256: newestCard?.sha ?? null,
+  };
   const preview = {
     obligation: { id: ob.id, control_id: ob.control_id, title: ob.title, obligation: ob.obligation, regulator: ob.regulator, counsel_confirmed: ob.counsel_confirmed, honesty: ob.honesty, ...(ob.review_note ? { review_note: ob.review_note } : {}), existing_pack: ob.existing_pack ? `${origin}${ob.existing_pack}` : null },
     subject: subject || null,
     relevant_signed_cards: selected.length,
+    freshness,
     ...(availableSubjects
       ? {
           available_subjects: availableSubjects,
