@@ -147,12 +147,16 @@ def publish(path:Path,manifest:dict):
         if sha(Path(downloaded).read_bytes())!=digest:
             raise RuntimeError("Published HF bytes do not match local bytes: "+name)
         print("VERIFIED",name,digest)
-    print(json.dumps({"publication":"VERIFIED_EXACT_BYTES",
+    receipt={"publication":"VERIFIED_EXACT_BYTES",
         "dataset":"https://huggingface.co/datasets/"+REPO,
         "hf_commit_sha":revision,
         "source_commit_sha":manifest["source_commit_sha"],
         "manifest_sha256":manifest["manifest_sha256"],
-        "n_files":len(expected)},sort_keys=True))
+        "n_files":len(expected),
+        "evidence_state":"PUBLIC_RESEARCH_MIRROR_EXACT_BYTES",
+        "not_external_validation":True}
+    print(json.dumps(receipt,sort_keys=True))
+    return receipt
 
 
 def main():
@@ -160,6 +164,7 @@ def main():
     group=ap.add_mutually_exclusive_group(required=True)
     group.add_argument("--check",action="store_true")
     group.add_argument("--publish",action="store_true")
+    ap.add_argument("--receipt-out",type=Path)
     a=ap.parse_args()
     root=Path(__file__).resolve().parents[2]
     source_sha=(os.environ.get("GITHUB_SHA") or "PREVIEW_UNBOUND").strip()
@@ -179,7 +184,9 @@ def main():
             print(json.dumps({"state":"READY_AFTER_SOURCE_GATES","n_observations":manifest["n_research_observations"],
                  "source_commit":manifest["source_commit_sha"],"manifest_sha256":manifest["manifest_sha256"]},sort_keys=True))
             return 0
-        publish(dest,manifest)
+        receipt=publish(dest,manifest)
+        if a.receipt_out:
+            a.receipt_out.write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n",encoding="utf-8")
     return 0
 
 
