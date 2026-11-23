@@ -104,6 +104,7 @@ jobs:
           python3 scripts/pod-loops/evidence_sync.py \
             --public-dir public \
             --manifest "$SYNC_MANIFEST" \
+            --receipt "$RUNNER_TEMP/hf-evidence-sync-receipt.json" \
             --probe 20
 
       - name: Sync to HF (apply mode)
@@ -118,6 +119,7 @@ jobs:
             --public-dir public \
             --manifest "$SYNC_MANIFEST" \
             --message "sync from councilof.ai build ${GITHUB_SHA::12}" \
+            --receipt "$RUNNER_TEMP/hf-evidence-sync-receipt.json" \
             --probe 20
 
       - name: Verify all publication metadata anonymously
@@ -157,3 +159,17 @@ jobs:
             fi
           done
           echo "All spot-checks passed"
+
+      # The sync script already writes a fail-closed receipt with per-directory
+      # OVER_DIRECTORY_LIMIT / remaining_files / orphan counts. Retain that exact
+      # machine-readable decision even when --apply exits nonzero; never infer that
+      # a failed job published anything. The receipt contains counts/states, not
+      # HF_TOKEN, uploaded file bodies or authorization headers.
+      - name: Retain structured mirror-sync decision
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf-evidence-sync-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/hf-evidence-sync-receipt.json
+          if-no-files-found: ignore
+          retention-days: 30
