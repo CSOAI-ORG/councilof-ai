@@ -6,6 +6,8 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import vm from 'node:vm';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 export const SCHEMA = 'csoai.historical-triad-oracle-leak-audit/0.1';
 
@@ -138,7 +140,7 @@ export function auditHistoricalTriad(source,record,profile='local-historical') {
   return result;
 }
 
-if (process.argv[1]?.endsWith('audit_historical_triad.mjs')) {
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
   const args=process.argv.slice(2);
   if(args.length!==4||args[0]!=='--source'||args[2]!=='--record') {
     console.error('Usage: node audit_historical_triad.mjs --source LOCALLY_AUTHORISED_MJS --record MATCHING_JSON');
