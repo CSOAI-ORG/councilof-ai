@@ -27,11 +27,12 @@ jobs:
           sparse-checkout: |
             scripts/hf/make-private.py
             scripts/hf/retire-private-list.txt
+            scripts/hf/test_make_private_plan.py
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Validate 34-entry privacy plan before any API access
-        run: python -B -m unittest discover -s scripts/hf -p test_make_private_plan.py -v
+        run: python -B scripts/hf/test_make_private_plan.py -v
       - run: pip install --quiet "huggingface_hub>=0.25,<2"
       - name: make private (never delete) and read back
         env:
