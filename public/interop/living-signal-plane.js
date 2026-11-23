@@ -44,6 +44,31 @@
         text("graph-note",graph.counts.working_groups+" Council group references · "+graph.counts.gspc_axis_references+" GSPC axis references · "+graph.counts.external_source_references+" external source references. All candidate mappings; no delegated authority.");
       },()=>{text("graph","UNVERIFIED");text("graph-note","Dependency projection cannot be verified from this client.");}),
       checked(async () => {
+        const research=await read("/working-groups/controlai.json");
+        if(research?.schema!=="csoai.research-evidence-pack/1" || research.status!=="research-candidate" ||
+           research.authorityGranted!==false || research.partnershipEstablished!==false ||
+           !Array.isArray(research.claims)) throw Error("research authority contract");
+        const toUTC = raw => {
+          if(typeof raw!=="string" || !/^\d{4}-\d{2}-\d{2}$/.test(raw)) return null;
+          const time=Date.parse(raw+"T00:00:00Z");
+          return Number.isFinite(time) && new Date(time).toISOString().slice(0,10)===raw ? time : null;
+        };
+        const end=toUTC(research.reviewAfter), observed=toUTC(research.asOf);
+        if(end===null || observed===null || end<observed) throw Error("research dates not verified");
+        const now=new Date(), today=Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate());
+        const active=research.claims.filter(c=>c.status==="source-reported" || c.status==="observed");
+        if(!active.length) throw Error("no reviewable claims");
+        let expired=0;
+        for(const claim of active){
+          const limit=toUTC(claim.reviewAfter);
+          if(limit===null) throw Error("bad claim review date");
+          if(today>=limit) expired++;
+        }
+        const due=today>=end || expired>0;
+        text("research", due ? "RECHECK REQUIRED" : "REVIEW WINDOW ACTIVE");
+        text("research-note", research.id+" · "+expired+" of "+active.length+" active claims require recheck · pack review after "+research.reviewAfter+" · no human approval inferred.");
+      },()=>{text("research","UNVERIFIED");text("research-note","Research source date or authority state could not be verified; no renewal assumed.");}),
+      checked(async () => {
         const doc=await read("/interop/regulatory-window-research-20261122.json");
         if(doc?.schema!=="csoai.regulatory-window-research/0.1" || !Array.isArray(doc.windows)) throw Error("schema");
         const list=q("windows");list.replaceChildren();
