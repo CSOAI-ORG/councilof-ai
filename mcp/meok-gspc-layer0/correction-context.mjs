@@ -12,8 +12,10 @@ const PATHS={
 const CAP=1_000_000;
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const isObject=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
-const goodDate=x=>typeof x==='string'&& /^\d{4}-\d{2}-\d{2}T\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|[+-]\d\d:\d\d)$/.test(x)&&Number.isFinite(Date.parse(x));
+const goodDate=x=>typeof x==='string'&& /^\d{4}-\d{2}-\d{2}T\d\d:\d\d(?::\d\d(?:\.\d+)?)?(?:Z|[+-]\d\d:\d\d)$/.test(x)&&Number.isFinite(Date.parse(x));
 const goodDay=x=>typeof x==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x)&&!Number.isNaN(Date.parse(x+'T00:00:00Z'));
+const hex64=x=>typeof x==='string'&&/^[a-f0-9]{64}$/.test(x);
+const claimEnum=(value,allowed)=>typeof value==='string'&&allowed.includes(value)?value:'UNAVAILABLE';
 
 async function fixedRead(path,fetchImpl,now){
   if(!Object.values(PATHS).includes(path))throw new Error('SOURCE_NOT_ALLOWED');
@@ -136,10 +138,44 @@ export async function readMeokCorrectionEvidence(args={}, {fetchImpl=fetch,now=(
   }
   if(witness.status==='fulfilled'&&isObject(witness.value.json)){
     const v=witness.value.json;
+    // A witness declaration is about specific earlier bytes and a dated observation;
+    // never project its positive status beside a different root without its subject/drift.
+    const subject=isObject(v.live_root)?v.live_root:{};
+    const drift=isObject(v.drift)?v.drift:{};
+    const conflict=isObject(v.conflict)?v.conflict:{};
+    const subjectSha=hex64(subject.sha256)?subject.sha256:null;
+    const subjectMerkle=hex64(subject.merkle_root)?subject.merkle_root:null;
+    const observedSha=result.layer0.source?.bytes_sha256??null;
+    const observedMerkle=result.layer0.declared_root?.merkle_root??null;
     result.layer0.declared_witness={
       source:witness.value.source,
-      rekor_state_source_claim:typeof v.witnesses?.rekor==='string'?v.witnesses.rekor:'UNAVAILABLE',
-      ots_state_source_claim:typeof v.witnesses?.ots==='string'?v.witnesses.ots:'UNAVAILABLE',
+      witnessed_subject_source_claim:{
+        root_bytes_sha256:subjectSha,
+        merkle_root:subjectMerkle,
+        as_of:goodDate(subject.as_of)?subject.as_of:null,
+        card_count:Number.isSafeInteger(subject.card_count)&&subject.card_count>=0?subject.card_count:null,
+      },
+      witness_status_observed_at_source_claim:
+        goodDate(v.witness_status_observed_at)?v.witness_status_observed_at:null,
+      rekor_state_source_claim:claimEnum(v.witnesses?.rekor,['WITNESSED','NOT_YET','UNAVAILABLE']),
+      ots_state_source_claim:claimEnum(v.witnesses?.ots,['CONFIRMED_BITCOIN','NOT_YET','UNAVAILABLE']),
+      source_drift:{
+        status:claimEnum(drift.status,['DRIFTED','MATCHED','NO_DRIFT','UNAVAILABLE']),
+        checked_at:goodDate(drift.checked_at)?drift.checked_at:null,
+        witnessed_root_bytes_sha256:hex64(drift.witness_artifact_sha256)?drift.witness_artifact_sha256:null,
+        checked_live_root_bytes_sha256:hex64(drift.live_root_sha256)?drift.live_root_sha256:null,
+        match_sha256:typeof drift.match_sha256==='boolean'?drift.match_sha256:null,
+        match_merkle_root:typeof drift.match_merkle_root==='boolean'?drift.match_merkle_root:null,
+      },
+      source_conflict:{
+        status:claimEnum(conflict.status,['NONE','CONFLICT','UNAVAILABLE']),
+        as_of:goodDate(conflict.as_of)?conflict.as_of:null,
+        merkle_root:hex64(conflict.merkle_root)?conflict.merkle_root:null,
+      },
+      observed_root_bytes_match_witness_subject:
+        subjectSha&&observedSha?subjectSha===observedSha:null,
+      observed_root_merkle_match_witness_subject:
+        subjectMerkle&&observedMerkle?subjectMerkle===observedMerkle:null,
     };
   }
   return result;
