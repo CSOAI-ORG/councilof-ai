@@ -28,8 +28,9 @@ Council of AI (CSOAI). This dataset contains the frozen-rank Micro-MOOC module(s
 studies while holding the `ORB-III` rank, extracted verbatim from the
 `meok-hitl-mooc.mjs` Frozen-to-Fluid competency engine (`source: "meok-hitl-mooc.frozen"`).
 
-**Policy: Measurement and Human-in-the-Loop Oversight — Never Certification.** These modules teach judgement for oversight decisions; completing them
-is measurement of readiness, never certification.
+**Policy: Measurement and Human-in-the-Loop Oversight — Never Certification.** These modules teach judgement for oversight decisions. Completion records training progress; they do not establish professional competence, authenticated reviewer identity or approval authority.
+
+> **Evidence-status correction proposed 23 November 2026 (owner review pending).** The original 26 October 2026 result and CID are retained, not deleted or silently overwritten. Subsequent source-review and adversarial replay found that the 3-Around-1 referee was shown answer-bearing metadata on the 12 model tasks. With all three model-seat answers deliberately wrong, that referee still returned the correct label on 12/12 tasks when metadata contained answer choices, versus 0/12 with those fields stripped. The historical pooled 32/32 is therefore **a source-specific deterministic rule-path demonstration**, not a blinded independent evaluation of a council, human quorum or generalisable 100%-accurate model performance. The originally reported McNemar p-value does not repair the label-leakage limitation. See [validity finding and original evidence hashes](https://github.com/CSOAI-ORG/councilof-ai/issues/4737) and [research review PR](https://github.com/CSOAI-ORG/councilof-ai/pull/4730). This correction does not alter the original signed data.
 
 ## The module in this dataset
 
@@ -45,7 +46,7 @@ is measurement of readiness, never certification.
 The Frozen→Fluid shift this module briefs you on:
 
 - **Frozen (t_0):** Normal Forward (Oldest-First) traversal = 34.4% (11/32), trapped by superseded t_0 records
-- **Fluid (t_N):** 3-Around-1 Bidirectional Triad = 100.0% (32/32, McNemar p=9.54e-7) (CID `dc8cee6781b6d02f`)
+- **Historical Fluid (t_N) record:** 3-Around-1 Bidirectional rule-path replay reported 32/32 (originally reported McNemar p=9.54e-7; CID `dc8cee6781b6d02f`). **Not a blinded accuracy result:** the referee-visible metadata contained answer-bearing labels. Preserve the historical figure only with that qualification and its [correction record](https://github.com/CSOAI-ORG/councilof-ai/issues/4737).
 
 ## Rank ladder (shared across all five datasets)
 
@@ -59,21 +60,17 @@ The Frozen→Fluid shift this module briefs you on:
 
 Scoring rules from the same engine: a first-correct answer grants the module's `xp_reward`;
 re-running a completed module grants a +25 XP refresher; a wrong answer resets the streak.
-Passing a module **unlocks the oversight decision path for that axis** — you cannot sign a
-human-oversight decision on an axis you have not been briefed on.
+Passing a module records curriculum progression. A module completion alone **does not authorize a human-oversight decision**. The live [HITL companion status](https://councilof.ai/api/hitl) currently declares operator identity NOT_VERIFIED, human presence NOT_ESTABLISHED, professional competence NOT_ASSESSED and execution authority false. Verified identity, delegated authority and signed decision-bound approval are separate prerequisites.
 
 ## How your verdict becomes real work
 
-Every oversight decision you sign emits an Ed25519-signed receipt under schema
-`csoai.hitl-oversight-receipt/0.1` (operator, axis, decision, note, competency flag, policy). Machine
-signatures prove pipeline provenance — **only a named, trained human can move an artefact
-from PENDING to APPROVED**. Real review queue: 676 artefacts, 664 PENDING.
+The HITL service can record machine-signed decision receipts under schema
+`csoai.hitl-oversight-receipt/0.1` (operator label, axis, decision, note, competency flag and policy). **A software signature is not proof that a distinct, trained human approved the request.** On the 23 November 2026 independent readback, the live [HITL companion endpoint](https://councilof.ai/api/hitl) stated `decision_recording_credential=SHARED_OPERATOR_TOKEN`, `operator_identity=NOT_VERIFIED`, `human_presence=NOT_ESTABLISHED` and `execution_authority=false`. It displayed 3 PENDING and 2 APPROVED decision records, **not independently authenticated human votes**. Historical queue numbers such as 676 artefacts / 664 PENDING must not be used as current counts; inspect the dated live source and its verification limits.
 
 ## The full Academy
 
 - `csoai/hitl-academy-orb1` … `csoai/hitl-academy-orb5` — one frozen dataset per rank
-- `csoai/hitl-practice-review-queue` — 30 real PENDING artefacts for fluid practice;
-  your verdicts join the actual human review queue (EAT), not a simulation.
+- `csoai/hitl-practice-review-queue` — a published practice-data source with historical sample rows. Its original description of 30 PENDING artefacts is not a current live-queue assertion. Practice responses do not establish authenticated human approval or an authorized production effect; verify any current operational state independently via [the HITL endpoint](https://councilof.ai/api/hitl).
 
 ## Licence & provenance
 
