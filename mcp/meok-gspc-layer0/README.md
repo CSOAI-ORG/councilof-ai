@@ -189,7 +189,7 @@ The reader only GETs three fixed public endpoints:
 - \`/interop/root-witness-pointer.json\` — publisher-side OTS/Rekor status declarations.
 
 It SHA-256-hashes exact HTTP response bytes, counts independently observed
-\`EXACT_SOURCE_DECLARED\`, \`DAY_BOUNDED_SOURCE_DECLARED\` and \`UNMEASURED\`
+\`EXACT_SOURCE_DECLARED\`, \`WINDOW_BOUNDED_SOURCE_DECLARED\` and \`UNMEASURED\`
 corrections; projects only aggregate counts, an optional selected correction ID,
 its record hash and its source-declared dates. Neither raw correction prose nor
 untrusted tools/permissions are copied into the model-visible view. A source
