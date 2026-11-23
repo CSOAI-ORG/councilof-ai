@@ -69,6 +69,9 @@ export const onRequest = async (context: Ctx): Promise<Response> => {
   // an inclusion proof that is free. probeOffer() now leaves alone every path that is not a door
   // and every query that asks only for a door's free part (FREE_PART below); only a door query
   // that selects no free part reaches isEmptyProbe(), which reads a clone up to a size cap.
+  // A browser's CORS preflight for an x402 door is answered here (doorPreflight below).
+  const preflight = doorPreflight(context.request);
+  if (preflight) return withApiSecurityHeaders(context.request, preflight);
   const offer = probeOffer(context.request);
   if (offer && (await isEmptyProbe(context.request))) {
     return withApiSecurityHeaders(
@@ -95,8 +98,8 @@ export const onRequest = async (context: Ctx): Promise<Response> => {
  *
  * Not listed — free-door, discover/*, request-attestation, ras/*: no query selects a free part.
  * A query that selects nothing (the bare path of most doors, or input the door refuses) is still
- * challenged, which is the probe this gate exists for. invoice=gbp is not a free part either and
- * is challenged exactly as before.
+ * challenged, which is the probe this gate exists for. invoice=gbp is not a free part; the doors
+ * that sell against an invoice are handled by INVOICE_TERMS below.
  */
 type Query = URLSearchParams;
 const one = (q: Query, key: string) => q.get(key) === "1";
@@ -132,15 +135,39 @@ function asksOnlyForFreePart(url: URL): boolean {
 }
 
 /**
+ * THE INVOICE TERMS OF THE DOORS THAT SELL AGAINST A CSOAI LTD INVOICE (2026-11-20).
+ *
+ * evidence-bundle.ts, provider-diff.ts and art50/marking-evidence.ts answer invoice=gbp with their
+ * own invoice terms (a quotation, an invoice-required reference, or the pack against the
+ * invoice), never with x402 terms, and in each invoice=gbp wins over bundle=1 / history=1. The
+ * bundle's own 402 advertises its invoice link WITH bundle=1, so that link POSTed with no body got
+ * the USDC challenge here instead of the quotation: the enterprise path the invoice door exists
+ * for. A query listed here goes to the door untouched. Each test mirrors its handler's own parse.
+ */
+const INVOICE_TERMS: Record<string, (q: Query) => boolean> = {
+  // evidence-bundle.ts: exact "gbp", and only once an obligation is named (no obligation, no quotation).
+  "/api/evidence-bundle": (q) => given(q, "obligation") && q.get("invoice") === "gbp",
+  // provider-diff.ts lowercases the value.
+  "/api/feeds/provider-diff": (q) => (q.get("invoice") ?? "").toLowerCase() === "gbp",
+  // marking-evidence.ts: exact "gbp".
+  "/api/art50/marking-evidence": (q) => q.get("invoice") === "gbp",
+};
+
+const asksForInvoiceTerms = (url: URL) => INVOICE_TERMS[url.pathname]?.(url.searchParams) ?? false;
+
+/**
  * The offer a paymentless probe of this request is answered with, or null to leave the request
  * alone. Decided on the method, the payment header, the path and the query only: no byte of the
  * body has been read when this returns, so /mcp, /api/a2a and every other path that is not a door
- * are never read by this middleware.
+ * are never read by this middleware. A query for a door's free part (FREE_PART) or its invoice
+ * terms (INVOICE_TERMS, 2026-11-20) is left to the door as well.
  */
 function probeOffer(request: Request): ListingOffer | null {
   if (request.method !== "POST" || hasPaymentHeader(request)) return null;
   const offer = offerFor(request.url);
-  if (!offer || asksOnlyForFreePart(new URL(request.url))) return null;
+  if (!offer) return null;
+  const url = new URL(request.url);
+  if (asksOnlyForFreePart(url) || asksForInvoiceTerms(url)) return null;
   return offer;
 }
 
@@ -187,6 +214,81 @@ async function isEmptyProbe(request: Request): Promise<boolean> {
 }
 
 /**
+ * THE x402 HTTP TRANSPORT'S HEADERS, FOR A BROWSER AND FOR A v2 CLIENT (2026-11-20).
+ *
+ * x402-foundation/x402 specs/transports-v2/http.md names three headers: PAYMENT-REQUIRED on the
+ * 402, PAYMENT-SIGNATURE on the paid request, PAYMENT-RESPONSE on the settled reply. Measured on
+ * the live doors that day:
+ *   - a settled reply carried the settlement only as X-PAYMENT-RESPONSE, the v1 name;
+ *   - no reply named PAYMENT-REQUIRED or PAYMENT-RESPONSE in Access-Control-Expose-Headers, so a
+ *     browser could read neither (the spec's "CORS" section asks for exactly that);
+ *   - a preflight OPTIONS of a door answered 404, so a browser could never send PAYMENT-SIGNATURE.
+ * The doors answered correctly to a server-side client and could not be bought from a page on
+ * another origin. Fixed here, on the one wrapper every /api/ response passes, instead of in each
+ * of the door files: nothing about payment changes, only which names carry what the doors
+ * already send and which of them a browser may read.
+ */
+const X402_EXPOSED_HEADERS = ["PAYMENT-REQUIRED", "PAYMENT-RESPONSE", "X-PAYMENT-RESPONSE"];
+// What a paying browser sends: the v2 header, the v1 header these doors also read, and JSON.
+const X402_REQUEST_HEADERS = ["PAYMENT-SIGNATURE", "X-PAYMENT", "Content-Type", "Accept"];
+
+/** A comma-separated header list with `add` appended, case-insensitively, keeping what is there. */
+function mergeHeaderList(existing: string | null, add: readonly string[]): string {
+  const have = (existing ?? "").split(",").map((v) => v.trim()).filter(Boolean);
+  if (have.includes("*")) return have.join(", ");
+  for (const name of add) if (!have.some((v) => v.toLowerCase() === name.toLowerCase())) have.push(name);
+  return have.join(", ");
+}
+
+/**
+ * On a reply that carries an x402 header: the settlement also under its v2 name, and both payment
+ * headers named for a browser. A reply with no x402 header is left exactly as it was, so the free
+ * reads (/api/gspc, /api/corrections, key verification) are untouched.
+ */
+function withX402TransportHeaders(headers: Headers): void {
+  const settled = headers.get("x-payment-response");
+  if (settled && !headers.has("payment-response")) headers.set("PAYMENT-RESPONSE", settled);
+  if (!headers.has("payment-required") && !headers.has("payment-response")) return;
+  headers.set(
+    "access-control-expose-headers",
+    mergeHeaderList(headers.get("access-control-expose-headers"), X402_EXPOSED_HEADERS),
+  );
+}
+
+/**
+ * The answer to a CORS preflight of an x402 door, or null. Only a real preflight (OPTIONS with
+ * Access-Control-Request-Method) of a path offerFor() knows is answered; every other OPTIONS goes
+ * to its route as before. A preflight never reaches a door's handler, so it can never be
+ * challenged, charged or counted as a probe. It grants nothing a non-browser client lacks: these
+ * doors already answer any origin (Access-Control-Allow-Origin: *) and carry no cookie.
+ */
+function doorPreflight(request: Request): Response | null {
+  if (request.method !== "OPTIONS" || !request.headers.has("access-control-request-method")) return null;
+  if (!offerFor(request.url)) return null;
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "access-control-allow-origin": "*",
+      "access-control-allow-methods": "GET, HEAD, POST, OPTIONS",
+      // The door's own names first, then whatever this preflight asks for: a door reads only the
+      // headers it knows, and allowing a header a browser asks to send grants it nothing here.
+      "access-control-allow-headers": mergeHeaderList(
+        X402_REQUEST_HEADERS.join(", "),
+        (request.headers.get("access-control-request-headers") ?? "")
+          .split(",")
+          .map((v) => v.trim())
+          .filter((v) => /^[A-Za-z0-9-]{1,64}$/.test(v))
+          .slice(0, 16),
+      ),
+      "access-control-expose-headers": X402_EXPOSED_HEADERS.join(", "),
+      "access-control-max-age": "600",
+      "cache-control": "no-store",
+      vary: "Access-Control-Request-Headers",
+    },
+  });
+}
+
+/**
  * /api/* responses carry the security headers the static rules never reach.
  *
  * public/_headers sets them, but that file applies to Cloudflare Pages STATIC
@@ -229,6 +331,7 @@ function withApiSecurityHeaders(request: Request, response: Response): Response 
   if (!path.startsWith("/api/")) return response;
 
   const headers = new Headers(response.headers);
+  withX402TransportHeaders(headers);
   headers.set("X-Content-Type-Options", "nosniff");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");

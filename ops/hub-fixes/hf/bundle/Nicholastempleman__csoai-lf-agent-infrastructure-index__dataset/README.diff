@@ -1,0 +1,90 @@
+--- a/Nicholastempleman/csoai-lf-agent-infrastructure-index/README.md (live)
++++ b/Nicholastempleman/csoai-lf-agent-infrastructure-index/README.md (proposed)
+@@ -5,6 +5,42 @@
+ - agent-infrastructure
+ - provenance
+ - policy
++- council-of-ai
++license: cc-by-4.0
++size_categories:
++- n<1K
++configs:
++- config_name: bitcoin-path-readback
++  data_files:
++  - split: train
++    path: bitcoin-path-readback.json
++  default: true
++- config_name: directory-receipt
++  data_files:
++  - split: train
++    path: directory-receipt.json
++- config_name: files
++  data_files:
++  - split: train
++    path: files.json
++- config_name: index
++  data_files:
++  - split: train
++    path: index.json
++- config_name: root-json
++  data_files:
++  - split: train
++    path: wave1-audit.json
++- config_name: root-json-v2
++  data_files:
++  - split: train
++    path: wave2-audit.json
++- config_name: root-json-v3
++  data_files:
++  - split: train
++    path: wave3-audit.json
++language:
++- en
+ ---
+ 
+ # Open agent infrastructure: a source-checked capability index
+@@ -69,3 +105,44 @@
+ The common admission path is source and rights review → positive and negative local fixture → independent replay → GSPC measurement → signed evidence and change watch. A project gets a CSOAI integration label only after that chain is measured and replayable.
+ 
+ The [index data](index.json) preserves project IDs, exact source revisions, evidence levels, rights caveats, and source hashes. [Wave 1](wave1-audit.json), [wave 2](wave2-audit.json), [wave 3](wave3-audit.json), and the [directory receipt](directory-receipt.json) are included with a [hash manifest for evidence files](files.json). Publication is checked separately by anonymous readback. Search visibility, partnership, and revenue are separate outcomes.
++
++<!-- csoai-card-fixes:start -->
++
++## Subsets (configs)
++
++The Dataset Viewer and `datasets` read this repository through the named subsets below. Each subset contains one homogeneous file group, so files with different schemas are not cast into a single table.
++
++| subset | files | rows (as verified) |
++|---|---|---|
++| `bitcoin-path-readback` (default) | `bitcoin-path-readback.json` | 1 |
++| `directory-receipt` | `directory-receipt.json` | 1 |
++| `files` | `files.json` | 1 |
++| `index` | `index.json` | 1 |
++| `root-json` | `wave1-audit.json` | 1 |
++| `root-json-v2` | `wave2-audit.json` | 1 |
++| `root-json-v3` | `wave3-audit.json` | 1 |
++
++```python
++from datasets import load_dataset
++
++ds = load_dataset("Nicholastempleman/csoai-lf-agent-infrastructure-index", "bitcoin-path-readback", split="train")
++```
++
++## Limitations
++
++**Measurement is not certification.** Values in this repository are measurements recorded by Council of AI (CSOAI Ltd) under the method, instrument version and observation date stated in each file. They are not a certification, audit opinion, conformity assessment or legal determination (including under the EU AI Act). Results depend on the instrument version, the sampled items and the date, and a re-measurement can change them. Repository updates and download counts are not new measurements.
++
++## Citation
++
++```bibtex
++@misc{nicholastempleman_csoai_lf_agent_infrastructure_index_2026,
++  title        = {CSOAI LF Open Agent Infrastructure Capability Index},
++  author       = {{CSOAI Ltd (Council of AI)}},
++  year         = {2026},
++  publisher    = {Hugging Face},
++  howpublished = {\url{https://huggingface.co/datasets/Nicholastempleman/csoai-lf-agent-infrastructure-index}},
++  url          = {https://huggingface.co/datasets/Nicholastempleman/csoai-lf-agent-infrastructure-index}
++}
++```
++
++<!-- csoai-card-fixes:end -->

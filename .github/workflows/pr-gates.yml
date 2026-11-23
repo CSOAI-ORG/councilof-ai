@@ -155,6 +155,8 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_BODY: ${{ github.event.pull_request.body }}
         run: python3 scripts/privacy/test_outside_email_addresses.py -v
+      - name: Publication gate proves it catches planted personal data, and every Hugging Face / Kaggle upload runs it first
+        run: python3 scripts/privacy/test_publication_gate.py -v
 
   # 7 Nov 2026: .github/workflows/runpod-intake.yml called
   # scripts/resolve_runpod_trusted_bank.py with flags the script never had ("--index-out"
@@ -336,6 +338,12 @@ jobs:
           node --test scripts/deploy-dispatch-followers.node-test.mjs
           node --test scripts/post-deploy-verification.node-test.mjs
           node scripts/workflow-trigger-coupling.mjs
+
+      # The globe probe's deadline, with a fake page (no browser). sov-stack-e2e runs only after a
+      # deploy, so its intermittent "Timeout 1ms exceeded" was never caught on a pull request.
+      - name: Globe probe deadline — offline controls
+        if: steps.scope.outputs.gated == 'true'
+        run: node --test scripts/sov-stack-globe-spy-deadline.node-test.mjs
 
       - name: Outward claims — offline manifest contract selftest
         if: steps.scope.outputs.gated == 'true'

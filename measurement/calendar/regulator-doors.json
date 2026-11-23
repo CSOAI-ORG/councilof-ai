@@ -10,6 +10,7 @@
  },
  "verification_rule": "verification.lane_refetch records a second, independent fetch of the same official URL by the governor lane on 2026-09-14 (FOUND = the evidence text was present in the bytes). Items with lane_refetch NOT_DONE rest on one fetch only and say so. An entry re-read after 14 Sep states its own fetches in verification.method.",
  "linked_from_rule": "Optional. The official page on which source_url was found as a link, for a source that is a file rather than a page. Re-open that page first and follow its link: a site can replace a linked file while the old file stays reachable at its old address (seen 13 Oct 2026 on uk-sovereign-ai-procurement-challenge-4-agents). The alert issue prints it above the file link.",
+ "axes_rule": "Optional. The board axes (ids from council-os/axis-specialists/registry.json) whose subject matter the instrument addresses. An editorial mapping made by PR, not a legal reading and not a statement about any measured system. A door with no clear axis carries none. The alert prints, for each axis, its working group (council-os/working-groups.json), its reviewer role and the date of its newest board measurement, so a closing window and a stale axis are seen together.",
  "alerts": {
   "offsets_days": [7, 2, 0],
   "applies_to": "status VERIFIED with a date",
@@ -325,6 +326,7 @@
   },
   {
    "id": "eu-ai-act-art50-application",
+   "axes": ["provenance", "detector-interop"],
    "regulator": "European Union (Regulation (EU) 2024/1689)",
    "instrument": "EU AI Act, Article 113 — application of Article 50 transparency obligations",
    "door_type": "application_date",
@@ -340,6 +342,7 @@
   },
   {
    "id": "eu-2026-1744-art50-2-transition",
+   "axes": ["provenance", "detector-interop"],
    "regulator": "European Union (Regulation (EU) 2026/1744 amending 2024/1689)",
    "instrument": "Regulation (EU) 2026/1744 of 8 July 2026 — transitional period for Article 50(2) marking",
    "door_type": "application_date",
@@ -355,6 +358,7 @@
   },
   {
    "id": "eu-code-of-practice-marking-labelling-ai-content",
+   "axes": ["provenance", "detector-interop"],
    "regulator": "European Commission (AI Office)",
    "instrument": "Code of Practice on marking and labelling of AI-generated content",
    "door_type": "code_of_practice",
