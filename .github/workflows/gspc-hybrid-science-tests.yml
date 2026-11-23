@@ -34,6 +34,12 @@ jobs:
           OPENBLAS_NUM_THREADS: '1'
         run: |
           python -B -m unittest discover -s measurement/experiments/two-path-council -p 'test_*.py' -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Historical triad oracle-label exposure guards (synthetic fixtures only)
+        run: |
+          node --test measurement/experiments/two-path-council/test_audit_historical_triad.mjs
       - name: Deterministic four-arm synthetic smoke
         run: |
           cd measurement/experiments/two-path-council
