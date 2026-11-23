@@ -19,6 +19,9 @@ Stdlib only: the pod venv has no huggingface_hub.
 """
 import argparse, base64, hashlib, json, os, random, re, sys, time, urllib.request, urllib.error
 from pathlib import Path
+# The helper is a sibling of pod-loops, and this script also runs as a standalone CLI.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from hf.mill_evidence_overflow import load_map, remap_files
 
 REPO = "csoai/councilof-ai-evidence"
 API = "https://huggingface.co/api/datasets/" + REPO
@@ -279,6 +282,9 @@ def main():
         ap.error("--probe must be positive; anonymous verification cannot be disabled")
     manifest = json.loads(Path(a.manifest).read_text())
     files = local_files(Path(a.public_dir), manifest)
+    # Published physical keys differ only for pinned, capacity-sharded mill evidence.
+    # Original files, signatures and historical mirror keys are never rewritten.
+    files = remap_files(files, load_map())
     prefixes = {rel.split("/")[0] for rel in files}
     token = os.environ.get("HF_TOKEN") if a.apply else None
     tree = remote_tree(prefixes, token)

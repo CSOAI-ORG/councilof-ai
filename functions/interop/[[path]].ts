@@ -1,3 +1,5 @@
+import overflowMap from "../../scripts/hf/mill_evidence_overflow_map.json";
+
 /**
  * Keep historical .invalid evidence URLs readable after their exact bytes are packed
  * out of the Pages asset tree. These are retired records, never current proof.
@@ -106,6 +108,26 @@ function unavailable(): Response {
 export const onRequest: PagesFunction<AssetEnv> = async (ctx) => {
   const url = new URL(ctx.request.url);
   const path = url.pathname;
+  // Overflow never mutates a signed card or deletes a legacy mirror URL. The
+  // fixed, reviewed map names exactly the 3,608 files missing at HF main on
+  // 22 Nov 2026. All other paths follow their existing Pages route/redirect.
+  if (Object.prototype.hasOwnProperty.call(overflowMap.entries, path.slice(1))) {
+    if (ctx.request.method !== "GET" && ctx.request.method !== "HEAD") {
+      return new Response("Method not allowed", { status: 405, headers: { allow: "GET, HEAD" } });
+    }
+    const filename = path.substring(path.lastIndexOf("/") + 1);
+    const match = filename.match(/-([0-9a-f]{12})\.(?:json|jsonl)$/);
+    if (!match) return new Response("Not found", { status: 404 });
+    const shardPath = `${overflowMap.destination_prefix}/${match[1][0]}/${filename}`;
+    return new Response(null, {
+      status: 302,
+      headers: {
+        location: `https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/${shardPath}`,
+        "cache-control": "public, max-age=300",
+        "x-content-type-options": "nosniff",
+      },
+    });
+  }
   // Captured third-party HTML is retained evidence, not an application on our
   // origin. Preserve its exact body while blocking scripts, forms and remote
   // resources. _headers ALSO sets this policy for /interop/:report/mirrors/*, and
