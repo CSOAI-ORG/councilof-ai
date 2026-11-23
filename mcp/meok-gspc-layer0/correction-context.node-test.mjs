@@ -12,6 +12,9 @@ const corrections=()=>({schema:'csoai.corrections/0.1',signature_state:'VALID',s
       what_was_wrong:'Secret-like source text must not project'},
     {id:'C-2026-1122-02',date:'2026-11-22',detected_at:'2026-11-21T10:00:00Z',published_at:'2026-11-22T20:00:00Z'},
     {id:'C-2026-1121-03',date:'2026-11-21',detected_at:'2026-11-20',published_at:'2026-11-21T20:00:00Z'},
+    {id:'C-2026-1120-04',date:'2026-11-20',detected_at:'UNRECORDED',
+      detected_window:{not_before:'2026-11-19T09:00:00Z',not_after:'2026-11-20T10:00:00Z',basis:'fixture'},
+      published_at:'2026-11-20T12:00:00Z'},
   ]});
 const root=()=>({kind:'csoai.public-root/v1',card_count:2,card_sha256:['a'.repeat(64),'b'.repeat(64)],
   merkle_root:'c'.repeat(64),as_of:'2026-11-21T23:11:50Z',sig_ed25519:'d'.repeat(128)});
@@ -25,9 +28,9 @@ test('bounded GET-only source-to-Layer0 read preserves unknown publication',asyn
  const calls=[];
  const out=await readMeokCorrectionEvidence({correction_id:'C-2026-1123-01'},{fetchImpl:fake(corrections(),root(),witness(),calls),now});
  assert.equal(out.state,'PUBLIC_SOURCE_OBSERVED');
- assert.equal(out.corrections.n_records,3);
+ assert.equal(out.corrections.n_records,4);
  assert.deepEqual(out.corrections.timing_classes,
-   {EXACT_SOURCE_DECLARED:1,DAY_BOUNDED_SOURCE_DECLARED:1,UNMEASURED:1});
+   {EXACT_SOURCE_DECLARED:1,WINDOW_BOUNDED_SOURCE_DECLARED:2,UNMEASURED:1});
  assert.equal(out.corrections.publication_time_unknown,1);
  assert.equal(out.selected.published_at_source_claim,'UNRECORDED');
  assert.equal(out.selected.recipient_effect,'NOT_MEASURED');
