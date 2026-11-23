@@ -28,7 +28,7 @@ class ResearchReleaseTests(unittest.TestCase):
     def test_no_duplicate_observation_keys(self):
         rows=[self.rows[0],self.rows[0]]
         with self.assertRaises(ValueError):
-            validate_rows(("\n".join(json.dumps(x) for x in rows)*12).encode())
+            validate_rows(("\n".join(json.dumps(x) for x in rows)+"\n").encode())
 
     def test_rejects_missing_disclosure(self):
         rows=copy.deepcopy(self.rows)
