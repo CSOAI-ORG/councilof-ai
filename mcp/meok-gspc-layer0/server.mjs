@@ -14,7 +14,9 @@ import readline from 'node:readline';
 const HOME = os.homedir();
 const WS = path.join(HOME, 'workspace_for_ai');
 const CAP_DIR = process.env.MEOK_CAPABILITY_DIR || path.join(WS, 'meok-router', 'capability-records');
-const HIM_BASE = process.env.HIM_URL || 'http://127.0.0.1:8787';
+// This recovered bridge must not silently target the retired M2 :8787 HIM.
+// A serving coordinator must be explicitly configured by the runtime owner.
+const HIM_BASE = process.env.HIM_URL?.trim() || null;
 
 const TOOLS = [
   ...(process.env.MEOK_HF_ENABLED === '1' ? [HF_SITUATION_TOOL] : []),
@@ -65,15 +67,15 @@ const TOOLS = [
     description: 'Read the configured local fleet snapshot. Snapshot contents do not establish current capacity, heartbeats or completed jobs.',
     inputSchema: { type: 'object', properties: {} },
   },
-  {
+  ...(HIM_BASE ? [{
     name: 'him_say',
-    description: 'Send a governed message to the H.I.M. Coordinator on :8787.',
+    description: 'Legacy H.I.M. coordinator messaging, exposed only when HIM_URL is explicitly configured by the runtime owner.',
     inputSchema: {
       type: 'object',
       properties: { text: { type: 'string', description: 'Message to send to H.I.M.' } },
       required: ['text'],
     },
-  },
+  }] : []),
   {
     name: 'zcode_desktop',
     description: 'Read-only Desktop Commander metadata bridge. op="list" discovers names; op="call" is restricted to list_devices with empty arguments. A listed tool is not a grant. For any effectful host action use a separately authenticated, operator-approved workflow; this bridge cannot execute it.',
@@ -200,10 +202,17 @@ async function handleToolCall(name, args = {}) {
     }
   }
   if (name === 'meok_gspc_evaluate_work_step') {
+    if (!HIM_BASE) return JSON.stringify({ state: 'UNCHECKABLE', reason: 'COORDINATOR_NOT_CONFIGURED' });
     return JSON.stringify(await submitWorkStep(args, { endpoint: HIM_BASE }), null, 2);
   }
 
   if (name === 'meok_route_to_clan' || name === 'him_say') {
+    // The old HIM port is retired. Do not dispatch or infer a healthy backend
+    // from a hidden localhost fallback; Cosmos remains an explicit opt-in.
+    if (!HIM_BASE && (name === 'him_say' ||
+      !process.env.MEOK_CHAT_BACKEND || process.env.MEOK_CHAT_BACKEND === 'him')) {
+      return JSON.stringify({ state: 'UNCHECKABLE', reason: 'COORDINATOR_NOT_CONFIGURED' });
+    }
     const content = args.prompt || args.text || '';
     // A Cosmos model endpoint never replaces the coordinator's governed-message route.
     // Work-step telemetry above also remains on HIM_BASE.
