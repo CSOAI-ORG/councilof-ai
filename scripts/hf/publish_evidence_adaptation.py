@@ -3,7 +3,7 @@
 """Publish ORIGINAL GSPC × MEOK research release with privacy gates and exact-byte replay.
 
 Only releases the curated public summary under research/releases/... on a
-workflow_dispatch from protected master. No HF secret in PR CI, no raw
+protected master merge or manual dispatch. No HF secret in PR CI, no raw
 historical keys, private tasks, personal data or third-party model files.
 """
 from __future__ import annotations
@@ -125,8 +125,8 @@ def privacy_gate(root:Path,path:Path):
 
 
 def publish(path:Path,manifest:dict):
-    if os.environ.get("GITHUB_REF")!="refs/heads/master" or os.environ.get("GITHUB_EVENT_NAME")!="workflow_dispatch":
-        raise RuntimeError("release requires explicitly dispatched protected master workflow")
+    if os.environ.get("GITHUB_REF")!="refs/heads/master" or os.environ.get("GITHUB_EVENT_NAME") not in ("workflow_dispatch","push"):
+        raise RuntimeError("release requires protected-master push or explicit dispatch")
     token=(os.environ.get("HF_TOKEN") or "").strip()
     if not token:
         raise RuntimeError("No authorised HF_TOKEN; refusing upload")
