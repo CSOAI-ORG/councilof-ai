@@ -106,6 +106,33 @@ describe("routeIntent — deterministic keyword/entity routing onto the /mcp too
     if (plan.kind === "tools") expect(plan.calls.map((c) => c.tool)).toEqual(tools);
   });
 
+  it("answers the GSPC acronym question as authored cited guidance, not a fabricated measurement", async () => {
+    const questions = [
+      "What does GSPC stand for?",
+      "QA smoke test: What does GSPC stand for? Answer in one sentence.",
+      "Define GSPC",
+      "GSPC acronym",
+    ];
+    const seen = stubOrigin();
+    for (const q of questions) {
+      expect(routeIntent(q)).toEqual({ kind: "help", intent: "gspc-definition" });
+      const answer = await talk(q, ORIGIN);
+      expect(answer.kind).toBe("help");
+      expect(answer.grounded).toBe(false);
+      expect(answer.tool_calls).toEqual([]);
+      expect(answer.answer).toContain("Governance, Safety, Provenance and Continuity");
+      expect(answer.answer).toContain("https://councilof.ai/cite/gspc");
+      expect(answer.answer).not.toMatch(/\b(?:34|23) (?:axes?|slots?)\b/);
+      expect(answer.answer).toMatch(/not a conformity certification/i);
+    }
+    expect(seen).toEqual([]); // definition must not fetch the board or call a paid tool
+    for (const q of ["How many GSPC axes?", "What does GSPC measure?", "What does the board say?"]) {
+      const plan = routeIntent(q);
+      expect(plan.kind).toBe("tools");
+      if (plan.kind === "tools") expect(plan.calls[0].tool).toBe("board_totals");
+    }
+  });
+
   it("routes only to tools POST /mcp lists (derived from gspc-tools.json + paid-tools.json), or to the two router reads", () => {
     const listed = new Set([...GSPC_TOOLS.tools, ...PAID_TOOLS.tools].map((t) => t.name));
     expect(ROUTABLE_TOOLS).toEqual(listed);
