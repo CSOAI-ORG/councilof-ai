@@ -61,8 +61,11 @@ test("Signal Desk renders source-bound ontology and dated measurement state", as
   assert.match(r.get("graph-note"), /candidate mappings/i);
   assert.equal(r.get("gspc"), "34 axes · 34 measured");
   assert.equal(r.get("groups"), "2 draft proposals");
-  assert.equal(r.get("research"), "RECHECK REQUIRED");
-  assert.match(r.get("research-note"), /4 of 4 active claims require recheck/);
+  const sourceDue = researchPack.reviewAfter <= "2026-11-23" ||
+    researchPack.claims.some(c => ["source-reported", "observed"].includes(c.status) && c.reviewAfter <= "2026-11-23");
+  assert.equal(r.get("research"), sourceDue ? "RECHECK REQUIRED" : "REVIEW WINDOW ACTIVE");
+  assert.match(r.get("research-note"), /4 active claims require recheck/);
+  assert.match(r.get("research-note"), /no human approval inferred/);
   assert.equal(r.elements.get("windows").children.length, dates.windows.length);
   assert(r.requests.includes("/interop/governance-dependency-projection.json"));
 });
@@ -87,6 +90,15 @@ test("reader failure stays UNVERIFIED without claiming origin outage", async () 
 test("Corrections workspace carries a semantic primary heading", () => {
   const source = readFileSync(new URL("../../client/src/components/gspc/CorrectionsPane.tsx", import.meta.url), "utf8");
   assert.match(source, /<h1\b[^>]*>Published corrections and changes<\/h1>/);
+});
+
+test("an expired review deadline stays visible even when current source data advances", async () => {
+  const expired = structuredClone(researchPack);
+  expired.reviewAfter = "2026-11-23";
+  expired.claims.forEach(c => {if (c.status === "source-reported" || c.status === "observed") c.reviewAfter = "2026-11-23";});
+  const r = await render({"/working-groups/controlai.json":expired});
+  assert.equal(r.get("research"), "RECHECK REQUIRED");
+  assert.match(r.get("research-note"), /4 of 4 active claims require recheck/);
 });
 
 test("working-group research only advances through explicit dated source review", async () => {
