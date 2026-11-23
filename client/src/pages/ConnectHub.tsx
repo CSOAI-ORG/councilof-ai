@@ -188,6 +188,7 @@ export default function ConnectHub() {
               ["#choose", "Choose your starting point"],
               ["#free", "Free MCP door"],
               ["#platforms", "Find your AI platform"],
+              ["https://github.com/Council-of-AI-CSOAI-org/csoai-agent-plugin", "Open-source agent plugin and install guide"],
               ["/tools/#extension", "Chrome toolbar extension"],
               ["#stacks", "Install into your stack"],
               ["#agent-skills", "Portable Agent Skills & renderers"],
