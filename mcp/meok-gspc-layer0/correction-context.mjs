@@ -49,15 +49,16 @@ async function fixedRead(path,fetchImpl,now){
 
 function correctionCounts(rows){
   if(!Array.isArray(rows)||rows.length===0||rows.length>10000)throw Error('INVALID_CORRECTIONS');
-  const ids=new Set(),types={EXACT_SOURCE_DECLARED:0,DAY_BOUNDED_SOURCE_DECLARED:0,UNMEASURED:0};
+  const ids=new Set(),types={EXACT_SOURCE_DECLARED:0,WINDOW_BOUNDED_SOURCE_DECLARED:0,UNMEASURED:0};
   for(const row of rows){
     if(!isObject(row)||typeof row.id!=='string'||!row.id||row.id.length>100||ids.has(row.id))
       throw Error('INVALID_CORRECTION_ID');
     ids.add(row.id);
     const pub=goodDate(row.published_at),det=goodDate(row.detected_at);
     const day=goodDay(row.detected_at);
+    const windowStart=isObject(row.detected_window)&&goodDate(row.detected_window.not_before);
     if(pub&&det)types.EXACT_SOURCE_DECLARED++;
-    else if(pub&&day)types.DAY_BOUNDED_SOURCE_DECLARED++;
+    else if(pub&&(day||windowStart))types.DAY_BOUNDED_SOURCE_DECLARED++;
     else types.UNMEASURED++;
   }
   return types;
