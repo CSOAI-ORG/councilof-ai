@@ -176,5 +176,6 @@ export const OPEN_SOURCE_RELATED = [
   { href: "/trust-center", label: "What we are built on", what: "Every dependency, named, with its licence." },
   { href: "/gspc-verify", label: "Verify a card", what: "Resolve the key from the domain and check a signature yourself." },
   { href: "/evidence", label: "The evidence hub", what: "Where the provenance bench and the collected evidence live." },
+  { href: "https://huggingface.co/datasets/csoai/gspc-meok-evidence-adaptation-lab/tree/a533a34ccb9f428d0fb3dd6b9f1f831c5f43d1c6", label: "GSPC × MEOK research — 23 November release", what: "26 source-linked aggregate observations, methods and white paper. Verified exact-byte research mirror, not independent peer review or model certification." },
   { href: "/methodology", label: "The method", what: "Deterministic predicates, n≥30, and what we refuse to score." },
 ];
