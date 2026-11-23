@@ -1,0 +1,80 @@
+name: claim-maintenance-rechecks
+
+# The ONE scheduler for claim-maintenance re-checks (scripts/claims/maintenance_due.py: the
+# scheduled read, day 7, day 30 and day 90 for every LIVE registry in /api/claims/register),
+# moved here from the daily claim-watch job on the always-on host. That host's last run was
+# 2026-10-25T08:00:22Z (latest.json on csoai/councilof-ai-evidence); the day-30 check due
+# 2026-10-28 did not run. Same script, same cron hour, same outputs.
+#
+# The outcomes ledger is append-only and hash-linked, and its only copy is the published one.
+# The job therefore RESTORES outcomes.jsonl and candidates.jsonl from the evidence dataset before
+# it runs and stops if either cannot be read: a run that started from an empty ledger would
+# publish a new chain over the old one. maintenance_due.py itself aborts on a broken chain.
+#
+# Writes: three files under public/interop/claim-maintenance/ on csoai/councilof-ai-evidence.
+# Nothing is committed to this repository, no board is written and nothing is signed here.
+# A CHANGED_CONFIRMED outcome writes a correction CANDIDATE: a prompt for a person, never an entry.
+
+on:
+  schedule:
+    - cron: "50 7 * * *"
+  workflow_dispatch:
+    inputs:
+      no_upload:
+        description: "Run the re-checks but publish nothing (dry run)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: claim-maintenance-rechecks
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  rechecks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Scheduler selftest (offline)
+        run: python3 scripts/claims/maintenance_due.py selftest
+      - name: Restore the published ledger (stop if it cannot be read)
+        run: |
+          set -euo pipefail
+          D="$RUNNER_TEMP/claim-maintenance"; mkdir -p "$D"
+          BASE="https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance"
+          for f in outcomes.jsonl candidates.jsonl; do
+            code=$(curl -sSL -m 60 -o "$D/$f" -w '%{http_code}' "$BASE/$f")
+            if [ "$code" != "200" ] || [ ! -s "$D/$f" ]; then
+              echo "::error::could not restore $f from the evidence dataset (HTTP $code). Not running: an empty ledger would start a new chain."
+              exit 1
+            fi
+            echo "restored $f: $(wc -l < "$D/$f") rows, sha256 $(sha256sum "$D/$f" | cut -d' ' -f1)"
+          done
+      - name: Run the due re-checks
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          CLAIM_MAINT_HOST: "GitHub Actions, CSOAI-ORG/councilof-ai claim-maintenance-rechecks.yml"
+          PYTHONUNBUFFERED: "1"
+        run: |
+          set -euo pipefail
+          python3 -m pip install -q huggingface_hub
+          EXTRA=""
+          if [ "${{ inputs.no_upload || 'false' }}" = "true" ]; then EXTRA="--no-upload"; fi
+          python3 scripts/claims/maintenance_due.py run --data "$RUNNER_TEMP/claim-maintenance" --tools . $EXTRA | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: claim-maintenance-${{ github.run_id }}
+          path: ${{ runner.temp }}/claim-maintenance/latest.json
+          if-no-files-found: warn

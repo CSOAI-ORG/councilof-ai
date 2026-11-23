@@ -22,7 +22,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "arena"))
 import board_sign as B  # noqa: E402
 
-MIRROR = "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/"
+# The artifact's off-site copy: csoai/councilof-ai-evidence interop/, the target councilof.ai 302s
+# /interop/effect-binding-server-probe-*.json to. Runs signed before 21 Nov 2026 name
+# csoai/councilof-ai-mirror here; that dataset was deleted on 21 Nov 2026.
+MIRROR = "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/"
+EVIDENCE_DATASET = "csoai/councilof-ai-evidence"
 
 
 def fsha(p):
@@ -65,7 +69,7 @@ def payload_for(art_path, log_path, mirror=MIRROR, redactions=0):
         "as_of": art["as_of"],
         "rerun_of_sha256": art["rerun_of"]["sha256"],
         "artifact": {"path": "/interop/" + name, "sha256": fsha(art_path), "mirror": mirror + name},
-        "raw_log": {"path": f"public/interop/{os.path.basename(log_path)} (HF mirror only)", "sha256": fsha(log_path),
+        "raw_log": {"path": f"public/interop/{os.path.basename(log_path)} ({EVIDENCE_DATASET} only)", "sha256": fsha(log_path),
                     "redactions": {"jwt_shaped_strings": redactions, "rule": "replaced by [REDACTED jwt-shaped sha256:<hex of the original>]"}},
         "verdicts": {k: o[k] for k in ("BINDS", "PARTIAL", "DOES_NOT_BIND")},
         "tried": tp["tried"],

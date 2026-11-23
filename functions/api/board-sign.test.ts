@@ -68,6 +68,13 @@ describe("/api/board-sign caller paths", () => {
 describe("/api/board-sign OIDC workflow admission", () => {
   const ref = (file: string, r = "refs/heads/master") => `CSOAI-ORG/councilof-ai/.github/workflows/${file}@${r}`;
 
+  it("admits the silent-change watch only as that file on refs/heads/master, compared whole", () => {
+    expect(workflowAdmitted({ job_workflow_ref: ref("silent-change-watch.yml") })).toBe(true);
+    expect(workflowAdmitted({ job_workflow_ref: ref("silent-change-watch.yml", "refs/heads/lane/silent-change-detector-20261122") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("silent-change-watch.yml.bak") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("silent-change-watch.yml").replace("CSOAI-ORG/", "someone/") })).toBe(false);
+  });
+
   it("admits the capsule-index workflow only as that file on refs/heads/master, compared whole", () => {
     expect(workflowAdmitted({ job_workflow_ref: ref("capsule-index-daily.yml") })).toBe(true);
     expect(workflowAdmitted({ job_workflow_ref: ref("capsule-index-daily.yml", "refs/heads/lane/spine-capsule-20261122") })).toBe(false);

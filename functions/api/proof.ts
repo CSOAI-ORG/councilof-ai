@@ -170,7 +170,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     // is ~101 fetches, far past Cloudflare Pages Functions' 50-subrequest cap, so the invocation
     // threw and the endpoint 500'd. Every inclusion proof already lives inside its card wrapper,
     // which the build-time aggregate carries, so ONE fetch of /cards-bundle.json resolves them
-    // all regardless of card count.
+    // all regardless of card count. (Since the 22 Nov split its `cards` holds exactly the
+    // wrappers on the current root, which are the only hashes read here.)
     const bundleRes = await fetch(u("/cards-bundle.json"));
     if (!bundleRes.ok) {
       return markPaidUndeliveredResponse(json(
