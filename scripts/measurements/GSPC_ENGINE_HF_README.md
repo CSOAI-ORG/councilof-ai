@@ -16,7 +16,7 @@ pretty_name: CSOAI GSPC Source-Qualified Evidence Engine Index
 This index connects three separate, reviewable GSPC research products **only when their source digests and denominators agree**:
 
 1. The canonical board-to-fact-table coverage read-model (34 board axes, heterogeneous methodologies).
-2. The source-reconciled per-cell repeated-observation integrity audit (observations are NOT statistically independent questions).
+2. The source-reconciled **per-observation** repeated-observation integrity audit (observations are NOT statistically independent questions).
 3. The explicitly synthetic 1/5/25/150-document byte-integrity experiment (no model inference/training, no evidence of semantic poisoning).
 
 **Nothing here is a new signed, independently replicated or admitted GSPC measurement, a compliance grade, a model safety certificate, or authority for an agent to act.** The current publication is an unsigned aggregate built from CI artifacts. The joined source digests identify the bytes being compared but are not an external trust anchor.
@@ -53,3 +53,5 @@ against the version-controlled reference. Three historic but internally
 consistent green CI artifacts are not sufficient if master has changed
 underlying source bytes. This is proof of source agreement in the checkout,
 not an independently witnessed external signature or new model measurement.
+
+The repeat producer must declare `csoai.gspc-repeat-integrity/2` and a bijective raw-row join. Cells mixing provider routes cannot be grouped under only the first observation's route. The index rejects older pre-fix repeat artifacts.

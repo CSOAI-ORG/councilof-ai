@@ -19,7 +19,7 @@ One GSPC per-item mill fact row is one observation. A (model, axis, item) key ca
 
 - Total source observation rows, ungraded results, missing observed outputs, and unattributed model rows.
 - Distinct attributed (axis, model, item) keys vs rows beyond one per key.
-- A stricter declared-lineage grouping that also fixes the source cell model revision, bank digest and provider route. These fields are validated against the raw cell bytes. It is NOT proof of independently repeated execution or exactly controlled sampling conditions.
+- A stricter declared-lineage grouping that fixes the *individual raw observation's* model revision, bank digest and provider route. The fact row is joined bijectively to source bytes by its original index (or unique legacy item ID); the first provider route in a cell must never be assigned to its other observations. These fields are validated against each raw observation's bytes. It is NOT proof of independently repeated execution or exactly controlled sampling conditions.
 - Groups containing both a true and false grade, **not** a determination of poisoning, model instability, a violation or incorrect grading.
 - Explicit counts of missing lineage and uncertainty by axis.
 
@@ -41,3 +41,10 @@ The producer independently re-hashes the original source cells, verifies their f
 The report is **unsigned** and constructed by one controlled CI runner. Source hashes establish byte identity relative to the published manifest, not external authenticity. The canonical signed GSPC card/root verification is a separate process.
 
 Baseline (22 November 2026): 53,847 rows, 11,757 distinct attributable axis/model/item keys; 12,812 ungraded rows; 1,290 rows without a model identifier. The report itself is authoritative for the latest source-qualified counts; do not repeat historical figures as live counts.
+
+
+## Corrected provider-route evidence (23 November 2026)
+
+An independent re-read of 1,788 raw source cells found **208 cells mixing provider routes**, with **1,289 observations using a route other than their cell's first row**. The prior candidate method attributed all rows in a cell to the first provider, yielding **11,880** declared-lineage keys and **120** conflicting-grade groups. Those candidate figures are superseded **before public dataset publication**.
+
+The corrected `csoai.gspc-repeat-integrity/2` method uses a bijective raw-observation-to-fact join and yields **11,800** distinct declared-lineage keys and **105** groups containing both grade values. The coarse `axis/model/item` grouping remains **11,757** keys and 111 differently graded groups. None is a statistically independent sample size or new model-safety finding.

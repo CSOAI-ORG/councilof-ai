@@ -20,13 +20,19 @@ function sources(){
     axes:[{axis:"safety",per_item_rows:3},{axis:"effect-binding",per_item_rows:0}],
   };
   const repeat={
-    schema:"csoai.gspc-repeat-integrity/1",
+    schema:"csoai.gspc-repeat-integrity/2",
     state:"EXPLORATORY_SOURCE_RECONCILED_NOT_A_MODEL_GRADE",
     source_authentication:"DIGESTED_SOURCE_BYTES_NOT_SIGNED_OR_INDEPENDENTLY_REPRODUCED",
     sources:{manifest_sha256:H("b"),raw_cell_digest_sha256:H("c"),cell_files:2},
     rows:{rows:3,rows_ungraded:1,rows_without_model:1,rows_with_attributed_model:2,
       rows_with_complete_pinned_identity:2},
     attributed_model_identifiers:1,
+    source_route_audit:{
+      cells_with_multiple_provider_routes:1,
+      source_observations_on_nonfirst_provider_route:1,
+      join_state:"ALL_RAW_OBSERVATIONS_LINKED_BIJECTIVELY",
+      attribution_method:"PER_OBSERVATION_RAW_SOURCE_LINEAGE_NOT_FIRST_CELL_METADATA",
+    },
     by_axis:[{axis:"safety",rows:3}],
     coarse_identity:{distinct_keys:1,repeated_keys:1,extra_rows_above_one_per_key:1,grade_disagreement_keys:1},
     pinned_identity:{distinct_keys:1,repeated_keys:1,extra_rows_above_one_per_key:1,grade_disagreement_keys:1},
@@ -53,10 +59,23 @@ test("three research feeds join only when their source pins and denominators agr
   assert.equal(out.measurements.distinct_attributed_model_axis_item_keys,1);
   assert.equal(out.measurements.ungraded_observation_rows,1);
   assert.equal(out.measurements.untested_separations,1);
+  assert.equal(out.measurements.source_cells_with_multiple_provider_routes,1);
+  assert.equal(out.measurements.source_observations_on_nonfirst_provider_route,1);
   assert.equal(out.separate_synthetic_research.model_poisoning_effect,"NOT_TESTED");
   assert.equal(out.sources.github_action_runs.coverage,"https://github.com/CSOAI-ORG/councilof-ai/actions/runs/11");
   assert.equal(out.authority.startsWith("NONE:"),true);
 });
+test("a pre-fix cell-level route audit must not be accepted as qualified input",()=>{
+  const x=sources();
+  delete x.repeat.source_route_audit;
+  assert.throws(()=>produceEvidenceEngineIndex(x.coverage,x.repeat,x.mutation,x.hashes),
+    /source-observation provider-route provenance/);
+  const old=sources();
+  old.repeat.schema="csoai.gspc-repeat-integrity/1";
+  assert.throws(()=>produceEvidenceEngineIndex(old.coverage,old.repeat,old.mutation,old.hashes),
+    /repeat audit missing or incorrectly authenticated/);
+});
+
 test("unmatched manifest SHA refuses a plausible-looking combined report",()=>{
   const x=sources();
   x.repeat.sources.manifest_sha256=H("e");

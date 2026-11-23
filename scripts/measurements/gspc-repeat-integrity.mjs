@@ -70,6 +70,11 @@ export function summarizeRepeatRows(rows, cellIndex) {
       (r.model===null || (typeof r.model==="string" && r.model.length>0)) &&
       (r.ok===null || r.ok===true || r.ok===false),"invalid identity or grade");
     const cell=cellIndex.get(r.cell);
+    // This must come from the individually joined raw source observation.
+    // A cell can legitimately contain different inference provider routes:
+    // 208 source cells did so in the 22 November 2026 corpus.
+    check(rec(r._lineage),"per-observation source lineage missing for "+r.cell);
+    const lineage=r._lineage;
     if(typeof cell.axis==="string" && cell.axis && cell.axis!==r.axis &&
        !cell.axis_ambiguous)fail("cell index axis disagrees for "+r.cell);
     m.rows++;
@@ -87,9 +92,9 @@ export function summarizeRepeatRows(rows, cellIndex) {
     const coarseKey=key(r.axis,r.model,r.item_id);
     group(coarse,coarseKey,r.ok);
     group(a.coarse,coarseKey,r.ok);
-    const hasRev=typeof cell.model_hf_revision==="string" && /^[0-9a-f]{40}$/.test(cell.model_hf_revision);
-    const hasBank=typeof cell.bank_sha256==="string" && /^[0-9a-f]{64}$/.test(cell.bank_sha256);
-    const hasRoute=typeof cell.provider_route==="string" && cell.provider_route.trim().length>0;
+    const hasRev=typeof lineage.model_hf_revision==="string" && /^[0-9a-f]{40}$/.test(lineage.model_hf_revision);
+    const hasBank=typeof lineage.bank_sha256==="string" && /^[0-9a-f]{64}$/.test(lineage.bank_sha256);
+    const hasRoute=typeof lineage.provider_route==="string" && lineage.provider_route.trim().length>0;
     if(!hasRev)m.rows_missing_model_revision++;
     if(!hasBank)m.rows_missing_bank_digest++;
     if(!hasRoute)m.rows_missing_provider_route++;
@@ -99,7 +104,7 @@ export function summarizeRepeatRows(rows, cellIndex) {
       continue;
     }
     m.rows_with_complete_pinned_identity++;
-    const pinnedKey=key(r.axis,r.model,cell.model_hf_revision,cell.bank_sha256,cell.provider_route,r.item_id);
+    const pinnedKey=key(r.axis,r.model,lineage.model_hf_revision,lineage.bank_sha256,lineage.provider_route,r.item_id);
     group(pinned,pinnedKey,r.ok);
     group(a.pinned,pinnedKey,r.ok);
   }
@@ -146,7 +151,7 @@ export function auditRepeatIntegrity({manifestPath,evidenceDir}) {
     check(rows.length>0,"empty source cell "+file);
     physicalRows+=rows.length;
     const hash=digest(raw);
-    sources.set(file,{hash,rows:rows.length,first:rows[0]});
+    sources.set(file,{hash,rows:rows.length,first:rows[0],rawRows:rows});
     sourceDigestLines.push(file+" "+hash);
   }
   const sourceDigest=digest(sourceDigestLines.join("\n"));
@@ -200,13 +205,72 @@ export function auditRepeatIntegrity({manifestPath,evidenceDir}) {
   const normalized=x=>JSON.stringify(Object.entries(x).sort(([a],[b])=>a.localeCompare(b)));
   check(normalized(axisCounts)===normalized(manifest.by_axis),"manifest per-axis attribution differs from fact rows");
   check(normalized(modelCounts)===normalized(manifest.by_model),"manifest per-model attribution differs from fact rows");
-  const report=summarizeRepeatRows(factRows,index);
+  // Every derived fact must correspond to exactly one raw observation.
+  // The source's output hash/prompt identity are the join witnesses.
+  // Some legacy governance records have no i; their explicit item_id is
+  // unique within the source cell, so fallback only on a unique exact match.
+  // Inference route is read from *that observation*, never the cell header.
+  const used=new Set();
+  const perSourceId=new Map();
+  let cellsWithMixedProviderRoutes=0,observationsUsingNonFirstProviderRoute=0;
+  for(const [file,source] of sources) {
+    const identities=new Map();
+    const routes=new Set();
+    const firstRoute=source.first.provider_route??null;
+    for (let i=0;i<source.rawRows.length;i++){
+      const raw=source.rawRows[i];
+      const id=raw.item_id;
+      if(typeof id==="string"&&id.length>0){
+        if(identities.has(id))identities.set(id,null);
+        else identities.set(id,i);
+      }
+      routes.add(raw.provider_route??null);
+      if((raw.provider_route??null)!==firstRoute)observationsUsingNonFirstProviderRoute++;
+    }
+    if(routes.size>1)cellsWithMixedProviderRoutes++;
+    perSourceId.set(file,identities);
+  }
+  const joinedFacts=factRows.map(row=>{
+    const source=sources.get(row.cell);
+    check(source!==undefined,"fact row points outside canonical cells");
+    let ordinal=row.i;
+    if(ordinal===null||ordinal===undefined){
+      ordinal=perSourceId.get(row.cell).get(row.item_id);
+      check(integer(ordinal),"legacy no-index fact has no unique source item_id: "+row.cell);
+    }
+    check(integer(ordinal)&&ordinal<source.rawRows.length,"fact observation source index invalid: "+row.cell);
+    const raw=source.rawRows[ordinal];
+    const unique=key(row.cell,ordinal);
+    check(!used.has(unique),"fact duplicates a single raw source observation: "+row.cell);
+    used.add(unique);
+    // The fact table normalises some row grades/axis labels. Verify only
+    // identity bytes, not raw.ok equality or a synthetic grading claim.
+    if(raw.axis!==null&&raw.axis!==undefined)
+      check(raw.axis===row.axis,"fact axis differs from linked source observation: "+row.cell);
+    if(raw.model!==null&&raw.model!==undefined)
+      check(raw.model===row.model,"fact model differs from linked source observation: "+row.cell);
+    if(typeof raw.item_id==="string"&&raw.item_id.length>0)
+      check(raw.item_id===row.item_id,"fact item_id differs from linked source observation: "+row.cell);
+    if(typeof raw.prompt_sha256==="string"&&raw.prompt_sha256.length>0)
+      check(raw.prompt_sha256===row.prompt_sha256,"fact prompt hash differs from linked raw observation: "+row.cell);
+    if(typeof raw.raw_output_sha256==="string"&&raw.raw_output_sha256.length>0)
+      check(raw.raw_output_sha256===row.raw_output_sha256,
+        "fact output hash differs from linked raw observation: "+row.cell);
+    return {...row,_lineage:{
+      model_hf_revision:raw.model_hf_revision??null,
+      bank_sha256:raw.bank_sha256??null,
+      provider_route:raw.provider_route??null,
+    }};
+  });
+  check(used.size===physicalRows && used.size===factRows.length,
+    "raw observation/source fact table join is not complete and bijective");
+  const report=summarizeRepeatRows(joinedFacts,index);
   check(report.rows.rows===manifest.counts.measurements &&
     report.rows.rows_ungraded===manifest.counts.rows_not_graded &&
     report.rows.rows_without_model===manifest.counts.rows_without_a_model,
     "fact grading/lineage counts differ from manifest");
   return {
-    schema:"csoai.gspc-repeat-integrity/1",
+    schema:"csoai.gspc-repeat-integrity/2",
     state:"EXPLORATORY_SOURCE_RECONCILED_NOT_A_MODEL_GRADE",
     source_authentication:"DIGESTED_SOURCE_BYTES_NOT_SIGNED_OR_INDEPENDENTLY_REPRODUCED",
     sources:{
@@ -217,10 +281,17 @@ export function auditRepeatIntegrity({manifestPath,evidenceDir}) {
       physical_source_rows:physicalRows,
     },
     ...report,
+    source_route_audit:{
+      cells_with_multiple_provider_routes:cellsWithMixedProviderRoutes,
+      source_observations_on_nonfirst_provider_route:observationsUsingNonFirstProviderRoute,
+      join_state:"ALL_RAW_OBSERVATIONS_LINKED_BIJECTIVELY",
+      attribution_method:"PER_OBSERVATION_RAW_SOURCE_LINEAGE_NOT_FIRST_CELL_METADATA",
+    },
     limitations:[
       "Observation rows are not independent test items, unique evaluation runs or unique customers",
       "Repeated model-axis-item keys may reflect valid repeated trials; grade changes do not prove misconduct or poisoning",
       "A complete model/bank/provider key is not proof of independent run, fixed decoding settings or exact model weights",
+      "Source cells can mix inference provider routes; the pinned key uses each raw observation route after a bijective index/item-id join",
       "Null grades and missing outputs are UNGRADED/UNCHECKABLE, never scored as false, clean or safe",
       "This artifact does not modify or certify the GSPC 34-axis board or create any new separation verdict",
       "Authenticity against an attacker able to rewrite both evidence and hashes requires independent signed pins",

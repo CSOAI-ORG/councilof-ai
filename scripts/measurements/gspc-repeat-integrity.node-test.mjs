@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, existsSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, existsSync, unlinkSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { createHash } from "node:crypto";
@@ -57,6 +57,10 @@ test("repeated grades are observations, not additional unique items",()=>{
     {cell:"cell-a",axis:"safety",model:null,item_id:"three",ok:null,observed:null,raw_output_sha256:null},
     {cell:"cell-b",axis:"safety",model:"vendor/A",item_id:"one",ok:false,observed:"UNSAFE",raw_output_sha256:"b"},
   ];
+  for (const row of rows) row._lineage={
+    model_hf_revision:cell.model_hf_revision,bank_sha256:cell.bank_sha256,
+    provider_route:cell.provider_route,
+  };
   const a=summarizeRepeatRows(rows,idx);
   assert.equal(a.rows.rows,4);
   assert.equal(a.rows.rows_with_attributed_model,3);
@@ -75,12 +79,53 @@ test("missing revision excludes only that row from pinned identity, not from sou
   const idx=new Map([["cell",{axis:"safety",axis_ambiguous:false,model_hf_revision:null,
     bank_sha256:"b",provider_route:"route",n_rows:1,n_joined:1,n_skipped:0}]]);
   const a=summarizeRepeatRows([{cell:"cell",axis:"safety",model:"vendor/A",item_id:"one",ok:null,
-    observed:null,raw_output_sha256:null}],idx);
+    observed:null,raw_output_sha256:null,_lineage:{model_hf_revision:null,
+      bank_sha256:"b",provider_route:"route"}}],idx);
   assert.equal(a.rows.rows_without_complete_pinned_identity,1);
   assert.equal(a.coarse_identity.distinct_keys,1);
   assert.equal(a.pinned_identity.distinct_keys,0);
   assert.equal(a.rows.rows_ungraded,1);
 });
+
+test("per-observation lineage is mandatory: the cell header cannot silently substitute",()=>{
+  const cell={axis:"safety",axis_ambiguous:false,model_hf_revision:"a".repeat(40),
+    bank_sha256:"b".repeat(64),provider_route:"first-provider",n_rows:1,n_joined:1,n_skipped:0};
+  assert.throws(()=>summarizeRepeatRows([{
+    cell:"source",axis:"safety",model:"test/A",item_id:"one",ok:true
+  }],new Map([["source",cell]])),/per-observation source lineage missing/);
+});
+
+test("same-cell mixed inference providers are distinct pinned identities, not one trial",()=>withinFixture(f=>{
+  const from=[{...f.first,i:0,provider_route:"provider/A",raw_output_sha256:"d".repeat(64)},
+    {...f.first,i:1,provider_route:"provider/B",ok:false,raw_output_sha256:"e".repeat(64)}];
+  const raw=from.map(r=>JSON.stringify(r)).join("\n")+"\n";
+  const name="items-safety-"+sha(raw).slice(0,12)+".jsonl";
+  unlinkSync(join(f.source,f.name));
+  writeFileSync(join(f.source,name),raw);
+  const partRows=[{...f.row,i:0,cell:name,raw_output_sha256:"d".repeat(64)},
+    {...f.row,i:1,cell:name,ok:false,raw_output_sha256:"e".repeat(64)}];
+  const part=partRows.map(r=>JSON.stringify(r)).join("\n")+"\n";
+  writeFileSync(join(f.table,"gspc_measurements/part-000.jsonl"),part);
+  const meta={...f.meta,cell:name,cell_sha256:sha(raw),provider_route:"provider/A",
+    n_rows:2,n_joined:2,n_graded:2,n_ok:1,accuracy:0.5};
+  writeFileSync(join(f.table,"gspc_cells.jsonl"),JSON.stringify(meta)+"\n");
+  const manifest={
+    ...f.manifest,source:{cell_files:1,source_rows:2,source_digest:sha(name+" "+sha(raw))},
+    counts:{...f.manifest.counts,measurements:2},by_axis:{safety:2},by_model:{"fixture/A":2},
+    tables:{measurements:{...f.manifest.tables.measurements,rows:2,bytes:Buffer.byteLength(part),
+      parts:[{file:"gspc_measurements/part-000.jsonl",rows:2,bytes:Buffer.byteLength(part)}]}},
+  };
+  writeFileSync(f.manifestPath,JSON.stringify(manifest));
+  const x=auditRepeatIntegrity({manifestPath:f.manifestPath,evidenceDir:f.source});
+  assert.equal(x.rows.rows,2);
+  assert.equal(x.coarse_identity.distinct_keys,1);
+  assert.equal(x.coarse_identity.grade_disagreement_keys,1);
+  assert.equal(x.pinned_identity.distinct_keys,2);
+  assert.equal(x.pinned_identity.grade_disagreement_keys,0);
+  assert.equal(x.source_route_audit.cells_with_multiple_provider_routes,1);
+  assert.equal(x.source_route_audit.source_observations_on_nonfirst_provider_route,1);
+  assert.equal(x.source_route_audit.join_state,"ALL_RAW_OBSERVATIONS_LINKED_BIJECTIVELY");
+}));
 
 test("reader reproduces a complete source-bound positive fixture",()=>withinFixture(f=>{
   const a=auditRepeatIntegrity({manifestPath:f.manifestPath,evidenceDir:f.source});
@@ -137,4 +182,9 @@ test("current 53k-row corpus reconciles with attributed and pinned denominators"
   assert.equal(a.pinned_identity.distinct_keys+a.pinned_identity.extra_rows_above_one_per_key,
     a.rows.rows_with_complete_pinned_identity);
   assert.equal(a.by_axis.reduce((n,row)=>n+row.rows,0),a.rows.rows);
+  assert.equal(a.source_route_audit.join_state,"ALL_RAW_OBSERVATIONS_LINKED_BIJECTIVELY");
+  assert.equal(a.source_route_audit.cells_with_multiple_provider_routes,208);
+  assert.equal(a.source_route_audit.source_observations_on_nonfirst_provider_route,1289);
+  assert.equal(a.pinned_identity.distinct_keys,11800);
+  assert.equal(a.pinned_identity.grade_disagreement_keys,105);
 });

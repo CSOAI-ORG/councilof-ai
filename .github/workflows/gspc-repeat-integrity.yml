@@ -46,7 +46,10 @@ jobs:
           import os,json
           p=Path(os.environ["RUNNER_TEMP"])/"gspc-repeat"/"report.json"
           d=json.loads(p.read_text())
+          assert d["schema"]=="csoai.gspc-repeat-integrity/2"
           assert d["state"]=="EXPLORATORY_SOURCE_RECONCILED_NOT_A_MODEL_GRADE"
+          assert d["source_route_audit"]["join_state"]=="ALL_RAW_OBSERVATIONS_LINKED_BIJECTIVELY"
+          assert d["source_route_audit"]["attribution_method"]=="PER_OBSERVATION_RAW_SOURCE_LINEAGE_NOT_FIRST_CELL_METADATA"
           assert d["source_authentication"]=="DIGESTED_SOURCE_BYTES_NOT_SIGNED_OR_INDEPENDENTLY_REPRODUCED"
           assert d["rows"]["rows"]==d["rows"]["rows_with_attributed_model"]+d["rows"]["rows_without_model"]
           for key,denominator in [

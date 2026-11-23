@@ -24,7 +24,7 @@ export function produceEvidenceEngineIndex(coverage,repeat,mutation,hashes,runId
     coverage.source_authentication==="DIGESTED_BYTES_NOT_SIGNATURE_VERIFIED",
     "coverage input not an unsigned, read-only source projection");
   check(rec(repeat) &&
-    repeat.schema==="csoai.gspc-repeat-integrity/1" &&
+    repeat.schema==="csoai.gspc-repeat-integrity/2" &&
     repeat.state==="EXPLORATORY_SOURCE_RECONCILED_NOT_A_MODEL_GRADE" &&
     repeat.source_authentication==="DIGESTED_SOURCE_BYTES_NOT_SIGNED_OR_INDEPENDENTLY_REPRODUCED",
     "repeat audit missing or incorrectly authenticated");
@@ -50,6 +50,14 @@ export function produceEvidenceEngineIndex(coverage,repeat,mutation,hashes,runId
     number(c.board_separated_leads)&&number(c.board_ties)&&number(c.board_untested_separations)&&
     c.board_separated_leads+c.board_ties+c.board_untested_separations===c.board_model_comparison_axes,
     "board axes or comparison separation denominator inconsistent");
+  check(rec(repeat.source_route_audit) &&
+    repeat.source_route_audit.join_state==="ALL_RAW_OBSERVATIONS_LINKED_BIJECTIVELY" &&
+    repeat.source_route_audit.attribution_method==="PER_OBSERVATION_RAW_SOURCE_LINEAGE_NOT_FIRST_CELL_METADATA" &&
+    number(repeat.source_route_audit.cells_with_multiple_provider_routes) &&
+    number(repeat.source_route_audit.source_observations_on_nonfirst_provider_route) &&
+    repeat.source_route_audit.cells_with_multiple_provider_routes<=repeat.sources.cell_files &&
+    repeat.source_route_audit.source_observations_on_nonfirst_provider_route<=r.rows,
+    "repeat audit lacks source-observation provider-route provenance");
   check(number(c.fact_rows)&&c.fact_rows===r.rows &&
     number(c.fact_ungraded_rows)&&c.fact_ungraded_rows===r.rows_ungraded &&
     number(c.fact_unattributed_model_rows)&&c.fact_unattributed_model_rows===r.rows_without_model &&
@@ -131,6 +139,9 @@ export function produceEvidenceEngineIndex(coverage,repeat,mutation,hashes,runId
       differently_graded_repeat_groups:repeat.coarse_identity.grade_disagreement_keys,
       distinct_fully_declared_lineage_keys:repeat.pinned_identity.distinct_keys,
       differently_graded_declared_lineage_groups:repeat.pinned_identity.grade_disagreement_keys,
+      source_cells_with_multiple_provider_routes:repeat.source_route_audit.cells_with_multiple_provider_routes,
+      source_observations_on_nonfirst_provider_route:repeat.source_route_audit.source_observations_on_nonfirst_provider_route,
+      observation_route_attribution:repeat.source_route_audit.attribution_method,
     },
     separate_synthetic_research:{
       baseline_documents:mutation.document_count,
