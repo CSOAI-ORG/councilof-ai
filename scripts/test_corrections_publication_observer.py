@@ -4,7 +4,7 @@
 import copy
 import hashlib
 import unittest
-from corrections_publication_observer import canonical,validate,otlp_logs
+from scripts.corrections_publication_observer import canonical,validate,otlp_logs
 
 WRAPPER=["signature","signature_state","signature_check","correction_latency","note","fix_requires"]
 
