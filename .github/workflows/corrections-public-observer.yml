@@ -1,0 +1,100 @@
+name: Corrections public post-deploy readback (not publication proof)
+
+on:
+  workflow_run:
+    workflows: ["Build + deploy site (gated production branch)"]
+    types: [completed]
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: corrections-public-observer
+  cancel-in-progress: false
+
+jobs:
+  observe:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'master' &&
+       github.event.workflow_run.repository.full_name == 'CSOAI-ORG/councilof-ai')
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit tests — no inferred timestamps or authority
+        run: python3 -m unittest -v scripts/test_corrections_publication_observer.py
+
+      - name: Obtain public JSON exact response bytes
+        run: |
+          mkdir -p /tmp/csoai-observer-src observer-out
+          python3 - <<'PY'
+          import json, urllib.request
+          from pathlib import Path
+          url = "https://councilof.ai/api/corrections"
+          request=urllib.request.Request(url,headers={
+              "User-Agent":"csoai-corrections-post-deploy/0.1 (+https://councilof.ai)",
+              "Accept":"application/json",
+              "Cache-Control":"no-cache",
+          })
+          with urllib.request.urlopen(request,timeout=35) as r:
+              if r.status!=200 or not r.headers.get("content-type","").startswith("application/json"):
+                  raise RuntimeError("Public corrections GET did not return 200 JSON")
+              raw=r.read(1_000_001)
+          if len(raw)>1_000_000:
+              raise RuntimeError("Refusing overlarge source response")
+          obj=json.loads(raw)
+          if obj.get("schema")!="csoai.corrections/0.1":
+              raise RuntimeError("Unexpected corrections source schema")
+          Path("/tmp/csoai-observer-src/public-response.json").write_bytes(raw)
+          print("Public correction response acquired; bytes:",len(raw),"entries:",len(obj["corrections"]))
+          PY
+
+      - name: Independently verify exact captured source against csoai.org DID
+        run: |
+          python3 -m pip -q install 'cryptography>=42,<49'
+          python3 scripts/verify_corrections_signature.py \
+            --file /tmp/csoai-observer-src/public-response.json \
+            --out /tmp/csoai-observer-src/verified.json
+
+      - name: Emit separate observed time, source hashes and OTLP log
+        env:
+          DEPLOY_SHA: ${{ github.event.workflow_run.head_sha }}
+          DEPLOY_RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: |
+          args=()
+          if [ -n "$DEPLOY_SHA" ]; then
+            args+=(--deploy-sha "$DEPLOY_SHA" --deploy-run-url "$DEPLOY_RUN_URL")
+          fi
+          python3 scripts/corrections_publication_observer.py \
+            --response /tmp/csoai-observer-src/public-response.json \
+            --signature-check /tmp/csoai-observer-src/verified.json \
+            --out observer-out/public-readback.json \
+            --otlp-out observer-out/otlp-log.json \
+            "${args[@]}"
+
+      - name: Privacy gate over the exact outgoing JSON bytes
+        run: python3 scripts/privacy/publication_gate.py --label corrections-post-deploy observer-out
+
+      - name: Retain verifiable public observation as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: corrections-public-observation-${{ github.run_id }}
+          path: observer-out/
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Evidence doctrine
+        run: |
+          echo "Observed at != deployed at != source committed at != published_at."
+          echo "The artifact contains no signing key, source text, performance grade or per-correction anchor time."
+          echo "Independent HTTP readback + source DID signature verification are required."

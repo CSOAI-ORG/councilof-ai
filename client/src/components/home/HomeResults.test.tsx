@@ -32,19 +32,20 @@ const render = (payload: GspcPayload | null, error: string | null = null) =>
   );
 
 describe("homepage result evidence boundary", () => {
-  it("keeps its only count beside separation, sample, date and source", () => {
+  it("keeps its only count beside separation, date and shared source", () => {
     const html = render(data);
     expect(html.match(/4 axes · 3 measured \(fixture\)/g)).toHaveLength(1);
     for (const part of [
       "0 of 2",
       "1 TIE",
       "1 UNTESTED",
-      "n 40",
       "fixture runs 2026-01-02",
-      "GET /api/gspc",
+      'href="/api/gspc"',
     ])
       expect(html).toContain(part);
-    expect(html).toContain("not an overall model score");
+    expect(html).toContain("Open on Hugging Face");
+    expect(html.match(/<iframe\b/g)).toHaveLength(1);
+    expect(html).toContain('src="https://csoai-gspc-board.static.hf.space/index.html"');
   });
   it("does not invent a zero or show unqualified totals on a partial separation read", () => {
     const html = render({
