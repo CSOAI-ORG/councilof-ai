@@ -17,6 +17,8 @@ SOURCE_STATES={
  "repeat":("csoai.gspc-repeated-observation-audit/0.1","state","RETROSPECTIVE_PUBLIC_REUSE"),
  "complementarity":("csoai.gspc-public-error-complementarity/0.1","evidence_state","RETROSPECTIVE_PUBLIC_REUSE"),
  "human":("csoai.him-meok-factorial-research/0.1","evidence_state","SYNTHETIC"),
+ "referee":("csoai.gspc-readonly-rule-referee/0.1","verdict","DISSENT"),
+ "corrections":("csoai.correction-timing-observer/0.1","state","PUBLIC_SOURCE_TIMING_REANALYSIS"),
 }
 
 
@@ -32,7 +34,7 @@ def validate(kind,r):
     schema,field,state=SOURCE_STATES[kind]
     if not isinstance(r,dict) or r.get("schema")!=schema or r.get(field)!=state:
         raise ValueError("research input has wrong schema or evidence state")
-    key="receipt_sha256" if kind=="temporal" else "report_sha256"
+    key={"temporal":"receipt_sha256","referee":"result_sha256"}.get(kind,"report_sha256")
     claim=r.get(key)
     if not isinstance(claim,str) or claim!=digest({k:v for k,v in r.items() if k!=key}):
         raise ValueError("input report digest mismatch")
@@ -44,6 +46,15 @@ def validate(kind,r):
         raise ValueError("historical repetition mislabelled as temporal")
     if kind=="complementarity" and "oracle" not in r.get("methods",{}).get("either_correct","").lower():
         raise ValueError("hidden ground-truth oracle ceiling not disclosed")
+    if kind=="referee" and (r.get("panel")!="NOT_CONVENED" or
+                            r.get("ruling_authority")!="NONE" or
+                            r.get("new_gspc_measurement") is not False or
+                            r.get("advisory_positions_unverified",{}).get("declared_votes")!=12):
+        raise ValueError("referee source falsely grants ruling or measurement authority")
+    if kind=="corrections" and (r.get("no_append_only_proof") is not True or
+                               r.get("effect_of_correction_on_users")!="NOT_MEASURED" or
+                               not isinstance(r.get("corrections_content_sha256"),str)):
+        raise ValueError("corrections source falsely asserts independent custody or user outcomes")
     return claim
 
 
@@ -66,12 +77,14 @@ def card(kind,title,known,unknown,question,source_digest,scope):
 
 def render(reports):
     if set(reports)!=set(SOURCE_STATES):
-        raise ValueError("exactly four distinct research report types required")
+        raise ValueError("exactly six distinct research report types required")
     receipts={k:validate(k,reports[k]) for k in SOURCE_STATES}
     t=reports["temporal"]
     r=reports["repeat"]
     c=reports["complementarity"]
     h=reports["human"]
+    e=reports["referee"]
+    q=reports["corrections"]
     cards=[
       card("temporal","What changed on the GSPC board?",
            f"The public board declared {t['n_axes']} axes, {t['n_measured_declared']} marked MEASURED, and {t['n_separated_model_axes']} separated model-axis leaders at the retrieval.",
@@ -88,6 +101,16 @@ def render(reports):
            "A ground-truth-aware oracle is not a deployable referee, production improvement, independent model family or BFT result.",
            "Can an independent referee choose a genuinely correct answer without seeing hidden ground truth, on new held-out tasks?",
            receipts["complementarity"],"Historical paired public-bank model correctness"),
+      card("referee","Can twelve votes overrule a reproducible measurement rule?",
+           f"The read-only referee independently derived {e['derived_public_source_value']} for {e['field']}, while the claim asserted {e['asserted']}; its verdict was DISSENT despite {e['advisory_positions_unverified']['advisory_concur']} of {e['advisory_positions_unverified']['declared_votes']} unauthenticated advisory positions.",
+           "No real independent reviewer, live BFT quorum, truth outside the publisher source or binding human ruling exists.",
+           "Can independent model reviewers reproduce the pre-registered rule and cite separately authenticated evidence, with no access to hidden outcomes?",
+           receipts["referee"],"Read-only source-count check; advisory votes simulated"),
+      card("corrections","Can we establish how quickly errors were corrected?",
+           f"The public ledger contains {q['n_corrections']} corrections. Exact source-declared detection-to-publication intervals exist for {q['n_exact_timing_pairs_with_nonnegative_latency']} records; {q['timestamp_coverage']['published_at'].get('UNRECORDED',0)} publication times remain unrecorded.",
+           "The source is not proven append-only; historical public deployment timestamps, recipient effects and correction SLAs are not independently verified.",
+           "Which publication/deploy evidence can close the missing timestamp cases without backfilling invented dates?",
+           receipts["corrections"],"Publisher-maintained corrections readback; no outcomes"),
       card("human","Does useful human information outperform mere presence?",
            f"The synthetic {h['n_matched_tasks']}-task factorial calculates separate information, presence, proposed-policy and time-period effects.",
            "No real user, independent outcome, model-weight change, human authority or AI consciousness was observed.",
@@ -96,7 +119,7 @@ def render(reports):
     ]
     out={
        "schema":SCHEMA,"state":"READ_ONLY_RESEARCH_PROJECTION",
-       "source_report_count":4,
+       "source_report_count":len(SOURCE_STATES),
        "cards":cards,
        "human_authority":"NOT_GRANTED",
        "gspc_board_mutations":0,
