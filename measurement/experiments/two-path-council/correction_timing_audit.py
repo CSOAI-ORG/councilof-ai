@@ -96,6 +96,7 @@ def reanalyse(source):
         "schema":SCHEMA,"state":"PUBLIC_SOURCE_TIMING_REANALYSIS",
         "source_schema":source["schema"],
         "n_corrections":len(rows),
+        "corrections_content_sha256":sha(canonical(rows)),
         "timestamp_coverage":{k:dict(sorted(v.items())) for k,v in kinds.items()},
         "n_timing_evidence_fields_nonempty":timing_evidence_present,
         "n_exact_timing_pairs_with_nonnegative_latency":len(latencies),
@@ -136,7 +137,8 @@ def main():
     if not a.public:p.error("only read-only public audit is enabled")
     raw=fetch()
     output=reanalyse(json.loads(raw))
-    output.pop("report_sha256")
+    stable=output.pop("report_sha256")
+    output["stable_analysis_sha256"]=stable
     output["source_bytes_sha256"]=sha(raw)
     output["report_sha256"]=sha(canonical(output))
     print(json.dumps(output,indent=2,sort_keys=True))
