@@ -1,35 +1,22 @@
 {
  "schema": "csoai.measurement-anchors/0.1",
- "as_of": "2026-10-28T08:53:00Z",
- "date": "2026-10-28",
+ "as_of": "2026-11-23T20:04:59Z",
+ "date": "2026-11-23",
  "what_this_is": "Where the index's bytes are anchored, read from the anchor files themselves. Anchors show WHEN bytes existed; the signature shows who signed them; neither says what the capsules measured.",
  "index": {
-  "file": "measurement-index-v0.2-2026-10-28.json",
-  "sha256": "241c5673d1afcd6a320e795facb8a7964dbfeda2c02af74705a1fa49d602d688",
-  "index_root": "bf58e87656139fe46ad5816930c1a1abb866477302e31f8c8c8f49067dd4de7d"
+  "file": "measurement-index-v0.2-2026-11-23.json",
+  "sha256": "14e49ec44059dde95e2bcdae050dcd0d0a600f751310b03e056c58d878454487",
+  "index_root": "3f94ac9e0910f4922d565ca36daf8e5938b2e94bd3aca6413bd5ebc25c702ca1"
  },
  "opentimestamps": {
-  "file": "measurement-index-v0.2-2026-10-28.json.ots",
-  "proof_sha256": "30e9826eb7ee35eac599c056f50fe77f27d14de58066c41384ad5ae9643940f2",
+  "file": "measurement-index-v0.2-2026-11-23.json.ots",
+  "proof_sha256": "313595011d5531d26af659d5df0ccd49847f2471c82ce91f1c5a5e1a2974ef40",
   "state": "PENDING_CALENDAR_COMMITMENT",
   "bitcoin_block_heights": [],
   "bitcoin": [],
   "meaning": "a Bitcoin attestation dates the index bytes no later than that block; a calendar commitment alone dates nothing"
  },
- "rekor": [
-  {
-   "subject": "daily index",
-   "file": "measurement-index-v0.2-2026-10-28.json",
-   "subject_sha256": "241c5673d1afcd6a320e795facb8a7964dbfeda2c02af74705a1fa49d602d688",
-   "signed_payload_sha256": "249fae68e2682eda234ce61172dc8f24274adb0e98d0fb0be0cf89d29e0c659b",
-   "state": "INCLUDED (inclusion proof verifies)",
-   "logIndex": 3535235263,
-   "uuid": "108e9186e8c5677a04a27e3eccd949bcf99eb38681e2fb8fe6a4896f27f2a711c8b9e32786bc8e39",
-   "integratedTime": 1793176256,
-   "entry_url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=3535235263",
-   "search_url": "https://search.sigstore.dev/?logIndex=3535235263"
-  }
- ],
+ "rekor": [],
  "xrpl": {
   "state": "PREPARED_NOT_SUBMITTED",
   "note": "memo drafts exist; nothing has been submitted to the XRP Ledger"
@@ -41,6 +28,6 @@
   "erratum": null
  },
  "copies": {
-  "hf_dataset": "https://huggingface.co/datasets/csoai/evidence-index/tree/main/measurement-index/2026-10-28"
+  "hf_dataset": "https://huggingface.co/datasets/csoai/evidence-index/tree/main/measurement-index/2026-11-23"
  }
 }
