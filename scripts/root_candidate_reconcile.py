@@ -1029,10 +1029,73 @@ def run_selftest() -> int:
         print(f"  {'ok ' if ok else 'BAD'} a lookalike of the shard folder still fails closed: {detail}")
         failures += not ok
 
+    # 17. Real recurring failure, 22 Nov: candidate and master both wrote
+    # publisher-health.json, but the one on the candidate describes its own
+    # newer root. The candidate's root is uncontested; the health is not.
+    # Choosing the health that binds the retained root is not a timestamp guess.
+    for bad in (False, True):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = _make_repo(
+                Path(tmp), master_changes_root=False, candidate_changes_root=True,
+                also_conflict=ROOT_HEALTH)
+            stamp = "2026-11-22T06:18:10Z"
+            root = {"kind": "csoai.public-root/v1", "as_of": stamp,
+                    "card_count": 452, "merkle_root": "1" * 64}
+            health = {"kind": "csoai.publisher-health/v0",
+                      "writer": "scripts/publish_public_root.py",
+                      "as_of": ("2026-11-20T00:00:00Z" if bad else stamp),
+                      "card_count": 452, "dry_run": False, "key": "present",
+                      "envelope": "signed",
+                      "halt": {"split": False, "missing_key": False,
+                               "unsigned_new_leaves": 0}}
+            _write(repo / ROOT_PATH, json.dumps(root))
+            _write(repo / ROOT_HEALTH, json.dumps(health))
+            git(repo, "add", "--", ROOT_PATH, ROOT_HEALTH)
+            git(repo, "commit", "-q", "-m", "candidate bound source health")
+            log = Path(tmp) / "order.log"
+            builder, generator = _stubs(repo, log)
+            try:
+                reconcile(repo, builder=builder, generator=generator)
+                got_health = git(repo, "cat-file", "-p", f"HEAD:{ROOT_HEALTH}").stdout
+                got_root = git(repo, "cat-file", "-p", f"HEAD:{ROOT_PATH}").stdout
+                ok = not bad and _health_binds_root(got_health, got_root)
+                detail = "candidate health matches merged root" if ok else "invalid health was accepted"
+            except RealConflict as exc:
+                ok = bad and ROOT_HEALTH in str(exc)
+                detail = str(exc)[:120]
+            except Uncheckable as exc:
+                ok = False
+                detail = f"unexpected UNCHECKABLE: {str(exc)[:100]}"
+            print(f"  {'ok ' if ok else 'BAD'} publisher-health binding {'rejects mismatched epoch' if bad else 'selects matching epoch'}: {detail}")
+            failures += not ok
+
+    # 19. A self-declared healthy status must never override a failed halt,
+    # a dry run or an unsigned report, even when as_of/card_count match.
+    good = {"kind": "csoai.publisher-health/v0",
+            "writer": "scripts/publish_public_root.py",
+            "as_of": "2026-11-22T06:18:10Z", "card_count": 452,
+            "dry_run": False, "key": "present", "envelope": "signed",
+            "halt": {"split": False, "unsigned_new_leaves": 0, "missing_key": False}}
+    root = {"kind": "csoai.public-root/v1", "as_of": good["as_of"], "card_count": 452}
+    variants = [
+        {**good, "dry_run": True},
+        {**good, "key": "absent"},
+        {**good, "envelope": "unsigned"},
+        {**good, "card_count": 453},
+        {**good, "halt": {**good["halt"], "split": True}},
+        {**good, "halt": {**good["halt"], "missing_key": True}},
+        {**good, "halt": {**good["halt"], "unsigned_new_leaves": 1}},
+    ]
+    ok = _health_binds_root(json.dumps(good), json.dumps(root)) and all(
+        not _health_binds_root(json.dumps(candidate), json.dumps(root))
+        for candidate in variants)
+    print(f"  {'ok ' if ok else 'BAD'} publisher-health wrong-card-count, dry-run, unsigned and halted negative controls")
+    failures += not ok
+
     if failures:
         print(f"root-candidate-reconcile selftest: FAIL ({failures} case(s))", file=sys.stderr)
         return 1
-    print("root-candidate-reconcile selftest: PASS (16 cases)")
+    print("root-candidate-reconcile selftest: PASS (19 cases)")
     return 0
 
 
