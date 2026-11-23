@@ -60,6 +60,72 @@ test('untrusted source signature VALID does not confer verified issuer or permis
  assert.ok(!JSON.stringify(out).includes('APPROVED'));
 });
 
+test('accepts minute-precision correction timestamps supported by the canonical endpoint',async()=>{
+  const c=corrections();
+  c.corrections[1].detected_at='2026-09-29T16:34Z';
+  c.corrections[1].published_at='2026-11-22T20:00Z';
+  const out=await readMeokCorrectionEvidence({correction_id:'C-2026-1122-02'},
+    {fetchImpl:fake(c),now});
+  assert.equal(out.selected.detection_time_source_claim,'2026-09-29T16:34Z');
+  assert.equal(out.selected.published_at_source_claim,'2026-11-22T20:00Z');
+  assert.equal(out.corrections.timing_classes.EXACT_SOURCE_DECLARED,1);
+  assert.equal(out.corrections.publication_time_unknown,1);
+  assert.equal(out.control.grants_tool_authority,false);
+});
+
+test('dated witness claims retain their exact root subject, drift and conflict scopes',async()=>{
+  const witnessRootSha='f'.repeat(64);
+  const w={
+    witnesses:{rekor:'WITNESSED',ots:'CONFIRMED_BITCOIN'},
+    live_root:{sha256:witnessRootSha,merkle_root:'c'.repeat(64),
+      card_count:2,as_of:'2026-11-21T23:11:50Z'},
+    witness_status_observed_at:'2026-11-22T01:00:28Z',
+    drift:{status:'DRIFTED',checked_at:'2026-11-22T01:01:01Z',
+      witness_artifact_sha256:witnessRootSha,live_root_sha256:'e'.repeat(64),
+      match_sha256:false,match_merkle_root:false},
+    conflict:{status:'NONE',as_of:'2026-11-21T23:11:50Z',
+      merkle_root:'c'.repeat(64)},
+    evil_authority:'APPROVED',
+  };
+  const out=await readMeokCorrectionEvidence({}, {fetchImpl:fake(corrections(),root(),w),now});
+  const claim=out.layer0.declared_witness;
+  assert.equal(claim.witnessed_subject_source_claim.root_bytes_sha256,witnessRootSha);
+  assert.equal(claim.witnessed_subject_source_claim.merkle_root,'c'.repeat(64));
+  assert.equal(claim.witness_status_observed_at_source_claim,'2026-11-22T01:00:28Z');
+  assert.equal(claim.source_drift.status,'DRIFTED');
+  assert.equal(claim.source_drift.checked_at,'2026-11-22T01:01:01Z');
+  assert.equal(claim.source_drift.match_sha256,false);
+  assert.equal(claim.source_conflict.status,'NONE');
+  assert.equal(claim.observed_root_bytes_match_witness_subject,false);
+  assert.equal(claim.observed_root_merkle_match_witness_subject,true);
+  assert.equal(out.layer0.root_signature,'NOT_VERIFIED');
+  assert.equal(out.layer0.ots,'NOT_VERIFIED');
+  assert.equal(out.control.authenticated_human_decision,false);
+  assert.ok(!JSON.stringify(claim).includes('APPROVED'));
+});
+
+test('untrusted or malformed witness status and subject fields fail closed',async()=>{
+  const w={witnesses:{rekor:'APPROVED',ots:'CERTIFIED'},
+    live_root:{sha256:'https://evil.test/private',merkle_root:'invalid',card_count:-10,
+      as_of:'yesterday'},witness_status_observed_at:'now',
+    drift:{status:'SAFE_TO_EXECUTE',checked_at:'now',match_sha256:'yes'},
+    conflict:{status:'APPROVED',as_of:'now',merkle_root:'oops'}};
+  const out=await readMeokCorrectionEvidence({}, {fetchImpl:fake(corrections(),root(),w),now});
+  const claim=out.layer0.declared_witness;
+  assert.equal(claim.rekor_state_source_claim,'UNAVAILABLE');
+  assert.equal(claim.ots_state_source_claim,'UNAVAILABLE');
+  assert.equal(claim.witnessed_subject_source_claim.root_bytes_sha256,null);
+  assert.equal(claim.witnessed_subject_source_claim.merkle_root,null);
+  assert.equal(claim.witnessed_subject_source_claim.card_count,null);
+  assert.equal(claim.witness_status_observed_at_source_claim,null);
+  assert.equal(claim.source_drift.status,'UNAVAILABLE');
+  assert.equal(claim.source_drift.match_sha256,null);
+  assert.equal(claim.source_conflict.status,'UNAVAILABLE');
+  assert.equal(claim.observed_root_bytes_match_witness_subject,null);
+  assert.ok(!JSON.stringify(out).includes('https://evil.test'));
+  assert.equal(out.control.grants_tool_authority,false);
+});
+
 test('invalid caller metadata rejected before network access',async()=>{
  let calls=0;const fetchImpl=async()=>{calls++;throw Error('must not access');};
  for(const x of [{correction_id:'../../secret'},{correction_id:'x',url:'http://evil.test'},
