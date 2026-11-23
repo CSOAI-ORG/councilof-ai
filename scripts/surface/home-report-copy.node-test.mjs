@@ -46,16 +46,16 @@ const resultsSource = fs.readFileSync(new URL("../../client/src/components/home/
 const spaceSource = fs.readFileSync(new URL("../../spaces/gspc-board/index.html", import.meta.url), "utf8");
 
 test("one real GSPC Space embed is retained with direct public evidence navigation", () => {
-  assert.equal([...resultsSource.matchAll(/<iframe\\b/g)].length, 1);
-  assert.match(resultsSource, /csoai-gspc-board\\.static\\.hf\\.space\\/index\\.html/);
-  assert.match(resultsSource, /href=\\{GSPC_SPACE\\}/);
-  assert.match(resultsSource, /href="\\/api\\/gspc"/);
-  assert.doesNotMatch(source, /<iframe\\b|<LivingBoardStrip\\s*\\/>/);
+  assert.equal([...resultsSource.matchAll(/<iframe\b/g)].length, 1);
+  assert.match(resultsSource, /csoai-gspc-board\.static\.hf\.space\/index\.html/);
+  assert.match(resultsSource, /href=\{GSPC_SPACE\}/);
+  assert.match(resultsSource, /href="\/api\/gspc"/);
+  assert.doesNotMatch(source, /<iframe\b|<LivingBoardStrip\s*\/>/);
 });
 
 test("Space links that leave an embedded frame open a separate tab", () => {
   for (const url of ["https://councilof.ai", "https://councilof.ai/gspc-verify", "https://huggingface.co/spaces/csoai/gspc-lookup"]) {
-    const links = [...spaceSource.matchAll(/<a\\b[^>]*>/g)].map(m => m[0]).filter(tag => tag.includes(`href="${url}"`));
+    const links = [...spaceSource.matchAll(/<a\b[^>]*>/g)].map(m => m[0]).filter(tag => tag.includes(`href="${url}"`));
     assert.ok(links.length > 0, "external Space link missing: " + url);
     for (const link of links) {
       assert.match(link, /target="_blank"/);
