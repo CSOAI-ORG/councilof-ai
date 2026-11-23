@@ -18,31 +18,37 @@ test('public source registry and crosswalk preserve dated research boundaries',(
   assert.equal(source('S15').legalStatus,'not-moved');
   assert.equal(source('S16').authority,'author-submission-hosted-by-parliament');
   assert.ok(pack.sources.every(s=>s.sourceBytesSha256===null));
+  assert.equal(pack.version,4);
+  assert.equal(pack.reviewAfter,'2026-11-30');
+  assert.equal(source('S31').url,'https://apartresearch.com/sprints/projects/a-narrow-line-edit-controlai-policy-sprint-ow76');
+  assert.equal(source('S32').url,'https://apartresearch.com/sprints/projects/red-teaming-a-narrow-path-controlai-policy-sprint-9syc');
+  assert.equal(source('S13').access,'partial');
   const groups=JSON.parse(readFileSync(root+'council-os/working-groups.json','utf8')).groups;
   for(const x of pack.crosswalk)assert.ok(groups.some(g=>g.id===x.groupId));
 });
 test('unsupported endorsement and superseded legal-name record cannot become review-ready',()=>{
-  // asOf is the pack's own observation date (2026-11-16, the dated re-review). An earlier date is
+  // asOf is the pack's own observation date (2026-11-23, the dated re-review). An earlier date is
   // outside the observation window now, because the pack was re-observed - it cannot establish the
   // earlier reading any more.
-  const outcomes=pack.claims.map(c=>assessClaim(pack,c.id,{asOf:'2026-11-16'}).outcome);
+  const outcomes=pack.claims.map(c=>assessClaim(pack,c.id,{asOf:'2026-11-23'}).outcome);
   assert.deepEqual(outcomes,['READY_FOR_HUMAN_REVIEW','READY_FOR_HUMAN_REVIEW','READY_FOR_HUMAN_REVIEW','SYNTHETIC_FIXTURE','SUPERSEDED','READY_FOR_HUMAN_REVIEW']);
   const x=structuredClone(pack);x.claims[3].synthetic=false;x.claims[3].use='organisation-practice';
-  assert.equal(assessClaim(x,'CL04',{asOf:'2026-11-16'}).outcome,'NEEDS_EVIDENCE');
+  assert.equal(assessClaim(x,'CL04',{asOf:'2026-11-23'}).outcome,'NEEDS_EVIDENCE');
 });
 test('reliance date is mandatory; expired and premature observations are refused',()=>{
   assert.throws(()=>assessClaim(pack,'CL01'),/date/);
   // Inside the current window the claim is reviewable; once the dated interval ends it is refused.
-  assert.equal(assessClaim(pack,'CL01',{asOf:'2026-11-16'}).outcome,'READY_FOR_HUMAN_REVIEW');
-  assert.equal(assessClaim(pack,'CL01',{asOf:'2026-11-23'}).outcome,'RECHECK_REQUIRED');
+  assert.equal(assessClaim(pack,'CL01',{asOf:'2026-11-23'}).outcome,'READY_FOR_HUMAN_REVIEW');
+  assert.equal(assessClaim(pack,'CL01',{asOf:'2026-11-30'}).outcome,'RECHECK_REQUIRED');
   assert.equal(assessClaim(pack,'CL01',{asOf:'2026-10-29'}).outcome,'OUTSIDE_OBSERVATION_WINDOW');
+  assert.equal(assessClaim(pack,'CL01',{asOf:'2026-11-16'}).outcome,'OUTSIDE_OBSERVATION_WINDOW');
   assert.throws(()=>assessClaim(pack,'CL01',{asOf:'not-a-date'}));
-  assert.throws(()=>assessClaim(pack,'unknown',{asOf:'2026-11-16'}));
+  assert.throws(()=>assessClaim(pack,'unknown',{asOf:'2026-11-23'}));
 });
 test('a changed model, tool, permission, environment or method cannot inherit the runtime result',()=>{
   for(const key of ['model','tools','permissions','environment','method']){
     const runtime=structuredClone(pack.claims[2].runtime);runtime[key]=Array.isArray(runtime[key])?['changed']: 'changed';
-    assert.equal(assessClaim(pack,'CL03',{asOf:'2026-11-16',runtime}).outcome,'SCOPE_MISMATCH');
+    assert.equal(assessClaim(pack,'CL03',{asOf:'2026-11-23',runtime}).outcome,'SCOPE_MISMATCH');
   }
 });
 for(const [label,mutate] of [
@@ -69,8 +75,8 @@ test('retained local fixture bytes match the actual digest and replay intentiona
 });
 test('CLI is dated, checks local bytes and fails expired reliance',()=>{
   const run=asOf=>spawnSync(process.execPath,['scripts/working-groups/check-research.mjs','--as-of',asOf],{cwd:root,encoding:'utf8'});
-  assert.equal(run('2026-11-16').status,0);
-  const old=run('2026-11-23');assert.equal(old.status,1);assert.match(old.stdout,/RECHECK_REQUIRED/);
+  assert.equal(run('2026-11-23').status,0);
+  const old=run('2026-11-30');assert.equal(old.status,1);assert.match(old.stdout,/RECHECK_REQUIRED/);
 });
 test('HTML preserves synthetic warning, corrections and escapes untrusted source text',()=>{
   const x=structuredClone(pack);x.sources[0].title='<script>window.bad=true</script>';
@@ -84,11 +90,11 @@ test('real stdio protocol returns the same evidence pack and refuses stale/unkno
     await client.connect(transport);
     const tool=(await client.listTools()).tools.find(t=>t.name==='working_group_research');
     assert.equal(tool.annotations.readOnlyHint,true);assert.equal(tool.annotations.openWorldHint,false);
-    const result=await client.callTool({name:tool.name,arguments:{packId:pack.id,asOf:'2026-11-16'}});
+    const result=await client.callTool({name:tool.name,arguments:{packId:pack.id,asOf:'2026-11-23'}});
     assert.deepEqual(result.structuredContent.pack,pack);
-    const stale=await client.callTool({name:tool.name,arguments:{packId:pack.id,asOf:'2026-11-23'}});
+    const stale=await client.callTool({name:tool.name,arguments:{packId:pack.id,asOf:'2026-11-30'}});
     assert.equal(stale.structuredContent.results[0].outcome,'RECHECK_REQUIRED');
-    for(const args of [{packId:pack.id},{packId:'unknown',asOf:'2026-11-16'}]){
+    for(const args of [{packId:pack.id},{packId:'unknown',asOf:'2026-11-23'}]){
       let refused=false;try{refused=(await client.callTool({name:tool.name,arguments:args})).isError===true;}catch{refused=true;}assert.equal(refused,true);
     }
   }finally{await client.close();}
