@@ -116,12 +116,47 @@
         wallet.hidden = true;
         output.textContent = message;
       };
+      const amountValid = (raw, decimals) =>
+        typeof raw === "string" && /^\d{1,32}$/.test(raw) &&
+        typeof decimals === "number" && Number.isInteger(decimals) && decimals >= 0 && decimals <= 18;
       const asAmount = (raw, decimals) => {
-        if (!/^\d+$/.test(String(raw)) || !Number.isInteger(decimals) || decimals < 0 || decimals > 18) return "Unknown — read accepts[]";
         const divisor = 10n ** BigInt(decimals);
         const atomic = BigInt(raw);
         const tail = (atomic % divisor).toString().padStart(decimals, "0").replace(/0+$/, "");
         return (atomic / divisor).toString() + (tail ? "." + tail : "");
+      };
+      // A browser must not trust only the body or the presence of an unparsed header.
+      // The canonical v2 PAYMENT-REQUIRED header intentionally omits body-only
+      // maxAmountRequired and descriptive csoai pricing, so compare exact settlement
+      // fields, resource identity and token metadata, never volatile sidecars.
+      const verifiedTerms = (response, body, expectedUrl) => {
+        const encoded = response.headers.get("PAYMENT-REQUIRED");
+        if (typeof encoded !== "string" || encoded.length === 0 || encoded.length > 8192 ||
+            !/^[A-Za-z0-9+/]+={0,2}$/.test(encoded)) return null;
+        let header;
+        try { header = JSON.parse(atob(encoded)); } catch { return null; }
+        if (header?.x402Version !== 2 || body?.x402Version !== 2 ||
+            header.resource?.url !== expectedUrl || body.resource?.url !== expectedUrl ||
+            !Array.isArray(header.accepts) || !Array.isArray(body.accepts) ||
+            header.accepts.length !== body.accepts.length || body.accepts.length === 0 ||
+            !body.extensions?.bazaar) return null;
+        const keys = ["scheme", "network", "asset", "payTo", "amount", "maxTimeoutSeconds"];
+        for (let i = 0; i < body.accepts.length; i++) {
+          const a = body.accepts[i];
+          const h = header.accepts[i];
+          if (!a || !h || keys.some(key => a[key] !== h[key]) ||
+              a.extra?.symbol !== h.extra?.symbol || a.extra?.decimals !== h.extra?.decimals) return null;
+        }
+        const term = body.accepts[0];
+        if (term.scheme !== "exact" || term.network !== "eip155:8453" ||
+            typeof term.asset !== "string" ||
+            term.asset.toLowerCase() !== "0x833589fcD6eDb6E08f4c7C32D4f71b54bdA02913".toLowerCase() ||
+            typeof term.payTo !== "string" || !/^0x[0-9a-fA-F]{40}$/.test(term.payTo) ||
+            term.extra?.symbol !== "USDC" || !amountValid(term.amount, term.extra?.decimals) ||
+            (term.maxAmountRequired !== undefined && term.maxAmountRequired !== term.amount) ||
+            !Number.isSafeInteger(term.maxTimeoutSeconds) || term.maxTimeoutSeconds <= 0)
+          return null;
+        return term;
       };
       picker.addEventListener("change", () => {
         inspect.disabled = !selected();
@@ -147,31 +182,35 @@
         inspect.disabled = true;
         reset("Requesting this endpoint without any payment header…");
         try {
-          const response = await fetch(url.toString(), { method: "GET", credentials: "omit", cache: "no-store", headers: { Accept: "application/json" } });
-          if (response.status !== 402) {
-            reset("HTTP " + response.status + " — no payable 402 offer from this request. No transaction attempted.");
+          const response = await fetch(url.toString(), {
+            method: "GET", credentials: "omit", cache: "no-store", redirect: "error",
+            headers: { Accept: "application/json" },
+          });
+          if (response.status !== 402 || response.redirected || response.url !== url.toString()) {
+            reset("HTTP " + response.status + " — no exact, non-redirected 402 from this resource. No transaction attempted.");
             return;
           }
           const challenge = await response.json();
-          const accept = challenge && Array.isArray(challenge.accepts) ? challenge.accepts[0] : null;
-          if (challenge.x402Version !== 2 || !accept || !response.headers.get("PAYMENT-REQUIRED") || !challenge.extensions?.bazaar) {
-            reset("An HTTP 402 arrived, but required x402 v2/Bazaar fields are missing. No wallet link shown.");
+          const accept = verifiedTerms(response, challenge, url.toString());
+          if (!accept) {
+            reset("The 402 header, resource or amount did not verify against the body. No wallet link shown.");
             return;
           }
-          const symbol = accept.extra?.symbol || "token";
-          const decimals = Number(accept.extra?.decimals);
-          const amount = asAmount(accept.amount ?? accept.maxAmountRequired, decimals);
+          const amount = asAmount(accept.amount, accept.extra.decimals);
           output.textContent = [
-            "HTTP 402 — live x402 v2 offer (not yet paid)",
+            "HTTP 402 — matching header and body (not yet paid)",
             "Resource: " + url.toString(),
-            "Amount: " + amount + " " + symbol + " (from this 402 only)",
-            "Network: " + (accept.network || "unconfirmed"),
-            "Recipient: " + (accept.payTo || "unconfirmed"),
-            "Scheme: " + (accept.scheme || "unconfirmed"),
-            "Next: choose whether to authorise this exact amount in your wallet.",
+            "Amount: " + amount + " USDC (from this exact 402 only)",
+            "Network: " + accept.network,
+            "Recipient: " + accept.payTo,
+            "Token: " + accept.asset,
+            "Scheme: " + accept.scheme,
+            "Next: decide separately whether to authorise the exact amount in your wallet.",
             "Free verification remains available via /api/verify."
           ].join("\n");
-          if (accept.scheme === "exact" && accept.network === "eip155:8453" && typeof accept.payTo === "string" && /^0x[0-9a-fA-F]{40}$/.test(accept.payTo)) {
+          // Zero-value challenges are valid protocol probes but do not prove
+          // a payable product or a revenue event.
+          if (BigInt(accept.amount) > 0n) {
             wallet.href = "/pay-all/?door=" + encodeURIComponent(url.toString());
             wallet.hidden = false;
           }
