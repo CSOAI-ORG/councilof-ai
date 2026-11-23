@@ -103,7 +103,7 @@ export function checkBundleFreshness(bundleObj, { nowIso = new Date().toISOStrin
     const ageDays = Number.isFinite(newestMs)
       ? Math.max(0, (nowMs - newestMs) / 86_400_000)
       : Infinity;
-    const fresh = matching.length > 0 && Number.isFinite(newestMs) && nowMs - newestMs <= maxAgeMs;
+    const fresh = matching.length > 0 && Number.isFinite(newestMs) && newestMs <= nowMs && nowMs - newestMs <= maxAgeMs;
     obligations.push({
       obligation: obId,
       card_count: matching.length,
