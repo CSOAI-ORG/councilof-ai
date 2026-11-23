@@ -7,6 +7,13 @@ import { recordPaidResponse, markPaidUndeliveredResponse } from "./_x402_deliver
  *                                                already-signed cards are relevant-to it, and the
  *                                                existing signed pack (Article 50) if one exists.
  *   402    &bundle=1                            → x402 challenge (amount lives ONLY here).
+ *   free   ?provision=<CELEX:number>            → the same door addressed by frozen provision id (functions/api/_provisions.ts):
+ *                                                 ladder state and capsule bindings, plus the obligation preview when an
+ *                                                 existing obligation id stands for that provision. The obligation ids
+ *                                                 (article-50, article-53, dora, cra) are accepted here as aliases. A
+ *                                                 provision no obligation stands for has a free view and nothing to buy;
+ *                                                 one that has an obligation buys exactly that obligation's bundle, at the
+ *                                                 same resource URL, so the payment path is unchanged.
  *   paid   &bundle=1 + settled X-PAYMENT        → OSCAL 1.1.0 assessment-results assembled from the
  *                                                already-signed public/cards leaves (full card bytes
  *                                                + any retained inclusion proofs), plus ONE manifest card-v0
@@ -35,9 +42,11 @@ import {
 } from "./_x402";
 import { railMode } from "./_x402_config";
 import { OBLIGATIONS, resolveObligation, isRelevant, type CardLite, type Obligation } from "./_obligations";
+import { resolveProvision, provisionView, PROVISION_USAGE } from "./_provisions";
 import { invoiceHandoff, INVOICE_CONTACT } from "./_invoice_handoff";
 import { signPayload, cardV0, sha256Hex } from "../_lib/cardSign";
 import { EVIDENCE_BUNDLE_DESCRIPTION } from "./_x402_descriptions";
+import { readCardsBundle } from "./_cards_bundle";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
@@ -59,18 +68,12 @@ async function uuidFrom(name: string): Promise<string> {
 }
 
 async function loadCards(origin: string): Promise<{ wrappers: Record<string, Wrapper>; merkle_root: string | null; as_of: string | null; source: string; read_ok: boolean }> {
-  const src = new URL("/cards-bundle.json", origin).toString();
-  const r = await fetch(src);
-  if (!r.ok) return { wrappers: {}, merkle_root: null, as_of: null, source: `${src} HTTP ${r.status}`, read_ok: false };
-  const b = (await r.json()) as { cards?: Record<string, Wrapper>; merkle_root?: string; as_of?: string };
+  // Every wrapper on disk, through the index and its 16 shards since the 22 Nov split
+  // (functions/api/_cards_bundle.ts). Only real signed cards are kept, as each shard arrives.
+  const r = await readCardsBundle(origin, { keep: (_sha, w) => !!(w && w.card && w.card.sha256 && w.card.sig_ed25519) });
+  if (!r.ok) return { wrappers: {}, merkle_root: null, as_of: null, source: `${r.failed ?? r.source} ${r.reason}`, read_ok: false };
   // The canonical producer always owns a cards object; missing/array values establish no absence.
-  const read_ok = Object.prototype.hasOwnProperty.call(b, "cards") &&
-    b.cards !== null && typeof b.cards === "object" && !Array.isArray(b.cards);
-  const wrappers: Record<string, Wrapper> = {};
-  for (const [sha, w] of Object.entries(b.cards || {})) {
-    if (w && w.card && w.card.sha256 && w.card.sig_ed25519) wrappers[sha] = w; // only real signed cards
-  }
-  return { wrappers, merkle_root: b.merkle_root || null, as_of: b.as_of || null, source: src, read_ok };
+  return { wrappers: r.cards as Record<string, Wrapper>, merkle_root: r.merkle_root, as_of: r.as_of, source: r.source, read_ok: r.cards_object };
 }
 
 function lite(sha: string, w: Wrapper): CardLite {
@@ -149,7 +152,48 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const obRaw = (url.searchParams.get("obligation") || "").trim();
   const subject = (url.searchParams.get("subject") || "").trim().slice(0, 120);
   const bundle = url.searchParams.get("bundle") === "1";
-  const ob = obRaw ? resolveObligation(obRaw) : null;
+  const provRaw = (url.searchParams.get("provision") || "").trim();
+  let obPick = obRaw ? resolveObligation(obRaw) : null;
+
+  // ?provision= — the door addressed by frozen provision id. Checked before payment is looked at, so an
+  // unknown provision or one with nothing to buy can never reach the facilitator.
+  let provisionBlock: Record<string, unknown> | null = null;
+  if (provRaw) {
+    if (obRaw)
+      return json({ schema: "csoai.evidence-bundle/0.1", error: "provision_and_obligation", reason: "pass either provision or obligation, not both", usage: PROVISION_USAGE }, 400);
+    const r = resolveProvision(provRaw);
+    if (!r)
+      return json(
+        {
+          schema: "csoai.evidence-bundle/0.1",
+          error: "unknown_provision",
+          provision: provRaw.slice(0, 64),
+          reason: "not a provision id of the frozen manifest and not an existing obligation id",
+          manifest: `${origin}/interop/frozen-provision-hashes.json`,
+          usage: PROVISION_USAGE,
+        },
+        404,
+      );
+    provisionBlock = provisionView(r, origin);
+    if (!r.obligation) {
+      const body = {
+        schema: "csoai.evidence-bundle/0.1",
+        kind: "provision_preview",
+        provision: provisionBlock,
+        obligation: null,
+        buy: null,
+        buy_note: "No evidence bundle is offered for this provision: no existing obligation id stands for it. The view is free and complete.",
+        free_verify: `${origin}/gspc-verify`,
+        never: ["conformity determination", "certificate", "score", "rank"],
+      };
+      // Nothing to deliver, so a presented payment or a bundle request is refused before any settlement.
+      if (bundle || hasPaymentHeader(request))
+        return json({ ...body, kind: undefined, error: "no_bundle_for_provision", reason: "drop bundle=1 and any payment: this provision has a free view only" }, 400);
+      return json(body);
+    }
+    obPick = r.obligation;
+  }
+  const ob = obPick;
 
   if (!ob) {
     const listing = {
@@ -237,6 +281,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     cards: selected.slice(0, 40).map(({ sha, l }) => ({ sha256: sha, surface: l.surface, subject: l.subject, as_of: l.as_of, url: `${origin}/cards/${sha.slice(0, 16)}.json` })),
     corpus: { as_of: corpus.as_of, merkle_root: corpus.merkle_root, read_from: corpus.source, signed_cards_total: Object.keys(corpus.wrappers).length },
     relation: "relevant-to — never a determination",
+    ...(provisionBlock ? { provision: provisionBlock } : {}),
     free_verify: `${origin}/gspc-verify`,
   };
 

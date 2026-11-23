@@ -99,6 +99,7 @@ export function Footer() {
         { name: 'GSPC axes, one page each', href: '/axes', native: true },
         { name: 'Signed findings', href: '/findings/', native: true },
         { name: 'Claim maintenance', href: '/claim-maintenance/', native: true },
+        { name: 'Engagements', href: '/engagements/', native: true },
         { name: 'Records feed (Atom)', href: '/feeds/records.xml', native: true },
       ],
     },
@@ -107,7 +108,7 @@ export function Footer() {
       links: [
         { name: 'About', href: '/about/' },
         { name: 'Operation and external use', href: '/traction/' },
-        { name: 'Partners and investors', href: '/traction/#partners' },
+        { name: 'Partners and investors', href: '/investors/' },
         { name: 'Brand & impostor notice', href: '/brand/' },
         { name: 'Evidence and reuse rights', href: '/licensing-agreement/#rights' },
         { name: 'Independence and conflicts', href: '/independence/' },

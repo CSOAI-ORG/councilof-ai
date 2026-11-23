@@ -1,0 +1,1295 @@
+[
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:pass",
+        "caller-supplied-authority-pin:497ad027374bd2e259b17bf170c744f2b22d43d794ebce58060bc9025b46254f",
+        "caller-pin-equals-captured-authority:true",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:13.600000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#pass",
+      "expires_at": "2026-11-21T02:09:14.600000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": {
+        "alg": "sha256",
+        "value": "d62c748fc0949cbc5c4df76150a2f09ec1b79832aa7f8b676b2108bea1f96139"
+      },
+      "effect_ref": "local:effects.jsonl#synthetic-only",
+      "failure_stage": null,
+      "observed_at": "2026-11-21T02:08:14.600000+00:00",
+      "state": "OBSERVED"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": null,
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "9abe32c22366eb3118ccea05edab86b75b433c281cd385cf40cb76cb6c25f0a5"
+      },
+      "invoked_at": "2026-11-21T02:08:14.600000+00:00",
+      "state": "EXECUTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario pass: file-effect digest observed in separate local process"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:3e2e8fa2e4d5f7bb3b5212a49d680edf",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#pass",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/pass",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:968b7ad24b549db38b43f9eba5968870e89dd63fa704994f205dc5d24f4a37ca",
+        "sha256:497ad027374bd2e259b17bf170c744f2b22d43d794ebce58060bc9025b46254f",
+        "sha256:d3939119c84bfedfe9f57aeaaa11fdfe4e1be1b71b63f108e87ede6615ba7e73",
+        "sha256:d62c748fc0949cbc5c4df76150a2f09ec1b79832aa7f8b676b2108bea1f96139",
+        "sha256:69476c452d325d183f6e514163cdb8ee657ccbb2b54f8db42102bb94c690e40d"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "VERIFIED",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:revoked",
+        "caller-supplied-authority-pin:79928b473b1eed876e3a30324b7e55137373ba106f8c63ee7dd15e0b26662328",
+        "caller-pin-equals-captured-authority:true",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:13.751000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#revoked",
+      "expires_at": "2026-11-21T02:09:14.751000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:REVOKED_OR_UNKNOWN_AUTHORITY",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "966a9b0fa0d5b547d9f3dbb2138c7bf6d486ba512f64ee631f3a580a896fd20f"
+      },
+      "invoked_at": "2026-11-21T02:08:14.751000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario revoked: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:1e73213687daccf75a32d874115013ba",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#revoked",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/revoked",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:b8e556aad727e93adefe246dd0c6b897e68ca71043c6d2da6ea0fc50183e7d2f",
+        "sha256:79928b473b1eed876e3a30324b7e55137373ba106f8c63ee7dd15e0b26662328",
+        "sha256:efd3da22aa5b3a758e8c788e30a568a30b9e9ece4f1109158bb9629b69534abe"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:unknown_revocation",
+        "caller-supplied-authority-pin:bd387694f01fdf63073e971b204cc01c84dc9c3eacca917bceda6cb52abc0f0a",
+        "caller-pin-equals-captured-authority:true",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:13.829000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#unknown_revocation",
+      "expires_at": "2026-11-21T02:09:14.829000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:REVOKED_OR_UNKNOWN_AUTHORITY",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "320768de997c9d6a5e2fb9a1833548280f10fd3d53bed29992133252c0d74fe9"
+      },
+      "invoked_at": "2026-11-21T02:08:14.829000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario unknown_revocation: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:f667d6d41093edd7ed28c8dea3c2a7e0",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#unknown_revocation",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/unknown_revocation",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:1ade4966afb27431f122261e4fab27ab423a3b3090a602ae53165b502f740a27",
+        "sha256:bd387694f01fdf63073e971b204cc01c84dc9c3eacca917bceda6cb52abc0f0a",
+        "sha256:0c3be6e736674a4ae93782d5234c4caf76ad11a123da5481a6bf26e9c008c276"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:stale_claim",
+        "caller-supplied-authority-pin:52af02fc82cedbbac3edeff1f267ec686198b4529273e33f83822d27cb90c426",
+        "caller-pin-equals-captured-authority:true",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:13.901000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#stale_claim",
+      "expires_at": "2026-11-21T02:09:14.901000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:NON_CURRENT_WATCH_STATE",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "83c5977e1bcfd032f3696e4ff14f869771b88ee6761808ef78df93df42aede6c"
+      },
+      "invoked_at": "2026-11-21T02:08:14.901000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario stale_claim: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:3e0987e00fa392f91b923a85bd070e33",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#stale_claim",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/stale_claim",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:3d1b60f3cee8b40a1d34e3f5833740b80d7b7ef41cbfb1f4e5860468a61cacbe",
+        "sha256:52af02fc82cedbbac3edeff1f267ec686198b4529273e33f83822d27cb90c426",
+        "sha256:585806cac6783d20593d72e5242a4d83215d2ebcc16f89f3c04fcbdbcedb52f4"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:expired",
+        "caller-supplied-authority-pin:32737f1f71347d0c528ddd381a588097ed926ec72133f3fb77db0a03ef63f4d4",
+        "caller-pin-equals-captured-authority:true",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:13.973000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#expired",
+      "expires_at": "2026-11-21T02:08:14.972000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:NOT_YET_VALID_OR_EXPIRED",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "5d29839bfc7ecec223d3ef85fbb50ea86de9a5611ff3f43ae781b89a607ee845"
+      },
+      "invoked_at": "2026-11-21T02:08:14.973000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario expired: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:f36627d66173719ac501187971abaa98",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#expired",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/expired",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:a72036ef656601dee335f843781f62e6b047b0cdb8a26c7899eda31d8d921620",
+        "sha256:32737f1f71347d0c528ddd381a588097ed926ec72133f3fb77db0a03ef63f4d4",
+        "sha256:75433f579a06320fec78dcee582b5553dd5ec83a5e7b2ec57884f30db98b18b9"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:not_yet_valid",
+        "caller-supplied-authority-pin:a3657b8b92cc2cea46e4ab360e3affe4b8975d37c56c401f3baaec441fc10d00",
+        "caller-pin-equals-captured-authority:true",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:16.051000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#not_yet_valid",
+      "expires_at": "2026-11-21T02:09:15.051000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:NOT_YET_VALID_OR_EXPIRED",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "ff84d7fd4d6af4717d48f06c9bceebb7432fa81ec3ad6fbb375f9eb83671d456"
+      },
+      "invoked_at": "2026-11-21T02:08:15.051000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario not_yet_valid: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:1943ac42dfb32cd34991b3d94e34609b",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#not_yet_valid",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/not_yet_valid",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:10036dc75beb7aaf7cb87b5d9a0f89afbedf794f06059e6e812b819df24b4bd5",
+        "sha256:a3657b8b92cc2cea46e4ab360e3affe4b8975d37c56c401f3baaec441fc10d00",
+        "sha256:94ae31406dd908c622962ed12e2700c7047d466c4fc27dbc738acb10ac617efa"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:wrong_scope",
+        "caller-supplied-authority-pin:5e3c014310edee417d2ee9f80a8356a29c7bb40c368d2356069ee9e864eb3023",
+        "caller-pin-equals-captured-authority:true",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:14.126000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#wrong_scope",
+      "expires_at": "2026-11-21T02:09:15.126000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "c3ae95434a7081703933a1da2ee58a436771bd77441e00881795e32bc355d370"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:SCOPE_MISMATCH",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "fdd7a2eceb41cc93a7891ff8de2c07ef84f5863fab2d113171bb4c05af807900"
+      },
+      "invoked_at": "2026-11-21T02:08:15.126000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario wrong_scope: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:62beb27305aea779d259065fb4d726c2",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#wrong_scope",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/wrong_scope",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:19909cbe82df508e6d3a36a2946fd9761e74742c17daced975c287a23f3d610e",
+        "sha256:5e3c014310edee417d2ee9f80a8356a29c7bb40c368d2356069ee9e864eb3023",
+        "sha256:98c3ba82ebaaa26fd0bf4d2cdbd5461a452d515bcb9c1d7a1a932b94a28e9bfd"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:tampered_request",
+        "caller-supplied-authority-pin:b4dd63ab40523ab23f22cd4459640c4a89896f0abd65c80395644646c5910ff9",
+        "caller-pin-equals-captured-authority:true",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:14.198000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#tampered_request",
+      "expires_at": "2026-11-21T02:09:15.198000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:REQUEST_BYTES_CHANGED",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "4175da70042347d02b3b06e36103d6b6404220e178816b796070ff5718d4f880"
+      },
+      "invoked_at": "2026-11-21T02:08:15.198000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario tampered_request: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:809818602e4968d9eda2022d60cd083e",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "bd5b4539f31092b418b6e35f246233736d9d428832f315bcb17acce86ef2e3f4"
+      },
+      "request_id": "demo-request-001#tampered_request",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/tampered_request",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:bd5b4539f31092b418b6e35f246233736d9d428832f315bcb17acce86ef2e3f4",
+        "sha256:9d512fc2e13085d979c93da9014ab0aa3e4c68e344292f3c027dbbfe9acc1efc",
+        "sha256:b4dd63ab40523ab23f22cd4459640c4a89896f0abd65c80395644646c5910ff9",
+        "sha256:c2936ecfc66b812c56ae8fc74e2b356b918252bde8e01eb83fd79152a41aa7ee"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:invalid_signature",
+        "caller-supplied-authority-pin:a88d5359eaebac9152f2c5c50955b0eb2c0a59799855fa15a01a9301042e15d3",
+        "caller-pin-equals-captured-authority:true",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:14.270000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#invalid_signature",
+      "expires_at": "2026-11-21T02:09:15.270000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:INVALID_SIGNATURE_OR_UNKNOWN_KEY",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "8b0d9fde20c80eadca8c6c83fc74dd444b9ce6ddd75620c11f80cf835a165858"
+      },
+      "invoked_at": "2026-11-21T02:08:15.270000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario invalid_signature: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:152f823ede97c7403afa71664a4af1b0",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#invalid_signature",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/invalid_signature",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:539183239fa8293712c624d26ae587bb576d9475864c802479300106661064e3",
+        "sha256:a88d5359eaebac9152f2c5c50955b0eb2c0a59799855fa15a01a9301042e15d3",
+        "sha256:b37b8dfe4e32079ea7153417e5fcb0174502fdd0eb531e5ed096bf37baacf182"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:wrong_epoch",
+        "caller-supplied-authority-pin:8d1c6e85384e92b5a818598bf4f1dae08bca0c74a157718bdb0ab8e8396ffeed",
+        "caller-pin-equals-captured-authority:true",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:14.345000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#wrong_epoch",
+      "expires_at": "2026-11-21T02:09:15.345000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:AUTHORITY_EPOCH_OR_PRINCIPAL_MISMATCH",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "cb05129cf4a1ffaa3de42635c50b784934d4be28ac0cba0ef74eb1e9479d15ca"
+      },
+      "invoked_at": "2026-11-21T02:08:15.345000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario wrong_epoch: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:9cc96ef6918569d3147ad8f286db30e7",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#wrong_epoch",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/wrong_epoch",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:f9a3870fc9775ee993df121e36cbe339854c75a2ef64eac0ab8e93a03307278c",
+        "sha256:8d1c6e85384e92b5a818598bf4f1dae08bca0c74a157718bdb0ab8e8396ffeed",
+        "sha256:8c419fe3acba29832e2f4cd38e83fae340f47062f56ea3effff0fc860bd55e97"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:deny",
+        "caller-supplied-authority-pin:11a77d5d961ba5066f10637a1e2e27a228ff5853cefce64a5414e377e91fa45a",
+        "caller-pin-equals-captured-authority:true",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:14.419000+00:00",
+      "decision": "DENY",
+      "decision_id": "demo-approval-001#deny",
+      "expires_at": "2026-11-21T02:09:15.419000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:NO_APPROVAL",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "174beb94ce03edbb85228d376017416e1477f7eb59eb331d7a945203c2793960"
+      },
+      "invoked_at": "2026-11-21T02:08:15.419000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario deny: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:9ab2cf93d286e9d4e4b9f492db21a40c",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#deny",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/deny",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:1192c5024c5ed342cc5af0b9a488b97d39861e06a97f695decf01d2d510d2d5e",
+        "sha256:11a77d5d961ba5066f10637a1e2e27a228ff5853cefce64a5414e377e91fa45a",
+        "sha256:6f11c5d6303fd41db2cde0a804fad340c30e4e4768cab0f18a31d7a66873b2b5"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:substituted_trust_key",
+        "caller-supplied-authority-pin:794c094475022d3d7d19788d838fb9323c46e870627b581502e88af734634e8f",
+        "caller-pin-equals-captured-authority:false",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:14.497000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#substituted_trust_key",
+      "expires_at": "2026-11-21T02:09:15.497000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:AUTHORITY_RECORD_NOT_PINNED_OR_CHANGED",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "b7284be764f25cb94562f62cd4f5399d9a6e63f386b0ce51d27f92470be0edbc"
+      },
+      "invoked_at": "2026-11-21T02:08:15.497000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario substituted_trust_key: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:60e9d8724512d21fb0ff573649b98554",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#substituted_trust_key",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/substituted_trust_key",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:932d5c9d8e6acb5fb0d9fa1986a5085bc9818638fa2e084065fa5d4e4e60bd2d",
+        "sha256:dd10e449fb32abb1ffbd22f388fa1903424c74e994db8989734fc0c1a0fe3668",
+        "sha256:e4c0c328e7ff94abedf658f2f8eb0aef611c8c02ab4984986de1d196760bc31b"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:unrevoked_by_folder_writer",
+        "caller-supplied-authority-pin:4a8abb4febe963f718b33acb063242af1f2b34eec87c78af007a8c43da9e569f",
+        "caller-pin-equals-captured-authority:false",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:14.567000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#unrevoked_by_folder_writer",
+      "expires_at": "2026-11-21T02:09:15.567000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:AUTHORITY_RECORD_NOT_PINNED_OR_CHANGED",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "3dac581e71d7bd606049aec0d58f607c96a4d0824d81e59db207fac7ba02d619"
+      },
+      "invoked_at": "2026-11-21T02:08:15.567000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario unrevoked_by_folder_writer: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:6debe49006933b42b50064a48dead4c9",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#unrevoked_by_folder_writer",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/unrevoked_by_folder_writer",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:6d1e0d97b97e3a6c9e65163a1e8bff7a2837ad39ddb82e96612d9789b10d011b",
+        "sha256:b7a6b4df12748c7f1ef653708dd4614f37b47111a1a606a06b9132dd1e5c5bad",
+        "sha256:ae2fcb6722d9720e0e7420abbfb83b957c56d342ae40b37ed8c4a4a34e03b5db"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  },
+  {
+    "authority": {
+      "authority_epoch": "demo-epoch-1",
+      "constraints": [
+        "SYNTHETIC_TEST_ONLY_NOT_HUMAN",
+        "fixture:missing_pin",
+        "caller-supplied-authority-pin:EMPTY",
+        "caller-pin-equals-captured-authority:false",
+        "authority validity depends on test guard; the declaration is not a valid live grant"
+      ],
+      "decided_at": "2026-11-21T02:08:14.637000+00:00",
+      "decision": "APPROVE",
+      "decision_id": "demo-approval-001#missing_pin",
+      "expires_at": "2026-11-21T02:09:15.637000+00:00",
+      "principal_ref": "synthetic-test-principal:demo:role:reviewer-1",
+      "review_kind": "AUTHORIZED_PRINCIPAL_REVIEW",
+      "scope_digest": {
+        "alg": "sha256",
+        "value": "ccff01a108bd5dee3c4bbf742092f22d955bd20bf1acc33b53cb576949e257c2"
+      }
+    },
+    "claim_maintenance": {
+      "claim_ref": null,
+      "next_review_condition": "new synthetic replay; no production authority",
+      "reverification_record_ref": null,
+      "watch_state": "NOT_WATCHED"
+    },
+    "effect": {
+      "effect_digest": null,
+      "effect_ref": null,
+      "failure_stage": null,
+      "observed_at": null,
+      "state": "NONE"
+    },
+    "invocation": {
+      "executor_ref": "node:synthetic-owned-fixture",
+      "failure_stage": "synthetic-guard:AUTHORITY_RECORD_NOT_PINNED_OR_CHANGED",
+      "invocation_digest": {
+        "alg": "sha256",
+        "value": "034255c1af3f113bb61433e897914db58503b9d0e8c9300010586816fec301df"
+      },
+      "invoked_at": "2026-11-21T02:08:15.637000+00:00",
+      "state": "REJECTED",
+      "tool_ref": "local:append_bounded_marker"
+    },
+    "issued_at": "2026-11-21T02:08:15.709Z",
+    "limits": [
+      "SYNTHETIC TEST PRINCIPAL AND KEY ONLY; no authenticated human approval.",
+      "This is the preserved draft 0.1 profile, not a production v0.2 authority release.",
+      "Declared decision and authority fields may be invalid under the fixture's negative test.",
+      "Inputs are digests captured before temporary-file deletion, not retained approval bytes.",
+      "Request and effect are bounded owned local files with separate LOCAL process readback.",
+      "Local independent-process verification is not an external institutional review.",
+      "No durable revocation service, commercial target, GSPC admission, signing or anchoring.",
+      "Scenario missing_pin: no effect file observed by the bounded synthetic test"
+    ],
+    "profile": "csoai.hitl-authority-effect/0.1",
+    "provenance": {
+      "ocsf_record_ref": null,
+      "otel_trace_ref": null,
+      "receipt_ref": "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+      "signature_ref": null,
+      "timestamp_ref": null,
+      "transparency_ref": null
+    },
+    "record_id": "hitl:synthetic:7b56ca6d891fb73733cb639ad3f48242",
+    "request": {
+      "action": "append_bounded_marker",
+      "intent_ref": null,
+      "proposal_digest": {
+        "alg": "sha256",
+        "value": "ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07"
+      },
+      "request_id": "demo-request-001#missing_pin",
+      "resource_ref": "local:effects.jsonl",
+      "subject_ref": "github:CSOAI-ORG/councilof-ai@ad3d28621addbb7ce58f8764871a7a96a9961c68#synthetic-fixture/missing_pin",
+      "tenant_ref": "synthetic-demo-tenant"
+    },
+    "verification": {
+      "evidence_refs": [
+        "sha256:7465a8aea62e93f0a44d625a9d1751dc6b913d07edfd2f87eb900ec3a630c19d",
+        "sha256:ab36a731c8cb37eaa0e9bc1f44c9c445f05bf21508153a15229deeea5a93ee07",
+        "sha256:fdf4062e7244346d529d40a07f79af39e08dc8fefc781d05e8c843992f1a2db9",
+        "sha256:417bd9e31d4a2e04088a1237721c8de2372ad13ac31d8c5dc114c5e892462889",
+        "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      ],
+      "method_ref": "synthetic:approval-effect-demo-v1",
+      "state": "PARTIAL",
+      "verified_at": "2026-11-21T02:08:15.709Z",
+      "verifier_ref": "local:separate-process-owned-file-readback"
+    }
+  }
+]

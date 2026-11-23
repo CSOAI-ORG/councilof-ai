@@ -1,0 +1,94 @@
+name: HF Inspect evidence Space (static)
+
+# Publish spaces/inspect-evidence/ to a STATIC Hugging Face Space.
+# Static Spaces are not subject to the org cpu-basic quota that blocks Gradio/Docker Spaces.
+# Fail-closed: the bundle's manifest (sha256 per .eval log + Merkle root) is verified
+# before upload and read back from the Hub after upload. Manual dispatch only; dry run by default.
+# The logs are Inspect PIPELINE TESTS (mockllm) plus one n=10 smoke run, not measurements.
+on:
+  workflow_dispatch:
+    inputs:
+      space_id:
+        description: "Target Space (created as sdk: static if missing)"
+        type: string
+        default: csoai/inspect-evidence
+      dry_run:
+        description: "Verify only; do not publish"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hf-inspect-evidence-space
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      github.repository == 'CSOAI-ORG/councilof-ai' &&
+      github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            spaces/inspect-evidence/
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify bundle manifest (stdlib, fail-closed)
+        working-directory: spaces/inspect-evidence
+        run: python tools/verify_manifest.py .
+
+      - name: Verify third-party dataset notices (not legal clearance)
+        working-directory: spaces/inspect-evidence
+        run: python tools/verify_release_notices.py .
+
+      - name: Install Hub client
+        if: ${{ !inputs.dry_run }}
+        run: python -m pip install --quiet "huggingface_hub==1.26.0"
+
+      - name: Publish to static Space, then read back and re-verify
+        if: ${{ !inputs.dry_run }}
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          SPACE_ID: ${{ inputs.space_id }}
+          GIT_SHA: ${{ github.sha }}
+        working-directory: spaces/inspect-evidence
+        run: |
+          python3 "$GITHUB_WORKSPACE/scripts/privacy/publication_gate.py" --label inspect-evidence-space .
+          python - <<'PY'
+          import hashlib, json, os, sys
+          from huggingface_hub import HfApi, hf_hub_download
+          space = os.environ["SPACE_ID"]
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          api.create_repo(space, repo_type="space", space_sdk="static", exist_ok=True)
+          info = api.space_info(space)
+          sdk = getattr(info, "sdk", None)
+          if sdk != "static":
+              sys.exit(f"refusing to publish: {space} has sdk={sdk!r}, expected 'static'")
+          commit = api.upload_folder(
+              folder_path=".", repo_id=space, repo_type="space",
+              commit_message=f"inspect evidence bundle from councilof-ai@{os.environ['GIT_SHA'][:12]}",
+          )
+          man = json.load(open("evidence/evidence_manifest.json"))
+          bad = 0
+          for r in man["logs"]:
+              p = hf_hub_download(space, f"evidence/logs/{r['file']}", repo_type="space",
+                                  revision=commit.oid, token=os.environ["HF_TOKEN"])
+              h = hashlib.sha256(open(p, "rb").read()).hexdigest()
+              ok = h == r["sha256"]; bad += not ok
+              print(("VALID  " if ok else "INVALID"), r["file"])
+          print("merkle_root", man["merkle_root"], "commit", commit.oid)
+          print("Space:", f"https://huggingface.co/spaces/{space}")
+          sys.exit(1 if bad else 0)
+          PY

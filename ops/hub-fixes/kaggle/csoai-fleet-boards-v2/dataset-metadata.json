@@ -1,0 +1,696 @@
+{
+  "title": "CSOAI Signed Fleet Boards v2",
+  "id": "nicktempleman/csoai-fleet-boards-v2",
+  "id_no": 11717781,
+  "subtitle": "GSPC dated evidence export · check councilof.ai/api/gspc",
+  "description": "## Download and use this snapshot\n\nThis page describes the published files in `nicktempleman/csoai-fleet-boards-v2`. Treat them as a dated snapshot: use the observation dates and limitations in the files and source notes below. A page edit does not refresh the measurements.\n\nWith the Kaggle CLI installed and authenticated:\n\n```bash\nkaggle datasets download -d nicktempleman/csoai-fleet-boards-v2 -p ./dataset --unzip\n```\n\nStart by inspecting `fleetv2_phi4_14b__xr.signed.json`. Keep its original bytes and record the Kaggle version before transforming or comparing results.\n\nPublished files include:\n\n- `README.md`\n- `fleetv2_phi4_14b__xr.signed.json`\n- `fleetv2_qwen3_4b__xr.signed.json`\n- `fleetv2_phi4_14b__agi.signed.json`\n- `fleetv2_phi4_14b__asi.signed.json`\n- `fleetv2_phi4_14b__det.signed.json`\n- `fleetv2_phi4_14b__gov.signed.json`\n- `fleetv2_phi4_14b__mcp.signed.json`\n- See the Data tab for all 167 files.\n\n[Current GSPC board](https://councilof.ai/api/gspc) · [Methodology](https://councilof.ai/methodology/) · [Verify supported signed records](https://councilof.ai/gspc-verify/) · [Corrections](https://councilof.ai/claim-maintenance)\n\nApply the licence shown on this dataset. Published by Council of AI — Council for the Safety of Artificial Intelligence, operated by CSOAI Ltd. Measurement is not certification; a mirror or package is not evidence of current board admission or benchmark leadership.\n\n---\n\nCSOAI Signed Fleet Boards v2\n\nPrinter / sibling twin for GSPC. Live board (authority): GET https://councilof.ai/api/gspc — cite totals.public_count (22 axis · 22 measured).\nLid: 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.\nThree states only: VALID · INVALID · UNCHECKABLE. Measurement not certification. Live authority: https://councilof.ai/api/gspc\nThis Kaggle card is a printer of that GET, not a second engine. Do not freeze MEASURED/UNMEASURED tables here. Fetch fail → UNCHECKABLE. Never claim IL5 / GenAI.mil. Never invent scores.\n\nHub cards (third-party Hub models — NOT the CSOAI fleet): GET https://councilof.ai/api/hub-cards → **885/885/0** (cells/measured/unmeasured; as_of 2026-09-07T05:44:17.454Z). Re-GET before citing; do not freeze a Hub triple on this card.\n\nVerify: https://councilof.ai/gspc-verify\nDOI 10.5281/zenodo.21991104. Issuer: CSOAI Ltd (GB, Companies House 16939677).\n\n## Dataset facts (checked 2026-11-20)\n\n- Kaggle version 5, last updated 2026-08-20.\n- 167 files, 227,467 bytes. File types: .json (166), .md (1).\n- Expected update frequency: never.\n",
+  "isPrivate": false,
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "ml ethics",
+    "law",
+    "government",
+    "benchmark",
+    "internet",
+    "software",
+    "pre-trained model"
+  ],
+  "collaborators": [],
+  "expectedUpdateFrequency": "never",
+  "userSpecifiedSources": "Published by Nick Templeman for Council of AI (CSOAI Ltd), https://councilof.ai.",
+  "resources": [
+    {
+      "path": "README.md",
+      "description": "Dataset README (Markdown). 1,284 bytes."
+    },
+    {
+      "path": "board_swarm-candidates-v2b.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,449 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__affect.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,376 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__agi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,348 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__art5.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,354 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__asi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,384 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__care.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,336 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__det.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,355 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__gov.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,396 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__jail.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,327 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__mach.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,379 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__mcp.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,349 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__oss.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,352 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__prv.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,353 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__swarm-candidates.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,400 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__swarm.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,405 bytes."
+    },
+    {
+      "path": "fleetv2_deepseek-r1_8b__xr.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,361 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__affect.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,371 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__agi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,340 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__art5.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,349 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__asi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,379 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__care.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,331 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__det.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,350 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__gov.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,387 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__jail.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,319 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__mach.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,374 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__mcp.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,341 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__oss.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,344 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__prv.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,342 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__swarm-candidates.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,396 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__swarm.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,401 bytes."
+    },
+    {
+      "path": "fleetv2_gemma3_12b__xr.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,356 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__affect.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,373 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__agi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,343 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__art5.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,351 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__asi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,380 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__care.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,334 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__det.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,352 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__gov.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,390 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__jail.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,327 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__mach.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,373 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__mcp.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,343 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__oss.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,345 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__prv.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,347 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__swarm-candidates.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,397 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__swarm.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,402 bytes."
+    },
+    {
+      "path": "fleetv2_llama3.2_3b__xr.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,355 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__affect.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,371 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__agi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,340 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__art5.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,349 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__asi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,379 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__care.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,328 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__det.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,350 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__gov.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,385 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__jail.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,319 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__mach.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,374 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__mcp.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,338 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__oss.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,344 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__prv.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,345 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__swarm-candidates.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,396 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__swarm.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,401 bytes."
+    },
+    {
+      "path": "fleetv2_mistral_7b__xr.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,356 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__affect.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,389 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__agi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,358 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__art5.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,367 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__asi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,397 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__care.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,346 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__det.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,362 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__gov.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,403 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__jail.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,337 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__mach.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,391 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__mcp.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,359 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__oss.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,362 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__prv.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,363 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__swarm-candidates.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,405 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__swarm.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,410 bytes."
+    },
+    {
+      "path": "fleetv2_nemotron-3-nano_30b__xr.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,374 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__affect.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,364 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__agi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,336 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__art5.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,339 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__asi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,375 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__care.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,328 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__det.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,340 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__gov.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,381 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__jail.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,315 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__mach.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,370 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__mcp.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,334 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__oss.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,337 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__prv.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,341 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__swarm-candidates.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,394 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__swarm.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,399 bytes."
+    },
+    {
+      "path": "fleetv2_phi4_14b__xr.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,349 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__affect.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,393 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__agi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,362 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__art5.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,371 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__asi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,401 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__care.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,351 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__det.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,371 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__gov.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,409 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__jail.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,341 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__mach.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,396 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__mcp.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,363 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__oss.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,365 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__prv.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,367 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__swarm-candidates.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,407 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__swarm.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,412 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_0.5b-instruct__xr.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,377 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__affect.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,372 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__agi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,344 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__art5.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,350 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__asi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,382 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__care.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,333 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__det.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,354 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__gov.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,391 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__jail.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,323 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__mach.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,378 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__mcp.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,345 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__oss.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,347 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__prv.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,349 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__swarm-candidates.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,398 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__swarm.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,403 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_1.5b__xr.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,360 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__affect.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,371 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__agi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,340 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__art5.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,348 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__asi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,379 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__care.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,332 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__det.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,347 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__gov.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,385 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__jail.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,319 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__mach.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,371 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__mcp.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,338 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__oss.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,344 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__prv.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,345 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__swarm-candidates.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,396 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__swarm.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,401 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_3b__xr.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,352 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__affect.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,371 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__agi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,337 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__art5.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,349 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__asi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,378 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__care.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,331 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__det.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,350 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__gov.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,387 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__jail.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,319 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__mach.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,374 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__mcp.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,338 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__oss.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,344 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__prv.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,342 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__swarm-candidates.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,396 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__swarm.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,401 bytes."
+    },
+    {
+      "path": "fleetv2_qwen2.5_7b__xr.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,355 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__affect.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,364 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__agi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,336 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__art5.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,339 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__asi.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,375 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__care.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,325 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__det.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,346 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__gov.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,383 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__jail.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,315 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__mach.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,370 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__mcp.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,337 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__oss.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,340 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__prv.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,338 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__swarm-candidates.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,394 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__swarm.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,399 bytes."
+    },
+    {
+      "path": "fleetv2_qwen3_4b__xr.signed.json",
+      "description": "Signed record (JSON envelope). TODO(owner): field list not obtainable anonymously (no byte-identical HF copy; Kaggle download host blocked in prep sandbox). 1,351 bytes."
+    }
+  ]
+}

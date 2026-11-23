@@ -33,9 +33,14 @@ Exit 0 = nothing FAILED (UNCHANGED and BLOCKED are not failures). Exit 1 = a sur
 | `manifest.jsonl` | file, bytes, sha256 |
 
 `fingerprint = sha256(board_content_sha256 | merkle_root | card_count)` where `board_content_sha256` is the sha256 of
-canonical JSON of the board minus `site_attestation`. The root's `as_of` moves every hour (public-root cron); the
-fingerprint moves only when the board or the card set changes. A surface that already carries this `as_of`, or this
-fingerprint, is left alone (`--force` overrides the fingerprint check, never the `as_of` check).
+canonical JSON of the board minus `site_attestation`. The root's `as_of` moves when a new public root is promoted,
+and that can be days apart; the fingerprint moves only when the board or the card set changes. A surface that already
+carries this `as_of`, or this fingerprint, is left alone (`--force` overrides the fingerprint check, never the `as_of`
+check). The Hugging Face dataset and Space, Kaggle and the GitHub mirror then also compare every snapshot file and
+republish when the bytes differ, because a board change can land without a new root (19 Nov 2026: two held axes were
+released under an unchanged root). Zenodo and PyPI do not: PyPI takes one release per root date, so a later board
+under the same root date waits for a root dated later, and its `UNCHANGED` row names the fingerprint and `as_of` the
+existing release bundles.
 
 The README is scanned before any push: the words "certified", "BFT" and "sovereign" refuse the run. No prices anywhere.
 
@@ -46,7 +51,7 @@ The README is scanned before any push: the words "certified", "BFT" and "soverei
 | Hugging Face dataset | `csoai/gspc-board` folder `snapshot/` | `hf auth login` (org csoai) | `HF_TOKEN` | `resolve/main/snapshot/SNAPSHOT.json` |
 | Hugging Face Space | `csoai/gspc-board` folder `snapshot/` (the one living Space; its index is untouched) | same | `HF_TOKEN` | same |
 | Kaggle | `nicktempleman/csoai-gspc-living-board`, new version | `~/.kaggle/kaggle.json` | `KAGGLE_USERNAME` + `KAGGLE_KEY` | subtitle carries `as_of`, description carries `spray-fingerprint:` |
-| GitHub mirror | `CSOAI-ORG/gspc-board` main (+ topics) | `gh auth` | `GSPC_BOARD_TOKEN` (fine-grained PAT, contents:write; `GITHUB_TOKEN` cannot push to another repo) | contents API `SNAPSHOT.json` |
+| GitHub mirror | `CSOAI-ORG/gspc-board` main (+ topics) | `gh auth` | `GSPC_BOARD_TOKEN` (fine-grained PAT, contents:write; `GITHUB_TOKEN` cannot push to another repo) | contents API `SNAPSHOT.json`, then each snapshot file's bytes |
 | Zenodo | new VERSION under concept DOI `10.5281/zenodo.22293340`, `isDerivedFrom` `10.5281/zenodo.21991104` (the methodology record is only referenced, never written) | `~/.zenodo_token` | `ZENODO_TOKEN` | records API: `version == as_of` or notes carry `spray-fingerprint:` |
 | PyPI | `csoai-gspc==0.2.<YYYYMMDD>` — the reader/verifier, with the snapshot bundled as package data and printed by `csoai-gspc snapshot`; every other command still reads the live GET | `~/.pypirc` | `PYPI_API_TOKEN` | project JSON: release exists, or description carries the fingerprint |
 | npm | `csoai-gspc-mcp` | **BLOCKED** — WebAuthn account: `--otp` can never work, web login returns EOTP | `NPM_TOKEN` (granular, Bypass 2FA) — owner mints it | — |
@@ -56,7 +61,8 @@ the 0.1.0 sdist on PyPI was the only copy). The vendored copy reads `totals.lid`
 
 ## Reading the result
 
-Each push prints the live URL and re-reads it until the `as_of` appears there (or says it did not). The table at the
+Each push prints the live URL and re-reads it until the pushed bytes (Hugging Face, Kaggle, GitHub) or the `as_of`
+(Zenodo, PyPI) appear there, or says they did not. The table at the
 end of a run, and `spray-report.json`, list per surface: `PUBLISHED`, `PUBLISHED-UNCONFIRMED`, `UNCHANGED`, `DRY-RUN`,
 `BLOCKED` (no credential / owner action) or `FAILED` (with the error text). The daily workflow writes the same table
 to the job summary and keeps the snapshot as an artifact for 30 days.

@@ -29,3 +29,14 @@ describe("Layer 0 discovery faces", () => {
     expect(page).not.toMatch(/Layer O|Harness X/);
   });
 });
+
+describe("Layer 0 reviewed evidence entrypoint", () => {
+  it("links the existing read-only proof, verifier and route documentation without claiming execution", () => {
+    expect(page).toContain('href="/traction/#external-use"');
+    expect(page).toContain('href="/interop/external-use.json"');
+    expect(page).toContain('href="/gspc-verify/"');
+    expect(page).toContain('href="/api/route/execute"');
+    expect(page).toContain("GET description, not an instruction to execute POST");
+    expect(page).toContain("No new Layer0 identity, signer, authority or tool call");
+  });
+});

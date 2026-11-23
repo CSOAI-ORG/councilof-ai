@@ -133,6 +133,31 @@ jobs:
           THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
         run: python3 scripts/privacy/test_third_party_identifiers.py -v
 
+  # 20 Nov 2026: outside people's email addresses reached public files more than once (#4490 removed 60 from 9
+  # files, and a full read on 20 Nov found 27 more in 10 files, removed by the PR that added this job). The
+  # repository is public, and so is every branch, commit message and PR in it. The guard reads every tracked file,
+  # plus this PR's title, description and commit messages, and fails on any address that is not ours, a role
+  # mailbox, an example or a reviewed exception (scripts/privacy/outside-email-allowlist.txt). Its output names
+  # places, never addresses, because this log is public too. merge_group-safe: with no PR number the two PR
+  # checks skip and the whole tree is still read.
+  outside-email-addresses:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: No outside person's email address in a tracked file or in this PR's text and commits
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: python3 scripts/privacy/test_outside_email_addresses.py -v
+      - name: Publication gate proves it catches planted personal data, and every Hugging Face / Kaggle upload runs it first
+        run: python3 scripts/privacy/test_publication_gate.py -v
+
   # 7 Nov 2026: .github/workflows/runpod-intake.yml called
   # scripts/resolve_runpod_trusted_bank.py with flags the script never had ("--index-out"
   # and "--index"), while the script's real CLI is two subcommands, "stage" and "lookup".
@@ -310,8 +335,15 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: |
           node --test scripts/workflow-trigger-coupling.node-test.mjs
+          node --test scripts/deploy-dispatch-followers.node-test.mjs
           node --test scripts/post-deploy-verification.node-test.mjs
           node scripts/workflow-trigger-coupling.mjs
+
+      # The globe probe's deadline, with a fake page (no browser). sov-stack-e2e runs only after a
+      # deploy, so its intermittent "Timeout 1ms exceeded" was never caught on a pull request.
+      - name: Globe probe deadline — offline controls
+        if: steps.scope.outputs.gated == 'true'
+        run: node --test scripts/sov-stack-globe-spy-deadline.node-test.mjs
 
       - name: Outward claims — offline manifest contract selftest
         if: steps.scope.outputs.gated == 'true'
@@ -357,12 +389,23 @@ jobs:
 
       - name: Native canvas build prerequisites
         if: steps.scope.outputs.gated == 'true'
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: |
-          sudo apt-get update
-          sudo env DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
-            build-essential pkg-config libpixman-1-dev \
-            libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+          # The runner's apt mirror stalled past the old 5-minute limit on 18 and 19 Nov 2026 (deploy run
+          # 44397073610; gates on #4499) when this step normally takes 13-24 s. Short network timeouts,
+          # apt's own retries and three attempts turn one stalled mirror read into a retry, not a red run.
+          APT_OPTS="-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30"
+          for attempt in 1 2 3; do
+            if sudo apt-get $APT_OPTS update && \
+              sudo env DEBIAN_FRONTEND=noninteractive apt-get $APT_OPTS install --yes --no-install-recommends \
+                build-essential pkg-config libpixman-1-dev \
+                libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev; then
+              exit 0
+            fi
+            echo "apt attempt $attempt failed; retrying in 15 s" >&2
+            sleep 15
+          done
+          exit 1
 
       - name: Install deps
         if: steps.scope.outputs.gated == 'true'
@@ -743,14 +786,48 @@ jobs:
           node scripts/brand-gate.mjs --selftest
           node scripts/brand-gate.mjs dist/client
 
+      # 22 Nov 2026: /investors rendered a standalone "$0.06" from the live revenue
+      # response. All PR checks were green, but the deploy-only price gate stopped
+      # every production release. The PR's one-route prerender never included
+      # /investors, so scanning dist without first rendering that route was false
+      # reassurance. scripts/dashboard-shell-routes.txt now includes /investors.
+      # This uses the same existing price gate as deploy (no exemptions or relaxed
+      # rules); a missing snapshot fails rather than reporting an empty pass.
+      - name: Price gate — prerendered investor and published source assets
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          test -s dist/client/investors/index.html || {
+            echo "::error::/investors was not prerendered; refusing an empty price-gate pass"
+            exit 1
+          }
+          grep -q 'data-testid="investors-page"' dist/client/investors/index.html || {
+            echo "::error::/investors did not render its actual React page; refusing an SPA-shell pass"
+            exit 1
+          }
+          node scripts/price-gate.mjs --selftest
+          node scripts/price-gate.mjs dist/client
+
       # Defect #14 (attack plan F-21): deploy.yml runs facts-gate on the prerendered output,
       # but pr-gates only ran brand-gate. A PR could introduce a typed fact that passes
       # brand-gate (which checks display strings) but contradicts facts.json. Running it
       # here catches the contradiction at PR time instead of at deploy time.
       # The selftest proves the gate can fail before it is trusted on our bytes.
+      # The 22 Nov 2026 production deploy failed on two bare axis counts in
+      # /methodology while every PR check had passed: PR prerender omitted this
+      # route. A missing/SPA-only methodology snapshot is a failed gate, never
+      # a pass over an empty directory. The unchanged facts-gate remains the
+      # source of truth for comparison with the render-bound 34-axis board.
       - name: Facts gate — no claim may contradict facts.json
         if: steps.scope.outputs.gated == 'true'
         run: |
+          test -s dist/client/methodology/index.html || {
+            echo "::error::/methodology was not prerendered; refusing an empty facts-gate pass"
+            exit 1
+          }
+          grep -q 'data-testid="methodology-decision-rule"' dist/client/methodology/index.html || {
+            echo "::error::/methodology rendered an SPA shell, not its measurement-method page"
+            exit 1
+          }
           node scripts/facts-gate.mjs --selftest
           node scripts/facts-gate.mjs dist/client --board-reference prerender-board-reference.json
 
@@ -1032,10 +1109,11 @@ jobs:
           # proves the per-directory commit plan: an over-cap directory fails alone and is named with the
           # count that broke it, while the directories that fit still publish.
           python3 -m pytest -q scripts/test_evidence_sync_per_directory.py
+          python3 -m pytest -q scripts/test_evidence_sync_publication_preflight.py
           # Canary privacy, safe capture retention and verified PR proposal (offline only).
           python3 -B scripts/canary/test_canary.py
           python3 -B scripts/canary/test_canary_delivery.py
-          python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py scripts/spray/test_gspc_spray_surfaces.py
+          python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py scripts/spray/test_gspc_spray_surfaces.py scripts/spray/test_gspc_spray_github.py
           python3 -m pytest -q scripts/surface/test_lm_eval_parity.py
           python3 -m pytest -q scripts/hf/test_product_cards.py scripts/hf/test_polish_frontdoors.py scripts/hf/test_catalogue_publication.py harness/bench/test_comparison_integrity.py harness/bench/test_paired_comparison.py harness/bench/test_run_bench.py
           # Source custody and the derived learning-review report stay distinct from learner outcomes.

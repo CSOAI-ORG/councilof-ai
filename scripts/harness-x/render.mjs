@@ -34,6 +34,7 @@ import {
 } from "./npm-release-state.mjs";
 import { workingGroupKit } from "../working-groups/render-kit.mjs";
 import { charterKit } from "../charter-federation/render-kit.mjs";
+import { registryEntryText } from "./registry-text.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const args = process.argv.slice(2);
@@ -143,15 +144,23 @@ const emit = (rel, text) => {
 };
 
 // ── 1. MCP Registry server.json, both namespaces ─────────────────────────────────────────────
+// The descriptions and the tool fields come from registry-text.mjs. A published registry version
+// cannot be edited, so from the version after 1.5.0 they name no count and no tool list; while the
+// version is still 1.5.0 they are exactly what the registry holds for 1.5.0.
+const REG = registryEntryText(REMOTE_VERSION, {
+  fleetLine: FLEET,
+  freeIds: free.map((t) => t.id),
+  paidIds: paid.map((t) => t.id),
+  servedFree: SERVED_FREE,
+});
 const regMeta = {
   "io.modelcontextprotocol.registry/publisher-provided": {
     "ai.councilof/doctrine": DOCTRINE,
-    "ai.councilof/fleet": { free: free.map((t) => t.id), paid: paid.map((t) => t.id) },
+    ...REG.gspc.tools,
     "ai.councilof/generator": "scripts/harness-x/render.mjs from council-os/distribution.json",
   },
 };
-const regDescription = `${FLEET}: GSPC board, evidence, Ed25519 card verify. Measurement only.`;
-if (regDescription.length > 100) throw new Error(`registry description is ${regDescription.length} chars; the 2025-12-11 schema allows 100`);
+const regDescription = REG.gspc.description;
 emit("distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json", j({
   $schema: mcpServer.$schema,
   name: dist.registry_names.github,
@@ -180,6 +189,30 @@ emit("distribution/mcp-registry/ai.councilof-gspc/server.json", j({
   websiteUrl: ID.website,
   remotes: [{ type: "streamable-http", url: DOMAIN_REMOTE }],
   _meta: regMeta,
+}));
+// The free door's own name, ai.councilof/gspc-free. Its 1.4.3 and 1.4.4 were published from a
+// descriptor this renderer did not own, so the listing still said "14 free read-only tools" (read
+// 20 Nov 2026) while /mcp/free served 49. Rendered here, its text and tool fields follow
+// registry-text.mjs, like the domain name's. The remote is the free door itself, which registers no
+// payment tool; the same domain login publishes it.
+const FREE_REGISTRY_NAME = dist.registry_names.domain_free;
+if (!FREE_REGISTRY_NAME) throw new Error("council-os/distribution.json registry_names.domain_free is missing");
+const regFreeDescription = REG.gspcFree.description;
+emit("distribution/mcp-registry/ai.councilof-gspc-free/server.json", j({
+  $schema: mcpServer.$schema,
+  name: FREE_REGISTRY_NAME,
+  title: `${ID.short_name} (free)`,
+  description: regFreeDescription,
+  version: REMOTE_VERSION,
+  websiteUrl: ID.website,
+  remotes: [{ type: "streamable-http", url: FREE_DOOR }],
+  _meta: {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "ai.councilof/doctrine": DOCTRINE,
+      ...REG.gspcFree.tools,
+      "ai.councilof/generator": "scripts/harness-x/render.mjs from council-os/distribution.json",
+    },
+  },
 }));
 
 // ── 2. One plugin manifest, three platform flavours ─────────────────────────────────────────
@@ -1737,6 +1770,12 @@ const STEPS = {
     "`mcp-publisher publish distribution/mcp-registry/ai.councilof-gspc/server.json`.",
     "CANONICAL NAME (owner ruling 2026-09-26). The live entry is remote-only; add the npm package to it only after an npm release that carries `mcpName: ai.councilof/gspc`.",
     `The remote is \`${DOMAIN_REMOTE}\` (the door plus one slash): the bare door is registered under the io.github name and the registry refuses one remote URL under two names. Publish a version above the registry's current isLatest; registry versions are immutable.`,
+  ],
+  "mcp-registry-domain-free": [
+    "The same login as mcp-registry-domain: `mcp-publisher login http --domain councilof.ai --private-key <64-hex Ed25519 seed>`.",
+    "`mcp-publisher publish distribution/mcp-registry/ai.councilof-gspc-free/server.json`.",
+    `The free door's own name, at the same version as mcp-registry-domain. The remote is \`${FREE_DOOR}\`, which serves the ${word(SERVED_FREE.length)} free tools and no payment tool. Publish a version above this name's current isLatest; registry versions are immutable.`,
+    `Read the exact version back: \`SERVER_JSON=distribution/mcp-registry/ai.councilof-gspc-free/server.json VER=${REMOTE_VERSION} EXPECTED_NAME=${FREE_REGISTRY_NAME} node scripts/mcp-registry-publish.cjs --check\` (exit 0 is an active match, is_latest reported separately; exit 2 is absent). A publish whose readback fails is unconfirmed (docs/operations/MCP-REGISTRY-PUBLICATION.md).`,
   ],
   "claude-plugin": [
     "Create a public repo on CouncilofAI-CSOAI (not CSOAI-ORG); copy distribution/plugin/ to its root.",

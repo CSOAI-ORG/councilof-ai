@@ -100,6 +100,8 @@ jobs:
           if not tok:
               print("RESTORE_SKIP no HF_TOKEN")
               sys.exit(0)
+          import subprocess, sys  # privacy gate: read the exact bytes before they leave; fails closed
+          subprocess.run([sys.executable, "scripts/privacy/publication_gate.py", "public/interop/fin7-skeletons"], check=True)
           from huggingface_hub import HfApi
           api = HfApi(token=tok)
           skel = Path("public/interop/fin7-skeletons")

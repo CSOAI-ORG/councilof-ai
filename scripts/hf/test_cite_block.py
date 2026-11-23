@@ -12,6 +12,11 @@ These tests hold the producer side:
   * apply() reproduces live cards byte for byte (fixtures are anonymous reads of the live cards,
     28 Sep 2026 13:50Z), is idempotent, and keeps exactly one block, at the end;
   * the year and DOI come from cite-block-registry.json, the licence only from L5's recorded decisions;
+  * a dataset derived from someone else's data (a registry `source` record) takes the source's licence and
+    credits the source after its title and in How to cite: csoai/gspc-gov said cc0-1.0 over CC BY 4.0 items and
+    credited only us (correction C-2026-1120-02). fixtures/cite-block/before/gspc-gov.md is that card at revision
+    beecacfc2136a41d2c23274116770585d7da5c14; the producer must turn it into fixtures/cite-block/gspc-gov.md, the
+    card read back from the Hub at revision c6ddc5a92c2354248e6b1328ebd341872ee80019 (20 Nov 2026);
   * every script in the repository that uploads a README.md to a Hugging Face dataset is classified BY
     NAME below, and every one that writes a card from its own template passes it through the producer.
     A new uploader fails the classification test until someone decides which kind it is;
@@ -85,7 +90,7 @@ PRODUCERS = {
     "scripts/spray/gspc-spray.py": "edits-live",             # hf_dataset_companions() line-edits the live card
     "scripts/pod-loops/gspc-spray.py": "edits-live",
     "scripts/pod-loops/durability_hf_publish.py": "private",  # csoai/councilof-ai-source; additive markers
-    "scripts/mirror_to_hf.py": "private",                    # csoai/councilof-ai-mirror
+    "scripts/mirror_to_hf.py": "private",                    # no default target; its old one, csoai/councilof-ai-mirror, was deleted 21 Nov 2026
     "scripts/pod-loops/corrections-watch.py": "not-a-card",  # sub-folder README (public/interop/corrections-watch/) in csoai/councilof-ai-evidence, not a dataset card
     "scripts/pod-loops/drift-draft.py": "private",           # csoai/corrections-watch, created --private
     "scripts/sync_hf_gspc.py": "not-a-card",                 # the gspc-board Space shell
@@ -170,12 +175,13 @@ class TheBlock(unittest.TestCase):
         # the exact checks that failed on 117 of 131 public cards on 29 Sep 2026 (05:00Z gate run)
         og = load("outward_gate", REPO / "scripts/outward-gate/outward_gate.py")
         for card in (CARD, "# Bare card without front matter\n\nBody.\n"):
-            md = cb.apply(card, "csoai/example-census")
-            links = re.findall(r"https?://[^\s)\]>\"'`]+", md)
-            got = {c["check"]: c["status"] for c in og.accountability_checks(md, og.md_text(md), "x", links)}
-            for chk in ("accountability.objection_route", "accountability.contact_plain_email",
-                        "accountability.corrections_link", "accountability.entity_named"):
-                self.assertEqual(got.get(chk), "PASS", (chk, got))
+            for repo in ("csoai/example-census", "csoai/gspc-gov"):   # gspc-gov: a card with a source section
+                md = cb.apply(card, repo)
+                links = re.findall(r"https?://[^\s)\]>\"'`]+", md)
+                got = {c["check"]: c["status"] for c in og.accountability_checks(md, og.md_text(md), "x", links)}
+                for chk in ("accountability.objection_route", "accountability.contact_plain_email",
+                            "accountability.corrections_link", "accountability.entity_named"):
+                    self.assertEqual(got.get(chk), "PASS", (repo, chk, got))
             bare = {c["check"]: c["status"] for c in og.accountability_checks(card, og.md_text(card), "x", [])}
             self.assertEqual(bare["accountability.objection_route"], "FAIL")  # the check is not vacuous
 
@@ -223,6 +229,75 @@ class TheBlock(unittest.TestCase):
         self.assertIn("license_name: csoai-mixed-data", mixed)
         self.assertEqual(mixed.count("## Licence note"), 1)
         self.assertEqual(cb.apply(mixed, "csoai/index-presence").count("## Licence note"), 1)
+
+    def test_a_source_record_decides_the_licence_of_derived_data(self):
+        cc0 = CARD.replace("license: cc-by-4.0", "license: cc0-1.0")
+        derived = cb.apply(cc0, "csoai/gspc-gov")                 # items copied from a CC BY 4.0 source
+        self.assertEqual(cb.fm_licence(cb.fm_split(derived)[0]), "cc-by-4.0")
+        self.assertNotIn("Attribution is appreciated, not required", derived)
+        kept = cb.apply(cc0, "csoai/gspc-ontology")              # no source record: the card's own licence stays
+        self.assertEqual(cb.fm_licence(cb.fm_split(kept)[0]), "cc0-1.0")
+        self.assertNotIn(cb.SRC_START, kept)
+        self.assertNotIn(cb.SRC_START, cb.apply(CARD, "csoai/example-census"))
+
+    def test_the_gspc_gov_card_credits_its_source_and_states_the_limit(self):
+        # C-2026-1120-02: the card at revision beecacfc said cc0-1.0, credited only us and stated no limit.
+        before = (FIX / "before" / "gspc-gov.md").read_text(encoding="utf-8")
+        self.assertEqual(cb.fm_licence(cb.fm_split(before)[0]), "cc0-1.0")
+        self.assertNotIn("Davvetas", before)
+        out = cb.apply(before, "csoai/gspc-gov")
+        self.assertEqual(out, (FIX / "gspc-gov.md").read_text(encoding="utf-8"))   # the card now published
+        self.assertEqual(cb.apply(out, "csoai/gspc-gov"), out)
+        fm, body = cb.fm_split(out)
+        self.assertEqual(cb.fm_licence(fm), "cc-by-4.0")
+        self.assertEqual(cb.registry()["gspc-gov"]["source"]["authors"],   # as named on arXiv:2603.09435
+                         ["Athanasios Davvetas", "Michael Papademas", "Xenia Ziouvelou", "Vangelis Karkaletsis"])
+        self.assertEqual(out.count(cb.SRC_START), 1)
+        self.assertEqual(out.count(cb.SRC_END), 1)
+        self.assertTrue(body.split(cb.SRC_START)[0].rstrip().endswith("# GSPC — governance bank (GovBench)"))
+        sec = out[out.index(cb.SRC_START):out.index(cb.SRC_END)]
+        for s in ("## Source, licence and limit",
+                  "by Athanasios Davvetas, Michael Papademas, Xenia Ziouvelou and Vangelis Karkaletsis (NCSR Demokritos)",
+                  "(https://arxiv.org/abs/2603.09435)", "(https://github.com/davidath/ai-act-evaluation-benchmark)",
+                  "(https://creativecommons.org/licenses/by/4.0/)", "this dataset is offered under CC BY 4.0",
+                  "**Changes we made.**", "237 of the 339 scenarios", "we changed no label",
+                  "**Limit.**", "matches 225 of the 237 labels", "It is not a test of how a system applies the EU AI Act",
+                  "a qualified person has checked the labels", "correction C-2026-1120-02",
+                  "https://councilof.ai/api/corrections"):
+            self.assertIn(s, sec)
+        blk = cb.extract(out)
+        for s in ("Cite its paper, as its authors ask:", "@article{Davvetas2026,", "To cite this derived dataset:",
+                  "@misc{csoai_gspc_gov,", "note         = {Derived from arXiv:2603.09435 (CC BY 4.0). Corrections:",
+                  "Licence: CC-BY-4.0, the licence of the source's data, which governs this derived dataset.",
+                  "Credit the source's authors, Athanasios Davvetas, Michael Papademas, Xenia Ziouvelou and "
+                  "Vangelis Karkaletsis (arXiv:2603.09435)"):
+            self.assertIn(s, blk)
+        self.assertLess(blk.index("@article{Davvetas2026,"), blk.index("@misc{csoai_gspc_gov,"))
+        self.assertNotRegex((sec + blk).lower(), r"certif")
+
+    def test_the_source_section_follows_the_title_outside_code_and_is_never_doubled(self):
+        fenced = "---\nlicense: cc0-1.0\n---\n```python\n# not a title\n```\n\n# Real title\n\nBody.\n"
+        out = cb.apply(fenced, "csoai/gspc-gov")
+        self.assertLess(out.index("# Real title"), out.index(cb.SRC_START))
+        self.assertLess(out.index(cb.SRC_END), out.index("Body."))
+        self.assertEqual(cb.apply(out, "csoai/gspc-gov"), out)
+        untitled = cb.apply("No title here.\n", "csoai/gspc-gov")
+        self.assertLess(untitled.index(cb.SRC_END), untitled.index("No title here."))
+        self.assertEqual(cb.apply(untitled, "csoai/gspc-gov"), untitled)
+        self.assertEqual(untitled.count(cb.SRC_START), 1)
+
+    def test_every_source_record_is_complete(self):
+        need = ("scope", "name", "title", "authors", "year", "arxiv", "paper", "repository", "licence",
+                "licence_short", "licence_url", "licence_basis", "bibtex", "changes")
+        sources = {k: v["source"] for k, v in cb.registry().items() if "source" in v}
+        self.assertIn("gspc-gov", sources)
+        for name, src in sources.items():
+            for k in need:
+                self.assertTrue(src.get(k), (name, k))
+            self.assertIn(src["licence"], cb.LIC_LABEL, name)
+            self.assertNotIn(name, cb.LIC_FIX, name)             # one licence decision per dataset
+            if src.get("limit"):
+                self.assertRegex(src.get("correction", ""), r"^C-\d{4}-\d{4}-\d{2}$", name)
 
 
 class TheProducers(unittest.TestCase):
