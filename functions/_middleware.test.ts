@@ -8,6 +8,9 @@ import { wwwToApex } from "./_lib/wwwRedirect";
 import { mcpDoorRootRequest } from "./_lib/mcpDoorRoot";
 import { onRequest as mcpDoor } from "./mcp/[[path]]";
 import { onRequestGet as x402Listing } from "./.well-known/x402.json";
+import { onRequestPost as evidenceBundlePost } from "./api/evidence-bundle";
+import { onRequestPost as providerDiffPost } from "./api/feeds/provider-diff";
+import { onRequestPost as markingEvidencePost } from "./api/art50/marking-evidence";
 
 function run(url: string, method = "GET") {
   const passthrough = new Response("next", { status: 200 });
@@ -396,13 +399,11 @@ describe("root middleware: the paymentless probe gate", () => {
       `${ORIGIN}/api/proof`, // proof.ts redirects the bare path to bundle=1
       `${ORIGIN}/api/evidence-bundle?obligation=dora&bundle=1`,
       `${ORIGIN}/api/evidence-bundle`,
-      `${ORIGIN}/api/evidence-bundle?obligation=dora&invoice=gbp&commissioned_by=Acme`,
       `${ORIGIN}/api/rwa/evidence?asset=RLUSD`,
       `${ORIGIN}/api/receipts/batch?from=2026-01-01T00:00:00Z`,
       `${ORIGIN}/api/signed-data-feed?feed=1`,
       `${ORIGIN}/api/signed-data-feed?x402=1`,
       `${ORIGIN}/api/feeds/provider-diff?history=1`,
-      `${ORIGIN}/api/feeds/provider-diff?invoice=gbp`,
       `${ORIGIN}/api/pop/xrpl`,
       `${ORIGIN}/api/wrapper/asset/usdc`,
       `${ORIGIN}/api/free-door?preview=1`, // no free part a query can select
@@ -417,6 +418,59 @@ describe("root middleware: the paymentless probe gate", () => {
       };
       expect(body.resource.url, url).toContain(new URL(url).pathname);
       expect(body.extensions.bazaar.info.input.method, url).toBe("POST");
+    }
+  });
+
+  it("an invoice request gets the door's own invoice answer, never the x402 probe", async () => {
+    // evidence-bundle.ts, provider-diff.ts and marking-evidence.ts also sell against a CSOAI LTD
+    // invoice, and in each invoice=gbp wins over bundle=1 / history=1. The bundle's own 402
+    // advertises its invoice link WITH bundle=1, so that link, POSTed with no body, used to get
+    // the USDC challenge instead of the quotation. Each door's real handler answers here.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL) =>
+        String(input).endsWith("/cards-bundle.json")
+          ? Response.json({ cards: {}, merkle_root: null, as_of: null })
+          : new Response("not found", { status: 404 }),
+      ),
+    );
+    const doors: Record<string, (c: unknown) => Promise<Response>> = {
+      "/api/evidence-bundle": evidenceBundlePost as never,
+      "/api/feeds/provider-diff": providerDiffPost as never,
+      "/api/art50/marking-evidence": markingEvidencePost as never,
+    };
+    try {
+      for (const [url, status, kind] of [
+        [`${ORIGIN}/api/evidence-bundle?obligation=article-50&bundle=1&invoice=gbp&commissioned_by=ACME%20Ltd`, 200, "quotation"],
+        [`${ORIGIN}/api/feeds/provider-diff?history=1&invoice=gbp&commissioned_by=Acme`, 402, "invoice-required"],
+        [`${ORIGIN}/api/feeds/provider-diff?invoice=GBP&commissioned_by=Acme`, 402, "invoice-required"], // provider-diff.ts lowercases
+        [`${ORIGIN}/api/art50/marking-evidence?invoice=gbp&commissioned_by=Acme`, 400, null], // a POST carries the bytes to measure
+      ] as const) {
+        const request = emptyPost(url);
+        const door = doors[new URL(url).pathname];
+        const next = vi.fn(async () => door({ request, env: {} }));
+        const res = await onRequest({ request, next });
+        expect(next, url).toHaveBeenCalledOnce();
+        expect(res.status, url).toBe(status);
+        const body = (await res.json()) as { kind?: string; accepts?: unknown };
+        expect(body.accepts, url).toBeUndefined();
+        if (kind) expect(body.kind, url).toBe(kind);
+      }
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("invoice=gbp opens nothing where the door has no invoice rail or would not read it", async () => {
+    for (const url of [
+      `${ORIGIN}/api/proof?bundle=1&invoice=gbp`,
+      `${ORIGIN}/api/signed-data-feed?feed=1&invoice=gbp`,
+      `${ORIGIN}/api/evidence-bundle?obligation=dora&bundle=1&invoice=GBP`, // evidence-bundle.ts matches "gbp" exactly
+      `${ORIGIN}/api/evidence-bundle?invoice=gbp`, // no obligation: no quotation to give
+    ]) {
+      const { res, next } = await gate(emptyPost(url));
+      expect(res.status, url).toBe(402);
+      expect(next, url).not.toHaveBeenCalled();
     }
   });
 

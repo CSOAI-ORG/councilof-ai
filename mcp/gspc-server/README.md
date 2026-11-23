@@ -66,6 +66,12 @@ forwards your `x_payment` verbatim as the `X-PAYMENT` header on one request to `
 authenticates, signs or invents a receipt; it only classifies the opaque response's receipt shape.
 Settlement is the route's job, fail-closed.
 
+A client that follows the x402 MCP transport (`specs/transports-v2/mcp.md`) may instead send its
+PaymentPayload **object** in `_meta["x402/payment"]` of the `tools/call`, as the HTTP door accepts it.
+The server base64s that object into the same `X-PAYMENT` header. Use one channel per call: both at
+once, or a value that is not an object, is refused before any request is made. A settlement the route
+reports is also returned in the result's `_meta["x402/payment-response"]`.
+
 Top-level statuses describe delivery, not settlement:
 
 - **`PAYMENT_REQUIRED`** — the route answered 402. Following the x402 MCP transport
@@ -74,9 +80,9 @@ Top-level statuses describe delivery, not settlement:
   alongside this wrapper's fields (`status`, `settlement_state`, …), and `content[0].text` is that same
   object as JSON; the human summary is `content[1].text`. With no `x_payment`, nothing was charged by that
   request. If an authorization was presented, settlement remains `UNCONFIRMED`; inspect before signing or
-  retrying. `isError` marks "not delivered yet" — it is a payment challenge, not a fault. Payment is still
-  read from the `x_payment` argument; `_meta["x402/payment"]` is not read yet, so a client that sends only
-  that gets the same challenge back and is charged nothing.
+  retrying. `isError` marks "not delivered yet" — it is a payment challenge, not a fault. Payment is
+  read from the `x_payment` argument or from `_meta["x402/payment"]`, so a client that retries the
+  challenged call as the x402 MCP transport describes is not challenged again for want of a field.
 - **`DELIVERED`** — the route answered 2xx and returned a deliverable. Inspect `delivery_kind`:
   `PREVIEW_OR_FREE`, `DELIVERED_SETTLEMENT_UNCONFIRMED`, `DELIVERED_RECEIPT_GAP`, or
   `DELIVERED_WITH_ROUTE_RECEIPT`. `receipt_state: PRESENT_UNVERIFIED` means a JWS-shaped receipt was

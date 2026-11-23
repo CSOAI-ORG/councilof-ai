@@ -47,6 +47,8 @@ jobs:
           python3 - <<'PY'
           import os, shutil, traceback
           from pathlib import Path
+          import subprocess, sys  # privacy gate: read the exact bytes before they leave; fails closed
+          subprocess.run([sys.executable, "scripts/privacy/publication_gate.py", "fin-signed", "public/fleet", "public/interop/fin7-skeletons"], check=True)
           from huggingface_hub import HfApi
 
           api = HfApi(token=os.environ["HF_TOKEN"])

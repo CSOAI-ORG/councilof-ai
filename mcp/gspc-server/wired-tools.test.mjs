@@ -57,9 +57,25 @@ function answer(res, status, body, headers = {}) {
 
 // Keep the wired test deterministic and payment-free: it still spawns the shipped
 // server, but all routes terminate at this local fixture rather than production.
+// Every request the fixture origin received: what a tool call did and did not send upstream.
+const seen = [];
+// The route reads X-PAYMENT with atob then JSON.parse and no UTF-8 step (functions/api/_x402.ts).
+const routeDecodes = (header) => {
+  try {
+    const decoded = JSON.parse(Buffer.from(String(header), "base64").toString("latin1"));
+    return decoded && typeof decoded === "object" ? decoded : null;
+  } catch {
+    return null;
+  }
+};
+
 const routeServer = createServer((req, res) => {
   const url = new URL(req.url || "/", "http://fixture.invalid");
-  const payment = req.headers["x-payment"];
+  const header = req.headers["x-payment"];
+  seen.push({ path: url.pathname, search: url.searchParams, header });
+  // A PaymentPayload sent in _meta arrives as base64 JSON; its payload.test names the fixture case
+  // the opaque x_payment tokens name directly.
+  const payment = routeDecodes(header)?.payload?.test ?? header;
   if (url.pathname === "/api/gspc") {
     return answer(res, 200, {
       measured_on: "2026-09-09",
@@ -419,6 +435,154 @@ check(
   doorRefusal.result?.isError === true &&
     /Input validation error/.test(doorRefusal.result?.content?.[0]?.text || "") &&
     !/UNREACHABLE/.test(JSON.stringify(doorRefusal)),
+);
+
+// The x402 MCP transport's own channel (specs/transports-v2/mcp.md): the PaymentPayload object in
+// params._meta["x402/payment"], and the settlement in the result's _meta["x402/payment-response"].
+// Until this change the server read only the x_payment argument, so a spec client that retried a
+// challenged call was challenged again every time.
+const WINDOW = { from: "2026-09-01T00:00:00Z", to: "2026-09-02T00:00:00Z" };
+const metaPayload = (test, extra = {}) => ({
+  x402Version: 2,
+  resource: { url: `${fixtureOrigin}/api/receipts/batch?from=${encodeURIComponent(WINDOW.from)}&to=${encodeURIComponent(WINDOW.to)}`, description: "reçus — 測定" },
+  payload: { test, signature: "0xmeta-signature-must-not-be-echoed" },
+  ...extra,
+});
+const lastSeen = () => seen[seen.length - 1];
+
+const metaPaid = await rpc("tools/call", {
+  name: "receipts_batch",
+  arguments: { ...WINDOW },
+  _meta: { "x402/payment": metaPayload("test-route-receipt") },
+});
+check(
+  "a _meta payment reaches the route as X-PAYMENT, byte for byte under the route's decoder",
+  lastSeen().path === "/api/receipts/batch" &&
+    /^[\x20-\x7e]+$/.test(Buffer.from(String(lastSeen().header), "base64").toString("latin1")) &&
+    JSON.stringify(routeDecodes(lastSeen().header)) === JSON.stringify(metaPayload("test-route-receipt")),
+);
+check(
+  "a _meta payment delivers, and the settlement the route reported is in the result's _meta",
+  metaPaid.result?.isError === false &&
+    metaPaid.result?.structuredContent?.status === "DELIVERED" &&
+    metaPaid.result?.structuredContent?.payment_presented === true &&
+    metaPaid.result?.structuredContent?.delivery_kind === "DELIVERED_WITH_ROUTE_RECEIPT" &&
+    typeof metaPaid.result?._meta?.["x402/payment-response"]?.extensions?.["offer-receipt"] === "object" &&
+    !JSON.stringify(metaPaid).includes("0xmeta-signature-must-not-be-echoed"),
+);
+check(
+  "an x_payment delivery carries the same settlement in _meta, and an unpaid or unsettled one carries none",
+  typeof paid.result?._meta?.["x402/payment-response"] === "object" &&
+    noReceipt.result?._meta === undefined &&
+    challenge.result?._meta === undefined,
+);
+
+const metaNoTo = await rpc("tools/call", {
+  name: "receipts_batch",
+  arguments: { from: WINDOW.from },
+  _meta: { "x402/payment": metaPayload("test-route-receipt") },
+});
+check(
+  "receipts_batch: a _meta payment without `to` buys the window its payload's resource names",
+  metaNoTo.result?.structuredContent?.status === "DELIVERED" &&
+    lastSeen().search.get("from") === WINDOW.from &&
+    lastSeen().search.get("to") === WINDOW.to,
+);
+
+let before = seen.length;
+const metaElsewhere = await rpc("tools/call", {
+  name: "receipts_batch",
+  arguments: { from: WINDOW.from },
+  _meta: { "x402/payment": metaPayload("test-route-receipt", { resource: { url: `https://example.com/api/receipts/batch?from=${encodeURIComponent(WINDOW.from)}&to=${encodeURIComponent(WINDOW.to)}` } }) },
+});
+check(
+  "receipts_batch: a payload naming another origin supplies no `to`, and nothing is requested",
+  metaElsewhere.result?.isError === true &&
+    metaElsewhere.result?.structuredContent?.status === "BAD_ARGUMENTS" &&
+    seen.length === before,
+);
+
+before = seen.length;
+const metaTwice = await rpc("tools/call", {
+  name: "receipts_batch",
+  arguments: { ...WINDOW, x_payment: "test-route-receipt" },
+  _meta: { "x402/payment": metaPayload("test-route-receipt") },
+});
+const metaNotObject = await rpc("tools/call", {
+  name: "receipts_batch",
+  arguments: { ...WINDOW },
+  _meta: { "x402/payment": "eyJ4NDAyVmVyc2lvbiI6Mn0=" },
+});
+const metaTooLarge = await rpc("tools/call", {
+  name: "receipts_batch",
+  arguments: { ...WINDOW },
+  _meta: { "x402/payment": metaPayload("test-route-receipt", { padding: "x".repeat(17 * 1024) }) },
+});
+check(
+  "payment in both channels, a non-object, or an oversized payload is refused before any request",
+  [metaTwice, metaNotObject, metaTooLarge].every(
+    (r) =>
+      r.result?.isError === true &&
+      r.result?.structuredContent?.status === "BAD_ARGUMENTS" &&
+      r.result?.structuredContent?.payment_forwarded === false &&
+      r.result?.structuredContent?.nothing_charged === true,
+  ) &&
+    /sent twice/.test(metaTwice.result?.structuredContent?.reason || "") &&
+    /PaymentPayload object/.test(metaNotObject.result?.structuredContent?.reason || "") &&
+    /exceeds/.test(metaTooLarge.result?.structuredContent?.reason || "") &&
+    seen.length === before,
+);
+
+const metaRefused = await rpc("tools/call", {
+  name: "commission_card",
+  arguments: { subject: "gspc-contract-check" },
+  _meta: { "x402/payment": metaPayload("test-refused") },
+});
+check(
+  "a _meta payment the route answers 402 to is a challenge with settlement unconfirmed, and is not echoed",
+  metaRefused.result?.isError === true &&
+    metaRefused.result?.structuredContent?.status === "PAYMENT_REQUIRED" &&
+    metaRefused.result?.structuredContent?.payment_presented === true &&
+    metaRefused.result?.structuredContent?.settlement_state === "UNCONFIRMED" &&
+    metaRefused.result?._meta === undefined &&
+    typeof lastSeen().header === "string" &&
+    !JSON.stringify(metaRefused).includes("0xmeta-signature-must-not-be-echoed"),
+);
+
+const metaNull = await rpc("tools/call", {
+  name: "commission_card",
+  arguments: { subject: "gspc-contract-check" },
+  _meta: { "x402/payment": null },
+});
+check(
+  "a null _meta payment is no payment: the challenge, nothing charged, no header sent",
+  metaNull.result?.structuredContent?.status === "PAYMENT_REQUIRED" &&
+    metaNull.result?.structuredContent?.payment_presented === false &&
+    metaNull.result?.structuredContent?.nothing_charged === true &&
+    lastSeen().header === undefined,
+);
+
+before = seen.length;
+const freeWithMeta = await rpc("tools/call", {
+  name: "board_totals",
+  arguments: {},
+  _meta: { "x402/payment": metaPayload("test-route-receipt") },
+});
+check(
+  "a free tool never reads _meta payment: it answers as usual and sends no payment header",
+  freeWithMeta.result?.isError !== true &&
+    freeWithMeta.result?._meta === undefined &&
+    seen.slice(before).every((r) => r.header === undefined),
+);
+
+const metaPreview = await rpc("tools/call", {
+  name: "receipts_batch",
+  arguments: { ...WINDOW, preview: true },
+  _meta: { "x402/payment": metaPayload("test-route-receipt") },
+});
+check(
+  "preview with a _meta payment is refused, as it is with x_payment",
+  metaPreview.result?.isError === true && metaPreview.result?.structuredContent?.status === "BAD_ARGUMENTS",
 );
 
 const childClosed = new Promise((resolve) => server.once("close", resolve));

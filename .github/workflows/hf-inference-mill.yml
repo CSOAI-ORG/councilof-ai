@@ -183,6 +183,8 @@ jobs:
           if python3 -c "import sys; sys.exit(0 if float('$budget') > 0 else 1)"; then
             if python3 - <<'PY'
           import os
+          import subprocess, sys  # privacy gate: read the exact bytes before they leave; fails closed
+          subprocess.run([sys.executable, "scripts/privacy/publication_gate.py", "ledger/spend.json"], check=True)
           from huggingface_hub import HfApi
           HfApi(token=os.environ["HF_TOKEN"].strip()).upload_file(
               path_or_fileobj="ledger/spend.json",
@@ -327,6 +329,8 @@ jobs:
           pip install --quiet "huggingface_hub>=0.25"
           python3 - <<'PY'
           import os
+          import subprocess, sys  # privacy gate: read the exact bytes before they leave; fails closed
+          subprocess.run([sys.executable, "scripts/privacy/publication_gate.py", "/tmp/spend.json", "/tmp/hosted-results.json"], check=True)
           from huggingface_hub import HfApi
           HfApi(token=os.environ["HF_TOKEN"].strip()).upload_file(
               path_or_fileobj="/tmp/spend.json",
@@ -391,6 +395,8 @@ jobs:
           pip install --quiet "huggingface_hub>=0.25"
           python3 - <<'PY'
           import json, os
+          import subprocess, sys  # privacy gate: read the exact bytes before they leave; fails closed
+          subprocess.run([sys.executable, "scripts/privacy/publication_gate.py", "/tmp/HF2200.lock.json"], check=True)
           from huggingface_hub import HfApi
 
           token = (os.environ.get("HF_TOKEN") or "").strip()
@@ -465,6 +471,8 @@ jobs:
           pip install --quiet "huggingface_hub>=0.25"
           python3 - <<'PY'
           import os, json
+          import subprocess, sys  # privacy gate: read the exact bytes before they leave; fails closed
+          subprocess.run([sys.executable, "scripts/privacy/publication_gate.py", "public/fleet/HF2200.lock.json"], check=True)
           from huggingface_hub import HfApi
           tok = (os.environ.get("HF_TOKEN") or "").strip()
           lock = json.load(open("public/fleet/HF2200.lock.json"))
