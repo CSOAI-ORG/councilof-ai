@@ -140,7 +140,7 @@ async function handleToolCall(name, args = {}) {
     });
     const boundedRead = async (response) => {
       const declared = response.headers.get('content-length');
-      if (declared !== null && (!/^\\d+$/.test(declared) || Number(declared) > MAX_DESKTOP_RESPONSE)) {
+      if (declared !== null && (!/^\d+$/.test(declared) || Number(declared) > MAX_DESKTOP_RESPONSE)) {
         void response.body?.cancel().catch(() => {});
         throw new Error('DESKTOP_RESPONSE_TOO_LARGE');
       }
