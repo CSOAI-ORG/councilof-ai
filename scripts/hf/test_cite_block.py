@@ -84,6 +84,7 @@ PRODUCERS = {
     "scripts/hf/hf_card_metadata.py": "edits-live",          # preserves the existing citation/body
     "scripts/hf/polish_frontdoors.py": "template",           # reviewed product templates; content/hash guards
     "scripts/claims/maintenance_due.py": "not-a-card",       # README below the claim-maintenance archive subfolder
+    "scripts/hf/publish_orb3_correction.py": "edits-live", # guarded CAS update of public ORB-III source-reviewed README
     "scripts/measurements/publish-fact-table.py": "template", # dedicated fact-table product card
     "scripts/surface/publish-hf-evaluation.py": "template",   # pinned evaluation pack/results cards and Space template
     "scripts/hf/hf-scrub-daily.py": "edits-live",        # hf-org-card.py scrub_legacy line-edits, commit against the revision read
