@@ -76,6 +76,13 @@ SECRET_RX = tuple((kind, re.compile(rx)) for kind, rx in (
 ))
 PHONE_RX = re.compile(rb"(?<![0-9A-Za-z+])\+[1-9][0-9]{0,2}(?:[ .\-]?\(?[0-9]{1,4}\)?){2,5}(?![0-9A-Za-z])")
 EXTRA_DECODE = ((re.compile(rb"\\u0040", re.I), b"@"), (re.compile(rb"\\x40", re.I), b"@"))
+# Azure SAS URLs can carry time-scoped bearer credentials. Requiring all three
+# query fields reduces false alarms on ordinary documentation parameters.
+# This is a lexical safeguard, not a complete credential-class inventory.
+AZURE_SAS_SIG = re.compile(rb"(?:[?&])sig=[A-Za-z0-9%+/_=.\-]{16,}", re.I)
+AZURE_SAS_VERSION = re.compile(rb"(?:[?&])sv=[0-9]{4}-[0-9]{2}-[0-9]{2}", re.I)
+AZURE_SAS_EXPIRY = re.compile(rb"(?:[?&])se=[A-Za-z0-9%:TZ.\-]{8,}", re.I)
+
 SECRET_NAMES = ("kaggle.json", "id_rsa", "id_ed25519", "id_ecdsa", ".netrc", ".npmrc", ".pypirc")
 
 
@@ -116,6 +123,8 @@ class Result:
             b = re.sub(re.escape(ident), b"<listed-name>", b, flags=re.I)
         for _, rx in SECRET_RX:
             b = rx.sub(b"<credential>", b)
+        # A SAS token in a path must never be reprinted in CI logs.
+        b = AZURE_SAS_SIG.sub(b"?sig=<credential>", b.replace(b"&amp;", b"&"))
         return b.decode("utf-8", "replace")
 
     def hit(self, place, kind):
@@ -148,7 +157,8 @@ def scan_text(res: Result, place: str, data: bytes, first_line: int = 1, names_o
             if any(k == "outside" for _, k in det.find(cut, res.tlds, res.allow)):
                 res.hit(f"{place}:1", "outside-email-address")
                 break
-        return
+        # File and directory names also carry keys and private identities.
+        # Continue through the same checks as file content.
     for kind, rx in SECRET_RX:
         for m in rx.finditer(data):
             res.hit(f"{place}:{data.count(NL, 0, m.start()) + first_line}", kind)
@@ -162,6 +172,13 @@ def scan_text(res: Result, place: str, data: bytes, first_line: int = 1, names_o
             pos = low.find(ident)
             if pos >= 0:
                 res.hit(f"{place}:{data.count(NL, 0, pos) + first_line}", f"private-list-entry-{i}")
+    # SAS URLs often appear in JSONL registry crawls and tool cards. Recognise
+    # a complete sv/se/sig trio even when HTML escaped, never echo the token.
+    for i, line in enumerate(data.splitlines(), first_line):
+        q = line.replace(b"&amp;", b"&").replace(b"\\u0026", b"&")
+        if AZURE_SAS_SIG.search(q) and AZURE_SAS_VERSION.search(q) and AZURE_SAS_EXPIRY.search(q):
+            res.hit(f"{place}:{i}", "credential:azure-sas-url")
+
 
 
 def scan_stream(res: Result, place: str, fh):
@@ -279,6 +296,9 @@ def scan_archive(res: Result, place: str, ext: str, fh, size, depth: int):
 def scan_path(res: Result, path: str):
     if not os.path.lexists(path):
         res.unc(path, "path does not exist"); return
+    # The root argument also must not be a symlink: isfile/isdir follow it.
+    if os.path.islink(path):
+        res.unc(path, "symlink input is not an approved publication source"); return
     if os.path.isfile(path):
         with open(path, "rb") as fh:
             scan_file_obj(res, path, os.path.basename(path), fh, os.path.getsize(path), 0)
@@ -287,12 +307,17 @@ def scan_path(res: Result, path: str):
         res.unc(path, "neither a file nor a folder"); return
     for dirpath, dirnames, filenames in os.walk(path, followlinks=False):
         dirnames.sort()
-        for d in dirnames:
+        for d in list(dirnames):
             rel = os.path.relpath(os.path.join(dirpath, d), path)
             scan_text(res, rel, rel.encode("utf-8", "surrogateescape"), names_only=True)
             why = shaped_like_a_secret_or_backup(rel)
             if why:
                 res.hit(rel, why)
+            if os.path.islink(os.path.join(dirpath, d)):
+                # os.walk(followlinks=False) silently skips nested symlink folders.
+                # Fail closed instead of treating an unexamined subtree as clean.
+                res.unc(rel, "symlink directory was not scanned")
+                dirnames.remove(d)
         for fn in sorted(filenames):
             full = os.path.join(dirpath, fn)
             rel = os.path.relpath(full, path)

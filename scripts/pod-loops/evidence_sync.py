@@ -123,6 +123,35 @@ def secret_scan(files: dict, rels) -> list:
     return hits
 
 
+def publication_privacy_preflight(files: dict, rels) -> int:
+    """Scan precisely the selected source bytes BEFORE any HF preupload/commit.
+
+    Files may be remapped to sharded physical Hub paths; the original local
+    source bytes, not their destination names, are what this gate examines.
+    Fail closed if the scanner cannot be imported or cannot vouch for a file.
+    OTS is a separate binary timestamp proof, raw-scanned here and validated
+    by the existing stamp verifier; no other opaque type is excused.
+    """
+    import importlib.util
+    guard = Path(__file__).resolve().parents[1] / "privacy" / "publication_gate.py"
+    if not guard.is_file():
+        print("publication-gate UNCHECKABLE: scanner missing; no HF write", file=sys.stderr)
+        return 2
+    try:
+        spec = importlib.util.spec_from_file_location("hf_evidence_publication_guard", guard)
+        if spec is None or spec.loader is None:
+            raise RuntimeError("publication scanner loader unavailable")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        paths = [str(files[rel]) for rel in rels]
+        code, result = module.gate(paths, opaque_ok=(".ots",))
+        module.report(code, result, "hf-evidence-sync selected source bytes")
+        return code
+    except Exception as error:
+        print(f"publication-gate UNCHECKABLE: {type(error).__name__}; no HF write", file=sys.stderr)
+        return 2
+
+
 def commit(rels, files, token, message):
     for i in range(0, len(rels), 500):
         chunk = rels[i:i + 500]
@@ -301,6 +330,12 @@ def main():
             print(f"✗ evidence-sync: secret pattern in {len(hits)} file(s); nothing uploaded: {hits[:5]}")
             rec["state"] = "SECRET_SCAN_FAILED"; _w(a.receipt, rec); sys.exit(5)
         print(f"  secret scan: {len(d)} file(s), 0 hits")
+        privacy_code = publication_privacy_preflight(files, d)
+        if privacy_code != 0:
+            rec["state"] = "PRIVACY_GATE_FINDINGS" if privacy_code == 1 else "PRIVACY_GATE_UNCHECKABLE"
+            rec["uploaded"] = None
+            _w(a.receipt, rec)
+            raise SystemExit(5)
         plan = plan_by_directory(d, tree, files)
         outcomes = commit_grouped(d, files, token, a.message, plan)
         rec['directories'] = outcomes

@@ -786,14 +786,48 @@ jobs:
           node scripts/brand-gate.mjs --selftest
           node scripts/brand-gate.mjs dist/client
 
+      # 22 Nov 2026: /investors rendered a standalone "$0.06" from the live revenue
+      # response. All PR checks were green, but the deploy-only price gate stopped
+      # every production release. The PR's one-route prerender never included
+      # /investors, so scanning dist without first rendering that route was false
+      # reassurance. scripts/dashboard-shell-routes.txt now includes /investors.
+      # This uses the same existing price gate as deploy (no exemptions or relaxed
+      # rules); a missing snapshot fails rather than reporting an empty pass.
+      - name: Price gate — prerendered investor and published source assets
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          test -s dist/client/investors/index.html || {
+            echo "::error::/investors was not prerendered; refusing an empty price-gate pass"
+            exit 1
+          }
+          grep -q 'data-testid="investors-page"' dist/client/investors/index.html || {
+            echo "::error::/investors did not render its actual React page; refusing an SPA-shell pass"
+            exit 1
+          }
+          node scripts/price-gate.mjs --selftest
+          node scripts/price-gate.mjs dist/client
+
       # Defect #14 (attack plan F-21): deploy.yml runs facts-gate on the prerendered output,
       # but pr-gates only ran brand-gate. A PR could introduce a typed fact that passes
       # brand-gate (which checks display strings) but contradicts facts.json. Running it
       # here catches the contradiction at PR time instead of at deploy time.
       # The selftest proves the gate can fail before it is trusted on our bytes.
+      # The 22 Nov 2026 production deploy failed on two bare axis counts in
+      # /methodology while every PR check had passed: PR prerender omitted this
+      # route. A missing/SPA-only methodology snapshot is a failed gate, never
+      # a pass over an empty directory. The unchanged facts-gate remains the
+      # source of truth for comparison with the render-bound 34-axis board.
       - name: Facts gate — no claim may contradict facts.json
         if: steps.scope.outputs.gated == 'true'
         run: |
+          test -s dist/client/methodology/index.html || {
+            echo "::error::/methodology was not prerendered; refusing an empty facts-gate pass"
+            exit 1
+          }
+          grep -q 'data-testid="methodology-decision-rule"' dist/client/methodology/index.html || {
+            echo "::error::/methodology rendered an SPA shell, not its measurement-method page"
+            exit 1
+          }
           node scripts/facts-gate.mjs --selftest
           node scripts/facts-gate.mjs dist/client --board-reference prerender-board-reference.json
 
@@ -1075,6 +1109,7 @@ jobs:
           # proves the per-directory commit plan: an over-cap directory fails alone and is named with the
           # count that broke it, while the directories that fit still publish.
           python3 -m pytest -q scripts/test_evidence_sync_per_directory.py
+          python3 -m pytest -q scripts/test_evidence_sync_publication_preflight.py
           # Canary privacy, safe capture retention and verified PR proposal (offline only).
           python3 -B scripts/canary/test_canary.py
           python3 -B scripts/canary/test_canary_delivery.py
