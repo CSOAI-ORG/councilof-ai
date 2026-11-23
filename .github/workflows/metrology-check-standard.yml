@@ -22,10 +22,14 @@ jobs:
         with:
           python-version: '3.12'
       - name: Offline calibration-control negative tests
-        run: python3 measurement/experiments/metrology-controls/test_check_standard.py
+        run: |
+          python3 measurement/experiments/metrology-controls/test_check_standard.py
+          python3 measurement/experiments/metrology-controls/test_operating_characteristics.py
       - name: Generate a reproducible SYNTHETIC instrument receipt
         run: |
           mkdir -p /tmp/gspc-metrology
+          python3 measurement/experiments/metrology-controls/simulate_operating_characteristics.py \
+            --trials 240 > /tmp/gspc-metrology/synthetic-operating-characteristics.json
           python3 - <<'PY'
           import hashlib, importlib.util, json, pathlib, sys
           root=pathlib.Path("measurement/experiments/metrology-controls").resolve()
@@ -58,6 +62,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: synthetic-metrology-check-standard-${{ github.run_id }}
-          path: /tmp/gspc-metrology/synthetic-receipt.json
+          path: /tmp/gspc-metrology/
           retention-days: 30
           if-no-files-found: error
