@@ -137,11 +137,15 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
-      - name: Regenerate the capsule VC projection and run the layout tests
+      - name: Regenerate the capsule VC projection and the mechanism coverage, and run the layout tests
         run: |
           set -euo pipefail
           node scripts/mechanism/capsule-vc.mjs
           node scripts/mechanism/capsule-vc.mjs --check
+          # /mechanism/coverage.json also reads the capsule tree. Regenerate it here, or `gates`
+          # fails on scripts/mechanism/build-coverage.test.ts for every capsule data PR.
+          node scripts/mechanism/build-coverage.mjs
+          node scripts/mechanism/build-coverage.mjs --check
           python3 scripts/test_measurement_capsule_layout.py
           python3 scripts/test_measurement_capsule_page.py
       - name: Land the layout on a branch, open the PR, dispatch gates, close older capsule PRs
@@ -152,7 +156,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A public/measurement-capsules public/mechanism/vc.json
+          git add -A public/measurement-capsules public/mechanism/vc.json public/mechanism/coverage.json
           if git diff --cached --quiet; then
             echo "laid out; the tree equals master; nothing to land"
             exit 0
