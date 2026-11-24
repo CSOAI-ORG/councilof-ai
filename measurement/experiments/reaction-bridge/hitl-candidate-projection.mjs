@@ -4,9 +4,37 @@
 // identity verification, receiver confirmation, canonical storage or permission to act.
 import {isSha,evaluateEpisode} from "./reaction-bridge.mjs";
 
-const HAS_OWN=(v,k)=>Object.prototype.hasOwnProperty.call(v,k);
 function obj(v){return v!==null&&typeof v==="object"&&!Array.isArray(v);}
 function digest(v){return obj(v)&&v.alg==="sha256"&&isSha(v.value)?v.value:null;}
+function instant(t){
+  return typeof t==="string" &&
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(t) &&
+    Number.isFinite(Date.parse(t));
+}
+function declaredApprovalConditions(record){
+  const a=record.authority,c=record.claim_maintenance,w=a.validity_window;
+  if(a.decision!=="APPROVE"||a.review_kind!=="HUMAN_REVIEW"||
+     a.release_state!=="ACTIVE"||a.revocation_state!=="NOT_REVOKED"||
+     !digest(a.scope_digest)||!digest(a.external_record_digest)||
+     !digest(a.operational_baseline?.baseline_digest)||
+     !instant(a.operational_baseline?.observed_at)||
+     !obj(w)||!instant(w.not_before)||!instant(w.not_after)||
+     !instant(a.decided_at)||
+     !obj(c)||c.watch_state!=="CURRENT"||c.watch_state_at_decision!=="CURRENT"||
+     (record.invocation.state==="EXECUTED"&&c.watch_state_at_invocation!=="CURRENT")){
+    return false;
+  }
+  const start=Date.parse(w.not_before),end=Date.parse(w.not_after),decision=Date.parse(a.decided_at);
+  if(start>end||decision<start||decision>end||Date.parse(a.operational_baseline.observed_at)>decision)return false;
+  if(record.invocation.state==="EXECUTED"){
+    if(!instant(record.invocation.invoked_at))return false;
+    const invoked=Date.parse(record.invocation.invoked_at);
+    if(invoked<decision||invoked>end)return false;
+  }
+  // Historical source-declared consistency ONLY. A source can still lie, be
+  // revoked since the record, use a false principal or lack a trusted issuer.
+  return true;
+}
 function reported(hex,realm){
   return hex?{state:"REPORTED",receipt_sha256:hex,source_realm:realm}:{state:"UNKNOWN",source_realm:realm};
 }
@@ -30,8 +58,7 @@ export function projectHitlCandidateV02({
   if(receiver_receipt_sha256!==null&&!isSha(receiver_receipt_sha256))throw Error("invalid receiving-party receipt pin");
   // A profile's "VERIFIED" label does not identify its verifier as independent of
   // the task, nor establish that the receiver actually witnessed an effect.
-  const reportedHumanReview=record.authority.decision==="APPROVE" &&
-    record.authority.review_kind==="HUMAN_REVIEW" &&
+  const reportedHumanReview=declaredApprovalConditions(record) &&
     digest(record.authority.external_record_digest);
   const reportedInvocation=record.invocation.state==="EXECUTED" &&
     digest(record.invocation.invocation_digest);
