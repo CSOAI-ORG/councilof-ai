@@ -52,8 +52,6 @@ export default function HomeVerify() {
       {/* Public distribution figures (own artifact + 48h staleness guard).
           Restored 2026-11-16 after the Sep rebuild left it composed nowhere. */}
       <HomeDistribution />
-      {/* The live board strip + daily-report/newsletter band (owner-verified 1 Nov;
-          restored 2026-11-09 after the journey rebuild dropped them). */}
       <HomeMine />
       <HomeProducts />
       <HomeLearningJourney />
