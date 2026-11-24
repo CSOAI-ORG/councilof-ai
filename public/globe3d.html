@@ -531,6 +531,7 @@ if(viewer){
   //                                             surfaces the underlying
   //                                             position + scenario it came
   //                                             from via postMessage {cmd:'stampClick',id}.
+  //   {cmd:'stampsLayer', layer, on}            — show/hide stamps whose stamp.layer matches
   //   {cmd:'stampsClear'}                       — remove all stamp glyphs
   //   {cmd:'stampClick', id, payload}          — outgoing: a stamp was clicked
   // Commands posted before Cesium is ready are buffered on window.__sovBuf
@@ -597,6 +598,7 @@ if(viewer){
     VIZ.forEach(function(e){ viewer.entities.remove(e); }); VIZ = [];
   }
 
+  var HIDDEN_RECORD_LAYERS = {};
   function handleCmd(d, source){
     if(!d || !d.cmd || !viewer) return;
     try{
@@ -662,12 +664,16 @@ if(viewer){
           'cspace-step': '#34d399',
           'cspace-verdict': '#10b981',
           'cspace': '#34d399',
+          'published-measured': '#22d3ee',   // measured by Council of AI (published records layer)
+          'published-reported': '#c084fc',   // reported by another organisation, re-published
         };
         var KIND_SIZE = {
           presence: 7,
           'cspace-step': 5,
           'cspace-verdict': 9,
           'cspace': 6,
+          'published-measured': 7,
+          'published-reported': 7,
         };
         d.stamps.forEach(function(s){
           if(!s || s.lng==null || s.lat==null) return;
@@ -678,6 +684,8 @@ if(viewer){
           STAMPS_META[s.id] = s;
           var ent = viewer.entities.add({
             layerTag: 'stamps',
+            recordLayer: s.layer || null,
+            show: !(s.layer && HIDDEN_RECORD_LAYERS[s.layer]),
             position: Cesium.Cartesian3.fromDegrees(s.lng, s.lat, 50000),
             point: {
               pixelSize: sz,
@@ -703,6 +711,11 @@ if(viewer){
           });
           STAMPS[s.id] = ent;
         });
+      }
+      else if(d.cmd==='stampsLayer' && d.layer){
+        // show/hide every stamp carrying s.layer (e.g. 'published-records'); other stamps untouched
+        HIDDEN_RECORD_LAYERS[d.layer] = !d.on;
+        Object.keys(STAMPS).forEach(function(k){ if(STAMPS[k].recordLayer===d.layer) STAMPS[k].show=!!d.on; });
       }
       else if(d.cmd==='stampsClear'){
         Object.values(STAMPS).forEach(function(e){ viewer.entities.remove(e); });
