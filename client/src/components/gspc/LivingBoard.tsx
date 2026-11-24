@@ -260,6 +260,11 @@ function AxisTable({ view }: { view: AxisView }) {
         {board.bench ? <span className="text-gray-600"> · {board.bench}</span> : null} ·{" "}
         <span className="font-mono">{fleet.distinct_items}</span> questions in the frozen bank · higher is better
       </p>
+      {typeof board.limit === "string" && board.limit.trim() ? (
+        <p className="mt-2 rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs leading-snug text-amber-950" data-testid="axis-limit">
+          Held: {board.limit}
+        </p>
+      ) : null}
       <BoardTestLine board={board} />
       <table className="mt-3 w-full text-left" data-testid="fleet-table">
         <thead>
