@@ -134,7 +134,7 @@ def classify_workflow(data, name, now, max_age_hours=168):
         state = "UNKNOWN"
     branch = run.get("head_branch")
     if state == "SUCCEEDED_SOURCE_ONLY" and branch != "master":
-        state = "SUCCEEDED_NONMASTER_SOURCE_ONLY"
+        state = "SUCCEEDED_NONMASTER_SOURCE_ONLY" if isinstance(branch, str) and branch else "SUCCEEDED_UNATTRIBUTED_SOURCE_ONLY"
     url = run.get("html_url")
     if not isinstance(url, str) or not url.startswith(f"https://github.com/{REPO}/actions/runs/"):
         url = None
