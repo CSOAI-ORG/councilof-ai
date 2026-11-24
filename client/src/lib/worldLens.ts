@@ -77,14 +77,15 @@ export function parseObservatory(raw: unknown): Observatory {
     const event = record(candidate);
     const epoch = event?.source_epoch;
     if (
-      event?.source_index !== i || !string(event?.axis) || !string(event?.intent) ||
+      event?.source_index !== i || !string(event?.axis) ||
+      typeof event?.intent !== "string" || event.intent.length > 220 ||
       typeof epoch !== "number" || !Number.isFinite(epoch) ||
       epoch < 0 || epoch > 4102444800
     ) throw new Error("SIMULATION_EVENT_UNCHECKABLE");
     return {
       sourceIndex: i,
       axis: string(event.axis)!,
-      intent: string(event.intent)!,
+      intent: event.intent, // An empty source intent is valid evidence of missing data, not a malformed record.
       sourceEpoch: epoch,
     };
   });
