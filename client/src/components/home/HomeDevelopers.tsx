@@ -87,6 +87,14 @@ export default function HomeDevelopers() {
             does not place an order.
           </p>
           <div className="hp-dev-links">
+            <a href="/tools/#extension">
+              Get the Chrome toolbar extension{" "}
+              <ArrowUpRight size={14} aria-hidden="true" />
+            </a>
+            <a href="/tools/">
+              Browse Council OS plugins{" "}
+              <ArrowUpRight size={14} aria-hidden="true" />
+            </a>
             <a href="/connect/#agent-skills">
               Portable Agent Skills{" "}
               <ArrowUpRight size={14} aria-hidden="true" />

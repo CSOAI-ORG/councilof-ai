@@ -301,19 +301,17 @@ function Independence() {
         <RotatingHighlight {...SECTION_TITLES.independence} />
       </Heading>
       <Body>
-        The obvious question about any body that scores AI is: who is writing the cheque? Here is the
-        whole answer. No company we measure pays for its place, its score, or its removal. Members of
-        the public never pay anything at all. Verifying a card is free forever, with no account. We
-        fund ourselves by selling signed evidence artefacts — the report, the dataset, the
-        re-attestation — published win or lose, and never a fee for a ranking or a placement.
+        The obvious question about any body that scores AI is: who is writing the cheque? No company we
+        measure pays for its place, its score or its removal, and members of the public never pay
+        anything. Verifying a card is free forever, with no account. Our funding sources are not yet
+        published; the independence page says so, and says how to ask for them.
       </Body>
       <Points
         points={[
-          { tag: "pain", text: "Most AI ratings are paid for by the company being rated" },
           { tag: "pain", text: "You are asked to trust a score you cannot see the invoice behind" },
           { tag: "benefit", text: "Verification is free forever — no login, no fee, no tier" },
           { tag: "benefit", text: "A bad result is published exactly like a good one" },
-          { tag: "usp", text: "We take no money from anything we rank — the board is not for sale" },
+          { tag: "usp", text: "No one can buy a place, a score or a removal — the board is not for sale" },
         ]}
       />
       <Cta
@@ -321,7 +319,7 @@ function Independence() {
         // was landing a front-door reader on a page carrying the "reference / archive" banner.
         href="/dashboard?task=pricing-overview&tab=measured"
         label="How the free rail works"
-        secondary={{ href: "/about/", label: "Who we are" }}
+        secondary={{ href: "/independence/#funding", label: "How we are funded" }}
       />
     </HeavyBand>
   );

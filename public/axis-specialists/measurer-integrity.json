@@ -1,6 +1,7 @@
 {
   "schema": "csoai.axis-specialist-audit/1.0",
   "axis": "measurer-integrity",
+  "limit": "We matched this bank's patterns on the raw page source, not on the text a reader sees, so tag names, style rules and script code could match. We also matched each pattern as a plain run of letters, so it could match inside other words. We cut every page at 400,000 bytes before scoring it, and 13 of the 40 rows are recorded at exactly that size. We have not run the bank again with the corrected method (C-2026-1120-01). Until we do, no rate, count or single row of this axis should be relied on.",
   "specialist": {
     "id": "meok-measurer-integrity-specialist",
     "cluster_id": "meok-axis-measurer-integrity",
@@ -146,7 +147,7 @@
     "not autonomous self-improvement",
     "not a provisioned compute cluster"
   ],
-  "audit_sha256": "5251ee3b43dae15ba6f1ae03c8979c578745cb02537293a91428274ba9f3de10",
+  "audit_sha256": "2fbac550b5e1c397549a2db4267b09cea2996955d0c978b50ea173fdcd22c5e9",
   "charter": {
     "version": "0.1.0",
     "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",

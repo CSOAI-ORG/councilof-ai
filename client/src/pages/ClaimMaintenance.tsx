@@ -191,20 +191,24 @@ export default function ClaimMaintenance() {
           <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400">Track public claims, their sources and changes over time</p>
           <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl">Claim maintenance</h1>
           <p className="mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
-            The continuous, independent observation of the public claims an organisation makes about itself or its
-            products: capturing each claim verbatim with its source and date, hashing and timestamping it so the
-            record cannot be quietly rewritten, re-reading it on a schedule, recording every observed change without
-            alleging anything, and measuring the claim against public evidence where — and only where — public
-            evidence can settle it.
+            Follow a public AI claim from its original wording to its latest recorded check. Each record keeps
+            the source, date and observed changes together so a reader can review what changed and when.
           </p>
           <div className="mt-7 flex flex-wrap gap-3 text-sm font-semibold">
-            <a className="rounded-lg bg-emerald-400 px-4 py-2.5 text-slate-950 hover:bg-emerald-300" href={SPEC}>Read the specification (v0.1)</a>
-            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={REGISTER}>Claim register (JSON)</a>
-            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={IMPL}>View the reference code</a>
-            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href="mailto:contact@csoai.org?subject=Claim%20maintenance%20enquiry">Discuss a use case</a>
+            <a className="rounded-lg bg-emerald-400 px-4 py-2.5 text-slate-950 hover:bg-emerald-300" href="#register">Inspect the public claim register</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href="mailto:contact@csoai.org?subject=Claim%20maintenance%20enquiry">Discuss a monitoring scope</a>
           </div>
           <p className="mt-4 max-w-3xl text-sm text-slate-400">
-            Tell us which public claim and source you want to follow. A monitoring scope and cadence would be agreed separately; being listed in this public register does not mean a service has been commissioned.
+            For a scoped enquiry, share the public source, the claim your team relies on and when a change would matter for your decision.
+            The register includes claims with and without scheduled checks.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-4 text-sm">
+            <a className="text-slate-200 underline underline-offset-4" href={SPEC}>Read the specification (v0.1)</a>
+            <a className="text-slate-200 underline underline-offset-4" href={REGISTER}>Claim register (JSON)</a>
+            <a className="text-slate-200 underline underline-offset-4" href={IMPL}>View the reference code</a>
+          </div>
+          <p className="mt-5 max-w-3xl text-sm text-slate-400">
+            The specification defines claim maintenance as the continuous, independent observation of the public claims an organisation makes about itself or its products.
           </p>
           <p className="mt-5 text-sm text-slate-400">
             The specification is dedicated to the public domain under CC0 1.0 — adopt it, fork it or translate it

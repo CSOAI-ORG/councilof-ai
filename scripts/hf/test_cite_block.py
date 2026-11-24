@@ -80,17 +80,20 @@ PRODUCERS = {
     "scripts/census/correct-a2a-card-census.py": "edits-live",
     "scripts/census/dataset-card-hygiene.py": "edits-live",
     "scripts/hf/fix-card-link.py": "edits-live",
+    "scripts/hf/correct_orb3_readme.py": "edits-live", # exact-reviewed public ORB-III historical notice, data rows unchanged
     "scripts/hf/hf_live_row.py": "edits-live",
     "scripts/hf/hf_card_metadata.py": "edits-live",          # preserves the existing citation/body
     "scripts/hf/polish_frontdoors.py": "template",           # reviewed product templates; content/hash guards
     "scripts/claims/maintenance_due.py": "not-a-card",       # README below the claim-maintenance archive subfolder
+    "scripts/hf/publish_evidence_adaptation.py": "template", # dedicated source-reviewed research product, not census card
+    "scripts/hf/publish_evidence_adaptation.py": "template", # reviewed original research card, protected-master release with privacy and byte-replay gates
     "scripts/measurements/publish-fact-table.py": "template", # dedicated fact-table product card
     "scripts/surface/publish-hf-evaluation.py": "template",   # pinned evaluation pack/results cards and Space template
     "scripts/hf/hf-scrub-daily.py": "edits-live",        # hf-org-card.py scrub_legacy line-edits, commit against the revision read
     "scripts/spray/gspc-spray.py": "edits-live",             # hf_dataset_companions() line-edits the live card
     "scripts/pod-loops/gspc-spray.py": "edits-live",
     "scripts/pod-loops/durability_hf_publish.py": "private",  # csoai/councilof-ai-source; additive markers
-    "scripts/mirror_to_hf.py": "private",                    # csoai/councilof-ai-mirror
+    "scripts/mirror_to_hf.py": "private",                    # no default target; its old one, csoai/councilof-ai-mirror, was deleted 21 Nov 2026
     "scripts/pod-loops/corrections-watch.py": "not-a-card",  # sub-folder README (public/interop/corrections-watch/) in csoai/councilof-ai-evidence, not a dataset card
     "scripts/pod-loops/drift-draft.py": "private",           # csoai/corrections-watch, created --private
     "scripts/sync_hf_gspc.py": "not-a-card",                 # the gspc-board Space shell
@@ -166,7 +169,7 @@ class TheBlock(unittest.TestCase):
     def test_the_block_carries_the_objections_contact_and_corrections_section(self):
         blk = cb.extract(cb.apply(CARD, "csoai/example-census"))
         self.assertEqual(blk.count(cb.OBJ_HEADING), 1)
-        for s in ("nicholas@csoai.org", "https://councilof.ai/dispute/", "https://councilof.ai/api/corrections",
+        for s in ("contact@csoai.org", "https://councilof.ai/dispute/", "https://councilof.ai/api/corrections",
                   "object to a row", "re-check", "request a correction", "CSOAI Ltd (company no. 16939677"):
             self.assertIn(s, blk)
         self.assertLess(blk.index(cb.OBJ_HEADING), blk.index("## How to cite"))

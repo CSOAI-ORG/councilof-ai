@@ -12,7 +12,7 @@ Every proposal points a measurement at a provision of frozen corpus v3 (root `8d
 | predicate | 1 | 1 | 5 |
 | axis | 21 | 14 | 9 |
 
-`coverage.json` → `capsule_binding`: CAPSULE_BOUND = 1779 (reviewed only), CAPSULE_BOUND_DRAFT = 0 of 11529 capsules. Both are derived by `scripts/mechanism/backfill-capsule-provisions.mjs` and `scripts/mechanism/build-coverage.mjs`; neither is typed.
+`coverage.json` → `capsule_binding`: CAPSULE_BOUND = 1779 (reviewed only), CAPSULE_BOUND_DRAFT = 0 of 10629 capsules. Both are derived by `scripts/mechanism/backfill-capsule-provisions.mjs` and `scripts/mechanism/build-coverage.mjs`; neither is typed.
 
 ## Owner review, 2026-11-24
 

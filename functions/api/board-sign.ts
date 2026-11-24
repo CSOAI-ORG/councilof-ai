@@ -44,8 +44,13 @@ const canonical = canonicalBytes;
 //  - allowedWf: the older rule, unchanged by that addition (any ref whose text contains one of the words). Its name
 //    and one-line form are read by scripts/sign-attest/workflow-shape.test.mjs and scripts/public_root_workflow.test.mjs.
 // The capsule-index entry is the daily measurement-capsule index producer, moved here from oracle-micro-2.
+// The daily-report entry (24 Nov 2026) signs a small pointer to the GSPC daily report: schema, date, file name, the
+// SHA-256 of the report's exact bytes and signed_at (scripts/daily-report/generate_daily_report.py; the report itself is
+// far over the 3 KB cap). scripts/daily-report/check_report.py verifies it under the pinned board key.
 export const EXACT_WORKFLOW_REFS: ReadonlySet<string> = new Set([
   "CSOAI-ORG/councilof-ai/.github/workflows/capsule-index-daily.yml@refs/heads/master",
+  "CSOAI-ORG/councilof-ai/.github/workflows/silent-change-watch.yml@refs/heads/master",
+  "CSOAI-ORG/councilof-ai/.github/workflows/daily-report.yml@refs/heads/master",
 ]);
 const allowedWf = ["public-root", "hf-fin-shells", "hf-inference-mill", "auto-eat-sign"];
 

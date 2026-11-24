@@ -466,3 +466,54 @@ describe("a frozen candidate re-checks green at a later wall-clock time", () => 
     expect(otsAsOfVerdict(null, LATER_WALL_CLOCK)).toBeTruthy();
   });
 });
+
+/**
+ * The lead (the blockquote under the title) is what an answer engine quotes first (front-door lane,
+ * 21 Nov 2026; one story with the home hero, /about/ and /investors/ since 24 Nov). It makes each
+ * claim plainly, with its live source on the same line. It prints no board count and no download
+ * figure: counts are read from GET /api/gspc, and download figures appear only in the Distribution
+ * section, which the census producer writes. It carries no word the outward gate refuses, because
+ * the claim boundary right below it states what we do not do.
+ */
+describe("the llms.txt lead puts a source beside every claim", () => {
+  const lead = (f: string) => R(f).split("\n").slice(1).filter((l) => l.startsWith("> "));
+  const LEAD_SOURCES: [string, RegExp, string][] = [
+    ["what we measure", /measures AI models, agents and the systems they call/, "https://councilof.ai/methodology/"],
+    ["the company record", /UK Companies House 16939677/, "https://find-and-update.company-information.service.gov.uk/company/16939677"],
+    ["the live board", /The results are on a live board, free to read/, "https://councilof.ai/api/gspc"],
+    ["free verification", /re-check our signed records for free, with no account/, "https://councilof.ai/gspc-verify/"],
+    ["the public keys", /public keys/, "https://csoai.org/.well-known/did.json"],
+    ["the corrections ledger", /Our corrections are published in a signed ledger/, "https://councilof.ai/api/corrections"],
+    ["distribution", /downloads of CSOAI's own packages/, "https://councilof.ai/interop/distribution-latest.json"],
+    ["the drafts that cite ours", /another author's Internet-Drafts cite our IETF Internet-Drafts/, "https://datatracker.ietf.org/doc/draft-templeman-scitt-framing-space/referencedby/"],
+    ["the W3C test set", /W3C AI KR Community Group/, "https://github.com/w3c-cg/aikr/pull/25"],
+    ["the x402 proposal", /x402 Foundation/, "https://github.com/x402-foundation/x402/issues/4127"],
+    ["where we take part", /Where we take part/, "https://councilof.ai/memberships/"],
+    ["the dispute route", /To object to, dispute or request a correction/, "https://councilof.ai/dispute/"],
+  ];
+
+  for (const f of ["scripts/llms/llms.txt.tmpl", "public/llms.txt"]) {
+    it(`${f}: each claim sits on the same line as its source`, () => {
+      const lines = lead(f);
+      expect(lines.length).toBeGreaterThanOrEqual(5);
+      for (const [name, claim, source] of LEAD_SOURCES) {
+        const line = lines.find((l) => claim.test(l));
+        expect(line, `the lead no longer says ${name}`).toBeTruthy();
+        expect(line, `${name} has lost its source`).toContain(source);
+      }
+    });
+  }
+
+  it("the published lead is the template's lead, word for word", () => {
+    expect(lead("public/llms.txt")).toEqual(lead("scripts/llms/llms.txt.tmpl"));
+  });
+
+  it("types no board count or download figure, and carries no word the outward gate refuses", () => {
+    const text = lead("public/llms.txt").join("\n");
+    expect(text, "board counts are read from GET /api/gspc, never frozen into the lead").not.toMatch(/\b\d+\s+(?:axes|axis|measured)\b/i);
+    expect(text, "download figures belong to the Distribution section, written from the census").not.toMatch(/\d{1,3}(?:,\d{3})+/);
+    expect(text).toContain("A download is distribution, not adoption, and MEOK AI Labs' packages are never added to ours.");
+    expect(text).not.toMatch(/certif|accredit|endorse|compliant/i);
+    expect(text, "a membership label waits on /interop/memberships.json").not.toMatch(/Linux Foundation|\bLF\b/);
+  });
+});

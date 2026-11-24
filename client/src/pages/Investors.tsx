@@ -9,7 +9,9 @@ import { ArrowUpRight } from "lucide-react";
  * - No figure on this page is typed by hand. Commercial and evidence counters are read live
  *   from the endpoints that own them; a failed read shows "unavailable", never a guess.
  * - Targets are labelled as targets. Nothing in the milestones section is claimed as done.
- * - Measurement, never certification. Payment never changes a finding.
+ * - Measurement only, and payment never changes a finding. The page says what we do in the words
+ *   the home hero, /about/ and the lead of /llms.txt use (24 Nov 2026: one front-door story), and
+ *   every outside claim links its primary source.
  */
 
 type Live = {
@@ -29,7 +31,9 @@ async function json(path: string, signal: AbortSignal) {
 }
 const integer = (value: unknown) => (Number.isSafeInteger(value) && Number(value) >= 0 ? Number(value) : null);
 
-const PROBLEMS = [
+type Source = { label: string; href: string };
+
+const PROBLEMS: { title: string; body: string; source?: Source }[] = [
   {
     title: "Claims written by the party being judged",
     body: "Model cards, vendor PDFs and leaderboard screenshots are produced by the people who benefit from them. A buyer usually cannot re-run them or see what was left out.",
@@ -37,6 +41,7 @@ const PROBLEMS = [
   {
     title: "Rules with dates on them",
     body: "EU AI Act transparency duties under Article 50 apply from 2 August 2026, and the marking grace period for systems already on the market ends on 2 December 2026. Deployers need evidence they can put in a file.",
+    source: { label: "Article 50 dates", href: "/article-50/" },
   },
   {
     title: "Underwriters and auditors need records, not slides",
@@ -61,7 +66,7 @@ const COMPOUNDS = [
 const MODEL = [
   { title: "Read and verify", who: "Developers, agents, researchers, the public", body: "Free, permanently. This is the distribution layer and the reason a paid record is worth anything." },
   { title: "Scoped evidence", who: "Deployers and their counsel", body: "Per-system checks and evidence packs bound to a stated question, for example Article 50 marking evidence." },
-  { title: "Monitoring", who: "Teams that ship continuously", body: "Recurring re-checks with a dated change record, so evidence keeps pace with the system it describes." },
+  { title: "Re-checks", who: "Teams that ship often", body: "The same frozen check run again when a system changes, each run delivered as its own dated record." },
   { title: "Reliance-grade evidence and data", who: "Insurers, auditors, enterprise buyers", body: "Multi-reviewer attestation for decisions that carry liability, and licences to the dated time series." },
 ];
 
@@ -70,14 +75,26 @@ const MILESTONES = [
   "More reproductions of our tests by parties with no relationship to us.",
   "Repeat outside buyers who accept a delivered evidence pack in writing.",
   "A first written reliance on our evidence by an auditor or insurer.",
-  "Accreditation of selected test methods under ISO/IEC 17025.",
 ];
 
-const OUTSIDE = [
-  "An outside operator reran a pinned evidence artifact of ours on three platforms and reproduced the expected outcomes.",
-  "A contributor built runnable fixtures on our published proposal, and they were merged into a W3C Community Group repository.",
-  "The UK Competition and Markets Authority hosts our non-confidential consultation response.",
-  "Another author's IETF Internet-Draft discusses and cites our research.",
+/** Each item links the third party's own record; each answered 200 on 2026-11-24. */
+const OUTSIDE: { text: string; source: Source }[] = [
+  {
+    text: "An outside operator reran a pinned evidence artifact of ours on three platforms and reproduced the expected outcomes.",
+    source: { label: "the operator's run", href: "https://github.com/probityai/agent-evidence-vectors/actions/runs/41583335594" },
+  },
+  {
+    text: "A contributor built runnable fixtures on our published proposal, and they were merged into a W3C Community Group repository.",
+    source: { label: "the merged fixtures", href: "https://github.com/w3c-cg/aikr/pull/25" },
+  },
+  {
+    text: "The UK Competition and Markets Authority hosts our non-confidential consultation response.",
+    source: { label: "the response on GOV.UK", href: "https://assets.publishing.service.gov.uk/media/6adb87142263175ac2aca3e0/Council_of_AI.pdf" },
+  },
+  {
+    text: "Another author's IETF Internet-Draft discusses and cites our research.",
+    source: { label: "the citing draft", href: "https://datatracker.ietf.org/doc/draft-gruszka-evaluation-receipt-mappings/04/" },
+  },
 ];
 
 export default function Investors() {
@@ -107,10 +124,12 @@ export default function Investors() {
   }, []);
 
   const show = (value: number | null) => (value === null ? "unavailable" : value.toLocaleString("en-GB"));
-  const usdc = live.settledAtomic === null ? "unavailable" : `$${(live.settledAtomic / 1_000_000).toFixed(2)}`;
+  // The amount is settled USDC, shown in its own unit. A dollar figure reads as a price, and the deploy-only
+  // price gate refuses it (22 Nov 2026: it blocked every production deploy after this page landed).
+  const usdc = live.settledAtomic === null ? "unavailable" : `${(live.settledAtomic / 1_000_000).toFixed(2)} USDC`;
   const counters = [
     { value: show(live.payers), label: "Distinct outside payers", note: "All time · self-tests excluded", href: "/api/revenue" },
-    { value: usdc, label: "Settled outside value", note: "USDC · self and zero-value tests excluded", href: "/api/revenue" },
+    { value: usdc, label: "Settled outside value", note: "Received from outside payers · self and zero-value tests excluded", href: "/api/revenue" },
     { value: show(live.outsideCommissions), label: "Outside commissions", note: "Paid measurement commissions from outside parties", href: "/api/commissions" },
     { value: show(live.cards), label: "Admitted records in the current root", note: live.rootAsOf ? `as of ${live.rootAsOf}` : "Signed evidence root", href: "/root.json" },
     { value: show(live.corrections), label: "Published corrections", note: "Dated entries in the public ledger", href: "/api/corrections" },
@@ -126,9 +145,10 @@ export default function Investors() {
             <span className="block text-emerald-300">We make them checkable.</span>
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
-            Council of AI is the trading name of CSOAI Ltd, a UK company. We run frozen tests on AI models, agents and the tools
-            they call, publish signed records that anyone can re-check for free, and sell scoped evidence to the organisations
-            that have to rely on it. Nobody can pay for a better result.
+            Council of AI is the public name of CSOAI Ltd, a UK company. We run frozen tests on AI models, agents and the systems
+            they call, and publish signed records that anyone can re-check for free. We sell scoped evidence to the organisations
+            that have to rely on it. Payment never buys a better result (
+            <Link href="/how-we-work/" className="text-emerald-300 underline">how we are funded</Link>).
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/contact/" className="rounded-full bg-emerald-400 px-5 py-3 font-bold text-slate-950" data-testid="investors-cta-contact">Talk to the founder</Link>
@@ -146,6 +166,11 @@ export default function Investors() {
             <div key={item.title} className="rounded-2xl border border-slate-700 p-6">
               <h3 className="text-lg font-bold">{item.title}</h3>
               <p className="mt-3 leading-7 text-slate-300">{item.body}</p>
+              {item.source ? (
+                <Link href={item.source.href} className="mt-3 inline-flex items-center gap-1 font-semibold text-emerald-300">
+                  {item.source.label} <ArrowUpRight size={15} aria-hidden="true" />
+                </Link>
+              ) : null}
             </div>
           ))}
         </div>
@@ -196,7 +221,7 @@ export default function Investors() {
             ))}
           </div>
           <p className="mt-6 max-w-4xl leading-7 text-slate-300">
-            Scope, price and delivery are agreed in writing before any paid work. See the{" "}
+            Scope, cost and delivery are agreed in writing before any paid work. See the{" "}
             <Link href="/services/" className="text-emerald-300 underline">service catalogue</Link> and our{" "}
             <Link href="/independence/" className="text-emerald-300 underline">independence and conflicts statement</Link>.
           </p>
@@ -230,10 +255,15 @@ export default function Investors() {
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">Outside evidence</p>
           <h2 id="inv-outside" className="mt-3 text-3xl font-bold">Others have run, built on and cited the work.</h2>
           <ul className="mt-6 max-w-4xl list-disc space-y-3 pl-6 leading-7 text-slate-300">
-            {OUTSIDE.map((line) => <li key={line}>{line}</li>)}
+            {OUTSIDE.map((item) => (
+              <li key={item.source.href}>
+                {item.text}{" "}
+                <a href={item.source.href} className="text-emerald-300 underline" rel="noopener noreferrer">{item.source.label}</a>
+              </li>
+            ))}
           </ul>
           <p className="mt-6 max-w-4xl leading-7 text-slate-300">
-            Each item has its own scope and primary source. None is a customer count, an endorsement or a standard.{" "}
+            Each item has its own scope and primary source. None is a customer count or a standard, and none means that the body concerned vouches for us.{" "}
             <Link href="/traction/" className="text-emerald-300 underline">Inspect each record</Link>.
           </p>
         </div>
@@ -253,13 +283,13 @@ export default function Investors() {
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">Governance and independence</p>
           <h2 id="inv-governance" className="mt-3 text-3xl font-bold">Founder-led today. Designed not to stay founder-controlled.</h2>
           <p className="mt-4 max-w-4xl leading-7 text-slate-300">
-            Oversight is being designed as a reviewer council with no fixed chair: reviewers drawn from several organisations,
-            no single organisation holding a blocking share, a facilitator chosen by lot, and the founder holding one vote on
-            oversight while leading the company. Until that council is seated, CSOAI Ltd is founder-led, and we say so.
+            Oversight is being designed as a reviewer council with no fixed chair and a facilitator chosen by lot. Its reviewers
+            would come from several organisations, and no single organisation would hold a blocking share. The founder would hold
+            one vote on oversight while leading the company. Until that council is seated, CSOAI Ltd is founder-led.
           </p>
           <p className="mt-4 max-w-4xl leading-7 text-slate-300">
             Where we take part in standards and open-source bodies, each relationship is listed with its evidence on{" "}
-            <Link href="/memberships/" className="text-emerald-300 underline">where we take part</Link>. Taking part is not endorsement.
+            <Link href="/memberships/" className="text-emerald-300 underline">where we take part</Link>. Taking part does not mean a body vouches for our work.
           </p>
         </div>
       </section>
@@ -292,7 +322,7 @@ export default function Investors() {
               CSOAI Ltd · registered in England and Wales ·{" "}
               <a href="https://find-and-update.company-information.service.gov.uk/company/16939677" className="text-emerald-300 underline">Companies House 16939677</a>.
               Founder: Nicholas Templeman (<a href="https://orcid.org/0009-0001-3869-1068" className="text-emerald-300 underline">ORCID</a>).
-              We measure; we do not certify.
+              The company holds no designation, registration or licence under any AI-verification or AI-audit scheme, and has not applied for one.
             </p>
           </div>
           <Link href="/contact/" className="self-start rounded-full bg-emerald-400 px-6 py-3 font-bold text-slate-950 md:self-auto">Talk to the founder</Link>

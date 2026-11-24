@@ -137,6 +137,11 @@ export default function BoardField({ rows, setId }: { rows: AxisRow[]; setId: st
               >
                 {chip === "UNMEASURED" ? "no run" : chip.toLowerCase()}
               </span>
+              {r.limit && (
+                <p className="col-span-full text-xs leading-snug text-amber-900" data-testid={`row-limit-${r.id}`}>
+                  Held: {r.limit}
+                </p>
+              )}
             </li>
           );
         })}

@@ -106,6 +106,33 @@ describe("routeIntent — deterministic keyword/entity routing onto the /mcp too
     if (plan.kind === "tools") expect(plan.calls.map((c) => c.tool)).toEqual(tools);
   });
 
+  it("answers the GSPC acronym question as authored cited guidance, not a fabricated measurement", async () => {
+    const questions = [
+      "What does GSPC stand for?",
+      "QA smoke test: What does GSPC stand for? Answer in one sentence.",
+      "Define GSPC",
+      "GSPC acronym",
+    ];
+    const seen = stubOrigin();
+    for (const q of questions) {
+      expect(routeIntent(q)).toEqual({ kind: "help", intent: "gspc-definition" });
+      const answer = await talk(q, ORIGIN);
+      expect(answer.kind).toBe("help");
+      expect(answer.grounded).toBe(false);
+      expect(answer.tool_calls).toEqual([]);
+      expect(answer.answer).toContain("Governance, Safety, Provenance and Continuity");
+      expect(answer.answer).toContain("https://councilof.ai/cite/gspc");
+      expect(answer.answer).not.toMatch(/\b(?:34|23) (?:axes?|slots?)\b/);
+      expect(answer.answer).toMatch(/not a conformity certification/i);
+    }
+    expect(seen).toEqual([]); // definition must not fetch the board or call a paid tool
+    for (const q of ["How many GSPC axes?", "What does GSPC measure?", "What does the board say?"]) {
+      const plan = routeIntent(q);
+      expect(plan.kind).toBe("tools");
+      if (plan.kind === "tools") expect(plan.calls[0].tool).toBe("board_totals");
+    }
+  });
+
   it("routes only to tools POST /mcp lists (derived from gspc-tools.json + paid-tools.json), or to the two router reads", () => {
     const listed = new Set([...GSPC_TOOLS.tools, ...PAID_TOOLS.tools].map((t) => t.name));
     expect(ROUTABLE_TOOLS).toEqual(listed);
@@ -252,6 +279,17 @@ describe("executePlan — answers carry the tool output, a citation and the stat
     expect(a.answer).toContain("- signature_state_reported: VALID");
     expect(a.answer).toContain("- signature_verification: NOT_RUN");
     expect(a.answer).toContain("C-2");
+  });
+
+  // 24 Nov 2026: the recent rows and correction_latency used to print as raw JSON (~14,000 characters
+  // for five corrections). Each correction is now one plain line, and no JSON object is printed.
+  it("corrections read as one plain line each, never raw JSON", async () => {
+    stubOrigin();
+    const a = await talk("show corrections", ORIGIN);
+    expect(a.answer).toMatch(/^- C-2 \(2026-09-29\): stale copy$/m);
+    expect(a.answer).toMatch(/^- C-1 \(2026-09-28\): old count$/m);
+    expect(a.answer).toContain("- correction_latency: 1 exact, 5 upper bound, 80 unmeasured");
+    expect(a.answer).not.toMatch(/\{"|\[\{/);
   });
 
   // 6 Oct 2026: /api/corrections is newest-first, and correctionsSummary took rows.slice(-5).reverse(),

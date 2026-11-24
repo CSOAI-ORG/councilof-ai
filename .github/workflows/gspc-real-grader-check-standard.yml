@@ -1,0 +1,92 @@
+name: GSPC real-source grader check-standard (research, no real-world effects)
+
+on:
+  pull_request:
+    paths:
+      - 'measurement/experiments/gspc-grader-checkstandard/**'
+      - '.github/workflows/gspc-real-grader-check-standard.yml'
+  workflow_dispatch: {}
+  schedule:
+    - cron: '12 11 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gspc-real-grader-check-standard
+  cancel-in-progress: false
+
+jobs:
+  offline-unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 20 fail-closed check-standard tests, no model calls or remote effects
+        run: python3 measurement/experiments/gspc-grader-checkstandard/test_check_standard.py
+
+  pinned-historical-source-readback:
+    if: github.event_name != 'pull_request'
+    needs: offline-unit-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Get one immutable public descriptor only; reject changed bytes
+        env:
+          OUT: /tmp/gspc-real-check-standard
+        run: |
+          mkdir -p "$OUT"
+          python3 - <<'PY'
+          import hashlib, os, pathlib, urllib.request
+          dest=pathlib.Path(os.environ["OUT"])/"gspc_cells.jsonl"
+          revision="d0605c2495bddae7956fec5c18403d8a49fd81ac"
+          digest="68dfb5b07b01c2cd1929aa506d667b77eb00e600f0df42b3463860c1e6a85f47"
+          url=f"https://huggingface.co/datasets/csoai/gspc-fact-table/resolve/{revision}/gspc_cells.jsonl"
+          req=urllib.request.Request(url,headers={"User-Agent":"csoai-source-pinned-metrology/0.1"})
+          with urllib.request.urlopen(req,timeout=30) as response:
+              data=response.read(500_001)
+          if len(data)>500_000 or hashlib.sha256(data).hexdigest()!=digest:
+              raise SystemExit("UNCHECKABLE: remote frozen descriptor does not match pinned byte SHA")
+          dest.write_bytes(data)
+          print("Source descriptor SHA256 verified; no provider or model calls")
+          PY
+      - name: Run actual historic grader-instrument reference, capture alarm without granting authority
+        env:
+          OUT: /tmp/gspc-real-check-standard
+        run: |
+          set -uo pipefail
+          NOW="$(date -u +%FT%TZ)"
+          python3 measurement/experiments/gspc-grader-checkstandard/check_standard.py \
+            --observed-at "$NOW" \
+            --descriptors "$OUT/gspc_cells.jsonl" \
+            --source-root public/interop/mill-evidence \
+            --manifest measurement/experiments/gspc-grader-checkstandard/data/real-source-reference-v1.json \
+            --grader harness/gspc-top100/mill_hub_queue.py \
+            --report "$OUT/source-only-check-standard-result.json"
+          rc=$?
+          if test -f "$OUT/source-only-check-standard-result.json"; then
+            sha256sum "$OUT/source-only-check-standard-result.json"
+          fi
+          if test "$rc" -ne 0; then
+            echo "::error::GSPC grader reference is ALARM or UNCHECKABLE: exit $rc. No board/root/signer mutated."
+          fi
+          exit "$rc"
+      - name: Keep source-qualified research receipt even on an alarm
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gspc-real-source-check-standard
+          path: /tmp/gspc-real-check-standard/source-only-check-standard-result.json
+          if-no-files-found: warn
+          retention-days: 45

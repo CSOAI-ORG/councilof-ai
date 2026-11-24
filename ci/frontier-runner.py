@@ -3,8 +3,8 @@
 
 Fetches the governance-lane gold bank from the public HF dataset
 csoai/gspc-master, classifies items into EU AI Act risk tiers via
-frontier provider APIs (credentials supplied through environment
-variables), scores predictions against gold, and writes:
+frontier provider APIs and open models served by Cloudflare Workers AI
+(credentials supplied through environment variables), scores predictions against gold, and writes:
 
   rows.jsonl     one row per (model, item) measurement
   summary.json   per-model accuracy, Wilson CI, unparsed count, status
@@ -286,6 +286,27 @@ def classify(model, scenario, cred):
             {"Authorization": "Bearer " + cred},
         )
         return data["choices"][0]["message"]["content"]
+    if model.startswith("cf:"):
+        # Cloudflare Workers AI, OpenAI-compatible route: an open model served by
+        # Cloudflare. It is a separate arm from the hf: route to the same weights
+        # (a different serving stack), and is named as such in every row. It reads its
+        # own token, CLOUDFLARE_AI_TOKEN (Workers AI permission only): the deploy token
+        # CLOUDFLARE_API_TOKEN is refused by Workers AI with HTTP 401 (pulse runs of 22-23
+        # Nov 2026) and must not be widened or replaced, because the deploys use it.
+        acct = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "").strip()
+        if not acct:
+            raise BlockedCredential("CLOUDFLARE_ACCOUNT_ID not set")
+        data = post_json(
+            "https://api.cloudflare.com/client/v4/accounts/%s/ai/v1/chat/completions" % acct,
+            {"model": model.split(":", 1)[1],
+             "messages": [{"role": "user", "content": prompt}],
+             "temperature": 0, "max_tokens": 24},
+            {"Authorization": "Bearer " + cred},
+        )
+        try:
+            return data["choices"][0]["message"]["content"]
+        except (KeyError, IndexError, TypeError):
+            raise Unreachable("unexpected response shape")
     if model == "deepseek":
         data = post_json(
             "https://api.deepseek.com/chat/completions",
@@ -328,6 +349,14 @@ PROVIDERS = {
     "deepseek": "DEEPSEEK_API_KEY",
     "gemini": "GEMINI_TOKEN",
     "grok": "GROK_TOKEN",
+    # Open models served by Cloudflare Workers AI (ids as listed by the account on
+    # 22 Nov 2026). The first two are the same weights as two hf: entries above,
+    # reached by another serving route.
+    "cf:@cf/zai-org/glm-5.3": "CLOUDFLARE_AI_TOKEN",
+    "cf:@cf/deepseek-ai/deepseek-v4.1-flash-1017": "CLOUDFLARE_AI_TOKEN",
+    "cf:@cf/meta/llama-4-scout-17b-16e-instruct": "CLOUDFLARE_AI_TOKEN",
+    "cf:@cf/google/gemma-4-26b-a4b-it": "CLOUDFLARE_AI_TOKEN",
+    "cf:@cf/mistralai/mistral-small-3.1-24b-instruct": "CLOUDFLARE_AI_TOKEN",
 }
 
 
