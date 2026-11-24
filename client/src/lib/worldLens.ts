@@ -65,7 +65,7 @@ export function parseObservatory(raw: unknown): Observatory {
     doc?.schema !== "csoai.simulation-observatory/1" ||
     !source || !importMeta ||
     source.url !== "https://councilof.ai/j-space/events.json" ||
-    if (n === null || !asOf || !/^[0-9]{4}-[0-9]{2}-[0-9]{2}T/.test(asOf) ||
+    !digest || !/^[0-9a-f]{64}$/i.test(digest) ||
     !generatedAt || !Number.isFinite(Date.parse(generatedAt)) ||
     !Array.isArray(events) || count === null || count !== events.length ||
     count > 10000 ||
@@ -117,7 +117,7 @@ export function parseWorldFact(key: WorldFactKey, raw: unknown): WorldFact {
   if (key === "root") {
     const n = boundedCount(doc.card_count);
     const asOf = sourceDate(doc.as_of);
-    if (n === null || !asOf || !/^\\d{4}-\\d{2}-\\d{2}T/.test(asOf) ||
+    if (n === null || !asOf || !/^[0-9]{4}-[0-9]{2}-[0-9]{2}T/.test(asOf) ||
       !Number.isFinite(Date.parse(asOf))) throw new Error("PUBLIC_ROOT_UNCHECKABLE");
     return { key, path, label: "Public root", value: String(n) + " recorded leaves",
       sourceDate: asOf,
