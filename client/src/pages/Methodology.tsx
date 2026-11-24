@@ -74,7 +74,7 @@ function SeparationTable() {
         const risk = rows ? decisionRisk(totals) : null;
         return risk ? (
           <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed" data-testid="methodology-decision-risk">
-            On this read, {risk.tested} axes are tested ({risk.separated} SEPARATED, {risk.ties} TIE) and{" "}
+            On this read, {risk.tested} model-comparison axes are tested ({risk.separated} SEPARATED, {risk.ties} TIE) and{" "}
             {risk.untested} read UNTESTED. If no model truly differed on any tested axis, about {risk.expected} of those{" "}
             {risk.tested} would still read SEPARATED by chance.
           </p>
@@ -338,7 +338,7 @@ export default function Methodology() {
                 <Link href="/research/cross-hardware-reproducibility/" className="text-emerald-300 underline">
                   the cross-hardware reproducibility study
                 </Link>{" "}
-                (preprint, September 2026; figures from its <code>paper/numbers.json</code> at dataset commit 57f1166), which scores no model and covers 11 open-weight models on 14 axes.
+                (preprint, September 2026; figures from its <code>paper/numbers.json</code> at dataset commit 57f1166), which scores no model and covers 11 open-weight models on 14 evaluation axes.
               </p>
             </div>
             <div id="rule-changes" className="scroll-mt-24 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5" data-testid="methodology-rule-changes">

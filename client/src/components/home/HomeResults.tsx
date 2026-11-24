@@ -1,9 +1,11 @@
 import { Link } from "wouter";
 import { ArrowUpRight } from "lucide-react";
-import LivingBoardStrip from "./LivingBoardStrip";
 import { separationRead } from "./LiveBoardGlance";
 import { useGspcBoard, type GspcPayload } from "../board/useGspcBoard";
 import { boardRunDates } from "@/lib/boardRunDates";
+
+const GSPC_SPACE = "https://huggingface.co/spaces/csoai/gspc-board";
+const GSPC_SPACE_EMBED = "https://csoai-gspc-board.static.hf.space/index.html";
 
 /** One board, one count line. Figures remain coupled to their separation and source dates. */
 export default function HomeResults({
@@ -34,11 +36,9 @@ export default function HomeResults({
       <div className="section-shell">
         <div className="hp-section-heading">
           <div>
-            <p className="hp-eyebrow">Published results</p>
+            <p className="hp-eyebrow">Governance · Safety · Provenance · Continuity</p>
             <h2 id="home-board-h">
-              The living board.
-              <br />
-              <span>The detail matters.</span>
+              GSPC Living Board
             </h2>
           </div>
           <div className="hp-heading-aside">
@@ -47,7 +47,7 @@ export default function HomeResults({
               can still produce a tie or leave a comparison untested.
             </p>
             <Link href="/board" className="hp-text-link">
-              Open the full board <ArrowUpRight size={16} aria-hidden="true" />
+              Browse the Council site board <ArrowUpRight size={16} aria-hidden="true" />
             </Link>
           </div>
         </div>
@@ -78,29 +78,16 @@ export default function HomeResults({
             </a>
           </div>
         )}
-        {readable ? (
-          <div data-testid="home-living-strip">
-            {/* The totals above count every axis; the strip holds only the model comparisons, and on
-                17 Nov 2026 five of its tiles were a bare dash. The count is the payload's own. */}
-            <p className="mb-3 max-w-3xl text-sm leading-relaxed text-slate-600" data-testid="home-strip-caption">
-              The strip shows the board’s {separation!.comparison} model-comparison axes; every other
-              axis is on the full board. A dash means no leading figure is published for that axis:
-              open it to read why.
-            </p>
-            <LivingBoardStrip
-              data={data}
-              showHeader={false}
-              showFooter={false}
-            />
-          </div>
-        ) : null}
         <div className="hp-board-context">
           <p>
-            {readable && dates ? <>Run dates: {dates}. </> : null}
-            <a href="/api/gspc">Source: GET /api/gspc</a>. Each percentage is
-            one axis’s published top figure, with its own sample; it is not an
-            overall model score.
+            Search models, open an axis and follow its evidence in the Hugging Face
+            Space below. The Space and Council site board read the same{" "}
+            <a href="/api/gspc">public GSPC data</a>.
+            {readable && dates ? <> Published run dates: {dates}.</> : null}
           </p>
+          <a href={GSPC_SPACE} className="hp-text-link">
+            Open on Hugging Face <ArrowUpRight size={15} aria-hidden="true" />
+          </a>
           <Link href="/models-measured/" className="hp-text-link">
             Browse measured models <ArrowUpRight size={15} aria-hidden="true" />
           </Link>
@@ -112,6 +99,14 @@ export default function HomeResults({
             Why no leader is shown <ArrowUpRight size={15} aria-hidden="true" />
           </Link>
         </div>
+        <iframe
+          className="hp-gspc-space"
+          src={GSPC_SPACE_EMBED}
+          title="Interactive GSPC Living Board on Hugging Face"
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+          referrerPolicy="no-referrer"
+        />
         <details className="hp-reading-guide">
           <summary>How to read the results</summary>
           <div className="hp-reading-grid">

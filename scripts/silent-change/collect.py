@@ -92,6 +92,7 @@ def openai_compat_send(base_url: str, api_key: str = ""):
                [{"role": "user", "content": prompt}]
         body = {"model": cfg["model"], "messages": msgs, "temperature": cfg.get("temperature", 0),
                 "max_tokens": cfg.get("max_tokens", 32)}
+        body.update(cfg.get("extra_body") or {})   # e.g. llama-server's cache_prompt; never set for hosted models
         hdr = {"Authorization": "Bearer " + api_key} if api_key else {}
         d = _post(base_url.rstrip("/") + "/chat/completions", body, hdr)
         return d["choices"][0]["message"].get("content") or ""
