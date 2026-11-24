@@ -131,7 +131,7 @@ PINNED = [
         "expect": "json",
         "count_path": "vulns",
         "grid": ["effect-binding", "supply-chain"],
-        "rights": "OSV.dev's FAQ, read 2026-11-24, says the API is not rate limited. Each record keeps the licence of the database it came from; the data page lists them (CC-BY 4.0 for most, one CC-BY-NC-ND 4.0). One query for one named package a day; only the number of records and the body hash are kept, never a record.",
+        "rights": "OSV.dev's FAQ, read 2026-11-24, says the API is not rate limited. Each record keeps the licence of the database it came from; the data page lists them (CC-BY 4.0 is the most common of them; one is CC-BY-NC-ND 4.0). One query for one named package a day; only the number of records and the body hash are kept, never a record.",
         "note": "POST query for one named package. A package's advisory count is a fact about that package, not a score for anything.",
     },
     {
