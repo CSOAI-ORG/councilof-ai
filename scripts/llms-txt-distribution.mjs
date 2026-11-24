@@ -25,7 +25,17 @@
  * because a generated file judged against the clock would turn `--check` red on wall-clock time
  * alone. A figure that fails is not printed, nothing is substituted for it, and the section says so.
  */
+import { readFileSync } from "node:fs";
+
 const SCHEMA = "csoai.distribution/0.1";
+/**
+ * The Hugging Face datasets our own services read (24 Nov 2026). Our Pages functions and jobs read
+ * them, so their download counts include our reads; /api/momentum keeps them apart (hf_self_read) and
+ * its rule says the two are never added. In the census of 23 Nov 2026 they were 298,200 of CSOAI's
+ * 551,286 downloads in 30-day windows. The ids are client/src/data/hf-self-read-ids.json, which the
+ * home page reads too and its test holds equal to SELF_READ_DATASETS in functions/api/_momentum.ts.
+ */
+const SELF_READ = new Set(JSON.parse(readFileSync(new URL("../client/src/data/hf-self-read-ids.json", import.meta.url), "utf8")));
 // The home page's ceiling on the census's own max_age_hours (HomeDistribution.tsx MAX_AGE_HOURS).
 const MAX_AGE_HOURS = 48;
 const fmtN = (n) => Number(n).toLocaleString("en-US");
@@ -48,9 +58,54 @@ function entityWindows(d, name, asOf) {
   return lifetime && recent && lifetime.as_of === asOf && recent.as_of === asOf ? { lifetime, recent } : null;
 }
 
+const isCount = (v) => typeof v === "number" && Number.isSafeInteger(v) && v >= 0;
+
+/** scripts/distribution-measure.py by_entity() over a subset of one entity's rows: the same state rule. */
+function rollUp(rows, field, asOf) {
+  const counted = rows.filter((p) => isCount(p[field]));
+  if (!counted.length) return null;
+  return {
+    state: counted.length === rows.length ? "READ" : "PARTIAL",
+    value: counted.reduce((sum, p) => sum + p[field], 0),
+    covered: counted.length,
+    attempted: rows.length,
+    as_of: asOf,
+  };
+}
+
 /**
- * The census as the home page reads it, without the clock: { asOf, csoai, meok } where meok may be
- * null, or { reason } when no figure may be printed from it.
+ * CSOAI's rows split into the datasets our own services read and the rest, as the home page and
+ * /api/footprint split them. Both parts must add back up to by_entity's CSOAI pair in value, covered
+ * and attempted, in both windows, or this returns null and no CSOAI figure is printed.
+ */
+function withoutSelfReads(d, csoai, asOf) {
+  const rows = (Array.isArray(d.packages) ? d.packages : []).filter((p) => p && p.entity === "csoai");
+  const isSelf = (p) => p.registry === "huggingface" && typeof p.name === "string" && SELF_READ.has(p.name);
+  const own = rows.filter(isSelf);
+  const rest = rows.filter((p) => !isSelf(p));
+  const split = (field, whole) => {
+    const others = rollUp(rest, field, asOf);
+    const selfRead = own.length ? rollUp(own, field, asOf) : null;
+    if (!others || (own.length > 0 && !selfRead)) return null;
+    const s = selfRead ?? { value: 0, covered: 0, attempted: 0 };
+    const adds = others.value + s.value === whole.value && others.covered + s.covered === whole.covered && others.attempted + s.attempted === whole.attempted;
+    return adds ? { others, selfRead } : null;
+  };
+  const lifetime = split("downloads_all_time", csoai.lifetime);
+  const recent = split("downloads_30d", csoai.recent);
+  if (!lifetime || !recent) return null;
+  return {
+    csoai: { lifetime: lifetime.others, recent: recent.others },
+    selfRead: lifetime.selfRead && recent.selfRead ? { lifetime: lifetime.selfRead, recent: recent.selfRead } : null,
+    datasets: own.length,
+  };
+}
+
+/**
+ * The census as the home page reads it, without the clock: { asOf, csoai, selfRead, selfReadDatasets,
+ * meok } where csoai is CSOAI's pair without the datasets our own services read, selfRead those
+ * datasets' pair (null if the census has none) and meok may be null; or { reason } when no figure may
+ * be printed from it.
  */
 export function distributionRead(d) {
   if (d?.schema !== SCHEMA) return { reason: `its schema is not ${SCHEMA}` };
@@ -67,7 +122,11 @@ export function distributionRead(d) {
   if (!csoai) {
     return { reason: "by_entity carries no CSOAI pair that is readable in both windows and dated like the census" };
   }
-  return { asOf: d.as_of, csoai, meok: entityWindows(d, "meok", d.as_of) };
+  const parts = withoutSelfReads(d, csoai, d.as_of);
+  if (!parts) {
+    return { reason: "the census's CSOAI package rows do not add back up to by_entity's CSOAI pair, so the datasets our own services read cannot be taken out" };
+  }
+  return { asOf: d.as_of, csoai: parts.csoai, selfRead: parts.selfRead, selfReadDatasets: parts.datasets, meok: entityWindows(d, "meok", d.as_of) };
 }
 
 // "state READ, 212 of 212 counters answered", and a PARTIAL row says it is a lower bound.
@@ -94,8 +153,11 @@ export function distributionSection(d) {
   const figures = read.reason
     ? `- No download figure is printed from this census: ${read.reason}. Nothing is substituted for it; read the artifact live.`
     : [
-        `- CSOAI packages, since first release (cumulative): ${fmtN(read.csoai.lifetime.value)} gross downloads — ${stated(read.csoai.lifetime)}.${windowOf("downloads_all_time")} as_of ${read.asOf}.`,
-        `- CSOAI packages, in the last 30 days: ${fmtN(read.csoai.recent.value)} gross downloads — ${stated(read.csoai.recent)}.${windowOf("downloads_30d")} as_of ${read.asOf}.`,
+        `- CSOAI packages${read.selfRead ? `, without the ${read.selfReadDatasets} datasets our own services read` : ""}, since first release (cumulative): ${fmtN(read.csoai.lifetime.value)} gross downloads — ${stated(read.csoai.lifetime)}.${windowOf("downloads_all_time")} as_of ${read.asOf}.`,
+        `- CSOAI packages${read.selfRead ? `, without the ${read.selfReadDatasets} datasets our own services read` : ""}, in the last 30 days: ${fmtN(read.csoai.recent.value)} gross downloads — ${stated(read.csoai.recent)}.${windowOf("downloads_30d")} as_of ${read.asOf}.`,
+        ...(read.selfRead
+          ? [`- The ${read.selfReadDatasets} Hugging Face datasets our own services read are counted on their own and never added to CSOAI's figures, because our reads are inside their counts (/api/momentum keeps them apart too): ${fmtN(read.selfRead.lifetime.value)} gross downloads since first release — ${stated(read.selfRead.lifetime)}; ${fmtN(read.selfRead.recent.value)} in the last 30 days — ${stated(read.selfRead.recent)}. as_of ${read.asOf}.`]
+          : []),
         read.meok
           ? `- MEOK AI Labs, a separate entity publishing from the same account, is counted on its own and never added to CSOAI's figures: ${fmtN(read.meok.lifetime.value)} gross downloads since first release — ${stated(read.meok.lifetime)}; ${fmtN(read.meok.recent.value)} in the last 30 days — ${stated(read.meok.recent)}. as_of ${read.asOf}.`
           : "- MEOK AI Labs' figures are not printed: by_entity carries no MEOK AI Labs pair that is readable in both windows and dated like the census. Nothing is substituted for them.",
@@ -120,8 +182,10 @@ disk at public/interop/distribution-latest.json, schema ${d.schema}, artifact as
 Re-read it live; do not quote these figures without the state and coverage beside them.${staleLine}
 
 CSOAI Ltd and MEOK AI Labs are separate entities publishing from one account, and the census labels
-every package with its entity. Their figures are read from the artifact's \`by_entity\`. They are two
-figures and are never added: quote each under its own label.
+every package with its entity. They are two figures and are never added: quote each under its own label.
+CSOAI's figures leave out the Hugging Face datasets our own services read, which are summed apart; both
+come from the artifact's package rows and add back up to its \`by_entity\` CSOAI pair. MEOK AI Labs'
+figures are its \`by_entity\` values.
 
 ${figures}
 - Packages labelled joint or unattributed are in neither figure. The artifact's \`totals\` counts every
@@ -130,7 +194,7 @@ ${figures}
 - Packages in the census, across three registries: ${fmtN(pkgs.length)} (${perReg}), each row labelled with
   its entity. Three registries are three populations: the download counts of different registries
   are reported per registry on the artifact, and the figures above are the artifact's own
-  \`by_entity\` values, not an arithmetic of this line.
+  package rows and \`by_entity\` values, not an arithmetic of this line.
 - The 30-day and cumulative figures are different WINDOWS over the same packages. They are never
   added to each other, and neither is a count of people: mirrors, CI and crawlers are inside both.
 ${silentLines}${ccLine ? "\n" + ccLine : ""}
