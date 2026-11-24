@@ -114,6 +114,11 @@ def anthropic_send(api_key: str):
 
 # --- one batch ------------------------------------------------------------------------------------------
 
+def request_seed(seed_key: str, item_id_: str, rep: int) -> int:
+    """Per-request seed (addendum 3): an integer from sha256(key, item, repeat). Same inputs, same seed."""
+    return int(hashlib.sha256(("%s\0%s\0%d" % (seed_key, item_id_, rep)).encode("utf-8")).hexdigest()[:8], 16) % (2 ** 31)
+
+
 def run_batch(items: list, labels_by_lane: dict, send, cfg: dict, k: int, order_seed: int,
               clock=time.time) -> dict:
     """items: [(item_id, prompt, lane)]. Returns {answers, raw_sha256, errors}. Calls are shuffled."""
@@ -124,8 +129,11 @@ def run_batch(items: list, labels_by_lane: dict, send, cfg: dict, k: int, order_
     errors = 0
     for idx, rep in calls:
         iid, prompt, lane = items[idx]
+        call_cfg = cfg
+        if cfg.get("seed_key") and cfg.get("temperature", 0) > 0:   # sampling batches only; temperature 0 is unchanged
+            call_cfg = dict(cfg, extra_body=dict(cfg.get("extra_body") or {}, seed=request_seed(cfg["seed_key"], iid, rep)))
         try:
-            text = send(prompt, cfg)
+            text = send(prompt, call_cfg)
         except PermissionError:
             raise
         except Exception:

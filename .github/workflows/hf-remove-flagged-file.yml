@@ -1,0 +1,46 @@
+name: hf-remove-flagged-file
+# Removes one file that Hugging Face secret scanning flagged in a csoai dataset.
+# Manual only; requires typing DELETE. Optional history squash drops the file from past revisions (irreversible).
+on:
+  workflow_dispatch:
+    inputs:
+      repo_id:
+        description: "Dataset repo id"
+        required: true
+        default: "csoai/index-presence"
+      path_in_repo:
+        description: "File to remove"
+        required: true
+        default: "2026-09-22/mcp-registry-servers.jsonl"
+      confirm:
+        description: "Type DELETE to proceed"
+        required: true
+      squash_history:
+        description: "Also super-squash repo history (irreversible)"
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  remove:
+    if: ${{ inputs.confirm == 'DELETE' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet "huggingface_hub>=0.26"
+      - name: Delete flagged file
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          REPO_ID: ${{ inputs.repo_id }}
+          PATH_IN_REPO: ${{ inputs.path_in_repo }}
+        run: |
+          python -c "import os; from huggingface_hub import HfApi; HfApi(token=os.environ['HF_TOKEN']).delete_file(path_in_repo=os.environ['PATH_IN_REPO'], repo_id=os.environ['REPO_ID'], repo_type='dataset', commit_message='Remove file flagged by HF secret scanning'); print('deleted')"
+      - name: Squash history (optional)
+        if: ${{ inputs.squash_history }}
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          REPO_ID: ${{ inputs.repo_id }}
+        run: |
+          python -c "import os; from huggingface_hub import HfApi; HfApi(token=os.environ['HF_TOKEN']).super_squash_history(repo_id=os.environ['REPO_ID'], repo_type='dataset'); print('squashed')"

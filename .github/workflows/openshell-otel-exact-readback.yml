@@ -1,0 +1,51 @@
+name: OpenShell OTel exact collector readback (offline regression)
+
+on:
+  pull_request:
+    paths:
+      - 'packages/evidence-fabric/examples/openshell-otel/check.py'
+      - 'packages/evidence-fabric/examples/openshell-otel/README.md'
+      - 'packages/evidence-fabric/tests/test_openshell_collector_check.py'
+      - '.github/workflows/openshell-otel-exact-readback.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  strict-transport-readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install only the test dependency
+        run: python -m pip install --quiet --disable-pip-version-check pytest==8.4.2
+      - name: Actual retained collector source integrity and 21 adversarial regressions
+        run: python -m pytest -q packages/evidence-fabric/tests/test_openshell_collector_check.py
+      - name: Re-run original three-record retention check
+        working-directory: packages/evidence-fabric/examples/openshell-otel
+        run: |
+          python check.py > /tmp/openshell-strict-readback.json
+          python - <<'PY'
+          import json
+          r=json.load(open("/tmp/openshell-strict-readback.json"))
+          assert r["result"]=="IDENTICAL"
+          assert r["records_sent"]==r["records_read_back"]==3
+          assert r["unique_sent_event_ids"]==3
+          assert r["unique_readback_event_ids"]==3
+          assert r["runtime_effectiveness_verified"] is False
+          assert sum(s["state"]=="DIVERGENT" for s in r["records"])==1
+          print("3/3 physical records accounted for, including one real DIVERGENT finding")
+          PY
+      - name: Retain diagnostic only, not an external assurance certificate
+        uses: actions/upload-artifact@v4
+        with:
+          name: openshell-exact-collector-readback
+          path: /tmp/openshell-strict-readback.json
+          retention-days: 30
+          if-no-files-found: error

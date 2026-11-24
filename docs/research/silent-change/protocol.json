@@ -209,5 +209,128 @@
       "free_plan_concurrent_jobs": 20,
       "source": "docs.github.com/en/actions/reference/limits (the github/docs source file, read 23 Nov 2026); the plan of this repository is unverified, so the matrix runs at most 8 jobs at once"
     }
+  },
+  "addendum_3": {
+    "added_on": "2026-11-24",
+    "before_any_code_or_data_of_run_2": true,
+    "scope": "a second calibration run (run 2) with a second decision rule. Sections 1 to 6, the statistic of run 1, the flag rule of run 1, addendum_1 and addendum_2 are unchanged and stay computable; run 1's rule is reported beside the new rule on run 2.",
+    "pilot_data_statement": "The rows of calibration run 1 (GitHub Actions run 45279396175, signed record sha256 5de64693acd1ae4dce393c28f8cca9505790746031cafc67386e45104c9ade59) were used as PILOT data to choose the rule below (docs/research/silent-change/DIAGNOSIS-RUN1.md). The new rule is judged only on a fresh run (run 2), whose batches do not exist yet. Run 1's signed rates are published as signed and are never re-scored with the new rule.",
+    "run_1_protocol_json_sha256": "d7af9f44850da6f4b1a4eb113944a4af3ca9cada3bbb8980bfa15a3ad4817ce2",
+    "why": "In run 1 every item gave the same answer on all 30 repeats of every batch (1,840 of 1,840 item-batches), so the registered permutation test had no spread to compare against and one moved item gave the smallest possible p. The real variation was between jobs (independent servers): one near-tie item changed its answer from one job to another. The reference for 'no change' must therefore come from repeated independent no-change batches, not from within-batch spread alone.",
+    "unit_of_independence": "a job: one fresh GitHub-hosted runner and one llama-server start. One job runs exactly one batch. A batch is never run in the same job as a batch it is compared against.",
+    "rule_2": {
+      "name": "pooled_baseline_loo_max",
+      "baseline_pool": {
+        "batches_per_pool": 20,
+        "pools": [
+          "BASE (temperature 0, no system prompt)",
+          "BASE5 (temperature 0.5, no system prompt)"
+        ],
+        "definition": "20 independent no-change batches of the same file and settings, each from its own job"
+      },
+      "pooled_share": "for item i and answer category c, s_ic = the mean over the 20 pool batches of that batch's share of c on item i (equal weight per batch; UNPARSED is a category)",
+      "score": "S(x; P) = mean over the 20 items of 0.5 * sum_c |q_ic - s_ic|, where q_ic is batch x's share of c on item i and s is the pooled share of pool P. Same total-variation distance as run 1, with a pooled reference instead of one batch.",
+      "loo_scores": "L_j = S(b_j; P without b_j) for each pool batch b_j, j = 1 to 20 (a baseline batch scored against the other 19)",
+      "threshold": "theta = max_j L_j",
+      "flag": "a new batch x is FLAG iff S(x; P) > theta (strictly greater). Ties are NO_FLAG. If theta = 0, any S > 0 is a flag.",
+      "false_flag_target": "at most 1/(N+1) = 1/21 = 0.0476, i.e. about 0.05 per no-change batch, under the assumption that a new no-change batch is exchangeable with the pool batches (same file, same settings, a fresh job). The new batch is scored against 20 pool batches and the pool batches against 19, a small difference that makes the rule slightly conservative; it is not corrected. Whether the target is met is what C0 and C5 of run 2 measure; it is not assumed.",
+      "no_alpha_no_floor": "no p-value, no permutation and no T floor in rule 2; theta comes from the data of the 20 pool batches",
+      "reported_with_every_rate": [
+        "theta",
+        "the 20 L_j",
+        "the number of items that moved between pool batches",
+        "the per-batch S"
+      ]
+    },
+    "rule_1_kept": "the run 1 rule (within-item permutation test on mean TV, p <= 0.01 and T >= 0.03) is computed on every run 2 trial against the first batch of its pool (BASE-01 for C0 to C4, BASE5-01 for C5) and reported beside rule 2, same conditions, same batches.",
+    "conditions_as_run": {
+      "BASE": {
+        "file": "q05-q8",
+        "temperature": 0,
+        "system": null,
+        "batches": 20,
+        "role": "the BASE pool; BASE-01 is also the single baseline of rule 1"
+      },
+      "BASE5": {
+        "file": "q05-q8",
+        "temperature": 0.5,
+        "system": null,
+        "batches": 20,
+        "role": "the BASE5 pool; BASE5-01 is also the single baseline of rule 1"
+      },
+      "C0": {
+        "file": "q05-q8",
+        "temperature": 0,
+        "system": null,
+        "trials": 30,
+        "against": "BASE",
+        "expected": "no flag"
+      },
+      "C1": {
+        "file": "q15-q8",
+        "temperature": 0,
+        "system": null,
+        "trials": 10,
+        "against": "BASE",
+        "expected": "flag"
+      },
+      "C2": {
+        "file": "q05-q4",
+        "temperature": 0,
+        "system": null,
+        "trials": 10,
+        "against": "BASE",
+        "expected": "flag"
+      },
+      "C3": {
+        "file": "q05-q8",
+        "temperature": 0,
+        "system": "Read the question carefully before answering.",
+        "trials": 10,
+        "against": "BASE",
+        "expected": "flag"
+      },
+      "C4": {
+        "file": "q05-q8",
+        "temperature": 0.5,
+        "system": null,
+        "trials": 10,
+        "against": "BASE",
+        "expected": "flag"
+      },
+      "C5": {
+        "file": "q05-q8",
+        "temperature": 0.5,
+        "system": null,
+        "trials": 20,
+        "against": "BASE5",
+        "expected": "no flag"
+      }
+    },
+    "batch_total": 130,
+    "job_total": 130,
+    "sampling_departure": "In run 1 temperature 0.5 gave no spread: the server seed was fixed per shard and all 30 repeats were identical. In run 2, for batches with temperature above 0, each request carries its own seed, an integer from sha256(trial_id, item_id, repeat). Temperature 0 batches are unchanged. This makes C4, C5 and BASE5 sample as a hosted endpoint would; it changes no other setting.",
+    "order": "the job matrix is a seeded shuffle (seed from sha256 of the protocol id and 'run2-order'), so baseline and trial batches are spread over the whole run in time",
+    "recorded_in_every_batch_from_now_on": [
+      "runner CPU model, logical CPU count, operating system image (ImageOS, ImageVersion), runner name",
+      "llama.cpp: the tag, the version line printed by llama-server, and the system_info line of the server log",
+      "job: shard name, run id, run attempt",
+      "the request-seed rule used"
+    ],
+    "completeness": "as in addendum_2: signed only if all 130 batches are present and comparable; a failed job may be re-run in Actions (the same matrix entry); a report with a missing batch is not signed.",
+    "expected_false_flag_and_power": {
+      "basis": "a synthetic simulation of rule 2 in the structure the pilot showed (identical answers inside a batch; a few near-tie items that take one of two labels per job with probability one half; changes that move whole items), 20 items, 20 pool batches, 4,000 repetitions per cell. The simulation script is added to the repository after this addendum and must reproduce these numbers. Pilot structure is from 2 to 4 independent jobs per condition, so the number of near-tie items in a 20-job pool is itself unknown.",
+      "false_flag": "with 0 to 5 near-tie items the simulated false-flag rate is 0.000 to 0.027, below the 0.0476 bound. Target for C0 and C5: at most 0.05. I expect C0 near 0 to 0.05.",
+      "C1": "expected power 0.9 or more. Why: 2 of 20 items moved in all 10 trials in all 4 jobs of run 1 (T = 0.10), above the 0.025 a single near-tie item contributes; simulated 1.00 with 0 to 5 near-tie items.",
+      "C3": "expected power 0.9 or more. Why: 3 of 20 items moved in all 10 trials in both jobs (T = 0.15); simulated 1.00.",
+      "C2": "expected power low, near the false-flag level (0.0 to 0.1). Why: in run 1, Q4_K_M moved no item other than the near-tie item; a rule cannot detect a movement that the 20 items do not show. A small number of flags here would be a finding about the 20 items, not a failure of the rule.",
+      "C4": "unknown from the pilot, and expected low to moderate. Why: in run 1 temperature 0.5 moved no item beyond the near-tie one, but it was not sampling (fixed seed). With per-request seeds the shares may spread; the pilot says nothing about by how much.",
+      "smallest_change": "one firm item moving completely (T = 0.05 against a pooled reference of 0): simulated 0.96 to 1.00 with 0 to 5 near-tie items. A shift of a part of one item's answers is smaller and will usually not be seen.",
+      "not_claimed": "power for any change of a paid model, for any item outside these 20, or for real sampling spread; run 2 measures C0 to C5 and nothing is promised before it."
+    },
+    "reporting": "for each of C0 to C5 and for each rule: flags / comparable trials, exact Wilson 95% interval, mean S (rule 2) or mean T (rule 1), and for each flag, which items moved. Because trials are in independent jobs, the number of trials equals the number of independent draws. Descriptive only: flags by runner CPU model, with no cause claimed.",
+    "second_view": "the illustrative CUSUM and Shewhart view (check_standard.py) takes its reference and spread from the 20 L_j of the pool instead of from resampling one batch; it changes no flag, rate or signed payload.",
+    "rehearsal": "a local run on a tiny slice proves the pipeline; its rows are never published, signed or counted.",
+    "still_true": "A flag is a detected change in answer behaviour on the probe items. It is not a cause. Nothing here makes a claim about any paid model. Measurement, not certification."
   }
 }

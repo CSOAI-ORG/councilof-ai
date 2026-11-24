@@ -16,6 +16,7 @@ import {
   a2aX402Extension,
   onRequestPost,
   x402PaymentErrorCode,
+  x402PublicTaskInput,
   x402TaskContextId,
   x402TaskId,
   x402TaskSelection,
@@ -103,6 +104,49 @@ describe("activation: only a request that names the a2a-x402 extension gets a Ta
     const { body } = await send({ parts: [{ data: { skill: "get_root", input: {} } }] }, { "x-a2a-extensions": V02 });
     expect(body.result?.task).toBeUndefined();
     expect(body.result?.message ?? body.error).toBeDefined();
+  });
+});
+
+describe("reversible Task ID privacy boundary: only enumerated public selectors", () => {
+  it("keeps the existing public Article 50 task flow", () => {
+    expect(x402PublicTaskInput("evidence_bundle", { obligation: "article-50" }, "ctx-issued")).toBe(true);
+    expect(x402TaskId("evidence_bundle", { obligation: "article-50" }, "ctx-issued")).toMatch(/^x402-/);
+  });
+
+  it("does not embed free-text subjects, raw URLs or encoded documents in task IDs", () => {
+    const secret = "SYNTHETIC_PRIVATE_SENTINEL_ONLY";
+    expect(x402TaskId("evidence_bundle", { obligation: "article-50", subject: secret })).toBeNull();
+    expect(x402TaskId("commission_card", { subject: secret })).toBeNull();
+    expect(x402TaskId("art50_marking_evidence", { url: "https://example.invalid/" + secret })).toBeNull();
+    expect(x402TaskId("art50_marking_evidence", { bytes_b64: btoa(secret) })).toBeNull();
+    expect(x402TaskId("rwa_evidence", { asset: secret })).toBeNull();
+    expect(x402TaskId("receipts_batch", { from: "2026-11-21T00:00:00Z" })).toBeNull();
+  });
+
+  it("rejects free-text context IDs and unknown selectors, even for the safe paid tool", () => {
+    expect(x402TaskId("evidence_bundle", { obligation: "article-50" }, "private context with spaces")).toBeNull();
+    expect(x402TaskId("evidence_bundle", { obligation: "article-50" }, "https://example.invalid/user")).toBeNull();
+    expect(x402TaskId("evidence_bundle", { obligation: "article-50", extra: "no" })).toBeNull();
+    expect(x402TaskId("evidence_bundle", { obligation: "unknown" })).toBeNull();
+  });
+
+  it("does not accept a forged base64url task whose decoded inputs would be denied", () => {
+    const forged = (v: unknown) => "x402-" + btoa(JSON.stringify(v)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    expect(x402TaskSelection(forged({ t: "evidence_bundle", i: { obligation: "article-50", subject: "PRIVATE" }, c: "ctx-1" }))).toBeNull();
+    expect(x402TaskSelection(forged({ t: "art50_marking_evidence", i: { url: "https://example.invalid" }, c: "ctx-1" }))).toBeNull();
+    expect(x402TaskSelection(forged({ t: "evidence_bundle", i: { obligation: "article-50" }, c: "context with spaces" }))).toBeNull();
+  });
+
+  it("uses the existing unpaid Message path for confidential input instead of issuing a Task ID", async () => {
+    const seen = stubRoute();
+    const { body } = await send(
+      { parts: [{ data: { skill: "evidence_bundle", input: { obligation: "article-50", subject: "SYNTHETIC_PRIVATE_SENTINEL_ONLY" } } }] },
+      { "x-a2a-extensions": V02 },
+    );
+    expect(body.result.task).toBeUndefined();
+    expect(body.result.message.metadata[STATUS_KEY]).toBe("payment-required");
+    expect(seen).toHaveLength(1);
+    expect(seen[0].headers.get("x-payment")).toBeNull();
   });
 });
 
@@ -317,12 +361,16 @@ describe("the Task is not stored, and a forged id buys nothing", () => {
     expect(seen).toHaveLength(0);
   });
 
-  it("an id whose input the tool's schema refuses reaches no route", async () => {
+  it("a forged Task ID with input outside the public selector policy reaches no route", async () => {
     const seen = stubRoute();
-    const taskId = x402TaskId("evidence_bundle", { obligation: "not-an-obligation" }) as string;
+    // The normal constructor must already refuse this invalid obligation.
+    expect(x402TaskId("evidence_bundle", { obligation: "not-an-obligation" })).toBeNull();
+    // Even a caller that forges the reversible JSON must not dispatch it.
+    const encoded = btoa(JSON.stringify({ t: "evidence_bundle", i: { obligation: "not-an-obligation" } }));
+    const taskId = "x402-" + encoded.replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "");
     const { body } = await send({ taskId, parts: [{ text: "pay" }], metadata: { [PAYLOAD_KEY]: PAYMENT } });
     expect(seen).toHaveLength(0);
-    expect(body.error.code).toBe(-32602);
+    expect(body.error.code).toBe(-32001);
   });
 
   it("a taskId that is not an x402 one is left alone: the message is read as before", async () => {
@@ -338,12 +386,14 @@ describe("the Task is not stored, and a forged id buys nothing", () => {
     expect(body.error.message).toMatch(/not stored/);
   });
 
-  it("the id round-trips non-ASCII input, and an input too large to carry gets no Task", async () => {
+  it("public Task IDs round-trip; non-ASCII private subjects and oversized selectors are not encoded", async () => {
     const input = { subject: "modèle — 測定" };
-    expect(x402TaskSelection(x402TaskId("commission_card", input) as string)?.input).toEqual(input);
+    expect(x402TaskId("commission_card", input)).toBeNull();
     expect(x402TaskId("commission_card", { subject: "x".repeat(X402_TASK_ID_MAX) })).toBeNull();
+    const safe = x402TaskId("evidence_bundle", { obligation: "article-50" }) as string;
+    expect(x402TaskSelection(safe)?.input).toEqual({ obligation: "article-50" });
     expect(x402TaskId("evidence_bundle", { obligation: "article-50", preview: true })).toBeNull();
-    expect(x402TaskId("evidence_bundle", { obligation: "article-50", preview: false, x_payment: " " })).toBe(x402TaskId("evidence_bundle", { obligation: "article-50" }));
+    expect(x402TaskId("evidence_bundle", { obligation: "article-50", preview: false, x_payment: " " })).toBe(safe);
   });
 });
 

@@ -94,6 +94,43 @@
   max-width: 485px;
   color: #d1dfd3;
 }
+/* One claim per line, its live proof link beside it. */
+.hp-hero-proof {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  max-width: 540px;
+  display: grid;
+  gap: 7px;
+}
+.hp-hero-proof li {
+  border-left: 2px solid #2f6b50;
+  padding-left: 11px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #d1dfd3;
+}
+.hp-hero-proof a {
+  color: #c5ee9b;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.hp-hero-proof a:hover {
+  color: #d8f7b9;
+}
+/* The lede's method link and the note's independence link, in the proof links' colour. */
+.hp-hero-lede a,
+.hp-hero-note a {
+  color: #c5ee9b;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.hp-hero-lede a:hover,
+.hp-hero-note a:hover {
+  color: #d8f7b9;
+}
 .hp-actions {
   display: flex;
   flex-wrap: wrap;
@@ -167,6 +204,8 @@
   aspect-ratio: 1.02;
   align-self: stretch;
   min-height: 440px;
+  /* Stretching to a taller copy column must not widen the art past its own column. */
+  max-width: 100%;
 }
 .hp-hero-art img {
   position: absolute;
@@ -1148,6 +1187,12 @@
   .hp-hero-lede {
     font-size: 14px;
     line-height: 1.8;
+  }
+  .hp-hero-proof li {
+    font-size: 12px;
+  }
+  .hp-hero-proof a {
+    white-space: normal;
   }
   .hp-hero .hp-eyebrow {
     font-size: 9px;

@@ -1,0 +1,21 @@
+# Offline source-truth guard for a legacy simulation page.
+# No schedule, deployment, network, signer, credential, production service or authority.
+name: sovereign-town-source-truth
+on:
+  pull_request:
+    paths:
+      - "src/pages/sovereign-town/**"
+      - ".github/workflows/sovereign-town-source-truth.yml"
+permissions:
+  contents: read
+jobs:
+  source-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Source truth and refusal controls
+        run: node --test src/pages/sovereign-town/*.node-test.mjs

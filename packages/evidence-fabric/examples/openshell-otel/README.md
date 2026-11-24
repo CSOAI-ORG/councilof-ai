@@ -85,3 +85,14 @@ SAFE readers pin its exact implementation and output.
   telemetry alone cannot tell which policy version produced the declared effect.
 - This shows the collector preserves the records. It says nothing about any SIEM or backend ingesting
   them, and nothing about whether OpenShell's enforcement is correct.
+
+
+## Corrected exact-record readback semantics (24 November 2026)
+
+A new adversarial review of this **retained** OpenShell/OTel example found that the previous verifier's dictionary keyed by `csoai.event_id` silently overwrote duplicates and ignored unexpected extra events. Three local corruptions each returned `IDENTICAL` with exit code zero: a duplicated collector readback, a duplicated submitted event, and an extra unrelated returned event. This was an **evidence completeness bug** in Council's readback script—not an allegation against NVIDIA or OpenTelemetry's collector.
+
+`check.py` now checks **physical record cardinality and exact event-ID multiplicity**, plus all event names, times and per-event attributes, and refuses ambiguity in attribute keys/types. A duplicate, unexpected extra, missing or changed record returns `MISMATCH` (exit 1); malformed or empty inputs return `UNCHECKABLE` (exit 2), never a clean pass. A genuine exact input/readback match returns `IDENTICAL` (exit 0) and is still explicitly qualified as a local source-only transport comparison, not independent external acceptance.
+
+The original retained input still passes at **3 sent / 3 read back**, including its one `DIVERGENT` policy-observation record. A dedicated adversarial suite at `packages/evidence-fabric/tests/test_openshell_collector_check.py` verifies the byte-pinned original and 20 additional cases. Initial offline tests passed **21/21 on the M4**; M2 passed the four baseline/duplicate/corrupt CLI acceptance checks. The protected GitHub PR checks remain authoritative for merge.
+
+**Privacy/release boundary:** the checker does not copy full attribute payloads into its report, create signatures, assert effective OpenShell sandbox enforcement, issue a human decision or verify a recipient effect. It is a stronger local readback, not a new industry standard or a vendor partnership.

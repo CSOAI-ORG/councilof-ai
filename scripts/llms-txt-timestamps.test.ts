@@ -30,6 +30,10 @@ function fixture() {
   );
   // And ./llms-txt-distribution.mjs, the distribution section and its print rule (18 Nov 2026).
   copyFileSync(resolve(__dirname, "llms-txt-distribution.mjs"), join(root, "scripts/llms-txt-distribution.mjs"));
+  // And the ids of the datasets our own services read, which llms-txt-distribution.mjs reads when it
+  // loads (24 Nov 2026): CSOAI's download figures leave those datasets out.
+  mkdirSync(join(root, "client/src/data"), { recursive: true });
+  copyFileSync(resolve(__dirname, "../client/src/data/hf-self-read-ids.json"), join(root, "client/src/data/hf-self-read-ids.json"));
   for (const name of names) writeFileSync(join(root, "public", name), `BOARD SNAPSHOT ${name}\n## Timestamps\n\n${marker}\nstale\n\n## Evidence\nIMMUTABLE SNAPSHOT ${name}\n`);
   writeFileSync(join(root, "public/interop/ots/manifest.json"), JSON.stringify({
     schema: "csoai.ots-manifest/0.4", as_of: "2026-10-11T00:00:00Z",
