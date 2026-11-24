@@ -71,6 +71,33 @@ The 34-axis board's measurement state and statistical-separation state must trav
 - OpenTelemetry: https://github.com/open-telemetry/semantic-conventions-genai
 - in-toto: https://github.com/in-toto/attestation
 
+### Second-pass adjacent infrastructure and protocol competition (24 November 2026)
+
+**Microsoft Agent Governance Toolkit:** a substantial direct engineering competitor, not a peripheral security checklist. Its open-source policy engine describes portable policy manifests, fail-closed decision points, zero-trust identity, runtime enforcement, audit, MCP/A2A integrations and formal specifications. Review its MIT code and documented governance/CLA rules before integrating or contributing. **Response:** adapt/test an AGT policy-decision and receipt importer, preserving policy version, decision ID, executor and audit trace. CSOAI should not rebuild this general-purpose enforcement kernel or claim to be the only agent-governance framework.
+
+**Google AP2 and x402:** AP2's human/agent authorization and payment mandates provide cryptographically linked payment authority and payment context. AP2 has example A2A–x402 integrations. **Response:** treat an AP2 mandate as *one possible authority input* to the Council evidence envelope, not as proof that a merchant settled, fulfilled an order or that a receiver accepted the product. Run deterministic no-payment fixtures first, with cross-rail issuer/expiry/revocation checks.
+
+**Temporal durable execution:** event-sourced workflow histories, deterministic replay, bounded retry policies and signals/updates for approvals solve common orchestration problems. **Response:** prototype a MEOK-backed, human-approved case workflow using Temporal only if the existing fleet lacks equivalent durable semantics; keep non-idempotent external effects in activities with stable deduplication IDs and explicit recovery. Do not introduce another 24/7 process without service ownership and reliability data.
+
+**OpenFGA and policy systems:** relationship-based authorisation can express human working-group membership, reviewer scopes and separation-of-duty constraints. But a tuple or role grant is not proof of an individual authenticated and current approval. **Response:** combine policy checks with short-lived human-signed approval events, revocation and a second-party receipt; never infer decision authority from a directory listing.
+
+**AI Verify Foundation Moonshot:** modular benchmark and red-team tools, plus CI/CD compatibility and business-facing reports. **Response:** provide import/export of raw GSPC rows into Moonshot's test results where versioned licensing permits; do not copy benchmarks or score mappings without consent and a labelled conformance test.
+
+**MCP 2026-07-28 and OWASP GenAI 2026:** the protocol adds stateless core, multiround requests, routing, caching, security and extension semantics; OWASP maintains an updated agent/LLM security threat baseline. **Response:** conformance-test Council's MCP endpoints and approval UX against current spec, and map risks to concrete negative controls, not badge claims.
+
+Primary sources:
+- Microsoft https://github.com/microsoft/agent-governance-toolkit and https://github.com/microsoft/agent-governance-toolkit/policy-engine
+- Temporal https://github.com/temporalio/temporal/blob/main/docs/architecture/README.md and https://docs.temporal.io/develop/python/integrations/openai-agents
+- AP2 https://github.com/google-agentic-commerce/AP2/blob/main/docs/ap2/agent_authorization.md
+- OpenFGA https://openfga.dev/
+- Moonshot https://github.com/aiverify-foundation/moonshot-cicd
+- MCP release https://blog.modelcontextprotocol.io/posts/2026-07-28/
+- OWASP https://github.com/GenAI-Security-Project/GenAI-LLM-Top10
+
+**Portability design:** Council should publish an adapter contract, not demand exclusive runtime use. Input: Inspect/EleutherAI/Moonshot evaluation result; Microsoft AGT/OPA/OpenFGA authorisation decision; Temporal/MEOK execution history; OTel trace; AP2/x402 payment event. Output: attributable, tamper-evident, *independently testable* signed evidence with an observed effect and an independently bound receiver response where available.
+
+**New anti-claim gate:** Until at least one outside organisation supplies a receiver acknowledgement, the claim "first/only platform that verifies agent outcomes" is **unproven**. Market differentiation is a hypothesis for customer trials, not a settled fact.
+
 ## 3. Market thesis and regulatory openings
 
 **Customer job-to-be-done:** "An autonomous AI workflow just changed. Before it acts on our customers, money, records or systems, show me exactly who approved what, which executor had authority, what it actually did, whether someone independent observed it, and whether the receiving system accepted it."
