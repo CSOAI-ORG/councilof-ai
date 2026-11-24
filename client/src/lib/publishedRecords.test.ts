@@ -81,6 +81,22 @@ describe("mapPublishedRecords", () => {
     expect(legendLine(r)).toMatch(/none available/);
   });
 
+  it("carries a source's terms line and note to its stamp when the index has them, and nothing when it has not", () => {
+    const i = base();
+    const notice = "This product uses the NVD API but is not endorsed or certified by the NVD.";
+    i.intakeIndex = ok("/interop/watchdog-intake/_index.json", { ...index, signals: [
+      { ...index.signals[0], rights: "CC0 1.0 by the publisher's licence file", note: "A catalogue size. " + notice },
+      index.signals[1],
+    ] });
+    const r = mapPublishedRecords(i);
+    const withTerms = r.stamps.find((x) => x.id === "pub:watchdog:cisa-kev")!.payload.detail;
+    expect(withTerms.terms).toBe("CC0 1.0 by the publisher's licence file");
+    expect(String(withTerms.source_note)).toContain(notice);
+    const without = r.stamps.find((x) => x.id === "pub:watchdog:atlas-current")!.payload.detail;
+    expect(without.terms).toBeUndefined();
+    expect(without.source_note).toBeUndefined();
+  });
+
   it("still maps the intake when only latest.json failed, using the index's run address", () => {
     const i = base(); i.intakeLatest = bad("latest", "HTTP 500");
     const r = mapPublishedRecords(i);

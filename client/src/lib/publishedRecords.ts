@@ -125,6 +125,10 @@ export function mapPublishedRecords(input: FeedInputs): PublishedRecords {
               count: s.count, count_kind: s.count_kind,
               count_unit: s.count_kind === "count" ? "items as read from the source's own response" : undefined,
               body_sha256: s.body_sha256,
+              // The intake's own words about the source, when the index carries them: the terms it is read
+              // under, and its note (which holds any notice the publisher asks readers to display).
+              terms: typeof s.rights === "string" && s.rights ? s.rights : undefined,
+              source_note: typeof s.note === "string" && s.note ? s.note : undefined,
               measure: "public source reachability and parseability; not a score, not a determination",
             },
           },
