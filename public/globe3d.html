@@ -722,8 +722,13 @@ if(viewer){
   // Buffered listener: commands posted before Cesium is ready queue on
   // window.__sovBuf (globeDrive.ts's contract), flushed once the viewer is up.
   window.addEventListener('message', function(ev){
-    var d = ev && ev.data;
-    if(!d || !d.cmd) return;
+    // A display-only command is still a capability. Never take commands from
+    // arbitrary embedding origins or an unrelated iframe. Council OS uses a
+    // same-origin parent; the anchor readback posts to this same window.
+    if(!ev || ev.origin !== window.location.origin ||
+       (ev.source !== window && ev.source !== window.parent)) return;
+    var d = ev.data;
+    if(!d || typeof d !== 'object' || typeof d.cmd !== 'string') return;
     if(!viewer){ (window.__sovBuf = window.__sovBuf || []).push({ d: d, source: ev.source }); return; }
     handleCmd(d, ev.source);
   });
