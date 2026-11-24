@@ -4,6 +4,7 @@
  * POST /api/a2ui/run: grounded Council OS answer as A2UI v1.0 Candidate NDJSON
  * GET /api/a2ui/gspc: living /api/gspc as an A2UI surface
  * GET /api/a2ui/board: the GSPC board card (board_totals), A2UI v0.9.1 by default
+ * GET /api/a2ui/axis?axis=: one axis of GET /api/gspc as a card, read at request time
  * GET|POST /api/a2ui/verify: a verify_card result, A2UI v0.9.1 by default
  */
 import { sharedToolResult } from "../../mcp/_handlers";
@@ -16,6 +17,7 @@ import {
 } from "../../_lib/a2uiSurfaces";
 import {
   a2uiDescriptor,
+  axisCardMessages,
   gspcSurface,
   ndjsonResponse,
   serveA2uiRun,
@@ -27,6 +29,22 @@ export const onRequest: PagesFunction = async (ctx) => {
 
   if (sub === "" || sub === "run" || sub === "agent")
     return serveA2uiRun(ctx.request);
+
+  if (sub === "axis") {
+    const cors = {
+      "access-control-allow-origin": "*",
+      "access-control-allow-methods": "GET, OPTIONS",
+      "access-control-allow-headers": "accept, content-type",
+    };
+    if (ctx.request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+    if (ctx.request.method !== "GET" && ctx.request.method !== "HEAD")
+      return Response.json({ error: "method_not_allowed" }, { status: 405, headers: cors });
+    const url = new URL(ctx.request.url);
+    const version = pickA2uiVersion(url.searchParams.get("version"));
+    const spec = A2UI_SPECS[version];
+    const msgs = await axisCardMessages(url.searchParams.get("axis"), origin, version);
+    return ndjsonResponse(msgs, 200, { "x-csoai-a2ui": spec.version, "x-csoai-a2ui-status": spec.status, "x-csoai-a2ui-spec": spec.spec, "x-csoai-a2ui-source": "gspc-board" });
+  }
 
   if (sub === "board" || sub === "verify") {
     const cors = {

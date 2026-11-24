@@ -5,7 +5,13 @@
 import { executePlan, routeIntent, type TalkAnswer } from "./talkRouter";
 import { isConfirmed, lastUserText, paidToolsIn } from "./aguiRun";
 import { axisCountLine } from "../api/_boardCounts";
-import { A2UI_DEFAULT_VERSION, A2UI_SPECS } from "./a2uiSurfaces";
+import {
+  A2UI_DEFAULT_VERSION,
+  A2UI_SPECS,
+  axisCardSurface,
+  surfaceMessages,
+  type A2uiVersion,
+} from "./a2uiSurfaces";
 
 type Json = Record<string, unknown>;
 
@@ -44,6 +50,7 @@ export function a2uiDescriptor(origin: string): Json {
       run: origin + "/api/a2ui/run",
       board: origin + "/api/a2ui/board",
       verify: origin + "/api/a2ui/verify?card={64-hex card id or councilof.ai card URL}",
+      axis: origin + "/api/a2ui/axis?axis={axis name}  (also what POST /api/a2ui/run answers to \"how is the governance axis?\")",
     },
     versions: {
       default_for_board_and_verify: A2UI_DEFAULT_VERSION,
@@ -189,6 +196,38 @@ export function gspcSurface(raw: unknown, surfaceId?: string): Json {
   };
 }
 
+/** Reads GET /api/gspc now and returns the axis card's wire messages. A failed read is a card, not an error page. */
+export async function axisCardMessages(
+  requested: string | null,
+  origin: string,
+  version: A2uiVersion,
+  fetchImpl: typeof fetch = fetch,
+  nowMs: number = Date.now(),
+): Promise<Json[]> {
+  let board: unknown = null;
+  let readError: string | null = null;
+  try {
+    const r = await fetchImpl(origin + "/api/gspc", { headers: { accept: "application/json" } });
+    if (!r.ok) readError = `HTTP ${r.status}`;
+    else board = await r.json();
+  } catch (e) {
+    readError = e instanceof Error ? e.message : String(e);
+  }
+  return surfaceMessages(axisCardSurface({ board, requested, origin, nowMs, readError }), version);
+}
+
+const AXIS_QUESTION = /\bhow(?:'s|\s+is|\s+are|\s+does)\s+(?:the\s+)?([a-z][a-z0-9-]*(?:\s[a-z0-9-]+){0,3}?)\s+axis\b/i;
+
+/** The axis an "axis card" question names: the router's get_axis plan, else the words before "axis". */
+export function axisCardRequest(question: string, plan: ReturnType<typeof routeIntent>): { requested: string | null } | null {
+  if (plan.kind === "tools" && plan.calls.length === 1 && plan.calls[0].tool === "get_axis") {
+    const a = plan.calls[0].args?.axis;
+    return { requested: typeof a === "string" ? a : null };
+  }
+  const m = AXIS_QUESTION.exec(question);
+  return m ? { requested: m[1].trim().toLowerCase().replace(/\s+/g, "-") } : null;
+}
+
 export function ndjsonResponse(
   messages: Json[],
   status = 200,
@@ -260,6 +299,11 @@ export async function serveA2uiRun(request: Request): Promise<Response> {
         200,
         { "x-csoai-a2ui-state": "confirm_required" },
       );
+    }
+    const axisAsk = axisCardRequest(question, plan);
+    if (axisAsk) {
+      const msgs = await axisCardMessages(axisAsk.requested, origin, "v1.0");
+      return ndjsonResponse(msgs, 200, { "x-csoai-a2ui-state": "axis_card", "x-csoai-a2ui-source": "gspc-board" });
     }
     const answer = await executePlan(plan, origin);
     return ndjsonResponse([answerSurface(answer, question)], 200, {
