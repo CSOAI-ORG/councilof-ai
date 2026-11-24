@@ -24,7 +24,7 @@ test("bad status reads remain unknown, not live",()=>{
 test("cross-domain source is only a reported simulation",()=>{
   assert.match(src,/simulation outcomes and controls/);
   assert.match(src,/not independently verified original episodes/);
-  assert.match(src,/simulation difference does not prove prevented real-world harm/i);
+  assert.match(src,/simulated difference does not prove prevented real-world harm/i);
 });
 test("signature/anchor/authority boundaries are explicit",()=>{
   assert.match(src,/No signature, issuer custody, Bitcoin inclusion or real-world effect/);
