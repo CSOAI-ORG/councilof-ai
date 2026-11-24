@@ -279,6 +279,71 @@ PINNED = [
         "grid": ["provenance", "provenance-controls"],
         "note": "Attestation framework reference.",
     },
+    # ── G3: the field's own public registries (added 2026-11-24) ──────────────────────
+    # Each carries a `rights` line: what the terms / licence / robots.txt allow, read on
+    # 2026-11-24, kept in docs/operations/INTAKE-FIELD-SOURCES-RIGHTS-2026-11-24.md. They store a count and a
+    # body hash only. `grid` is empty on purpose: no defensible axis mapping, so no obligation
+    # is raised from them. A source whose terms were not read as permitting this is NOT here.
+    {
+        "id": "mcp-registry",
+        "name": "Official MCP Registry (server listing, first page)",
+        "kind": "agent-registry",
+        "url": "https://registry.modelcontextprotocol.io/v0.1/servers?limit=100",
+        "method": "GET",
+        "expect": "json",
+        "count_path": "servers.@length",
+        "grid": [],
+        "rights": "Registry Data is dedicated to the public domain (CC0 1.0) by the registry's published terms; the documented public read API needs no login; the host serves no robots.txt (404).",
+        "note": "Count is the page size actually served (limit=100); the registry returns a cursor, not a total. A listing is not a grade, and says nothing about any server in it.",
+    },
+    {
+        "id": "inspect-evals",
+        "name": "Inspect evals registry (UK AISI inspect_evals, source directory)",
+        "kind": "evaluation-registry",
+        "url": "https://api.github.com/repos/UKGovernmentBEIS/inspect_evals/contents/src/inspect_evals",
+        "method": "GET",
+        "expect": "json",
+        "count_path": "@length",
+        "grid": [],
+        "rights": "MIT-licensed public repository read through GitHub's documented REST API, which GitHub's terms (section H) and acceptable-use policy treat as distinct from scraping; anonymous rate limit applies.",
+        "note": "Count is the number of entries in the directory (folders and files together), a catalogue size and not a count of evaluations.",
+    },
+    {
+        "id": "agentsociety-releases",
+        "name": "AgentSociety releases (tsinghua-fib-lab/AgentSociety)",
+        "kind": "simulator-release",
+        "url": "https://api.github.com/repos/tsinghua-fib-lab/AgentSociety/releases?per_page=30",
+        "method": "GET",
+        "expect": "json",
+        "count_path": "@length",
+        "grid": [],
+        "rights": "Apache-2.0 public repository read through GitHub's documented REST API (see inspect-evals); release metadata only.",
+        "note": "Count is the page size served (at most 30); the body hash changes when a release is published. Release titles and authors are never stored.",
+    },
+    {
+        "id": "hf-benchmark-datasets",
+        "name": "Hugging Face Hub datasets tagged benchmark:official",
+        "kind": "evaluation-registry",
+        "url": "https://huggingface.co/api/datasets?filter=benchmark:official&limit=1000",
+        "method": "GET",
+        "expect": "json",
+        "count_path": "@length",
+        "grid": [],
+        "rights": "Documented public Hub API, the same host as the pinned hf-models source; robots.txt allows /; the Hugging Face terms read on 2026-11-24 carry no clause against reading the public API.",
+        "note": "Count of datasets the Hub itself tags as official benchmarks (one request, limit 1000). It is a registry size, not a count of evaluation results or of any model's standing.",
+    },
+    {
+        "id": "epoch-notable-models",
+        "name": "Epoch AI notable AI models dataset (CSV)",
+        "kind": "evaluation-dataset",
+        "url": "https://epoch.ai/data/notable_ai_models.csv",
+        "method": "GET",
+        "expect": "csv",
+        "count_path": "@rows",
+        "grid": [],
+        "rights": "Epoch's data page states the datasets are free to download and may be reproduced with credit under CC BY; robots.txt disallows only /assets/ and a benchmark-problems path; no terms-of-use page was found at the addresses tried.",
+        "note": "Count is data rows in the CSV (header excluded). Only the count and the hash are kept; credit: Epoch AI, https://epoch.ai/data.",
+    },
 ]
 
 # Sources that were PROBED and did NOT answer with a documented machine-readable
@@ -493,6 +558,22 @@ def grade(spec: dict, got: dict) -> dict:
                         "unparseable_reason": f"documented path '{spec['count_path']}' not present"})
         else:
             row.update({"count": val, "count_kind": kind})
+    elif expect == "csv":
+        import csv
+        import io
+        if got.get("content_type", "").startswith("text/html"):
+            row.update({"state": "UNCHECKABLE", "count": None, "count_kind": "absent",
+                        "unparseable_reason": "body is HTML where a CSV is documented"})
+            return row
+        try:
+            rows_ = list(csv.reader(io.StringIO(body.decode("utf-8", "replace"))))
+        except Exception:
+            rows_ = []
+        if len(rows_) < 2:
+            row.update({"state": "UNCHECKABLE", "count": None, "count_kind": "absent",
+                        "unparseable_reason": "body is not a CSV with a header and at least one row"})
+        else:
+            row.update({"count": len(rows_) - 1, "count_kind": "count"})
     else:  # yaml-or-text
         n, kind = yamlish_count(body.decode("utf-8", "replace"), spec["count_path"])
         if kind == "count":

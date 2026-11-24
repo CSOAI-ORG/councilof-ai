@@ -157,5 +157,67 @@ class TestPinnedRegistryIsHonest(unittest.TestCase):
         self.assertFalse(pinned & unpinned, "a source cannot be both pinned and unpinned")
 
 
+FIX = pathlib.Path(__file__).resolve().parent / "fixtures" / "watchdog_intake"
+G3_IDS = ("mcp-registry", "inspect-evals", "agentsociety-releases", "hf-benchmark-datasets", "epoch-notable-models")
+
+
+def _spec(sid):
+    return next(s for s in wi.PINNED if s["id"] == sid)
+
+
+def _fixture(name):
+    return (FIX / name).read_bytes()
+
+
+class TestFieldSources(unittest.TestCase):
+    """G3: one test per new source, graded from a RECORDED response (trimmed to a few rows and with
+    every person-bearing field removed; shape and field names are the source's own)."""
+
+    def test_mcp_registry_counts_servers_on_the_page(self):
+        row = wi.grade(_spec("mcp-registry"), FakeGot(body=_fixture("mcp-registry.json")))
+        self.assertEqual((row["state"], row["count"], row["count_kind"]), ("REACHABLE", 3, "count"))
+        self.assertEqual(row["kind"], "agent-registry")
+
+    def test_inspect_evals_counts_directory_entries(self):
+        row = wi.grade(_spec("inspect-evals"), FakeGot(body=_fixture("inspect-evals.json")))
+        self.assertEqual((row["state"], row["count"]), ("REACHABLE", 4))
+        self.assertEqual(row["kind"], "evaluation-registry")
+
+    def test_agentsociety_counts_releases_on_the_page(self):
+        row = wi.grade(_spec("agentsociety-releases"), FakeGot(body=_fixture("agentsociety-releases.json")))
+        self.assertEqual((row["state"], row["count"]), ("REACHABLE", 3))
+        self.assertEqual(row["kind"], "simulator-release")
+
+    def test_hf_benchmark_datasets_counts_the_list(self):
+        row = wi.grade(_spec("hf-benchmark-datasets"), FakeGot(body=_fixture("hf-benchmark-datasets.json")))
+        self.assertEqual((row["state"], row["count"]), ("REACHABLE", 3))
+
+    def test_epoch_csv_counts_data_rows_not_the_header(self):
+        row = wi.grade(_spec("epoch-notable-models"), FakeGot(body=_fixture("epoch-notable-models.csv"), ctype="text/csv"))
+        self.assertEqual((row["state"], row["count"]), ("REACHABLE", 3))
+        self.assertEqual(row["body_sha256"], wi.sha256_hex(_fixture("epoch-notable-models.csv")))
+
+    def test_epoch_html_where_csv_is_documented_is_uncheckable(self):
+        row = wi.grade(_spec("epoch-notable-models"), FakeGot(body=b"<html>404</html>", ctype="text/html"))
+        self.assertEqual(row["state"], "UNCHECKABLE")
+        self.assertIsNone(row["count"])
+
+    def test_each_new_source_keeps_only_a_count_and_a_hash_and_states_its_rights(self):
+        allowed = {"id", "name", "kind", "url", "method", "grid", "state", "http_status", "content_type",
+                   "bytes", "body_sha256", "count", "count_kind"}
+        for sid in G3_IDS:
+            spec = _spec(sid)
+            self.assertTrue(spec.get("rights"), f"{sid} must carry a rights line")
+            self.assertEqual(spec["grid"], [], f"{sid}: no defensible axis mapping, so the grid stays empty")
+            row = wi.grade(spec, FakeGot(body=_fixture(sid + (".csv" if spec["expect"] == "csv" else ".json")),
+                                         ctype="text/csv" if spec["expect"] == "csv" else "application/json"))
+            self.assertFalse(set(row) - allowed, f"{sid} row carries fields beyond count and hash: {set(row) - allowed}")
+
+    def test_a_failing_new_source_is_unreachable_never_zero(self):
+        row = wi.grade(_spec("mcp-registry"), FakeGot(transport="http_error", status=429, body=b"", error="HTTP 429"))
+        self.assertEqual(row["state"], "UNREACHABLE")
+        self.assertIsNone(row["count"])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
