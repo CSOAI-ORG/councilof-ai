@@ -1,8 +1,7 @@
 name: Organisation operating heartbeat (source-only, read-only)
 
 on:
-  schedule:
-    - cron: '10 8 * * *'
+  # No duplicate schedule: canonical company pulse proposed in #4790.
   workflow_dispatch:
   pull_request:
     paths:
