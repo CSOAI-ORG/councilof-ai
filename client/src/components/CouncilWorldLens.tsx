@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Globe2, MessageCircle, ExternalLink, Layers, ShieldCheck } from "lucide-react";
 import { askSovereign } from "@/lib/sovAsk";
+import { MISSIONS, missionForId, missionHref, suggestMission, type MissionId } from "@/lib/worldMissions";
+import { DESKS, type DeskId } from "../../../functions/api/_chatDesks";
+import PalAskPanel from "@/components/PalAskPanel";
 import { sovActions } from "@/lib/sovAgent";
 import {
   WORLD_SOURCES, eventAt, parseObservatory, parseWorldFact,
@@ -33,6 +36,10 @@ export default function CouncilWorldLens() {
   const [prompt, setPrompt] = useState("");
   const [reply, setReply] = useState("");
   const [asking, setAsking] = useState(false);
+  const [selectedMission, setSelectedMission] = useState<MissionId>("ras");
+  const [suggestedMission, setSuggestedMission] = useState<MissionId | null>(null);
+  const [staffOpen, setStaffOpen] = useState(false);
+  const [staffDesk, setStaffDesk] = useState<DeskId>("measure");
   const [status, setStatus] = useState("Globe is a view, not a live agent or a real-world outcome.");
 
   useEffect(() => {
@@ -84,6 +91,9 @@ export default function CouncilWorldLens() {
     event.preventDefault();
     const question = prompt.trim().slice(0, 600);
     if (!question || asking) return;
+    const mission = suggestMission(question);
+    if (mission) { setSelectedMission(mission.id); setSuggestedMission(mission.id); }
+    else setSuggestedMission(null);
     const actions = sovActions(question);
     // Only visual commands are safe to execute deterministically from a sentence.
     // A simulation, threat, human approval or physical intervention is NEVER run by this parser.
@@ -207,6 +217,58 @@ export default function CouncilWorldLens() {
         </aside>
       </div>
 
+      <section className="border-t border-slate-200 bg-white p-4 sm:p-5" aria-labelledby="world-workflows-title" data-testid="world-mission-router">
+        <h3 id="world-workflows-title" className="text-base font-semibold text-emerald-950">
+          Choose a real workflow
+        </h3>
+        <p className="mt-1 text-xs leading-relaxed text-slate-700">
+          An objective becomes a suggested Council OS view, never an executed instruction. All 16 destinations reuse existing panes and their own identity, evidence and permission checks.
+        </p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+          <label className="text-xs font-semibold text-slate-800">Workflow
+            <select value={selectedMission} onChange={(e) => { setSelectedMission(e.target.value as MissionId); setSuggestedMission(null); }}
+              className="mt-1 block w-full rounded-lg border border-emerald-200 bg-white p-2.5 text-sm">
+              {MISSIONS.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
+            </select>
+          </label>
+          <a href={missionHref(missionForId(selectedMission)!)}
+            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-emerald-800 px-4 py-2 text-center text-sm font-semibold text-white">
+            Open existing Council OS pane <ExternalLink className="h-3.5 w-3.5"/>
+          </a>
+        </div>
+        {(() => {
+          const m = missionForId(selectedMission)!;
+          return <div className="mt-3 rounded-xl border border-emerald-100 bg-emerald-50/60 p-3 text-xs" data-testid="world-mission-detail">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-semibold text-emerald-900">{m.label}</span>
+              <span className="rounded bg-white px-2 py-0.5 font-mono text-[10px] text-slate-700">{m.dataKind.replace(/_/g, " ")}</span>
+              {suggestedMission === m.id && <span className="rounded bg-white px-2 py-0.5 text-[10px] text-emerald-800">Suggested by your question</span>}
+            </div>
+            <p className="mt-2 text-slate-800">{m.promise}</p>
+            <p className="mt-1 text-amber-950">{m.boundary}</p>
+            <p className="mt-2 text-slate-600">AI staff desk: {DESKS[m.desk].name}. Staff answers are not binding decisions by a person.</p>
+          </div>;
+        })()}
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <label className="text-xs font-semibold text-slate-700">Speak with an existing AI staff member
+            <select aria-label="AI staff desk" value={staffDesk} onChange={(e) => { setStaffDesk(e.target.value as DeskId); setStaffOpen(true); }}
+              className="ml-2 rounded-lg border border-slate-200 bg-white p-2 text-xs">
+              {(["measure", "press", "revenue", "watchdog", "academy", "verify"] as const).map((desk) => (
+                <option key={desk} value={desk}>{DESKS[desk].name}</option>
+              ))}
+            </select>
+          </label>
+          <button type="button" onClick={() => setStaffOpen((open) => !open)}
+            aria-expanded={staffOpen} aria-controls="world-ai-staff-chat"
+            className="rounded-lg border border-emerald-200 px-3 py-2 text-xs font-semibold text-emerald-900">
+            {staffOpen ? "Close AI staff" : "Talk to AI staff"}
+          </button>
+        </div>
+        {staffOpen && <div id="world-ai-staff-chat" className="mt-3" data-testid="world-him-staff">
+          <p className="mb-2 text-xs text-amber-900">AI assistant only; escalation is not approval. Uses the existing /api/pals staff service, not a duplicate chatbot.</p>
+          <PalAskPanel key={staffDesk} desk={staffDesk} onClose={() => setStaffOpen(false)} />
+        </div>}
+      </section>
       <form onSubmit={ask} className="border-t border-slate-200 bg-emerald-50/50 p-4">
         <label htmlFor="council-world-question" className="flex items-center gap-2 text-sm font-semibold text-emerald-950">
           <MessageCircle className="h-4 w-4"/> Ask the Council and focus the world
