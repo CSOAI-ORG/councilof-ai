@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 import sys
 from urllib.parse import urlsplit
@@ -24,9 +25,16 @@ INTERNAL_PATHS = {"meok_api": "/api/health", "him_studio": "/api/him/health"}
 
 
 def utc(t: str) -> datetime:
-    if not isinstance(t, str) or not t.endswith("Z"):
-        raise ValueError("explicit UTC Z required")
-    return datetime.fromisoformat(t[:-1] + "+00:00")
+    # A trailing Z on a date-only string is not an ISO UTC datetime:
+    # datetime.fromisoformat('2026-11-23+00:00') returns a *naive* value.
+    if not isinstance(t, str) or not re.fullmatch(
+        r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,6})?)?Z", t
+    ):
+        raise ValueError("explicit UTC datetime with T and clock required")
+    result = datetime.fromisoformat(t[:-1] + "+00:00")
+    if result.utcoffset() is None:
+        raise ValueError("missing UTC offset")
+    return result
 
 
 class RejectRedirects(HTTPRedirectHandler):
