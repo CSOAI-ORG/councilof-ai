@@ -185,6 +185,14 @@ class ResearchCommonsTests(unittest.TestCase):
         self.assertEqual([x["doi"] for x in r["papers"]], ["10.1234/relevant"])
         self.assertEqual(r["coverage"], "TOP_8_API_SEARCH_MATCHES_ONLY_NOT_EXHAUSTIVE")
 
+    def test_safety_topic_excludes_unrelated_calibration_papers(self):
+        self.assertFalse(c.title_relevant(
+            c.TOPICS[1], "Reliability and calibration of AI-derived shear models for concrete beams"))
+        self.assertFalse(c.title_relevant(
+            c.TOPICS[1], "A new AI disclosure benchmark for financial filings"))
+        self.assertTrue(c.title_relevant(
+            c.TOPICS[1], "Benchmarking AI safety controls and calibration failure modes"))
+
     def test_bad_crossref_shape_is_explicit_error(self):
         def malformed(url):
             return {"message": {"items": "not a list"}}
