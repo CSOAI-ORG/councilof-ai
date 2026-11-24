@@ -14,9 +14,8 @@ Emits one trio per run (per-axis sections + overall):
 
     daily-report-YYYY-MM-DD.md   human report
     daily-report-YYYY-MM-DD.json machine mirror (same content + source sha256 at read time)
-    daily-report-YYYY-MM-DD.sig  Ed25519 signature over the exact .json bytes
-                                 (only if ACTION_EVENT_SIGNING_KEY_PKCS8_B64 is set;
-                                 otherwise unsigned and honestly noted)
+    daily-report-YYYY-MM-DD.sig  the board signature over a small pointer to the exact .json bytes
+                                 (or an honest UNSIGNED note saying why there is none)
 
 ZERO FABRICATION: every number comes from the source files. A missing source is
 reported as UNAVAILABLE, never guessed.
@@ -25,23 +24,32 @@ Regeneration rule: rerunnable daily. Yesterday's trio moves to archive/YYYY-MM-D
 and the diff section compares consecutive reports (new SEPARATED events,
 staleness aging, rank changes, corrections added).
 
-Signing pattern replicated from seam-build-20261101/lib/action-event.mjs
-(csoai.action-event/0.1): Ed25519 over canonical bytes, key from the
-ACTION_EVENT_SIGNING_KEY_PKCS8_B64 env var (base64 PKCS8), one signer doctrine.
+Signing (24 Nov 2026). The report is far larger than the board signer's 3 KB payload cap, so the board signs a pointer:
+schema, report date, file name, SHA-256 of the exact .json bytes, signed_at (check_report.pointer). The pointer goes to
+POST https://councilof.ai/api/board-sign with this GitHub Actions job's own OIDC token, through the client the capsule
+index already uses (packages/venturi-capsule/venturi_capsule.py sign_payload: the digest check, local verification under
+the did.json key, altered-preimage controls). The signer is did:web:csoai.org#board-attestation-1 and admits
+.github/workflows/daily-report.yml only at refs/heads/master. No key is held here. No token, a refused call or a failed
+check writes an UNSIGNED .sig with the reason. --test-key signs the pointer with a throwaway key instead (pull-request
+dry runs, which cannot reach the signer); that .sig names the throwaway key and is never publishable.
 """
 
 import base64
 import glob
 import hashlib
+import importlib.util
 import json
 import re
 import os
 import shutil
-import subprocess
 import sys
+import urllib.error
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import check_report  # noqa: E402  (the pointer and its canonical bytes live there, beside their verifier)
 
 # ---------------------------------------------------------------- constants
 
@@ -73,8 +81,8 @@ HELD_AXES = {a: dict(HOLDS["entries"][e], entry=e) for a, e in HOLDS["axes"].ite
 WITHHELD_FIELDS = ("n", "accuracy", "interval", "fleet_mean", "mean_harm", "leader", "separation_sentence", "api_note")
 
 REPORT_SCHEMA = "csoai.daily-report/0.1"
-SIG_SCHEMA = "csoai.daily-report-sig/0.1"
-SIGNING_ENV = "ACTION_EVENT_SIGNING_KEY_PKCS8_B64"
+SIG_SCHEMA = check_report.SIG_SCHEMA
+BOARD_SIGN_CLIENT = REPO / "packages" / "venturi-capsule" / "venturi_capsule.py"
 
 # Freshness rule (documented in the report, applied fail-closed):
 # a MEASURED axis is CURRENT only if its measurement evidence date is at most
@@ -630,13 +638,15 @@ def render_md(report):
     if sig_file.exists():
         try:
             sd = json.loads(sig_file.read_text())
-            L.append(f"- status: **{'SIGNED' if sd.get('signature') else 'UNSIGNED'}** "
-                     f"({sd.get('schema')}, {sd.get('algorithm')})")
-            if sd.get("signature"):
-                L.append(f"- {sd.get('note')}")
-                L.append(f"- signed file sha256: `{sd.get('signed_file_sha256')}`")
-            else:
-                L.append(f"- {sd.get('note')}")
+            p, s = sd.get("pointer") or {}, sd.get("signature") or {}
+            L.append(f"- status: **{sd.get('status')}** ({sd.get('schema')})")
+            L.append(f"- pointer (what a signature covers): `{p.get('schema')}` names `{p.get('file')}`, "
+                     f"sha256 `{p.get('sha256')}`, signed_at `{p.get('signed_at')}`")
+            if s:
+                L.append(f"- signer: `{s.get('did')}` (Ed25519, {s.get('signer_auth')}); "
+                         f"pointer sha256 `{s.get('payload_sha256')}`")
+            L.append(f"- {sd.get('note')}")
+            L.append(f"- how to check it: {sd.get('verify')}")
         except Exception as e:
             L.append(f"- signature file unreadable: {e}")
     else:
@@ -842,7 +852,7 @@ def render_md(report):
     L.append("")
     L.append("Reusability: every number above traces to a sha256-hashed source in "
              "`Sources`; the machine mirror (`daily-report-" + report['report_date'] + ".json`) "
-             "carries the same content; the signature block is in the `.sig` file. "
+             "carries the same content; the board signature over a pointer to its exact bytes is in the `.sig` file. "
              "Measurement only. Generated by scripts/daily-report/generate_daily_report.py "
              "(Council of AI).")
     L.append("")
@@ -851,81 +861,90 @@ def render_md(report):
 
 # ---------------------------------------------------------------- signing
 
-def sign_report(json_path: Path, json_bytes: bytes):
-    """Ed25519 over the exact .json bytes — pattern from action-event.mjs.
-    Key from ACTION_EVENT_SIGNING_KEY_PKCS8_B64 (base64 PKCS8). No key = honest unsigned."""
-    key_b64 = os.environ.get(SIGNING_ENV, "").strip()
-    doc = {
-        "schema": SIG_SCHEMA,
-        "created_at": iso_now(),
-        "signed_file": json_path.name,
-        "signed_file_sha256": sha256_bytes(json_bytes),
-        "algorithm": "Ed25519",
-        "signature": None,
-        "public_key_spki_b64": None,
-    }
-    if not key_b64:
-        doc["note"] = ("UNSIGNED — " + SIGNING_ENV + " not set; the report is hash-bound only "
-                       "(sha256 above), with no signer asserted. No signature is fabricated.")
-        return doc, False
-    data = json_bytes
+VERIFY_TEXT = ("Two checks on the published files; either failing is a failure. (1) Digest: the SHA-256 of the .json "
+               "file equals pointer.sha256, and the pointer names that date and that file. (2) Signature: sig_ed25519 "
+               "verifies (Ed25519) over the canonical pointer (JSON, keys sorted, separators ',' and ':', UTF-8) under "
+               "the #board-attestation-1 key published at https://csoai.org/.well-known/did.json (raw key "
+               + check_report.BOARD_PUB_HEX + "). scripts/daily-report/check_report.py runs both.")
+
+_BOARD_CLIENT = []
+
+
+def board_client():
+    """packages/venturi-capsule/venturi_capsule.py, loaded by path: the board-sign client the capsule index uses
+    (actions_daily.py runs `venturi_capsule.py sign --token github-oidc`). Nothing of it is copied here."""
+    if not _BOARD_CLIENT:
+        spec = importlib.util.spec_from_file_location("venturi_capsule", BOARD_SIGN_CLIENT)
+        m = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(m)
+        _BOARD_CLIENT.append(m)
+    return _BOARD_CLIENT[0]
+
+
+def refusal(e) -> str:
+    """One line of printable ASCII on why no signature was made. It never holds the token: the board client puts it
+    in no message, and only the error, reason, detail and label fields of a refusal are kept."""
+    if isinstance(e, SystemExit):
+        why = str(e.code)
+    elif isinstance(e, urllib.error.HTTPError):
+        try:
+            body = json.loads(e.read().decode("utf-8", "replace"))
+            said = "; ".join(f"{k}: {str(body[k])[:120]}" for k in ("error", "reason", "detail", "label") if k in body)
+        except Exception:
+            said = ""
+        finally:
+            e.close()
+        why = f"the signer answered HTTP {e.code}" + (f" ({said})" if said else "")
+    else:
+        msg = str(e)[:200]
+        why = type(e).__name__ + (f": {msg}" if msg else "")
+    return re.sub(r"[^\x20-\x7e]", "?", why)
+
+
+def sign_pointer(json_bytes: bytes, report_date: str, test_key_file=None):
+    """The .sig document: the pointer to the exact .json bytes, the signature over it, and how to check both.
+
+    Board (the default): venturi_capsule.sign_payload posts the pointer to /api/board-sign with this job's OIDC token,
+    refuses a reply whose payload_sha256 is not the pointer's or whose signer_auth is not github-oidc, verifies the
+    signature under the did.json key and runs the altered-preimage controls. The reply is kept as it came.
+    test_key_file: the pointer is signed with that throwaway key and the .sig says so (pull-request dry runs).
+    Anything that fails on the way leaves an UNSIGNED .sig with the reason. A signature is never made up."""
+    ptr = check_report.pointer(report_date, json_bytes, iso_now())
+    c = check_report.canon(ptr)
+    doc = {"schema": SIG_SCHEMA, "status": "UNSIGNED", "pointer": ptr, "signature": None, "verify": VERIFY_TEXT}
     try:
-        from cryptography.hazmat.primitives.serialization import (
-            Encoding, PublicFormat, load_der_private_key)
-        priv = load_der_private_key(base64.b64decode(key_b64), password=None)
-        sig = priv.sign(data)
-        pub = priv.public_key().public_bytes(Encoding.DER,
-                                             PublicFormat.SubjectPublicKeyInfo)
-        doc["signature"] = base64.b64encode(sig).decode()
-        doc["public_key_spki_b64"] = base64.b64encode(pub).decode()
-        doc["note"] = ("Signed with Ed25519 over the exact bytes of " + json_path.name +
-                       " (one-signer doctrine, key material from " + SIGNING_ENV + "). " +
-                       "Verify: openssl pkeyutl -verify -rawin -in <json> -pubkey <spki.pem> " +
-                       "-sigfile <sig.raw>.")
-        return doc, True
-    except ImportError:
-        pass
-    except Exception as e:
-        doc["note"] = f"UNSIGNED — signing failed honestly: {type(e).__name__}: {e}"
-        return doc, False
-    # openssl CLI fallback
-    import tempfile
-    try:
-        with tempfile.TemporaryDirectory() as td:
-            key_pem = Path(td) / "key.pem"
-            der = base64.b64decode(key_b64)
-            key_pem.write_bytes(
-                b"-----BEGIN PRIVATE KEY-----\n" +
-                base64.encodebytes(der).replace(b"\n", b"\n") +
-                b"-----END PRIVATE KEY-----\n")
-            data_f = Path(td) / "data.bin"
-            data_f.write_bytes(data)
-            sig_f = Path(td) / "sig.bin"
-            r = subprocess.run(
-                [shutil.which("openssl") or "openssl", "pkeyutl", "-sign", "-rawin",
-                 "-inkey", str(key_pem), "-in", str(data_f), "-out", str(sig_f)],
-                capture_output=True, timeout=30)
-            if r.returncode != 0 or not sig_f.exists():
-                doc["note"] = f"UNSIGNED — openssl signing failed: {r.stderr.decode()[:200]}"
-                return doc, False
-            doc["signature"] = base64.b64encode(sig_f.read_bytes()).decode()
-            pub_f = Path(td) / "pub.pem"
-            r2 = subprocess.run(
-                [shutil.which("openssl") or "openssl", "pkey", "-in", str(key_pem),
-                 "-pubout", "-out", str(pub_f)],
-                capture_output=True, timeout=30)
-            if r2.returncode == 0:
-                pem = pub_f.read_text()
-                b64 = "".join(
-                    l for l in pem.splitlines() if "-----" not in l)
-                doc["public_key_spki_b64"] = b64
-            doc["note"] = ("Signed with Ed25519 over the exact bytes of " + json_path.name +
-                           " (openssl pkeyutl -rawin; one-signer doctrine, key from " +
-                           SIGNING_ENV + ").")
-            return doc, True
-    except Exception as e:
-        doc["note"] = f"UNSIGNED — openssl fallback failed honestly: {type(e).__name__}: {e}"
-        return doc, False
+        if not c.isascii():
+            raise ValueError("the pointer is not ASCII, so the signer's canonical rule and this one could disagree")
+        if test_key_file:
+            from cryptography.hazmat.primitives.serialization import load_der_private_key
+            key = load_der_private_key(base64.b64decode(Path(test_key_file).read_text().strip()), password=None)
+            doc["signature"] = {"did": check_report.TEST_DID, "alg": "Ed25519", "sig_ed25519": key.sign(c).hex(),
+                                "payload_sha256": sha256_bytes(c), "signer_auth": "test-key"}
+            doc["status"] = "TEST_KEY"
+            doc["note"] = ("TEST KEY: a throwaway key made in this pull-request job signed the pointer, to test the pointer "
+                           "and the verify path. It is not a board signature, and publish.py refuses it.")
+            return doc
+        vc = board_client()
+        pins = [("report sha256 altered", ptr["sha256"]), ("report date altered", report_date)]
+        reply, controls = vc.sign_payload(ptr, pins, vc.OIDC)
+        if reply.get("did") != check_report.BOARD_DID:
+            raise ValueError(f"the signer named {reply.get('did')!r}, not {check_report.BOARD_DID}")
+        doc["signature"] = reply
+        doc["local_verification"] = {
+            "result": "VERIFIES", "altered_preimage_controls": controls,
+            "key": "the #board-attestation-1 key in https://csoai.org/.well-known/did.json, read when the pointer was signed"}
+        doc["status"] = "SIGNED"
+        doc["note"] = ("Signed by " + check_report.BOARD_DID + " through POST https://councilof.ai/api/board-sign, asked by "
+                       "this workflow's own GitHub OIDC token. The signature covers the canonical pointer, and the pointer "
+                       "carries the SHA-256 of the .json bytes. pointer.signed_at is this job's clock and is signed; "
+                       "signature.signed_at is the signer's clock and is not.")
+        return doc
+    except (Exception, SystemExit) as e:
+        doc.update(status="UNSIGNED", signature=None)
+        doc.pop("local_verification", None)
+        doc["note"] = ("UNSIGNED: " + refusal(e) + ". No signature is made up: check_report.py fails an unsigned report "
+                       "and publish.py publishes nothing it failed.")
+        return doc
 
 
 # ---------------------------------------------------------------- archive / previous
@@ -980,6 +999,9 @@ def main():
     import argparse
     ap = argparse.ArgumentParser(description="Council of AI daily report")
     ap.add_argument("--out", default=str(ROOT), help="output folder (archive/ inside it holds earlier reports)")
+    ap.add_argument("--test-key", default=None,
+                    help="FILE holding a throwaway Ed25519 key (base64 PKCS8 DER): sign the pointer with it instead of "
+                         "asking the board signer (pull-request dry runs only; such a .sig is never publishable)")
     args = ap.parse_args()
     ROOT = Path(args.out).resolve()
     ARCHIVE = ROOT / "archive"
@@ -1092,30 +1114,38 @@ def main():
         report["axes"].items(),
         key=lambda kv: (rank_order.get(kv[1]["derived_state"], 9), kv[0])))
 
-    # Signature model: detached, over the FINAL on-disk .json bytes — anyone can
-    # verify by hashing the published .json and checking the .sig. The .json's
-    # signature block points at the .sig (a signature never signs itself).
+    # Signature model: detached. The board signs a pointer that carries the SHA-256 of the FINAL on-disk .json bytes,
+    # so anyone can hash the published .json, compare it with the pointer and verify the signature over the pointer.
+    # The .json's signature block points at the .sig (a signature never signs itself).
     json_name = f"daily-report-{today}.json"
     sig_name = f"daily-report-{today}.sig"
     report["signature"] = {
         "status": "SEE_SIG",
         "schema": SIG_SCHEMA,
         "algorithm": "Ed25519",
+        "signer_asked": check_report.TEST_DID if args.test_key else check_report.BOARD_DID,
         "signed_file": json_name,
         "signature_file": sig_name,
-        "note": ("The detached signature covering these exact bytes is in " + sig_name +
-                 " (" + SIG_SCHEMA + ", Ed25519, key from " + SIGNING_ENV + "). If that env "
-                 "var was not set at generation time, the .sig records an honest UNSIGNED "
-                 "note instead — no signature is ever fabricated."),
+        "pointer_schema": check_report.POINTER_SCHEMA,
+        "note": (("Pull-request dry run: the pointer in " + sig_name + " is signed with a throwaway key made in the "
+                  "job, to test the pointer and the verify path. It is not a board signature and is never published.")
+                 if args.test_key else
+                 ("The detached signature is in " + sig_name + ". The board signer (" + check_report.BOARD_DID +
+                  ", POST https://councilof.ai/api/board-sign, asked by the daily-report workflow's own GitHub OIDC "
+                  "token) signs a small pointer (" + check_report.POINTER_SCHEMA + ": report date, file name, SHA-256 "
+                  "of these exact bytes, signed_at), because this report is larger than the signer's 3 KB payload "
+                  "cap. If the signer was not reached, the .sig says UNSIGNED and why; no signature is ever made up.")),
     }
     json_path = ROOT / json_name
     json_bytes = json.dumps(report, ensure_ascii=False, indent=2,
                             sort_keys=True).encode("utf-8")
     json_path.write_bytes(json_bytes)
 
-    sig_doc, signed = sign_report(json_path, json_bytes)
+    sig_doc = sign_pointer(json_bytes, today, args.test_key)
     (ROOT / sig_name).write_text(
         json.dumps(sig_doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if sig_doc["status"] != "SIGNED":
+        print(sig_doc.get("note"), file=sys.stderr)
 
     md = render_md(report)
     md_path = ROOT / f"daily-report-{today}.md"
@@ -1125,7 +1155,7 @@ def main():
     print(f"OK daily report {today}: "
           f"MEASURED {counts.get('MEASURED',0)} · STALE-DATE {counts.get('STALE-DATE',0)} · "
           f"UNMEASURED {counts.get('UNMEASURED',0)} · "
-          f"signature: {'SIGNED' if signed else 'UNSIGNED'} · archived: {moved or 'none'}")
+          f"signature: {sig_doc['status']} · archived: {moved or 'none'}")
     print(f"  {md_path.name}  {json_path.name}  daily-report-{today}.sig")
     return 0
 

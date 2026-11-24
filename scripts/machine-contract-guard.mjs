@@ -16,7 +16,7 @@
  *   4. /api/feed.xml — must be 200 and well-formed (balanced <rss>/<channel>).
  *   5. did.json split-brain: csoai.org (authoritative) and the mirror carry the same keys.
  *   6. Publish verification (scripts/publish-freshness.mjs): sitemap count + sampled URLs 200,
- *      feed freshness, sampled signed-card URLs 200 with the indexed id, root.json as_of freshness.
+ *      event-feed source parity (QUIET when unchanged), sampled signed-card URLs 200 with indexed id, root.json as_of freshness.
  *
  * It reads NOTHING secret and changes NOTHING. It only fetches public URLs and asserts.
  *
@@ -205,8 +205,9 @@ try {
   else pass(`did.json consistent across csoai.org (authoritative) and the mirror: ${root}`);
 } catch (e) { fail(`DID consistency check error: ${e.message}`); }
 
-// 6. Publish verification: reachable is not the same as FRESH. A well-formed feed can have
-// stopped weeks ago and a signed root.json can still answer 200 after its publisher stopped.
+// 6. Publish verification: reachable is not the same as FRESH. Event feeds may legitimately
+// have no newer source events; a missed eligible event is a defect. A signed root.json can
+// still answer 200 after its publisher stopped.
 console.log("\n  — publish verification —");
 try {
   await runPublishChecks({ get, host: HOST, rehost, pass, fail });
@@ -217,4 +218,4 @@ if (fails.length) {
   console.error(`MACHINE-CONTRACT: FAIL — ${fails.length} broken contract(s). The machine surfaces do not hold what they advertise.`);
   process.exit(1);
 }
-console.log(`MACHINE-CONTRACT: PASS — llms.txt links, did.json endpoints, JSON surfaces, feed, and publish freshness all hold.`);
+console.log(`MACHINE-CONTRACT: PASS — llms.txt links, did.json endpoints, JSON surfaces, event-feed source parity and publisher freshness checks hold.`);

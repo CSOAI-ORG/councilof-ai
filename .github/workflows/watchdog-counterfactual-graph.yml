@@ -1,0 +1,53 @@
+name: Watchdog source-freshness and synthetic consequence graph
+
+on:
+  pull_request:
+    paths:
+      - 'measurement/experiments/watchdog-consequence-graph/**'
+      - '.github/workflows/watchdog-counterfactual-graph.yml'
+  workflow_dispatch: {}
+  schedule:
+    - cron: '42 12 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: watchdog-counterfactual-graph
+  cancel-in-progress: false
+
+jobs:
+  source-to-simulation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source-only negative controls and hypothesis separation
+        run: python3 measurement/experiments/watchdog-consequence-graph/test_build_graph.py
+      - name: Evaluate publicly committed watchdog index against source clock
+        if: github.event_name != 'pull_request'
+        env:
+          OUT: /tmp/csoai-watchdog-consequence
+        run: |
+          mkdir -p "$OUT"
+          NOW="$(date -u +%FT%TZ)"
+          python3 measurement/experiments/watchdog-consequence-graph/build_graph.py \
+            --latest public/interop/watchdog-intake/latest.json \
+            --index public/interop/watchdog-intake/_index.json \
+            --as-of "$NOW" \
+            --max-age-hours 48 \
+            --output "$OUT/synthetic-source-only-graph.json"
+          echo "No incident record copied, no simulation effect executed, no human authority issued."
+      - name: Retain stale/failed source check separately from production releases
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: watchdog-source-only-synthetic-graph
+          path: /tmp/csoai-watchdog-consequence/synthetic-source-only-graph.json
+          if-no-files-found: warn
+          retention-days: 30

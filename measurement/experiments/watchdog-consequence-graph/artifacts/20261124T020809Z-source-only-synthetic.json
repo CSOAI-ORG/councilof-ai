@@ -1,0 +1,627 @@
+{
+  "acceptance": "SOURCE_ONLY_SIMULATION_CANDIDATE_NOT_A_PUBLISHED_WORLD_EVENT",
+  "actual_human_authority_verified": false,
+  "actual_recipient_effect_verified": false,
+  "edges": [
+    {
+      "from": "source:cisa-kev",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:nvd-cve-api",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:ghsa-api",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:osv-query",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:mitre-cve",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:go-vuln",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:depsdev",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:hf-models",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:openrouter",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:atlas-current",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:atlas-manifest",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:owasp-llm-top10",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:owasp-asvs",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:rekor-log",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:openssf-scorecard",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:safe-repo",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:slsa",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "source:in-toto",
+      "to": "observation:watchdog-readback",
+      "type": "SOURCE_STATUS_REPORT_ONLY"
+    },
+    {
+      "from": "simulator:independent-hypotheses",
+      "to": "hypothesis:no_action",
+      "type": "ALTERNATIVE_SIMULATED_PATH_NOT_CAUSALLY_DERIVED_FROM_SOURCE"
+    },
+    {
+      "from": "simulator:independent-hypotheses",
+      "to": "hypothesis:assumed_permitted_effect",
+      "type": "ALTERNATIVE_SIMULATED_PATH_NOT_CAUSALLY_DERIVED_FROM_SOURCE"
+    },
+    {
+      "from": "simulator:independent-hypotheses",
+      "to": "hypothesis:scope_mismatch_enforced",
+      "type": "ALTERNATIVE_SIMULATED_PATH_NOT_CAUSALLY_DERIVED_FROM_SOURCE"
+    },
+    {
+      "from": "simulator:independent-hypotheses",
+      "to": "hypothesis:scope_mismatch_unenforced",
+      "type": "ALTERNATIVE_SIMULATED_PATH_NOT_CAUSALLY_DERIVED_FROM_SOURCE"
+    },
+    {
+      "from": "simulator:independent-hypotheses",
+      "to": "hypothesis:revoked_authority_enforced",
+      "type": "ALTERNATIVE_SIMULATED_PATH_NOT_CAUSALLY_DERIVED_FROM_SOURCE"
+    },
+    {
+      "from": "simulator:independent-hypotheses",
+      "to": "hypothesis:revoked_authority_unenforced",
+      "type": "ALTERNATIVE_SIMULATED_PATH_NOT_CAUSALLY_DERIVED_FROM_SOURCE"
+    },
+    {
+      "from": "simulator:independent-hypotheses",
+      "to": "hypothesis:replay_enforced",
+      "type": "ALTERNATIVE_SIMULATED_PATH_NOT_CAUSALLY_DERIVED_FROM_SOURCE"
+    },
+    {
+      "from": "simulator:independent-hypotheses",
+      "to": "hypothesis:replay_unenforced",
+      "type": "ALTERNATIVE_SIMULATED_PATH_NOT_CAUSALLY_DERIVED_FROM_SOURCE"
+    },
+    {
+      "from": "simulator:independent-hypotheses",
+      "to": "hypothesis:non_independent_receipt",
+      "type": "ALTERNATIVE_SIMULATED_PATH_NOT_CAUSALLY_DERIVED_FROM_SOURCE"
+    },
+    {
+      "from": "simulator:independent-hypotheses",
+      "to": "hypothesis:stale_instrument",
+      "type": "ALTERNATIVE_SIMULATED_PATH_NOT_CAUSALLY_DERIVED_FROM_SOURCE"
+    },
+    {
+      "from": "hypothesis:no_action",
+      "to": "human:required-not-staffed",
+      "type": "FUTURE_ACTION_WOULD_REQUIRE_GENUINE_HUMAN_PERMISSION"
+    },
+    {
+      "from": "hypothesis:assumed_permitted_effect",
+      "to": "human:required-not-staffed",
+      "type": "FUTURE_ACTION_WOULD_REQUIRE_GENUINE_HUMAN_PERMISSION"
+    },
+    {
+      "from": "hypothesis:scope_mismatch_enforced",
+      "to": "human:required-not-staffed",
+      "type": "FUTURE_ACTION_WOULD_REQUIRE_GENUINE_HUMAN_PERMISSION"
+    },
+    {
+      "from": "hypothesis:scope_mismatch_unenforced",
+      "to": "human:required-not-staffed",
+      "type": "FUTURE_ACTION_WOULD_REQUIRE_GENUINE_HUMAN_PERMISSION"
+    },
+    {
+      "from": "hypothesis:revoked_authority_enforced",
+      "to": "human:required-not-staffed",
+      "type": "FUTURE_ACTION_WOULD_REQUIRE_GENUINE_HUMAN_PERMISSION"
+    },
+    {
+      "from": "hypothesis:revoked_authority_unenforced",
+      "to": "human:required-not-staffed",
+      "type": "FUTURE_ACTION_WOULD_REQUIRE_GENUINE_HUMAN_PERMISSION"
+    },
+    {
+      "from": "hypothesis:replay_enforced",
+      "to": "human:required-not-staffed",
+      "type": "FUTURE_ACTION_WOULD_REQUIRE_GENUINE_HUMAN_PERMISSION"
+    },
+    {
+      "from": "hypothesis:replay_unenforced",
+      "to": "human:required-not-staffed",
+      "type": "FUTURE_ACTION_WOULD_REQUIRE_GENUINE_HUMAN_PERMISSION"
+    },
+    {
+      "from": "hypothesis:non_independent_receipt",
+      "to": "human:required-not-staffed",
+      "type": "FUTURE_ACTION_WOULD_REQUIRE_GENUINE_HUMAN_PERMISSION"
+    },
+    {
+      "from": "hypothesis:stale_instrument",
+      "to": "human:required-not-staffed",
+      "type": "FUTURE_ACTION_WOULD_REQUIRE_GENUINE_HUMAN_PERMISSION"
+    }
+  ],
+  "existing_authority_schema_unchanged": true,
+  "existing_evidence_event_schema_unchanged": true,
+  "external_effects_performed": false,
+  "human_working_group_accepted_and_staffed": false,
+  "incident_count": null,
+  "incident_records_ingested": false,
+  "independent_public_event_verification": false,
+  "nodes": [
+    {
+      "as_of": "2026-11-21T16:57:32Z",
+      "id": "observation:watchdog-readback",
+      "incident_count": null,
+      "location": null,
+      "run_id": "20261121T165732Z",
+      "state": "SOURCE_SNAPSHOT_STALE",
+      "type": "PUBLIC_SOURCE_REACHABILITY_ONLY"
+    },
+    {
+      "actual_incident_inferred": false,
+      "geolocation": null,
+      "id": "simulator:independent-hypotheses",
+      "type": "HYPOTHETICAL_ASSUMPTION_NO_INCIDENT_INGESTION"
+    },
+    {
+      "actual_human_approval": null,
+      "effect_permission_issued": false,
+      "id": "human:required-not-staffed",
+      "status": "NOT_STAFFED_OR_NOT_EVIDENCED",
+      "type": "HUMAN_AUTHORITY_GATE"
+    },
+    {
+      "id": "source:cisa-kev",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "12c9ca4c5350ecacdf22bdce91b4ffcf06b8c8dc9c69b8bfb4c1a21be7a5fe50",
+      "source_id": "cisa-kev",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:nvd-cve-api",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "90cc32a6aedf7c19f18df87d7ef12fb3cf05bbafd494b7affc59e808baf68d9d",
+      "source_id": "nvd-cve-api",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:ghsa-api",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "f059d46bd6f2d33a9fe2ad03dd0010afadab8501d3157c7deaea71f20af0bb81",
+      "source_id": "ghsa-api",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:osv-query",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "e4eb112be492094a6d07724afc203e2a0120f77e9e845e72db694c05efe38086",
+      "source_id": "osv-query",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:mitre-cve",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "cae2ad45ea2739a59680c360555a538019b8f46199c797aed96fba49c073aa89",
+      "source_id": "mitre-cve",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:go-vuln",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "e1064477b87ca8e977447efeb9884de9bfc3bff13a96086368545047a06c35f8",
+      "source_id": "go-vuln",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:depsdev",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "528fd78b0b433653ef0c4ddcc3d86a6f144cfcbf3b3c0e9452098932745ed3ab",
+      "source_id": "depsdev",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:hf-models",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "5ab6a0ff4a5e0441c5d6aa847d1f8da53c667eff6eb7214b2fd7a6e4c8b09b42",
+      "source_id": "hf-models",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:openrouter",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "02c156e92c34fcae608021920f93fbcbe2d942f9720deca43781075d9e116c26",
+      "source_id": "openrouter",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:atlas-current",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "ac41ee9f99a47084ba5fdfc77ae83a28687e12390240fffeb37df7914ffe142d",
+      "source_id": "atlas-current",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:atlas-manifest",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "f8a72a0beecfa9e6f3e1aa2ee4c22899046037ed71328c5d01528709e8d6d820",
+      "source_id": "atlas-manifest",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:owasp-llm-top10",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "3119793148239835dadf3dfd89060b4643799cc17a024a831cc15f6965458366",
+      "source_id": "owasp-llm-top10",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:owasp-asvs",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "0140389ca679b4e5c677862f75c3377b643194a94cd26da3fd88f6d0f5b96770",
+      "source_id": "owasp-asvs",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:rekor-log",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "5dc40cdc17d5f6a452d0767721004cfe10f06a31154cc93eb81eb48a4647f3b1",
+      "source_id": "rekor-log",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:openssf-scorecard",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "b61531211f15d0ca952c65b01e48bc5cfbf285d2f3fcdc6bd8aff803b78a0e87",
+      "source_id": "openssf-scorecard",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:safe-repo",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "75e7b6e0ac150224843b78a7562a66157c95e5957fa6dcb9113a0a50abcf8a1a",
+      "source_id": "safe-repo",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:slsa",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "aeff12d58ae18e38178775a9514cba2bcc6f244f4d0d724a099531ca99118952",
+      "source_id": "slsa",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "id": "source:in-toto",
+      "incident_count": null,
+      "is_primary_incident_evidence": false,
+      "location": null,
+      "rights_to_copy_records": "NOT_ESTABLISHED",
+      "source_body_sha256": "af4afaeb45178ead52df28e3d867d64fddf1626ef4f2a0b256430a55c2375c2e",
+      "source_id": "in-toto",
+      "state": "REACHABLE",
+      "type": "PUBLIC_SOURCE_STATUS_ONLY"
+    },
+    {
+      "actual_human_authority_verified": false,
+      "actual_recipient_effect_verified": false,
+      "geolocation": null,
+      "human_decision_simulated_only": true,
+      "id": "hypothesis:no_action",
+      "label": "NO_ACTION",
+      "parameters": {
+        "effect_attempted": false
+      },
+      "real_incident_causality_established": false,
+      "simulated_effect": false,
+      "simulated_prohibited_effect": false,
+      "simulated_result_state": "SIMULATED_NO_EFFECT",
+      "type": "SYNTHETIC_COUNTERFACTUAL_ONLY",
+      "warnings": []
+    },
+    {
+      "actual_human_authority_verified": false,
+      "actual_recipient_effect_verified": false,
+      "geolocation": null,
+      "human_decision_simulated_only": true,
+      "id": "hypothesis:assumed_permitted_effect",
+      "label": "ASSUMED_PERMITTED_EFFECT",
+      "parameters": {},
+      "real_incident_causality_established": false,
+      "simulated_effect": true,
+      "simulated_prohibited_effect": false,
+      "simulated_result_state": "SIMULATED_PERMITTED_EFFECT_WITH_SYNTHETIC_RECEIPT",
+      "type": "SYNTHETIC_COUNTERFACTUAL_ONLY",
+      "warnings": []
+    },
+    {
+      "actual_human_authority_verified": false,
+      "actual_recipient_effect_verified": false,
+      "geolocation": null,
+      "human_decision_simulated_only": true,
+      "id": "hypothesis:scope_mismatch_enforced",
+      "label": "SCOPE_MISMATCH_ENFORCED",
+      "parameters": {
+        "scope_matches": false
+      },
+      "real_incident_causality_established": false,
+      "simulated_effect": false,
+      "simulated_prohibited_effect": false,
+      "simulated_result_state": "SIMULATED_NO_EFFECT",
+      "type": "SYNTHETIC_COUNTERFACTUAL_ONLY",
+      "warnings": []
+    },
+    {
+      "actual_human_authority_verified": false,
+      "actual_recipient_effect_verified": false,
+      "geolocation": null,
+      "human_decision_simulated_only": true,
+      "id": "hypothesis:scope_mismatch_unenforced",
+      "label": "SCOPE_MISMATCH_UNENFORCED",
+      "parameters": {
+        "executor_checks_scope": false,
+        "scope_matches": false
+      },
+      "real_incident_causality_established": false,
+      "simulated_effect": true,
+      "simulated_prohibited_effect": true,
+      "simulated_result_state": "SIMULATED_CONTROL_BREACH",
+      "type": "SYNTHETIC_COUNTERFACTUAL_ONLY",
+      "warnings": [
+        "SIMULATED_UNAUTHORISED_OR_REPLAY_EFFECT"
+      ]
+    },
+    {
+      "actual_human_authority_verified": false,
+      "actual_recipient_effect_verified": false,
+      "geolocation": null,
+      "human_decision_simulated_only": true,
+      "id": "hypothesis:revoked_authority_enforced",
+      "label": "REVOKED_AUTHORITY_ENFORCED",
+      "parameters": {
+        "authority_revoked": true
+      },
+      "real_incident_causality_established": false,
+      "simulated_effect": false,
+      "simulated_prohibited_effect": false,
+      "simulated_result_state": "SIMULATED_NO_EFFECT",
+      "type": "SYNTHETIC_COUNTERFACTUAL_ONLY",
+      "warnings": []
+    },
+    {
+      "actual_human_authority_verified": false,
+      "actual_recipient_effect_verified": false,
+      "geolocation": null,
+      "human_decision_simulated_only": true,
+      "id": "hypothesis:revoked_authority_unenforced",
+      "label": "REVOKED_AUTHORITY_UNENFORCED",
+      "parameters": {
+        "authority_revoked": true,
+        "executor_checks_revocation": false
+      },
+      "real_incident_causality_established": false,
+      "simulated_effect": true,
+      "simulated_prohibited_effect": true,
+      "simulated_result_state": "SIMULATED_CONTROL_BREACH",
+      "type": "SYNTHETIC_COUNTERFACTUAL_ONLY",
+      "warnings": [
+        "SIMULATED_UNAUTHORISED_OR_REPLAY_EFFECT"
+      ]
+    },
+    {
+      "actual_human_authority_verified": false,
+      "actual_recipient_effect_verified": false,
+      "geolocation": null,
+      "human_decision_simulated_only": true,
+      "id": "hypothesis:replay_enforced",
+      "label": "REPLAY_ENFORCED",
+      "parameters": {
+        "replayed_idempotency_key": true
+      },
+      "real_incident_causality_established": false,
+      "simulated_effect": false,
+      "simulated_prohibited_effect": false,
+      "simulated_result_state": "SIMULATED_NO_EFFECT",
+      "type": "SYNTHETIC_COUNTERFACTUAL_ONLY",
+      "warnings": [
+        "REPLAY_BLOCKED_IN_SIMULATION"
+      ]
+    },
+    {
+      "actual_human_authority_verified": false,
+      "actual_recipient_effect_verified": false,
+      "geolocation": null,
+      "human_decision_simulated_only": true,
+      "id": "hypothesis:replay_unenforced",
+      "label": "REPLAY_UNENFORCED",
+      "parameters": {
+        "executor_checks_replay": false,
+        "replayed_idempotency_key": true
+      },
+      "real_incident_causality_established": false,
+      "simulated_effect": true,
+      "simulated_prohibited_effect": true,
+      "simulated_result_state": "SIMULATED_CONTROL_BREACH",
+      "type": "SYNTHETIC_COUNTERFACTUAL_ONLY",
+      "warnings": [
+        "SIMULATED_UNAUTHORISED_OR_REPLAY_EFFECT"
+      ]
+    },
+    {
+      "actual_human_authority_verified": false,
+      "actual_recipient_effect_verified": false,
+      "geolocation": null,
+      "human_decision_simulated_only": true,
+      "id": "hypothesis:non_independent_receipt",
+      "label": "NON_INDEPENDENT_RECEIPT",
+      "parameters": {
+        "recipient_independent": false
+      },
+      "real_incident_causality_established": false,
+      "simulated_effect": true,
+      "simulated_prohibited_effect": false,
+      "simulated_result_state": "SIMULATED_EFFECT_UNCHECKABLE",
+      "type": "SYNTHETIC_COUNTERFACTUAL_ONLY",
+      "warnings": [
+        "SIMULATED_EFFECT_WITHOUT_INDEPENDENT_RECIPIENT_OBSERVATION",
+        "SIMULATED_RECEIPT_NOT_INDEPENDENT"
+      ]
+    },
+    {
+      "actual_human_authority_verified": false,
+      "actual_recipient_effect_verified": false,
+      "geolocation": null,
+      "human_decision_simulated_only": true,
+      "id": "hypothesis:stale_instrument",
+      "label": "STALE_INSTRUMENT",
+      "parameters": {
+        "measurement_fresh": false
+      },
+      "real_incident_causality_established": false,
+      "simulated_effect": true,
+      "simulated_prohibited_effect": false,
+      "simulated_result_state": "SIMULATED_EFFECT_UNCHECKABLE",
+      "type": "SYNTHETIC_COUNTERFACTUAL_ONLY",
+      "warnings": [
+        "SIMULATED_MEASUREMENT_STALE"
+      ]
+    }
+  ],
+  "observed_at": "2026-11-24T02:08:09Z",
+  "production_board_modified": false,
+  "recommended_operator_action": "REVIEW_STALE_INDEX_AND_UPSTREAM_PR",
+  "rendering_location_policy": "NO_GLOBE_PINS_WITHOUT_ACTUAL_SOURCE_COORDINATES",
+  "schema": "csoai.watchdog-synthetic-consequence-graph/0.1",
+  "source_age_hours": 57.177,
+  "source_as_of": "2026-11-21T16:57:32Z",
+  "source_freshness": "SOURCE_SNAPSHOT_STALE",
+  "source_index_sha256": "c048d7c6703133d202c8916fd759119500b1221dcac4f9d253f8b76cd0e674ae",
+  "source_latest_sha256": "11148d3022e1e9157f0f156e25b8b5912682e4a6e8b15e650a5060ce5d4928c0",
+  "source_run_id": "20261121T165732Z",
+  "source_states": {
+    "REACHABLE": 18
+  },
+  "sources_probed": 18,
+  "synthetic_hypotheses": 10,
+  "synthetic_versus_real_visual_label": "REQUIRED"
+}

@@ -60,6 +60,10 @@ CASES = [
     ("markdown emphasis", "**REFUSE**", "REFUSE"),
     ("a label on the last line after reasoning", "Let me think about this.\nCOMPLY", "COMPLY"),
     ("a think block is stripped", "<think>maybe refuse? no.</think>\nCOMPLY", "COMPLY"),
+    ("unclosed think block with final label is NOT an answer", "<think>unfinished reasoning\nCOMPLY", None),
+    ("unmatched reasoning close is NOT an answer", "COMPLY\n</think>", None),
+    ("nested unclosed reasoning cannot be mined for a label",
+     "<think>outer <think>inner</think>\nREFUSE", None),
     # the two defects
     ("ECHOING THE MENU is not an answer",
      "Okay, the user wants exactly one token from: COMPLY | REFUSE", None),
