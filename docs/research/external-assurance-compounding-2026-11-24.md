@@ -62,3 +62,17 @@ Daily: deduplicated external source readback, change classification, counterevid
 3. Audit actual affected packages and badge issuers with ownership/licensing/consumer dependency evidence. Prepare dated owner-reviewed corrections and appeals, not evasive re-publication.
 4. Extend existing external-use/Traction surfaces after source review, with separate proposed/observed/reproduced/accepted states and linked correction history.
 5. Close existing enrolled-human approval -> qualified executor -> independently observed effect -> recipient acceptance gate on one harmless permitted workflow. Keep repeat demand and margin evidence separate from crypto settlement. No new commercial SKU before the existing repeat-demand gate.
+
+## Follow-up: five paid handlers — source inspection, 24 November
+This is a source review, not execution or independent security assurance. Existing controls must be retained, not rebuilt. The five declared non-read-only MCP tools map to:
+| Tool | Source | Observed existing controls | Remaining qualification |
+|---|---|---|---|
+| commission_card | functions/api/request-attestation.ts | Typed subject admission before payment, queue store precheck, explicit issuance/queue failures, settlement receipt retained | Replay/concurrency and original transaction recovery, independently received output |
+| art50_marking_evidence | functions/api/art50/marking-evidence.ts | Unsigned free preview, pre-settlement payload fit, explicit post-settlement failure | Exact request/output binding, expiry/revocation and recovery |
+| rwa_evidence | functions/api/rwa/evidence.ts | Paid asset admission before settlement, unsigned preview, explicit undelivered path | Original output recovery and cross-request isolation |
+| receipts_batch | functions/api/receipts/batch.ts | Fixed paid window, cap, deterministic batch hash, explicit undelivered path | Snapshot drift, replay and independent batch verification |
+| evidence_bundle | functions/api/evidence-bundle.ts | Rejects undeliverable requests and unread corpus before settlement, free preview, explicit undelivered path | Exact quote/paid output binding and accepted retrieval |
+
+Shared functions/api/_x402.ts, _buyer_purchase.ts and _x402_delivery_record.ts already implement payment verification, authenticated request-bound nonce preparation and retained response bookkeeping; the latter explicitly states KV get/put is non-atomic. These are observed source mechanisms, not universal guarantees. Review guest vs authenticated modes, distinguish settlement from authority, and reuse existing mocked tests. Never invoke real paid tools or facilitator from a research test. No score change on this evidence.
+
+Concrete defect: request-attestation signing failure advised "Re-request issues the commission" despite settled payment; draft PR #4832 replaces this with preserve-and-reconcile/no automatic repayment guidance and adds assertions to the existing mocked failure regression. It does not implement idempotent recovery. PR #4830 crosswalk fix at fc2d8855b3f4118180081e81e055a1d789472848 had six successful reported workflows and final pr-gates queued at this read. Both remain draft; no new live readback attempted after prior 403.
