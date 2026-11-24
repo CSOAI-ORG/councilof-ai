@@ -162,8 +162,9 @@ def summarise(docs: dict[str, bytes | None], pulls: dict[str, dict | None], at: 
         "independently_accepted_buyer_and_payment")}
     # A partial ledger/corrections/research observation is still a partial
     # organisational readback even when the board and root respond HTTP 200.
+    metric_key = {"hf_research": "research"}
     partial = any(obs[name]["state"] != "PUBLIC_BYTES_OBSERVED"
-                  or metrics[name]["state"] == "UNCHECKABLE"
+                  or metrics[metric_key.get(name, name)]["state"] == "UNCHECKABLE"
                   for name in PUBLIC_URLS)
     return {"schema": SCHEMA, "observed_at": at,
         "scope": "PUBLIC_READ_ONLY_OBSERVATION; NO_HUMAN_AUTHORITY_OR_SAFETY_CERTIFICATION",
