@@ -4,6 +4,8 @@ on:
     paths:
       - "scripts/research/audit_rogue_ai_public_archive.py"
       - "scripts/research/test_rogue_ai_public_archive_audit.py"
+      - "scripts/research/rogue_ai_to_evidence_event.py"
+      - "scripts/research/test_rogue_ai_to_evidence_event.py"
       - "docs/research/rogue-ai-public-archive-20261124/**"
       - ".github/workflows/rogue-ai-external-source-audit.yml"
 permissions:
@@ -19,6 +21,25 @@ jobs:
           python-version: "3.12"
       - name: Verify retained exact-byte source, denominator, and claim-boundary record
         run: python3 -m unittest discover -s scripts/research -p test_rogue_ai_public_archive_audit.py -v
+      - name: Verify canonical GSPC conversion of third-party observed source with no new authority
+        run: python3 -m unittest discover -s scripts/research -p test_rogue_ai_to_evidence_event.py -v
+      - name: Build actual unsigned PARTIAL original-source audit evidence event
+        run: |
+          python3 scripts/research/rogue_ai_to_evidence_event.py --output /tmp/rogue-ai-source-partial-event.json
+          python3 - <<'PY'
+          import importlib.util,json
+          spec=importlib.util.spec_from_file_location('fabric','packages/evidence-fabric/event.py')
+          mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+          d=json.load(open('/tmp/rogue-ai-source-partial-event.json'))
+          assert mod.validate(d)==[]
+          assert d['event_id']==mod.compute_event_id(d)
+          assert d['state']=='PARTIAL' and d['value'] is None
+          assert d['signature'] is None and d['anchors']['ots']=='none'
+          assert d['observed']['gspc_board_admitted'] is False
+          assert d['observed']['actual_model_inference_by_csoai'] is False
+          assert d['observed']['external_human_receiver_accepted'] is False
+          print('EXTERNAL_SOURCE_ARITHMETIC PARTIAL UNSIGNED NOT_GSPC_MEASURED')
+          PY
       - name: Independently GET original upstream archive and recalculate its published rows
         run: |
           python3 scripts/research/audit_rogue_ai_public_archive.py --download --output /tmp/rogue-ai-external-reaudit.json
@@ -38,6 +59,11 @@ jobs:
           assert new["independent_human_recipient_accepted"] is False
           print("Original-source table arithmetic reproduced on independent GitHub CI host; no frontier model was called.")
           PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rogue-ai-unsigned-source-event-${{ github.sha }}
+          path: /tmp/rogue-ai-source-partial-event.json
+          retention-days: 30
       - uses: actions/upload-artifact@v4
         with:
           name: rogue-ai-third-party-archive-source-recheck-${{ github.sha }}
