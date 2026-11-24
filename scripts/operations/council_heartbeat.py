@@ -160,8 +160,11 @@ def summarise(docs: dict[str, bytes | None], pulls: dict[str, dict | None], at: 
         "authenticated_human_authority", "private_receiving_party_save_reopen",
         "qualified_runtime_effect_and_independent_observation",
         "independently_accepted_buyer_and_payment")}
-    partial = any(obs[k]["state"] != "PUBLIC_BYTES_OBSERVED" or metrics[k]["state"] == "UNCHECKABLE"
-                  for k in ("gspc", "root"))
+    # A partial ledger/corrections/research observation is still a partial
+    # organisational readback even when the board and root respond HTTP 200.
+    partial = any(obs[name]["state"] != "PUBLIC_BYTES_OBSERVED"
+                  or metrics[name]["state"] == "UNCHECKABLE"
+                  for name in PUBLIC_URLS)
     return {"schema": SCHEMA, "observed_at": at,
         "scope": "PUBLIC_READ_ONLY_OBSERVATION; NO_HUMAN_AUTHORITY_OR_SAFETY_CERTIFICATION",
         "summary_state": "READBACK_PARTIAL" if partial else "PUBLIC_SOURCES_OBSERVED",
