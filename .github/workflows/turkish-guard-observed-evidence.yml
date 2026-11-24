@@ -16,6 +16,11 @@ on:
       - "scripts/research/test_actual_github_effect.py"
       - "scripts/research/project_actual_host_reaction.mjs"
       - "scripts/research/project_actual_host_reaction.test.mjs"
+      - "scripts/research/live_reaction_browser_readback.py"
+      - "scripts/research/test_live_reaction_browser_readback.py"
+      - "client/src/components/ReactionResearchReview.tsx"
+      - "client/src/components/ReactionResearchReview.test.tsx"
+      - "measurement/experiments/reaction-bridge/councilos-integration.test.mjs"
       - "docs/research/turkish-guard-observed-20261124/**"
       - ".github/workflows/turkish-guard-observed-evidence.yml"
 permissions:
@@ -75,6 +80,10 @@ jobs:
           assert x["true_meok_effect_prevention_established"] is False
           print("Actual host write/readback ACCEPTED by provider; authentic human/MEOK/external receiver: NOT ESTABLISHED")
           PY
+      - name: Verify saved four actual public-browser journeys and served bundle digest
+        run: python3 -m unittest discover -s scripts/research -p test_live_reaction_browser_readback.py -v
+      - name: Verify CouncilOS source consumes the same two real observed episodes
+        run: node --test measurement/experiments/reaction-bridge/councilos-integration.test.mjs
       - name: Build actual observed, unsigned PARTIAL GSPC candidate event
         run: |
           python3 scripts/research/turkish_to_evidence_event.py --output /tmp/observed-turkish-evidence-event.json
