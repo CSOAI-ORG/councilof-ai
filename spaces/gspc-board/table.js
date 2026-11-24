@@ -491,6 +491,16 @@ function showPanel(id) {
   }
 }
 
+function renderAxisPicker() {
+  const picker = document.getElementById("all-axes");
+  const axes = [...(BOARD?.axes || [])].sort((a, b) => displayName(a).localeCompare(displayName(b)));
+  picker.innerHTML = '<option value="">Choose a published axis</option>' + axes
+    .map((axis) => `<option value="${esc(axis.axis)}">${esc(displayName(axis))}</option>`)
+    .join("");
+  picker.disabled = axes.length === 0;
+  picker.value = selected || "";
+}
+
 function readHash() {
   try {
     return decodeURIComponent(location.hash.slice(1));
@@ -510,13 +520,15 @@ function openAxis(name, updateOnly = false) {
   if (!a) return;
   if (!updateOnly) {
     selected = name;
+    document.getElementById("all-axes").value = name;
+    document.getElementById("axis-copy-status").textContent = "";
     lbAxis = name;
     history.replaceState(null, "", `#${encodeURIComponent(name)}`);
     renderMap();
     renderBoardTable();
     renderLeaderboard(name);
   }
-  const desk = document.getElementById("desk");
+  document.getElementById("axis-tool-call").textContent = JSON.stringify({ name: "get_axis", arguments: { axis: a.axis } }, null, 2);
   if (!updateOnly) {
     document.getElementById("axis-back").href = `#${activePanel === "desk" ? "ontology" : activePanel}`;
     showPanel("desk");
@@ -841,6 +853,7 @@ function renderCurrentBoard() {
     if (activePanel === "desk") showPanel("ontology");
   }
   if (BOARD) {
+    renderAxisPicker();
     printLid(BOARD);
     renderRuling(QUEUE_SUMMARY?.n, CENSUS_WALK_SUMMARY?.n_unique_ids);
     renderTape(BOARD);
@@ -922,6 +935,17 @@ function boot() {
   showLocation();
   renderRead();
   renderDoors();
+  const picker = document.getElementById("all-axes");
+  picker.addEventListener("change", () => openAxis(picker.value));
+  document.getElementById("copy-axis-tool").addEventListener("click", async () => {
+    const status = document.getElementById("axis-copy-status");
+    try {
+      await navigator.clipboard.writeText(document.getElementById("axis-tool-call").textContent);
+      status.textContent = "Tool call copied.";
+    } catch {
+      status.textContent = "Copy unavailable. Select and copy the tool call above.";
+    }
+  });
   document.getElementById("q").addEventListener("input", () => {
     query = document.getElementById("q").value;
     if (query.trim() && !["ontology", "tape-table", "boards", "hub-cells", "models"].includes(activePanel)) {

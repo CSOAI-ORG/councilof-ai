@@ -323,3 +323,20 @@ footer { padding: 1.4rem 1.2rem 2.2rem; color: var(--mute); font-size: 12px; }
   .workspace-nav { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .workspace-nav a { padding: .5rem; }
 }
+
+.axis-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: .75rem 1rem;
+  padding: .75rem;
+  margin-bottom: .8rem;
+  border: 1px solid var(--line);
+  border-radius: .85rem;
+  background: var(--panel);
+}
+.axis-toolbar .pick { flex: 1 1 13rem; min-width: 0; font-weight: 600; }
+.axis-toolbar a { padding-block: .5rem; font-weight: 600; }
+.agent-handoff { margin-top: 1rem; padding: .8rem; border: 1px solid var(--line); border-radius: .65rem; }
+.agent-handoff summary { cursor: pointer; font-weight: 700; }
+.agent-handoff pre { overflow: auto; background: var(--focus); padding: .7rem; }
