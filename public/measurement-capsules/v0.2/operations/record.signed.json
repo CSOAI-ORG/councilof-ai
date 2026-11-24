@@ -5,32 +5,28 @@
   "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
   "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
   "artifact": {
-   "path": "measurement-capsules/v0.2/2026-10-07/operations/record.json",
-   "sha256": "91114d37d85d2f16160bec985b4f6038504dc94fa30e954cedc74da790c83e2e",
+   "path": "measurement-capsules/v0.2/2026-11-04/operations/record.json",
+   "sha256": "47dbd4dd842822e17b14ca9375e1f419791995c28adffdfc5d3ce3dbe27d1b23",
    "schema": "csoai.measurement-capsule-batch/0.2",
-   "as_of": "2026-10-07T08:25:42Z"
+   "as_of": "2026-11-04T08:16:43Z"
   },
-  "merkle_root": "4e9f8c61ee90118f8ae3f8af1039e22498603faea703e9196972fe37f9df1d48",
-  "n_capsules": 1006,
+  "merkle_root": "1ab9ce6ad69896966f0d52560ae340086aab1f3de6b4050606d8f4108bdbb58e",
+  "n_capsules": 106,
   "states": {
-   "BITCOIN_ATTESTED": 10,
-   "INCLUDED_PROOF_VERIFIES": 1,
-   "LANDED_NOT_SHIPPED": 7,
-   "PENDING_CALENDAR_COMMITMENT": 1,
-   "PRESENT_SHA256_UNRECORDED": 980,
-   "TIME_TO_CORRECT_UNMEASURED": 6,
-   "UNCHECKABLE": 1
+   "BITCOIN_ATTESTED": 81,
+   "INCLUDED_PROOF_VERIFIES": 22,
+   "UNCHECKABLE": 3
   },
-  "capsules_sha256": "dd308c4f9981d59317141d11ec40067f54c76bd254b32a2ee42cfcceddcb4ebd",
+  "capsules_sha256": "72f7e0638136ec8ad8c3ba8d39b7bf2fd36bdd554b6d5714af82f1ba804e522c",
   "adapter": "operations",
   "kind": "operations"
  },
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
   "alg": "Ed25519",
-  "sig_ed25519": "f5c9b97a073a7941d083e3c3bfc596285ff9c9dee2713e59c78c0c7437bb570b6c7c90ea6618723b76fc2712270dcf87d35eb5f452268d65b8ea7b65da029f0f",
-  "payload_sha256": "b217dc213d764dd1709afae0a720b94d03d817d248b7c38f8d3056863a36b289",
-  "signed_at": "2026-10-07T08:25:43.978Z"
+  "sig_ed25519": "4cf53371c2594085997ae6a69dcade2bb4e91a81cbcac80db3e346fe03d438651de52b23f4351006a9ee65269abf38d762b6498e40b48bcafaf3b1834dac3209",
+  "payload_sha256": "a271c803392ee823820dd90b2b7d1c76c6429cc70a5bbf51ba8c69ae046144c3",
+  "signed_at": "2026-11-04T08:16:44.204Z"
  },
  "local_verification": {
   "result": "VERIFIES",
