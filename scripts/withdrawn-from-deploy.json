@@ -1,0 +1,12 @@
+{
+  "schema": "csoai.withdrawn-from-deploy/0.1",
+  "note": "Paths kept in the repository but never deployed to the public site. Unlike scripts/deploy-exclusions.json, nothing here is mirrored to Hugging Face or redirected to a mirror: a withdrawn path is simply not served.",
+  "entries": [
+    {
+      "path": "jewels",
+      "kind": "dir",
+      "since": "2026-11-24",
+      "why": "Internal working catalogue (owner gates, local working paths, internal names). Withdrawn by the 2026-11-24 public-exposure audit; scripts/surface/rebind-catalogue-live-state.mjs and its tests still read the repository copy."
+    }
+  ]
+}
