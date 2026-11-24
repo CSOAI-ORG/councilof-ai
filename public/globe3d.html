@@ -24,6 +24,8 @@
      the 3D globe never mounted. Both live E2E suites caught it ("globe — no canvas" /
      "/globe 3d renders"). The library must load BEFORE the inline script in <body>. -->
 <script>window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/';</script>
+<script>/* Framed inside another page, or asked with ?embed=1: show the globe alone. */
+if(window.self!==window.top||/[?&]embed=1(&|$)/.test(location.search))document.documentElement.classList.add('embed');</script>
 <link href="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Widgets/widgets.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Cesium.js"></script>
 <script type="application/ld+json">
@@ -302,6 +304,20 @@
     color: var(--muted);
   }
 </style>
+<style>
+  /* The globe's own box. The site template carries no rule for it, so without this the
+     canvas falls back to the engine's small default size. */
+  #c { height: min(70vh, 640px); min-height: 360px; border-radius: 12px; overflow: hidden; background: #05080e; }
+  .load { color: var(--muted, #6b7280); font-size: 13px; margin: 8px 0; }
+  /* Embed mode (?embed=1): the globe alone, filling its frame. Used by pages that already
+     carry their own header, legend and controls. The standalone page is unchanged. */
+  html.embed, html.embed body { height: 100%; margin: 0; background: #05080e; overflow: hidden; }
+  html.embed .site-header, html.embed .site-footer, html.embed main > h1, html.embed #hud,
+  html.embed #rail, html.embed #legend, html.embed #back { display: none !important; }
+  html.embed main { max-width: none; margin: 0; padding: 0; height: 100%; }
+  html.embed #c { position: fixed; inset: 0; width: 100%; height: 100%; min-height: 0; border-radius: 0; }
+  html.embed .load { position: fixed; left: 12px; bottom: 10px; z-index: 2; margin: 0; color: #94a3b8; }
+</style>
 </head>
 <body>
 <header class="site-header" data-static-shell="brand-v1">
@@ -375,9 +391,12 @@ try{ Cesium.Ion.defaultAccessToken=''; }catch(e){}
 var viewer;
 try{
   viewer=new Cesium.Viewer('c',{
-    baseLayer:new Cesium.ImageryLayer(new Cesium.UrlTemplateImageryProvider({
-      url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', subdomains:['a','b','c','d'], maximumLevel:18
-    })),
+    // Basemap: the Natural Earth II imagery shipped inside the engine's own package, darkened.
+    // No tile service and no key. The CARTO raster tiles used before are, by CARTO's own FAQ,
+    // no longer served without a key since 25 Sep 2026.
+    baseLayer:Cesium.ImageryLayer.fromProviderAsync(
+      Cesium.TileMapServiceImageryProvider.fromUrl(Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')),
+      {brightness:0.62, contrast:1.12, saturation:0.5}),
     baseLayerPicker:false, geocoder:false, homeButton:false, sceneModePicker:false,
     navigationHelpButton:false, animation:false, timeline:false, fullscreenButton:false,
     infoBox:false, selectionIndicator:false, requestRenderMode:false
@@ -391,7 +410,8 @@ if(viewer){
   sc.skyAtmosphere.show=true;
   try{ sc.skyAtmosphere.atmosphereLightIntensity=8.0; }catch(e){}
   sc.fog.enabled=true;
-  viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(20,28,26000000)});
+  // Embedded, the globe fills its frame, so it starts closer.
+  viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(20,28,document.documentElement.classList.contains('embed')?17500000:26000000)});
 
   // ----- Council nodes (points + labels) -----
   NODES.forEach(function(d){
@@ -409,7 +429,9 @@ if(viewer){
   // ----- Cross-region arcs (geodesic, raised) between binding/emerging hubs -----
   var hubs=NODES.filter(function(n){return n.tier!=='voluntary';});
   for(var i=0;i<hubs.length;i++)for(var j=i+1;j<hubs.length;j++){
-    viewer.entities.add({ layerTag:'arcs',
+    // These arcs are illustrative and are labelled only in this page's own layer list. The embed
+    // hides that list, so embedded they start off; a parent page can turn them on by command.
+    viewer.entities.add({ layerTag:'arcs', show:!document.documentElement.classList.contains('embed'),
       polyline:{ positions:Cesium.Cartesian3.fromDegreesArrayHeights([
         hubs[i].c[0],hubs[i].c[1],350000, (hubs[i].c[0]+hubs[j].c[0])/2,(hubs[i].c[1]+hubs[j].c[1])/2,1400000, hubs[j].c[0],hubs[j].c[1],350000]),
         width:1.4, arcType:Cesium.ArcType.NONE,

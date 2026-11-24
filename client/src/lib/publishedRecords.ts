@@ -88,7 +88,7 @@ const abs = (p: string) => (/^https?:\/\//.test(p) ? p : SITE + (p.startsWith("/
 const isIso = (s: unknown): s is string => typeof s === "string" && !Number.isNaN(Date.parse(s));
 
 function fail(f: FeedResult, name: string, omitted: Omission[]): f is { ok: false; url: string; reason: string } {
-  if (!f.ok) { omitted.push({ source: name + " (" + f.url + ")", reason: "source failed: " + f.reason }); return true; }
+  if ("reason" in f) { omitted.push({ source: name + " (" + f.url + ")", reason: "source failed: " + f.reason }); return true; }
   return false;
 }
 
