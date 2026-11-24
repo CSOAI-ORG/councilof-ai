@@ -118,8 +118,9 @@ export async function checkBuyerPayment(request:BuyerRequest,env:BuyerEnv,resour
     const tagged=all.some(h=>isBuyerNonce(authorization(decodeHeader(h)||{})?.nonce));
     const sidecar=payload.csoaiPurchase;
     const hasSession=request.headers.has("authorization");
-    if(!tagged && !sidecar && !hasSession)return {ok:true};
+    // Reject competing payment instructions before the legacy guest compatibility return.
     if(other && all[0]!==all[1])throw new BuyerHold("ambiguous payment headers cannot bind a purchase",400);
+    if(!tagged && !sidecar && !hasSession)return {ok:true};
     if(!auth || !isBuyerNonce(auth.nonce) || typeof auth.nonce!=="string" || !/^0x[0-9a-fA-F]{64}$/.test(auth.nonce))
       throw new BuyerHold("authenticated purchases require a request-bound nonce; guest downgrade refused",400);
     if(!object(sidecar) || sidecar.version!==1 || !validGeneration(sidecar.seed))
