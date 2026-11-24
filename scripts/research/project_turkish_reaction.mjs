@@ -67,7 +67,7 @@ export function projectObservedModelRun(record, bytes) {
     source_dataset_sha256:source,
     model_weights_sha256:pin(record.weights_sha256),
     sample_population:record.rows,
-    confusion:c,method_sha256:method,
+    confusion:{tp:c.tp,tn:c.tn,fp:c.fp,fn:c.fn},method_sha256:method,
     episode,review,
     operating_view:summarizeReactionCases([episode]),
     role:"READ_ONLY_OPERATOR_RESEARCH",

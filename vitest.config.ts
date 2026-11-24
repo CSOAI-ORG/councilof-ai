@@ -126,6 +126,17 @@ export const NODE_TEST_FILES = [
   'scripts/research/project_turkish_reaction.test.mjs',
   'scripts/research/project_actual_host_reaction.test.mjs',
   'scripts/research/turkish_councilos_import.test.mjs',
+  // Reaction-bridge engine node:test files. measurement/experiments is outside every vitest run path
+  // and was not listed here, so until 2026-11-24 its 59 tests ran in no CI job (engine audit).
+  'measurement/experiments/reaction-bridge/councilos-integration.test.mjs',
+  'measurement/experiments/reaction-bridge/hitl-candidate-canonical-fixture.test.mjs',
+  'measurement/experiments/reaction-bridge/hitl-candidate-projection.test.mjs',
+  'measurement/experiments/reaction-bridge/operating-view.test.mjs',
+  'measurement/experiments/reaction-bridge/preview.test.mjs',
+  'measurement/experiments/reaction-bridge/reaction-bridge.test.mjs',
+  'measurement/experiments/reaction-bridge/reaction-review-cli.test.mjs',
+  'measurement/experiments/reaction-bridge/reaction-engine-negative-controls.test.mjs',
+  'measurement/experiments/reaction-bridge/reaction-engine-object-integrity.test.mjs',
 ];
 
 export default defineConfig({

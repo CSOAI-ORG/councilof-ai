@@ -4,10 +4,18 @@
 export function isSha(value) {
   return typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
 }
-export function evaluateEpisode(episode) {
+export function evaluateEpisode(input) {
   const stages = ["request","method","human_approval","executor_authority","executor_response","effect","receiver_verification","retrieval","payment","repeat_use"];
   const required = stages.slice(0,7);
-  if (!episode || typeof episode !== "object" || Array.isArray(episode) || episode.schema !== "csoai.reaction-experiment/0.1")
+  if (!input || typeof input !== "object" || Array.isArray(input))
+    throw new Error("unknown experiment schema");
+  // Read each reviewed field ONCE into plain values, so validation and classification see the
+  // same data: no accessor can answer differently later, and no inherited, non-enumerable or
+  // proxy-hidden stage can be counted without being validated (2026-11-24 audit).
+  const episode = {schema:input.schema, realm:input.realm, condition:input.condition,
+    experiment_id:input.experiment_id, case_id:input.case_id, input_sha256:input.input_sha256,
+    method_sha256:input.method_sha256, stages:input.stages};
+  if (episode.schema !== "csoai.reaction-experiment/0.1")
     throw new Error("unknown experiment schema");
   if (!["SIMULATED","OBSERVED"].includes(episode.realm) || !["NO_HUMAN","HUMAN_INFORMATION","HUMAN_APPROVAL"].includes(episode.condition))
     throw new Error("invalid realm or human condition");
@@ -15,10 +23,12 @@ export function evaluateEpisode(episode) {
   for (const id of ["input_sha256","method_sha256"]) if (!isSha(episode[id])) throw new Error("missing pinned input or method digest");
   if (!episode.stages || typeof episode.stages !== "object" || Array.isArray(episode.stages))
     throw new Error("invalid stages");
-  const missing=[];
-  for (const [key, value] of Object.entries(episode.stages)) {
-    if (!stages.includes(key) || !value || typeof value !== "object" || Array.isArray(value))
+  const missing=[], reviewed=Object.create(null);
+  for (const [key, raw] of Object.entries(episode.stages)) {
+    if (!stages.includes(key) || !raw || typeof raw !== "object" || Array.isArray(raw))
       throw new Error("invalid stage");
+    const fields=Object.keys(raw);
+    const value={state:raw.state, receipt_sha256:raw.receipt_sha256, source_realm:raw.source_realm};
     if (!["UNKNOWN","REPORTED","FAILED"].includes(value.state))
       throw new Error("invalid stage state");
     if (value.state === "REPORTED" && !isSha(value.receipt_sha256))
@@ -27,11 +37,12 @@ export function evaluateEpisode(episode) {
       throw new Error("unreported stage cannot carry a receipt digest");
     if (value.source_realm !== episode.realm && value.state === "REPORTED")
       throw new Error("cross-realm evidence laundering");
-    if (Object.keys(value).some(k=>!["state","receipt_sha256","source_realm"].includes(k)))
+    if (fields.some(k=>!["state","receipt_sha256","source_realm"].includes(k)))
       throw new Error("unreviewed stage fields");
+    reviewed[key]=value;
   }
-  for (const key of required) if (episode.stages[key]?.state !== "REPORTED") missing.push(key);
-  const failures=required.filter(key=>episode.stages[key]?.state==="FAILED");
+  for (const key of required) if (reviewed[key]?.state !== "REPORTED") missing.push(key);
+  const failures=required.filter(key=>reviewed[key]?.state==="FAILED");
   const status = episode.realm==="SIMULATED" ? "SIMULATION_ONLY" : missing.length ?
     "ACCEPTANCE_INCOMPLETE" : "REPORTED_CHAIN_NEEDS_EXTERNAL_QUALIFICATION";
   return {
@@ -40,7 +51,7 @@ export function evaluateEpisode(episode) {
     condition:episode.condition, source_sha256:episode.input_sha256,
     method_sha256:episode.method_sha256, status, missing_stages:missing,
     failed_stages:failures,
-    stages:stages.map(key=>({stage:key,state:episode.stages[key]?.state??"UNKNOWN",receipt_sha256:episode.stages[key]?.receipt_sha256??null})),
+    stages:stages.map(key=>({stage:key,state:reviewed[key]?.state??"UNKNOWN",receipt_sha256:reviewed[key]?.receipt_sha256??null})),
     execute_authorized:false, human_identity_qualified:false,
     effect_independently_accepted:false, fresh_gspc_measurement:false,
     explanation:"Receipt digests and reported states are pointers, not authenticated actors, permitted effects, real human approval or independent recipient acceptance."

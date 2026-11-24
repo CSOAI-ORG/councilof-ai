@@ -7,9 +7,13 @@ import {isSha,evaluateEpisode} from "./reaction-bridge.mjs";
 function obj(v){return v!==null&&typeof v==="object"&&!Array.isArray(v);}
 function digest(v){return obj(v)&&v.alg==="sha256"&&isSha(v.value)?v.value:null;}
 function instant(t){
-  return typeof t==="string" &&
-    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(t) &&
-    Number.isFinite(Date.parse(t));
+  if(typeof t!=="string" ||
+    !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(t) ||
+    !Number.isFinite(Date.parse(t)))return false;
+  // Date.parse silently rolls impossible days forward (2026-02-30 -> 2026-03-02); refuse them.
+  const last=new Date(0);last.setUTCFullYear(+t.slice(0,4),+t.slice(5,7),0);
+  const day=+t.slice(8,10);
+  return day>=1&&day<=last.getUTCDate();
 }
 function declaredApprovalConditions(record){
   const a=record.authority,c=record.claim_maintenance,w=a.validity_window;
@@ -43,6 +47,8 @@ export function projectHitlCandidateV02({
   realm,condition,executor_authority_receipt_sha256=null,
   receiver_receipt_sha256=null
 }) {
+  // Review one plain-data snapshot: each accessor is read once; proxies and functions refuse.
+  try{record=structuredClone(record);}catch{record=null;}
   if(!obj(record)||record.profile!=="csoai.hitl-authority-effect/0.2"||
      !obj(record.request)||!obj(record.authority)||!obj(record.invocation)||
      !obj(record.effect)||!obj(record.verification)||!Array.isArray(record.limits)){
