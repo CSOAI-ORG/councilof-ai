@@ -70,7 +70,7 @@ GitHub Actions run 45312560403 (master, started 02:28 UTC and finished 04:46 UTC
 
 **Second view** (unsigned report; illustrative; it changes no flag and has no established false-alarm rate). The sequential check signalled on the first trial for C1, C3 and C4, and never for C0, C2 and C5.
 
-Rule 2 is not edited after this data, and it did not fail in the way that would call for a protocol 3. Two statements still need a new registered run before anyone makes them: a false-flag rate at or below 1/21 (many more unchanged batches), and anything about quantisation (more items, or longer outputs).
+Rule 2 is not edited after this data. Its false-flag count was 0 of 50, inside the range written before the run, so no protocol 3 is written to replace it. Two statements still need a new registered run before anyone makes them: a false-flag rate at or below 1/21 (many more unchanged batches), and anything about quantisation (more items, or longer outputs).
 
 ## 7. Related work (abstracts and method text read on 24 Nov 2026; described only as far as read)
 
