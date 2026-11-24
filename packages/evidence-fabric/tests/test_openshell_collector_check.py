@@ -87,6 +87,7 @@ def test_duplicate_sent_record_is_no_longer_identical(tmp_path):
 def test_unexpected_extra_readback_record_is_no_longer_identical(tmp_path):
     docs = back_docs()
     extra = copy.deepcopy(docs[0])
+    extra["resourceLogs"][0]["scopeLogs"][0]["logRecords"] = [copy.deepcopy(log_records(extra)[0])]
     event_id_attribute(log_records(extra)[0])["value"]["stringValue"] = "sha256:" + "f" * 64
     docs.append(extra)
     x = check.compare(SENT, write_back(tmp_path, docs))
@@ -97,7 +98,7 @@ def test_unexpected_extra_readback_record_is_no_longer_identical(tmp_path):
 
 def test_missing_readback_record_is_not_success(tmp_path):
     docs = back_docs()
-    docs.pop()
+    log_records(docs[0]).pop()
     x = check.compare(SENT, write_back(tmp_path, docs))
     assert x["result"] == "MISMATCH"
     assert len(x["missing_event_ids"]) >= 1
