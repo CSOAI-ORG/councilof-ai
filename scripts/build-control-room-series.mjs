@@ -11,6 +11,9 @@
  * no arithmetic. A file it cannot read is listed under `skipped`, never dropped silently or zeroed.
  * It signs nothing and measures nothing; the series is a copy of dated files, with their paths.
  *
+ * The site build writes the file itself (the csoai-control-room-series step in client/vite.config.ts),
+ * which keeps package.json, and so the dependency inventory made from it, unchanged.
+ *
  *   node scripts/build-control-room-series.mjs            write the file
  *   node scripts/build-control-room-series.mjs --check    exit 1 if the file on disk is out of date
  */
@@ -95,17 +98,29 @@ export function collectSeries(root) {
   };
 }
 
+/** The exact text of the series file for this checkout. */
+export function seriesText(root) {
+  return JSON.stringify(collectSeries(root), null, 1) + "\n";
+}
+
+/** Writes the series file under `root` and returns its repo-relative path. The site build calls this
+ *  (client/vite.config.ts) just before the public folder is copied, so the deployed history is the
+ *  dated files of that build. */
+export function writeSeries(root) {
+  const out = join(root, OUT);
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, seriesText(root));
+  return OUT;
+}
+
 const here = dirname(fileURLToPath(import.meta.url));
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const root = join(here, "..");
-  const text = JSON.stringify(collectSeries(root), null, 1) + "\n";
-  const out = join(root, OUT);
   if (process.argv.includes("--check")) {
-    const ok = existsSync(out) && readFileSync(out, "utf8") === text;
+    const out = join(root, OUT);
+    const ok = existsSync(out) && readFileSync(out, "utf8") === seriesText(root);
     console.log(ok ? "control-room series is current" : "control-room series is out of date: run node scripts/build-control-room-series.mjs");
     process.exit(ok ? 0 : 1);
   }
-  mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, text);
-  console.log(`wrote ${OUT}`);
+  console.log(`wrote ${writeSeries(root)}`);
 }

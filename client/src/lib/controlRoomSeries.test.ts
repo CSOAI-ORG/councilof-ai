@@ -1,8 +1,8 @@
-import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { collectCanary, collectSeries, collectWatchdog, collectX402 } from "../../../scripts/build-control-room-series.mjs";
+import { collectCanary, collectSeries, collectWatchdog, collectX402, seriesText, writeSeries } from "../../../scripts/build-control-room-series.mjs";
 import {
   WEEK_MS,
   breakSegments,
@@ -124,6 +124,29 @@ describe("collector (scripts/build-control-room-series.mjs)", () => {
     expect(s.watchdog_runs).toHaveLength(1);
     expect(s.x402_rounds).toHaveLength(1);
     expect(s.skipped.map((x: { path: string }) => x.path)).toEqual(["public/interop/x402-trust/20261102T000000Z.json"]);
+  });
+
+  it("the site build's step writes the file from the dated files beside it, and a new dated file changes it", () => {
+    const root = mkdtempSync(join(tmpdir(), "cr-"));
+    for (const d of ["public/interop/silent-route-canary-2026-09", "public/interop/watchdog-intake", "public/interop/x402-trust"]) mkdirSync(join(root, d), { recursive: true });
+    writeFileSync(join(root, "public/interop/silent-route-canary-2026-09/baseline.jsonl"), "");
+    writeFileSync(join(root, "public/interop/watchdog-intake/20261101T000000Z.json"), JSON.stringify({ as_of: "2026-11-01T00:00:00Z", totals: { sources_probed: 18, reachable: 18 } }));
+    const rel = writeSeries(root);
+    expect(rel).toBe("public/interop/control-room/series.json");
+    const first = readFileSync(join(root, rel), "utf8");
+    expect(first).toBe(seriesText(root));
+    expect(JSON.parse(first).watchdog_runs).toHaveLength(1);
+    writeFileSync(join(root, "public/interop/watchdog-intake/20261102T000000Z.json"), JSON.stringify({ as_of: "2026-11-02T00:00:00Z", totals: { sources_probed: 23, reachable: 22 } }));
+    writeSeries(root);
+    expect(JSON.parse(readFileSync(join(root, rel), "utf8")).watchdog_runs.map((r: { reachable: number }) => r.reachable)).toEqual([18, 22]);
+  });
+
+  it("the build configuration runs that step, and package.json does not", () => {
+    const repo = join(__dirname, "../../..");
+    const config = readFileSync(join(repo, "client/vite.config.ts"), "utf8");
+    expect(config).toContain("name: 'csoai-control-room-series'");
+    expect(config).toContain("writeSeries(path.resolve(__dirname, '..'))");
+    expect(readFileSync(join(repo, "package.json"), "utf8")).not.toContain("build-control-room-series");
   });
 });
 
