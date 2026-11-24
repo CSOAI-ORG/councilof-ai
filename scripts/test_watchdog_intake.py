@@ -145,10 +145,9 @@ class TestPinnedRegistryIsHonest(unittest.TestCase):
         for spec in wi.PINNED:
             self.assertTrue(str(spec.get("rights", "")).strip(), f"pinned source {spec.get('id')} has no rights line")
 
-    def test_an_unread_or_unresolved_rights_line_says_so_in_capitals(self):
+    def test_a_rights_line_resting_on_a_page_that_was_not_read_says_so_in_capitals(self):
         by_id = {s["id"]: s for s in wi.PINNED}
         self.assertTrue(by_id["nvd-cve-api"]["rights"].startswith("UNVERIFIED"))
-        self.assertTrue(by_id["openrouter"]["rights"].startswith("UNRESOLVED"))
 
     def test_the_nvd_row_carries_the_notice_the_nvd_terms_ask_for(self):
         spec = next(s for s in wi.PINNED if s["id"] == "nvd-cve-api")
@@ -164,6 +163,23 @@ class TestPinnedRegistryIsHonest(unittest.TestCase):
             wi.fetch = real_fetch
         self.assertEqual(rows[0]["rights"], spec["rights"])
         self.assertEqual(rows[0]["count"], 2)
+
+    def test_the_signal_index_carries_each_source_rights_line_and_note(self):
+        import tempfile
+        spec = next(s for s in wi.PINNED if s["id"] == "nvd-cve-api")
+        real_fetch = wi.fetch
+        wi.fetch = lambda s, timeout=30: FakeGot(body=b'{"totalResults": 7}')
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                artifact = wi.run([spec], [], pathlib.Path(d))
+                wi.write_outputs(artifact, pathlib.Path(d))
+                index = json.loads((pathlib.Path(d) / "_index.json").read_text())
+        finally:
+            wi.fetch = real_fetch
+        signal = index["signals"][0]
+        self.assertEqual(signal["rights"], spec["rights"])
+        self.assertIn("not endorsed or certified by the NVD", signal["note"])
+        self.assertEqual(signal["count"], 7)
 
     def test_pinned_ids_are_unique(self):
         ids = [s["id"] for s in wi.PINNED]

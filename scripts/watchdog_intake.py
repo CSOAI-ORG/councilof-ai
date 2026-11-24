@@ -82,7 +82,7 @@ UA = "CSOAI-watchdog-intake/0.1 (+https://councilof.ai)"
 #
 # `rights` is what the publisher's licence, terms or robots.txt were read to allow, with
 # the date read. Every pinned source carries one and it is published in every row. Where a
-# page could not be read, or a clause was not resolved, the line says so in capitals.
+# page could not be read, the line says so in capitals.
 # The table is docs/operations/INTAKE-FIELD-SOURCES-RIGHTS-2026-11-24.md.
 PINNED = [
     {
@@ -191,7 +191,7 @@ PINNED = [
         "expect": "json",
         "count_path": "data.@length",
         "grid": ["serving-fidelity"],
-        "rights": "UNRESOLVED, for the owner. OpenRouter's terms (last updated 2026-08-31, read 2026-11-24) bar using scripts, robots, crawlers or any other automated technology to scrape or copy any information on the Site or the Services. This row reads the public model catalogue once a day and keeps a count and a body hash. Whether that is scraping or copying under the clause was not decided here.",
+        "rights": "OpenRouter's API reference, read 2026-11-24, documents GET /api/v1/models as a public catalogue with optional authentication, offered for programmatic access. Its terms of service (last updated 2026-08-31) separately bar using scripts, robots or crawlers to scrape or copy information on the Site or the Services; reading a documented API is not taken here to be that, and no lawyer has reconciled the two texts. One read a day; a count and the body hash are kept.",
         "note": "Public serving catalog. Catalog size is not a measurement of serving fidelity.",
     },
     {
@@ -701,6 +701,8 @@ def write_outputs(artifact: dict, out_dir: pathlib.Path) -> dict:
                 "http_status": r.get("http_status"),
                 "grid": r.get("grid", []),
                 "body_sha256": r.get("body_sha256"),
+                "rights": r.get("rights"),
+                "note": r.get("note"),
             }
             for r in artifact["sources"]
         ],
