@@ -55,13 +55,13 @@ export const MISSIONS: readonly Mission[] = [
     id: "watchdog-intake", label: "Watchdog · ask about reporting", route: "/dashboard?tab=staff", desk: "watchdog",
     dataKind: "INTAKE", promise: "Talk to the existing Watchdog AI desk about the published reporting route.",
     boundary: "The old incident form redirects. A chat is not a filed report, emergency response or human case acceptance.",
-    cues: [/\breport (?:an? )?(?:incident|harm|failure)\b|\bfile (?:a )?complaint\b/i],
+    cues: [/\breport (?:an? )?(?:AI |artificial intelligence )?(?:incident|harm|failure)\b|\bfile (?:a )?complaint\b/i],
   },
   {
     id: "human", label: "H.I.M. · human review", route: "/dashboard?tab=staff", desk: "watchdog",
     dataKind: "HUMAN_GATED", promise: "Inspect staff escalations, competency and the human-review console.",
     boundary: "An AI desk, proposed WG member or model quorum is not a newly authenticated human approver.",
-    cues: [/\b(?:hitl|h\.?i\.?m\.?|human[- ]in[- ]the[- ]loop|human review|approval)\b/i, /\bworking groups?\b|\bwg charter\b|\bquorum\b/i],
+    cues: [/\b(?:hitl|h\.?i\.?m\.?|human[- ]in[- ]the[- ]loop|human review|approval|approve|approving)\b/i, /\bworking groups?\b|\bwg charter\b|\bquorum\b/i],
   },
   {
     id: "academy", label: "Academy · learning", route: "/dashboard?tab=academy", desk: "academy",
