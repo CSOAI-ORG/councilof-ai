@@ -18,6 +18,9 @@ jobs:
             src: https://councilof.ai/interop/effect-binding-server-probe-2026-09-22.signed.json
           # gspc-cards-mill: add once the public URL of the 12 Oct mill Merkle root is confirmed (1,479 signed mill cards).
     steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/privacy
       - name: Fetch public artifact
         run: |
           set -euo pipefail
@@ -41,6 +44,7 @@ jobs:
         if: ${{ !inputs.dry_run }}
         env: {HF_TOKEN: "${{ secrets.HF_TOKEN }}"}
         run: |
+          python3 scripts/privacy/publication_gate.py --label gspc-mirror out
           pip install -q "huggingface_hub>=0.30"
           python - <<'PY'
           import os

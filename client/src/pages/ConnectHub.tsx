@@ -65,15 +65,20 @@ const QUICK_JUMP_IDS = [
   "dify",
 ] as const;
 
-function Code({ label, text }: { label: string; text: string }) {
+/** tone "ink" is for the dark page header, where the light label and button would lose contrast. */
+function Code({ label, text, tone = "light" }: { label: string; text: string; tone?: "light" | "ink" }) {
   const [copied, setCopied] = useState(false);
   return (
     <div className="mt-3">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+        <p className={`text-xs font-bold uppercase tracking-[0.14em] ${tone === "ink" ? "ink-kicker" : "text-muted-foreground"}`}>{label}</p>
         <button
           type="button"
-          className="min-h-9 rounded-lg border border-border bg-card px-3 text-xs font-semibold text-foreground transition hover:border-emerald-600/50"
+          className={
+            tone === "ink"
+              ? "min-h-9 rounded-lg border border-[var(--ink-border)] bg-white/5 px-3 text-xs font-semibold text-[var(--ink-foreground)] transition hover:border-[var(--ink-border-hover)]"
+              : "min-h-9 rounded-lg border border-border bg-card px-3 text-xs font-semibold text-foreground transition hover:border-emerald-600/50"
+          }
           onClick={() => {
             void navigator.clipboard?.writeText(text).then(
               () => {
@@ -164,16 +169,27 @@ export default function ConnectHub() {
         <div className="section-shell relative py-10 sm:py-16">
           <p className="t-kicker ink-kicker">Connect · MCP · A2A · HTTP</p>
           <h1 className="t-band mt-3 max-w-3xl text-white">Use GSPC in your workflow.</h1>
-          <div className="max-w-3xl"><DocMeta updated="2026-10-29" slug="connect" /></div>
           <p className="t-lede mt-4 max-w-2xl ink-muted">
-            Read published evidence in an agent, show it in your product, or discuss a scoped measurement
-            for a business decision. The free MCP door needs no account or key. Verification stays free.
+            Ask your assistant to find a measurement for a model you use, show the evidence behind it or check
+            whether a claim has changed. The free MCP connection needs no account or key. Verification stays free.
           </p>
+          {/* 22 Nov 2026: the door's address first appeared 1,186 px down at 1440 px, below the page's own
+              "Was this helpful?" card. A developer's first screen now carries the one line that connects. */}
+          <div className="mt-5 max-w-3xl" data-testid="connect-quick-start">
+            <Code tone="ink" label="Free MCP door · Claude Code" text={CLAUDE_CODE_CMD} />
+            <p className="mt-2 text-sm ink-muted">
+              Cursor, Antigravity, ChatGPT and the other clients:{" "}
+              <a href="#free" className="font-semibold text-[var(--ink-foreground)] underline underline-offset-2">the free MCP door</a>{" "}
+              and <a href="#platforms" className="font-semibold text-[var(--ink-foreground)] underline underline-offset-2">your platform</a> below.
+            </p>
+          </div>
           <ul className="mt-6 flex list-none flex-wrap gap-2 p-0 text-sm font-semibold">
             {[
               ["#choose", "Choose your starting point"],
               ["#free", "Free MCP door"],
-              ["#platforms", "GSPC in your platform"],
+              ["#platforms", "Find your AI platform"],
+              ["https://github.com/Council-of-AI-CSOAI-org/csoai-agent-plugin", "Open-source agent plugin and install guide"],
+              ["/tools/#extension", "Chrome toolbar extension"],
               ["#stacks", "Install into your stack"],
               ["#agent-skills", "Portable Agent Skills & renderers"],
               ["#full", "Full MCP endpoint"],
@@ -191,6 +207,7 @@ export default function ConnectHub() {
               </li>
             ))}
           </ul>
+          <div className="max-w-3xl"><DocMeta updated="2026-11-22" slug="connect" /></div>
         </div>
       </header>
 

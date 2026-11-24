@@ -47,7 +47,7 @@ export type ToolCall = { tool: string; args: Json };
 export type Plan =
   | { kind: "tools"; intent: string; calls: ToolCall[] }
   | { kind: "needs_input"; intent: string; tool: string; missing: string; example: string }
-  | { kind: "help"; intent: "help" | "unknown" | "buying" }
+  | { kind: "help"; intent: "help" | "unknown" | "buying" | "gspc-definition" }
   | { kind: "help"; intent: "guidance"; topic: GuidanceTopic };
 
 export type Citation = { tool: string; record_id: string | null; url: string | null };
@@ -178,6 +178,12 @@ export function routeIntent(raw: string): Plan {
   const text = String(raw ?? "").trim();
   const t = text.toLowerCase().replace(/\s+/g, " ");
   if (!t) return { kind: "help", intent: "unknown" };
+
+  // Definition is not measurement. A public Ask smoke query asking what
+  // GSPC stands for incorrectly returned board totals, not the definition.
+  // Keep this narrow authored answer separate from live measured counts.
+  if (/\b(?:what (?:does|do) (?:the )?gspc (?:stand for|mean)|define (?:the )?gspc|expand (?:the )?gspc|gspc (?:acronym|definition|meaning))\b/.test(t))
+    return { kind: "help", intent: "gspc-definition" };
 
   // 1. A pasted measurement capsule.
   if (/measurement-capsule|capsule_id/.test(t)) {
@@ -470,6 +476,14 @@ export async function executePlan(
   onEvent?: (e: { phase: "start" | "end"; call: ToolCall; outcome?: ToolOutcome; id: string }) => void | Promise<void>,
 ): Promise<TalkAnswer> {
   if (plan.kind === "help") {
+    if (plan.intent === "gspc-definition") {
+      return {
+        kind: "help", intent: "gspc-definition", grounded: false,
+        answer: "GSPC stands for Governance, Safety, Provenance and Continuity. It is the Council of AI's measurement board, not a conformity certification or a promise that any model is safe.\n\nSource: https://councilof.ai/cite/gspc (published board citation); https://councilof.ai/methodology/.",
+        label: "PUBLISHED_GUIDANCE", tool_calls: [], citations: [],
+        answered_by: "published board citation (authored definition; no tool called)",
+      };
+    }
     if (plan.intent === "guidance") {
       return { kind: "help", intent: "guidance", grounded: false, answer: guidanceAnswer(plan.topic), label: "GUIDANCE", tool_calls: [], citations: [], answered_by: "published product guidance (no tool called)" };
     }

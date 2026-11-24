@@ -171,3 +171,50 @@ repair the previously observed model judgement error by itself.
 
 See [the process consolidation research](../../docs/integrations/meok-process-consolidation-20261109.md)
 for protocol boundaries, reuse targets and the measured-improvement experiment.
+
+
+## Read-only Layer-0 correction + source-witness context
+
+The existing MEOK stdio bridge now exposes a separate *candidate* reference method:
+
+\`\`\`json
+{"name":"meok_read_correction_evidence","arguments":{"correction_id":"C-2026-1118-01"}}
+\`\`\`
+
+Its caller input is an optional exact bounded public ID, never a URL or a command.
+The reader only GETs three fixed public endpoints:
+
+- \`/api/corrections\` — publisher-maintained source correction records;
+- \`/root.json\` — current publisher root bytes and declared Merkle/card count;
+- \`/interop/root-witness-pointer.json\` — publisher-side OTS/Rekor status declarations.
+
+It SHA-256-hashes exact HTTP response bytes, counts independently observed
+\`EXACT_SOURCE_DECLARED\`, \`WINDOW_BOUNDED_SOURCE_DECLARED\` and \`UNMEASURED\`
+corrections; projects only aggregate counts, an optional selected correction ID,
+its record hash and its source-declared dates. Neither raw correction prose nor
+untrusted tools/permissions are copied into the model-visible view. A source
+claim of \`signature_state: VALID\` stays \`declared_source_signature_state\`;
+the reader deliberately returns \`issuer_signature: NOT_VERIFIED_BY_THIS_READER\`.
+
+This is an **information boundary**, not a new root-signing or human-authority
+boundary. The independent existing verifiers remain
+\`scripts/verify_corrections_signature.py\`,
+\`scripts/verify-estate.mjs\`, and
+\`scripts/layer0/verify_layer0_records.py\`.
+The MEOK tool does not verify Merkle inclusion, its OTS or Rekor proofs,
+the original detection time, or the first public publication time.
+It does not produce a canonical \`csoai.evidence-event/0.1\` record or an
+actual human approval. A later runner must call the existing independent
+verification gates before admitting data into durable memory or a task effect.
+
+This additive source is **not automatically installed on the connected Macs**:
+the active local bridge requires separate authorised operator installation,
+rollback and producer/receiver qualification. No signing key, model training,
+paid provider, live report intake, or durable store was touched here.
+
+Offline controls:
+
+\`\`\`sh
+node --test mcp/meok-gspc-layer0/correction-context.node-test.mjs
+npx vitest run mcp/meok-gspc-layer0/correction-context.test.ts
+\`\`\`

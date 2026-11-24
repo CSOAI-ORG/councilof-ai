@@ -34,6 +34,7 @@ import {
 } from "./npm-release-state.mjs";
 import { workingGroupKit } from "../working-groups/render-kit.mjs";
 import { charterKit } from "../charter-federation/render-kit.mjs";
+import { registryEntryText } from "./registry-text.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const args = process.argv.slice(2);
@@ -143,15 +144,23 @@ const emit = (rel, text) => {
 };
 
 // ── 1. MCP Registry server.json, both namespaces ─────────────────────────────────────────────
+// The descriptions and the tool fields come from registry-text.mjs. A published registry version
+// cannot be edited, so from the version after 1.5.0 they name no count and no tool list; while the
+// version is still 1.5.0 they are exactly what the registry holds for 1.5.0.
+const REG = registryEntryText(REMOTE_VERSION, {
+  fleetLine: FLEET,
+  freeIds: free.map((t) => t.id),
+  paidIds: paid.map((t) => t.id),
+  servedFree: SERVED_FREE,
+});
 const regMeta = {
   "io.modelcontextprotocol.registry/publisher-provided": {
     "ai.councilof/doctrine": DOCTRINE,
-    "ai.councilof/fleet": { free: free.map((t) => t.id), paid: paid.map((t) => t.id) },
+    ...REG.gspc.tools,
     "ai.councilof/generator": "scripts/harness-x/render.mjs from council-os/distribution.json",
   },
 };
-const regDescription = `${FLEET}: GSPC board, evidence, Ed25519 card verify. Measurement only.`;
-if (regDescription.length > 100) throw new Error(`registry description is ${regDescription.length} chars; the 2025-12-11 schema allows 100`);
+const regDescription = REG.gspc.description;
 emit("distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json", j({
   $schema: mcpServer.$schema,
   name: dist.registry_names.github,
@@ -183,13 +192,12 @@ emit("distribution/mcp-registry/ai.councilof-gspc/server.json", j({
 }));
 // The free door's own name, ai.councilof/gspc-free. Its 1.4.3 and 1.4.4 were published from a
 // descriptor this renderer did not own, so the listing still said "14 free read-only tools" (read
-// 20 Nov 2026) while /mcp/free served 49. Rendered here, the count is the length of the definitions
-// the free door serves (functions/mcp/gspc-tools.json), like every other count. The remote is the
-// free door itself, which registers no payment tool; the same domain login publishes it.
+// 20 Nov 2026) while /mcp/free served 49. Rendered here, its text and tool fields follow
+// registry-text.mjs, like the domain name's. The remote is the free door itself, which registers no
+// payment tool; the same domain login publishes it.
 const FREE_REGISTRY_NAME = dist.registry_names.domain_free;
 if (!FREE_REGISTRY_NAME) throw new Error("council-os/distribution.json registry_names.domain_free is missing");
-const regFreeDescription = `${SERVED_FREE.length} free read-only tools: GSPC board, signed card and capsule verify, Merkle proofs, route.`;
-if (regFreeDescription.length > 100) throw new Error(`free registry description is ${regFreeDescription.length} chars; the 2025-12-11 schema allows 100`);
+const regFreeDescription = REG.gspcFree.description;
 emit("distribution/mcp-registry/ai.councilof-gspc-free/server.json", j({
   $schema: mcpServer.$schema,
   name: FREE_REGISTRY_NAME,
@@ -201,7 +209,7 @@ emit("distribution/mcp-registry/ai.councilof-gspc-free/server.json", j({
   _meta: {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "ai.councilof/doctrine": DOCTRINE,
-      "ai.councilof/fleet": { free: SERVED_FREE, paid: [] },
+      ...REG.gspcFree.tools,
       "ai.councilof/generator": "scripts/harness-x/render.mjs from council-os/distribution.json",
     },
   },

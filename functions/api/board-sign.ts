@@ -46,6 +46,7 @@ const canonical = canonicalBytes;
 // The capsule-index entry is the daily measurement-capsule index producer, moved here from oracle-micro-2.
 export const EXACT_WORKFLOW_REFS: ReadonlySet<string> = new Set([
   "CSOAI-ORG/councilof-ai/.github/workflows/capsule-index-daily.yml@refs/heads/master",
+  "CSOAI-ORG/councilof-ai/.github/workflows/silent-change-watch.yml@refs/heads/master",
 ]);
 const allowedWf = ["public-root", "hf-fin-shells", "hf-inference-mill", "auto-eat-sign"];
 

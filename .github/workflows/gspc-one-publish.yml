@@ -30,6 +30,7 @@ jobs:
         run: |
           pip install -q "huggingface_hub>=0.25"
           mkdir -p out/hf && cp public/interop/gspc-one.json out/hf/ && cp scripts/gspc-one/HF_README.md out/hf/README.md
+          python3 scripts/privacy/publication_gate.py --label gspc-one-hf out/hf
           python3 - <<'PY'
           import os
           from huggingface_hub import HfApi
@@ -44,6 +45,7 @@ jobs:
           pip install -q "kaggle>=1.7" six
           mkdir -p out/kg && cp public/interop/gspc-one.json out/kg/
           printf '{"title":"GSPC one: Council of AI (CSOAI) measurements","id":"nicktempleman/gspc-one","licenses":[{"name":"CC-BY-4.0"}]}' > out/kg/dataset-metadata.json
+          python3 scripts/privacy/publication_gate.py --label gspc-one-kaggle out/kg
           if kaggle datasets status nicktempleman/gspc-one >/dev/null 2>&1; then
             kaggle datasets version -p out/kg -m "gspc-one nightly export"
           else

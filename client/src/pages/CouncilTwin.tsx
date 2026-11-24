@@ -3,7 +3,7 @@ const EMG_GW = "/api";
 /**
  * DESIGN — not a live claim. This page shows what a personalized Sovereign Twin
  * experience WOULD look like. The visualizer is an illustrative canvas; the
- * "charge" meter is a UI affordance. The passport-mint flow hits a real signing
+ * "charge" meter is a UI affordance. The signed-record flow hits a real signing
  * endpoint, but the resulting "twin" is a signed personalisation record, not
  * a claim about emergent AI behaviour. See CouncilModelCard for the canonical
  * disclaimer: "Not AGI, not conscious in the literal sense — any language
@@ -86,14 +86,14 @@ export default function CouncilTwin() {
 
         {/* Digital sovereign twin + signed ID passport (real Ed25519 signing) */}
         <div className="mt-6 rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-transparent p-5 text-left">
-          <div className="text-sm font-bold text-emerald-200">Mint a digital ID passport</div>
+          <div className="text-sm font-bold text-emerald-200">Request a signed personalisation record</div>
           <p className="mt-1 text-[13px] text-emerald-100/75">This is a digital-twin and agent-passport design. A published Ed25519 identity can be verified only from its specific artifact. This page does not claim that every deployed agent already has a passport or that ordinary actions are signed.</p>
           <div className="mt-3 flex flex-wrap gap-2">
             <input value={pName} onChange={(e) => setPName(e.target.value)} placeholder="Holder — you, an agent, or an org" className="flex-1 min-w-[200px] rounded-lg border border-emerald-500/25 bg-black/30 px-3 py-2 text-sm text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" />
             <select value={pKind} onChange={(e) => setPKind(e.target.value)} className="rounded-lg border border-emerald-500/25 bg-black/30 px-2 py-2 text-sm text-emerald-50">
               <option>Council twin</option><option>Enterprise agent</option><option>Government agent</option><option>Humanoid / robot</option>
             </select>
-            <button onClick={mintPassport} disabled={minting} className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{minting ? "Signing\u2026" : "Mint signed passport"}</button>
+            <button onClick={mintPassport} disabled={minting} className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{minting ? "Signing\u2026" : "Sign a record"}</button>
           </div>
           {passport && (
             <div className="mt-3 rounded-xl border border-emerald-500/20 bg-black/30 p-3 font-mono text-[11px] text-emerald-100/85">

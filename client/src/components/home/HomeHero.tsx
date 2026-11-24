@@ -94,22 +94,28 @@ export default function HomeHero() {
         data-journey-index
       >
         <a href="#board">
-          <span>01</span> Published results
+          <span>01</span> GSPC Living Board
         </a>
         <a href="#watchdog">
           <span>02</span> Public Watchdog
         </a>
         <a href="#products">
-          <span>03</span> Put evidence to work
+          <span>03</span> Council OS and evidence tools
         </a>
         <a href="#learning">
-          <span>04</span> Academy and practice
+          <span>04</span> Academy, games and human review
         </a>
         <a href="#how-it-works">
           <span>05</span> How to check it
         </a>
         <a href="#developers">
           <span>06</span> For developers
+        </a>
+        <a href="/dashboard/?tab=home">
+          <span>07</span> Open Council OS
+        </a>
+        <a href="/tools/#extension">
+          <span>08</span> Browser extension and plugins
         </a>
       </div>
     </section>

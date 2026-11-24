@@ -38,14 +38,14 @@ ORDER = ["self_parity", "tool_drift", "cross_ledger", "public_signals", "contrac
          "operations", "claim_watch", "busabase", "meok"]
 # Where each adapter's source record was produced (fleet/jobs.yaml, capsule-daily.sh). Stated in the signed index.
 WHERE = {
-    "self_parity": "oracle-micro-2 (self-parity, cron 05:10Z)",
-    "tool_drift": "a RunPod pod (the tool-drift probe), with its earlier observations on oracle-micro-2",
-    "cross_ledger": "oracle-micro-2 (xl-daily, cron 04:20Z)",
-    "public_signals": "oracle-micro-2 with network reads on a RunPod backup pod",
-    "contract_parity": "oracle-micro-2 (a signed census record, weekly)",
-    "a2a_card": "oracle-micro-2 (a signed census record, weekly)",
-    "operations": "oracle-micro-2 (a harvest that reads the RunPod build pod's deploy logs)",
-    "claim_watch": "oracle-micro-2 (claim-watch receipts, cron 07:50Z)",
+    "self_parity": "the operator's scheduled host (self-parity, cron 05:10Z)",
+    "tool_drift": "a RunPod pod (the tool-drift probe), with its earlier observations on the operator's scheduled host",
+    "cross_ledger": "the operator's scheduled host (xl-daily, cron 04:20Z)",
+    "public_signals": "the operator's scheduled host with network reads on a RunPod backup pod",
+    "contract_parity": "the operator's scheduled host (a signed census record, weekly)",
+    "a2a_card": "the operator's scheduled host (a signed census record, weekly)",
+    "operations": "the operator's scheduled host (a harvest that reads the RunPod build pod's deploy logs)",
+    "claim_watch": "the operator's scheduled host (claim-watch receipts, cron 07:50Z)",
     "busabase": "the RunPod build pod (a snapshot record)",
     "meok": "the RunPod build pod (a snapshot record)",
 }

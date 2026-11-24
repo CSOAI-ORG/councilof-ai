@@ -59,6 +59,16 @@ DERIVED_VIEWS = (
     "public/llms-full.txt",
 )
 
+# Folders whose every file is a derived view. Since 22 Nov 2026 scripts/generate-cards-bundle.mjs
+# splits the cards bundle: public/cards-bundle.json is the index (it stays in DERIVED_VIEWS) and
+# public/cards-bundle/<c>.json are its 16 shards. A shard is a function of the tree exactly as the
+# 0.1 file was, so a conflict on one is resolved by the generator, and the rebuilt folder is staged
+# whole (-A), so a shard the generator stops writing leaves the tree with it. Only paths INSIDE a
+# listed folder count; a lookalike such as public/cards-bundle-old/ is still a real conflict.
+DERIVED_DIRS = (
+    "public/cards-bundle",
+)
+
 # A stamped artefact is a file with a sibling OpenTimestamps proof. For a derived view the
 # GENERATOR decides the bytes; for a stamped artefact the PROOF decides them, and the only
 # proof that exists for master's bytes is the one that sits beside them on master.
@@ -70,6 +80,7 @@ STAMPED_SUFFIX = ".ots"
 # it sits in. So the pointer follows the root.
 ROOT_PATH = "public/root.json"
 ROOT_POINTER = "public/interop/root-witness-pointer.json"
+ROOT_HEALTH = "public/publisher-health.json"
 RELEASE_GATE = "scripts/root-witness-release-gate.py"
 
 # The manifest is generated from the .ots files in the tree; the views quote it. This order is
@@ -126,7 +137,7 @@ def unmerged_paths(repo: Path) -> list[str]:
 
 
 def is_derived(path: str) -> bool:
-    return path in DERIVED_VIEWS
+    return path in DERIVED_VIEWS or any(path.startswith(d + "/") for d in DERIVED_DIRS)
 
 
 def has_path(repo: Path, ref: str, path: str) -> bool:
@@ -231,6 +242,65 @@ def _pointer_side_for_merged_root(repo: Path, conflicted: list[str]) -> str | No
     if ours_binds:
         return "ours"
     if theirs_binds:
+        return "theirs"
+    return None
+
+
+def _health_binds_root(health_raw: bytes | str, root_raw: bytes | str) -> bool:
+    """Publisher health describes only the exact retained root, never another epoch.
+
+    The root signature/Merkle/witness gate runs separately after reconciliation.
+    This check is a typed *source report to source root* binding, not a
+    cryptographic signature on publisher-health.json itself.
+    """
+    try:
+        h = json.loads(_as_bytes(health_raw))
+        root = json.loads(_as_bytes(root_raw))
+    except (TypeError, ValueError):
+        return False
+    if not isinstance(h, dict) or not isinstance(root, dict):
+        return False
+    halt = h.get("halt")
+    if not isinstance(halt, dict):
+        return False
+    return (
+        root.get("kind") == "csoai.public-root/v1"
+        and isinstance(root.get("as_of"), str)
+        and isinstance(root.get("card_count"), int)
+        and root.get("card_count") >= 0
+        and h.get("kind") == "csoai.publisher-health/v0"
+        and h.get("writer") == "scripts/publish_public_root.py"
+        and h.get("as_of") == root["as_of"]
+        and type(h.get("card_count")) is int
+        and h["card_count"] == root["card_count"]
+        and h.get("dry_run") is False
+        and h.get("key") == "present"
+        and h.get("envelope") == "signed"
+        and halt.get("split") is False
+        and type(halt.get("unsigned_new_leaves")) is int
+        and halt["unsigned_new_leaves"] == 0
+        and halt.get("missing_key") is False
+    )
+
+
+def _health_side_for_merged_root(repo: Path, conflicted: list[str]) -> str | None:
+    """Select conflicted health *only* if it matches the merged root version.
+
+    No arbitrary favoring of the newer timestamp, no loss of independent
+    publisher/witness checks. If both sides fail, the conflict remains real.
+    """
+    if ROOT_HEALTH not in conflicted:
+        return None
+    root_raw = _merged_root_bytes(repo)
+    if root_raw is None:
+        return None
+    ours = git(repo, "show", f":2:{ROOT_HEALTH}", check=False)
+    theirs = git(repo, "show", f":3:{ROOT_HEALTH}", check=False)
+    ours_ok = ours.returncode == 0 and _health_binds_root(ours.stdout, root_raw)
+    theirs_ok = theirs.returncode == 0 and _health_binds_root(theirs.stdout, root_raw)
+    if ours_ok:
+        return "ours"
+    if theirs_ok:
         return "theirs"
     return None
 
@@ -343,7 +413,11 @@ def reconcile(
         # stays a real conflict and this fails closed exactly as it did before. The guarantee
         # this script exists to hold is not weakened; it is stated in terms of the artefact.
         pointer_side = _pointer_side_for_merged_root(repo, conflicted)
-        bound = [p for p in conflicted if pointer_side and p == ROOT_POINTER]
+        health_side = _health_side_for_merged_root(repo, conflicted)
+        bound = [p for p in conflicted if (
+            (pointer_side and p == ROOT_POINTER)
+            or (health_side and p == ROOT_HEALTH)
+        )]
         real = [p for p in conflicted
                 if not is_derived(p) and p not in stamped and p not in bound]
         if real:
@@ -362,8 +436,9 @@ def reconcile(
                     git(repo, "checkout", "--theirs", "--", proof, check=False)
                     git(repo, "add", "--", proof)
             elif path in bound:
-                # The pointer follows the root the merge kept.
-                checkout = git(repo, "checkout", f"--{pointer_side}", "--", path, check=False)
+                # Only the pointer OR health that binds the retained root is selected.
+                side = pointer_side if path == ROOT_POINTER else health_side
+                checkout = git(repo, "checkout", f"--{side}", "--", path, check=False)
                 if checkout.returncode != 0:
                     git(repo, "rm", "--quiet", "--", path)
             else:
@@ -376,6 +451,10 @@ def reconcile(
 
     ran = rebuild_derived_views(repo, builder, generator, bundle, lifecycle)
     git(repo, "add", "--", *DERIVED_VIEWS)
+    for folder in DERIVED_DIRS:
+        # A tree whose generator predates the split has no such folder; there is nothing to stage.
+        if (repo / folder).is_dir():
+            git(repo, "add", "-A", "--", folder)
     git(repo, "add", "--", "public/interop/ots")
     if commit:
         staged = git(repo, "diff", "--cached", "--quiet", check=False)
@@ -393,8 +472,12 @@ def _write(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def _make_repo(tmp: Path, *, master_changes_root: bool, candidate_changes_root: bool) -> Path:
-    """A candidate repo where the three derived views conflict, and optionally root.json too."""
+def _make_repo(tmp: Path, *, master_changes_root: bool, candidate_changes_root: bool,
+               also_conflict: str | None = None) -> Path:
+    """A candidate repo where the three derived views conflict, and optionally root.json too.
+
+    `also_conflict` names one more path that both sides change differently (a bundle shard, or
+    a lookalike of one)."""
     repo = tmp / "repo"
     repo.mkdir(parents=True)
     git(repo, "init", "-q")
@@ -406,7 +489,8 @@ def _make_repo(tmp: Path, *, master_changes_root: bool, candidate_changes_root: 
     empty_hooks = repo / ".no-hooks"
     empty_hooks.mkdir(exist_ok=True)
     git(repo, "config", "core.hooksPath", str(empty_hooks))
-    for view in DERIVED_VIEWS:
+    extra = (also_conflict,) if also_conflict else ()
+    for view in DERIVED_VIEWS + extra:
         _write(repo / view, "base\n")
     _write(repo / "public/root.json", "base root\n")
     _write(repo / "scripts/ots_manifest_rebuild.py", "")
@@ -416,7 +500,7 @@ def _make_repo(tmp: Path, *, master_changes_root: bool, candidate_changes_root: 
     git(repo, "branch", "-M", "master")
 
     # master moves the derived views, and optionally root.json
-    for view in DERIVED_VIEWS:
+    for view in DERIVED_VIEWS + extra:
         _write(repo / view, "master\n")
     if master_changes_root:
         _write(repo / "public/root.json", "master root\n")
@@ -425,7 +509,7 @@ def _make_repo(tmp: Path, *, master_changes_root: bool, candidate_changes_root: 
 
     # the candidate moves them differently, from the same base
     git(repo, "checkout", "-q", "-b", "candidate", "HEAD~1")
-    for view in DERIVED_VIEWS:
+    for view in DERIVED_VIEWS + extra:
         _write(repo / view, "candidate\n")
     if candidate_changes_root:
         _write(repo / "public/root.json", "candidate root\n")
@@ -439,6 +523,18 @@ def _make_repo(tmp: Path, *, master_changes_root: bool, candidate_changes_root: 
     git(repo, "fetch", "-q", "origin")
     git(repo, "checkout", "-q", "candidate")
     return repo
+
+
+def _shard_stub(repo: Path, log: Path) -> None:
+    """A bundle producer that also writes two shards of the merged root, like the real one."""
+    _write(repo / "scripts/generate-cards-bundle.mjs",
+           f"import {{ appendFileSync, mkdirSync, readFileSync, writeFileSync }} from 'node:fs';\n"
+           f"appendFileSync({str(log)!r}, 'bundle\\n');\n"
+           f"const root = readFileSync('public/root.json', 'utf8');\n"
+           f"writeFileSync('public/card-feed-index.json', 'feed-of:' + root);\n"
+           f"mkdirSync('public/cards-bundle', {{ recursive: true }});\n"
+           f"writeFileSync('public/cards-bundle/0.json', 'shard-0-of:' + root);\n"
+           f"writeFileSync('public/cards-bundle/1.json', 'shard-1-of:' + root);\n")
 
 
 def _make_stamped_repo(tmp: Path) -> Path:
@@ -878,10 +974,128 @@ def run_selftest() -> int:
         print(f"  {'ok ' if ok else 'BAD'} without the producer the feed index goes stale")
         failures += not ok
 
+    # 14. A bundle shard conflicts (22 Nov 2026 split). It is a derived view: the merge must
+    #     survive it, and the tree must carry the shards the producer wrote for the merged root,
+    #     the one it rewrote AND the one it added (the folder is staged whole). Read HEAD.
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = _make_repo(Path(tmp), master_changes_root=False, candidate_changes_root=True,
+                          also_conflict="public/cards-bundle/0.json")
+        log = Path(tmp) / "order.log"
+        builder, generator = _stubs(repo, log)
+        _shard_stub(repo, log)
+        try:
+            reconcile(repo, builder=builder, generator=generator)
+            root_raw = git(repo, "cat-file", "-p", "HEAD:public/root.json").stdout
+            shard0 = git(repo, "cat-file", "-p", "HEAD:public/cards-bundle/0.json").stdout
+            shard1 = git(repo, "cat-file", "-p", "HEAD:public/cards-bundle/1.json").stdout
+            ok = shard0 == f"shard-0-of:{root_raw}" and shard1 == f"shard-1-of:{root_raw}"
+            detail = "both shards hold the merged root" if ok else f"shards {shard0!r} {shard1!r}"
+        except (RealConflict, Uncheckable) as exc:
+            ok = False
+            detail = str(exc)[:100]
+        print(f"  {'ok ' if ok else 'BAD'} a conflicting bundle shard is rebuilt and committed: {detail}")
+        failures += not ok
+
+    # 15. The CONTROL for case 14: with the producer suppressed, the shard keeps a side's bytes,
+    #     so case 14's assertion can go red.
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = _make_repo(Path(tmp), master_changes_root=False, candidate_changes_root=True,
+                          also_conflict="public/cards-bundle/0.json")
+        log = Path(tmp) / "order.log"
+        builder, generator = _stubs(repo, log)
+        reconcile(repo, builder=builder, generator=generator, bundle=["node", "-e", ""])
+        root_raw = git(repo, "cat-file", "-p", "HEAD:public/root.json").stdout
+        shard0 = git(repo, "cat-file", "-p", "HEAD:public/cards-bundle/0.json").stdout
+        ok = shard0 != f"shard-0-of:{root_raw}"
+        print(f"  {'ok ' if ok else 'BAD'} without the producer the shard goes stale")
+        failures += not ok
+
+    # 16. A lookalike of the shard folder is NOT derived: it stays a real conflict.
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = _make_repo(Path(tmp), master_changes_root=False, candidate_changes_root=False,
+                          also_conflict="public/cards-bundle-old/0.json")
+        log = Path(tmp) / "order.log"
+        builder, generator = _stubs(repo, log)
+        try:
+            reconcile(repo, builder=builder, generator=generator)
+            ok = False
+            detail = "a lookalike path was resolved automatically"
+        except RealConflict as exc:
+            ok = "public/cards-bundle-old/0.json" in str(exc)
+            detail = str(exc)[:100]
+        except Uncheckable as exc:
+            ok = False
+            detail = f"unexpected UNCHECKABLE: {exc}"
+        print(f"  {'ok ' if ok else 'BAD'} a lookalike of the shard folder still fails closed: {detail}")
+        failures += not ok
+
+    # 17. Real recurring failure, 22 Nov: candidate and master both wrote
+    # publisher-health.json, but the one on the candidate describes its own
+    # newer root. The candidate's root is uncontested; the health is not.
+    # Choosing the health that binds the retained root is not a timestamp guess.
+    for bad in (False, True):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = _make_repo(
+                Path(tmp), master_changes_root=False, candidate_changes_root=True,
+                also_conflict=ROOT_HEALTH)
+            stamp = "2026-11-22T06:18:10Z"
+            root = {"kind": "csoai.public-root/v1", "as_of": stamp,
+                    "card_count": 452, "merkle_root": "1" * 64}
+            health = {"kind": "csoai.publisher-health/v0",
+                      "writer": "scripts/publish_public_root.py",
+                      "as_of": ("2026-11-20T00:00:00Z" if bad else stamp),
+                      "card_count": 452, "dry_run": False, "key": "present",
+                      "envelope": "signed",
+                      "halt": {"split": False, "missing_key": False,
+                               "unsigned_new_leaves": 0}}
+            _write(repo / ROOT_PATH, json.dumps(root))
+            _write(repo / ROOT_HEALTH, json.dumps(health))
+            git(repo, "add", "--", ROOT_PATH, ROOT_HEALTH)
+            git(repo, "commit", "-q", "-m", "candidate bound source health")
+            log = Path(tmp) / "order.log"
+            builder, generator = _stubs(repo, log)
+            try:
+                reconcile(repo, builder=builder, generator=generator)
+                got_health = git(repo, "cat-file", "-p", f"HEAD:{ROOT_HEALTH}").stdout
+                got_root = git(repo, "cat-file", "-p", f"HEAD:{ROOT_PATH}").stdout
+                ok = not bad and _health_binds_root(got_health, got_root)
+                detail = "candidate health matches merged root" if ok else "invalid health was accepted"
+            except RealConflict as exc:
+                ok = bad and ROOT_HEALTH in str(exc)
+                detail = str(exc)[:120]
+            except Uncheckable as exc:
+                ok = False
+                detail = f"unexpected UNCHECKABLE: {str(exc)[:100]}"
+            print(f"  {'ok ' if ok else 'BAD'} publisher-health binding {'rejects mismatched epoch' if bad else 'selects matching epoch'}: {detail}")
+            failures += not ok
+
+    # 19. A self-declared healthy status must never override a failed halt,
+    # a dry run or an unsigned report, even when as_of/card_count match.
+    good = {"kind": "csoai.publisher-health/v0",
+            "writer": "scripts/publish_public_root.py",
+            "as_of": "2026-11-22T06:18:10Z", "card_count": 452,
+            "dry_run": False, "key": "present", "envelope": "signed",
+            "halt": {"split": False, "unsigned_new_leaves": 0, "missing_key": False}}
+    root = {"kind": "csoai.public-root/v1", "as_of": good["as_of"], "card_count": 452}
+    variants = [
+        {**good, "dry_run": True},
+        {**good, "key": "absent"},
+        {**good, "envelope": "unsigned"},
+        {**good, "card_count": 453},
+        {**good, "halt": {**good["halt"], "split": True}},
+        {**good, "halt": {**good["halt"], "missing_key": True}},
+        {**good, "halt": {**good["halt"], "unsigned_new_leaves": 1}},
+    ]
+    ok = _health_binds_root(json.dumps(good), json.dumps(root)) and all(
+        not _health_binds_root(json.dumps(candidate), json.dumps(root))
+        for candidate in variants)
+    print(f"  {'ok ' if ok else 'BAD'} publisher-health wrong-card-count, dry-run, unsigned and halted negative controls")
+    failures += not ok
+
     if failures:
         print(f"root-candidate-reconcile selftest: FAIL ({failures} case(s))", file=sys.stderr)
         return 1
-    print("root-candidate-reconcile selftest: PASS (13 cases)")
+    print("root-candidate-reconcile selftest: PASS (19 cases)")
     return 0
 
 

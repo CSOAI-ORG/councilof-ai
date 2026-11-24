@@ -8,18 +8,6 @@
   "source_rights": "Original source and artifact terms apply independently.",
   "entry_points": [
     {
-      "id": "claim-capture",
-      "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/claim-capture/latest.json",
-      "method": "GET",
-      "scope": "Version-pinned public capture release; not a paid product revision."
-    },
-    {
-      "id": "operations",
-      "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/operations/claim-maintenance/latest.json",
-      "method": "GET",
-      "scope": "Dated operational readback with per-producer observation times."
-    },
-    {
       "id": "gspc",
       "url": "https://councilof.ai/api/gspc",
       "method": "GET",
@@ -47,6 +35,18 @@
         "text/event-stream"
       ],
       "scope": "Discovery only; do not call declared paid or mutating tools without separate authority."
+    }
+  ],
+  "retired_entry_points": [
+    {
+      "id": "claim-capture",
+      "retired": "2026-11-21",
+      "reason": "Published only in the Hugging Face dataset csoai/councilof-ai-mirror, deleted on 21 Nov 2026. The last release was published on 24 Sep 2026; no other host carries this family."
+    },
+    {
+      "id": "operations",
+      "retired": "2026-11-21",
+      "reason": "Published only in the Hugging Face dataset csoai/councilof-ai-mirror, deleted on 21 Nov 2026. The last release was published on 24 Sep 2026; no other host carries this family."
     }
   ]
 }

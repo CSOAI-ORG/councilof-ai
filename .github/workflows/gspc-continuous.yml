@@ -14,7 +14,7 @@ on:
         required: false
         default: "30"
       lanes:
-        description: "Frozen August lanes to pulse, space-separated (blank = this slot's three)"
+        description: "Frozen August lanes to pulse, space-separated (blank = this slot's five)"
         required: false
         default: ""
       lane_limit:
@@ -52,20 +52,25 @@ jobs:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           GEMINI_TOKEN: ${{ secrets.GEMINI_TOKEN }}
           GROK_TOKEN: ${{ secrets.GROK_TOKEN }}
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           LIMIT="${{ inputs.limit || '30' }}"
           python ci/frontier-runner.py --limit "$LIMIT" --out-dir out
-          # The frozen August lane banks rotate three per pulse, so on the
-          # 6-hourly schedule each of the ten lanes gets one pulse a day. A lane that
-          # cannot run is a visible warning, never a silent skip.
+          # The frozen August lane banks rotate five per pulse, chosen by run count, so
+          # every lane is reached within two delivered runs. The clock is not used:
+          # GitHub delivers only some scheduled runs (18 to 21 Nov: one near 07Z and
+          # one near 19 to 20Z a day), and a slot picked from the UTC hour reached four
+          # lanes and never the other six. A lane that cannot run is a visible
+          # warning, never a silent skip.
           # care is absent: its gold column is a 0/1 rubric score, not a label, so the runner refuses it.
           ALL=(safety continuity provenance cross-reality detector-interop art5-safeguard conformance openness machinery-conformity affect)
           REQ="${{ inputs.lanes || '' }}"
           if [ -n "$REQ" ]; then
             read -r -a LANES <<< "$REQ"
           else
-            SLOT=$(( 10#$(date -u +%H) / 6 ))
-            LANES=("${ALL[@]:$((SLOT * 3)):3}")
+            SLOT=$(( GITHUB_RUN_NUMBER % 2 ))
+            LANES=("${ALL[@]:$((SLOT * 5)):5}")
           fi
           for L in "${LANES[@]}"; do
             python ci/frontier-runner.py --lane "$L" --limit "${{ inputs.lane_limit || '10' }}" --out-dir "out-lanes/$L" \

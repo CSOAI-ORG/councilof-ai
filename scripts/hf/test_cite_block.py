@@ -84,13 +84,15 @@ PRODUCERS = {
     "scripts/hf/hf_card_metadata.py": "edits-live",          # preserves the existing citation/body
     "scripts/hf/polish_frontdoors.py": "template",           # reviewed product templates; content/hash guards
     "scripts/claims/maintenance_due.py": "not-a-card",       # README below the claim-maintenance archive subfolder
+    "scripts/hf/publish_evidence_adaptation.py": "template", # dedicated source-reviewed research product, not census card
+    "scripts/hf/publish_evidence_adaptation.py": "template", # reviewed original research card, protected-master release with privacy and byte-replay gates
     "scripts/measurements/publish-fact-table.py": "template", # dedicated fact-table product card
     "scripts/surface/publish-hf-evaluation.py": "template",   # pinned evaluation pack/results cards and Space template
     "scripts/hf/hf-scrub-daily.py": "edits-live",        # hf-org-card.py scrub_legacy line-edits, commit against the revision read
     "scripts/spray/gspc-spray.py": "edits-live",             # hf_dataset_companions() line-edits the live card
     "scripts/pod-loops/gspc-spray.py": "edits-live",
     "scripts/pod-loops/durability_hf_publish.py": "private",  # csoai/councilof-ai-source; additive markers
-    "scripts/mirror_to_hf.py": "private",                    # csoai/councilof-ai-mirror
+    "scripts/mirror_to_hf.py": "private",                    # no default target; its old one, csoai/councilof-ai-mirror, was deleted 21 Nov 2026
     "scripts/pod-loops/corrections-watch.py": "not-a-card",  # sub-folder README (public/interop/corrections-watch/) in csoai/councilof-ai-evidence, not a dataset card
     "scripts/pod-loops/drift-draft.py": "private",           # csoai/corrections-watch, created --private
     "scripts/sync_hf_gspc.py": "not-a-card",                 # the gspc-board Space shell
