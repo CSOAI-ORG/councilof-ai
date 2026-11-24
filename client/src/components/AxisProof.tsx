@@ -1,5 +1,6 @@
+import { Fragment } from "react";
 import { useGspcBoard, type GspcAxis } from "./board/useGspcBoard";
-import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
+import { accuracyCell, heldLimit, intervalCell, separationNote } from "@/lib/axisCells";
 
 /**
  * AxisProof — the block that turns a commercial page into a checkable one.
@@ -121,8 +122,10 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
                 const acc = accuracyCell(a);
                 const iv = intervalCell(a);
                 const sep = separationNote(a);
+                const lim = heldLimit(a);
                 return (
-                  <tr key={a.axis} className="border-t border-current/10">
+                  <Fragment key={a.axis}>
+                  <tr className="border-t border-current/10">
                     <td className={`whitespace-nowrap px-5 py-3 font-semibold ${t.axis}`}>{a.axis}</td>
                     <td className={`whitespace-nowrap px-3 py-3 ${t.cell}`}>{a.bench || "—"}</td>
                     {/* A declared slot serves n:0. Printing "0" in an n column reads as
@@ -177,6 +180,14 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
                       )}
                     </td>
                   </tr>
+                  {lim && (
+                    <tr>
+                      <td colSpan={6} className={`px-5 pb-3 text-xs leading-snug ${t.muted}`} data-testid={`axisproof-limit-${a.axis}`}>
+                        Held: {lim}
+                      </td>
+                    </tr>
+                  )}
+                  </Fragment>
                 );
               })}
             </tbody>

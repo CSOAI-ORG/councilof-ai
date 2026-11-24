@@ -284,7 +284,10 @@ export function renderAxesIndex(board) {
           ? `none shown — <code>${esc(a.public_leader_state)}</code>`
           : "—";
     const leadCell = leadCol ? `<td>${lead}</td>` : "";
-    return `      <tr ${stateAttrs(a)}><td><a href="/axis/${encodeURIComponent(a.axis)}">${esc(a.axis)}</a></td><td>${esc(stateLabel(a))}</td><td>${typeof a.n === "number" ? a.n : "—"}${a.n_unit ? ` <span class="muted">${esc(a.n_unit)}</span>` : ""}</td>${leadCell}</tr>`;
+    // A held row (axes[].limit, #4680) is printed with its limit, as its own page prints it.
+    const limit = typeof a?.limit === "string" ? a.limit.trim() : "";
+    const held = limit ? `\n      <tr data-limit="${esc(a.axis)}"><td colspan="${leadCol ? 4 : 3}" class="note">Held: ${esc(limit)}</td></tr>` : "";
+    return `      <tr ${stateAttrs(a)}><td><a href="/axis/${encodeURIComponent(a.axis)}">${esc(a.axis)}</a></td><td>${esc(stateLabel(a))}</td><td>${typeof a.n === "number" ? a.n : "—"}${a.n_unit ? ` <span class="muted">${esc(a.n_unit)}</span>` : ""}</td>${leadCell}</tr>${held}`;
   };
   const table = (list, leadCol = true) => `  <div class="scroll"><table>
     <thead><tr><th>Axis</th><th>State</th><th>n</th>${leadCol ? "<th>Point leader</th>" : ""}</tr></thead>

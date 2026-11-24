@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { axisHref } from "@/lib/axisHref";
 import AxisLink from "@/components/AxisLink";
 import { Link, useRoute } from "wouter";
@@ -6,7 +6,7 @@ import { setMetaDescription } from "@/lib/utils";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { verifyPublishedArenaElo } from "@/lib/arenaAttestation";
 import { BOARD_COUNT_OBSERVED, BOARD_OBSERVED_AT, boardCountFromPayload, boardKindSplitFromPayload } from "@/lib/boardCount";
-import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
+import { accuracyCell, heldLimit, intervalCell, separationNote } from "@/lib/axisCells";
 import RowsSeparationPanel, { RowsAxisDetermination } from "@/components/board/RowsSeparationPanel";
 import StatusChip, { chipFor } from "@/components/board/StatusChip";
 import BoardAttestation from "@/components/board/BoardAttestation";
@@ -616,6 +616,11 @@ export default function GspcScoreboard() {
                 </p>
               );
             })()}
+            {heldLimit(focused) && (
+              <p className="mt-2 text-xs leading-snug text-amber-900" data-testid="scoreboard-focused-limit">
+                Held: {heldLimit(focused)}
+              </p>
+            )}
             <RowsAxisDetermination a={focused as any} />
             <p className="mt-3 flex flex-wrap gap-4 text-sm">
               {/* Only an axis WITH a frozen bank gets the bank link. A financial axis has
@@ -675,8 +680,10 @@ export default function GspcScoreboard() {
                   const acc = accuracyCell(a);
                   const ci = intervalCell(a);
                   const sepNote = separationNote(a);
+                  const lim = heldLimit(a);
                   return (
-                    <tr key={a.axis} className={`border-b last:border-0 ${focused?.axis === a.axis ? "bg-emerald-50" : ""}`}>
+                    <Fragment key={a.axis}>
+                    <tr className={`border-b last:border-0 ${focused?.axis === a.axis ? "bg-emerald-50" : ""}`}>
                       <td className="whitespace-nowrap p-3 font-semibold text-gray-900">
                         {/* -m-3 p-3 makes the link fill its cell, so the touch
                             target is the whole row cell rather than a 17px line. */}
@@ -738,6 +745,14 @@ export default function GspcScoreboard() {
                         </button>
                       </td>
                     </tr>
+                    {lim && (
+                      <tr className="border-b last:border-0">
+                        <td colSpan={7} className="px-3 pb-3 text-xs leading-snug text-amber-900" data-testid={`scoreboard-limit-${a.axis}`}>
+                          Held: {lim}
+                        </td>
+                      </tr>
+                    )}
+                    </Fragment>
                   );
                 })}
               </tbody>

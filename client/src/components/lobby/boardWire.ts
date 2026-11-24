@@ -47,6 +47,8 @@ export interface WireAxis {
   /** The bank resolved to a fetchable URL by /api/gspc. Absent → show no link. */
   dataset_url?: string;
   note?: string;
+  /** A held row's stated limit (#4680), carried so every pane prints it beside the row's figure. */
+  limit?: string;
 }
 
 export interface WireLane {
@@ -125,6 +127,7 @@ function readAxis(w: any): WireAxis | null {
     dataset: w.dataset ? str(w.dataset) : undefined,
     dataset_url: w.dataset_url ? str(w.dataset_url) : undefined,
     note: w.note ? str(w.note) : undefined,
+    limit: typeof w.limit === "string" && w.limit.trim() ? w.limit.trim() : undefined,
   };
 }
 
