@@ -62,6 +62,22 @@ class PulseTests(unittest.TestCase):
         r=summarise(d,{},AT)
         self.assertEqual(r["summary_state"],"READBACK_PARTIAL")
         self.assertNotIn("axis_count",r["metrics"]["gspc"])
+    def test_missing_corrections_claims_or_research_makes_entire_pulse_partial(self):
+        for source in ("corrections", "claims", "hf_research"):
+            with self.subTest(source=source):
+                docs=fixture()
+                docs[source]=None
+                report=summarise(docs, {}, AT)
+                self.assertEqual(report["sources"][source]["state"], "UNCHECKABLE")
+                self.assertEqual(report["summary_state"], "READBACK_PARTIAL")
+    def test_malformed_research_manifest_makes_entire_pulse_partial(self):
+        docs=fixture()
+        value=json.loads(docs["hf_research"])
+        value["n_research_observations"]=27
+        docs["hf_research"]=json.dumps(value).encode()
+        report=summarise(docs, {}, AT)
+        self.assertEqual(report["metrics"]["research"]["state"], "UNCHECKABLE")
+        self.assertEqual(report["summary_state"], "READBACK_PARTIAL")
     def test_bad_schema_fails_closed(self):
         d=fixture();d["gspc"]=b'{"schema":"wrong","axes":[]}'
         self.assertEqual(summarise(d,{},AT)["metrics"]["gspc"]["state"],"UNCHECKABLE")
