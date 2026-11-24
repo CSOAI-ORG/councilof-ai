@@ -10,7 +10,7 @@ export const WATCHDOG_JOURNEYS = [
 
 export const LEARNING_JOURNEYS = [
   { title: "Learn the foundations", body: "Explore the Academy's lessons on AI governance, evidence and measurement. Start with the concepts before interpreting a score.", href: "/dashboard?tab=academy", cta: "Explore the Academy", icon: BookOpenCheck },
-  { title: "Practise with the evidence", body: "Use the learning arena to work through a question, play a challenge, explain your reasoning and prepare a proposed improvement.", href: "/dashboard?tab=learn", cta: "Enter the learning arena", icon: MessagesSquare },
+  { title: "Practise with the evidence", body: "Use Practice to work through a question, play a challenge, explain your reasoning and prepare a proposed improvement.", href: "/dashboard?tab=learn", cta: "Enter the learning arena", icon: MessagesSquare },
   { title: "Understand the human decision", body: "Inspect the staff and human-review workflow: what is proposed, which evidence supports it and whether a person is authorised to decide.", href: "/dashboard?tab=staff", cta: "Inspect human review", icon: Users },
 ] as const;
 
@@ -60,7 +60,7 @@ export function HomeLearningJourney() {
       <JourneyCards journeys={LEARNING_JOURNEYS} />
       <div className="hp-resource-row" aria-label="Games and human-in-the-loop tools">
         <a href="/games/ruler/">Play the Ruler challenge<ArrowUpRight size={14} aria-hidden="true" /></a>
-        <a href="/gspc-arena/">Explore the GSPC Arena<ArrowUpRight size={14} aria-hidden="true" /></a>
+        <a href="/gspc-arena/">Explore Council Space<ArrowUpRight size={14} aria-hidden="true" /></a>
         <a href="/dashboard?tab=him">Explore H.I.M., the human-in-the-loop layer<ArrowUpRight size={14} aria-hidden="true" /></a>
       </div>
       <details className="hp-journey-disclosure">

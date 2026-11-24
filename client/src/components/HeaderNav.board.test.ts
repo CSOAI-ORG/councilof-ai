@@ -41,7 +41,7 @@ describe("header mega-menu: no dead, login-walled or unlabelled raw-JSON links (
     const os = navigation.find((group) => group.name === "Council OS")!;
     const byHref = (href: string) => os.submenu.filter((item) => item.href === href).map((item) => item.name);
     expect(byHref("/dashboard?tab=home")).toEqual(["Find published results"]);
-    expect(byHref("/dashboard?tab=space")).toEqual(["Model arena"]);
+    expect(byHref("/dashboard?tab=space")).toEqual(["Head-to-head"]);
     expect(byHref("/dashboard?tab=measured")).toEqual(["Request a fresh run"]);
     expect(os.submenu.map((item) => item.name)).not.toContain("Lobby home");
     expect(os.submenu.map((item) => item.name)).not.toContain("Council Space");

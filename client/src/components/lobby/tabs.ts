@@ -154,7 +154,7 @@ export const LOBBY_TABS: LobbyTab[] = [
   },
   {
     id: "learn",
-    label: "Learning arena",
+    label: "Practice",
     blurb:
       "Human-guided learning across every canonical GSPC axis: learn, play, explain, propose a fix, then require human review.",
     path: "",
@@ -454,7 +454,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     id: "space",
     label: "Council Space",
     blurb:
-      "The governed arena — rounds graded deterministically, never by a model jury.",
+      "Head-to-head rounds, graded deterministically, never by a model jury.",
     path: "/gspc-arena",
     cues: /\b(arena|space|council space|rounds|match|towns|globe)\b/i,
   },
@@ -526,7 +526,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     id: "play",
     label: "Play gallery",
     blurb:
-      "Arena previews with honest in-build labels — measurement surfaces, not live multiplayer yet.",
+      "Head-to-head previews with honest in-build labels — measurement surfaces, not live multiplayer yet.",
     path: "",
     kind: "local",
     accent: "gold",
@@ -1073,7 +1073,7 @@ const DASHBOARD_NAV_DEFINITION: {
       { id: "academy", label: "Academy" },
       { id: "play", label: "Games" },
       { id: "ruler", label: "The Ruler" },
-      { id: "space", label: "Model arena" },
+      { id: "space", label: "Head-to-head" },
       { id: "research", label: "Continuous research" },
     ],
   },

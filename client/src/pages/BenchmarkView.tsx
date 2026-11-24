@@ -53,17 +53,17 @@ export default function BenchmarkView() {
       <div className="mb-6">
         <h1 className="text-2xl font-black text-emerald-100">Benchmarks</h1>
         <p className="mt-1 text-xs text-emerald-200/60">
-          Published arena Elo (deterministic, Wilson 95% CIs) beside the assessed
-          third-party benchmark register. <span className="text-emerald-300">MEASURED</span> (arena)
+          Published head-to-head Elo (deterministic, Wilson 95% CIs) beside the assessed
+          third-party benchmark register. <span className="text-emerald-300">MEASURED</span> (head-to-head)
           vs <span className="text-amber-300">REPORTED</span> (third-party) — never blended.
-          Arena rounds are separate from admitted GSPC board axes.
+          Head-to-head rounds are separate from admitted GSPC board axes.
         </p>
       </div>
 
       {/* Our Elo leaderboard — same signed feed as /gspc-scoreboard */}
       <section className="mb-8 rounded-2xl border border-emerald-400/20 bg-emerald-950/30 p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-sm font-bold text-emerald-100">Arena Elo — signed snapshot</h2>
+          <h2 className="text-sm font-bold text-emerald-100">Head-to-head Elo — signed snapshot</h2>
           <button
             onClick={verifySigned}
             className="rounded-lg border border-emerald-400/30 px-3 py-1 text-[10px] font-bold text-emerald-200 hover:bg-emerald-400/10"
@@ -73,7 +73,7 @@ export default function BenchmarkView() {
         </div>
         {verifyState === "ok" && (
           <p className="mb-3 rounded-lg bg-emerald-400/10 px-3 py-2 text-[10px] font-semibold text-emerald-300">
-            ✓ Board DID signature verified over this arena snapshot and its content ID.
+            ✓ Board DID signature verified over this head-to-head snapshot and its content ID.
           </p>
         )}
         {verifyState === "bad" && (

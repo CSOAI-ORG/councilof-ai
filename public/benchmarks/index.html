@@ -7,7 +7,7 @@
 <title>GSPC Benchmarks &amp; Living Hub — Council of AI</title>
 <!-- No count in this description: a count frozen into <head> cannot be derived and
      is the first thing to go stale. The live count renders into #board-count. -->
-<meta name="description" content="The live GSPC board: per-axis n, leader accuracy and separation, with UNMEASURED reported rather than hidden. Includes Dataset Row Viewer, 1-Line Harness Runner, Blind Arena, Universal Cohorts, and N-Site Snapshot Syndication. Counts come from councilof.ai/api/gspc. Measurement, not certification.">
+<meta name="description" content="The live GSPC board: per-axis n, leader accuracy and separation, with UNMEASURED reported rather than hidden. Includes Dataset Row Viewer, 1-Line Harness Runner, blind comparison, Universal Cohorts, and N-Site Snapshot Syndication. Counts come from councilof.ai/api/gspc. Measurement, not certification.">
 <link rel="canonical" href="https://councilof.ai/benchmarks">
 <meta name="robots" content="index,follow">
 <meta property="og:title" content="GSPC Benchmarks &amp; Living Hub — Council of AI">
@@ -74,7 +74,7 @@ slot count alone would claim measurements that do not exist.
   <button type="button" class="tab-btn" data-tab="tab-cohorts">2. Universal Cohorts</button>
   <button type="button" class="tab-btn" data-tab="tab-dataset-viewer">3. Dataset &amp; Item Row Viewer</button>
   <button type="button" class="tab-btn" data-tab="tab-harness-runner">4. 1-Line Harness Runner &amp; Card Intake</button>
-  <button type="button" class="tab-btn" data-tab="tab-blind-arena">5. Side-by-Side Blind Arena &amp; Rubric</button>
+  <button type="button" class="tab-btn" data-tab="tab-blind-arena">5. Side-by-side blind comparison &amp; rubric</button>
   <button type="button" class="tab-btn" data-tab="tab-pareto">6. Speed / Cost / Openness / Reasoning</button>
   <button type="button" class="tab-btn" data-tab="tab-nsites">7. N-Site Snapshots &amp; BibTeX Citation</button>
   <button type="button" class="tab-btn" data-tab="tab-crosswalk-him">8. Council OS Crosswalk &amp; H.I.M. Desk</button>
@@ -244,10 +244,10 @@ slot count alone would claim measurements that do not exist.
 
 <!-- TAB 5: SIDE-BY-SIDE BLIND ARENA & DETERMINISTIC RUBRIC BATTLE STATION -->
 <section id="tab-blind-arena" class="panel">
-  <h2>Side-by-Side Blind Arena &amp; Deterministic Rubric Battle Station</h2>
+  <h2>Side-by-side blind comparison &amp; deterministic rubric</h2>
   <p class="sub">Human preference votes are recorded alongside — and never substituted for — the deterministic rubric verdict. Boundary failures route automatically to the 31-Door Autonomous HITL Router.</p>
   <div class="ctrl-row">
-    <select id="arena-prompt-select" aria-label="Select frozen Arena prompt"></select>
+    <select id="arena-prompt-select" aria-label="Select frozen head-to-head prompt"></select>
     <button type="button" class="action-btn" id="arena-new-bout-btn">Load Blind Bout</button>
   </div>
   <div class="card-box" style="margin-bottom:1rem">
@@ -344,7 +344,7 @@ slot count alone would claim measurements that do not exist.
 Council of AI · CSOAI Ltd · UK 16939677 ·
 <a href="https://councilof.ai/api/gspc">live API</a> ·
 <a href="https://councilof.ai/gspc-verify">verify</a> ·
-<a href="https://councilof.ai/gspc-arena">arena</a> ·
+<a href="https://councilof.ai/gspc-arena">Council Space</a> ·
 <a href="https://councilof.ai/connect">connect MCP &amp; plugins</a>
 </footer>
 </main>
@@ -748,7 +748,7 @@ Council of AI · CSOAI Ltd · UK 16939677 ·
   function loadArenaBout(){
     var idx=parseInt((arenaSel||{value:"0"}).value,10)||0;
     var b=ARENA_BOUTS[idx]||ARENA_BOUTS[0];
-    document.getElementById("arena-prompt-title").textContent="Frozen Arena Prompt "+b.id+" ["+b.axis+"]";
+    document.getElementById("arena-prompt-title").textContent="Frozen head-to-head prompt "+b.id+" ["+b.axis+"]";
     document.getElementById("arena-prompt-body").textContent=b.prompt;
     document.getElementById("arena-rubric-pill").textContent=b.rubric;
     document.getElementById("arena-resp-a").textContent=b.respA;

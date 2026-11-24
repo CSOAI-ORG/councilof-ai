@@ -26,7 +26,7 @@ export const DASHBOARD_ARENA_CONTRACT = {
     scope: "HISTORICAL_REPLAY",
     taxonomy: "NONCANONICAL_15_AXIS",
     interaction:
-      "select two recorded model subjects on one historical arena axis",
+      "select two recorded model subjects on one historical head-to-head axis",
   },
   chat: {
     state: "RUNTIME_OBSERVED",
@@ -706,7 +706,7 @@ export default function DashboardArenaPane({
       <header className="border-b border-border pb-5">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-800">
-            Council of AI · human-in-the-loop arena
+            Council of AI · human-in-the-loop practice
           </p>
           <h1 className="mt-2 flex items-center gap-2 text-2xl font-semibold tracking-tight text-foreground">
             <Swords className="h-5 w-5 text-emerald-700" aria-hidden="true" />{" "}
@@ -733,7 +733,7 @@ export default function DashboardArenaPane({
           role="status"
           className="mt-6 rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground"
         >
-          Reading the arena scoreboard…
+          Reading the head-to-head scoreboard…
         </p>
       )}
       {state.phase === "unreachable" && (
@@ -767,7 +767,7 @@ export default function DashboardArenaPane({
             className="mt-6 grid gap-3 rounded-2xl border border-border bg-muted/35 p-4 md:grid-cols-3"
           >
             <label className="text-xs font-medium text-foreground">
-              Historical arena axis
+              Historical head-to-head axis
               <select
                 value={axisName}
                 onChange={(event) => setAxisName(event.target.value)}

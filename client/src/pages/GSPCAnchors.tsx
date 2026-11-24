@@ -322,7 +322,7 @@ export default function GSPCAnchors() {
               Coverage gap map →
             </Link>
             <Link href="/gspc-arena" className="text-primary hover:underline font-medium">
-              Enter the arena →
+              Open Council Space →
             </Link>
           </div>
         </section>

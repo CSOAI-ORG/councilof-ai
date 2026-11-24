@@ -48,7 +48,7 @@ export default function DashboardEvidenceLearningPane() {
             setState("loading");
             setAttempt((value) => value + 1);
           }}>Retry loading</button>
-          <a href="/dashboard?tab=learn" className="mt-3 inline-block underline">Open the existing learning arena</a>
+          <a href="/dashboard?tab=learn" className="mt-3 inline-block underline">Open Practice</a>
         </div>
       )}
       {state === "ready" && createElement("council-evidence-learning")}

@@ -341,7 +341,7 @@ function InsurersEvidencePack() {
               >
                 /honesty
               </Link>{" "}
-              we publish our own models losing our own arena. An instrument that
+              we publish our own models losing our own head-to-head comparisons. An instrument that
               catches its owner is the one an underwriter can verify; we do not
               sell a rating, and the underwriter still prices.
             </p>

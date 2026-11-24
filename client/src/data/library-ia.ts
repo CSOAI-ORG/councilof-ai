@@ -284,7 +284,7 @@ export const SECTORS: Sector[] = [
     blurb: "NIST AI RMF, ISO/IEC 42001, OSCAL, readiness, PDCA, sector playbooks — the frameworks crosswalked to the measured axes.",
     test: rx(/\bnist\b|iso-?42001|\boscal\b|framework|readiness|crosswalk|governance|risk-|policy|maturity|standard|complian|\bpdca\b|playbook|sector|industry-|how-it-works|\bhow\b|knowledge-base|maps?\b|relevance/) },
   { id: "product", title: "Product, OS & Demo",
-    blurb: "Council OS, the arena, the globe, the watchdog map, live demos — the interactive product surfaces.",
+    blurb: "Council OS, Council Space, the globe, the watchdog map, live demos — the interactive product surfaces.",
     test: rx(/\bos\b|\bdemo\b|globe|watchdog|command|dashboard|council|network|\bpoc\b|\bcity\b|\bspace\b|\btour\b|twin|hive|galaxy|world|temple|commons|open-media|graph|minds|opengridworks|real-world|protect|personal-protection|\bei3\b|badges|authorit|\bvoice\b/) },
   { id: "company", title: "Company, About & Legal",
     blurb: "Charter, careers, privacy, terms, contact, press, comparisons — who we are and the rules we run on. No public prices.",

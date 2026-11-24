@@ -380,7 +380,7 @@ export default function GSPCGapMap() {
               Read the refutation ledger →
             </Link>
             <Link href="/gspc-arena" className="text-primary hover:underline font-medium">
-              Enter the arena →
+              Open Council Space →
             </Link>
             <Link href="/gspc-anchors" className="text-primary hover:underline font-medium">
               Anchored to →

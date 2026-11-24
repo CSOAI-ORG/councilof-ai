@@ -38,7 +38,7 @@ import type { Slide } from "@/components/scrollworld";
 
 export const COLISEUM_HERO = {
   kicker: "The Coliseum of AI",
-  title: "Put the model in the arena and see what it actually does",
+  title: "Put the model in a head-to-head and see what it actually does",
   lede:
     "Frontier systems face the same frozen tests, in the open, judged by a fixed rule rather than by another model. What comes out is not an opinion or a badge — it is a signed measurement anyone can recompute, including the parts that make us look bad.",
   bg: {
@@ -46,7 +46,7 @@ export const COLISEUM_HERO = {
     alt: "Clay figures and green verification seals gathered in a marble arena",
   },
   actions: [
-    { href: "/gspc-arena", label: "Enter the arena", primary: true },
+    { href: "/gspc-arena", label: "Open Council Space", primary: true },
     { href: "/dashboard?tab=board", label: "Read the board" },
   ],
 };

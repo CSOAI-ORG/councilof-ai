@@ -38,7 +38,7 @@ const SLIDES: Slide[] = [
   },
   {
     kicker: "THE PROVING GROUND",
-    headline: ["The arena is open.", "Not a badge."],
+    headline: ["Council Space is open.", "Not a badge."],
     sub: "Frozen tests. A signed card you can hold. Anyone re-checks it without asking us. Measurement, not certification.",
     cta: { label: "See the board", href: "/dashboard?tab=board" },
     image: {
@@ -74,7 +74,7 @@ const SLIDES: Slide[] = [
     kicker: "YOU VERSUS THE SYSTEM",
     headline: ["Probe it yourself.", "Practice stays practice."],
     sub: "Step in and stress the instrument. Signed runs count. Practice runs stay practice and are never quoted.",
-    cta: { label: "Enter the arena", href: "/gspc-arena" },
+    cta: { label: "Open Council Space", href: "/gspc-arena" },
     image: {
       src: "/images/coliseum_logic_duel.jpg",
       alt: "A human and an AI facing each other across a chessboard in the arena",

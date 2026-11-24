@@ -17,7 +17,7 @@ describe("HeroSlides merges Ken Burns stills into the green reel", () => {
   });
 
   it("gives every image slide its own title and does not sell certification", () => {
-    expect(src).toContain("The arena is open.");
+    expect(src).toContain("Council Space is open.");
     expect(src).toContain("AI versus AI.");
     expect(src).toContain("Probe it yourself.");
     expect(src).toContain("Humans stay");

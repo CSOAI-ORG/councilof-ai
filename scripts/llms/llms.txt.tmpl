@@ -214,7 +214,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 
 - Board: GET https://councilof.ai/api/gspc
 - Verify free: https://councilof.ai/gspc-verify
-- Arena (slashless): https://councilof.ai/gspc-arena
+- Council Space (slashless): https://councilof.ai/gspc-arena
 - Source-linked SOV World observatory (dated simulation archive; check source date and signature-verification status on the page): https://councilof.ai/world/observatory/
 - Agent card: https://councilof.ai/.well-known/agent-card.json
 - Agent Skills (the 15 executable skills, each with a digest and one SKILL.md): https://councilof.ai/.well-known/agent-skills/index.json — the index lists every skill id and the path of its SKILL.md; each SKILL.md names the exact call it makes. Send a skill to the A2A door (POST https://councilof.ai/api/a2a, header `A2A-Version: 1.0`, JSON-RPC 2.0 `SendMessage`).
@@ -230,7 +230,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - Smithery: the third-party directory listing of this door came and went (removed 2026-11-02), so it is not linked here — the registry line above is the durable pointer. Third-party tools[] snapshots can lag the door; before relying on any listing, read the live POST https://councilof.ai/mcp tools/list ({{MCP_TOOLS}} tools: {{MCP_FREE_WORD}} free readers plus {{MCP_PAID_WORD}} x402-metered evidence tools).
 - Open banks: https://huggingface.co/csoai
 
-- Signed per-axis arena leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard
+- Signed per-axis head-to-head leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard
 - ClaimGuard (claim-vs-signed-artifact integrity checker; audit any claim against a signed board, deterministic, never a model opinion): https://councilof.ai/claimguard
 
 

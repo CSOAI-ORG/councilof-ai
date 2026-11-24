@@ -152,10 +152,10 @@ const GAMES: GameDef[] = [
   },
   {
     id: "model-arena",
-    name: "Model Arena",
+    name: "Head-to-head",
     tagline: "AI vs AI. May the best model win.",
     description: "League of Legends meets AI benchmarking. Pit AI models against each other on real compliance tasks. Vote on outputs. Build the leaderboard. Every vote trains the measurement system.",
-    genre: "Arena · Competition",
+    genre: "Head-to-head · Competition",
     inspiredBy: "LMSYS Arena · League of Legends",
     icon: Swords,
     color: "#ec4899",

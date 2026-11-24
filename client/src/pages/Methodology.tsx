@@ -499,7 +499,7 @@ export default function Methodology() {
         {/* LINKS */}
         <div className="flex flex-wrap gap-x-4 gap-y-1 pb-4 text-[13px]">
           <Link href="/gspc-arena" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
-            Enter the arena →
+            Open Council Space →
           </Link>
           <Link href="/gspc-verify" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             Verify a signed card or root membership →

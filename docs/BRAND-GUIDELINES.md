@@ -29,6 +29,9 @@ Both lines carry no count, no superlative and no status. Keep them that way.
 | **CSOAI** | Short form. JSON-LD `alternateName`. | In code, package names, the HF/GitHub org names, and after the full name has appeared. | As the only name on a public page. |
 | **Council OS** | The workspace product: ask, get results, check a result, connect. Served at `/dashboard/`. | As secondary context in the lockup ("Council of AI · Council OS"). The header CTA reads "Council OS". | As if it were a separate company or brand. "CouncilOS". |
 | **GSPC** | The measurement board and its banks. Live at `GET /api/gspc`; the human page is `/board/`. | "the GSPC board". Quote its counts only from the live endpoint (§5). | With a typed count ("the 23-axis GSPC"). |
+| **Council Space** | The interactive scenario page at `/gspc-arena/`: console, globe, towns and demos. It claims no signed run. | "Council Space". | "the arena", "GSPC Arena". |
+| **head-to-head** | Two recorded models compared on one axis (the Council OS tab, the scoreboard, the signed Elo reference). | "Head-to-head" as a label; "head-to-head comparisons" in prose. | "arena" for our own comparison. Keep "arena" only in other people's names (LMArena, arena.ai, Chatbot Arena), for the general term "arena-style ranking", and in published paths, schema names and signed records. |
+| **Practice** | The Council OS learning group. | "Practice" (noun); "practise" (verb). | "Learning arena". |
 | **SovX** | The public name for the wrapped-asset (wrapper) measurements: the wrapper door, the CAIP-19 ledger, the token list and the wallet Snap (owner ruling, 28 Sep 2026). | "SovX". | The internal codename for the wrapper work. Do not publish it. |
 | **SovSpace** | The sandbox where simulated reactions run. | "SovSpace", S-O-V. | "Soft Space", "Soft Signal" (voice transcripts get this wrong). |
 | **SOVOS / sov34** | MEOK-side names. SOVOS is the system; `sov34` is one 0.5B-family operator model. | "the sov34 operator" in any measurement sentence. | "SOVOS scored …". Any framing of a MEOK model as "our model" or "the winner" on a CSOAI instrument. |
@@ -120,6 +123,7 @@ These rules are enforced in part by the repository's gates: the brand gate, fact
 | "23 axes, 14 fleets, 335 signed cards" typed into a page or listing. | "See the live board" with a link to `GET /api/gspc`, or the number rendered from that response. |
 | "SOVOS scored 89." | "The sov34 operator scored … on …" (and only as an arm's-length subject). |
 | "Soft Space." | "SovSpace." |
+| "Enter the arena", "Model arena", "Learning arena". | "Open Council Space", "Head-to-head", "Practice". Bench pages link "Back to the measures". |
 | Title: "Measure once. Show the signed card. \| CSOAI" | Title: "Measure once. Show the signed card. \| Council of AI" |
 | A blue "measurement · not certification" pill in the header. | That line in the footer, the methodology and each card's verification line. |
 | "Pro plan £79/month." | "Verification is free. Paid work is a named job; agents pay per call over x402." |

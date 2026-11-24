@@ -30,7 +30,7 @@ export default function VerifyLeaderboard() {
   useEffect(() => {
     document.title = "Verify this leaderboard - free, in your browser | Council of AI";
     setMetaDescription(
-      "Recompute the arena reference's content ID and verify its Ed25519 envelope against the pinned public board DID key in your browser."
+      "Recompute the head-to-head reference's content ID and verify its Ed25519 envelope against the pinned public board DID key in your browser."
     );
     fetch("/arena/elo_reference.json")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
@@ -65,7 +65,7 @@ export default function VerifyLeaderboard() {
               {elo ? (
                 <>
                   <span className="font-semibold text-gray-900">{elo.models ?? "—"}</span> models ·{" "}
-                  <span className="font-semibold text-gray-900">{elo.axes?.length ?? 0}</span> arena
+                  <span className="font-semibold text-gray-900">{elo.axes?.length ?? 0}</span> head-to-head
                   axes · measured rows carry their published n and interval
                 </>
               ) : err ? (

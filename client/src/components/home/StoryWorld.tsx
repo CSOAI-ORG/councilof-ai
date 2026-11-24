@@ -96,7 +96,7 @@ export const STORY: Slide[] = [
       { tag: "usp", text: "Only measured runs are ever quoted — practice stays practice" },
     ],
     href: "/gspc-arena",
-    cta: "Enter the arena",
+    cta: "Open Council Space",
     image: { src: "/images/coliseum_logic_duel.jpg", alt: "A human and an AI facing each other across a chessboard in the arena" },
   },
   {

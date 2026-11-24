@@ -52,7 +52,7 @@ export const PLAY_CARDS: PlayCard[] = [
     reality:
       "Choose first, request a proposal from the existing MEOK service, then approve its move in this browser game. " +
       "Download local practice data and a report; game points never update the GSPC board. " +
-      "The dated arena replay remains available below.",
+      "The dated head-to-head replay remains available below.",
   },
   {
     id: "gspc-quests",
@@ -94,7 +94,7 @@ export const PLAY_CARDS: PlayCard[] = [
     image: "/images/coliseum_swarm_clash.jpg",
     alt: "A swarm of green shards clashing with clay scientists raising shields",
     status: "in-build",
-    reality: "In build — arena wrapper is local preview only.",
+    reality: "In build — head-to-head wrapper is local preview only.",
   },
   {
     id: "humans-vs-humanoids",
