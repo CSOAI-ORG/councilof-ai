@@ -12,24 +12,24 @@
   "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
    "n_probed": 9,
-   "live": 9,
+   "live": 8,
    "placeholder": 0,
-   "held": 0,
+   "held": 1,
    "dead": 0,
    "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
+   "live_fraction_of_probed": 0.8889,
    "live_examples": [
-    "dougalldeepmind/2026-11-24-qwen36-0-da-gptresp-15 (200)",
-    "th3263/gsm8ksft-llama3.2-1B-lora (200)",
-    "richmondsin/grpo-posterior-no-belief-line-qwen3-vl-4b-thinking (200)",
-    "richmondsin/grpo-posterior-no-belief-line-qwen3-vl-8b-thinking (200)",
-    "hfusr5488184/toktest9 (200)",
-    "hfusr5488184/toktest8 (200)"
+    "mradermacher/Llama-3.3-70B-Instruct-apostate-GGUF (200)",
+    "2A5F/h3 (200)",
+    "hojinlab/ai-read-forest-voice-cnn (200)",
+    "mradermacher/BioMedGPT-LM-7B-GGUF (200)",
+    "millrace-ai/Raon-1-nano-QwenPU-GGUF (200)",
+    "Nexa-AI-Official/minimind-3v-moe (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-11-24T03:47:28Z",
+  "as_of": "2026-11-24T06:02:49Z",
   "unmeasured": [
    "gspc_score",
    "weights_integrity",
@@ -118,22 +118,23 @@
   },
   "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 3,
-   "live": 3,
+   "n_probed": 4,
+   "live": 4,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "rKoXaBw8pzkNaaLdMpzKqNbGjBpypmVPgH (exists)",
-    "rBabHJVPPRXH8SiY1xUYb7PqpmYYSXD7ab (exists)",
-    "r3drY2fHEEzFiU1EHpw2Qjpa2EHGs8cMHo (exists)"
+    "r3rhWeE31JiXqUpNrXHVDCdv2vsT3XAJrv (exists)",
+    "rGk99J8mmxA2bmgmLNg1vXrCF5VqbRzqd1 (exists)",
+    "rHscBnwUAi9dv97Kr1wxsbH8ZravseuK8Z (exists)",
+    "rsGeoMibM7bntR5FyYycGcZKrMg1TbijcW (exists)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-11-24T03:47:28Z",
+  "as_of": "2026-11-24T06:02:49Z",
   "unmeasured": [
    "issuer_identity",
    "reserve_attestation",
@@ -160,17 +161,17 @@
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "mishmish-studio/sotak (200)",
-    "nainiayoub/flora-qa (200)",
-    "FaiyazSaju/toolkit-processor (200)",
-    "SNEHIL0608/pika-h3-flex-conditioner (200)",
-    "redmingwei/cad-bebc-train (200)",
-    "SNEHIL0608/pika-h3-flex (200)"
+    "sukritdevs/cleome (200)",
+    "abhijeet0409/multi-language-translator (200)",
+    "sakshikekan24/lipnet-vsr (200)",
+    "akhaliq/sensenova-u1.6-studio (200)",
+    "FutZapata/FUT_7_ZAPATA (200)",
+    "papapee1980/makerforge1980 (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-11-24T03:47:28Z",
+  "as_of": "2026-11-24T06:02:49Z",
   "unmeasured": [
    "runtime_behavior",
    "hardware_claim",

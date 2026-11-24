@@ -1,8 +1,8 @@
 {
  "schema": "https://councilof.ai/schema/card-v0.json",
  "surface": "autoeat.hf.newmodels",
- "subject": "auto-eat hf-model: 9 LIVE of 9 probed (read-only, ungraded)",
- "as_of": "2026-11-24T03:47:28Z",
+ "subject": "auto-eat hf-model: 8 LIVE of 9 probed (read-only, ungraded)",
+ "as_of": "2026-11-24T06:02:49Z",
  "source_urls": [
   "https://huggingface.co/api/models"
  ],
@@ -19,24 +19,24 @@
   "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
    "n_probed": 9,
-   "live": 9,
+   "live": 8,
    "placeholder": 0,
-   "held": 0,
+   "held": 1,
    "dead": 0,
    "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
+   "live_fraction_of_probed": 0.8889,
    "live_examples": [
-    "dougalldeepmind/2026-11-24-qwen36-0-da-gptresp-15 (200)",
-    "th3263/gsm8ksft-llama3.2-1B-lora (200)",
-    "richmondsin/grpo-posterior-no-belief-line-qwen3-vl-4b-thinking (200)",
-    "richmondsin/grpo-posterior-no-belief-line-qwen3-vl-8b-thinking (200)",
-    "hfusr5488184/toktest9 (200)",
-    "hfusr5488184/toktest8 (200)"
+    "mradermacher/Llama-3.3-70B-Instruct-apostate-GGUF (200)",
+    "2A5F/h3 (200)",
+    "hojinlab/ai-read-forest-voice-cnn (200)",
+    "mradermacher/BioMedGPT-LM-7B-GGUF (200)",
+    "millrace-ai/Raon-1-nano-QwenPU-GGUF (200)",
+    "Nexa-AI-Official/minimind-3v-moe (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-11-24T03:47:28Z",
+  "as_of": "2026-11-24T06:02:49Z",
   "unmeasured": [
    "gspc_score",
    "weights_integrity",
