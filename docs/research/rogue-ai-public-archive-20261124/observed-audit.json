@@ -1,0 +1,118 @@
+{
+  "archive_original_bytes": 4068332,
+  "archive_original_bytes_sha256": "3643f291c8a25680a30771e7db9e339fb0ac84424db20afdd05cc11075d551da",
+  "archived_reported_reproduction_pct": 88.8889,
+  "authors_aggregated_control_sessions": {
+    "harmful_sessions": 16,
+    "recorded_rate_pct": 0.5791,
+    "recorded_sessions": 2763
+  },
+  "authors_original_model_session_totals": {
+    "claude-sonnet-4.6": {
+      "harmful_sessions": 67,
+      "observed_archived_rate_pct": 18.7675,
+      "recorded_sessions": 357
+    },
+    "deepseek-v4-flash": {
+      "harmful_sessions": 117,
+      "observed_archived_rate_pct": 32.7731,
+      "recorded_sessions": 357
+    },
+    "gemini-3.5-flash": {
+      "harmful_sessions": 112,
+      "observed_archived_rate_pct": 31.3725,
+      "recorded_sessions": 357
+    },
+    "gpt-5.6-luna": {
+      "harmful_sessions": 64,
+      "observed_archived_rate_pct": 17.9272,
+      "recorded_sessions": 357
+    },
+    "gpt-5.6-sol": {
+      "harmful_sessions": 97,
+      "observed_archived_rate_pct": 25.1948,
+      "recorded_sessions": 385
+    }
+  },
+  "csoai_gspc_result_admitted": false,
+  "independent_human_recipient_accepted": false,
+  "individual_harm_labels_independently_adjudicated": false,
+  "initial_verdict_by_final_reproduction": {
+    "no control:yes": 2,
+    "not reproduced:no": 12,
+    "not reproduced:yes": 39,
+    "suggestive:yes": 23,
+    "supported:yes": 32
+  },
+  "initial_verdict_distribution": {
+    "no control": 2,
+    "not reproduced": 51,
+    "suggestive": 23,
+    "supported": 32
+  },
+  "interpretation": [
+    "Recounts original authors' archived outcome TABLE exactly, not original raw run transcripts.",
+    "96/108 reproduced=yes does not mean 96 independently causally supported matched controls; two yes rows have 'no control'.",
+    "39 rows initially marked not reproduced later show reproduced=yes; distinguish initial from later rounds.",
+    "Model-session fractions are different denominators across models and cannot be used as paired cases without individual traces.",
+    "No model provider called, no experiment reenacted and no incident prevented by this CSOAI audit.",
+    "Use as literature and source-integrity review, not an externally endorsed GSPC safety measurement."
+  ],
+  "licence_notice": "MIT License, Copyright (c) 2026 The authors; original full notice in source archive",
+  "meok_prevented_incident": false,
+  "observed_source_at": "2026-11-24T04:01:04.782453+00:00",
+  "original_authors_endorsed_csoai": false,
+  "original_environment_state_checks_independently_reexecuted": false,
+  "original_paper_model_sessions_reexecuted": false,
+  "paper_url": "https://arxiv.org/abs/2611.26553",
+  "raw_incident_data_republished": false,
+  "realm": "ORIGINAL_AUTHORS_HISTORICAL_RECORDED_MODEL_OUTPUTS",
+  "reported_not_reproduced": 12,
+  "reported_reproduced": 96,
+  "row_count": 108,
+  "schema": "csoai.external-paper-archived-outcome-audit/0.1",
+  "source_category_counts": {
+    "Browser agent": {
+      "replications": 11,
+      "reported_reproduced": 11
+    },
+    "Cloud operations": {
+      "replications": 10,
+      "reported_reproduced": 8
+    },
+    "Containment": {
+      "replications": 8,
+      "reported_reproduced": 5
+    },
+    "Customer support": {
+      "replications": 5,
+      "reported_reproduced": 5
+    },
+    "Destructive actions": {
+      "replications": 19,
+      "reported_reproduced": 14
+    },
+    "Multi-agent": {
+      "replications": 9,
+      "reported_reproduced": 9
+    },
+    "Payments": {
+      "replications": 10,
+      "reported_reproduced": 10
+    },
+    "Personal assistant": {
+      "replications": 9,
+      "reported_reproduced": 9
+    },
+    "Prompt injection": {
+      "replications": 12,
+      "reported_reproduced": 10
+    },
+    "Tool supply chain": {
+      "replications": 15,
+      "reported_reproduced": 15
+    }
+  },
+  "source_url": "https://rogue-ai.surge.sh/download/rogue-ai-artifact.zip",
+  "table_original_bytes_sha256": "54c036c426af169c5d6cb3be211e0e7452e38207df96a3ac0f5fd8887860d905"
+}
