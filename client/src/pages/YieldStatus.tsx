@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ControlRoom from "./ControlRoom";
 import { Link } from "wouter";
 import { readBytes, readClock, readJson, statusReadError, type Read } from "../lib/statusReads";
 import {
@@ -476,5 +477,16 @@ export default function YieldStatus() {
         </p>
       </section>
     </section>
+  );
+}
+
+/** /status as served: the control-room strip above the service-status rows. The rows component
+ *  above stays the default export, so its own tests keep measuring it alone. */
+export function StatusPage() {
+  return (
+    <>
+      <ControlRoom />
+      <YieldStatus />
+    </>
   );
 }
