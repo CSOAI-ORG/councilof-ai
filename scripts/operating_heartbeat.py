@@ -26,7 +26,7 @@ OBSERVATIONS = {
     "human_reaction_research": ("pulls/4764", "PR"),
     "commercial_revenue_loop": ("pulls/4772", "PR"),
     "metrology_research": ("pulls/4763", "PR"),
-    "metrology_ci": ("actions/workflows/metrology-check-standard.yml/runs?per_page=1&branch=master", "WORKFLOW"),
+    "metrology_ci": ("actions/workflows/metrology-check-standard.yml/runs?per_page=1", "WORKFLOW"),
     "gspc_continuous_ci": ("actions/workflows/gspc-continuous.yml/runs?per_page=1&branch=master", "WORKFLOW"),
     "research_hf_publication_ci": ("actions/workflows/publish-gspc-meok-research.yml/runs?per_page=1&branch=master", "WORKFLOW"),
     "production_deployment_ci": ("actions/workflows/deploy.yml/runs?per_page=1&branch=master", "WORKFLOW"),
@@ -132,11 +132,15 @@ def classify_workflow(data, name, now, max_age_hours=168):
         state = "NO_SUCCESS_CLAIM"
     else:
         state = "UNKNOWN"
+    branch = run.get("head_branch")
+    if state == "SUCCEEDED_SOURCE_ONLY" and branch != "master":
+        state = "SUCCEEDED_NONMASTER_SOURCE_ONLY"
     url = run.get("html_url")
     if not isinstance(url, str) or not url.startswith(f"https://github.com/{REPO}/actions/runs/"):
         url = None
     return {"state": state, "source_url": url,
             "created_at": ts, "age_hours": round(age_hours, 2),
+            "run_head_branch": branch if isinstance(branch, str) and len(branch) <= 128 else None,
             "run_id": run.get("id") if isinstance(run.get("id"), int) else None}
 
 
