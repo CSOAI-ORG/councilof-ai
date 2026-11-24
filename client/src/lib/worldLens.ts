@@ -117,7 +117,8 @@ export function parseWorldFact(key: WorldFactKey, raw: unknown): WorldFact {
   if (key === "root") {
     const n = boundedCount(doc.card_count);
     const asOf = sourceDate(doc.as_of);
-    if (n === null || !asOf) throw new Error("PUBLIC_ROOT_UNCHECKABLE");
+    if (n === null || !asOf || !/^\\d{4}-\\d{2}-\\d{2}T/.test(asOf) ||
+      !Number.isFinite(Date.parse(asOf))) throw new Error("PUBLIC_ROOT_UNCHECKABLE");
     return { key, path, label: "Public root", value: String(n) + " recorded leaves",
       sourceDate: asOf,
       caveat: "Count and timestamp are source-reported; this interface has not independently verified signatures or inclusion." };
