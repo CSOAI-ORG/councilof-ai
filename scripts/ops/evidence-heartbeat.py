@@ -21,6 +21,7 @@ SOURCES = {
     "root": "https://councilof.ai/root.json",
     "distribution": "https://councilof.ai/interop/distribution-latest.json",
     "revenue": "https://councilof.ai/api/revenue",
+    "witness_pointer": "https://councilof.ai/interop/root-witness-pointer.json",
 }
 UA = "CSOAI-evidence-heartbeat/0.1 (+https://councilof.ai/methodology/)"
 UTC = dt.timezone.utc
@@ -160,6 +161,45 @@ def assess(observations, *, now=None, crypto_report=None):
             else:
                 record("root_crypto_verification", "UNCHECKABLE",
                        "replay did not establish all required cryptographic checks")
+
+    pointer = payload("witness_pointer")
+    if pointer is not None and root is not None:
+        declared = pointer.get("live_root")
+        if not isinstance(declared, dict):
+            record("witness_current_root_bytes", "UNCHECKABLE",
+                   "witness pointer has no typed live_root declaration")
+        else:
+            current_sha = observations.get("root", {}).get("sha256")
+            required = (
+                isinstance(current_sha, str) and len(current_sha) == 64
+                and declared.get("sha256") == current_sha
+                and declared.get("merkle_root") == root.get("merkle_root")
+                and declared.get("card_count") == root.get("card_count")
+                and declared.get("as_of") == root.get("as_of")
+            )
+            metrics["witness"] = {
+                "pointer_as_of": pointer.get("as_of"),
+                "claimed_ots_state": pointer.get("witnesses", {}).get("ots")
+                    if isinstance(pointer.get("witnesses"), dict) else None,
+                "claimed_rekor_state": pointer.get("witnesses", {}).get("rekor")
+                    if isinstance(pointer.get("witnesses"), dict) else None,
+                "external_ots_verified_here": False,
+                "external_rekor_verified_here": False,
+                "pointer_matches_live_bytes": required,
+            }
+            if required:
+                record("witness_current_root_bytes", "MATCH_LIVE_ROOT_BYTES",
+                       "publisher witness pointer identifies identical currently served root bytes; external witness not replayed")
+            else:
+                record("witness_current_root_bytes", "UNCHECKABLE",
+                       "current root bytes or semantics do not match publisher witness pointer; new root may be unwitnessed")
+            drift = pointer.get("drift")
+            if isinstance(drift, dict) and drift.get("status") == "DRIFTED" and required:
+                record("witness_historical_drift", "HISTORICAL_ONLY",
+                       "pointer retains an older DRIFTED sample, but the CURRENT exact-byte read matches")
+            elif isinstance(drift, dict):
+                record("witness_historical_drift", "OBSERVED",
+                       "historical drift field is not a replacement for a current live byte check")
 
     distribution = payload("distribution")
     if distribution is not None:
