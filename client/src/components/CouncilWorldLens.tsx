@@ -93,13 +93,23 @@ export default function CouncilWorldLens() {
     setStatus("Showing existing " + tag + " visual layer. Markers must be checked against their sources; no simulation graded.");
   }
 
+  function suggestView(question: string) {
+    const mission = suggestMission(question);
+    if (!mission) { setSuggestedMission(null); return; }
+    setSelectedMission(mission.id);
+    setSuggestedMission(mission.id);
+    // A message can select a *view* automatically, but never commits a run,
+    // intake, payment, human approval or external effect.
+    if (mission.id === "benchmarks") setMode("benchmarks");
+    else if (mission.id === "simulation") setMode("timeline");
+    else setMode("systems");
+  }
+
   async function ask(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const question = prompt.trim().slice(0, 600);
     if (!question || asking) return;
-    const mission = suggestMission(question);
-    if (mission) { setSelectedMission(mission.id); setSuggestedMission(mission.id); }
-    else setSuggestedMission(null);
+    suggestView(question);
     const actions = sovActions(question);
     // Only visual commands are safe to execute deterministically from a sentence.
     // A simulation, threat, human approval or physical intervention is NEVER run by this parser.
@@ -380,7 +390,14 @@ export default function CouncilWorldLens() {
         </div>
         {staffOpen && <div id="world-ai-staff-chat" className="mt-3" data-testid="world-him-staff">
           <p className="mb-2 text-xs text-amber-900">AI assistant only; escalation is not approval. Uses the existing /api/pals staff service, not a duplicate chatbot.</p>
-          <PalAskPanel key={staffDesk} desk={staffDesk} onClose={() => setStaffOpen(false)} />
+          <PalAskPanel key={staffDesk} desk={staffDesk} onClose={() => setStaffOpen(false)}
+            onAsk={suggestView}
+            onEscalation={() => {
+              setSelectedMission("human");
+              setSuggestedMission("human");
+              setMode("systems");
+              setStatus("Staff raised a challenge for human review; no approval or effect has occurred.");
+            }} />
         </div>}
       </section>
       <form onSubmit={ask} className="border-t border-slate-200 bg-emerald-50/50 p-4">
