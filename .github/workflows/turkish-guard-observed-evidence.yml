@@ -1,0 +1,42 @@
+name: turkish-guard-observed-evidence
+on:
+  pull_request:
+    paths:
+      - "scripts/research/turkish_guard_observed.py"
+      - "scripts/research/test_turkish_guard_observed.py"
+      - "scripts/research/project_turkish_reaction.mjs"
+      - "scripts/research/project_turkish_reaction.test.mjs"
+      - "docs/research/turkish-guard-observed-20261124/**"
+      - ".github/workflows/turkish-guard-observed-evidence.yml"
+permissions:
+  contents: read
+jobs:
+  source-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Test method and claims without downloading model/data
+        run: python3 -m unittest discover -s scripts/research -p test_turkish_guard_observed.py -v
+      - name: Replay retained real observation into read-only reaction bridge
+        run: node --test scripts/research/project_turkish_reaction.test.mjs
+      - name: Fail closed on missing receipt or incorrect qualification
+        run: |
+          node scripts/research/project_turkish_reaction.mjs docs/research/turkish-guard-observed-20261124/record.json > /tmp/reaction-readback.json
+          python3 - <<'PY'
+          import json
+          obj=json.load(open("/tmp/reaction-readback.json"))
+          assert obj["review"]["status"]=="ACCEPTANCE_INCOMPLETE"
+          assert obj["review"]["execute_authorized"] is False
+          assert obj["review"]["effect_independently_accepted"] is False
+          assert obj["review"]["fresh_gspc_measurement"] is False
+          assert obj["operating_view"]["independently_qualified_chains"] is None
+          assert obj["confusion"]=={"fn":62,"fp":287,"tn":2768,"tp":255}
+          print("Observed model-output source integrity: PASS. Human/recipient qualification: NOT ESTABLISHED.")
+          PY
