@@ -104,6 +104,17 @@ class MeokGspcReadbackTests(unittest.TestCase):
         self.assertFalse(r.bounded_loopback("http://127.0.0.1:1234/api/health?token=foo", "meok_api"))
         self.assertFalse(r.bounded_loopback("http://user:password@localhost:1234/api/health", "meok_api"))
         self.assertFalse(r.bounded_loopback("https://127.0.0.1:1234/api/health", "meok_api"))
+        self.assertFalse(r.bounded_loopback("http://127.0.0.1:bad/api/health", "meok_api"))
+        self.assertFalse(r.bounded_loopback("http://[::1/api/health", "meok_api"))
+
+    def test_redirects_are_never_followed(self):
+        request = r.Request("http://127.0.0.1:1234/api/health", method="GET")
+        handler = r.RejectRedirects()
+        self.assertIsNone(handler.redirect_request(
+            request, None, 302, "Found",
+            {"Location": "http://169.254.169.254/latest/meta-data/"},
+            "http://169.254.169.254/latest/meta-data/"
+        ))
 
     def test_observe_rejects_nonallowlisted_external_destination_without_fetch(self):
         with patch.object(r, "urlopen", side_effect=AssertionError("network should never be called")):
