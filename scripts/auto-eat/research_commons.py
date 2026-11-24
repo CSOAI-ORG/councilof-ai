@@ -64,7 +64,7 @@ assert len(SOURCES) <= MAX_REPOS
 
 TOPIC_RULES = {
     TOPICS[0]: (r"\bagents?\b|\bmulti.agent\b", r"evaluat|reproduc|benchmark"),
-    TOPICS[1]: (r"\bai\b|artificial intelligence|\bllm\b|\bmodel", r"safety|benchmark|calibrat"),
+    TOPICS[1]: (r"\bai\b|artificial intelligence|\bllm\b|\bmodel", r"\bsafety\b|\bassurance\b|\bharm\b", r"benchmark|calibrat|evaluat"),
     TOPICS[2]: (r"\bagents?\b|autonom", r"authoriz|permission|access control|governance|policy|security"),
 }
 
