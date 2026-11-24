@@ -172,7 +172,7 @@ def verify_sources(root: dict, did: dict, proofs: dict[int, dict]) -> dict:
 
 
 def indices_for(count: int) -> list[int]:
-    return sorted(set((0, 1, count // 2, count - 1)))
+    return sorted(set((0, min(1, count - 1), count // 2, count - 1)))
 
 
 def main(argv=None) -> int:
