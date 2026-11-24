@@ -128,6 +128,30 @@ class PrivacyPlanTests(unittest.TestCase):
         self.assertEqual(reads, [("csoai/index-presence", "dataset")])
         self.assertIn("private=True", output)
 
+    def test_live_error_output_never_contains_remote_exception_or_secret(self):
+        class HostileError(Exception):
+            response = SimpleNamespace(status_code=403)
+            def __str__(self):
+                raise AssertionError("Exception __str__ must not be invoked")
+        class FakeApi:
+            def __init__(self, token):
+                self.token = token
+            def update_repo_settings(self, repo_id, *, repo_type, private):
+                raise HostileError("FAKE-SENSITIVE-SIGNED-URL-MARKER")
+            def repo_info(self, repo_id, *, repo_type):
+                raise AssertionError("No readback after failed update")
+        output = io.StringIO()
+        env = {"DRY_RUN": "false", "HF_TARGET_ONLY": "dataset/index-presence", "HF_TOKEN": "FAKE-SENSITIVE-TOKEN"}
+        with mock.patch.dict(os.environ, env, clear=True), \
+             mock.patch.dict(sys.modules, {"huggingface_hub": SimpleNamespace(HfApi=FakeApi)}), \
+             mock.patch.object(module, "plan", return_value=[("dataset", "index-presence")]), \
+             redirect_stdout(output):
+            status = module.main()
+        self.assertEqual(status, 1)
+        self.assertIn("ERROR HostileError status=403", output.getvalue())
+        self.assertIn("failures=1", output.getvalue())
+        self.assertNotIn("FAKE-SENSITIVE", output.getvalue())
+
     def test_unconfirmed_privacy_readback_fails(self):
         status, updates, reads, _ = self._fake_run(dry_run="false", private=False)
         self.assertEqual(status, 1)
