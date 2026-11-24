@@ -14,7 +14,7 @@ import math
 from pathlib import Path
 import sys
 from urllib.parse import urlsplit
-from urllib.request import Request, urlopen
+from urllib.request import Request, urlopen, build_opener, HTTPRedirectHandler
 from urllib.error import HTTPError, URLError
 
 SCHEMA = "csoai.meok-gspc-health-readback/0.1"
@@ -29,14 +29,23 @@ def utc(t: str) -> datetime:
     return datetime.fromisoformat(t[:-1] + "+00:00")
 
 
+class RejectRedirects(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        # A permitted local health endpoint must not pivot to an arbitrary URL.
+        return None
+
+
 def bounded_loopback(url: str, kind: str) -> bool:
     if kind not in INTERNAL_PATHS or not isinstance(url, str):
         return False
-    p = urlsplit(url)
-    return (p.scheme == "http" and p.hostname in {"127.0.0.1", "::1", "localhost"}
-            and p.path == INTERNAL_PATHS[kind] and p.username is None
-            and p.password is None and not p.query and not p.fragment
-            and p.port is not None and 1 <= p.port <= 65535)
+    try:
+        p = urlsplit(url)
+        return (p.scheme == "http" and p.hostname in {"127.0.0.1", "::1", "localhost"}
+                and p.path == INTERNAL_PATHS[kind] and p.username is None
+                and p.password is None and not p.query and not p.fragment
+                and p.port is not None and 1 <= p.port <= 65535)
+    except ValueError:
+        return False
 
 
 def observe_url(url: str, limit: int = 1_000_000, timeout: int = 8) -> dict:
@@ -46,7 +55,7 @@ def observe_url(url: str, limit: int = 1_000_000, timeout: int = 8) -> dict:
         return {"status": None, "body": None, "reason": "URL_NOT_ALLOWLISTED"}
     try:
         req = Request(url, headers={"User-Agent": "csoai-readonly-health-freshness/0.1"}, method="GET")
-        with urlopen(req, timeout=timeout) as r:
+        with build_opener(RejectRedirects).open(req, timeout=timeout) as r:
             raw = r.read(limit + 1)
             status = r.status
         if len(raw) > limit:
