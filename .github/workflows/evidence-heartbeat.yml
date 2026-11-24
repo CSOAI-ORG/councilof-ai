@@ -4,8 +4,7 @@ name: Council evidence heartbeat (read-only)
 # private MEOK probes, payment, model grading or human authorisation.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "23 6 * * *"
+  # Manual verification and PR tests only; canonical scheduled pulse is #4790.
   pull_request:
     paths:
       - "scripts/ops/evidence-heartbeat.py"
