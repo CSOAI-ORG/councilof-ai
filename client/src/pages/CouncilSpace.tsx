@@ -94,7 +94,7 @@ function ArenaEvidenceStrip() {
 
 const SS_VIEWS = [
   { id: "console", label: "🎛 Console", href: "/gspc-arena" },
-  { id: "arena", label: "🏟 Arena", href: "/gspc-arena?view=arena" },
+  { id: "arena", label: "🏟 Head-to-head", href: "/gspc-arena?view=arena" },
   { id: "globe", label: "🌍 Globe", href: "/gspc-arena?view=globe" },
   { id: "towns", label: "Towns · review", href: "/gspc-arena?view=towns" },
   { id: "benchmarks", label: "📊 Benchmarks", href: "/gspc-arena?view=benchmarks" },

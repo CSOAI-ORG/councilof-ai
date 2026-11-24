@@ -25,7 +25,7 @@ export default function Gone() {
             href="/gspc-arena"
             className="rounded-lg border border-emerald-500/40 px-5 py-2 text-sm font-semibold text-emerald-100 hover:bg-emerald-500/10"
           >
-            Visit the Arena
+            Visit Council Space
           </Link>
         </div>
       </div>

@@ -32,7 +32,7 @@ type Msg =
 const CHIPS: [string, string][] = [
   ["Live board", "board"],
   ["Verify a record", "verify"],
-  ["Arena feed", "arena"],
+  ["Head-to-head feed", "arena"],
   ["REPORTED", "reported"],
   ["The charter", "go /firewall-charter"],
 ];
@@ -125,7 +125,7 @@ export default function CouncilConsole() {
         say({ role: "console", kind: "board", axes: d.axes.slice(0, 6), totals: d.totals });
       } else if (lower.includes("verify")) {
         say({ role: "console", kind: "verify" });
-      } else if (lower.includes("arena") || lower.includes("round")) {
+      } else if (lower.includes("arena") || lower.includes("head-to-head") || lower.includes("round")) {
         const t = await (await fetch("/api/arena/rounds.jsonl")).text();
         const rounds = t.trim().split("\n").slice(-4).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
         say({ role: "console", kind: "arena", rounds });
@@ -143,7 +143,7 @@ export default function CouncilConsole() {
         say({ role: "console", kind: "escort", label: "Open the insurer evidence pack", path: "/insurers" });
       } else {
         say({ role: "console", kind: "text",
-          text: "I'm the deterministic console — no model, just the estate's signed APIs. I can: show the live board · verify a record · stream the arena · list REPORTED figures · or take you to any page (“go /library”). Everything I show, you can also curl." });
+          text: "I'm the deterministic console — no model, just the estate's signed APIs. I can: show the live board · verify a record · stream the head-to-head rounds · list REPORTED figures · or take you to any page (“go /library”). Everything I show, you can also curl." });
       }
     } catch (e) {
       say({ role: "console", kind: "text", text: "That fetch failed honestly: " + String(e) + " — the API is the source of truth; try it directly." });
@@ -204,7 +204,7 @@ export default function CouncilConsole() {
               );
               if (m.kind === "arena") return (
                 <div key={i} className="mr-2 rounded-lg bg-white p-2 shadow-sm">
-                  <div className="mb-1 text-[11px] font-bold text-gray-700">Latest arena rounds (live feed)</div>
+                  <div className="mb-1 text-[11px] font-bold text-gray-700">Latest head-to-head rounds (live feed)</div>
                   {m.rounds.map((r: any, j: number) => (
                     <div key={j} className="border-t border-gray-100 py-1 font-mono text-[10px] text-gray-600">
                       #{r.round ?? r.id ?? j} {r.winner ? `winner: ${r.winner}` : ""} {r.models ? `(${(r.models || []).join(" vs ")})` : ""}

@@ -6,7 +6,7 @@ import { Link, useLocation, useSearch } from "wouter";
 const LINKS = [
   { href: "/gspc-arena?view=globe", label: "🌍 Globe", view: "globe" },
   { href: "/gspc-arena", label: "◈ Council Space", alt: "/simulate", view: "" },
-  { href: "/gspc-arena?view=arena", label: "🏟 Arena", view: "arena" },
+  { href: "/gspc-arena?view=arena", label: "🏟 Head-to-head", view: "arena" },
   { href: "/gspc-arena?view=towns", label: "Towns · review", view: "towns" },
   { href: "/try", label: "▶ Council demo", view: null },
 ];

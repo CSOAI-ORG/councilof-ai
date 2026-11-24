@@ -55,7 +55,7 @@ export default function LobbyPlay() {
               Guided curriculum · every canonical axis
             </p>
             <h3 className="mt-2 text-xl font-semibold tracking-tight text-slate-950">
-              Council Learning Arena
+              Council Practice
             </h3>
             <p className="mt-2 text-[13px] leading-relaxed text-slate-700">
               Learn the source, play a bounded scenario, explain the error,
@@ -68,7 +68,7 @@ export default function LobbyPlay() {
             href="/dashboard?tab=learn"
             className={`inline-flex shrink-0 rounded-xl bg-emerald-900 px-4 py-2.5 text-[12.5px] font-semibold text-white transition hover:bg-emerald-950 motion-reduce:transition-none ${FOCUS}`}
           >
-            Open learning arena
+            Open Practice
           </Link>
         </div>
       </section>

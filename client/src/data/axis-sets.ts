@@ -524,7 +524,7 @@ function loadArena(raw: unknown): LoadedSet {
           label: "the live pass-rate scoreboard",
           href: "/api/arena/scoreboard",
           kind: "api",
-          what: "the other arena surface — which carries a different set of axis",
+          what: "the other head-to-head surface — which carries a different set of axis",
         },
       ],
       note: null,
@@ -876,7 +876,7 @@ export const AXIS_SETS: AxisSet[] = [
   },
   {
     id: "arena",
-    name: "The head-to-head arena",
+    name: "Head-to-head rounds",
     headline:
       "Models play rounds against each other on a topic, a deterministic referee calls each round, and a chess-style rating falls out of who beat whom.",
     measures: "Relative standing between models on a topic — who beats whom, and by how comfortable a margin.",

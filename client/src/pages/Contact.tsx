@@ -248,7 +248,7 @@ export default function Contact() {
                   <p className="text-gray-600 mb-4">
                     The demo is 30 minutes and covers three things: the instrument (how CSOAI
                     measures AI systems against published governance provisions — a measurement,
-                    not a compliance finding), the arena (how systems are compared and
+                    not a compliance finding), head-to-head comparisons (how systems are compared and
                     scored), and the provisions of interest to you — tell us your sector and we
                     walk those first.
                   </p>

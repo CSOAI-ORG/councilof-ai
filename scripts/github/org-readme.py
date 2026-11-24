@@ -648,7 +648,7 @@ def profile_md(f: dict, product_index: Path | None) -> str:
         f"{n_or_unc(f['hf']['spaces'])} Spaces, {n_or_unc(f['hf']['models'])} models. "
         f"Methodology record {ZENODO_METHOD_CONCEPT} — record unavailable at doi.org since 29 Sep 2026, see " f"[the dated notice](https://councilof.ai/interop/zenodo-status.json) — latest version `{f['zenodo']['method']['doi']}` ({f['zenodo']['method']['date']}). "
         f"Board snapshot cited on 2026-09-05: `{f['zenodo']['snapshot_cited']['doi']}` = as_of `{f['zenodo']['snapshot_cited']['version']}`, under concept `{f['zenodo']['snapshot_cited']['conceptdoi']}`. "
-        "Our own models losing our own arena: [councilof.ai/honesty](https://councilof.ai/honesty/).",
+        "Our own models losing our own head-to-head comparisons: [councilof.ai/honesty](https://councilof.ai/honesty/).",
         "",
         "## Repositories that carry the estate",
         "",

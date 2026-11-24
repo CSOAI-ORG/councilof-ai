@@ -125,7 +125,7 @@ export default function ArenaScoreboard() {
       <div className="mb-8">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/60">Council OS · measurement</p>
         <h1 className="mt-2 text-4xl sm:text-4xl font-black tracking-tight">
-          A signed <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">historical arena artefact.</span>
+          A signed <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">historical head-to-head artefact.</span>
         </h1>
         <p className="mt-3 max-w-2xl text-emerald-100/80">
           This is a historical artefact (signed 29 Aug 2026) of per-axis pass rates, not Elo. Most axes read 0.0
@@ -148,7 +148,7 @@ export default function ArenaScoreboard() {
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3">
           <p className="text-[11px] uppercase tracking-wider text-emerald-300/60">
-            {axesCount} arena axis · {rankableCount} rankable
+            {axesCount} head-to-head axes · {rankableCount} rankable
           </p>
           <p className="mt-0.5 font-mono text-2xl text-emerald-100">{data.n_rounds ?? 0} rounds</p>
         </div>

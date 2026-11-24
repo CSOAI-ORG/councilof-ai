@@ -204,7 +204,7 @@ export default function DashboardPane({ id }: { id: string }) {
         <nav aria-label="Available workspace destinations" className="mt-5 flex flex-wrap justify-center gap-3">
           <Link href="/dashboard?tab=explore" className="inline-flex min-h-11 items-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Open all tools</Link>
           <Link href="/dashboard?tab=board" className="inline-flex min-h-11 items-center rounded-lg border border-current px-4 py-2 text-sm font-semibold underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">GSPC board</Link>
-          <Link href="/dashboard?tab=learn" className="inline-flex min-h-11 items-center rounded-lg border border-current px-4 py-2 text-sm font-semibold underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Learning arena</Link>
+          <Link href="/dashboard?tab=learn" className="inline-flex min-h-11 items-center rounded-lg border border-current px-4 py-2 text-sm font-semibold underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Practice</Link>
         </nav>
       </div>
     );

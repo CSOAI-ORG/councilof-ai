@@ -257,7 +257,7 @@ function StatusCell({ status }: { status: "measured" | "blind" | "lead" | null }
 
 export default function GSPCArena() {
   useEffect(() => {
-    document.title = "The Arena — measured head-to-head compliance, no LLM-as-judge | CSOAI";
+    document.title = "Head-to-head: measured compliance, no LLM-as-judge | Council of AI";
   }, []);
 
   const sortedSubjects = [...ARENA_SUBJECTS].sort((a, b) => b.refusal_rate - a.refusal_rate);
@@ -270,7 +270,7 @@ export default function GSPCArena() {
           <div className="mx-auto max-w-5xl px-6 pt-14 pb-10">
             {/* Eyebrow */}
             <p className="font-mono text-[10px] uppercase tracking-[4px] text-emerald-400/50">
-              The arena · measured cells · no LLM-as-judge — ever
+              Head-to-head · measured cells · no LLM-as-judge — ever
             </p>
 
             {/* Headline */}
@@ -338,7 +338,7 @@ export default function GSPCArena() {
                 num: "03",
                 title: "Greenfield vs Greenfield",
                 accent: "border-l-emerald-500/40",
-                body: "New measurements on untested provisions. The blind spots become the arena.",
+                body: "New measurements on untested provisions. The blind spots become the next head-to-head.",
               },
             ].map((m) => (
               <div
@@ -582,11 +582,11 @@ export default function GSPCArena() {
 
           {/* ═══════════════════ WHAT THIS IS NOT ═══════════════════ */}
           <section className="rounded-xl border border-emerald-500/20 bg-[#05140d] p-6">
-            <h2 className="text-xl font-bold text-emerald-50">What this arena is not</h2>
+            <h2 className="text-xl font-bold text-emerald-50">What this comparison is not</h2>
             <ul className="mt-4 space-y-2 text-[13px] text-emerald-100/70 leading-relaxed list-none pl-0">
               {[
                 "Not a leaderboard with composite scores. Each cell is measured independently.",
-                "Not a popularity contest. The arena shows what models did, not what they claim.",
+                "Not a popularity contest. The head-to-head shows what models did, not what they claim.",
                 "Not a safety certification. We report refusals and survivals — the conclusions are yours.",
                 "Not LLM-as-judge. Every verdict is a deterministic predicate applied to a recorded trace.",
               ].map((text, i) => (

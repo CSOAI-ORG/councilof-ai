@@ -915,7 +915,7 @@ async function bossChairLeaveAndReturn(page: Page) {
   const navigation = page.getByRole("navigation", { name: "Learn pages" });
   await navigation.getByRole("link", { name: "Learning", exact: true }).click();
   await expect(page.getByTestId("dashboard-pane-learn")).toBeVisible();
-  await navigation.getByRole("link", { name: "Model arena", exact: true }).click();
+  await navigation.getByRole("link", { name: "Head-to-head", exact: true }).click();
   await expect(bossChairPractice(page)).toBeVisible();
   await expect(bossChairPractice(page).getByRole("button", { name: "Resolve within scope", exact: true })).toBeEnabled();
 }

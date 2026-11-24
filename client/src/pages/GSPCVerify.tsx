@@ -664,7 +664,7 @@ export default function GSPCVerify() {
               second receipt on the root / DID / inclusion bundle — never a PQC-signed card.
               <code>#board-pqc-1</code> is <strong className="text-emerald-50">ABSENT</strong>.
               No PQC verify helper is wired. Fail-closed: a missing PQC seal is UNCHECKABLE,
-              never VALID. PQCBench is the GSPC continuity arena (<code>csoai/gspc-asi</code>),
+              never VALID. PQCBench is the GSPC continuity bench (<code>csoai/gspc-asi</code>),
               not a post-quantum signature on these cards.
             </li>
           </ul>
@@ -691,7 +691,7 @@ export default function GSPCVerify() {
         {/* LINKS */}
         <div className="flex flex-wrap gap-x-4 gap-y-1 pb-4 text-[13px]">
           <Link href="/gspc-arena" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
-            See the records in the arena →
+            See the records in Council Space →
           </Link>
           <Link href="/methodology" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             Read the methodology →

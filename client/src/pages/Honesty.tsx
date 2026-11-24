@@ -53,7 +53,7 @@ const ARTICLE_LD = {
 const HONESTY_FAQ = [
   {
     q: "Do Council of AI's own models beat the bases they started from?",
-    a: "No. In the published signed arena reference at /arena/elo_reference.json, the evaluated in-house council models score below their base models. The table reads that dated reference at load time. This is a finding about the tested configurations, not every model or deployment.",
+    a: "No. In the published signed head-to-head reference at /arena/elo_reference.json, the evaluated in-house council models score below their base models. The table reads that dated reference at load time. This is a finding about the tested configurations, not every model or deployment.",
   },
   {
     q: "What does the cryptographic chain prove — and where does it stop?",
@@ -73,7 +73,7 @@ const HONESTY_FAQ = [
   },
 ] as const;
 
-/** Our own fine-tunes, read from the signed arena reference rather than typed. */
+/** Our own fine-tunes, read from the signed head-to-head reference rather than typed. */
 function OurFineTunes() {
   const [rows, setRows] = useState<EloRow[] | null>(null);
   const [generated, setGenerated] = useState<string | null>(null);
@@ -93,7 +93,7 @@ function OurFineTunes() {
       })
       // An aborted fetch is NOT a failed fetch. React StrictMode runs this effect twice in
       // development and aborts the first one, so `catch(() => setFailed(true))` latched the
-      // failure state permanently and the page rendered "The signed arena reference could not
+      // failure state permanently and the page rendered "The signed head-to-head reference could not
       // be loaded" over an artifact that had answered 200 with a 12-row leaderboard. On the
       // honesty page, of all places, a false "could not load" is the defect it documents.
       .catch((e) => { if ((e as { name?: string })?.name !== "AbortError") setFailed(true); });
@@ -108,12 +108,12 @@ function OurFineTunes() {
   if (failed) {
     return (
       <p className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
-        The signed arena reference could not be loaded, so this section shows nothing rather than a
+        The signed head-to-head reference could not be loaded, so this section shows nothing rather than a
         remembered ladder. Fetch it directly at <code>/arena/elo_reference.json</code>.
       </p>
     );
   }
-  if (!rows) return <p className="mt-4 text-sm text-slate-500">Loading the signed arena reference…</p>;
+  if (!rows) return <p className="mt-4 text-sm text-slate-500">Loading the signed head-to-head reference…</p>;
 
   const ours = rows.filter((r) => isOurs(r.model));
   const best = rows[0];
@@ -169,7 +169,7 @@ function OurFineTunes() {
         {generated ? <> · generated {generated}</> : null}
         {method ? <> · {method}</> : null}. Nothing in this table is typed into the page. Rows with a
         small games count carry a wide interval and should be read as such — the interval is printed
-        rather than hidden. Arena Elo is an internal-doctrine figure we publish here, against
+        rather than hidden. Head-to-head Elo is an internal-doctrine figure we publish here, against
         ourselves; it is never published as a verdict on anyone else&apos;s model, and the board at{" "}
         <Link href="/gspc-arena" className="text-emerald-700 underline">/gspc-arena</Link> remains the
         only measurement surface we stand behind.
@@ -209,7 +209,7 @@ export default function Honesty() {
         {/* ── 1. our own fine-tunes lose ─────────────────────────────── */}
         <h2 id="council-inhouse-ft" className="mt-12 text-xl font-bold">1. In-house model comparison results</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
-          In the published arena reference below, the evaluated in-house council models score
+          In the published head-to-head reference below, the evaluated in-house council models score
           below the base models used to build them. These results remain available for
           independent inspection, with the reference date and method shown alongside the table.
         </p>

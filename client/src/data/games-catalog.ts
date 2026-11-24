@@ -66,7 +66,7 @@ export const GAMES_CATALOG: CatalogEntry[] = [
     path: "/gspc-arena",
     kind: "play",
     description:
-      "The governed arena shell. Historical board context loads from GET /api/gspc, while a room becomes a current scored comparison only when independently admitted evidence exists. Recorded runs stay inspection-only until then; empty stays empty.",
+      "The governed Council Space shell. Historical board context loads from GET /api/gspc, while a room becomes a current scored comparison only when independently admitted evidence exists. Recorded runs stay inspection-only until then; empty stays empty.",
     usesLiveBoard: true,
     badge: "live",
   },
@@ -182,7 +182,7 @@ export const IN_BUILD_CARDS = [
   {
     id: "swarm-clash",
     name: "Swarm Clash",
-    note: "In build — arena wrapper is local preview only",
+    note: "In build — head-to-head wrapper is local preview only",
   },
   {
     id: "humans-vs-humanoids",

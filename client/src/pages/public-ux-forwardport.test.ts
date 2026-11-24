@@ -46,7 +46,7 @@ describe('RunPod public UX forward-port', () => {
     expect(pane).toContain('/dashboard?tab=explore');
     expect(pane).toContain('/dashboard?tab=board');
     expect(pane).toContain('/dashboard?tab=learn');
-    expect(pane).toContain('Learning arena');
+    expect(pane).toContain('>Practice</Link>');
   });
   it('preserves the one-mailbox Contact design while adding pilot and copy recovery', () => {
     expect(contact).toContain("PlainEmail, { CONTACT_MAILBOX }");
