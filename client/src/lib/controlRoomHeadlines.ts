@@ -51,7 +51,7 @@ export function headlineTiles(r: Reads): { tiles: Tile[]; failed: Failed[] } {
   const tiles: Tile[] = [];
   const failed: Failed[] = [];
   const miss = (source: string, x: Read<unknown>, why?: string) =>
-    failed.push({ source, error: x.ok ? why ?? "answered, but without the field this tile reads" : x.error, readAt: x.readAt });
+    failed.push({ source, error: "error" in x ? x.error : why ?? "answered, but without the field this tile reads", readAt: x.readAt });
 
   const g = r.gspc;
   const t = g.ok ? g.body.totals : undefined;

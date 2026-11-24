@@ -84,6 +84,8 @@ export default function ControlRoom() {
   const wd = inView(watchdogPoints(series?.watchdog_runs ?? []), view, nowMs);
   const x4 = inView(x402Points(series?.x402_rounds ?? []), view, nowMs);
   const grid = canaryGrid(series?.canary ?? [], view, nowMs);
+  const canaryCells = grid.endpoints.flatMap((e) => grid.dates.map((d) => grid.cell[e][d])).filter((s): s is string => typeof s === "string");
+  const canaryHashed = canaryCells.filter((s) => s.split(" + ").includes("HASHED")).length;
   const footer = reads
     ? [
         [SRC.gspc, reads.gspc],
@@ -142,9 +144,9 @@ export default function ControlRoom() {
             </p>
 
             <figure className="mt-6" data-testid="control-room-canary">
-              <figcaption className="text-sm font-semibold text-slate-100">Silent-route canary: status stated for each endpoint, by day</figcaption>
+              <figcaption className="text-sm font-semibold text-slate-100">Silent-route canary: what our own probe recorded for each endpoint, by day</figcaption>
               <p className="font-mono text-[11px] text-slate-400">
-                {grid.dates.length ? `${grid.dates.length} day(s) with rows · ${grid.endpoints.length} endpoint(s) · blank cell = no row that day (a gap, not a pass)` : "no row in this view"}
+                {grid.dates.length ? `${grid.dates.length} day(s) with rows · ${grid.endpoints.length} endpoint(s) · ${canaryHashed} of ${canaryCells.length} rows are HASHED · blank cell = no row that day (a gap, not a pass)` : "no row in this view"}
               </p>
               {grid.dates.length ? (
                 <div className="mt-2 overflow-x-auto">
@@ -172,6 +174,11 @@ export default function ControlRoom() {
                   </table>
                 </div>
               ) : null}
+              <p className="mt-2 max-w-3xl text-[11px] leading-5 text-slate-400">
+                Each status describes our own daily probe, not the service of the organisation named. HASHED: the responses were received and hashed, which is the only status that is a measurement.
+                UNAVAILABLE: our probe held no credential for that endpoint, or our local endpoint did not answer. BAD_CREDENTIALS, NO_BALANCE, FORBIDDEN and RATE_LIMITED: our request was answered 401, 402, 403 or 429.
+                ERROR: our request failed in another way.
+              </p>
               <p className="font-mono text-[10px] text-slate-500">Source: /interop/silent-route-canary-2026-09/baseline.jsonl, one row per endpoint per day, copied verbatim into the series file. Statuses stated: {grid.statuses.join(", ") || "none"}.</p>
             </figure>
           </>
@@ -216,7 +223,7 @@ export default function ControlRoom() {
           <ul className="mt-2 space-y-1 font-mono text-[11px] text-slate-400">
             {footer.map(([url, rd]) => (
               <li key={url} data-read={rd.ok ? "ok" : "failed"}>
-                {url} · {rd.ok ? "read" : `FAILED (${rd.error})`} at {rd.readAt}
+                {url} · {"error" in rd ? `FAILED (${rd.error})` : "read"} at {rd.readAt}
               </li>
             ))}
             {series?.skipped?.length ? <li>series file skipped {series.skipped.length} source file(s): {series.skipped.map((s) => s.path).join(", ")}</li> : null}
