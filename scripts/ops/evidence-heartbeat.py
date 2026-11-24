@@ -67,11 +67,14 @@ def assess(observations, *, now=None):
     metrics = {}
     failures = []
     unknown = []
+    stale = []
 
     def record(key, state, detail, *, failure=False):
         checks[key] = {"state": state, "detail": detail}
         if failure:
             failures.append(key)
+        elif state == "STALE":
+            stale.append(key)
         elif state in ("UNCHECKABLE", "NOT_EVALUATED"):
             unknown.append(key)
 
@@ -144,6 +147,10 @@ def assess(observations, *, now=None):
             },
             "limitation": "Gross registry download events; not unique users, execution or adoption. Entities must not be added."
         }
+        if not all(isinstance(all_time.get(entity), dict) and isinstance(all_time[entity].get("value"), int) and all_time[entity].get("state") in ("READ", "PARTIAL") for entity in ("csoai", "meok")):
+            record("distribution_entity_scope", "UNCHECKABLE", "missing separate labelled CSOAI/MEOK populations or source states")
+        else:
+            record("distribution_entity_scope", "OBSERVED", "two entity populations retained separately, with READ/PARTIAL states")
         if deadline is None:
             record("distribution_freshness", "UNCHECKABLE", "missing/invalid UTC stale_after")
         elif now >= deadline:
@@ -178,6 +185,8 @@ def assess(observations, *, now=None):
         rollup = "FAILED_INVARIANTS"
     elif any(k.endswith("_source") for k in unknown):
         rollup = "UNCHECKABLE_SOURCES"
+    elif stale:
+        rollup = "STALE_SOURCES"
     else:
         rollup = "OBSERVATIONS_ONLY_WITH_OPEN_GATES"
     return {"schema": "csoai.operational-heartbeat/0.1",
@@ -186,7 +195,8 @@ def assess(observations, *, now=None):
             "observations": {name: {k: v for k, v in item.items() if k != "payload"}
                              for name, item in observations.items()},
             "metrics": metrics, "checks": checks,
-            "failed_invariants": failures, "open_or_uncheckable_gates": unknown,
+            "failed_invariants": failures, "stale_sources": stale,
+            "open_or_uncheckable_gates": unknown,
             "disclaimer": "No runtime execution, external acceptance, legal conformity, signature or source accuracy is certified by this report."}
 
 
@@ -206,7 +216,7 @@ def main(argv=None):
                       "failed_invariants": report["failed_invariants"],
                       "open_or_uncheckable_gates": report["open_or_uncheckable_gates"],
                       "artifact": str(out)}))
-    return 2 if args.fail_on_invariant and report["failed_invariants"] else 0
+    return 2 if args.fail_on_invariant and (report["failed_invariants"] or report["stale_sources"]) else 0
 
 
 if __name__ == "__main__":
