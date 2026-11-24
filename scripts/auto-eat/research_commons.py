@@ -18,6 +18,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import time
 import tempfile
 import urllib.error
 import urllib.parse
@@ -353,7 +354,12 @@ def collect(previous: dict | None, *, now: datetime,
             future.append(pool.submit(github_source, src, token=token, fetch=fetch))
         observed = [f.result() for f in future]
     from_date = (now.date() - timedelta(days=14)).isoformat()
-    studies = [crossref_topic(topic, from_date=from_date, fetch=fetch) for topic in topics]
+    studies = []
+    for idx, topic in enumerate(topics):
+        # Polite public API pacing; only the real network path sleeps.
+        if idx and fetch is fetch_json:
+            time.sleep(1.5)
+        studies.append(crossref_topic(topic, from_date=from_date, fetch=fetch))
     return summarize(previous, observed, studies, now, registry=sources)
 
 
