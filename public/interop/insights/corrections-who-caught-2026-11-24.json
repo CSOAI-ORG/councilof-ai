@@ -1,0 +1,168 @@
+{
+ "schema": "csoai.insight.corrections-who-caught/0.1",
+ "note": "/notes/who-caught-our-published-errors/",
+ "source": "https://councilof.ai/api/corrections",
+ "source_content_id": "cabc99524da2b43ead7b1eca23d2ac40b9e2fb8d6533a609e998596a8fe6ae36",
+ "source_content_id_check": "sha256 of the record with its unsigned_wrapper_fields removed, json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True); equals the attested content_id. The Ed25519 signature over the attestation is checked by the endpoint itself (signature_check) and can be re-checked with any Ed25519 library under the published key.",
+ "entries": 97,
+ "by_detected_by": {
+  "internal audit": 58,
+  "external report": 15,
+  "internal monitor": 10,
+  "persona test": 7,
+  "UNRECORDED": 5,
+  "self-report": 2
+ },
+ "by_group": {
+  "our own checks": 77,
+  "outside readers": 15,
+  "not recorded": 5
+ },
+ "group_rule": {
+  "internal audit": "our own checks",
+  "internal monitor": "our own checks",
+  "persona test": "our own checks",
+  "self-report": "our own checks",
+  "external report": "outside readers",
+  "UNRECORDED": "not recorded"
+ },
+ "outside_reports": {
+  "entries": 15,
+  "separate_reports": 8,
+  "rule": "one report per distinct date and channel; an unlabelled outside entry on the date of a labelled audit is assigned to that audit, which can only lower this count",
+  "reports": [
+   {
+    "report": "2026-08-19 live-surface audit",
+    "entries": 1,
+    "ids": [
+     "C-2026-0819-01"
+    ],
+    "basis": [
+     "how_caught: 'External live-surface audit; confirmed by direct curl.'"
+    ]
+   },
+   {
+    "report": "2026-08-26 IETF list implementer",
+    "entries": 1,
+    "ids": [
+     "C-2026-0826-07"
+    ],
+    "basis": [
+     "how_caught: 'An outside SCITT implementer followed our post to the IETF list'"
+    ]
+   },
+   {
+    "report": "2026-08-26 live-site audit",
+    "entries": 8,
+    "ids": [
+     "C-2026-0826-06b",
+     "C-2026-0826-07b",
+     "C-2026-0826-08",
+     "C-2026-0826-08b",
+     "C-2026-0826-09",
+     "C-2026-0826-10",
+     "C-2026-0826-11",
+     "C-2026-0826-12"
+    ],
+    "basis": [
+     "how_caught: 'Outside audit of the live site, 2026-08-26 (finding D9).'",
+     "how_caught: 'Outside audit of the live site, 2026-08-26 (finding D8).'",
+     "how_caught: 'An outside auditor with no CSOAI code and no CSOAI credentials'; no finding code, same date, so assigned to the audit of that day (conservative: lowers the count of separate reports)",
+     "how_caught: 'Outside audit of the live site, 2026-08-26 (finding A3)'",
+     "how_caught: 'Outside audit of the live site, 2026-08-26 (finding D11).'",
+     "how_caught: 'Outside audit of the live site, 2026-08-26 (finding D10).'",
+     "how_caught: 'Outside audit of the live site, 2026-08-26 (finding P1).'",
+     "how_caught: 'Outside audit of the live site, 2026-08-26 (finding A2).'"
+    ]
+   },
+   {
+    "report": "2026-09-02 IETF agentproto list objection",
+    "entries": 1,
+    "ids": [
+     "C-2026-0902-10"
+    ],
+    "basis": [
+     "how_caught: 'IETF agentproto list, 31 Aug-2 Sep 2026: an objection to the offline-verification sentence'"
+    ]
+   },
+   {
+    "report": "2026-09-05 outside review",
+    "entries": 1,
+    "ids": [
+     "C-2026-0905-02"
+    ],
+    "basis": [
+     "how_caught: 'Outside review of the estate on 2026-09-05'"
+    ]
+   },
+   {
+    "report": "2026-09-17 outside correspondent",
+    "entries": 1,
+    "ids": [
+     "C-2026-0917-02"
+    ],
+    "basis": [
+     "timing_evidence: 'the external correspondent's report preceded it'"
+    ]
+   },
+   {
+    "report": "2026-09-28 IETF SCITT architecture issue",
+    "entries": 1,
+    "ids": [
+     "C-2026-0928-01"
+    ],
+    "basis": [
+     "how_caught: 'IETF SCITT architecture issue #462, opened by an outside participant'"
+    ]
+   },
+   {
+    "report": "2026-11-18 independent security researcher",
+    "entries": 1,
+    "ids": [
+     "C-2026-1118-01"
+    ],
+    "basis": [
+     "how_caught: 'an independent security researcher ... reported it to us privately'"
+    ]
+   }
+  ]
+ },
+ "by_month": {
+  "2026-08": {
+   "outside readers": 10,
+   "our own checks": 19,
+   "not recorded": 1
+  },
+  "2026-09": {
+   "our own checks": 52,
+   "outside readers": 4,
+   "not recorded": 4
+  },
+  "2026-10": {
+   "our own checks": 3
+  },
+  "2026-11": {
+   "our own checks": 3,
+   "outside readers": 1
+  }
+ },
+ "timing": {
+  "detected_at_recorded": 46,
+  "published_at_recorded": 7,
+  "published_at_recorded_ids": [
+   "C-2026-0926-01",
+   "C-2026-0926-02",
+   "C-2026-0926-03",
+   "C-2026-0926-04",
+   "C-2026-0926-05",
+   "C-2026-0927-05",
+   "C-2026-1118-01"
+  ],
+  "why_no_time_to_fix_summary": "published_at is UNRECORDED for most entries, so a time to fix cannot be computed for the record as a whole; the endpoint's own correction_latency block reports the few that can be measured"
+ },
+ "limits": [
+  "detected_by is our own label on each entry; it is counted here, not re-judged",
+  "an error nobody recorded is absent from this record and from this table",
+  "fewer entries per month can mean fewer errors or less recording; the record does not say which"
+ ]
+}
