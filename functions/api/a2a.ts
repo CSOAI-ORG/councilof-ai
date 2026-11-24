@@ -971,6 +971,23 @@ export const X402_TASK_ID_MAX = 2048;
 // Arguments that select something other than "buy this": never part of a payment Task.
 const X402_TASK_EXCLUDED_ARGS = ["x_payment", "preview", "purchase_action"];
 
+// Task IDs are reversible base64url; they are NOT opaque, encrypted or authenticated.
+// Only a narrowly defined public, enumerated selection may ride inside one.
+// All free-text subjects, URLs, encoded documents and other paid tool inputs remain
+// on the existing x402 Message path; nobody should log confidential args in a Task ID.
+const PUBLIC_BUNDLE_OBLIGATIONS = new Set(["article-50", "article-53", "dora", "cra"]);
+const PUBLIC_TASK_CONTEXT = /^[A-Za-z0-9_-]{1,80}$/;
+export function x402PublicTaskInput(tool: string, input: Json, contextId?: string): boolean {
+  if (tool !== "evidence_bundle") return false;
+  if (!input || typeof input !== "object" || Array.isArray(input)) return false;
+  if (Object.keys(input).length !== 1 ||
+      typeof input.obligation !== "string" ||
+      !PUBLIC_BUNDLE_OBLIGATIONS.has(input.obligation)) return false;
+  // A context identifier is itself reproduced into the Task ID. Email, URL,
+  // free-text subject and opaque bearer token strings must not ride there.
+  return contextId === undefined || PUBLIC_TASK_CONTEXT.test(contextId);
+}
+
 /** The id of the payment Task for this call, or null when the input is too large to carry. */
 export function x402TaskId(tool: string, input: Json, contextId?: string): string | null {
   // A blank x_payment and preview:false say nothing; anything else in that list is not a purchase.
@@ -978,6 +995,7 @@ export function x402TaskId(tool: string, input: Json, contextId?: string): strin
   if (typeof carried.x_payment === "string" && carried.x_payment.trim() === "") delete carried.x_payment;
   if (carried.preview === false) delete carried.preview;
   if (X402_TASK_EXCLUDED_ARGS.some((key) => key in carried)) return null;
+  if (!x402PublicTaskInput(tool, carried, contextId)) return null;
   const json = JSON.stringify({ t: tool, i: carried, ...(contextId ? { c: contextId } : {}) }).replace(
     /[\u0080-\uffff]/g,
     (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`,
@@ -1010,6 +1028,7 @@ export function x402TaskSelection(taskId: string): ToolSelection | null {
     const input = record(decoded?.i);
     if (!tool || !input || !PAID_TOOL_NAMES.has(tool) || !TOOL_SKILL_SET.has(tool)) return null;
     if (X402_TASK_EXCLUDED_ARGS.some((key) => key in input)) return null;
+    if (!x402PublicTaskInput(tool, input, typeof decoded?.c === "string" ? decoded.c : undefined)) return null;
     return { kind: "TOOL", tool, input };
   } catch {
     return null;
