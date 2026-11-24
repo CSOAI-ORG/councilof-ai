@@ -187,7 +187,7 @@ export default function CouncilWorldLens() {
                   <input id="world-tick" type="range" min={0} max={observatory.events.length - 1} value={tick}
                     onChange={(e) => setTick(Number(e.target.value))} className="mt-2 accent-emerald-400" />
                   <div className="mt-4 rounded-xl border border-slate-700 bg-slate-900 p-4">
-                    <p className="break-words font-mono text-xs text-emerald-200">{event.intent}</p>
+                    <p className="break-words font-mono text-xs text-emerald-200">{event.intent || "Source supplied no intent text; no meaning inferred."}</p>
                     <p className="mt-2 text-xs text-slate-300">Source timestamp: {new Date(event.sourceEpoch * 1000).toISOString()}</p>
                     <p className="mt-1 text-xs text-slate-300">Source row: {event.sourceIndex} · no verified geographic coordinates or signature</p>
                   </div>
