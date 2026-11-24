@@ -1,5 +1,8 @@
 import {
   ArrowUpRight,
+  Bot,
+  Cable,
+  ShieldCheck,
   AudioLines,
   FileCheck2,
   History,
@@ -9,6 +12,36 @@ import {
 } from "lucide-react";
 
 export const PRODUCTS = [
+  {
+    id: "plugins",
+    eyebrow: "Connect",
+    title: "Use Council evidence inside your AI tools",
+    body: "Connect Claude, Cursor or another supported client to read published GSPC measurements and corrections. Try a free read on a model you already use.",
+    href: "/connect/#platforms",
+    cta: "Choose your AI platform",
+    icon: Cable,
+    note: "Free evidence reads · platform setup guides",
+  },
+  {
+    id: "models",
+    eyebrow: "Compare",
+    title: "Inspect open models and their measured results",
+    body: "Find models tested on published question banks. Inspect our own prompt overlays alongside their base models and see which results carry signed records.",
+    href: "/models-measured/",
+    cta: "Browse measured models",
+    icon: Bot,
+    note: "Published test banks · signed evidence",
+  },
+  {
+    id: "maintain",
+    eyebrow: "Monitor",
+    title: "Track changes to public AI claims",
+    body: "Follow a dated claim back to its source, see the latest recorded check and find what changed. Discuss a monitoring scope for the claims your team relies on.",
+    href: "/claim-maintenance/",
+    cta: "See the claim monitoring register",
+    icon: History,
+    note: "Public sources · dated checks and corrections",
+  },
   {
     id: "workspace",
     eyebrow: "Explore",
@@ -30,14 +63,14 @@ export const PRODUCTS = [
     note: "Marking evidence · bounded methods",
   },
   {
-    id: "maintain",
-    eyebrow: "Keep current",
-    title: "Follow a claim as it changes",
-    body: "Read dated public claims, their sources and recorded changes. See what was re-read, what moved and what needs another look.",
-    href: "/claim-maintenance/",
-    cta: "Explore claim maintenance",
-    icon: History,
-    note: "Sources, dates and change history",
+    id: "authority",
+    eyebrow: "Pilot",
+    title: "Check the evidence behind an agent action",
+    body: "Walk through the demonstration of a proposed action, its approval and an effect receipt. Use the published example to scope an evidence pilot for your workflow.",
+    href: "/pilots/agent-authority/",
+    cta: "Explore the agent authority pilot",
+    icon: ShieldCheck,
+    note: "Synthetic demonstration · scoped pilot enquiry",
   },
   {
     id: "packs",
@@ -84,18 +117,17 @@ export default function HomeProducts() {
           <div>
             <p className="hp-eyebrow">Put evidence to work</p>
             <h2 id="home-products-h">
-              Start with a question.
+              Tools for checking
               <br />
-              <span>Leave with something checkable.</span>
+              <span>AI evidence.</span>
             </h2>
           </div>
           <p className="hp-heading-aside">
-            For people choosing AI, teams building with it, and anyone who needs
-            to inspect the record behind a claim.
+            Read public records in your own tools, compare models and track changes. If your team needs a fresh measurement or a monitoring scope, start with the published examples.
           </p>
         </div>
         <div className="hp-service-grid">
-          {PRODUCTS.map((product, index) => {
+          {PRODUCTS.map((product) => {
             const Icon = product.icon;
             return (
               <article
@@ -106,7 +138,7 @@ export default function HomeProducts() {
                 <div className="hp-service-top">
                   <Icon size={25} strokeWidth={1.5} aria-hidden="true" />
                   <span>
-                    {String(index + 1).padStart(2, "0")} / {product.eyebrow}
+                    {product.eyebrow}
                   </span>
                 </div>
                 <h3>
