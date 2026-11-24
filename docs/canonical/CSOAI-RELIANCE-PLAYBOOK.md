@@ -1,10 +1,13 @@
 <!-- Canonical plan. Source: csoai_reliance_playbook.md v1.0 (20 Nov 2026). Committed 21 Nov 2026 in the backlog triage approved by the owner. -->
+<!-- v1.1: amended 24 Nov 2026 on the owner's instruction; see section 12. -->
 > **Canonical plan.** This file supersedes the earlier plan documents listed in [`docs/plans/INDEX.md`](../plans/INDEX.md). Companion specifications: [`RAS-SPEC.md`](RAS-SPEC.md), [`AXIS-REPORT-CONTRACT.md`](AXIS-REPORT-CONTRACT.md), [`axis-report.schema.json`](axis-report.schema.json).
 >
 > Repo copy notes: links to private working files are shown as plain filenames (those files are not in this repo). Edits made for public copy only: (1) a named credit-rating agency is replaced by a generic term in §1 and §5.5 (owner rule on public naming); (2) one excluded-organisation mention is removed from §3 (owner rule); (3) host file-permission findings are removed from §10 item 10. Figures are as read on 20 Nov 2026 and are not refreshed here.
 
 # CSOAI reliance playbook: from measurement publisher to relied-upon evidence institution
-**Version 1.0 · 20 November 2026 · CSOAI Ltd (UK 16939677) · for owner review**
+**Version 1.1 · 24 November 2026 (v1.0: 20 November 2026) · CSOAI Ltd (UK 16939677) · for owner review**
+
+*Version 1.1 adds twelve amendments, listed in §12, on the owner's instruction of 24 Nov 2026. Amended passages are marked "v1.1". Figures in them were read on 24 Nov 2026; all other figures remain as read on 20 Nov.*
 
 This document is meant to become the **single canonical plan**. The consolidation track found more than 20 earlier plans that were never finished (Aug–Nov 2026; `prior_work_consolidation.md`). Adopting this one should retire the others. Every number below was read live on 20 Nov 2026 or comes from a linked artifact. Provisional items are marked.
 
@@ -12,6 +15,15 @@ This document is meant to become the **single canonical plan**. The consolidatio
 ## 0. One page
 
 **The goal:** make independent verification, institutional participation and paid acceptance *repeatable*, so that other organisations rely on CSOAI's evidence.
+
+**Position (v1.1):** CSOAI publishes signed, outside-in measurement records and keeps claims current. Certifiers, auditors, insurers and hosts consume them. CSOAI certifies nothing, and the measured party never pays for its result.
+
+| | The measured party pays | A relying party or a funder pays |
+|---|---|---|
+| **A verdict or certificate is issued** | Vendor-paid certificates and insurance-linked audits | Subscriber-paid ratings; funder-paid indices of lab practice |
+| **A measurement record is issued** | Evaluations paid for by the organisations evaluated | Enterprise-paid or grant-funded independent measurement: **CSOAI's cell** |
+
+The grid is drawn from public pages read on 24 Nov 2026 (field study, a private working file). A page shows what an organisation says, not what it does.
 
 **Where you stand (20 Nov, live):**
 
@@ -39,7 +51,7 @@ This document is meant to become the **single canonical plan**. The consolidatio
    - the AI Verify sandbox and accredited-tester track
    - BSI ART/1 and the prEN 18283 enquiry
    - BridgeAI, only if a UK deployer partner signs by 1 Dec
-5. **Turn GSPC into 34 honest per-axis reports**, and define DORADO as a *subscriber-paid evidence index* (a grade per axis plus coverage and confidence). Never sum over UNMEASURED or STALE axes.
+5. **Turn GSPC into 34 honest per-axis reports**, and define DORADO as an *evidence index paid for by relying parties* (a grade per axis plus coverage and confidence; v1.1: v1.0 said "subscriber-paid", see §5.5 and §10 item 13). Never sum over UNMEASURED or STALE axes.
 
 ---
 ## 1. Answers to the owner's questions
@@ -115,7 +127,7 @@ Pricing tiers (proposals; see eval_economics):
 |---|---|---|
 | T0 | Agent-native, x402 | Automated check, no human review, labelled "unreviewed" |
 | T1 | Per-system check | One-reviewer attestation (e.g. Art 50 marking), £150–£500 |
-| T2 | Monitoring | Monthly re-attestation, frozen snapshots on the fluid stream, £200–£600/month |
+| T2 | Monitoring | Re-attestation on a stated cadence, frozen snapshots on the fluid stream. Each re-attestation is a metered request or an engagement invoiced after delivery. v1.0 proposed £200–£600/month; recurring billing is offered only if the owner rules for it (v1.1, §10 item 13) |
 | T3 | Threshold-signed | 2-of-3 reviewers, for insurer or auditor reliance. Priced per engagement |
 
 **Conflict-of-interest controls (mandatory before T2/T3 are sold):**
@@ -147,6 +159,10 @@ One report contract per axis, published per frozen snapshot:
 | `reproductions` | Independent reruns on record |
 | `reliance` | Named acceptances (with consent) |
 | `snapshot_id`, `anchor` | Frozen ID plus OTS/Rekor |
+| `access_level` (v1.1) | What access the measurer had. For CSOAI: outside-in, no privileged access |
+| `funder`, `publication_control` (v1.1) | Who paid for the run, and who decided that it was published |
+| `min_detectable_change` (v1.1) | The smallest change this run could have detected at its n |
+| `right_of_reply` (v1.1) | Notice given to a named provider before publication, and any reply |
 
 Today's honest starting point (estate_axes.csv, 20 Nov):
 
@@ -161,7 +177,7 @@ DORADO is already your measurement-engine codename (cibola README: "a measuremen
 
 - **Published as a vector, not a single number:** a grade per axis plus coverage plus confidence plus freshness.
 - **No composite over UNMEASURED or STALE axes.** Any headline aggregate covers only MEASURED-fresh axes and states its coverage (e.g. "covers 6/34").
-- **Subscriber-pays** (insurers, auditors, enterprise buyers) for the time-series and capsules. The free public view drives adoption; the paid product is history plus capsules.
+- **Relying parties pay** (insurers, auditors, enterprise buyers) for the time-series and capsules: metered per request over x402, or as a scoped engagement invoiced after delivery. v1.0 said "subscriber-pays"; whether any recurring payment is allowed is an open owner ruling (v1.1, §10 item 13). The free public view drives adoption; the paid product is history plus capsules.
 - **East–West:** one CSOAI method run on Western *and* Chinese open-weight models on CSOAI hardware. Eastern published results (OpenCompass, CAICT) are cited as external comparators and never ingested into paid products. NC-licensed sets (C-Eval CC BY-NC-SA, CMMLU CC BY-NC) are excluded from paid SKUs. `/api/east-west-bench` (ex-`/api/dorado`) is the existing rail.
 - **Public naming:** do not describe DORADO by comparison with a named credit-rating agency in public copy (CMA/ASA misleading-claims risk; contradicts the "measurement, not certification" contract). Internally, the staged gates in §7 are the path to rating-like reliance.
 
@@ -201,6 +217,20 @@ Council governance:
 
 Advisory: separate an independent chair for oversight (conflicts, appeals) from the founder's executive role.
 
+**A beat, a number and a state per lane (v1.1).** Read on 24 Nov 2026. A lane that no person holds is written UNSTAFFED, not assigned (wording from the operating-model draft in PR #4787; its acceptance ladder is a candidate for the receipts in this table).
+
+| Lane | Beat | The number | State on 24 Nov |
+|---|---|---|---|
+| Source & measurement | Every 6 hours, and daily | Hosted models that answered this week | 0; the last pulse log shows BLOCKED_CREDENTIAL with n=0. Open-weight models only |
+| Trust & Layer 0 | Quarterly | Independent custodians named | 0; ceremony still simulated |
+| Human authority & watchdog | Monthly | Complaints and corrections closed within the stated time | UNSTAFFED |
+| Release & infrastructure | Daily | Open PRs against the gate of 40 | 184; no single release owner |
+| Commercial / RAS | Weekly | Asks sent; outside payers in 30 days; repeats | Unverified; 2; 0. UNSTAFFED: only the owner can send |
+| Standards & institutions | Weekly | Filings due within 30 days | See §9 |
+| Academy & SovSpace | Quarterly | Outside users on record | None on record (unverified) |
+
+Ten vital signs are read each Friday: hosted models that answered the pulse; comparisons separated, tied and untested; open PRs; distinct outside payers in 30 days; repeat outside payers in 30 days; settled revenue; named outside people; asks sent that week; the detector's flag rate with no change; days to the owner's public date.
+
 ### 5.8 Throughput rule (the binding constraint)
 
 - **Work in progress:** no new automated lanes until the open-PR count is below 40.
@@ -208,6 +238,8 @@ Advisory: separate an independent chair for oversight (conflicts, appeals) from 
 - **Stale PRs:** rolling-series PRs auto-supersede.
 - **Ledger:** measure *externally verified outcomes* (merged + deployed + independently checked), not commits.
 - **The first triage pass is ready** (pr_triage.csv): about 41 closures (26 superseded, 12 folded, plus #3100 and other stale PRs), 9 one-review merges, and roughly 830 org-wide bot PRs to group or close.
+- **Closing fortnight (v1.1, 24 Nov):** no session starts a new lane until the open-PR count is below 40. Read on 24 Nov: 184 open, 44 of them drafts.
+- **One release owner (v1.1):** not yet named by the owner (§10 item 14). On 22 Nov at least seven landing trains were observed at once.
 
 
 ---
@@ -215,11 +247,13 @@ Advisory: separate an independent chair for oversight (conflicts, appeals) from 
 *estate_loops.csv lists 33 rows. D33 (`/api/eunomia-data`) is retired and now redirects (308) to `/api/signed-data-feed`, so it is excluded from the 32 live doors; its one historical payer is still counted in the payer totals.*
 The site's own gates apply: **0 payers in 30 days means add no doors; at least 1 repeat in 30 days opens the next door; at least 5 distinct payers in 30 days makes it a product.** Today: 2 outside payers in 30 days and 0 repeats.
 
+**Order of money for 2027 (v1.1).** 1. Grants and public contracts. 2. RL1, Article 50 checks. 3. RL2, evidence for auditors. 4. RL3, insurers, once anchors are live. 5. RL4, RL5 and RL7 stay as rails with no revenue target. Reason: read on 24 Nov, settled revenue is still $0.06 with 0 repeat payers in 30 days, and real commerce across the whole x402 rail was reported at about $28,000 a day in March 2026 (a second-hand figure).
+
 | loop_id   | loop                                                       | buyer                                                           | acceptance_criterion                                                                                         | price                           | kill_scale_gate                                                                  |
 |:----------|:-----------------------------------------------------------|:----------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------|:--------------------------------|:---------------------------------------------------------------------------------|
 | RL1       | Art 50 marking evidence (RAS T1/T2)                        | EU-facing genAI deployers + their counsel                       | Signed per-system marking check bound to AI Act Art 50(2) provision hash; recipient files written acceptance | £150–£500/check; £200–£600/mo   | Scale: ≥3 paid checks + 1 repeat in 60d. Kill: 0 paid by 31 Mar 2027             |
-| RL2       | Provision-bound evidence capsules for auditors             | ISO 42001 certification bodies; future Illinois SB 315 auditors | Auditor cites capsule IDs in an audit file                                                                   | £5k–£20k per audit-firm seat/yr | Scale: 1 signed pilot with an audit firm. Kill: no pilot after 6 outreach cycles |
-| RL3       | Underwriting data licence (DORADO time-series)             | AI insurers (AIUC, Armilla, Munich Re/Mosaic)                   | Insurer uses series in a pricing/claims decision, in writing                                                 | £10k–£50k pilot                 | Gate first: anchors live + witnessed ceremony. Scale: 1 pilot                    |
+| RL2       | Provision-bound evidence capsules for auditors             | ISO 42001 certification bodies; audit firms accredited under agent-certification standards (seven read on 24 Nov; v1.1); future Illinois SB 315 auditors | Auditor cites capsule IDs in an audit file                                                                   | £5k–£20k per audit engagement (v1.1: v1.0 said per audit-firm seat/yr; seats are barred by the revenue firewall; basis to be confirmed) | Scale: 1 signed pilot with an audit firm. Kill: no pilot after 6 outreach cycles |
+| RL3       | Underwriting data licence (DORADO time-series)             | AI insurers (AIUC, Armilla, Munich Re/Mosaic)                   | Insurer uses series in a pricing/claims decision, in writing                                                 | £10k–£50k pilot                 | Gate first: anchors live + witnessed ceremony. Route to test (v1.1): an insurer's published data-partner programme, recorded in the 2 Sep file and unverified on 24 Nov. Scale: 1 pilot                    |
 | RL4       | MCP / agent security attestation (RAS)                     | MCP server publishers, agent platforms, registries              | Publisher displays attestation linking to verifier; registry consumes feed                                   | T0 x402 $0.02–$2; T1 £150       | Scale: ≥5 distinct publishers in 30d (site's own gate). Kill: 0 in 30d           |
 | RL5       | Stablecoin/RWA wrapper & proof-of-presence feeds           | Stablecoin issuers, GENIUS Act compliance teams                 | Issuer or regulator comment references the feed                                                              | x402 per call; feed licence     | Freeze new doors; keep top 3 by use; retire rest if 0 payers by 28 Feb 2027      |
 | RL6       | Institutional evidence (filings, standards, reproductions) | NIST, ICO, OCC/FDIC, BSI, OECD, AI Verify                       | Body publishes, cites, selects (CRADA, sandbox, WG seat)                                                     | Free (reliance, not revenue)    | Target 3 acceptances by 31 Mar 2027; each becomes a reference in RL1–RL4         |
@@ -235,9 +269,17 @@ The site's own gates apply: **0 payers in 30 days means add no doors; at least 1
 | 3 | Relied-on input | ≥2 written reliance agreements (insurer or auditor); ≥24 months of anchored history; back-test against incidents; professional-indemnity cover | 2028–29 |
 | 4 | Regulatory recognition | Notified body via an EU entity, SB 315 auditor partnership, or a future AI-rating regime | 2029+ |
 
+**Statutory route (v1.1).** Statute is creating the Stage 4 category on fixed dates: Illinois SB 315 annual independent audits from 1 Jan 2028; a California process for designating independent verification organisations due by 1 Jan 2028 (SB 813); California auditor registration from 1 Jan 2029 (AB 1405); a Connecticut pilot; and a proposed federal licensing bill. These were read from secondary legal summaries on 24 Nov 2026; the primary texts were not opened. The first mandatory audits fall in the Stage 2 year.
+
 ---
 ## 8. Open environment (one stack, open tools)
 Design: `open_env_design.md`. The pipeline runs: **runners** (Inspect, lm-eval, garak, Cisco MCP Scanner, TrustyAI) → **Layer 0 seal** (RFC 9162 Merkle root) → **human sign-off** (threshold) → **per-axis reports** → **DORADO index**.
+
+**Host-native outputs (v1.1).** Results should also appear in the formats the hosts read, one result at a time and never in bulk (owner rule 4):
+
+- Hub result files (`.eval_results/`) and a schema-valid `eval.yaml` for one bank. Read on 24 Nov: the `eval.yaml` in `csoai/gspc-gov` carries doctrine notes and none of the host's benchmark fields, so it is not a registered benchmark. Registration is by request to the host, which is the owner's to send.
+- Kaggle benchmark task cards, starting from the six in `csoai-provebench`.
+- An MCP feed keyed by registry server name, since the registry leaves ratings to downstream aggregators.
 
 Prototype results:
 
@@ -265,11 +307,14 @@ Business-intelligence join (50 companies → LEI → HF org → AI Act provision
 |---|---|---|
 | 20 Nov | Submit ICO; approve PR triage; merge #4533; decide on BridgeAI partner outreach (b2match) | Yes |
 | 24 Nov | NIST webform resubmission; OECD.AI form; BSI ART/1 application; prEN 18283 and DIS 23282 comments; review draft PR #4562 (coverage-evidence bare GET 400→402) | Mostly |
+| 24 Nov (v1.1) | Closing fortnight begins (§5.8). Silent-change calibration run 2, after run 1 failed its no-change control | No |
 | 1 Dec | BridgeAI go/no-go; Art 50 RAS T1 offer to 20 EU deployers (deadline 2 Dec); NIST SP 800-82r4 by 30 Nov | Mixed |
+| 7 Dec (v1.1) | UK Sovereign AI Challenge 4, batch 2 opens; closes 22 Jan 17:00 GMT (from the 18 Nov funding file, not re-checked) | Yes |
 | 8 Dec | BridgeAI submission (if go); SEC S7-2026-35 (7 Dec); schedule the ceremony (custodians named) | Yes |
 | 15 Dec | OCC/FDIC third-party-risk comment (16 Dec); NIST SP 2400-102 comment (18 Dec); Sovereign AI EOI | Yes |
+| 1 Jan (v1.1) | Owner's stated date for going public. Conditions: this playbook on master; one comparison axis re-measured on real open models, or UNTESTED stated on the board's first line; the silent-change report leads with its failed run; one outside person named; four asks sent in December | Yes |
 | 5 Jan | **Witnessed root ceremony**, then OTS + Rekor re-anchor; reconcile #4056 | Yes (humans) |
-| 12 Jan | Re-measure 14 model-comparison axes with a real model (key or local server); publish per-axis report contract v1 | No |
+| 12 Jan | Re-measure 14 model-comparison axes with a real model (key or local server); publish per-axis report contract v1 (v1.1: bring forward where possible on the open-weight Actions lane proven by the 23 Nov calibration, which needs no credential) | No |
 | 19 Jan | ICML DEB paper (benchmark answerability audit), arXiv first, then the Inspect registry submission | Mixed |
 | Feb | DORADO index v0 (vector, coverage-honest); auditor pilot (RL2); insurer pilot outreach (RL3) once anchors are live | Mixed |
 | 31 Mar 2027 | Stage-0 gate review: kill or scale each loop by its gate | Yes |
@@ -283,7 +328,7 @@ Business-intelligence join (50 companies → LEI → HF org → AI Act provision
 4. Name three independent ceremony custodians and a date.
 5. Complete the NIST webform and name a CRADA signatory; authorise the third-party-risk (FDIC), SEC 4-882 and NIST SP 2400-102 comments.
 6. BridgeAI: find a deployer partner by 1 Dec or drop it.
-7. DORADO: confirm it is an evidence index, subscriber-pays, ring-fenced from tool sales.
+7. DORADO: confirm it is an evidence index, paid for by relying parties, ring-fenced from tool sales (v1.1: "subscriber-pays" removed pending item 13).
 8. Provide a model API key (or a reachable local server) so that real re-measurement can run.
 9. Repair or retire the Freshness and Drift CI gates (29/30 and 20/30 recent failures).
 10. Machine hygiene:
@@ -291,6 +336,11 @@ Business-intelligence join (50 companies → LEI → HF org → AI Act provision
     - Disk: 4–11 GiB free.
 11. Licence rulings: gspc-gov, gspc-mcp and gspc-agi need cc-by-4.0, not cc0; gspc-care's Apache LICENSE file conflicts with its declared licence.
 12. Approve the Google Drive card so Drive strategy and grant documents can join the prior-work register.
+13. (v1.1) Rule on recurring payment: engagements invoiced after delivery plus metered x402 calls only, or subscriptions for relying parties. Until ruled, nothing recurring is offered.
+14. (v1.1) Name one release owner (§5.8).
+15. (v1.1) Name one appeals reviewer and the ceremony custodians (§5.6, §5.7).
+16. (v1.1) Rule on renaming four public Hugging Face datasets whose names use a word the owner has barred from public pages (list in the field study).
+17. (v1.1) State what one year of operation costs, so that grant drafts can carry an amount.
 
 ---
 ## 11. Method, limits and provenance
@@ -306,6 +356,9 @@ Business-intelligence join (50 companies → LEI → HF org → AI Act provision
 - One process note: to fetch sec.gov, the openings track sent a single request whose User-Agent named the public address contact@councilof.ai. That address was not sourced from the account settings; it should not have been used without your say-so.
 - Nothing was submitted, emailed, merged or deployed. Repo changes exist only as draft PRs.
 
+- **Host concentration (v1.1).** The estate's largest distribution host is reported to be changing owner in the first half of 2027 (a second-hand report, read 24 Nov). Verification stays on `did:web:csoai.org` and must not depend on any host; public records are mirrored off the host.
+- **Silent-change calibration (v1.1).** Run 1 of the registered rule flagged 19 of 30 and 12 of 20 no-change batches (signed record sha256 `5de64693acd1ae4dce393c28f8cca9505790746031cafc67386e45104c9ade59`). No detection claim is made until a rule passes its own control.
+
 ### 11.1 Executed this session (all drafts or comments; nothing merged)
 - **Draft PR #4556** adds an Inspect evidence static Space and a dispatch workflow. Recommendation: fold it into the existing `hf-evidence-sync`/`hf-frontdoors` workflows (§2).
 - **Draft PR #4562:** a bare GET on the paid `/api/coverage-evidence` path now returns a 402 challenge instead of a 400. 16 of 17 checks pass; the failing `gates` step 62 also fails on other PRs.
@@ -314,3 +367,25 @@ Business-intelligence join (50 companies → LEI → HF org → AI Act provision
 - **Issue #4565:** the jail axis reason code `NO_PER_ROW_RESULTS` is missing from the `/api/gspc` state_enum.
 - **Correction:** `/api/wrapper?id=usdc.e:arbitrum` returning 200 is **by design**. The pair was unreadable (all 4 public RPCs failed), so it answered with a preview and was not offered for sale. It is not a defect.
 - **ICO agentic-AI response drafted** for the owner to submit.
+
+---
+## 12. Version 1.1 amendments (24 Nov 2026)
+
+Twelve amendments, made on the owner's instruction of 24 Nov 2026 after a field study of comparable organisations (a private working file). The study's developer-platform segment relies on draft PR #4787.
+
+| # | Section | Amendment | State |
+|---|---|---|---|
+| 1 | 0 | Position statement and who-pays grid | In text |
+| 2 | 6 | Order of money for 2027 | In text |
+| 3 | 6, RL2 | Price per engagement, not per seat; accredited audit firms added as buyers | In text; price basis to be confirmed |
+| 4 | 6, RL3 | Insurer data-partner route | In text; unverified |
+| 5 | 0, 5.2, 5.5, 10 | "Subscriber-pays" removed; relying parties pay per request or per engagement | Proposed wording; owner ruling open (§10 item 13) |
+| 6 | 7 | Statutory route to Stage 4 | In text; secondary sources |
+| 7 | 5.4 | Five report fields: access level, funder, publication control, smallest detectable change, right of reply | In text, contract and schema (optional fields) |
+| 8 | 8 | Host-native outputs | In text |
+| 9 | 5.7 | A beat, a number and a state per lane; UNSTAFFED where no person holds it | In text |
+| 10 | 5.8 | Closing fortnight; one release owner | In text; owner to name (§10 item 14) |
+| 11 | 9 | Calendar: re-measurement brought forward; 24 Nov, 7 Dec and 1 Jan rows | In text |
+| 12 | 11 | Host concentration named as a risk | In text |
+
+Live reads used, 24 Nov 2026: `GET /api/gspc`, `GET /api/revenue`, `GET /api/worker`, the GitHub pull-request list, and the last log of the six-hourly pulse.

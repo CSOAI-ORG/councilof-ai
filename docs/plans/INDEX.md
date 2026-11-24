@@ -79,3 +79,8 @@ Source for this list: the prior-work consolidation of 20 Nov 2026, section "Plan
 ## Not listed (not plans)
 
 Handoffs and reports, such as the TUI reports of 11–13 Sep, HERMES ledgers and weekly lane plans, are working records rather than plans. They are left unclassified here. These files are also excluded: `council-os/DASHBOARD-CONSOLIDATION-2026-09-04.md` (a dashboard), `docs/integrations/meok-process-consolidation-20261109.md`, `docs/research/measured-reuse-consolidation-20261110.md` and `docs/seals/DAY3_53_DAY_ROADMAP_2026-06-15.md`. The owner may add any of them.
+
+## Inputs folded into playbook v1.1 (24 Nov 2026)
+
+- Field study of comparable organisations, business plan and operating heartbeat (a private working file, 24 Nov 2026): folded into the playbook as amendments 1 to 12 (playbook §12). Not a plan.
+- `docs/strategy/*-2026-11-24.md` in draft PR #4787: a research annex on developer platforms and an operating-model draft. Not a plan; its acceptance ladder is referenced from playbook §5.7.

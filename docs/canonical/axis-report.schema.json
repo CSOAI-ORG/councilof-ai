@@ -306,6 +306,75 @@
     "disclaimer": {
       "type": "string",
       "minLength": 20
+    },
+    "access_level": {
+      "type": "string",
+      "enum": [
+        "outside-in",
+        "api-key",
+        "weights",
+        "privileged"
+      ],
+      "description": "v1.1. What access the measurer had."
+    },
+    "funder": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "v1.1. Who paid for the run."
+    },
+    "publication_control": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "v1.1. Who decided that the record was published."
+    },
+    "min_detectable_change": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "metric",
+        "value"
+      ],
+      "properties": {
+        "metric": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        },
+        "basis": {
+          "type": "string"
+        }
+      },
+      "description": "v1.1. The smallest change this run could have detected at its n."
+    },
+    "right_of_reply": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "notified_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reply_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "description": "v1.1. Notice given to a named provider before publication, and any reply."
     }
   },
   "allOf": [

@@ -24,6 +24,10 @@ Each of the 34 GSPC axes is published as its own report, one per frozen snapshot
 | `reliance[]` | yes (may be empty) | Named acceptances, **only with consent** (`consent: true`) |
 | `anchor` | yes | `merkle_root`, `state` ANCHORED / PENDING / SIMULATED / NONE, `ots`, `rekor` |
 | `disclaimer` | yes | States that this is a measurement record, not a certificate, rating or conformity assessment |
+| `access_level` | no (v1.1 addition) | What access the measurer had: `outside-in`, `api-key`, `weights` or `privileged`. CSOAI's own runs are `outside-in` |
+| `funder`, `publication_control` | no (v1.1 addition) | Who paid for the run, and who decided that it was published |
+| `min_detectable_change` | no (v1.1 addition) | `metric`, `value`, optional `basis`: the smallest change this run could have detected at its n |
+| `right_of_reply` | no (v1.1 addition) | `notified_at`, `reply_ref`: notice given to a named provider before publication, and any reply. `null` when no provider is named |
 
 ## 2. Publication rules
 
