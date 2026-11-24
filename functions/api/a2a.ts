@@ -880,9 +880,20 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
       break;
   }
   const result = await fetchJsonSource(origin, path, { method, body });
+  // The advertised crosswalk canon and signed card are separate resources from
+  // the live divergence feed. Link them without rewriting the source payload,
+  // asserting their current availability, or promoting their signatures.
+  const crosswalkResources = skill === "east-west-crosswalk" ? {
+    live_divergence: { url: result.source, schema: record(result.payload)?.schema ?? null },
+    regulatory_crosswalk: { url: new URL("/crosswalk/east-west-v1.json", origin).toString(), state: "REFERENCE_ONLY" },
+    cross_border_card: { url: new URL("/signals/cross-border-card.signed.json", origin).toString(), state: "REFERENCE_ONLY" },
+    verifier: { url: new URL("/gspc-verify", origin).toString(), state: "REFERENCE_ONLY" },
+    note: "Separate resources; linked artifacts were not fetched or verified by this call.",
+  } : undefined;
   return {
-    text: sourceText(skill, result.source),
+    text: sourceText(skill, result.source) + (crosswalkResources ? "\nThe versioned regulatory crosswalk and cross-border card are separate resources linked in data.related_resources; they are not verified by this call." : ""),
     data: {
+      ...(crosswalkResources ? { related_resources: crosswalkResources } : {}),
       state: "DELIVERED_SOURCE",
       skill,
       source: result.source,
