@@ -18,6 +18,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import tempfile
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -170,6 +171,7 @@ def github_source(src: tuple[str, str, str], *, token=None,
         doc = fetch(base, token=token)
         if not isinstance(doc, dict) or doc.get("full_name", "").lower() != slug.lower():
             raise Uncheckable("GITHUB_REPO_ID_MISMATCH")
+        source_metadata_digest = sha(canonical(doc))
         repo_id = doc.get("id")
         if isinstance(repo_id, bool) or not isinstance(repo_id, int):
             raise Uncheckable("GITHUB_REPOSITORY_ID_INVALID")
@@ -180,6 +182,7 @@ def github_source(src: tuple[str, str, str], *, token=None,
         commit_list = fetch(base + "/commits?per_page=1", token=token)
         if not isinstance(commit_list, list) or not commit_list:
             raise Uncheckable("GITHUB_COMMIT_UNCHECKABLE")
+        commit_metadata_digest = sha(canonical(commit_list))
         head = commit_list[0].get("sha") if isinstance(commit_list[0], dict) else None
         if not isinstance(head, str) or not SHA40.fullmatch(head):
             raise Uncheckable("GITHUB_HEAD_SHA_UNCHECKABLE")
@@ -187,6 +190,8 @@ def github_source(src: tuple[str, str, str], *, token=None,
             "source": "github_public_api", "repository": slug, "project_role": kind,
             "candidate_experiment": experiment, "status": "SOURCE_METADATA_OBSERVED",
             "repository_id": repo_id, "head_sha": head,
+            "repository_metadata_canonical_sha256": source_metadata_digest,
+            "commit_metadata_canonical_sha256": commit_metadata_digest,
             "pushed_at_source_declared": safe_text(doc.get("pushed_at"), 35),
             "archived_source_declared": doc.get("archived") if type(doc.get("archived")) is bool else None,
             "license_spdx_source_declared": licence,
@@ -250,6 +255,7 @@ def crossref_topic(topic: str, *, from_date: str, fetch=fetch_json) -> dict:
                 "human_review": "UNASSIGNED",
             })
         return {"topic": topic, "status": "SOURCE_METADATA_OBSERVED",
+                "source_response_canonical_sha256": sha(canonical(doc)),
                 "papers": papers, "recently_indexed_not_necessarily_newly_published": True}
     except (Uncheckable, TypeError, ValueError, KeyError) as exc:
         return {"topic": topic, "status": "SOURCE_UNCHECKABLE",
@@ -353,7 +359,8 @@ def main(argv=None):
         if args.out.exists():
             if args.out.stat().st_size > 200_000:
                 raise Uncheckable("PREVIOUS_INDEX_TOO_LARGE")
-            previous = json.loads(args.out.read_text(encoding="utf-8"))
+            previous_bytes = args.out.read_bytes()
+            previous = json.loads(previous_bytes)
             if not isinstance(previous, dict) or previous.get("schema") != SCHEMA:
                 raise Uncheckable("PREVIOUS_INDEX_SCHEMA_CHANGED")
             previously = utc(previous["observed_at"])
@@ -368,6 +375,12 @@ def main(argv=None):
         elif args.offline:
             raise Uncheckable("OFFLINE_INDEX_NOT_AVAILABLE")
         output = collect(previous, now=now, token=os.getenv("GH_API_TOKEN") or None)
+        if previous is not None:
+            output["previous_snapshot_sha256"] = sha(previous_bytes)
+            output["previous_snapshot_observed_at"] = previous["observed_at"]
+        else:
+            output["previous_snapshot_sha256"] = None
+            output["previous_snapshot_observed_at"] = None
         if output["repositories_observed"] == 0:
             raise Uncheckable("ALL_PUBLIC_REPOSITORY_METADATA_UNCHECKABLE")
         raw = json.dumps(output, indent=2, ensure_ascii=False, sort_keys=True,
@@ -375,7 +388,22 @@ def main(argv=None):
         if len(raw) > 200_000:
             raise Uncheckable("OUTPUT_METADATA_TOO_LARGE")
         args.out.parent.mkdir(parents=True, exist_ok=True)
-        args.out.write_bytes(raw)
+        staged_path = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="wb", prefix=".research-commons-", dir=args.out.parent,
+                delete=False
+            ) as staged:
+                staged_path = Path(staged.name)
+                staged.write(raw)
+                staged.flush()
+                os.fsync(staged.fileno())
+            if args.out.is_symlink():
+                raise Uncheckable("OUTPUT_SYMLINK_REFUSED")
+            os.replace(staged_path, args.out)
+        finally:
+            if staged_path is not None and staged_path.exists():
+                staged_path.unlink()
         print(json.dumps({"state": output["repository_status"],
                           "repos_observed": output["repositories_observed"],
                           "repos_uncheckable": output["repositories_uncheckable"],
