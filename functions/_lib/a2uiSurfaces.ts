@@ -301,14 +301,15 @@ export function axisCardSurface(input: AxisCardInput, surfaceId = sid("gspc_axis
     record_line: `Record address: ${record ? absolute(origin, record) : NOT_PUBLISHED}`,
     card_state_line: cardState ? `Card state, as the board words it: ${cardState}` : null,
     data_line: `Data address: ${dataset ?? NOT_PUBLISHED}`,
-    verifier_line: verifyUrl ? null : "Free verifier: not published for this record (the board names no signed card id for this axis)",
+    // The address is always shown as text too: a renderer that draws no Button still shows it.
+    verifier_line: verifyUrl ? `Free verifier for this record: ${verifyUrl}` : "Free verifier: not published for this record (the board names no signed card id for this axis)",
     verify_url: verifyUrl,
     read,
     source,
     as_of: asOf,
   };
   const optional = (id: string, key: string, role: "body" | "caption" = "caption"): Json[] => (model[key] ? [t(id, { path: `/${key}` }, role)] : []);
-  const children = ["title", "name", "result", "separation", ...(model.separation_words ? ["separation_words"] : []), "date", "record", ...(model.card_state_line ? ["card_state"] : []), "data", ...(verifyUrl ? ["verify_button"] : ["verifier"]), "divider", "read", "limits"];
+  const children = ["title", "name", "result", "separation", ...(model.separation_words ? ["separation_words"] : []), "date", "record", ...(model.card_state_line ? ["card_state"] : []), "data", "verifier", ...(verifyUrl ? ["verify_button"] : []), "divider", "read", "limits"];
   const components: Json[] = [
     { id: "root", component: "Card", child: "body" },
     { id: "body", component: "Column", children },
@@ -321,12 +322,13 @@ export function axisCardSurface(input: AxisCardInput, surfaceId = sid("gspc_axis
     t("record", { path: "/record_line" }, "caption"),
     ...optional("card_state", "card_state_line"),
     t("data", { path: "/data_line" }, "caption"),
+    t("verifier", { path: "/verifier_line" }, "caption"),
     ...(verifyUrl
       ? [
           t("verify_label", "Open the free verifier for this record", "body"),
           { id: "verify_button", component: "Button", child: "verify_label", variant: "primary", action: { functionCall: { call: "openUrl", args: { url: verifyUrl } } } },
         ]
-      : [t("verifier", { path: "/verifier_line" }, "caption")]),
+      : []),
     { id: "divider", component: "Divider" },
     t("read", { path: "/read" }, "caption"),
     t("limits", limits, "caption"),

@@ -172,6 +172,8 @@ describe("axis card", () => {
     expect(m.as_of).toBe("2026-11-24T06:00:00.000Z");
     const button = b.components.find((c) => c.component === "Button") as J;
     expect(button.action.functionCall).toEqual({ call: "openUrl", args: { url: `${ORIGIN}/api/a2ui/verify?card=${CARD}` } });
+    // the same address is also a text line, for a renderer that draws no Button
+    expect(m.verifier_line).toBe(`Free verifier for this record: ${ORIGIN}/api/a2ui/verify?card=${CARD}`);
     checkTree(b.components);
     // catalogue only: nothing outside the basic catalogue is used
     for (const c of b.components) expect(["Card", "Column", "Text", "Divider", "Button"]).toContain(c.component);
