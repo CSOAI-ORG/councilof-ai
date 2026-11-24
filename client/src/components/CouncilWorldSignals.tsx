@@ -6,7 +6,7 @@ import {
 } from "@/lib/worldSignals";
 
 type SourceName = keyof typeof SIGNAL_SOURCES;
-type Read<T> = { state: "loading" | "ready" | "unavailable"; data: T | null; error: string | null };
+type Read<T> = { state: "loading" | "ready" | "unavailable"; data: T | null; error: string | null; sha256?: string; readAt?: string };
 const EMPTY = { state: "loading", data: null, error: null } as const;
 const PUBLIC_ONLY = "Read-only public source projection. Presence here is not independent verification, an accepted incident, authenticated human authority, or a newly performed measurement.";
 
@@ -29,10 +29,14 @@ export default function CouncilWorldSignals() {
         });
         if (!response.ok) throw new Error("HTTP " + response.status);
         // Source shapes and claims must be validated before they reach the interface.
-        const raw: unknown = await response.json();
+        const bytes = await response.arrayBuffer();
+        if (bytes.byteLength > 1_500_000) throw new Error("SOURCE_SIZE_LIMIT");
+        const raw: unknown = JSON.parse(new TextDecoder().decode(bytes));
+        const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
+        const sha256 = Array.from(digest, (byte) => byte.toString(16).padStart(2, "0")).join("");
         const parsed = key === "corrections" ? parseCorrections(raw) :
           key === "fabric" ? parseFabric(raw) : parseOversight(raw);
-        if (!controller.signal.aborted) (set as (v: unknown) => void)({ state: "ready", data: parsed, error: null });
+        if (!controller.signal.aborted) (set as (v: unknown) => void)({ state: "ready", data: parsed, error: null, sha256, readAt: new Date().toISOString() });
       } catch (err) {
         if (!controller.signal.aborted) (set as (v: unknown) => void)({
           state: "unavailable", data: null,
@@ -96,6 +100,15 @@ export default function CouncilWorldSignals() {
         <a className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-800 underline"
           href={SIGNAL_SOURCES[kind]}>Inspect original JSON <ExternalLink className="h-3 w-3"/></a>
       </div>
+
+      {active.state === "ready" && active.sha256 && (
+        <p className="mt-2 break-all rounded-lg border border-emerald-100 bg-white p-2 font-mono text-[10px] text-slate-700" data-testid="world-source-fingerprint">
+          SHA-256 of exactly fetched response bytes: {active.sha256}
+          <span className="mt-1 block font-sans text-[10px] text-slate-600">
+            Browser read time {active.readAt ?? "unknown"}. This hash is a local fingerprint, not a source signature, OTS anchor or independent witness.
+          </span>
+        </p>
+      )}
 
       {active.state === "ready" && kind !== "oversight" && (
         <label className="mt-3 block text-xs font-semibold text-slate-700">
