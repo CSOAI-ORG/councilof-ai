@@ -948,9 +948,12 @@ function boot() {
   });
   document.getElementById("q").addEventListener("input", () => {
     query = document.getElementById("q").value;
-    if (query.trim() && !["ontology", "tape-table", "boards", "hub-cells", "models"].includes(activePanel)) {
-      history.replaceState(null, "", "#ontology");
-      showPanel("ontology");
+    // Search must expose a panel where filtered results are actually visible.
+    // The model directory has its own live filter; all other panels use the
+    // filtered comparison table (including zero-result searches).
+    if (query.trim() && !["tape-table", "models"].includes(activePanel)) {
+      history.replaceState(null, "", "#tape-table");
+      showPanel("tape-table");
     }
     applySearch();
   });
