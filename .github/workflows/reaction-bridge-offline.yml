@@ -18,4 +18,4 @@ jobs:
         with:
           node-version: "22"
       - name: Pure deterministic negative controls
-        run: node --test measurement/experiments/reaction-bridge/reaction-bridge.test.mjs
+        run: node --test measurement/experiments/reaction-bridge/*.test.mjs
