@@ -287,6 +287,8 @@ const EXCLUDE_EXACT = new Set([
 ]);
 
 const EXCLUDE_PREFIX = [
+  // Withdrawn 2026-11-24 (public-exposure audit): internal catalogue, kept in the repo, not deployed.
+  "/jewels/",
   "/settings",
   "/dashboard/",
   "/certification/exam",
