@@ -12,6 +12,9 @@ const record = (value: unknown): Json | null =>
 export type AxisSpecialistAudit = {
   schema: "csoai.axis-specialist-audit/1.0";
   axis: string;
+  /** What the row's figures do not show, in the board row's own words. Present only on a row
+   * that states one (the held rows); the pane shows it before any figure from that row. */
+  limit?: string;
   specialist: {
     id: string;
     cluster_id: string;
@@ -57,8 +60,17 @@ export type AxisSpecialistAudit = {
   audit_sha256: string;
 };
 
+/** The limit this build pins for an axis, copied from the board row into the specialist index by
+ * scripts/axis-specialists.mjs. Undefined when the row states none. */
+function pinnedLimit(axis: string): string | undefined {
+  const pin = INDEX.specialists.find((item) => item.axis === axis) as { limit?: unknown } | undefined;
+  return typeof pin?.limit === "string" ? pin.limit : undefined;
+}
+
 /** Fail closed at the UI boundary: a response for another axis, another logical
- * cluster, an open human gate or an applied proposal is not displayable evidence. */
+ * cluster, an open human gate or an applied proposal is not displayable evidence.
+ * Nor is a held row whose stated limit is missing or reworded: its figures may not
+ * be shown without that limit. */
 export function validateAxisSpecialistAudit(value: unknown, axis: string): AxisSpecialistAudit {
   const audit = record(value);
   const specialist = record(audit?.specialist);
@@ -109,6 +121,7 @@ export function validateAxisSpecialistAudit(value: unknown, axis: string): AxisS
     !Array.isArray(review.required_fields) || !review.required_fields.every(field => typeof field === "string") ||
     typeof review.next_step !== "string" ||
     audit.axis !== axis ||
+    audit.limit !== pinnedLimit(axis) ||
     specialist?.id !== `meok-${axis}-specialist` ||
     specialist.cluster_id !== `meok-axis-${axis}` ||
     specialist.cluster_state !== "DECLARED_NOT_PROVISIONED" ||
@@ -156,6 +169,27 @@ export async function loadAxisSpecialist(
   return audit;
 }
 
+const LIMIT_TEXT_ID = "axis-limit-text";
+const CORRECTION_ID = /\bC-\d{4}-\d{4}-\d{2}\b/g;
+
+/** The row's stated limit as plain text, with each correction it cites linked to its ledger
+ * entry, as the Limit block on /axis/<axis> shows it (scripts/surface/build-axis-pages.mjs). */
+function AxisLimit({ axis, text }: { axis: string; text: string }) {
+  const ids = [...new Set(text.match(CORRECTION_ID) ?? [])];
+  return (
+    <section aria-labelledby="axis-limit" data-limit={axis} className="mt-6 rounded-2xl border border-amber-300 bg-amber-50 p-5 text-amber-950">
+      <h3 id="axis-limit" className="text-lg font-bold">Limit</h3>
+      <p id={LIMIT_TEXT_ID} className="mt-2 text-sm leading-relaxed [overflow-wrap:anywhere]">{text}</p>
+      {ids.length ? (
+        <p className="mt-3 text-xs">
+          Recorded in the corrections ledger:{" "}
+          {ids.map((id, i) => <span key={id}>{i ? ", " : ""}<a className="underline" href={`/corrections/#${id}`}>{id}</a></span>)}.
+        </p>
+      ) : null}
+    </section>
+  );
+}
+
 export default function CouncilAxisSpecialistPane() {
   const [axis, setAxis] = useState(INDEX.specialists[0]?.axis ?? "governance");
   const [audit, setAudit] = useState<AxisSpecialistAudit | null>(null);
@@ -186,6 +220,8 @@ export default function CouncilAxisSpecialistPane() {
   }, [axis, attempt]);
 
   const selected = INDEX.specialists.find((item) => item.axis === axis);
+  // On a row that states a limit, every figure printed from it is described by that limit.
+  const held = audit?.limit ? { "aria-describedby": LIMIT_TEXT_ID } : {};
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-8 sm:py-8" data-testid="axis-specialists-pane">
       <header className="border-b border-border pb-6">
@@ -204,7 +240,7 @@ export default function CouncilAxisSpecialistPane() {
               data-testid="axis-specialist-select"
             >
               {INDEX.specialists.map((item) => (
-                <option key={item.axis} value={item.axis}>{item.axis} · {item.measurement_status}</option>
+                <option key={item.axis} value={item.axis}>{item.axis} · {item.measurement_status}{pinnedLimit(item.axis) ? " · limit stated" : ""}</option>
               ))}
             </select>
           </label>
@@ -231,10 +267,11 @@ export default function CouncilAxisSpecialistPane() {
         </div>
       ) : audit ? (
         <>
+          {audit.limit ? <AxisLimit axis={audit.axis} text={audit.limit} /> : null}
           <section className="mt-6 grid gap-4 lg:grid-cols-[1fr_18rem]" aria-labelledby="specialist-mission">
             <div className="rounded-2xl border border-border bg-card p-5">
               <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
-                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-slate-900">{audit.source.axis_row.status}</span>
+                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-slate-900" {...held}>{audit.source.axis_row.status}</span>
                 <span className="rounded-full bg-slate-100 px-2.5 py-1 text-slate-900">{audit.source.axis_row.family}</span>
                 <span className="rounded-full bg-amber-100 px-2.5 py-1 text-amber-950">H.I.M. {audit.human_gate.decision}</span>
               </div>
@@ -244,7 +281,7 @@ export default function CouncilAxisSpecialistPane() {
                 <div><dt className="text-xs text-muted-foreground">Passed / total</dt><dd className="mt-1 font-mono font-bold">{audit.summary.passed}/{audit.summary.checks}</dd><dd className="mt-1 text-xs text-slate-700">{audit.summary.declared} declared, unverified</dd></div>
                 <div><dt className="text-xs text-muted-foreground">Findings</dt><dd className="mt-1 font-mono font-bold">{audit.summary.findings}</dd></div>
                 <div><dt className="text-xs text-muted-foreground">Proposals</dt><dd className="mt-1 font-mono font-bold">{audit.improvement_proposals.length}</dd></div>
-                <div><dt className="text-xs text-muted-foreground">Observed n</dt><dd className="mt-1 font-mono font-bold">{audit.source.axis_row.n}</dd></div>
+                <div><dt className="text-xs text-muted-foreground">Observed n</dt><dd className="mt-1 font-mono font-bold" {...held}>{audit.source.axis_row.n}</dd>{audit.limit ? <dd className="mt-1 text-xs font-semibold text-amber-950">Read with the Limit above</dd> : null}</div>
               </dl>
               {audit.source.axis_row.status === "UNMEASURED" ? <p className="mt-4 text-xs font-semibold text-amber-950">UNMEASURED stays visible. n=0 is not a score.</p> : null}
             </div>
@@ -269,13 +306,14 @@ export default function CouncilAxisSpecialistPane() {
               <a className="min-h-11 py-2 underline" href={`/api/hitl/modules/${axis}`}>Reviewer briefing</a>
               <a className="min-h-11 py-2 underline" href="/corrections/">Request a correction</a>
             </nav>
-            <details className="mt-3"><summary className="min-h-11 cursor-pointer py-2 text-sm font-semibold">Required evidence fields ({audit.review.required_fields.length})</summary><dl className="space-y-3 text-xs">{audit.review.required_fields.map(field => <div key={field}><dt className="font-mono font-bold">{field}</dt><dd className="mt-1 break-all text-muted-foreground">{audit.source.axis_row[field] == null || audit.source.axis_row[field] === "" ? "Missing in this snapshot" : typeof audit.source.axis_row[field] === "object" ? JSON.stringify(audit.source.axis_row[field]) : String(audit.source.axis_row[field])}</dd></div>)}</dl></details>
+            <details className="mt-3"><summary className="min-h-11 cursor-pointer py-2 text-sm font-semibold">Required evidence fields ({audit.review.required_fields.length})</summary>{audit.limit ? <p data-limit-copy={audit.axis} className="mb-3 text-xs leading-relaxed text-amber-950 [overflow-wrap:anywhere]">Limit: {audit.limit}</p> : null}<dl className="space-y-3 text-xs">{audit.review.required_fields.map(field => <div key={field}><dt className="font-mono font-bold">{field}</dt><dd className="mt-1 break-all text-muted-foreground" {...held}>{audit.source.axis_row[field] == null || audit.source.axis_row[field] === "" ? "Missing in this snapshot" : typeof audit.source.axis_row[field] === "object" ? JSON.stringify(audit.source.axis_row[field]) : String(audit.source.axis_row[field])}</dd></div>)}</dl></details>
             <p className="mt-3 text-xs text-muted-foreground">The audit body and row match this application's pinned content. That check does not verify the linked evidence or grant authority.</p>
           </section>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
             <section aria-labelledby="axis-checks">
               <h3 id="axis-checks" className="text-base font-bold">Audit checks and findings</h3>
+              {audit.limit ? <p className="mt-2 text-xs font-semibold text-amber-950">These checks read the row that the Limit above describes.</p> : null}
               <ol className="mt-3 space-y-2">
                 {audit.checks.map((check) => (
                   <li key={check.id} className="rounded-xl border border-border bg-card p-4">
@@ -283,7 +321,7 @@ export default function CouncilAxisSpecialistPane() {
                       <span className="font-mono font-bold">{check.id}</span>
                       <span className={`rounded-full px-2 py-1 font-semibold ${check.state === "PASS" ? "bg-emerald-50 text-emerald-900" : check.state === "DECLARED" ? "bg-slate-100 text-slate-700" : "bg-amber-100 text-amber-950"}`}>{check.state}</span>
                     </p>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{check.detail}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground" {...held}>{check.detail}</p>
                   </li>
                 ))}
               </ol>

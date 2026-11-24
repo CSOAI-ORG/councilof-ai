@@ -24,6 +24,7 @@ jobs:
       EAT_PER_SOURCE: "10"
       EAT_MAX_PROBE: "100"
       EAT_PROBE_WORKERS: "8"
+      PYTHONUNBUFFERED: "1"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -42,6 +43,9 @@ jobs:
           # Do not merge master wholesale: master has unrelated legacy auto-eat
           # atoms in this directory. Sync only the operator code.
           git restore --source=origin/master -- scripts/auto-eat
+
+      - name: prove sparse A2A registry cannot stall discovery
+        run: python3 scripts/auto-eat/test_discover_bounded.py
 
       - name: discover bounded public candidates
         run: timeout 180s python3 scripts/auto-eat/discover.py --per-source "$EAT_PER_SOURCE"

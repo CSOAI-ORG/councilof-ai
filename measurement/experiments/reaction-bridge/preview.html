@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CSOAI reaction evidence review — local research</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#e5f5ee;background:#071a12}
+*{box-sizing:border-box}body{margin:0}.wrap{max-width:930px;margin:auto;padding:28px 18px}
+h1{line-height:1.14;font-size:clamp(1.5rem,4vw,2.4rem)}p{line-height:1.5;color:#b6cfc2}
+.panel{background:#10261b;border:1px solid #315342;padding:20px;border-radius:12px}
+label{display:block;font-weight:600;margin-bottom:8px}
+textarea{font:13px/1.5 ui-monospace,monospace;width:100%;min-height:230px;padding:14px;background:#05150e;color:#f1fdf5;border:1px solid #467b5a;border-radius:8px;resize:vertical}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}
+button{cursor:pointer;padding:11px 16px;background:#13764a;border:1px solid #45b985;color:white;font-weight:650;border-radius:8px}
+button.secondary{background:#183426}
+button:focus-visible,textarea:focus-visible{outline:3px solid #b7f5ce;outline-offset:2px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#071a12;padding:14px;border-radius:8px;border:1px solid #315342;min-height:100px}
+.critical{border-left:3px solid #e9b54c;padding-left:14px}
+small{color:#aac8b5}
+</style></head><body><main class="wrap">
+<h1>Reaction evidence review</h1>
+<p class="critical"><strong>Local research only.</strong> This is not a CouncilOS production tool, verifier, reviewer identity check, GSPC measurement, model invocation or an approved human decision. A reported receipt digest cannot establish an externally accepted effect.</p>
+<section class="panel" aria-labelledby="source-label">
+<label id="source-label" for="cases">Paste a JSON array of existing reaction experiment records (public or synthetic non-sensitive examples only)</label>
+<textarea id="cases" spellcheck="false" aria-describedby="privacy-note"></textarea>
+<small id="privacy-note">Your browser processes the text locally. This page has no upload, storage, external request, payment or execution path. Do not paste private records.</small>
+<div class="actions">
+<button type="button" id="review">Review supplied pointers</button>
+<button type="button" id="sample" class="secondary">Load synthetic example</button>
+<button type="button" id="clear" class="secondary">Clear</button>
+</div>
+<h2>Read-only result</h2><pre id="result" role="status" aria-live="polite">No analysis run. UNKNOWN is not zero.</pre>
+</section>
+</main><script type="module" src="./preview.mjs"></script></body></html>
