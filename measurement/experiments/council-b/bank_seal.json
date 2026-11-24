@@ -1,0 +1,32 @@
+{
+  "bank_sha256": "6c8e6af60e76a1d8a8552735554b42aff3654e0066ca2ad3b510cd4322d23476",
+  "corpus_commit": "b88b88a40f95c86debc03957be87ca06565bdb5c",
+  "custody": "bank.jsonl only is staged to GPU jobs; key.jsonl stays local and is joined only in analysis. Bank content is not committed here (hashes only) so the bank stays hidden until the owner decides on publication.",
+  "gold_counts": {
+    "FALSE": 153,
+    "TRUE": 153,
+    "UNCHECKABLE": 54
+  },
+  "gspc_snapshot_sha256": "898b62ecce679302faaef378ee72f9d8f444be829fd3ab3d764be8d1cea62c5c",
+  "key_sha256": "09a69dc5068739496ca2bd1d4478eeb0acb29c24dcd1888cdf8931d225c00381",
+  "n_items": 360,
+  "pre_run_key_audit": {
+    "excluded_from_all_analyses": {
+      "cb-0040": "T2 FALSE claim 'refers to Article 27'; text cites 'Articles 26(3), 27 and 28' (list form missed by the singular regex): gold is wrong",
+      "cb-0084": "T2 FALSE claim 'refers to Section 5'; text cites 'Section 5.1 of Annex IX': ambiguous",
+      "cb-0191": "T2 FALSE claim 'refers to Article 9'; text cites 'Articles 7 to 17' (range form): gold is wrong"
+    },
+    "method": "independent regex audit of FALSE T1/T2 items for the claimed number appearing in list or range citations, run before any model output existed",
+    "n_analysed": 357
+  },
+  "prereg_commit": "827b432c13b38f7d9474232a9b1fb93bb61b51d7",
+  "protocol_sha256": "1c9996dca0096e9a1bdf1323890c5485a325941a6bd61f032730bd4fc36320dd",
+  "sealed_at": "2026-11-24T10:07:06Z",
+  "type_counts": {
+    "G1": 84,
+    "T1": 118,
+    "T2": 58,
+    "T3": 58,
+    "T4": 42
+  }
+}
