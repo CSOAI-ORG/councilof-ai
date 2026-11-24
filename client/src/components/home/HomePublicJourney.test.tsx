@@ -29,6 +29,8 @@ describe("public evidence and learning journeys", () => {
     const page = render(<HomeLearningJourney />);
     expect(LEARNING_JOURNEYS.map((x) => x.href)).toEqual(["/dashboard?tab=academy", "/dashboard?tab=learn", "/dashboard?tab=staff"]);
     expect(page.querySelector('a[href="/dashboard?tab=him"]')).not.toBeNull();
+    expect(page.querySelector('a[href="/games/ruler/"]')).not.toBeNull();
+    expect(page.querySelector('a[href="/gspc-arena/"]')).not.toBeNull();
     expect(page.body.textContent).toContain("Council for the Safety of Artificial Intelligence");
   });
   it("keeps practice separate from authority, benchmark changes and deployed-model training", () => {
@@ -66,7 +68,7 @@ describe("public evidence and learning journeys", () => {
     const page = render(<><HomeWatchdog /><HomeLearningJourney /><HomeJourneyQuestions /></>);
     for (const anchor of page.querySelectorAll("a")) {
       const href = anchor.getAttribute("href")!;
-      expect(href).toMatch(/^\/(dashboard\?tab=(watchdog|corrections|academy|learn|staff|him)|watchdog\/(\?view=library)?|faq\/|services\/|contact\?arm=run)$/);
+      expect(href).toMatch(/^\/(dashboard\?tab=(watchdog|corrections|academy|learn|staff|him)|watchdog\/(\?view=library)?|games\/ruler\/|gspc-arena\/|faq\/|services\/|contact\?arm=run)$/);
       expect(href).not.toBe("#");
     }
   });
@@ -77,10 +79,10 @@ describe("public evidence and learning journeys", () => {
     expect(source).toContain("gspcDatasetLd(false)");
     expect(source).not.toContain("contact@council");
   });
-  it("keeps all six hero anchors meaningful and unique", () => {
+  it("links directly to the workspace and extension as well as the page sections", () => {
     const page = render(<HomeHero />);
     const links = [...page.querySelectorAll('[data-journey-index] a')];
-    expect(links.map((a) => a.getAttribute("href"))).toEqual(["#board", "#watchdog", "#products", "#learning", "#how-it-works", "#developers"]);
-    expect(new Set(links.map((a) => a.getAttribute("href"))).size).toBe(6);
+    expect(links.map((a) => a.getAttribute("href"))).toEqual(["#board", "#watchdog", "#products", "#learning", "#how-it-works", "#developers", "/dashboard/?tab=home", "/tools/#extension"]);
+    expect(new Set(links.map((a) => a.getAttribute("href"))).size).toBe(8);
   });
 });
