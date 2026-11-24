@@ -1,0 +1,94 @@
+{
+  "schema": "csoai.research-evidence-bundle-manifest/0.1",
+  "bundle_id": "multilingual-guard-evidence-20261124",
+  "status": "UNSIGNED_SELF_RUN_RESEARCH_NOT_MEASUREMENT_ADMITTED",
+  "publisher": "CSOAI research; not independently accepted or externally certified",
+  "created_at": "2026-11-24",
+  "rights": {
+    "turkish_dataset": "license:other; raw text excluded and reuse rights unqualified",
+    "notinject_dataset": "MIT metadata; raw prompt text excluded",
+    "model": "Apache-2.0 model metadata; verify version and derived-code conditions"
+  },
+  "sources": [
+    {
+      "kind": "dataset",
+      "name": "halilneed/turkish-prompt-injection-benchmark",
+      "revision": "bf31d065f96a82a8d615863b8ae8da532651f7f2",
+      "file_sha256": "1f00c9a3639ec307538e45dcbd4a7397a908fea125c682156bfc3331b5fda5b5",
+      "n": 3372,
+      "labels": "publisher only"
+    },
+    {
+      "kind": "dataset",
+      "name": "leolee99/NotInject",
+      "revision": "847ae76cf8fea5ed325429e569ae8cfef022d2e0",
+      "file_sha256s": [
+        "5b1d3a8ec341205305efd8c6d2cabeb5ba0f594dd8726b08ee7fde1a46ddc6ec",
+        "a5a8c1b3b851b0b5acc3b6caf8bfee26d7da631b2967dd31ca90358df8883feb",
+        "d5c685b123570c092a0f374ba6bdf324b2026d905a2751a243eb2bb360d411a8"
+      ],
+      "n": 339,
+      "labels": "publisher only"
+    },
+    {
+      "kind": "model",
+      "name": "Horizon-Labs/prompt-injection-guard-small",
+      "revision": "2efc2ed5abecd21eb45c2506d231a65d6e392b85",
+      "weights_sha256": "61cd0741cdbfcc229e32e1de1392f352736d87d1e8b3c2b67ad9836bb7910d5d",
+      "runtime": "CPU ONNX, max512, threshold0.5"
+    }
+  ],
+  "observations": [
+    {
+      "source": "docs/research/turkish-guard-observed-20261124/record.json",
+      "original_bytes_sha256": "1e470104b50e7ca851a448d63b352c732b95ab05d040d94229188c1760260ee1",
+      "kind": "ACTUAL_RECORDED_MODEL_CLASSIFICATION",
+      "cases": 3372,
+      "true_positive": 255,
+      "false_negative": 62,
+      "true_negative": 2768,
+      "false_positive": 287,
+      "real_tool_effect": false
+    },
+    {
+      "source": "docs/research/turkish-guard-observed-20261124/notinject-summary.json",
+      "original_local_record_sha256": "2533608d57dd6fe7ade17b3ca4d36682aea6449438583caaeb1e77169be740c0",
+      "kind": "DERIVED_SUMMARY_FROM_ACTUAL_LOCAL_RECORD",
+      "cases": 339,
+      "false_positive": 13,
+      "benign_only": true,
+      "original_bytes_published": false
+    }
+  ],
+  "reaction_import": "docs/research/turkish-guard-observed-20261124/councilos-import.json",
+  "reaction_readback": "docs/research/turkish-guard-observed-20261124/reaction-observation.json",
+  "reaction_status": "ACCEPTANCE_INCOMPLETE",
+  "gspc_event_generator": "scripts/research/turkish_to_evidence_event.py",
+  "gspc_event_candidate_state": "PARTIAL_UNSIGNED_NOT_ADMITTED",
+  "human_approval": "NOT_ESTABLISHED",
+  "qualified_executor_effect": "NOT_ESTABLISHED",
+  "independent_receiver_acceptance": "NOT_ESTABLISHED",
+  "customer_retrieval_acceptance": "NOT_ESTABLISHED",
+  "defense_effectiveness_claim": "NOT_ESTABLISHED",
+  "public_docs": [
+    "docs/research/turkish-guard-observed-20261124/README.md",
+    "docs/research/turkish-guard-observed-20261124/INCIDENT-TRANSFER-20261124.md",
+    "docs/research/turkish-guard-observed-20261124/ROGUE-AI-RESEARCH-TRANSFER-20261124.md"
+  ],
+  "required_next": [
+    "PR CI source/rights review",
+    "qualified real human approved harmless executor action",
+    "independent receiving-party readback",
+    "protected publisher release and real browser journey",
+    "external buyer acceptance documented separately"
+  ],
+  "gspc_axes_candidate_only": [
+    "jail",
+    "measurer-integrity",
+    "detector-interop",
+    "harness-fidelity",
+    "effect-binding",
+    "serving-fidelity",
+    "watchdog-ingest"
+  ]
+}
