@@ -29,6 +29,13 @@ export function projectObservedModelRun(record, bytes) {
     throw Error("row population arithmetic mismatch");
   const source=pin(record.dataset_parquet_sha256);
   const method=pin(record.method_sha256);
+  const actualMethod=createHash("sha256").update(readFileSync(new URL("./turkish_guard_observed.py",import.meta.url))).digest("hex");
+  if(source!=="1f00c9a3639ec307538e45dcbd4a7397a908fea125c682156bfc3331b5fda5b5" ||
+     method!==actualMethod ||
+     record.dataset_revision!=="bf31d065f96a82a8d615863b8ae8da532651f7f2" ||
+     record.model_revision!=="2efc2ed5abecd21eb45c2506d231a65d6e392b85" ||
+     record.weights_sha256!=="61cd0741cdbfcc229e32e1de1392f352736d87d1e8b3c2b67ad9836bb7910d5d")
+    throw Error("model/source/method changed; refuse provenance promotion");
   const output=pin(createHash("sha256").update(bytes).digest("hex"));
   const reported=(receipt_sha256)=>({state:"REPORTED",receipt_sha256,source_realm:"OBSERVED"});
   const unknown=()=>({state:"UNKNOWN",source_realm:"OBSERVED"});
