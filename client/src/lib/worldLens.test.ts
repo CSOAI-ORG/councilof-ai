@@ -25,6 +25,8 @@ describe("Council World fixed-source evidence adapters", () => {
     expect(() => parseWorldFact("gspc", { totals: { axes: 34 } })).toThrow();
     expect(() => parseWorldFact("gspc", { schema: "csoai.gspc-axes/0.5", totals: { axes: -1 } })).toThrow();
     expect(() => parseWorldFact("root", { card_count: "452", as_of: "today" })).toThrow();
+    expect(() => parseWorldFact("root", { card_count: 452, as_of: "today" })).toThrow();
+    expect(() => parseWorldFact("root", { card_count: 452, as_of: "2035-01-01" })).toThrow();
     expect(() => parseWorldFact("worker", { schema: "csoai.worker-state/0.1", status: "ALIVE" })).toThrow();
   });
 
