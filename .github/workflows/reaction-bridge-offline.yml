@@ -36,3 +36,18 @@ jobs:
         run: npx vitest run client/src/components/ReactionResearchReview.test.tsx client/src/components/ReactionResearchReview.behavior.test.tsx --maxWorkers 1
       - name: Bundle browser-only research component in isolation
         run: npx esbuild client/src/components/ReactionResearchReview.tsx --bundle --platform=browser --format=esm --target=es2022 --external:react --outfile=/tmp/council-reaction-component.mjs
+  isolated-chromium-journey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked browser test dependencies
+        run: npm ci
+      - name: Install test browser
+        run: npx playwright install --with-deps chromium
+      - name: Exercise local-only 390px and desktop browser journeys
+        run: node measurement/experiments/reaction-bridge/browser-smoke.mjs
