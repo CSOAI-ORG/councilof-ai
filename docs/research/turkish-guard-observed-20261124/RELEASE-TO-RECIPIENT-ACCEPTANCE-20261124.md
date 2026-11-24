@@ -8,14 +8,14 @@
 | --- | --- | --- | --- |
 | 1. Incident/source intake | Cursor Nov 13 vendor note, HF July source plus METR Aug assessment, ROGUE-AI Nov 19 preprint | exact source/version, access time and changed claims, no logo endorsement or duplicated incident prevention claim | SOURCE-LINKED ONLY |
 | 2. Dataset rights/byte custody | Turkish 3372-row public split, rev bf31d065; NotInject 339 benign hard negatives; English 116 already published Nov 21 | exact original file hashes, per-record derived digest, source licence review, no prompts redistributed if unqualified | TURKISH BYTES PINNED; RIGHT TO REPUBLISH RAW TEXT HELD |
-| 3. Genuine inference | Horizon open-weight ONNX exact rev, Apple M4 | deterministic threshold, full confusion and subgroup matrix, denominator, runtime, false negatives and false alarms | OBSERVED 3372 + 339; NO FRONTIER GPT/CLAUDE/GEMINI RUN |
+| 3. Genuine inference | Horizon open-weight ONNX exact rev, Apple M4 | deterministic threshold, full confusion and subgroup matrix, denominator, runtime, false negatives and false alarms | OBSERVED 3372 Turkish + 339 NotInject + 116 ProtectAI on identical prior English bank; NO FRONTIER GPT/CLAUDE/GEMINI RUN |
 | 4. Independent scientific method | Original classifier scripts + CI source tests | second authorized machine reexecutes exact model/data, independently adjudicates labels, records training overlap and subgroup uncertainty | ORIGINAL CSOAI SELF-RUN; SECOND-PARTY REEXECUTION OPEN |
 | 5. Reaction-engine event | `reaction-observation.json` and `councilos-import.json` | pure source/method-reported episode, no hallucinated execution/recipient; exact output digest | OBSERVED MODEL INPUT; ACCEPTANCE_INCOMPLETE |
 | 6. Canonical GSPC candidate | `turkish_to_evidence_event.py` uses existing evidence-fabric event builder | PARTIAL, unsigned, validated RFC 8785 event ID, zero board admission without independent measurement method | SOURCE CANDIDATE, NOT GSPC MEASURED/ATTESTED |
 | 7. Human authority | Existing candidate HITL v0.2 / owner-held PR #4703 | genuinely enrolled principal, exact authorized file/tool action, baseline, expiry and current revocation; no model grant | NOT ESTABLISHED |
 | 8. Qualified executor/effect | Existing MEOK owner-controlled least privilege | **real harmless** action on owner-created sandbox with independent physical bytes readback; negative wrong-scope/revoked controls | NOT ESTABLISHED |
 | 9. Receiving-party verification | A distinct actual authorized participant, not ChatGPT or owner model | independent retrieval of the final exact effect/result, signed/recorded accepted or rejected receipt, source and method IDs | NOT ESTABLISHED |
-| 10. Public UI and commercial delivery | #4764 merged; `/dashboard/?tab=evidence-learning` public old JS at last read | published bundle hash, real mobile/desktop/keyboard journeys, supported public receipt retrieval, clear limitations, authentic buyer scope+acceptance | SOURCE MERGED; LIVE REACTION PANEL AND REAL BUYER ACCEPTANCE OPEN |
+| 10. Public UI and commercial delivery | #4764 merged; `/dashboard/?tab=evidence-learning` public reviewed JS SHA256 68df16ab09b0a9d638ec9de98cdbc9526d7da418dc8a46f3949f0e32f206da75 (4/4 observed 24 Nov) | published bundle hash, real mobile/desktop/keyboard journeys, supported public receipt retrieval, clear limitations, authentic buyer scope+acceptance | EXISTING LIVE REACTION REVIEWER: 4/4 PUBLIC BROWSER JOURNEYS PASS; NEW ONE-CLICK/PILOT PAGE PENDING, BUYER ACCEPTANCE OPEN |
 
 ## Exactly what was measured, not marketing projection
 
@@ -42,11 +42,11 @@
 | Study | Compare / intervene | Measured outcome and promotion gate |
 | --- | --- | --- |
 | Multilingual and hard negatives | Actual same frozen classifier on Turkish and NotInject | DONE as self-run observed output; independently blind re-exec and rights review still OPEN |
-| Cross-model, same bank | GPT/Claude/Gemini/DeepSeek/open-weight **only where accessible, consented, rights cleared and actual usage budget approved** | Paired per-case outputs, score F1/false positives and total cost; no source rights leakage, no confounded model/benchmark samples. **NOT RUN** |
+| Cross-model, same bank | GPT/Claude/Gemini/DeepSeek/open-weight **only where accessible, consented, rights cleared and actual usage budget approved** | Paired per-case outputs, score F1/false positives and total cost; no source rights leakage, no confounded model/benchmark samples. **TWO SPECIALIST MODELS TESTED ON SAME 116 PUBLISHER-LABELLED CASES; FRONTIER MODELS NOT RUN** |
 | Real agent-world hazard | ONE owner-authorized non-sensitive file state and two conditions: known risky operation vs policy-enforced permission | Retain actual on-disk before/after and denied tool outcomes; no original vendor exploit or production target. **NOT RUN** |
-| Independent receiver | Second authorized identity reads result bytes and signs acceptance/denial | Full source/method/human/executor/effect/recipient continuity; privacy review. **NO RECEIVER CURRENTLY VERIFIED** |
+| Independent receiver | Second authorized identity reads result bytes and signs acceptance/denial | Full source/method/human/executor/effect/recipient continuity; privacy review. **SECOND OWNER MACHINE VERIFIED BYTES; EXTERNAL INDEPENDENT HUMAN RECEIVER NOT VERIFIED** |
 | News-to-control intelligence | Cursor supply-chain and HF agent incident, ROGUE-AI research | Original source and cause map, testable action/receipt/identity gates; never claim retrospective prevention |
-| Visual acceptance | Existing CouncilOS React reviewer and 390/1280 local browser fixtures | Live apex + Pages alias, same released bundle and actual controls; source-vs-deployment byte hash. **PUBLIC SITE LAST SEEN OLD BUNDLE** |
+| Visual acceptance | Existing CouncilOS React reviewer and 390/1280 local browser fixtures | Live apex + Pages alias, same released bundle and actual controls; source-vs-deployment byte hash. **EXISTING READ-ONLY PUBLIC PANEL VERIFIED 4/4; CANDIDATE ONE-CLICK SOURCE BUTTON NOT YET RELEASED** |
 
 ## Product thesis, limited to defensible evidence
 
@@ -60,4 +60,13 @@ Reuse the existing business observer, source-writer, Layer-0 verifier and `deplo
 
 ## Precise success definition
 
-Only declare the full product end-to-end complete when there is one documented: **authenticated human approval → currently qualified MEOK executor → actual permitted harmless effect → independent recipient observation and acceptance → source-pinned external report → deployed and verified user-facing retrieval**. The actual study in this branch verifies only the earlier source/model/read-only reporting steps. This is a blocker to close, not a pass by fiat.
+Only declare the full product end-to-end complete when there is one documented: **authenticated human approval → currently qualified MEOK executor → actual permitted harmless effect → independent recipient observation and acceptance → source-pinned external report → deployed and verified user-facing retrieval**. The actual work verifies real model scores, an external GitHub provider-controlled write/readback and a live browser readback, but NOT an authenticated MEOK approval/execution chain or external human/recipient acceptance. This is a blocker to close, not a pass by fiat.
+
+
+## 24 November actual progression of the acceptance gates
+
+- **Production read-only CouncilOS: PASSED 4/4** real browser journeys (apex and Pages; 390px and 1280px) with two actual observed source cases, malformed-input refusal, clear button, no click-triggered HTTP requests, and identical 12,207-byte shipped React chunk SHA256 `68df16ab09b0a9d638ec9de98cdbc9526d7da418dc8a46f3949f0e32f206da75`. [Original browser receipt](live-browser-acceptance.json).
+- **Actual external service effect: OBSERVED**. GitHub accepted a non-sensitive source file, rejected a stale SHA write (409), and a different-client anonymous GET read the exact committed 539 bytes (200). A second owner-controlled physical machine reproduced the bytes. [Original host-effect receipt](actual-github-host-observation.json). The service accepted bytes, **no independent human accepted a qualified MEOK action**.
+- **Real matched model comparison: OBSERVED**. Protect AI and Horizon actually evaluated the same pinned 116 source cases; 20 vs 1 paired correctness discordance. [Report](PROTECTAI-PAIRED-REAL-MODEL-20261124.md). No frontier GPT/Claude/Gemini inference.
+- **Commercial product UI change: CANDIDATE**. The new one-click observed-evidence button and real-metrics pilot page are only on PR #4827, subject to protected build, rights review, deploy and fresh browser acceptance.
+- **Authenticated HITL → MEOK execution → independent receiving-person accepted result: NOT ESTABLISHED**. Owner's direction to run public research does not prove enrolled actor identity, scope, revocation or buyer's own receipt. [Independent acceptance request](https://github.com/CSOAI-ORG/councilof-ai/issues/4828) is open; a public issue is not its own acceptance.

@@ -61,7 +61,7 @@ This is a *real evidence readback* rather than a claim that a model classifier p
 
 The differentiated existing evidence-bundle and Agent Authority & Evidence pilot proposition is: **measure missed threats AND unnecessary restrictions, pin source and method bytes, reveal the missing independent human/recipient evidence, and make corrections auditable**. No new SKU, price or buyer is invented here. A genuine customer acceptance needs a separately identified receiving party to review and accept the agreed output.
 
-Next gates: independent label adjudication, genuinely blind/recent rights-cleared holdouts, another model on the *same* fixed bank when budget/provider access is genuinely available, an authorized harmless tool effect observed by a separate recipient, and a public CouncilOS browser readback after the protected release. Do not train on this public test set and then report it as a blind test.
+Next gates: independently re-adjudicated labels, truly blind rights-cleared model banks, a real **MEOK** policy-enforced action with qualified human approval, and **independent external receiving-party** acknowledgement. The historical 116-case English bank has now been rerun on a second actual open-weight detector; the existing CouncilOS reviewer has passed real public-browser readback. Neither changes the source/training limitations. Do not train on this public test set and then report it as a blind test.
 
 ## Separate observed benign hard-negative evaluation (NotInject, 339 rows)
 
@@ -80,3 +80,16 @@ The existing repository evidence-fabric module now receives this **actually obse
 PR-only CI validates canonical event identity and stores a 30-day unsigned build artifact. This makes observed data available for source-bound independent replay but **does not mutate a public GSPC score or appoint an independent reviewer**. Its ID is the hash of the canonical original event bytes rather than a free-form success label.
 
 **Other benchmark:** the companion [NotInject derived summary](notinject-summary.json) is a clearly marked derivative of an actual M4 local run, NOT identical to the original local aggregate file; a remote/independent reproducer must still recompute and compare the pinned original SHA-256.
+
+
+## 24 November follow-through — real second model and real publicly observed effects
+
+The exact **same 116 source-labelled English cases** were run through a separate actual Protect AI DeBERTa ONNX detector, preserving the original Horizon results: Horizon **41/60** vs Protect AI **22/60** labelled attacks detected, both **0/56** benign false flags, and **20 vs 1** paired correct/wrong discordance (exact two-sided McNemar p ≈ 0.00002098). The original frozen method, model weights and all new case hashes/scores are retained in [the real paired-model report](PROTECTAI-PAIRED-REAL-MODEL-20261124.md) and [the original 116-row output](protectai-paired-english-observation.json). This is NOT a frontier GPT/Claude/Gemini agent test or a blind model ranking.
+
+A **real** harmless GitHub branch file was written and accepted, a stale content-SHA update declined with HTTP **409**, and its immutable 539 bytes were retrieved anonymously with HTTP **200** and exact SHA-256 `8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f`. The event is preserved in [the host-effect readback](actual-github-host-observation.json) and [Reaction classification](actual-host-effect-reaction.json), which reports an actual effect while **human approval / executor authority / human receiver are UNKNOWN**. An additional owner-controlled physical machine independently fetched the same exact public bytes; this does **not** establish independent human or customer acceptance.
+
+On **24 November 2026, 03:42 UTC**, real Chrome on **390px/1280px** verified the already-deployed **read-only** CouncilOS Reaction reviewer at both public apex and Pages addresses: **4/4 end-user journeys passed**, including observed two-case import, malformed-JSON refusal, local clearing and no new network calls on review. Both origins served identical reviewer JavaScript, SHA-256 `68df16ab09b0a9d638ec9de98cdbc9526d7da418dc8a46f3949f0e32f206da75`. The [retained original browser receipt](live-browser-acceptance.json) establishes that specific public UI version; it does not preapprove an unreleased UI change.
+
+The candidate PR also changes CouncilOS to **load the two measured source cases directly**, replacing the synthetic demo button, and adds measured results to the [existing pilot page](../../../public/pilots/agent-authority/index.html). These **new modifications are not yet deployed**, and require their own protected build, privacy/rights review and browser release acceptance. The source-local test suite cannot substitute for that real release.
+
+**Reusable product:** [Agent Action Evidence: what is real and who accepts it](PRODUCT-EVIDENCE-PILOT-20261124.md) and the [machine-readable bundle manifest](evidence-bundle-manifest.json). Both distinguish actual source measurement, host-provider acceptance, owner-machine readback and missing independent person/buyer acceptance.

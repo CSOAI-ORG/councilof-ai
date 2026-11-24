@@ -7,7 +7,9 @@
   "rights": {
     "turkish_dataset": "license:other; raw text excluded and reuse rights unqualified",
     "notinject_dataset": "MIT metadata; raw prompt text excluded",
-    "model": "Apache-2.0 model metadata; verify version and derived-code conditions"
+    "model": "Apache-2.0 model metadata; verify version and derived-code conditions",
+    "english_prompt_injection_dataset": "Conflicting top-level Apache-2.0 and nested CC-BY-4.0 metadata; source text excluded",
+    "protectai_model": "Apache-2.0 model metadata; weights exact SHA and source revision pinned"
   },
   "sources": [
     {
@@ -36,6 +38,21 @@
       "revision": "2efc2ed5abecd21eb45c2506d231a65d6e392b85",
       "weights_sha256": "61cd0741cdbfcc229e32e1de1392f352736d87d1e8b3c2b67ad9836bb7910d5d",
       "runtime": "CPU ONNX, max512, threshold0.5"
+    },
+    {
+      "kind": "dataset",
+      "name": "deepset/prompt-injections",
+      "revision": "4f61ecb038e9c3fb77e21034b22511b523772cdd",
+      "file_sha256": "39ac797cabc157eeed58435a08593b2952bb6cb16fc394a2d383f447cc7b246e",
+      "n": 116,
+      "labels": "publisher only, previously evaluated"
+    },
+    {
+      "kind": "model",
+      "name": "protectai/deberta-v3-base-prompt-injection-v2",
+      "revision": "90c9989b1a342275dd0d1a95aad283c04e075671",
+      "weights_sha256": "f0ea7f239f765aedbde7c9e163a7cb38a79c5b8853d3f76db5152172047b228c",
+      "runtime": "CPU ONNX, 116 identical English cases, threshold0.5"
     }
   ],
   "observations": [
@@ -58,6 +75,59 @@
       "false_positive": 13,
       "benign_only": true,
       "original_bytes_published": false
+    },
+    {
+      "source": "docs/research/turkish-guard-observed-20261124/protectai-paired-english-observation.json",
+      "original_bytes_sha256": "7dc2a6eb7fde579ae5c83e37a42973015fe06bae686b9d784dd3d222cdb3419d",
+      "kind": "ACTUAL_MATCHED_OPEN_WEIGHT_MODEL_RUN",
+      "cases": 116,
+      "source_labels": "publisher-only",
+      "baseline_tp": 41,
+      "compared_tp": 22,
+      "baseline_fn": 19,
+      "compared_fn": 38,
+      "baseline_fp": 0,
+      "compared_fp": 0,
+      "paired_old_correct_new_wrong": 20,
+      "paired_old_wrong_new_correct": 1,
+      "real_tool_effect": false
+    },
+    {
+      "source": "docs/research/turkish-guard-observed-20261124/actual-github-host-observation.json",
+      "original_bytes_sha256": "eb95d9fed738ed1d5917d12c6c22d1eabc39cdfbcbb9f87555ed7ed88870d28c",
+      "kind": "REAL_PROVIDER_STORAGE_EFFECT_AND_ANONYMOUS_READBACK",
+      "exact_effect_content_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+      "bytes": 539,
+      "http_readback": 200,
+      "observed_conditional_stale_sha_rejection": 409,
+      "meok_executor": false,
+      "external_human_receiver": false
+    },
+    {
+      "source": "docs/research/turkish-guard-observed-20261124/live-browser-acceptance.json",
+      "original_bytes_sha256": "8b13ecf5d5ba7c4f21e946bc79f9d9b04ea0a6956be730c42eb15292ce342ba3",
+      "kind": "FOUR_ACTUAL_PRODUCTION_BROWSER_REVIEW_JOURNEYS",
+      "journeys": 4,
+      "passed": 4,
+      "observed_cases": 2,
+      "simulated_cases": 0,
+      "hosts": [
+        "councilof.ai",
+        "councilof-ai.pages.dev"
+      ],
+      "viewports_px": [
+        390,
+        1280
+      ],
+      "served_asset_sha256": "68df16ab09b0a9d638ec9de98cdbc9526d7da418dc8a46f3949f0e32f206da75",
+      "independent_human_acceptance": false
+    },
+    {
+      "source": "docs/research/turkish-guard-observed-20261124/second-owner-machine-readback.json",
+      "kind": "SEPARATE_OWNER_CONTROLLED_MACHINE_EXACT_BYTES",
+      "effect_match": true,
+      "deployed_bundle_match": true,
+      "external_independent_person": false
     }
   ],
   "reaction_import": "docs/research/turkish-guard-observed-20261124/councilos-import.json",
@@ -66,21 +136,25 @@
   "gspc_event_generator": "scripts/research/turkish_to_evidence_event.py",
   "gspc_event_candidate_state": "PARTIAL_UNSIGNED_NOT_ADMITTED",
   "human_approval": "NOT_ESTABLISHED",
-  "qualified_executor_effect": "NOT_ESTABLISHED",
+  "qualified_executor_effect": "NOT_ESTABLISHED_FOR_MEOK; GITHUB_PROVIDER_EFFECT_OBSERVED_ONLY",
   "independent_receiver_acceptance": "NOT_ESTABLISHED",
   "customer_retrieval_acceptance": "NOT_ESTABLISHED",
   "defense_effectiveness_claim": "NOT_ESTABLISHED",
   "public_docs": [
     "docs/research/turkish-guard-observed-20261124/README.md",
     "docs/research/turkish-guard-observed-20261124/INCIDENT-TRANSFER-20261124.md",
-    "docs/research/turkish-guard-observed-20261124/ROGUE-AI-RESEARCH-TRANSFER-20261124.md"
+    "docs/research/turkish-guard-observed-20261124/ROGUE-AI-RESEARCH-TRANSFER-20261124.md",
+    "docs/research/turkish-guard-observed-20261124/PROTECTAI-PAIRED-REAL-MODEL-20261124.md",
+    "docs/research/turkish-guard-observed-20261124/RELEASE-TO-RECIPIENT-ACCEPTANCE-20261124.md",
+    "docs/research/turkish-guard-observed-20261124/PRODUCT-EVIDENCE-PILOT-20261124.md"
   ],
   "required_next": [
-    "PR CI source/rights review",
-    "qualified real human approved harmless executor action",
-    "independent receiving-party readback",
-    "protected publisher release and real browser journey",
-    "external buyer acceptance documented separately"
+    "Protected current-head source and application build for candidate one-click CouncilOS and pilot page",
+    "Deploy through canonical protected master release and repeat real mobile/desktop user journeys",
+    "Rights and independent label review; independent raw benchmark re-execution",
+    "Authentic enrolled human approval plus currently qualified MEOK executor, not a browser checkbox",
+    "Distinct genuine human receiving-party observation and accountable accept/reject",
+    "Actual customer delivery, billing only if agreed, and receiving-party acceptance"
   ],
   "gspc_axes_candidate_only": [
     "jail",
@@ -90,5 +164,15 @@
     "effect-binding",
     "serving-fidelity",
     "watchdog-ingest"
-  ]
+  ],
+  "reaction_readback_host": "docs/research/turkish-guard-observed-20261124/actual-host-effect-reaction.json",
+  "public_deployment": {
+    "currently_verified": "EXISTING_READ_ONLY_REACTION_REVIEWER_ON_APEX_AND_PAGES",
+    "browser_readback_at": "2026-11-24T03:42:02.112544+00:00",
+    "verified_browser_journeys": 4,
+    "verified_asset_sha256": "68df16ab09b0a9d638ec9de98cdbc9526d7da418dc8a46f3949f0e32f206da75",
+    "one_click_observed_cases": "CANDIDATE_NOT_YET_DEPLOYED",
+    "updated_pilot_page": "CANDIDATE_NOT_YET_DEPLOYED"
+  },
+  "technical_second_owner_machine_readback": "OBSERVED_EXACT_BYTES_NOT_EXTERNAL_RECIPIENT"
 }
