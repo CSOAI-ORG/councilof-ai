@@ -130,6 +130,28 @@ const EXTENSIONS = [
       + "proves this server signed those bytes; it is not by itself proof that money moved, and "
       + "the transaction field, when present, is a claim to check against the chain.",
   },
+  {
+    // ADDED 2026-11-20 (discovery hygiene). The card's provider block said "CSOAI Ltd" with a URL and
+    // nothing a stranger could look up. A2A v1.0 AgentProvider has exactly two fields (url,
+    // organization), so the legal-entity identity cannot go there without inventing a field. An
+    // AgentExtension carries `params` (google.protobuf.Struct) in the proto, so the identity travels
+    // in a field the schema already has, and the register entry is the checkable source.
+    slug: "provider-identity",
+    uri: "https://councilof.ai/a2a/extensions/provider-identity/v1/",
+    required: false,
+    lead: () => "Legal-entity identity of the provider named in provider.organization.",
+    tail:
+      "CSOAI Ltd, a private limited company on the UK Companies House register, company number 16939677. "
+      + "Check it at the register, not here: the registryUrl in params is the public Companies House entry. "
+      + "Identity of the publisher, not an accreditation of anything it publishes.",
+    params: {
+      legalName: "CSOAI Ltd",
+      registry: "UK Companies House",
+      companyNumber: "16939677",
+      registryUrl: "https://find-and-update.company-information.service.gov.uk/company/16939677",
+      website: "https://councilof.ai",
+    },
+  },
 ];
 
 const published = existsSync(EXT_DIR) ? readdirSync(EXT_DIR) : [];
@@ -137,7 +159,9 @@ const out = EXTENSIONS.map((e) => {
   const state = e.slug === "signed-receipts" ? stateOf(e.slug)
     : e.slug === "offer-and-receipt" ? x402ReceiptState()
     : "EMITTED";
-  return { uri: e.uri, required: e.required, description: `${e.lead(state)} ${e.tail}`.replace(/\s+/g, " ").trim() };
+  const ext = { uri: e.uri, required: e.required, description: `${e.lead(state)} ${e.tail}`.replace(/\s+/g, " ").trim() };
+  // AgentExtension.params (proto field 4) is written only for an entry that declares it.
+  return e.params ? { ...ext, params: e.params } : ext;
 });
 
 const cardSource = readFileSync(CARD, "utf8");
