@@ -1,5 +1,6 @@
 import { createElement, useEffect, useState } from "react";
 import SafeExportReview from "./SafeExportReview";
+import ReactionResearchReview from "./ReactionResearchReview";
 
 /** The same public-source reader and synthetic lesson runner used by the private
  * research hub. Native Council OS shell; no cross-origin iframe or private data.
@@ -52,6 +53,7 @@ export default function DashboardEvidenceLearningPane() {
         </div>
       )}
       {state === "ready" && createElement("council-evidence-learning")}
+      <ReactionResearchReview />
       <SafeExportReview />
     </section>
   );
