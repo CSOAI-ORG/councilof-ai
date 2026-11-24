@@ -73,6 +73,21 @@ class PrivacyPlanTests(unittest.TestCase):
         rows = self.plan(self.original + "\n\n# approved source inventory\n")
         self.assertEqual(len(rows), 34)
 
+    def test_http_status_diagnostic_reports_only_valid_numeric_code(self):
+        # The response may contain a secret-bearing URL or text; never stringify it.
+        class ToxicResponse:
+            status_code = 403
+            def __str__(self):
+                raise AssertionError("Response details must not be printed")
+        class ToxicError(Exception):
+            response = ToxicResponse()
+            def __str__(self):
+                raise AssertionError("Exception details must not be printed")
+        self.assertEqual(module.safe_http_status(ToxicError()), 403)
+        self.assertIsNone(module.safe_http_status(Exception("possible sensitive data")))
+        self.assertIsNone(module.safe_http_status(SimpleNamespace(response=SimpleNamespace(status_code="403"))))
+        self.assertIsNone(module.safe_http_status(SimpleNamespace(response=SimpleNamespace(status_code=999))))
+
     def test_no_network_or_credential_import_on_plan(self):
         self.assertNotIn("huggingface_hub", module.__dict__)
         self.assertEqual(module.plan.__name__, "plan")
