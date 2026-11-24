@@ -163,6 +163,14 @@ The companion implementation in `scripts/ops/evidence-heartbeat.py` is a **first
 
 **Causality vs correlation:** The 34-axis dashboard is an inventory; the evidence graph records who caused what and which independent verification supports it. Separate commercial adoption, software distribution, theoretical experiments and actual effects.
 
+### Verified crypto readback addition — 24 November 2026
+
+The sibling \`scripts/ops/verify_root_readback.py\` performs an actual independent **algorithmic replay** of the current published evidence root: (a) recompute the Merkle tree from *all* published leaf hashes, including odd-node duplication; (b) fetch the publisher-controlled \`did:web:csoai.org\` key and verify exact canonical Ed25519 preimage; (c) fetch four root-bound inclusion proofs across beginning, middle and tail and recompute paths; (d) archive the source SHA-256 for root, DID and proofs. A missing source is UNCHECKABLE rather than an invented failure; bad crypto is INVALID. It neither verifies every individual card nor proves an independent third-party witness, external effect or recipient acceptance.
+
+The operator workflow passes the generated crypto JSON into \`evidence-heartbeat.py\` via \`--crypto-report\`. It only changes the root-crypto check to VALID when the report's \`root_source_sha256\` matches the independently fetched heartbeat root byte hash. If sources have changed in between reads the state remains UNCHECKABLE (no implied time travel). Negative controls explicitly reject a forged signature, wrong DID key, altered leaf, wrong path, stale root digest and duplicate-tail out-of-bounds index.
+
+**Actual run on M2, 24 Nov 2026:** 19/19 offline tests pass; root=452 leaves, signature VALID under live DID, four sampled inclusion paths VALID, six open gates remain. These are **local independent computations against publisher-hosted sources**, not a second independent institution's endorsement. Before marketing "external verification" of root time, arrange a genuinely separate witness or rerunner and publish its trace.
+
 ## 7. SWOT — with prioritised response
 
 | | Internal / market facts | Action |
