@@ -1,0 +1,68 @@
+name: Organisation operating heartbeat (source-only, read-only)
+
+on:
+  schedule:
+    - cron: '10 8 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/operating_heartbeat.py'
+      - 'scripts/test_operating_heartbeat.py'
+      - '.github/workflows/organisation-operating-heartbeat.yml'
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  source-only-heartbeat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline negative controls
+        run: python3 scripts/test_operating_heartbeat.py
+      - name: Gather source-only GitHub PR and workflow state
+        shell: bash
+        run: |
+          mkdir -p /tmp/csoai-organisation-heartbeat
+          CUTOFF="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          set +e
+          python3 scripts/operating_heartbeat.py \
+            --as-of "$CUTOFF" \
+            --output /tmp/csoai-organisation-heartbeat/snapshot.json \
+            > /tmp/csoai-organisation-heartbeat/summary.json
+          RESULT=$?
+          set -e
+          # Unknown remote data is a surfaced monitor finding, not a safety pass.
+          # Do not let a missing GitHub API response suppress the audit artifact.
+          if [ "$RESULT" -ne 0 ] && [ "$RESULT" -ne 4 ]; then exit "$RESULT"; fi
+          if [ ! -s /tmp/csoai-organisation-heartbeat/snapshot.json ]; then
+            echo "No usable snapshot; fail workflow" >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import json, pathlib
+          r=json.loads(pathlib.Path('/tmp/csoai-organisation-heartbeat/snapshot.json').read_text())
+          assert r['external_effect_verified'] is False
+          assert r['mutations_performed'] == 0
+          assert r['decision'] == 'HUMAN_TRIAGE_NO_AUTOMATED_PROMOTION'
+          print('ROOT_RELEASE_HOLDS:',','.join(r['release_holds_from_open_or_unknown_prs']) or 'none from checked PR state')
+          print('HUMAN_RECHECK:',','.join(r['recheck_or_operator_review']) or 'none from checked source status')
+          print('No customer, revenue, human-authority or production-safety claims derived')
+          PY
+      - name: Retain private-by-default source snapshot as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: organisation-heartbeat-${{ github.run_id }}
+          path: /tmp/csoai-organisation-heartbeat/
+          retention-days: 14
+          if-no-files-found: error
