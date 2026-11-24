@@ -7,7 +7,9 @@ csoai/gspc-daily-reports under reports/YYYY-MM-DD/.
 
 22 Nov 2026: moved into the repository from the report host (it read the script's own folder, and it uploaded an
 unsigned report when the signing key was absent). It now publishes only a report that check_report.py passed:
-OUT/report-check-<date>.json must say PASS and signature VERIFIES, and must pin the exact .json bytes.
+OUT/report-check-<date>.json must say PASS and signature VERIFIES, must pin the exact .json bytes, and (24 Nov 2026)
+must have been made under the pinned board key, did:web:csoai.org#board-attestation-1 (never a pull-request
+dry run's throwaway key).
 
 Token: HF_TOKEN env var, else the stored token file ~/.cache/huggingface/token.
 No token -> exit 2, honest refusal (never published unsigned-by-auth, never faked).
@@ -24,6 +26,9 @@ import os
 import sys
 import urllib.request
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import check_report  # noqa: E402  (the pinned board key)
 
 REPO_ID = "csoai/gspc-daily-reports"
 FILES = ("md", "json", "sig")
@@ -71,9 +76,13 @@ def main():
         return 2
     chk = json.loads(chk_p.read_text())
     json_sha = hashlib.sha256((root / f"daily-report-{date}.json").read_bytes()).hexdigest()
-    if chk.get("result") != "PASS" or chk.get("signature") != "VERIFIES" or chk.get("report_json_sha256") != json_sha:
+    key = chk.get("key") or {}
+    board_key = key.get("did") == check_report.BOARD_DID and key.get("public_key_hex") == check_report.BOARD_PUB_HEX
+    if (chk.get("result") != "PASS" or chk.get("signature") != "VERIFIES" or chk.get("report_json_sha256") != json_sha
+            or not board_key):
         print(f"REFUSED — the check says result={chk.get('result')} signature={chk.get('signature')} "
-              f"pins_these_bytes={chk.get('report_json_sha256') == json_sha}; nothing published")
+              f"pins_these_bytes={chk.get('report_json_sha256') == json_sha} "
+              f"under_the_board_key={board_key}; nothing published")
         return 3
     files.append(chk_p)
 

@@ -1,0 +1,40 @@
+name: GSPC frozen raw-source incidence audit (offline controls)
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/measurements/audit_frozen_raw_think.py'
+      - 'scripts/measurements/test_audit_frozen_raw_think.py'
+      - 'docs/measurement/GSPC-GRADER-UNCLOSED-THINK-20261124.md'
+      - '.github/workflows/gspc-frozen-raw-archive-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-replay-adversarial-controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exercise source pin, tamper and no-raw leakage negative controls
+        run: python3 scripts/measurements/test_audit_frozen_raw_think.py
+      - name: Scope and non-promotion record
+        run: |
+          python3 - <<'PY'
+          from importlib.util import spec_from_file_location, module_from_spec
+          from pathlib import Path
+          p = Path("scripts/measurements/audit_frozen_raw_think.py")
+          s = spec_from_file_location("archive", p)
+          m = module_from_spec(s)
+          s.loader.exec_module(m)
+          assert m.FROZEN_REV == "d0605c2495bddae7956fec5c18403d8a49fd81ac"
+          assert m.FROZEN_CELLS == 677 and m.FROZEN_ROWS == 20517
+          print("Offline synthetic tests only. No remote archive download, live model, signature issuance, score promotion or external effect.")
+          PY

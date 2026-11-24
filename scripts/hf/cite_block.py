@@ -74,6 +74,19 @@ LIC_FIX = {
     "gspc-own-models-measured": "cc-by-4.0",   # apache-2.0 on GSPC measurement rows
     "gspc-hf-model-census": "cc-by-4.0",       # apache-2.0 on data; build_census.py stays Apache-2.0 (note)
     "index-presence": "other",                 # mixed: CSOAI files CC-BY-4.0, registry copy keeps upstream terms
+    # GSPC banks (test-set audit 2026-11-20, finding 7): the front matter has said cc0-1.0 since the 9 Nov
+    # migration while the card text (this block, written by L5) says "Licence: CC-BY-4.0" and
+    # cite-block-registry.json records cc-by-4.0. Without a decision here apply() follows the front matter and
+    # would rewrite the card text to CC0 on its next run. gspc-gov is not listed: its registry `source` record
+    # (CC BY 4.0 upstream items, C-2026-1120-02) already sets cc-by-4.0.
+    "gspc-agi": "cc-by-4.0",
+    "gspc-art5": "cc-by-4.0",
+    "gspc-asi": "cc-by-4.0",
+    "gspc-care": "cc-by-4.0",
+    "gspc-mcp": "cc-by-4.0",
+    "gspc-oss": "cc-by-4.0",
+    "gspc-prv": "cc-by-4.0",
+    "gspc-swarm": "cc-by-4.0",
 }
 
 LIC_NOTE = {
@@ -123,9 +136,11 @@ def title_of(fm, body, name):
 # address on the card itself; the block above carried neither, so 117 of 131 public cards failed on it.
 # A card whose own body already carries this heading (outside the block) keeps its own text; the block then
 # omits the section, so no card shows it twice.
+# Contact (2026-11-20): contact@csoai.org, the one mailbox councilof.ai names on /, /contact/, /about/,
+# /dispute/ and llms.txt. The cards named nicholas@csoai.org (human-journey audit D7).
 OBJ_HEADING = "## Objections, contact and corrections"
 OBJ_TEXT = ("To object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, "
-            "email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. "
+            "email **contact@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. "
             "Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what "
             "changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.")
 

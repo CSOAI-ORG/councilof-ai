@@ -53,5 +53,18 @@ def main():
         tot += h
         print("- %s: %d batches, planned %.1f runner hours (planning constant, about 6 x the laptop rehearsal)" % (f, cnt, h))
     print("- total planned: about %.0f runner hours, split into jobs of about an hour; free for a public repository (unverified for this plan)." % tot)
+    conds3 = P["addendum_3"]["conditions_as_run"]
+    batches3 = sum(c.get("trials", c.get("batches", 1)) for c in conds3.values())
+    print("\n### Open-model calibration, run 2 (addendum 3): one batch per job\n")
+    print("%d batches x %d calls = %d calls, %d jobs." % (batches3, CALLS_PER_BATCH, batches3 * CALLS_PER_BATCH, P["addendum_3"]["job_total"]))
+    n3 = {}
+    for c in conds3.values():
+        n3[c["file"]] = n3.get(c["file"], 0) + c.get("trials", c.get("batches", 1))
+    tot3 = 0
+    for f, cnt in sorted(n3.items()):
+        h = cnt * pins["plan"]["est_seconds_per_batch"][f] / 3600
+        tot3 += h
+        print("- %s: %d batches, planned %.1f runner hours (same planning constants as above)" % (f, cnt, h))
+    print("- total planned: about %.0f runner hours before per-job setup; at most 8 jobs run at once, so planned wall-clock is about %.1f hours plus setup and the longest jobs. Observed in run 1: 200 to 275 s per q05-q8 batch, 260 to 335 s per q05-q4, 330 to 995 s per q15-q8, 14 to 306 s setup per job. Expected run time 2 to 3 hours (estimate, unverified)." % (tot3, tot3 / 8))
 
 main()

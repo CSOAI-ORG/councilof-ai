@@ -37,6 +37,10 @@ HF_PAGE = 1000
 NPM_PAGE = 250
 MCP_PAGE = 100
 ERC_PAGE = 100
+# A2A URIs are sparse in 8004scan. A full page can contain zero HTTP agent URIs.
+# Never turn an external sparse index into an unbounded hourly feed scan.
+A2A_SCAN_PAGES = 3
+A2A_HTTP_TIMEOUT = 12
 HF_MODELS = "https://huggingface.co/api/models?sort=createdAt&direction=-1&limit={n}&skip={skip}"
 HF_SPACES = "https://huggingface.co/api/spaces?sort=createdAt&direction=-1&limit={n}&skip={skip}"
 NPM_SEARCH = "https://registry.npmjs.org/-/v1/search?text=keywords:mcp&size={n}&from={skip}"
@@ -233,26 +237,38 @@ def discover_erc8004(n: int) -> list[dict]:
 
 
 def discover_a2a(n: int) -> list[dict]:
-    """A2A agents that 8004scan already indexed with an http(s) uri."""
+    """Discover URI-bearing A2A agents from a BOUNDED 8004scan slice.
+
+    8004scan can return full 100-row pages without a single HTTP URI. Its
+    offset is not evidence of a finite, usable URI list. A bounded page budget
+    preserves partial DISCOVERED rows, logs incomplete coverage explicitly,
+    and lets the other six discovery sources finish their scheduled pass.
+    """
     out, skip = [], 0
-    while len(out) < n:
+    for _page in range(A2A_SCAN_PAGES):
+        if len(out) >= n:
+            break
         take = ERC_PAGE
-        st, body = c.http_get(ERC8004.format(n=take, skip=skip), timeout=30)
+        st, body = c.http_get(ERC8004.format(n=take, skip=skip), timeout=A2A_HTTP_TIMEOUT)
         if st != 200 or not body:
             if not out:
-                print(f"  a2a-agent UNREACHABLE (status={st})", file=sys.stderr)
+                print(f"  a2a-agent UNREACHABLE (status={st})", file=sys.stderr, flush=True)
             break
         try:
             data = json.loads(body)
-        except Exception:
-            print("  a2a-agent UNCHECKABLE (bad json)", file=sys.stderr)
+            items = data.get("items", [])
+            if not isinstance(items, list):
+                raise ValueError("items is not an array")
+        except (ValueError, AttributeError):
+            print("  a2a-agent UNCHECKABLE (bad json/schema)", file=sys.stderr, flush=True)
             break
-        items = data.get("items") or []
         if not items:
             break
         for a in items:
+            if not isinstance(a, dict):
+                continue
             uri = a.get("agent_uri") or a.get("url") or a.get("endpoint") or ""
-            if not isinstance(uri, str) or not uri.startswith("http"):
+            if not isinstance(uri, str) or not uri.startswith(("http://", "https://")):
                 continue
             aid = a.get("agent_id") or uri
             out.append({
@@ -266,10 +282,13 @@ def discover_a2a(n: int) -> list[dict]:
             if len(out) >= n:
                 break
         skip += len(items)
-        if len(items) < take or len(out) >= n:
+        if len(items) < take or len(out) >= n or data.get("has_more") is False:
             break
+    else:
+        # Page-budget exit is NOT enumeration completion. Keep known IDs and
+        # report the remainder as uninspected (not a zero, not a dead agent).
+        print(f"  a2a-agent INCOMPLETE (page budget {A2A_SCAN_PAGES}; found {len(out)}/{n} URI rows)", file=sys.stderr, flush=True)
     return out[:n]
-
 
 def discover_xrpl(n: int) -> list[dict]:
     # Latest validated ledger -> distinct accounts touched by its transactions.

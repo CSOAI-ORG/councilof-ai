@@ -12,8 +12,10 @@ Stdlib only.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
+import random
 import sys
 from pathlib import Path
 
@@ -39,21 +41,47 @@ def baseline_of(cond: str) -> str | None:
     return "BASE5" if cond == "C5" else "BASE"
 
 
-def expected_batches(protocol: dict, scale: int = 1) -> list:
+RUNS = {"run1": "addendum_2", "run2": "addendum_3"}
+
+
+def pool_size(protocol: dict, scale: int = 1) -> int:
+    """Run 2: batches per baseline pool (20). A smoke run divides it, never below 3; it is never signed."""
+    n = protocol["addendum_3"]["rule_2"]["baseline_pool"]["batches_per_pool"]
+    return max(3, n // scale) if scale > 1 else n
+
+
+def expected_batches(protocol: dict, scale: int = 1, run: str = "run1") -> list:
     """[{condition, trial_id, file}] for every registered batch. scale > 1 divides trial counts (smoke only)."""
-    conds = protocol["addendum_2"]["conditions_as_run"]
+    conds = protocol[RUNS[run]]["conditions_as_run"]
     out = []
     for cond, spec in conds.items():
         n = spec.get("trials", spec.get("batches", 1))
-        if scale > 1 and cond not in ("BASE", "BASE5"):
+        if run == "run2" and cond in ("BASE", "BASE5"):
+            n = pool_size(protocol, scale)
+        elif scale > 1 and cond not in ("BASE", "BASE5"):
             n = max(1, n // scale)
         for i in range(1, n + 1):
             out.append({"condition": cond, "trial_id": trial_id(cond, i), "file": spec["file"]})
     return out
 
 
-def shards(protocol: dict, pins: dict, scale: int = 1) -> list:
+def shards_run2(protocol: dict, pins: dict, scale: int = 1) -> list:
+    """Run 2: one batch per job (a job is the unit of independence), in a seeded shuffle so baseline and trials spread in time."""
+    plan = pins["plan"]
+    out = []
+    for b in expected_batches(protocol, scale, "run2"):
+        out.append({"shard": "r2-" + b["trial_id"].lower(), "file": b["file"],
+                    "batches": b["condition"] + ":" + b["trial_id"], "n_batches": 1,
+                    "planned_minutes": round(plan["est_seconds_per_batch"][b["file"]] / 60)})
+    seed = int(hashlib.sha256((protocol["protocol_id"] + "run2-order").encode()).hexdigest()[:16], 16)
+    random.Random(seed).shuffle(out)
+    return out
+
+
+def shards(protocol: dict, pins: dict, scale: int = 1, run: str = "run1") -> list:
     """Group by model file, then cut into jobs of equal size so each is planned near target_job_minutes."""
+    if run == "run2":
+        return shards_run2(protocol, pins, scale)
     plan = pins["plan"]
     per_job_budget = plan["target_job_minutes"] * 60
     by_file = {}
@@ -79,14 +107,16 @@ def main(argv=None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     m = sub.add_parser("matrix")
     m.add_argument("--scale", type=int, default=1)
-    sub.add_parser("list")
+    m.add_argument("--run", choices=sorted(RUNS), default="run1")
+    ls = sub.add_parser("list")
+    ls.add_argument("--run", choices=sorted(RUNS), default="run1")
     a = ap.parse_args(argv)
     proto = detector.load_protocol()
     if a.cmd == "list":
-        for b in expected_batches(proto):
+        for b in expected_batches(proto, 1, a.run):
             print(b["trial_id"])
         return 0
-    rows = shards(proto, load_pins(), max(1, a.scale))
+    rows = shards(proto, load_pins(), max(1, a.scale), a.run)
     if len(rows) > 256:
         raise SystemExit("REFUSE: more than 256 jobs")
     print("matrix=" + json.dumps({"include": rows}, separators=(",", ":")))

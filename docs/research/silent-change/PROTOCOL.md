@@ -97,3 +97,41 @@ Two departures from section 7, both made now. (1) C1 was "a different revision o
 **Rehearsal.** A local run on 2 items and 3 repeats proves the pipeline before the first Actions run. Its rows are never published, never signed and never counted; the report refuses a batch marked as rehearsal.
 
 **Still true.** A flag is a detected change in answer behaviour on the probe items. It is not a cause, and nothing here says safe, unsafe, degraded or certified. The open model served on a runner is a different arm from a hosted endpoint; no cross-claim is made.
+
+## 12. Addendum 3 (24 Nov 2026, after run 1 and before any code or data of run 2): a second decision rule
+
+Committed on its own, before any code or new data of the second run. Machine-readable twin: `addendum_3` in `protocol.json`. Sections 1 to 11, run 1's statistic and flag rule stay as written and stay computable.
+
+**Run 1's rows were used as pilot data.** Run 1 (GitHub Actions run 45279396175, signed record sha256 `5de64693acd1ae4dce393c28f8cca9505790746031cafc67386e45104c9ade59`) flagged 19 of 30 batches in C0 and 12 of 20 in C5 when nothing changed. Its rows were read to find out why (`DIAGNOSIS-RUN1.md`): inside every batch all 30 repeats of every item were identical, so the permutation test had no spread; the only movement was one near-tie item changing its answer from one job to another. Those rows chose the rule below. **The new rule is judged only on a fresh run (run 2).** Run 1's signed rates stay as signed and are never re-scored.
+
+**The new rule (rule 2).** The reference for "no change" comes from repeated independent no-change batches.
+
+- *Pool.* 20 batches of the same file and settings, each in its own job (one fresh runner and one llama-server start; one batch per job). Two pools: BASE (temperature 0) and BASE5 (temperature 0.5).
+- *Pooled share.* For each item and answer category, the mean over the 20 batches of that batch's share. UNPARSED is a category.
+- *Score.* S(x; pool) = the mean over the 20 items of total-variation distance between batch x's shares and the pooled shares. The same distance as run 1, with a pooled reference.
+- *Threshold.* Score each pool batch against the other 19 (leave one out): L_1 to L_20. theta = max L_j.
+- *Flag.* A new batch is a FLAG iff S(x; pool) > theta (strictly). No permutation, no p-value, no floor. If theta is 0, any movement flags.
+- *False-flag target.* At most 1/21 = 0.0476, about 0.05 per no-change batch, if a fresh no-change batch is exchangeable with the pool batches. The new batch faces 20 pool batches and the pool batches face 19, which makes the rule slightly conservative; this is not corrected. The target is a design aim. C0 and C5 of run 2 measure whether it holds.
+
+**Run 2 as it will run.** 130 batches in 130 jobs: BASE pool 20, BASE5 pool 20, C0 30, C1 10, C2 10, C3 10, C4 10, C5 20 (C0 to C4 against BASE, C5 against BASE5). A trial is never in the same job as any batch it is compared against. Both rules are reported for every trial, rule 1 against BASE-01 or BASE5-01 (the first batch of each pool) and rule 2 against the pool. The job order is a seeded shuffle so baseline and trial batches are spread in time.
+
+**One change to what a batch is.** In run 1 temperature 0.5 did not vary: the server seed was fixed per shard and every repeat was identical. In run 2, batches with temperature above 0 send a per-request seed (an integer from sha256 of trial id, item id and repeat). Temperature 0 batches are unchanged. This makes C4, C5 and BASE5 sample the way a hosted endpoint does.
+
+**Recorded in every batch from now on.** Runner CPU model, logical CPU count, image name and version, runner name, the llama.cpp tag, the version line llama-server prints and the system_info line of its log, the shard, run id and run attempt. Run 1's rows had none of these; no cause for the job-to-job movement was established, and none is claimed.
+
+**Expected false-flag rate and power, and why.** From a synthetic simulation of rule 2 in the structure the pilot showed (identical answers inside a batch; a few near-tie items taking one of two labels per job; changes that move whole items; 20 items, 20 pool batches, 4,000 repetitions per cell). The simulation script is added after this commit and has to reproduce these numbers. The pilot has only 2 to 4 independent jobs per condition, so how many near-tie items a 20-job pool shows is not known.
+
+| | Expected | Why |
+|---|---|---|
+| False flag (C0, C5) | at most 0.05; simulated 0.000 to 0.027 for 0 to 5 near-tie items | leave-one-out maximum over 20 gives at most 1/21 under exchangeability |
+| C1 sibling model | 0.9 or more (simulated 1.00) | 2 of 20 items moved in 10 of 10 trials in all 4 jobs: S about 0.10 against 0.025 per near-tie item |
+| C3 added sentence | 0.9 or more (simulated 1.00) | 3 of 20 items moved in 10 of 10 trials in both jobs: S about 0.15 |
+| C2 Q4_K_M | low, near the false-flag level (0.0 to 0.1) | in run 1 it moved no item other than the near-tie one; a rule cannot see a movement the 20 items do not show |
+| C4 temperature 0.5 | unknown, low to moderate | in run 1 it was not sampling; with per-request seeds shares may spread, by how much the pilot cannot say |
+| One whole item moves | simulated 0.96 to 1.00 | S = 0.05 against a reference near 0 |
+
+A partial shift in one item's answers is smaller and will usually not be seen. If C2 and C4 come out mostly NO_FLAG, that is a finding about what 20 items can see, not a failure of the rule, and is reported as such. No power is claimed for any change of a paid model, for items outside the 20, or for real sampling spread.
+
+**Reporting.** For C0 to C5 and for each rule: flags over comparable trials, exact Wilson 95% interval, mean score, which items moved in each flag. With one batch per job, trials are independent draws. Flags by runner CPU model are shown as description only. The illustrative CUSUM view takes its reference and spread from the 20 leave-one-out scores. A report with any of the 130 batches missing is not signed; a failed job may be re-run (the same matrix entry).
+
+**Still true.** A flag is a detected change in answer behaviour on the probe items. It is not a cause. Nothing here is a claim about any paid model. Measurement, not certification.

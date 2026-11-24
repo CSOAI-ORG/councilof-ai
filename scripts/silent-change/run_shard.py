@@ -37,6 +37,57 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
+SIMD_FLAGS = ("avx", "avx2", "fma", "f16c", "avx512f", "avx512_vnni", "avx512_bf16", "amx_tile", "avx_vnni", "neon")
+
+
+def cpu_from_cpuinfo(text: str) -> dict:
+    """Pure parser of /proc/cpuinfo text: model name and the SIMD features the first core lists."""
+    model, flags = "", ""
+    for line in text.splitlines():
+        key, _, val = line.partition(":")
+        key, val = key.strip(), val.strip()
+        if key == "model name" and not model:
+            model = val
+        elif key in ("flags", "Features") and not flags:
+            flags = val
+        if model and flags:
+            break
+    have = set(flags.split())
+    return {"cpu_model": model or "UNKNOWN",
+            "simd": [f for f in SIMD_FLAGS if f in have],
+            "cpu_flags_sha256": hashlib.sha256(flags.encode()).hexdigest() if flags else None}
+
+
+def runner_record(server_bin: Path, log_path: Path, shard: str, env=None) -> dict:
+    """What addendum 3 says every batch records: runner CPU, image, llama.cpp build line, system_info line, job."""
+    env = os.environ if env is None else env
+    rec = {}
+    try:
+        rec.update(cpu_from_cpuinfo(Path("/proc/cpuinfo").read_text(errors="replace")))
+    except OSError:
+        try:
+            out = subprocess.run(["sysctl", "-n", "machdep.cpu.brand_string"], capture_output=True, text=True, timeout=10).stdout.strip()
+        except Exception:
+            out = ""
+        rec.update({"cpu_model": out or "UNKNOWN", "simd": [], "cpu_flags_sha256": None})
+    rec["logical_cpus"] = os.cpu_count()
+    rec["image"] = {k: env.get(k) for k in ("ImageOS", "ImageVersion", "RUNNER_OS", "RUNNER_ARCH", "RUNNER_NAME")}
+    try:
+        v = subprocess.run([str(server_bin), "--version"], capture_output=True, text=True, timeout=30,
+                           env=dict(os.environ, LD_LIBRARY_PATH=str(Path(server_bin).parent), DYLD_LIBRARY_PATH=str(Path(server_bin).parent)))
+        lines = [x.strip() for x in (v.stdout + "\n" + v.stderr).splitlines() if "version" in x.lower() or "built with" in x.lower()]
+    except Exception:
+        lines = []
+    rec["llama_server_version_lines"] = lines[:3]
+    try:
+        sysinfo = [x.strip() for x in Path(log_path).read_text(errors="replace").splitlines() if "system_info" in x or "CPU :" in x or "n_threads =" in x]   # the line's wording differs between llama.cpp builds
+    except OSError:
+        sysinfo = []
+    rec["llama_system_info"] = sysinfo[:2]
+    rec["job"] = {"shard": shard, "run_id": env.get("GITHUB_RUN_ID"), "run_attempt": env.get("GITHUB_RUN_ATTEMPT")}
+    return rec
+
+
 def fetch(url: str, dest: Path, sha256: str) -> Path:
     """Download if absent or wrong, resuming nothing; verify the sha256 or stop."""
     if dest.exists() and sha256_file(dest) == sha256:
@@ -75,6 +126,7 @@ def main(argv=None) -> int:
     ap.add_argument("--platform", default="ubuntu_x64")
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--pins", default=str(planmod.PINS_PATH))
+    ap.add_argument("--run", choices=["run1", "run2"], default="run1", help="run2 = addendum 3: per-request seeds when sampling, runner record in every batch")
     ap.add_argument("--items-limit", type=int, default=0)
     ap.add_argument("--k", type=int, default=0)
     ap.add_argument("--server-extra", default="", help="REHEARSAL only: extra llama-server arguments, e.g. '-ngl 0' to stay on the CPU")
@@ -82,7 +134,7 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     pins = json.loads(Path(a.pins).read_text(encoding="utf-8"))
     f = pins["files"][a.file]
-    work = Path(a.work)
+    work = Path(a.work).resolve()   # the server runs with its own directory as cwd, so paths must be absolute
     t_start = time.time()
     if a.bin_dir:
         server_bin = Path(a.bin_dir) / "llama-server"
@@ -119,12 +171,14 @@ def main(argv=None) -> int:
         else:
             raise SystemExit("STOP: llama-server did not come up in 4 minutes")
         loaded = collect.load_public_items(detector.load_protocol())
+        runner = runner_record(server_bin, work / ("server-%s.log" % a.shard), a.shard) if a.run == "run2" else None
         for spec in a.batches.split(","):
             cond, tid = spec.split(":")
             if pins["conditions"][cond]["file"] != a.file:
                 raise SystemExit("STOP: %s is not a %s condition" % (tid, a.file))
             t0 = time.time()
-            b = watch.run_trial(pins, cond, tid, base_url, Path(a.out), loaded=loaded, items_limit=a.items_limit, k=a.k)
+            b = watch.run_trial(pins, cond, tid, base_url, Path(a.out), loaded=loaded, items_limit=a.items_limit, k=a.k,
+                                 run=a.run, runner=runner)
             timings.append({"trial_id": tid, "seconds": round(time.time() - t0, 1), "state": b["state"],
                             "transport_error_share": b["transport_error_share"]})
             print("done", tid, timings[-1]["seconds"], "s", b["state"], flush=True)
