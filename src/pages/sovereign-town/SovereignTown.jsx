@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { parseSovereignSimulationStatus } from './status-contract.mjs';
 
 // Legacy Sovereign Town explanatory surface, with source-reported simulation values.
 // A network response or hash does not independently verify authority, real-world effects,
@@ -40,12 +41,9 @@ const SovereignTown = () => {
     })
       .then((r) => { if (!r.ok) throw new Error('Source unavailable'); return r.json(); })
       .then((d) => {
-        if (!Number.isSafeInteger(d?.cum_episodes) || d.cum_episodes < 0 ||
-            !Number.isSafeInteger(d?.ungoverned_crimes) || d.ungoverned_crimes < 0) {
-          throw new Error('Malformed source totals');
-        }
-        setReported({ episodes: d.cum_episodes, ungoverned: d.ungoverned_crimes });
-        setSourceState('SOURCE_REPORTED_NOT_INDEPENDENTLY_VERIFIED');
+        const status = parseSovereignSimulationStatus(d);
+        setReported({ episodes: status.episodes, ungoverned: status.hypotheticalViolations });
+        setSourceState(status.evidence_state);
       })
       .catch(() => { if (!controller.signal.aborted) setSourceState('UNAVAILABLE_OR_UNCHECKABLE'); });
     return () => controller.abort();
