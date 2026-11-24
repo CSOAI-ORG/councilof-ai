@@ -102,7 +102,7 @@ export default function ControlRoom() {
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-300">Control room · read live · never typed</p>
         <h2 id="control-room-h" className="mt-3 text-3xl font-black tracking-tight">Live numbers, with history</h2>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
-          Measured by Council of AI from its own endpoints and dated files. Nothing on this strip is reported by another organisation, and nothing is simulated.
+          Council of AI measured these from its own endpoints and dated files. One count, open pull requests, is read from GitHub. Nothing is simulated.
           Every figure comes from an automated job and has not been reviewed by a named person. Each number carries its unit, its time and its source address.
           A source that could not be read is left out and listed in the footer; it is never drawn as zero. Measurement, not certification.
         </p>
@@ -223,7 +223,7 @@ export default function ControlRoom() {
             {failed.length ? <li className="text-amber-300">left out of the headline numbers: {failed.map((f) => `${f.source} (${f.error})`).join("; ")}</li> : null}
           </ul>
           <p className="mt-2 font-mono text-[10px] text-slate-500">
-            The series file is regenerated from the dated files by scripts/build-control-room-series.mjs; its newest points can lag the newest dated file until it is regenerated.
+            The series file is rebuilt from the dated files each time the site is built (scripts/build-control-room-series.mjs), so its newest point is the newest dated file in that build.
           </p>
         </footer>
       </div>
