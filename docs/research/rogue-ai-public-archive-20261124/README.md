@@ -56,3 +56,9 @@ The verifier uses only Python standard library, exact original zip/CSV digests a
 5. **Reusable research product:** an independent evidence bundle can add a pinned original-data audit receipt beside Council's *own* measured results, clearly marked with external source ownership and the limits of review; it does not create a new signed GSPC grade.
 
 **Status:** self-run independent *arithmetic* reproduction from source archive, unsigned and not admitted as an independently qualified GSPC outcome. The original authors have not endorsed CSOAI. The data rights and any further code integration require per-file and derived-source review even where the archive includes an MIT software licence.
+
+## Actual Council evidence-fabric integration
+
+The independent arithmetic result can be converted with `python3 scripts/research/rogue_ai_to_evidence_event.py --output original-source-partial.json`. This invokes the existing canonical `csoai.evidence-event/0.1` schema and produces an **unsigned PARTIAL** record with original-archive identity, original publisher ownership, initial vs later verdicts, and no external human or GSPC admission. Its recorded deterministic event ID from the actual 24 November source receipt is `sha256:901260900f874b4bde530e673d58b77ecf56249fe4492f556521e812c56a6bfb`.
+
+Four additional local source/authority integrity tests have passed, and the PR workflow independently rebuilds and validates this evidence event without any API model call, signer, wallet or new public grade. The original full paper artifact remains credited to its authors; the only Council-owned artifact is the source-recheck and its unsigned evidence pointer. Do not use this record as a buyer's acceptance or as an independent reexecution of the original 108 agent tasks.
