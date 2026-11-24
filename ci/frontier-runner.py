@@ -289,8 +289,10 @@ def classify(model, scenario, cred):
     if model.startswith("cf:"):
         # Cloudflare Workers AI, OpenAI-compatible route: an open model served by
         # Cloudflare. It is a separate arm from the hf: route to the same weights
-        # (a different serving stack), and is named as such in every row. Same
-        # account and token the mill already uses (mill_hub_queue.py, _cloudflare).
+        # (a different serving stack), and is named as such in every row. It reads its
+        # own token, CLOUDFLARE_AI_TOKEN (Workers AI permission only): the deploy token
+        # CLOUDFLARE_API_TOKEN is refused by Workers AI with HTTP 401 (pulse runs of 22-23
+        # Nov 2026) and must not be widened or replaced, because the deploys use it.
         acct = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "").strip()
         if not acct:
             raise BlockedCredential("CLOUDFLARE_ACCOUNT_ID not set")
@@ -350,11 +352,11 @@ PROVIDERS = {
     # Open models served by Cloudflare Workers AI (ids as listed by the account on
     # 22 Nov 2026). The first two are the same weights as two hf: entries above,
     # reached by another serving route.
-    "cf:@cf/zai-org/glm-5.3": "CLOUDFLARE_API_TOKEN",
-    "cf:@cf/deepseek-ai/deepseek-v4.1-flash-1017": "CLOUDFLARE_API_TOKEN",
-    "cf:@cf/meta/llama-4-scout-17b-16e-instruct": "CLOUDFLARE_API_TOKEN",
-    "cf:@cf/google/gemma-4-26b-a4b-it": "CLOUDFLARE_API_TOKEN",
-    "cf:@cf/mistralai/mistral-small-3.1-24b-instruct": "CLOUDFLARE_API_TOKEN",
+    "cf:@cf/zai-org/glm-5.3": "CLOUDFLARE_AI_TOKEN",
+    "cf:@cf/deepseek-ai/deepseek-v4.1-flash-1017": "CLOUDFLARE_AI_TOKEN",
+    "cf:@cf/meta/llama-4-scout-17b-16e-instruct": "CLOUDFLARE_AI_TOKEN",
+    "cf:@cf/google/gemma-4-26b-a4b-it": "CLOUDFLARE_AI_TOKEN",
+    "cf:@cf/mistralai/mistral-small-3.1-24b-instruct": "CLOUDFLARE_AI_TOKEN",
 }
 
 
