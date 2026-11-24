@@ -60,6 +60,35 @@ class HeartbeatTests(unittest.TestCase):
         observations["root"]["payload"]["card_count"] = 3
         self.assertIn("root_internal_consistency", heartbeat.assess(observations, now=NOW)["failed_invariants"])
 
+    def test_exact_byte_crypto_replay_promotes_only_matching_root(self):
+        observations = sample()
+        observations["root"]["sha256"] = "a" * 64
+        crypto = {"verdict": "VALID", "root_source_sha256": "a" * 64,
+                  "sampled_proofs": 4,
+                  "checks": {"merkle_tree": {"state": "VALID"},
+                             "root_signature": {"state": "VALID"},
+                             "proof_0": {"state": "VALID"}}}
+        report = heartbeat.assess(observations, now=NOW, crypto_report=crypto)
+        self.assertEqual(report["checks"]["root_crypto_verification"]["state"], "VALID")
+        self.assertNotIn("root_crypto_verification", report["open_or_uncheckable_gates"])
+        self.assertEqual(report["metrics"]["root"]["sampled_proofs_verified"], 4)
+
+    def test_crypto_report_with_other_bytes_is_unknown(self):
+        observations = sample()
+        observations["root"]["sha256"] = "a" * 64
+        crypto = {"verdict": "VALID", "root_source_sha256": "b" * 64,
+                  "sampled_proofs": 4,
+                  "checks": {"merkle_tree": {"state": "VALID"}, "root_signature": {"state": "VALID"}}}
+        report = heartbeat.assess(observations, now=NOW, crypto_report=crypto)
+        self.assertEqual(report["checks"]["root_crypto_verification"]["state"], "UNCHECKABLE")
+
+    def test_crypto_invalid_same_bytes_fails(self):
+        observations = sample()
+        observations["root"]["sha256"] = "a" * 64
+        crypto = {"verdict": "INVALID", "root_source_sha256": "a" * 64}
+        report = heartbeat.assess(observations, now=NOW, crypto_report=crypto)
+        self.assertIn("root_crypto_verification", report["failed_invariants"])
+
     def test_missing_source_is_unknown_not_clean(self):
         observations = sample()
         observations["root"] = {"state": "UNCHECKABLE", "reason": "HTTP 403"}
