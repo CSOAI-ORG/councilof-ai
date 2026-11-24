@@ -43,6 +43,17 @@ def valid_utc(value: str) -> bool:
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
+        # Hugging Face's immutable /resolve route redirects to its own bounded
+        # cache path. Never carry an authenticated GitHub request across a redirect.
+        source = urllib.parse.urlsplit(req.full_url)
+        target = urllib.parse.urlsplit(newurl)
+        allowed_cache = (source.scheme == "https" and source.hostname == "huggingface.co"
+            and source.path.startswith("/datasets/csoai/gspc-meok-evidence-adaptation-lab/resolve/")
+            and target.scheme == "https" and target.hostname == "huggingface.co"
+            and target.path.startswith("/api/resolve-cache/datasets/csoai/gspc-meok-evidence-adaptation-lab/")
+            and target.path.endswith("/manifest.json") and not target.username and not target.password)
+        if allowed_cache:
+            return super().redirect_request(req, fp, code, msg, headers, newurl)
         raise ValueError("REDIRECT_NOT_QUALIFIED")
 
 def fetch_bytes(url: str, token: str = "") -> bytes:
@@ -90,7 +101,9 @@ def summarise(docs: dict[str, bytes | None], pulls: dict[str, dict | None], at: 
             metrics["gspc"] = {"state": "PUBLISHER_DECLARED", "axis_count": len(axes),
                 "comparison_axes": len(comparison),
                 "separated_comparison_axes": sum(x.get("separation") == "SEPARATED" for x in comparison),
-                "reported_measurement_date": board.get("measured_on"),
+                "reported_measurement_date": (board.get("measured_on", {}).get("date")
+                    if isinstance(board.get("measured_on"), dict)
+                    else board.get("measured_on") if isinstance(board.get("measured_on"), str) else None),
                 "measurement_reproduced_here": False,
                 "governance_axis_limitations": next((str(x.get("limit"))[:850] for x in axes
                     if x.get("axis") == "governance"), None)}
