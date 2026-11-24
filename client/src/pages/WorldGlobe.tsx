@@ -164,8 +164,18 @@ export default function WorldGlobe() {
     }, 2500);
     return () => window.clearTimeout(t);
   }, [pub, mode, pubOn]);
+  // A click is accepted only from the embedded globe on this origin, and only its stamp id is
+  // used: the panel shows the record this page itself sent, never content carried by a message.
+  const pubRef = useRef<PublishedRecords | null>(null);
+  useEffect(() => { pubRef.current = pub; }, [pub]);
   useEffect(() => {
-    const h = (ev: MessageEvent) => { const d: any = ev.data; if (d && d.cmd === "stampClick" && d.payload?.layer === PUBLISHED_LAYER) setPubSel(d.payload); };
+    const h = (ev: MessageEvent) => {
+      if (ev.origin !== window.location.origin || ev.source !== globe3dRef.current?.contentWindow) return;
+      const d: any = ev.data;
+      if (!d || d.cmd !== "stampClick" || typeof d.id !== "string") return;
+      const s = pubRef.current?.stamps.find((x) => x.id === d.id);
+      if (s) setPubSel(s.payload);
+    };
     window.addEventListener("message", h); return () => window.removeEventListener("message", h);
   }, []);
   // ── The Sovereign tour ─────────────────────────────────────────────────────
