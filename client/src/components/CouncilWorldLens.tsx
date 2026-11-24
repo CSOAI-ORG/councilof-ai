@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Globe2, MessageCircle, ExternalLink, Layers, ShieldCheck } from "lucide-react";
 import { askSovereign } from "@/lib/sovAsk";
 import { MISSIONS, missionForId, missionHref, suggestMission, type MissionId } from "@/lib/worldMissions";
+import { parseWorldBoard, type WorldBoard } from "@/lib/worldBoard";
 import { DESKS, type DeskId } from "../../../functions/api/_chatDesks";
 import PalAskPanel from "@/components/PalAskPanel";
 import { sovActions } from "@/lib/sovAgent";
@@ -10,7 +11,7 @@ import {
   type Observatory, type WorldFact, type WorldFactKey,
 } from "@/lib/worldLens";
 
-type WorldMode = "globe" | "atlas" | "timeline" | "systems";
+type WorldMode = "globe" | "atlas" | "timeline" | "systems" | "benchmarks";
 type ReadState = { phase: "loading" | "ready" | "unavailable"; fact?: WorldFact; error?: string };
 const SOURCE_KEYS: WorldFactKey[] = ["gspc", "root", "worker", "observatory"];
 const WORLD_REGIONS: Record<string, [number, number]> = {
@@ -32,6 +33,9 @@ export default function CouncilWorldLens() {
   const [layer, setLayer] = useState("frameworks");
   const [reads, setReads] = useState<Partial<Record<WorldFactKey, ReadState>>>({});
   const [observatory, setObservatory] = useState<Observatory | null>(null);
+  const [board, setBoard] = useState<WorldBoard | null>(null);
+  const [axisQuery, setAxisQuery] = useState("");
+  const [axisFilter, setAxisFilter] = useState<"all" | "model" | "tie" | "untested" | "separated">("all");
   const [tick, setTick] = useState(0);
   const [prompt, setPrompt] = useState("");
   const [reply, setReply] = useState("");
@@ -47,6 +51,7 @@ export default function CouncilWorldLens() {
     const timeout = window.setTimeout(() => controller.abort(), 12000);
     setReads(Object.fromEntries(SOURCE_KEYS.map((key) => [key, { phase: "loading" }])) as Partial<Record<WorldFactKey, ReadState>>);
     setObservatory(null);
+    setBoard(null);
     for (const key of SOURCE_KEYS) {
       fetch(WORLD_SOURCES[key], { headers: { accept: "application/json" }, cache: "no-store", signal: controller.signal })
         .then(async (response) => {
@@ -54,6 +59,7 @@ export default function CouncilWorldLens() {
           const data: unknown = await response.json();
           const fact = parseWorldFact(key, data);
           if (key === "observatory" && !controller.signal.aborted) setObservatory(parseObservatory(data));
+          if (key === "gspc" && !controller.signal.aborted) setBoard(parseWorldBoard(data));
           if (!controller.signal.aborted) setReads((old) => ({ ...old, [key]: { phase: "ready", fact } }));
         })
         .catch((error: unknown) => {
@@ -139,6 +145,7 @@ export default function CouncilWorldLens() {
           ["atlas", "OpenGridWorks atlas"],
           ["timeline", "SovSpace replay"],
           ["systems", "Systems & ontology"],
+          ["benchmarks", "GSPC control room"],
         ] as const).map(([id, title]) => (
           <button key={id} type="button" role="tab" aria-selected={mode === id}
             onClick={() => setMode(id)}
@@ -148,7 +155,7 @@ export default function CouncilWorldLens() {
       </div>
 
       <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_minmax(235px,290px)]">
-        <div role="tabpanel" aria-label={mode === "globe" ? "3D globe" : mode === "atlas" ? "Regulation atlas" : mode === "systems" ? "Connected Council systems" : "Historical simulation replay"} className="min-w-0 bg-slate-950">
+        <div role="tabpanel" aria-label={mode === "globe" ? "3D globe" : mode === "atlas" ? "Regulation atlas" : mode === "systems" ? "Connected Council systems" : mode === "benchmarks" ? "Live GSPC axis evidence" : "Historical simulation replay"} className="min-w-0 bg-slate-950">
           {mode === "globe" ? (
             <iframe ref={frameRef} title="Council 3D Earth, source-reported markers"
               src="/globe3d.html" loading="lazy" onLoad={() => setStatus("Globe frame loaded; Cesium canvas and data freshness require independent verification.")}
@@ -156,6 +163,92 @@ export default function CouncilWorldLens() {
           ) : mode === "atlas" ? (
             <iframe title="OpenGridWorks regulation atlas" src="/opengridworks?embed=1" loading="lazy"
               className="h-[410px] w-full border-0 bg-white sm:h-[520px]" />
+          ) : mode === "benchmarks" ? (
+            <div className="min-h-[410px] bg-[#f8fcfa] p-4 text-slate-900 sm:min-h-[520px]" data-testid="world-gspc-control-room">
+              <h3 className="text-lg font-semibold text-emerald-950">GSPC · measurement control room</h3>
+              <p className="mt-1 text-xs text-slate-700">
+                The public board supplies every count and row. Measurement does not mean a model won, that a method is sufficient, or that an agent is safe to deploy.
+              </p>
+              {board ? (
+                <>
+                  <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Source-derived GSPC summary">
+                    {[
+                      { title: "Published axes", number: board.axes.length, detail: board.nMeasured + " with a measured status" },
+                      { title: "Comparison axes", number: board.nModelComparison, detail: "A shared model test, not unique models" },
+                      { title: "Separated leads", number: board.nSeparated, detail: "Only a qualifying separation" },
+                      { title: "TIE / UNTESTED", number: board.nTie + board.nUntested, detail: board.nTie + " tied · " + board.nUntested + " untested" },
+                    ].map((metric) => (
+                      <div key={metric.title} className="rounded-lg border border-emerald-200 bg-white p-2.5">
+                        <p className="text-[10px] font-semibold text-slate-700">{metric.title}</p>
+                        <p className="mt-1 text-2xl font-semibold tabular-nums text-emerald-950">{metric.number}</p>
+                        <p className="mt-1 text-[10px] text-slate-600">{metric.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-3 rounded-lg border border-slate-200 bg-white p-2 text-[11px] leading-relaxed text-slate-700">
+                    Source separation line: {board.separationLine}
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <label className="min-w-0 flex-1 text-[11px] font-semibold text-slate-700">
+                      Find an axis
+                      <input type="search" value={axisQuery} onChange={(e) => setAxisQuery(e.target.value)}
+                        placeholder="Search axis, task or family" className="mt-1 w-full rounded-lg border border-slate-200 bg-white p-2 text-xs" />
+                    </label>
+                    <label className="text-[11px] font-semibold text-slate-700">
+                      Evidence state
+                      <select value={axisFilter} onChange={(e) => setAxisFilter(e.target.value as typeof axisFilter)}
+                        className="mt-1 block rounded-lg border border-slate-200 bg-white p-2 text-xs">
+                        <option value="all">All axes</option>
+                        <option value="model">Model comparisons</option>
+                        <option value="tie">TIE</option>
+                        <option value="untested">UNTESTED</option>
+                        <option value="separated">SEPARATED</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div className="mt-2 grid max-h-[300px] gap-2 overflow-y-auto sm:grid-cols-2" aria-live="polite" data-testid="world-axis-cards">
+                    {board.axes.filter((a) => {
+                      const query = axisQuery.trim().toLowerCase();
+                      const hit = !query || (a.id + " " + a.family + " " + a.detail).toLowerCase().includes(query);
+                      const match = axisFilter === "all" || axisFilter === "model" && a.kind === "model-comparison" ||
+                        axisFilter === "tie" && a.separation === "TIE" ||
+                        axisFilter === "untested" && a.separation === "UNTESTED" ||
+                        axisFilter === "separated" && a.separation === "SEPARATED";
+                      return hit && match;
+                    }).map((a) => (
+                      <a key={a.id} href={a.path}
+                        className="block rounded-xl border border-slate-200 bg-white p-3 text-xs focus-visible:outline-2 focus-visible:outline-emerald-700 hover:border-emerald-500">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <strong className="capitalize text-emerald-900">{a.label}</strong>
+                          <span className="rounded bg-slate-100 px-2 py-0.5 font-mono text-[10px] text-slate-700">
+                            {a.separation ?? a.status}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-[10px] text-slate-600">{a.kind} · {a.family} · n={a.n ?? "not supplied"} · method: {a.method ?? "not supplied"}</p>
+                        <p className="mt-1 line-clamp-2 text-[11px] text-slate-700">{a.detail}</p>
+                      </a>
+                    ))}
+                    {board.axes.every((a) => {
+                      const query = axisQuery.trim().toLowerCase();
+                      return !( (!query || (a.id + " " + a.family + " " + a.detail).toLowerCase().includes(query)) &&
+                        (axisFilter === "all" || axisFilter === "model" && a.kind === "model-comparison" ||
+                        axisFilter === "tie" && a.separation === "TIE" ||
+                        axisFilter === "untested" && a.separation === "UNTESTED" ||
+                        axisFilter === "separated" && a.separation === "SEPARATED") );
+                    }) && <p className="col-span-full rounded-lg border border-slate-200 bg-white p-3 text-xs text-slate-700">
+                      No axes match these filters. This is not evidence that no such issue exists.
+                    </p>}
+                  </div>
+                  <a href="/dashboard?tab=results" className="mt-3 inline-block text-xs font-semibold text-emerald-800 underline">
+                    Open complete benchmark records, sources, intervals and methods
+                  </a>
+                </>
+              ) : (
+                <p className="mt-4 rounded-lg border border-amber-200 bg-white p-4 text-sm text-amber-900">
+                  GSPC source unavailable, rejected or still loading. No cached scores substituted.
+                </p>
+              )}
+            </div>
           ) : mode === "systems" ? (
             <div className="min-h-[410px] bg-[#f8fcfa] p-4 text-slate-900 sm:min-h-[520px]" data-testid="world-ontology">
               <h3 className="text-lg font-semibold text-emerald-950">Systems &amp; ontology</h3>
