@@ -122,6 +122,20 @@ await test("auth-free legacy payment remains unowned compatibility",async()=>{
  const legacy=envelope("0x"+"9".repeat(64));delete legacy.csoaiPurchase;
  const r=await buyer.checkBuyerPayment(paidReq(legacy,null),env,target,legacy);assert.equal(r.ok,true);assert.equal(r.buyer,undefined);
 });
+await test("conflicting guest payment headers refuse before any financial effect",async()=>{
+ const first=envelope("0x"+"9".repeat(64));delete first.csoaiPurchase;
+ const second=envelope("0x"+"8".repeat(64));delete second.csoaiPurchase;
+ const r=paidReq(first,null);r.headers.set("payment-signature",encoded(second));
+ const before=financialCalls.length;const result=await x402.verifyX402Payment(r,env,target);
+ assert.equal(result.ok,false);assert.match(result.reason,/ambiguous payment headers/);
+ assert.equal(financialCalls.length,before);
+});
+await test("identical guest payment headers retain unowned compatibility",async()=>{
+ const legacy=envelope("0x"+"9".repeat(64));delete legacy.csoaiPurchase;
+ const r=paidReq(legacy,null);r.headers.set("payment-signature",encoded(legacy));
+ const result=await buyer.checkBuyerPayment(r,env,target,legacy);
+ assert.equal(result.ok,true);assert.equal(result.buyer,undefined);
+});
 await test("tagged v1 and v2 payment headers bind to the verified account",async()=>{
  for(const [version,header]of [[1,"x-payment"],[2,"payment-signature"]]){
   const p=envelope(prep.nonce,version);const r=await buyer.checkBuyerPayment(paidReq(p,tokenA,target,"GET",undefined,header),env,target,p);assert.equal(r.ok,true);assert.ok(r.buyer);checked=r;
