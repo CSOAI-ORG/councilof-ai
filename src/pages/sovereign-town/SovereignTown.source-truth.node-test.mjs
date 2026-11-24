@@ -17,8 +17,7 @@ test("bad status reads remain unknown, not live",()=>{
   assert.match(src,/SOURCE_REPORTED_NOT_INDEPENDENTLY_VERIFIED/);
   assert.match(src,/UNAVAILABLE_OR_UNCHECKABLE/);
   assert.match(src,/if \(!r\.ok\) throw/);
-  assert.match(src,/Number\.isSafeInteger\(d\?\.cum_episodes\)/);
-  assert.match(src,/Number\.isSafeInteger\(d\?\.ungoverned_crimes\)/);
+  assert.match(src,/parseSovereignSimulationStatus\(d\)/);
   assert.doesNotMatch(src,/setLive\(/);
 });
 test("cross-domain source is only a reported simulation",()=>{
