@@ -118,6 +118,14 @@ Sources:
 - https://www.iso.org/standard/42001
 - https://www.iso.org/standard/42006
 
+### LIVE opportunity register — deadlines and go/no-go (verified 24 November 2026)
+
+**BridgeAI Deployment Catalyst, AI for Assurance and Compliance (OPEN; closes 8 December 2026 at 11:00 UK time).** This is a **£5 million shared allocation across three strands**, not an unconditional £5 million pot for CSOAI, and not £5 million in direct grants to one applicant. The project grant request is **£100,000–£200,000**, with a project of three to five months starting by 1 April 2027. The lead must be a **UK registered AI SME with a TRL 5–6 functioning MVP**; must account for 40–70% of eligible project costs. Consortium must also include an eligible **UK medium/large deployer or UK public-sector organisation**, contributing 30–50% of eligible costs and operational access. Minimum two and maximum three consortium organisations. The deployer must operate in an eligible priority sector. Direct eligibility **not yet confirmed** for CSOAI; an eligible independent deployer **not secured**. Need technical maturity dossier, partner invitation, clear deployment case, finances, letters of support and scoped permissions. No application has been submitted by this plan. Source: https://find-lb.find-a-grant-support.service.cabinetoffice.gov.uk/grants/bridgeai-deployment-catalyst-ai-for-assurance-and-compliance-1
+
+**Ofgem — Approach to AI assurance in the energy sector (OPEN; responses by 15 January 2027).** Consultation published 18 November 2026, invites energy participants, developers, AI providers, assurance professionals, academic and other stakeholders; email EmergingTechnologies@ofgem.gov.uk. It is **not** the same as the 25 November 2026 licensee-only AI Reg Lab whose direct application deadline has passed. Prepare a sourced, narrowly scoped response comparing consent/authority, versioned tests, observed effects, negative states, and independent verification; no claim of regulator endorsement. Source: https://www.ofgem.gov.uk/consultation/approach-ai-assurance-energy-sector
+
+**Priority choice:** A real deployer and a representative operational demonstration would advance both BridgeAI readiness and the independent-acceptance product. However, don't divert all resources into a grant bid without a qualified deployer, cost-share and maturity evidence. Founder time and existing release-critical work remain budget constraints.
+
 ## 4. Product architecture — one evidence ID, many views
 
 **Canonical event envelope (proposed v0.1, not currently universally deployed):**
