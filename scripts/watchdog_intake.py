@@ -79,6 +79,11 @@ UA = "CSOAI-watchdog-intake/0.1 (+https://councilof.ai)"
 # lives in the parsed body. `grid` names the estate's own axes / obligations this
 # source is expected to touch — an empty list means "no declared grid hit", which is
 # a fact about the source, never a fault.
+#
+# `rights` is what the publisher's licence, terms or robots.txt were read to allow, with
+# the date read. Every pinned source carries one and it is published in every row. Where a
+# page could not be read, or a clause was not resolved, the line says so in capitals.
+# The table is docs/operations/INTAKE-FIELD-SOURCES-RIGHTS-2026-11-24.md.
 PINNED = [
     {
         "id": "cisa-kev",
@@ -89,6 +94,7 @@ PINNED = [
         "expect": "json",
         "count_path": "vulnerabilities",
         "grid": ["effect-binding", "supply-chain"],
+        "rights": "CISA's licence file for the catalogue, read 2026-11-24, says the KEV database is distributed under CC0 1.0 and may be used in any legal manner; it adds that use does not authorise use of the CISA logo or the DHS seal and is not an endorsement by CISA or DHS.",
         "note": "Known-exploited CVE catalog. Authoritative US list; a CISA KEV entry means exploitation is observed in the wild, not that a product is unsafe in general.",
     },
     {
@@ -100,7 +106,8 @@ PINNED = [
         "expect": "json",
         "count_path": "totalResults",
         "grid": ["effect-binding", "supply-chain"],
-        "note": "totalResults is the catalog's own count of CVE records; it is a catalog size, not a measurement of this estate.",
+        "rights": "UNVERIFIED against the publisher's own page: the NVD API terms page answered 403 from its content-delivery network to plain requests on 2026-11-24 and was not read. A third-party copy of those terms (ScanCode LicenseDB, key nist-nvd-api-tou) asks services that use the API to display the notice carried in this row's note, bars using the NVD name to imply endorsement, and binds requests made without a key to the public rate limits. One request a day, without a key.",
+        "note": "totalResults is the catalog's own count of CVE records; it is a catalog size, not a measurement of this estate. This product uses the NVD API but is not endorsed or certified by the NVD.",
     },
     {
         "id": "ghsa-api",
@@ -111,6 +118,7 @@ PINNED = [
         "expect": "json",
         "count_path": "@length",
         "grid": ["effect-binding", "supply-chain"],
+        "rights": "The GitHub Advisory Database is licensed CC BY 4.0 (LICENSE.md of github/advisory-database, read 2026-11-24). Read through GitHub's documented REST API (see inspect-evals); the anonymous rate limit applies. Advisory text is never stored.",
         "note": "GHSA advisories, newest first. Anonymous rate-limited; the count is the page size actually served, not the catalog total.",
     },
     {
@@ -123,6 +131,7 @@ PINNED = [
         "expect": "json",
         "count_path": "vulns",
         "grid": ["effect-binding", "supply-chain"],
+        "rights": "OSV.dev's FAQ, read 2026-11-24, says the API is not rate limited. Each record keeps the licence of the database it came from; the data page lists them (CC-BY 4.0 for most, one CC-BY-NC-ND 4.0). One query for one named package a day; only the number of records and the body hash are kept, never a record.",
         "note": "POST query for one named package. A package's advisory count is a fact about that package, not a score for anything.",
     },
     {
@@ -134,6 +143,7 @@ PINNED = [
         "expect": "json",
         "count_path": "cveMetadata.cveId",
         "grid": ["effect-binding"],
+        "rights": "The CVE Program terms of use, read 2026-11-24, grant a perpetual, worldwide, no-charge licence to reproduce and distribute CVE content, on condition that MITRE's copyright designation and the licence are reproduced in any copy; the page has no sentence on automated access. No copy is kept: one record is read a day and only its id and the body hash are stored.",
         "note": "Record-level probe: proves the CVE Services API answers a named record. It says nothing about the catalog's completeness.",
     },
     {
@@ -145,6 +155,7 @@ PINNED = [
         "expect": "json",
         "count_path": "@length",
         "grid": ["supply-chain"],
+        "rights": "The Go vulnerability database is licensed CC BY 4.0 (vuln.go.dev/copyright, read 2026-11-24), and its front page says it is meant to be accessed by programs. Only the number of modules in the index and the body hash are kept.",
         "note": "Module index, not advisory records. Counted as a source that answered, not as an advisory count.",
     },
     {
@@ -156,6 +167,7 @@ PINNED = [
         "expect": "json",
         "count_path": "versions.@length",
         "grid": ["supply-chain", "provenance"],
+        "rights": "The deps.dev API documentation, read 2026-11-24, says the data deps.dev generates is available under CC-BY 4.0, that use of the API is subject to the Google API Terms of Service (not read in this pass), and that clients may cache what the API serves. One request for one named package a day.",
         "note": "Supply-chain dependency facts for one named package.",
     },
     {
@@ -167,6 +179,7 @@ PINNED = [
         "expect": "json",
         "count_path": "@length",
         "grid": ["serving-fidelity", "provenance"],
+        "rights": "Documented public Hub API; robots.txt allows /; the Hugging Face terms read on 2026-11-24 carry no clause against reading the public API. Only the page size and the body hash are kept, never a model or author name.",
         "note": "Public model registry. A listing is not a grade.",
     },
     {
@@ -178,6 +191,7 @@ PINNED = [
         "expect": "json",
         "count_path": "data.@length",
         "grid": ["serving-fidelity"],
+        "rights": "UNRESOLVED, for the owner. OpenRouter's terms (last updated 2026-08-31, read 2026-11-24) bar using scripts, robots, crawlers or any other automated technology to scrape or copy any information on the Site or the Services. This row reads the public model catalogue once a day and keeps a count and a body hash. Whether that is scraping or copying under the clause was not decided here.",
         "note": "Public serving catalog. Catalog size is not a measurement of serving fidelity.",
     },
     {
@@ -189,6 +203,7 @@ PINNED = [
         "expect": "yaml-or-text",
         "count_path": "techniques",
         "grid": ["swarm", "jail", "safety", "effect-binding"],
+        "rights": "MITRE ATLAS data is Apache-2.0 (LICENSE of mitre-atlas/atlas-data, read 2026-11-24). One file a day from the repository's public raw address; only a count and the body hash are kept.",
         "note": "ATLAS release 2026.10. The versioned path is taken from dist/manifest.yaml, which names the current release; the legacy dist/ATLAS.yaml is DEPRECATED and self-declares so.",
     },
     {
@@ -200,6 +215,7 @@ PINNED = [
         "expect": "yaml-or-text",
         "count_path": "@length",
         "grid": ["swarm", "jail", "safety"],
+        "rights": "Apache-2.0, the same repository and licence as atlas-current. One file a day; only a count and the body hash are kept.",
         "note": "Names each ATLAS release and its path. This is how the harness discovers the current release instead of hardcoding a date.",
     },
     {
@@ -211,6 +227,7 @@ PINNED = [
         "expect": "yaml-or-text",
         "count_path": "@sha256",
         "grid": ["safety", "jail", "provenance"],
+        "rights": "CC BY-SA 4.0 (LICENSE.md of the project repository, read 2026-11-24). One README a day from the public raw address; only its hash is kept, and no text is copied or adapted.",
         "note": "Threat-framework prose. Counted by content digest — there is no row count to read, and pretending otherwise would invent one.",
     },
     {
@@ -222,6 +239,7 @@ PINNED = [
         "expect": "yaml-or-text",
         "count_path": "@sha256",
         "grid": ["safety", "effect-binding"],
+        "rights": "CC BY-SA 4.0 (LICENSE.md of OWASP/ASVS, read 2026-11-24). One README a day from the public raw address; only its hash is kept, and no text is copied or adapted.",
         "note": "Verification-standard prose, counted by content digest.",
     },
     {
@@ -233,6 +251,7 @@ PINNED = [
         "expect": "json",
         "count_path": "treeSize",
         "grid": ["provenance", "provenance-controls"],
+        "rights": "Sigstore's documentation, read 2026-11-24, describes a public instance that auditors can monitor for consistency. No terms-of-use page was found at the addresses read. One read of the log's state a day; the tree size and the body hash are kept.",
         "note": "Public transparency log. treeSize is the log's own entry count — evidence the log is live and moving, not a score for anything.",
     },
     {
@@ -244,6 +263,7 @@ PINNED = [
         "expect": "json",
         "count_path": "checks.@length",
         "grid": ["supply-chain", "provenance-controls"],
+        "rights": "The Scorecard README, read 2026-11-24, says data provided by the REST API is licensed under CDLA Permissive 2.0. It now names the host api.scorecard.dev; this row still reads the older host, which answered 200 on 2026-11-23. One named repository a day.",
         "note": "Named-repository check set. Counted by checks, and the count is the source's check taxonomy size — not a grade for the repository.",
     },
     {
@@ -255,6 +275,7 @@ PINNED = [
         "expect": "yaml-or-text",
         "count_path": "@sha256",
         "grid": ["charter", "article-50", "article-53", "hitl"],
+        "rights": "CC BY 4.0 (LICENSE of OpenSecureAIAlliance/wg-safe, read 2026-11-24). One README a day from the public raw address; only its hash is kept.",
         "note": "The upstream SAFE reference this estate's charter feed tracks.",
     },
     {
@@ -266,6 +287,7 @@ PINNED = [
         "expect": "yaml-or-text",
         "count_path": "@sha256",
         "grid": ["provenance", "provenance-controls"],
+        "rights": "Community Specification License 1.0 (LICENSE.md of slsa-framework/slsa, read 2026-11-24). One README a day from the public raw address; only its hash is kept.",
         "note": "Supply-chain provenance framework reference.",
     },
     {
@@ -277,6 +299,7 @@ PINNED = [
         "expect": "yaml-or-text",
         "count_path": "@sha256",
         "grid": ["provenance", "provenance-controls"],
+        "rights": "Apache-2.0 (LICENSE of in-toto/attestation, read 2026-11-24). One README a day from the public raw address; only its hash is kept.",
         "note": "Attestation framework reference.",
     },
     # ── G3: the field's own public registries (added 2026-11-24) ──────────────────────
@@ -592,6 +615,8 @@ def build_rows(specs, only=None, timeout=30):
         got = fetch(spec, timeout=timeout)
         row = grade(spec, got)
         row["note"] = spec.get("note", "")
+        if spec.get("rights"):
+            row["rights"] = spec["rights"]
         rows.append(row)
     return rows
 

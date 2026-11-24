@@ -141,6 +141,30 @@ class TestPinnedRegistryIsHonest(unittest.TestCase):
             missing = required - set(spec)
             self.assertFalse(missing, f"pinned source {spec.get('id')} missing {missing}")
 
+    def test_every_pinned_source_carries_a_rights_line(self):
+        for spec in wi.PINNED:
+            self.assertTrue(str(spec.get("rights", "")).strip(), f"pinned source {spec.get('id')} has no rights line")
+
+    def test_an_unread_or_unresolved_rights_line_says_so_in_capitals(self):
+        by_id = {s["id"]: s for s in wi.PINNED}
+        self.assertTrue(by_id["nvd-cve-api"]["rights"].startswith("UNVERIFIED"))
+        self.assertTrue(by_id["openrouter"]["rights"].startswith("UNRESOLVED"))
+
+    def test_the_nvd_row_carries_the_notice_the_nvd_terms_ask_for(self):
+        spec = next(s for s in wi.PINNED if s["id"] == "nvd-cve-api")
+        self.assertIn("This product uses the NVD API but is not endorsed or certified by the NVD.", spec["note"])
+
+    def test_the_rights_line_is_published_in_the_row(self):
+        spec = next(s for s in wi.PINNED if s["id"] == "cisa-kev")
+        real_fetch = wi.fetch
+        wi.fetch = lambda s, timeout=30: FakeGot(body=b'{"vulnerabilities":[1,2]}')
+        try:
+            rows = wi.build_rows([spec])
+        finally:
+            wi.fetch = real_fetch
+        self.assertEqual(rows[0]["rights"], spec["rights"])
+        self.assertEqual(rows[0]["count"], 2)
+
     def test_pinned_ids_are_unique(self):
         ids = [s["id"] for s in wi.PINNED]
         self.assertEqual(len(ids), len(set(ids)), "a duplicate pinned id would silently drop a source")
