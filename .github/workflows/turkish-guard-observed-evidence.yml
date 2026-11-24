@@ -10,6 +10,12 @@ on:
       - "scripts/research/project_turkish_reaction.mjs"
       - "scripts/research/project_turkish_reaction.test.mjs"
       - "scripts/research/turkish_councilos_import.test.mjs"
+      - "scripts/research/paired_protectai_english.py"
+      - "scripts/research/test_paired_protectai_english.py"
+      - "scripts/research/verify_actual_github_effect.py"
+      - "scripts/research/test_actual_github_effect.py"
+      - "scripts/research/project_actual_host_reaction.mjs"
+      - "scripts/research/project_actual_host_reaction.test.mjs"
       - "docs/research/turkish-guard-observed-20261124/**"
       - ".github/workflows/turkish-guard-observed-evidence.yml"
 permissions:
@@ -48,6 +54,27 @@ jobs:
           PY
       - name: Verify real CouncilOS local import does not grant authority
         run: node --test scripts/research/turkish_councilos_import.test.mjs
+      - name: Validate real cross-model paired outputs on exactly 116 original labels
+        run: python3 -m unittest discover -s scripts/research -p test_paired_protectai_english.py -v
+      - name: Verify exact recorded GitHub effect and authority boundaries
+        run: python3 -m unittest discover -s scripts/research -p test_actual_github_effect.py -v
+      - name: Real HTTPS readback of immutable provider storage bytes and missing-target control
+        run: python3 scripts/research/verify_actual_github_effect.py
+      - name: Actual provider-effect projection into the read-only reaction bridge
+        run: |
+          node --test scripts/research/project_actual_host_reaction.test.mjs
+          node scripts/research/project_actual_host_reaction.mjs > /tmp/actual-github-reaction.json
+          python3 - <<'PY'
+          import json
+          x=json.load(open("/tmp/actual-github-reaction.json"))
+          assert x["episode"]["realm"]=="OBSERVED"
+          assert x["episode"]["stages"]["effect"]["state"]=="REPORTED"
+          assert x["review"]["status"]=="ACCEPTANCE_INCOMPLETE"
+          assert x["verified_human_authority_established"] is False
+          assert x["receiving_party_human_acceptance_established"] is False
+          assert x["true_meok_effect_prevention_established"] is False
+          print("Actual host write/readback ACCEPTED by provider; authentic human/MEOK/external receiver: NOT ESTABLISHED")
+          PY
       - name: Build actual observed, unsigned PARTIAL GSPC candidate event
         run: |
           python3 scripts/research/turkish_to_evidence_event.py --output /tmp/observed-turkish-evidence-event.json
