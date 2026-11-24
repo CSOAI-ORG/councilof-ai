@@ -61,7 +61,7 @@ def read_source(name, *, fixture_dir=None):
                 "url": url, "reason": str(exc)[:240]}
 
 
-def assess(observations, *, now=None):
+def assess(observations, *, now=None, crypto_report=None):
     now = now or dt.datetime.now(UTC)
     checks = {}
     metrics = {}
@@ -130,8 +130,36 @@ def assess(observations, *, now=None):
         record("root_internal_consistency", "OBSERVED_CONSISTENT" if valid else "FAIL",
                "structural check only; signatures, inclusion and Bitcoin witness NOT verified",
                failure=not valid)
-        record("root_crypto_verification", "NOT_EVALUATED",
-               "use pinned DID, exact-byte signature, inclusion path and independent witness verifier")
+        if crypto_report is None:
+            record("root_crypto_verification", "NOT_EVALUATED",
+                   "separate publisher-DID signature and inclusion replay has not been supplied")
+        elif crypto_report.get("root_source_sha256") != observations["root"].get("sha256"):
+            record("root_crypto_verification", "UNCHECKABLE",
+                   "cryptographic replay used different source bytes, or source identity is missing")
+        else:
+            proof_checks = crypto_report.get("checks")
+            required = {"merkle_tree", "root_signature"}
+            qualified = (
+                isinstance(proof_checks, dict)
+                and required.issubset(proof_checks)
+                and isinstance(crypto_report.get("sampled_proofs"), int)
+                and crypto_report["sampled_proofs"] > 0
+                and len(proof_checks) >= 3
+                and all(isinstance(item, dict) and item.get("state") == "VALID"
+                        for item in proof_checks.values())
+                and crypto_report.get("verdict") == "VALID"
+            )
+            if qualified:
+                record("root_crypto_verification", "VALID",
+                       "signed publisher DID verified and sampled inclusion replay matched identical root bytes; external witness not verified")
+                metrics["root"]["signature_verified"] = True
+                metrics["root"]["sampled_proofs_verified"] = crypto_report["sampled_proofs"]
+            elif crypto_report.get("verdict") == "INVALID":
+                record("root_crypto_verification", "INVALID",
+                       "same-byte signature/Merkle replay returned an invalid verdict", failure=True)
+            else:
+                record("root_crypto_verification", "UNCHECKABLE",
+                       "replay did not establish all required cryptographic checks")
 
     distribution = payload("distribution")
     if distribution is not None:
@@ -204,11 +232,20 @@ def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", default="out/operational-heartbeat.json")
     parser.add_argument("--fixture-dir", help="offline JSON fixtures; no network access")
+    parser.add_argument("--crypto-report", help="companion readback JSON (must bind to exact root bytes)")
     parser.add_argument("--fail-on-invariant", action="store_true")
     args = parser.parse_args(argv)
     observations = {name: read_source(name, fixture_dir=args.fixture_dir)
                     for name in SOURCES}
-    report = assess(observations)
+    crypto_report = None
+    if args.crypto_report:
+        try:
+            crypto_report = json.loads(pathlib.Path(args.crypto_report).read_text())
+            if not isinstance(crypto_report, dict):
+                raise ValueError("not a JSON object")
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            crypto_report = {"verdict": "UNCHECKABLE", "reason": str(exc)[:160]}
+    report = assess(observations, crypto_report=crypto_report)
     out = pathlib.Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
