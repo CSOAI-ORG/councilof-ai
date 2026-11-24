@@ -82,6 +82,29 @@ class PulseTests(unittest.TestCase):
         self.assertIn("not** a new GSPC measurement",txt)
         self.assertIn("Signature not verified by this pulse",txt)
         self.assertIn("NOT_ESTABLISHED_BY_THIS_PULSE",txt)
+    def test_nested_measurement_stamp_does_not_leak_large_preimage(self):
+        d=fixture()
+        board=json.loads(d["gspc"])
+        board["measured_on"]={"date":"behavioural axes 2026-08-12",
+            "living_stamp":{"preimage":{"private_model_card":"SHOULD_NOT_LEAK"}}}
+        d["gspc"]=json.dumps(board).encode()
+        r=summarise(d,{},AT)
+        self.assertEqual(r["metrics"]["gspc"]["reported_measurement_date"],
+            "behavioural axes 2026-08-12")
+        self.assertNotIn("SHOULD_NOT_LEAK",json.dumps(r))
+    def test_only_immutable_hf_cache_redirect_is_permitted(self):
+        from council_heartbeat import NoRedirect
+        from urllib.request import Request
+        handler=NoRedirect()
+        u="https://huggingface.co/datasets/csoai/gspc-meok-evidence-adaptation-lab/resolve/revision/manifest.json"
+        okay="https://huggingface.co/api/resolve-cache/datasets/csoai/gspc-meok-evidence-adaptation-lab/revision/manifest.json?etag=abc"
+        req=Request(u,method="GET")
+        self.assertIsNotNone(handler.redirect_request(req,None,307,"Temporary",{},okay))
+        for target in ("https://evil.example/steal",
+                       "https://api.github.com/repos/private",
+                       "https://huggingface.co/api/private-user"):
+            with self.subTest(target=target),self.assertRaises(ValueError):
+                handler.redirect_request(req,None,307,"Temporary",{},target)
     def test_utc_required(self):
         with self.assertRaises(ValueError):
             summarise(fixture(),{}, "2026-11-24T00:00:00")
