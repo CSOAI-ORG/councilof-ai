@@ -29,8 +29,9 @@ ALLOW_HOSTS = frozenset({"api.github.com", "api.crossref.org"})
 MAX_RESPONSE_BYTES = 350_000
 GITHUB_WORKERS = 5
 MAX_REPOS = 18
-TOPIC_ROWS = 3
-MAX_PAPERS = 12
+TOPIC_ROWS = 8
+TOPIC_RESULTS_PER_SEARCH = 3
+MAX_PAPERS = 9
 TIMEOUT_SECONDS = 9
 DEFAULT_OUTPUT = "public/interop/auto-eat/research-commons.json"
 
@@ -60,6 +61,12 @@ TOPICS = (
     "autonomous agent runtime authorization",
 )
 assert len(SOURCES) <= MAX_REPOS
+
+TOPIC_RULES = {
+    TOPICS[0]: (r"\bagents?\b|\bmulti.agent\b", r"evaluat|reproduc|benchmark"),
+    TOPICS[1]: (r"\bai\b|artificial intelligence|\bllm\b|\bmodel", r"safety|benchmark|calibrat"),
+    TOPICS[2]: (r"\bagents?\b|autonom", r"authoriz|permission|access control|governance|policy|security"),
+}
 
 REPO_ID = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
@@ -213,12 +220,17 @@ def github_source(src: tuple[str, str, str], *, token=None,
         }
 
 
+def title_relevant(topic: str, title: str) -> bool:
+    """Conservative, documented title keyword check. Not scientific review."""
+    if topic not in TOPIC_RULES or not isinstance(title, str):
+        return False
+    return all(re.search(pat, title, re.I) is not None for pat in TOPIC_RULES[topic])
+
+
 def crossref_topic(topic: str, *, from_date: str, fetch=fetch_json) -> dict:
     query = urllib.parse.urlencode({
         "query.bibliographic": topic,
         "filter": "from-index-date:" + from_date,
-        "sort": "indexed",
-        "order": "desc",
         "rows": str(TOPIC_ROWS),
         "select": "DOI,title,URL,indexed,published,type",
         "mailto": "contacts@csoai.org",
@@ -238,12 +250,13 @@ def crossref_topic(topic: str, *, from_date: str, fetch=fetch_json) -> dict:
             if not isinstance(doi, str) or not DOI.fullmatch(doi):
                 continue
             title = safe_text(titles[0] if isinstance(titles, list) and titles else None)
-            if not title or doi.lower() in seen:
+            if not title or not title_relevant(topic, title) or doi.lower() in seen:
                 continue
             seen.add(doi.lower())
             published = row.get("published", {})
             indexed = row.get("indexed", {})
             papers.append({
+                "title_relevance": "HEURISTIC_KEYWORD_MATCH_NOT_SCIENTIFIC_JUDGEMENT",
                 "doi": doi, "title_metadata": title, "doi_url": "https://doi.org/" + doi,
                 "crossref_published_date_parts": (published.get("date-parts", [None])[0]
                                                   if isinstance(published, dict) else None),
@@ -254,9 +267,13 @@ def crossref_topic(topic: str, *, from_date: str, fetch=fetch_json) -> dict:
                 "reproducibility_status": "NOT_TESTED",
                 "human_review": "UNASSIGNED",
             })
+            if len(papers) >= TOPIC_RESULTS_PER_SEARCH:
+                break
         return {"topic": topic, "status": "SOURCE_METADATA_OBSERVED",
                 "source_response_canonical_sha256": sha(canonical(doc)),
-                "papers": papers, "recently_indexed_not_necessarily_newly_published": True}
+                "papers": papers, "recently_indexed_not_necessarily_newly_published": True,
+                "coverage": "TOP_8_API_SEARCH_MATCHES_ONLY_NOT_EXHAUSTIVE",
+                "candidate_selection": "TWO_PART_TITLE_KEYWORD_HEURISTIC_REVIEW_REQUIRED"
     except (Uncheckable, TypeError, ValueError, KeyError) as exc:
         return {"topic": topic, "status": "SOURCE_UNCHECKABLE",
                 "reason": str(exc)[:75], "papers": [],
