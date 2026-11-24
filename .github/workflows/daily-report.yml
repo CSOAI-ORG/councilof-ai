@@ -1,21 +1,30 @@
 # daily-report — the GSPC daily report, generated, signed and checked on GitHub Actions.
 #
 # WHY THIS EXISTS. scripts/daily-report/generate_daily_report.py ran on another Mac, read a fixed local folder and
-# uploaded an unsigned report to the HF dataset csoai/gspc-daily-reports, because the signing key exists only as this
-# repository's secret ACTION_EVENT_SIGNING_KEY_PKCS8_B64. Here it runs on a runner and signs with that secret.
+# uploaded an unsigned report to the HF dataset csoai/gspc-daily-reports. Here it runs on a runner.
+#
+# SIGNING (24 Nov 2026). The report is far larger than the board signer's 3 KB payload cap, so the board signs a small
+# pointer to it: schema, report date, file name, SHA-256 of the exact .json bytes, signed_at (the corrections ledger's
+# detached pattern, scripts/sign-corrections-ledger.mjs). Job `report` asks GitHub for its own OIDC token and posts the
+# pointer to https://councilof.ai/api/board-sign through packages/venturi-capsule/venturi_capsule.py, the client the
+# capsule index signs with. The signer admits this file only at refs/heads/master (functions/api/board-sign.ts,
+# EXACT_WORKFLOW_REFS), so a branch dispatch gets an UNSIGNED .sig that says why, and a failed check. No key is stored:
+# the key is did:web:csoai.org#board-attestation-1, published in https://csoai.org/.well-known/did.json and pinned in
+# check_report.py. The actions in this job are pinned by commit because the job can ask for that token.
 #
 # THE GATE. scripts/daily-report/check_report.py runs on every report. It refuses one that restates a figure of an
 # axis held in scripts/daily-report/holds.json (the open corrections C-2026-1120-01, -02 and -03), prints the
 # governance axis without its limit, carries a banned phrase (held scores, the double-counted claim figure,
-# certification wording, prices, download figures), or is not signed over its exact bytes. publish.py refuses
-# anything the check did not pass.
+# certification wording, prices, download figures), or whose .sig is not a board signature over a pointer that pins
+# its exact bytes. publish.py refuses anything the check did not pass under the pinned board key.
 #
 # PUBLICATION is off until the repository variable DAILY_REPORT_PUBLISH is "on". Set it only after the report host's
 # own job has stopped: it uploads to the same dataset path at about 06:00Z and 13:50Z, unsigned, and would overwrite
 # this one. Until then the scheduled run still generates, signs and checks, and keeps the report as a run artifact.
 #
-# A pull request never sees the signing key: its dry run signs with a throwaway key made in the job, which proves the
-# signing and checking path and nothing else. workflow_dispatch defaults to a dry run (signed, checked, not published).
+# A pull request cannot reach the signer: its dry run signs the pointer with a throwaway key made in the job and checks
+# it under that key, which proves the pointer and the verify path and nothing else. That check names the throwaway
+# key, and publish.py refuses it. workflow_dispatch defaults to a dry run (signed, checked, not published).
 
 name: daily-report
 
@@ -32,6 +41,7 @@ on:
     paths:
       - .github/workflows/daily-report.yml
       - scripts/daily-report/**
+      - packages/venturi-capsule/venturi_capsule.py # the board-sign client the generator calls
 
 permissions:
   contents: read
@@ -44,6 +54,9 @@ jobs:
   report:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write # the job's own OIDC token is the board-sign caller credential; no stored key
     env:
       # schedule = a real run; workflow_dispatch = real only with dry_run=false; pull_request = always a dry run
       DRY_RUN: ${{ (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && !inputs.dry_run)) && 'false' || 'true' }}
@@ -58,7 +71,7 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies (pinned)
         run: python -m pip install --disable-pip-version-check 'cryptography==50.0.2' 'huggingface_hub==1.19.0'
-      - name: Tests (withholding and the publication gate)
+      - name: Tests (withholding, the signed pointer and the publication gate)
         run: python scripts/daily-report/test_daily_report.py
       - name: Fetch the previous report for the day-to-day diff (public dataset, read only)
         run: |
@@ -81,31 +94,41 @@ jobs:
           except Exception as e:
               print(f"no previous report fetched ({type(e).__name__}); the report says so")
           PY
+      - name: Make a throwaway signing key (pull request only; the board signer admits only master)
+        if: github.event_name == 'pull_request'
+        run: |
+          python - "$RUNNER_TEMP/test-key" <<'PY'
+          import base64, pathlib, sys
+          from cryptography.hazmat.primitives import serialization as s
+          from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+          k, d = Ed25519PrivateKey.generate(), pathlib.Path(sys.argv[1])
+          d.mkdir(mode=0o700)
+          (d / "key.b64").write_text(base64.b64encode(k.private_bytes(s.Encoding.DER, s.PrivateFormat.PKCS8, s.NoEncryption())).decode())
+          (d / "pub.hex").write_text(k.public_key().public_bytes(s.Encoding.Raw, s.PublicFormat.Raw).hex())
+          PY
       - name: Generate and sign
         env:
-          REPORT_KEY: ${{ github.event_name != 'pull_request' && secrets.ACTION_EVENT_SIGNING_KEY_PKCS8_B64 || '' }}
           EVENT: ${{ github.event_name }}
         run: |
           set -euo pipefail
           if [ "$EVENT" = pull_request ]; then
-            ACTION_EVENT_SIGNING_KEY_PKCS8_B64=$(python -c 'import base64
-          from cryptography.hazmat.primitives import serialization as s
-          from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-          print(base64.b64encode(Ed25519PrivateKey.generate().private_bytes(s.Encoding.DER, s.PrivateFormat.PKCS8, s.NoEncryption())).decode())')
-            echo "Signed with a throwaway key made in this pull-request job (dry run only)." >> "$GITHUB_STEP_SUMMARY"
+            python scripts/daily-report/generate_daily_report.py --out "$OUT" --test-key "$RUNNER_TEMP/test-key/key.b64"
+            echo "Pull-request dry run: the board signer admits only this workflow on master, so the pointer was signed with a throwaway key made in this job, and the check below verifies it under that key. That proves the pointer and the verify path, not a board signature; publish.py refuses a check made under any key but the pinned board key." >> "$GITHUB_STEP_SUMMARY"
           else
-            [ -n "$REPORT_KEY" ] || { echo "ACTION_EVENT_SIGNING_KEY_PKCS8_B64 is not set: no unsigned report is made"; exit 1; }
-            ACTION_EVENT_SIGNING_KEY_PKCS8_B64="$REPORT_KEY"
+            # The board signer (POST /api/board-sign) with this job's OIDC token. No token or a refusal: UNSIGNED, and the check fails.
+            python scripts/daily-report/generate_daily_report.py --out "$OUT"
           fi
-          export ACTION_EVENT_SIGNING_KEY_PKCS8_B64
-          python scripts/daily-report/generate_daily_report.py --out "$OUT"
       - name: Check holds and signature
         id: check
+        env:
+          EVENT: ${{ github.event_name }}
         run: |
           set -euo pipefail
           D=$(ls "$OUT"/daily-report-*.json | sed -E 's/.*daily-report-([0-9]{4}-[0-9]{2}-[0-9]{2})\.json$/\1/' | sort | tail -1)
           echo "date=$D" >> "$GITHUB_OUTPUT"
-          { echo '## daily-report check'; echo '```'; python scripts/daily-report/check_report.py --dir "$OUT" --date "$D"; echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
+          KEY=()
+          if [ "$EVENT" = pull_request ]; then KEY=(--test-public-key "$RUNNER_TEMP/test-key/pub.hex"); fi
+          { echo '## daily-report check'; echo '```'; python scripts/daily-report/check_report.py --dir "$OUT" --date "$D" "${KEY[@]}"; echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
           python -c 'import json,sys; r=json.load(open(sys.argv[1])); sys.exit(0 if r["result"]=="PASS" else 1)' "$OUT/report-check-$D.json"
       - name: Keep the report as a run artifact
         if: always()
