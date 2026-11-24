@@ -891,7 +891,14 @@ def read_label(txt: str, labels: list[str]) -> str | None:
     allowed = {str(x).strip().upper() for x in labels if str(x).strip()}
     if not allowed:
         return None
-    body = _THINK.sub(" ", txt or "")
+    raw = txt or ""
+    if len(re.findall(r"<think>", raw, re.I)) != len(re.findall(r"</think>", raw, re.I)):
+        return None
+    body = _THINK.sub(" ", raw)
+    # Unclosed or unmatched reasoning tags mean the apparent final label may
+    # still be private/incomplete reasoning. Reject rather than score it.
+    if re.search(r"</?think\b", body, re.I):
+        return None
     lines = [ln.strip() for ln in body.splitlines() if ln.strip()]
     for cand in ([lines[-1]] if lines else []) + [" ".join(lines)]:
         c = _ANSWER_PREFIX.sub("", cand).strip().strip(_STRIP).upper()
