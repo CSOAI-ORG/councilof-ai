@@ -1,0 +1,41 @@
+name: MEOK GSPC source health freshness controls (offline)
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/meok_gspc_health_readback.py'
+      - 'scripts/test_meok_gspc_health_readback.py'
+      - 'docs/operations/MEOK-GSPC-HEALTH-FRESHNESS-20261124.md'
+      - '.github/workflows/meok-gspc-health-source-controls.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-freshness-negative-controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline invalid-source, clock, freshness, URL and non-claim tests
+        run: python3 scripts/test_meok_gspc_health_readback.py
+      - name: Confirm no hidden live-service dependency in CI
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import importlib.util, pathlib
+          p=pathlib.Path("scripts/meok_gspc_health_readback.py")
+          spec=importlib.util.spec_from_file_location("readback",p)
+          module=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          assert module.SPINE=="http://127.0.0.1:3102/health"
+          assert module.PUBLIC_BOARD=="https://councilof.ai/api/gspc"
+          assert module.bounded_loopback("https://example.com/api/health","meok_api") is False
+          print("CI only qualifies source-only code; it does NOT have access to the private M4 runtime")
+          PY
