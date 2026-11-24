@@ -10,7 +10,7 @@ import {
   type Observatory, type WorldFact, type WorldFactKey,
 } from "@/lib/worldLens";
 
-type WorldMode = "globe" | "atlas" | "timeline";
+type WorldMode = "globe" | "atlas" | "timeline" | "systems";
 type ReadState = { phase: "loading" | "ready" | "unavailable"; fact?: WorldFact; error?: string };
 const SOURCE_KEYS: WorldFactKey[] = ["gspc", "root", "worker", "observatory"];
 const WORLD_REGIONS: Record<string, [number, number]> = {
@@ -138,6 +138,7 @@ export default function CouncilWorldLens() {
           ["globe", "3D Earth"],
           ["atlas", "OpenGridWorks atlas"],
           ["timeline", "SovSpace replay"],
+          ["systems", "Systems & ontology"],
         ] as const).map(([id, title]) => (
           <button key={id} type="button" role="tab" aria-selected={mode === id}
             onClick={() => setMode(id)}
@@ -147,7 +148,7 @@ export default function CouncilWorldLens() {
       </div>
 
       <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_minmax(235px,290px)]">
-        <div role="tabpanel" aria-label={mode === "globe" ? "3D globe" : mode === "atlas" ? "Regulation atlas" : "Historical simulation replay"} className="min-w-0 bg-slate-950">
+        <div role="tabpanel" aria-label={mode === "globe" ? "3D globe" : mode === "atlas" ? "Regulation atlas" : mode === "systems" ? "Connected Council systems" : "Historical simulation replay"} className="min-w-0 bg-slate-950">
           {mode === "globe" ? (
             <iframe ref={frameRef} title="Council 3D Earth, source-reported markers"
               src="/globe3d.html" loading="lazy" onLoad={() => setStatus("Globe frame loaded; Cesium canvas and data freshness require independent verification.")}
@@ -155,6 +156,26 @@ export default function CouncilWorldLens() {
           ) : mode === "atlas" ? (
             <iframe title="OpenGridWorks regulation atlas" src="/opengridworks?embed=1" loading="lazy"
               className="h-[410px] w-full border-0 bg-white sm:h-[520px]" />
+          ) : mode === "systems" ? (
+            <div className="min-h-[410px] bg-[#f8fcfa] p-4 text-slate-900 sm:min-h-[520px]" data-testid="world-ontology">
+              <h3 className="text-lg font-semibold text-emerald-950">Systems &amp; ontology</h3>
+              <p className="mb-3 mt-1 text-xs text-slate-700">
+                An interactive index of actual Council OS destinations. Each link opens the existing working pane; this graph does not imply that all 16 backends are connected or live.
+              </p>
+              <div className="grid max-h-[440px] grid-cols-1 gap-2 overflow-y-auto sm:grid-cols-2">
+                {MISSIONS.map((mission) => (
+                  <a key={mission.id} href={missionHref(mission)}
+                    className="group rounded-xl border border-emerald-200 bg-white p-3 focus-visible:outline-2 focus-visible:outline-emerald-700 hover:border-emerald-500 hover:shadow-sm">
+                    <div className="flex items-start justify-between gap-1">
+                      <strong className="text-xs text-emerald-900">{mission.label}</strong>
+                      <ExternalLink className="h-3 w-3 shrink-0 text-emerald-700" aria-hidden="true" />
+                    </div>
+                    <span className="mt-1 inline-block rounded bg-emerald-50 px-1.5 py-0.5 font-mono text-[9px] text-emerald-900">{mission.dataKind.replace(/_/g, " ")}</span>
+                    <p className="mt-1 line-clamp-2 text-[11px] text-slate-700">{mission.promise}</p>
+                  </a>
+                ))}
+              </div>
+            </div>
           ) : (
             <div className="flex min-h-[410px] flex-col justify-center bg-slate-950 p-5 text-slate-100 sm:min-h-[520px]">
               <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-300">Archived projection · not live simulation</p>
