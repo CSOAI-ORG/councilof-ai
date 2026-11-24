@@ -39,11 +39,13 @@ try {
       await page.locator('[data-testid="reaction-research-review"]').waitFor();
       assert.equal(await page.locator("details").getAttribute("open"),null);
       await page.locator("summary").click();
-      await page.getByRole("button",{name:"Load synthetic example"}).click();
-      assert.match(await page.locator("textarea").inputValue(),/SIMULATED/);
+      await page.getByRole("button",{name:"Load two observed research cases"}).click();
+      assert.match(await page.locator("textarea").inputValue(),/OBSERVED/);
       await page.getByRole("button",{name:"Review reported stages"}).click();
       assert.match(await page.locator('pre[role="status"]').innerText(),/UNQUALIFIED INPUT/);
-      assert.match(await page.locator('pre[role="status"]').innerText(),/SIMULATION_ONLY/);
+      assert.match(await page.locator('pre[role="status"]').innerText(),/ACCEPTANCE_INCOMPLETE/);
+      assert.match(await page.locator('pre[role="status"]').innerText(),/observed-labelled: 2/);
+      assert.match(await page.locator('pre[role="status"]').innerText(),/simulated-labelled: 0/);
       assert.match(await page.locator('pre[role="status"]').innerText(),/independently qualified: UNKNOWN/);
       await page.locator("textarea").fill("{invalid json");
       await page.getByRole("button",{name:"Review reported stages"}).click();
@@ -56,7 +58,7 @@ try {
       assert.ok(width.scroll<=width.client+1,"horizontal overflow "+JSON.stringify(width));
       assert.deepEqual(errors,[],"browser page errors");
       assert.deepEqual(outbound,[],"unexpected outbound browser requests");
-      return {viewport,source:"ISOLATED_FIXTURE",synthetic_only:true,interaction:"PASSED",outbound_requests:outbound.length,page_errors:errors.length};
+      return {viewport,source:"ISOLATED_FIXTURE",observed_source_only:true,interaction:"PASSED",outbound_requests:outbound.length,page_errors:errors.length};
     }finally{await page.close();}
   };
   const results=[await check({width:390,height:844}),await check({width:1280,height:900})];

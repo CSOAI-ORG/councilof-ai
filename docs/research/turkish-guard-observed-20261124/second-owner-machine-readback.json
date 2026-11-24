@@ -1,0 +1,33 @@
+{
+  "schema": "csoai.second-owner-device-real-receiver-readback/0.1",
+  "observed_at": "2026-11-24T03:46:50.849217+00:00",
+  "observer_type": "SEPARATE_OWNER_CONTROLLED_DEVICE_NOT_EXTERNAL_HUMAN",
+  "platform": "Darwin",
+  "readbacks": [
+    {
+      "resource": "effect",
+      "http": 200,
+      "bytes": 539,
+      "observed_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+      "exact_match": true,
+      "expected_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f"
+    },
+    {
+      "resource": "production_reaction_js",
+      "http": 200,
+      "bytes": 12207,
+      "observed_sha256": "68df16ab09b0a9d638ec9de98cdbc9526d7da418dc8a46f3949f0e32f206da75",
+      "exact_match": true,
+      "expected_sha256": "68df16ab09b0a9d638ec9de98cdbc9526d7da418dc8a46f3949f0e32f206da75"
+    }
+  ],
+  "all_match": true,
+  "independent_human_reviewer": false,
+  "buyer_acceptance": false,
+  "limits": [
+    "Read-only actual HTTPS GET on a second physically distinct machine controlled by the same CSOAI owner; not an external human acceptance.",
+    "Original check performed as a one-off inline Python command on the connected second machine; no independent institutional signature, controlled third-party chain of custody or buyer consent.",
+    "The effect is a GitHub-hosted research file, not a MEOK-authorized real tool effect.",
+    "The React bundle readback proves source bytes at this point in time, not every website user receives the same delivery forever."
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "schema": "csoai.actual-host-effect-reaction/0.1",
+  "observation_sha256": "eb95d9fed738ed1d5917d12c6c22d1eabc39cdfbcbb9f87555ed7ed88870d28c",
+  "external_effect_bytes_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+  "method_sha256": "e8c365f826183fc0847696bf0995cf7192438865a05e9bfdf17da8bc25276352",
+  "episode": {
+    "schema": "csoai.reaction-experiment/0.1",
+    "realm": "OBSERVED",
+    "condition": "HUMAN_INFORMATION",
+    "experiment_id": "real-github-host-20261124",
+    "case_id": "branch-write-readback",
+    "input_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+    "method_sha256": "e8c365f826183fc0847696bf0995cf7192438865a05e9bfdf17da8bc25276352",
+    "stages": {
+      "request": {
+        "state": "REPORTED",
+        "receipt_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+        "source_realm": "OBSERVED"
+      },
+      "method": {
+        "state": "REPORTED",
+        "receipt_sha256": "e8c365f826183fc0847696bf0995cf7192438865a05e9bfdf17da8bc25276352",
+        "source_realm": "OBSERVED"
+      },
+      "human_approval": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      },
+      "executor_authority": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      },
+      "executor_response": {
+        "state": "REPORTED",
+        "receipt_sha256": "eb95d9fed738ed1d5917d12c6c22d1eabc39cdfbcbb9f87555ed7ed88870d28c",
+        "source_realm": "OBSERVED"
+      },
+      "effect": {
+        "state": "REPORTED",
+        "receipt_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+        "source_realm": "OBSERVED"
+      },
+      "receiver_verification": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      },
+      "retrieval": {
+        "state": "REPORTED",
+        "receipt_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+        "source_realm": "OBSERVED"
+      },
+      "payment": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      },
+      "repeat_use": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      }
+    }
+  },
+  "review": {
+    "schema": "csoai.reaction-experiment-review/0.1",
+    "experiment_id": "real-github-host-20261124",
+    "case_id": "branch-write-readback",
+    "realm": "OBSERVED",
+    "condition": "HUMAN_INFORMATION",
+    "source_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+    "method_sha256": "e8c365f826183fc0847696bf0995cf7192438865a05e9bfdf17da8bc25276352",
+    "status": "ACCEPTANCE_INCOMPLETE",
+    "missing_stages": [
+      "human_approval",
+      "executor_authority",
+      "receiver_verification"
+    ],
+    "failed_stages": [],
+    "stages": [
+      {
+        "stage": "request",
+        "state": "REPORTED",
+        "receipt_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f"
+      },
+      {
+        "stage": "method",
+        "state": "REPORTED",
+        "receipt_sha256": "e8c365f826183fc0847696bf0995cf7192438865a05e9bfdf17da8bc25276352"
+      },
+      {
+        "stage": "human_approval",
+        "state": "UNKNOWN",
+        "receipt_sha256": null
+      },
+      {
+        "stage": "executor_authority",
+        "state": "UNKNOWN",
+        "receipt_sha256": null
+      },
+      {
+        "stage": "executor_response",
+        "state": "REPORTED",
+        "receipt_sha256": "eb95d9fed738ed1d5917d12c6c22d1eabc39cdfbcbb9f87555ed7ed88870d28c"
+      },
+      {
+        "stage": "effect",
+        "state": "REPORTED",
+        "receipt_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f"
+      },
+      {
+        "stage": "receiver_verification",
+        "state": "UNKNOWN",
+        "receipt_sha256": null
+      },
+      {
+        "stage": "retrieval",
+        "state": "REPORTED",
+        "receipt_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f"
+      },
+      {
+        "stage": "payment",
+        "state": "UNKNOWN",
+        "receipt_sha256": null
+      },
+      {
+        "stage": "repeat_use",
+        "state": "UNKNOWN",
+        "receipt_sha256": null
+      }
+    ],
+    "execute_authorized": false,
+    "human_identity_qualified": false,
+    "effect_independently_accepted": false,
+    "fresh_gspc_measurement": false,
+    "explanation": "Receipt digests and reported states are pointers, not authenticated actors, permitted effects, real human approval or independent recipient acceptance."
+  },
+  "operating_view": {
+    "schema": "csoai.reaction-operating-view/0.1",
+    "view_only": true,
+    "source_authentication_established": false,
+    "execute_authorized": false,
+    "independent_receiver_acceptance_established": false,
+    "actual_buyer_acceptance_established": false,
+    "total_cases": 1,
+    "simulated_cases": 0,
+    "observed_cases": 1,
+    "reported_complete_chains": 0,
+    "independently_qualified_chains": null,
+    "highest_gate": {
+      "stage": "human_approval",
+      "role": "HITL authority owner",
+      "owner_acknowledged": false
+    },
+    "cases": [
+      {
+        "experiment_id": "real-github-host-20261124",
+        "case_id": "branch-write-readback",
+        "realm": "OBSERVED",
+        "status": "ACCEPTANCE_INCOMPLETE",
+        "missing": [
+          "human_approval",
+          "executor_authority",
+          "receiver_verification"
+        ],
+        "failed": []
+      }
+    ]
+  },
+  "real_github_provider_storage_effect": true,
+  "true_meok_effect_prevention_established": false,
+  "verified_human_authority_established": false,
+  "receiving_party_human_acceptance_established": false
+}
