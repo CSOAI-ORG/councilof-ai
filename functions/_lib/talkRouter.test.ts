@@ -281,6 +281,17 @@ describe("executePlan — answers carry the tool output, a citation and the stat
     expect(a.answer).toContain("C-2");
   });
 
+  // 24 Nov 2026: the recent rows and correction_latency used to print as raw JSON (~14,000 characters
+  // for five corrections). Each correction is now one plain line, and no JSON object is printed.
+  it("corrections read as one plain line each, never raw JSON", async () => {
+    stubOrigin();
+    const a = await talk("show corrections", ORIGIN);
+    expect(a.answer).toMatch(/^- C-2 \(2026-09-29\): stale copy$/m);
+    expect(a.answer).toMatch(/^- C-1 \(2026-09-28\): old count$/m);
+    expect(a.answer).toContain("- correction_latency: 1 exact, 5 upper bound, 80 unmeasured");
+    expect(a.answer).not.toMatch(/\{"|\[\{/);
+  });
+
   // 6 Oct 2026: /api/corrections is newest-first, and correctionsSummary took rows.slice(-5).reverse(),
   // so "show corrections" listed the five OLDEST rows as recent. The fixture below has the live
   // order: newest first, published_at mostly "UNRECORDED", and a few older rows trailing in
