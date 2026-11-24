@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, lazy, Suspense } from "react";
 import {
   Bot,
   ExternalLink,
@@ -11,6 +11,9 @@ import MunderDuel from "@/components/MunderDuel";
 import { generatePracticeRounds, simulatePracticeDecisions, scorePracticeDecisions, type PracticeDecision } from "@/lib/munderPractice";
 import { decisionsToTimelineEvents } from "@/components/timeline/decisionToTimeline";
 import { useLedger } from "@/hooks/useLedger";
+
+// Existing Council OS space pane owns both the world and the arena: no second app or chat store.
+const CouncilWorldLens = lazy(() => import("@/components/CouncilWorldLens"));
 
 export const ARENA_SCOREBOARD_ENDPOINT = "/api/arena/scoreboard";
 export const ARENA_SCOREBOARD_FALLBACK = "/signed/arena_scoreboard.json";
@@ -646,6 +649,7 @@ export default function DashboardArenaPane({
   const [axisName, setAxisName] = useState<string>(() =>
     initialData ? defaultArenaAxis(initialData) : "",
   );
+  const [worldOpen, setWorldOpen] = useState(false);
   const [left, setLeft] = useState("");
   const [right, setRight] = useState("");
 
@@ -703,7 +707,29 @@ export default function DashboardArenaPane({
       className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8"
       data-testid="dashboard-arena-pane"
     >
-      <header className="border-b border-border pb-5">
+      <div className="mb-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4" data-testid="world-lens-entry">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-800">Council World · spatial workspace</p>
+            <p className="mt-1 text-sm text-emerald-950">
+              Explore the 3D globe, OpenGridWorks regulation atlas and dated SovSpace evidence in this same Council OS pane.
+            </p>
+          </div>
+          <button type="button" aria-expanded={worldOpen} aria-controls="council-world-content"
+            onClick={() => setWorldOpen((value) => !value)}
+            className="min-h-11 rounded-xl bg-emerald-800 px-4 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-emerald-900">
+            {worldOpen ? "Close world" : "Open Council World"}
+          </button>
+        </div>
+      </div>
+      {worldOpen && (
+        <div id="council-world-content">
+          <Suspense fallback={<p role="status" className="mb-5 p-4 text-sm text-slate-700">Loading Council World…</p>}>
+            <CouncilWorldLens />
+          </Suspense>
+        </div>
+      )}
+      <header id="arena-practice" className="border-b border-border pb-5">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-800">
             Council of AI · human-in-the-loop arena
