@@ -1,0 +1,118 @@
+{
+  "schema": "csoai.silent-change-calibration-pins/1",
+  "written_on": "2026-11-23",
+  "before_any_data": true,
+  "note": "The three files are the ones named in protocol.json addendum_2.open_model.files; a test checks the two agree. Each sha256 was computed by downloading the file once into a scratch folder outside the clone and hashing it (23 Nov 2026); the three equal the hashes the hub lists.",
+  "licence": "apache-2.0",
+  "files": {
+    "q05-q8": {
+      "repo": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+      "filename": "qwen2.5-0.5b-instruct-q8_0.gguf",
+      "sha256": "ca59ca7f13d0e15a8cfa77bd17e65d24f6844b554a7b6c12e07a5f89ff76844e",
+      "licence": "apache-2.0"
+    },
+    "q05-q4": {
+      "repo": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+      "filename": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      "sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+      "licence": "apache-2.0"
+    },
+    "q15-q8": {
+      "repo": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+      "revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+      "filename": "qwen2.5-1.5b-instruct-q8_0.gguf",
+      "sha256": "d7efb072e7724d25048a4fda0a3e10b04bdef5d06b1403a1c93bd9f1240a63c8",
+      "licence": "apache-2.0"
+    }
+  },
+  "llama_cpp": {
+    "tag": "b12651",
+    "ubuntu_x64": {
+      "asset": "llama-b12651-bin-ubuntu-x64.tar.gz",
+      "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12651/llama-b12651-bin-ubuntu-x64.tar.gz",
+      "sha256": "17b242259181d5b1b1f7719aba27929700a8b0dab39bfaef1b971a992b397b38"
+    },
+    "macos_arm64": {
+      "asset": "llama-b12651-bin-macos-arm64.tar.gz",
+      "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12651/llama-b12651-bin-macos-arm64.tar.gz",
+      "sha256": "264fd872de61679c45ad57e1e21c2a2a54e29b35734ecf3d50f24166447ab8d2",
+      "use": "local rehearsal only"
+    }
+  },
+  "server": {
+    "args": [
+      "-c",
+      "2048",
+      "-t",
+      "4",
+      "--parallel",
+      "1",
+      "--no-webui"
+    ],
+    "extra_body": {
+      "cache_prompt": false
+    },
+    "seed_rule": "server seed = first 8 hex digits of sha256(shard name), as an integer"
+  },
+  "conditions": {
+    "BASE": {
+      "file": "q05-q8",
+      "temperature": 0,
+      "system": null,
+      "batches": 1
+    },
+    "C0": {
+      "file": "q05-q8",
+      "temperature": 0,
+      "system": null,
+      "trials": 30
+    },
+    "C1": {
+      "file": "q15-q8",
+      "temperature": 0,
+      "system": null,
+      "trials": 10
+    },
+    "C2": {
+      "file": "q05-q4",
+      "temperature": 0,
+      "system": null,
+      "trials": 10
+    },
+    "C3": {
+      "file": "q05-q8",
+      "temperature": 0,
+      "system": "Read the question carefully before answering.",
+      "trials": 10
+    },
+    "C4": {
+      "file": "q05-q8",
+      "temperature": 0.5,
+      "system": null,
+      "trials": 10
+    },
+    "BASE5": {
+      "file": "q05-q8",
+      "temperature": 0.5,
+      "system": null,
+      "batches": 1
+    },
+    "C5": {
+      "file": "q05-q8",
+      "temperature": 0.5,
+      "system": null,
+      "trials": 20
+    }
+  },
+  "plan": {
+    "target_job_minutes": 60,
+    "est_seconds_per_batch": {
+      "q05-q8": 300,
+      "q05-q4": 500,
+      "q15-q8": 1100
+    },
+    "note": "planning constants only (see protocol.json addendum_2.sharding). Local rehearsal on an Apple M4 CPU, 4 threads, full-size batches of 600 calls: q05-q8 50 s, q05-q4 81 s, q15-q8 182 s. The constants are about 6 times those, as a margin for a slower runner CPU (unmeasured)."
+  }
+}

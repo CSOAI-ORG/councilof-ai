@@ -1,0 +1,67 @@
+name: GSPC check-standard metrology research (read-only)
+
+on:
+  pull_request:
+    paths:
+      - 'measurement/experiments/metrology-controls/**'
+      - '.github/workflows/metrology-check-standard.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-negative-controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline calibration-control negative tests
+        run: |
+          python3 measurement/experiments/metrology-controls/test_check_standard.py
+          python3 measurement/experiments/metrology-controls/test_operating_characteristics.py
+      - name: Generate a reproducible SYNTHETIC instrument receipt
+        run: |
+          mkdir -p /tmp/gspc-metrology
+          python3 measurement/experiments/metrology-controls/simulate_operating_characteristics.py \
+            --trials 240 > /tmp/gspc-metrology/synthetic-operating-characteristics.json
+          python3 - <<'PY'
+          import hashlib, importlib.util, json, pathlib, sys
+          root=pathlib.Path("measurement/experiments/metrology-controls").resolve()
+          sys.path.insert(0,str(root))
+          import check_standard
+          spec=importlib.util.spec_from_file_location("metrology_test",root/"test_check_standard.py")
+          module=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          x=module.example([100.0]*5+[101.0]*8)
+          result=check_standard.assess(x,module.NOW)
+          assert result["state"]=="ALARM" and result["real_world_safety_certified"] is False
+          receipt={
+            "schema":"csoai.metrology-demo-receipt/0.1",
+            "evidence_state":"SYNTHETIC_NEGATIVE_CONTROL_ONLY",
+            "input_sha256":check_standard.digest(x),
+            "source_reference_sha256":x["baseline_ref_sha256"],
+            "state":result["state"],
+            "signal_count":len(result["signals"]),
+            "signals":result["signals"],
+            "real_world_safety_certified":False,
+            "independent_reference_verified":False,
+            "production_signer_used":False,
+            "human_authorised_effect":"NOT_PERFORMED",
+          }
+          output=pathlib.Path("/tmp/gspc-metrology/synthetic-receipt.json")
+          output.write_text(json.dumps(receipt,sort_keys=True,indent=2)+"\n")
+          print("SYNTHETIC receipt SHA256",hashlib.sha256(output.read_bytes()).hexdigest())
+          PY
+      - name: Retain research artifact (not a safety certificate)
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-metrology-check-standard-${{ github.run_id }}
+          path: /tmp/gspc-metrology/
+          retention-days: 30
+          if-no-files-found: error
