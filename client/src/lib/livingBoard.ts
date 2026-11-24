@@ -50,6 +50,8 @@ export interface FleetDoc {
 /** The subset of one /api/gspc axis this page reads. Absent fields stay absent. */
 export interface BoardAxis {
   axis: string;
+  /** A held row's stated limit (#4680); printed beside any figure from the row. */
+  limit?: string;
   kind?: string;
   family?: string;
   bench?: string;

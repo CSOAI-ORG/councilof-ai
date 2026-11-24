@@ -1,10 +1,15 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "ai.councilof/gspc",
-  "description": "Remote GSPC endpoint: 54 MCP tools: 49 free + 5 x402. Public board, evidence lookup and Ed25519 verification. Measurement, not certification.",
+  "description": "Free read/verify and x402-metered evidence tools for the GSPC board. Measurement, not certification.",
   "title": "Council of AI — GSPC Measurement Tools",
   "version": "1.5.0",
   "websiteUrl": "https://councilof.ai",
+  "repository": {
+    "url": "https://github.com/CSOAI-ORG/councilof-ai",
+    "source": "github",
+    "subfolder": "mcp/gspc-server"
+  },
   "remotes": [
     {
       "type": "streamable-http",
@@ -25,7 +30,9 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "ai.councilof/deprecated_alias": "io.github.CSOAI-ORG/gspc",
-      "ai.councilof/registry_names_note": "ai.councilof/gspc is the canonical MCP Registry name (domain-verified via /.well-known/mcp-registry-auth). io.github.CSOAI-ORG/gspc is its deprecated alias: the same door, listed under the GitHub-org namespace; the owner deprecates it in the registry."
+      "ai.councilof/registry_names_note": "ai.councilof/gspc is the canonical MCP Registry name (domain-verified via /.well-known/mcp-registry-auth). io.github.CSOAI-ORG/gspc is its deprecated alias: the same door, listed under the GitHub-org namespace; the owner deprecates it in the registry.",
+      "ai.councilof/description_long": "Remote GSPC endpoint: free read/verify tools plus x402-metered evidence tools (tools/list is authoritative). Public board, evidence lookup and Ed25519 verification. Measurement, not certification.",
+      "ai.councilof/tool_count_source": "tools/list on the remote is authoritative; no integer count is typed in this descriptor, so it cannot go stale."
     }
   }
 }

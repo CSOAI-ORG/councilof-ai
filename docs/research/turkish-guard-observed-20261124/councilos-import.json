@@ -1,0 +1,112 @@
+[
+  {
+    "case_id": "published-3372",
+    "condition": "NO_HUMAN",
+    "experiment_id": "turkish-guard-20261124",
+    "input_sha256": "1f00c9a3639ec307538e45dcbd4a7397a908fea125c682156bfc3331b5fda5b5",
+    "method_sha256": "c2de570b4de2c2782d988bcb29f6839b8f91ba8ac80b3d0d022d2ba9ad344f39",
+    "realm": "OBSERVED",
+    "schema": "csoai.reaction-experiment/0.1",
+    "stages": {
+      "effect": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "executor_authority": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "executor_response": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "human_approval": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "method": {
+        "receipt_sha256": "c2de570b4de2c2782d988bcb29f6839b8f91ba8ac80b3d0d022d2ba9ad344f39",
+        "source_realm": "OBSERVED",
+        "state": "REPORTED"
+      },
+      "payment": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "receiver_verification": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "repeat_use": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "request": {
+        "receipt_sha256": "1f00c9a3639ec307538e45dcbd4a7397a908fea125c682156bfc3331b5fda5b5",
+        "source_realm": "OBSERVED",
+        "state": "REPORTED"
+      },
+      "retrieval": {
+        "receipt_sha256": "1f00c9a3639ec307538e45dcbd4a7397a908fea125c682156bfc3331b5fda5b5",
+        "source_realm": "OBSERVED",
+        "state": "REPORTED"
+      }
+    }
+  },
+  {
+    "schema": "csoai.reaction-experiment/0.1",
+    "realm": "OBSERVED",
+    "condition": "HUMAN_INFORMATION",
+    "experiment_id": "real-github-host-20261124",
+    "case_id": "branch-write-readback",
+    "input_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+    "method_sha256": "e8c365f826183fc0847696bf0995cf7192438865a05e9bfdf17da8bc25276352",
+    "stages": {
+      "request": {
+        "state": "REPORTED",
+        "receipt_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+        "source_realm": "OBSERVED"
+      },
+      "method": {
+        "state": "REPORTED",
+        "receipt_sha256": "e8c365f826183fc0847696bf0995cf7192438865a05e9bfdf17da8bc25276352",
+        "source_realm": "OBSERVED"
+      },
+      "human_approval": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      },
+      "executor_authority": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      },
+      "executor_response": {
+        "state": "REPORTED",
+        "receipt_sha256": "eb95d9fed738ed1d5917d12c6c22d1eabc39cdfbcbb9f87555ed7ed88870d28c",
+        "source_realm": "OBSERVED"
+      },
+      "effect": {
+        "state": "REPORTED",
+        "receipt_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+        "source_realm": "OBSERVED"
+      },
+      "receiver_verification": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      },
+      "retrieval": {
+        "state": "REPORTED",
+        "receipt_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+        "source_realm": "OBSERVED"
+      },
+      "payment": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      },
+      "repeat_use": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      }
+    }
+  }
+]

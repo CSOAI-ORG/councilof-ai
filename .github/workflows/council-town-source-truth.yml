@@ -1,0 +1,27 @@
+# Source truth qualification for an inactive Council Town component.
+# No schedule, release, grant, signer, API call or service is created here.
+name: council-town-source-truth
+on:
+  pull_request:
+    paths:
+      - "client/src/data/sov-town-data.ts"
+      - "client/src/data/sov-town-data.test.ts"
+      - "client/src/pages/CouncilTown.tsx"
+      - "client/src/pages/CouncilTown.truth.test.ts"
+      - ".github/workflows/council-town-source-truth.yml"
+permissions:
+  contents: read
+jobs:
+  react-data-truth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked test dependencies
+        run: npm ci
+      - name: Offline source-data and withdrawn-view honesty controls
+        run: npx vitest run client/src/data/sov-town-data.test.ts client/src/pages/CouncilTown.truth.test.ts --maxWorkers 1

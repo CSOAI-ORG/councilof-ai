@@ -183,13 +183,13 @@ export const COLISEUM_SLIDES: Slide[] = [
     kicker: "The shift",
     title: "Certification tells you someone approved it. Measurement tells you what it did.",
     body:
-      "A certificate is a judgement sold by a party with an interest in the outcome, delivered as a verdict you cannot inspect. A measurement is a number you can reproduce, with the method and the scoring code published beside it. We do not issue conformity marks, we do not accredit, and we take no money from anything we rank.",
+      "A certificate is a judgement sold by a party with an interest in the outcome, delivered as a verdict you cannot inspect. A measurement is a number you can reproduce, with the method and the scoring code published beside it. We do not issue conformity marks, we do not accredit, and no one can buy a place, a score or a removal.",
     points: [
       { tag: "pain", text: "Pay-to-play assessment, where the grader also sells the fix" },
       { tag: "pain", text: "Opaque verdicts with no rows, no n, and no way to recompute" },
       { tag: "benefit", text: "Published tests and published scoring code — run them yourself" },
       { tag: "benefit", text: "Ties reported as ties; unmeasured cells left visibly empty" },
-      { tag: "usp", text: "Independent by construction: no revenue from any ranked party" },
+      { tag: "usp", text: "Independent by construction: no one can buy a place, a score or a removal" },
     ],
     href: "/methodology",
     cta: "Read the method",

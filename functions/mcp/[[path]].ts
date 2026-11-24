@@ -105,7 +105,7 @@ export function fullDoorInstall(origin: string): Record<string, string> {
   };
 }
 const INSTRUCTIONS =
-  `GSPC MCP. ${FREE_TOOL_COUNT} free read-only tools and ${PAID_TOOL_COUNT} paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT, or on this HTTP door as the x402 MCP transport's PaymentPayload object in _meta["x402/payment"] (one channel per call); each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.`;
+  `GSPC MCP. ${FREE_TOOL_COUNT} free read-only tools and ${PAID_TOOL_COUNT} paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT, or on this HTTP door as the x402 MCP transport's PaymentPayload object in params._meta["x402/payment"] (inside params, never beside it; one channel per call); each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.`;
 // The free door speaks to a person using a chat client, so it carries no operations notes and no
 // payment text (packet CR-6). The count is derived from the file, like the one above.
 export const FREE_INSTRUCTIONS =
@@ -707,6 +707,21 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       id,
     );
   }
+  // JSON-RPC has no top-level _meta; MCP's is params._meta. A model writing a paid retry by hand puts
+  // it here often enough to measure (5 of the first 12 replies written from this door's own guidance,
+  // 24 Nov 2026, four open-weight models), and the SDK refuses the message with words that do not say why. The refusal stands;
+  // it now names the place the field belongs.
+  if ("_meta" in call)
+    return jsonError(
+      400,
+      -32600,
+      // The free door carries no payment text (packet CR-6), so only the full door names the payment field.
+      `Unexpected top-level "_meta". JSON-RPC has no such member; MCP request metadata belongs in params._meta.` +
+        (door === "full"
+          ? ` For an x402 payment, send the payload at params._meta["${X402_META_PAYMENT}"], beside params.name and params.arguments. Nothing was run and nothing was charged.`
+          : " Nothing was run."),
+      id,
+    );
   // Never execute payment-bearing work as an id-less notification.
   if (id === undefined && !call.method.startsWith("notifications/"))
     return jsonError(400, -32600, "A request id is required for this method.");

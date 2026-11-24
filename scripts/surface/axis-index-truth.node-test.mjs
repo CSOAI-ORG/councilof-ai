@@ -355,3 +355,16 @@ test("the ten held subject axes and claim-maintenance print the row's limit in a
     assert.ok(committed.includes(block), `committed public/axis/${axis}.html carries the Limit block`);
   }
 });
+
+test("/axes prints a held row with its limit, as the row's own page does, and gives an unheld row none (24 Nov 2026)", () => {
+  // Live on 24 Nov: /axes printed governance's point leader at 58.7% over n=237 with no limit, while
+  // /axis/governance printed the row's limit (#4680) in its Limit block.
+  const b = board({ gated: [] });
+  b.axes[0].limit = "The item wording gives the risk tier away, so this axis shows agreement with this bank's labels only.";
+  const html = renderAxesIndex(b);
+  const rows = [...html.matchAll(/<tr data-limit="([^"]+)"><td colspan="(\d)" class="note">Held: ([^<]+)<\/td><\/tr>/g)];
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0][1], b.axes[0].axis);
+  assert.equal(rows[0][2], "4");
+  assert.match(rows[0][3], /^The item wording gives the risk tier away/);
+});

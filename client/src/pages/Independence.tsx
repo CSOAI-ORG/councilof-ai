@@ -54,7 +54,7 @@ type Gspc = {
     comparison_axes?: number;
     public_leader_count?: number;
   };
-  axes?: { axis: string; kind?: string; leader?: string | null; public_leader_state?: string; separation?: string }[];
+  axes?: { axis: string; kind?: string; leader?: string | null; public_leader_state?: string; separation?: string; limit?: string }[];
 };
 
 /** How the board treats the axes where our own model held the point lead, partitioned from the
@@ -285,6 +285,17 @@ export default function Independence() {
               </>
             )}
           </p>
+          {part && [...part.reranked, ...part.withheld, ...part.noCard].some((a) => typeof a.limit === "string" && a.limit.trim()) && (
+            <ul className="space-y-1 text-sm text-amber-900" data-testid="independence-held-limits">
+              {[...part.reranked, ...part.withheld, ...part.noCard]
+                .filter((a) => typeof a.limit === "string" && a.limit.trim())
+                .map((a) => (
+                  <li key={a.axis}>
+                    Held: {a.axis}: {a.limit}
+                  </li>
+                ))}
+            </ul>
+          )}
           <p>
             A gap we have not closed: the board&rsquo;s test only recognises names that begin with <code>council</code> or are
             marked &ldquo;council specialist&rdquo;. It would not recognise a <code>sov</code> or <code>clan</code> tag. The

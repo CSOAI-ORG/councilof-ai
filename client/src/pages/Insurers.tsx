@@ -1,9 +1,9 @@
 import { fetchWithRetry } from "@/lib/fetchWithRetry";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { DeckPage } from "@/components/scrollworld";
-import { accuracyCell, separationNote } from "@/lib/axisCells";
+import { accuracyCell, heldLimit, separationNote } from "@/lib/axisCells";
 import StatusChip, { chipFor } from "@/components/board/StatusChip";
 import {
   PRICING_RISK_HERO,
@@ -391,8 +391,10 @@ function InsurersEvidencePack() {
                 {(board.axes as Axis[]).map((a) => {
                   const acc = accuracyCell(a);
                   const sepNote = separationNote(a);
+                  const lim = heldLimit(a);
                   return (
-                    <tr key={a.axis} className="border-b last:border-0">
+                    <Fragment key={a.axis}>
+                    <tr className="border-b last:border-0">
                       <td className="whitespace-nowrap p-3 font-semibold text-gray-900">
                         {a.axis}
                       </td>
@@ -457,6 +459,14 @@ function InsurersEvidencePack() {
                         )}
                       </td>
                     </tr>
+                    {lim && (
+                      <tr className="border-b last:border-0">
+                        <td colSpan={4} className="px-3 pb-3 text-xs leading-snug text-amber-900" data-testid={`insurers-limit-${a.axis}`}>
+                          Held: {lim}
+                        </td>
+                      </tr>
+                    )}
+                    </Fragment>
                   );
                 })}
               </tbody>

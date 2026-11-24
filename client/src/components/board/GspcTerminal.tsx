@@ -8,7 +8,7 @@ import {
   separationP,
   separationSentence,
 } from "./axisMethod";
-import { accuracyCell } from "@/lib/axisCells";
+import { accuracyCell, heldLimit } from "@/lib/axisCells";
 export { axisRunEvidence } from "./runEvidence";
 export {
   axisMde,
@@ -619,6 +619,7 @@ export default function GspcTerminal({ className }: { className?: string }) {
               {filtered.map((a) => {
                 const isOpen = open === a.axis;
                 const canDrill = true;
+                const lim = heldLimit(a);
                 return (
                   <Fragment key={a.axis}>
                     <tr
@@ -650,6 +651,13 @@ export default function GspcTerminal({ className }: { className?: string }) {
                         {canDrill ? (isOpen ? "▾" : "▸") : ""}
                       </td>
                     </tr>
+                    {lim && (
+                      <tr className="border-b border-slate-100">
+                        <td colSpan={6} className="px-4 pb-2.5 text-[11px] leading-snug text-amber-900" data-testid={`terminal-limit-${a.axis}`}>
+                          Held: {lim}
+                        </td>
+                      </tr>
+                    )}
                     {isOpen && (
                       <tr>
                         <td colSpan={6} className="p-0">

@@ -943,6 +943,11 @@ function SetTable({
                 </span>
               </div>
               <p className="text-sm text-gray-700">{r.what}</p>
+              {r.limit && (
+                <p className="text-xs leading-snug text-amber-900" data-testid={`limit-${setId}-${r.id}`}>
+                  Held: {r.limit}
+                </p>
+              )}
               <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-gray-600">
                 <span>{r.n === null ? "nothing measured" : r.nNote ? `n = ${r.nNote}` : `n = ${r.n} ${r.nUnit}`}</span>
                 <span>
@@ -1000,7 +1005,14 @@ function SetTable({
                 }`}
               >
                 <td className="px-4 py-2 font-semibold text-gray-900">{r.name}</td>
-                <td className="max-w-[22rem] px-4 py-2 text-gray-700">{r.what}</td>
+                <td className="max-w-[22rem] px-4 py-2 text-gray-700">
+                  {r.what}
+                  {r.limit && (
+                    <span className="mt-1 block text-xs leading-snug text-amber-900" data-testid={`limit-${setId}-${r.id}-wide`}>
+                      Held: {r.limit}
+                    </span>
+                  )}
+                </td>
                 <td className="px-4 py-2">
                   <span
                     className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase ${STATUS_STYLE[r.status] ?? STATUS_STYLE.DRAFT}`}

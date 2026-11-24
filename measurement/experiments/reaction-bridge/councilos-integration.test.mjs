@@ -31,3 +31,17 @@ test("the UI has visible refusal, responsive text and accessibility labels",()=>
   assert.match(ui,/htmlFor="council-reaction-episode-json"/);
   assert.match(ui,/break-words/);
 });
+
+test("the browser default uses exact actually observed non-sensitive source cases, not a synthetic demo",()=>{
+  assert.match(ui,/observedSamples from "\.\.\/\.\.\/\.\.\/docs\/research\/turkish-guard-observed-20261124\/councilos-import\.json"/);
+  assert.match(ui,/Load two observed research cases/);
+  assert.match(ui,/original evidence bundle/);
+  assert.doesNotMatch(ui,/const DEMO/);
+  assert.doesNotMatch(ui,/Load synthetic example/);
+  const bank=JSON.parse(readFileSync(new URL("../../../docs/research/turkish-guard-observed-20261124/councilos-import.json",import.meta.url),"utf8"));
+  assert.equal(bank.length,2);
+  assert.ok(bank.every(r=>r.realm==="OBSERVED"));
+  assert.equal(bank[0].stages.human_approval.state,"UNKNOWN");
+  assert.equal(bank[1].stages.effect.state,"REPORTED");
+  assert.equal(bank[1].stages.receiver_verification.state,"UNKNOWN");
+});

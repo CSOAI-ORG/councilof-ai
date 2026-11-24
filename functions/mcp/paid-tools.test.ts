@@ -687,6 +687,58 @@ describe("/mcp tools/call — paid tools", () => {
     expect(sc.nothing_charged).toBe(true);
     expect(sc.how_to_pay).toMatch(/x_payment=/);
     expect(sc.how_to_pay).toContain('_meta["x402/payment"]');
+    // 24 Nov 2026: real models put _meta beside params and tried base64 by hand. The text now says
+    // where _meta goes, puts the channel that needs no encoding first, and says base64 is optional.
+    expect(sc.how_to_pay).toContain('params._meta["x402/payment"]');
+    expect(sc.how_to_pay).toMatch(/never at the top level/);
+    expect(sc.how_to_pay.indexOf("params._meta")).toBeLessThan(sc.how_to_pay.indexOf("x_payment="));
+    expect(sc.how_to_pay).toMatch(/base64 is not required/);
+    expect(sc.how_to_pay).toMatch(/must be a string, not an object/);
+  });
+
+  // What the text promises about x_payment is what the route does: functions/api/_x402.ts reads the
+  // header as JSON when it starts with "{", and as base64 otherwise. The wrapper must pass both through.
+  it("x_payment reaches the route unchanged as JSON text or as base64", async () => {
+    const seen: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL) => {
+        const req = input instanceof Request ? input : new Request(String(input));
+        seen.push(req.headers.get("x-payment") ?? "");
+        return new Response(JSON.stringify({ x402Version: 2, error: "Payment required", accepts: [] }), { status: 402, headers: { "content-type": "application/json" } });
+      }),
+    );
+    const payload = JSON.stringify({ x402Version: 2, payload: { signature: "0xabc" } });
+    for (const form of [payload, btoa(payload)]) {
+      await call(rpc("tools/call", { name: "commission_card", arguments: { subject: "qwen3", x_payment: form } }));
+      expect(seen.at(-1)).toBe(form);
+    }
+  });
+
+  it("a top-level _meta is refused with words that say where it belongs, and nothing is run", async () => {
+    const fetched = vi.fn(async () => new Response("{}", { status: 200 }));
+    vi.stubGlobal("fetch", fetched);
+    const body = { jsonrpc: "2.0", id: 4, method: "tools/call", params: { name: "commission_card", arguments: { subject: "qwen3" } }, _meta: { "x402/payment": { x402Version: 2 } } };
+    const post = (path: string) =>
+      onRequest({
+        request: new Request(`https://councilof.ai${path}`, { method: "POST", headers: { "content-type": "application/json", accept: "application/json" }, body: JSON.stringify(body) }),
+        env: {},
+        waitUntil: () => {},
+      } as never);
+    const full = await post("/mcp");
+    expect(full.status).toBe(400);
+    const fullBody = (await full.json()) as { error: { code: number; message: string }; id: number };
+    expect(fullBody.error.code).toBe(-32600);
+    expect(fullBody.id).toBe(4);
+    expect(fullBody.error.message).toContain('params._meta["x402/payment"]');
+    expect(fullBody.error.message).toMatch(/Nothing was run and nothing was charged/);
+    // The free door refuses it too, and says nothing about payment.
+    const free = await post("/mcp/free");
+    const freeBody = (await free.json()) as { error: { code: number; message: string } };
+    expect(freeBody.error.code).toBe(-32600);
+    expect(freeBody.error.message).toMatch(/params\._meta/);
+    expect(freeBody.error.message).not.toMatch(/x402|pay|charg/i);
+    expect(fetched).not.toHaveBeenCalled();
   });
 
   it("paid: keeps delivery distinct while reporting a present, unverified route receipt", async () => {

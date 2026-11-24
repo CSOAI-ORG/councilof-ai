@@ -41,15 +41,17 @@ afterEach(async()=>{
   vi.restoreAllMocks();
 });
 describe("CouncilOS local-only reaction viewer user journey",()=>{
-  it("renders collapsed and unknown, then loads and reviews a synthetic example",async()=>{
+  it("renders collapsed and unknown, then loads and reviews two observed source cases",async()=>{
     await render();
     expect(holder.querySelector("details")?.hasAttribute("open")).toBe(false);
     expect(result()).toContain("All acceptance states remain unknown");
-    await click("Load synthetic example");
-    expect(holder.querySelector("textarea")?.value).toContain("SIMULATED");
+    await click("Load two observed research cases");
+    expect(holder.querySelector("textarea")?.value).toContain("OBSERVED");
     await click("Review reported stages");
     expect(result()).toContain("UNQUALIFIED INPUT");
-    expect(result()).toContain("SIMULATION_ONLY");
+    expect(result()).toContain("ACCEPTANCE_INCOMPLETE");
+    expect(result()).toContain("observed-labelled: 2");
+    expect(result()).toContain("simulated-labelled: 0");
     expect(result()).toContain("independently qualified: UNKNOWN");
     await click("Clear local input");
     expect(holder.querySelector("textarea")?.value).toBe("");

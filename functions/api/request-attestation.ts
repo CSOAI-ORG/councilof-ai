@@ -515,7 +515,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         settle: { network: payment.settlement?.network || null, transaction: tx, payer: payment.settlement?.payer || null },
         reserve_state: reserve.read ? "READ" : "UNCHECKABLE",
         deliverable_state: "INCOMPLETE_ISSUANCE_FAILED",
-        note: "Payment settled; the commission receipt could not be issued. The x-payment-response header carries the settlement receipt. Re-request issues the commission; measurement never depends on a payment.",
+        note: "Payment settled; the commission receipt could not be issued. The x-payment-response header carries the settlement receipt. Preserve the original settlement receipt and reconcile the transaction with CSOAI before any reissue; do not automatically retry or pay again. Measurement never depends on a payment.",
       },
       500,
       payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
