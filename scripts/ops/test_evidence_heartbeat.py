@@ -72,6 +72,14 @@ class HeartbeatTests(unittest.TestCase):
         observations["distribution"]["payload"]["stale_after"] = "2026-11-23T00:00:00Z"
         report = heartbeat.assess(observations, now=NOW)
         self.assertEqual(report["checks"]["distribution_freshness"]["state"], "STALE")
+        self.assertEqual(report["rollup"], "STALE_SOURCES")
+        self.assertEqual(report["stale_sources"], ["distribution_freshness"])
+
+    def test_missing_entity_is_unknown_not_a_combined_count(self):
+        observations = sample()
+        del observations["distribution"]["payload"]["by_entity"]["downloads_all_time"]["meok"]
+        report = heartbeat.assess(observations, now=NOW)
+        self.assertEqual(report["checks"]["distribution_entity_scope"]["state"], "UNCHECKABLE")
 
     def test_invalid_census_timestamp_never_claims_current(self):
         observations = sample()
