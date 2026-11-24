@@ -155,7 +155,7 @@ Source change or customer requirement
 
 ## Read-only operating heartbeat implementation
 
-The companion `scripts/operating_heartbeat.py` checks named PRs/workflows and records source-corrected statuses, with GitHub URLs. It **does not** inspect private bank/CRM/human authority/effect or live website and explicitly marks these `NOT_MEASURED`. Synthetic and source-only CI success cannot become a green organisational certification. Unit/negative controls are in `scripts/test_operating_heartbeat.py`, and `.github/workflows/organisation-operating-heartbeat.yml` uploads daily snapshots, reporting unknowns without silently promoting an artefact.
+The companion `scripts/operating_heartbeat.py` checks named PRs/workflows and records source-corrected statuses, with GitHub URLs. It distinguishes master-branch CI success from PR/nonmaster success and unattributed run branches, so a successful research PR never masquerades as a deployed master workflow. It **does not** inspect private bank/CRM/human authority/effect or live website and explicitly marks these `NOT_MEASURED`. Synthetic and source-only CI success cannot become a green organisational certification. Unit/negative controls are in `scripts/test_operating_heartbeat.py`, and `.github/workflows/organisation-operating-heartbeat.yml` uploads daily snapshots, reporting unknowns without silently promoting an artefact.
 
 **Guarding against false reports:** root/freshness PR open = HOLD; source fetch fail/stale workflow = UNKNOWN or review; workflow pass = CI source only; PR merged = merged source only, not deployed; customers, actual staff, revenue and recipients never inferred. Never expose GitHub tokens, external customer data or private review records in artifacts.
 
