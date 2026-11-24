@@ -34,10 +34,13 @@ import {
   buildFootprint,
   getFootprint,
   grossDistribution,
+  HEADLINE_SCOPE,
   onRequestGet,
+  SELF_READ_SCOPE,
   registryListings,
   type Deps,
 } from "./footprint";
+import { SELF_READ_DATASETS } from "./_momentum";
 import packages from "../../public/interop/footprint-packages.json";
 import distribution from "../../public/interop/distribution-latest.json";
 import registryCensus from "../../public/interop/mcp-registry-2026-09-23/census.json";
@@ -87,6 +90,33 @@ afterEach(() => vi.clearAllMocks());
 
 // ── the artifact the endpoint reads out ──────────────────────────────────────
 const CENSUS_AS_OF = "2026-09-22T11:00:00Z";
+// CSOAI's package rows as the census writes them: the ten Hugging Face datasets our own services read
+// (SELF_READ_DATASETS) and 302 others. by_entity's CSOAI pair below is rolled up from these rows with
+// the producer's rule, so every CSOAI figure a test expects is a sum over them.
+type Pkg = { registry: string; name: string; entity: string; downloads_30d: number | null; downloads_all_time: number | null };
+const csoaiPackages = (): Pkg[] => [
+  ...SELF_READ_DATASETS.map((d) => ({ registry: "huggingface", name: d.id, entity: "csoai", downloads_30d: 5, downloads_all_time: 30 })),
+  ...Array.from({ length: 302 }, (_, i) => ({
+    registry: i < 40 ? "pypi" : "huggingface",
+    name: `csoai-row-${i}`,
+    entity: "csoai",
+    downloads_30d: i < 12 ? null : i < 82 ? 1 : 0, // 12 counters did not answer in this window
+    downloads_all_time: i < 4 ? 1 : 2,
+  })),
+];
+const isSelf = (p: Pkg) => p.registry === "huggingface" && SELF_READ_DATASETS.some((d) => d.id === p.name);
+const rollUpRows = (rows: Pkg[], w: "downloads_30d" | "downloads_all_time") => {
+  const counted = rows.filter((p) => typeof p[w] === "number");
+  return {
+    value: counted.reduce((a, p) => a + (p[w] as number), 0),
+    covered: counted.length,
+    attempted: rows.length,
+    state: counted.length === rows.length ? "READ" : "PARTIAL",
+    as_of: CENSUS_AS_OF,
+  };
+};
+const OTHERS = { downloads_30d: rollUpRows(csoaiPackages().filter((p) => !isSelf(p)), "downloads_30d"), downloads_all_time: rollUpRows(csoaiPackages().filter((p) => !isSelf(p)), "downloads_all_time") };
+const OWN = { downloads_30d: rollUpRows(csoaiPackages().filter(isSelf), "downloads_30d"), downloads_all_time: rollUpRows(csoaiPackages().filter(isSelf), "downloads_all_time") };
 // by_entity in the shape public/interop/distribution-latest.json carries it: every package row is
 // labelled with its entity, and each entity's pair is its own. These four add up to `totals`
 // below (230 and 2000), which is exactly why `totals` is neither entity's figure.
@@ -94,13 +124,13 @@ const byEntity = () => ({
   rule: "CSOAI Ltd and MEOK AI Labs are separate entities publishing from one account. The CSOAI and MEOK AI Labs figures are two figures and are never added.",
   downloads_30d: {
     meok: { value: 80, covered: 250, attempted: 260, state: "PARTIAL", as_of: CENSUS_AS_OF },
-    csoai: { value: 120, covered: 300, attempted: 312, state: "PARTIAL", as_of: CENSUS_AS_OF },
+    csoai: rollUpRows(csoaiPackages(), "downloads_30d"), // 120 over 300 of 312
     joint: { value: 20, covered: 50, attempted: 50, state: "READ", as_of: CENSUS_AS_OF },
     unattributed: { value: 10, covered: 97, attempted: 99, state: "PARTIAL", as_of: CENSUS_AS_OF },
   },
   downloads_all_time: {
     meok: { value: 800, covered: 150, attempted: 150, state: "READ", as_of: CENSUS_AS_OF },
-    csoai: { value: 900, covered: 180, attempted: 180, state: "READ", as_of: CENSUS_AS_OF },
+    csoai: rollUpRows(csoaiPackages(), "downloads_all_time"), // 900 over 312 of 312
     joint: { value: 200, covered: 40, attempted: 40, state: "READ", as_of: CENSUS_AS_OF },
     unattributed: { value: 100, covered: 27, attempted: 351, state: "PARTIAL", as_of: CENSUS_AS_OF },
   },
@@ -126,6 +156,7 @@ const artifact = (over: Record<string, unknown> = {}) => ({
     downloads_all_time: { state: "PARTIAL", value: 2000, unit: "downloads", window: "cumulative, all time", covered: 397, attempted: 721, as_of: "2026-09-22T11:00:00Z", registries_covered: ["pypi"], registries_missing: ["npm"] },
   },
   by_entity: byEntity(),
+  packages: csoaiPackages(),
   requests: { made: 730, retried_after_429_or_5xx: 3 },
   package_list: { totals: { pypi: 397, npm: 324, huggingface: 111 } },
   ...over,
@@ -150,18 +181,18 @@ describe("gross_distribution — read out of the measured artifact, never fanned
 
   it("keeps 30-day and cumulative in separate rows and never adds them", () => {
     const row = grossDistribution(NOW, artifact());
-    // CSOAI's own pair (by_entity.*.csoai), each with the census's window for its column.
-    expect(row.downloads_30d).toMatchObject({ value: 120, window: "last 30 days" });
-    expect(row.downloads_all_time).toMatchObject({ value: 900, window: "cumulative, all time" });
+    // CSOAI's pair without the datasets our own services read, each with the census's window for its column.
+    expect(row.downloads_30d).toMatchObject({ value: OTHERS.downloads_30d.value, window: "last 30 days" });
+    expect(row.downloads_all_time).toMatchObject({ value: OTHERS.downloads_all_time.value, window: "cumulative, all time" });
     // The headline is the 30-day figure, not a sum of the two windows.
-    expect(row.value).toBe(120);
-    expect(row.value).not.toBe(120 + 900);
+    expect(row.value).toBe(OTHERS.downloads_30d.value);
+    expect(row.value).not.toBe(OTHERS.downloads_30d.value + OTHERS.downloads_all_time.value);
     expect(String(row.windows_rule)).toContain("never added");
   });
 
   it("carries covered/attempted on the face of every fan-out row", () => {
     const row = grossDistribution(NOW, artifact());
-    expect(row).toMatchObject({ covered: 300, attempted: 312 });
+    expect(row).toMatchObject({ covered: OTHERS.downloads_30d.covered, attempted: OTHERS.downloads_30d.attempted });
     const npm30 = (row.by_registry as Record<string, Record<string, Record<string, unknown>>>).npm.downloads_30d;
     expect(npm30).toMatchObject({ state: "PARTIAL", value: 30, covered: 300, attempted: 324 });
   });
@@ -210,7 +241,7 @@ describe("gross_distribution — STALE when the artifact is older than the age i
   it("past it the row is STALE, keeps the real number, and says how old it is", () => {
     const row = grossDistribution("2026-09-25T11:00:00Z", artifact()); // 72 h > 48 h
     expect(row.state).toBe("STALE");
-    expect(row.value).toBe(120); // the number is what was measured, not a null and not a guess
+    expect(row.value).toBe(OTHERS.downloads_30d.value); // the number is what was measured, not a null and not a guess
     expect(row.age_hours).toBeCloseTo(72, 1);
     expect(String(row.reason)).toContain("48 h");
     expect(row.measured_state).toBe("PARTIAL"); // what it was before it went stale is not lost
@@ -240,20 +271,46 @@ describe("gross_distribution — CSOAI's own figures head it, as on the home pag
   const WINDOWS = ["downloads_30d", "downloads_all_time"] as const;
   const headline = (row: R) => [row.value, (row.downloads_30d as R).value, (row.downloads_all_time as R).value];
 
-  it("heads with by_entity's CSOAI pair in both windows, stated as CSOAI packages", () => {
+  it("heads with CSOAI's rows without the datasets our own services read, in both windows", () => {
     const row = grossDistribution(NOW, artifact());
     expect(row).toMatchObject({
-      state: "PARTIAL", value: 120, covered: 300, attempted: 312, as_of: CENSUS_AS_OF,
-      scope: "CSOAI packages", entity: "csoai", source_field: "by_entity.downloads_30d.csoai",
-      unit: "downloads", window: "last 30 days",
+      state: "PARTIAL", value: OTHERS.downloads_30d.value, covered: OTHERS.downloads_30d.covered, attempted: OTHERS.downloads_30d.attempted,
+      as_of: CENSUS_AS_OF, scope: HEADLINE_SCOPE, entity: "csoai", unit: "downloads", window: "last 30 days",
     });
-    expect(row.downloads_30d).toMatchObject({ value: 120, scope: "CSOAI packages", source_field: "by_entity.downloads_30d.csoai" });
+    expect(String(row.source_field)).toContain("adding back up to by_entity.downloads_30d.csoai");
     expect(row.downloads_all_time).toMatchObject({
-      state: "READ", value: 900, covered: 180, attempted: 180, window: "cumulative, all time",
-      scope: "CSOAI packages", entity: "csoai", source_field: "by_entity.downloads_all_time.csoai",
+      state: "READ", value: OTHERS.downloads_all_time.value, covered: 302, attempted: 302, window: "cumulative, all time",
+      scope: HEADLINE_SCOPE, entity: "csoai",
     });
-    expect(String(row.note)).toContain("CSOAI packages only");
+    // The by_entity pair has our own reads inside it, so it is never the headline.
+    for (const w of WINDOWS) expect((row[w] as R).value).not.toBe(byEntity()[w].csoai.value);
+    expect(String(row.note)).toContain(`It counts ${HEADLINE_SCOPE}:`);
     expect(String(row.note)).toContain("not a count of people");
+  });
+
+  it("puts the datasets our own services read in self_read, under their own label, never added", () => {
+    const row = grossDistribution(NOW, artifact());
+    const own = row.self_read as R;
+    expect(own).toMatchObject({ scope: SELF_READ_SCOPE, datasets: SELF_READ_DATASETS.map((d) => d.id).sort() });
+    expect(own.downloads_30d).toMatchObject({ state: "READ", value: OWN.downloads_30d.value, covered: 10, attempted: 10, scope: SELF_READ_SCOPE });
+    expect(own.downloads_all_time).toMatchObject({ state: "READ", value: OWN.downloads_all_time.value, covered: 10, attempted: 10 });
+    for (const w of WINDOWS) {
+      expect((row[w] as R).value as number + ((own[w] as R).value as number)).toBe(byEntity()[w].csoai.value);
+    }
+    expect(String(own.rule)).toContain("never added to the headline");
+  });
+
+  it("publishes no CSOAI figure when the rows do not add back up to by_entity, nor without the rows", () => {
+    const drift = csoaiPackages();
+    drift[0] = { ...drift[0], downloads_30d: (drift[0].downloads_30d as number) + 1 };
+    for (const art of [artifact({ packages: drift }), artifact({ packages: undefined })]) {
+      const row = grossDistribution(NOW, art);
+      for (const r of [row, row.downloads_30d as R, row.downloads_all_time as R]) {
+        expect(r).toMatchObject({ state: "UNCHECKABLE", value: null, scope: HEADLINE_SCOPE });
+        expect(String(r.reason)).toContain("do not add back up to by_entity");
+      }
+      expect(row.self_read).toBeNull();
+    }
   });
 
   it("never heads with the account total, and never adds MEOK AI Labs into CSOAI", () => {
@@ -296,7 +353,7 @@ describe("gross_distribution — CSOAI's own figures head it, as on the home pag
     breakIt(b);
     const row = grossDistribution(NOW, artifact({ by_entity: b }));
     for (const r of [row, row.downloads_30d as R, row.downloads_all_time as R]) {
-      expect(r).toMatchObject({ state: "UNCHECKABLE", value: null, scope: "CSOAI packages" });
+      expect(r).toMatchObject({ state: "UNCHECKABLE", value: null, scope: HEADLINE_SCOPE });
       expect(String(r.reason ?? "")).not.toBe("");
     }
     expect(headline(row)).toEqual([null, null, null]);
@@ -305,7 +362,7 @@ describe("gross_distribution — CSOAI's own figures head it, as on the home pag
 
   it("a census with no by_entity block heads with nothing, never with its totals", () => {
     const row = grossDistribution(NOW, artifact({ by_entity: undefined }));
-    expect(row).toMatchObject({ state: "UNCHECKABLE", value: null, scope: "CSOAI packages" });
+    expect(row).toMatchObject({ state: "UNCHECKABLE", value: null, scope: HEADLINE_SCOPE });
     expect(headline(row)).toEqual([null, null, null]);
     expect(row.by_entity).toBeNull();
   });
@@ -314,29 +371,34 @@ describe("gross_distribution — CSOAI's own figures head it, as on the home pag
     const b = byEntity() as R & ReturnType<typeof byEntity>;
     (b.downloads_30d as R).csoai = { state: "UNMEASURED", value: null, as_of: CENSUS_AS_OF, reason: "no counter exists for these packages" };
     const row = grossDistribution(NOW, artifact({ by_entity: b }));
-    expect(row).toMatchObject({ state: "UNMEASURED", value: null, reason: "no counter exists for these packages", scope: "CSOAI packages" });
+    expect(row).toMatchObject({ state: "UNMEASURED", value: null, reason: "no counter exists for these packages", scope: HEADLINE_SCOPE });
     expect(row.downloads_all_time).toMatchObject({ state: "UNCHECKABLE", value: null });
     expect(String((row.downloads_all_time as R).reason)).toContain("published together or not at all");
   });
 
   it("past the census's declared max age both CSOAI windows are STALE and keep CSOAI's figures", () => {
     const row = grossDistribution("2026-09-25T11:00:00Z", artifact()); // 72 h > 48 h
-    expect(row).toMatchObject({ state: "STALE", value: 120, measured_state: "PARTIAL", scope: "CSOAI packages" });
-    expect(row.downloads_all_time).toMatchObject({ state: "STALE", value: 900, measured_state: "READ", scope: "CSOAI packages" });
+    expect(row).toMatchObject({ state: "STALE", value: OTHERS.downloads_30d.value, measured_state: "PARTIAL", scope: HEADLINE_SCOPE });
+    expect(row.downloads_all_time).toMatchObject({ state: "STALE", value: OTHERS.downloads_all_time.value, measured_state: "READ", scope: HEADLINE_SCOPE });
   });
 
-  it("on the committed census the payload heads with the figures /llms.txt prints, from by_entity, never totals", async () => {
-    const art = distribution as unknown as { as_of: string; totals: Record<string, R>; by_entity: Record<string, Record<string, R>> };
+  it("on the committed census the payload heads with the figures /llms.txt prints, never by_entity's CSOAI pair or totals", async () => {
+    const art = distribution as unknown as { as_of: string; totals: Record<string, R>; by_entity: Record<string, Record<string, R>>; packages: Pkg[] };
     const { distributionRead } = await import("../../scripts/llms-txt-distribution.mjs");
     const read = distributionRead(art);
     expect(read.reason, "the committed census is readable by the /llms.txt rule").toBeUndefined();
     const g = (await buildFootprint(deps(healthy()))).gross_distribution as R;
     expect(g.value).toBe(read.csoai.recent.value);
     expect((g.downloads_all_time as R).value).toBe(read.csoai.lifetime.value);
+    expect(((g.self_read as R).downloads_30d as R).value).toBe(read.selfRead.recent.value);
     for (const w of WINDOWS) {
-      expect((g[w] as R).value).toBe(art.by_entity[w].csoai.value);
+      // Summed here from the committed census's own rows, not typed.
+      const rows = art.packages.filter((p) => p.entity === "csoai");
+      const others = rows.filter((p) => !isSelf(p)).reduce((a, p) => a + (typeof p[w] === "number" ? (p[w] as number) : 0), 0);
+      expect((g[w] as R).value).toBe(others);
+      expect((g[w] as R).value).not.toBe(art.by_entity[w].csoai.value);
       expect((g[w] as R).value).not.toBe(art.totals[w].value);
-      expect((g[w] as R)).toMatchObject({ as_of: art.as_of, scope: "CSOAI packages" });
+      expect((g[w] as R)).toMatchObject({ as_of: art.as_of, scope: HEADLINE_SCOPE });
     }
     expect((g.by_entity as Record<string, Record<string, R>>).downloads_30d.meok).toEqual(art.by_entity.downloads_30d.meok);
   });
