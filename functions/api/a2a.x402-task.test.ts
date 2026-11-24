@@ -14,6 +14,7 @@ import {
   X402_TASK_ID_MAX,
   a2aPaidCallName,
   a2aX402Extension,
+  onRequestGet,
   onRequestPost,
   x402PaymentErrorCode,
   x402PublicTaskInput,
@@ -414,5 +415,59 @@ describe("what the door reports about a Task", () => {
     expect(a2aPaidCallName(paid.body)).toBe("a2a.evidence_bundle.meta");
     const paid03 = await send03({ taskId: unpaid.body.result.task.id, parts: [{ kind: "text", text: "pay" }], metadata: { [PAYLOAD_KEY]: PAYMENT } });
     expect(a2aPaidCallName(paid03.body)).toBe("a2a.evidence_bundle.meta");
+  });
+});
+
+/**
+ * The door's own description, read on GET before a client sends anything. Until 24 Nov 2026 it
+ * still said "every SendMessage answers with a Message" two days after the Task flow went live.
+ * These hold the description to what the door does, by running the door beside it.
+ */
+describe("GET /api/a2a describes the reply a client will actually get", () => {
+  const describeDoor = async () =>
+    (await (await onRequestGet({ request: new Request(`${ORIGIN}/api/a2a`) } as never)).json()) as {
+      tasks: string;
+      methods: Record<string, string>;
+      version_rule: string;
+      tool_skills: { payment: string };
+    };
+
+  it("does not say every reply is a Message, because one is a Task", async () => {
+    stubRoute();
+    const doc = await describeDoor();
+    const { body } = await send({ parts: [{ data: SELECT }] }, { "x-a2a-extensions": V02 });
+    expect(body.result.task.status.state).toBe("TASK_STATE_INPUT_REQUIRED"); // what the door does
+    for (const text of [doc.tasks, doc.methods.SendMessage]) {
+      expect(text).toMatch(/\bTask\b/);
+      expect(text).not.toMatch(/every SendMessage answers with a Message/);
+    }
+    expect(doc.tasks).toMatch(/none stored/);
+    expect(doc.tasks).toMatch(/input-required/);
+    expect(doc.methods.SendMessage).toContain('message.metadata["x402.payment.payload"]');
+    expect(doc.version_rule).not.toMatch(/answered as a 0\.3 Message/);
+  });
+
+  it("still says GetTask finds nothing, and the door agrees for both kinds of id", async () => {
+    const doc = await describeDoor();
+    expect(doc.tasks).toMatch(/GetTask can only ever say TaskNotFound/);
+    expect(doc.methods.GetTask).toMatch(/-32001/);
+    const get = async (taskId: string) =>
+      (await (
+        await onRequestPost({
+          request: new Request(`${ORIGIN}/api/a2a`, {
+            method: "POST",
+            headers: { "content-type": "application/json", "a2a-version": "1.0" },
+            body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "GetTask", params: { id: taskId } }),
+          }),
+          env: {},
+          waitUntil: () => {},
+        } as never)
+      ).json()) as { error: { code: number; message: string } };
+    const plain = await get("some-other-task");
+    expect(plain.error.code).toBe(-32001);
+    expect(plain.error.message).not.toMatch(/every SendMessage answers with a Message/);
+    expect(plain.error.message).toMatch(/not stored/);
+    const x402 = await get(x402TaskId("evidence_bundle", { obligation: "article-50" }) as string);
+    expect(x402.error.code).toBe(-32001);
   });
 });
