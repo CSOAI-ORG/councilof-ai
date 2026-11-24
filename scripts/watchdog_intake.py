@@ -335,7 +335,7 @@ PINNED = [
     {
         "id": "epoch-notable-models",
         "name": "Epoch AI notable AI models dataset (CSV)",
-        "kind": "evaluation-dataset",
+        "kind": "model-dataset",
         "url": "https://epoch.ai/data/notable_ai_models.csv",
         "method": "GET",
         "expect": "csv",
