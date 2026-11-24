@@ -375,6 +375,37 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
     expect(json.result.message.parts[0].text).not.toMatch(/certified|compliant/i);
   });
 
+  it("distinguishes the live crosswalk payload from separate unverified references", async () => {
+    const payload = { schema: "csoai.cross/0.1", rows: [], signature: { fixture: "untouched" } };
+    const fetchMock = vi.fn(async () => Response.json(payload));
+    vi.stubGlobal("fetch", fetchMock);
+    const { json } = await callSkill("east-west-crosswalk", {});
+    expect(json.error).toBeUndefined();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const data = json.result.message.parts[1].data;
+    expect(data.payload).toEqual(payload);
+    expect(data.related_resources).toEqual({
+      live_divergence: { url: "https://councilof.ai/api/cross", schema: "csoai.cross/0.1" },
+      regulatory_crosswalk: { url: "https://councilof.ai/crosswalk/east-west-v1.json", state: "REFERENCE_ONLY" },
+      cross_border_card: { url: "https://councilof.ai/signals/cross-border-card.signed.json", state: "REFERENCE_ONLY" },
+      verifier: { url: "https://councilof.ai/gspc-verify", state: "REFERENCE_ONLY" },
+      note: "Separate resources; linked artifacts were not fetched or verified by this call.",
+    });
+    expect(json.result.message.parts[0].text).toContain("not verified by this call");
+  });
+
+  it("does not invent a schema for a crosswalk response without one", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ rows: [] })));
+    const { json } = await callSkill("east-west-crosswalk", {});
+    expect(json.result.message.parts[1].data.related_resources.live_divergence.schema).toBeNull();
+  });
+
+  it("does not attach crosswalk resources to unrelated skills", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ fixture: true })));
+    const { json } = await callSkill("benchmark-quality-register", {});
+    expect(json.result.message.parts[1].data).not.toHaveProperty("related_resources");
+  });
+
   it("refuses a 3xx source redirect instead of following it", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(null, {
       status: 302,
