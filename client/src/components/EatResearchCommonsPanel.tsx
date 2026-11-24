@@ -102,7 +102,7 @@ export default function EatResearchCommonsPanel() {
             <h2 className="mt-2 text-2xl font-bold text-emerald-50">Open research commons</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-emerald-100/75">
               Source-linked software revisions and paper references for Council research. Discovery is free.
-              A source listing is not our measurement, a vendor partnership, licence clearance or independent verification.
+              A source listing is not our measurement, not a vendor partnership, not licence clearance and not independent verification.
             </p>
           </div>
           <a href="/api/research-plan" className="rounded-lg border border-emerald-400/40 px-3 py-2 text-sm text-emerald-200 hover:bg-white/10">
