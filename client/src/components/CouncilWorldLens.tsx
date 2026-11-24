@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from "react";
 import { Globe2, MessageCircle, ExternalLink, Layers, ShieldCheck } from "lucide-react";
 import { askSovereign } from "@/lib/sovAsk";
 import { MISSIONS, missionForId, missionHref, suggestMission, type MissionId } from "@/lib/worldMissions";
@@ -11,7 +11,9 @@ import {
   type Observatory, type WorldFact, type WorldFactKey,
 } from "@/lib/worldLens";
 
-type WorldMode = "globe" | "atlas" | "timeline" | "systems" | "benchmarks";
+const CouncilWorldSignals = lazy(() => import("@/components/CouncilWorldSignals"));
+
+type WorldMode = "globe" | "atlas" | "timeline" | "systems" | "benchmarks" | "signals";
 type ReadState = { phase: "loading" | "ready" | "unavailable"; fact?: WorldFact; error?: string };
 const SOURCE_KEYS: WorldFactKey[] = ["gspc", "root", "worker", "observatory"];
 const WORLD_REGIONS: Record<string, [number, number]> = {
@@ -102,6 +104,7 @@ export default function CouncilWorldLens() {
     // intake, payment, human approval or external effect.
     if (mission.id === "benchmarks") setMode("benchmarks");
     else if (mission.id === "simulation") setMode("timeline");
+    else if (mission.id === "watchdog" || mission.id === "human" || mission.id === "ontology") setMode("signals");
     else setMode("systems");
   }
 
@@ -156,6 +159,7 @@ export default function CouncilWorldLens() {
           ["timeline", "SovSpace replay"],
           ["systems", "Systems & ontology"],
           ["benchmarks", "GSPC control room"],
+          ["signals", "Public signals"],
         ] as const).map(([id, title]) => (
           <button key={id} type="button" role="tab" aria-selected={mode === id}
             onClick={() => setMode(id)}
@@ -165,7 +169,7 @@ export default function CouncilWorldLens() {
       </div>
 
       <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_minmax(235px,290px)]">
-        <div role="tabpanel" aria-label={mode === "globe" ? "3D globe" : mode === "atlas" ? "Regulation atlas" : mode === "systems" ? "Connected Council systems" : mode === "benchmarks" ? "Live GSPC axis evidence" : "Historical simulation replay"} className="min-w-0 bg-slate-950">
+        <div role="tabpanel" aria-label={mode === "globe" ? "3D globe" : mode === "atlas" ? "Regulation atlas" : mode === "systems" ? "Connected Council systems" : mode === "benchmarks" ? "Live GSPC axis evidence" : mode === "signals" ? "Public signals, corrections and oversight" : "Historical simulation replay"} className="min-w-0 bg-slate-950">
           {mode === "globe" ? (
             <iframe ref={frameRef} title="Council 3D Earth, source-reported markers"
               src="/globe3d.html" loading="lazy" onLoad={() => setStatus("Globe frame loaded; Cesium canvas and data freshness require independent verification.")}
@@ -173,6 +177,10 @@ export default function CouncilWorldLens() {
           ) : mode === "atlas" ? (
             <iframe title="OpenGridWorks regulation atlas" src="/opengridworks?embed=1" loading="lazy"
               className="h-[410px] w-full border-0 bg-white sm:h-[520px]" />
+          ) : mode === "signals" ? (
+            <Suspense fallback={<p role="status" className="min-h-[410px] bg-white p-5 text-sm text-slate-700">Opening source-linked public signals…</p>}>
+              <CouncilWorldSignals />
+            </Suspense>
           ) : mode === "benchmarks" ? (
             <div className="min-h-[410px] bg-[#f8fcfa] p-4 text-slate-900 sm:min-h-[520px]" data-testid="world-gspc-control-room">
               <h3 className="text-lg font-semibold text-emerald-950">GSPC · measurement control room</h3>
