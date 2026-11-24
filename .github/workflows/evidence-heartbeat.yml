@@ -1,0 +1,68 @@
+name: Council evidence heartbeat (read-only)
+
+# An observer, not a release gate or signing ceremony. Does NOT perform
+# private MEOK probes, payment, model grading or human authorisation.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 6 * * *"
+  pull_request:
+    paths:
+      - "scripts/ops/evidence-heartbeat.py"
+      - "scripts/ops/test_evidence_heartbeat.py"
+      - ".github/workflows/evidence-heartbeat.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: council-evidence-heartbeat-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m unittest discover -s scripts/ops -p test_evidence_heartbeat.py -v
+
+  observe:
+    if: github.event_name != 'pull_request'
+    needs: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Read public sources, preserve any failures as evidence
+        run: python scripts/ops/evidence-heartbeat.py --out out/operational-heartbeat.json --fail-on-invariant
+      - name: Record truth-boundary summary
+        if: always()
+        run: |
+          if test -f out/operational-heartbeat.json; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          r=json.load(open("out/operational-heartbeat.json"))
+          print("# Council evidence heartbeat")
+          print("**State:** " + r["rollup"])
+          print("**Observed at:** " + r["generated_at"])
+          print("**Failed invariants:** " + (", ".join(r["failed_invariants"]) or "none observed"))
+          print("**Unknown/open gates:** " + ", ".join(r["open_or_uncheckable_gates"]))
+          print("")
+          print("This is a source/consistency snapshot, **not** an independent signature validation, production remeasurement, regulatory certification, authorised execution or commercial delivery.")
+          PY
+          fi
+      - name: Retain the exact dated observation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: council-evidence-heartbeat-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/operational-heartbeat.json
+          if-no-files-found: warn
+          retention-days: 30
