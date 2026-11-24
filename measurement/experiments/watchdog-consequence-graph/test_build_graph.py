@@ -128,7 +128,7 @@ class WatchdogCounterfactualTests(unittest.TestCase):
         self.assertFalse(report["incident_records_ingested"])
         self.assertFalse(report["production_board_modified"])
         self.assertIsNone(report["incident_count"])
-        self.assertTrue(all(n.get("location") is None or n.get("geolocation") is None for n in report["nodes"]))
+        self.assertTrue(all(n.get("location") is None and n.get("geolocation") is None for n in report["nodes"]))
 
     def test_no_causal_connection_source_to_synthetic_path(self):
         l, i = fixture()
