@@ -15,7 +15,7 @@ describe("CouncilOS reaction research integration", () => {
   it("does not suggest authorization from a demo", () => {
     const html = renderToStaticMarkup(<ReactionResearchReview />);
     expect(html).toContain("not authenticated human authorization");
-    expect(html).toContain("Nothing");
+    expect(html).toContain("All acceptance states remain unknown");
     expect(html).not.toContain("execution approved");
   });
 });
