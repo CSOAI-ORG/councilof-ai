@@ -54,11 +54,14 @@ export default function PalAskPanel({
   desk,
   onClose,
   onEscalation,
+  onAsk,
 }: {
   desk: DeskId;
   onClose: () => void;
   /** Called when the staff member escalates a consequential act to a human. */
   onEscalation?: (challenge: unknown) => void;
+  /** Optional local view-only routing hook. Never authorises a tool or an effect. */
+  onAsk?: (text: string) => void;
 }) {
   const d = DESKS[desk];
   const [q, setQ] = useState("");
@@ -68,6 +71,7 @@ export default function PalAskPanel({
   async function send() {
     const message = q.trim();
     if (!message || busy) return;
+    onAsk?.(message);
     const history = turns
       .filter((t) => t.who === "agent" && t.text)
       .slice(-6)

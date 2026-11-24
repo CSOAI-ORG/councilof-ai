@@ -121,6 +121,8 @@ export const NODE_TEST_FILES = [
   'actions/verify-card/run.test.mjs',
   'actions/verify-card/workflow.test.mjs',
   'scripts/derive-fin-run-attestation.test.mjs',
+  // Uses node:test to validate globe message-origin guards; pr-gates executes it under node --test.
+  'scripts/council-world-security.test.mjs',
 ];
 
 export default defineConfig({
