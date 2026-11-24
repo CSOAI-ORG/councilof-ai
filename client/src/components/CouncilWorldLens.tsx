@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Globe2, RotateCcw, MessageCircle, ExternalLink, Layers, ShieldCheck } from "lucide-react";
+import { Globe2, MessageCircle, ExternalLink, Layers, ShieldCheck } from "lucide-react";
 import { askSovereign } from "@/lib/sovAsk";
 import { sovActions } from "@/lib/sovAgent";
 import {
@@ -46,7 +46,7 @@ export default function CouncilWorldLens() {
           if (!response.ok) throw new Error("HTTP " + response.status);
           const data: unknown = await response.json();
           const fact = parseWorldFact(key, data);
-          if (key === "observatory") setObservatory(parseObservatory(data));
+          if (key === "observatory" && !controller.signal.aborted) setObservatory(parseObservatory(data));
           if (!controller.signal.aborted) setReads((old) => ({ ...old, [key]: { phase: "ready", fact } }));
         })
         .catch((error: unknown) => {
