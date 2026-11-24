@@ -199,6 +199,7 @@ export async function onRequestGet({ request }: { request: Request }): Promise<R
   if (new URL(request.url).searchParams.has("url"))
     return unavailable("DYNAMIC_FETCH_NOT_SUPPORTED", 400);
   let bytes: Uint8Array;
+  let rawBuffer: ArrayBuffer;
   let body: unknown;
   try {
     const reply = await fetch(FEED_SOURCE, {
@@ -210,14 +211,15 @@ export async function onRequestGet({ request }: { request: Request }): Promise<R
     const size = Number(reply.headers.get("content-length") || 0);
     if (!Number.isFinite(size) || size > MAX_BODY)
       return unavailable("EAT_FEED_OVERSIZE_OR_UNCHECKABLE");
-    bytes = new Uint8Array(await reply.arrayBuffer());
+    rawBuffer = await reply.arrayBuffer();
+    bytes = new Uint8Array(rawBuffer);
     if (bytes.byteLength > MAX_BODY) return unavailable("EAT_FEED_OVERSIZE");
     body = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
   } catch {
     return unavailable("EAT_FEED_UNREACHABLE_OR_INVALID");
   }
   if (!validEATCommonsForTest(body)) return unavailable("EAT_FEED_SCHEMA_OR_RIGHTS_BOUNDARY_INVALID");
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  const digest = await crypto.subtle.digest("SHA-256", rawBuffer);
   const sourceSha256 = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
   const now = Date.now();
   const projection = projectForTest(body, new Date(now).toISOString(), sourceSha256, now);
