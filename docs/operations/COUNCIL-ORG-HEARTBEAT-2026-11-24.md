@@ -45,6 +45,16 @@ Each company is a potential source of validated operating patterns or a partner.
 
 **Do not copy whole competing stacks.** Learn source/trace contracts, state machines and evaluation controls. A licence described as open source may still impose commercial-service restrictions; Phoenix ELv2 and Langfuse enterprise portions require their respective licence reviews. Any external content ingestion needs rights and privacy controls.
 
+### Internal source reuse: avoid rebuilding existing adapters
+
+The current Council repository already has a useful interoperable foundation:
+
+- `packages/otel/README.md` and `packages/otel/route_receipt.py` implement an optional, fail-closed OTLP/JSON GenAI routing receipt with digest/trace IDs and **no copied prompts, tool arguments or responses**. `functions/mcp/_otel.ts` distinguishes HTTP door/transport observations from actual tool outcomes. **Use these existing contracts first**; do not create a second tracing event model or infer tool success from HTTP 200.
+- `packages/evidence-fabric/RECEIVER-ADAPTERS.md` documents implemented **offline local projections** for **Langfuse, Alan Turing Institute TEA and Moonshot**. It explicitly does **not** establish any real receiving-party import/acknowledgement. Qualification should begin with an authorised receiver-owned synthetic test, pinned API/schema version, redacted fields, exact-request digest, authenticated ACK and later receiver GET/reopen. Keep source `csoai.evidence-event/0.1`.
+- New candidates should be admitted only if the present adapters cannot express the required evidence. Prioritise missing integration tests over generic package proliferation; any commercial integration first requires licence and personal-data handling review.
+
+**Cross-team owner task:** science signs off whether local evidence records actually prove the claim; MEOK owner qualifies receiver/account/scope; evidence-fabric owner tests existing adapter; human authority steward confirms independent principal; commercial owner obtains buyer/SOW; SRE retains exact deployed receipts. None may report `RECEIVER_ACCEPTED` without a real external acknowledgement.
+
 ## 3. SWOT grounded in current acceptance, not a promotional benchmark
 
 | | Condition | Response |
