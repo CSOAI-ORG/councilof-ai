@@ -65,7 +65,7 @@ export function parseObservatory(raw: unknown): Observatory {
     doc?.schema !== "csoai.simulation-observatory/1" ||
     !source || !importMeta ||
     source.url !== "https://councilof.ai/j-space/events.json" ||
-    !digest || !/^[0-9a-f]{64}$/i.test(digest) ||
+    if (n === null || !asOf || !/^[0-9]{4}-[0-9]{2}-[0-9]{2}T/.test(asOf) ||
     !generatedAt || !Number.isFinite(Date.parse(generatedAt)) ||
     !Array.isArray(events) || count === null || count !== events.length ||
     count > 10000 ||
