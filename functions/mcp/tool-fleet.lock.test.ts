@@ -135,7 +135,16 @@ describe("K-1 fleet-size lock: one list of names, every surface agrees", () => {
     const all = LOCK_ALL.length;
     const free = LOCK_FREE.length;
     const paid = LOCK_PAID.length;
-    expect(WELLKNOWN_SERVER.description).toContain(`${all} MCP tools: ${free} free + ${paid} x402`);
+    // public/.well-known/mcp/server.json states NO count (2026-11-20, discovery hygiene): its description
+    // said "54 MCP tools: 49 free + 5 x402" and was 141 characters, over the 2025-12-11 schema's 100. It now
+    // names the two kinds of tool and defers the number to tools/list, so it cannot drift from the lock.
+    expect(WELLKNOWN_SERVER.description).not.toMatch(/\b\d+\s+(?:MCP\s+|HTTP\s+)?tools?\b/i);
+    expect(WELLKNOWN_SERVER.description.length).toBeLessThanOrEqual(100);
+    expect(
+      (WELLKNOWN_SERVER as { _meta: Record<string, Record<string, string>> })._meta[
+        "io.modelcontextprotocol.registry/publisher-provided"
+      ]["ai.councilof/description_long"],
+    ).toContain("tools/list is authoritative");
     expect(REGISTRY_DESCRIPTOR.description).toContain(`${all} HTTP tools (${free} free, ${paid} x402)`);
     expect(NPM_PACKAGE.description.toLowerCase()).toContain(
       `${word(all)} tools: ${word(free)} free readers and ${word(paid)} x402-metered`,
