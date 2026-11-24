@@ -4,6 +4,8 @@ on:
     paths:
       - "scripts/research/turkish_guard_observed.py"
       - "scripts/research/test_turkish_guard_observed.py"
+      - "scripts/research/notinject_guard_observed.py"
+      - "scripts/research/test_notinject_guard_observed.py"
       - "scripts/research/project_turkish_reaction.mjs"
       - "scripts/research/project_turkish_reaction.test.mjs"
       - "docs/research/turkish-guard-observed-20261124/**"
@@ -24,6 +26,8 @@ jobs:
           node-version: "22"
       - name: Test method and claims without downloading model/data
         run: python3 -m unittest discover -s scripts/research -p test_turkish_guard_observed.py -v
+      - name: Verify independent benign hard-negative source and derived receipt
+        run: python3 -m unittest discover -s scripts/research -p test_notinject_guard_observed.py -v
       - name: Replay retained real observation into read-only reaction bridge
         run: node --test scripts/research/project_turkish_reaction.test.mjs
       - name: Fail closed on missing receipt or incorrect qualification
