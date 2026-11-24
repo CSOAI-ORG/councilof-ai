@@ -80,6 +80,7 @@ PRODUCERS = {
     "scripts/census/correct-a2a-card-census.py": "edits-live",
     "scripts/census/dataset-card-hygiene.py": "edits-live",
     "scripts/hf/fix-card-link.py": "edits-live",
+    "scripts/hf/correct_orb3_readme.py": "edits-live", # exact-reviewed public ORB-III historical notice, data rows unchanged
     "scripts/hf/hf_live_row.py": "edits-live",
     "scripts/hf/hf_card_metadata.py": "edits-live",          # preserves the existing citation/body
     "scripts/hf/polish_frontdoors.py": "template",           # reviewed product templates; content/hash guards

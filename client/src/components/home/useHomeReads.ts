@@ -119,12 +119,22 @@ export function useFootprintPayload(injected?: ReadState<FootprintPayload>) {
 }
 
 /** The dated package census itself answers quickly, without the full funnel's live registry walk. */
+/** One row of the census's `packages` list: a count is a number, or null when its counter did not answer. */
+export interface DistributionPackage {
+  registry?: string;
+  name?: string;
+  entity?: string;
+  downloads_30d?: number | null;
+  downloads_all_time?: number | null;
+}
+
 export interface DistributionArtifact {
   schema?: string;
   as_of?: string;
   max_age_hours?: number;
   totals?: { downloads_all_time?: FootprintRow; downloads_30d?: FootprintRow };
   by_entity?: { downloads_all_time?: Record<string, FootprintRow>; downloads_30d?: Record<string, FootprintRow> };
+  packages?: DistributionPackage[];
 }
 
 export function useDistributionArtifact(injected?: ReadState<DistributionArtifact>) {

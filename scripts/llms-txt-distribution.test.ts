@@ -28,6 +28,13 @@ const dist = JSON.parse(R("public/interop/distribution-latest.json"));
 const WINDOWS = ["downloads_all_time", "downloads_30d"] as const;
 const MARK = "Derived at generation from https://councilof.ai/interop/distribution-latest.json";
 const producer = () => import("./llms-txt-distribution.mjs");
+// The Hugging Face datasets our own services read (24 Nov 2026): CSOAI's figures leave them out and
+// they get their own line. Expected figures are summed here from the census's own package rows.
+const SELF_READ: string[] = JSON.parse(R("client/src/data/hf-self-read-ids.json"));
+type Pkg = { registry?: string; name?: string; entity?: string; [w: string]: unknown };
+const isSelf = (p: Pkg) => p.registry === "huggingface" && SELF_READ.includes(p.name as string);
+const sumOf = (rows: Pkg[], w: string) => rows.reduce((a, p) => a + (typeof p[w] === "number" ? (p[w] as number) : 0), 0);
+const csoaiRows = (d: { packages: Pkg[] }) => d.packages.filter((p) => p.entity === "csoai");
 
 /** The distribution section: from its derivation line to the next heading. */
 function section(text: string): string {
@@ -53,11 +60,19 @@ describe("the published distribution section heads with CSOAI's own figures", ()
     }
   });
 
-  it("its first two figures are CSOAI's own by_entity values, each with state, denominator and as_of", async () => {
+  it("its first two figures are CSOAI's package rows without the datasets our own services read", async () => {
     const read = (await producer()).distributionRead(dist);
     expect(read.reason, "the committed census is readable by the producer's rule").toBeUndefined();
+    const rows = csoaiRows(dist);
+    for (const [key, which] of [["downloads_all_time", "lifetime"], ["downloads_30d", "recent"]] as const) {
+      expect(read.csoai[which].value, key).toBe(sumOf(rows.filter((p) => !isSelf(p)), key));
+      expect(read.selfRead[which].value, key).toBe(sumOf(rows.filter(isSelf), key));
+      // The two parts add back up to by_entity's CSOAI pair, which is never printed as CSOAI's figure.
+      expect(read.csoai[which].value + read.selfRead[which].value).toBe(dist.by_entity[key].csoai.value);
+    }
     for (const f of files) {
-      const [lifetime, recent] = figureLines(section(R(f)));
+      const lines = figureLines(section(R(f)));
+      const [lifetime, recent] = lines;
       for (const [line, row] of [[lifetime, read.csoai.lifetime], [recent, read.csoai.recent]] as const) {
         expect(line, `${f}: the section must head with CSOAI's figures`).toMatch(/^- CSOAI packages, /);
         expect(line).toContain(`${fmt(row.value)} gross downloads`);
@@ -67,6 +82,9 @@ describe("the published distribution section heads with CSOAI's own figures", ()
       }
       expect(lifetime).toContain("since first release");
       expect(recent).toContain("in the last 30 days");
+      expect(lines[2], `${f}: the datasets our own services read get their own line`).toMatch(/^- The \d+ Hugging Face datasets our own services read are counted on their own and never added to CSOAI's figures/);
+      for (const row of [read.selfRead.lifetime, read.selfRead.recent]) expect(lines[2]).toContain(`${fmt(row.value)} `);
+      for (const key of WINDOWS) expect(section(R(f)), `${f}: CSOAI's figure with our own reads inside it`).not.toContain(fmt(dist.by_entity[key].csoai.value));
       expect(section(R(f)), `${f}: the census's own freshness bound travels with its figures`)
         .toContain(`The census declares itself out of date after ${dist.stale_after} (stale_after)`);
     }
@@ -132,6 +150,12 @@ describe("both files tell an agent to send a descriptive User-Agent", () => {
 describe("the producer prints a figure only when the home page would", () => {
   const asOf = "2026-11-16T04:40:31Z";
   const row = (value: number, covered: number, attempted: number, state = "READ") => ({ state, value, covered, attempted, as_of: asOf });
+  // CSOAI's rows: the ten self-read datasets and 202 others, with by_entity's pair rolled up from them.
+  const csoaiPackages = () => [
+    ...SELF_READ.map((name, i) => ({ registry: "huggingface", name, entity: "csoai", downloads_30d: 1000 + i, downloads_all_time: 2000 + i })),
+    ...Array.from({ length: 202 }, (_, i) => ({ registry: i < 24 ? "pypi" : "huggingface", name: `csoai-row-${i}`, entity: "csoai", downloads_30d: 100 + i, downloads_all_time: 300 + i })),
+  ];
+  const rollUp = (rows: Pkg[], w: string) => row(sumOf(rows, w), rows.filter((p) => typeof p[w] === "number").length, rows.length);
   const census = (): any => ({
     schema: "csoai.distribution/0.1",
     as_of: asOf,
@@ -142,22 +166,28 @@ describe("the producer prints a figure only when the home page would", () => {
       downloads_all_time: { ...row(3852241, 908, 909, "PARTIAL"), unit: "downloads", window: "cumulative, all time" },
     },
     by_entity: {
-      downloads_30d: { meok: row(228554, 317, 318, "PARTIAL"), csoai: row(514407, 212, 212), joint: row(14346, 32, 32), unattributed: row(14126, 347, 347) },
-      downloads_all_time: { meok: row(2746597, 317, 318, "PARTIAL"), csoai: row(890521, 212, 212), joint: row(72056, 32, 32), unattributed: row(143067, 347, 347) },
+      downloads_30d: { meok: row(228554, 317, 318, "PARTIAL"), csoai: rollUp(csoaiPackages(), "downloads_30d"), joint: row(14346, 32, 32), unattributed: row(14126, 347, 347) },
+      downloads_all_time: { meok: row(2746597, 317, 318, "PARTIAL"), csoai: rollUp(csoaiPackages(), "downloads_all_time"), joint: row(72056, 32, 32), unattributed: row(143067, 347, 347) },
     },
     packages: [
-      { registry: "npm", name: "a-csoai-package", entity: "csoai", downloads_30d: 10, downloads_all_time: 20 },
+      ...csoaiPackages(),
       { registry: "pypi", name: "meok-.github-profile", entity: "meok", downloads_30d: null, downloads_all_time: null, reason: "http 404" },
     ],
   });
 
-  it("heads with CSOAI, gives MEOK AI Labs a line, and prints no total of the account", async () => {
-    const sec = (await producer()).distributionSection(census());
+  it("heads with CSOAI without the datasets our own services read, gives those and MEOK AI Labs a line each, and prints no total of the account", async () => {
+    const d = census();
+    const sec = (await producer()).distributionSection(d);
     const lines = figureLines(sec);
-    expect(lines[0]).toMatch(/^- CSOAI packages, since first release \(cumulative\): 890,521 gross downloads — state READ, 212 of 212 counters answered\./);
-    expect(lines[1]).toMatch(/^- CSOAI packages, in the last 30 days: 514,407 gross downloads — state READ, 212 of 212 counters answered\./);
-    expect(lines[2]).toContain("MEOK AI Labs, a separate entity publishing from the same account, is counted on its own and never added to CSOAI's figures: 2,746,597 gross downloads since first release — state PARTIAL, 317 of 318 counters answered, so it is a LOWER BOUND");
-    expect(lines[2]).toContain("228,554 in the last 30 days — state PARTIAL, 317 of 318 counters answered, so it is a LOWER BOUND");
+    const rows = csoaiRows(d);
+    const others = rows.filter((p) => !isSelf(p));
+    const own = rows.filter(isSelf);
+    expect(lines[0]).toBe(`- CSOAI packages, without the 10 datasets our own services read, since first release (cumulative): ${fmt(sumOf(others, "downloads_all_time"))} gross downloads — state READ, ${others.length} of ${others.length} counters answered. Window: cumulative, all time. as_of ${asOf}.`);
+    expect(lines[1]).toBe(`- CSOAI packages, without the 10 datasets our own services read, in the last 30 days: ${fmt(sumOf(others, "downloads_30d"))} gross downloads — state READ, ${others.length} of ${others.length} counters answered. Window: last 30 days, each registry over its own 30-day window. as_of ${asOf}.`);
+    expect(lines[2]).toContain(`${fmt(sumOf(own, "downloads_all_time"))} gross downloads since first release — state READ, 10 of 10 counters answered; ${fmt(sumOf(own, "downloads_30d"))} in the last 30 days`);
+    for (const w of WINDOWS) expect(sec, "CSOAI's figure with our own reads inside it").not.toContain(fmt(d.by_entity[w].csoai.value));
+    expect(lines[3]).toContain("MEOK AI Labs, a separate entity publishing from the same account, is counted on its own and never added to CSOAI's figures: 2,746,597 gross downloads since first release — state PARTIAL, 317 of 318 counters answered, so it is a LOWER BOUND");
+    expect(lines[3]).toContain("228,554 in the last 30 days — state PARTIAL, 317 of 318 counters answered, so it is a LOWER BOUND");
     for (const total of ["3,852,241", "771,433", "3,637,118", "742,961"]) expect(sec).not.toContain(total);
     expect(sec).toContain("pypi `meok-.github-profile` (labelled meok) — http 404. Its value is null, never 0.");
     expect(sec).toContain("A download is distribution. It is not adoption");
@@ -175,6 +205,8 @@ describe("the producer prints a figure only when the home page would", () => {
       ["CSOAI 30-day row dated before the census", (d) => { d.by_entity.downloads_30d.csoai.as_of = "2026-11-15T04:40:31Z"; }],
       ["CSOAI row covering more than it attempted", (d) => { d.by_entity.downloads_30d.csoai.covered = 213; }],
       ["CSOAI row in an unknown state", (d) => { d.by_entity.downloads_all_time.csoai.state = "UNMEASURED"; }],
+      ["CSOAI package rows one download off by_entity's pair", (d) => { d.packages[0].downloads_30d += 1; }],
+      ["no package rows to take our own reads out of", (d) => { d.packages = d.packages.filter((p: Pkg) => p.entity !== "csoai"); }],
     ];
     for (const [name, breakIt] of broken) {
       const d = census();
@@ -192,16 +224,20 @@ describe("the producer prints a figure only when the home page would", () => {
     const d = census();
     d.by_entity.downloads_30d.meok.value = null;
     const sec = distributionSection(d);
-    expect(figureLines(sec).map((l) => l.slice(0, 16))).toEqual(["- CSOAI packages", "- CSOAI packages"]);
+    expect(figureLines(sec).map((l) => l.slice(0, 16))).toEqual(["- CSOAI packages", "- CSOAI packages", "- The 10 Hugging"]);
     expect(sec).toContain("- MEOK AI Labs' figures are not printed:");
     expect(sec).not.toContain("2,746,597");
   });
 
-  it("prints a PARTIAL CSOAI row as a lower bound", async () => {
+  it("prints a PARTIAL CSOAI row as a lower bound, as the census does", async () => {
     const { distributionSection } = await producer();
     const d = census();
-    d.by_entity.downloads_30d.csoai = row(514000, 211, 212, "PARTIAL");
+    // One of CSOAI's other rows did not answer in the 30-day window, and by_entity says so.
+    d.packages[10].downloads_30d = null;
+    d.by_entity.downloads_30d.csoai = rollUp(csoaiRows(d), "downloads_30d");
+    d.by_entity.downloads_30d.csoai.state = "PARTIAL";
+    const others = csoaiRows(d).filter((p) => !isSelf(p));
     const recent = figureLines(distributionSection(d))[1];
-    expect(recent).toContain("514,000 gross downloads — state PARTIAL, 211 of 212 counters answered, so it is a LOWER BOUND over those, never a total over all of them.");
+    expect(recent).toContain(`${fmt(sumOf(others, "downloads_30d"))} gross downloads — state PARTIAL, ${others.length - 1} of ${others.length} counters answered, so it is a LOWER BOUND over those, never a total over all of them.`);
   });
 });
