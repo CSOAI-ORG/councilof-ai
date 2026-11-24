@@ -87,6 +87,26 @@ class ReadOnlyHeartbeatTests(unittest.TestCase):
         x["metrology_ci"]["workflow_runs"][0]["created_at"] = "2026-11-25T12:00:00Z"
         self.assertEqual(oh.make_snapshot(x, NOW)["source_observations"]["metrology_ci"]["state"], "UNKNOWN")
 
+    def test_nonmaster_pr_only_ci_is_reported_with_branch_boundary(self):
+        x = valid_sources()
+        x["metrology_ci"]["workflow_runs"][0]["head_branch"] = "research/check-standard"
+        y = oh.make_snapshot(x, NOW)["source_observations"]["metrology_ci"]
+        self.assertEqual(y["state"], "SUCCEEDED_NONMASTER_SOURCE_ONLY")
+        self.assertEqual(y["run_head_branch"], "research/check-standard")
+
+    def test_unattributed_ci_cannot_claim_master(self):
+        x = valid_sources()
+        y = oh.make_snapshot(x, NOW)["source_observations"]["metrology_ci"]
+        self.assertEqual(y["state"], "SUCCEEDED_UNATTRIBUTED_SOURCE_ONLY")
+        self.assertIsNone(y["run_head_branch"])
+
+    def test_master_attributed_ci_remains_source_only(self):
+        x = valid_sources()
+        x["metrology_ci"]["workflow_runs"][0]["head_branch"] = "master"
+        y = oh.make_snapshot(x, NOW)["source_observations"]["metrology_ci"]
+        self.assertEqual(y["state"], "SUCCEEDED_SOURCE_ONLY")
+        self.assertNotIn("deployed", json.dumps(y).lower())
+
     def test_skipped_workflow_not_green(self):
         x = valid_sources()
         x["metrology_ci"]["workflow_runs"][0]["conclusion"] = "skipped"
