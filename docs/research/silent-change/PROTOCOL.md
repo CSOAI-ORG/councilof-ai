@@ -66,3 +66,34 @@ Same code, same items, same statistic, same flag rule, under the public model na
 ## 10. Addendum 1 (22 Nov 2026, still before any data): data-quality gate
 
 If more than 5 percent of the calls of a batch fail at the transport (network error, timeout, an HTTP error other than a refusal of credentials), the batch is `UNCHECKABLE`: it is not compared, not counted as a flag and not counted in any rate. A failed fetch is never read as "unchanged" or "changed". `UNPARSED` answers are not transport failures; they stay a category. Sections 1 to 9 are unchanged. This is recorded in `protocol.json` under `addendum_1`.
+
+## 11. Addendum 2 (23 Nov 2026, still before any data): the open-model calibration as it will run
+
+Written and committed before any calibration batch exists. Sections 1 to 10, the statistic and the flag rule are unchanged. The machine-readable twin is `addendum_2` in `protocol.json`. What changes is only how section 7 is carried out.
+
+**Model.** Qwen2.5-0.5B-Instruct as GGUF files (Apache-2.0), served on the GitHub-hosted runner by the `llama-server` of llama.cpp release b12651 (pinned by tag and sha256). Three files, each pinned by repository, revision commit, file name and sha256 (listed in `addendum_2` and in `calibration-pins.json`). Each sha256 was checked on 23 Nov by downloading the file once into a scratch folder outside the clone and hashing it; the three hashes equal the ones the hub lists.
+
+**Conditions as run.**
+
+| Condition | What is done | Trials |
+|---|---|---|
+| BASE | 0.5B Q8_0, temperature 0, no system prompt (the one baseline batch) | 1 |
+| C0 | the same file, run again | 30 |
+| C1 | a sibling model: 1.5B Q8_0, otherwise the same | 10 |
+| C2 | the same 0.5B weights, Q4_K_M instead of Q8_0 | 10 |
+| C3 | the 0.5B Q8_0 with one added system sentence, "Read the question carefully before answering." | 10 |
+| C4 | the 0.5B Q8_0 at temperature 0.5 | 10 |
+| BASE5 | 0.5B Q8_0 at temperature 0.5 (the one baseline batch for C5) | 1 |
+| C5 | the same as BASE5, run again (no change, answers varying) | 20 |
+
+Two departures from section 7, both made now. (1) C1 was "a different revision of the same model". No such thing exists for these files: the 0.5B GGUF files carry the same sha256 in the first and second commits of their repository and in the current one, so there is nothing different to run. C1 is the sibling model instead. It is a bigger change than a revision would be, so a flag in C1 says less about small changes. (2) C5 is new. At temperature 0 on a serial local server a file repeats its answers, so C0 may show no movement at all, which says little about false flags when answers vary. C5 asks the false-flag question while the model is sampling. It is a second false-flag rate beside C0, and it is reported whatever it shows. Total: 92 batches of 600 calls, 55,200 calls.
+
+**Why this fits free compute.** A GitHub-hosted job may run 6 hours; a matrix may have 256 jobs; the Free plan allows 20 concurrent jobs (all read on 23 Nov from the `github/docs` source of the limits page; this repository's plan is unverified, so at most 8 jobs run at once). The 92 batches are cut into jobs of a few batches each, grouped by model file, each job planned at about an hour against a limit of six. The full registered plan runs; nothing is shrunk, so nothing in power is lost. A smaller smoke run exists (`trials_scale`) and is not calibration.
+
+**Completeness.** The combined report is signed only if every registered batch is present and comparable. A missing batch is named, and a report with one is not signed. Rates are those of section 7: flags over comparable trials, exact Wilson 95% interval, mean T, for each of C0 to C5. Reading aids fixed now: 0 flags in 30 trials leaves an upper bound near 0.11; 0 in 20 near 0.16; 10 of 10 flags leave a lower bound near 0.72.
+
+**Second view.** An illustrative CUSUM and Shewhart reading of each condition's T series, run with `measurement/experiments/metrology-controls/check_standard.py`. Its reference and spread come from resampling the baseline batch alone, its clock is the trial order, and it has no established false-alarm rate. It changes no flag, no rate and nothing that is signed.
+
+**Rehearsal.** A local run on 2 items and 3 repeats proves the pipeline before the first Actions run. Its rows are never published, never signed and never counted; the report refuses a batch marked as rehearsal.
+
+**Still true.** A flag is a detected change in answer behaviour on the probe items. It is not a cause, and nothing here says safe, unsafe, degraded or certified. The open model served on a runner is a different arm from a hosted endpoint; no cross-claim is made.

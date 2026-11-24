@@ -1,0 +1,48 @@
+name: Assurance evidence-effect fault twin (synthetic only)
+
+on:
+  pull_request:
+    paths:
+      - 'measurement/experiments/assurance-fault-twin/**'
+      - '.github/workflows/assurance-fault-twin.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fault-injection-synthetic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run adversarial negative controls (no external effects)
+        run: python3 measurement/experiments/assurance-fault-twin/test_fault_twin.py
+      - name: Exhaustively enumerate toy fault conditions
+        run: |
+          mkdir -p /tmp/csoai-synthetic-assurance-faults
+          python3 measurement/experiments/assurance-fault-twin/fault_twin.py \
+            --output /tmp/csoai-synthetic-assurance-faults/synthetic-fault-sweep.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path('/tmp/csoai-synthetic-assurance-faults/synthetic-fault-sweep.json').read_text())
+          assert a['sweep']['total_cases'] == 1024
+          assert sum(a['sweep']['counts'].values()) == 1024
+          assert a['sweep']['actual_recipient_effect_verified'] is False
+          assert a['sweep']['actual_human_authority_verified'] is False
+          assert a['sweep']['production_policy_mutated'] is False
+          print('SYNTHETIC_ONLY. No human decision, real effect or safety certification.')
+          PY
+      - name: Retain synthetic-only experiment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-assurance-fault-sweep-${{ github.run_id }}
+          path: /tmp/csoai-synthetic-assurance-faults/synthetic-fault-sweep.json
+          if-no-files-found: error
+          retention-days: 30

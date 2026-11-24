@@ -170,8 +170,8 @@ export default function ConnectHub() {
           <p className="t-kicker ink-kicker">Connect · MCP · A2A · HTTP</p>
           <h1 className="t-band mt-3 max-w-3xl text-white">Use GSPC in your workflow.</h1>
           <p className="t-lede mt-4 max-w-2xl ink-muted">
-            Read published evidence in an agent, show it in your product, or discuss a scoped measurement
-            for a business decision. The free MCP door needs no account or key. Verification stays free.
+            Ask your assistant to find a measurement for a model you use, show the evidence behind it or check
+            whether a claim has changed. The free MCP connection needs no account or key. Verification stays free.
           </p>
           {/* 22 Nov 2026: the door's address first appeared 1,186 px down at 1440 px, below the page's own
               "Was this helpful?" card. A developer's first screen now carries the one line that connects. */}
@@ -187,7 +187,9 @@ export default function ConnectHub() {
             {[
               ["#choose", "Choose your starting point"],
               ["#free", "Free MCP door"],
-              ["#platforms", "GSPC in your platform"],
+              ["#platforms", "Find your AI platform"],
+              ["https://github.com/Council-of-AI-CSOAI-org/csoai-agent-plugin", "Open-source agent plugin and install guide"],
+              ["/tools/#extension", "Chrome toolbar extension"],
               ["#stacks", "Install into your stack"],
               ["#agent-skills", "Portable Agent Skills & renderers"],
               ["#full", "Full MCP endpoint"],

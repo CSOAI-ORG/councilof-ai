@@ -100,5 +100,114 @@
     "before_any_data": true,
     "data_quality_gate": "if more than 5 percent of the calls of a batch fail at the transport (network error, timeout, HTTP error other than a refusal of credentials), the batch is UNCHECKABLE: it is not compared, not counted as a flag and not counted in any rate. A failed fetch is never read as 'unchanged' or 'changed'. UNPARSED answers are not transport failures; they stay a category.",
     "max_transport_error_share": 0.05
+  },
+  "addendum_2": {
+    "added_on": "2026-11-23",
+    "before_any_data": true,
+    "scope": "calibration run on free GitHub-hosted runners; sections 1 to 6 and the statistic, the flag rule and addendum_1 are unchanged",
+    "open_model": {
+      "family": "Qwen2.5-0.5B-Instruct GGUF (Apache-2.0), served by llama.cpp release b12651 llama-server on the runner",
+      "licence": "apache-2.0",
+      "files": {
+        "q05-q8": {
+          "repo": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+          "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+          "filename": "qwen2.5-0.5b-instruct-q8_0.gguf",
+          "sha256": "ca59ca7f13d0e15a8cfa77bd17e65d24f6844b554a7b6c12e07a5f89ff76844e"
+        },
+        "q05-q4": {
+          "repo": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+          "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+          "filename": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+          "sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db"
+        },
+        "q15-q8": {
+          "repo": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+          "revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+          "filename": "qwen2.5-1.5b-instruct-q8_0.gguf",
+          "sha256": "d7efb072e7724d25048a4fda0a3e10b04bdef5d06b1403a1c93bd9f1240a63c8"
+        }
+      },
+      "llama_cpp": {
+        "tag": "b12651",
+        "asset": "llama-b12651-bin-ubuntu-x64.tar.gz",
+        "sha256": "17b242259181d5b1b1f7719aba27929700a8b0dab39bfaef1b971a992b397b38"
+      },
+      "server": "one serial request at a time, prompt cache off (cache_prompt false), context 2048, a fixed server seed per shard, the model's own chat template; no other sampling setting is changed"
+    },
+    "conditions_as_run": {
+      "BASE": {
+        "file": "q05-q8",
+        "temperature": 0,
+        "system": null,
+        "batches": 1,
+        "role": "the one baseline batch for C0 to C4"
+      },
+      "C0": {
+        "file": "q05-q8",
+        "temperature": 0,
+        "system": null,
+        "trials": 30,
+        "expected": "no flag"
+      },
+      "C1": {
+        "file": "q15-q8",
+        "temperature": 0,
+        "system": null,
+        "trials": 10,
+        "expected": "flag",
+        "change": "a sibling model (Qwen2.5-1.5B-Instruct, same Q8_0 quantisation). Replaces 'a different revision of the same model': the 0.5B GGUF files have the same sha256 in every revision of their repository (checked 23 Nov for the first and the second commit), so no different revision exists to run."
+      },
+      "C2": {
+        "file": "q05-q4",
+        "temperature": 0,
+        "system": null,
+        "trials": 10,
+        "expected": "flag",
+        "change": "the same weights quantised Q4_K_M instead of Q8_0"
+      },
+      "C3": {
+        "file": "q05-q8",
+        "temperature": 0,
+        "system": "Read the question carefully before answering.",
+        "trials": 10,
+        "expected": "flag"
+      },
+      "C4": {
+        "file": "q05-q8",
+        "temperature": 0.5,
+        "system": null,
+        "trials": 10,
+        "expected": "flag"
+      },
+      "BASE5": {
+        "file": "q05-q8",
+        "temperature": 0.5,
+        "system": null,
+        "batches": 1,
+        "role": "the one baseline batch for C5"
+      },
+      "C5": {
+        "file": "q05-q8",
+        "temperature": 0.5,
+        "system": null,
+        "trials": 20,
+        "expected": "no flag",
+        "change": "none: the no-change control while the model is sampling, compared with BASE5"
+      }
+    },
+    "why_c5": "At temperature 0 on a serial local server the same file is expected to repeat its answers, so C0 may show exactly no movement and then says little about false flags under run-to-run noise. C5 is the same no-change test while answers vary. It is a second false-flag rate, reported beside C0. It was added before any data and is never dropped if it goes badly.",
+    "batch_total": 92,
+    "sharding": "batches are grouped by model file and cut into jobs of equal size. The size comes from a seconds-per-batch planning constant in calibration-pins.json; it changes which job runs a batch, never what a batch is, so it is not a method parameter. Every comparison is against the one baseline batch of its own kind.",
+    "completeness": "the combined report is signed only if every registered batch is present. A missing or UNCHECKABLE batch is reported as such and counted out of the denominator of its condition; a report with a missing batch is not signed.",
+    "rates": "for each of C0 to C5: flags / comparable trials, exact Wilson 95% interval, mean T, as in section 7. Reading aids: with 0 flags in 30 trials the upper bound is about 0.11 and with 0 in 20 about 0.16; 10 of 10 flags give a lower bound of about 0.72.",
+    "second_view": "an illustrative CUSUM and Shewhart view of the per-trial T series (measurement/experiments/metrology-controls/check_standard.py). Its reference and spread come from resampling the baseline batch alone, its time axis is the trial order, and it carries no false-alarm rate. It never changes a flag, a rate or the signed payload.",
+    "rehearsal": "a local run on 2 items and 3 repeats proves the pipeline. Its rows are never published, never signed and never counted; the report refuses any batch marked rehearsal.",
+    "runner_limits": {
+      "job_time_limit_hours": 6,
+      "job_matrix_limit": 256,
+      "free_plan_concurrent_jobs": 20,
+      "source": "docs.github.com/en/actions/reference/limits (the github/docs source file, read 23 Nov 2026); the plan of this repository is unverified, so the matrix runs at most 8 jobs at once"
+    }
   }
 }
