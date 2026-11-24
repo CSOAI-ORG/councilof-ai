@@ -125,7 +125,7 @@ class ResearchCommonsTests(unittest.TestCase):
         old = c.collect(None, now=NOW - timedelta(days=1), fetch=stub_fetch)
         new_head = "f" * 40
         def changed(url, *, token=None):
-            if url.endswith("/commits?per_page=1") and "NVIDIA/OpenShell" in url:
+            if url.endswith("/commits?per_page=1") and "ai-openshell/openshell" in url:
                 return [{"sha": new_head}]
             return stub_fetch(url, token=token)
         today = c.collect(old, now=NOW, fetch=changed)
@@ -142,7 +142,7 @@ class ResearchCommonsTests(unittest.TestCase):
 
     def test_partial_source_fails_to_claim_global_freshness(self):
         def partial(url, *, token=None):
-            if "NVIDIA/OpenShell" in url:
+            if "ai-openshell/openshell" in url:
                 raise c.Uncheckable("SOURCE_HTTP_429")
             return stub_fetch(url, token=token)
         r = c.collect(None, now=NOW, fetch=partial)
@@ -208,8 +208,8 @@ class ResearchCommonsTests(unittest.TestCase):
                 c.allow_url(address)
 
     def test_exact_api_paths_accepted(self):
-        c.allow_url("https://api.github.com/repos/NVIDIA/OpenShell")
-        c.allow_url("https://api.github.com/repos/NVIDIA/OpenShell/commits?per_page=1")
+        c.allow_url("https://api.github.com/repos/ai-openshell/openshell")
+        c.allow_url("https://api.github.com/repos/ai-openshell/openshell/commits?per_page=1")
         c.allow_url("https://api.crossref.org/works?rows=3")
 
     def test_source_slug_with_path_traversal_refused(self):
