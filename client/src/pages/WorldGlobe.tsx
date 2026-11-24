@@ -396,7 +396,7 @@ export default function WorldGlobe() {
             <div><span className="font-bold text-cyan-200">{pubLoading ? "Published records · loading from public addresses…" : pub ? legendLine(pub) : ""}</span>{mode !== "3d" && " · drawn on the 3D globe only"}{!pubOn && " · layer hidden"}</div>
             <div className="text-white/50">Cyan: measured by Council of AI. Violet: reported by another organisation, re-published here. Amber Watchdog and swarm layers are illustrations and are separate. Automated, unreviewed. Measurement, not certification.</div>
             {pub && pub.omitted.length > 0 && <details className="text-white/50"><summary className="cursor-pointer">{pub.omitted.length} sources omitted or kept off the globe</summary><ul className="list-disc pl-5">{pub.omitted.map((o, i) => <li key={i}>{o.source}: {o.reason}</li>)}</ul></details>}
-            {pubSel && <div className="mt-1 rounded border border-white/10 p-2 text-white/80">{pubSel.place} · as_of {pubSel.as_of} · <a className="underline" href={pubSel.record_address}>record</a> · <a className="underline" href={pubSel.verifier}>free verifier</a> · {pubSel.review}</div>}
+            {pubSel && <div className="mt-1 rounded border border-white/10 p-2 text-white/80">{pubSel.place} · as_of {pubSel.as_of} · <a className="underline" href={pubSel.record_address}>record</a> · <a className="underline" href={pubSel.verifier}>free verifier</a> · {pubSel.review}<div className="text-white/50">Place: {pubSel.place_basis}</div></div>}
           </div>
         </div>
         <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-6 min-h-[260px]">

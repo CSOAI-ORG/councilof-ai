@@ -57,20 +57,28 @@ export interface FeedInputs {
   labour: FeedResult;
 }
 
-// Publisher seats. The place is where the publisher of the source sits; it says nothing about
-// where an event happened. "unverified": compiled by us from the publishers' public pages, not
-// re-read on 24 Nov 2026. Sources with no single seat (foundations, registries, companies with
-// several seats) are deliberately absent and are listed as omitted.
-export const PUBLISHER_SEATS: Record<string, { place: string; lng: number; lat: number }> = {
-  "cisa-kev": { place: "Washington DC area, US (CISA)", lng: -77.04, lat: 38.9 },
-  "nvd-cve-api": { place: "Washington DC area, US (NIST)", lng: -77.04, lat: 38.9 },
-  "mitre-cve": { place: "McLean VA, US (MITRE)", lng: -77.18, lat: 38.93 },
-  "atlas-current": { place: "McLean VA, US (MITRE)", lng: -77.18, lat: 38.93 },
-  "atlas-manifest": { place: "McLean VA, US (MITRE)", lng: -77.18, lat: 38.93 },
-  "ghsa-api": { place: "San Francisco, US (GitHub)", lng: -122.42, lat: 37.77 },
-  "osv-query": { place: "Mountain View, US (Google)", lng: -122.08, lat: 37.42 },
-  "go-vuln": { place: "Mountain View, US (Google)", lng: -122.08, lat: 37.42 },
-  "depsdev": { place: "Mountain View, US (Google)", lng: -122.08, lat: 37.42 },
+// Publisher seats. The place is the address the publisher gives for itself on its own page; it
+// says nothing about where an event happened. Each page named in `basis` was read on
+// 24 Nov 2026 and the stamp carries it. Coordinates are city-level. A publisher that states no
+// single address (foundations, registries) is deliberately absent and is listed as omitted.
+// MITRE names two principal locations (Bedford MA and McLean VA) and is drawn at the one its
+// own page labels "Main Campus". NIST's stated address is Gaithersburg MD, not Washington DC.
+type Seat = { place: string; lng: number; lat: number; basis: string };
+const CISA: Seat = { place: "Washington DC, US (CISA mailing address)", lng: -77.04, lat: 38.9, basis: "https://www.cisa.gov/about/contact-us" };
+const NIST: Seat = { place: "Gaithersburg MD, US (NIST)", lng: -77.22, lat: 39.14, basis: "https://www.nist.gov/visit" };
+const MITRE: Seat = { place: "McLean VA, US (MITRE main campus; Bedford MA is its other principal location)", lng: -77.2, lat: 38.92, basis: "https://www.mitre.org/locations" };
+const GITHUB: Seat = { place: "San Francisco, US (GitHub)", lng: -122.39, lat: 37.78, basis: "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" };
+const GOOGLE: Seat = { place: "Mountain View, US (Google)", lng: -122.08, lat: 37.42, basis: "https://about.google/company-info/locations/" };
+export const PUBLISHER_SEATS: Record<string, Seat> = {
+  "cisa-kev": CISA,
+  "nvd-cve-api": NIST,
+  "mitre-cve": MITRE,
+  "atlas-current": MITRE,
+  "atlas-manifest": MITRE,
+  "ghsa-api": GITHUB,
+  "osv-query": GOOGLE,
+  "go-vuln": GOOGLE,
+  "depsdev": GOOGLE,
 };
 
 const EU_SEAT = { place: "EU27 aggregate, drawn at Brussels", lng: 4.35, lat: 50.85 };
@@ -111,7 +119,7 @@ export function mapPublishedRecords(input: FeedInputs): PublishedRecords {
           claim: String(s.name || s.source_id), ts: asOf, layer: PUBLISHED_LAYER,
           payload: {
             layer: PUBLISHED_LAYER, layer_class: "measured", record_address: abs(runArtifact), as_of: asOf, verifier: VERIFIER_URL,
-            place: seat.place, place_basis: "publisher's seat (unverified)", review: AUTOMATED,
+            place: seat.place, place_basis: "address the publisher gives for itself, read 24 Nov 2026 at " + seat.basis + (n ? "; pin moved east so pins at one address do not overlap" : ""), review: AUTOMATED,
             detail: {
               source_id: s.source_id, state: s.state, kind: s.kind, http_status: s.http_status,
               count: s.count, count_kind: s.count_kind,
