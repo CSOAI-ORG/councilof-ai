@@ -468,6 +468,43 @@ function rows(pairs) {
     `</tbody>`;
 }
 
+const panelGroups = {
+  empty: "market-coverage",
+  census: "market-coverage",
+  health: "read",
+  doors: "read",
+  honesty: "read",
+};
+const workspacePanels = [...document.querySelectorAll(".workspace-content > section")];
+const workspaceLinks = [...document.querySelectorAll('.workspace-nav a[href^="#"]')];
+let activePanel = "ontology";
+
+function showPanel(id) {
+  if (!workspacePanels.some((panel) => panel.id === id)) return;
+  activePanel = panelGroups[id] || id;
+  for (const panel of workspacePanels) {
+    panel.hidden = (panelGroups[panel.id] || panel.id) !== activePanel;
+  }
+  for (const link of workspaceLinks) {
+    if (link.hash === `#${activePanel}`) link.setAttribute("aria-current", "location");
+    else link.removeAttribute("aria-current");
+  }
+}
+
+function readHash() {
+  try {
+    return decodeURIComponent(location.hash.slice(1));
+  } catch {
+    return "";
+  }
+}
+
+function showLocation() {
+  const id = readHash();
+  if (axisOf(id)) openAxis(id);
+  else if (id !== "desk") showPanel(id || "ontology");
+}
+
 function openAxis(name, updateOnly = false) {
   const a = axisOf(name);
   if (!a) return;
@@ -480,7 +517,10 @@ function openAxis(name, updateOnly = false) {
     renderLeaderboard(name);
   }
   const desk = document.getElementById("desk");
-  desk.hidden = false;
+  if (!updateOnly) {
+    document.getElementById("axis-back").href = `#${activePanel === "desk" ? "ontology" : activePanel}`;
+    showPanel("desk");
+  }
   const on = measuredOf(a);
   document.getElementById("desk-kicker").textContent = on ? "Published finding" : "Published empty slot";
   document.getElementById("desk-h").textContent = a.axis;
@@ -577,7 +617,11 @@ function openAxis(name, updateOnly = false) {
   links.push(`<a href="${API}?axis=${encodeURIComponent(a.axis)}" target="_blank" rel="noreferrer">Live axis</a>`);
   links.push(`<a href="${VERIFY}" target="_blank" rel="noreferrer">Verify a card</a>`);
   document.getElementById("desk-links").innerHTML = links.join("");
-  if (!updateOnly) desk.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  if (!updateOnly) {
+    const title = document.getElementById("desk-h");
+    title.tabIndex = -1;
+    title.focus();
+  }
 }
 
 function renderRead() {
@@ -794,7 +838,7 @@ function refreshStatus(failures) {
 function renderCurrentBoard() {
   if (selected && !axisOf(selected)) {
     selected = null;
-    document.getElementById("desk").hidden = true;
+    if (activePanel === "desk") showPanel("ontology");
   }
   if (BOARD) {
     printLid(BOARD);
@@ -810,8 +854,7 @@ function renderCurrentBoard() {
     renderHonesty();
     if (restoreHash) {
       restoreHash = false;
-      const hash = decodeURIComponent((location.hash || "").replace(/^#/, ""));
-      if (hash && axisOf(hash)) openAxis(hash);
+      showLocation();
     }
     if (selected) openAxis(selected, true);
   }
@@ -875,10 +918,16 @@ function stopRefresh() {
 }
 
 function boot() {
+  showPanel("ontology");
+  showLocation();
   renderRead();
   renderDoors();
   document.getElementById("q").addEventListener("input", () => {
     query = document.getElementById("q").value;
+    if (query.trim() && !["ontology", "tape-table", "boards", "hub-cells", "models"].includes(activePanel)) {
+      history.replaceState(null, "", "#ontology");
+      showPanel("ontology");
+    }
     applySearch();
   });
   document.getElementById("watch-add").addEventListener("click", addLookup);
@@ -890,10 +939,7 @@ function boot() {
 }
 
 boot();
-window.addEventListener("hashchange", () => {
-  const hash = decodeURIComponent((location.hash || "").replace(/^#/, ""));
-  if (hash && axisOf(hash)) openAxis(hash);
-});
+window.addEventListener("hashchange", showLocation);
 
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) refreshBoard();

@@ -23,6 +23,9 @@ class Element extends EventTarget {
     this.scrolls = 0;
   }
   getAttribute(name) { return this.attrs[name] ?? null; }
+  setAttribute(name, value) { this.attrs[name] = value; }
+  removeAttribute(name) { delete this.attrs[name]; }
+  focus() { this.focused = true; }
   scrollIntoView() { this.scrolls++; }
   querySelectorAll(selector) {
     const key = selector.includes("data-pillar") ? "data-pillar" : "data-axis";
@@ -84,6 +87,14 @@ function harness({ initial = fixtures(), hash = "" } = {}) {
     return bodies.get(selector);
   };
   document.querySelectorAll = (selector) => {
+    if (selector === ".workspace-content > section") {
+      return [...html.split('<main class="workspace-content"')[1].split("</main>")[0].matchAll(/<section id="([^"]+)"/g)]
+        .map(([, id]) => Object.assign(elements.get(id), { id }));
+    }
+    if (selector.startsWith(".workspace-nav")) {
+      return [...html.split('<nav class="workspace-nav"')[1].split("</nav>")[0].matchAll(/href="(#[^"]+)"/g)]
+        .map(([, hash]) => Object.assign(new Element(), { hash }));
+    }
     const match = /^#([\w-]+) (.+)$/.exec(selector);
     return elements.get(match[1]).querySelectorAll(match[2]);
   };
@@ -387,4 +398,22 @@ test("a valid empty snapshot clears stale leaderboard and detail rather than inv
   assert.match(h.body("#lb-table tbody").innerHTML, /No axes in the current board/);
   assert.doesNotMatch(h.body("#lb-table tbody").innerHTML, /model-1/);
   assert.doesNotMatch(h.el("board-refresh-status").textContent, /Latest read failed/);
+});
+
+test("navigates panels and deep links without reopening a hidden axis on refresh", async () => {
+  const h = harness({ hash: "#safety" });
+  await flush();
+  assert.equal(h.el("desk").hidden, false);
+  assert.equal(h.el("ontology").hidden, true);
+  assert.equal(h.el("desk-h").textContent, "safety");
+  h.location.hash = "#models";
+  h.window.dispatchEvent(new Event("hashchange"));
+  assert.equal(h.el("models").hidden, false);
+  assert.equal(h.el("desk").hidden, true);
+  h.tick();
+  await flush();
+  assert.equal(h.el("desk").hidden, true);
+  h.location.hash = "#%xx";
+  h.window.dispatchEvent(new Event("hashchange"));
+  assert.equal(h.el("ontology").hidden, false);
 });
