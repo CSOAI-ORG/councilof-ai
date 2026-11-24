@@ -38,9 +38,9 @@ DEFAULT_OUTPUT = "public/interop/auto-eat/research-commons.json"
 # Explicit inclusion = relevant to Council's existing architecture, NOT a
 # relationship, endorsement, licence to redistribute source, or certification.
 SOURCES = (
-    ("NVIDIA/OpenShell", "sandbox_runtime", "DENY_ALLOW_POLICY_OBSERVATION"),
+    ("ai-openshell/openshell", "sandbox_runtime", "DENY_ALLOW_POLICY_OBSERVATION"),
     ("NVIDIA/NeMo-Relay", "agent_middleware", "TOOL_LIFECYCLE_TELEMETRY"),
-    ("NVIDIA/NeMo-Guardrails", "runtime_guardrail", "REFUSAL_FALSE_POSITIVE_CONTROLS"),
+    ("NVIDIA-NeMo/Guardrails", "runtime_guardrail", "REFUSAL_FALSE_POSITIVE_CONTROLS"),
     ("langfuse/langfuse", "trace_experiment_platform", "OTEL_EXPERIMENT_SOURCE_CROSSWALK"),
     ("Arize-ai/phoenix", "trace_experiment_platform", "OTEL_LICENSE_AND_DATA_BOUNDARY"),
     ("UKGovernmentBEIS/inspect_ai", "evaluation_framework", "PINNED_TASK_SCORER_REPLAY"),
