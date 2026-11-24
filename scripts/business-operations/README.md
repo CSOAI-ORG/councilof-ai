@@ -3,8 +3,11 @@
 Runs on the existing mill using Python's standard library and no inference calls.
 Every 15 minutes it observes the canonical revenue, GSPC, root, hub-card and x402
 catalogue APIs, plus loopback worker health, available Ollama models and workspace
-free space. Five official regulatory sources refresh every six hours. The curated
-calendar covers 12–26 September 2026; refresh it after that window.
+free space. Five official regulatory sources refresh every six hours. The curated calendar was refreshed on 24 November 2026 with source-checked
+EU AI Act and Ofgem consultation milestones through 16 January 2027, plus a clearly
+labelled internal review. Historical September events remain preserved. This is
+not a comprehensive obligations register and is not a legal applicability finding.
+Review the official sources and update the calendar again before the period ends.
 
 It is a private operating report, not a public score, legal determination, independent
 chain audit or investor traction claim. The existing evidence admission and public

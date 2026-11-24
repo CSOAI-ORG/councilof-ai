@@ -1,71 +1,76 @@
+/** Source-reported *simulation* counts. No live source independently verifies original episodes, signers or real-world effects. */
 export interface SovTownStats {
-  episodes: number;
-  governedCrimes: number;
-  ungovernedCrimes: number;
-  modelsTrained: number;
-  hives: number;
-  passports: number;
+  episodes: number | null;
+  governedCrimes: number | null;
+  ungovernedCrimes: number | null;
+  modelsTrained: number | null;
+  hives: number | null;
+  passports: number | null;
   macUpdated: string;
   vmUpdated: string;
-  /** Honesty bar: where did these numbers come from, and when. */
-  source: "live" | "partial" | "last-known";
+  source: "source-reported" | "partial" | "unavailable";
   fetchedAt: string;
 }
 
-function num(n?: number): number {
-  return typeof n === "number" && !Number.isNaN(n) ? n : 0;
+export const UNKNOWN_SOV_TOWN: SovTownStats = {
+  episodes: null,
+  governedCrimes: null,
+  ungovernedCrimes: null,
+  modelsTrained: null,
+  hives: null,
+  passports: null,
+  macUpdated: "",
+  vmUpdated: "",
+  source: "unavailable",
+  fetchedAt: "",
+};
+
+function count(value: unknown): number | null {
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0 ? value : null;
+}
+function sumIfComplete(a: unknown, b: unknown): number | null {
+  const left = count(a), right = count(b);
+  if (left === null || right === null) return null;
+  return count(left + right);
+}
+function record(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown> : null;
+}
+function updated(value: unknown): string {
+  return typeof value === "string" && value.length <= 80 ? value : "";
 }
 
+/** Read-only: no credential, write, payment, inference or signature verification.
+ * "source-reported" describes an HTTP observation, NOT independently verified events. */
 export async function fetchSovTownStats(): Promise<SovTownStats> {
   const base = "https://proofof.ai/towns";
-  // Last-known values shown ONLY when the live feed is unreachable — and the UI
-  // must say so (source: "last-known"). Never silent fake-live.
-  const fallback: SovTownStats = {
-    episodes: 700_000_000,
-    governedCrimes: 0,
-    ungovernedCrimes: 60_000_000,
-    modelsTrained: 50,
-    hives: 28,
-    passports: 29,
-    macUpdated: "",
-    vmUpdated: "",
-    source: "last-known",
-    fetchedAt: "",
+  const endpoints = ["fleet_status_mac.json", "fleet_status_vm.json", "registry.json"];
+  const responses = await Promise.allSettled(endpoints.map(async name => {
+    const response = await fetch(`${base}/${name}`, { cache: "no-store" });
+    if (!response.ok) return null;
+    return record(await response.json());
+  }));
+  const [mac, vm, registry] = responses.map(r => r.status === "fulfilled" ? r.value : null);
+  const validSources = [mac, vm, registry].filter(Boolean).length;
+  if (validSources === 0) return { ...UNKNOWN_SOV_TOWN };
+  return {
+    episodes: sumIfComplete(mac?.cum_episodes, vm?.cum_episodes),
+    governedCrimes: sumIfComplete(mac?.governed_crimes, vm?.governed_crimes),
+    ungovernedCrimes: sumIfComplete(mac?.ungoverned_crimes, vm?.ungoverned_crimes),
+    modelsTrained: sumIfComplete(mac?.models_trained, vm?.models_trained),
+    hives: count(mac?.hives),
+    passports: count(registry?.count),
+    macUpdated: updated(mac?.updated),
+    vmUpdated: updated(vm?.updated),
+    source: validSources === 3 ? "source-reported" : "partial",
+    fetchedAt: new Date().toISOString(),
   };
-
-  try {
-    const cacheOpt = { next: { revalidate: 300 } } as RequestInit;
-    const [macRes, vmRes, registryRes] = await Promise.all([
-      fetch(`${base}/fleet_status_mac.json`, cacheOpt),
-      fetch(`${base}/fleet_status_vm.json`, cacheOpt),
-      fetch(`${base}/registry.json`, cacheOpt),
-    ]);
-
-    const okCount = [macRes, vmRes, registryRes].filter(r => r.ok).length;
-    if (okCount === 0) return fallback;
-
-    const mac = macRes.ok ? await macRes.json() : {};
-    const vm = vmRes.ok ? await vmRes.json() : {};
-    const registry = registryRes.ok ? await registryRes.json() : {};
-
-    return {
-      episodes: num(mac.cum_episodes) + num(vm.cum_episodes),
-      governedCrimes: num(mac.governed_crimes) + num(vm.governed_crimes),
-      ungovernedCrimes: num(mac.ungoverned_crimes) + num(vm.ungoverned_crimes),
-      modelsTrained: num(mac.models_trained) + num(vm.models_trained),
-      hives: num(mac.hives) || fallback.hives,
-      passports: num(registry.count) || fallback.passports,
-      macUpdated: mac.updated || "",
-      vmUpdated: vm.updated || "",
-      source: okCount === 3 ? "live" : "partial",
-      fetchedAt: new Date().toISOString(),
-    };
-  } catch {
-    return fallback;
-  }
 }
 
-export function formatCount(n: number): string {
+/** Unknown is not zero, and missing data must not display a numeric suffix. */
+export function formatCount(n: number | null): string {
+  if (n === null || !Number.isSafeInteger(n) || n < 0) return "Unknown";
   if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(2)}B`;
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;

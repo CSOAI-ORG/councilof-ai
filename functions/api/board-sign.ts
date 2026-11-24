@@ -38,6 +38,29 @@ function b64urlToBytes(s: string): Uint8Array {
 // endpoints that issue card-v0 leaves, so no two signers can disagree on the preimage.
 const canonical = canonicalBytes;
 
+// Which GitHub Actions workflows may ask for a board signature. Two lists:
+//  - EXACT_WORKFLOW_REFS (22 Nov 2026): one workflow file at refs/heads/master, compared whole. A branch copy of the
+//    file, a longer ref, or a file whose name only contains these words does not match.
+//  - allowedWf: the older rule, unchanged by that addition (any ref whose text contains one of the words). Its name
+//    and one-line form are read by scripts/sign-attest/workflow-shape.test.mjs and scripts/public_root_workflow.test.mjs.
+// The capsule-index entry is the daily measurement-capsule index producer, moved here from oracle-micro-2.
+// The daily-report entry (24 Nov 2026) signs a small pointer to the GSPC daily report: schema, date, file name, the
+// SHA-256 of the report's exact bytes and signed_at (scripts/daily-report/generate_daily_report.py; the report itself is
+// far over the 3 KB cap). scripts/daily-report/check_report.py verifies it under the pinned board key.
+export const EXACT_WORKFLOW_REFS: ReadonlySet<string> = new Set([
+  "CSOAI-ORG/councilof-ai/.github/workflows/capsule-index-daily.yml@refs/heads/master",
+  "CSOAI-ORG/councilof-ai/.github/workflows/silent-change-watch.yml@refs/heads/master",
+  "CSOAI-ORG/councilof-ai/.github/workflows/daily-report.yml@refs/heads/master",
+]);
+const allowedWf = ["public-root", "hf-fin-shells", "hf-inference-mill", "auto-eat-sign"];
+
+export function workflowAdmitted(claims: Record<string, unknown>): boolean {
+  const jobRef = typeof claims.job_workflow_ref === "string" ? claims.job_workflow_ref : "";
+  if (jobRef && EXACT_WORKFLOW_REFS.has(jobRef)) return true;
+  const wf = String(claims.job_workflow_ref || claims.workflow || claims.workflow_ref || "");
+  return allowedWf.some((w) => wf.includes(w));
+}
+
 async function verifyOidc(token: string): Promise<void> {
   const parts = token.split(".");
   if (parts.length !== 3) throw new Error("jwt");
@@ -50,9 +73,7 @@ async function verifyOidc(token: string): Promise<void> {
   const audList = Array.isArray(aud) ? aud : [aud];
   if (!audList.some((a) => typeof a === "string" && allowed.has(a))) throw new Error("aud");
   if (payload.repository !== REPO) throw new Error("repo");
-  const wf = String(payload.job_workflow_ref || payload.workflow || payload.workflow_ref || "");
-  const allowedWf = ["public-root", "hf-fin-shells", "hf-inference-mill", "auto-eat-sign"];
-  if (!allowedWf.some((w) => wf.includes(w))) throw new Error("workflow");
+  if (!workflowAdmitted(payload)) throw new Error("workflow");
   if (typeof payload.exp === "number" && payload.exp * 1000 < Date.now() - 30_000) throw new Error("exp");
   const jwks = (await (await fetch(`${ISS}/.well-known/jwks`)).json()) as { keys: JsonWebKey[] };
   const jwk = jwks.keys.find((k) => (k as JsonWebKey & { kid?: string }).kid === header.kid);

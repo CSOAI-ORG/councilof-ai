@@ -3,8 +3,8 @@
 
 Fetches the governance-lane gold bank from the public HF dataset
 csoai/gspc-master, classifies items into EU AI Act risk tiers via
-frontier provider APIs (credentials supplied through environment
-variables), scores predictions against gold, and writes:
+frontier provider APIs and open models served by Cloudflare Workers AI
+(credentials supplied through environment variables), scores predictions against gold, and writes:
 
   rows.jsonl     one row per (model, item) measurement
   summary.json   per-model accuracy, Wilson CI, unparsed count, status
@@ -37,6 +37,37 @@ LANE = "governance"
 LABELS = ["PROHIBITED", "HIGH_RISK", "LIMITED_RISK", "MINIMAL_RISK"]
 Z95 = 1.959963984540054
 UA = "gspc-continuous-engine/1.0 (CSOAI-ORG/gspc-board)"
+
+# Other lanes read the frozen August per-item banks (one file per board axis) and are
+# asked and graded by the estate's canonical contract, imported rather than copied:
+# harness/gspc-top100/mill_hub_queue.py::axis_prompt builds the prompt and ::read_label
+# reads the answer (the reply must BE one label; anything else is unparsed and leaves
+# the accuracy denominator). A lane pulse is its own series; it is not the board figure.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                "..", "harness", "gspc-top100"))
+from mill_hub_queue import axis_prompt, exact_label_menu, read_label  # noqa: E402
+
+PERITEM_REPO_ID = "csoai/gspc-peritem-rows-2026-08-12"
+LANE_FILES = {
+    "safety": "rows/peritem_agi.jsonl",
+    "continuity": "rows/peritem_asi.jsonl",
+    "provenance": "rows/peritem_prv.jsonl",
+    "cross-reality": "rows/peritem_xr.jsonl",
+    "detector-interop": "rows/peritem_det.jsonl",
+    "art5-safeguard": "rows/peritem_art5.jsonl",
+    "care": "rows/peritem_care.jsonl",
+    "conformance": "rows/peritem_mcp.jsonl",
+    "openness": "rows/peritem_oss.jsonl",
+    "machinery-conformity": "rows/peritem_mach.jsonl",
+    "affect": "rows/peritem_affect.jsonl",
+}
+# Held lanes: the bank is published but is not pulsed until the owner clears it.
+HELD_LANES = {
+    "care": "bank recorded as mixed-construct, re-itemise pending (owner item)",
+}
+PROMPT_FRAME = "eu-ai-act-risk-tier-v1"
+GRADER = "last-occurrence-over-four-labels"
+RAW_LABELS = []
 
 PROMPT_TEMPLATE = (
     "Classify the AI system described below into exactly one EU AI Act risk tier.\n"
@@ -118,6 +149,45 @@ def fetch_bank():
     return bank, source
 
 
+def fetch_lane_bank(lane):
+    """Return (bank, path, labels, raw_labels, file_sha256) for a frozen per-item lane.
+
+    Labels are the bank's own gold column. The canonical menu check refuses a bank
+    that cannot be answered wrongly (one option, or a grading-mode sentinel).
+    """
+    if lane in HELD_LANES:
+        raise SystemExit("lane %s is held: %s" % (lane, HELD_LANES[lane]))
+    path = LANE_FILES[lane]
+    raw = http_get("https://huggingface.co/datasets/%s/resolve/main/%s"
+                   % (PERITEM_REPO_ID, path), timeout=120)
+    file_sha = hashlib.sha256(raw).hexdigest()
+    gold_of = {}
+    raw_labels = set()
+    for line in raw.decode("utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            row = json.loads(line)
+        except ValueError:
+            continue
+        scenario = row.get("item")
+        expected = row.get("expected")
+        if not scenario or expected is None or not str(expected).strip():
+            continue
+        raw_labels.add(str(expected))
+        gold = str(expected).strip().upper()
+        if gold_of.setdefault(scenario, gold) != gold:
+            raise SystemExit("lane %s: item has two gold labels, refusing" % lane)
+    try:
+        menu = exact_label_menu(sorted(raw_labels))
+    except ValueError as refused:
+        raise SystemExit("lane %s is not label-gradable: %s" % (lane, refused))
+    labels = sorted(set(gold_of.values()))
+    bank = sorted(gold_of.items(), key=lambda p: (p[1], p[0]))
+    return bank, path, labels, menu, file_sha
+
+
 def build_panel(bank, limit, offset):
     """Round-robin interleave by gold tier so every pulse is tier-balanced."""
     by_gold = {g: [] for g in LABELS}
@@ -142,6 +212,8 @@ def parse_label(text):
     last-occurrence-wins over the 4 labels. No match -> UNPARSED."""
     if not text:
         return "UNPARSED"
+    if LANE != "governance":
+        return read_label(text, LABELS) or "UNPARSED"
     t = THINK_RE.sub(" ", text)
     t = t.upper().replace("-", "_")
     best, best_idx = None, -1
@@ -150,6 +222,12 @@ def parse_label(text):
         if idx > best_idx:
             best, best_idx = label, idx
     return best if best is not None else "UNPARSED"
+
+
+def build_prompt(scenario):
+    if LANE == "governance":
+        return PROMPT_TEMPLATE.format(scenario=scenario)
+    return axis_prompt(LANE, scenario, RAW_LABELS)
 
 
 class BlockedCredential(Exception):
@@ -197,7 +275,7 @@ def post_json(url, payload, headers, timeout=90, retries=3):
 
 
 def classify(model, scenario, cred):
-    prompt = PROMPT_TEMPLATE.format(scenario=scenario)
+    prompt = build_prompt(scenario)
     if model.startswith("hf:"):
         router_model = model.split(":", 1)[1]
         data = post_json(
@@ -208,6 +286,27 @@ def classify(model, scenario, cred):
             {"Authorization": "Bearer " + cred},
         )
         return data["choices"][0]["message"]["content"]
+    if model.startswith("cf:"):
+        # Cloudflare Workers AI, OpenAI-compatible route: an open model served by
+        # Cloudflare. It is a separate arm from the hf: route to the same weights
+        # (a different serving stack), and is named as such in every row. It reads its
+        # own token, CLOUDFLARE_AI_TOKEN (Workers AI permission only): the deploy token
+        # CLOUDFLARE_API_TOKEN is refused by Workers AI with HTTP 401 (pulse runs of 22-23
+        # Nov 2026) and must not be widened or replaced, because the deploys use it.
+        acct = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "").strip()
+        if not acct:
+            raise BlockedCredential("CLOUDFLARE_ACCOUNT_ID not set")
+        data = post_json(
+            "https://api.cloudflare.com/client/v4/accounts/%s/ai/v1/chat/completions" % acct,
+            {"model": model.split(":", 1)[1],
+             "messages": [{"role": "user", "content": prompt}],
+             "temperature": 0, "max_tokens": 24},
+            {"Authorization": "Bearer " + cred},
+        )
+        try:
+            return data["choices"][0]["message"]["content"]
+        except (KeyError, IndexError, TypeError):
+            raise Unreachable("unexpected response shape")
     if model == "deepseek":
         data = post_json(
             "https://api.deepseek.com/chat/completions",
@@ -250,6 +349,14 @@ PROVIDERS = {
     "deepseek": "DEEPSEEK_API_KEY",
     "gemini": "GEMINI_TOKEN",
     "grok": "GROK_TOKEN",
+    # Open models served by Cloudflare Workers AI (ids as listed by the account on
+    # 22 Nov 2026). The first two are the same weights as two hf: entries above,
+    # reached by another serving route.
+    "cf:@cf/zai-org/glm-5.3": "CLOUDFLARE_AI_TOKEN",
+    "cf:@cf/deepseek-ai/deepseek-v4.1-flash-1017": "CLOUDFLARE_AI_TOKEN",
+    "cf:@cf/meta/llama-4-scout-17b-16e-instruct": "CLOUDFLARE_AI_TOKEN",
+    "cf:@cf/google/gemma-4-26b-a4b-it": "CLOUDFLARE_AI_TOKEN",
+    "cf:@cf/mistralai/mistral-small-3.1-24b-instruct": "CLOUDFLARE_AI_TOKEN",
 }
 
 
@@ -275,12 +382,24 @@ def main():
                     help="rotational offset into the tier-balanced panel")
     ap.add_argument("--out-dir", default="out")
     ap.add_argument("--run-id", default=None)
+    ap.add_argument("--lane", default="governance",
+                    choices=["governance"] + sorted(LANE_FILES),
+                    help="board lane to pulse (default: governance)")
     args = ap.parse_args()
 
     run_id = args.run_id or utc_now_stamp()
     started = utc_now_stamp()
 
-    bank, source = fetch_bank()
+    global LANE, LABELS, RAW_LABELS, PROMPT_FRAME, GRADER
+    bank_repo, bank_file_sha = REPO_ID, None
+    if args.lane == "governance":
+        bank, source = fetch_bank()
+    else:
+        LANE = args.lane
+        bank, source, LABELS, RAW_LABELS, bank_file_sha = fetch_lane_bank(args.lane)
+        PROMPT_FRAME = "harness/gspc-top100/mill_hub_queue.py::axis_prompt"
+        GRADER = "harness/gspc-top100/mill_hub_queue.py::read_label"
+        bank_repo = PERITEM_REPO_ID
     panel = build_panel(bank, args.limit, args.offset)
     bank_digest = hashlib.sha256(
         ("\n".join("%s\t%s" % p for p in bank)).encode("utf-8")).hexdigest()[:16]
@@ -350,13 +469,18 @@ def main():
             else:
                 status = "LIVE"
                 reason = None
+            # Canonical lanes: an unparsed reply is not a wrong answer, so it leaves the
+            # denominator. Governance keeps its own rule (unparsed counts against n).
+            graded = n if LANE == "governance" else n - unparsed
             providers_summary[model] = {
                 "status": status,
                 "reason": reason,
                 "n": n, "correct": correct, "unparsed": unparsed,
+                "n_graded": graded,
+                "parse_rate": round((n - unparsed) / n, 4) if n else None,
                 "transport_errors": transport_errors,
-                "accuracy": round(correct / n, 4) if n else None,
-                "wilson95": wilson(correct, n),
+                "accuracy": round(correct / graded, 4) if graded else None,
+                "wilson95": wilson(correct, graded),
             }
             print("[model:%s] %s n=%d acc=%s unparsed=%d"
                   % (model, status, n,
@@ -368,11 +492,16 @@ def main():
         "lane": LANE,
         "repo": "CSOAI-ORG/gspc-board",
         "bank": {
-            "dataset": REPO_ID,
+            "dataset": bank_repo,
             "source_dir": source,
+            "file_sha256": bank_file_sha,
             "unique_pairs": len(bank),
             "sha256_16": bank_digest,
         },
+        "labels": list(LABELS),
+        "prompt_frame": PROMPT_FRAME,
+        "grader": GRADER,
+        "comparable_to_board": False,
         "panel": {"limit": args.limit, "offset": args.offset, "n": len(panel)},
         "started_at": started,
         "finished_at": utc_now_stamp(),

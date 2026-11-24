@@ -8,7 +8,9 @@
  * The axis list is GET /api/gspc → axes[] (never typed). For every row it probes, once each, with a
  * browser user-agent: the row door (/api/gspc?axis=), the per-axis page (/axis/<id>.html), the Hub
  * bank page and its raw README (does the card link this row?), the evidence artifact on the edge
- * and on the public mirror, and the MCP get_axis tool over POST /mcp. It reads the x402 manifest, the
+ * and, when the edge does not answer 200, in the repository's public/ tree on GitHub (until
+ * 21 Nov 2026 that second door was the Hugging Face dataset csoai/councilof-ai-mirror, deleted that
+ * day), and the MCP get_axis tool over POST /mcp. It reads the x402 manifest, the
  * A2A agent card + one gspc-board SendMessage, the live llms.txt and the door-demand (PayAI) record
  * once, and asks of each whether it names the axis. HTTP codes are recorded as returned; a door that
  * did not answer is UNREACHABLE, never 0 and never absent.
@@ -22,7 +24,8 @@ import { fileURLToPath } from "node:url";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = process.env.CSOAI_SITE || "https://councilof.ai";
-const MIRROR = "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main";
+// A door is what a reader can fetch today, so this is the moving master ref, not a pinned commit.
+const MIRROR = "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master";
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36 csoai-axis-doors-probe/0.1";
 const args = process.argv.slice(2);
 const argv = (k) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
@@ -103,7 +106,7 @@ for (const a of axes) {
   const bank = a.dataset_url ? await probe(a.dataset_url) : null;
   const readme = a.dataset ? await probe(`https://huggingface.co/datasets/${a.dataset}/raw/main/README.md`) : null;
   const evidenceEdge = a.evidence_url ? await probe(abs(a.evidence_url)) : null;
-  // Hub resolve answers with a redirect to its CDN; followed, because the bytes are the door.
+  // Any redirect is followed, because the bytes are the door.
   const evidenceMirror = a.evidence_url && evidenceEdge && evidenceEdge.http !== 200 ? await probe(`${MIRROR}/public${a.evidence_url}`, { redirect: "follow" }) : null;
   const call = await mcp("tools/call", { name: "get_axis", arguments: { axis: id } });
   const callJson = call.http === 200 ? sseJson(call.text) : null;
@@ -117,7 +120,7 @@ for (const a of axes) {
     hub_bank: bank ? { ...strip(bank), kind: "frozen bank (Hub)" } : { state: "NONE_ON_ROW", note: "the row carries no dataset; a server probe or fact run is not a bank" },
     hub_card_links_row: readme ? { url: readme.url, http: readme.http, links_board: names(readme.text, "councilof.ai/api/gspc"), links_this_row: names(readme.text, `api/gspc?axis=${id}`), names_axis: names(readme.text, id) } : null,
     evidence_edge: evidenceEdge ? { ...strip(evidenceEdge), kind: "run artifact (edge)" } : { state: "NONE_ON_ROW" },
-    evidence_mirror: evidenceMirror ? { ...strip(evidenceMirror), kind: "run artifact (public mirror)" } : null,
+    evidence_mirror: evidenceMirror ? { ...strip(evidenceMirror), kind: "run artifact (repository copy on GitHub)" } : null,
   };
   const discoverable = {
     llms_txt_live_row_line: llmsLive.http === 200 ? names(llmsLive.text, `api/gspc?axis=${id}`) : "UNREACHABLE",

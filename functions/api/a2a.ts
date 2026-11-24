@@ -26,7 +26,9 @@
  *                              carries a payment; the tool's route settles it (functions/api/_x402.ts),
  *                              fail closed. Until that date every per-tool card named this door and
  *                              the router answered every one of them "unknown skill".
- *   GetTask / CancelTask    -> TaskNotFoundError (-32001): this agent keeps no task store.
+ *   GetTask / CancelTask    -> TaskNotFoundError (-32001): this agent keeps no task store. An x402
+ *                              payment Task (below, X402 TASK) is carried in its own id and is
+ *                              answered only by SendMessage; it is not stored either.
  *   ListTasks               -> UnsupportedOperationError (-32004): nothing to list.
  *   SendStreamingMessage / SubscribeToTask -> UnsupportedOperationError (-32004), which §3.3.4
  *                              requires while capabilities.streaming is false.
@@ -48,7 +50,7 @@
 
 import { DOCTRINE, measurementIndex, serverEvidence, verifyCapsule } from "../_lib/measurementCapsule";
 import { executePlan, routeIntent, type Plan } from "../_lib/talkRouter";
-import { recordUsage } from "../_lib/usage";
+import { paidCallName, recordUsage } from "../_lib/usage";
 import { shapeLabel } from "../_lib/askInput";
 import { evidenceBundlePreview } from "../mcp/_evidence";
 import { routeResult } from "../mcp/_route";
@@ -75,7 +77,8 @@ export const REGISTER =
 const HEADERS: Record<string, string> = {
   "content-type": "application/json; charset=utf-8",
   "access-control-allow-origin": "*",
-  "access-control-allow-headers": "content-type, a2a-version, a2a-extensions",
+  "access-control-allow-headers": "content-type, a2a-version, a2a-extensions, x-a2a-extensions",
+  "access-control-expose-headers": "a2a-version, x-a2a-extensions",
   "access-control-allow-methods": "GET, POST, OPTIONS",
   "cache-control": "no-store",
   "a2a-version": A2A_PROTOCOL_VERSION,
@@ -98,12 +101,13 @@ export const A2A_ERROR = {
 // can read the contract before sending anything.
 export const METHODS: Record<string, string> = {
   SendMessage:
-    "answered with a Message from one explicit {skill,input} selector, or from one plain-text Part that the shared " +
+    "answered with a Message (one case is a Task: a metered skill's x402 challenge to a request that activates the " +
+    "a2a-x402 extension; see tool_skills.payment), from one explicit {skill,input} selector, or from one plain-text Part that the shared " +
     "deterministic router (functions/_lib/talkRouter.ts, also behind POST /api/chat and POST /api/agui/run) places on a " +
     "POST /mcp tool, quoting that tool's output with a citation; text it cannot place is refused. Every card skill routes to a fixed, free, " +
     "same-origin handler. A per-tool skill - a tool name from /.well-known/agents/index.json - runs that tool through the " +
-    "dispatch POST /mcp tools/call runs; the metered ones answer with their x402 challenge until input.x_payment carries a " +
-    "payment. The set is the skills array on this response - read it rather than a number: this " +
+    "dispatch POST /mcp tools/call runs; the metered ones answer with their x402 challenge until input.x_payment or " +
+    "message.metadata[\"x402.payment.payload\"] carries a payment. The set is the skills array on this response - read it rather than a number: this " +
     "string once named a smaller figure than SKILL_IDS actually held, and scripts/capability-registry.mjs --check " +
     "now fails on any skill count typed into this file.",
   SendStreamingMessage: "UnsupportedOperationError -32004 (streaming is false on the card)",
@@ -205,7 +209,46 @@ export function v1MessageTo03(m: Json): Json {
         return { kind: "data", data: p };
       })
     : [];
-  return { kind: "message", messageId: m.messageId, contextId: m.contextId, role: "agent", parts };
+  return {
+    kind: "message",
+    messageId: m.messageId,
+    contextId: m.contextId,
+    ...(typeof m.taskId === "string" ? { taskId: m.taskId } : {}),
+    role: "agent",
+    // The x402 A2A transport's status fields ride in message.metadata. Until 22 Nov 2026 this
+    // mapping dropped metadata, so a 0.3 client never saw x402.payment.status or the challenge.
+    ...(m.metadata && typeof m.metadata === "object" && !Array.isArray(m.metadata) ? { metadata: m.metadata } : {}),
+    parts,
+  };
+}
+
+const V03_TASK_STATES: Record<string, string> = {
+  TASK_STATE_INPUT_REQUIRED: "input-required",
+  TASK_STATE_COMPLETED: "completed",
+  TASK_STATE_FAILED: "failed",
+};
+
+/** v1.0 Task -> 0.3 Task (kind "task", lower-case states, 0.3 parts), for the x402 payment Task. */
+export function v1TaskTo03(t: Json): Json {
+  const status = (t.status && typeof t.status === "object" ? t.status : {}) as Json;
+  const message = status.message && typeof status.message === "object" ? v1MessageTo03(status.message as Json) : undefined;
+  const artifacts = Array.isArray(t.artifacts)
+    ? t.artifacts.map((raw) => {
+        const a = (raw && typeof raw === "object" ? raw : {}) as Json;
+        return { ...a, parts: v1MessageTo03({ parts: a.parts }).parts };
+      })
+    : undefined;
+  return {
+    kind: "task",
+    id: t.id,
+    contextId: t.contextId,
+    status: {
+      state: V03_TASK_STATES[String(status.state)] ?? status.state,
+      timestamp: status.timestamp,
+      ...(message ? { message } : {}),
+    },
+    ...(artifacts ? { artifacts } : {}),
+  };
 }
 
 const record = (v: unknown): Json | null =>
@@ -884,6 +927,208 @@ function a2aPaymentMetadata(result: McpToolResult): Json | null {
 }
 
 /**
+ * X402 TASK — the task half of the x402 A2A transport (lane a2a-x402-task-flow-20261122).
+ *
+ * x402 `specs/transports-v2/a2a.md` and the a2a-x402 extension (v0.1, v0.2) signal "payment
+ * required" with a Task in state input-required, and the client pays by sending a Message that
+ * names that task (taskId) with its PaymentPayload in metadata. This door answered every
+ * SendMessage with a Message, so a client built to either spec never recognised the challenge.
+ *
+ * It is opt-in and stateless:
+ *   - Only a request that activates the extension (X-A2A-Extensions, or A2A-Extensions, naming
+ *     one of A2A_X402_EXTENSION_URIS) gets a Task, and only for a metered skill's unpaid
+ *     challenge. Every other reply is the Message it was before.
+ *   - No task store. The Task's id is "x402-" + base64url of {tool, input, contextId}: the client
+ *     carries its own request back, and the context it belongs to, so a follow-up that names
+ *     only the task stays in the conversation the challenge was issued in. Nothing is trusted from it that the first call did not also send -
+ *     the input is validated against the tool's schema again, and the route verifies the payment
+ *     against its own requirements for that input - so a forged id buys nothing a plain call
+ *     would not. KV was not used: it is eventually consistent, and the paying message follows
+ *     the challenge within seconds.
+ *   - The follow-up runs the same dispatch with the PaymentPayload on the path #4517 built, and
+ *     answers with the Task again: completed with x402.payment.receipts when the route reports a
+ *     settlement, failed with x402.payment.error when the payment was refused. GetTask still
+ *     answers -32001: the SendMessage reply is the only record of an x402 Task.
+ */
+export const A2A_X402_EXTENSION_URIS: readonly string[] = [
+  "https://github.com/google-agentic-commerce/a2a-x402/blob/main/spec/v0.2",
+  "https://github.com/google-agentic-commerce/a2a-x402/blob/main/spec/v0.1",
+  "https://github.com/google-a2a/a2a-x402/v0.1",
+];
+
+/** The x402 extension URI this request activates, or null. Header names per A2A 0.3 and 1.0. */
+export function a2aX402Extension(headers: Headers): string | null {
+  const asked = [headers.get("x-a2a-extensions"), headers.get("a2a-extensions")]
+    .filter((v): v is string => !!v)
+    .join(",")
+    .split(",")
+    .map((v) => v.trim().replace(/\/+$/, ""));
+  return A2A_X402_EXTENSION_URIS.find((uri) => asked.includes(uri)) ?? null;
+}
+
+export const X402_TASK_PREFIX = "x402-";
+export const X402_TASK_ID_MAX = 2048;
+// Arguments that select something other than "buy this": never part of a payment Task.
+const X402_TASK_EXCLUDED_ARGS = ["x_payment", "preview", "purchase_action"];
+
+// Task IDs are reversible base64url; they are NOT opaque, encrypted or authenticated.
+// Only a narrowly defined public, enumerated selection may ride inside one.
+// All free-text subjects, URLs, encoded documents and other paid tool inputs remain
+// on the existing x402 Message path; nobody should log confidential args in a Task ID.
+const PUBLIC_BUNDLE_OBLIGATIONS = new Set(["article-50", "article-53", "dora", "cra"]);
+const PUBLIC_TASK_CONTEXT = /^[A-Za-z0-9_-]{1,80}$/;
+export function x402PublicTaskInput(tool: string, input: Json, contextId?: string): boolean {
+  if (tool !== "evidence_bundle") return false;
+  if (!input || typeof input !== "object" || Array.isArray(input)) return false;
+  if (Object.keys(input).length !== 1 ||
+      typeof input.obligation !== "string" ||
+      !PUBLIC_BUNDLE_OBLIGATIONS.has(input.obligation)) return false;
+  // A context identifier is itself reproduced into the Task ID. Email, URL,
+  // free-text subject and opaque bearer token strings must not ride there.
+  return contextId === undefined || PUBLIC_TASK_CONTEXT.test(contextId);
+}
+
+/** The id of the payment Task for this call, or null when the input is too large to carry. */
+export function x402TaskId(tool: string, input: Json, contextId?: string): string | null {
+  // A blank x_payment and preview:false say nothing; anything else in that list is not a purchase.
+  const carried: Json = { ...input };
+  if (typeof carried.x_payment === "string" && carried.x_payment.trim() === "") delete carried.x_payment;
+  if (carried.preview === false) delete carried.preview;
+  if (X402_TASK_EXCLUDED_ARGS.some((key) => key in carried)) return null;
+  if (!x402PublicTaskInput(tool, carried, contextId)) return null;
+  const json = JSON.stringify({ t: tool, i: carried, ...(contextId ? { c: contextId } : {}) }).replace(
+    /[\u0080-\uffff]/g,
+    (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`,
+  );
+  const id = X402_TASK_PREFIX + btoa(json).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  return id.length <= X402_TASK_ID_MAX ? id : null;
+}
+
+/** What an x402 Task id carries, decoded; null when it is not base64url JSON of an object. */
+function x402TaskBody(taskId: string): Json | null {
+  if (!taskId.startsWith(X402_TASK_PREFIX) || taskId.length > X402_TASK_ID_MAX) return null;
+  try {
+    return record(JSON.parse(atob(taskId.slice(X402_TASK_PREFIX.length).replace(/-/g, "+").replace(/_/g, "/"))));
+  } catch {
+    return null;
+  }
+}
+
+/** The context an x402 Task was issued in, when its id carries one. */
+export function x402TaskContextId(taskId: string): string | null {
+  return str(x402TaskBody(taskId)?.c) ?? null;
+}
+
+/** The call an x402 Task id carries, or null when it is not one this door could have issued. */
+export function x402TaskSelection(taskId: string): ToolSelection | null {
+  try {
+    const decoded = x402TaskBody(taskId);
+    if (decoded && "c" in decoded && !str(decoded.c)) return null;
+    const tool = str(decoded?.t);
+    const input = record(decoded?.i);
+    if (!tool || !input || !PAID_TOOL_NAMES.has(tool) || !TOOL_SKILL_SET.has(tool)) return null;
+    if (X402_TASK_EXCLUDED_ARGS.some((key) => key in input)) return null;
+    if (!x402PublicTaskInput(tool, input, typeof decoded?.c === "string" ? decoded.c : undefined)) return null;
+    return { kind: "TOOL", tool, input };
+  } catch {
+    return null;
+  }
+}
+
+/** The a2a-x402 section 9.1 code for a refusal, read from the reason the route gave. */
+export function x402PaymentErrorCode(reason: string): string {
+  const r = reason.toLowerCase();
+  if (/insufficient|balance|funds/.test(r)) return "INSUFFICIENT_FUNDS";
+  if (/signature/.test(r)) return "INVALID_SIGNATURE";
+  if (/expired|valid_?before|valid_?after/.test(r)) return "EXPIRED_PAYMENT";
+  if (/nonce/.test(r)) return "DUPLICATE_NONCE";
+  if (/network|chain/.test(r)) return "NETWORK_MISMATCH";
+  if (/amount|value/.test(r)) return "INVALID_AMOUNT";
+  // Not SETTLEMENT_FAILED: that code says a transaction failed on-chain, and none was sent.
+  return "VERIFICATION_FAILED";
+}
+
+type X402TaskMode = { extension: string | null; taskId?: string };
+
+/** The x402 payment Task for a metered skill's result. Never invents a settlement. */
+function x402TaskReply(
+  id: unknown,
+  args: {
+    taskId: string;
+    contextId: string;
+    extension: string | null;
+    result: McpToolResult;
+    presented: boolean;
+    textPart: Json;
+    dataPart: Json;
+    /** Set only for a state the tool result cannot express (the client's own rejection). */
+    paymentStatus?: string;
+  },
+): Response {
+  const { result } = args;
+  const structured = record(result.structuredContent) ?? {};
+  const challenge = record(structured.payment_required);
+  let metadata: Json | null = args.paymentStatus
+    ? { "x402.payment.status": args.paymentStatus }
+    : a2aPaymentMetadata(result);
+  // Delivery is what the paid wrapper says was delivered, never the absence of an error: a route
+  // that is not deployed answers NOT_DEPLOYED / NOT_DELIVERED with isError false (a state, not a
+  // fault), and nothing was verified or delivered there.
+  const delivered = structured.status === "DELIVERED" && structured.delivery_state === "DELIVERED";
+  if (!metadata) {
+    metadata =
+      args.presented && delivered
+        ? // Delivered, and the route settles before it delivers, but it reported no settlement here.
+          { "x402.payment.status": "payment-verified", "x402.payment.receipts": [] }
+        : // A payload was received and its outcome is not established, or none was and none was taken.
+          { "x402.payment.status": args.presented ? "payment-submitted" : "payment-required" };
+  } else if (metadata["x402.payment.status"] === "payment-failed" && !("x402.payment.receipts" in metadata)) {
+    const reason =
+      str(record(challenge?.csoai)?.not_paid_reason) ?? str(challenge?.error) ?? "the payment was not accepted";
+    const network = str(record(Array.isArray(challenge?.accepts) ? challenge.accepts[0] : null)?.network);
+    metadata = {
+      ...metadata,
+      "x402.payment.error": x402PaymentErrorCode(reason),
+      "x402.payment.receipts": [{ success: false, errorReason: reason, transaction: "", ...(network ? { network } : {}) }],
+    };
+  }
+  const state =
+    metadata["x402.payment.status"] === "payment-required" && structured.status === "PAYMENT_REQUIRED"
+      ? "TASK_STATE_INPUT_REQUIRED"
+      : delivered
+        ? "TASK_STATE_COMPLETED"
+        : "TASK_STATE_FAILED";
+  const completed = state === "TASK_STATE_COMPLETED";
+  const body = {
+    result: {
+      task: {
+        id: args.taskId,
+        contextId: args.contextId,
+        status: {
+          state,
+          timestamp: new Date().toISOString(),
+          message: {
+            messageId: crypto.randomUUID(),
+            contextId: args.contextId,
+            taskId: args.taskId,
+            role: "ROLE_AGENT",
+            metadata,
+            // The deliverable goes in the artifact once; a challenge or a refusal is read here.
+            parts: completed ? [args.textPart] : [args.textPart, args.dataPart],
+          },
+        },
+        ...(completed ? { artifacts: [{ artifactId: crypto.randomUUID(), name: str(record(args.dataPart.data)?.skill) ?? "result", parts: [args.dataPart] }] } : {}),
+      },
+    },
+  };
+  const res = reply(id, body);
+  if (!args.extension) return res;
+  const headers = new Headers(res.headers);
+  headers.set("x-a2a-extensions", args.extension);
+  return new Response(res.body, { status: res.status, headers });
+}
+
+/**
  * A per-tool skill. The input is validated against the tool's inputSchema first, so a refused
  * input calls no route and forwards no payment. The tool then runs through the dispatch POST /mcp
  * tools/call runs, and its result (content, structuredContent, isError) is quoted unchanged in
@@ -900,6 +1145,7 @@ async function sendToolMessage(
   origin: string,
   caller?: PaidCallerContext,
   metaPayment?: unknown,
+  x402Task?: X402TaskMode,
 ): Promise<Response> {
   const { tool, input } = selection;
   const invalid = await toolInputError(tool, input);
@@ -925,6 +1171,15 @@ async function sendToolMessage(
       });
     caller = { ...caller, metaPayment };
   }
+  // Which field this door read a payment from, said in the reply so a client and the usage row
+  // (a2aPaidCallName) need not infer it. Both at once never reaches here: it was refused above.
+  const paymentChannel = !metered
+    ? undefined
+    : metaPayment !== undefined
+      ? A2A_PAYMENT_FIELD
+      : typeof input.x_payment === "string" && input.x_payment.trim() !== ""
+        ? "input.x_payment"
+        : "none";
   let result: McpToolResult;
   try {
     result = await dispatchTool(tool, input, origin, { paid: true }, caller);
@@ -946,6 +1201,54 @@ async function sendToolMessage(
   const human = (texts.length > 1 && texts[0].trimStart().startsWith("{") ? texts[1] : texts[0]) ?? "";
   const summary = human.split("\n\n")[0].slice(0, 2_000);
   const paymentMetadata = metered ? a2aPaymentMetadata(result) : null;
+  const textPart: Json = {
+    text: [
+      `${tool}: ${state} — run by the dispatch POST /mcp tools/call runs (functions/mcp/_dispatch.ts).`,
+      summary,
+      metered
+        ? "Metered (x402): payment is read from input.x_payment, or from the x402 A2A transport's PaymentPayload in message.metadata[\"x402.payment.payload\"] (one channel per call), and the tool's route settles it, fail closed. With neither, nothing is charged."
+        : "Free: no payment is read or asked for.",
+      REGISTER,
+    ].filter(Boolean).join("\n"),
+    mediaType: "text/plain",
+  };
+  const dataPart: Json = {
+    data: {
+      kind: "TOOL_RESULT",
+      skill: tool,
+      tool,
+      state,
+      metered,
+      ...(paymentChannel ? { payment_channel: paymentChannel } : {}),
+      door: "POST /api/a2a",
+      same_as: `POST /mcp tools/call ${tool}`,
+      card: new URL(`/.well-known/agents/${tool}.json`, origin).toString(),
+      register: REGISTER,
+      result,
+    },
+    mediaType: "application/json",
+  };
+  // X402 TASK (above): a follow-up on a payment Task always answers with that Task; a first call
+  // gets one only when the extension is activated and the answer is the unpaid challenge.
+  if (metered && x402Task) {
+    const taskContext = contextId ?? crypto.randomUUID();
+    const taskId =
+      x402Task.taskId ??
+      (x402Task.extension && paymentChannel === "none" && structured?.status === "PAYMENT_REQUIRED"
+        ? x402TaskId(tool, input, taskContext)
+        : null);
+    if (taskId) {
+      return x402TaskReply(id, {
+        taskId,
+        contextId: taskContext,
+        extension: x402Task.extension,
+        result,
+        presented: paymentChannel !== "none",
+        textPart,
+        dataPart,
+      });
+    }
+  }
   return reply(id, {
     result: {
       message: {
@@ -953,40 +1256,13 @@ async function sendToolMessage(
         contextId: contextId ?? crypto.randomUUID(),
         role: "ROLE_AGENT",
         ...(paymentMetadata ? { metadata: paymentMetadata } : {}),
-        parts: [
-          {
-            text: [
-              `${tool}: ${state} — run by the dispatch POST /mcp tools/call runs (functions/mcp/_dispatch.ts).`,
-              summary,
-              metered
-                ? "Metered (x402): payment is read from input.x_payment, or from the x402 A2A transport's PaymentPayload in message.metadata[\"x402.payment.payload\"] (one channel per call), and the tool's route settles it, fail closed. With neither, nothing is charged."
-                : "Free: no payment is read or asked for.",
-              REGISTER,
-            ].filter(Boolean).join("\n"),
-            mediaType: "text/plain",
-          },
-          {
-            data: {
-              kind: "TOOL_RESULT",
-              skill: tool,
-              tool,
-              state,
-              metered,
-              door: "POST /api/a2a",
-              same_as: `POST /mcp tools/call ${tool}`,
-              card: new URL(`/.well-known/agents/${tool}.json`, origin).toString(),
-              register: REGISTER,
-              result,
-            },
-            mediaType: "application/json",
-          },
-        ],
+        parts: [textPart, dataPart],
       },
     },
   });
 }
 
-async function sendMessage(id: unknown, params: unknown, origin: string, caller?: PaidCallerContext): Promise<Response> {
+async function sendMessage(id: unknown, params: unknown, origin: string, caller?: PaidCallerContext, x402Extension: string | null = null): Promise<Response> {
   const p = record(params);
   const message = record(p?.message);
   if (!message) {
@@ -1011,6 +1287,38 @@ async function sendMessage(id: unknown, params: unknown, origin: string, caller?
       "INVALID_PARAMS",
       { field: "params.message" },
     );
+  }
+  // X402 TASK follow-up: a Message that names a payment Task this door issued. The call comes from
+  // the task id, so the parts (the specs' examples send a line of text) are not read as a selector.
+  const taskId = str(message.taskId);
+  if (taskId && taskId.startsWith(X402_TASK_PREFIX)) {
+    const paying = x402TaskSelection(taskId);
+    if (!paying) {
+      return rpcError(id, A2A_ERROR.TASK_NOT_FOUND, "task not found: this is not an x402 payment Task this door issues", "TASK_NOT_FOUND", { taskId: taskId.slice(0, 64) });
+    }
+    // A follow-up that names only the task stays in the task's context (A2A: the agent infers it
+    // from the task). One that names a different context is refused before anything runs.
+    const issuedIn = x402TaskContextId(taskId);
+    const named = str(message.contextId);
+    if (issuedIn && named && named !== issuedIn) {
+      return rpcError(id, A2A_ERROR.INVALID_PARAMS, "message.contextId does not match the context this task was issued in; omit it or send the task's contextId. Nothing was forwarded; nothing was charged.", "INVALID_PARAMS", { field: "params.message.contextId" });
+    }
+    const contextId = issuedIn ?? named ?? crypto.randomUUID();
+    if (record(message.metadata)?.["x402.payment.status"] === "payment-rejected") {
+      // The client declined the terms. Nothing is run, forwarded or charged.
+      return x402TaskReply(id, {
+        taskId,
+        contextId,
+        extension: x402Extension,
+        presented: false,
+        paymentStatus: "payment-rejected",
+        result: { content: [], structuredContent: { status: "PAYMENT_REJECTED_BY_CLIENT", nothing_charged: true }, isError: true },
+        textPart: { text: `${paying.tool}: the client rejected the payment requirements. Nothing was run and nothing was charged.`, mediaType: "text/plain" },
+        // Not a TOOL_RESULT: no tool was dispatched, so a2aPaidCallName writes no paid_call row.
+        dataPart: { data: { kind: "X402_PAYMENT_REJECTED", skill: paying.tool, tool: paying.tool, state: "PAYMENT_REJECTED_BY_CLIENT", dispatched: false, door: "POST /api/a2a", register: REGISTER }, mediaType: "application/json" },
+      });
+    }
+    return sendToolMessage(id, paying, contextId, origin, caller, a2aMetaPayment(message), { extension: x402Extension, taskId });
   }
   const selection = parseSkillSelection(message);
   if (typeof selection === "string") {
@@ -1047,7 +1355,7 @@ async function sendMessage(id: unknown, params: unknown, origin: string, caller?
     });
   }
   if ("kind" in selection && selection.kind === "TOOL") {
-    return sendToolMessage(id, selection, str(message.contextId), origin, caller, a2aMetaPayment(message));
+    return sendToolMessage(id, selection, str(message.contextId), origin, caller, a2aMetaPayment(message), x402Extension ? { extension: x402Extension } : undefined);
   }
   if ("kind" in selection) {
     return reply(id, {
@@ -1153,12 +1461,13 @@ export const onRequestGet: PagesFunction = async (context) => {
       metered: [...METERED_TOOL_SKILL_IDS],
       selector: 'Part.data {"skill":"<tool>","input":{...}}: input is the MCP tool\'s arguments, validated against its inputSchema',
       payment:
-        "A metered tool answers with its x402 challenge (result.structuredContent.accepts) and charges nothing. To pay, send the same selector again with input.x_payment set to the base64 payment payload, or with the PaymentPayload object in message.metadata[\"x402.payment.payload\"] (x402 A2A transport); the tool's route verifies and settles it, fail closed. Payment is never read from text, part metadata or HTTP headers. Verification stays free.",
+        "A metered tool answers with its x402 challenge (result.structuredContent.accepts) and charges nothing. To pay, send the same selector again with input.x_payment set to the base64 payment payload, or with the PaymentPayload object in message.metadata[\"x402.payment.payload\"] (x402 A2A transport); the tool's route verifies and settles it, fail closed. A request that activates the a2a-x402 extension (X-A2A-Extensions) gets the challenge as a Task in state input-required instead, and pays by sending a Message with that taskId and the PaymentPayload in the same metadata field; the Task is not stored, so GetTask does not find it. Payment is never read from text, part metadata or HTTP headers. Verification stays free.",
     },
     version_rule:
-      "Send `A2A-Version: 1.0`; a patch number (1.0.1) is ignored, as A2A v1.0 section 3.6 requires. Per A2A v1.0, an absent or empty header means 0.3. A v1.0 method name sent as 0.3 returns VersionNotSupportedError -32009; any other name that is not an A2A 0.3 method returns -32601. The 0.3 wire shape itself is served: a 0.3 method name (message/send, tasks/get, ...) with no header or a 0.x one is mapped onto the 1.0 handler and answered as a 0.3 Message; a request that declares 1.0 must use the 1.0 names. A body that is not JSON-RPC returns -32600; to ask in plain words, POST {\"message\": \"...\"} to /api/chat.",
+      "Send `A2A-Version: 1.0`; a patch number (1.0.1) is ignored, as A2A v1.0 section 3.6 requires. Per A2A v1.0, an absent or empty header means 0.3. A v1.0 method name sent as 0.3 returns VersionNotSupportedError -32009; any other name that is not an A2A 0.3 method returns -32601. The 0.3 wire shape itself is served: a 0.3 method name (message/send, tasks/get, ...) with no header or a 0.x one is mapped onto the 1.0 handler and answered in the 0.3 shape (a Message, or a Task for an x402 payment challenge under the extension); a request that declares 1.0 must use the 1.0 names. A body that is not JSON-RPC returns -32600; to ask in plain words, POST {\"message\": \"...\"} to /api/chat.",
     compat_0_3: Object.keys(V03_METHODS),
-    tasks: "none kept — every SendMessage answers with a Message, so GetTask can only ever say TaskNotFound",
+    tasks:
+      "none stored. A SendMessage answers with a Message, with one exception: a metered skill's x402 challenge to a request that activates the a2a-x402 extension is a Task in state input-required, whose id carries the request and its context. That Task is answered only by the SendMessage that names it with a payment or a rejection, so GetTask can only ever say TaskNotFound.",
     register: REGISTER,
     example: {
       jsonrpc: "2.0",
@@ -1223,7 +1532,7 @@ export async function handlePost(request: Request, env?: unknown): Promise<Respo
   const requested = normalizeA2aVersion(rawVersion);
   // The 0.3 wire shape: a 0.3 method name with no version header (or a 0.x one).
   if (isLegacyVersionHeader(rawVersion) && Object.prototype.hasOwnProperty.call(V03_METHODS, method)) {
-    return serveV03(id, method, req.params, origin, caller);
+    return serveV03(id, method, req.params, origin, caller, a2aX402Extension(request.headers));
   }
   if (isLegacyVersionHeader(rawVersion)) {
     // An absent header means 0.3 (A2A v1.0 section 3.6.2), and the 0.3 names ARE served above.
@@ -1274,17 +1583,25 @@ export async function handlePost(request: Request, env?: unknown): Promise<Respo
     );
   }
 
-  return dispatchV1(id, method, req.params, origin, caller);
+  return dispatchV1(id, method, req.params, origin, caller, a2aX402Extension(request.headers));
 }
 
-async function dispatchV1(id: unknown, method: string, params: unknown, origin: string, caller?: PaidCallerContext): Promise<Response> {
+async function dispatchV1(id: unknown, method: string, params: unknown, origin: string, caller?: PaidCallerContext, x402Extension: string | null = null): Promise<Response> {
   switch (method) {
     case "SendMessage":
-      return sendMessage(id, params, origin, caller);
+      return sendMessage(id, params, origin, caller, x402Extension);
     case "GetTask":
     case "CancelTask": {
       const taskId = str(record(params)?.id) ?? null;
-      return rpcError(id, A2A_ERROR.TASK_NOT_FOUND, "task not found: this agent keeps no task store; every SendMessage answers with a Message", "TASK_NOT_FOUND", { taskId });
+      return rpcError(
+        id,
+        A2A_ERROR.TASK_NOT_FOUND,
+        taskId?.startsWith(X402_TASK_PREFIX)
+          ? "task not found: an x402 payment Task is not stored; it is answered only by the SendMessage that names it with a payment or a rejection"
+          : "task not found: this agent keeps no task store; a SendMessage answers with a Message, or with an x402 payment Task that is not stored",
+        "TASK_NOT_FOUND",
+        { taskId: taskId ? taskId.slice(0, 64) : null },
+      );
     }
     case "ListTasks":
       return rpcError(id, A2A_ERROR.UNSUPPORTED_OPERATION, "ListTasks is not supported: this agent keeps no task store", "UNSUPPORTED_OPERATION", { method });
@@ -1307,7 +1624,7 @@ async function dispatchV1(id: unknown, method: string, params: unknown, origin: 
  * `result` of message/send is the Message itself). Errors keep their JSON-RPC codes, which 0.3
  * and 1.0 share.
  */
-async function serveV03(id: unknown, method: string, params: unknown, origin: string, caller?: PaidCallerContext): Promise<Response> {
+async function serveV03(id: unknown, method: string, params: unknown, origin: string, caller?: PaidCallerContext, x402Extension: string | null = null): Promise<Response> {
   const p = record(params);
   let v1Params: unknown = params;
   if (method === "message/send" || method === "message/stream") {
@@ -1315,14 +1632,22 @@ async function serveV03(id: unknown, method: string, params: unknown, origin: st
     const normalized = m && !str(m.messageId) ? { ...m, messageId: crypto.randomUUID() } : m;
     v1Params = normalized ? { message: v03MessageToV1(normalized) } : {};
   }
-  const res = await dispatchV1(id, V03_METHODS[method], v1Params, origin, caller);
+  const res = await dispatchV1(id, V03_METHODS[method], v1Params, origin, caller, x402Extension);
   const body = record(await res.json()) ?? {};
   const result = record(body.result);
   const message = record(result?.message);
-  const out = message ? { ...body, result: v1MessageTo03(message) } : body;
+  const task = record(result?.task);
+  // The 0.3 result of message/send is the Message itself, or the Task itself (kind "task").
+  const out = message ? { ...body, result: v1MessageTo03(message) } : task ? { ...body, result: v1TaskTo03(task) } : body;
+  const activated = res.headers.get("x-a2a-extensions");
   return new Response(JSON.stringify(out, null, 2), {
     status: res.status,
-    headers: { ...HEADERS, "a2a-version": "0.3", "x-a2a-compat": "0.3 request served by the 1.0 handler" },
+    headers: {
+      ...HEADERS,
+      "a2a-version": "0.3",
+      "x-a2a-compat": "0.3 request served by the 1.0 handler",
+      ...(activated ? { "x-a2a-extensions": activated } : {}),
+    },
   });
 }
 
@@ -1344,6 +1669,45 @@ export function a2aUsageShape(rawVersionHeader: string | null, servedAs03: boole
   return "vother";
 }
 
+/**
+ * The paid_call label for a reply, or null. Read off the reply's own TOOL_RESULT part: a metered
+ * per-tool skill that reached the dispatch, the field the door says it read a payment from
+ * (payment_channel: input.x_payment is "arg", message.metadata["x402.payment.payload"] is "meta"),
+ * and what the paid wrapper said about payment. A call refused before the dispatch (both fields at
+ * once, an input the schema refuses) has no TOOL_RESULT and writes no row. Presence only.
+ */
+export function a2aPaidCallName(replyBody: unknown): string | null {
+  const result = record(record(replyBody)?.result);
+  // An x402 payment Task (1.0 wraps it as result.task; 0.3 is the Task itself, kind "task")
+  // carries the TOOL_RESULT in its status message, or in its artifact once delivered.
+  const task = record(result?.task) ?? (result?.kind === "task" ? result : null);
+  const message = task ? record(record(task.status)?.message) : (record(result?.message) ?? result); // 1.0 wraps the Message; the 0.3 shim does not
+  const parts = [
+    ...(Array.isArray(message?.parts) ? message.parts : []),
+    ...(Array.isArray(task?.artifacts) ? task.artifacts.flatMap((a) => { const ps = record(a)?.parts; return Array.isArray(ps) ? ps : []; }) : []),
+  ];
+  for (const part of parts) {
+    const data = record(record(part)?.data);
+    if (data?.kind !== "TOOL_RESULT" || data.metered !== true) continue;
+    const tool = str(data.tool);
+    if (!tool || !PAID_TOOL_NAMES.has(tool)) continue;
+    const structured = record(record(data.result)?.structuredContent) ?? {};
+    const status = str(structured.status) ?? "";
+    const payment =
+      data.payment_channel === A2A_PAYMENT_FIELD
+        ? "meta"
+        : structured.payment_presented === true || data.payment_channel === "input.x_payment"
+          ? "arg"
+        : status.startsWith("PURCHASE_") || status === "ORIGINAL_RECOVERED" || status.startsWith("BUYER_DECISION")
+          ? "purchase"
+          : structured.delivery_kind === "PREVIEW_OR_FREE"
+            ? "preview"
+            : "none";
+    return paidCallName("a2a", tool, payment);
+  }
+  return null;
+}
+
 export const onRequestPost: PagesFunction = async (context) => {
   const res = await handlePost(context.request, (context as { env?: unknown }).env);
   // Aggregate usage (functions/_lib/usage.ts): declared version + ok / error code, and for a body
@@ -1357,6 +1721,8 @@ export const onRequestPost: PagesFunction = async (context) => {
           const err = record(record(j)?.error) ?? {};
           const code = err.code;
           recordUsage(ctx, "a2a_outcome", `${shape}_${typeof code === "number" ? `error${code}` : "ok"}`);
+          const paid = a2aPaidCallName(j);
+          if (paid) recordUsage(ctx, "paid_call", paid);
           if (code === A2A_ERROR.INVALID_REQUEST || code === A2A_ERROR.PARSE) {
             const meta = record(record(Array.isArray(err.data) ? err.data[0] : null)?.metadata);
             const received = str(meta?.received);

@@ -110,7 +110,9 @@ describe("the home page says how to use it", () => {
     const hero = renderToStaticMarkup(<Router ssrPath="/"><HomeHero /></Router>);
     const evidence = renderToStaticMarkup(<Router ssrPath="/"><HomeEvidence /></Router>);
     const text = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
-    expect(text(hero)).toContain("AI models, agents and the systems they call");
+    // The measured scope: the headline names models and agents, the lede the systems they call.
+    expect(text(hero)).toContain("We measure AI models and agents.");
+    expect(text(hero)).toContain("and the systems they call");
     expect(text(hero)).toContain("Verification is free, forever.");
     expect(hero).toContain('href="/gspc-verify"');
     // The inspection steps carry the distinction and correction route beside the method.

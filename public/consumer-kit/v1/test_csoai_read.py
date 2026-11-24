@@ -97,4 +97,12 @@ class Tests(unittest.TestCase):
         fx,_=self.population_fixture();r,raw=c.read_population(fetcher=fx.__getitem__)
         with tempfile.TemporaryDirectory() as d,patch.object(c,'read_population',return_value=(r,raw)):
             with self.assertRaises(FileExistsError):c.main(['population','--output',d])
+    def test_deleted_host_is_never_requested(self):
+        # The releases' only host was deleted on 21 Nov 2026: both reads stop with that reason and open no connection.
+        with patch('socket.create_connection',side_effect=AssertionError('network used')),patch('urllib.request.urlopen',side_effect=AssertionError('network used')):
+            for read in (c.read_operations,c.read_population):
+                with self.assertRaises(c.EvidenceError) as e:read()
+                self.assertEqual(str(e.exception),c.NO_CURRENT_RELEASE)
+            with self.assertRaises(c.EvidenceError):c.main(['operations'])
+        self.assertIn('deleted on 21 Nov 2026',c.NO_CURRENT_RELEASE);self.assertLessEqual(len(c.NO_CURRENT_RELEASE),240)
 if __name__=='__main__':unittest.main(verbosity=2)

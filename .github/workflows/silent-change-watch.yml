@@ -1,0 +1,185 @@
+# silent-change-watch: the silent-change detector (protocol 1: docs/research/silent-change/PROTOCOL.md).
+#
+# Three jobs, one method, no second implementation:
+#   selftest   unit tests on synthetic data (planted change, no change). Runs on every PR that touches the detector.
+#   calibrate  workflow_dispatch only. Open model, pinned revision, known deliberate changes. Produces the false-flag
+#              rates (C0, C5) and detection rates (C1 to C4) that every later flag is reported beside.
+#   watch      paid models on a daily schedule. SWITCHED OFF: `if: false` below, and scripts/silent-change/paid_models.json
+#              refuses every entry until a named person has confirmed that provider's benchmarking and publication terms
+#              (~/_alignment/provider-terms-20261122/CLAUSES.md lists what must be checked). Turning it on is a reviewed
+#              change to both files, not a dispatch input.
+#
+# SIGNING happens only here, through the job's own OIDC token and /api/board-sign, and only on refs/heads/master
+# (functions/api/board-sign.ts, EXACT_WORKFLOW_REFS). No key is stored. This file never signs from a laptop.
+# This repository is public: logs and artifacts are public. Nothing private is loaded by this workflow.
+#
+# Calibrate, run 2 (24 Nov 2026, addendum 3): 130 batches, each in its own job (a job is the unit of independence), a baseline pool
+# of 20 per kind, both decision rules reported side by side, runner CPU and llama.cpp build recorded in every batch.
+# Calibrate (23 Nov 2026): the pins, the matrix planner, the shard runner and the combiner were rehearsed on a laptop with the
+# pinned model on a 2-item, 3-repeat slice; that rehearsal is never counted. The first run in Actions is still ahead.
+
+name: silent-change-watch
+
+on:
+  pull_request:
+    paths:
+      - scripts/silent-change/**
+      - docs/research/silent-change/**
+      - .github/workflows/silent-change-watch.yml
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "selftest | calibrate"
+        type: choice
+        options: [selftest, calibrate]
+        default: selftest
+      run:
+        description: "calibrate only: run2 = addendum 3 (130 batches, one per job, both rules); run1 = addendum 2 (92 batches in 12 jobs, run 1's plan)"
+        type: choice
+        options: [run2, run1]
+        default: run2
+      trials_scale:
+        description: "calibrate only: 1 = the registered trial counts; a smaller whole number divides them for a smoke run (a smoke run is not calibration and is never signed)"
+        type: string
+        default: "1"
+  schedule:
+    - cron: "23 4 * * *"   # the watch job only; it sleeps a random 0 to 50 minutes so the probe time is not fixed
+
+permissions:
+  contents: read
+
+concurrency:
+  group: silent-change-${{ github.event_name == 'pull_request' && github.ref || 'main' }}
+  cancel-in-progress: false
+
+jobs:
+  selftest:
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.job == 'selftest')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: python3 -m unittest scripts/silent-change/test_silent_change.py -v
+      - name: cost sheet matches the protocol
+        run: python3 scripts/silent-change/cost_sheet.py > /dev/null
+
+  # ---- CALIBRATION (protocol 1, addendum 2): open model on the runner itself, no hosted route, no secret ----
+  # run1: 92 registered batches are cut by scripts/silent-change/plan.py into jobs of about an hour each; run2: 130 batches,
+  # one per job (limit: 6 hours per job, 256 jobs per matrix). Each job verifies the pinned llama.cpp release and GGUF by sha256, serves it with llama-server,
+  # runs its batches and uploads the rows. One final job combines them. Dispatch from master to get a signed report.
+  plan:
+    if: github.event_name == 'workflow_dispatch' && inputs.job == 'calibrate'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        env:
+          TRIALS_SCALE: ${{ inputs.trials_scale }}   # via env, never spliced into the shell text
+          RUN_KIND: ${{ inputs.run }}
+        run: python3 scripts/silent-change/plan.py matrix --scale "$TRIALS_SCALE" --run "$RUN_KIND" >> "$GITHUB_OUTPUT"
+
+  calibrate:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: pins must exist (committed before any run)
+        run: test -f docs/research/silent-change/calibration-pins.json || { echo "REFUSE - calibration-pins.json is not committed"; exit 1; }
+      - name: run this job's batches (verifies each pinned file by sha256 before serving it)
+        env:
+          RUN_KIND: ${{ inputs.run }}
+        run: |
+          python3 scripts/silent-change/run_shard.py --shard "${{ matrix.shard }}" --file "${{ matrix.file }}" \
+            --batches "${{ matrix.batches }}" --out calibration --work "$RUNNER_TEMP/silent-change-work" --run "$RUN_KIND"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: calibration-${{ matrix.shard }}
+          path: calibration/
+          retention-days: 90
+
+  calibration-report:
+    needs: calibrate
+    if: always() && needs.calibrate.result != 'skipped'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write   # the job's own OIDC token is the only signing credential
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: actions/download-artifact@v4
+        with: { pattern: "calibration-*", path: all, merge-multiple: true }
+      - name: rates, from the same detector the watch uses (names every missing batch; a report with one is never signed)
+        env:
+          TRIALS_SCALE: ${{ inputs.trials_scale }}
+          RUN_KIND: ${{ inputs.run }}
+        run: python3 scripts/silent-change/watch.py report --dir all --scale "$TRIALS_SCALE" --run "$RUN_KIND" --cusum --payload-out payload.json | tee report.json
+      - name: sign (master only; the signer refuses any other ref and any incomplete report)
+        if: github.ref == 'refs/heads/master'
+        run: python3 scripts/silent-change/watch.py sign --payload payload.json --out calibration-signed.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: silent-change-calibration-report
+          path: |
+            report.json
+            payload.json
+            calibration-signed.json
+            all/timing-*.json
+          if-no-files-found: warn
+          retention-days: 90
+
+  # ---- PAID MODELS: OFF. `if: false` is deliberate. See the header. ----
+  watch:
+    if: false && github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: write
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        model: [deepseek-chat, grok-3-mini]   # only keys in paid_models.json; each still needs a person's confirmation there
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: random minute inside the window
+        run: sleep $(( RANDOM % 3000 ))
+      - name: restore this model's baseline from ci-results
+        run: |
+          mkdir -p state
+          if git ls-remote --exit-code --heads origin ci-results >/dev/null 2>&1; then
+            git fetch --depth 1 origin ci-results
+            git archive FETCH_HEAD results/silent-change/state 2>/dev/null | tar -x -C state --strip-components=3 || true
+          fi
+      - name: one batch, then baseline or comparison
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          GROK_TOKEN: ${{ secrets.GROK_TOKEN }}
+        run: python3 scripts/silent-change/watch.py run --target "paid:${{ matrix.model }}" --state-dir state --out "out/${{ matrix.model }}" --run-id "${{ github.run_id }}"
+      - name: sign (master only)
+        if: github.ref == 'refs/heads/master'
+        run: python3 scripts/silent-change/watch.py sign --payload "out/${{ matrix.model }}/payload.json" --out "out/${{ matrix.model }}/signed.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: silent-change-${{ matrix.model }}-${{ github.run_id }}
+          path: out/
+          retention-days: 90
+      # Publishing a record about a provider's model is a person's decision after the terms are confirmed; no issue, post or
+      # email is made from here. The record sits in the artifact and on ci-results for the axis's working group to read.

@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: Apache-2.0
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import { evaluateEpisode,compareSyntheticPaired } from "./reaction-bridge.mjs";
+const H="a".repeat(64),G="b".repeat(64);
+const stages=Object.fromEntries(["request","method","human_approval","executor_authority","executor_response","effect","receiver_verification"].map(x=>[x,{state:"REPORTED",receipt_sha256:H,source_realm:"OBSERVED"}]));
+const good={schema:"csoai.reaction-experiment/0.1",realm:"OBSERVED",condition:"HUMAN_APPROVAL",experiment_id:"trial-1",case_id:"case-1",input_sha256:H,method_sha256:G,stages};
+const row=(n,c,success)=>({experiment_id:"trial-1",case_id:"case-"+n,realm:"SIMULATED",condition:c,input_sha256:n===1?H:G,bank_sha256:H,success});
+const paired=[row(1,"NO_HUMAN",false),row(1,"HUMAN_INFORMATION",true),row(2,"NO_HUMAN",true),row(2,"HUMAN_INFORMATION",true)];
+test("complete reported chain never qualifies external acceptance or execution",()=>{const a=evaluateEpisode(good);assert.equal(a.status,"REPORTED_CHAIN_NEEDS_EXTERNAL_QUALIFICATION");assert.equal(a.execute_authorized,false);assert.equal(a.effect_independently_accepted,false)});
+test("simulation always labelled synthetic",()=>assert.equal(evaluateEpisode({...good,realm:"SIMULATED",stages:{}}).status,"SIMULATION_ONLY"));
+test("missing stages retained as unknown",()=>assert.equal(evaluateEpisode({...good,stages:{request:stages.request}}).missing_stages.length,6));
+test("cross-realm evidence laundering rejected",()=>assert.throws(()=>evaluateEpisode({...good,stages:{...stages,effect:{state:"REPORTED",receipt_sha256:H,source_realm:"SIMULATED"}}})));
+test("reported evidence needs exact receipt digest",()=>assert.throws(()=>evaluateEpisode({...good,stages:{...stages,effect:{state:"REPORTED",source_realm:"OBSERVED"}}})));
+test("unknown evidence cannot secretly carry a receipt",()=>assert.throws(()=>evaluateEpisode({...good,stages:{...stages,effect:{state:"UNKNOWN",receipt_sha256:H,source_realm:"OBSERVED"}}})));
+test("unknown stage is rejected",()=>assert.throws(()=>evaluateEpisode({...good,stages:{...stages,rogue:{state:"UNKNOWN"}}})));
+test("paired comparison preserves matching cases and difference",()=>{const v=compareSyntheticPaired(paired);assert.equal(v.matched_cases,2);assert.equal(v.paired_difference,.5);assert.equal(v.qualified_measurement,false)});
+test("no imputation of missing case",()=>assert.throws(()=>compareSyntheticPaired(paired.slice(1))));
+test("duplicate paired case fails",()=>assert.throws(()=>compareSyntheticPaired([...paired,paired[0]])));
+test("changed task between branches fails",()=>assert.throws(()=>compareSyntheticPaired(paired.map((r,i)=>i===1?{...r,input_sha256:G}:r))));
+test("actual observation cannot be laundered through synthetic comparer",()=>assert.throws(()=>compareSyntheticPaired(paired.map((r,i)=>i===1?{...r,realm:"OBSERVED"}:r))));
+test("mixed research bank fails",()=>assert.throws(()=>compareSyntheticPaired(paired.map((r,i)=>i===1?{...r,bank_sha256:G}:r))));
+test("unmeasured missing outcome fails",()=>assert.throws(()=>compareSyntheticPaired(paired.map((r,i)=>i===1?{...r,success:null}:r))));

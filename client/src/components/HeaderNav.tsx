@@ -152,7 +152,7 @@ export const navigation: NavGroup[] = [
     submenu: [
       { section: 'Who we are', name: 'About', href: '/about/', description: 'An operating UK AI measurement and evidence organisation, run by CSOAI Ltd' },
       { name: 'Operation and external use', href: '/traction/', description: 'Operating infrastructure, dated outside evidence and the separate commercial position' },
-      { name: 'Partners and investors', href: '/traction/#partners', description: 'The business model, evidence for diligence and a route to discuss working together' },
+      { name: 'Partners and investors', href: '/investors/', description: 'The business model, evidence for diligence and a route to discuss working together' },
       { name: 'Team', href: '/team', description: 'The people, and the AI agents you can ask (labelled as AI)' },
       { name: 'Independence and conflicts', href: '/independence/', description: 'Who runs us, who pays, and where we have an interest' },
       { name: 'Contact', href: '/contact/', description: 'CSOAI Ltd, UK company 16939677' },

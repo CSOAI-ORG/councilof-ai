@@ -120,6 +120,15 @@ export default function ModelsMeasured() {
       <div className="section-shell">
         <p className="t-kicker text-emerald-800 dark:text-emerald-300">Models measured</p>
         <h1 className="t-band mt-3 max-w-3xl text-foreground">Every AI model we have measured on a frozen bank</h1>
+        <p className="t-lede measure mt-5 text-muted-foreground">
+          Use the published results to shortlist a model for your workload. Compare the exact model, the
+          test bank and the evidence record. Council’s own prompt overlays are disclosed alongside their stock base models.
+        </p>
+        <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold">
+          <a href="https://huggingface.co/csoai/models" className="underline underline-offset-4">Browse Council model repositories on Hugging Face</a>
+          <a href="/board/" className="underline underline-offset-4">Compare GSPC measurements</a>
+          <a href="/contact?arm=run" className="underline underline-offset-4">Discuss measuring a model</a>
+        </div>
 
         {read.kind === "loading" ? <div className="mt-8 min-h-[24rem]" aria-busy="true" aria-label="Loading the list" /> : null}
         {read.kind === "failed" ? (

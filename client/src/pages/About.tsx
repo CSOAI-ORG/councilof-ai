@@ -9,7 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import AboutNumbers from "@/components/about/AboutNumbers";
+import AboutRecord from "@/components/about/AboutRecord";
 import ExternalUseEvidence from "@/components/ExternalUseEvidence";
+import MembershipStrip from "@/components/MembershipStrip";
 import { useBoardCount } from "@/lib/boardCount";
 import { useEstateFacts } from "@/lib/estateFacts";
 
@@ -61,7 +63,9 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
   );
 }
 
-function LiveModelCount() {
+// The axis figure is GET /api/gspc separation.comparison_axes, passed in from the live board; it was
+// typed as "14" here until 24 Nov 2026 (BRAND-GUIDELINES §5.1: no surface types a board count).
+function LiveModelCount({ comparisonAxes }: { comparisonAxes: number | null }) {
   const [count, setCount] = useState<number | null>(null);
   useEffect(() => {
     fetchWithRetry("/interop/models-measured.json")
@@ -77,7 +81,7 @@ function LiveModelCount() {
       <p className="text-sm font-bold uppercase tracking-wider text-emerald-300">Do not confuse axes with models</p>
       <p className="mt-2 text-lg leading-relaxed text-gray-200">
         {count !== null ? <><strong className="text-white">{count.toLocaleString()} third-party models</strong> currently have at least one signed, quotable measurement on a frozen bank.</> : <>The distinct model count is derived from signed cards and published separately.</>}{" "}
-        The <strong className="text-white">14</strong> on the GSPC board is the number of model-comparison <em>axes</em> — one fleet per axis — not the number of models measured.
+        {comparisonAxes !== null ? <>The <strong className="text-white">{comparisonAxes}</strong> on the GSPC board is the number of model-comparison <em>axes</em> — one fleet per axis — not the number of models measured.</> : <>The board&apos;s model-comparison count is a number of <em>axes</em> — one fleet per axis — not the number of models measured.</>}
       </p>
       <Link href="/models-measured/" className="mt-3 inline-block text-sm font-bold text-emerald-300 underline">
         Open the derived model register →
@@ -171,23 +175,19 @@ export default function About() {
   // Card-chain counts, derived from GET /api/state -> card_chain, which is built from
   // scripts/derive-chain-facts.mjs re-verifying every published body.
   const facts = useEstateFacts();
-  useEffect(() => {
-    document.title = "About | Council of AI";
-    let m = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
-    if (!m) { m = document.createElement("meta"); m.name = "description"; document.head.appendChild(m); }
-    m.content = "Council of AI is an operating UK AI measurement and evidence organisation. Inspect its methods, assets, documented external use and accountable company.";
-  }, []);
+  // The <title> and description come from client/src/data/seo-head.json, the one head producer
+  // (docs/BRAND-GUIDELINES.md §7: a page must not write a second title or description).
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section - Origin Story */}
       <div className="surface-ink text-white py-16 sm:py-24">
         <div className="container max-w-4xl">
-          <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">Our Story</Badge>
+          <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">About Council of AI</Badge>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8 leading-tight">
-            AI measurements you can inspect and challenge
+            An independent body that measures AI and publishes the evidence
           </h1>
           <p className="text-lg text-gray-300 leading-relaxed mb-8" data-testid="about-accountable-entity">
-            Council of AI is an operating UK AI measurement and evidence organisation run by <strong className="text-white">CSOAI Ltd</strong>, UK Companies House{" "}
+            Council of AI is an independent UK body that measures AI models and agents. It is the public name of <strong className="text-white">CSOAI Ltd</strong>, UK Companies House{" "}
             <a
               href="https://find-and-update.company-information.service.gov.uk/company/16939677"
               className="text-emerald-300 underline"
@@ -195,18 +195,30 @@ export default function About() {
             >
               16939677
             </a>
-            , founded by Nicholas Templeman. The company is accountable for everything published on this site.{" "}
+            , and the company is accountable for everything published on this site.{" "}
             <Link href="/team" className="text-emerald-300 underline">Meet the team and the AI agents</Link>.
           </p>
           <p className="text-xl text-gray-300 leading-relaxed mb-6">
-            The problem predates the company. <strong className="text-white">CSOAI Ltd was incorporated in England and Wales on 2 January 2026</strong> to make AI behaviour checkable by someone other than the vendor: frozen test banks, deterministic grading, signed evidence, public corrections and dated re-measurement.
+            <strong className="text-white">CSOAI Ltd was incorporated in England and Wales on 2 January 2026</strong> to make AI behaviour checkable by someone other than the vendor. It does that with frozen test banks, deterministic grading, signed evidence, public corrections and dated re-measurement.
           </p>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">
-            Training is a separate, free programme. The commercial product is evidence work performed on request — never a better grade, never a place on the board, and never a certificate.
+            Training is a separate, free programme. Paid work is evidence work done on request, and it never buys a better result, a place on the board or removal from it. A result is a measurement of what we ran and when, never a mark, a badge or a grade to buy. Verification is free, forever.{" "}
+            <Link href="/how-we-work/" className="text-emerald-300 underline">Read how we are funded</Link>.
           </p>
-          <LiveModelCount />
+          <AboutRecord />
+          <LiveModelCount comparisonAxes={board.live ? board.separation?.comparison_axes ?? null : null} />
           <HeroStatsBar />
         </div>
+      </div>
+
+      {/* The Council first: the bodies it takes part in, every row read from /interop/memberships.json. */}
+      <div className="bg-white border-b border-border pb-12 sm:pb-16" data-testid="about-takes-part">
+        <div className="container max-w-6xl pt-10 sm:pt-12">
+          <p className="text-lg text-gray-700 leading-relaxed max-w-3xl">
+            Council of AI works inside the standards bodies, policy programmes and open-source commons that shape how AI is measured. Each entry names the body, our role in it and the evidence for it.
+          </p>
+        </div>
+        <MembershipStrip variant="home" />
       </div>
 
       <div className="surface-base border-b border-border py-12 sm:py-16">
@@ -791,6 +803,16 @@ export default function About() {
               </p>
             </Card>
           </div>
+        </div>
+      </div>
+
+      {/* Accountable entity: the founder, stated once. */}
+      <div className="bg-white pt-12">
+        <div className="container max-w-4xl">
+          <p className="text-base text-gray-600" data-testid="about-founder">
+            CSOAI Ltd was founded by Nicholas Templeman.{" "}
+            <Link href="/team" className="underline underline-offset-4">Meet the team and the AI agents</Link>.
+          </p>
         </div>
       </div>
 

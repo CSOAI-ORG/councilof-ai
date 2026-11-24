@@ -72,6 +72,7 @@ jobs:
       - name: write the census to the Hub (main, else PR) — when the queue OR the index changed
         if: env.DRY_RUN != 'true' && steps.flip.outputs.changed == 'true'
         run: |
+          python3 scripts/privacy/publication_gate.py --label hub-queue-flip --opaque-ok .parquet flip-out
           python3 - <<'PY'
           import os
           from huggingface_hub import HfApi

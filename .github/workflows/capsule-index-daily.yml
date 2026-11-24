@@ -1,0 +1,195 @@
+# capsule-index-daily — the daily measurement-capsule index, re-homed after its two machines stopped.
+#
+# WHY THIS EXISTS. capsule-daily.sh wrote each day's chained, signed index on oracle-micro-2 (cron 08:05Z) and
+# scripts/pod-loops/capsule-publish-daily.sh laid it out for the site on a RunPod pod. The pods were terminated on
+# 3 Nov and the Oracle disks are full (every run since then is skipped on its disk floor), so the chain on
+# Hugging Face stops at 2026-11-04 and https://councilof.ai/measurement-capsules/latest.json at 2026-11-01. This
+# workflow runs the same code (packages/venturi-capsule: venturi_capsule.py and chain.py, the index host's copy) on a
+# runner: packages/venturi-capsule/actions_daily.py says step by step what it does.
+#
+# WHAT IT DOES NOT DO. No adapter source is produced on a runner yet (self-parity, xl-daily, the tool-drift probe,
+# public-signals, claim-watch and the build-pod snapshots all ran on oracle-micro-2 or a pod). So every batch is
+# carried from the chain's head, and the index says so: freshness NOT_UPDATED for the daily adapters, with their
+# last good date, and one pending_source line per adapter naming where its source is produced. Only the index is
+# dated today. No Rekor submission is made here (the index host did that); the weekly chain head is written on Sundays.
+#
+# SIGNING. Job `index` asks GitHub for its own OIDC token and posts each payload to https://councilof.ai/api/board-sign.
+# The signer admits this file only at refs/heads/master (functions/api/board-sign.ts, EXACT_WORKFLOW_REFS), so a branch
+# dispatch cannot sign; a pull request that changes the producer gets a dry run. Job `index` cannot write the repository; job `land`
+# cannot ask for a token. The actions in `index` are pinned by commit for that reason (same commits as
+# hf-fin-shells-attest.yml).
+#
+# PUBLICATION. The day's index, signature and proof go to the HF dataset csoai/evidence-index (create-only), under the
+# owner's publication approval of 26 Sep 2026, carried in packages/venturi-capsule/approvals/. Then `land` opens one
+# data PR with the site layout and closes the older capsule PRs, as loops-distribution.yml does. It does not arm
+# auto-merge: the main session lands these PRs.
+
+name: capsule-index-daily
+
+on:
+  schedule:
+    - cron: "5 8 * * *" # 08:05Z, the slot capsule-daily kept on oracle-micro-2
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "true: build the day's index unsigned and lay it out in scratch space only (no signature, no HF, no PR)"
+        type: boolean
+        default: true
+  pull_request: # a change to the producer gets a dry run (a workflow file that is not on master yet cannot be dispatched)
+    paths:
+      - .github/workflows/capsule-index-daily.yml
+      - packages/venturi-capsule/**
+      - scripts/measurement_capsule_layout.py
+      - scripts/measurement_capsule_page.py
+
+permissions:
+  contents: read
+
+concurrency:
+  group: capsule-index-daily-${{ github.event_name == 'pull_request' && github.ref || 'publish' }}
+  cancel-in-progress: false
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      id-token: write # the job's own OIDC token is the board-sign caller credential; no stored key
+    outputs:
+      state: ${{ steps.run.outputs.state }}
+      date: ${{ steps.run.outputs.date }}
+    env:
+      # schedule = a real run; workflow_dispatch = real only with dry_run=false; pull_request = always a dry run
+      DRY_RUN: ${{ (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && !inputs.dry_run)) && 'false' || 'true' }}
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Install the capsule tool's dependencies (pinned)
+        run: python -m pip install --disable-pip-version-check 'cryptography==50.0.2' 'rfc8785==0.1.4' 'opentimestamps-client==0.7.2' 'huggingface_hub==1.19.0'
+      - name: Run the capsule tool's tests and the layout and page tests
+        run: |
+          set -euo pipefail
+          (cd packages/venturi-capsule && python -m unittest discover -s . -t . -p 'test_*.py')
+          python scripts/test_measurement_capsule_layout.py
+          python scripts/test_measurement_capsule_page.py
+      - name: Prepare the chain directory and the owner's publication approval record
+        run: |
+          set -euo pipefail
+          sudo mkdir -p /evac-bulk && sudo chown "$(id -u):$(id -g)" /evac-bulk
+          mkdir -p "$HOME/.config/csoai/approvals"
+          cp packages/venturi-capsule/approvals/measurement-index-hf-publish.APPROVED "$HOME/.config/csoai/approvals/"
+      - name: Build the day's chained index (and, unless dry run, sign, stamp and publish it)
+        id: run
+        env:
+          HF_TOKEN: ${{ env.DRY_RUN == 'false' && secrets.HF_TOKEN || '' }}
+        run: |
+          set -uo pipefail
+          ARGS=(run --bulk /evac-bulk --work "$RUNNER_TEMP/capsule-daily" --site "$GITHUB_WORKSPACE/public/measurement-capsules"
+                --hf-approval "$HOME/.config/csoai/approvals/measurement-index-hf-publish.APPROVED")
+          [ "$DRY_RUN" = true ] && ARGS+=(--dry-run)
+          python packages/venturi-capsule/actions_daily.py "${ARGS[@]}" > "$RUNNER_TEMP/result.json" 2> "$RUNNER_TEMP/steps.log"
+          rc=$?
+          tail -n 80 "$RUNNER_TEMP/steps.log"
+          python - "$RUNNER_TEMP/result.json" <<'PY'
+          import json, os, sys
+          r = json.loads(open(sys.argv[1]).read().strip().splitlines()[-1])
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"state={r.get('state')}\ndate={r.get('date') or (r.get('index') or {}).get('date') or ''}\n")
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+              f.write("## capsule-index-daily\n\n```json\n" + json.dumps(r, indent=1) + "\n```\n")
+          print(json.dumps(r, indent=1))
+          PY
+          exit $rc
+      - name: Hand the laid-out site tree to the landing job
+        if: steps.run.outputs.state == 'DONE' || steps.run.outputs.state == 'LAID_OUT'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: capsule-site-${{ github.run_id }}
+          path: public/measurement-capsules
+          if-no-files-found: error
+          retention-days: 7
+
+  land:
+    needs: index
+    if: needs.index.outputs.state == 'DONE' || needs.index.outputs.state == 'LAID_OUT'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write # push the data branch
+      pull-requests: write # open the data PR, close superseded ones
+      actions: write # dispatch pr-gates for the bot branch (GITHUB_TOKEN pushes emit no pull_request event)
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: master
+      - name: Replace the published capsule tree with the new layout
+        run: rm -rf public/measurement-capsules && mkdir -p public/measurement-capsules
+      - uses: actions/download-artifact@v4
+        with:
+          name: capsule-site-${{ github.run_id }}
+          path: public/measurement-capsules
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - name: Regenerate the capsule VC projection and the mechanism coverage, and run the layout tests
+        run: |
+          set -euo pipefail
+          node scripts/mechanism/capsule-vc.mjs
+          node scripts/mechanism/capsule-vc.mjs --check
+          # /mechanism/coverage.json also reads the capsule tree. Regenerate it here, or `gates`
+          # fails on scripts/mechanism/build-coverage.test.ts for every capsule data PR.
+          node scripts/mechanism/build-coverage.mjs
+          node scripts/mechanism/build-coverage.mjs --check
+          # The charter register pins coverage.json by sha256, and render.mjs projects the register into
+          # /charter-register/ and the distribution kits. Rebuild both here, or `gates` fails on
+          # functions/mcp/tool-counts.test.ts ("Stale charter input: public/mechanism/coverage.json")
+          # and `integrity` fails on the register's byte-identity check.
+          (cd packages/charter-federation && python3 build.py --root ../..)
+          node scripts/harness-x/render.mjs
+          node scripts/harness-x/render.mjs --check
+          python3 scripts/test_measurement_capsule_layout.py
+          python3 scripts/test_measurement_capsule_page.py
+      - name: Land the layout on a branch, open the PR, dispatch gates, close older capsule PRs
+        env:
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }} # a PR opened with SNAPSHOT_PR_TOKEN fires pull_request checks
+          DAY: ${{ needs.index.outputs.date }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A public/measurement-capsules public/mechanism/vc.json public/mechanism/coverage.json \
+            packages/charter-federation public/charter-register distribution/charter-federation distribution/MANIFEST.json
+          if git diff --cached --quiet; then
+            echo "laid out; the tree equals master; nothing to land"
+            exit 0
+          fi
+          SUBJ=$(python3 - <<'PY'
+          import json
+          d = json.load(open("public/measurement-capsules/v0.2/index.json"))
+          print("%s: %d batches, %s capsules, root %s, chain seq %s, gap_days %s"
+                % (d["date"], len(d["batches"]), format(d["n_capsules_total"], ","), d["index_root"][:16], d["chain_seq"], d["gap_days"]))
+          PY
+          )
+          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
+          BR="capsule-index/auto-${DAY}-${STAMP}"
+          git checkout -b "$BR"
+          git commit -q -m "measurement capsules: index ${SUBJ}" -m "Laid out by scripts/measurement_capsule_layout.py from the signed, OTS-stamped day index that .github/workflows/capsule-index-daily.yml wrote (run ${GITHUB_RUN_ID}); bytes unchanged."
+          git push -q origin "HEAD:$BR"
+          BODY=$(printf '%s\n\n%s\n\n%s\n' \
+            "Daily measurement-capsule index ${SUBJ}, built and signed by capsule-index-daily (run ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}). The day's index, signature and OpenTimestamps proof are also at https://huggingface.co/datasets/csoai/evidence-index/tree/main/measurement-index/${DAY}." \
+            "Every batch is carried from the chain head: no adapter source is produced on a runner yet, so the daily adapters read NOT_UPDATED with their last good date, and pending_source names where each source is produced. Only the index is dated today." \
+            "The staged bytes are the laid-out tree under public/measurement-capsules/ and the regenerated public/mechanism/vc.json. Measurement, not endorsement.")
+          URL=$(gh pr create --base master --head "$BR" --title "measurement capsules: daily index ${DAY}" --body "$BODY")
+          gh workflow run pr-gates.yml --ref "$BR"
+          NEW="${URL##*/}"
+          for n in $(gh pr list --base master --state open --limit 50 --json number,headRefName \
+              --jq '.[] | select(.headRefName | startswith("capsule-index/auto-")) | .number'); do
+            [ "$n" = "$NEW" ] || gh pr close "$n" --comment "Superseded by $URL, a newer daily capsule index. Landing this older layout would put an older index back on the site."
+          done
+          echo "opened $URL"

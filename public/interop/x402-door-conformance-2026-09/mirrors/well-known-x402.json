@@ -546,7 +546,7 @@
       "method": "GET",
       "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
       "paid_for": "issuance",
-      "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1",
+      "free_preview": "https://councilof.ai/api/rwa/evidence?asset=RLUSD&preview=1",
       "description": "RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free.",
       "accepts": [
         {
@@ -602,7 +602,7 @@
       "method": "GET",
       "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
       "paid_for": "issuance",
-      "free_preview": "https://councilof.ai/api/wrapper?id=<wrapped-symbol:chain>&preview=1",
+      "free_preview": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum&preview=1",
       "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
       "accepts": [
         {

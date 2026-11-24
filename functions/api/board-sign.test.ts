@@ -4,7 +4,7 @@
 // back verifies under the matching public key over the canonical preimage — so the test can
 // fail if the signature, the digest or the auth split is wrong.
 import { describe, expect, it } from "vitest";
-import { onRequestPost } from "./board-sign";
+import { onRequestPost, workflowAdmitted } from "./board-sign";
 import { canonicalBytes } from "../_lib/cardSign";
 
 const b64 = (u: ArrayBuffer) => btoa(String.fromCharCode(...new Uint8Array(u)));
@@ -62,5 +62,41 @@ describe("/api/board-sign caller paths", () => {
     const { pkcs8b64 } = await keypair();
     const r = await call({ BOARD_SIGN_KEY_PKCS8_B64: pkcs8b64, BOARD_SIGN_POD_TOKEN: POD }, POD, { payload: { label: "THIN" } });
     expect(r.status).toBe(422);
+  });
+});
+
+describe("/api/board-sign OIDC workflow admission", () => {
+  const ref = (file: string, r = "refs/heads/master") => `CSOAI-ORG/councilof-ai/.github/workflows/${file}@${r}`;
+
+  it("admits the silent-change watch only as that file on refs/heads/master, compared whole", () => {
+    expect(workflowAdmitted({ job_workflow_ref: ref("silent-change-watch.yml") })).toBe(true);
+    expect(workflowAdmitted({ job_workflow_ref: ref("silent-change-watch.yml", "refs/heads/lane/silent-change-detector-20261122") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("silent-change-watch.yml.bak") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("silent-change-watch.yml").replace("CSOAI-ORG/", "someone/") })).toBe(false);
+  });
+
+  it("admits the capsule-index workflow only as that file on refs/heads/master, compared whole", () => {
+    expect(workflowAdmitted({ job_workflow_ref: ref("capsule-index-daily.yml") })).toBe(true);
+    expect(workflowAdmitted({ job_workflow_ref: ref("capsule-index-daily.yml", "refs/heads/lane/spine-capsule-20261122") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("capsule-index-daily.yml", "refs/heads/master-copy") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("capsule-index-daily.yml").replace("CSOAI-ORG/", "someone/") })).toBe(false);
+    expect(workflowAdmitted({ workflow: "capsule-index-daily" })).toBe(false);
+    expect(workflowAdmitted({})).toBe(false);
+  });
+
+  it("admits the daily report only as that file on refs/heads/master, compared whole", () => {
+    expect(workflowAdmitted({ job_workflow_ref: ref("daily-report.yml") })).toBe(true);
+    expect(workflowAdmitted({ job_workflow_ref: ref("daily-report.yml", "refs/heads/lane/daily-report-board-sign-20261124") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("daily-report.yml", "refs/pull/4700/merge") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("daily-report.yml", "refs/heads/master2") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("daily-report.yaml") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("daily-report.yml").replace("CSOAI-ORG/", "someone/") })).toBe(false);
+    expect(workflowAdmitted({ workflow: "daily-report", workflow_ref: ref("daily-report.yml") })).toBe(false);
+  });
+
+  it("leaves the older substring rule as it was", () => {
+    expect(workflowAdmitted({ job_workflow_ref: ref("public-root.yml") })).toBe(true);
+    expect(workflowAdmitted({ job_workflow_ref: ref("hf-fin-shells-attest.yml") })).toBe(true);
+    expect(workflowAdmitted({ job_workflow_ref: ref("deploy.yml") })).toBe(false);
   });
 });

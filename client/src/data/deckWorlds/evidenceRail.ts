@@ -180,6 +180,7 @@ export const EVIDENCE_RAIL_NOT_CLAIMED = [
 ];
 
 export const EVIDENCE_RAIL_RELATED = [
+  { href: "https://github.com/CSOAI-ORG/councilof-ai/releases/tag/research-guard-evidence-2026-11-21-v1", label: "Open classifier research — including misses", what: "Download eight SHA-256-pinned records and independently verify GitHub build provenance. Self-run evidence, 19 misses in a 116-case labelled split; not GSPC-admitted or independently reviewed." },
   { href: "/insurers", label: "For underwriters", what: "The same evidence, read as an actuarial input." },
   { href: "/live-ledger", label: "The living ledger", what: "How a measurement stays current when the statute moves." },
   { href: "/evidence", label: "The evidence hub", what: "Continuous evidence collection across your own controls." },

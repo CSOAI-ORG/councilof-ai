@@ -57,12 +57,12 @@ const STEPS: StepConfig[] = [
   },
   {
     id: "passport",
-    title: "Passport mint",
+    title: "Signed passport record",
     narration:
-      "Every tour visitor can request a live Ed25519-signed passport. The signature is verifiable offline with the published public key.",
+      "Every tour visitor can request a live Ed25519-signed record. Nothing is minted. The signature is verifiable offline with the published public key.",
     dataType: "real",
     verifyHref: "/api",
-    verifyLabel: "Inspect mint endpoint",
+    verifyLabel: "Inspect signing endpoint",
     globeCommand: { cmd: "flyTo", lng: -0.12, lat: 51.5, height: 1200000, duration: 1.8 },
   },
   {
@@ -147,7 +147,7 @@ export default function CouncilTour() {
         out.benchError = e instanceof Error ? e.message : "Network error";
       }
 
-      // 4. Passport mint endpoint (HEAD check)
+      // 4. Passport signing endpoint (HEAD check)
       try {
         const r = await fetch(PASSPORT_URL, { method: "HEAD", cache: "no-store" });
         out.passport = { minted: r.ok, ts: new Date().toISOString(), sig: "" };
@@ -308,7 +308,7 @@ export default function CouncilTour() {
           <div className="mt-4 rounded-xl border border-emerald-400/20 bg-emerald-500/5 p-4">
             <div className="flex items-center gap-2">
               <RealBadge />
-              <span className="text-xs text-emerald-300/70">Ed25519 passport mint</span>
+              <span className="text-xs text-emerald-300/70">Ed25519 signed record</span>
             </div>
             <div className="mt-2 font-mono text-xs text-emerald-100">
               Status: <span className="font-bold text-emerald-50">{data.passport.minted ? "Reachable" : "Checked"}</span>
