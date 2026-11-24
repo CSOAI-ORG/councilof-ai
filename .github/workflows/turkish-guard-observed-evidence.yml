@@ -6,6 +6,7 @@ on:
       - "scripts/research/test_turkish_guard_observed.py"
       - "scripts/research/notinject_guard_observed.py"
       - "scripts/research/test_notinject_guard_observed.py"
+      - "scripts/research/turkish_to_evidence_event.py"
       - "scripts/research/project_turkish_reaction.mjs"
       - "scripts/research/project_turkish_reaction.test.mjs"
       - "docs/research/turkish-guard-observed-20261124/**"
@@ -44,3 +45,27 @@ jobs:
           assert obj["confusion"]=={"fn":62,"fp":287,"tn":2768,"tp":255}
           print("Observed model-output source integrity: PASS. Human/recipient qualification: NOT ESTABLISHED.")
           PY
+      - name: Build actual observed, unsigned PARTIAL GSPC candidate event
+        run: |
+          python3 scripts/research/turkish_to_evidence_event.py --output /tmp/observed-turkish-evidence-event.json
+          python3 - <<'PY'
+          import importlib.util, json
+          path="/tmp/observed-turkish-evidence-event.json"
+          doc=json.load(open(path))
+          spec=importlib.util.spec_from_file_location("event","packages/evidence-fabric/event.py")
+          mod=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+          assert mod.validate(doc)==[]
+          assert mod.compute_event_id(doc)==doc["event_id"]
+          assert doc["state"]=="PARTIAL" and doc["value"] is None
+          assert doc["signature"] is None and doc["anchors"]["ots"]=="none"
+          assert doc["observed"]["gspc_admitted"] is False
+          assert doc["observed"]["receiving_party_accepted"] is False
+          assert doc["observed"]["tool_effect_observed"] is False
+          print("Canonical evidence event: VALID/UNSIGNED/PARTIAL/NOT_ADMITTED")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: observed-turkish-evidence-partial-${{ github.sha }}
+          path: /tmp/observed-turkish-evidence-event.json
+          retention-days: 30
