@@ -273,7 +273,7 @@ def crossref_topic(topic: str, *, from_date: str, fetch=fetch_json) -> dict:
                 "source_response_canonical_sha256": sha(canonical(doc)),
                 "papers": papers, "recently_indexed_not_necessarily_newly_published": True,
                 "coverage": "TOP_8_API_SEARCH_MATCHES_ONLY_NOT_EXHAUSTIVE",
-                "candidate_selection": "TWO_PART_TITLE_KEYWORD_HEURISTIC_REVIEW_REQUIRED"
+                "candidate_selection": "TWO_PART_TITLE_KEYWORD_HEURISTIC_REVIEW_REQUIRED"}
     except (Uncheckable, TypeError, ValueError, KeyError) as exc:
         return {"topic": topic, "status": "SOURCE_UNCHECKABLE",
                 "reason": str(exc)[:75], "papers": [],
