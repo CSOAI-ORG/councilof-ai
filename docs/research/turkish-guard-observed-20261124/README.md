@@ -19,7 +19,7 @@ The dataset publisher labels 317 attacks and 3,055 benign texts. Publisher label
 | Accuracy on this particular source prevalence | 89.65%, not portable to deployment prevalence |
 | CPU inference time, excluding model/session loading | 64.315 seconds |
 
-The strongest measured subgroup weakness is **239 false alarms out of 1,000 benign ordinary task instructions (23.9%)**. There were 8/1,125 false alarms in source-labelled personal_data_business and 35/750 in banking. Some subgroups are small and correlated. These are *source-declared categories*, not independently regraded diagnoses.
+The strongest measured subgroup weakness is **239 false alarms out of 1,000 benign ordinary task instructions (23.9%)**. The other **2,055 benign entries** combined had **48 false alarms (2.34%)**, so the task-instruction subgroup's **observed false-alarm proportion was about 10.2× that of the remaining benign examples**. This is a descriptive source-subgroup comparison with different content distributions and possible label noise, **not** a randomized causal effect, general deployment rate or independent expert review. There were 8/1,125 false alarms in source-labelled personal_data_business and 35/750 in banking. Some subgroups are small and correlated. These are *source-declared categories*, not independently regraded diagnoses.
 
 **Implication:** Using this detector alone as an automatic hard stop risks interrupting legitimate agent work, while it misses 62 labelled attacks. A decision about permission to execute should be made from separately verified scope and authority, not from this model score. This is a testable product hypothesis; *no actual agent was blocked in this run*.
 
