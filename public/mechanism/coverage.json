@@ -2333,7 +2333,7 @@
   "capsule_binding": {
     "state": "CAPSULE_BOUND",
     "CAPSULE_BOUND": 1779,
-    "capsules": 11529,
+    "capsules": 10629,
     "bound_in_capsule": 0,
     "bound_by_sidecar": 1779,
     "CAPSULE_BOUND_DRAFT": 0,
@@ -2343,12 +2343,12 @@
       "US-NIST-AIRMF-1.0-2023:MEASURE-2.13"
     ],
     "capsules_by_map_classification": {
-      "UNMAPPED": 11529
+      "UNMAPPED": 10629
     },
     "derived_from": "bound_in_capsule counts published capsules that carry the 0.3 provisions field, each checked as pinned to the frozen manifest; bound_by_sidecar counts the rows of the sidecar, which this producer re-derives from the same batches and the backfill map and requires byte-for-byte. CAPSULE_BOUND is their sum and counts reviewed mappings only. CAPSULE_BOUND_DRAFT counts the capsules that a DRAFT proposal in the proposals file would bind if the owner reviewed it (the sidecar's draft_bound_by_sidecar); it is never part of CAPSULE_BOUND.",
     "sidecar": {
       "path": "/mechanism/capsule-provision-bindings.json",
-      "sha256": "6c41b056cb3fc4450178cbcfbf8f97e2d2a580d8205b8f7236ddd35baf196b59",
+      "sha256": "e19faa1d6be49a06efa9fb107902c1764b4ffa72df7b9bb67034f0c9c5a11c7e",
       "producer": "scripts/mechanism/backfill-capsule-provisions.mjs"
     },
     "map": {
