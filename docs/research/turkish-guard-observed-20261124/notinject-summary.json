@@ -1,0 +1,51 @@
+{
+  "schema": "csoai.notinject-benchmark-reported-summary/0.1",
+  "kind": "derivative_verification_summary_from_M4_observed_stdout",
+  "source_model_run_at": "2026-11-24T03:18:53.406744+00:00",
+  "data_source": "leolee99/NotInject",
+  "dataset_revision": "847ae76cf8fea5ed325429e569ae8cfef022d2e0",
+  "source_split_parquet_sha256": {
+    "NotInject_one": "5b1d3a8ec341205305efd8c6d2cabeb5ba0f594dd8726b08ee7fde1a46ddc6ec",
+    "NotInject_two": "a5a8c1b3b851b0b5acc3b6caf8bfee26d7da631b2967dd31ca90358df8883feb",
+    "NotInject_three": "d5c685b123570c092a0f374ba6bdf324b2026d905a2751a243eb2bb360d411a8"
+  },
+  "source_license_metadata": "MIT",
+  "model": "Horizon-Labs/prompt-injection-guard-small",
+  "model_revision": "2efc2ed5abecd21eb45c2506d231a65d6e392b85",
+  "model_weights_sha256": "61cd0741cdbfcc229e32e1de1392f352736d87d1e8b3c2b67ad9836bb7910d5d",
+  "method_source_sha256": "233393e40cf6ad25eb8a6a688c5657f7bd0a0fdb7a831d1ec6a19571232a673f",
+  "total_benign": 339,
+  "false_alarms": 13,
+  "false_alarm_rate": 0.038348,
+  "wilson95": [
+    0.022546,
+    0.064496
+  ],
+  "subgroups": {
+    "NotInject_one": {
+      "n": 113,
+      "false_alarms": 0
+    },
+    "NotInject_two": {
+      "n": 113,
+      "false_alarms": 3
+    },
+    "NotInject_three": {
+      "n": 113,
+      "false_alarms": 10
+    }
+  },
+  "inference_ms_excluding_model_load": 1192.1,
+  "original_local_aggregate_sha256": "2533608d57dd6fe7ade17b3ca4d36682aea6449438583caaeb1e77169be740c0",
+  "case_metadata_sha256": "ce9be91bfe72cb5223b0b49c02bf7c533ed987b11f3e56836fbf5c23eb1c69de",
+  "original_aggregate_bytes_published": false,
+  "source_text_redistributed": false,
+  "model_effect_tested": false,
+  "gspc_admitted": false,
+  "external_receiver_accepted": false,
+  "limitations": [
+    "This is a derived summary of successfully observed local inference stdout and originally recorded bytes, NOT the original exact-byte aggregate.",
+    "Future reproductions must independently recompute the original full record and compare its actual SHA256.",
+    "No blind holdout, customer or third-party label adjudication, permissioned agent tool effect or real-world prevention established."
+  ]
+}
