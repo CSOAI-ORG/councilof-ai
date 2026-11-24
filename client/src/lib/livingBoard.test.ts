@@ -2,10 +2,13 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
+  ROOT_STALE_MS,
+  ageLabel,
   axisView,
   comparedModels,
   daysSince,
   freshness,
+  olderThanRootWindow,
   groupAxis,
   isOwnModel,
   modelCells,
@@ -147,5 +150,35 @@ describe("freshness", () => {
   });
   it("counts whole days in UTC", () => {
     expect(daysSince("2026-08-12", new Date("2026-10-06T01:00:00Z"))).toBe(55);
+  });
+});
+
+describe("age at the source's own precision", () => {
+  // The live case of 2026-11-24 06:33Z: root.json as_of 2026-11-21T23:11:50Z, 55.4 h old.
+  // The board printed "3 days ago" (calendar days) while the ledger tab called the same root stale.
+  const root = "2026-11-21T23:11:50Z";
+  it("counts an instant's elapsed time: hours under a day, then whole days", () => {
+    expect(ageLabel(root, new Date("2026-11-21T23:40:00Z"))).toBe("under an hour ago");
+    expect(ageLabel(root, new Date("2026-11-22T00:30:00Z"))).toBe("1 hour ago");
+    expect(ageLabel(root, new Date("2026-11-22T06:33:00Z"))).toBe("7 hours ago");
+    expect(ageLabel(root, new Date("2026-11-23T05:00:00Z"))).toBe("1 day ago");
+    expect(ageLabel(root, new Date("2026-11-24T06:33:46Z"))).toBe("2 days ago");
+  });
+  it("keeps calendar days for a DAY-precision date, as the comparison dates publish", () => {
+    expect(ageLabel("2026-08-19", new Date("2026-11-24T06:33:46Z"))).toBe("97 days ago");
+    expect(ageLabel("2026-11-24", new Date("2026-11-24T06:33:46Z"))).toBe("today");
+  });
+  it("never goes negative and never invents a date", () => {
+    expect(ageLabel(root, new Date("2026-11-21T20:00:00Z"))).toBe("under an hour ago");
+    expect(ageLabel("not a date", new Date())).toBe("date unreadable");
+  });
+  it("marks a root stale past the 48-hour window, with the same rule the ledger tab uses", () => {
+    expect(ROOT_STALE_MS).toBe(48 * 3600 * 1000);
+    expect(olderThanRootWindow(root, new Date("2026-11-22T06:33:00Z"))).toBe(false);
+    expect(olderThanRootWindow(root, Date.parse(root) + ROOT_STALE_MS)).toBe(false);
+    expect(olderThanRootWindow(root, Date.parse(root) + ROOT_STALE_MS + 1)).toBe(true);
+    expect(olderThanRootWindow(root, new Date("2026-11-24T06:33:46Z"))).toBe(true);
+    expect(olderThanRootWindow(null, new Date())).toBe(false);
+    expect(olderThanRootWindow("not a date", new Date())).toBe(false);
   });
 });

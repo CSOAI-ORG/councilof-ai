@@ -8,6 +8,7 @@
  * · public readback), never merged into one badge.
  */
 import { useEffect, useState } from "react";
+import { ROOT_STALE_MS } from "@/lib/livingBoard";
 
 type Row = {
   key: string;
@@ -46,7 +47,8 @@ type Ledgers = {
 
 type Load = { state: "reading" } | { state: "ok"; doc: Ledgers } | { state: "failed"; reason: string } | { state: "empty" };
 
-const STALE_MS = 48 * 3600 * 1000;
+// One rule for every surface that prints the root's age: lib/livingBoard ROOT_STALE_MS (48 h).
+const STALE_MS = ROOT_STALE_MS;
 const short = (s: string | null | undefined, n = 16) => (s ? (s.length > n ? `${s.slice(0, n)}…` : s) : "not recorded");
 const yn = (v: boolean | null) => (v === null ? "not stated (head not in the root yet)" : v ? "yes" : "no");
 

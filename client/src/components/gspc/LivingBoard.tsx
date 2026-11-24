@@ -16,12 +16,13 @@ import {
   FLEET_CSV_URL,
   FLEET_URL,
   ROWS_RECORD_SIGNED_URL,
+  ageLabel,
   axisView,
   comparedModels,
-  daysSince,
   formatSpread,
   freshness,
   modelHref,
+  olderThanRootWindow,
   pct1,
   type AxisView,
   type BoardDoc,
@@ -44,9 +45,18 @@ const fmtDate = (d: string) =>
     timeZone: "UTC",
   });
 
-function Age({ date }: { date: string }) {
-  const days = daysSince(date.slice(0, 10), new Date());
-  return <span className="text-gray-600">({days === 0 ? "today" : days === 1 ? "1 day ago" : `${days} days ago`})</span>;
+/**
+ * Age of a dated thing, at its own precision (lib/livingBoard ageLabel). `stale` adds the root
+ * window's marker; it is decided by the caller from the same 48-hour rule the ledger tab uses,
+ * so the board never prints a bare "3 days ago" for a root the ledger tab already calls stale.
+ */
+function Age({ date, now, stale }: { date: string; now: Date; stale?: boolean }) {
+  return (
+    <span className="text-gray-600">
+      ({ageLabel(date, now)}
+      {stale ? <strong className="text-amber-800"> · older than the 48-hour root window</strong> : null})
+    </span>
+  );
 }
 
 export function FreshnessLine({
@@ -54,11 +64,14 @@ export function FreshnessLine({
   fleet,
   cards,
   root,
+  now = new Date(),
 }: {
   board: BoardDoc | null;
   fleet: FleetDoc | null;
   cards: CardIndex | null;
   root: RootDoc | null;
+  /** The read time every age is counted from; injected by tests, the clock otherwise. */
+  now?: Date;
 }) {
   const f = board ? freshness(board) : null;
   const models = fleet ? comparedModels(fleet) : null;
@@ -76,7 +89,7 @@ export function FreshnessLine({
             between <strong>{fmtDate(first)}</strong> and <strong>{fmtDate(last)}</strong>
           </>
         )}{" "}
-        <Age date={last} />
+        <Age date={last} now={now} />
       </span>,
     );
   }
@@ -100,7 +113,8 @@ export function FreshnessLine({
   if (root?.as_of) {
     items.push(
       <span key="root">
-        signed public root as of <strong>{fmtDate(root.as_of)}</strong> <Age date={root.as_of} />
+        signed public root as of <strong>{fmtDate(root.as_of)}</strong>{" "}
+        <Age date={root.as_of} now={now} stale={olderThanRootWindow(root.as_of, now)} />
       </span>,
     );
   }

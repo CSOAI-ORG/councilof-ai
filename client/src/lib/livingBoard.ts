@@ -104,6 +104,40 @@ export function daysSince(date: string, now: Date): number {
   return Math.max(0, Math.round((today - then) / 86_400_000));
 }
 
+/**
+ * The public-root window. A root whose as_of is older than this is marked stale wherever it is
+ * printed: the ledger tab (LedgersPanel) and the board's freshness line read this one constant,
+ * so the two surfaces cannot disagree about the same root.
+ */
+export const ROOT_STALE_MS = 48 * 3600 * 1000;
+
+/**
+ * How long ago an ISO date was, at the precision the source publishes. A DAY-precision date
+ * (YYYY-MM-DD, no time part) counts calendar days in UTC, as daysSince does. An instant counts
+ * elapsed time: hours under a day, then whole days — so a root signed at 23:11 UTC reads
+ * "7 hours ago" the next morning, not "1 day ago", and 55 hours reads "2 days ago", not 3.
+ * An unreadable date is said in words; nothing is invented.
+ */
+export function ageLabel(iso: string, now: Date): string {
+  const days = (d: number) => (d === 0 ? "today" : d === 1 ? "1 day ago" : `${d} days ago`);
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(iso)) {
+    return /^\d{4}-\d{2}-\d{2}/.test(iso) ? days(daysSince(iso.slice(0, 10), now)) : "date unreadable";
+  }
+  const t = Date.parse(iso);
+  if (!Number.isFinite(t)) return "date unreadable";
+  const hours = Math.floor(Math.max(0, now.getTime() - t) / 3_600_000);
+  if (hours < 1) return "under an hour ago";
+  if (hours < 24) return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+  return days(Math.floor(hours / 24));
+}
+
+/** True when an ISO instant is older than ROOT_STALE_MS at `now`. Unreadable dates are never stale. */
+export function olderThanRootWindow(iso: string | null | undefined, now: Date | number): boolean {
+  const t = iso ? Date.parse(iso) : NaN;
+  const n = typeof now === "number" ? now : now.getTime();
+  return Number.isFinite(t) && n - t > ROOT_STALE_MS;
+}
+
 export interface Freshness {
   /** Distinct measurement dates of the model-comparison axes, oldest first. */
   comparisonDates: string[];
