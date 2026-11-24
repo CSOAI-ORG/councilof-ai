@@ -20,10 +20,16 @@ def sample():
                      {"axis": "effect-binding", "kind": "deterministic-facts", "status": "MEASURED"}],
             "totals": {"axes": 3, "measured_axes": 3, "unmeasured_axes": 0,
                        "comparison_axes": 2, "ties": 1, "untested_separations": 1, "separated_leads": 0}}},
-        "root": {"state": "READ", "payload": {
+        "root": {"state": "READ", "sha256": "a" * 64, "payload": {
             "as_of": "2026-11-23T00:00:00Z", "card_count": 2,
             "card_sha256": ["a" * 64, "b" * 64], "merkle_root": "f" * 64,
             "sig_ed25519": "signed-byte-field-present"}},
+        "witness_pointer": {"state": "READ", "payload": {
+            "as_of": "2026-11-23T00:20:00Z",
+            "live_root": {"sha256": "a" * 64, "merkle_root": "f" * 64,
+                          "card_count": 2, "as_of": "2026-11-23T00:00:00Z"},
+            "drift": {"status": "DRIFTED", "checked_at": "2026-11-23T00:10:00Z"},
+            "witnesses": {"ots": "CONFIRMED_BITCOIN", "rekor": "WITNESSED"}}},
         "distribution": {"state": "READ", "payload": {
             "as_of": "2026-11-23T00:00:00Z", "stale_after": "2026-11-25T00:00:00Z",
             "by_entity": {"downloads_all_time": {
@@ -54,6 +60,25 @@ class HeartbeatTests(unittest.TestCase):
         observations["board"]["payload"]["totals"]["ties"] = 0
         report = heartbeat.assess(observations, now=NOW)
         self.assertIn("board_consistency", report["failed_invariants"])
+
+    def test_current_witness_match_trumps_old_drift_snapshot(self):
+        report = heartbeat.assess(sample(), now=NOW)
+        self.assertEqual(report["checks"]["witness_current_root_bytes"]["state"], "MATCH_LIVE_ROOT_BYTES")
+        self.assertEqual(report["checks"]["witness_historical_drift"]["state"], "HISTORICAL_ONLY")
+        self.assertFalse(report["metrics"]["witness"]["external_ots_verified_here"])
+
+    def test_changed_live_root_is_not_treated_as_witnessed(self):
+        observations = sample()
+        observations["root"]["sha256"] = "b" * 64
+        report = heartbeat.assess(observations, now=NOW)
+        self.assertEqual(report["checks"]["witness_current_root_bytes"]["state"], "UNCHECKABLE")
+
+    def test_unreachable_pointer_is_unknown_not_clean(self):
+        observations = sample()
+        observations["witness_pointer"] = {"state": "UNCHECKABLE", "reason": "HTTP 503"}
+        report = heartbeat.assess(observations, now=NOW)
+        self.assertEqual(report["checks"]["witness_pointer_source"]["state"], "UNCHECKABLE")
+        self.assertEqual(report["rollup"], "UNCHECKABLE_SOURCES")
 
     def test_root_membership_count_mismatch_fails(self):
         observations = sample()
