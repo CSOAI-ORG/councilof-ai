@@ -27,9 +27,16 @@ def stub_fetch(url: str, *, token=None, **_):
                 "license": {"spdx_id": "Apache-2.0"}, "archived": False,
                 "pushed_at": "2026-11-23T21:30:00Z"}
     if "api.crossref.org/works" in url:
+        from urllib.parse import parse_qs, urlsplit
+        topic = parse_qs(urlsplit(url).query).get("query.bibliographic", [""])[0]
+        relevant = {
+            c.TOPICS[0]: "Reproducible evaluation of AI agents <script>",
+            c.TOPICS[1]: "Calibrated AI safety benchmarks <script>",
+            c.TOPICS[2]: "Autonomous agent authorization policy <script>",
+        }
         doi = "10.1234/source.example"
         return {"message": {"items": [
-            {"DOI": doi, "title": ["Open agent measurement paper <script>"],
+            {"DOI": doi, "title": [relevant[topic]],
              "published": {"date-parts": [[2024, 2, 2]]},
              "indexed": {"date-time": "2026-11-23T00:00:00Z"},
              "abstract": "PRIVATE FULL TEXT MUST NOT BE COPIED",
@@ -158,13 +165,25 @@ class ResearchCommonsTests(unittest.TestCase):
             if "api.crossref" in url:
                 return {"message": {"items": [
                     {"DOI": "javascript:alert(1)", "title": ["bad"]},
-                    {"DOI": "10.1234/good", "title": ["good <img>"]},
+                    {"DOI": "10.1234/good", "title": ["AI agent evaluation <img>"]},
                     {"DOI": "10.1234/good", "title": ["duplicate"]},
                 ]}}
             return stub_fetch(url, token=token)
         r = c.crossref_topic(c.TOPICS[0], from_date="2026-11-01", fetch=poisoned)
         self.assertEqual(len(r["papers"]), 1)
-        self.assertEqual(r["papers"][0]["title_metadata"], "good img")
+        self.assertEqual(r["papers"][0]["title_metadata"], "AI agent evaluation img")
+
+    def test_crossref_does_not_call_unrelated_paper_research(self):
+        def misleading(url, *, token=None):
+            if "api.crossref" in url:
+                return {"message": {"items": [
+                    {"DOI": "10.1234/irrelevant", "title": ["A cancer medicine clinical trial"]},
+                    {"DOI": "10.1234/relevant", "title": ["Reproducible evaluation of AI agents"]},
+                ]}}
+            return stub_fetch(url, token=token)
+        r = c.crossref_topic(c.TOPICS[0], from_date="2026-11-01", fetch=misleading)
+        self.assertEqual([x["doi"] for x in r["papers"]], ["10.1234/relevant"])
+        self.assertEqual(r["coverage"], "TOP_8_API_SEARCH_MATCHES_ONLY_NOT_EXHAUSTIVE")
 
     def test_bad_crossref_shape_is_explicit_error(self):
         def malformed(url):
