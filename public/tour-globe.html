@@ -294,6 +294,24 @@
     color: var(--muted);
   }
 </style>
+<!-- The map engine. The unified page template dropped these three lines on 3 Sep 2026, which left
+     the script below failing with "Cesium is not defined". The library must load before it. -->
+<script>window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/';</script>
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Widgets/widgets.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Cesium.js"></script>
+<script>/* Framed inside another page, or asked with ?embed=1: show the globe alone. */
+if(window.self!==window.top||/[?&]embed=1(&|$)/.test(location.search))document.documentElement.classList.add('embed');</script>
+<style>
+  /* The globe's own box; the page template carries no rule for it. */
+  #c { height: min(70vh, 640px); min-height: 360px; border-radius: 12px; overflow: hidden; background: #05080e; }
+  .load { color: var(--muted, #6b7280); font-size: 13px; margin: 8px 0; }
+  /* Embed mode: the globe alone, filling its frame. /tour frames this page as its background. */
+  html.embed, html.embed body { height: 100%; margin: 0; background: #05080e; overflow: hidden; }
+  html.embed .site-header, html.embed .site-footer, html.embed main > h1 { display: none !important; }
+  html.embed main { max-width: none; margin: 0; padding: 0; height: 100%; }
+  html.embed #c { position: fixed; inset: 0; width: 100%; height: 100%; min-height: 0; border-radius: 0; }
+  html.embed .load { position: fixed; left: 12px; bottom: 10px; z-index: 2; margin: 0; color: #94a3b8; }
+</style>
 </head>
 <body>
 <header class="site-header" data-static-shell="brand-v1">
@@ -319,11 +337,12 @@ try{ Cesium.Ion.defaultAccessToken=''; }catch(e){}
 var viewer;
 try{
   viewer=new Cesium.Viewer('c',{
-    baseLayer:new Cesium.ImageryLayer(new Cesium.UrlTemplateImageryProvider({
-      url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-      subdomains:['a','b','c','d'],
-      maximumLevel:18
-    })),
+    // Basemap: the Natural Earth II imagery shipped inside the engine's own package, darkened.
+    // No tile service and no key. The CARTO raster tiles used before are, by CARTO's own FAQ,
+    // no longer served without a key since 25 Sep 2026.
+    baseLayer:Cesium.ImageryLayer.fromProviderAsync(
+      Cesium.TileMapServiceImageryProvider.fromUrl(Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')),
+      {brightness:0.62, contrast:1.12, saturation:0.5}),
     baseLayerPicker:false, geocoder:false, homeButton:false, sceneModePicker:false,
     navigationHelpButton:false, animation:false, timeline:false, fullscreenButton:false,
     infoBox:false, selectionIndicator:false, requestRenderMode:false
