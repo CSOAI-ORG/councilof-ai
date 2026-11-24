@@ -52,5 +52,61 @@
         "state": "REPORTED"
       }
     }
+  },
+  {
+    "schema": "csoai.reaction-experiment/0.1",
+    "realm": "OBSERVED",
+    "condition": "HUMAN_INFORMATION",
+    "experiment_id": "real-github-host-20261124",
+    "case_id": "branch-write-readback",
+    "input_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+    "method_sha256": "e8c365f826183fc0847696bf0995cf7192438865a05e9bfdf17da8bc25276352",
+    "stages": {
+      "request": {
+        "state": "REPORTED",
+        "receipt_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+        "source_realm": "OBSERVED"
+      },
+      "method": {
+        "state": "REPORTED",
+        "receipt_sha256": "e8c365f826183fc0847696bf0995cf7192438865a05e9bfdf17da8bc25276352",
+        "source_realm": "OBSERVED"
+      },
+      "human_approval": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      },
+      "executor_authority": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      },
+      "executor_response": {
+        "state": "REPORTED",
+        "receipt_sha256": "eb95d9fed738ed1d5917d12c6c22d1eabc39cdfbcbb9f87555ed7ed88870d28c",
+        "source_realm": "OBSERVED"
+      },
+      "effect": {
+        "state": "REPORTED",
+        "receipt_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+        "source_realm": "OBSERVED"
+      },
+      "receiver_verification": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      },
+      "retrieval": {
+        "state": "REPORTED",
+        "receipt_sha256": "8064c4586f15d94994701910d81f7564c7a47cba33add3919adbae540bd8597f",
+        "source_realm": "OBSERVED"
+      },
+      "payment": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      },
+      "repeat_use": {
+        "state": "UNKNOWN",
+        "source_realm": "OBSERVED"
+      }
+    }
   }
 ]
