@@ -99,7 +99,7 @@ export default function EatResearchCommonsPanel() {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-emerald-300">Public research · AUTO-EAT to H.I.M.</p>
-            <h2 className="mt-2 text-2xl font-bold text-emerald-50">Live open research commons</h2>
+            <h2 className="mt-2 text-2xl font-bold text-emerald-50">Open research commons</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-emerald-100/75">
               Source-linked software revisions and paper references for Council research. Discovery is free.
               A source listing is not our measurement, a vendor partnership, licence clearance or independent verification.
