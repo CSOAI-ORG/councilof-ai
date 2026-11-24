@@ -38,7 +38,7 @@ export const EVIDENCE_RAIL_HERO = {
   kicker: "The evidence rail",
   title: "We don't sell evaluations. We sign evidence.",
   lede:
-    "The AI governance market has a structural problem: the people grading models usually have a stake in the grade — a remediation product to sell, or risk of their own on the book. We built the other thing. A measurement layer that produces signed, deterministic facts and takes no money from anything it ranks.",
+    "The AI governance market has a structural problem: the people grading models usually have a stake in the grade — a remediation product to sell, or risk of their own on the book. We built the other thing. A measurement layer that produces signed, deterministic facts, on a board where no one can buy a place, a score or a removal.",
   bg: {
     src: "/images/verifiable_evidence_card.jpg",
     alt: "Hands holding a signed evidence card reading verified: true",
@@ -59,7 +59,7 @@ export const EVIDENCE_RAIL_SLIDES: Slide[] = [
       { tag: "pain", text: "The party diagnosing your gaps is often the party selling the remediation" },
       { tag: "pain", text: "Scores from a party that also carries the exposure are not independent inputs" },
       { tag: "benefit", text: "A grader with no product attached to any outcome" },
-      { tag: "usp", text: "Structurally independent: we take no money from anything we rank, ever" },
+      { tag: "usp", text: "Structurally independent: no one can buy a place, a score or a removal" },
     ],
     video: { src: "/videos/trust-ecosystem.mp4", poster: "/videos/trust-ecosystem.jpg", title: "The trust ecosystem — who Council of AI serves" },
   },

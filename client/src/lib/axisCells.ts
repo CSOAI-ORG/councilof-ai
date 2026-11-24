@@ -168,6 +168,16 @@ export function intervalCell(a: AxisCellSource): { text: string; title?: string 
  * has not been run (UNTESTED); on a deterministic-facts axis no test is
  * APPLICABLE, because there is no fleet and no leader to separate.
  */
+/**
+ * A held row's stated limit, verbatim from GET /api/gspc `limit` (#4680: the ten held subject axes,
+ * claim-maintenance and governance carry one). Every table that prints a figure from such a row
+ * prints this beside it. A row without one returns null.
+ */
+export function heldLimit(a: object | null | undefined): string | null {
+  const v = (a as { limit?: unknown } | null | undefined)?.limit;
+  return typeof v === "string" && v.trim() ? v.trim() : null;
+}
+
 export function separationNote(a: AxisCellSource): string | null {
   if (a.separation) return null;
   if (isFactsAxis(a)) return "not applicable — no fleet, no leader";

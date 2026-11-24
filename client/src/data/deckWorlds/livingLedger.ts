@@ -68,7 +68,7 @@ export const LIVING_LEDGER_SLIDES: Slide[] = [
       { tag: "pain", text: "Assurance vendors grade you, then sell you the remedy for the grade" },
       { tag: "benefit", text: "A measured result with no product attached to the outcome" },
       { tag: "benefit", text: "The verdict is a deterministic predicate — never a vote, never a model judging a model" },
-      { tag: "usp", text: "We take no money from anything we rank" },
+      { tag: "usp", text: "No one can buy a place, a score or a removal" },
     ],
     href: "/methodology",
     cta: "Read the method",

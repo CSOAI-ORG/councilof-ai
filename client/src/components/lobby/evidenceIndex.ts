@@ -1,4 +1,5 @@
 import { quotableWire, type WireAxis, type WireBoard } from "./boardWire";
+import { heldLimit } from "@/lib/axisCells";
 
 /**
  * evidenceIndex — the Evidence-pack pane's artefact, as a PURE function.
@@ -50,6 +51,9 @@ function evidenceRow(a: WireAxis): Record<string, unknown> {
   if (a.n_note) row.n_note = a.n_note;
   if (typeof a.separation_p === "number") row.separation_p = a.separation_p;
   if (a.separation_basis) row.separation_basis = a.separation_basis;
+  // A held row (#4680) keeps its stated limit beside any figure it carries.
+  const limit = heldLimit(a);
+  if (limit) row.limit = limit;
 
   // ── invariant 1 ─────────────────────────────────────────────────────────
   if (quotableWire(a)) {

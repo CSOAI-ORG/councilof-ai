@@ -40,8 +40,8 @@ import type { Slide } from "@/components/scrollworld";
  *     Playground, Overcooked-AI). Copyleft, deprecated and proprietary/non-commercial
  *     environments are deliberately not named as hostable.
  *  8. The operator/measurer firewall is stated explicitly: MEOK operates and monetises
- *     play; Council of AI measures the same environments as frozen instruments and is
- *     never paid by a ranked party.
+ *     play; Council of AI measures the same environments as frozen instruments, and no one
+ *     can buy a place, a score or a removal on its board.
  */
 
 export const METROLOGY_HERO = {
@@ -152,11 +152,11 @@ export const METROLOGY_SLIDES: Slide[] = [
     kicker: "The firewall",
     title: "Whoever runs the game must not be whoever scores it",
     body:
-      "This is the part that makes the rest safe. MEOK operates and hosts the play, and may monetise it. Council of AI measures the same environments as frozen instruments, publishes the results, and is never paid by any party it ranks. The operator and the measurer are separate by construction, exactly as they are everywhere else on this site.",
+      "This is the part that makes the rest safe. MEOK operates and hosts the play, and may monetise it. Council of AI measures the same environments as frozen instruments, publishes the results, and no one can buy a place, a score or a removal on its board. The operator and the measurer are separate by construction, exactly as they are everywhere else on this site.",
     points: [
       { tag: "pain", text: "An arena operator that also sets the scores is a promoter, not an instrument" },
       { tag: "benefit", text: "The environments are frozen and published, so the measurement is reproducible off-platform" },
-      { tag: "usp", text: "We take no money from anything we rank — including anything we play against" },
+      { tag: "usp", text: "No one can buy a place, a score or a removal on the board" },
     ],
     bg: {
       src: "/images/coliseum_humans_vs_humanoids.jpg",
