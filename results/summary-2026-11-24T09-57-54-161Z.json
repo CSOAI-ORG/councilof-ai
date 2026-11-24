@@ -1,0 +1,171 @@
+{
+  "run_id": "2026-11-24T09-57-54-161Z",
+  "engine": "gspc-continuous",
+  "lane": "provenance",
+  "repo": "CSOAI-ORG/gspc-board",
+  "bank": {
+    "dataset": "csoai/gspc-peritem-rows-2026-08-12",
+    "source_dir": "rows/peritem_prv.jsonl",
+    "file_sha256": "fb9efe3afda9d075cf38607c53f1c6a8044909b642e58747b9559a87fcc83237",
+    "unique_pairs": 32,
+    "sha256_16": "cc2e86dbcc18bee7"
+  },
+  "labels": [
+    "DESTROYED",
+    "SURVIVES"
+  ],
+  "prompt_frame": "harness/gspc-top100/mill_hub_queue.py::axis_prompt",
+  "grader": "harness/gspc-top100/mill_hub_queue.py::read_label",
+  "comparable_to_board": false,
+  "panel": {
+    "limit": 10,
+    "offset": 0,
+    "n": 10
+  },
+  "started_at": "2026-11-24T09-57-54-161Z",
+  "finished_at": "2026-11-24T09-57-55-673Z",
+  "providers": {
+    "hf:moonshotai/Kimi-K3": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "hf:deepseek-ai/DeepSeek-V4.1-Flash": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "hf:MiniMaxAI/MiniMax-M3.1-Flash": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "hf:Qwen/Qwen3.8-2.4T-A95B": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "hf:zai-org/GLM-5.3": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "deepseek": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "gemini": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 403",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "grok": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 400 invalid key",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "n_graded": 0,
+      "parse_rate": null,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "cf:@cf/zai-org/glm-5.3": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "CLOUDFLARE_AI_TOKEN not set",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "cf:@cf/deepseek-ai/deepseek-v4.1-flash-1017": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "CLOUDFLARE_AI_TOKEN not set",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "cf:@cf/meta/llama-4-scout-17b-16e-instruct": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "CLOUDFLARE_AI_TOKEN not set",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "cf:@cf/google/gemma-4-26b-a4b-it": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "CLOUDFLARE_AI_TOKEN not set",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "cf:@cf/mistralai/mistral-small-3.1-24b-instruct": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "CLOUDFLARE_AI_TOKEN not set",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "accuracy": null,
+      "wilson95": null
+    }
+  },
+  "live_providers": []
+}
