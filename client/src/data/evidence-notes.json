@@ -11,6 +11,28 @@
  },
  "notes": [
   {
+   "id": "who-caught-our-published-errors",
+   "date": "2026-11-24",
+   "title": "Outside readers caught 15 of the 97 errors in our corrections record",
+   "summary": "The 15 trace to at least 8 separate outside reports; one audit of the live site on 26 August produced 8 of them.",
+   "body": "Our corrections record lists 97 published errors. Each entry states what was wrong, how it was caught and the fix, and the record is signed; this note counts the version whose content id begins cabc9952. We sorted the 97 by the detected_by label each entry carries. Our own checks caught 77: 58 in internal audits, 10 by monitors, 7 by persona tests and 2 by self-report. Outside readers caught 15, and 5 entries do not record who found the error. The 15 outside entries trace to at least 8 separate reports: audits of the live site on 19 and 26 August, an implementer and an objection on IETF lists, an outside review, a correspondent who tested our payable door, an issue in the IETF SCITT architecture repository and an independent security researcher. The audit of 26 August produced 8 of the 15. Three limits. The label is ours, and this note counts it rather than re-judging it. An error nobody recorded is absent here. And the record thinned: 90 entries are dated August or September and 7 are dated October or November, and the record does not say whether errors fell or recording did. The time a correction went live is recorded for 7 entries, too few to summarise. Errors can be reported from the corrections page.",
+   "artifacts": [
+    {
+     "label": "Corrections record (signed; what was wrong, how it was caught, the fix)",
+     "url": "https://councilof.ai/corrections/"
+    },
+    {
+     "label": "Who-caught table for this note",
+     "url": "https://councilof.ai/interop/insights/corrections-who-caught-2026-11-24.json"
+    },
+    {
+     "label": "Producer script (standard library only)",
+     "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/insights/corrections_who_caught.py"
+    }
+   ],
+   "social": "Outside readers caught 15 of the 97 errors in our published corrections record, from at least 8 separate reports. Our own checks caught 77. Table and method: https://councilof.ai/notes/who-caught-our-published-errors/"
+  },
+  {
    "id": "live-ai-rules-frozen-as-checkable-text",
    "date": "2026-11-22",
    "title": "264 of 573 live AI rules are frozen as text anyone can re-check",
