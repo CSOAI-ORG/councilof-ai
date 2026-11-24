@@ -38,7 +38,7 @@ describe("image-led homepage upgrade", () => {
       expect(`${product.title} ${product.body}`).not.toMatch(UNSUPPORTED);
     }
     const html = render(<HomeProducts />);
-    for (const href of ["/dashboard", "/dashboard?tab=art50", "/contact?arm=run", "/services/", "/claim-maintenance/", "/open-source/", "/registers", "/regulators", "/working-groups/"]) {
+    for (const href of ["/dashboard", "/dashboard?tab=art50", "/contact?arm=run", "/services/", "/claim-maintenance/", "/connect/#platforms", "/models-measured/", "/pilots/agent-authority/", "/open-source/", "/registers", "/regulators", "/working-groups/"]) {
       expect(html).toContain(`href="${href}"`);
     }
     expect(html).toContain("Terms before any paid request");

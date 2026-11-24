@@ -126,6 +126,6 @@ def calibration_rates(results: dict) -> dict:
             "wilson95": wilson(flags, len(ok)),
             "mean_T": round(sum(t["T"] for t in ok) / len(ok), 4) if ok else None,
             "incomparable": len(trials) - len(ok),
-            "role": "false-flag rate" if cond == "C0" else "detection rate",
+            "role": "false-flag rate" if cond in ("C0", "C5") else "detection rate",
         }
     return out
