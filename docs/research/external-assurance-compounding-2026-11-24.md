@@ -1,0 +1,47 @@
+# External assurance and commercial conversion — 2026-11-24
+
+Status: proposed operating programme, not an implementation or independent assurance result. Window: 2026-10-25 through 2026-11-24. Source dates and observed scope are separate. Do not change GSPC scores based on directory rankings.
+
+## Product thesis
+A portable, independently checkable authority-to-effect receipt for autonomous agents: principal mandate -> deterministic policy decision outside model -> scoped executor -> independently observed effect -> receiving-party verification -> optional settlement. Free verification; paid integration, monitoring, evidence assembly and support. Never sell a higher measurement score or imply that CSOAI and MEOK are independent of each other.
+
+## Public readback and immediate corrections
+Home https://councilof.ai/ already displays Probity rerun, W3C CG implementation, SAFE author review and IETF citation, and an external listing section. Do not replace these with promotional claims. AgentPeering is absent from the inspected homepage text; audit the entire site before claiming missing coverage.
+- https://mcpi.app/servers/ai-councilof-gspc — 23 Nov: 96/96 protocol checks, 54 tools listed, version 1.5.0, 916ms init. Summary says 13 tools; distinguish observed tools from stale description. Protocol availability is not functional safety.
+- https://agentpeering.com/agents/councilof.ai/council-of-ai-measurement-agent — LLM-graded quality 91/100; ownership unverified, zero real calls and reviews shown, score 56 in current detailed breakdown. Latest 22 Nov: east-west-crosswalk 2/8 (wrapper not expected JSON); governance specialist 8/8. Do not manipulate neutral ratings.
+- https://leashkit.com/io-github-csoai-org-gspc — 28 Oct manifest, 52 tools, 70/100 exposure; 5 uncapped-write classifications, generic lack of MCP declaration fields for revocation/expiry/audit. Not proof controls absent. Reconcile each classified tool against real behavior, verify controls and invite re-read.
+- https://themcpindex.com/flagged — editorial criticism of MEOK/CSOAI templated repository volume and same-operator score badges. Treat as allegation until package-by-package verification; audit shared ownership and badge provenance, label self-assessment clearly, withdraw duplicate listings where appropriate, preserve version history, seek independent review without pressure.
+- https://mcpbeat.com/mcp-servers/csoai-org/gspc/ and https://agenstry.com/agents/councilof.ai — endpoint status and agent discovery, not endorsement.
+
+## Market & regulatory intake
+- NIST 27 Oct: https://www.nist.gov/blogs/cybersecurity-insights/design-tenets-agent-identity-management-systems — ten proposed IAM design tenets. Crosswalk to evidence with not-tested states; build cross-org refusal receipt demonstration.
+- UK 3 Nov: https://www.gov.uk/government/publications/cyber-security-and-resilience-network-and-information-systems-bill-factsheets/agentic-ai-resilience-measures — proposed agentic loss-of-control resilience measures; not enacted requirements by this factsheet.
+- UK Budget: https://www.gov.uk/government/publications/budget-2026-document/budget-2026-html — £40m National Agentic Security Unit and £120m AISI additional funding; not an open award to CSOAI.
+- BoE/FCA 26 Oct: https://www.bankofengland.co.uk/report/2026/artificial-intelligence-in-uk-financial-services-2026 — 86% respondent firms use AI; post-deployment controls lag pre-deployment controls.
+- BoE/PRA/FCA 19 Nov: https://www.bankofengland.co.uk/prudential-regulation/publication/2026/november/cyber-risk-and-resilience-management-consultation-paper — consultation, not new rules; map live controls and limitations.
+- MAS 18 Nov: https://www.mas.gov.sg/news/media-releases/2026/mas-and-future-of-finance-institute-set-out-initiatives-in-support-of-national-ai-missions — Agentic Money Sandbox; pursue eligibility and partner route, no assertion of acceptance.
+- IBM 12 Nov: https://newsroom.ibm.com/blog-ibm-advances-agent-identity-security-with-new-vault-capabilities — runtime identity and credential observability; integrate with incumbents rather than rebuild secret storage.
+- EU: https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai — AI Omnibus effective 27 July; verify current obligations and deadlines individually; no automated legal compliance guarantees.
+- UK challenge fund context: https://www.gov.uk/government/news/chancellor-unveils-britains-ambitious-plan-for-ai — £25m challenge fund within National Cyber Shield, track official opening/eligibility.
+
+## 30-day work and acceptance criteria
+| Lane | First implementation | Acceptance evidence |
+|---|---|---|
+| P0 reputation | Canonical external evidence/criticism registry with source, relationship, dated observation, limitations, status and correction history | Public readback, no misleading badges, independently rechecked sample; no bulk deletion |
+| P0 A2A | Reproduce crosswalk grading case against exact agent-card contract, resolve mismatch or clarify wrapper | Golden JSON/schema test, negative cases, outside retest; do not tailor to judge alone |
+| P0 MCP | Compare live tool schemas with registry and descriptions; verify mutation classification, limits, expiry, revocation and receipts | Snapshot diff, isolated test-only read/write classification, deny/revoke tests, third-party re-read |
+| P0 authority | Sandbox authority-to-effect receipt with distinct principal/executor/verifier and append-only external audit | Valid, expired, revoked, replay, excess scope, altered receipt, observer unavailable all tested; no real payment/privileged writes |
+| P1 research | NIST tenet crosswalk; independent reproduction kit, pinned hashes, coverage and negative controls | Reproducible run outside operator, signed evidence and dated limitations |
+| P1 commerce | Agent Authority & Evidence pilot, scoped monitoring and integration deliverables | Real buyer acceptance, invoice/payment evidence, repeat use; protect confidential records |
+| P1 product | Council OS evidence feed, Watchdog self-scrutiny, SovSpace synthetic incident simulations, Academy exercises, plugin evidence links | UX and contract tests; no claim of automatic human authority |
+| P1 IP | Inventory inventions, code rights, licenses, contributor agreements, trade marks, disclosure timeline | Counsel review before patent disclosure; no assumption of patentability or exclusivity |
+| P2 distribution | Consolidate overlapping packages, track genuine unique use, downstream reuse and external integrations | Denominator-aware statistics; exclude self traffic where feasible, no manufactured activity |
+
+## Evidence ladder and targets
+Levels: proposed -> implemented -> internally tested -> deployed/read back -> independently reproduced -> receiving-party accepted. Do not skip levels or count directory presence as usage. Freeze core measurement methodology; proposed new axes go through change control.
+Internal trust target 8/10 is an aspiration, not an external rating: ownership and affiliations disclosed; verified identity where supported; corrected package inventory; independent reproduction and adverse test coverage; published correction ledger and external rechecks. Commercial target 8/10 requires real recurring customers, independently accepted paid deliverables, retention and positive contribution margin; do not count self-spend or grant announcements as sales.
+30-day leading targets (not achieved): 3 paid pilots, 1 renewal/expansion or repeat purchase, 2 independent technical reproductions, all high-priority criticism triaged, zero misleading self-issued independence claims in reviewed inventory, 100% tested denial/revocation paths in bounded pilot. Capture denominator and failures.
+## Public communications
+One evidence hub, one technical response article with source links, one research article on authority-to-effect receipts, one monthly market/standards brief. Individual posts only where substantive new facts exist. No logo misuse, paid-link schemes, reciprocal rating arrangements or suggestion of regulatory endorsement. Each public article must be reviewed for privacy, IP, legal and claims scope before deployment.
+## Cadence
+Daily: deduplicated external source readback, change classification, counterevidence, issue/experiment decision, exact-byte reproducible tests in approved environments. Weekly: publish material changes and corrections, prioritise commercial acceptance and independent validation. Coordinate with existing evidence digest, legal watch, research page and fleet watch; avoid duplicate or conflicting writes. Preserve human approvals for external commitments, spending, privileged effects, IP and live publication.
