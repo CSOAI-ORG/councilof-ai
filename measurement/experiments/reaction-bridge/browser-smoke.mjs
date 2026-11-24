@@ -24,7 +24,7 @@ const server=http.createServer(async (req,res)=>{
 });
 let browser=null, listening=false;
 try {
-  await build({entryPoints:[path.join(root,"measurement/experiments/reaction-bridge/browser-fixture.tsx")],outfile:path.join(dir,"bundle.js"),bundle:true,platform:"browser",format:"iife",target:"es2022",minify:true});
+  await build({entryPoints:[path.join(root,"measurement/experiments/reaction-bridge/browser-fixture.tsx")],outfile:path.join(dir,"bundle.js"),bundle:true,platform:"browser",format:"iife",target:"es2022",jsx:"automatic",minify:true});
   await fs.writeFile(path.join(dir,"index.html"),html);
   await new Promise((resolve,reject)=>{server.once("error",reject);server.listen(0,"127.0.0.1",resolve);});listening=true;
   const address=server.address(),base="http://127.0.0.1:"+address.port;
