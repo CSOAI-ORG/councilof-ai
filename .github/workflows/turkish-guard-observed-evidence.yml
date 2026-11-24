@@ -21,6 +21,8 @@ on:
       - "client/src/components/ReactionResearchReview.tsx"
       - "client/src/components/ReactionResearchReview.test.tsx"
       - "measurement/experiments/reaction-bridge/councilos-integration.test.mjs"
+      - "public/pilots/agent-authority/index.html"
+      - "scripts/research/test_pilot_real_evidence_source.py"
       - "docs/research/turkish-guard-observed-20261124/**"
       - ".github/workflows/turkish-guard-observed-evidence.yml"
 permissions:
@@ -82,6 +84,8 @@ jobs:
           PY
       - name: Verify saved four actual public-browser journeys and served bundle digest
         run: python3 -m unittest discover -s scripts/research -p test_live_reaction_browser_readback.py -v
+      - name: Verify commercial pilot's source-to-copy accuracy and unqualified claims
+        run: python3 -m unittest discover -s scripts/research -p test_pilot_real_evidence_source.py -v
       - name: Verify CouncilOS source consumes the same two real observed episodes
         run: node --test measurement/experiments/reaction-bridge/councilos-integration.test.mjs
       - name: Build actual observed, unsigned PARTIAL GSPC candidate event
