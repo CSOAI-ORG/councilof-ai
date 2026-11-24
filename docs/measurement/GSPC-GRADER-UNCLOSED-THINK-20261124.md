@@ -27,6 +27,35 @@ The canonical mill is the source of truth. Generated artifacts are produced by t
 - Code passing tests is not an independent model safety certification, human authorisation, real grader calibration or permission to promote a pending root.
 - The Space deployment must be separately pinned and read back; merging GitHub source does not establish HF production deployment.
 
+## Frozen archive retrospective replay — newly completed 24 November 2026
+
+**Source discovery beyond the published fact table:** `csoai/gspc-fact-table@d0605c2495bddae7956fec5c18403d8a49fd81ac` publishes 20,517 joined measurement rows, **without** the raw model-response text. But its frozen `gspc_cells.jsonl` carries exact file and SHA-256 references to the original `public/interop/mill-evidence/items-*.jsonl` cells. A read-only replay using the source files available on M4 established:
+
+| What was independently checked against pinned source descriptors | Reproduced result |
+| --- | ---: |
+| Frozen `gspc_cells.jsonl` SHA-256 | `68dfb5b07b01c2cd1929aa506d667b77eb00e600f0df42b3463860c1e6a85f47` |
+| Source cells matched to declared SHA-256 | **677 / 677** |
+| Historical rows accounted for | **20,517 / 20,517** |
+| Raw model-response strings with matching individual SHA-256 | **19,227 / 19,227 available** |
+| Archived rows without original raw-response text | **1,290 / 20,517** |
+| Available raw responses containing the relevant `<think>`-family tag marker | **0 / 19,227** |
+
+**Qualification:** The discovered parser defect **has no identified trigger in the 19,227 source-verifiable raw outputs** belonging to this frozen October fact table. That substantially limits the likely effect on *this particular corpus* from the new `<think>` check. It does not establish the absence of other parser bugs, correctness of original grades, model safety, independent calibration, or zero incidence in other source corpora or in the 1,290 rows without raw output. Do not backdate cards or alter historical measurements.
+
+**Executable reproduction:** `scripts/measurements/audit_frozen_raw_think.py` fails closed if any descriptor, cell source file or raw response hash differs or if required counts are absent. Twelve synthetic/adversarial tests are in `scripts/measurements/test_audit_frozen_raw_think.py`. It returns only source counts and candidate-incidence metadata—**no raw prompts, model responses, keys or private values**. It is not a grader and cannot reissue signed scores.
+
+To reproduce the exact frozen comparison after obtaining its pinned public descriptor (never substitute the current master descriptor, which may change), provide the original source-cell directory:
+
+```bash
+python3 scripts/measurements/test_audit_frozen_raw_think.py
+python3 scripts/measurements/audit_frozen_raw_think.py \
+  --descriptors /path/to/gspc-fact-table-at-d0605c/gspc_cells.jsonl \
+  --source-root public/interop/mill-evidence \
+  --output /tmp/csoai-frozen-think-audit.json
+```
+
+Verify the descriptor SHA is the pinned value above before treating a result as archived-fact evidence.
+
 ## Acceptance commands
 
 ~~~bash
