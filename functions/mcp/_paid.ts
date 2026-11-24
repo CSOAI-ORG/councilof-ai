@@ -494,7 +494,12 @@ async function paidToolCall(
       ...settlementFields(),
       how_to_pay: paymentPresented
         ? "A payment authorization was presented, but this response does not prove settlement. Inspect the returned reason, wallet, chain and facilitator before signing or retrying."
-        : "sign accepts[0] (x402 exact scheme, EIP-3009 transferWithAuthorization under extra.name/version) with your wallet, then call this tool again with the same arguments and either x_payment=<base64 of the payload> or the payload object in _meta[\"x402/payment\"] (x402 MCP transport), not both. The free preview, if any, is in payment_required.csoai.preview.",
+        : // 24 Nov 2026: 12 replies real models wrote from the previous text were sent to this door. Five
+          // put _meta beside params, where JSON-RPC does not allow it; two tried to base64 two kilobytes
+          // by hand and never finished; one put the object in x_payment. Two were read as a payment. So
+          // the location is spelled out, the channel that needs no encoding comes first, and the string
+          // form says what the route has always accepted (functions/api/_x402.ts: JSON text or base64).
+          "sign accepts[0] (x402 exact scheme, EIP-3009 transferWithAuthorization under extra.name/version) with your wallet, then call this tool again with the same arguments and the payment in ONE of two places, not both. (1) The payload object, as it is, at params._meta[\"x402/payment\"] (x402 MCP transport): _meta goes inside params, beside name and arguments, never at the top level of the JSON-RPC message; nothing is encoded. (2) arguments.x_payment=<one string>: the payload's JSON text, or base64 of that text; it must be a string, not an object, and base64 is not required. The free preview, if any, is in payment_required.csoai.preview.",
     };
     // T11 (6 Oct 2026): a dated amount is said in the human line, built from the challenge itself so it
     // disappears once accepts[0] no longer carries an end date. No amount is typed here.
