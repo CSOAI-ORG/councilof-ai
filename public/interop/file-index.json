@@ -1,7 +1,7 @@
 {
  "schema": "csoai.interop-file-index/0.2",
- "as_of": "2026-11-24T10:22:24Z",
- "source_commit": "b88b88a40f95c86debc03957be87ca06565bdb5c",
+ "as_of": "2026-11-24T22:44:52Z",
+ "source_commit": "eded2576cd23cb3e60e01d241555dd2dedffb996",
  "what_this_is": "Every file the estate's committed tree publishes under /interop/, with its size, its sha256 and how it is served. Built by reading the tree, so it is a measurement, not a list of intentions. Three served states occur, because there are three \u2014 a path routed to the mirror is not the same path as one the estate serves from its retired-bytes archive, and a fourth state (retired-bytes-absent) is reserved for a retired record the archive does not hold, which is not emitted because the archive is a deploy-time artefact and naming its membership here would make this index stale on every deploy.",
  "how_to_verify": "sha256 is the digest of the file's bytes as published. Fetch the path and hash it; on a row whose served_bytes reads 'as-published', a match means you hold what the estate published. Three things to know when it does not match: the digest is of the bytes at THIS index's source_commit, and the live site serves the bytes of the currently DEPLOYED commit, so the two agree once that commit is deployed; for pages-served HTML the digest is over the BUILT file, which carries the workspace-launcher script the build injects; and the EDGE rewrites some HTML in transit, so on a row whose served_bytes reads 'edge-transformed' or 'edge-transformed-per-request' the bytes the site serves are NOT the bytes published here, and on a 'per-request' row they differ on every fetch, so no digest of them can be reproduced by anyone, including us. A row whose served state is hf-mirror is a different case again: the bytes come from the HuggingFace evidence mirror, which is a SEPARATE HOST whose membership this index does not record, so the row's digest is checkable only while the mirror still holds the file. For retired-bytes paths the digest is of the canonical bytes, which the archive copies verbatim.",
  "retired": "A retired record is HISTORICAL evidence of a past measurement, never current proof. The estate's server marks these with the response header x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE SAME AS BEING UNREACHABLE: a retired path that is served answers 200 and its bytes verify against the sha256 below; a retired path that is not served answers 404. The `served` field says which.",
@@ -17,20 +17,20 @@
   "edge-transformed-per-request": "the edge rewrites this markup and the rewrite is randomised per request, so the bytes the site serves differ on EVERY fetch; no digest of them can be reproduced, by a reader or by the estate"
  },
  "counts": {
-  "files": 16566,
-  "bytes": 288824914,
+  "files": 16569,
+  "bytes": 289170703,
   "by_served": {
-   "pages": 3320,
+   "pages": 3323,
    "retired-bytes": 6,
    "hf-mirror": 13240
   },
   "by_served_bytes": {
-   "as-published": 16565,
+   "as-published": 16568,
    "edge-transformed-per-request": 1
   },
   "digests_taken_from_the_built_tree": 0,
   "digests_taken_from_the_injectors_transform": 54,
-  "digests_taken_from_the_tree_bytes": 3266,
+  "digests_taken_from_the_tree_bytes": 3269,
   "digests_not_comparable_no_built_tree": 0,
   "excluded_the_index_itself": 1,
   "excluded_not_present_in_the_tree": 0
@@ -5088,9 +5088,16 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/distribution-2026-11-24.json",
+   "bytes": 293603,
+   "sha256": "3bf802ae18f99d6f1d43082feb2c427ff504b1b7e3756c08d1d7d5e5591ca2b2",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/distribution-latest.json",
-   "bytes": 293597,
-   "sha256": "d8dac6e67f9626a2ae2a756b7e9d690553dac4d0a79bc62cdb474c21484b5055",
+   "bytes": 293603,
+   "sha256": "3bf802ae18f99d6f1d43082feb2c427ff504b1b7e3756c08d1d7d5e5591ca2b2",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -7253,14 +7260,14 @@
   {
    "path": "/interop/hf-census/SUMMARY.json",
    "bytes": 690,
-   "sha256": "c597188fb3357dd20894987bf60f6f7684ad042f75e1f3a265ec3aef99f8df1e",
+   "sha256": "abf74000ceede3506fe5c56b285fc3e0ba1f72b762835f7603ed25f87afff69c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/hf-census/axis-sources.json",
-   "bytes": 5543,
-   "sha256": "fb422646ba914822037c4c9df1df12c03876bf9c374bcffd7a938b5d7b138b9f",
+   "bytes": 5541,
+   "sha256": "f891f6c06cb310342f4a5e4debe65aacf994cab767ec1e315353ebac24c9505f",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -7273,8 +7280,8 @@
   },
   {
    "path": "/interop/hf-census/org-register.json",
-   "bytes": 1085358,
-   "sha256": "8a0c383502478535b417bc0379940a38b7c24385a6bfc1a99e2239fefa02bd46",
+   "bytes": 1134139,
+   "sha256": "cdef1b6ff95ac65e5e92205f202a49e858cc215cde362c46ccc0a3550c69155a",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -10368,9 +10375,16 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/mcp-registry-2026-11-24/census.json",
+   "bytes": 1817,
+   "sha256": "62768f68a75a05a1c673ebfac8514decac38243c8fe46856648e8eae862f0ad8",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/mcp-registry-latest.json",
    "bytes": 590,
-   "sha256": "f7657b10e42b6f113c08d2b9f1d11c6a0da2ec6bc2f582078eec8d1cba791d0e",
+   "sha256": "db73b2aea95a3cb691dff7f83009cf0762cd0ed4d3fe04d62d5d8ec362de9d99",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115397,6 +115411,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/x402-trust/20261124T101518Z.json",
+   "bytes": 1584,
+   "sha256": "0d0ccf864787dfdab54f8741454da4806f9202730295334eeb818019d99edb91",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/x402-trust/index.html",
    "bytes": 1940,
    "sha256": "3a025483c48fcb19b7d57ce87378d0f5234af085789ed8ecbf8b7756d681a1cd",
@@ -115406,7 +115427,7 @@
   {
    "path": "/interop/x402-trust/latest.json",
    "bytes": 1584,
-   "sha256": "534b4c7190239d7010af491b42dd1effb5e49a6a42a9deec7b16fe2f041d2817",
+   "sha256": "0d0ccf864787dfdab54f8741454da4806f9202730295334eeb818019d99edb91",
    "served": "pages",
    "served_bytes": "as-published"
   },
