@@ -36,6 +36,7 @@ describe("Council World fixed-source evidence adapters", () => {
     expect(result.sourceDate).toBe("2026-08-15T16:59:38Z");
     expect(eventAt(result, 0)?.axis).toBe("governance");
     expect(eventAt(result, 1)).toBeNull();
+    expect(parseObservatory({ ...archive, events: [{ ...archive.events[0], intent: "" }] }).events[0].intent).toBe("");
     expect(eventAt(result, -1)).toBeNull();
     expect(parseWorldFact("observatory", archive).value).toBe("1 indexed events");
   });
@@ -46,5 +47,6 @@ describe("Council World fixed-source evidence adapters", () => {
     expect(() => parseObservatory({ ...archive, events: [{ ...archive.events[0], source_index: 1 }] })).toThrow();
     expect(() => parseObservatory({ ...archive, source: { ...archive.source, sha256: "not-a-hash" } })).toThrow();
     expect(() => parseObservatory({ ...archive, events: [{ ...archive.events[0], source_epoch: Number.NaN }] })).toThrow();
+    expect(() => parseObservatory({ ...archive, events: [{ ...archive.events[0], intent: null }] })).toThrow();
   });
 });
