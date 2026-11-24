@@ -48,6 +48,7 @@ import packages from "../../public/interop/footprint-packages.json";
 import distribution from "../../public/interop/distribution-latest.json";
 import registryLatest from "../../public/interop/mcp-registry-latest.json";
 import { headFromGet } from "./_head";
+import { SELF_READ_DATASETS } from "./_momentum";
 
 export const SCHEMA = "csoai.footprint/0.1";
 export const TTL_SECONDS = 3600;
@@ -315,7 +316,9 @@ function passThrough(r: ArtifactRow): Record<string, unknown> {
 // ── gross_distribution's headline: CSOAI's own pair ───────────────────────────
 /** The entity whose figures head gross_distribution, and the scope the headline is stated under. */
 export const HEADLINE_ENTITY = "csoai";
-export const HEADLINE_SCOPE = "CSOAI packages";
+export const HEADLINE_SCOPE = "CSOAI packages, without the datasets our own services read";
+/** The scope of self_read: the Hugging Face datasets /api/momentum lists in hf_self_read. */
+export const SELF_READ_SCOPE = "the Hugging Face datasets our own services read";
 
 const WINDOWS = ["downloads_30d", "downloads_all_time"] as const;
 type WindowKey = (typeof WINDOWS)[number];
@@ -323,8 +326,11 @@ const WINDOW_LABEL: Record<WindowKey, string> = { downloads_30d: "30-day", downl
 
 export const ENTITY_RULE =
   "CSOAI Ltd and MEOK AI Labs are separate entities publishing from one account, and the census labels every package with its entity. " +
-  "The headline, downloads_30d and downloads_all_time are CSOAI's own figures, read from by_entity.*.csoai, and they are published only " +
-  "when both of CSOAI's windows are readable and dated like the census, the rule the home page and /llms.txt follow. " +
+  "The headline, downloads_30d and downloads_all_time are CSOAI's own figures without the Hugging Face datasets our own services read " +
+  "(hf_self_read in /api/momentum). They are summed from the census's own package rows, with the census producer's rule, and published only " +
+  "when both of CSOAI's by_entity windows are readable and dated like the census and the rows add back up to them, the rule the home page " +
+  "and /llms.txt follow. Those datasets' downloads are in self_read under their own label, because our own reads are inside their counts; " +
+  "the two are never added. " +
   "MEOK AI Labs' figures are in by_entity.*.meok under their own label and are never added to CSOAI's. " +
   "Packages labelled joint or unattributed are in neither figure. The census's totals count every row of the account, " +
   "so they are neither entity's figure and are not a headline here.";
@@ -417,6 +423,97 @@ export function entityWindows(
   return out;
 }
 
+// ── the datasets our own services read ────────────────────────────────────────
+const SELF_READ_IDS: ReadonlySet<string> = new Set(SELF_READ_DATASETS.map((d) => d.id));
+
+type PackageRow = { registry?: unknown; name?: unknown; entity?: unknown; downloads_30d?: unknown; downloads_all_time?: unknown };
+const isCountValue = (v: unknown): v is number => typeof v === "number" && Number.isSafeInteger(v) && v >= 0;
+
+/** scripts/distribution-measure.py by_entity() over a subset of one entity's rows: the same state rule. */
+function rollUp(rows: PackageRow[], w: WindowKey, asOf: string | undefined): ArtifactRow | null {
+  const counted = rows.filter((p) => isCountValue(p[w]));
+  if (!counted.length) return null;
+  return {
+    state: counted.length === rows.length ? "READ" : "PARTIAL",
+    value: counted.reduce((sum, p) => sum + (p[w] as number), 0),
+    covered: counted.length,
+    attempted: rows.length,
+    as_of: asOf ?? null,
+  };
+}
+
+/**
+ * CSOAI's package rows split into the Hugging Face datasets our own services read (SELF_READ_DATASETS
+ * in _momentum.ts) and the rest, rolled up per window with the producer's own rule. Both parts must
+ * add back up to by_entity.<window>.csoai in value, covered and attempted, in both windows, or this
+ * returns null and no CSOAI figure is published. Live census of 23 Nov 2026: of CSOAI's 551,286
+ * downloads in 30-day windows, 298,200 were of those ten datasets, whose counts include our reads.
+ */
+export function selfReadSplit(art: DistributionArtifact) {
+  const rows = (Array.isArray(art.packages) ? art.packages : []).filter(
+    (p): p is PackageRow => !!p && typeof p === "object" && (p as PackageRow).entity === HEADLINE_ENTITY,
+  );
+  const isSelf = (p: PackageRow) => p.registry === "huggingface" && typeof p.name === "string" && SELF_READ_IDS.has(p.name);
+  const own = rows.filter(isSelf);
+  const rest = rows.filter((p) => !isSelf(p));
+  const others = {} as Record<WindowKey, ArtifactRow>;
+  const selfRead = {} as Record<WindowKey, ArtifactRow>;
+  for (const w of WINDOWS) {
+    const block = art.by_entity && typeof art.by_entity === "object" ? (art.by_entity as Record<string, unknown>)[w] : undefined;
+    const whole = entityCount(block && typeof block === "object" ? (block as Record<string, unknown>)[HEADLINE_ENTITY] : undefined);
+    const o = rollUp(rest, w, art.as_of);
+    const s = own.length ? rollUp(own, w, art.as_of) : null;
+    if (!whole || !o || (own.length > 0 && !s)) return null;
+    const parts = { value: o.value! + (s?.value ?? 0), covered: o.covered! + (s?.covered ?? 0), attempted: o.attempted! + (s?.attempted ?? 0) };
+    if (parts.value !== whole.value || parts.covered !== whole.covered || parts.attempted !== whole.attempted) return null;
+    others[w] = o;
+    if (s) selfRead[w] = s;
+  }
+  return { others, selfRead: own.length ? selfRead : null, datasets: own.map((p) => p.name as string).sort() };
+}
+
+/**
+ * The headline pair and the self_read pair. CSOAI's by_entity pair still decides WHETHER a figure is
+ * published (entityWindows: both windows readable and dated like the census, or neither); the split
+ * decides WHAT is published. When the pair is readable but the rows do not add back up to it, both
+ * windows are UNCHECKABLE and say why, and the by_entity figure with our own reads inside it is never
+ * put in their place.
+ */
+export function headlineWindows(art: DistributionArtifact, nowIso: string) {
+  const whole = entityWindows(art, nowIso);
+  const readable = WINDOWS.every((w) => whole[w].state === "READ" || whole[w].state === "PARTIAL" || whole[w].state === "STALE");
+  if (!readable) return { headline: whole, selfRead: null as Record<WindowKey, Row> | null, datasets: [] as string[] };
+  const split = selfReadSplit(art);
+  const headline = {} as Record<WindowKey, Row>;
+  let selfRead: Record<WindowKey, Row> | null = split?.selfRead ? ({} as Record<WindowKey, Row>) : null;
+  for (const w of WINDOWS) {
+    const label = `${HEADLINE_SCOPE}, ${WINDOW_LABEL[w]}`;
+    const columns = windowColumns(art.totals?.[w]);
+    const tag = {
+      scope: HEADLINE_SCOPE,
+      entity: HEADLINE_ENTITY,
+      source_field: `packages (entity ${HEADLINE_ENTITY}, without hf_self_read), adding back up to by_entity.${w}.${HEADLINE_ENTITY}`,
+    };
+    if (!split) {
+      headline[w] = uncheckable(
+        `${label}: the census's package rows for ${HEADLINE_ENTITY} do not add back up to by_entity.${w}.${HEADLINE_ENTITY} in value, covered and attempted, so the datasets our own services read cannot be taken out; nothing is put in its place`,
+        { ...artifactBase(art), ...columns, ...tag },
+      );
+      continue;
+    }
+    headline[w] = { ...artifactRow(art, () => ({ ...columns, ...split.others[w] }), label, nowIso), ...tag };
+    if (selfRead && split.selfRead) {
+      selfRead[w] = {
+        ...artifactRow(art, () => ({ ...columns, ...split.selfRead![w] }), `${SELF_READ_SCOPE}, ${WINDOW_LABEL[w]}`, nowIso),
+        scope: SELF_READ_SCOPE,
+        entity: HEADLINE_ENTITY,
+        source_field: `packages (hf_self_read, entity ${HEADLINE_ENTITY})`,
+      };
+    }
+  }
+  return { headline, selfRead, datasets: split?.datasets ?? [] };
+}
+
 /**
  * gross_distribution: read out of the measured artifact, never fanned out from here.
  *
@@ -437,7 +534,7 @@ export function entityWindows(
  * registry, and `by_registry_scope` says so.
  */
 export function grossDistribution(nowIso: string, art: DistributionArtifact = distribution as DistributionArtifact): Row {
-  const csoai = entityWindows(art, nowIso);
+  const { headline: csoai, selfRead, datasets } = headlineWindows(art, nowIso);
   const byRegistry: Record<string, { downloads_30d: Row; downloads_all_time: Row }> = {};
   for (const name of Object.keys(art.registries ?? {})) {
     byRegistry[name] = {
@@ -450,6 +547,17 @@ export function grossDistribution(nowIso: string, art: DistributionArtifact = di
     downloads_30d: csoai.downloads_30d,
     downloads_all_time: csoai.downloads_all_time,
     entity_rule: ENTITY_RULE,
+    self_read: selfRead
+      ? {
+          scope: SELF_READ_SCOPE,
+          datasets,
+          rule:
+            "Our own Pages functions and jobs read these datasets, so their download counts include our reads. They are counted here " +
+            "on their own and never added to the headline, as /api/momentum keeps them apart (hf_self_read).",
+          downloads_30d: selfRead.downloads_30d,
+          downloads_all_time: selfRead.downloads_all_time,
+        }
+      : null,
     windows_rule:
       art.window_rule ??
       "30-day and cumulative are different windows over the same packages and are never added to each other.",
@@ -462,7 +570,7 @@ export function grossDistribution(nowIso: string, art: DistributionArtifact = di
     measurement_requests: art.requests ?? null,
     note:
       "Gross. Mirrors, CI installs and crawlers are in this number. It is not a count of people. " +
-      `It counts ${HEADLINE_SCOPE} only: MEOK AI Labs, a separate entity publishing from the same account, is in by_entity under its own label and is never added. ` +
+      `It counts ${HEADLINE_SCOPE}: those datasets are in self_read under their own label, and MEOK AI Labs, a separate entity publishing from the same account, is in by_entity under its own label; neither is ever added. ` +
       `Measured package by package on the pod and read out here; every package's own figure is in ${DISTRIBUTION_PATH}.`,
   };
 }
