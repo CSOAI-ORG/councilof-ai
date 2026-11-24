@@ -119,13 +119,17 @@ def summarise(docs: dict[str, bytes | None], pulls: dict[str, dict | None], at: 
     claims = obs["claims"].get("object")
     if isinstance(claims, dict) and isinstance(claims.get("totals"), dict):
         t = claims["totals"]
-        safe = lambda name: t.get(name) if type(t.get(name)) is int else None
-        metrics["claims"] = {"state": "PUBLISHER_DECLARED", "source_as_of": claims.get("as_of"),
-            "subjects": safe("subjects"), "claims": safe("claims"),
-            "due_execution_unverified": safe("subjects_with_due_execution_unverified"),
-            "claims_independently_remeasured_here": False}
+        required = ("subjects", "claims", "subjects_with_due_execution_unverified")
+        valid = all(type(t.get(name)) is int and t[name] >= 0 for name in required)
+        if valid and t["subjects_with_due_execution_unverified"] <= t["subjects"]:
+            metrics["claims"] = {"state": "PUBLISHER_DECLARED", "source_as_of": claims.get("as_of"),
+                "subjects": t["subjects"], "claims": t["claims"],
+                "due_execution_unverified": t["subjects_with_due_execution_unverified"],
+                "claims_independently_remeasured_here": False}
+        else:
+            metrics["claims"] = {"state": "UNCHECKABLE", "reason": "INVALID_REQUIRED_CLAIM_TOTALS"}
     else:
-        metrics["claims"] = {"state": "UNCHECKABLE"}
+        metrics["claims"] = {"state": "UNCHECKABLE", "reason": "MISSING_CLAIM_TOTALS"}
 
     root = obs["root"].get("object")
     metrics["root"] = ({"state": "PUBLISHER_DECLARED", "card_count": root["card_count"],
