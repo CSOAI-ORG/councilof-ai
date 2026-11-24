@@ -54,7 +54,7 @@ jobs:
           set +e
           python scripts/ops/verify_root_readback.py --out out/cryptographic-root-readback.json --strict
           CRYPTO_STATUS=$?
-          python scripts/ops/evidence-heartbeat.py --out out/operational-heartbeat.json --fail-on-invariant
+          python scripts/ops/evidence-heartbeat.py --out out/operational-heartbeat.json --crypto-report out/cryptographic-root-readback.json --fail-on-invariant
           STRUCT_STATUS=$?
           if test "$CRYPTO_STATUS" -ne 0 || test "$STRUCT_STATUS" -ne 0; then exit 2; fi
       - name: Record truth-boundary summary
