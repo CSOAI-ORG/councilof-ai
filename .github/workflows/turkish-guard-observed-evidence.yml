@@ -9,6 +9,7 @@ on:
       - "scripts/research/turkish_to_evidence_event.py"
       - "scripts/research/project_turkish_reaction.mjs"
       - "scripts/research/project_turkish_reaction.test.mjs"
+      - "scripts/research/turkish_councilos_import.test.mjs"
       - "docs/research/turkish-guard-observed-20261124/**"
       - ".github/workflows/turkish-guard-observed-evidence.yml"
 permissions:
@@ -45,6 +46,8 @@ jobs:
           assert obj["confusion"]=={"fn":62,"fp":287,"tn":2768,"tp":255}
           print("Observed model-output source integrity: PASS. Human/recipient qualification: NOT ESTABLISHED.")
           PY
+      - name: Verify real CouncilOS local import does not grant authority
+        run: node --test scripts/research/turkish_councilos_import.test.mjs
       - name: Build actual observed, unsigned PARTIAL GSPC candidate event
         run: |
           python3 scripts/research/turkish_to_evidence_event.py --output /tmp/observed-turkish-evidence-event.json
