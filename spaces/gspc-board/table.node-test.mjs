@@ -152,7 +152,7 @@ test("global search reveals filtered results instead of a hidden table", async (
   assert.equal(h.el("tape-table").hidden, false);
   assert.equal(h.location.hash, "#tape-table");
   assert.match(h.el("filter-note").textContent, /0 matches/);
-  assert.equal(h.el("board-body").innerHTML, "");
+  assert.match(h.el("board-body").innerHTML, /No axes match/);
 
   h.location.hash = "#lookup";
   h.window.dispatchEvent(new Event("hashchange"));
