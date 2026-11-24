@@ -1,0 +1,45 @@
+name: rogue-ai-external-source-audit
+on:
+  pull_request:
+    paths:
+      - "scripts/research/audit_rogue_ai_public_archive.py"
+      - "scripts/research/test_rogue_ai_public_archive_audit.py"
+      - "docs/research/rogue-ai-public-archive-20261124/**"
+      - ".github/workflows/rogue-ai-external-source-audit.yml"
+permissions:
+  contents: read
+jobs:
+  independent-table-readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify retained exact-byte source, denominator, and claim-boundary record
+        run: python3 -m unittest discover -s scripts/research -p test_rogue_ai_public_archive_audit.py -v
+      - name: Independently GET original upstream archive and recalculate its published rows
+        run: |
+          python3 scripts/research/audit_rogue_ai_public_archive.py --download --output /tmp/rogue-ai-external-reaudit.json
+          python3 - <<'PY'
+          import json
+          old=json.load(open("docs/research/rogue-ai-public-archive-20261124/observed-audit.json"))
+          new=json.load(open("/tmp/rogue-ai-external-reaudit.json"))
+          for key in (
+            "archive_original_bytes_sha256","table_original_bytes_sha256",
+            "row_count","reported_reproduced","reported_not_reproduced",
+            "archived_reported_reproduction_pct","initial_verdict_distribution",
+            "initial_verdict_by_final_reproduction","authors_original_model_session_totals",
+            "authors_aggregated_control_sessions","source_category_counts",
+          ):
+            assert new[key]==old[key], key
+          assert new["original_paper_model_sessions_reexecuted"] is False
+          assert new["independent_human_recipient_accepted"] is False
+          print("Original-source table arithmetic reproduced on independent GitHub CI host; no frontier model was called.")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rogue-ai-third-party-archive-source-recheck-${{ github.sha }}
+          path: /tmp/rogue-ai-external-reaudit.json
+          retention-days: 30
