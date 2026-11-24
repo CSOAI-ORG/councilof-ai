@@ -162,6 +162,40 @@ else {
   if (!api) reports.push("/connect/: no WebAPI node for the MCP door");
   else if (api.url !== `${ORIGIN}/mcp/free`) reports.push(`/connect/: WebAPI url is ${api.url}, not ${ORIGIN}/mcp/free`);
 }
+// --- /gspc/<axis>/ : the axis's OWN Dataset — REPORTED, not yet armed ----------
+// From 2026-11-22 every /gspc/<axis>/ page the sitemap lists carries a top-level Dataset for that
+// axis (client/src/lib/datasetSchema.ts gspcAxisPageDataset): url = the page, a JSON distribution,
+// isPartOf = the board. Until then each page carried only the board node. Reported, not failed,
+// until a real prerender has been seen to carry them — then move this to fail().
+let axisPagesChecked = 0;
+let axisPagesOk = 0;
+{
+  const sitemapFile = [join(DIR, "sitemap.xml"), join(REPO, "public/sitemap.xml")].find((f) => existsSync(f));
+  const listedAxisPages = sitemapFile
+    ? [...readFileSync(sitemapFile, "utf8").matchAll(/<loc>https:\/\/councilof\.ai\/gspc\/([a-z0-9-]+)\/<\/loc>/g)].map((m) => m[1])
+    : [];
+  for (const axis of listedAxisPages) {
+    axisPagesChecked++;
+    const where = `/gspc/${axis}/`;
+    const html = read(`gspc/${axis}`);
+    if (!html) { reports.push(`${where}: listed in the sitemap but not present in the built tree`); continue; }
+    const page = `${ORIGIN}${where}`;
+    const own = hasType(nodesIn(html, (m) => fail(where, `unparseable ld+json block (${m})`)), "Dataset").find((n) => n.url === page);
+    const problems = [];
+    if (!own) problems.push("no Dataset whose url is this page");
+    else {
+      if (!own.name) problems.push("no name");
+      if (!(typeof own.description === "string" && own.description.length >= 50 && own.description.length <= 5000)) problems.push("description not 50-5000 chars");
+      if (!own.creator?.name) problems.push("no creator");
+      if (!own.license) problems.push("no license");
+      if (!(Array.isArray(own.distribution) && own.distribution.some((d) => d?.contentUrl))) problems.push("no distribution with a contentUrl");
+      if (own.isPartOf?.["@id"] !== `${ORIGIN}/board/#dataset`) problems.push("isPartOf does not name the board Dataset");
+    }
+    if (problems.length) reports.push(`${where}: ${problems.join("; ")}`);
+    else axisPagesOk++;
+  }
+}
+
 for (const r of reports) console.warn(`⚠ structured-data-gate (reported, not armed): ${r}`);
 
 // --- /honesty/ : FAQPage -----------------------------------------------------
@@ -196,4 +230,4 @@ if (failures.length) {
 // Say what was actually checked. The earlier wording claimed "FAQPage on /honesty/ — present"
 // even on runs where the FAQ was absent and only warned, which is a success line asserting
 // something the run did not establish.
-console.log(`✓ structured-data-gate: Organization + Dataset on / present, parseable, citing a real board, and naming a page this tree serves; FAQPage on /honesty/ ${faqSeen ? `present (${faqSeen} question(s))` : "ABSENT — reported, not verified"}; /board/ Dataset and /connect/ WebAPI ${reports.length ? `${reports.length} reported problem(s), not armed` : "present"}`);
+console.log(`✓ structured-data-gate: Organization + Dataset on / present, parseable, citing a real board, and naming a page this tree serves; FAQPage on /honesty/ ${faqSeen ? `present (${faqSeen} question(s))` : "ABSENT — reported, not verified"}; /board/ Dataset, /connect/ WebAPI and ${axisPagesOk}/${axisPagesChecked} sitemap-listed /gspc/<axis>/ axis Datasets ${reports.length ? `— ${reports.length} reported problem(s), not armed` : "present"}`);

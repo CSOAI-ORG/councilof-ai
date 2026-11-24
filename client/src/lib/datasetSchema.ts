@@ -78,35 +78,90 @@ export const GSPC_MEASUREMENT_TECHNIQUE =
 
 const hfUrl = (slug: string) => `https://huggingface.co/datasets/${slug}`;
 
+type RegistryAxis = (typeof AXES)[number];
+
+/** One registry axis as a Dataset node (the bank on Hugging Face). Shared by the board's
+ *  `hasPart` catalogue and by each axis deep-dive page, so the two cannot disagree. */
+function axisBankNode(a: RegistryAxis): Record<string, unknown> {
+  const hf = hfUrl(a.dataset as string);
+  const doi = GSPC_AXIS_DOIS[a.axis];
+  const node: Record<string, unknown> = {
+    "@type": "Dataset",
+    name: `GSPC — ${a.axis} bank (${a.bench})`,
+    description: a.task,
+    url: hf,
+    sameAs: hf,
+    license: GSPC_LICENSE,
+    isAccessibleForFree: true,
+    creator: GSPC_CREATOR,
+    publisher: GSPC_CREATOR,
+    measurementTechnique: GSPC_MEASUREMENT_TECHNIQUE,
+    variableMeasured: a.task,
+    isPartOf: { "@type": "Dataset", "@id": `${GSPC_BOARD_PAGE}#dataset`, name: "GSPC board", url: GSPC_BOARD_PAGE },
+  };
+  // A Hub repository page is a valid Dataset URL, but it is not itself a JSON
+  // download. Do not emit DataDownload until the registry publishes a stable,
+  // file-specific content URL and its actual media type.
+  // A minted DOI makes the bank citable; it is only asserted when real.
+  if (doi) {
+    node.identifier = doi;
+    if (ZENODO_DOIS_RESOLVE) node.citation = `https://doi.org/${doi}`;
+  }
+  return node;
+}
+
 /** Per-axis Dataset nodes, one per published bank, derived from the registry. */
 export function gspcAxisDatasets(): Record<string, unknown>[] {
-  return AXES.filter((a) => a.dataset).map((a) => {
-    const hf = hfUrl(a.dataset as string);
-    const doi = GSPC_AXIS_DOIS[a.axis];
-    const node: Record<string, unknown> = {
-      "@type": "Dataset",
-      name: `GSPC — ${a.axis} bank (${a.bench})`,
-      description: a.task,
-      url: hf,
-      sameAs: hf,
-      license: GSPC_LICENSE,
-      isAccessibleForFree: true,
-      creator: GSPC_CREATOR,
-      publisher: GSPC_CREATOR,
-      measurementTechnique: GSPC_MEASUREMENT_TECHNIQUE,
-      variableMeasured: a.task,
-      isPartOf: { "@type": "Dataset", "@id": `${GSPC_BOARD_PAGE}#dataset`, name: "GSPC board", url: GSPC_BOARD_PAGE },
-    };
-    // A Hub repository page is a valid Dataset URL, but it is not itself a JSON
-    // download. Do not emit DataDownload until the registry publishes a stable,
-    // file-specific content URL and its actual media type.
-    // A minted DOI makes the bank citable; it is only asserted when real.
-    if (doi) {
-      node.identifier = doi;
-      if (ZENODO_DOIS_RESOLVE) node.citation = `https://doi.org/${doi}`;
-    }
-    return node;
-  });
+  return AXES.filter((a) => a.dataset).map(axisBankNode);
+}
+
+/** The served URL of an axis deep-dive. The bare /gspc/<axis> form 308s to it. */
+export const gspcAxisPageUrl = (axis: string) => `${BASE}/gspc/${axis}/`;
+
+/** The axis's own row of the live board, as JSON: GET /api/gspc/axis/:axis serves the same bytes
+ *  as GET /api/gspc?axis=:axis (functions/api/gspc/axis/[axis].ts) and 404s an unknown axis. */
+export const gspcAxisApiUrl = (axis: string) => `${BASE}/api/gspc/axis/${axis}`;
+
+/**
+ * The top-level Dataset an axis deep-dive page (/gspc/<axis>/) carries as its OWN node.
+ *
+ * Until 2026-11-22 every axis page carried only the BOARD node (one 283-character description,
+ * identical on every page), with the axis's bank buried in `hasPart`, so a dataset search engine
+ * reading /gspc/care/ was told the page described the whole board. This is the same registry node
+ * the board's `hasPart` carries (name, licence, creator, measurement technique, DOI identifier where
+ * minted), re-pointed at the page that describes it:
+ *   • `url` and `@id` are the page; the Hugging Face bank stays as `sameAs`.
+ *   • `distribution` is the axis's own row of the live board as JSON — a real JSON download, unlike
+ *     the Hub landing page (see the note in axisBankNode).
+ *   • `isPartOf` names the board Dataset by its @id.
+ *   • `description` is the registry's task text plus fixed wording that carries no number: the
+ *     registry's task text alone is under the 50 characters dataset search asks for on most axes.
+ * An axis with no published bank gets no node (null), never a constructed one.
+ */
+export function gspcAxisPageDataset(axis: string): Record<string, unknown> | null {
+  const a = AXES.find((x) => x.axis === axis);
+  if (!a || !a.dataset) return null;
+  const page = gspcAxisPageUrl(a.axis);
+  const api = gspcAxisApiUrl(a.axis);
+  return {
+    "@context": "https://schema.org",
+    "@id": `${page}#dataset`,
+    ...axisBankNode(a),
+    url: page,
+    description:
+      `${a.task} — the ${a.axis} axis of the Council of AI GSPC board (${a.bench}). ` +
+      `The frozen bank is published as the Hugging Face dataset ${a.dataset}. ` +
+      `The live item count and results are this axis's row on GET ${api}, not a figure on this page. ` +
+      "Measurement, not certification.",
+    distribution: [
+      {
+        "@type": "DataDownload",
+        name: `GSPC board row for the ${a.axis} axis (live JSON)`,
+        encodingFormat: "application/json",
+        contentUrl: api,
+      },
+    ],
+  };
 }
 
 /**

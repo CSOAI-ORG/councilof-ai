@@ -3,7 +3,8 @@ import { axisHref } from "@/lib/axisHref";
 import AxisLink from "@/components/AxisLink";
 import { Link, useRoute } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
-import { gspcDatasetLd } from "@/lib/datasetSchema";
+import { gspcAxisPageDataset, gspcDatasetLd } from "@/lib/datasetSchema";
+import { useHeadJsonLd } from "@/lib/headJsonLd";
 import { verifyPublishedArenaElo } from "@/lib/arenaAttestation";
 import { BOARD_COUNT_OBSERVED, BOARD_OBSERVED_AT, boardCountFromPayload, boardKindSplitFromPayload } from "@/lib/boardCount";
 import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
@@ -264,6 +265,12 @@ export default function GspcScoreboard() {
   const rawAxis = axisParams?.axis?.toLowerCase() ?? null;
   const wantAxis = rawAxis ? (AXIS_ALIAS[rawAxis] ?? rawAxis) : null;
   const isFinancialAxis = !!wantAxis && FIN_AXIS_IDS.has(wantAxis);
+  // An axis deep-dive carries the axis's OWN Dataset node in <head> (url = this page, distribution =
+  // the axis's live board row, isPartOf = the board). Only when the registry has no published bank
+  // for the axis does the page fall back to the board node below. Derived from the route, not the
+  // fetched payload, so the prerendered snapshot carries it.
+  const axisLd = wantAxis ? gspcAxisPageDataset(wantAxis) : null;
+  useHeadJsonLd("dataset", axisLd);
   const focused: Axis | null =
     data && wantAxis ? ((data.axes as Axis[]).find((a) => a.axis === wantAxis) ?? null) : null;
 
@@ -326,7 +333,7 @@ export default function GspcScoreboard() {
   return (
     <>
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(DATASET_LD) }} />
+      {!axisLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(DATASET_LD) }} />}
       <div className="mx-auto max-w-5xl px-6 py-14">
         <img
           src="/images/detail/board_arena_detail.jpg"
