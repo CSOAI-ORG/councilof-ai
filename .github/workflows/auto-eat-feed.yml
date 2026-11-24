@@ -56,6 +56,17 @@ jobs:
       - name: regenerate the timestamped, non-authoritative status
         run: python3 scripts/auto-eat/gen_status.py
 
+      - name: Verify research metadata-only source and human-authority holds
+        run: python3 scripts/auto-eat/test_research_commons.py
+
+      - name: Update bounded public research commons at most once every 20 hours
+        env:
+          GH_API_TOKEN: ${{ github.token }}
+        run: |
+          timeout 150s python3 scripts/auto-eat/research_commons.py \
+            --out public/interop/auto-eat/research-commons.json \
+            --min-hours 20
+
       - name: verify unsigned and refusal invariants
         run: |
           python3 scripts/auto-eat/test_fold_auto_eat.py
