@@ -163,7 +163,7 @@ def safe_text(raw: object, max_chars=240) -> str | None:
 def github_source(src: tuple[str, str, str], *, token=None,
                   fetch=fetch_json) -> dict:
     slug, kind, experiment = src
-    if not REPO_ID.fullmatch(slug):
+    if not REPO_ID.fullmatch(slug) or any(part in (".", "..") for part in slug.split("/")):
         raise Uncheckable("INVALID_STATIC_REPOSITORY")
     base = "https://api.github.com/repos/" + slug
     try:
