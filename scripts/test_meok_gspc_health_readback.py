@@ -138,6 +138,28 @@ class MeokGspcReadbackTests(unittest.TestCase):
             with self.subTest(v=v), self.assertRaises(ValueError):
                 r.evaluate(sources(), NOW, max_age_hours=v)
 
+    def test_date_only_z_cannot_produce_false_green(self):
+        # Prior version parsed this invalid date as naive on both sides and
+        # reported SOURCES_RESPONDING_AWARENESS_WITHIN_POLICY with zero ages.
+        invalid = "2026-11-23Z"
+        x = sources()
+        x["spine"]["body"]["timestamp"] = invalid
+        x["spine"]["body"]["awareness"]["generated_at"] = invalid
+        x["spine"]["body"]["awareness"]["gspc_spine"]["observed_at"] = invalid
+        with self.assertRaises(ValueError):
+            r.evaluate(x, invalid)
+        self.assertEqual(r.evaluate(x, NOW)["state"], "SOURCE_CLOCK_UNCHECKABLE")
+
+    def test_date_only_z_cli_returns_machine_refusal_exit_four(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = Path(tmp) / "fixture.json"
+            output = Path(tmp) / "status.json"
+            fixture.write_text(json.dumps(sources()))
+            rc = r.main(["--fixture", str(fixture), "--as-of", "2026-11-23Z",
+                         "--output", str(output)])
+            self.assertEqual(rc, 4)
+            self.assertFalse(output.exists())
+
     def test_wrong_utc_format_fails(self):
         with self.assertRaises(ValueError):
             r.evaluate(sources(), "2026-11-24T00:55:00+00:00")
