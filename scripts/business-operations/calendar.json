@@ -1,16 +1,105 @@
 {
-  "period": {"start": "2026-09-12", "end": "2026-09-26", "reviewed_at": "2026-09-12", "scope": "Selected verified CSOAI-relevant dates, not an exhaustive regulatory calendar"},
+  "period": {
+    "start": "2026-11-24",
+    "end": "2027-01-16",
+    "reviewed_at": "2026-11-24",
+    "scope": "Selected source-checked regulatory and participation dates plus clearly identified internal reviews; not exhaustive, not legal advice or automatic obligation"
+  },
   "sources": [
-    {"id": "eu-data-sovereignty", "url": "https://digital-strategy.ec.europa.eu/en/consultations/targeted-consultation-safeguarding-eus-data-sovereignty", "marker": "data sovereignty"},
-    {"id": "nist-documentation", "url": "https://www.nist.gov/artificial-intelligence/nists-ai-standards-zero-drafts-pilot-project-accelerate-standardization", "marker": "September 16, 2026"},
-    {"id": "cra-reporting", "url": "https://digital-strategy.ec.europa.eu/en/policies/cra-reporting", "marker": "reporting"},
-    {"id": "enisa-srp", "url": "https://www.enisa.europa.eu/topics/product-security/single-reporting-platform-srp", "marker": "Single Reporting Platform"},
-    {"id": "enisa-srp-status", "url": "https://www.enisa.europa.eu/topics/cra-srp-status", "marker": "CRA"}
+    {
+      "id": "eu-data-sovereignty",
+      "url": "https://digital-strategy.ec.europa.eu/en/consultations/targeted-consultation-safeguarding-eus-data-sovereignty",
+      "marker": "data sovereignty"
+    },
+    {
+      "id": "nist-documentation",
+      "url": "https://www.nist.gov/artificial-intelligence/nists-ai-standards-zero-drafts-pilot-project-accelerate-standardization",
+      "marker": "September 16, 2026"
+    },
+    {
+      "id": "cra-reporting",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/cra-reporting",
+      "marker": "reporting"
+    },
+    {
+      "id": "enisa-srp",
+      "url": "https://www.enisa.europa.eu/topics/product-security/single-reporting-platform-srp",
+      "marker": "Single Reporting Platform"
+    },
+    {
+      "id": "enisa-srp-status",
+      "url": "https://www.enisa.europa.eu/topics/cra-srp-status",
+      "marker": "CRA"
+    },
+    {
+      "id": "eu-ai-act-service-desk",
+      "url": "https://ai-act-service-desk.ec.europa.eu/en/ai-act/timeline/timeline-implementation-eu-ai-act",
+      "marker": "02 Dec 2026"
+    },
+    {
+      "id": "ofgem-ai-assurance-consultation",
+      "url": "https://www.ofgem.gov.uk/consultation/approach-ai-assurance-energy-sector",
+      "marker": "AI assurance"
+    }
   ],
   "events": [
-    {"id": "cra-reporting-in-force", "date": "2026-09-11", "title": "CRA reporting obligations began; operational relevance throughout this window", "url": "https://digital-strategy.ec.europa.eu/en/policies/cra-reporting", "action": "Prepare an evidence custody example for manufacturers. Applicability and incident reporting remain human decisions; no claim that a GSPC card satisfies CRA."},
-    {"id": "eu-data-sovereignty", "date": "2026-09-15", "deadline_at": "2026-09-15T21:59:00Z", "title": "EU data sovereignty consultation closes 23:59 CEST", "url": "https://digital-strategy.ec.europa.eu/en/consultations/targeted-consultation-safeguarding-eus-data-sovereignty", "action": "Review draft contribution on declared versus observed routing metadata and portable evidence. Submit only after explicit authorization."},
-    {"id": "nist-documentation", "date": "2026-09-16", "title": "NIST public-facing AI documentation input date; exact cutoff time unspecified", "url": "https://www.nist.gov/artificial-intelligence/nists-ai-standards-zero-drafts-pilot-project-accelerate-standardization", "action": "Finalize existing NIST draft with measured, missing, and unsigned examples and AI-assistance disclosure. Submit only after explicit authorization."},
-    {"id": "business-review", "date": "2026-09-26", "title": "Internal 14-day revenue and evidence review; not a regulatory deadline", "url": "https://councilof.ai/api/revenue", "action": "Reconcile actual settlement growth, repeat purchases, evidence freshness, useful completed runs and index coverage. Do not infer ARR from test transactions."}
+    {
+      "id": "cra-reporting-in-force",
+      "date": "2026-09-11",
+      "title": "CRA reporting obligations began; operational relevance throughout this window",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/cra-reporting",
+      "action": "Prepare an evidence custody example for manufacturers. Applicability and incident reporting remain human decisions; no claim that a GSPC card satisfies CRA."
+    },
+    {
+      "id": "eu-data-sovereignty",
+      "date": "2026-09-15",
+      "deadline_at": "2026-09-15T21:59:00Z",
+      "title": "EU data sovereignty consultation closes 23:59 CEST",
+      "url": "https://digital-strategy.ec.europa.eu/en/consultations/targeted-consultation-safeguarding-eus-data-sovereignty",
+      "action": "Review draft contribution on declared versus observed routing metadata and portable evidence. Submit only after explicit authorization."
+    },
+    {
+      "id": "nist-documentation",
+      "date": "2026-09-16",
+      "title": "NIST public-facing AI documentation input date; exact cutoff time unspecified",
+      "url": "https://www.nist.gov/artificial-intelligence/nists-ai-standards-zero-drafts-pilot-project-accelerate-standardization",
+      "action": "Finalize existing NIST draft with measured, missing, and unsigned examples and AI-assistance disclosure. Submit only after explicit authorization."
+    },
+    {
+      "id": "business-review",
+      "date": "2026-09-26",
+      "title": "Internal 14-day revenue and evidence review; not a regulatory deadline",
+      "url": "https://councilof.ai/api/revenue",
+      "action": "Reconcile actual settlement growth, repeat purchases, evidence freshness, useful completed runs and index coverage. Do not infer ARR from test transactions."
+    },
+    {
+      "id": "internal-business-evidence-review-2026-12-01",
+      "date": "2026-12-01",
+      "title": "Internal CSOAI seven-day revenue, GSPC freshness, indexed x402 discovery and human-authority gap review (NOT an external deadline)",
+      "url": "https://councilof.ai/api/revenue",
+      "action": "Read the existing measured/unknown states, reconcile signed root and paying customer evidence separately; do not claim new sales, regulation approval or staffed HITL without receiving-party proof."
+    },
+    {
+      "id": "eu-ai-act-article50-transition-2026-12-02",
+      "date": "2026-12-02",
+      "title": "EU AI Act Service Desk: Article 50(2) transitional milestone for specified existing synthetic-content AI providers; CSOAI applicability not determined",
+      "url": "https://ai-act-service-desk.ec.europa.eu/en/ai-act/timeline/timeline-implementation-eu-ai-act",
+      "action": "Review the current official consolidated text, check whether any Council/MEOK public-facing outputs are in scope, assign legal applicability to a qualified human; do not interpret this date-only reference as an exact UTC submission cutoff or compliance finding."
+    },
+    {
+      "id": "ofgem-ai-assurance-workshop-2026-12-07",
+      "date": "2026-12-07",
+      "title": "Ofgem AI assurance consultation: first optional stakeholder workshop, 11:00–12:30 GMT (event, NOT filing deadline)",
+      "url": "https://www.ofgem.gov.uk/consultation/approach-ai-assurance-energy-sector",
+      "action": "Consider optional workshop participation and assess relevance of source-pinned evidence and independent-effect assurance; any registration requires separately authorised human action."
+    },
+    {
+      "id": "ofgem-ai-assurance-consultation-2027-01-15",
+      "date": "2027-01-15",
+      "deadline_at": "2027-01-15T23:59:00Z",
+      "title": "Ofgem consultation on AI assurance guidance in the energy sector closes 23:59 GMT, 15 January 2027",
+      "url": "https://www.ofgem.gov.uk/consultation/approach-ai-assurance-energy-sector",
+      "action": "Review the proposed guidance and prepare factual, rights-cleared examples on source identity, frozen methods, unqualified versus qualified outcomes and real independent acceptance; send only after company owner reviews and explicitly authorises a response. Consultation is not a grant or award."
+    }
   ]
 }
