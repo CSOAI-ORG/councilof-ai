@@ -4,7 +4,8 @@ import { useLocation } from "wouter";
 // ── Types ──
 interface TourData {
   provisions: Array<{ id: string; label: string; jurisdiction: string; provisions: number; status: string; hash: string }>;
-  driftEvents: number;
+  driftEvents: number | null;
+  corpusRunAt: string;
   driftReportUrl: string;
   benchCounts: Record<string, number> | null;
   benchError: string;
@@ -29,7 +30,7 @@ const STEPS: StepConfig[] = [
     id: "globe",
     title: "The watched corpus",
     narration:
-      "Five legal instruments are under continuous hash watch. When a provision changes, we know the same morning — with a signed delta.",
+      "These counts come from the site's published corpus-watch status file and carry the date of its run. One dated run is a record of that day, not a continuous watch.",
     dataType: "real",
     verifyHref: "/corpus-watch/status.json",
     verifyLabel: "View corpus-watch status.json",
@@ -78,7 +79,6 @@ const STEPS: StepConfig[] = [
 ];
 
 // ── Data sources ──
-const CORPUS_STATE_URL = "https://raw.githubusercontent.com/CSOAI-ORG/corpus-watch/main/corpus_state.json";
 const LOCAL_CORPUS_URL = "/corpus-watch/status.json";
 const HF_LEDGER_URL = "https://csoai-csoai-measurement-ledger.hf.space/snapshot.json";
 const PASSPORT_URL = "/api";
@@ -91,7 +91,8 @@ export default function CouncilTour() {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<TourData>({
     provisions: [],
-    driftEvents: 0,
+    driftEvents: null,
+    corpusRunAt: "",
     driftReportUrl: "/corpus-watch/delta-report-2026-08-01.md",
     benchCounts: null,
     benchError: "",
@@ -108,30 +109,21 @@ export default function CouncilTour() {
     async function load() {
       const out: Partial<TourData> = { loaded: true };
 
-      // 1. Corpus state (GitHub raw → local fallback)
-      try {
-        const r = await fetch(CORPUS_STATE_URL, { cache: "no-store" });
-        if (r.ok) {
-          const j = await r.json();
-          out.provisions = j.instruments || [];
-        } else throw new Error("GH " + r.status);
-      } catch {
-        try {
-          const r2 = await fetch(LOCAL_CORPUS_URL, { cache: "no-store" });
-          const j2 = await r2.json();
-          out.provisions = j2.instruments || [];
-        } catch {
-          out.provisions = [];
-        }
-      }
-
-      // 2. Drift events from local delta report
+      // 1 and 2. Corpus status: the site's own published file, the one this step links to.
+      // The GitHub copy read here before has a different shape with no instrument list, so the
+      // page drew "0 provisions" while this file states them. A failed read leaves each value
+      // unread; it is never drawn as zero.
       try {
         const r = await fetch(LOCAL_CORPUS_URL, { cache: "no-store" });
+        if (!r.ok) throw new Error("HTTP " + r.status);
         const j = await r.json();
-        out.driftEvents = j.drift_events ?? 0;
+        out.provisions = Array.isArray(j.instruments) ? j.instruments : [];
+        out.driftEvents = typeof j.drift_events === "number" ? j.drift_events : null;
+        out.corpusRunAt = typeof j.finished_at === "string" ? j.finished_at : "";
       } catch {
-        out.driftEvents = 0;
+        out.provisions = [];
+        out.driftEvents = null;
+        out.corpusRunAt = "";
       }
 
       // 3. HF ledger snapshot (may be behind auth or rate-limited)
@@ -202,8 +194,8 @@ export default function CouncilTour() {
   // ── Render helpers ──
   const RealBadge = () => (
     <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
-      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-      Live
+      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+      Real data
     </span>
   );
 
@@ -232,8 +224,9 @@ export default function CouncilTour() {
             </div>
           ))}
           <div className="rounded-xl border border-emerald-400/20 bg-emerald-500/10 p-3">
-            <div className="text-[10px] uppercase tracking-wider text-emerald-300/60">Total provisions under watch</div>
-            <div className="mt-1 text-3xl font-black text-emerald-50">{total || 0}</div>
+            <div className="text-[10px] uppercase tracking-wider text-emerald-300/60">Total provisions in that run</div>
+            <div className="mt-1 text-3xl font-black text-emerald-50">{data.provisions.length ? total : "not read"}</div>
+            <div className="mt-1 font-mono text-[10px] text-emerald-300/60">{data.corpusRunAt ? "run finished " + data.corpusRunAt.slice(0, 10) : "run date not read"}</div>
           </div>
         </div>
       );
@@ -246,7 +239,7 @@ export default function CouncilTour() {
             <span className="text-xs text-emerald-300/70">Signed delta report</span>
           </div>
           <div className="mt-2 font-mono text-sm text-emerald-100">
-            Drift events: <span className="text-lg font-bold text-emerald-50">{data.driftEvents}</span>
+            Drift events: <span className="text-lg font-bold text-emerald-50">{data.driftEvents === null ? "not read" : data.driftEvents}</span>
           </div>
           <div className="mt-1 font-mono text-[10px] text-emerald-400/50">Normaliser: norm-v2 · Ed25519 signed</div>
         </div>

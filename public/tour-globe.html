@@ -342,7 +342,7 @@ try{
     // no longer served without a key since 25 Sep 2026.
     baseLayer:Cesium.ImageryLayer.fromProviderAsync(
       Cesium.TileMapServiceImageryProvider.fromUrl(Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')),
-      {brightness:0.62, contrast:1.12, saturation:0.5}),
+      {brightness:0.4, contrast:1.1, saturation:0.45}),   // darker here: /tour sets text over this globe
     baseLayerPicker:false, geocoder:false, homeButton:false, sceneModePicker:false,
     navigationHelpButton:false, animation:false, timeline:false, fullscreenButton:false,
     infoBox:false, selectionIndicator:false, requestRenderMode:false
