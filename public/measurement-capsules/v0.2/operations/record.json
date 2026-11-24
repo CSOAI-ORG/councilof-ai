@@ -1,32 +1,28 @@
 {
  "schema": "csoai.measurement-capsule-batch/0.2",
- "as_of": "2026-10-07T08:25:42Z",
+ "as_of": "2026-11-04T08:16:43Z",
  "capsule_schema": "csoai.measurement-capsule/0.2",
  "adapter": "operations",
  "kind": "operations",
- "n_capsules": 1006,
+ "n_capsules": 106,
  "states": {
-  "BITCOIN_ATTESTED": 10,
-  "INCLUDED_PROOF_VERIFIES": 1,
-  "LANDED_NOT_SHIPPED": 7,
-  "PENDING_CALENDAR_COMMITMENT": 1,
-  "PRESENT_SHA256_UNRECORDED": 980,
-  "TIME_TO_CORRECT_UNMEASURED": 6,
-  "UNCHECKABLE": 1
+  "BITCOIN_ATTESTED": 81,
+  "INCLUDED_PROOF_VERIFIES": 22,
+  "UNCHECKABLE": 3
  },
- "merkle_root": "4e9f8c61ee90118f8ae3f8af1039e22498603faea703e9196972fe37f9df1d48",
+ "merkle_root": "1ab9ce6ad69896966f0d52560ae340086aab1f3de6b4050606d8f4108bdbb58e",
  "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
  "canonicalisation": {
   "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
-  "jcs_byte_equal": "1006/1006",
+  "jcs_byte_equal": "106/106",
   "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
  },
  "capsules_file": {
   "path": "capsules.jsonl.gz",
-  "sha256": "dd308c4f9981d59317141d11ec40067f54c76bd254b32a2ee42cfcceddcb4ebd",
-  "bytes": 216743,
-  "uncompressed_sha256": "dc2b5b764014767b13d448539c9d1ad7f32884d73ed389bc048d0076ab8ee554",
-  "uncompressed_bytes": 1637265,
+  "sha256": "72f7e0638136ec8ad8c3ba8d39b7bf2fd36bdd554b6d5714af82f1ba804e522c",
+  "bytes": 20414,
+  "uncompressed_sha256": "6cfabd619ae8a771d3d0589080841c32e8e4ac4fbf3c6eacd93207b8bfcbb1ee",
+  "uncompressed_bytes": 131702,
   "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
  },
  "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
@@ -34,34 +30,32 @@
  "what_this_is_not": "Not a claim that the work is good, and not a grade. A private notice is recorded only as having been sent: no recipient, domain, address or message text.",
  "window": {
   "continues_from": {
-   "batch_dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-03-operations",
-   "index_date": "2026-10-03",
-   "record_sha256": "44f3cef7bcfda92f4f0c068091454d93374a358439dbb73fc18abda7fce3cda1"
+   "batch_dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-07-operations",
+   "index_date": "2026-10-07",
+   "record_sha256": "91114d37d85d2f16160bec985b4f6038504dc94fa30e954cedc74da790c83e2e"
   },
-  "end": "2026-10-07T08:05:03Z",
+  "end": "2026-11-04T08:05:03Z",
   "rule": "starts where the newest operations batch named by a final daily index (dated before this day) ended; the first starts at 2026-09-26T00:00:00Z; ends at the harvest time",
-  "start": "2026-10-03T10:29:47Z"
+  "start": "2026-10-07T08:05:03Z"
  },
  "source": {
-  "harvest_dir": "/evac-bulk/operations/2026-10-07/20261007T080503Z",
-  "harvest_sha256": "2d79a1876dfef8feee97c6ce743b6dcd553b82b1081048085866a1a0cd459d9b",
-  "date": "2026-10-07",
+  "harvest_dir": "/evac-bulk/operations/2026-11-04/20261104T080503Z",
+  "harvest_sha256": "7af2f7a600960536fbb0d615c3e341ad47ee9362b2d01336e149547529bc0d8b",
+  "date": "2026-11-04",
   "schema": "csoai.operations-harvest/0.1",
-  "harvested_at": "2026-10-07T08:05:03Z",
+  "harvested_at": "2026-11-04T08:05:03Z",
   "source_states": {
    "anchor": "READ",
    "correction": "READ",
    "deploy": "UNCHECKABLE",
-   "landing": "READ",
+   "landing": "UNCHECKABLE",
    "notice": "READ",
-   "publication": "READ"
+   "publication": "UNCHECKABLE"
   },
   "files_sha256": {
-   "anchors.json": "2df5fe98c712a7bbec1381f4961840d17b21cbec0edc344d00ab403e72326c6c",
-   "corrections.json": "da0e1f7da7f44da1c67c98613fed5374bf3d6c155436732bf0d9506ced2a3434",
-   "corrections.previous.json": "067145f05be08134b4467d4418fd6613d0d21d44728562de35db129e9c53511f",
-   "hf-commits.json": "c5eff1a6f1375030e585dafce734b96c609dfb4db32b41707cf721e34d100e2e",
-   "landings.json": "c9bbfeb1fa56f1ab1261bc1b85733e489c9bcfcb78431e97455f9230861f1856",
+   "anchors.json": "3f3503848e4e88c9b4249a65d22215c0c3fc48431456f480b55dc73789e956b9",
+   "corrections.json": "9816cb4742b95b6105ab208abd265445c979d573a6a7cfe810305c20dffd4c42",
+   "corrections.previous.json": "da0e1f7da7f44da1c67c98613fed5374bf3d6c155436732bf0d9506ced2a3434",
    "notices.json": "5083afdc16b6c6e5c05854feec19f20d3569880ee91d7197d98609e2ab3d7863"
   }
  },
@@ -70,18 +64,15 @@
    "UNCHECKABLE": 1
   },
   "landing": {
-   "LANDED_NOT_SHIPPED": 7
+   "UNCHECKABLE": 1
   },
-  "correction": {
-   "TIME_TO_CORRECT_UNMEASURED": 6
-  },
+  "correction": {},
   "publication": {
-   "PRESENT_SHA256_UNRECORDED": 980
+   "UNCHECKABLE": 1
   },
   "anchor": {
-   "BITCOIN_ATTESTED": 10,
-   "PENDING_CALENDAR_COMMITMENT": 1,
-   "INCLUDED_PROOF_VERIFIES": 1
+   "BITCOIN_ATTESTED": 81,
+   "INCLUDED_PROOF_VERIFIES": 22
   },
   "notice": {}
  },
@@ -93,34 +84,30 @@
    "complete": true
   },
   "landing": {
-   "first_parent_since": "f339b01a95db7af16e288c2ec6892e6c00abfc48",
-   "head": "bbc9b1a8b520c2c8f339991cd3e844d16a6630c5",
-   "n": 7,
-   "listed": 7,
-   "capsuled": 7,
+   "state": "UNCHECKABLE",
+   "listed": 0,
+   "capsuled": 0,
    "complete": true
   },
   "correction": {
    "ledger_entries": 93,
-   "capsuled": 6,
+   "capsuled": 0,
    "rule": "all entries on the first harvest (BACKFILL); afterwards entries NEW or CHANGED since the harvest of the last indexed batch",
-   "listed": 6,
+   "listed": 0,
    "complete": true
   },
   "publication": {
-   "datasets_listed": 136,
-   "commits": 980,
-   "errors": [],
-   "listed": 980,
-   "capsuled": 980,
+   "state": "UNCHECKABLE",
+   "listed": 0,
+   "capsuled": 0,
    "complete": true
   },
   "anchor": {
-   "ots": 11,
-   "rekor": 1,
+   "ots": 81,
+   "rekor": 22,
    "base": 0,
-   "listed": 12,
-   "capsuled": 12,
+   "listed": 103,
+   "capsuled": 103,
    "complete": true
   },
   "notice": {
