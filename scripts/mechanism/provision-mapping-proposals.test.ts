@@ -68,12 +68,16 @@ describe("provision-mapping proposals", () => {
     }
   });
 
-  it("never claims equivalence, and every proposal starts as DRAFT", () => {
+  it("never claims equivalence, and every status is the owner's 2026-11-24 review (20 REVIEWED, 2 REJECTED, 3 held as DRAFT)", () => {
     expect(PROPOSAL_RELATIONS).toEqual(["partial", "related"]);
     for (const p of proposals) {
       expect(["partial", "related"]).toContain(p.relation);
-      expect(p.status, p.id).toBe("DRAFT");
+      expect(["DRAFT", "REVIEWED", "REJECTED"]).toContain(p.status);
     }
+    const ids = (s: string) => proposals.filter((p) => p.status === s).map((p) => p.id).sort();
+    expect(ids("REVIEWED").length).toBe(20);
+    expect(ids("REJECTED")).toEqual(["axis:company-practice->US-15USC45-FTCAct-1914:s45", "axis:cross-reality->32024R1689:14"]);
+    expect(ids("DRAFT")).toEqual(["axis:distribution-integrity->EU-mica-2023:30", "axis:humanoid-deployment->32024R1689:71", "axis:reserve-attestation->EU-mica-2023:36"]);
     expect(() => withProposals([{ ...proposals[0], relation: "equivalent" }])).toThrow(/relation equivalent/);
   });
 
@@ -108,31 +112,35 @@ describe("provision-mapping proposals", () => {
     expect(cov.CAPSULE_BOUND_DRAFT).toBe(side.totals.draft_bound_by_sidecar);
     expect(side.totals.draft_bound_by_sidecar).toBe((side.batches as Batch[]).reduce((a, b) => a + b.draft_bound_by_sidecar, 0));
     expect(serialiseSidecar(deriveSidecar(sidecarIo(ROOT)))).toBe(read(SIDECAR).toString("utf8"));
-    expect(side.totals.bound_by_sidecar).toBe(0); // every proposal is DRAFT today, so nothing they name is bound
-    for (const b of side.batches as Batch[]) expect(b.reviewed_proposals, b.batch).toEqual([]);
+    // every adapter proposal is REVIEWED since the 2026-11-24 owner review, so no capsule is counted as DRAFT-bound
+    expect(side.totals.draft_bound_by_sidecar).toBe(0);
+    for (const b of side.batches as Batch[]) {
+      const want = proposals.filter((p) => p.source === "adapter" && p.subject === b.adapter && p.status === "REVIEWED").map((p) => p.id).sort();
+      expect(b.reviewed_proposals, b.batch).toEqual(want);
+    }
     expect(JSON.stringify(readJson(SOURCE))).not.toMatch(/CAPSULE_BOUND_DRAFT/);
   });
 
-  it("the owner's REVIEWED flip moves exactly that proposal's capsules from DRAFT to bound; REJECTED counts nowhere", () => {
+  it("a status flip moves exactly that proposal's capsules: back to DRAFT unbinds them into CAPSULE_BOUND_DRAFT; REJECTED counts nowhere", () => {
     const side = readJson(SIDECAR);
     const target = proposals.find((p) => p.id === "adapter:tool_drift->INTL-owasp-llm-top10-2026:LLM01") as Proposal;
-    const n = (side.batches as Batch[]).filter((b) => b.adapter === "tool_drift").reduce((a, b) => a + b.draft_bound_by_sidecar, 0);
+    expect(target.status).toBe("REVIEWED");
+    const live = (side.batches as Batch[]).find((b) => b.adapter === "tool_drift") as Batch;
+    expect(live.bindings[0].provisions).toContainEqual({ corpus_root: v3.corpus_root, provision_id: target.provision_id, provision_sha256: target.provision_sha256, relation: target.relation });
+    const n = (side.batches as Batch[]).filter((b) => b.adapter === "tool_drift").reduce((a, b) => a + b.bound_by_sidecar, 0);
     expect(n).toBeGreaterThan(0);
     const flip = (status: string) => proposals.map((p) => (p.id === target.id ? { ...p, status } : p));
 
-    const reviewed = withProposals(flip("REVIEWED"));
-    expect(reviewed.sidecar.totals.bound_by_sidecar).toBe(side.totals.bound_by_sidecar + n);
-    expect(reviewed.sidecar.totals.draft_bound_by_sidecar).toBe(side.totals.draft_bound_by_sidecar - n);
-    const cov = deriveCoverage(read(SOURCE), reviewed.io).capsule_binding;
-    expect(cov.CAPSULE_BOUND).toBe(readJson(OUTPUT).capsule_binding.CAPSULE_BOUND + n);
-    expect(cov.CAPSULE_BOUND_DRAFT).toBe(readJson(OUTPUT).capsule_binding.CAPSULE_BOUND_DRAFT - n);
-    expect(cov.provision_ids_bound).toContain(target.provision_id);
-    const batch = (reviewed.sidecar.batches as Batch[]).find((b) => b.adapter === "tool_drift") as Batch;
-    expect(batch.bindings[0].provisions).toContainEqual({ corpus_root: v3.corpus_root, provision_id: target.provision_id, provision_sha256: target.provision_sha256, relation: target.relation });
+    const draft = withProposals(flip("DRAFT"));
+    expect(draft.sidecar.totals.bound_by_sidecar).toBe(side.totals.bound_by_sidecar - n);
+    expect(draft.sidecar.totals.draft_bound_by_sidecar).toBe(side.totals.draft_bound_by_sidecar + n);
+    const cov = deriveCoverage(read(SOURCE), draft.io).capsule_binding;
+    expect(cov.CAPSULE_BOUND).toBe(readJson(OUTPUT).capsule_binding.CAPSULE_BOUND - n);
+    expect(cov.CAPSULE_BOUND_DRAFT).toBe(readJson(OUTPUT).capsule_binding.CAPSULE_BOUND_DRAFT + n);
 
     const rejected = withProposals(flip("REJECTED"));
-    expect(rejected.sidecar.totals.bound_by_sidecar).toBe(side.totals.bound_by_sidecar);
-    expect(rejected.sidecar.totals.draft_bound_by_sidecar).toBe(side.totals.draft_bound_by_sidecar - n);
+    expect(rejected.sidecar.totals.bound_by_sidecar).toBe(side.totals.bound_by_sidecar - n);
+    expect(rejected.sidecar.totals.draft_bound_by_sidecar).toBe(side.totals.draft_bound_by_sidecar);
   });
 
   it("a match filter binds only the capsules it names (contract_parity: TOOLS dimension only)", () => {
@@ -140,8 +148,8 @@ describe("provision-mapping proposals", () => {
     const b = (side.batches as Batch[]).find((x) => x.batch === "contract_parity") as Batch;
     const rec = readJson(CAPSULE_ROOT + "/contract_parity/record.json");
     const caps = gunzipSync(read(CAPSULE_ROOT + "/contract_parity/" + rec.capsules_file.path)).toString("utf8").split("\n").filter((l) => l.trim()).map((l) => JSON.parse(l));
-    expect(b.draft_bound_by_sidecar).toBe(caps.filter((c) => c.claim?.dimension === "TOOLS").length);
-    expect(b.draft_bound_by_sidecar).toBeLessThan(b.n_capsules);
+    expect(b.bound_by_sidecar).toBe(caps.filter((c) => c.claim?.dimension === "TOOLS").length);
+    expect(b.bound_by_sidecar).toBeLessThan(b.n_capsules);
   });
 
   it("a proposal off the corpus, or not pinned to its anchor, fails the producer", () => {

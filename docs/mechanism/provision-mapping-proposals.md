@@ -1,4 +1,4 @@
-# Provision-mapping proposals (DRAFT, for owner review)
+# Provision-mapping proposals (owner-reviewed 2026-11-24)
 
 Source of truth: `public/mechanism/provision-mapping-proposals.json`. Review sheet: `docs/mechanism/mapping_review_sheet.csv` (one row per proposal; fill `owner_decision` and `owner_notes`, then set each proposal's `status` in the JSON to `REVIEWED` or `REJECTED` and re-run the producers).
 
@@ -12,7 +12,14 @@ Every proposal points a measurement at a provision of frozen corpus v3 (root `8d
 | predicate | 1 | 1 | 5 |
 | axis | 21 | 14 | 9 |
 
-`coverage.json` → `capsule_binding`: CAPSULE_BOUND = 0 (reviewed only), CAPSULE_BOUND_DRAFT = 1779 of 11529 capsules. Both are derived by `scripts/mechanism/backfill-capsule-provisions.mjs` and `scripts/mechanism/build-coverage.mjs`; neither is typed.
+`coverage.json` → `capsule_binding`: CAPSULE_BOUND = 1779 (reviewed only), CAPSULE_BOUND_DRAFT = 0 of 11529 capsules. Both are derived by `scripts/mechanism/backfill-capsule-provisions.mjs` and `scripts/mechanism/build-coverage.mjs`; neither is typed.
+
+## Owner review, 2026-11-24
+
+* 20 proposals `REVIEWED`, which includes all 3 adapter proposals (1,779 capsules bound through the sidecar) and the cra-13-cvd predicate.
+* 2 `REJECTED`: `axis:company-practice->US-15USC45-FTCAct-1914:s45`; `axis:cross-reality->32024R1689:14`.
+* 3 held, and left `DRAFT` (the schema has no HOLD status): `axis:distribution-integrity->EU-mica-2023:30`; `axis:humanoid-deployment->32024R1689:71`; `axis:reserve-attestation->EU-mica-2023:36`.
+* The reason for each row is in `owner_notes` in the review sheet. A related or partial pointer is not a compliance determination.
 
 ## How a status flip binds
 

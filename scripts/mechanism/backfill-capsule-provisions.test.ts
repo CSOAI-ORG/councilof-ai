@@ -69,7 +69,11 @@ describe("capsule-provision sidecar", () => {
     }
     for (const b of out.batches as Batch[]) {
       expect(b.classification, b.batch).toBe(classify(b.adapter, map));
-      if (b.classification !== "MAPPED" && b.kind !== routeKind) expect(b.bindings, b.batch).toEqual([]);
+      if (b.classification === "MAPPED" || b.kind === routeKind) continue;
+      // an unmapped adapter binds only through a REVIEWED proposal (provision-mapping-proposals.json), pinned to corpus v3
+      const reviewed = (b as Batch & { reviewed_proposals?: string[] }).reviewed_proposals ?? [];
+      if (!reviewed.length) expect(b.bindings, b.batch).toEqual([]);
+      for (const row of b.bindings) for (const p of row.provisions) expect(reviewed.some((id) => id.endsWith("->" + p.provision_id)), b.batch + " " + p.provision_id).toBe(true);
     }
     expect(classify("no_such_adapter", map)).toBe("UNCLASSIFIED");
   });

@@ -2158,12 +2158,12 @@
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
       "provision_map": "UNMAPPED",
-      "capsules_bound_by_sidecar": 0,
-      "provision_ids_bound_by_sidecar": [],
-      "capsules_bound_by_draft": 1129,
-      "provision_ids_draft": [
+      "capsules_bound_by_sidecar": 1129,
+      "provision_ids_bound_by_sidecar": [
         "INTL-owasp-llm-top10-2026:LLM01"
       ],
+      "capsules_bound_by_draft": 0,
+      "provision_ids_draft": [],
       "owasp_checks": [
         "contract-parity.TOOLS",
         "contract-parity.VERSION",
@@ -2224,12 +2224,12 @@
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
       "provision_map": "UNMAPPED",
-      "capsules_bound_by_sidecar": 0,
-      "provision_ids_bound_by_sidecar": [],
-      "capsules_bound_by_draft": 14,
-      "provision_ids_draft": [
+      "capsules_bound_by_sidecar": 14,
+      "provision_ids_bound_by_sidecar": [
         "US-NIST-AIRMF-1.0-2023:MEASURE-2.13"
       ],
+      "capsules_bound_by_draft": 0,
+      "provision_ids_draft": [],
       "owasp_checks": [],
       "owasp_items": [],
       "record": "/measurement-capsules/v0.2/mill_cross_runtime-5ae00c1f4c2e/record.json"
@@ -2243,12 +2243,12 @@
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
       "provision_map": "UNMAPPED",
-      "capsules_bound_by_sidecar": 0,
-      "provision_ids_bound_by_sidecar": [],
-      "capsules_bound_by_draft": 140,
-      "provision_ids_draft": [
+      "capsules_bound_by_sidecar": 140,
+      "provision_ids_bound_by_sidecar": [
         "US-NIST-AIRMF-1.0-2023:MEASURE-2.13"
       ],
+      "capsules_bound_by_draft": 0,
+      "provision_ids_draft": [],
       "owasp_checks": [],
       "owasp_items": [],
       "record": "/measurement-capsules/v0.2/mill_cross_runtime-78226433e9e4/record.json"
@@ -2313,12 +2313,12 @@
       "capsules_binding_a_provision": 0,
       "provision_ids_bound": [],
       "provision_map": "UNMAPPED",
-      "capsules_bound_by_sidecar": 0,
-      "provision_ids_bound_by_sidecar": [],
-      "capsules_bound_by_draft": 496,
-      "provision_ids_draft": [
+      "capsules_bound_by_sidecar": 496,
+      "provision_ids_bound_by_sidecar": [
         "INTL-owasp-llm-top10-2026:LLM01"
       ],
+      "capsules_bound_by_draft": 0,
+      "provision_ids_draft": [],
       "owasp_checks": [
         "tool-drift"
       ],
@@ -2331,24 +2331,24 @@
     }
   ],
   "capsule_binding": {
-    "state": "NO_CAPSULE_BOUND",
-    "CAPSULE_BOUND": 0,
+    "state": "CAPSULE_BOUND",
+    "CAPSULE_BOUND": 1779,
     "capsules": 11529,
     "bound_in_capsule": 0,
-    "bound_by_sidecar": 0,
-    "CAPSULE_BOUND_DRAFT": 1779,
-    "provision_ids_draft": [
+    "bound_by_sidecar": 1779,
+    "CAPSULE_BOUND_DRAFT": 0,
+    "provision_ids_draft": [],
+    "provision_ids_bound": [
       "INTL-owasp-llm-top10-2026:LLM01",
       "US-NIST-AIRMF-1.0-2023:MEASURE-2.13"
     ],
-    "provision_ids_bound": [],
     "capsules_by_map_classification": {
       "UNMAPPED": 11529
     },
     "derived_from": "bound_in_capsule counts published capsules that carry the 0.3 provisions field, each checked as pinned to the frozen manifest; bound_by_sidecar counts the rows of the sidecar, which this producer re-derives from the same batches and the backfill map and requires byte-for-byte. CAPSULE_BOUND is their sum and counts reviewed mappings only. CAPSULE_BOUND_DRAFT counts the capsules that a DRAFT proposal in the proposals file would bind if the owner reviewed it (the sidecar's draft_bound_by_sidecar); it is never part of CAPSULE_BOUND.",
     "sidecar": {
       "path": "/mechanism/capsule-provision-bindings.json",
-      "sha256": "d19d55fdeae3ef021aa0d1b3c1974310c1f4aaeb546163c466d4fd4a6f2719ae",
+      "sha256": "6c41b056cb3fc4450178cbcfbf8f97e2d2a580d8205b8f7236ddd35baf196b59",
       "producer": "scripts/mechanism/backfill-capsule-provisions.mjs"
     },
     "map": {
@@ -2359,7 +2359,7 @@
   },
   "provision_mapping_proposals": {
     "path": "/mechanism/provision-mapping-proposals.json",
-    "sha256": "34c4a703faf8e289e07d13b86f46f6ee3308b143d8f9e693707b70b2ed9ae885",
+    "sha256": "e456ab4f1da0945c31f9053d05152d3c4c179523c4dec8a740946b7d89825db9",
     "corpus_root": "8d057a301973ec0307566152362cf711a661eea956426fe960ee9e28a49c25c0",
     "proposals": {
       "adapter": 3,
@@ -2368,19 +2368,19 @@
     },
     "by_status": {
       "DRAFT": {
-        "adapter": 3,
-        "predicate": 1,
-        "axis": 21
-      },
-      "REVIEWED": {
         "adapter": 0,
         "predicate": 0,
-        "axis": 0
+        "axis": 3
+      },
+      "REVIEWED": {
+        "adapter": 3,
+        "predicate": 1,
+        "axis": 16
       },
       "REJECTED": {
         "adapter": 0,
         "predicate": 0,
-        "axis": 0
+        "axis": 2
       }
     },
     "subjects_with_proposals": {
