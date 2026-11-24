@@ -141,6 +141,34 @@ function harness({ initial = fixtures(), hash = "" } = {}) {
   };
 }
 
+
+test("global search reveals filtered results instead of a hidden table", async () => {
+  const h = harness();
+  await flush();
+  assert.equal(h.el("ontology").hidden, false);
+  h.el("q").value = "nonexistent-model";
+  h.el("q").dispatchEvent(new Event("input"));
+  assert.equal(h.el("ontology").hidden, true);
+  assert.equal(h.el("tape-table").hidden, false);
+  assert.equal(h.location.hash, "#tape-table");
+  assert.match(h.el("filter-note").textContent, /0 matches/);
+  assert.equal(h.el("board-body").innerHTML, "");
+
+  h.location.hash = "#lookup";
+  h.window.dispatchEvent(new Event("hashchange"));
+  assert.equal(h.el("lookup").hidden, false);
+  h.el("q").value = "safety";
+  h.el("q").dispatchEvent(new Event("input"));
+  assert.equal(h.el("tape-table").hidden, false);
+  assert.match(h.el("board-body").innerHTML, /data-axis="safety"/);
+
+  h.location.hash = "#models";
+  h.window.dispatchEvent(new Event("hashchange"));
+  h.el("q").value = "model-1";
+  h.el("q").dispatchEvent(new Event("input"));
+  assert.equal(h.el("models").hidden, false);
+});
+
 test("reads primary feeds each minute without replacing source measurement time", async () => {
   const h = harness();
   await flush();
