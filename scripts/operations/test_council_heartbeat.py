@@ -62,6 +62,19 @@ class PulseTests(unittest.TestCase):
         r=summarise(d,{},AT)
         self.assertEqual(r["summary_state"],"READBACK_PARTIAL")
         self.assertNotIn("axis_count",r["metrics"]["gspc"])
+    def test_invalid_required_claim_totals_are_uncheckable_and_partial(self):
+        for invalid in ({}, {"subjects":28,"claims":99},
+                {"subjects":True,"claims":99,"subjects_with_due_execution_unverified":5},
+                {"subjects":28,"claims":-1,"subjects_with_due_execution_unverified":5},
+                {"subjects":1,"claims":99,"subjects_with_due_execution_unverified":5}):
+            with self.subTest(invalid=invalid):
+                docs=fixture()
+                claim=json.loads(docs["claims"])
+                claim["totals"]=invalid
+                docs["claims"]=json.dumps(claim).encode()
+                report=summarise(docs,{},AT)
+                self.assertEqual(report["metrics"]["claims"]["state"],"UNCHECKABLE")
+                self.assertEqual(report["summary_state"],"READBACK_PARTIAL")
     def test_missing_corrections_claims_or_research_makes_entire_pulse_partial(self):
         for source in ("corrections", "claims", "hf_research"):
             with self.subTest(source=source):
