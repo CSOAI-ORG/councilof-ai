@@ -68,7 +68,7 @@ def simulate(s: Scenario) -> dict:
         warnings.append("SIMULATED_RECEIPT_NOT_INDEPENDENT")
     if s.replayed_idempotency_key and s.effect_attempted and not simulated_effect:
         warnings.append("REPLAY_BLOCKED_IN_SIMULATION")
-    if authority_current and s.effect_attempted and not executor_allows:
+    if authority_current and s.effect_attempted and not executor_allows and not s.replayed_idempotency_key:
         warnings.append("SIMULATED_FALSE_REFUSAL")
     if prohibited_effect:
         state = "SIMULATED_CONTROL_BREACH"
