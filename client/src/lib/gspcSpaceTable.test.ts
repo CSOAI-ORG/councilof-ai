@@ -12,7 +12,10 @@ const blob = [html, js, css, readme].join("\n");
 describe("gspc-board Space is CSOAI-GSPC", () => {
   it("brands the public board and keeps search plus axis leaderboards", () => {
     expect(html).toContain("<title>CSOAI-GSPC");
-    expect(html).toContain("<h1>CSOAI-GSPC</h1>");
+    expect(html).toContain("<h1>GSPC Measurement Board</h1>");
+    expect(html).toContain("<i>CSOAI-GSPC</i>");
+    expect(html).toContain('aria-label="GSPC workspace"');
+    expect(html).toContain('id="board-refresh-status"');
     expect(html).toContain('id="q"');
     expect(html).toContain('id="boards"');
     expect(html).toContain('id="models"');
