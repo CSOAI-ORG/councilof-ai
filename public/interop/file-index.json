@@ -1,7 +1,7 @@
 {
  "schema": "csoai.interop-file-index/0.2",
- "as_of": "2026-11-24T01:27:16Z",
- "source_commit": "dc1f535043580781785b4ccfdd85ad12c75546af",
+ "as_of": "2026-11-24T10:22:24Z",
+ "source_commit": "b88b88a40f95c86debc03957be87ca06565bdb5c",
  "what_this_is": "Every file the estate's committed tree publishes under /interop/, with its size, its sha256 and how it is served. Built by reading the tree, so it is a measurement, not a list of intentions. Three served states occur, because there are three \u2014 a path routed to the mirror is not the same path as one the estate serves from its retired-bytes archive, and a fourth state (retired-bytes-absent) is reserved for a retired record the archive does not hold, which is not emitted because the archive is a deploy-time artefact and naming its membership here would make this index stale on every deploy.",
  "how_to_verify": "sha256 is the digest of the file's bytes as published. Fetch the path and hash it; on a row whose served_bytes reads 'as-published', a match means you hold what the estate published. Three things to know when it does not match: the digest is of the bytes at THIS index's source_commit, and the live site serves the bytes of the currently DEPLOYED commit, so the two agree once that commit is deployed; for pages-served HTML the digest is over the BUILT file, which carries the workspace-launcher script the build injects; and the EDGE rewrites some HTML in transit, so on a row whose served_bytes reads 'edge-transformed' or 'edge-transformed-per-request' the bytes the site serves are NOT the bytes published here, and on a 'per-request' row they differ on every fetch, so no digest of them can be reproduced by anyone, including us. A row whose served state is hf-mirror is a different case again: the bytes come from the HuggingFace evidence mirror, which is a SEPARATE HOST whose membership this index does not record, so the row's digest is checkable only while the mirror still holds the file. For retired-bytes paths the digest is of the canonical bytes, which the archive copies verbatim.",
  "retired": "A retired record is HISTORICAL evidence of a past measurement, never current proof. The estate's server marks these with the response header x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE SAME AS BEING UNREACHABLE: a retired path that is served answers 200 and its bytes verify against the sha256 below; a retired path that is not served answers 404. The `served` field says which.",
@@ -17,20 +17,20 @@
   "edge-transformed-per-request": "the edge rewrites this markup and the rewrite is randomised per request, so the bytes the site serves differ on EVERY fetch; no digest of them can be reproduced, by a reader or by the estate"
  },
  "counts": {
-  "files": 16545,
-  "bytes": 288372796,
+  "files": 16566,
+  "bytes": 288824914,
   "by_served": {
-   "pages": 3299,
+   "pages": 3320,
    "retired-bytes": 6,
    "hf-mirror": 13240
   },
   "by_served_bytes": {
-   "as-published": 16544,
+   "as-published": 16565,
    "edge-transformed-per-request": 1
   },
   "digests_taken_from_the_built_tree": 0,
   "digests_taken_from_the_injectors_transform": 54,
-  "digests_taken_from_the_tree_bytes": 3245,
+  "digests_taken_from_the_tree_bytes": 3266,
   "digests_not_comparable_no_built_tree": 0,
   "excluded_the_index_itself": 1,
   "excluded_not_present_in_the_tree": 0
@@ -367,15 +367,15 @@
   },
   {
    "path": "/interop/agent-card-jws-input.json",
-   "bytes": 27661,
-   "sha256": "ff17fa2f04b70a2bfbd9890b14b3c8755c3de10169a6bb77b625b5a4177491fb",
+   "bytes": 28613,
+   "sha256": "9caee63c3b4d9f812fb97ce41b0afa0b61580e8c8367ddb3926e45d283a10160",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/agent-card-jws-input.json.ots",
-   "bytes": 3587,
-   "sha256": "54608314fc35e10cdde2ecaa5d7d61a762412f2ddadcb0ff29e6dff00bbfc8c4",
+   "bytes": 427,
+   "sha256": "ed938f0334f7be0289f1c4ae834aa2577ab3cf03eda4fa74f3e50328c1dd5354",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -7253,14 +7253,14 @@
   {
    "path": "/interop/hf-census/SUMMARY.json",
    "bytes": 690,
-   "sha256": "4649e5f26e274f00937f9e7a9d60e1485784f057cb50a23dc1045b1731f11c6e",
+   "sha256": "c597188fb3357dd20894987bf60f6f7684ad042f75e1f3a265ec3aef99f8df1e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/hf-census/axis-sources.json",
-   "bytes": 5541,
-   "sha256": "74aaebddeaa384bb5864d054eab8d98d4685f31de85660daf544e4bf6f9791d7",
+   "bytes": 5543,
+   "sha256": "fb422646ba914822037c4c9df1df12c03876bf9c374bcffd7a938b5d7b138b9f",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -7273,8 +7273,8 @@
   },
   {
    "path": "/interop/hf-census/org-register.json",
-   "bytes": 863016,
-   "sha256": "8e93799d461363cead9da38d77f462af59052454aeff984dc33c9aa2d74fb57e",
+   "bytes": 1085358,
+   "sha256": "8a0c383502478535b417bc0379940a38b7c24385a6bfc1a99e2239fefa02bd46",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -8115,6 +8115,13 @@
    "path": "/interop/insights/corpus-freeze-outcomes-2026-11-22.json",
    "bytes": 146956,
    "sha256": "c74e835e22ef19192f7dc967aca76a0939b94adb7ce1252044b8608570c35695",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/insights/corrections-who-caught-2026-11-24.json",
+   "bytes": 5106,
+   "sha256": "5bbb98d51512e16a6a13d040fe13b85b6e57413abed8c0799f4bd65dedc7e4a9",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -10585,6 +10592,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/mcp-trust/2026-11-23.json",
+   "bytes": 2853,
+   "sha256": "db007ea6ff2fafca941e54aa9ddc4ffe8d9edfb1b4d3328de354bfa1d99083f5",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/mcp-trust/diff-2026-09-12.json",
    "bytes": 1306,
    "sha256": "36b290ec21d7fc213e724c15a726f4b3e8a86437a6f4d4040cc17903fbf1c602",
@@ -10648,9 +10662,16 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/mcp-trust/diff-2026-11-23.json",
+   "bytes": 1401,
+   "sha256": "3a79c84ab3c7b46db3fe53b317025be62d60d2190b47d9e3a7c514ee9c4c64ac",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/mcp-trust/latest.json",
-   "bytes": 2855,
-   "sha256": "41554fb4dc5468d49074127e510fd702192107156a8559b915c992de2c667317",
+   "bytes": 2853,
+   "sha256": "db007ea6ff2fafca941e54aa9ddc4ffe8d9edfb1b4d3328de354bfa1d99083f5",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -10707,6 +10728,13 @@
    "path": "/interop/mcp-trust/unsigned/unsigned-mcp-trust-613f3a12cf15.json",
    "bytes": 1751,
    "sha256": "35514940a12788d0ccf959343353a57e7df8d2437032771267580594066d3a0c",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/mcp-trust/unsigned/unsigned-mcp-trust-9dae1278b6ce.json",
+   "bytes": 1756,
+   "sha256": "8a7e0bc548c8a20d119ecafa941fea7b4fb1dd90461a55c374b1542cd33e1b37",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -91012,7 +91040,7 @@
   {
    "path": "/interop/ots/manifest.json",
    "bytes": 232088,
-   "sha256": "d45d4851c5380de78236ca9689111ec502d0be23356815fc53fdffb9c033c370",
+   "sha256": "844fb27fd6340094db9eafb7df8c839725d61834cfac30cb35ed40172593e1a5",
    "served": "hf-mirror",
    "served_bytes": "as-published"
   },
@@ -110789,8 +110817,8 @@
   },
   {
    "path": "/interop/silent-route-canary-2026-09/baseline.jsonl",
-   "bytes": 42358,
-   "sha256": "1857817669d28f9a3996abba0a4a247e01b7abc66c99da85171a884b6759e02f",
+   "bytes": 62535,
+   "sha256": "a7398b405b9db0b26c21b88c6588fcd34ef81be101e50a4dc5966ded5ee91001",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -112868,6 +112896,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/watchdog-intake/20261104T173107Z.json",
+   "bytes": 18780,
+   "sha256": "c89031beca4747008474d52561daae0308681a62a3f4358d9f68409a695850b5",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/watchdog-intake/20261105T173803Z.json",
    "bytes": 18780,
    "sha256": "7c6973bdaf9fe6fbb24dc8e53e6d5e007438fcbd9b0db93db30aef31e26d8cfa",
@@ -112931,6 +112966,55 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/watchdog-intake/20261114T160632Z.json",
+   "bytes": 18780,
+   "sha256": "b54ab4b92b12c111e62d864ef46279f254dd81a082e56de7e99ffa203783b17d",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/watchdog-intake/20261115T163548Z.json",
+   "bytes": 18682,
+   "sha256": "3dec7c47540ab3c844cd4ebe9427308d2658e0c0f11b652cafd2c8c838a9614d",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/watchdog-intake/20261116T195112Z.json",
+   "bytes": 18780,
+   "sha256": "2df27d19b59b09940c72b49b22668c939637a14505aefba9c193a53f3489dcb7",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/watchdog-intake/20261117T184601Z.json",
+   "bytes": 18780,
+   "sha256": "20027f97d0eda0c4f3f96c499ce3e0eb36135195e39dd0ca9401b68206d59f7e",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/watchdog-intake/20261118T182340Z.json",
+   "bytes": 18780,
+   "sha256": "54c451bec661567651af6d4257a999c0ab7d35145a35b98ec3f0b8aa108cb874",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/watchdog-intake/20261119T184012Z.json",
+   "bytes": 18780,
+   "sha256": "5211493932f4aeaa55ee97cf534a76bd8fa7f5b9317077bc9798406c76e6c994",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/watchdog-intake/20261120T180047Z.json",
+   "bytes": 18780,
+   "sha256": "d42a2bd95a12f1651fa9fd958401626ecc731917240a0bc31d2346abfc7773aa",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/watchdog-intake/20261121T165732Z.json",
    "bytes": 18780,
    "sha256": "4bc48959c31ac8e9e686a444933455f8b53434911ae765469e401afcb852ad95",
@@ -112938,23 +113022,37 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/watchdog-intake/20261122T172341Z.json",
+   "bytes": 18780,
+   "sha256": "6cb2cc9f82c2005c5707598c0afa85fbadb96eb1b0170a3a735f9d337201a5d4",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/watchdog-intake/20261123T214013Z.json",
+   "bytes": 18780,
+   "sha256": "d4046cc8c86296869cf8c8acb99ce7a3ccca8cd8ab73d6f4b7434c80c1a5b581",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/watchdog-intake/_index.json",
    "bytes": 10670,
-   "sha256": "c048d7c6703133d202c8916fd759119500b1221dcac4f9d253f8b76cd0e674ae",
+   "sha256": "59c5cf2b0d18f8cb1cd0f7c900aa839f8376d1485089d1cd7c348a8d21560c68",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/watchdog-intake/charter-feed.json",
    "bytes": 73561,
-   "sha256": "f24b4a0a4ccd1271e1f272e69f00be17cc28d3c747bb13509bc72e9ab9431b3c",
+   "sha256": "477eb505606d606674f4c0f94039d83ac625c4221473d71f24877e5b2ed41101",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/watchdog-intake/latest.json",
    "bytes": 318,
-   "sha256": "11148d3022e1e9157f0f156e25b8b5912682e4a6e8b15e650a5060ce5d4928c0",
+   "sha256": "9678f6af4d8a8b146992c851ccf37db7d7bab45a3a0fa2da5db3ca5b1eb6ad13",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -114195,7 +114293,7 @@
   {
    "path": "/interop/x402-door-conformance-2026-09/artefact-manifest.json",
    "bytes": 10748,
-   "sha256": "9cd7cf0fefb64b333ebb8411dbc7e85099df18095600bff888eeab82a2b1d6a2",
+   "sha256": "4337b539ae6a0b27baab466ec5c88b097d94e2740165218b6ffbb38e25225594",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -114223,455 +114321,455 @@
   {
    "path": "/interop/x402-door-conformance-2026-09/card-x402-door-conformance-summary-unsigned.json",
    "bytes": 908,
-   "sha256": "c6d3049b27ddd5c2f04902341baef6d762a8ef9a0fcf25619789350f25c490d3",
+   "sha256": "05bfeb5caa0ea34ffad5363538c252246ca535e16961f1ba6d34e9752116aafd",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-0-challenge.json",
    "bytes": 5444,
-   "sha256": "c225f2f990fa9fb0d588d7e133b2470e3d12da098ec68c280c790e2e3a71380a",
+   "sha256": "c7fe5a49fe8a848b566b9d771d834ccf2c719374d678e25aebbc85a2483f3d82",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-0-challenge.json.meta.json",
    "bytes": 290,
-   "sha256": "af4e02c6bacf23943356636f3bb671d024eb268f350963da0671656b11963821",
+   "sha256": "86770159939cacaca6d53de1ad3bc47bf21f06d32bc60fe97d6a2c5d53428b97",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-1-challenge.json",
    "bytes": 5279,
-   "sha256": "0cbf4c860e50a46c8dd68a69cbecf21beb621448bfd1d2f61469d2e52b2480e5",
+   "sha256": "af1c437844ea28bf746e449c910637b3db5d5f5b9596a1e5a0edaba6bc53ab9c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-1-challenge.json.meta.json",
    "bytes": 269,
-   "sha256": "038ff43565c20e84a408e788cbe24b4e42286c568ba79e04d38213f39e718874",
+   "sha256": "85916dd327d2804489e7624dd9c8e19b4ad352b51ca9d24cb4042f924bca9fd3",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-10-challenge.json",
-   "bytes": 3787,
-   "sha256": "fe27b0f9bcb9847647fb5ec20c28804c2dad3baa0e88a63e8f4bfd5224299348",
+   "bytes": 5976,
+   "sha256": "8be006cb9c2f74657e8dcaf72921f2bf7dfac2afcdb52ebf9234afed81e85790",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-10-challenge.json.meta.json",
    "bytes": 287,
-   "sha256": "62a2aea0aeb537ec8b6fb3222971e1b4b1ac9b04f47be181005f178c03898579",
+   "sha256": "e9b42c9819254f674c38d7c8545953d3362635e768432b5b43dda9dac8a478ec",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-11-challenge.json",
    "bytes": 5171,
-   "sha256": "657caee52541af711c5c476697487edd45667cc2c497524ae7a93870273d7697",
+   "sha256": "e28a474dd52400b1b4b9b5aa51aa33123413355383b06586056f2a36e088b0bb",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-11-challenge.json.meta.json",
    "bytes": 295,
-   "sha256": "74f791e46ce3fcb5a47ccc7a6f6b0d8dc00682e8337162c4871458bd57b64922",
+   "sha256": "f623afdcc1829d7b56e6e4fa7974a76b486b8d724aa5c14b01780021191d123c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-12-challenge.json",
-   "bytes": 5962,
-   "sha256": "f5f723ca234166d57d46a2b372658fb9f900daebf04e11a59b62f038de225d5d",
+   "bytes": 5791,
+   "sha256": "e8e4d8b39869f97265f9922395cbe0d9113c4b2134516640fd1150a48918ed96",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-12-challenge.json.meta.json",
    "bytes": 279,
-   "sha256": "cc2b8b5dde869548f206ace97d357d8b26575ee020698229c47cb6678b29585b",
+   "sha256": "ead3a2d4de70a5ca01824e4f10c66bb1db00197c373e87bf384f30e8d35e1d5e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-13-challenge.json",
-   "bytes": 5931,
-   "sha256": "731861c398a9c458d65121f81c0a048d529bff57ea0441360c1c9c87afb60810",
+   "bytes": 5760,
+   "sha256": "62eccf8e563902c4a4c8d03fc38f502bee59c6a705bad087b4256564e41c0b5e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-13-challenge.json.meta.json",
    "bytes": 279,
-   "sha256": "d0c4f9b3405dedc9777343d83e65a6b283e4225558f910b5cc64bafa50162565",
+   "sha256": "59b284fdbbfb811d7acc1beb116550eb0a6b4bba0c23d9b8b8b03f1fb263dead",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-14-challenge.json",
    "bytes": 5879,
-   "sha256": "ff65f2bbe3f22460b999ced45cc0c5da891b7662d7a1264064ee07570354de4b",
+   "sha256": "51c0fa8797f3d037b0972e94424be8e716cb9411d81379a1b44b90061b6a63cc",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-14-challenge.json.meta.json",
    "bytes": 278,
-   "sha256": "d0cfdc690f45d9379d25f2f53bce89ea867bf30da8bb593fe0f612fa949c01d0",
+   "sha256": "8cb1787e916644b2cefff04aa9f0a92a912f388ee02d51d86846a60edc327cc0",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-15-challenge.json",
    "bytes": 9603,
-   "sha256": "3a7b88d104aee80706e857881f2f328ce3dcf8d8545a430329bf5aeae5ffc354",
+   "sha256": "dd557f3bf2c27acdeee39d3e44ca73e92c004ad4d80c0bf85c68b9457a401db7",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-15-challenge.json.meta.json",
    "bytes": 321,
-   "sha256": "13418104b466df3f9e702d555be57a582fac8bf060a4b9dad2f36a757611a497",
+   "sha256": "6681f33ee37d3e1c077232175ee66c07dad70f137b699859172cd01b9493d375",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-16-challenge.json",
    "bytes": 5822,
-   "sha256": "4b94ca936956168e6b574cf976a7822248a80e96cc7452fddea7ddd6c60ac314",
+   "sha256": "9a8335d79fbb8364af20a80dfa01596fe2f7c7e07c74e932ba78826dc94db4cc",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-16-challenge.json.meta.json",
    "bytes": 290,
-   "sha256": "5ff4d7f9e01c0aaf4da4d6a05d3d1cdcf48a8a0b2674719a6b26be9d1922417e",
+   "sha256": "4a8d2a97ac8486b06d392e0fc7dfa92efaee386906c79eda7b6d4eaf73a3716c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-17-challenge.json",
    "bytes": 7826,
-   "sha256": "b157bdb841788af2f87cde7cdebcb6322140f4784e2360a35a30dcc1ceaa6654",
+   "sha256": "eb73af7ef835ac0f329e5b7ecfe3ed52436fcfd231bb55905d4198d3ddf64aed",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-17-challenge.json.meta.json",
    "bytes": 301,
-   "sha256": "7c5809a5f5ffd14d7f0cdf6e47cbcddf5817eb7af27c62d2ad4d3c60540d4e41",
+   "sha256": "c1bc5e37fd5e6add960495d956ed52a684bae01993804d8961717d8d168832b6",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-18-challenge.json",
    "bytes": 5712,
-   "sha256": "9b9fb7916973c4ec4ec2523f5d24aa078f2361bd1353b9fc9972ccf38e109e51",
+   "sha256": "e993e952662b05d053ef0b5dad68e328261e1800e7fec46b62ffbf03e5c72cc0",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-18-challenge.json.meta.json",
    "bytes": 286,
-   "sha256": "6de79730a5be7b2f034693833035e44f9d6f747dcb2de58d64f7b92eaf52f074",
+   "sha256": "b8e056e1dc08ff9062eb5be7cf35852b33c51dc8fe322a5fd364f9d61f4a6def",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-19-challenge.json",
    "bytes": 6210,
-   "sha256": "29e195a4fd6c1e11460544f32b61bba74861732f0c0e952b5ba35dcf45ee24a9",
+   "sha256": "e90878817ea77b1e91591c465704afb186e272be3f2c3765b9ef556e4dc57511",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-19-challenge.json.meta.json",
    "bytes": 276,
-   "sha256": "b3c6dfb2429106bc3148c306b9bec81ace40cf86adf64327328965d5178022af",
+   "sha256": "b06db14fd8216d589b5afd1a4846db51d353592d8fbfcb7f7b656f15ae9e84c0",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-2-challenge.json",
    "bytes": 4713,
-   "sha256": "6073cf7fdb56a97849cc204a8533e91567e0733c40b154fd115f0ead180c4793",
+   "sha256": "9ad39c5be44e7f1ffac2247879958f7a333c3e4a827e3624d68cc42a5ee9efbd",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-2-challenge.json.meta.json",
    "bytes": 278,
-   "sha256": "0fa85303499bd8396a836ee20633460297ee2a4adcb6cc2d207b4df7ad21c1d7",
+   "sha256": "6dc354d97935fd304753e7a8a2d89dfa11f4f7fd7c1ebffbf087ee8a444f536d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-20-challenge.json",
    "bytes": 6086,
-   "sha256": "262195722dc92bc94f8b72ecadd1486863e137848e84eda5abd0af89def6de2b",
+   "sha256": "725071740310d9e88d114b285323f6ed3b0b710594ead8169c7c77d90152fde7",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-20-challenge.json.meta.json",
    "bytes": 270,
-   "sha256": "310af447b8cacbde1a599efe1aac55da9828115dc75e0fed79a7ee6406cf9899",
+   "sha256": "34ec62d3d0965203a185d3439842bc4fbc0c1e3339734713aa36a2047896361b",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-21-challenge.json",
    "bytes": 6141,
-   "sha256": "9a5c7cc2326882173863da3f247772d30d66c020bd015b946f63be23f0a8f5a6",
+   "sha256": "d28de488239469232e99d9e8ba4f4ea2e7caa9150f89a0918e6360899ab3e4bb",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-21-challenge.json.meta.json",
    "bytes": 269,
-   "sha256": "01cf3aaf7e9d627286d2ce379ec72e08e7ef0fc4b717b7ffa756f36895e79915",
+   "sha256": "2a5600af7906c6661e550e33712c1e6fcc1b9e65c33bfe42661b924e1757fe6c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-22-challenge.json",
    "bytes": 6559,
-   "sha256": "d1fe0e5c84fbcf82b72e72a8b44cb81a723941bd79b91d0bfd80f26dcd2ca425",
+   "sha256": "066fa9f5b2e558bee7367eff2e288b99336158c69b6147593bdacba8990ce86e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-22-challenge.json.meta.json",
    "bytes": 276,
-   "sha256": "6af4328ee2f1cc89a48283df6d1e028b7853a2e90e76dacc1cd0051ef9c453f3",
+   "sha256": "22e5aa6312d5ac8037cc983d6b3d375bdc125ae0fcc972d3035b0c02eb3cd17f",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-23-challenge.json",
    "bytes": 6362,
-   "sha256": "fb5a4ce7d8bd3f1030e379db7ad268c7edcad8a40ab67c32f6c447a9d861db5e",
+   "sha256": "11c6d9f1f54a784c1fe2394b5b72598ceece33753a25104ab85e42dd96b57d27",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-23-challenge.json.meta.json",
    "bytes": 277,
-   "sha256": "0d2444956263aa0ab9f53d9bda420df6c37166c13610d6dcaef3caa95120187b",
+   "sha256": "3861a3b69164e36fd2ff488a373a591b356f85f2753d9b662cb181d4ab719fc0",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-24-challenge.json",
    "bytes": 6289,
-   "sha256": "22a31cfa7c906f87868c4cbfe500ed0e14fde2d1cb70d5bd67a13e23ebc39ac0",
+   "sha256": "f29a4d9c4b7fe5454846ce40a9c68069cfc41f2dc61a0f50e8b0fbf73e6844d2",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-24-challenge.json.meta.json",
    "bytes": 268,
-   "sha256": "113b3f45956fe8041433755d815e7c73f64440fe2fa2c04f896350deae714070",
+   "sha256": "42131d32b27c0953096e7cf2c82f0defccedfb5a603bb9cf03354284fd059d94",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-25-challenge.json",
    "bytes": 6042,
-   "sha256": "6ea4693a7448001ca1ba5de1b100b90ed66910caaa596ecff894b3a4beaf19ca",
+   "sha256": "3ca0833f9d61d38dd387815be4c171cc691cac4f9868a14df1900ff414dff61c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-25-challenge.json.meta.json",
    "bytes": 275,
-   "sha256": "c38e4845c185a4c37796f89156b081cfbe75213058f9260302c825ef2658ecba",
+   "sha256": "0ec3454fdcf32326840ebbe29f7a5ec05369a7aa0dd9d0258e087bbfe19887b0",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-26-challenge.json",
    "bytes": 6262,
-   "sha256": "a142fed3530739687b466f7d3c3054e4b08d7dbea6f58ea62609b80675584541",
+   "sha256": "47f70e9d90bf917847efbee1a94341350c6be09240257e678424f8da1e0b4764",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-26-challenge.json.meta.json",
    "bytes": 271,
-   "sha256": "1a66c15f46c0eeb2915645a1e5bd49161906032cf47500a1372b47707d5b5278",
+   "sha256": "0d7ebf6d8e20f2d5b5bdd99f9e46f0d5aaab4e0ad055cdfc97ec3fe27c42decb",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-27-challenge.json",
    "bytes": 6226,
-   "sha256": "f3d8662f58b092de9a3325c3e2374e96a97d102a1ee764cdc3edbbae1730cc59",
+   "sha256": "32e51d867ec6c1add54e663b118834a2c0dd27f57b2c194556bb22b6ed3d6aad",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-27-challenge.json.meta.json",
    "bytes": 276,
-   "sha256": "a4b3a0dcbce2bd7c5a5872336098117a274a8699d60f823adbd788d8ffd0ee19",
+   "sha256": "1bc2b741122c54b8311641b8c4d7c2637f97aa8ac1217db3084bd837d56173bb",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-28-challenge.json",
-   "bytes": 7564,
-   "sha256": "c209002e8fd328c6f502f092feb06becd84bba4d6ed127a8363f3773cc13a6dc",
+   "bytes": 7331,
+   "sha256": "1559af843ba44eab40307553af0557af51bacd02f6996915c75e3afbf7cf7a73",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-28-challenge.json.meta.json",
    "bytes": 276,
-   "sha256": "7a271103d58bf06ed938f69308aab940f8b1ddc8a7698493797267e1d6bbbfb0",
+   "sha256": "8d0221f968d7b7c171e9145747156b21304ea09781d79663bbbda8ae01ff2e05",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-29-challenge.json",
    "bytes": 6309,
-   "sha256": "edd337dd81dcc877dac440f99963c5d77d6a235e29b001ee8aa24637983d6354",
+   "sha256": "c7103bee1be5322a2fb62a39b17e4f55404718e4acfa7c8774061d8fa279e69b",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-29-challenge.json.meta.json",
    "bytes": 303,
-   "sha256": "75c3123ed92909ae350154b20a7f20a2abe88a3646f142ad0650ee1d37c2ed83",
+   "sha256": "42e116ad3ce49c289e671c8d7afd0e6b079f4797fd27a7674f5ed2e635c9fbb2",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-3-challenge.json",
    "bytes": 4715,
-   "sha256": "c1ccb9a1e18adc627b6034c11b113f3721df3b4b82e2e52fc0f20a29bfc06b21",
+   "sha256": "abfe7e32b619fb919ac8b73e3e178261f3d7689f1cb2389d7f5f4ae2d0280d54",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-3-challenge.json.meta.json",
    "bytes": 273,
-   "sha256": "0c99536c75ec4845e1eb0685621b0b0ef730ca813948312be18dcfb5d26bacf8",
+   "sha256": "5d2b3d3e2dd59e01990ae06120850dcc4da9ee9a3b1cef7d041e00f7e5b6b39d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-30-challenge.json",
    "bytes": 6203,
-   "sha256": "a888d5f28b438a7f483a197f0fb3e314d3c28da1f94825eb5c523a9dce368eac",
+   "sha256": "83a6791764e3459a4effa64b983097ae36fa3b6371efc3b2f4b53e779ee8e802",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-30-challenge.json.meta.json",
    "bytes": 314,
-   "sha256": "7fda525f51b1ead16687f1c0b071213805f9f3a5c8ed9a78a95f537eb2055af7",
+   "sha256": "090ba365246e39427dfaad8ab44dbdbf7aaa2940aad55e763b6d89c97849cf57",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-31-challenge.json",
    "bytes": 6448,
-   "sha256": "8a2e7e49392aafc26320b303aec20c934b1b05ef342794ec1b2314ed5abc01a2",
+   "sha256": "09ff3997693bee4126e8ef052e69d6f7dc40ffc720473605a4ff46c09da9cc1c",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-31-challenge.json.meta.json",
    "bytes": 298,
-   "sha256": "8d236ffe4903f07de2597a46c7df598a8d26f5cdab4c70402464f8cc7d947438",
+   "sha256": "f17d8e54cb40977967b44e39fbacc49c11895521888afc297b5922de70ab4bf8",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-4-challenge.json",
    "bytes": 4838,
-   "sha256": "d146b3ad7e7a5497eabc688d76c2878a6ce2d8d9c065b4ec755a2a6fad0f7969",
+   "sha256": "fd7aaf4d80b26a1184009e16addca9cc446a4ac4035d10e337b4736fb384fc7b",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-4-challenge.json.meta.json",
    "bytes": 278,
-   "sha256": "7eec1dbff65e220610d06dcef95f9e10ec80aeb5496d9c6fae12700eaab318f5",
+   "sha256": "60a20be0e7c5be6377468dff8352d523b8bc3986635a89e830a297e72065bada",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-5-challenge.json",
    "bytes": 7704,
-   "sha256": "a7b4a2b82d1602330e57bd3d1bba98fb7f897e847e519ab3a25e57881f56b72f",
+   "sha256": "2be6fdfa116d8178e9eeb94806ff97de1713416d2ef7139352d9b51261966f8e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-5-challenge.json.meta.json",
    "bytes": 307,
-   "sha256": "15ed4c6b1b63244d3806e2adc014accbe61d88c94c91c6763b09710f7f22b9c7",
+   "sha256": "e0a70f10cfdf7fed867cf991d68fb2182648df4667af1a2c22ec03f0bcc22441",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-6-challenge.json",
    "bytes": 12130,
-   "sha256": "416c64d0394cf097c163627cae0b5b7184f2748cde39a470603db1c8256648ba",
+   "sha256": "1adcec43234a714f172be2ff7316b3cb2fa6d189ee8b5d1a3773d24354eb807f",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-6-challenge.json.meta.json",
    "bytes": 307,
-   "sha256": "a13f0c6d03002efb9f70a4971ed8a411dc18304a3f56a1feb0525fb2a714115d",
+   "sha256": "c55017d54d25ab624f734cdfaa70fd5d3f2eea5c39de35670a1500d6a29e48af",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-7-challenge.json",
    "bytes": 8772,
-   "sha256": "d10b02ce69a39aae47755de38224fcbfe179aad0cef13cfc03a300f238376303",
+   "sha256": "07555933622109f3131ece26ca93de7095b2718b7118944dee95094fa071e565",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-7-challenge.json.meta.json",
    "bytes": 283,
-   "sha256": "39bc7334ff34bd2e825df11aad882147d622c83e05c763a25d64f3e4798160ff",
+   "sha256": "01be20bc881af3646ed52b732930d7bfbe34703cedaa39df6b6a881150389264",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-8-challenge.json",
    "bytes": 5414,
-   "sha256": "1803faa9534cd75bbda2ed58372f3d1f5388852867984e42617e076b75292ee0",
+   "sha256": "851d14eb4d66ef49e69822f7918ddab2f74ee64cef809bab2f09844cd7209953",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-8-challenge.json.meta.json",
    "bytes": 274,
-   "sha256": "04659e04741ee1e03a09903ec6132aef19bc9868705a86513eb51aabad8998bc",
+   "sha256": "66ed87cb6c12bf635128b9d37aa417740205e928efc4619e2b08d1ccd5cfa473",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-9-challenge.json",
    "bytes": 5544,
-   "sha256": "a247ea48311d673130666f9751988fe9ca42c7712d8161db3cae16ca368d9a8f",
+   "sha256": "f9a00d1a096fa2f3c19dadd0921ada59bbd1e07334a5be6fa160e4a0ef073f21",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/door-9-challenge.json.meta.json",
    "bytes": 284,
-   "sha256": "eb4e1725ab6eb5ba980c6d0761223f0aff941e6513e748f8493878578ebe101a",
+   "sha256": "398610493015d30d61e90fe654a94ae5b09452a7df625c14ba81867fdb599c4f",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -114685,14 +114783,14 @@
   {
    "path": "/interop/x402-door-conformance-2026-09/mirrors/well-known-x402.json.meta.json",
    "bytes": 274,
-   "sha256": "12ce6cf821b8bd7e3c25b4bc3e516f4ed14106c26b41c6cebe1a08f2dd01dc9c",
+   "sha256": "3b551f49f0b7b45bda630e027939c7228efc57d6fcd43c2d6a0038639c87ae44",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/x402-door-conformance-2026-09/report.json",
-   "bytes": 19932,
-   "sha256": "343a5f772fdd8831f12fadddabaa5a99f7932db6c51d8a55143b54782dc8b4f1",
+   "bytes": 20211,
+   "sha256": "76913a6ea33ad2be48a98cdd6947f5cdaf00008846bab50d3d656c45aca181cb",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -114991,6 +115089,20 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/x402-trust/20261104T033457Z.json",
+   "bytes": 1584,
+   "sha256": "bf62413f96e945154d3477c2e63bef4c4770f0fefee84cfdb0b1730a70b698a1",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/x402-trust/20261104T065216Z.json",
+   "bytes": 1586,
+   "sha256": "67fd2db30126a249a08e885f5d66463283254082da1799b1912d9cb516f1a16a",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/x402-trust/20261104T195831Z.json",
    "bytes": 1586,
    "sha256": "f66e263c6901e82516ea778d1cceb688c294d38d1df8f59ece5a812e48db1d2f",
@@ -115173,6 +115285,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/x402-trust/20261116T070421Z.json",
+   "bytes": 1586,
+   "sha256": "8b0a9df20c6ddceb36c2d7ecf61d8ca97f48c7d3db72fd6c13fb8a14d416c9c2",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/x402-trust/20261116T222557Z.json",
    "bytes": 1586,
    "sha256": "f326ffa66385ff361d632f273c2f2a45d994f820eaefaed543374c87cd7e6395",
@@ -115187,6 +115306,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/x402-trust/20261117T211322Z.json",
+   "bytes": 1586,
+   "sha256": "ea625fa19445a871d3155152ee3b34f8db4dbc865b5a46ee7e22949c363e00cf",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/x402-trust/20261118T075052Z.json",
    "bytes": 1586,
    "sha256": "e2d54640b00d4a8e6fb69cc33ea0f1737e5671bf2089b41ef69052e253e8be33",
@@ -115197,6 +115323,13 @@
    "path": "/interop/x402-trust/20261118T204902Z.json",
    "bytes": 1584,
    "sha256": "eb1228471377c718713e69747a8d3094448fc8cd47d6a7cf04aa00c853f12ae7",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
+   "path": "/interop/x402-trust/20261119T074615Z.json",
+   "bytes": 1585,
+   "sha256": "8dff528115849d21389d7221ee6060b4cec4200bc9efaa247c5b501c339fb1ce",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -115236,6 +115369,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/x402-trust/20261122T071806Z.json",
+   "bytes": 1586,
+   "sha256": "6c554ab72e8c6c91c6251c8358b91044278db5b0e6f8278881af85c9eca75491",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/x402-trust/20261122T195500Z.json",
    "bytes": 1586,
    "sha256": "4d95a3ce5f73055a20de22d5a257467f3859af871f5463895654b735b6f34908",
@@ -115250,6 +115390,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/x402-trust/20261124T001205Z.json",
+   "bytes": 1584,
+   "sha256": "534b4c7190239d7010af491b42dd1effb5e49a6a42a9deec7b16fe2f041d2817",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/x402-trust/index.html",
    "bytes": 1940,
    "sha256": "3a025483c48fcb19b7d57ce87378d0f5234af085789ed8ecbf8b7756d681a1cd",
@@ -115258,8 +115405,8 @@
   },
   {
    "path": "/interop/x402-trust/latest.json",
-   "bytes": 1585,
-   "sha256": "da87124bd9fa46459e04e649034dead51d04ff2999bb11dd045b1b32e114dd98",
+   "bytes": 1584,
+   "sha256": "534b4c7190239d7010af491b42dd1effb5e49a6a42a9deec7b16fe2f041d2817",
    "served": "pages",
    "served_bytes": "as-published"
   },
