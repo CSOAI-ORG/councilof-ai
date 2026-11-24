@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchSovTownStats, formatCount, type SovTownStats } from "../data/sov-town-data";
+import { fetchSovTownStats, formatCount, UNKNOWN_SOV_TOWN, type SovTownStats } from "../data/sov-town-data";
 import { fetchOracleFleet, getFeed, subscribeBus, BUS, type OracleFleet } from "../lib/sovDataBus";
 
 // Oracle fleet strip — the free substrate's heartbeat, rendered honestly inside
@@ -41,18 +41,7 @@ function OracleFleetStrip() {
   );
 }
 
-const FALLBACK: SovTownStats = {
-  episodes: 1_458_000_000,
-  governedCrimes: 0,
-  ungovernedCrimes: 120_500_000,
-  modelsTrained: 112,
-  hives: 28,
-  passports: 29,
-  macUpdated: "",
-  vmUpdated: "",
-  source: "last-known",
-  fetchedAt: "",
-};
+
 
 // Frameworks Council Town measures conduct against — the "governed against"
 // wall (modelled on Red Hat's customer-logo wall: concrete, scannable proof of reach).
@@ -96,14 +85,14 @@ const EXPLAINERS = [
 ];
 
 export default function CouncilTown() {
-  const [s, setS] = useState<SovTownStats>(FALLBACK);
+  const [s, setS] = useState<SovTownStats>(UNKNOWN_SOV_TOWN);
 
   useEffect(() => {
     document.title = "Council Town — Governance Simulation Record · CSOAI";
     let live = true;
     fetchSovTownStats()
       .then((d) => {
-        if (live && d && d.episodes > 0) setS(d);
+        if (live && d) setS(d);
       })
       .catch(() => {});
     return () => {
@@ -112,14 +101,14 @@ export default function CouncilTown() {
   }, []);
 
   const stats = [
-    { value: formatCount(s.episodes) + "+", label: "Signed episodes" },
-    { value: String(s.governedCrimes), label: "Governed crimes", good: true },
-    { value: formatCount(s.ungovernedCrimes) + "+", label: "Ungoverned crimes" },
-    { value: String(s.hives), label: "Autonomous hives" },
+    { value: s.episodes === null ? "Unknown" : formatCount(s.episodes), label: "Source-reported simulation episodes" },
+    { value: formatCount(s.governedCrimes), label: "Governed simulated outcomes", good: false },
+    { value: formatCount(s.ungovernedCrimes), label: "Hypothetical ungoverned violations" },
+    { value: formatCount(s.hives), label: "Source-reported hives" },
     // No typed counts: "140 Personas" was a hardcoded string with no feed field
     // behind it. models_trained IS a feed field, so it earns the tile instead.
-    { value: String(s.modelsTrained), label: "Models trained" },
-    { value: String(s.passports), label: "Ed25519 passports" },
+    { value: formatCount(s.modelsTrained), label: "Source-reported models trained" },
+    { value: formatCount(s.passports), label: "Source-reported passport records" },
   ];
 
   return (
@@ -128,24 +117,24 @@ export default function CouncilTown() {
       <section className="bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white py-24">
         <div className="max-w-5xl mx-auto px-6">
           <p className="text-emerald-300 font-semibold tracking-wide uppercase text-sm">
-            The live argument for governed AI
+            Council Town · simulation research
           </p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
-            The world&rsquo;s first signed record of AI governance
+            Source-reported governance simulation, with visible limitations
           </h1>
           <p className="mt-5 text-lg text-emerald-50 max-w-2xl">
-            A governed-vs-ungoverned agent world that proves &mdash; visually and cryptographically &mdash;
-            why governance architecture decides whether multi-agent AI systems thrive or collapse.
-            Every figure below is summed from a hash-chained Ed25519 ledger.
+            A source-reported comparison of hypothetical governed and ungoverned scenarios. The counts here
+            are not independently authenticated original episodes, real incidents, prevented harm, or human approvals.
+            Missing inputs remain Unknown rather than becoming zero or invented historical totals.
           </p>
           {/* Honesty bar: the feed state is part of the figure. */}
           <p className="mt-3 text-xs">
-            {s.source === "live" ? (
-              <span className="rounded-full border border-emerald-400/40 bg-emerald-400/10 px-3 py-1 font-bold uppercase tracking-wider text-emerald-300">live feed · fetched {s.fetchedAt ? new Date(s.fetchedAt).toLocaleString() : "just now"}</span>
+            {s.source === "source-reported" ? (
+              <span className="rounded-full border border-emerald-400/40 bg-emerald-400/10 px-3 py-1 font-bold uppercase tracking-wider text-emerald-300">source-reported HTTP feed · fetched {s.fetchedAt ? new Date(s.fetchedAt).toLocaleString() : "just now"}</span>
             ) : s.source === "partial" ? (
               <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 font-bold uppercase tracking-wider text-amber-300">partial feed — some sources offline</span>
             ) : (
-              <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 font-bold uppercase tracking-wider text-amber-300">last-known figures — live feed offline</span>
+              <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 font-bold uppercase tracking-wider text-amber-300">source unavailable · counts unknown</span>
             )}
           </p>
           <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 gap-5">
@@ -167,10 +156,9 @@ export default function CouncilTown() {
           </div>
           {/* Cited source — Red Hat's "Source: …" credibility move */}
           <p className="mt-6 text-sm text-emerald-100/70 max-w-2xl">
-            Source: Council Town hash-chained Ed25519 ledger. External{" "}
-            <span className="font-semibold text-emerald-200">Bitcoin/OpenTimestamps anchoring is
-            planned, not yet live</span> &mdash; today the ledger is verifiable offline against the
-            published key.
+            Source: reported fields fetched from the Council Town feed. This interface does not
+            independently verify original ledger bytes, Ed25519 signatures, Bitcoin/OpenTimestamps
+            inclusion, legal conformity or real-world effects.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
             {/* "Verify the chain -> proofof.ai/towns" was a loop: that host 301s to
@@ -178,8 +166,8 @@ export default function CouncilTown() {
                 endpoint is republished there is nothing to verify against, and the
                 surface says so instead of sending the reader in a circle. */}
             <span className="rounded-lg border border-amber-300/50 bg-amber-400/10 px-5 py-3 text-sm font-semibold text-amber-100">
-              Chain verification: not yet available — the towns ledger endpoint is offline, so
-              there is no live chain to check. Figures above are last-known and labelled.
+              Independent chain verification is not established here. Figures appear only where the
+              necessary source fields are available and valid; other values remain Unknown.
             </span>
             <a
               href="mailto:contact@csoai.org?subject=Council%20Town%20pilot"
@@ -197,11 +185,11 @@ export default function CouncilTown() {
       <section className="border-b border-gray-100 bg-gray-50">
         <div className="max-w-5xl mx-auto px-6 py-14 text-center">
           <h2 className="text-2xl font-bold text-gray-900">
-            Governed against the frameworks that matter
+            Framework references for research
           </h2>
           <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
-            Council Town measures conduct against the binding and emerging regimes in force across
-            177 jurisdictions &mdash; not a private rulebook.
+            These frameworks provide research context only. No applicable law, jurisdictional coverage,
+            compliance result or independent evaluation is established by this page.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             {FRAMEWORKS.map((f) => (
@@ -220,18 +208,15 @@ export default function CouncilTown() {
       <section className="max-w-5xl mx-auto px-6 py-16 text-gray-700">
         <h2 className="text-2xl font-bold text-gray-900">Same agents. Two futures.</h2>
         <p className="mt-3 max-w-3xl">
-          The simulation runs the identical agent population twice — once governed, once
-          ungoverned. One side maintains commons, trust and legal boundaries; the other collapses
-          into crime, scarcity and contagion. The simulation ingests live public data (EU
-          aggregates, CISA KEV, OFAC SDN, UK Companies House PSC, FRED, FAOSTAT, EIA, NOAA) so
-          stress events reflect the real economy, climate, threats and regulatory environment.
-          The interactive toggle world itself is not embedded on this page — what you are reading
-          here is its signed ledger record, and this page says so rather than miming a control
-          that is not wired.
+          The proposed research design compares matched simulated agents under different control
+          conditions. A paired result only measures a modelled scenario when its inputs, method and
+          output are independently reproducible. The interactive simulation is not embedded on this
+          page; no physical-world or human-authority effect is demonstrated here.
         </p>
         <p className="mt-6 text-sm text-gray-500">
-          Research-grade, predictive output. Public data sources are cited and OGL-UK-3.0 /
-          public-domain where applicable. What is verifiable today is a signed measurement card at{" "}
+          Modelled scenarios cannot establish that real-world harm was prevented or that any
+          outside dataset has training or redistribution rights. A separate public measurement
+          card may be verified at{" "}
           <a className="text-emerald-700 underline" href="/gspc-verify">
             /gspc-verify
           </a>
@@ -244,12 +229,10 @@ export default function CouncilTown() {
         <div className="max-w-5xl mx-auto px-6 py-16">
           <h2 className="text-2xl font-bold text-gray-900">Why we hash-chain the ledger</h2>
           <p className="mt-4 max-w-3xl text-gray-700 leading-relaxed">
-            A governance record is only worth what it cannot be quietly rewritten. Every Council
-            Town episode is signed with an Ed25519 key and its hash is SHA-256-linked into a
-            tamper-evident chain &mdash; so the record of what an AI did, and whether it was governed,
-            is checkable offline against the published key. External Bitcoin/OpenTimestamps
-            time-anchoring is planned, not yet live. This is digital autonomy for AI oversight:
-            control and protect critical decisions without asking anyone to take our word for it.
+            An independently checked chain can establish relationships between exact records,
+            but not their factual correctness or the identity and authority of a human principal.
+            No original episode signature or external timestamp anchor is checked by this view.
+            Treat source-reported simulation outcomes as hypotheses until externally reproduced.
           </p>
         </div>
       </section>
@@ -303,7 +286,8 @@ export default function CouncilTown() {
         <div className="max-w-5xl mx-auto px-6 py-16 text-center">
           <h2 className="text-3xl font-black tracking-tight">Put your AI on the record</h2>
           <p className="mt-3 text-emerald-50 max-w-2xl mx-auto">
-            Run it under the Council Gate &mdash; with real identity, policy, and proof.
+            Ask about a bounded research pilot. Human approval, permitted execution and receiving-party
+            verification require separate authorized workflows.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <a
