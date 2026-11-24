@@ -142,7 +142,7 @@ const Art50 = lazy(() => import("./pages/Art50"));
 const ProofReceipt = lazy(() => import("./pages/ProofReceipt"));
 const ProofOfReceipt = lazy(() => import("./pages/ProofOfReceipt"));
 const FeedLaunchPack = lazy(() => import("./pages/FeedLaunchPack"));
-const YieldStatus = lazy(() => import("./pages/YieldStatus"));
+const YieldStatus = lazy(() => import("./pages/StatusWithControlRoom"));
 const YieldInternal = lazy(() => import("./pages/YieldInternal"));
 const YieldDashboard = lazy(() => import("./pages/YieldDashboard"));
 const ClaritySpecimen = lazy(() => import("./pages/ClaritySpecimen"));
