@@ -1,0 +1,215 @@
+{
+  "source_commit": "16f916629e27742ef83aed2655c99e4d14c50692",
+  "result": {
+    "authorises_execution": false,
+    "bft_demonstrated": false,
+    "new_gspc_measurement": false,
+    "quorums": [
+      {
+        "fault_bound": 1,
+        "honest_intersection_if_bound_holds": false,
+        "minimum_intersection": 1,
+        "quorum": 2,
+        "quorum_possible_with_f_unavailable": true,
+        "replicas": 3
+      },
+      {
+        "fault_bound": 1,
+        "honest_intersection_if_bound_holds": true,
+        "minimum_intersection": 2,
+        "quorum": 3,
+        "quorum_possible_with_f_unavailable": true,
+        "replicas": 4
+      },
+      {
+        "fault_bound": 2,
+        "honest_intersection_if_bound_holds": true,
+        "minimum_intersection": 3,
+        "quorum": 5,
+        "quorum_possible_with_f_unavailable": true,
+        "replicas": 7
+      },
+      {
+        "fault_bound": 3,
+        "honest_intersection_if_bound_holds": true,
+        "minimum_intersection": 4,
+        "quorum": 7,
+        "quorum_possible_with_f_unavailable": true,
+        "replicas": 10
+      },
+      {
+        "fault_bound": 3,
+        "honest_intersection_if_bound_holds": true,
+        "minimum_intersection": 6,
+        "quorum": 9,
+        "quorum_possible_with_f_unavailable": true,
+        "replicas": 12
+      },
+      {
+        "fault_bound": 10,
+        "honest_intersection_if_bound_holds": true,
+        "minimum_intersection": 13,
+        "quorum": 23,
+        "quorum_possible_with_f_unavailable": true,
+        "replicas": 33
+      }
+    ],
+    "seed": 261125,
+    "simulations": [
+      {
+        "policies": {
+          "one_engine": {
+            "holds": 11442,
+            "safe": 8075,
+            "unsafe": 483
+          },
+          "three_hive_majority": {
+            "holds": 12306,
+            "safe": 7694,
+            "unsafe": 0
+          },
+          "three_locks": {
+            "holds": 11491,
+            "safe": 7985,
+            "unsafe": 524
+          },
+          "three_locks_redundant": {
+            "holds": 9230,
+            "safe": 10592,
+            "unsafe": 178
+          },
+          "three_majority": {
+            "holds": 10951,
+            "safe": 8955,
+            "unsafe": 94
+          },
+          "twelve_majority": {
+            "holds": 10024,
+            "safe": 9976,
+            "unsafe": 0
+          }
+        },
+        "safe_tasks": 12155,
+        "shared_fault_mixture": 0,
+        "tasks": 20000,
+        "unsafe_tasks": 7845
+      },
+      {
+        "policies": {
+          "one_engine": {
+            "holds": 11452,
+            "safe": 8066,
+            "unsafe": 482
+          },
+          "three_hive_majority": {
+            "holds": 12130,
+            "safe": 7815,
+            "unsafe": 55
+          },
+          "three_locks": {
+            "holds": 11495,
+            "safe": 7981,
+            "unsafe": 524
+          },
+          "three_locks_redundant": {
+            "holds": 9367,
+            "safe": 10420,
+            "unsafe": 213
+          },
+          "three_majority": {
+            "holds": 10931,
+            "safe": 8928,
+            "unsafe": 141
+          },
+          "twelve_majority": {
+            "holds": 10064,
+            "safe": 9881,
+            "unsafe": 55
+          }
+        },
+        "safe_tasks": 12155,
+        "shared_fault_mixture": 0.1,
+        "tasks": 20000,
+        "unsafe_tasks": 7845
+      },
+      {
+        "policies": {
+          "one_engine": {
+            "holds": 11427,
+            "safe": 8055,
+            "unsafe": 518
+          },
+          "three_hive_majority": {
+            "holds": 11439,
+            "safe": 8278,
+            "unsafe": 283
+          },
+          "three_locks": {
+            "holds": 11457,
+            "safe": 8021,
+            "unsafe": 522
+          },
+          "three_locks_redundant": {
+            "holds": 9962,
+            "safe": 9670,
+            "unsafe": 368
+          },
+          "three_majority": {
+            "holds": 10852,
+            "safe": 8819,
+            "unsafe": 329
+          },
+          "twelve_majority": {
+            "holds": 10263,
+            "safe": 9454,
+            "unsafe": 283
+          }
+        },
+        "safe_tasks": 12155,
+        "shared_fault_mixture": 0.5,
+        "tasks": 20000,
+        "unsafe_tasks": 7845
+      },
+      {
+        "policies": {
+          "one_engine": {
+            "holds": 11450,
+            "safe": 8025,
+            "unsafe": 525
+          },
+          "three_hive_majority": {
+            "holds": 10651,
+            "safe": 8785,
+            "unsafe": 564
+          },
+          "three_locks": {
+            "holds": 11446,
+            "safe": 8033,
+            "unsafe": 521
+          },
+          "three_locks_redundant": {
+            "holds": 10665,
+            "safe": 8769,
+            "unsafe": 566
+          },
+          "three_majority": {
+            "holds": 10820,
+            "safe": 8625,
+            "unsafe": 555
+          },
+          "twelve_majority": {
+            "holds": 10594,
+            "safe": 8838,
+            "unsafe": 568
+          }
+        },
+        "safe_tasks": 12155,
+        "shared_fault_mixture": 1,
+        "tasks": 20000,
+        "unsafe_tasks": 7845
+      }
+    ],
+    "state": "SYNTHETIC_ENGINE_COUNCIL_RESEARCH",
+    "tests": 8
+  }
+}
