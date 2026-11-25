@@ -115,6 +115,104 @@ export const PINNED_SUBJECT_BANKS = [
   },
 ];
 
+// Reconcile the frozen observation payloads without re-fetching sources.
+// This is internal consistency, not independent source truth or a fresh score.
+function canonicalize(v) {
+  if (v === null || typeof v !== "object") return JSON.stringify(v);
+  if (Array.isArray(v)) return "[" + v.map(canonicalize).join(",") + "]";
+  return "{" + Object.keys(v).sort().map(k => JSON.stringify(k) + ":" + canonicalize(v[k])).join(",") + "}";
+}
+const digest = v => crypto.createHash("sha256").update(canonicalize(v)).digest("hex");
+const isSha = v => typeof v === "string" && /^[0-9a-f]{64}$/.test(v);
+const nonempty = v => typeof v === "string" && v.length > 0;
+const record = v => v !== null && typeof v === "object" && !Array.isArray(v);
+
+export function reconcileSubjectBank(bank, spec) {
+  const errors = [];
+  const require = (ok, code) => { if (!ok) errors.push(code); };
+  if (!record(bank)) return { ok: false, errors: ["BANK_SHAPE"], details: null };
+  if (spec.axis === "claim-maintenance") {
+    // This format counts reachable re-reads across historical register
+    // versions, not unique claims or independent subjects.
+    const rows = Array.isArray(bank.rows) ? bank.rows : [];
+    const counts = { CHANGED: 0, WITHDRAWN: 0, UNCHANGED: 0, UNREACHABLE: 0 };
+    require(bank.schema === "csoai.claim-maintenance.wave/0.1", "CLAIM_SCHEMA");
+    require(Array.isArray(bank.rows) && Array.isArray(bank.registers), "CLAIM_ARRAYS");
+    for (const [i, row] of rows.entries()) {
+      if (!record(row) || !Object.hasOwn(counts, row.outcome)) {
+        errors.push("CLAIM_ROW:" + i); continue;
+      }
+      counts[row.outcome]++;
+      require(nonempty(row.claim_id) && nonempty(row.identifier) && nonempty(row.source_url) &&
+        isSha(row.captured_digest) && isSha(row.claim_verbatim_sha256), "CLAIM_IDENTITY:" + i);
+      if (row.outcome !== "UNREACHABLE") {
+        require(isSha(row.reread_digest), "CLAIM_REREAD:" + i);
+        if (row.outcome === "UNCHANGED") require(row.reread_digest === row.captured_digest, "CLAIM_UNCHANGED:" + i);
+        if (row.outcome === "CHANGED") require(row.reread_digest !== row.captured_digest, "CLAIM_CHANGED:" + i);
+      }
+    }
+    const reachable = rows.length - counts.UNREACHABLE;
+    require(bank.counts?.claims === rows.length && bank.counts?.registers === bank.registers?.length, "CLAIM_TOTALS");
+    for (const [k, v] of Object.entries(counts)) require(bank.counts?.[k] === v, "CLAIM_COUNT:" + k);
+    require(reachable === spec.n && reachable >= 30, "CLAIM_DENOMINATOR");
+    require(Array.isArray(bank.registers) && bank.registers.every(r => record(r) && nonempty(r.file) &&
+      isSha(r.sha256) && Number.isSafeInteger(r.claims) && r.claims >= 0) &&
+      bank.registers.reduce((n, r) => n + r.claims, 0) === rows.length, "CLAIM_REGISTER_COUNTS");
+    return { ok: errors.length === 0, errors, details: {
+      observation_rows: rows.length, reachable_rows: reachable,
+      unique_claim_ids: new Set(rows.filter(record).map(r => r.claim_id)).size,
+      distinct_canonical_rows: new Set(rows.map(digest)).size,
+      independence_established: false,
+    }};
+  }
+  const items = Array.isArray(bank.items) ? bank.items : [];
+  const classes = bank.disclosure_bar?.classes;
+  require(bank.schema === "csoai.subject-axis-bank/1.1" && bank.axis_id === spec.axis && bank.family === "subject", "BANK_IDENTITY");
+  require(bank.method_sha256 === spec.method_sha, "METHOD_BINDING");
+  require(Array.isArray(items) && Array.isArray(bank.items) && items.length === bank.n_items &&
+    bank.n_valid === spec.n && items.length === spec.n && items.length >= 30, "BANK_DENOMINATOR");
+  require(bank.frame?.n_reachable === items.length && Number.isSafeInteger(bank.frame?.n_attempted) &&
+    bank.frame.n_attempted >= items.length, "FRAME_DENOMINATOR");
+  if (!Array.isArray(classes) || classes.length !== 5 || new Set(classes).size !== 5 || !classes.every(nonempty) ||
+      bank.disclosure_bar?.rule !== "presence of at least 3 of 5 link classes") {
+    return { ok: false, errors: [...errors, "DISCLOSURE_CONTRACT"], details: null };
+  }
+  const ids = new Set();
+  let meeting = 0, positives = 0, negativeControls = 0;
+  for (const [i, item] of items.entries()) {
+    if (!record(item) || !record(item.payload)) { errors.push("ITEM_SHAPE:" + i); continue; }
+    const p = item.payload;
+    require(nonempty(item.item_id) && !ids.has(item.item_id), "ITEM_ID:" + i);
+    ids.add(item.item_id);
+    require(item.ordinal === i + 1 && p.axis_id === spec.axis && p.item_id === item.item_id &&
+      p.subject === item.subject && p.url === item.url, "ITEM_BINDING:" + i);
+    const matched = isSha(item.expected_payload_sha256) && digest(p) === item.expected_payload_sha256;
+    require(matched && item.positive_verdict === "VALID", "PAYLOAD_DIGEST:" + i);
+    positives += Number(matched && item.positive_verdict === "VALID");
+    const corrupted = { ...p, content_sha256: p.content_sha256 === "0".repeat(64) ? "1".repeat(64) : "0".repeat(64) };
+    const caught = matched && isSha(p.content_sha256) && digest(corrupted) !== item.expected_payload_sha256 &&
+      item.negative_control_verdict === "INVALID";
+    require(caught, "NEGATIVE_CONTROL:" + i);
+    negativeControls += Number(caught);
+    const checks = p.presence_checks;
+    if (!record(checks) || Object.keys(checks).length !== 5 || !classes.every(k => typeof checks[k] === "boolean")) {
+      errors.push("PRESENCE_SHAPE:" + i); continue;
+    }
+    const hits = classes.filter(k => checks[k]).length;
+    require(p.checks_present === hits && p.meets_disclosure_bar === (hits >= 3), "PRESENCE_COUNT:" + i);
+    meeting += Number(hits >= 3);
+  }
+  require(bank.all_positive_passed === true && positives === items.length, "POSITIVE_TOTAL");
+  require(bank.negative_controls_caught === negativeControls && negativeControls === items.length, "NEGATIVE_TOTAL");
+  require(bank.n_meeting_disclosure_bar === meeting, "DISCLOSURE_TOTAL");
+  require(typeof bank.score === "number" && Math.abs(bank.score - Number((meeting / items.length).toFixed(4))) < 1e-9, "DISCLOSURE_SCORE");
+  return { ok: errors.length === 0, errors, details: {
+    observation_rows: items.length, recomputed_positive: positives,
+    recomputed_digest_mutation_controls: negativeControls, meeting_disclosure_bar: meeting,
+    independence_established: false,
+  }};
+}
+
 export function verifySubjectBanks({ repoRoot = REPO_ROOT, specs = PINNED_SUBJECT_BANKS } = {}) {
   const results = [];
   for (const s of specs) {
@@ -122,14 +220,20 @@ export function verifySubjectBanks({ repoRoot = REPO_ROOT, specs = PINNED_SUBJEC
     const absPath = path.join(repoRoot, relPath);
     const exists = fs.existsSync(absPath);
     let actualSha = null;
+    let semantic = { ok: false, errors: ["BANK_UNAVAILABLE"], details: null };
     if (exists) {
-      const bytes = fs.readFileSync(absPath);
-      actualSha = crypto.createHash("sha256").update(bytes).digest("hex");
+      try {
+        const bytes = fs.readFileSync(absPath);
+        actualSha = crypto.createHash("sha256").update(bytes).digest("hex");
+        semantic = reconcileSubjectBank(JSON.parse(bytes.toString("utf8")), s);
+      } catch {
+        semantic = { ok: false, errors: ["BANK_READ_OR_PARSE"], details: null };
+      }
     }
     const shaMatch = actualSha === s.bank_sha256;
     const nValidOk = typeof s.n === "number" && s.n >= 30;
     const methodShaOk = /^[0-9a-f]{64}$/.test(s.method_sha || "");
-    const pass = exists && shaMatch && nValidOk && methodShaOk;
+    const pass = exists && shaMatch && nValidOk && methodShaOk && semantic.ok;
     results.push({
       axis: s.axis,
       applies_to: s.applies_to,
@@ -138,11 +242,13 @@ export function verifySubjectBanks({ repoRoot = REPO_ROOT, specs = PINNED_SUBJEC
       expected_sha256: s.bank_sha256,
       actual_sha256: actualSha,
       method_sha: s.method_sha,
+      internal_consistency: semantic,
       status: pass ? "VERIFIED" : "FAIL",
     });
   }
   return {
-    ok: results.length === 11 && results.every((r) => r.status === "VERIFIED"),
+    ok: results.length === 11 && new Set(results.map(r => r.axis)).size === 11 &&
+      PINNED_SUBJECT_BANKS.every(s => results.some(r => r.axis === s.axis)) && results.every((r) => r.status === "VERIFIED"),
     count: results.length,
     results,
   };
@@ -152,8 +258,9 @@ function main() {
   const report = verifySubjectBanks();
   for (const r of report.results) {
     console.log(
-      `[${r.status}] axis=${r.axis} n=${r.n} applies_to=${r.applies_to} sha_match=${r.actual_sha256 === r.expected_sha256} bank=${r.bank_path}`,
+      `[${r.status}] axis=${r.axis} n=${r.n} applies_to=${r.applies_to} sha_match=${r.actual_sha256 === r.expected_sha256} internal_consistency=${r.internal_consistency.ok} bank=${r.bank_path}`,
     );
+    if (!r.internal_consistency.ok) console.error(r.internal_consistency.errors.join(", "));
   }
   if (!report.ok) {
     process.exit(1);
