@@ -1,5 +1,5 @@
 # Council of AI — external + internal release evaluation matrix
-Date: 2026-11-23. Status: **implementation plan plus one executable public behaviour gate**, not an independent certification.
+Date: 2026-11-23. Status: **implementation plan plus one executable post-deploy public behaviour diagnostic**, not an independent certification.
 
 ## Ground rule
 
@@ -43,9 +43,13 @@ This is a **regression sentinel**, not blanket coverage of the 331-item
 capability catalogue or a replacement for signed-root verification.
 The post-deployment source guard is added to the protected
 `.github/workflows/deploy.yml` in [PR #4704](https://github.com/CSOAI-ORG/councilof-ai/pull/4704).
-Any fail/timeout must fail the deployment job, not silently warn. Its
-readback happens *after* deployment; prevention before production still
-requires protected PR tests, a preview environment and safe rollback policy.
+Following gateway review on 24 November, the behaviour observation runs in a
+separate diagnostic job after a successful build-deploy. A mismatch or unavailable
+source must remain visible as NOT PASSED, not a false green evidence result;
+it must not interrupt fleet-lock, mirror or outward-claims checks. The blocking
+capability parity gate and offline fixture gate remain unchanged. Prevention
+before production still requires protected PR tests, a preview environment
+and safe rollback policy.
 
 ## Required layered campaign
 
