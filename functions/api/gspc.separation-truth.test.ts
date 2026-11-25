@@ -113,6 +113,16 @@ export function separationViolations(p: Payload): string[] {
 
   p.limitations.forEach((line, i) => {
     for (const sentence of line.split(/(?<=[.;])\s+/)) {
+      // A limitation that states an axis's separation state must state the row's state
+      // (jail said "TIE" here for two months after C-2026-0929-02 moved the row to UNTESTED).
+      const stated = /separation(?: determination)?[^:.;]*:\s*(TIE|SEPARATED|UNTESTED)\b/.exec(sentence);
+      if (stated) {
+        for (const [id, a] of byId) {
+          if (new RegExp(`\\b${id.replace(/[-]/g, "\\-")}\\b`, "i").test(sentence) && a.separation !== stated[1]) {
+            bad.push(`limitations[${i}]: states ${id} separation ${stated[1]}, row says ${a.separation}`);
+          }
+        }
+      }
       if (!claimsSeparatedLead(sentence) || IN_LANE_LABEL.test(sentence)) continue;
       for (const [id, a] of byId) {
         if (a.separation === "SEPARATED") continue;
@@ -152,6 +162,15 @@ describe("GET /api/gspc: separation prose agrees with the separation fields", ()
 
   it("no note, historical record or limitation contradicts separation or totals.separated_leads", () => {
     expect(separationViolations(board)).toEqual([]);
+  });
+
+  it("failing control: a limitation stating a separation state the row does not hold is rejected", () => {
+    const planted = JSON.parse(JSON.stringify(board)) as Payload;
+    planted.limitations.push(
+      "Jail (slot 14) separation determination 2026-08-25: TIE — the leader's Wilson 95% interval contains the fleet mean.",
+    );
+    const i = planted.limitations.length - 1;
+    expect(separationViolations(planted)).toContain(`limitations[${i}]: states jail separation TIE, row says UNTESTED`);
   });
 
   it("failing control: the pre-correction governance note is rejected on the served board", () => {
