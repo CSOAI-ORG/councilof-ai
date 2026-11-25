@@ -1,0 +1,47 @@
+# SOVOS situational awareness and Council of Engines — 25 November 2026
+
+Continuation of merged #4863, #4865 and #4866. Research only: no new GSPC measure, actual authority, operational BFT, general intelligence or production promotion. Reuse pinned original MEOK model, frozen readout, deterministic SovSpace procurement oracle, existing reaction bridge and Venturi. All experiment code and complete results in this directory; source commits retained in each result wrapper.
+
+## Executed situational awareness
+sovos_situation_prevention.py at c31341cb3d6681dd97fc26e58f9f831afb50b72c; SHA256 86573aa41beb39d8ff8bc7bd78b2b4fbd1bb389a4554b4b7244eb5d90afffe2f. M2 sklearn 1.9.0, NumPy 2.4.6. 3072 train, 1536 calibration, 4096 new test rows. Prior observed state and artificial noisy precursor, not hidden current truth, enter forecast. Known expiry separate. Prior states teacher-forced, not autonomous rollout. Threshold from calibration hazard score 5th percentile. MLP reached iteration limit; convergence not established.
+| Model | nominal AP | degraded AP | hazardous tasks allowed nominal/degraded by forecast veto |
+|---|---:|---:|---:|
+| raw logistic | .786617 | .573345 | 10/16 |
+| logistic + MEOK | .796172 | .578312 | 11/26 |
+| extra trees | .878693 | .747521 | 19/54 |
+| gradient boosting | .919594 | .788589 | 17/68 |
+| MLP | .924114 | .792249 | 17/81 |
+
+793 hazardous decisions in expiry-only baseline; accurate simulated pre-effect verifier denies all by construction. Unknown or revoked must hold. Adding forecast veto lowers safe throughput without improving fixture safety. Logistic+MEOK gives prior warning in 76/108 nominal and 96/120 degraded hazard episodes; false warnings 60/148 and 79/136 no-hazard episodes. Forecast prioritises review, not authority.
+
+## Verification scheduling and source faults
+sovos_verification_budget.py at 5be1555122f076bf2067c186dd3e79f7193fda94; SHA256 7d3ceb7a874eaa4241e53a6565ca55cfdfe7a0ec2dbd3c6ffbcde309e447051e. 4096 fresh test rows. Under degraded observations and 64 refresh requests, risk-first confirms 44 hazardous cases versus FIFO 20, utility-first 11. Safe allowed 471/484/490 respectively; no refresh 457. All zero hazards allowed under accurate simulated verifier. Common outage reduces recovery. Artificial source faults (10% wrong, 90% available): degraded 405 hazards: single 37 unsafe allows, clone 37, two common-mode 33, two independent 3; nominal 402 hazards: 35/35/29/0. Authenticity is not semantic truth; no cryptographic compromise established.
+
+## GPU: actual cross-family language-model experiments
+sovos_cross_family_situation.py at e0858a6111d42c02416b370f647a82ddd417ade4; HF job https://huggingface.co/jobs/csoai/6b066070d0582cfbbefd972e completed on Tesla T4. Pinned SmolLM2-135M-Instruct 12fd25f77366fa6b3b4b768ec3050bf629380bac and Qwen2.5-0.5B-Instruct 7ae557604adf67be50417f59c2c2f167def9a775; model cards declare Apache-2.0. Safetensors, no remote code, PyTorch 2.5.1+cu124, Transformers 4.48.3, NumPy 1.26.4. 96/96 synthetic train/test tasks. Both native space-prefixed forced-choice outputs always allow, 64 unsafe allowances each. Qwen native latent probe 90.625%, Smol 41.667%; Qwen-to-Smol fitted bridge 98.958% vs shuffled 34.375%; paraphrase 33.333%. This is readout-relevant information, NOT a causal model stitch or general reasoning.
+
+Follow-up sovos_cross_family_robustness.py at 9bc8a55bd78f0a3d459eb4d8fabadbc074027fcf; HF job https://huggingface.co/jobs/csoai/6b0661551460ffe1d5e9ba64 completed. New 96 test cases; bare/space/combined token scoring and greedy first standalone letter, not full output compliance. Qwen two-format probe 66.667/97.917/33.333% for formats 0/1/2 (third unseen); Qwen-to-Smol bridge 81.25/97.917/33.333%, shuffled 33.333/25/33.333%. Two unsafe allows by Qwen probe on format 1, one by bridge. Both native models at chance across all formats. No candidate promoted. Redacted log values retained null, source explicitly disclaims authority and measurement. Two 300-second-capped GPU jobs completed; actual charges unknown. No Kaggle replay of this batch.
+
+## CPU throughput
+sovos_cpu_batch_profile.py at bdd1056e139f384f49d37ebf92ea9213e9d64563, SHA256 12d122cfe94afb005ddfda58455071419a4699f52ef4b2abe13e96c1bd420c4a. 12,800 repeated rows, 3 repeats each. Median 5,929/s single rows -> 2,554,211/s all rows batched, ~431x; max delta <=3.34e-16. Local in-memory microbenchmark, excludes data loading, network, storage, authority and full LLM. Not CPU-vs-GPU comparison.
+
+## Engine council, independent locks and quorum
+Existing Hive Grid and earlier engine design recovered. Do NOT reactivate quarantined simulated engine wiring or fabricated 33/33 votes; _quarantine/simulated-bft-2026-09-04/README.md records role definitions not voters, rho=1, effective count 1. Existing docs/meok/NVIDIA_COSMOS_RESEARCH_20261108.md and packages/world-rehearsal/INTEGRATION.md preserve Dream/Evolve HOLD and Light Society licensed component boundaries.
+
+sovos_engine_council.py at 16f916629e27742ef83aed2655c99e4d14c50692; SHA256 bc2f2d42ffef090001568e8ac16d127226a27dd63abbd1b076d1d71c56261ff6. Eight offline controls pass on M2. Four 20,000-trial mixtures, 12 hypothetical engines, 3 semantic requirements, 10% error probability and 3% missing observation. Same task truth across mixtures, correlated faults explicitly injected. Counts are unsafe allows; each mixture contains 7,845 invalid and 12,155 valid tasks:
+| common-mode mixture | single | 3 majority | 12 majority | 3 hives of 4 | 3 distinct locks | 3 locks replicated |
+|---|---:|---:|---:|---:|---:|---:|
+| 0 | 483 | 94 | 0 | 0 | 524 | 178 |
+| .1 | 482 | 141 | 55 | 55 | 524 | 213 |
+| .5 | 518 | 329 | 283 | 283 | 522 | 368 |
+| 1 | 525 | 555 | 568 | 564 | 521 | 566 |
+Distinct checks alone do not establish truth. Replicated locks trade valid coverage and faults; explicit shared failures defeat voting. Structural receipt control checks required roles, distinct declared lineage, exact task/revision/epoch/effect and PASS; duplicate, stale, absent, wrong effect or UNKNOWN -> HOLD. Complete returns STRUCTURALLY_COMPLETE_NOT_AUTHORIZED. Declared lineage not independently authenticated. Source, authority and effect preflight are separate semantic locks; independent post-effect receiver remains necessary.
+
+Quorum arithmetic: intersection >= 2q-n; >f required to guarantee honest intersection given at most f faulty replicas. Exhaustively checked small cases. 3/2 with f1 fails; 4/3 with f1 passes; 7/5 f2; 10/7 f3; 12/9 f3; 33/23 f10. These are necessary intersection/availability checks, not network consensus, view changes, authentication, safety or liveness proof. Do not count heterogeneous reasoning engines as replicas of a deterministic state machine. Use BFT only for a narrowly defined replicated log/state contract, with authenticated messages, actual independent fault domains, adversarial network tests and owner review. Three eyes: source/current state, exact authority, effect bounds; three locks conjunctive. Separate post-effect receiving party. Jury reviews disputed or consequential cases, no power to override failed mandatory check.
+
+## Integration and global research
+Horizontal: heterogeneous hives (perception, reasoning, evidence, rehearsal, reaction, learning); vertical: independent oversight and release boundaries. Keep typed versioned interfaces, scoped state, resource and authority separation, immutable frozen baselines, shadow candidate and reviewed promotion. Dream/Evolve proposes bounded changes, never self-promotes or expands authority. RAS requests not training consent. SOVOS coordinates, existing Layer 0 and Harness X enforce, GSPC independently measures, H.I.M. escalates, SovSpace runs bounded counterfactuals, Venturi derived cache invalidates, J-Space displays provenance and unknowns. No new production scheduler, signer, model default, or parallel evidence ledger.
+
+Crosswalk: safety/governance -> pre-effect shield; provenance/detector-interop -> common-mode source controls; continuity -> prompt and sensor shift; effect-binding -> independent recipient; swarm -> distinct fault domains and quorum; cross-reality -> simulated vs observed; care -> human false-alarm burden. Existing 34-axis transfer map remains canonical; no new axis.
+
+Research references: Endsley situation awareness https://doi.org/10.1518/001872095779049543 ; NASA runtime assurance https://ntrs.nasa.gov/citations/20240007986 ; Castro/Liskov https://pdos.csail.mit.edu/archive/6.824-2009/papers/castro-practicalbft.pdf ; Knight/Leveson dependent errors https://doi.org/10.1109/TSE.1986.6312924 ; Ray resource placement https://docs.ray.io/en/latest/ray-core/scheduling/placement-group.html . Evaluate existing workers before adding Ray; verify licenses and exact dependency revisions. Next independent tests: authenticated engine replicas and network partitions on bounded local harness, engine rollback/circuit-breaker, candidate-vs-frozen drift, independent receiver, typed semantic normalization vs unseen prompt/language families, label permutations and activation patching, closed-loop reaction forecasts, multi-objective refresh and tail-risk replay. No new operational claims or all-clear.
