@@ -178,14 +178,20 @@ export function reconcileSubjectBank(bank, spec) {
     return { ok: false, errors: [...errors, "DISCLOSURE_CONTRACT"], details: null };
   }
   const ids = new Set();
-  let meeting = 0, positives = 0, negativeControls = 0;
+  let meeting = 0, positives = 0, negativeControls = 0, previousOrdinal = 0;
   for (const [i, item] of items.entries()) {
     if (!record(item) || !record(item.payload)) { errors.push("ITEM_SHAPE:" + i); continue; }
     const p = item.payload;
     require(nonempty(item.item_id) && !ids.has(item.item_id), "ITEM_ID:" + i);
     ids.add(item.item_id);
-    require(item.ordinal === i + 1 && p.axis_id === spec.axis && p.item_id === item.item_id &&
+    // Some producers retain original frame ordinals across unreachable rows.
+    // Others number reachable rows; both are ordered and bounded by the frame.
+    require(Number.isSafeInteger(item.ordinal) && item.ordinal > previousOrdinal &&
+      item.ordinal <= bank.frame?.n_attempted &&
+      item.item_id === `${spec.axis}-live-${String(item.ordinal).padStart(3, "0")}` &&
+      p.axis_id === spec.axis && p.item_id === item.item_id &&
       p.subject === item.subject && p.url === item.url, "ITEM_BINDING:" + i);
+    previousOrdinal = item.ordinal;
     const matched = isSha(item.expected_payload_sha256) && digest(p) === item.expected_payload_sha256;
     require(matched && item.positive_verdict === "VALID", "PAYLOAD_DIGEST:" + i);
     positives += Number(matched && item.positive_verdict === "VALID");
@@ -267,6 +273,6 @@ function main() {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && fs.existsSync(process.argv[1]) && fileURLToPath(import.meta.url) === fs.realpathSync(process.argv[1])) {
   main();
 }
