@@ -1,0 +1,20 @@
+{
+  "amendment": 1,
+  "amends": "councilof-ai/council-b/2026-11-24/v1",
+  "changes": {
+    "bank_transfer": "bank.jsonl, protocol.json, runner and parser are embedded in the private kernel script as a base64 tar.gz; the job verifies the bank sha256 before running. key.jsonl is not embedded. The arm-e injected panel (key-derived by design, protocol arms.e) is embedded as panels_e.jsonl.",
+    "cost": "Kaggle free quota (GPU hours, no currency spend). GPU hours used are reported instead of USD.",
+    "engine.dtype": "float16 instead of bfloat16 (T4 has no bf16)",
+    "engine.gpu": "Kaggle 'GPU T4 x2' (machine_shape NvidiaTeslaT4; 2x NVIDIA T4 16 GB, sm_75) instead of 1x A100-40GB on Modal",
+    "engine.tensor_parallel_size": 2,
+    "engine.version_pin": "vllm==0.8.5 installed with pip inside the kernel; VLLM_USE_V1=0 (V0 engine; V1 needs sm_80+). Exact versions recorded from the run.",
+    "panels": "Vote tallies for d_b and d_c are computed inside the kernel by parse_council.py (key-free) from the run's own votes. The exact rerun (run2, fresh kernel session) reruns all M1 voter calls and all four referee arms with run1's panels as input, so referee inputs are byte-identical across runs.",
+    "weights": "snapshot_download of each model at the pinned revision inside the kernel (safetensors, tokenizer and config files only)"
+  },
+  "produced_by": "Claude Science agent session for the owner. Self-run study, not independent.",
+  "protocol_sha256": "1c9996dca0096e9a1bdf1323890c5485a325941a6bd61f032730bd4fc36320dd",
+  "reason": "The owner's Modal workspace returned 'Workspace is paused' on every call (24 Nov 2026, 3 attempts) and Hugging Face Jobs returned 402 Payment Required (personal) / 403 (csoai org). The owner chose Kaggle's free GPU tier.",
+  "unchanged": "Hypotheses, arms, prompts, parsing, decoding parameters, endpoints, tests, alpha, stopping rule and the 3 pre-run exclusions in bank_seal.json.",
+  "written_at": "2026-11-25T05:13:41Z",
+  "written_before_any_model_output": true
+}
