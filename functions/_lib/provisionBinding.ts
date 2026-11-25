@@ -11,6 +11,7 @@
  * JSON Schema for the same shape: public/measurement-capsules/capsule-provisions-0.3.schema.json.
  */
 import MANIFEST from "../../public/interop/frozen-provision-hashes.json";
+import MAP from "../../public/mechanism/capsule-provision-map.json";
 
 export const PROVISION_ID_RE = /^3\d{4}[RLD]\d{4}:-?\d+$/;
 export const RELATIONS = ["PREDICATE", "RELEVANT_TO"] as const;
@@ -32,7 +33,7 @@ export type BindingCheck = {
 };
 
 const HEX64 = /^[0-9a-f]{64}$/;
-const NOTE =
+export const BINDING_NOTE =
   "A pinned binding says the capsule names this provision of this frozen manifest. It is not a finding that the capsule measures what the provision requires, and never a compliance determination.";
 
 export const frozenManifest = (): Manifest => MANIFEST as Manifest;
@@ -44,7 +45,7 @@ export function checkProvisionBinding(value: unknown, capsuleSchema: unknown, ma
     problems,
     provisions,
     manifest_corpus_root: manifest.corpus_root,
-    note: NOTE,
+    note: BINDING_NOTE,
   });
   if (capsuleSchema !== CAPSULE_SCHEMA_WITH_PROVISIONS)
     return out("SCHEMA_MISMATCH", [`a provisions binding is defined only for ${CAPSULE_SCHEMA_WITH_PROVISIONS}, not ${String(capsuleSchema)}`]);
@@ -93,4 +94,34 @@ export function bindingFor(provisionId: string, relation: Relation, manifest: Ma
   const anchor = manifest.anchors[provisionId];
   if (!anchor) throw new Error(`${provisionId} is not in the frozen manifest`);
   return { provision_id: provisionId, provision_sha256: anchor, corpus_root: manifest.corpus_root, relation };
+}
+
+export type ProvisionMap = {
+  corpus_root: string;
+  mappings: { source: string; kind: string; provision_id: string; provision_sha256: string; relation: string }[];
+};
+
+/**
+ * The binding rows the committed backfill map (public/mechanism/capsule-provision-map.json) gives a producer,
+ * pinned to the frozen manifest, sorted by provision id then relation. The rule is the capsule library's
+ * (packages/venturi-capsule/provision_binding.py) and the sidecar producer's
+ * (scripts/mechanism/backfill-capsule-provisions.mjs): a mapping with source "adapter" matches the adapter
+ * name, a mapping with source "route" matches the evidence kind. An unmapped producer gets []. Throws when a
+ * map row is not pinned to the manifest, so a stale map can never yield a binding.
+ */
+export function mapBindingsFor(
+  adapter: string | null,
+  kind: string,
+  map: ProvisionMap = MAP as unknown as ProvisionMap,
+  manifest: Manifest = frozenManifest(),
+): ProvisionBinding[] {
+  if (map.corpus_root !== manifest.corpus_root) throw new Error("the capsule-provision map is not pinned to the frozen manifest's root");
+  const rows = new Map<string, ProvisionBinding>();
+  for (const m of map.mappings) {
+    if (!((m.source === "adapter" && adapter !== null && m.kind === adapter) || (m.source === "route" && m.kind === kind))) continue;
+    if (manifest.anchors[m.provision_id] !== m.provision_sha256) throw new Error(`map row ${m.provision_id} is not pinned to the frozen manifest`);
+    if (!RELATIONS.includes(m.relation as Relation)) throw new Error(`map row ${m.provision_id} has relation ${m.relation}`);
+    rows.set(`${m.provision_id}|${m.relation}`, bindingFor(m.provision_id, m.relation as Relation, manifest));
+  }
+  return [...rows.keys()].sort().map((k) => rows.get(k)!);
 }
