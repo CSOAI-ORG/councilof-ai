@@ -5,8 +5,9 @@
 //         routing record belongs to which instrument, the predicates, the jurisdiction list).
 // Reads:  the frozen provision manifest, its published source texts (which must regenerate every
 //         hash, see frozen-sources.mjs), the regulatory inventory, the crosswalk files, the
-//         published capsule batches and client/src/App.tsx. Every count in the output is derived
-//         from those bytes; the source file carries no number.
+//         published capsule batches, the capsule-provision sidecar (which must be exactly what
+//         backfill-capsule-provisions.mjs derives from those batches) and client/src/App.tsx. Every
+//         count in the output is derived from those bytes; the source file carries no number.
 // Output: public/mechanism/coverage.json. No clock time, so unchanged inputs give identical bytes.
 //
 //   node scripts/mechanism/build-coverage.mjs          write
@@ -17,6 +18,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gunzipSync } from "node:zlib";
 import { parseSources, verifySources } from "./frozen-sources.mjs";
+import { derive as deriveBindings, serialise as serialiseBindings, bindingProblems, OUTPUT as BINDINGS_OUTPUT, PRODUCER as BINDINGS_PRODUCER, MAP as BINDINGS_MAP, PROPOSALS, PROPOSAL_STATUSES, PROPOSAL_SOURCES } from "./backfill-capsule-provisions.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const SOURCE = "scripts/mechanism/coverage.source.json";
@@ -73,7 +75,7 @@ export function routeFiles(appText) {
 }
 
 /** Every capsule in a published batch that carries a provision binding (the optional v0.3 field). */
-function capsuleBindings(dir, readBytes) {
+function capsuleBindings(dir, readBytes, manifest) {
   const rec = JSON.parse(readBytes(`${dir}/record.json`).toString("utf8"));
   const gz = readBytes(`${dir}/${rec.capsules_file.path}`);
   if (sha256(gz) !== rec.capsules_file.sha256) fail(`${dir}: capsules file sha256 does not match its record`);
@@ -84,7 +86,9 @@ function capsuleBindings(dir, readBytes) {
     if (!line.trim()) continue;
     n++;
     const c = JSON.parse(line);
-    if (Array.isArray(c.provisions) && c.provisions.length) {
+    if (c.provisions !== undefined) {
+      const bad = bindingProblems(c.provisions, c.schema, manifest);
+      if (bad.length) fail(`${dir}: capsule ${c.capsule_id} carries a provision binding that is not pinned (${bad[0]})`);
       withBinding++;
       for (const b of c.provisions) if (b && b.provision_id) bound.add(b.provision_id);
     }
@@ -294,8 +298,17 @@ export function derive(sourceBytes, io) {
   const batches = listDirs(S.capsule_root)
     .filter((d) => exists(`${S.capsule_root}/${d}/record.json`))
     .sort();
+  // The sidecar is derived, never typed: it must be byte-for-byte what the backfill producer derives now
+  // from the same batches, map and manifest, or this producer fails.
+  if (S.capsule_root !== "public/measurement-capsules/v0.2") fail("the capsule-provision sidecar is derived from public/measurement-capsules/v0.2 only");
+  const sidecarBytes = readBytes(BINDINGS_OUTPUT);
+  const sidecar = deriveBindings(io);
+  if (sidecarBytes.toString("utf8") !== serialiseBindings(sidecar)) fail(`${BINDINGS_OUTPUT} is stale: run node ${BINDINGS_PRODUCER}`);
+  const sidecarByBatch = new Map(sidecar.batches.map((b) => [b.batch, b]));
   const capsuleAdapters = batches.map((d) => {
-    const { rec, n, withBinding, bound } = capsuleBindings(`${S.capsule_root}/${d}`, readBytes);
+    const { rec, n, withBinding, bound } = capsuleBindings(`${S.capsule_root}/${d}`, readBytes, manifest);
+    const side = sidecarByBatch.get(d) || fail(`${BINDINGS_OUTPUT} has no row for batch ${d}`);
+    if (side.n_capsules !== n || side.bound_in_capsule !== withBinding) fail(`${BINDINGS_OUTPUT} disagrees with batch ${d}`);
     const carried = carries.get(rec.adapter) ?? [];
     return {
       batch: d,
@@ -305,11 +318,56 @@ export function derive(sourceBytes, io) {
       n_capsules: n,
       capsules_binding_a_provision: withBinding,
       provision_ids_bound: bound,
+      provision_map: side.classification,
+      capsules_bound_by_sidecar: side.bound_by_sidecar,
+      provision_ids_bound_by_sidecar: side.provision_ids,
+      capsules_bound_by_draft: side.draft_bound_by_sidecar,
+      provision_ids_draft: side.draft_provision_ids,
       owasp_checks: carried,
       owasp_items: [...new Set(carried.flatMap((c) => owaspItems.get(c) ?? []))].sort(),
       record: `/${S.capsule_root.replace(/^public\//, "")}/${d}/record.json`,
     };
   });
+
+  const capsuleTotal = capsuleAdapters.reduce((a, b) => a + b.n_capsules, 0);
+  const boundInCapsule = capsuleAdapters.reduce((a, b) => a + b.capsules_binding_a_provision, 0);
+  const boundBySidecar = capsuleAdapters.reduce((a, b) => a + b.capsules_bound_by_sidecar, 0);
+  const capsuleBound = boundInCapsule + boundBySidecar;
+  const boundByDraft = capsuleAdapters.reduce((a, b) => a + b.capsules_bound_by_draft, 0);
+  const byMap = {};
+  for (const a of capsuleAdapters) byMap[a.provision_map] = (byMap[a.provision_map] ?? 0) + a.n_capsules;
+  const capsuleBinding = {
+    state: capsuleBound ? "CAPSULE_BOUND" : "NO_CAPSULE_BOUND",
+    CAPSULE_BOUND: capsuleBound,
+    capsules: capsuleTotal,
+    bound_in_capsule: boundInCapsule,
+    bound_by_sidecar: boundBySidecar,
+    CAPSULE_BOUND_DRAFT: boundByDraft,
+    provision_ids_draft: [...new Set(capsuleAdapters.flatMap((a) => a.provision_ids_draft))].sort(),
+    provision_ids_bound: [...new Set(capsuleAdapters.flatMap((a) => [...a.provision_ids_bound, ...a.provision_ids_bound_by_sidecar]))].sort(),
+    capsules_by_map_classification: Object.fromEntries(Object.entries(byMap).sort(([a], [b]) => (a < b ? -1 : 1))),
+    derived_from: "bound_in_capsule counts published capsules that carry the 0.3 provisions field, each checked as pinned to the frozen manifest; bound_by_sidecar counts the rows of the sidecar, which this producer re-derives from the same batches and the backfill map and requires byte-for-byte. CAPSULE_BOUND is their sum and counts reviewed mappings only. CAPSULE_BOUND_DRAFT counts the capsules that a DRAFT proposal in the proposals file would bind if the owner reviewed it (the sidecar's draft_bound_by_sidecar); it is never part of CAPSULE_BOUND.",
+    sidecar: { path: `/${BINDINGS_OUTPUT.replace(/^public\//, "")}`, sha256: sha256(sidecarBytes), producer: BINDINGS_PRODUCER },
+    map: { path: `/${BINDINGS_MAP.replace(/^public\//, "")}`, sha256: sha256(readBytes(BINDINGS_MAP)) },
+    note: "A bound capsule names a provision of the frozen manifest. It is not a finding that the capsule measures what the provision requires, and never a compliance determination.",
+  };
+
+  // ---- provision-mapping proposals (adapter, predicate and axis), counted from the file, never typed
+  const proposalBytes = exists(PROPOSALS) ? readBytes(PROPOSALS) : null;
+  const proposalDoc = proposalBytes ? JSON.parse(proposalBytes.toString("utf8")) : { proposals: [], unmapped: [] };
+  const tally = (rows, key) => Object.fromEntries(PROPOSAL_SOURCES.map((s) => [s, rows.filter((r) => r.source === s && (!key || r.status === key)).length]));
+  const subjects = (rows, s) => [...new Set(rows.filter((r) => r.source === s).map((r) => r.subject))].sort();
+  const mappingProposals = {
+    path: proposalBytes ? `/${PROPOSALS.replace(/^public\//, "")}` : null,
+    sha256: proposalBytes ? sha256(proposalBytes) : null,
+    corpus_root: proposalDoc.corpus?.corpus_root ?? null,
+    proposals: tally(proposalDoc.proposals),
+    by_status: Object.fromEntries(PROPOSAL_STATUSES.map((st) => [st, tally(proposalDoc.proposals, st)])),
+    subjects_with_proposals: Object.fromEntries(PROPOSAL_SOURCES.map((s) => [s, subjects(proposalDoc.proposals, s)])),
+    subjects_left_unmapped: Object.fromEntries(PROPOSAL_SOURCES.map((s) => [s, subjects(proposalDoc.unmapped ?? [], s)])),
+    provision_ids: [...new Set(proposalDoc.proposals.map((p) => p.provision_id))].sort(),
+    note: "A proposal is a pointer from a measurement to a corpus v3 provision with the verbatim span it rests on. Only status REVIEWED counts toward CAPSULE_BOUND; DRAFT is counted in CAPSULE_BOUND_DRAFT. Neither is a compliance determination.",
+  };
 
   // ---- instruments, level by level
   const crosswalkRegs = readJson(S.regulator_crosswalk);
@@ -509,6 +567,8 @@ export function derive(sourceBytes, io) {
     frameworks_outside_corpus: frameworks,
     predicates: src.predicates.map(({ code_must_contain, ...p }) => ({ ...p, provision_id: `${p.celex}:${p.article}` })),
     capsule_adapters: capsuleAdapters,
+    capsule_binding: capsuleBinding,
+    provision_mapping_proposals: mappingProposals,
     routes_today: src.routes_today,
     not_open_today: src.not_open_today,
   };

@@ -1,0 +1,516 @@
+{
+  "schema": "csoai.provision-mapping-proposals/0.1",
+  "what_this_is": "Proposed pointers from a measurement (a published capsule adapter, a predicate, or a GSPC axis) to a provision of frozen corpus v3 that the measurement is evidence for, each with the verbatim span of the provision it rests on. Every proposal is DRAFT until the owner reviews it.",
+  "what_this_is_not": "Not a compliance determination, not a finding that any measured party is in scope of or meets a provision, and never an equivalence: a relation is partial (the measurement observes one trace the provision names) or related (the measurement observes something the provision's text is about). Measurement, not certification.",
+  "rule": "Only status REVIEWED counts. A REVIEWED adapter proposal binds the batch's capsules (or only those whose claim field equals match.equals) in the sidecar public/mechanism/capsule-provision-bindings.json and counts in CAPSULE_BOUND; a DRAFT one counts only in CAPSULE_BOUND_DRAFT; REJECTED counts nowhere. The owner changes status by editing this file; the producers re-derive every count. The capsule-provision map (capsule-provision-map.json) keeps its own rule and is unchanged by this file.",
+  "review": {
+    "statuses": [
+      "DRAFT",
+      "REVIEWED",
+      "REJECTED"
+    ],
+    "relations": [
+      "partial",
+      "related"
+    ],
+    "sheet": "docs/mechanism/mapping_review_sheet.csv",
+    "drafted": "2026-11-22",
+    "drafted_by": "agent draft for owner review"
+  },
+  "corpus": {
+    "manifest": "/interop/corpus-v3/manifest.json",
+    "corpus_root": "8d057a301973ec0307566152362cf711a661eea956426fe960ee9e28a49c25c0",
+    "provisions": "/interop/corpus-v3/provisions/"
+  },
+  "existing_axis_pointers": "The 11 GSPC axes that already point at 13 EU AI Act provisions are served by /api/gspc and are unchanged; this file neither restates nor edits them.",
+  "proposals": [
+    {
+      "id": "adapter:contract_parity->INTL-owasp-llm-top10-2026:LLM01",
+      "source": "adapter",
+      "subject": "contract_parity",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "INTL-owasp-llm-top10-2026:LLM01",
+      "provision_sha256": "a24b54c700b1c50bf257c1da9c74f5b335cc04070586c06d7452308732051626",
+      "instrument_id": "INTL-owasp-llm-top10-2026",
+      "jurisdiction": "INTL",
+      "instrument_status": "IN_FORCE",
+      "span": "Pin, sign, and verify every MCP server and third-party tool package, audit tool descriptions for hidden instructions, and monitor tool composition.",
+      "rationale": "TOOLS-dimension capsules compare the tool set an MCP server's public surfaces declare with the set its live tools/list returns, which is an observation of the tool composition this mitigation says to verify and monitor. Only TOOLS capsules match; VERSION, AUTH, PROTOCOL and PAYMENT capsules are not bound.",
+      "match": {
+        "field": "claim.dimension",
+        "equals": "TOOLS"
+      }
+    },
+    {
+      "id": "adapter:mill_cross_runtime->US-NIST-AIRMF-1.0-2023:MEASURE-2.13",
+      "source": "adapter",
+      "subject": "mill_cross_runtime",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "US-NIST-AIRMF-1.0-2023:MEASURE-2.13",
+      "provision_sha256": "cb103620b3ce668c15c4fc75a61ced6466b32b6eca0b6e554cbd13906dd469ce",
+      "instrument_id": "US-NIST-AIRMF-1.0-2023",
+      "jurisdiction": "US",
+      "instrument_status": "IN_FORCE",
+      "span": "Effectiveness of the employed TEVV metrics and processes in the MEASURE function are evaluated and documented.",
+      "rationale": "Each capsule re-runs a signed evaluation card on a second runtime with the same model digest, instrument and bank and records whether the result survives, which evaluates whether the TEVV result depends on the runtime. Voluntary framework; says nothing about the model's trustworthiness."
+    },
+    {
+      "id": "adapter:tool_drift->INTL-owasp-llm-top10-2026:LLM01",
+      "source": "adapter",
+      "subject": "tool_drift",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "INTL-owasp-llm-top10-2026:LLM01",
+      "provision_sha256": "a24b54c700b1c50bf257c1da9c74f5b335cc04070586c06d7452308732051626",
+      "instrument_id": "INTL-owasp-llm-top10-2026",
+      "jurisdiction": "INTL",
+      "instrument_status": "IN_FORCE",
+      "span": "Pin, sign, and verify every MCP server and third-party tool package, audit tool descriptions for hidden instructions, and monitor tool composition.",
+      "rationale": "Each capsule compares the tools an MCP endpoint advertised at two times (names, and descriptions and input schemas where recorded), which is the tool-composition and tool-description monitoring this mitigation names. A change is a recorded difference, not a finding of poisoning."
+    },
+    {
+      "id": "predicate:cra-13-cvd->32024R2847:13",
+      "source": "predicate",
+      "subject": "cra-13-cvd",
+      "status": "REVIEWED",
+      "relation": "partial",
+      "provision_id": "32024R2847:13",
+      "provision_sha256": "bb1208c3f360c7d82f5aa9a9c9a141923183050018fb913d2fedaa22adf278e3",
+      "instrument_id": "EU-cra-2024",
+      "jurisdiction": "EU",
+      "instrument_status": "PARTIALLY_APPLICABLE",
+      "paragraph": "13(8)",
+      "span": "Manufacturers shall have appropriate policies and procedures, including coordinated vulnerability disclosure policies, referred to in Part II, point (5), of Annex I to process and remediate potential vulnerabilities in the product with digital elements reported from internal or external sources.",
+      "rationale": "Article 13(8). The predicate detects a valid security.txt or a vulnerability-reporting page with a channel, one public trace of a coordinated vulnerability disclosure policy; it does not show that vulnerabilities are handled. Annex I Part II is not a frozen provision in corpus v3, so the binding is to Article 13 only.",
+      "heldout": {
+        "report": "heldout_report.md (public-trace predicates v0.1.0, runbook Stage D.3)",
+        "sites": 30,
+        "frozen_at": "2026-11-22T03:20:32Z",
+        "detected_audited": 14,
+        "true_positive": 14,
+        "precision": "14/14",
+        "precision_ci95_wilson": [
+          0.785,
+          1.0
+        ],
+        "not_detected_audited": 6,
+        "false_negative": 0,
+        "fn_rate_ci95_wilson": [
+          0.0,
+          0.39
+        ],
+        "unreachable_rows": 10,
+        "limits": "one auditor, sample now spent (tuning data from here on); CRA Art 13 applies from 2027-12-11"
+      },
+      "capsule_state": "NO_CAPSULE_YET: the predicate's results are not emitted as capsule batches, so this binding counts no capsule."
+    },
+    {
+      "id": "axis:affect->32024R1689:5",
+      "source": "axis",
+      "subject": "affect",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "32024R1689:5",
+      "provision_sha256": "c451cd71d9c29ad7f814c58ad1c41d55cda0f56486539880e7a48d7ccaf95397",
+      "instrument_id": "EU-ai-act-2024",
+      "jurisdiction": "EU",
+      "instrument_status": "PARTIALLY_APPLICABLE",
+      "span": "purposefully manipulative or deceptive techniques",
+      "rationale": "AffectBench scores model responses on manipulation and vulnerability scenarios; the instrument names Art 5(1)(a)/(b)/(f). A bank score is not a finding that any system deploys a prohibited practice."
+    },
+    {
+      "id": "axis:affect->32024R1689:50",
+      "source": "axis",
+      "subject": "affect",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "32024R1689:50",
+      "provision_sha256": "7acac08345151e9d00babc21ffbc91af3768c7043288f3cbbedd3c838e10d22c",
+      "instrument_id": "EU-ai-act-2024",
+      "jurisdiction": "EU",
+      "instrument_status": "PARTIALLY_APPLICABLE",
+      "span": "informed that they are interacting with an AI system",
+      "rationale": "The disclosure scenarios score whether a model discloses that it is an AI when asked or when context requires; Art 50(1) places this duty on providers."
+    },
+    {
+      "id": "axis:affect->CN-anthropomorphic-ai-interaction-measures-2026:8",
+      "source": "axis",
+      "subject": "affect",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "CN-anthropomorphic-ai-interaction-measures-2026:8",
+      "provision_sha256": "4aef801af2b572785dc731e52cac958b7e9a4803796c5db5b006d9abe86fdcbe",
+      "instrument_id": "CN-anthropomorphic-ai-interaction-measures-2026",
+      "jurisdiction": "CN",
+      "instrument_status": "IN_FORCE",
+      "span": "通过情感操纵等方式，诱导用户作出不合理决策，损害用户合法权益的",
+      "rationale": "Article 8(6) of the CN anthropomorphic interaction measures prohibits inducing unreasonable user decisions through emotional manipulation; the manipulation scenarios measure model behaviour of that kind."
+    },
+    {
+      "id": "axis:affect->US-CA-SB243-companionchatbots-2025:SEC-1:22602.",
+      "source": "axis",
+      "subject": "affect",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "US-CA-SB243-companionchatbots-2025:SEC-1:22602.",
+      "provision_sha256": "3360fe30b525c7273e42989fda7199a9267829f562467197b8ed627fa00dd911",
+      "instrument_id": "US-CA-SB243-companionchatbots-2025",
+      "jurisdiction": "US",
+      "instrument_status": "IN_FORCE",
+      "span": "an operator shall issue a clear and conspicuous notification indicating that the companion chatbot is artificially generated and not human",
+      "rationale": "SB 243 s22602(a) requires companion-chatbot operators to notify that the chatbot is not human; the disclosure scenarios measure whether a model makes that statement."
+    },
+    {
+      "id": "axis:company-practice->US-15USC45-FTCAct-1914:s45",
+      "source": "axis",
+      "subject": "company-practice",
+      "status": "REJECTED",
+      "relation": "related",
+      "provision_id": "US-15USC45-FTCAct-1914:s45",
+      "provision_sha256": "5ce93681cfeaa9b4afcb63c3f24e7792968b42ec4a732b0aa0ef79c2de803daa",
+      "instrument_id": "US-15USC45-FTCAct-1914",
+      "jurisdiction": "US",
+      "instrument_status": "IN_FORCE",
+      "span": "unfair or deceptive acts or practices in or affecting commerce, are hereby declared unlawful",
+      "rationale": "The slot asks whether a non-lab AI company does what its public material says; a mismatch between public claims and conduct is the kind of fact FTC Act s5 deception analysis uses. A measured mismatch is not a finding of deception. Slot UNMEASURED."
+    },
+    {
+      "id": "axis:cross-reality->32024R1689:14",
+      "source": "axis",
+      "subject": "cross-reality",
+      "status": "REJECTED",
+      "relation": "related",
+      "provision_id": "32024R1689:14",
+      "provision_sha256": "40be5fa70658fb847635eccc61d47b16999573cc99b36b699bc0a732c75574dd",
+      "instrument_id": "EU-ai-act-2024",
+      "jurisdiction": "EU",
+      "instrument_status": "PARTIALLY_APPLICABLE",
+      "span": "effectively overseen by natural persons during the period in which they are in use",
+      "rationale": "The axis scores whether an autonomous agent proceeds, asks a human to confirm, or refuses an action, an observable of a model's deference to human oversight. Art 14 is a duty on high-risk system design; a model's choice on a bank is not evidence that a system meets it."
+    },
+    {
+      "id": "axis:cross-reality->INTL-mitre-atlas-2026:AML.M0029",
+      "source": "axis",
+      "subject": "cross-reality",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "INTL-mitre-atlas-2026:AML.M0029",
+      "provision_sha256": "a854f53e638f0947c7bbe089f9a04dac7119920fdbb6125af393c5e664543f8d",
+      "instrument_id": "INTL-mitre-atlas-2026",
+      "jurisdiction": "INTL",
+      "instrument_status": "IN_FORCE",
+      "span": "Requiring user confirmation of AI agent tool invocations can prevent the automatic execution of tools by an adversary.",
+      "rationale": "PROCEED / CONFIRM / REFUSE choices measure whether a model asks for the user confirmation this mitigation names before acting."
+    },
+    {
+      "id": "axis:custody-disclosure->EU-mica-2023:36",
+      "source": "axis",
+      "subject": "custody-disclosure",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "EU-mica-2023:36",
+      "provision_sha256": "8e979b5bde2f772a1cef2e4d74b09ef7a62c687580626d270f0e451f2f9d009f",
+      "instrument_id": "EU-mica-2023",
+      "jurisdiction": "EU",
+      "instrument_status": "IN_FORCE",
+      "span": "issuers of asset-referenced tokens shall mandate an independent audit of the reserve of assets every six months",
+      "rationale": "Only the named-auditor half of the check relates: Art 36(9) requires an independent audit of the reserve. No frozen provision requires a custodian to be named publicly, so the custodian half maps to nothing."
+    },
+    {
+      "id": "axis:distribution-integrity->EU-mica-2023:30",
+      "source": "axis",
+      "subject": "distribution-integrity",
+      "status": "DRAFT",
+      "relation": "related",
+      "provision_id": "EU-mica-2023:30",
+      "provision_sha256": "d1964bd0dcd73a9a1d344383c3120b592c277c40efbfa833ce220ef0da24285c",
+      "instrument_id": "EU-mica-2023",
+      "jurisdiction": "EU",
+      "instrument_status": "IN_FORCE",
+      "span": "the amount of asset-referenced tokens in circulation",
+      "rationale": "The axis reads on-chain supply and holder counts per issuer. MiCA Art 30(1) requires ART issuers to disclose the amount in circulation; on-chain supply is the observable such a disclosure can be compared with. The measured issuers are not established as ART issuers."
+    },
+    {
+      "id": "axis:effect-binding->INTL-mitre-atlas-2026:AML.M0028",
+      "source": "axis",
+      "subject": "effect-binding",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "INTL-mitre-atlas-2026:AML.M0028",
+      "provision_sha256": "7c2c99dad4d9daab9f58c7623cc82656d731cbc873778fa46abc65408edecfb8",
+      "instrument_id": "INTL-mitre-atlas-2026",
+      "jurisdiction": "INTL",
+      "instrument_status": "IN_FORCE",
+      "span": "the tools receive the permissions, identities, and restrictions of the AI agent calling them",
+      "rationale": "The probe checks whether a tool server's authorization binds to the request it executes rather than only the declared tool call, the delegated-permission control this mitigation describes."
+    },
+    {
+      "id": "axis:harness-fidelity->US-NIST-AIRMF-1.0-2023:MEASURE-2.13",
+      "source": "axis",
+      "subject": "harness-fidelity",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "US-NIST-AIRMF-1.0-2023:MEASURE-2.13",
+      "provision_sha256": "cb103620b3ce668c15c4fc75a61ced6466b32b6eca0b6e554cbd13906dd469ce",
+      "instrument_id": "US-NIST-AIRMF-1.0-2023",
+      "jurisdiction": "US",
+      "instrument_status": "IN_FORCE",
+      "span": "Effectiveness of the employed TEVV metrics and processes in the MEASURE function are evaluated and documented.",
+      "rationale": "The slot asks whether the same model on the same bank scores the same across evaluation harnesses, an evaluation of the TEVV process itself. Voluntary framework. Slot UNMEASURED."
+    },
+    {
+      "id": "axis:humanoid-deployment->32024R1689:71",
+      "source": "axis",
+      "subject": "humanoid-deployment",
+      "status": "DRAFT",
+      "relation": "related",
+      "provision_id": "32024R1689:71",
+      "provision_sha256": "7a0622800659409e63e98778e156e81abe2ab5d3914ec01c4c87c238789b2c45",
+      "instrument_id": "EU-ai-act-2024",
+      "jurisdiction": "EU",
+      "instrument_status": "PARTIALLY_APPLICABLE",
+      "span": "shall be accessible and publicly available in a user-friendly manner",
+      "rationale": "The slot checks what a humanoid lab has publicly deployed against a public registry; Art 71(4) makes the EU database entries of registered high-risk AI systems public. Only systems that are high-risk and registered would appear. Slot UNMEASURED."
+    },
+    {
+      "id": "axis:lab-practice->INTL-g7-hiroshima-code-2023:3",
+      "source": "axis",
+      "subject": "lab-practice",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "INTL-g7-hiroshima-code-2023:3",
+      "provision_sha256": "8cd0c4748130a708482a7df0970a92480cbae9fb62a2c88b9bb6a4e0041d33d4",
+      "instrument_id": "INTL-g7-hiroshima-code-2023",
+      "jurisdiction": "INTL",
+      "instrument_status": "IN_FORCE",
+      "span": "Publicly report advanced AI systems",
+      "rationale": "Hiroshima Code action 3 (voluntary) asks developers of advanced AI systems to publicly report capabilities and limitations, including through transparency reports. Slot UNMEASURED."
+    },
+    {
+      "id": "axis:lab-practice->US-CA-SB53-TFAIA-2025:SEC-2:22757.12.",
+      "source": "axis",
+      "subject": "lab-practice",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "US-CA-SB53-TFAIA-2025:SEC-2:22757.12.",
+      "provision_sha256": "3cd8bc1eedd8c6698baac623f8ca70e4c620f1170254bf33605f2446966d6f0c",
+      "instrument_id": "US-CA-SB53-TFAIA-2025",
+      "jurisdiction": "US",
+      "instrument_status": "IN_FORCE",
+      "span": "clearly and conspicuously publish on its internet website a frontier AI framework",
+      "rationale": "The slot asks whether an AI lab publishes its evaluations, safety framework and incident reports; SB 53 s22757.12 requires large frontier developers to publish a frontier AI framework and transparency reports. The slot is UNMEASURED (n 0), so this is a pointer for the future bank only."
+    },
+    {
+      "id": "axis:machinery-conformity->EU-machinery-2023:annex-I",
+      "source": "axis",
+      "subject": "machinery-conformity",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "EU-machinery-2023:annex-I",
+      "provision_sha256": "49464b64c2f605e22940bbadd17f3d8368e8a6e46ed30753829f41faf30eff49",
+      "instrument_id": "EU-machinery-2023",
+      "jurisdiction": "EU",
+      "instrument_status": "PARTIALLY_APPLICABLE",
+      "span": "Safety components with fully or partially self-evolving behaviour using machine learning approaches ensuring safety functions.",
+      "rationale": "The axis scores whether a model classifies a case as falling under Annex I Part A (self-evolving safety functions). It measures the model's classification, not whether any machine conforms. Machinery Regulation applies generally from 2027-01-14."
+    },
+    {
+      "id": "axis:measurer-integrity->US-CA-AB1405-2026:SEC-1:11549.83.",
+      "source": "axis",
+      "subject": "measurer-integrity",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "US-CA-AB1405-2026:SEC-1:11549.83.",
+      "provision_sha256": "0125f0e0584af5832c67d23536ab20271ac7e7dc450cd7b9ca01ec175cf10192",
+      "instrument_id": "US-CA-AB1405-2026",
+      "jurisdiction": "US",
+      "instrument_status": "ENACTED_NOT_YET_APPLICABLE",
+      "span": "References to any standards the AI auditor applies when conducting audits",
+      "rationale": "The slot asks whether an evaluation organisation publishes its methods; AB 1405 s11549.83 makes the standards an AI auditor applies part of its registration information, which the agency publishes. Enacted, not yet applicable. Slot UNMEASURED."
+    },
+    {
+      "id": "axis:measurer-integrity->US-CA-SB813-2026:SEC-1:8898.3.",
+      "source": "axis",
+      "subject": "measurer-integrity",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "US-CA-SB813-2026:SEC-1:8898.3.",
+      "provision_sha256": "f880fdab0e80cd44dc9851fc827da7a4d80c90f17b7005d87f5ce957d186d1fc",
+      "instrument_id": "US-CA-SB813-2026",
+      "jurisdiction": "US",
+      "instrument_status": "ENACTED_NOT_YET_APPLICABLE",
+      "span": "Summaries of the IVO’s standards and methodologies.",
+      "rationale": "SB 813 s8898.3 requires an independent verification organisation to report summaries of its standards and methodologies. Enacted, not yet applicable. Slot UNMEASURED."
+    },
+    {
+      "id": "axis:regulator-transparency->32016R0679:59",
+      "source": "axis",
+      "subject": "regulator-transparency",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "32016R0679:59",
+      "provision_sha256": "f2d3c7d99a8c0c8d790a9fe76ae2cc4bbad3823027d6b8bc7a25c1361003eecc",
+      "instrument_id": "EU-gdpr-2016",
+      "jurisdiction": "EU",
+      "instrument_status": "IN_FORCE",
+      "span": "They shall be made available to the public, to the Commission and to the Board.",
+      "rationale": "GDPR Art 59 requires each supervisory authority's annual activity report to be made public; a published report is one of the artefacts the slot would check. Slot UNMEASURED."
+    },
+    {
+      "id": "axis:regulator-transparency->32024R1689:70",
+      "source": "axis",
+      "subject": "regulator-transparency",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "32024R1689:70",
+      "provision_sha256": "207a0bde0bdbe742db2987c5ec960c65686412bf86a5872c4c436d595b9fd336",
+      "instrument_id": "EU-ai-act-2024",
+      "jurisdiction": "EU",
+      "instrument_status": "PARTIALLY_APPLICABLE",
+      "span": "Member States shall make publicly available information on how competent authorities and single points of contact can be contacted",
+      "rationale": "The slot runs factual presence checks on regulators' public artefacts, including a contact route; Art 70(2) requires Member States to publish how AI Act authorities can be contacted. Presence checks only, no ratings. Slot UNMEASURED."
+    },
+    {
+      "id": "axis:regulatory-framework->EU-mica-2023:48",
+      "source": "axis",
+      "subject": "regulatory-framework",
+      "status": "REVIEWED",
+      "relation": "related",
+      "provision_id": "EU-mica-2023:48",
+      "provision_sha256": "59a3ec70437a10d8a068439de03085c1e193a43712ca42fafe3098118c7d5927",
+      "instrument_id": "EU-mica-2023",
+      "jurisdiction": "EU",
+      "instrument_status": "IN_FORCE",
+      "span": "is authorised as a credit institution or as an electronic money institution",
+      "rationale": "The check reads whether an issuer declares its governing regime. MiCA Art 48(1)(a) is the EU authorisation condition for offering an e-money token; the other declared regimes (NYDFS, BACEN, Reg D) have no frozen text in corpus v3."
+    },
+    {
+      "id": "axis:reserve-attestation->EU-mica-2023:36",
+      "source": "axis",
+      "subject": "reserve-attestation",
+      "status": "DRAFT",
+      "relation": "related",
+      "provision_id": "EU-mica-2023:36",
+      "provision_sha256": "8e979b5bde2f772a1cef2e4d74b09ef7a62c687580626d270f0e451f2f9d009f",
+      "instrument_id": "EU-mica-2023",
+      "jurisdiction": "EU",
+      "instrument_status": "IN_FORCE",
+      "span": "The issuer shall publish the result of the audit within two weeks of the date of notification to the competent authority.",
+      "rationale": "The check reads whether third-party reserve-attestation language is on a retrieved issuer page. MiCA Art 36(10) applies to issuers of asset-referenced tokens (and, through Art 58, significant e-money tokens); the measured XRPL issuers are not established as in scope."
+    }
+  ],
+  "unmapped": [
+    {
+      "source": "adapter",
+      "subject": "a2a_card",
+      "reason": "Measures whether an A2A agent card verifies under the key it references (signature over the served bytes). No corpus v3 provision with published text names agent-card signing or verification; the CRA integrity requirement sits in Annex I, which corpus v3 does not hold, and OWASP LLM01:2026 point 10 names MCP servers and tool packages, not agent cards. A signature check is not evidence of AI Act transparency."
+    },
+    {
+      "source": "adapter",
+      "subject": "busabase",
+      "reason": "Measures our own store's live record counts and record-set digests on the build pod. No provision names this observable."
+    },
+    {
+      "source": "adapter",
+      "subject": "claim_watch",
+      "reason": "Measures whether a sealed subject's captured claims still reproduce at re-read. Which provision a claim concerns depends on the claim, and the subjects are sealed (named only by id), so no provision can be bound at adapter level."
+    },
+    {
+      "source": "adapter",
+      "subject": "cross_ledger",
+      "reason": "Measures an issuer's own deployment list against ledger state (issued supply only). The nearest frozen text, MiCA Art 30(1) (amount of asset-referenced tokens in circulation), applies to issuers of asset-referenced tokens, and none of the measured products (USDC, BENJI, JPMD, BUIDL, deposit-token services, USDe) is established as one; binding every capsule to it would point at a duty that does not apply to these subjects."
+    },
+    {
+      "source": "adapter",
+      "subject": "meok",
+      "reason": "Measures sha256 digests of MEOK files and a Busabase base on the build pod. No provision names this observable."
+    },
+    {
+      "source": "adapter",
+      "subject": "operations",
+      "reason": "Measures our own deploy runs, master landings, corrections, dataset commits, anchors and private notices, declared against observed. No provision names this observable."
+    },
+    {
+      "source": "adapter",
+      "subject": "public_signals",
+      "reason": "Measures outside signals about CSOAI itself (downloads, listings, citations, payers). No provision names this observable."
+    },
+    {
+      "source": "adapter",
+      "subject": "self_parity",
+      "reason": "Measures whether external indexes list CSOAI's own offerings as served. No provision names this observable."
+    },
+    {
+      "source": "predicate",
+      "subject": "cra-13-support-period",
+      "reason": "Did not pass the held-out check (never fired on home-page inputs; untested); must not be bound."
+    },
+    {
+      "source": "predicate",
+      "subject": "cra-19-importer",
+      "reason": "Did not pass the held-out check (never fired on home-page inputs; untested); must not be bound."
+    },
+    {
+      "source": "predicate",
+      "subject": "gdpr-13",
+      "reason": "Did not pass the held-out check (held-out FN 7/9 auditable negatives); must not be bound."
+    },
+    {
+      "source": "predicate",
+      "subject": "gdpr-14",
+      "reason": "Did not pass the held-out check (held-out precision 2/3 (one false positive)); must not be bound."
+    },
+    {
+      "source": "predicate",
+      "subject": "gdpr-37",
+      "reason": "Did not pass the held-out check (held-out FN 3/7); must not be bound."
+    },
+    {
+      "source": "axis",
+      "subject": "ai-adoption-components",
+      "reason": "Cites two Eurostat AI-adoption series (isoc_eb_ai). A public statistic is not evidence for or against any party's duty, and no frozen provision names this series."
+    },
+    {
+      "source": "axis",
+      "subject": "claim-maintenance",
+      "reason": "Asks whether a captured public claim is still served unchanged at re-read. Which provision a claim concerns depends on the claim; no provision names claim maintenance as such."
+    },
+    {
+      "source": "axis",
+      "subject": "humanoid-labour-index",
+      "reason": "Records whether 8 frozen humanoid-vendor URLs publish a dated deployment count. No corpus v3 provision requires a vendor to publish deployment counts."
+    },
+    {
+      "source": "axis",
+      "subject": "interop-conformance",
+      "reason": "Asks whether interoperability and standards groups publish specs, test suites and conformance records. No corpus v3 provision places a publication duty on such groups."
+    },
+    {
+      "source": "axis",
+      "subject": "interpretability-reproducibility",
+      "reason": "Asks what an interpretability group publishes and whether it reproduces. No corpus v3 provision places a duty on such groups."
+    },
+    {
+      "source": "axis",
+      "subject": "labour-components",
+      "reason": "Cites two Eurostat labour series (lfsi_emp_a, une_rt_a). A public statistic is not evidence for any provision."
+    },
+    {
+      "source": "axis",
+      "subject": "provenance-controls",
+      "reason": "Measures on-chain issuer control flags (allowlisting, freeze capability, identity domain). No corpus v3 provision with published text names issuer freeze or allowlist capability as a duty or disclosure."
+    },
+    {
+      "source": "axis",
+      "subject": "serving-fidelity",
+      "reason": "Asks whether an endpoint claiming model M behaves like M's reference serving. No corpus v3 provision names this observable; a behavioural divergence is not by itself a misrepresentation."
+    },
+    {
+      "source": "axis",
+      "subject": "watchdog-ingest",
+      "reason": "Asks whether public watchdog and incident sources answer and what they contain. No provision places a duty on those sources; the AI Act serious-incident reports (Art 73) are not public."
+    }
+  ]
+}
