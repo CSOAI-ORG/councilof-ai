@@ -30,6 +30,27 @@ test("a self-hosted reference alone cannot masquerade as external use", () => {
   selfOnly.records[0].sources = [{ label: "Self reference", href: "https://github.com/CSOAI-ORG/councilof-ai/issues/1" }];
   assert.throws(() => validate(selfOnly), /No independently hosted source/);
 });
+test("known related-operator aliases cannot qualify as the sole external source", () => {
+  for (const href of [
+    "https://proofof.ai/scorecard/example",
+    "https://api.meok.ai/example",
+    "https://csoai.org./example",
+    "https://github.com/Council-of-AI-CSOAI-org/repo",
+    "https://github.com/%43SOAI-ORG/repo",
+    "https://raw.githubusercontent.com/CSOAI-ORG/repo/master/README.md",
+    "https://huggingface.co/datasets/CSOAI/example",
+    "https://huggingface.co/spaces/MEOK/example",
+  ]) {
+    const data = clone();
+    data.records[0].sources = [{ label: "Related operator", href }];
+    assert.throws(() => validate(data), /No independently hosted source/, href);
+  }
+});
+test("a related-operator link can supplement a reviewed outside source", () => {
+  const data = clone();
+  data.records[0].sources.push({ label: "Operator reference", href: "https://proofof.ai/example" });
+  assert.doesNotThrow(() => validate(data));
+});
 test("rejects silent commercial acceptance promotion", () => {
   const fake = clone(); fake.records[0].buyer_acceptance = "ACCEPTED";
   assert.throws(() => validate(fake), /Unsupported acceptance/);
