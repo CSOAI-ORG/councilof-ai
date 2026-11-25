@@ -1,0 +1,450 @@
+{
+  "job_id": "6b066070d0582cfbbefd972e",
+  "job_state": "COMPLETED",
+  "source_commit": "e0858a6111d42c02416b370f647a82ddd417ade4",
+  "source_boundary": "authorises_execution and new_gspc_measurement declared false in source; two tool-log values redacted and retained null, not reconstructed",
+  "result": {
+    "authorises_execution": null,
+    "device": "cuda",
+    "device_name": "Tesla T4",
+    "models": {
+      "HuggingFaceTB/SmolLM2-135M-Instruct": {
+        "direct": {
+          "accuracy": 0.3333333333333333,
+          "confusion": [
+            [
+              32,
+              0,
+              0
+            ],
+            [
+              32,
+              0,
+              0
+            ],
+            [
+              32,
+              0,
+              0
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 64,
+          "valid_allow": 32
+        },
+        "direct_consistency": 1,
+        "encode_seconds": [
+          0.8197002669999165,
+          0.40222639200010235,
+          0.419166382999947
+        ],
+        "label_tokens": [
+          330,
+          389,
+          340
+        ],
+        "paraphrase": {
+          "accuracy": 0.3333333333333333,
+          "confusion": [
+            [
+              32,
+              0,
+              0
+            ],
+            [
+              32,
+              0,
+              0
+            ],
+            [
+              32,
+              0,
+              0
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 64,
+          "valid_allow": 32
+        },
+        "probe": {
+          "accuracy": 0.4166666666666667,
+          "confusion": [
+            [
+              30,
+              2,
+              0
+            ],
+            [
+              22,
+              10,
+              0
+            ],
+            [
+              32,
+              0,
+              0
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 54,
+          "valid_allow": 30
+        },
+        "probe_paraphrase": {
+          "accuracy": 0.4479166666666667,
+          "confusion": [
+            [
+              21,
+              11,
+              0
+            ],
+            [
+              10,
+              22,
+              0
+            ],
+            [
+              28,
+              4,
+              0
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 38,
+          "valid_allow": 21
+        },
+        "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+        "shuffled_label_probe": {
+          "accuracy": 0.3645833333333333,
+          "confusion": [
+            [
+              0,
+              31,
+              1
+            ],
+            [
+              0,
+              32,
+              0
+            ],
+            [
+              0,
+              29,
+              3
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 0,
+          "valid_allow": 0
+        },
+        "width": 576
+      },
+      "Qwen/Qwen2.5-0.5B-Instruct": {
+        "direct": {
+          "accuracy": 0.3333333333333333,
+          "confusion": [
+            [
+              32,
+              0,
+              0
+            ],
+            [
+              32,
+              0,
+              0
+            ],
+            [
+              32,
+              0,
+              0
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 64,
+          "valid_allow": 32
+        },
+        "direct_consistency": 1,
+        "encode_seconds": [
+          0.7842315909999797,
+          0.729690292999976,
+          0.8193974999999227
+        ],
+        "label_tokens": [
+          362,
+          425,
+          356
+        ],
+        "paraphrase": {
+          "accuracy": 0.3333333333333333,
+          "confusion": [
+            [
+              32,
+              0,
+              0
+            ],
+            [
+              32,
+              0,
+              0
+            ],
+            [
+              32,
+              0,
+              0
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 64,
+          "valid_allow": 32
+        },
+        "probe": {
+          "accuracy": 0.90625,
+          "confusion": [
+            [
+              23,
+              6,
+              3
+            ],
+            [
+              0,
+              32,
+              0
+            ],
+            [
+              0,
+              0,
+              32
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 0,
+          "valid_allow": 23
+        },
+        "probe_paraphrase": {
+          "accuracy": 0.375,
+          "confusion": [
+            [
+              4,
+              0,
+              28
+            ],
+            [
+              3,
+              0,
+              29
+            ],
+            [
+              0,
+              0,
+              32
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 3,
+          "valid_allow": 4
+        },
+        "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+        "shuffled_label_probe": {
+          "accuracy": 0.3541666666666667,
+          "confusion": [
+            [
+              1,
+              9,
+              22
+            ],
+            [
+              0,
+              15,
+              17
+            ],
+            [
+              0,
+              14,
+              18
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 0,
+          "valid_allow": 1
+        },
+        "width": 896
+      }
+    },
+    "new_gspc_measurement": null,
+    "numpy": "1.26.4",
+    "oracle": {
+      "accuracy": 1,
+      "confusion": [
+        [
+          32,
+          0,
+          0
+        ],
+        [
+          0,
+          32,
+          0
+        ],
+        [
+          0,
+          0,
+          32
+        ]
+      ],
+      "rows": 96,
+      "unsafe_allow": 0,
+      "valid_allow": 32
+    },
+    "state": "OPEN_MODEL_SYNTHETIC_RESEARCH",
+    "stitches": [
+      {
+        "aligned_paraphrase": {
+          "accuracy": 0.3333333333333333,
+          "confusion": [
+            [
+              32,
+              0,
+              0
+            ],
+            [
+              32,
+              0,
+              0
+            ],
+            [
+              32,
+              0,
+              0
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 64,
+          "valid_allow": 32
+        },
+        "aligned_probe": {
+          "accuracy": 0.4270833333333333,
+          "confusion": [
+            [
+              30,
+              2,
+              0
+            ],
+            [
+              21,
+              11,
+              0
+            ],
+            [
+              31,
+              1,
+              0
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 52,
+          "valid_allow": 30
+        },
+        "from": "HuggingFaceTB/SmolLM2-135M-Instruct",
+        "shuffled_anchor_probe": {
+          "accuracy": 0.3645833333333333,
+          "confusion": [
+            [
+              0,
+              31,
+              1
+            ],
+            [
+              0,
+              32,
+              0
+            ],
+            [
+              0,
+              29,
+              3
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 0,
+          "valid_allow": 0
+        },
+        "to": "Qwen/Qwen2.5-0.5B-Instruct"
+      },
+      {
+        "aligned_paraphrase": {
+          "accuracy": 0.3333333333333333,
+          "confusion": [
+            [
+              0,
+              0,
+              32
+            ],
+            [
+              0,
+              0,
+              32
+            ],
+            [
+              0,
+              0,
+              32
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 0,
+          "valid_allow": 0
+        },
+        "aligned_probe": {
+          "accuracy": 0.9895833333333334,
+          "confusion": [
+            [
+              31,
+              1,
+              0
+            ],
+            [
+              0,
+              32,
+              0
+            ],
+            [
+              0,
+              0,
+              32
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 0,
+          "valid_allow": 31
+        },
+        "from": "Qwen/Qwen2.5-0.5B-Instruct",
+        "shuffled_anchor_probe": {
+          "accuracy": 0.34375,
+          "confusion": [
+            [
+              0,
+              12,
+              20
+            ],
+            [
+              0,
+              16,
+              16
+            ],
+            [
+              0,
+              15,
+              17
+            ]
+          ],
+          "rows": 96,
+          "unsafe_allow": 0,
+          "valid_allow": 0
+        },
+        "to": "HuggingFaceTB/SmolLM2-135M-Instruct"
+      }
+    ],
+    "test_digest": "b837770b8fe9600dcef3fdeaa395b4ef6e4eefc9979c1b9e1c1188bf65ea4167",
+    "torch": "2.5.1+cu124",
+    "train_digest": "0f688f862f9df2381de21c751579d10e44b43858de0a8c0a21f42d66ffcc96f8"
+  }
+}
