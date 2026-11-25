@@ -1,0 +1,110 @@
+{
+  "source_commit": "31084b99e91991a146264dfdbb77b78d77c0ebe2",
+  "result": {
+    "authorises_execution": false,
+    "care": {
+      "blanket_hold": {
+        "benign_helped": 0,
+        "benign_total": 12534,
+        "harmful_allowed": 0,
+        "harmful_total": 7466,
+        "help": 0,
+        "protect": 1,
+        "protect_x_help": 0
+      },
+      "both": {
+        "benign_helped": 11305,
+        "benign_total": 12534,
+        "harmful_allowed": 1789,
+        "harmful_total": 7466,
+        "help": 0.901946704962502,
+        "protect": 0.7603803911063488,
+        "protect_x_help": 0.6858225882764698
+      },
+      "both_plus_authority": {
+        "benign_helped": 11305,
+        "benign_total": 12534,
+        "harmful_allowed": 203,
+        "harmful_total": 7466,
+        "help": 0.901946704962502,
+        "protect": 0.9728100723278864,
+        "protect_x_help": 0.8774228392904704
+      },
+      "input_only": {
+        "benign_helped": 11908,
+        "benign_total": 12534,
+        "harmful_allowed": 4332,
+        "harmful_total": 7466,
+        "help": 0.9500558480931866,
+        "protect": 0.4197696222877043,
+        "protect_x_help": 0.3988045845063015
+      },
+      "none": {
+        "benign_helped": 12534,
+        "benign_total": 12534,
+        "harmful_allowed": 7466,
+        "harmful_total": 7466,
+        "help": 1,
+        "protect": 0,
+        "protect_x_help": 0
+      },
+      "output_only": {
+        "benign_helped": 11907,
+        "benign_total": 12534,
+        "harmful_allowed": 4207,
+        "harmful_total": 7466,
+        "help": 0.9499760651029201,
+        "protect": 0.4365121885882668,
+        "protect_x_help": 0.41467613128454545
+      }
+    },
+    "lineage": {
+      "affected": 23708,
+      "graphs": 1000,
+      "nodes": 150000,
+      "policies": {
+        "direct_children": {
+          "affected_held": 2949,
+          "affected_released": 20759,
+          "unaffected_held": 0
+        },
+        "global": {
+          "affected_held": 23708,
+          "affected_released": 0,
+          "unaffected_held": 126292
+        },
+        "incomplete_fail_closed": {
+          "affected_held": 23708,
+          "affected_released": 0,
+          "unaffected_held": 104538
+        },
+        "incomplete_naive": {
+          "affected_held": 14562,
+          "affected_released": 9146,
+          "unaffected_held": 0
+        },
+        "no_invalidation": {
+          "affected_held": 0,
+          "affected_released": 23708,
+          "unaffected_held": 0
+        },
+        "root_only": {
+          "affected_held": 1000,
+          "affected_released": 22708,
+          "unaffected_held": 0
+        },
+        "transitive": {
+          "affected_held": 23708,
+          "affected_released": 0,
+          "unaffected_held": 0
+        }
+      }
+    },
+    "new_gspc_measurement": false,
+    "seed": 251126,
+    "signatures_verified": false,
+    "state": "SYNTHETIC_LINEAGE_CARE_RESEARCH",
+    "tests": 6
+  },
+  "comparison": "exact parsed output matches first host"
+}
