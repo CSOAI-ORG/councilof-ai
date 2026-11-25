@@ -48,6 +48,11 @@ between the two) and, when it re-issues a day, the version it supersedes. The ch
 import argparse, base64, datetime, glob, gzip, hashlib, json, os, pathlib, re, sys, urllib.parse, urllib.request
 # The committed capsule-provision map and frozen manifest (module provision_binding.py). Imported under another name
 # because this module's own provision_binding(manifest, pairs) builds a provisions field from (id, relation) pairs.
+# The sibling module is found from this file's own folder, so loading this client by path (scripts/daily-report
+# loads it with importlib.util.spec_from_file_location) works as well as running it from its folder.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+if _HERE not in sys.path:
+    sys.path.insert(0, _HERE)
 import provision_binding as provision_files
 
 SCHEMA = "csoai.measurement-capsule/0.2"
