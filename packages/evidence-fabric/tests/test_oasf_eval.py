@@ -107,3 +107,64 @@ def test_record_with_module_validates_against_official_record_schema():
 def test_golden_unchanged():
     got = dump(oasf_eval.module(EVS, EVENTS_URL, created_at=CREATED))
     assert got == open(os.path.join(HERE, "golden", "oasf_eval.json"), encoding="utf-8").read()
+
+
+def _integrity_mutation_controls(check, module, events):
+    import copy
+    mod = module(events, "https://fixture.example.org/evidence/events.jsonl", created_at="2026-09-30T12:00:00Z")
+    def target(doc):
+        return next(r for r in doc["data"]["referred_evaluations"] if r.get("evaluation_report"))
+    def metric(doc):
+        return target(doc)["evaluation_report"]["metrics"][0]
+    def dataset(doc):
+        return target(doc)["datasets"][0]
+    def replace(items, key, value):
+        next(x for x in items if x["name"] == key)["value"] = value
+    def duplicate_metadata(doc):
+        dataset(doc)["metadata"].append(copy.deepcopy(dataset(doc)["metadata"][0]))
+    def duplicate_metric_key(doc):
+        metric(doc)["data_points"].append(copy.deepcopy(metric(doc)["data_points"][0]))
+    def duplicate_dataset(doc):
+        target(doc)["datasets"].append(copy.deepcopy(dataset(doc)))
+    def duplicate_group(doc):
+        doc["data"]["referred_evaluations"].append(copy.deepcopy(target(doc)))
+    def duplicate_metric(doc):
+        target(doc)["evaluation_report"]["metrics"].append(copy.deepcopy(metric(doc)))
+    def orphan(doc):
+        replace(metric(doc)["data_points"], "event_id", "sha256:" + "f" * 64)
+    def conflict(doc):
+        replace(metric(doc)["data_points"], "state", "CONSISTENT")
+    def value_conflict(doc):
+        replace(metric(doc)["data_points"], "value", "0.99")
+    def subject_conflict(doc):
+        replace(metric(doc)["data_points"], "subject_locator", "urn:fixture:other")
+    def missing_metric(doc):
+        target(doc).pop("evaluation_report")
+    def bad_state(doc):
+        replace(dataset(doc)["metadata"], "state", "UNKNOWN")
+    def nan_value(doc):
+        replace(dataset(doc)["metadata"], "value", "NaN")
+        replace(metric(doc)["data_points"], "value", "NaN")
+    def report_grade(doc):
+        target(doc)["evaluation_report"]["overall_rating"] = "A"
+    cases = [duplicate_metadata, duplicate_metric_key, duplicate_dataset, duplicate_group,
+             duplicate_metric, orphan, conflict, value_conflict, subject_conflict, missing_metric,
+             bad_state, nan_value, report_grade]
+    outcomes = []
+    for mutate in cases:
+        bad = copy.deepcopy(mod)
+        mutate(bad)
+        try:
+            check(bad)
+        except E.DoctrineError:
+            rejected = True
+        else:
+            rejected = False
+        outcomes.append((mutate.__name__, rejected))
+    return outcomes
+
+
+def test_oasf_metric_integrity_rejects_all_mutated_modules():
+    results = _integrity_mutation_controls(oasf_eval.check, oasf_eval.module, EVS)
+    assert len(results) == 13
+    assert all(rejected for _, rejected in results), [name for name, rejected in results if not rejected]
