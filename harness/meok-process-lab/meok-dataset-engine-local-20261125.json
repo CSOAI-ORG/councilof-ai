@@ -1,0 +1,47 @@
+{
+  "source_commit": "37d32164d416b7dfe8f0dfba234b057569178829",
+  "result": {
+    "authorises_execution": false,
+    "dataset_revision": "8e3f2986992377019bdf4dcbd062414fed2c76b4",
+    "negative_controls": [
+      "changed_bytes",
+      "test_as_training",
+      "wrong_split",
+      "wrong_pin_map",
+      "duplicate_json_key",
+      "nonfinite",
+      "duplicate_row",
+      "missing_tick",
+      "invalid_proportion",
+      "invalid_control",
+      "cross_split_episode"
+    ],
+    "new_gspc_measurement": false,
+    "rights_scope": "existing synthetic MEOK lab dataset only; no general rights grant",
+    "splits": {
+      "test": {
+        "additional_distinct_targets_for_seen_features": 43,
+        "episodes": 70,
+        "rows": 560,
+        "sha256": "191c6f0ec609d8e0a99f0a8d6c8368e606b32b1129cbbe4f607b59dc2e9f84dc",
+        "unique_feature_vectors": 493
+      },
+      "train": {
+        "additional_distinct_targets_for_seen_features": 147,
+        "episodes": 200,
+        "rows": 1600,
+        "sha256": "b97907598847b7ef61919208ec479984bb82c90c3eb125c897de889feb90e286",
+        "unique_feature_vectors": 1309
+      },
+      "validation": {
+        "additional_distinct_targets_for_seen_features": 25,
+        "episodes": 50,
+        "rows": 400,
+        "sha256": "1691625837204bd7c1cec386a8196c7f01dacc5530b3733e7c64cf7f3408fe8e",
+        "unique_feature_vectors": 341
+      }
+    },
+    "state": "PINNED_DATASET_INTAKE_RESEARCH",
+    "train_only_bytes_returned": 498111
+  }
+}
