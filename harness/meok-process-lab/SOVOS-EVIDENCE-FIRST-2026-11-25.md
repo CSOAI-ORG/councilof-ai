@@ -6,7 +6,7 @@ This extends existing MEOK process-world, two-path Council, Venturi and reaction
 ## Executed results
 - Desktop Commander M2: exact source, NumPy 2.4.6, all controls passed.
 - HF CPU job csoai/6b065a4fd0582cfbbefd9045 completed 03:47:37 UTC. NumPy 2.2.6, 180-second cap, no secrets, actual billed cost not returned. All result details retained in sovos-neural-stitch-hf-20261125.json. Mac and HF agree to floating-point precision on reported metrics.
-- Kaggle private CPU kernel nicktempleman/sovos-neural-stitch-20261125 version 1 submitted using identical source; running at initial observation. No public notebook or dataset publication inferred.
+- Kaggle private CPU kernel nicktempleman/sovos-neural-stitch-20261125 version 1 completed. Downloaded JSON log gives NumPy 2.1.3 and matching metrics to floating-point precision; retained in sovos-neural-stitch-kaggle-20261125.json. No public notebook or dataset publication inferred.
 - A new ridge readout (81 x 4 coefficients, 324 learned coefficients including bias; lambda .1) was fitted only on original train activations, then exported in sovos-fused-readout-candidate-20261125.json. No neural member weights updated. SHA256 d4567ac50bfea446b992ba6c6a9cf81bf9cbb40c1c8c316344081dd90dc13594, 5,222 bytes. Replayed after reloading, 7/7 rejection controls. First export rejected a legitimate control value of 9/8; corrected to the discrete training-domain expiry/tick lattice; negative controls retained. No final evaluation set selected or optimizer tuning performed on test.
 
 | Variant | validation MAE | published test MAE | test worst |
@@ -43,3 +43,31 @@ Frozen -> fluid -> frozen: retain admitted snapshot; replay new incidents in Sov
 - NVIDIA CPO: https://www.nvidia.com/en-gb/networking/products/silicon-photonics/ — optical transport/power at distributed scale, not proof of improved model reasoning or unlimited capacity. CPU for orchestration/small numerical workloads, GPU for batched tensor/LLM work; instrument time, bytes moved, throughput, energy and costs. No hardware purchased.
 
 Next: genuinely new deterministic simulator episodes, pre-registered candidate and separate oracle (no published bank tuning); fresh regime shifts, adversarial/revocation counterfactuals, compression of fused head, per-layer activation patches/ablations, shuffled anchors, cross-family open-weight checkpoints, dataset mixture versus routing versus distillation, blind Council variants at matched inference budget, calibration/uncertainty, held-out failure/safety tests via GSPC instrument guard. Use current #4764 reaction bridge, #4703 reciprocal contract, #4704 release parity, #4863 two-path research. No new production signer, scheduler, database, model default, or external authority. Real human grant -> qualified executor -> independent observer -> receiving-party acceptance remains unestablished.
+
+## Fresh frozen-candidate rehearsal and 3D counterexample (executed)
+
+The readout was committed at de76ef754ab55d4630b67e59d80295f6d1c0899d BEFORE generating fresh cases. Script and experimental design committed at c0fde95447dd351723c8d0fd881020a48feb4013; script SHA256 822255ef614b0057c5eafda7fe7974819739207fccf07c5677bd129a336433a7. Eight original oracle file hashes checked before loading. A new set of 384 seed pairs (each baseline/evidence-aware, 8 steps) spans 128 seeds each at population ranges 16–96, 4–15 and 97–120. No overlap with the original IDs 1000–1319. Fresh data SHA256 0b9d524ca3ee2001abd4eeacaa615436aac65441984acad3775a0c902e505cf3. Not independent external review or real procurement. All controls (episode IDs, candidate pin, oracle pins, simplex, teacher-forced expiry and closed-loop expiry) passed.
+
+| New cohort, 2,048 rows each | Ensemble MAE | Fused MAE | Paired seed bootstrap 95% CI of MAE improvement | Ensemble closed-loop MAE | Fused closed-loop MAE |
+|---|---:|---:|---|---:|---:|
+| nominal | .01699114 | .01207619 | [.00424381,.00562985] | .06255029 | .05213364 |
+| small | .03371621 | .02722047 | [.00529969,.00768463] | .11603632 | .11039935 |
+| large | .01649010 | .01181198 | [.00410996,.00526467] | .05788742 | .04830380 |
+
+Bootstrap resamples 128 matched scenario seeds within each cohort, not individual transitions. CI scope is this synthetic generation procedure. Full per-cohort tail error, active error and baselines retained in JSON. Closed-loop uses its own previous predicted states (future targets not provided); expiry preserves its predicted prior, not necessarily observed prior. Smaller populations remain a material failure mode. Exact deterministic engine stays authoritative.
+
+Mac and [HF CPU job 6b065c301460ffe1d5e9b2b0](https://huggingface.co/jobs/csoai/6b065c301460ffe1d5e9b2b0) reproduced the same new dataset digest and metrics to numerical precision. HF completed 03:56:00 UTC, 180s cap, no secrets. Retained files sovos-fresh-rehearsal-results-20261125.json and sovos-fresh-rehearsal-hf-20261125.json. Both hosted jobs are potentially billable, actual charges unknown. No GPU or recurring job.
+
+3D PCA fit only original training activations retains .677343 of variance. A separate ridge readout on those three coordinates has new teacher-forced MAE .03936294 nominal / .06417238 small / .03930035 large, worse than the full 80-dimensional readout. A random orthogonal 3D projection is worse still (.04547116/.07404728/.04748864). Visual coordinates alone do not preserve full predictive state. Store full or qualified compressed representations behind reference-addressed J-Space nodes; display a lossy projection with revision, fidelity, uncertainty and source links. No visual scene or representation is an independently verified reasoning transcript.
+
+## Additional methods to qualify, not blindly import
+| Method and source | SOVOS experiment |
+|---|---|
+| Relative representations (ICLR 2023), https://arxiv.org/abs/2209.15430 / https://github.com/lucmos/relreps | Same shared anchors vs shuffled vs learned alignment; compare cross-family stitch fidelity, downstream task results and causal effects |
+| MergeKit, https://github.com/arcee-ai/mergekit / https://arxiv.org/abs/2403.13257 | Same-base linear/TIES/DARE/SLERP vs frozen experts, matched budget; dissimilar architectures use explicit bridge or routing |
+| DoReMi, https://github.com/sangmichaelxie/doremi | Compare domain-reweighted mixture with equal, original and worst-group weighting; preserve dataset source/licence/hold-out boundaries |
+| Avalanche, https://github.com/ContinualAI/avalanche | Compare frozen, replay, EWC, adapter learning and separate specialist routing on time-ordered tasks; measure forgetting and forward/backward transfer |
+| TransformerLens, https://github.com/TransformerLensOrg/TransformerLens | Real open-model activations, ablation, patching and layer-level control experiments; pin exact model + tokenizer + hooks + revision |
+| Shannon source coding, https://ocw.mit.edu/courses/18-200-principles-of-discrete-applied-mathematics-spring-2024/resources/18200-lecture-16-version-2_mp4/ | Measure actual compressed byte cost and recoverability; finite memory cannot losslessly encode arbitrary unlimited data |
+
+Check exact code/data/model licence and dependency security per pinned revision before adopting. These are external methods, not claimed partnerships, copied corpora or proof of CSOAI novelty. Harness X and existing GSPC instrument guard retain independent hold-out and admission responsibilities. No production SOVOS UI or Layer 0 behaviour changed.
