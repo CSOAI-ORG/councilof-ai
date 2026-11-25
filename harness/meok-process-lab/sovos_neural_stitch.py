@@ -94,7 +94,7 @@ def main():
             wa=ridge(h["train"][a],h["train"][b]);wb=ridge(h["train"][a],h["train"][b][rng.permutation(len(h["train"][b]))])
             stitched.append((a,b,wa,wb))
     output={"state":"REAL_TRAINED_WEIGHTS_SYNTHETIC_DOMAIN_EXPLORATORY","source_pins":PINS,
-        "model_revision":MODEL.split("/")[5],"dataset_revision":DATA.split("/")[6],"numpy":np.__version__,
+        "model_revision":MODEL.split("/resolve/")[1].strip("/"),"dataset_revision":DATA.split("/resolve/")[1].strip("/"),"numpy":np.__version__,
         "source_urls":[MODEL,DATA],"new_fit":"ridge on original train split only; no neural weight update",
         "published_test_not_blind":True,"new_gspc_measurement":False,"authorises_execution":False,
         "hidden_widths":[a.shape[1] for a in h["train"]],"splits":{}}
