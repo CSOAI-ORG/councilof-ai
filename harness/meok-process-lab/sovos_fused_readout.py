@@ -28,7 +28,7 @@ def predict(raw_model,doc,features):
     if not np.isfinite(x).all():raise ValueError("nonfinite features")
     for state in (x[0,:4],x[0,4:8]):
         if (state<0).any() or (state>1).any() or not np.isclose(state.sum(),1,atol=1e-8):raise ValueError("invalid state proportions")
-    if x[0,8] not in (0,1) or x[0,10] not in (0,1) or not -1<=x[0,9]<=1 or not 0<=x[0,11]<=1:raise ValueError("invalid control features")
+    if x[0,8] not in (0,1) or x[0,10] not in (0,1) or x[0,9] not in tuple(i/8 for i in range(-7,10)) or x[0,11] not in tuple(i/8 for i in range(8)):raise ValueError("invalid control features")
     p=lab.constrain(lab.apply(latent(x,json.loads(raw_model)),validate_candidate(doc)),x)[0]
     return {"state":"MODEL_PREDICTION_NOT_OBSERVED","prediction":p.tolist(),"authorises_execution":False,"gspc_admitted":False}
 def export():
