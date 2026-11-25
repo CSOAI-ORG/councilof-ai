@@ -5,7 +5,7 @@ Synthetic output fixtures, no benchmark score or production judge replacement.""
 import ast,hashlib,json,pathlib,random,urllib.request
 PIN="c4b6672a366081598f3aba1865e5c5a357dffd83"
 def load_legacy():
-    url="https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/harness/owem/axis_cluster.py"
+    url="https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/49d5f372bc2053c4a727db8989affba31fb56d8b/harness/owem/axis_cluster.py"
     with urllib.request.urlopen(url,timeout=15) as r:b=r.read(200001)
     if len(b)>200000 or hashlib.sha1(b"blob "+str(len(b)).encode()+b"\x00"+b).hexdigest()!=PIN:raise ValueError("legacy source moved")
     tree=ast.parse(b)
