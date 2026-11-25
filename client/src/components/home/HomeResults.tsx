@@ -88,6 +88,9 @@ export default function HomeResults({
           <a href={GSPC_SPACE} className="hp-text-link">
             Open on Hugging Face <ArrowUpRight size={15} aria-hidden="true" />
           </a>
+          <a href="/gspc-verify/#check-record" className="hp-text-link">
+            Try verifying a published card <ArrowUpRight size={15} aria-hidden="true" />
+          </a>
           <Link href="/models-measured/" className="hp-text-link">
             Browse measured models <ArrowUpRight size={15} aria-hidden="true" />
           </Link>

@@ -31,14 +31,6 @@
         <i>CSOAI-GSPC</i>
       </span>
     </a>
-    <nav class="top-nav jump" aria-label="CSOAI-GSPC">
-      <a href="#ontology">Axes</a>
-      <a href="#boards">Leaderboards</a>
-      <a href="#hub-cells">Hub cells</a>
-      <a href="#models">Models</a>
-      <a href="#tape-table">Board</a>
-      <a href="https://councilof.ai/gspc-verify" target="_blank" rel="noopener noreferrer">Verify</a>
-    </nav>
     <label class="search">
       <span class="sr">Search models or axes</span>
       <input id="q" type="search" placeholder="Search a model or axis" autocomplete="off">
@@ -47,15 +39,37 @@
 
   <section class="hero">
     <p class="kicker">Public · measurement, never certification</p>
-    <h1>CSOAI-GSPC</h1>
+    <h1>GSPC Measurement Board</h1>
     <p id="lid" class="lid">Lid: loading live GET /api/gspc…</p>
     <p id="board-refresh-status" class="fine" role="status" aria-live="polite">Reading public feeds…</p>
+    <details class="board-context"><summary>What these figures cover</summary>
     <p class="lede" id="ruling">
       Reading the live board and the separate Hugging Face measurement population…
     </p>
+    </details>
     <div class="tape" id="tape" aria-live="polite"></div>
   </section>
 
+  <div class="workspace">
+    <nav class="workspace-nav" aria-label="GSPC workspace">
+      <a href="#ontology">Explore axes</a>
+      <a href="#tape-table">Compare results</a>
+      <a href="#boards">Leaderboards</a>
+      <a href="#hub-cells">Hugging Face evidence</a>
+      <a href="#models">Model directory</a>
+      <a href="#market-coverage">Coverage and gaps</a>
+      <a href="#read">Methods and corrections</a>
+      <a href="#lookup">Model lookup</a>
+      <a href="https://councilof.ai/gspc-verify" target="_blank" rel="noopener noreferrer">Verify a record</a>
+    </nav>
+    <main class="workspace-content" id="workspace-content">
+      <div class="axis-toolbar">
+        <label class="pick">Go to an axis
+          <select id="all-axes" disabled><option value="">Waiting for published axes…</option></select>
+        </label>
+        <a href="https://councilof.ai/dashboard/?tab=board" target="_blank" rel="noopener noreferrer">Council OS</a>
+        <a href="https://councilof.ai/connect/#platforms" target="_blank" rel="noopener noreferrer">Connect a plugin</a>
+      </div>
   <section id="ontology" class="block" aria-labelledby="onto-h">
     <div class="head">
       <div>
@@ -180,6 +194,7 @@
   </section>
 
   <section id="desk" class="block focus" hidden aria-labelledby="desk-h">
+    <a href="#ontology" id="axis-back">Back to results</a>
     <div class="head">
       <p class="kicker" id="desk-kicker">Selected record</p>
       <h2 id="desk-h">—</h2>
@@ -207,6 +222,14 @@
     <p class="note" id="desk-note"></p>
     <div id="fleet" class="fleet" hidden></div>
     <p class="links" id="desk-links"></p>
+    <details class="agent-handoff">
+      <summary>Read this axis from an agent or plugin</summary>
+      <p>Connect the Council of AI MCP server in your client, including MEOK workspaces with that connector configured. Use this tool call to read the same published axis.</p>
+      <pre id="axis-tool-call"></pre>
+      <button type="button" id="copy-axis-tool">Copy tool call</button>
+      <span id="axis-copy-status" role="status"></span>
+      <p><a href="https://councilof.ai/connect/" target="_blank" rel="noopener noreferrer">Connector setup</a> · <a href="https://meok.ai/" target="_blank" rel="noopener noreferrer">Open MEOK</a></p>
+    </details>
   </section>
 
   <section id="read" class="block" aria-labelledby="read-h">
@@ -290,6 +313,9 @@
     </table>
     <p class="fine" id="market-note"></p>
   </section>
+
+    </main>
+  </div>
 
   <footer>
     <a class="brand foot" href="https://councilof.ai" target="_blank" rel="noopener noreferrer">
