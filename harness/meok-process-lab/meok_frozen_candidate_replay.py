@@ -36,7 +36,9 @@ def metrics(p,y,x,prior=None):
     assert np.array_equal(p[x[:,9]<=0],prior[x[:,9]<=0])
     return {**lab.metric(p,y,x),**continual.effect(p,y,x)}
 def main():
-    doc=json.loads((ROOT/"meok-nonlinear-candidate-local-20261125.json").read_bytes())["result"]["candidate"]
+    candidate_raw=(ROOT/"meok-nonlinear-candidate-20261125.json").read_bytes()
+    if hashlib.sha256(candidate_raw).hexdigest()!=PIN:raise ValueError("exact candidate bytes")
+    doc=json.loads(candidate_raw)
     weights=validate(doc)
     raw=(ROOT/"sovos-fused-readout-candidate-20261125.json").read_bytes()
     assert hashlib.sha256(raw).hexdigest()==fresh.CANDIDATE_SHA
