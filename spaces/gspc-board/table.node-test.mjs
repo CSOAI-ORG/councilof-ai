@@ -169,6 +169,62 @@ test("global search reveals filtered results instead of a hidden table", async (
   assert.equal(h.el("models").hidden, false);
 });
 
+test("the atlas includes uncategorised source axes once and keeps them filterable after refresh", async () => {
+  const initial = fixtures();
+  initial.set(API, board(1, ["governance", "effect-binding", "watchdog-ingest", "future-axis"]));
+  const h = harness({ initial });
+  await flush();
+  const tiles = () => [...h.el("graph").innerHTML.matchAll(/data-axis="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(tiles().sort(), ["effect-binding", "future-axis", "governance", "watchdog-ingest"]);
+  assert.doesNotMatch(h.el("graph").innerHTML, /role="listitem"/);
+  h.choosePillar("additional");
+  assert.deepEqual(tiles().sort(), ["effect-binding", "future-axis", "watchdog-ingest"]);
+  assert.doesNotMatch(h.el("board-body").innerHTML, /data-axis="governance"/);
+  h.replies.set(API, board(2, ["safety"]));
+  h.tick();
+  await flush();
+  assert.deepEqual(tiles(), ["safety"]);
+  assert.doesNotMatch(h.el("pillars").innerHTML, /data-pillar="additional"/);
+});
+
+test("fact axes show their dated finding without empty model seats or accuracy placeholders", async () => {
+  const initial = fixtures();
+  const source = board(1, ["effect-binding", "governance"]);
+  source.axes[0] = { axis: "effect-binding", status: "MEASURED", kind: "deterministic-facts",
+    family: "gspc", n: 261, n_note: "261 server verdicts from 600 tried",
+    task: "request binding", measurement_time: { state: "EXACT", observed_at: "2026-09-22T05:43:05Z" } };
+  initial.set(API, source);
+  const h = harness({ initial, hash: "#effect-binding" });
+  await flush();
+  assert.equal(h.el("desk-models").hidden, true);
+  assert.equal(h.el("desk-facts").hidden, false);
+  assert.equal(h.el("lb-table").hidden, true);
+  assert.equal(h.el("podium").innerHTML, "");
+  assert.doesNotMatch(h.el("desk-lb").innerHTML, /Not published on this axis/);
+  assert.doesNotMatch(h.el("quote").innerHTML, /95% interval|Fleet mean|Macro F1|Leader/);
+  assert.match(h.el("find-table").innerHTML, /261/);
+  assert.match(h.el("find-table").innerHTML, /2026-09-22T05:43:05Z/);
+  assert.match(h.el("honest-table").innerHTML, /261 server verdicts from 600 tried/);
+  vm.runInContext('openAxis("governance")', h.context);
+  assert.equal(h.el("desk-models").hidden, false);
+  assert.equal(h.el("desk-facts").hidden, true);
+  assert.equal(h.el("lb-table").hidden, false);
+  assert.match(h.el("desk-lb").innerHTML, /model-1/);
+  assert.doesNotMatch(h.el("desk-lb").innerHTML, /TIE · floor|Not published on this axis/);
+});
+
+test("an empty board remains visible after a fact-only leaderboard", async () => {
+  const h = harness();
+  await flush();
+  vm.runInContext('BOARD.axes[0].kind = "deterministic-facts"; renderLeaderboard("governance")', h.context);
+  assert.equal(h.el("lb-table").hidden, true);
+  h.replies.set(API, board(2, []));
+  h.tick();
+  await flush();
+  assert.equal(h.el("lb-table").hidden, false);
+  assert.match(h.body("#lb-table tbody").innerHTML, /No axes in the current board/);
+});
+
 test("reads primary feeds each minute without replacing source measurement time", async () => {
   const h = harness();
   await flush();

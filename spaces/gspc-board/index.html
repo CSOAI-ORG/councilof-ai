@@ -64,8 +64,8 @@
     </nav>
     <main class="workspace-content" id="workspace-content">
       <div class="axis-toolbar">
-        <label class="pick">Go to an axis
-          <select id="all-axes" disabled><option value="">Waiting for published axes…</option></select>
+        <label class="pick"><span id="all-axes-label">Go to an axis</span>
+          <select id="all-axes" aria-labelledby="all-axes-label" disabled><option value="">Waiting for published axes…</option></select>
         </label>
         <a href="https://councilof.ai/dashboard/?tab=board" target="_blank" rel="noopener noreferrer">Council OS</a>
         <a href="https://councilof.ai/connect/#platforms" target="_blank" rel="noopener noreferrer">Connect a plugin</a>
@@ -79,7 +79,7 @@
       <div class="pillars" id="pillars"></div>
     </div>
     <p class="fine" id="legend">Green is measured. Slate is empty. Click a family, then an axis.</p>
-    <div id="graph" class="atlas" role="list"></div>
+    <div id="graph" class="atlas"></div>
   </section>
 
   <section id="boards" class="block" aria-labelledby="lb-h">
@@ -201,9 +201,12 @@
       <p class="fine" id="desk-sub"></p>
     </div>
     <div class="quote" id="quote"></div>
-    <h3>Top published names</h3>
-    <div class="scroll">
-      <table class="sheet" id="desk-lb"></table>
+    <p id="desk-facts" class="fine" hidden>This axis records facts with its own scope and denominator. Read its finding and limitations below.</p>
+    <div id="desk-models">
+      <h3>Top published names</h3>
+      <div class="scroll">
+        <table class="sheet" id="desk-lb"></table>
+      </div>
     </div>
     <div class="sheets three">
       <div>
@@ -335,7 +338,7 @@
     </a>
     <p>CSOAI Ltd UK 16939677 · measurement, never certification. Verify is free.
       <a href="https://councilof.ai/gspc-verify" target="_blank" rel="noopener noreferrer">councilof.ai/gspc-verify</a>
-      · DOI 10.5281/zenodo.21991104 (Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.)</p>
+      · DOI 10.5281/zenodo.21991104 (Zenodo record unavailable since 29 Sep 2026. Check the <a href="https://councilof.ai/interop/zenodo-status.json" target="_blank" rel="noopener noreferrer">current deposit status</a>.)</p>
   </footer>
   <script src="./table.js"></script>
 </body>
