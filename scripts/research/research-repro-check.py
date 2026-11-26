@@ -15,6 +15,14 @@ is compared value by value with the committed JSON ("result" member):
     are NOT reproduced here; their digests and counts are).
 Any other difference is drift and makes the run fail.
 
+Recorded host: the "-local" results were produced on macOS arm64 (numpy wheel
+with Accelerate). Three entries do not reproduce on Linux x86_64 (OpenBLAS):
+the fused-readout export (last printed digits of the ridge coefficients), the
+ExtraTrees rows of sovos_situation_prevention and the MLP of
+meok_nonlinear_candidate. They are marked `platform_sensitive`; with
+--allow-platform-drift their drift is reported as PLATFORM_DRIFT and does not
+fail the run. Every other entry stays strict on every platform.
+
 Usage: python3 scripts/research/research-repro-check.py [--only NAME ...]
        [--report out.json] [--summary out.md]
 """
@@ -50,7 +58,7 @@ MANIFEST = [
     # PR #4865
     lab("sovos_neural_stitch", ["sovos-neural-stitch-hf-20261125.json", "sovos-neural-stitch-kaggle-20261125.json"],
         ignore=OTHER_HOST),
-    {"name": "sovos_fused_readout_export", "kind": "export_bytes", "cwd": LAB,
+    {"name": "sovos_fused_readout_export", "kind": "export_bytes", "cwd": LAB, "platform_sensitive": True,
      "cmd": ["python3", "sovos_fused_readout.py", "--export", "{tmp}/candidate.json"],
      "artifact": "{tmp}/candidate.json", "committed": LAB + "/sovos-fused-readout-candidate-20261125.json"},
     {"name": "sovos_fused_readout_verify", "kind": "selftest", "cwd": LAB,
@@ -65,14 +73,14 @@ MANIFEST = [
     lab("sovos_cpu_batch_profile", ["sovos-cpu-batch-profile-local-20261125.json"], ignore=TIMING),
     lab("sovos_engine_council", ["sovos-engine-council-local-20261125.json"]),
     lab("sovos_engine_cpu_profile", ["sovos-engine-cpu-profile-local-20261125.json"], ignore=TIMING),
-    lab("sovos_situation_prevention", ["sovos-situation-prevention-local-20261125.json"]),
+    dict(lab("sovos_situation_prevention", ["sovos-situation-prevention-local-20261125.json"]), platform_sensitive=True),
     lab("sovos_verification_budget", ["sovos-verification-budget-local-20261125.json"]),
     # PR #4869
     lab("sovos_care_lineage", ["sovos-care-lineage-local-20261125.json", "sovos-care-lineage-second-host-20261125.json"]),
     lab("sovos_incremental_replay", ["sovos-incremental-replay-local-20261125.json"]),
     # PR #4870
     lab("meok_dataset_engine", ["meok-dataset-engine-local-20261125.json"]),
-    lab("meok_nonlinear_candidate", ["meok-nonlinear-candidate-local-20261125.json"]),
+    dict(lab("meok_nonlinear_candidate", ["meok-nonlinear-candidate-local-20261125.json"]), platform_sensitive=True),
     {"name": "meok_axis_cpu_engine", "kind": "pinned_node", "script": "scripts/research/meok-axis-cpu-engine.mjs",
      "results": [LAB + "/meok-axis-cpu-replay-local-20261125.json"], "ignore": []},
     # PR #4871
@@ -174,6 +182,14 @@ def pinned_root(entry, committed_doc, tmp):
     return moved
 
 
+def subtree_counts(diffs, depth=3):
+    out = {}
+    for d in diffs:
+        key = "/".join(re.sub(r"\[\d+\]", "", d["path"]).split("/")[:depth + 1])
+        out[key] = out.get(key, 0) + 1
+    return out
+
+
 def check(entry):
     rec = {"name": entry["name"], "kind": entry["kind"], "comparisons": []}
     tmp = tempfile.mkdtemp(prefix="research-repro-")
@@ -216,7 +232,8 @@ def check(entry):
                 statuses.append(st)
                 rec["comparisons"].append({"committed": rel, "status": st, "ignored_paths": ignore,
                                            "max_abs_numeric_delta": max_numeric_delta(got, committed, ignore),
-                                           "drift": diffs[:25], "drift_count": len(diffs)})
+                                           "drift": diffs[:25], "drift_count": len(diffs),
+                                           "drift_by_subtree": subtree_counts(diffs)})
             rec["status"] = "DRIFT" if "DRIFT" in statuses else ("TOLERANCE" if "TOLERANCE" in statuses else "EXACT")
     except Exception as e:  # report, never hide
         rec["status"] = "FAIL"
@@ -231,29 +248,37 @@ def main():
     ap.add_argument("--only", nargs="*")
     ap.add_argument("--report")
     ap.add_argument("--summary")
+    ap.add_argument("--allow-platform-drift", action="store_true",
+                    help="report drift of platform_sensitive entries as PLATFORM_DRIFT instead of failing")
     a = ap.parse_args()
     entries = [e for e in MANIFEST if not a.only or e["name"] in a.only]
     records = []
     for e in entries:
         r = check(e)
+        if r["status"] == "DRIFT" and e.get("platform_sensitive") and a.allow_platform_drift:
+            r["status"] = "PLATFORM_DRIFT"
         records.append(r)
         print("%-40s %-9s %6.1fs" % (r["name"], r["status"], r.get("seconds", 0)), flush=True)
         for c in r["comparisons"]:
             print("    %-58s %s max|d|=%.3g" % (c["committed"].split("/")[-1], c["status"], c["max_abs_numeric_delta"]))
-            for d in c["drift"][:10]:
+            for k, n in sorted(c.get("drift_by_subtree", {}).items()):
+                print("        drift %5d under %s" % (n, k))
+            for d in c["drift"][:5]:
                 print("        drift", json.dumps(d))
         if r.get("inputs_moved_since_pin"):
             print("    inputs changed since pin (pinned bytes used):", r["inputs_moved_since_pin"])
         if r.get("error"):
             print("    error:", r["error"][-400:])
     bad = [r["name"] for r in records if r["status"] in ("DRIFT", "FAIL")]
+    import platform
     doc = {"schema": "csoai.research-repro-check/0.1", "abs_tol": ABS_TOL, "rel_tol": REL_TOL,
-           "python": sys.version.split()[0], "records": records, "failed": bad,
+           "python": sys.version.split()[0], "platform": platform.platform(), "machine": platform.machine(),
+           "allow_platform_drift": a.allow_platform_drift, "records": records, "failed": bad,
            "new_gspc_measurement": False, "authorises_execution": False}
     if a.report:
         open(a.report, "w").write(json.dumps(doc, indent=1, sort_keys=True) + "\n")
     if a.summary:
-        lines = ["### Research reproduction (L1)", "", "| entry | status | seconds |", "|---|---|---|"]
+        lines = ["### Research reproduction (L1) on %s" % platform.platform(), "", "| entry | status | seconds |", "|---|---|---|"]
         lines += ["| %s | %s | %s |" % (r["name"], r["status"], r.get("seconds", "")) for r in records]
         lines += ["", "Throughput profiles: timing fields are machine-dependent and are not compared; "
                   "digests and counts are. Not run here: the two cross-family open-LM scripts (CUDA, model download) "
