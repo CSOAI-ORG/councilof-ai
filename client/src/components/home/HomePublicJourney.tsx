@@ -1,4 +1,4 @@
-import { ArrowUpRight, BookOpenCheck, FileSearch, History, MessagesSquare, ScanEye, Users } from "lucide-react";
+import { ArrowUpRight, BookOpenCheck, FileSearch, FlaskConical, Gamepad2, History, MessagesSquare, ScanEye, Users } from "lucide-react";
 import "@/styles/home-public-journey.css";
 
 /** Public navigation only: no incident intake, case creation or background inference. */
@@ -12,6 +12,8 @@ export const LEARNING_JOURNEYS = [
   { title: "Learn the foundations", body: "Explore the Academy's lessons on AI governance, evidence and measurement. Start with the concepts before interpreting a score.", href: "/dashboard?tab=academy", cta: "Explore the Academy", icon: BookOpenCheck },
   { title: "Practise with the evidence", body: "Use the learning arena to work through a question, play a challenge, explain your reasoning and prepare a proposed improvement.", href: "/dashboard?tab=learn", cta: "Enter the learning arena", icon: MessagesSquare },
   { title: "Understand the human decision", body: "Inspect the staff and human-review workflow: what is proposed, which evidence supports it and whether a person is authorised to decide.", href: "/dashboard?tab=staff", cta: "Inspect human review", icon: Users },
+  { title: "Play the Council Coliseum", body: "Open the Council's public Hugging Face game Space. A challenge is practice, not an audited GSPC result or a credential.", href: "https://huggingface.co/spaces/csoai/council-coliseum", cta: "Open the Coliseum", icon: Gamepad2 },
+  { title: "Explore MEOK experiments", body: "Visit the experimental MEOK hybrid lab on Hugging Face. Research demonstrations are not independently approved safety measurements.", href: "https://huggingface.co/spaces/csoai/meok-oowm-hybrid-lab", cta: "View the MEOK lab", icon: FlaskConical },
 ] as const;
 
 export const PUBLIC_JOURNEY_FAQS = [
