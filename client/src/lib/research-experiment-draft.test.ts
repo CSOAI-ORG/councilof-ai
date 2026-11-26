@@ -45,3 +45,14 @@ describe("private experiment draft from research commons", () => {
     it("rejects draft "+name,()=>expect(()=>createResearchDraft(fixture(),"open-policy-agent/opa",{...input,...patch},clock)).toThrow());
   it("rechecks freshness at export time",()=>expect(()=>createResearchDraft(fixture(),"open-policy-agent/opa",input,clock+3*86400000)).toThrow());
 });
+
+// Constructed boundary controls only, never empirical observations.
+it("accepts the 25-source projection and holds a 26th source",()=>{
+  const p=fixture();
+  p.repositories=Array.from({length:25},(_,i)=>({...p.repositories[0],repository:"example/repo"+i}));
+  p.coverage.repositories_checked=25;p.coverage.repositories_observed=25;p.coverage.repositories_uncheckable=0;
+  expect(validateResearchProjection(p,clock).candidates).toHaveLength(25);
+  p.repositories.push({...p.repositories[0],repository:"example/repo25"});
+  p.coverage.repositories_checked=26;p.coverage.repositories_observed=26;
+  expect(()=>validateResearchProjection(p,clock)).toThrow();
+});

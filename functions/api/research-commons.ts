@@ -49,8 +49,8 @@ export function validEATCommonsForTest(value: unknown): boolean {
       timestampUTC(value.observed_at) === null ||
       !SHA256.test(String(value.registry_sha256)) ||
       !Array.isArray(value.repositories) || value.repositories.length === 0 ||
-      value.repositories.length > 18 ||
-      !Array.isArray(value.crossref_topics) || value.crossref_topics.length !== 3 ||
+      value.repositories.length > 25 ||
+      !Array.isArray(value.crossref_topics) || ![3, 7].includes(value.crossref_topics.length) ||
       value.repositories_checked !== value.repositories.length ||
       value.repositories_observed !== value.repositories.filter((r) =>
         isObject(r) && r.status === "SOURCE_METADATA_OBSERVED").length ||
@@ -72,7 +72,7 @@ export function validEATCommonsForTest(value: unknown): boolean {
   for (const item of value.repositories) {
     if (!isObject(item) || !cleanText(item.repository) ||
         !REPO.test(item.repository) || item.repository.split("/").some((s) => s === "." || s === "..") ||
-        names.has(item.repository) ||
+        names.has(item.repository.toLowerCase()) ||
         item.source !== "github_public_api" ||
         !cleanText(item.project_role, 90) ||
         !cleanText(item.candidate_experiment, 90) ||
@@ -80,7 +80,7 @@ export function validEATCommonsForTest(value: unknown): boolean {
         item.human_review !== "UNASSIGNED" ||
         item.ras_measurement_permission !== "NOT_GRANTED" ||
         (item.status !== "SOURCE_METADATA_OBSERVED" && item.status !== "SOURCE_UNCHECKABLE")) return false;
-    names.add(item.repository);
+    names.add(item.repository.toLowerCase());
     if (item.status === "SOURCE_METADATA_OBSERVED") {
       if (!Number.isSafeInteger(item.repository_id) || Number(item.repository_id) <= 0 ||
           !SHA40.test(String(item.head_sha)) ||
