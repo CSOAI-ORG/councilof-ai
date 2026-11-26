@@ -1,0 +1,35 @@
+name: CouncilOS EAT research commons bridge (offline contract)
+
+on:
+  pull_request:
+    paths:
+      - 'functions/api/research-commons.ts'
+      - 'functions/api/research-commons.test.ts'
+      - 'client/src/components/EatResearchCommonsPanel*'
+      - 'client/src/pages/Ecosystem.tsx'
+      - '.github/workflows/councilos-eat-commons-bridge.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: councilos-eat-commons-bridge-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-rights-and-him-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install pinned application test dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Check fixed-origin source intake, access controls, freshness, no fake RAS/HITL outcomes
+        run: npx vitest run functions/api/research-commons.test.ts client/src/components/EatResearchCommonsPanel.test.tsx --reporter=dot
