@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { FEED_SOURCE, validEATCommonsForTest, freshnessForTest, projectForTest, onRequestGet, onRequestHead } from "./research-commons";
+import { FEED_SOURCE, FEED_RAW_API, validEATCommonsForTest, freshnessForTest, projectForTest, onRequestGet, onRequestHead } from "./research-commons";
 
 const CLOCK = Date.parse("2026-11-24T03:00:00Z");
 const SHA = "a".repeat(64);
@@ -230,7 +230,7 @@ describe("H.I.M. read-only AUTO-EAT research commons", () => {
     expect(res.status).toBe(200);
     expect(calls).toHaveLength(1);
     expect(calls[0].url).toBe(FEED_SOURCE);
-    expect(calls[0].redirect).toBe("error");
+    expect(calls[0].redirect).toBe("manual");
     const json = await res.json() as any;
     expect(json.state).toBe("FREE_DISCOVERY_ONLY");
     expect(json.source.source_sha256).toMatch(/^[0-9a-f]{64}$/);
@@ -295,4 +295,42 @@ describe("H.I.M. read-only AUTO-EAT research commons", () => {
     expect(await res.text()).toBe("");
     expect(res.headers.get("payment-required")).toBeNull();
   });
+  it("uses only the fixed raw API alternate after primary transport rejection", async () => {
+    vi.useFakeTimers().setSystemTime(CLOCK);
+    const calls: Array<{url: string; init: RequestInit}> = [];
+    vi.stubGlobal("fetch", vi.fn(async (url: string, init: RequestInit) => {
+      calls.push({url, init});
+      if (url === FEED_SOURCE) throw Error("transport unavailable");
+      return new Response(JSON.stringify(fixture()));
+    }));
+    const r = await onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    expect(r.status).toBe(200);
+    expect(calls.map(x=>x.url)).toEqual([FEED_SOURCE, FEED_RAW_API]);
+    expect(calls.every(x=>x.init.redirect==="manual")).toBe(true);
+    expect(new Headers(calls[1].init.headers).get("accept")).toBe("application/vnd.github.raw+json");
+    const data = await r.json() as any;
+    expect(data.source.url).toBe(FEED_SOURCE);
+    expect(data.source.retrieval_url).toBe(FEED_RAW_API);
+    expect(data.source.signature_verification).toBe("NOT_PERFORMED");
+  });
+
+  it("holds both transport failures without a stale fallback", async () => {
+    const calls: string[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {calls.push(url);throw Error("unavailable");}));
+    const r = await onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    expect(r.status).toBe(503);
+    expect(calls).toEqual([FEED_SOURCE, FEED_RAW_API]);
+    expect((await r.json() as any).reason).toBe("EAT_FEED_TRANSPORT_UNAVAILABLE");
+  });
+
+  it("does not try another transport after invalid JSON or a redirect response", async () => {
+    for (const response of [new Response("{bad"),new Response(null,{status:302,headers:{location:"https://example.invalid"}})]) {
+      const stub=vi.fn(async()=>response);
+      vi.stubGlobal("fetch",stub);
+      const r=await onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+      expect(r.status).toBe(503);
+      expect(stub).toHaveBeenCalledTimes(1);
+    }
+  });
+
 });

@@ -11,6 +11,9 @@ import { headFromGet } from "./_head";
 type Obj = Record<string, unknown>;
 export const FEED_SOURCE =
   "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/auto-eat-feed/public/interop/auto-eat/research-commons.json";
+// Same repository, path and branch via a fixed alternate GitHub transport.
+export const FEED_RAW_API =
+  "https://api.github.com/repos/CSOAI-ORG/councilof-ai/contents/public/interop/auto-eat/research-commons.json?ref=auto-eat-feed";
 const SCHEMA = "csoai.auto-eat.research-commons/0.1";
 const OUTPUT_SCHEMA = "csoai.councilos-eat-research-commons/0.1";
 const MAX_BODY = 80000;
@@ -198,25 +201,44 @@ export async function onRequestGet({ request }: { request: Request }): Promise<R
   // Requests never influence the origin, pathname, source allowlist or target.
   if (new URL(request.url).searchParams.has("url"))
     return unavailable("DYNAMIC_FETCH_NOT_SUPPORTED", 400);
-  let bytes: Uint8Array;
-  let rawBuffer: ArrayBuffer;
+  let rawBuffer: ArrayBuffer | undefined;
+  let transport = FEED_SOURCE;
+  // Retry transport failures only. Do not retry invalid, stale, redirected or oversized
+  // content as if another source could grant permission. No caller-controlled origin.
+  for (const origin of [FEED_SOURCE, FEED_RAW_API]) {
+    let reply: Response;
+    try {
+      reply = await fetch(origin, {
+        redirect: "manual",
+        headers: {
+          "accept": origin === FEED_SOURCE ? "application/json" : "application/vnd.github.raw+json",
+          "user-agent": "csoai-research-commons/0.1 (+https://councilof.ai)",
+        },
+        signal: AbortSignal.timeout(4000),
+      });
+    } catch {
+      continue;
+    }
+    if (!reply.ok || reply.redirected)
+      return unavailable("EAT_FEED_NOT_PUBLISHED_OR_UNAVAILABLE");
+    const size = Number(reply.headers.get("content-length") || 0);
+    if (!Number.isFinite(size) || size < 0 || size > MAX_BODY)
+      return unavailable("EAT_FEED_OVERSIZE_OR_UNCHECKABLE");
+    try {
+      rawBuffer = await reply.arrayBuffer();
+    } catch {
+      continue;
+    }
+    if (rawBuffer.byteLength > MAX_BODY) return unavailable("EAT_FEED_OVERSIZE");
+    transport = origin;
+    break;
+  }
+  if (!rawBuffer) return unavailable("EAT_FEED_TRANSPORT_UNAVAILABLE");
   let body: unknown;
   try {
-    const reply = await fetch(FEED_SOURCE, {
-      redirect: "error",
-      headers: { "accept": "application/json" },
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!reply.ok) return unavailable("EAT_FEED_NOT_PUBLISHED_OR_UNAVAILABLE");
-    const size = Number(reply.headers.get("content-length") || 0);
-    if (!Number.isFinite(size) || size > MAX_BODY)
-      return unavailable("EAT_FEED_OVERSIZE_OR_UNCHECKABLE");
-    rawBuffer = await reply.arrayBuffer();
-    bytes = new Uint8Array(rawBuffer);
-    if (bytes.byteLength > MAX_BODY) return unavailable("EAT_FEED_OVERSIZE");
-    body = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+    body = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(rawBuffer));
   } catch {
-    return unavailable("EAT_FEED_UNREACHABLE_OR_INVALID");
+    return unavailable("EAT_FEED_INVALID_UTF8_OR_JSON");
   }
   if (!validEATCommonsForTest(body)) return unavailable("EAT_FEED_SCHEMA_OR_RIGHTS_BOUNDARY_INVALID");
   const digest = await crypto.subtle.digest("SHA-256", rawBuffer);
@@ -224,6 +246,8 @@ export async function onRequestGet({ request }: { request: Request }): Promise<R
   const now = Date.now();
   const projection = projectForTest(body, new Date(now).toISOString(), sourceSha256, now);
   if (!projection) return unavailable("EAT_FEED_PROJECTION_FAILED");
+  // Identify the actual transport without changing the canonical source identity.
+  (projection.source as Obj).retrieval_url = transport;
   // Stale metadata is not advertised as current research. No previous-fresh fallback.
   if (projection.state !== "FREE_DISCOVERY_ONLY") {
     return Response.json({
