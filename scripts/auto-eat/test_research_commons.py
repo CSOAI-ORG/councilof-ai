@@ -259,6 +259,18 @@ class ResearchCommonsTests(unittest.TestCase):
         with self.assertRaisesRegex(c.Uncheckable, "SOURCE_PAYLOAD_TOO_LARGE"):
             c.fetch_json("https://api.github.com/repos/a/b", opener=Opener())
 
+    def test_snapshot_transport_budget_preserves_previous(self):
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as directory:
+            p = pathlib.Path(directory) / "commons.json"
+            prior = c.collect(None, now=datetime.now(timezone.utc), fetch=stub_fetch)
+            original = json.dumps(prior).encode()
+            p.write_bytes(original)
+            oversized = dict(prior, safety_note="x" * c.MAX_PUBLIC_SNAPSHOT_BYTES)
+            with patch.object(c, "collect", return_value=oversized):
+                self.assertEqual(c.main(["--out", str(p), "--force"]), 4)
+            self.assertEqual(p.read_bytes(), original)
+
     def test_redirect_hop_refused(self):
         class Opener:
             def open(self, request, timeout):

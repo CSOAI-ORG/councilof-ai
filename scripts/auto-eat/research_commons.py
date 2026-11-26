@@ -28,6 +28,7 @@ SCHEMA = "csoai.auto-eat.research-commons/0.1"
 USER_AGENT = "CSOAI-public-metadata-commons/0.1 (mailto:contacts@csoai.org)"
 ALLOW_HOSTS = frozenset({"api.github.com", "api.crossref.org"})
 MAX_RESPONSE_BYTES = 350_000
+MAX_PUBLIC_SNAPSHOT_BYTES = 80_000  # match CouncilOS research-commons MAX_BODY
 GITHUB_WORKERS = 5
 MAX_REPOS = 25
 TOPIC_ROWS = 8
@@ -427,7 +428,7 @@ def main(argv=None):
             raise Uncheckable("ALL_PUBLIC_REPOSITORY_METADATA_UNCHECKABLE")
         raw = json.dumps(output, indent=2, ensure_ascii=False, sort_keys=True,
                          allow_nan=False).encode("utf-8") + b"\n"
-        if len(raw) > 200_000:
+        if len(raw) > MAX_PUBLIC_SNAPSHOT_BYTES:
             raise Uncheckable("OUTPUT_METADATA_TOO_LARGE")
         args.out.parent.mkdir(parents=True, exist_ok=True)
         staged_path = None
