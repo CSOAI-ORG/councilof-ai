@@ -6,9 +6,9 @@
 # Not run here (declared in the checker): the two cross-family open-LM scripts
 # (recorded on CUDA, need model downloads) and the live councilof.ai probe.
 # The reaction-bridge *.test.mjs files already run in reaction-bridge-offline.yml.
-# Two jobs: strict replay on macOS arm64 (the host that recorded the "-local"
-# results), and Linux x86_64, strict except three declared platform-sensitive
-# entries whose drift is reported (PLATFORM_DRIFT) in the step summary.
+# Two jobs, macOS arm64 and Linux x86_64. Per-entry gates (strict / darwin_arm64 / report)
+# are declared and explained in scripts/research/research-repro-check.py; drift
+# under a non-strict gate is reported in the step summary and the report artifact.
 name: research-repro
 on:
   pull_request:
@@ -80,7 +80,7 @@ jobs:
       - name: Install pinned numerical dependencies (versions recorded in the committed results)
         run: python -m pip install --no-cache-dir numpy==2.4.6 scikit-learn==1.9.0
       - name: Re-run research scripts and compare with committed results
-        run: python scripts/research/research-repro-check.py --allow-platform-drift --report research-repro-report.json --summary "$GITHUB_STEP_SUMMARY"
+        run: python scripts/research/research-repro-check.py --report research-repro-report.json --summary "$GITHUB_STEP_SUMMARY"
       - name: Keep the comparison report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
