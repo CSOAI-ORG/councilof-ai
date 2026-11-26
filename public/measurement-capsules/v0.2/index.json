@@ -1,6 +1,6 @@
 {
  "schema": "csoai.measurement-capsule-index/0.3",
- "as_of": "2026-11-24T00:42:20Z",
+ "as_of": "2026-11-26T18:20:56Z",
  "what_this_is": "One index over every signed measurement-capsule batch: each batch's own Merkle root, record sha256, signature and OTS state, and one root over all of them.",
  "what_this_is_not": "Not a grade, ranking, admission or approval of anything. The capsules measure declared vs observed; this index only binds them together.",
  "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
@@ -697,11 +697,11 @@
   }
  ],
  "verify": "for each batch: recompute every capsule_id and the batch Merkle root, check record sha256 and its board signature; then recompute index_root over the union of capsule ids; the index itself is signed (.signed.json) and OTS-stamped (.json.ots)",
- "date": "2026-11-24",
+ "date": "2026-11-26",
  "chain_rule": "each day's index names the FINAL version of the previous day's index on disk (measurement-index-v0.2-<prev_date>.json): prev_index_sha256 = sha256 of its bytes, prev_index_root = its index_root; gap_days = calendar days strictly between prev_date and date that have no index (0 = consecutive); a re-issue of a day names the version it replaces in supersedes; the first day (genesis) has prev = null",
- "chain_seq": 31,
- "prev_date": "2026-11-23",
- "prev_index_sha256": "14e49ec44059dde95e2bcdae050dcd0d0a600f751310b03e056c58d878454487",
+ "chain_seq": 33,
+ "prev_date": "2026-11-25",
+ "prev_index_sha256": "5062ad484611a47d2bb6dda6777408dae7a103d137f8f93fcc657f4238e626fe",
  "prev_index_root": "3f94ac9e0910f4922d565ca36daf8e5938b2e94bd3aca6413bd5ebc25c702ca1",
  "gap_days": 0,
  "missing_dates": [],
