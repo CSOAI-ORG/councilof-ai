@@ -1,6 +1,6 @@
 {
   "schema": "csoai.capsule-provision-map/0.1",
-  "what_this_is": "The deterministic backfill map from a capsule adapter, or an evidence kind, to the frozen provision it may cite in the optional capsule 0.3 provisions binding. Read by functions/api/_provisions.ts for the ?provision= door and checked by scripts/mechanism/capsule-provision-map.test.ts.",
+  "what_this_is": "The deterministic backfill map from a capsule adapter, or an evidence kind, to the frozen provision it may cite in the optional capsule 0.3 provisions binding. Read by functions/api/_provisions.ts for the ?provision= door, by the capsule library when it writes a batch (its provision_binding.py module), by functions/_lib/provisionBinding.ts (mapBindingsFor) and by the sidecar producer scripts/mechanism/backfill-capsule-provisions.mjs; checked by scripts/mechanism/capsule-provision-map.test.ts.",
   "what_this_is_not": "Not a re-emission of any capsule: no published capsule, batch or root changes. Not a statement that any measured party complies with any provision.",
   "rule": "An adapter or evidence kind maps to a provision only when an implemented predicate in scripts/mechanism/coverage.source.json names that provision and the producing code is that predicate's code. Every published v0.2 capsule adapter is listed, mapped or unmapped, so a new adapter fails the check until it is classified. Obligation aliases are derived from the Article numbers in each obligation's title in functions/api/_obligations.ts; an obligation whose title names no Article maps to no provision.",
   "manifest": "/interop/frozen-provision-hashes.json",
@@ -15,7 +15,7 @@
       "provision_sha256": "7acac08345151e9d00babc21ffbc91af3768c7043288f3cbbedd3c838e10d22c",
       "relation": "PREDICATE",
       "scope": "Article 50(2) only: whether a generated file carries a machine-readable mark that named methods detect, at the time of the check.",
-      "capsule_state": "NOT_EMITTED_AS_CAPSULE: the route returns signed packs and previews, not v0.2 capsule batches, so no published capsule carries this binding yet."
+      "capsule_state": "NOT_EMITTED_AS_CAPSULE: the route returns signed card-v0 packs and previews, not capsule batches, so no published capsule carries this binding yet. Its responses carry this binding beside the signed leaf, never inside the signed bytes. A capsule of this kind built by the capsule library is bound when its batch is written, and a published batch of this kind is bound by the sidecar producer scripts/mechanism/backfill-capsule-provisions.mjs."
     }
   ],
   "unmapped_adapters": [

@@ -89,9 +89,23 @@
                 "uri": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
                 "required": false,
                 "description": "x402 Offer & Receipt extension (v0.6), JWS profile — CONDITIONALLY EMITTED. A signed offer is attached only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise the 402 carries csoai.offer_receipt with the gap and no offer-receipt extension block. A signed receipt is attached only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise the paid artefact still delivers and receiptGap states why no signed receipt was attached. When emitted, the format is jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1, resolvable at https://csoai.org/.well-known/did.json (an authorization mechanism the extension names in section 4.5.1). eip712 is NOT emitted: the edge has no secp256k1 signer; when the optional Ed25519 board key is provisioned it signs JWS. A format we cannot produce is better declared missing than faked. A receipt proves this server signed those bytes; it is not by itself proof that money moved, and the transaction field, when present, is a claim to check against the chain."
+              },
+              {
+                "uri": "https://councilof.ai/a2a/extensions/provider-identity/v1/",
+                "required": false,
+                "description": "Legal-entity identity of the provider named in provider.organization. CSOAI Ltd, a private limited company on the UK Companies House register, company number 16939677. Check it at the register, not here: the registryUrl in params is the public Companies House entry. Identity of the publisher, not an accreditation of anything it publishes.",
+                "params": {
+                  "legalName": "CSOAI Ltd",
+                  "registry": "UK Companies House",
+                  "companyNumber": "16939677",
+                  "registryUrl": "https://find-and-update.company-information.service.gov.uk/company/16939677",
+                  "website": "https://councilof.ai"
+                }
               }
             ]
           },
+          "securitySchemes": {},
+          "securityRequirements": [],
           "defaultInputModes": [
             "text/plain",
             "application/json"

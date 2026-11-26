@@ -34,6 +34,19 @@
     a{color:var(--teal);text-decoration:none}
     a:hover{text-decoration:underline}
     .foot{margin:2.5rem 0 3rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.9rem}
+
+    .catalog{border:1px solid var(--border);background:var(--surface);border-radius:14px;padding:1.4rem;margin:1.8rem 0}
+    .catalog h2{margin:0 0 .5rem;font-size:1.3rem}
+    .catalog p{color:var(--muted);font-size:.95rem;margin:.5rem 0 1rem}
+    .catalog label{display:block;font-weight:600;margin:1.1rem 0 .35rem}
+    .catalog select{display:block;width:100%;background:#0a0e17;border:1px solid #475569;color:#f8fafc;padding:.8rem;border-radius:8px;font:inherit}
+    .catalog .actions{display:flex;flex-wrap:wrap;gap:.7rem;margin:1rem 0}
+    .catalog button,.catalog .action-link{font:inherit;font-weight:600;padding:.7rem 1rem;border:1px solid #475569;background:#162235;color:#f8fafc;border-radius:8px;cursor:pointer}
+    .catalog button:disabled{cursor:not-allowed;opacity:.6}
+    .catalog .action-link{background:#064e3b;border-color:#0fa98c;text-decoration:none}
+    .catalog .action-link[hidden]{display:none}
+    .catalog .offer{white-space:pre-wrap;overflow-wrap:anywhere;font:0.86rem/1.6 ui-monospace,SFMono-Regular,monospace;color:#e2e8f0;background:#090d15;border:1px solid var(--border);border-radius:8px;padding:1rem;min-height:3.7rem}
+    .catalog .notice{font-size:.83rem;color:var(--muted)}
   </style>
 </head>
 <body>
@@ -54,6 +67,20 @@
     <p>This is the buyer page. You settle an x402 door to receive an already-public evidence pack. Amounts appear only in the 402 challenge — never on this page.</p>
   </section>
   <p>Discover doors via the <a href="/.well-known/x402.json">x402 discovery manifest</a>, or start from the <a href="/x402-buyer-guide.html">buyer guide</a>. Inspect the free preview before you pay.</p>
+  <section class="catalog" aria-labelledby="catalog-title">
+    <h2 id="catalog-title">Find one payable service</h2>
+    <p>These offers are read from the live <a href="/.well-known/x402.json">x402 catalogue</a>. Select a service and inspect its current HTTP 402 payment terms without paying. Amounts, network and recipient are shown only if that particular endpoint returns a valid live challenge.</p>
+    <label for="x402-door">Evidence service</label>
+    <select id="x402-door" disabled><option value="">Loading the public catalogue…</option></select>
+    <div class="actions">
+      <button type="button" id="inspect-x402" disabled>Inspect live 402 offer</button>
+      <button type="button" id="copy-x402" disabled>Copy endpoint URL</button>
+      <a id="wallet-x402" class="action-link" hidden href="/pay-all/">Open one-resource wallet flow</a>
+    </div>
+    <div id="x402-offer" class="offer" role="status" aria-live="polite">Reading the catalogue…</div>
+    <p class="notice">No payment is initiated by viewing or copying an offer. The optional wallet flow has a separate confirmation; never use “settle all” unless you deliberately intend every purchase. A paid request buys the delivered computation or assembly specified by the endpoint, not a new GSPC measurement or certification. This page does not ask for a seed phrase or private key.</p>
+    <p class="notice">Agent clients can call the exact endpoint directly with x402 v2. <a href="/x402-buyer-guide.html">Protocol and verification guide</a> · <a href="https://www.x402scan.com/server/9b8bcb34-6c9f-45d6-b881-9a6afe7bf6b5">Independent x402scan server listing</a> · <a href="/api/revenue">Audited settlement counts</a></p>
+  </section>
   <div class="never">
     <strong>What a payment never buys:</strong>
     <ul>
@@ -67,5 +94,163 @@
   <p>Owner wallet tool (not this page): <code>/pay-all</code> — one settle per door from the estate wallet.</p>
   <p class="foot">Measurement, not certification.</p>
   </main>
+
+  <script>
+    (() => {
+      "use strict";
+      const picker = document.getElementById("x402-door");
+      const inspect = document.getElementById("inspect-x402");
+      const copy = document.getElementById("copy-x402");
+      const wallet = document.getElementById("wallet-x402");
+      const output = document.getElementById("x402-offer");
+      let resources = [];
+
+      const selected = () => picker.value === "" ? null : (resources[Number(picker.value)] || null);
+      const safeResource = (value) => {
+        try {
+          const url = new URL(value);
+          return url.protocol === "https:" && url.origin === window.location.origin && url.pathname.startsWith("/api/") ? url : null;
+        } catch { return null; }
+      };
+      const reset = (message) => {
+        wallet.hidden = true;
+        output.textContent = message;
+      };
+      const amountValid = (raw, decimals) =>
+        typeof raw === "string" && /^\d{1,32}$/.test(raw) &&
+        typeof decimals === "number" && Number.isInteger(decimals) && decimals >= 0 && decimals <= 18;
+      const asAmount = (raw, decimals) => {
+        const divisor = 10n ** BigInt(decimals);
+        const atomic = BigInt(raw);
+        const tail = (atomic % divisor).toString().padStart(decimals, "0").replace(/0+$/, "");
+        return (atomic / divisor).toString() + (tail ? "." + tail : "");
+      };
+      // A browser must not trust only the body or the presence of an unparsed header.
+      // The canonical v2 PAYMENT-REQUIRED header intentionally omits body-only
+      // maxAmountRequired and descriptive csoai pricing, so compare exact settlement
+      // fields, resource identity and token metadata, never volatile sidecars.
+      const verifiedTerms = (response, body, expectedUrl) => {
+        const encoded = response.headers.get("PAYMENT-REQUIRED");
+        if (typeof encoded !== "string" || encoded.length === 0 || encoded.length > 8192 ||
+            !/^[A-Za-z0-9+/]+={0,2}$/.test(encoded)) return null;
+        let header;
+        try { header = JSON.parse(atob(encoded)); } catch { return null; }
+        if (header?.x402Version !== 2 || body?.x402Version !== 2 ||
+            header.resource?.url !== expectedUrl || body.resource?.url !== expectedUrl ||
+            !Array.isArray(header.accepts) || !Array.isArray(body.accepts) ||
+            header.accepts.length !== body.accepts.length || body.accepts.length === 0 ||
+            !body.extensions?.bazaar) return null;
+        const keys = ["scheme", "network", "asset", "payTo", "amount", "maxTimeoutSeconds"];
+        for (let i = 0; i < body.accepts.length; i++) {
+          const a = body.accepts[i];
+          const h = header.accepts[i];
+          if (!a || !h || keys.some(key => a[key] !== h[key]) ||
+              a.extra?.symbol !== h.extra?.symbol || a.extra?.decimals !== h.extra?.decimals) return null;
+        }
+        const term = body.accepts[0];
+        if (term.scheme !== "exact" || term.network !== "eip155:8453" ||
+            typeof term.asset !== "string" ||
+            term.asset.toLowerCase() !== "0x833589fcD6eDb6E08f4c7C32D4f71b54bdA02913".toLowerCase() ||
+            typeof term.payTo !== "string" || !/^0x[0-9a-fA-F]{40}$/.test(term.payTo) ||
+            term.extra?.symbol !== "USDC" || !amountValid(term.amount, term.extra?.decimals) ||
+            (term.maxAmountRequired !== undefined && term.maxAmountRequired !== term.amount) ||
+            !Number.isSafeInteger(term.maxTimeoutSeconds) || term.maxTimeoutSeconds <= 0)
+          return null;
+        return term;
+      };
+      picker.addEventListener("change", () => {
+        inspect.disabled = !selected();
+        copy.disabled = !selected();
+        const row = selected();
+        reset(row ? "Selected: " + row.url + "\nInspect the exact live challenge before paying." : "Choose a service.");
+      });
+      copy.addEventListener("click", async () => {
+        const row = selected();
+        if (!row) return;
+        try {
+          await navigator.clipboard.writeText(row.url);
+          reset("Endpoint URL copied. No payment sent.");
+        } catch {
+          reset("Clipboard unavailable; copy the selected URL manually: " + row.url);
+        }
+      });
+      inspect.addEventListener("click", async () => {
+        const row = selected();
+        if (!row) return;
+        const url = safeResource(row.url);
+        if (!url) return reset("Invalid or off-origin payable endpoint; refusing probe.");
+        inspect.disabled = true;
+        reset("Requesting this endpoint without any payment header…");
+        try {
+          const response = await fetch(url.toString(), {
+            method: "GET", credentials: "omit", cache: "no-store", redirect: "error",
+            headers: { Accept: "application/json" },
+          });
+          if (response.status !== 402 || response.redirected || response.url !== url.toString()) {
+            reset("HTTP " + response.status + " — no exact, non-redirected 402 from this resource. No transaction attempted.");
+            return;
+          }
+          const challenge = await response.json();
+          const accept = verifiedTerms(response, challenge, url.toString());
+          if (!accept) {
+            reset("The 402 header, resource or amount did not verify against the body. No wallet link shown.");
+            return;
+          }
+          const amount = asAmount(accept.amount, accept.extra.decimals);
+          output.textContent = [
+            "HTTP 402 — matching header and body (not yet paid)",
+            "Resource: " + url.toString(),
+            "Amount: " + amount + " USDC (from this exact 402 only)",
+            "Network: " + accept.network,
+            "Recipient: " + accept.payTo,
+            "Token: " + accept.asset,
+            "Scheme: " + accept.scheme,
+            "Next: decide separately whether to authorise the exact amount in your wallet.",
+            "Free verification remains available via /api/verify."
+          ].join("\n");
+          // Zero-value challenges are valid protocol probes but do not prove
+          // a payable product or a revenue event.
+          if (BigInt(accept.amount) > 0n) {
+            wallet.href = "/pay-all/?door=" + encodeURIComponent(url.toString());
+            wallet.hidden = false;
+          }
+        } catch {
+          reset("Offer could not be checked now; no transaction attempted. Retry later or inspect the endpoint manually.");
+        } finally {
+          inspect.disabled = false;
+        }
+      });
+
+      (async () => {
+        try {
+          const response = await fetch("/.well-known/x402.json", { credentials: "omit", cache: "no-store" });
+          if (!response.ok) throw new Error("catalogue unavailable");
+          const manifest = await response.json();
+          if (!Array.isArray(manifest.resources)) throw new Error("not a resource list");
+          resources = manifest.resources
+            .filter((r) => r && r.method === "GET" && typeof r.url === "string" && safeResource(r.url))
+            .map((r) => ({ url: r.url, name: new URL(r.url).pathname.replace(/^\/api\//, ""), what: r.paid_for || "evidence service" }));
+          picker.replaceChildren();
+          const intro = document.createElement("option");
+          intro.value = ""; intro.textContent = "Choose one of " + resources.length + " live GET services";
+          picker.append(intro);
+          resources.forEach((row, i) => {
+            const item = document.createElement("option");
+            item.value = String(i);
+            item.textContent = row.name + " — " + row.what;
+            picker.append(item);
+          });
+          picker.disabled = resources.length === 0;
+          reset(resources.length ? "The catalogue loaded. Choose one service to inspect its current 402 offer." : "No validated payable GET resources were advertised.");
+        } catch {
+          picker.replaceChildren();
+          const fallback = document.createElement("option");
+          fallback.textContent = "Catalogue unavailable; use the manifest link above.";
+          picker.append(fallback);
+          reset("The catalogue could not be read. No offer or payment was made.");
+        }
+      })();
+    })();
+  </script>
 </body>
 </html>

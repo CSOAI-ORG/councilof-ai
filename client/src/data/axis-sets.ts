@@ -81,6 +81,10 @@ export interface AxisRow {
   evidence: EvidenceLink[];
   /** The artifact's own note, verbatim. */
   note: string | null;
+  /** A held row's stated limit, verbatim from GET /api/gspc `limit` (the ten subject axes held since
+   *  18 Nov, claim-maintenance and governance, #4680). Any page that prints a figure from the row
+   *  prints this beside it. */
+  limit?: string | null;
   /** Whether a signed per-model card backs THIS row's model and number, as the board itself
    *  declares it (/api/gspc axes[].leader_card_state). null = the board declared no backing card.
    *  Never inferred from the card index: a card filed under the same axis may record a different
@@ -369,6 +373,7 @@ export function loadBoard(raw: unknown, provenance = "Live from the board endpoi
       interval: interval(a.interval),
       measuredOn: a.leader ?? (measured ? a.fleet ?? null : null),
       separation: a.separation ?? null,
+      limit: typeof a.limit === "string" && a.limit.trim() ? a.limit : null,
       runAttestation: attestation,
       whyUnmeasured: measured
         ? null

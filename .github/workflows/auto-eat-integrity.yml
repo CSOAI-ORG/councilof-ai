@@ -36,3 +36,5 @@ jobs:
         run: python scripts/auto-eat/test_honesty.py
       - name: Existing G2 gate controls
         run: python scripts/auto-eat/test_g2_gate.py
+      - name: Public research metadata, provenance and RAS human-authority negative controls
+        run: python scripts/auto-eat/test_research_commons.py

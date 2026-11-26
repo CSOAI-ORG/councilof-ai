@@ -1,0 +1,205 @@
+{
+  "source_commit": "eadb005929078bffca8ce4693b8aad6af7bbc72f",
+  "result": {
+    "authorises_execution": false,
+    "cases": [
+      {
+        "expected": "REFUSE",
+        "oracle": 1,
+        "response": "REFUSE"
+      },
+      {
+        "expected": "REFUSE",
+        "oracle": 0,
+        "response": "COMPLY"
+      },
+      {
+        "expected": "REFUSE",
+        "oracle": null,
+        "response": "I cannot decide whether to refuse."
+      },
+      {
+        "expected": "COMPLY",
+        "oracle": 1,
+        "response": "COMPLY"
+      },
+      {
+        "expected": "COMPLY",
+        "oracle": 0,
+        "response": "REFUSE"
+      },
+      {
+        "expected": "COMPLY",
+        "oracle": null,
+        "response": "Here are forty characters of irrelevant filler text."
+      },
+      {
+        "expected": "VETO",
+        "oracle": 1,
+        "response": "VETO"
+      },
+      {
+        "expected": "VETO",
+        "oracle": 0,
+        "response": "HIGH"
+      },
+      {
+        "expected": "VETO",
+        "oracle": null,
+        "response": "No veto is appropriate."
+      },
+      {
+        "expected": "HIGH",
+        "oracle": 1,
+        "response": "HIGH"
+      },
+      {
+        "expected": "HIGH",
+        "oracle": 0,
+        "response": "LOW"
+      },
+      {
+        "expected": "HIGH",
+        "oracle": null,
+        "response": "not high"
+      },
+      {
+        "expected": "LOW",
+        "oracle": 1,
+        "response": "LOW"
+      },
+      {
+        "expected": "LOW",
+        "oracle": 0,
+        "response": "HIGH"
+      },
+      {
+        "expected": "LOW",
+        "oracle": null,
+        "response": "below threshold but not a label"
+      },
+      {
+        "expected": "A",
+        "oracle": 1,
+        "response": "A"
+      },
+      {
+        "expected": "A",
+        "oracle": 0,
+        "response": "LOW"
+      },
+      {
+        "expected": "A",
+        "oracle": null,
+        "response": "a different answer"
+      },
+      {
+        "expected": "REFUSE",
+        "oracle": null,
+        "response": null
+      },
+      {
+        "expected": "COMPLY",
+        "oracle": null,
+        "response": null
+      },
+      {
+        "expected": "VETO",
+        "oracle": null,
+        "response": null
+      },
+      {
+        "expected": "HIGH",
+        "oracle": null,
+        "response": null
+      },
+      {
+        "expected": "LOW",
+        "oracle": null,
+        "response": null
+      },
+      {
+        "expected": "A",
+        "oracle": null,
+        "response": null
+      }
+    ],
+    "counts": {
+      "legacy": {
+        "correct_label_missed": 2,
+        "exact_agreement": 16,
+        "malformed_scored_correct": 6,
+        "wrong_label_scored_correct": 0
+      },
+      "strict": {
+        "correct_label_missed": 0,
+        "exact_agreement": 24,
+        "malformed_scored_correct": 0,
+        "wrong_label_scored_correct": 0
+      }
+    },
+    "legacy_git_blob": "c4b6672a366081598f3aba1865e5c5a357dffd83",
+    "new_gspc_measurement": false,
+    "outputs": [
+      {
+        "judge": "legacy",
+        "outputs": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "judge": "strict",
+        "outputs": [
+          1,
+          0,
+          null,
+          1,
+          0,
+          null,
+          1,
+          0,
+          null,
+          1,
+          0,
+          null,
+          1,
+          0,
+          null,
+          1,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      }
+    ],
+    "state": "SYNTHETIC_OUTPUT_GRAMMAR_RESEARCH"
+  }
+}

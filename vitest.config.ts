@@ -121,6 +121,11 @@ export const NODE_TEST_FILES = [
   'actions/verify-card/run.test.mjs',
   'actions/verify-card/workflow.test.mjs',
   'scripts/derive-fin-run-attestation.test.mjs',
+  // New source-bound real observed model and host-effect tests run under node --test,
+  // never the Vitest collector. Central registry also drives pr-gates execution.
+  'scripts/research/project_turkish_reaction.test.mjs',
+  'scripts/research/project_actual_host_reaction.test.mjs',
+  'scripts/research/turkish_councilos_import.test.mjs',
 ];
 
 export default defineConfig({

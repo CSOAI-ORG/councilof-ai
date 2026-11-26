@@ -3,7 +3,7 @@
 # Three jobs, one method, no second implementation:
 #   selftest   unit tests on synthetic data (planted change, no change). Runs on every PR that touches the detector.
 #   calibrate  workflow_dispatch only. Open model, pinned revision, known deliberate changes. Produces the false-flag
-#              rate (C0) and detection rates (C1 to C4) that every later flag is reported beside.
+#              rates (C0, C5) and detection rates (C1 to C4) that every later flag is reported beside.
 #   watch      paid models on a daily schedule. SWITCHED OFF: `if: false` below, and scripts/silent-change/paid_models.json
 #              refuses every entry until a named person has confirmed that provider's benchmarking and publication terms
 #              (~/_alignment/provider-terms-20261122/CLAUSES.md lists what must be checked). Turning it on is a reviewed
@@ -13,8 +13,10 @@
 # (functions/api/board-sign.ts, EXACT_WORKFLOW_REFS). No key is stored. This file never signs from a laptop.
 # This repository is public: logs and artifacts are public. Nothing private is loaded by this workflow.
 #
-# NOT YET RUN in Actions on 22 Nov 2026 (written on a laptop; the selftest passes locally). The calibrate job's server
-# step is unverified.
+# Calibrate, run 2 (24 Nov 2026, addendum 3): 130 batches, each in its own job (a job is the unit of independence), a baseline pool
+# of 20 per kind, both decision rules reported side by side, runner CPU and llama.cpp build recorded in every batch.
+# Calibrate (23 Nov 2026): the pins, the matrix planner, the shard runner and the combiner were rehearsed on a laptop with the
+# pinned model on a 2-item, 3-repeat slice; that rehearsal is never counted. The first run in Actions is still ahead.
 
 name: silent-change-watch
 
@@ -31,8 +33,13 @@ on:
         type: choice
         options: [selftest, calibrate]
         default: selftest
+      run:
+        description: "calibrate only: run2 = addendum 3 (130 batches, one per job, both rules); run1 = addendum 2 (92 batches in 12 jobs, run 1's plan)"
+        type: choice
+        options: [run2, run1]
+        default: run2
       trials_scale:
-        description: "calibrate only: 1 = the registered trial counts; a smaller whole number divides them for a smoke run (a smoke run is not calibration)"
+        description: "calibrate only: 1 = the registered trial counts; a smaller whole number divides them for a smoke run (a smoke run is not calibration and is never signed)"
         type: string
         default: "1"
   schedule:
@@ -59,6 +66,10 @@ jobs:
       - name: cost sheet matches the protocol
         run: python3 scripts/silent-change/cost_sheet.py > /dev/null
 
+  # ---- CALIBRATION (protocol 1, addendum 2): open model on the runner itself, no hosted route, no secret ----
+  # run1: 92 registered batches are cut by scripts/silent-change/plan.py into jobs of about an hour each; run2: 130 batches,
+  # one per job (limit: 6 hours per job, 256 jobs per matrix). Each job verifies the pinned llama.cpp release and GGUF by sha256, serves it with llama-server,
+  # runs its batches and uploads the rows. One final job combines them. Dispatch from master to get a signed report.
   plan:
     if: github.event_name == 'workflow_dispatch' && inputs.job == 'calibrate'
     runs-on: ubuntu-latest
@@ -68,56 +79,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: m
-        run: |
-          python3 - <<'PY' >> "$GITHUB_OUTPUT"
-          import json, os
-          p = json.load(open("docs/research/silent-change/protocol.json"))
-          scale = max(1, int("${{ inputs.trials_scale }}"))
-          rows = [{"condition": "BASE", "trial": "0"}]
-          for c, d in p["calibration"]["conditions"].items():
-              for t in range(max(1, d["trials"] // scale)):
-                  rows.append({"condition": c, "trial": str(t + 1)})
-          print("matrix=" + json.dumps({"include": rows}))
-          PY
+        env:
+          TRIALS_SCALE: ${{ inputs.trials_scale }}   # via env, never spliced into the shell text
+          RUN_KIND: ${{ inputs.run }}
+        run: python3 scripts/silent-change/plan.py matrix --scale "$TRIALS_SCALE" --run "$RUN_KIND" >> "$GITHUB_OUTPUT"
 
   calibrate:
     needs: plan
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 90
     strategy:
       fail-fast: false
-      max-parallel: 10
+      max-parallel: 8
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
       - name: pins must exist (committed before any run)
+        run: test -f docs/research/silent-change/calibration-pins.json || { echo "REFUSE - calibration-pins.json is not committed"; exit 1; }
+      - name: run this job's batches (verifies each pinned file by sha256 before serving it)
+        env:
+          RUN_KIND: ${{ inputs.run }}
         run: |
-          test -f docs/research/silent-change/calibration-pins.json || { echo "REFUSE - calibration-pins.json is not committed"; exit 1; }
-      - name: serve the condition's pinned GGUF (llama.cpp OpenAI-compatible server) - unverified
-        run: |
-          python3 -m pip install --quiet "llama-cpp-python[server]==0.3.*" huggingface_hub
-          python3 - <<'PY'
-          import hashlib, json
-          from huggingface_hub import hf_hub_download
-          c = json.load(open("docs/research/silent-change/calibration-pins.json"))["conditions"]["${{ matrix.condition == 'BASE' && 'C0' || matrix.condition }}"]
-          g = c["gguf"]
-          path = hf_hub_download(g["repo"], g["filename"], revision=g["revision"])
-          assert hashlib.sha256(open(path, "rb").read()).hexdigest() == g["sha256"], "gguf sha256 differs from the pin"
-          open("/tmp/gguf_path", "w").write(path)
-          PY
-          nohup python3 -m llama_cpp.server --model "$(cat /tmp/gguf_path)" --port 8000 --n_ctx 2048 > /tmp/server.log 2>&1 &
-          for i in $(seq 1 60); do curl -sf http://127.0.0.1:8000/v1/models >/dev/null && break; sleep 5; done
-      - name: one batch
-        run: |
-          python3 scripts/silent-change/watch.py trial --condition "${{ matrix.condition == 'BASE' && 'C0' || matrix.condition }}" \
-            --trial-id "${{ matrix.condition }}-${{ matrix.trial }}" --dir calibration
-          # the baseline batch is named BASE so the report can tell it apart
-          if [ "${{ matrix.condition }}" = "BASE" ]; then for f in calibration/batch-C0-BASE-*.json; do mv "$f" "${f/batch-C0-/batch-BASE-}"; done; fi
+          python3 scripts/silent-change/run_shard.py --shard "${{ matrix.shard }}" --file "${{ matrix.file }}" \
+            --batches "${{ matrix.batches }}" --out calibration --work "$RUNNER_TEMP/silent-change-work" --run "$RUN_KIND"
       - uses: actions/upload-artifact@v4
         with:
-          name: calibration-${{ matrix.condition }}-${{ matrix.trial }}
+          name: calibration-${{ matrix.shard }}
           path: calibration/
           retention-days: 90
 
@@ -135,9 +124,12 @@ jobs:
         with: { python-version: "3.12" }
       - uses: actions/download-artifact@v4
         with: { pattern: "calibration-*", path: all, merge-multiple: true }
-      - name: rates, from the same detector the watch uses
-        run: python3 scripts/silent-change/watch.py report --dir all --payload-out payload.json | tee report.json
-      - name: sign (master only; the signer refuses any other ref)
+      - name: rates, from the same detector the watch uses (names every missing batch; a report with one is never signed)
+        env:
+          TRIALS_SCALE: ${{ inputs.trials_scale }}
+          RUN_KIND: ${{ inputs.run }}
+        run: python3 scripts/silent-change/watch.py report --dir all --scale "$TRIALS_SCALE" --run "$RUN_KIND" --cusum --payload-out payload.json | tee report.json
+      - name: sign (master only; the signer refuses any other ref and any incomplete report)
         if: github.ref == 'refs/heads/master'
         run: python3 scripts/silent-change/watch.py sign --payload payload.json --out calibration-signed.json
       - uses: actions/upload-artifact@v4
@@ -147,6 +139,7 @@ jobs:
             report.json
             payload.json
             calibration-signed.json
+            all/timing-*.json
           if-no-files-found: warn
           retention-days: 90
 

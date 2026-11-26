@@ -56,14 +56,18 @@ export function HomeLearningJourney() {
   return <section id="learning" className="hp-section hp-public-journey hp-public-journey-soft" aria-labelledby="home-learning-journey-h" data-testid="home-learning-journey">
     <div className="section-shell">
       <div className="hp-section-heading">
-        <div><p className="hp-eyebrow">Academy · practice · human review</p><h2 id="home-learning-journey-h">Better evidence.<br /><span>Better-informed people.</span></h2></div>
+        <div><p className="hp-eyebrow">Academy · games · human review</p><h2 id="home-learning-journey-h">Better evidence.<br /><span>Better-informed people.</span></h2></div>
         <p className="hp-heading-aside">Council of AI — the Council for the Safety of Artificial Intelligence — connects measurement with learning. Understand a result, practise evaluating it and see where human judgement and permission belong.</p>
       </div>
       <JourneyCards journeys={LEARNING_JOURNEYS} />
+      <div className="hp-resource-row" aria-label="Games and human-in-the-loop tools">
+        <a href="/games/ruler/">Play the Ruler challenge<ArrowUpRight size={14} aria-hidden="true" /></a>
+        <a href="/gspc-arena/">Explore the GSPC Arena<ArrowUpRight size={14} aria-hidden="true" /></a>
+        <a href="/dashboard?tab=him">Explore H.I.M., the human-in-the-loop layer<ArrowUpRight size={14} aria-hidden="true" /></a>
+      </div>
       <details className="hp-journey-disclosure">
         <summary>What does completing a challenge change?</summary>
         <p>A practice result is not a professional qualification, a change to the public benchmark or permission to act. A proposed fix still needs the relevant review. Completing a lesson does not, by itself, train or improve a deployed AI model.</p>
-        <a href="/dashboard?tab=him" className="hp-text-link">Explore H.I.M., the human-in-the-loop layer<ArrowUpRight size={16} aria-hidden="true" /></a>
       </details>
     </div>
   </section>;

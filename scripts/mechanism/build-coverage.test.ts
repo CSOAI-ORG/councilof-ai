@@ -5,6 +5,9 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 // @ts-expect-error: plain ESM script, no type declarations
 import { derive, serialise, nodeIo, articlesIn, corpusRoot, routeFiles, readInventory, SOURCE, OUTPUT, PROVISION_ID_RE } from "./build-coverage.mjs";
+// @ts-expect-error: plain ESM script, no type declarations
+import { derive as deriveSidecar, serialise as serialiseSidecar, OUTPUT as SIDECAR, CAPSULE_ROOT, MAP as CAPSULE_MAP } from "./backfill-capsule-provisions.mjs";
+import { gzipSync } from "node:zlib";
 
 const ROOT = join(__dirname, "..", "..");
 const read = (p: string) => readFileSync(join(ROOT, p));
@@ -137,5 +140,64 @@ describe("mechanism coverage reads the inventory through its pointer", () => {
   it("fails closed on a pointer whose digest does not name those bytes, or that leaves the versioned set", () => {
     expect(() => readInventory(pointerPath, withPointer({ index_sha256: "0".repeat(64) }))).toThrow(/is not the bytes/);
     expect(() => readInventory(pointerPath, withPointer({ index_url: "/interop/../signed/x.json" }))).toThrow(/outside the versioned/);
+  });
+});
+
+describe("mechanism coverage derives CAPSULE_BOUND", () => {
+  type Io = { readBytes: (p: string) => Buffer; exists: (p: string) => boolean; listDirs: (p: string) => string[]; readText: (p: string) => string; readJson: (p: string) => unknown };
+  type Adapter = { n_capsules: number; capsules_binding_a_provision: number; capsules_bound_by_sidecar: number; provision_map: string };
+
+  it("is the sum of in-capsule and sidecar bindings over the published batches, and the source file types no count", () => {
+    const cb = out.capsule_binding;
+    const adapters = out.capsule_adapters as Adapter[];
+    const inCapsule = adapters.reduce((a, b) => a + b.capsules_binding_a_provision, 0);
+    const bySidecar = adapters.reduce((a, b) => a + b.capsules_bound_by_sidecar, 0);
+    expect(cb.bound_in_capsule).toBe(inCapsule);
+    expect(cb.bound_by_sidecar).toBe(bySidecar);
+    expect(cb.CAPSULE_BOUND).toBe(inCapsule + bySidecar);
+    expect(cb.capsules).toBe(adapters.reduce((a, b) => a + b.n_capsules, 0));
+    expect(cb.state).toBe(cb.CAPSULE_BOUND ? "CAPSULE_BOUND" : "NO_CAPSULE_BOUND");
+    const sidecar = readJson(SIDECAR);
+    expect(cb.bound_by_sidecar).toBe(sidecar.totals.bound_by_sidecar);
+    expect(cb.sidecar.sha256).toBe(createHash("sha256").update(read(SIDECAR)).digest("hex"));
+    expect(JSON.stringify(readJson(SOURCE))).not.toMatch(/CAPSULE_BOUND|capsule_binding/);
+  });
+
+  it("a sidecar that is not the backfill producer's output fails the producer", () => {
+    const io: Io = nodeIo(ROOT);
+    const edited: Io = {
+      ...io,
+      readBytes: (p) => {
+        if (p !== SIDECAR) return io.readBytes(p);
+        const d = JSON.parse(io.readBytes(p).toString("utf8"));
+        d.totals.bound_by_sidecar += 1;
+        return Buffer.from(serialiseSidecar(d));
+      },
+    };
+    expect(() => derive(read(SOURCE), edited)).toThrow(/capsule-provision-bindings\.json is stale/);
+  });
+
+  it("a published batch of a mapped kind raises CAPSULE_BOUND by its capsules, through the sidecar", () => {
+    const io: Io = nodeIo(ROOT);
+    const map = readJson(CAPSULE_MAP);
+    const kind = map.mappings.find((m: { source: string }) => m.source === "route").kind;
+    const caps = [1, 2].map((i) => ({ schema: "csoai.measurement-capsule/0.2", kind, capsule_id: `${i}`.padStart(64, "b") }));
+    const gz = gzipSync(Buffer.from(caps.map((c) => `${JSON.stringify(c)}\n`).join("")));
+    const dir = `${CAPSULE_ROOT}/zz_route_fixture`;
+    const rec = Buffer.from(JSON.stringify({ adapter: "route_fixture", kind, capsule_schema: "csoai.measurement-capsule/0.2", n_capsules: 2, merkle_root: "e".repeat(64), capsules_file: { path: "capsules.jsonl.gz", sha256: createHash("sha256").update(gz).digest("hex") } }));
+    let sidecar: Buffer | null = null;
+    const next: Io = {
+      ...io,
+      listDirs: (p) => (p === CAPSULE_ROOT ? [...io.listDirs(p), "zz_route_fixture"] : io.listDirs(p)),
+      exists: (p) => p === `${dir}/record.json` || io.exists(p),
+      readBytes: (p) => (p === `${dir}/record.json` ? rec : p === `${dir}/capsules.jsonl.gz` ? gz : p === SIDECAR && sidecar ? sidecar : io.readBytes(p)),
+    };
+    sidecar = Buffer.from(serialiseSidecar(deriveSidecar(next)));
+    const d = derive(read(SOURCE), next);
+    expect(d.capsule_binding.CAPSULE_BOUND).toBe(out.capsule_binding.CAPSULE_BOUND + 2);
+    expect(d.capsule_binding.state).toBe("CAPSULE_BOUND");
+    const row = d.capsule_adapters.find((a: { batch: string }) => a.batch === "zz_route_fixture");
+    expect([row.capsules_binding_a_provision, row.capsules_bound_by_sidecar]).toEqual([0, 2]);
+    expect(d.capsule_binding.provision_ids_bound).toEqual(expect.arrayContaining(map.mappings.filter((m: { kind: string }) => m.kind === kind).map((m: { provision_id: string }) => m.provision_id)));
   });
 });

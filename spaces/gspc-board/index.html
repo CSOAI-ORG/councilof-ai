@@ -13,7 +13,7 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="https://councilof.ai" rel="noopener">
+    <a class="brand" href="https://councilof.ai" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 100 100" class="mark" role="img" aria-label="Council of AI">
         <path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/>
         <path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/>
@@ -31,14 +31,6 @@
         <i>CSOAI-GSPC</i>
       </span>
     </a>
-    <nav class="top-nav jump" aria-label="CSOAI-GSPC">
-      <a href="#ontology">Axes</a>
-      <a href="#boards">Leaderboards</a>
-      <a href="#hub-cells">Hub cells</a>
-      <a href="#models">Models</a>
-      <a href="#tape-table">Board</a>
-      <a href="https://councilof.ai/gspc-verify">Verify</a>
-    </nav>
     <label class="search">
       <span class="sr">Search models or axes</span>
       <input id="q" type="search" placeholder="Search a model or axis" autocomplete="off">
@@ -47,15 +39,37 @@
 
   <section class="hero">
     <p class="kicker">Public · measurement, never certification</p>
-    <h1>CSOAI-GSPC</h1>
+    <h1>GSPC Measurement Board</h1>
     <p id="lid" class="lid">Lid: loading live GET /api/gspc…</p>
     <p id="board-refresh-status" class="fine" role="status" aria-live="polite">Reading public feeds…</p>
+    <details class="board-context"><summary>What these figures cover</summary>
     <p class="lede" id="ruling">
       Reading the live board and the separate Hugging Face measurement population…
     </p>
+    </details>
     <div class="tape" id="tape" aria-live="polite"></div>
   </section>
 
+  <div class="workspace">
+    <nav class="workspace-nav" aria-label="GSPC workspace">
+      <a href="#ontology">Explore axes</a>
+      <a href="#tape-table">Compare results</a>
+      <a href="#boards">Leaderboards</a>
+      <a href="#hub-cells">Hugging Face evidence</a>
+      <a href="#models">Model directory</a>
+      <a href="#market-coverage">Coverage and gaps</a>
+      <a href="#read">Methods and corrections</a>
+      <a href="#lookup">Model lookup</a>
+      <a href="https://councilof.ai/gspc-verify" target="_blank" rel="noopener noreferrer">Verify a record</a>
+    </nav>
+    <main class="workspace-content" id="workspace-content">
+      <div class="axis-toolbar">
+        <label class="pick"><span id="all-axes-label">Go to an axis</span>
+          <select id="all-axes" aria-labelledby="all-axes-label" disabled><option value="">Waiting for published axes…</option></select>
+        </label>
+        <a href="https://councilof.ai/dashboard/?tab=board" target="_blank" rel="noopener noreferrer">Council OS</a>
+        <a href="https://councilof.ai/connect/#platforms" target="_blank" rel="noopener noreferrer">Connect a plugin</a>
+      </div>
   <section id="ontology" class="block" aria-labelledby="onto-h">
     <div class="head">
       <div>
@@ -65,7 +79,7 @@
       <div class="pillars" id="pillars"></div>
     </div>
     <p class="fine" id="legend">Green is measured. Slate is empty. Click a family, then an axis.</p>
-    <div id="graph" class="atlas" role="list"></div>
+    <div id="graph" class="atlas"></div>
   </section>
 
   <section id="boards" class="block" aria-labelledby="lb-h">
@@ -102,7 +116,7 @@
     <div class="head">
       <div>
         <p class="kicker">Hugging Face measured cells</p>
-        <h2 id="hub-h">Top nine published measurements by axis</h2>
+        <h2 id="hub-h">Published model observations by axis</h2>
       </div>
       <label class="pick">
         <span class="sr">Hugging Face axis</span>
@@ -113,9 +127,10 @@
     <div class="tape" id="hub-tape" aria-live="polite"></div>
     <div class="scroll">
       <table class="sheet" id="hub-table">
+        <caption>Up to nine observations, ordered by model name. Scores may use different banks.</caption>
         <thead>
           <tr>
-            <th>#</th>
+            <th>Row</th>
             <th>Model</th>
             <th>Figure</th>
             <th>n</th>
@@ -143,7 +158,7 @@
           <tr>
             <th>Model</th>
             <th>Axes</th>
-            <th>Best published figure</th>
+            <th>Axis count</th>
             <th></th>
           </tr>
         </thead>
@@ -169,7 +184,7 @@
             <th>n</th>
             <th>Interval</th>
             <th>Separation</th>
-            <th>Leader</th>
+            <th>Published model</th>
           </tr>
         </thead>
         <tbody id="board-body">
@@ -180,15 +195,20 @@
   </section>
 
   <section id="desk" class="block focus" hidden aria-labelledby="desk-h">
+    <a href="#ontology" id="axis-back">Back to results</a>
     <div class="head">
       <p class="kicker" id="desk-kicker">Selected record</p>
       <h2 id="desk-h">—</h2>
       <p class="fine" id="desk-sub"></p>
     </div>
+    <p class="note" id="desk-source-limit" role="note" hidden></p>
     <div class="quote" id="quote"></div>
-    <h3>Top published names</h3>
-    <div class="scroll">
-      <table class="sheet" id="desk-lb"></table>
+    <p id="desk-facts" class="fine" hidden>This axis records facts with its own scope and denominator. Read its finding and limitations below.</p>
+    <div id="desk-models">
+      <h3>Top published names</h3>
+      <div class="scroll">
+        <table class="sheet" id="desk-lb"></table>
+      </div>
     </div>
     <div class="sheets three">
       <div>
@@ -207,6 +227,14 @@
     <p class="note" id="desk-note"></p>
     <div id="fleet" class="fleet" hidden></div>
     <p class="links" id="desk-links"></p>
+    <details class="agent-handoff">
+      <summary>Read this axis from an agent or plugin</summary>
+      <p>Connect the Council of AI MCP server in your client, including MEOK workspaces with that connector configured. Use this tool call to read the same published axis.</p>
+      <pre id="axis-tool-call"></pre>
+      <button type="button" id="copy-axis-tool">Copy tool call</button>
+      <span id="axis-copy-status" role="status"></span>
+      <p><a href="https://councilof.ai/connect/" target="_blank" rel="noopener noreferrer">Connector setup</a> · <a href="https://meok.ai/" target="_blank" rel="noopener noreferrer">Open MEOK</a></p>
+    </details>
   </section>
 
   <section id="read" class="block" aria-labelledby="read-h">
@@ -269,7 +297,7 @@
       <h2 id="look-h">A Hub name is a listing until this board grades it</h2>
     </div>
     <div class="panel-in">
-      <p class="fine">Per-model lookup, every axis verbatim (MEASURED · STAGED-UNSIGNED · QUEUED · DEAD · UNMEASURED): <a href="https://huggingface.co/spaces/csoai/gspc-lookup">csoai/gspc-lookup</a> — staged cards are UNSIGNED and never a rank.</p>
+      <p class="fine">Per-model lookup, every axis verbatim (MEASURED · STAGED-UNSIGNED · QUEUED · DEAD · UNMEASURED): <a href="https://huggingface.co/spaces/csoai/gspc-lookup" target="_blank" rel="noopener noreferrer">csoai/gspc-lookup</a> — staged cards are UNSIGNED and never a rank.</p>
       <textarea id="watch-draft" rows="3" placeholder="owner/name — one per line"></textarea>
       <button type="button" id="watch-add">Add</button>
       <button type="button" class="ghost" id="watch-refresh">Read files list</button>
@@ -291,8 +319,11 @@
     <p class="fine" id="market-note"></p>
   </section>
 
+    </main>
+  </div>
+
   <footer>
-    <a class="brand foot" href="https://councilof.ai" rel="noopener">
+    <a class="brand foot" href="https://councilof.ai" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 100 100" class="mark sm" aria-hidden="true">
         <path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/>
         <path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/>
@@ -308,8 +339,8 @@
       Council of AI
     </a>
     <p>CSOAI Ltd UK 16939677 · measurement, never certification. Verify is free.
-      <a href="https://councilof.ai/gspc-verify">councilof.ai/gspc-verify</a>
-      · DOI 10.5281/zenodo.21991104 (Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.)</p>
+      <a href="https://councilof.ai/gspc-verify" target="_blank" rel="noopener noreferrer">councilof.ai/gspc-verify</a>
+      · DOI 10.5281/zenodo.21991104 (Zenodo record unavailable since 29 Sep 2026. Check the <a href="https://councilof.ai/interop/zenodo-status.json" target="_blank" rel="noopener noreferrer">current deposit status</a>.)</p>
   </footer>
   <script src="./table.js"></script>
 </body>

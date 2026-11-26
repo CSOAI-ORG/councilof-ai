@@ -1,0 +1,51 @@
+name: Public ORB-III scientific-limitation correction
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'docs/corrections/ORBIII-HISTORICAL-COUNCIL-LIMITATION-2026-11-23.md'
+      - 'scripts/hf/correct_orb3_readme.py'
+      - '.github/workflows/publish-orb3-correction.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: protected-hf-orb3-correction
+  cancel-in-progress: false
+
+jobs:
+  source-preserving-hf-card-correction:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Negative controls and source template tests
+        run: python3 scripts/hf/test_correct_orb3_readme.py
+
+      - name: Exact staged README privacy gate — no HF token
+        run: python3 scripts/hf/correct_orb3_readme.py --check
+
+      - name: Install Hugging Face API
+        run: python3 -m pip install 'huggingface_hub>=0.30,<2'
+
+      - name: Compare-and-swap card correction; verify exact served bytes
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: python3 scripts/hf/correct_orb3_readme.py --publish
+
+      - name: Never silently update the archived model training rows
+        run: |
+          echo 'Only README.md was included in the remote compare-and-swap.'
+          echo 'The original signed result and frozen train.jsonl remain untouched.'

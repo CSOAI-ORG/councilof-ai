@@ -6,6 +6,7 @@ import { quotableWire, stateWord, useBoardWire, useSignalCards } from "./boardWi
 import { badgeSnippet, cardSnippet, CARD_EMBED_HEIGHT, CARD_EMBED_WIDTH } from "@/lib/embedSnippet";
 import JoinedSpecsFooter from "@/components/JoinedSpecsFooter";
 import HelpDoor from "./HelpDoor";
+import { heldLimit } from "@/lib/axisCells";
 
 /**
  * LobbyEmbedPane — the white-label embed kit, NATIVE in Council OS.
@@ -149,6 +150,7 @@ export default function LobbyEmbedPane({
                     ) : (
                       ". No score is published for it, so the badge carries none."
                     )}
+                    {heldLimit(chosen) ? <> Held: {heldLimit(chosen)}</> : null}
                   </>
                 ) : (
                   "The overall badge states the board's own derived count — never a typed slot number."
