@@ -84,3 +84,17 @@ Do **not** copy a private transcript, session history, prompts, raw model output
 - Keep commercial readiness and external acceptance distinct from packages, tests, download events or self-run experiments.
 
 **Completion definition:** Both directions work in their actual released interfaces with pinned provenance, privacy and authority preserved; a user can retrieve public evidence, save/reopen a private result, and independently inspect the authorised effect/result boundary. No one may label this COMPLETE from a new document, an open pull request, a host-health response or a synthetic test alone.
+
+## Receiving-runtime migration gate (26 November source qualification)
+
+Treat a configured MCP registration, an isolated server launch and an enrolled client call as different observations. A matching tool name or protocol version does not establish live receipt, authenticated scope or current implementation identity.
+
+Before a runtime owner adopts the candidate:
+
+1. Inventory the configured entrypoint and its import closure without collecting credentials or private case contents. Record expected existing hashes in the private release receipt. Compare all advertised tool identifiers under the intended qualified configuration.
+2. Compose the exact reviewed public source against current protected master. Retain every transitive relative import, including shared evidence-learning modules; verify the source digests and exercise the existing core and server-error suites. Do not reintroduce arbitrary desktop RPC forwarding or an implicit coordinator fallback. Coordinator-dependent tools must be held when the coordinator is not qualified.
+3. Have the receiver owner approve the exact version, explicit coordinator and capability producer, and a rollback plan that does not reactivate an unqualified effectful bridge. Reconcile current local bytes before any switch; do not overwrite a concurrently changed entrypoint.
+4. Through the existing runtime release path, reinitialize the enrolled client and confirm the actual tool advertisement and one fixed public GSPC evidence read. Retain source hash, method-deposit caveat, signature state, observation time and retrieval time. Use an isolated receiver for destructive/unknown-tool negative controls; never probe production host effects.
+5. Only after the receiving identity and ingress are qualified, progress C2/C3 through the existing authenticated Company route and the C4–C7 evidence/authority checks. Unknown or partial receipt outcomes must not trigger automatic repeats.
+
+Current source-side check: the composed Council candidate retained existing core identifiers when an explicit coordinator was provided in an isolated listing and exposed two additional read-only evidence references. The existing core and server-error suites passed 58/58 using isolated receiver fixtures. This is not installation, coordinator qualification, an enrolled-client read or private case acceptance. Do not mark C1–C7 complete based on this section.
