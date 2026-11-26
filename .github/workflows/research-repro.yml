@@ -6,9 +6,9 @@
 # Not run here (declared in the checker): the two cross-family open-LM scripts
 # (recorded on CUDA, need model downloads) and the live councilof.ai probe.
 # The reaction-bridge *.test.mjs files already run in reaction-bridge-offline.yml.
-# Two jobs, macOS arm64 and Linux x86_64. Per-entry gates (strict / darwin_arm64 / report)
-# are declared and explained in scripts/research/research-repro-check.py; drift
-# under a non-strict gate is reported in the step summary and the report artifact.
+# Two jobs, macOS arm64 and Linux x86_64; every entry is strict on both. Observed
+# portability labels (informational only) are in scripts/research/research-repro-check.py;
+# known non-portable entries are expected to fail here until their owner resolves them.
 name: research-repro
 on:
   pull_request:

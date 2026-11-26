@@ -15,18 +15,17 @@ is compared value by value with the committed JSON ("result" member):
     are NOT reproduced here; their digests and counts are).
 Any other difference is drift and makes the run fail.
 
-Gates (field `gate`, default "strict"):
-  strict        drift fails on every platform.
-  darwin_arm64  drift fails on macOS arm64 only; elsewhere it is reported as
-                PLATFORM_DRIFT. sovos_situation_prevention: its ExtraTrees rows
-                reproduce on macOS arm64 runners but drift on Linux x86_64.
-  report        drift is reported as DRIFT_REPORTED and never fails, because the
-                committed value did not reproduce on any CI runner:
-                sovos_fused_readout_export (export bytes vary with the CPU's BLAS
-                kernels; the --verify replay of its test MAE stays strict) and
-                meok_nonlinear_candidate (the MLP fit and its MAE rows differ on
-                both macOS arm64 and Linux x86_64 runners).
-A crash (exit code != 0) fails under every gate.
+Every entry is strict: drift fails the run on every platform. Nothing is
+gated out. The field `portability` is an observed label only, printed next to
+the status. It never changes pass/fail:
+  portable             reproduced on the owner's Mac, GitHub macOS arm64 and
+                       Linux x86_64 runners.
+  arm64_macos_only     sovos_situation_prevention: ExtraTrees rows reproduce on
+                       arm64 Macs and drift on Linux x86_64 (20 fields).
+  recording_host_only  sovos_fused_readout_export (export bytes differ on every
+                       runner; its --verify replay of test MAE is portable) and
+                       meok_nonlinear_candidate (MLP fit and MAE rows differ on
+                       both runners). These do NOT reproduce off the recording Mac.
 
 Usage: python3 scripts/research/research-repro-check.py [--only NAME ...]
        [--report out.json] [--summary out.md]
@@ -63,7 +62,7 @@ MANIFEST = [
     # PR #4865
     lab("sovos_neural_stitch", ["sovos-neural-stitch-hf-20261125.json", "sovos-neural-stitch-kaggle-20261125.json"],
         ignore=OTHER_HOST),
-    {"name": "sovos_fused_readout_export", "kind": "export_bytes", "cwd": LAB, "gate": "report",
+    {"name": "sovos_fused_readout_export", "kind": "export_bytes", "cwd": LAB, "portability": "recording_host_only",
      "cmd": ["python3", "sovos_fused_readout.py", "--export", "{tmp}/candidate.json"],
      "artifact": "{tmp}/candidate.json", "committed": LAB + "/sovos-fused-readout-candidate-20261125.json"},
     {"name": "sovos_fused_readout_verify", "kind": "selftest", "cwd": LAB,
@@ -78,14 +77,14 @@ MANIFEST = [
     lab("sovos_cpu_batch_profile", ["sovos-cpu-batch-profile-local-20261125.json"], ignore=TIMING),
     lab("sovos_engine_council", ["sovos-engine-council-local-20261125.json"]),
     lab("sovos_engine_cpu_profile", ["sovos-engine-cpu-profile-local-20261125.json"], ignore=TIMING),
-    dict(lab("sovos_situation_prevention", ["sovos-situation-prevention-local-20261125.json"]), gate="darwin_arm64"),
+    dict(lab("sovos_situation_prevention", ["sovos-situation-prevention-local-20261125.json"]), portability="arm64_macos_only"),
     lab("sovos_verification_budget", ["sovos-verification-budget-local-20261125.json"]),
     # PR #4869
     lab("sovos_care_lineage", ["sovos-care-lineage-local-20261125.json", "sovos-care-lineage-second-host-20261125.json"]),
     lab("sovos_incremental_replay", ["sovos-incremental-replay-local-20261125.json"]),
     # PR #4870
     lab("meok_dataset_engine", ["meok-dataset-engine-local-20261125.json"]),
-    dict(lab("meok_nonlinear_candidate", ["meok-nonlinear-candidate-local-20261125.json"]), gate="report"),
+    dict(lab("meok_nonlinear_candidate", ["meok-nonlinear-candidate-local-20261125.json"]), portability="recording_host_only"),
     {"name": "meok_axis_cpu_engine", "kind": "pinned_node", "script": "scripts/research/meok-axis-cpu-engine.mjs",
      "results": [LAB + "/meok-axis-cpu-replay-local-20261125.json"], "ignore": []},
     # PR #4871
@@ -262,12 +261,7 @@ def main():
     records = []
     for e in entries:
         r = check(e)
-        gate = e.get("gate", "strict")
-        r["gate"] = gate
-        if r["status"] == "DRIFT" and gate == "report":
-            r["status"] = "DRIFT_REPORTED"
-        elif r["status"] == "DRIFT" and gate == "darwin_arm64" and not ON_DARWIN_ARM64:
-            r["status"] = "PLATFORM_DRIFT"
+        r["portability"] = e.get("portability", "portable")
         records.append(r)
         print("%-40s %-9s %6.1fs" % (r["name"], r["status"], r.get("seconds", 0)), flush=True)
         for c in r["comparisons"]:
@@ -289,8 +283,8 @@ def main():
     if a.report:
         open(a.report, "w").write(json.dumps(doc, indent=1, sort_keys=True) + "\n")
     if a.summary:
-        lines = ["### Research reproduction (L1) on %s" % platform.platform(), "", "| entry | gate | status | seconds |", "|---|---|---|---|"]
-        lines += ["| %s | %s | %s | %s |" % (r["name"], r.get("gate"), r["status"], r.get("seconds", "")) for r in records]
+        lines = ["### Research reproduction (L1) on %s" % platform.platform(), "", "| entry | observed portability | status | seconds |", "|---|---|---|---|"]
+        lines += ["| %s | %s | %s | %s |" % (r["name"], r.get("portability"), r["status"], r.get("seconds", "")) for r in records]
         lines += ["", "Throughput profiles: timing fields are machine-dependent and are not compared; "
                   "digests and counts are. Not run here: the two cross-family open-LM scripts (CUDA, model download) "
                   "and the live councilof.ai readback probe."]
