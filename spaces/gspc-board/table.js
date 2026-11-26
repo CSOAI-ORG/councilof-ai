@@ -442,7 +442,7 @@ function renderHubCells() {
   const cells = (HUB.cells || [])
     .filter((cell) => cell.axis === hubAxis)
     .filter((cell) => !query.trim() || String(cell.model || "").toLowerCase().includes(query.trim().toLowerCase()))
-    .sort((a, b) => (Number(b.accuracy) || -1) - (Number(a.accuracy) || -1) || String(a.model).localeCompare(String(b.model)));
+    .sort((a, b) => String(a.model).localeCompare(String(b.model)) || String(a.card_url || "").localeCompare(String(b.card_url || "")));
   const models = new Set((HUB.cells || []).map((cell) => cell.model).filter(Boolean));
   const counts = HUB.counts || {};
   tape.innerHTML = [
@@ -452,9 +452,10 @@ function renderHubCells() {
     [counts.indexes_read ?? "-", "Indexes read"],
     [counts.duplicates_collapsed ?? "-", "Duplicates collapsed"],
   ].map(([value, label]) => `<div><b>${esc(value)}</b><span>${esc(label)}</span></div>`).join("");
-  note.textContent = counts.complete
-    ? `${cells.length} published cell${cells.length === 1 ? "" : "s"} on ${hubAxis}; showing the top nine by the card's published figure. All discovered indexes answered.`
+  const coverage = counts.complete
+    ? `${cells.length} published cell${cells.length === 1 ? "" : "s"} on ${hubAxis}. All discovered indexes answered.`
     : `Partial read. ${counts.indexes_unread?.length || "Some"} index file(s) did not answer; no total is claimed.`;
+  note.textContent = `${coverage} Showing up to nine observations in model-name order. The feed does not identify a common comparison set: scores may use different banks or instruments. Inspect each signed card before comparing results.`;
   body.innerHTML = cells.slice(0, 9).map((cell, index) => `<tr>
     <td>${index + 1}</td>
     <td>${esc(cell.model)}</td>

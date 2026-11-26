@@ -225,6 +225,26 @@ test("an empty board remains visible after a fact-only leaderboard", async () =>
   assert.match(h.body("#lb-table tbody").innerHTML, /No axes in the current board/);
 });
 
+test("Hub observations use model-name order and disclose missing comparison context even on a partial read", async () => {
+  const initial = fixtures();
+  initial.set(HUB, { cells: [
+    { axis: "governance", model: "z-higher-score", accuracy: 1, n: 30, status: "MEASURED" },
+    { axis: "governance", model: "a-lower-score", accuracy: 0, n: 30, status: "MEASURED" },
+  ], counts: { complete: true, measured: 2 } });
+  const h = harness({ initial });
+  await flush();
+  const rendered = h.body("#hub-table tbody").innerHTML;
+  assert.ok(rendered.indexOf("a-lower-score") < rendered.indexOf("z-higher-score"));
+  assert.match(rendered, /0%/);
+  assert.match(h.el("hub-note").textContent, /does not identify a common comparison set/);
+  assert.doesNotMatch(h.el("hub-note").textContent, /top nine/);
+  h.replies.set(HUB, { cells: [], counts: { complete: false, indexes_unread: ["missing"] } });
+  h.tick();
+  await flush();
+  assert.match(h.el("hub-note").textContent, /Partial read/);
+  assert.match(h.el("hub-note").textContent, /different banks or instruments/);
+});
+
 test("reads primary feeds each minute without replacing source measurement time", async () => {
   const h = harness();
   await flush();
