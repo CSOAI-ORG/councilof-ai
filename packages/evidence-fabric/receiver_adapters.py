@@ -103,13 +103,15 @@ def validate_contract(name, obj):
     jsonschema.validators.validator_for(schema)(schema, format_checker=checker).validate(obj)
 
 
-def langfuse_score(event, trace_id, observation_id=None):
+def langfuse_score(event, trace_id, observation_id=None, *, binding_kind="CALLER_DECLARED_UNVERIFIED"):
     """Create a native POST /api/public/scores request body, never upload it.
 
     The caller supplies the actual trace binding. Nothing is derived from an event ID
     and presented as an observed trace. All six evidence states remain strings.
     """
     E.check_renderable(event)
+    if not isinstance(binding_kind, str) or binding_kind not in {"CALLER_DECLARED_UNVERIFIED", "SYNTHETIC_CONTRACT_FIXTURE_NOT_OBSERVED_TRACE"}:
+        raise ValueError("unknown or unsupported trace binding provenance")
     if not isinstance(trace_id, str) or not re.fullmatch(r"[0-9a-f]{32}", trace_id) or trace_id == "0" * 32:
         raise ValueError("supply a nonzero lowercase 32-hex trace ID from the receiver")
     if observation_id is not None and (not isinstance(observation_id, str)
@@ -123,7 +125,8 @@ def langfuse_score(event, trace_id, observation_id=None):
         "comment": "Retained evidence state; no release decision or measurement admission is implied.",
         "metadata": {"event_id": event["event_id"], "event_sha256": sha(E.jcs(event)),
                      "method_id": event["method"]["id"], "method_version": str(event["method"]["version"]),
-                     "limits": event["limits"], "receiver_acceptance": "NOT_ESTABLISHED"}}
+                     "limits": event["limits"], "receiver_acceptance": "NOT_ESTABLISHED",
+                     "trace_binding_kind": binding_kind, "trace_binding_verified": False}}
     if observation_id is not None:
         payload["observationId"] = observation_id
     validate_contract("langfuse-create-scores.schema.json", payload)
@@ -357,7 +360,8 @@ def main(argv=None):
             if event["event_id"] not in mapping:
                 raise ValueError("receiver trace mapping is missing for event")
             binding = mapping[event["event_id"]]
-            payload.append(langfuse_score(event, binding["trace_id"], binding.get("observation_id")))
+            payload.append(langfuse_score(event, binding["trace_id"], binding.get("observation_id"),
+                                          binding_kind=binding.get("binding_kind", "CALLER_DECLARED_UNVERIFIED")))
         validate_contract("langfuse-create-scores.schema.json", payload)
         write_new(args.out, E.jcs(payload) + b"\n")
     elif args.command == "tea":
