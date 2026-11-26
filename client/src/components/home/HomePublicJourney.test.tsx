@@ -27,7 +27,7 @@ describe("public evidence and learning journeys", () => {
   });
   it("shows Academy, practice and human-review destinations in one workspace", () => {
     const page = render(<HomeLearningJourney />);
-    expect(LEARNING_JOURNEYS.map((x) => x.href)).toEqual(["/dashboard?tab=academy", "/dashboard?tab=learn", "/dashboard?tab=staff"]);
+    expect(LEARNING_JOURNEYS.map((x) => x.href)).toEqual(["/dashboard?tab=academy", "/dashboard?tab=learn", "/dashboard?tab=staff", "https://huggingface.co/spaces/csoai/council-coliseum", "https://huggingface.co/spaces/csoai/meok-oowm-hybrid-lab"]);
     expect(page.querySelector('a[href="/dashboard?tab=him"]')).not.toBeNull();
     expect(page.querySelector('a[href="/games/ruler/"]')).not.toBeNull();
     expect(page.querySelector('a[href="/gspc-arena/"]')).not.toBeNull();
@@ -38,12 +38,14 @@ describe("public evidence and learning journeys", () => {
     expect(text).toContain("not a professional qualification");
     expect(text).toContain("does not, by itself, train or improve a deployed AI model");
     expect(text).toContain("still needs the relevant review");
+    expect(text).toContain("not an audited GSPC result");
+    expect(text).toContain("not independently approved safety measurements");
   });
   it("uses native keyboard-operable disclosure elements without hiding the main actions", () => {
     const page = render(<><HomeWatchdog /><HomeLearningJourney /></>);
     expect(page.querySelectorAll("details > summary")).toHaveLength(2);
     expect(page.querySelectorAll("details[open]")).toHaveLength(0);
-    expect(page.querySelectorAll("article a")).toHaveLength(6);
+    expect(page.querySelectorAll("article a")).toHaveLength(8);
     expect(page.querySelectorAll('[tabindex="-1"]')).toHaveLength(0);
   });
   it("generates FAQ schema from exactly the questions and answers a person can read", () => {
@@ -68,7 +70,9 @@ describe("public evidence and learning journeys", () => {
     const page = render(<><HomeWatchdog /><HomeLearningJourney /><HomeJourneyQuestions /></>);
     for (const anchor of page.querySelectorAll("a")) {
       const href = anchor.getAttribute("href")!;
-      expect(href).toMatch(/^\/(dashboard\?tab=(watchdog|corrections|academy|learn|staff|him)|watchdog\/(\?view=library)?|games\/ruler\/|gspc-arena\/|faq\/|services\/|contact\?arm=run)$/);
+      if (href.startsWith("https://")) {
+        expect(["https://huggingface.co/spaces/csoai/council-coliseum", "https://huggingface.co/spaces/csoai/meok-oowm-hybrid-lab"]).toContain(href);
+      } else expect(href).toMatch(/^\/(dashboard\?tab=(watchdog|corrections|academy|learn|staff|him)|watchdog\/(\?view=library)?|games\/ruler\/|gspc-arena\/|faq\/|services\/|contact\?arm=run)$/);
       expect(href).not.toBe("#");
     }
   });

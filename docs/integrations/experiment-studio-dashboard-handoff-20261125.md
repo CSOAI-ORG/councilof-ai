@@ -1,0 +1,13 @@
+# Experiment Studio dashboard handoff — 25 November 2026
+
+This candidate extends the existing GSPC DashboardResearchPane. It consumes the same-origin read-only projection specified by PR #4826 (reviewed head 008041c1aca99d41531439276e9f80e2ae21a642), rather than building a separate collector, endpoint, scheduler, queue, grader or case store. No change to #4826's files, #4693's evidence-index files or #4703's duplex integration contract.
+
+The private local draft binds a selected observed repository revision, unsigned source snapshot SHA-256 and source observation time to a user-supplied hypothesis, baseline, comparator, metric direction and threshold, planned denominator and controls. The draft retains NOT_RUN, NOT_FROZEN, UNASSIGNED, UNREVIEWED and explicit false authority, admission, publication and independent-verification fields. Nothing is uploaded; there is no server mutation, agent call, payment, signing, appointment or training. The browser receives a reported digest; it does not independently authenticate original bytes. It omits cookies and refuses held/malformed/stale projections. It is not a benchmark execution service.
+
+Local verification on 25 November: retained standalone v3 Node suite rerun, 60/60 passed. The new validator's source functions exercised in a JS isolate with a locally constructed projection of the 02:28:03 UTC collector metadata and a synthetic digest: one successful draft and 21 expected refusals. This is a projection-contract check, not an actual #4826 response or new model inference. A Vitest regression suite is included; repository-wide build, protected CI, rendered browser and live readback have not been run in this handoff.
+
+Integration order:
+1. #4826 owner verifies and releases the actual research commons projection, including held states.
+2. GSPC dashboard owner reviews this draft and resolves any concurrent changes. Run the new Vitest suite, normal protected checks and accessible desktop/mobile journey, including unavailable feed, no source, export and no outbound form submission. Verify same-origin observed request and downloaded bytes separately.
+3. Keep the #4693 canonical evidence index and #4703 authority/effect gates as the receiving paths. A draft is not a RAS request or a permission. Future authenticated intake must revalidate scope, rights, version, budget, isolation, retention and independent receipt; do not turn this browser download into an authority.
+4. Only after protected release and real recipient readback add the same draft contract to existing MCP/A2A capabilities through the canonical registry. No capability or OpenAPI edit in this candidate.

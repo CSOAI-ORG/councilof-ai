@@ -11,6 +11,9 @@ import { headFromGet } from "./_head";
 type Obj = Record<string, unknown>;
 export const FEED_SOURCE =
   "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/auto-eat-feed/public/interop/auto-eat/research-commons.json";
+// Same repository, path and branch via a fixed alternate GitHub transport.
+export const FEED_RAW_API =
+  "https://api.github.com/repos/CSOAI-ORG/councilof-ai/contents/public/interop/auto-eat/research-commons.json?ref=auto-eat-feed";
 const SCHEMA = "csoai.auto-eat.research-commons/0.1";
 const OUTPUT_SCHEMA = "csoai.councilos-eat-research-commons/0.1";
 const MAX_BODY = 80000;
@@ -46,8 +49,8 @@ export function validEATCommonsForTest(value: unknown): boolean {
       timestampUTC(value.observed_at) === null ||
       !SHA256.test(String(value.registry_sha256)) ||
       !Array.isArray(value.repositories) || value.repositories.length === 0 ||
-      value.repositories.length > 18 ||
-      !Array.isArray(value.crossref_topics) || value.crossref_topics.length !== 3 ||
+      value.repositories.length > 25 ||
+      !Array.isArray(value.crossref_topics) || ![3, 7].includes(value.crossref_topics.length) ||
       value.repositories_checked !== value.repositories.length ||
       value.repositories_observed !== value.repositories.filter((r) =>
         isObject(r) && r.status === "SOURCE_METADATA_OBSERVED").length ||
@@ -69,7 +72,7 @@ export function validEATCommonsForTest(value: unknown): boolean {
   for (const item of value.repositories) {
     if (!isObject(item) || !cleanText(item.repository) ||
         !REPO.test(item.repository) || item.repository.split("/").some((s) => s === "." || s === "..") ||
-        names.has(item.repository) ||
+        names.has(item.repository.toLowerCase()) ||
         item.source !== "github_public_api" ||
         !cleanText(item.project_role, 90) ||
         !cleanText(item.candidate_experiment, 90) ||
@@ -77,7 +80,7 @@ export function validEATCommonsForTest(value: unknown): boolean {
         item.human_review !== "UNASSIGNED" ||
         item.ras_measurement_permission !== "NOT_GRANTED" ||
         (item.status !== "SOURCE_METADATA_OBSERVED" && item.status !== "SOURCE_UNCHECKABLE")) return false;
-    names.add(item.repository);
+    names.add(item.repository.toLowerCase());
     if (item.status === "SOURCE_METADATA_OBSERVED") {
       if (!Number.isSafeInteger(item.repository_id) || Number(item.repository_id) <= 0 ||
           !SHA40.test(String(item.head_sha)) ||
@@ -194,29 +197,98 @@ function unavailable(reason: string, status = 503): Response {
   }, { status, headers: HEADERS });
 }
 
+type FeedRead =
+  | { state: "READ"; bytes: ArrayBuffer }
+  | { state: "TRANSPORT_FAILURE" }
+  | { state: "REJECTED"; reason: string };
+
+/** Bound both connection and body reads even when an upstream ignores abort. */
+async function readFeedTransport(origin: string): Promise<FeedRead> {
+  const controller = new AbortController();
+  let expired = false;
+  let expire: () => void = () => {};
+  const timeout = new Promise<never>((_, reject) => {
+    expire = () => { expired = true; controller.abort(); reject(new Error("feed deadline")); };
+  });
+  const timer = setTimeout(expire, 4000);
+  let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+  let response: Response | undefined;
+  let complete = false;
+  const discard = (body: ReadableStream<Uint8Array> | null) => {
+    try { void body?.cancel().catch(() => {}); } catch { /* cleanup never delays the deadline */ }
+  };
+  try {
+    const pending = fetch(origin, {
+      redirect: "manual",
+      headers: {
+        "accept": origin === FEED_SOURCE ? "application/json" : "application/vnd.github.raw+json",
+        "user-agent": "csoai-research-commons/0.1 (+https://councilof.ai)",
+      },
+      signal: controller.signal,
+    });
+    // Dispose of a response that arrives after the request already timed out.
+    void pending.then(reply => { if (expired) discard(reply.body); }, () => {});
+    response = await Promise.race([pending, timeout]);
+    if (!response.ok || response.redirected)
+      return { state: "REJECTED", reason: "EAT_FEED_NOT_PUBLISHED_OR_UNAVAILABLE" };
+    const size = Number(response.headers.get("content-length") || 0);
+    if (!Number.isFinite(size) || size < 0 || size > MAX_BODY)
+      return { state: "REJECTED", reason: "EAT_FEED_OVERSIZE_OR_UNCHECKABLE" };
+    const chunks: Uint8Array[] = [];
+    let received = 0;
+    if (response.body) {
+      reader = response.body.getReader();
+      while (true) {
+        const part = await Promise.race([reader.read(), timeout]);
+        if (part.done) break;
+        received += part.value.byteLength;
+        if (received > MAX_BODY)
+          return { state: "REJECTED", reason: "EAT_FEED_OVERSIZE" };
+        chunks.push(part.value);
+      }
+    }
+    const bytes = new ArrayBuffer(received);
+    const output = new Uint8Array(bytes);
+    let offset = 0;
+    for (const chunk of chunks) { output.set(chunk, offset); offset += chunk.byteLength; }
+    complete = true;
+    return { state: "READ", bytes };
+  } catch {
+    return { state: "TRANSPORT_FAILURE" };
+  } finally {
+    clearTimeout(timer);
+    if (!complete) {
+      controller.abort();
+      if (reader) {
+        try { void reader.cancel().catch(() => {}); } catch { /* best effort */ }
+      } else if (response) discard(response.body);
+    }
+    try { reader?.releaseLock(); } catch { /* a stuck upstream cannot hold this response */ }
+  }
+}
+
 export async function onRequestGet({ request }: { request: Request }): Promise<Response> {
   // Requests never influence the origin, pathname, source allowlist or target.
   if (new URL(request.url).searchParams.has("url"))
     return unavailable("DYNAMIC_FETCH_NOT_SUPPORTED", 400);
-  let bytes: Uint8Array;
-  let rawBuffer: ArrayBuffer;
+  let rawBuffer: ArrayBuffer | undefined;
+  let transport = FEED_SOURCE;
+  // Retry transport failures only. Do not retry invalid, stale, redirected or oversized
+  // content as if another source could grant permission. No caller-controlled origin.
+  for (const origin of [FEED_SOURCE, FEED_RAW_API]) {
+    const result = await readFeedTransport(origin);
+    if (result.state === "TRANSPORT_FAILURE") continue;
+    if (result.state === "REJECTED") return unavailable(result.reason);
+    rawBuffer = result.bytes;
+    transport = origin;
+    break;
+  }
+  if (!rawBuffer) return unavailable("EAT_FEED_TRANSPORT_UNAVAILABLE");
   let body: unknown;
   try {
-    const reply = await fetch(FEED_SOURCE, {
-      redirect: "error",
-      headers: { "accept": "application/json" },
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!reply.ok) return unavailable("EAT_FEED_NOT_PUBLISHED_OR_UNAVAILABLE");
-    const size = Number(reply.headers.get("content-length") || 0);
-    if (!Number.isFinite(size) || size > MAX_BODY)
-      return unavailable("EAT_FEED_OVERSIZE_OR_UNCHECKABLE");
-    rawBuffer = await reply.arrayBuffer();
-    bytes = new Uint8Array(rawBuffer);
-    if (bytes.byteLength > MAX_BODY) return unavailable("EAT_FEED_OVERSIZE");
-    body = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+    body = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(rawBuffer));
   } catch {
-    return unavailable("EAT_FEED_UNREACHABLE_OR_INVALID");
+    return unavailable("EAT_FEED_INVALID_UTF8_OR_JSON");
   }
   if (!validEATCommonsForTest(body)) return unavailable("EAT_FEED_SCHEMA_OR_RIGHTS_BOUNDARY_INVALID");
   const digest = await crypto.subtle.digest("SHA-256", rawBuffer);
@@ -224,6 +296,8 @@ export async function onRequestGet({ request }: { request: Request }): Promise<R
   const now = Date.now();
   const projection = projectForTest(body, new Date(now).toISOString(), sourceSha256, now);
   if (!projection) return unavailable("EAT_FEED_PROJECTION_FAILED");
+  // Identify the actual transport without changing the canonical source identity.
+  (projection.source as Obj).retrieval_url = transport;
   // Stale metadata is not advertised as current research. No previous-fresh fallback.
   if (projection.state !== "FREE_DISCOVERY_ONLY") {
     return Response.json({

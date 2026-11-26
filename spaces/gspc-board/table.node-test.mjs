@@ -169,6 +169,137 @@ test("global search reveals filtered results instead of a hidden table", async (
   assert.equal(h.el("models").hidden, false);
 });
 
+test("the atlas includes uncategorised source axes once and keeps them filterable after refresh", async () => {
+  const initial = fixtures();
+  initial.set(API, board(1, ["governance", "effect-binding", "watchdog-ingest", "future-axis"]));
+  const h = harness({ initial });
+  await flush();
+  const tiles = () => [...h.el("graph").innerHTML.matchAll(/data-axis="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(tiles().sort(), ["effect-binding", "future-axis", "governance", "watchdog-ingest"]);
+  assert.doesNotMatch(h.el("graph").innerHTML, /role="listitem"/);
+  h.choosePillar("additional");
+  assert.deepEqual(tiles().sort(), ["effect-binding", "future-axis", "watchdog-ingest"]);
+  assert.doesNotMatch(h.el("board-body").innerHTML, /data-axis="governance"/);
+  h.replies.set(API, board(2, ["safety"]));
+  h.tick();
+  await flush();
+  assert.deepEqual(tiles(), ["safety"]);
+  assert.doesNotMatch(h.el("pillars").innerHTML, /data-pillar="additional"/);
+});
+
+test("fact axes show their dated finding without empty model seats or accuracy placeholders", async () => {
+  const initial = fixtures();
+  const source = board(1, ["effect-binding", "governance"]);
+  source.axes[0] = { axis: "effect-binding", status: "MEASURED", kind: "deterministic-facts",
+    family: "gspc", n: 261, n_note: "261 server verdicts from 600 tried",
+    task: "request binding", measurement_time: { state: "EXACT", observed_at: "2026-09-22T05:43:05Z" } };
+  initial.set(API, source);
+  const h = harness({ initial, hash: "#effect-binding" });
+  await flush();
+  assert.equal(h.el("desk-models").hidden, true);
+  assert.equal(h.el("desk-facts").hidden, false);
+  assert.equal(h.el("lb-table").hidden, true);
+  assert.equal(h.el("podium").innerHTML, "");
+  assert.doesNotMatch(h.el("desk-lb").innerHTML, /Not published on this axis/);
+  assert.doesNotMatch(h.el("quote").innerHTML, /95% interval|Fleet mean|Macro F1|Leader/);
+  assert.match(h.el("find-table").innerHTML, /261/);
+  assert.match(h.el("find-table").innerHTML, /2026-09-22T05:43:05Z/);
+  assert.match(h.el("honest-table").innerHTML, /261 server verdicts from 600 tried/);
+  vm.runInContext('openAxis("governance")', h.context);
+  assert.equal(h.el("desk-models").hidden, false);
+  assert.equal(h.el("desk-facts").hidden, true);
+  assert.equal(h.el("lb-table").hidden, false);
+  assert.match(h.el("desk-lb").innerHTML, /model-1/);
+  assert.doesNotMatch(h.el("desk-lb").innerHTML, /TIE · floor|Not published on this axis/);
+});
+
+test("an empty board remains visible after a fact-only leaderboard", async () => {
+  const h = harness();
+  await flush();
+  vm.runInContext('BOARD.axes[0].kind = "deterministic-facts"; renderLeaderboard("governance")', h.context);
+  assert.equal(h.el("lb-table").hidden, true);
+  h.replies.set(API, board(2, []));
+  h.tick();
+  await flush();
+  assert.equal(h.el("lb-table").hidden, false);
+  assert.match(h.body("#lb-table tbody").innerHTML, /No axes in the current board/);
+});
+
+test("Hub observations use model-name order and disclose missing comparison context even on a partial read", async () => {
+  const initial = fixtures();
+  initial.set(HUB, { cells: [
+    { axis: "governance", model: "z-higher-score", accuracy: 1, n: 30, status: "MEASURED" },
+    { axis: "governance", model: "a-lower-score", accuracy: 0, n: 30, status: "MEASURED" },
+  ], counts: { complete: true, measured: 2 } });
+  const h = harness({ initial });
+  await flush();
+  const rendered = h.body("#hub-table tbody").innerHTML;
+  assert.ok(rendered.indexOf("a-lower-score") < rendered.indexOf("z-higher-score"));
+  assert.match(rendered, /0%/);
+  assert.match(h.el("hub-note").textContent, /does not identify a common comparison set/);
+  assert.doesNotMatch(h.el("hub-note").textContent, /top nine/);
+  h.replies.set(HUB, { cells: [], counts: { complete: false, indexes_unread: ["missing"] } });
+  h.tick();
+  await flush();
+  assert.match(h.el("hub-note").textContent, /Partial read/);
+  assert.match(h.el("hub-note").textContent, /different banks or instruments/);
+});
+
+test("subject observations retain source warnings, units, method and unsigned evidence without becoming model scores", async () => {
+  const initial = fixtures();
+  const source = board(1, ["watchdog-ingest", "safety"]);
+  source.axes[0] = { axis: "watchdog-ingest", status: "MEASURED", family: "subject", kind: "measured-subject",
+    n: 106, n_unit: "subjects in the frozen frame", rate: 0.1981, rate_scale: "fraction",
+    rate_rule: "presence threshold", per_outcome: { UNCHANGED: 12 }, method_status: "meets-rule",
+    method_sha: "a".repeat(64), run_attestation: "CONTENT_ADDRESSED_UNSIGNED", bank: "source-bank.json",
+    evidence_url: "/interop/source-bank.json", limit: "Do not rely on these old counts <script>source</script>" };
+  initial.set(API, source);
+  const h = harness({ initial, hash: "#watchdog-ingest" });
+  await flush();
+  assert.equal(h.el("desk-source-limit").hidden, false);
+  assert.equal(h.el("desk-source-limit").textContent, "Source limitation: " + source.axes[0].limit);
+  assert.equal(h.el("desk-models").hidden, true);
+  assert.match(h.el("quote").innerHTML, /subjects in the frozen frame/);
+  assert.doesNotMatch(h.el("quote").innerHTML, /accuracy|Leader|Fleet mean/);
+  assert.match(h.el("find-table").innerHTML, /0\.1981/);
+  assert.match(h.el("find-table").innerHTML, /fraction/);
+  assert.match(h.el("find-table").innerHTML, /CONTENT_ADDRESSED_UNSIGNED/);
+  assert.match(h.el("find-table").innerHTML, /https:\/\/councilof\.ai\/interop\/source-bank\.json/);
+  vm.runInContext('openAxis("safety")', h.context);
+  assert.equal(h.el("desk-source-limit").hidden, true);
+  assert.equal(h.el("desk-source-limit").textContent, "");
+  assert.equal(h.el("desk-models").hidden, false);
+});
+
+test("a withheld model-comparison figure stays withheld and is not relabelled as facts", async () => {
+  const initial = fixtures();
+  const source = board(1, ["safety"]);
+  Object.assign(source.axes[0], { kind: "model-comparison", accuracy: null, leader: null, separation: "UNTESTED" });
+  initial.set(API, source);
+  const h = harness({ initial, hash: "#safety" });
+  await flush();
+  assert.match(h.el("quote").innerHTML, /figure withheld/);
+  assert.match(h.el("graph").innerHTML, /figure withheld/);
+  assert.doesNotMatch(h.el("quote").innerHTML, /facts · no accuracy/);
+  assert.match(h.el("read-box").innerHTML, /Read the published separation state and method/);
+  assert.doesNotMatch(h.el("read-box").innerHTML, /interval contains the fleet mean/);
+});
+
+test("the model directory does not rank maximum scores pooled across different axes", async () => {
+  const initial = fixtures();
+  const source = board(1, ["governance", "safety"]);
+  Object.assign(source.axes[0], { leader: "z-higher-score", accuracy: 1 });
+  Object.assign(source.axes[1], { leader: "a-lower-score", accuracy: 0.1 });
+  initial.set(API, source);
+  const h = harness({ initial });
+  await flush();
+  const rendered = h.body("#mod-table tbody").innerHTML;
+  assert.ok(rendered.indexOf("a-lower-score") < rendered.indexOf("z-higher-score"));
+  assert.doesNotMatch(rendered, /100%|10%/);
+  assert.match(h.el("graph").innerHTML, /Top observed: z-higher-score/);
+  assert.match(h.el("board-body").innerHTML, /z-higher-score · not separated/);
+});
+
 test("reads primary feeds each minute without replacing source measurement time", async () => {
   const h = harness();
   await flush();

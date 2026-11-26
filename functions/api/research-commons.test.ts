@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { FEED_SOURCE, validEATCommonsForTest, freshnessForTest, projectForTest, onRequestGet, onRequestHead } from "./research-commons";
+import { FEED_SOURCE, FEED_RAW_API, validEATCommonsForTest, freshnessForTest, projectForTest, onRequestGet, onRequestHead } from "./research-commons";
 
 const CLOCK = Date.parse("2026-11-24T03:00:00Z");
 const SHA = "a".repeat(64);
@@ -230,7 +230,7 @@ describe("H.I.M. read-only AUTO-EAT research commons", () => {
     expect(res.status).toBe(200);
     expect(calls).toHaveLength(1);
     expect(calls[0].url).toBe(FEED_SOURCE);
-    expect(calls[0].redirect).toBe("error");
+    expect(calls[0].redirect).toBe("manual");
     const json = await res.json() as any;
     expect(json.state).toBe("FREE_DISCOVERY_ONLY");
     expect(json.source.source_sha256).toMatch(/^[0-9a-f]{64}$/);
@@ -294,5 +294,141 @@ describe("H.I.M. read-only AUTO-EAT research commons", () => {
     expect(res.status).toBe(200);
     expect(await res.text()).toBe("");
     expect(res.headers.get("payment-required")).toBeNull();
+  });
+  it("uses only the fixed raw API alternate after primary transport rejection", async () => {
+    vi.useFakeTimers().setSystemTime(CLOCK);
+    const calls: Array<{url: string; init: RequestInit}> = [];
+    vi.stubGlobal("fetch", vi.fn(async (url: string, init: RequestInit) => {
+      calls.push({url, init});
+      if (url === FEED_SOURCE) throw Error("transport unavailable");
+      return new Response(JSON.stringify(fixture()));
+    }));
+    const r = await onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    expect(r.status).toBe(200);
+    expect(calls.map(x=>x.url)).toEqual([FEED_SOURCE, FEED_RAW_API]);
+    expect(calls.every(x=>x.init.redirect==="manual")).toBe(true);
+    expect(new Headers(calls[1].init.headers).get("accept")).toBe("application/vnd.github.raw+json");
+    const data = await r.json() as any;
+    expect(data.source.url).toBe(FEED_SOURCE);
+    expect(data.source.retrieval_url).toBe(FEED_RAW_API);
+    expect(data.source.signature_verification).toBe("NOT_PERFORMED");
+  });
+
+  it("holds both transport failures without a stale fallback", async () => {
+    const calls: string[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {calls.push(url);throw Error("unavailable");}));
+    const r = await onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    expect(r.status).toBe(503);
+    expect(calls).toEqual([FEED_SOURCE, FEED_RAW_API]);
+    expect((await r.json() as any).reason).toBe("EAT_FEED_TRANSPORT_UNAVAILABLE");
+  });
+
+  it("does not try another transport after invalid JSON or a redirect response", async () => {
+    for (const response of [new Response("{bad"),new Response(null,{status:302,headers:{location:"https://example.invalid"}})]) {
+      const stub=vi.fn(async()=>response);
+      vi.stubGlobal("fetch",stub);
+      const r=await onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+      expect(r.status).toBe(503);
+      expect(stub).toHaveBeenCalledTimes(1);
+    }
+  });
+
+  it("bounds a chunked body before fully buffering it and does not retry oversize content", async () => {
+    let pulls = 0; let cancelled = false;
+    const stream = new ReadableStream<Uint8Array>({
+      pull(controller) {
+        pulls++;
+        controller.enqueue(new Uint8Array(16000));
+        if (pulls === 12) controller.close();
+      },
+      cancel() { cancelled = true; },
+    });
+    const stub = vi.fn(async () => new Response(stream, {headers:{"content-length":"1"}}));
+    vi.stubGlobal("fetch",stub);
+    const r = await onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    expect(r.status).toBe(503);
+    expect((await r.json() as any).reason).toBe("EAT_FEED_OVERSIZE");
+    expect(stub).toHaveBeenCalledTimes(1);
+    expect(cancelled).toBe(true);
+    expect(pulls).toBeLessThan(12);
+  });
+
+  it("returns from a stalled transport even if the transport ignores abort", async () => {
+    vi.useFakeTimers().setSystemTime(CLOCK);
+    const calls: string[]=[];
+    vi.stubGlobal("fetch",vi.fn((url:string)=>{
+      calls.push(url);
+      return url===FEED_SOURCE ? new Promise<Response>(()=>{}) : Promise.resolve(new Response(JSON.stringify(fixture())));
+    }));
+    const task = onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    await vi.advanceTimersByTimeAsync(4001);
+    // Let pending native digest work settle; the alternate must already have started.
+    expect(calls).toEqual([FEED_SOURCE,FEED_RAW_API]);
+    expect((await task).status).toBe(200);
+  });
+
+  it("does not wait for a stalled body or cancellation promise", async () => {
+    vi.useFakeTimers().setSystemTime(CLOCK);
+    const calls: string[]=[];let cancelled=false;
+    const stream=new ReadableStream<Uint8Array>({
+      start(controller){controller.enqueue(new TextEncoder().encode("{"));},
+      cancel(){cancelled=true;return new Promise<void>(()=>{});}
+    });
+    vi.stubGlobal("fetch",vi.fn(async(url:string)=>{
+      calls.push(url);
+      return url===FEED_SOURCE?new Response(stream):new Response(JSON.stringify(fixture()));
+    }));
+    const task=onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    await vi.advanceTimersByTimeAsync(4001);
+    expect(calls).toEqual([FEED_SOURCE,FEED_RAW_API]);
+    expect(cancelled).toBe(true);
+    expect((await task).status).toBe(200);
+  });
+
+  it("both stalled transports stop after the two bounded attempts", async () => {
+    vi.useFakeTimers().setSystemTime(CLOCK);
+    const calls:string[]=[];
+    vi.stubGlobal("fetch",vi.fn((url:string)=>{calls.push(url);return new Promise<Response>(()=>{});}));
+    const task=onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    await vi.advanceTimersByTimeAsync(8001);
+    const r=await task;
+    expect(r.status).toBe(503);
+    expect(calls).toEqual([FEED_SOURCE,FEED_RAW_API]);
+    expect((await r.json() as any).reason).toBe("EAT_FEED_TRANSPORT_UNAVAILABLE");
+  });
+
+  it("a late primary response cannot replace the accepted alternate", async () => {
+    vi.useFakeTimers().setSystemTime(CLOCK);
+    let deliver: (r:Response)=>void=()=>{};
+    let cancelled=false;
+    const late=new Response(new ReadableStream<Uint8Array>({cancel(){cancelled=true;}}));
+    vi.stubGlobal("fetch",vi.fn((url:string)=>url===FEED_SOURCE?new Promise<Response>(r=>{deliver=r;}):Promise.resolve(new Response(JSON.stringify(fixture())))));
+    const task=onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    await vi.advanceTimersByTimeAsync(4001);
+    const accepted=await task;expect(accepted.status).toBe(200);
+    expect((await accepted.json() as any).source.retrieval_url).toBe(FEED_RAW_API);
+    deliver(late);await Promise.resolve();await Promise.resolve();
+    expect(cancelled).toBe(true);
+  });
+
+});
+
+// Boundary controls only: these constructed records are NOT empirical evidence.
+describe("expanded source contract bounds", () => {
+  it("accepts 25 repositories and seven topics, but refuses 26 or case aliases", () => {
+    const d = fixture();
+    const template = d.repositories[0];
+    d.repositories = Array.from({length:25}, (_,i)=>({...template,repository:"example/repo"+i,source_link:"https://github.com/example/repo"+i,repository_id:i+1}));
+    d.repositories_checked=25; d.repositories_observed=25; d.repositories_uncheckable=0;
+    const t=d.crossref_topics[0];
+    d.crossref_topics=Array.from({length:7}, (_,i)=>({...t,topic:"test topic "+i,papers:[]}));
+    d.crossref_topics_checked=7; d.crossref_topics_observed=7; d.crossref_candidate_metadata_rows=0;
+    expect(validEATCommonsForTest(d)).toBe(true);
+    d.repositories[24]={...d.repositories[0],repository:"EXAMPLE/REPO0",source_link:"https://github.com/EXAMPLE/REPO0"};
+    expect(validEATCommonsForTest(d)).toBe(false);
+    d.repositories[24]={...template,repository:"example/repo24",source_link:"https://github.com/example/repo24",repository_id:25};
+    d.repositories.push({...template,repository:"example/repo25",source_link:"https://github.com/example/repo25",repository_id:26});
+    d.repositories_checked=26;d.repositories_observed=26;
+    expect(validEATCommonsForTest(d)).toBe(false);
   });
 });

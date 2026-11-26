@@ -51,7 +51,7 @@ type State =
   | { status: "held" }
   | { status: "ready"; data: Response };
 
-function isReady(value: unknown): value is Response {
+export function isReady(value: unknown): value is Response {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const d = value as Record<string, unknown>;
   const source = d.source as Record<string, unknown> | null;
@@ -62,8 +62,8 @@ function isReady(value: unknown): value is Response {
     source?.independent_source_verification === false &&
     typeof source?.observed_at === "string" &&
     typeof source?.source_sha256 === "string" &&
-    Array.isArray(d.repositories) && d.repositories.length <= 18 &&
-    Array.isArray(d.papers) && d.papers.length <= 3 &&
+    Array.isArray(d.repositories) && d.repositories.length <= 25 &&
+    Array.isArray(d.papers) && [3, 7].includes(d.papers.length) &&
     !!coverage && typeof coverage.repositories_observed === "number" &&
     typeof coverage.repositories_uncheckable === "number";
 }

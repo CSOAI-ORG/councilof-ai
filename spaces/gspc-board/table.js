@@ -37,7 +37,7 @@ const READ = [
   { title: "A listing is not a grade", body: "A Hub name can sit on a public list. That is DISCOVERED. It is not a GSPC cell." },
   { title: "The board snapshot is signed", body: "Every measured axis carries a published measurement. Public cards check. They do not yet name a unique weight file." },
   { title: "An empty slot is a finding", body: "Declared empty slots stay on the map so gaps stay visible. No invented zero, no invented leader." },
-  { title: "A TIE is not a win", body: "When the leader interval contains the fleet mean, the point lead is not a measured advantage. Jail is a measured floor." },
+  { title: "A TIE is not a win", body: "A point-estimate lead does not establish separation. Read the published separation state and method. UNTESTED means no separation test is established." },
 ];
 
 const EMPTY_NEXT = {
@@ -64,7 +64,7 @@ const DOORS = [
   ["Council of AI", "https://councilof.ai", "CSOAI-GSPC on the main site."],
   ["CSOAI-GSPC API", "https://councilof.ai/api/gspc", "The same figures, machine-readable."],
   ["Signed card index", "https://councilof.ai/signed/card_index.json", "Public compact cards."],
-  ["Methodology (DOI 10.5281/zenodo.21991104)", "https://councilof.ai/methodology/", "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. Live methodology page, not the deposit's bytes."],
+  ["Methodology (DOI 10.5281/zenodo.21991104)", "https://councilof.ai/methodology/", "Zenodo record unavailable since 29 Sep 2026. Live methodology page, not verified deposit bytes."],
   ["Board dataset", "https://huggingface.co/datasets/csoai/gspc-board", "Hub mirror of CSOAI-GSPC."],
   ["Governance bank", "https://huggingface.co/datasets/csoai/gspc-gov", "The published governance bank. Other banks come from each axis record."],
 ];
@@ -122,6 +122,13 @@ function mentions(hay, name) {
 function measuredOf(a) {
   return String(a?.status || "").toUpperCase() === "MEASURED";
 }
+function figureText(a) {
+  if (!measuredOf(a)) return "no figure";
+  if (typeof a.accuracy === "number") return pct(a.accuracy);
+  if (a.kind === "measured-subject") return "subjects";
+  if (a.kind === "deterministic-facts" || a.family === "financial") return "facts · no accuracy";
+  return "figure withheld";
+}
 function displayName(a) {
   return String(a.label || a.axis || "").replace(/-/g, " ");
 }
@@ -132,6 +139,9 @@ function cleanModel(s) {
 function seatsFor(a) {
   const seats = Array.from({ length: 9 }, () => null);
   if (!a || !measuredOf(a)) return { kind: "empty", seats };
+  if (a.kind === "measured-subject") {
+    return { kind: "subjects", seats, note: "This axis records subject observations with their own method and limitations." };
+  }
   if (a.kind === "deterministic-facts" || (a.family === "financial" && !a.leader)) {
     return { kind: "facts", seats, note: a.task || a.note || "This axis measures published facts, not a model contest." };
   }
@@ -162,9 +172,19 @@ function seatsFor(a) {
   return { kind: "models", seats, published: rows.length };
 }
 
+// Navigation groups are presentation only. Keep every source axis reachable,
+// including axes added after this hand-curated navigation was written.
+function axisGroups() {
+  const grouped = new Set(PILLARS.flatMap((p) => p.axes));
+  const additional = (BOARD?.axes || []).map((a) => a.axis).filter((id) => !grouped.has(id));
+  return additional.length
+    ? [...PILLARS, { id: "additional", title: "Additional axes", axes: additional }]
+    : PILLARS;
+}
+
 function visibleAxes() {
   const allowed = pillarFilter
-    ? new Set((PILLARS.find((p) => p.id === pillarFilter) || {}).axes || [])
+    ? new Set((axisGroups().find((p) => p.id === pillarFilter) || {}).axes || [])
     : null;
   const q = query.trim().toLowerCase();
   return (BOARD?.axes || []).filter((a) => {
@@ -197,7 +217,7 @@ function modelIndex() {
   let rows = [...map.values()];
   const q = query.trim().toLowerCase();
   if (q) rows = rows.filter((r) => r.name.toLowerCase().includes(q) || r.axes.some((ax) => ax.includes(q)));
-  rows.sort((a, b) => (b.best ?? -1) - (a.best ?? -1) || a.name.localeCompare(b.name));
+  rows.sort((a, b) => a.name.localeCompare(b.name));
   return rows;
 }
 
@@ -231,8 +251,9 @@ function renderRuling(queueN, walkN) {
 function renderPillars() {
   const el = document.getElementById("pillars");
   if (!el) return;
+  if (pillarFilter && !axisGroups().some((p) => p.id === pillarFilter)) pillarFilter = null;
   el.innerHTML = `<button type="button" data-pillar="" class="${pillarFilter ? "" : "on"}">All</button>` +
-    PILLARS.map((p) =>
+    axisGroups().map((p) =>
       `<button type="button" data-pillar="${esc(p.id)}" class="${pillarFilter === p.id ? "on" : ""}">${esc(p.title)}</button>`
     ).join("");
   el.querySelectorAll("[data-pillar]").forEach((b) => {
@@ -248,32 +269,34 @@ function renderPillars() {
 function renderMap() {
   renderPillars();
   const host = document.getElementById("graph");
-  const shown = pillarFilter ? PILLARS.filter((p) => p.id === pillarFilter) : PILLARS;
+  const groups = axisGroups();
+  const shown = pillarFilter ? groups.filter((p) => p.id === pillarFilter) : groups;
+  const visible = new Set(visibleAxes().map((a) => a.axis));
   host.innerHTML = shown.map((p) => {
     const tiles = p.axes.map((id) => {
       const a = axisOf(id);
-      if (!a) return "";
+      if (!a || !visible.has(id)) return "";
       const on = measuredOf(a);
       const tie = a.axis === "jail" && a.separation === "TIE";
-      const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : "facts") : "empty";
+      const fig = figureText(a);
       const klass = `tile${on ? "" : " empty"}${tie ? " jail" : ""}${selected === id ? " on" : ""}`;
-      return `<button type="button" class="${klass}" data-axis="${esc(id)}" role="listitem">
+      return `<button type="button" class="${klass}" data-axis="${esc(id)}">
         <div class="fig">${esc(fig)}</div>
         <div class="name">${esc(displayName(a))}</div>
-        <div class="who">${on ? esc(cleanModel(a.leader) || (a.kind === "deterministic-facts" ? "facts" : "-")) : "No grade yet"}</div>
+        <div class="who">${on && a.leader ? esc(`${a.separation === "SEPARATED" ? "Separated" : "Top observed"}: ${cleanModel(a.leader)}`) : ""}</div>
         ${chip(a.status, a.separation)}
       </button>`;
     }).join("");
-    return `<div class="col"><h3>${esc(p.title)}</h3>${tiles}</div>`;
-  }).join("");
+    return tiles ? `<div class="col"><h3>${esc(p.title)}</h3>${tiles}</div>` : "";
+  }).join("") || '<p class="fine">No axes match this selection.</p>';
   host.querySelectorAll("[data-axis]").forEach((b) => {
     b.onclick = () => openAxis(b.getAttribute("data-axis"));
   });
   const note = document.getElementById("legend");
   if (note) {
     note.textContent = pillarFilter
-      ? `${visibleAxes().length} axes in this family. Click a tile to open the record.`
-      : "Five families. Green is measured. Slate is empty. Click a family, then an axis.";
+      ? `${visible.size} axes in this navigation group. Click a tile to open the record.`
+      : `${visible.size} published axes. Navigation groups do not change the source family or measurement. Click an axis to open its record.`;
   }
 }
 
@@ -287,7 +310,7 @@ function renderBoardTable() {
   }
   document.getElementById("board-body").innerHTML = rows.map((a) => {
     const on = measuredOf(a);
-    const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : "facts") : "-";
+    const fig = figureText(a);
     const iv = on && Array.isArray(a.interval) ? `${pct(a.interval[0])}-${pct(a.interval[1])}` : "-";
     const sep = on ? (a.axis === "jail" && a.separation === "TIE" ? "TIE · floor" : (a.separation || "-")) : "-";
     return `<tr data-axis="${esc(a.axis)}" tabindex="0" class="${selected === a.axis ? "active" : ""}">
@@ -298,7 +321,7 @@ function renderBoardTable() {
       <td>${esc(on && a.n != null ? a.n : "-")}</td>
       <td>${esc(iv)}</td>
       <td>${esc(sep)}</td>
-      <td>${on ? esc(a.leader || "-") : "-"}</td>
+      <td>${on && a.leader ? esc(a.leader + (a.separation === "SEPARATED" ? "" : " · not separated")) : "-"}</td>
     </tr>`;
   }).join("") || `<tr><td colspan="8">No axes match.</td></tr>`;
   document.querySelectorAll("#board-body tr[data-axis]").forEach((tr) => {
@@ -310,12 +333,13 @@ function renderBoardTable() {
 
 function leaderboardRows(a) {
   const pack = seatsFor(a);
-  return pack.seats.map((s, i) => {
-    if (!s) {
-      return `<tr class="vacant"><td>${i + 1}</td><td colspan="5">Not published on this axis</td></tr>`;
-    }
+  const published = pack.seats.filter(Boolean);
+  if (!published.length) return `<tr><td colspan="6">${["facts", "subjects"].includes(pack.kind)
+    ? "This axis records non-model observations. No model ranking applies."
+    : "No model results are published on this axis."}</td></tr>`;
+  return published.map((s, i) => {
     const iv = Array.isArray(s.interval) ? `${pct(s.interval[0])}-${pct(s.interval[1])}` : "-";
-    const sep = s.sep === "TIE" ? "TIE · floor" : (s.sep || (s.publishedLeader ? "published leader" : "-"));
+    const sep = s.sep === "TIE" && a.axis === "jail" ? "TIE · floor" : (s.sep || (s.publishedLeader ? "published leader" : "-"));
     return `<tr data-model="${esc(s.model)}">
       <td>${i + 1}</td>
       <td>${esc(s.model)}</td>
@@ -333,6 +357,7 @@ function renderLeaderboard(name) {
     lbAxis = "";
     document.getElementById("lb-axis").innerHTML = "";
     document.getElementById("podium").innerHTML = "";
+    document.getElementById("lb-table").hidden = false;
     document.querySelector("#lb-table tbody").innerHTML =
       '<tr><td colspan="6">No axes in the current board snapshot.</td></tr>';
     document.getElementById("lb-note").textContent = "No axes are published in this snapshot.";
@@ -356,21 +381,20 @@ function renderLeaderboard(name) {
   const pack = seatsFor(a);
   const note = document.getElementById("lb-note");
   if (pack.kind === "empty") {
-    note.textContent = "This slot is published empty. No measurement has been signed. Nine seats stay blank so a gap is visible.";
-  } else if (pack.kind === "facts") {
+    note.textContent = "This slot is published empty. No model results are published.";
+  } else if (["facts", "subjects"].includes(pack.kind)) {
     note.textContent = pack.note || "This axis measures published facts, not a model contest.";
   } else if (pack.published === 1) {
-    note.textContent = "The signed board publishes one leader and a fleet mean on this axis. The other eight seats stay blank until per-model rows are signed. A rank is never sold.";
+    note.textContent = "The board publishes one model figure on this axis. Additional model results are unavailable. Read its separation state before comparing results.";
   } else {
     note.textContent = `${pack.published} published names on this axis. Empty seats are not invented zeros. Jail is a measured floor when the lead is a TIE.`;
   }
   const podium = document.getElementById("podium");
-  const top = pack.seats.slice(0, 3);
-  podium.innerHTML = [0, 1, 2].map((i) => {
-    const s = top[i];
-    if (!s) return `<li><span>#${i + 1}</span><b class="vacant">Not published</b><span>-</span></li>`;
+  const top = pack.seats.filter(Boolean).slice(0, 3);
+  podium.innerHTML = top.map((s, i) => {
     return `<li><span>#${i + 1}</span><b>${esc(cleanModel(s.model))}</b><span>${esc(typeof s.figure === "number" ? pct(s.figure) : "-")}</span></li>`;
   }).join("");
+  document.getElementById("lb-table").hidden = ["facts", "subjects"].includes(pack.kind);
   document.querySelector("#lb-table tbody").innerHTML = leaderboardRows(a);
 }
 
@@ -380,14 +404,14 @@ function renderModels() {
   if (note) {
     note.textContent = query.trim()
       ? `${rows.length} published names match "${query.trim()}".`
-      : `${rows.length} names appear as a leader or a signed per-model row. Search above.`;
+      : `${rows.length} names appear in published model fields. Listed alphabetically; compare results within their own axis and method.`;
   }
   const tb = document.querySelector("#mod-table tbody");
   tb.innerHTML = rows.map((r) =>
     `<tr data-axis="${esc(r.axes[0] || "")}">
       <td>${esc(r.name)}</td>
-      <td>${esc(r.axes.join(", "))}</td>
-      <td>${esc(r.best != null ? pct(r.best) : "-")}</td>
+      <td>${esc([...new Set(r.axes)].join(", "))}</td>
+      <td>${new Set(r.axes).size}</td>
       <td><button type="button" data-axis="${esc(r.axes[0] || "")}">Open</button></td>
     </tr>`
   ).join("") || `<tr><td colspan="4">No published model names match.</td></tr>`;
@@ -428,7 +452,7 @@ function renderHubCells() {
   const cells = (HUB.cells || [])
     .filter((cell) => cell.axis === hubAxis)
     .filter((cell) => !query.trim() || String(cell.model || "").toLowerCase().includes(query.trim().toLowerCase()))
-    .sort((a, b) => (Number(b.accuracy) || -1) - (Number(a.accuracy) || -1) || String(a.model).localeCompare(String(b.model)));
+    .sort((a, b) => String(a.model).localeCompare(String(b.model)) || String(a.card_url || "").localeCompare(String(b.card_url || "")));
   const models = new Set((HUB.cells || []).map((cell) => cell.model).filter(Boolean));
   const counts = HUB.counts || {};
   tape.innerHTML = [
@@ -438,9 +462,10 @@ function renderHubCells() {
     [counts.indexes_read ?? "-", "Indexes read"],
     [counts.duplicates_collapsed ?? "-", "Duplicates collapsed"],
   ].map(([value, label]) => `<div><b>${esc(value)}</b><span>${esc(label)}</span></div>`).join("");
-  note.textContent = counts.complete
-    ? `${cells.length} published cell${cells.length === 1 ? "" : "s"} on ${hubAxis}; showing the top nine by the card's published figure. All discovered indexes answered.`
+  const coverage = counts.complete
+    ? `${cells.length} published cell${cells.length === 1 ? "" : "s"} on ${hubAxis}. All discovered indexes answered.`
     : `Partial read. ${counts.indexes_unread?.length || "Some"} index file(s) did not answer; no total is claimed.`;
+  note.textContent = `${coverage} Showing up to nine observations in model-name order. The feed does not identify a common comparison set: scores may use different banks or instruments. Inspect each signed card before comparing results.`;
   body.innerHTML = cells.slice(0, 9).map((cell, index) => `<tr>
     <td>${index + 1}</td>
     <td>${esc(cell.model)}</td>
@@ -534,22 +559,38 @@ function openAxis(name, updateOnly = false) {
     showPanel("desk");
   }
   const on = measuredOf(a);
+  const resultKind = seatsFor(a).kind;
+  const nonModel = ["facts", "subjects"].includes(resultKind);
   document.getElementById("desk-kicker").textContent = on ? "Published finding" : "Published empty slot";
   document.getElementById("desk-h").textContent = a.axis;
   document.getElementById("desk-sub").textContent = [a.bench, a.task].filter(Boolean).join(" · ");
-  const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : "facts · no accuracy") : "no figure";
+  const fig = figureText(a);
   const iv = on && Array.isArray(a.interval) ? `${pct(a.interval[0])} - ${pct(a.interval[1])}` : (on ? "withheld" : "-");
   const sep = a.axis === "jail" && a.separation === "TIE" ? "TIE · floor" : (a.separation || "-");
-  document.getElementById("quote").innerHTML = [
+  const sourceLimit = document.getElementById("desk-source-limit");
+  sourceLimit.hidden = !a.limit;
+  sourceLimit.textContent = a.limit ? `Source limitation: ${a.limit}` : "";
+  const summary = nonModel ? [
+    [chip(a.status, a.separation), "Status"],
+    [esc(a.n ?? "-"), a.n_unit || "n · see scope below"],
+    [esc(measurementTimeText(a)), "Measurement time"],
+  ] : [
     [chip(a.status, a.separation), "Status"],
     [esc(fig), "Figure"],
     [esc(on && a.n != null ? a.n : "-"), "n"],
     [esc(iv), "95% interval"],
     [esc(sep), "Separation"],
-    [esc(on && a.leader ? a.leader : "-"), "Leader"],
+    [esc(on && a.leader ? a.leader : "-"), a.separation === "SEPARATED" ? "Separated leader" : "Top observed · not separated"],
     [esc(on && typeof a.fleet_mean === "number" ? pct(a.fleet_mean) : "-"), "Fleet mean"],
     [esc(on && typeof a.macro_f1 === "number" ? String(a.macro_f1) : "-"), "Macro F1"],
-  ].map(([v, k]) => `<div><b>${v}</b><span>${esc(k)}</span></div>`).join("");
+  ];
+  document.getElementById("quote").innerHTML = summary.map(([v, k]) => `<div><b>${v}</b><span>${esc(k)}</span></div>`).join("");
+
+  document.getElementById("desk-models").hidden = nonModel;
+  document.getElementById("desk-facts").hidden = !nonModel;
+  document.getElementById("desk-facts").textContent = resultKind === "subjects"
+    ? "This axis records subject observations. Read the source limitation, method and evidence before using its published figures."
+    : "This axis records facts with its own scope and denominator. Read its finding and limitations below.";
 
   document.getElementById("desk-lb").innerHTML =
     `<thead><tr><th>#</th><th>Model</th><th>Figure</th><th>n</th><th>Interval</th><th>Lead</th></tr></thead><tbody>${leaderboardRows(a)}</tbody>`;
@@ -560,22 +601,38 @@ function openAxis(name, updateOnly = false) {
     ["Family", esc(a.family || "-")],
     ["Kind", esc(a.kind || "-")],
     ["Instrument / task", esc(a.task || a.bench || "-")],
-    ["Leader", on ? esc(a.leader || "-") : "-"],
     ["n", on && a.n != null ? esc(String(a.n)) : "-"],
-    ["Figure", on ? esc(fig) : "-"],
-    ["95% interval", esc(iv)],
-    ["Fleet mean", on && typeof a.fleet_mean === "number" ? esc(pct(a.fleet_mean)) : "-"],
-    ["Macro F1", on && typeof a.macro_f1 === "number" ? esc(String(a.macro_f1)) : "-"],
-    ["Separation", esc(sep)],
-    ["McNemar p", on && a.separation_p != null ? esc(String(a.separation_p)) : "-"],
-    ["Unparsed rate", on && typeof a.unparsed_rate === "number" ? esc(pct(a.unparsed_rate)) : "-"],
+    ...(!nonModel ? [
+      [a.separation === "SEPARATED" ? "Separated leader" : "Top observed · not separated", on ? esc(a.leader || "-") : "-"],
+      ["Figure", on ? esc(fig) : "-"],
+      ["95% interval", esc(iv)],
+      ["Fleet mean", on && typeof a.fleet_mean === "number" ? esc(pct(a.fleet_mean)) : "-"],
+      ["Macro F1", on && typeof a.macro_f1 === "number" ? esc(String(a.macro_f1)) : "-"],
+      ["Separation", esc(sep)],
+      ["McNemar p", on && a.separation_p != null ? esc(String(a.separation_p)) : "-"],
+      ["Unparsed rate", on && typeof a.unparsed_rate === "number" ? esc(pct(a.unparsed_rate)) : "-"],
+    ] : []),
   ];
+  if (resultKind === "subjects") {
+    for (const [label, key] of [
+      ["Applies to", "applies_to"], ["n unit", "n_unit"],
+      ["Publisher method status", "method_status"], ["Method", "method"], ["Method SHA-256", "method_sha"],
+      ["Published rate (read source limitation)", "rate"], ["Rate scale", "rate_scale"], ["Rate rule", "rate_rule"],
+      ["Published outcomes (read source limitation)", "per_outcome"],
+      ["Bank SHA-256", "bank_sha256"], ["Frame SHA-256", "frame_sha256"], ["Run attestation", "run_attestation"],
+    ]) {
+      if (a[key] != null) finding.push([label, esc(typeof a[key] === "object" ? JSON.stringify(a[key]) : String(a[key]))]);
+    }
+  }
   if (on && typeof a.mean_harm === "number") finding.push(["Mean harm", esc(num(a.mean_harm))]);
   if (on && typeof a.cvar05_harm === "number") finding.push(["CVaR harm", esc(num(a.cvar05_harm))]);
   const bank = a.dataset_url
     ? `<a href="${esc(a.dataset_url)}" target="_blank" rel="noreferrer">${esc(a.dataset || a.dataset_url)}</a>`
-    : esc(a.dataset || "-");
+    : esc(a.dataset || a.bank || "-");
   finding.push(["Bank", bank]);
+  const evidenceUrl = typeof a.evidence_url === "string" && /^\/(?!\/)/.test(a.evidence_url)
+    ? SITE + a.evidence_url : typeof a.evidence_url === "string" && /^https?:\/\//.test(a.evidence_url) ? a.evidence_url : null;
+  if (evidenceUrl) finding.push(["Published evidence", `<a href="${esc(evidenceUrl)}" target="_blank" rel="noreferrer">Open source record</a>`]);
   if (a.axis === "jail") finding.push(["Note", "Measured floor. A TIE is not a scored arena door."]);
   if (!on) finding.push(["Note", "This slot is published empty. No measurement has been signed."]);
   document.getElementById("find-table").innerHTML = rows(finding);
