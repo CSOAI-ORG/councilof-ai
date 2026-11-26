@@ -3,7 +3,8 @@
  * about the mock and nothing in this file can leak onto a page.
  *
  * What is pinned, band by band:
- *  HomeHero          one plain sentence, no figures, no banned string (rebuilt 2026-09-30)
+ *  HomeHero          plain measurement claims, a proof link beside each, no typed figure,
+ *                    no banned string (rebuilt 2026-09-30; claims and proofs 2026-11-24)
  *  LiveBoardGlance   one tile per axis with its read state; count + separation + model count off
  *                    their sources; an unread board prints the reason and NO figure
  *  HomeStrengths     six cards in the owner's order; every proof line is live-read or a labelled
@@ -16,7 +17,7 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Router } from "wouter";
-import HomeHero from "./HomeHero";
+import HomeHero, { HERO_PROOF } from "./HomeHero";
 import LiveBoardGlance, { boardTiles, modelsHeadline, separationRead } from "./LiveBoardGlance";
 import HomeStrengths, { anchorProof, correctionsProof, machineProof, strengthCards } from "./HomeStrengths";
 import HomeNavigator, { NAV_GROUPS } from "./HomeNavigator";
@@ -104,11 +105,21 @@ const models = { third_party_models: 123, own_models_excluded: 7 };
 describe("HomeHero", () => {
   it("opens on a plain measurement proposition, with no figure and no banned string", () => {
     const html = render(<HomeHero />);
-    expect(html).toContain("See how AI behaves.");
+    // Owner, 21 Nov 2026: read as a measurement body, plain claims with the proof beside each.
+    expect(html).toContain("We measure AI models and agents.");
     expect(html).toContain("Check the evidence yourself.");
-    expect(html).toContain("Independent measurements of AI models, agents");
-    expect(html).toContain("understand their limits");
-    expect(html).toContain("Measurement, not certification.");
+    expect(html).toContain("against frozen test banks with fixed grading rules");
+    expect(html).toContain("keep a public ledger of our own corrections");
+    expect(html).toContain("Verification is free, forever.");
+    expect(html).toContain("A result is a measurement of what we ran and when, never a mark, a badge or a grade to buy.");
+    expect(html).toContain("Payment never buys a place on the board or a better result");
+    // The lede and the note carry their sources too: the method, the board, and how we are funded.
+    expect(html).toContain('href="/methodology/"');
+    expect(html).toContain('href="/api/gspc"');
+    expect(html).toContain('href="/how-we-work/"');
+    // The no-certification line lives in the footer, methodology and card lines (BRAND-GUIDELINES
+    // §3.3), and the outward gate refuses the word in any form, negated or not.
+    expect(html).not.toMatch(/certif/i);
     expect(html).not.toContain('aria-roledescription="carousel"');
     expect(html).not.toContain("data-hero-dot");
     expect(html.match(/<h1\b/g)).toHaveLength(1);
@@ -123,6 +134,28 @@ describe("HomeHero", () => {
     expect(html).toContain('data-testid="hero-cta-board"');
     expect(html).toContain('data-testid="hero-cta-check"');
     expect(html).toContain('data-testid="hero-cta-agents"');
+  });
+
+  it("puts a live proof link beside every claim, and types no count into any of them", () => {
+    const html = render(<HomeHero />);
+    expect(HERO_PROOF.map((p) => p.id)).toEqual(["board", "signed", "corrections", "distribution", "standards"]);
+    const items = [...html.matchAll(/<li data-proof="([^"]+)">([\s\S]*?)<\/li>/g)];
+    expect(items.map((m) => m[1])).toEqual(HERO_PROOF.map((p) => p.id));
+    for (const [, id, inner] of items) {
+      const row = HERO_PROOF.find((p) => p.id === id)!;
+      expect(inner, `${id} carries its claim`).toContain(row.claim.replace(/'/g, "&#x27;"));
+      expect(inner, `${id} carries its proof link`).toContain(`href="${row.href}"`);
+      // A figure lives at the link, read live; the claim beside it states no count of its own.
+      // (A digit inside an identifier such as Ed25519 is a name, not a figure.)
+      expect(row.claim, `${id} types a count`).not.toMatch(/\b\d/);
+    }
+    // The proofs are the sources themselves, not pages that describe them.
+    expect(HERO_PROOF.find((p) => p.id === "board")!.href).toBe("/api/gspc");
+    expect(HERO_PROOF.find((p) => p.id === "corrections")!.href).toBe("/api/corrections");
+    expect(HERO_PROOF.find((p) => p.id === "distribution")!.href).toBe("/interop/distribution-latest.json");
+    expect(HERO_PROOF.find((p) => p.id === "standards")!.href).toMatch(/^https:\/\/datatracker\.ietf\.org\/doc\/draft-templeman-[a-z-]+\/referencedby\/$/);
+    // Downloads are distribution, never adoption (BRAND-GUIDELINES §5.5).
+    expect(HERO_PROOF.find((p) => p.id === "distribution")!.claim).toContain("distribution, not adoption");
   });
 
   it("has exactly one primary CTA, Explore the results, with Verify as the outlined secondary", () => {

@@ -1,0 +1,1186 @@
+{
+  "source_commit": "c24acfc5c4d80843be4707c8c4562dd877fcf6b7",
+  "git_blob_pins": {
+    "scripts/research/meok-axis-cpu-engine.mjs": "631f0f20a2f3c6fb61b0c6daa66298cb4ddca39f",
+    "scripts/axis-specialists.mjs": "6739b5c57e67c21345d17fbe9670c86de6d7d1b0",
+    "scripts/build-axis-reports.mjs": "823eada8d48a31ae837695c49fb366058148b569",
+    "council-os/axis-specialists/registry.json": "9466cc62cb82368b6da8bb26b3005730d1ef9ef3",
+    "council-os/axis-specialists/board-2026-11-02.snapshot.json": "8fdcd684aed9b5f48e349418695f96c622ed9ecf",
+    "public/axis-specialists/index.json": "02fa7093c476f1a3711b23145411301d2aeb18f0",
+    "council-os/axis-specialists/charter-map.json": "c1ba7a96e7c5d1577b6bb514f874484d1c4ce443",
+    "public/.well-known/constitutional-harness.json": "c75f63dc6121fecea22493be5ab206e51d61a793"
+  },
+  "result": {
+    "state": "READ_ONLY_SPECIALIST_CPU_REPLAY",
+    "axes": 34,
+    "required_field_controls": 165,
+    "identity_controls": 34,
+    "hold_controls": 34,
+    "source_snapshot_sha256": "d2165b6f2e22becc8f7b747515df2ce8e164e57525d5b0d1b490212de85a733e",
+    "new_gspc_measurement": false,
+    "authorises_execution": false,
+    "results": [
+      {
+        "axis": "governance",
+        "source_row_sha256": "cfdd5cd1984ddece176e301004c269d0d9f42dcd122bbd0002765ac13060b441",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "separation_evidence",
+          "leader_card_url",
+          "measurement_time"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          14,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "safety",
+        "source_row_sha256": "0bc1cebbc9033207fffba0f2a64c9e5b9698771b8aaf4f211992b58cf180187c",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "macro_f1",
+          "unparsed_rate",
+          "cvar05_harm",
+          "mean_harm"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "AXIS_SPECIFIC_EVIDENCE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "provenance",
+        "source_row_sha256": "a0331c39319f473b19d0818f64fd87cd6c11bed58a55255fcfdf9b538c50d471",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "leader_card_url",
+          "separation_evidence",
+          "measurement_time"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "continuity",
+        "source_row_sha256": "c800b3f78ab4fb35b122f9296cc7aae0453f471420517d33c21278f9c3e8def0",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "separation_evidence",
+          "measurement_time",
+          "method_status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "conformance",
+        "source_row_sha256": "9497570c71df97fd4501962988c6e7650ca740e57ab32c99efb81e624b80997d",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "separation_evidence",
+          "measurement_time",
+          "method_status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "openness",
+        "source_row_sha256": "50e7f75f0dc5dc1c178e2ccdfa6dbbe8961f51bef4502c6a8a6b38f6cec86abe",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "separation_evidence",
+          "measurement_time",
+          "method_status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "machinery-conformity",
+        "source_row_sha256": "3f62b927e29843a5dddc454084a637f67a5d7817cbfa9deca91140827c941f8c",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "separation_untested_reason_code",
+          "measurement_time"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          14,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "care",
+        "source_row_sha256": "d47999be33bf6ad3d040410da3e013f84ba7dc88a78be8cc1304f0169781ba66",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "n_note",
+          "separation_n_note",
+          "leader_card_url"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "cross-reality",
+        "source_row_sha256": "17c63013efd76c92ce5fed5d5f2f3b3d497d52a83d0ee76a89afba2ae35f1239",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "separation_untested_reason_code",
+          "measurement_time"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "detector-interop",
+        "source_row_sha256": "11bb3398ffd4be5c977d5ae23960610c804ee690753fc43a79eebd20c223b753",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "separation_untested_reason_code",
+          "measurement_time"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "art5-safeguard",
+        "source_row_sha256": "bdf4f6b61d0e508b12b70c504385ff062a245dc3401f64202363efdc30e535e8",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "separation_untested_reason_code",
+          "cvar05_harm"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "AXIS_SPECIFIC_EVIDENCE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          14,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "swarm",
+        "source_row_sha256": "c63ef4a73c628542210cbdd7e2d297757909297118f59a7b881e03229b84b96e",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "n_note",
+          "method_status",
+          "separation_basis"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "LEADER_STATE",
+          "CURRENT_METHOD_RULE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "affect",
+        "source_row_sha256": "84653d0f3444b4c15239393a70575c70793845871f050efecef21147629cd5e3",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "cvar05_harm",
+          "mean_harm"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "AXIS_SPECIFIC_EVIDENCE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "jail",
+        "source_row_sha256": "867d14ee81d94f72bc512ebd918827e4a8a35b7ca252725859846ac94a2e5d0c",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "dataset_note",
+          "null_grammar",
+          "quotable_models",
+          "method_status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "ROW_LINEAGE",
+          "LEADER_STATE",
+          "CURRENT_METHOD_RULE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "effect-binding",
+        "source_row_sha256": "87e041f281a5c1a8238e2394b586115ab2b1ad4c982e702b815270bb407b39c3",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "evidence_url",
+          "facts_as_of",
+          "run_attestation",
+          "coverage",
+          "n_unit"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "CURRENT_METHOD_RULE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "provenance-controls",
+        "source_row_sha256": "f4c1d530153beea69a6b391d10125744008fc0fa43b24ed6c82e39c4d49c0f16",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "coverage",
+          "carrier"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "CURRENT_METHOD_RULE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "reserve-attestation",
+        "source_row_sha256": "cc0f92e06441f67ea7554d2136f0be2a7e2fb49675a5f75f0443330c95b18313",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "n_unit"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "RUN_ATTESTATION",
+          "CURRENT_METHOD_RULE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "regulatory-framework",
+        "source_row_sha256": "74df3f149597a9a3030a46cd24f63e41802405f0a9860ce0c711c3726503dab6",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "n_unit"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "RUN_ATTESTATION",
+          "CURRENT_METHOD_RULE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          14,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "distribution-integrity",
+        "source_row_sha256": "7fd8d619f2b9164e998e7184210a6886cf478582382cd71261e564c0d48cfe9f",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "n_unit"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "RUN_ATTESTATION",
+          "CURRENT_METHOD_RULE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "custody-disclosure",
+        "source_row_sha256": "11d5c9190ba42415ae298c9f1b8fb7a9223f4b0192da2d72a78ecd99f7c30ce1",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "n_unit"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "RUN_ATTESTATION",
+          "CURRENT_METHOD_RULE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "ai-adoption-components",
+        "source_row_sha256": "ae966acf8e41d0271e87df5e740c6323930e92ee5f2024adadbf2648681e071b",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "dataset_note",
+          "evidence_url",
+          "facts_as_of",
+          "method_status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "RUN_ATTESTATION",
+          "CURRENT_METHOD_RULE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "labour-components",
+        "source_row_sha256": "0d4bdead51f1e5a2a82876166aa4ceed1fdf36e58cad9380ee9c424b5a0c52cd",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "dataset_note",
+          "evidence_url",
+          "facts_as_of",
+          "method_status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "RUN_ATTESTATION",
+          "CURRENT_METHOD_RULE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "humanoid-labour-index",
+        "source_row_sha256": "2e78a7629ace3312c48662ca4f07df1a283a902f52dbe420d8114f08db8f95ce",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "dataset_url",
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "RUN_ATTESTATION",
+          "CURRENT_METHOD_RULE"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "lab-practice",
+        "source_row_sha256": "f1d1c62826dd44ead3c2d26fc3406c9fd9f2554fb82a9b27cd6058ae1f24b5f2",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "MEASUREMENT_KIND"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "company-practice",
+        "source_row_sha256": "2e7f06a189bb9b124eef7e0ab50ed4e36a4e8a2e34f0832671d3fe6611f5f9a3",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "MEASUREMENT_KIND"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "measurer-integrity",
+        "source_row_sha256": "359ad3301329701f43a551de9361c00b7c52e39b204ad7346d85ea2fd0ab71bd",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "MEASUREMENT_KIND"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "harness-fidelity",
+        "source_row_sha256": "aced7b6a217213eac91a6bfdf39f3f877960ae2f243678329caf5e28bd169402",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "MEASUREMENT_KIND"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "interop-conformance",
+        "source_row_sha256": "ff7271e428bce4dc929900b3af36bcd1ea6aef96c6d4bcc31fcd24f5faa9a95d",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "MEASUREMENT_KIND"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "humanoid-deployment",
+        "source_row_sha256": "2e07395146dd61904ec9cb7e602cf29fccd30ceca6cd169e67e733e71e8d0cfc",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "MEASUREMENT_KIND"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "regulator-transparency",
+        "source_row_sha256": "270a9b7fe8c5df579165fd5167b05174b5632128e71bc0d5e2522c798770661e",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "applies_to",
+          "method_status",
+          "public_pages",
+          "n",
+          "status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "MEASUREMENT_KIND"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          14,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "interpretability-reproducibility",
+        "source_row_sha256": "d8466bcdab98d93fa1f571768a74cf7e948b0520adc1acc3aad14269f9d7040a",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "MEASUREMENT_KIND"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "claim-maintenance",
+        "source_row_sha256": "68a24306e899492c0c6a41057c4f1c71137277c673b9af748bd789fd3f9d7cf7",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "applies_to",
+          "method_status",
+          "n_note",
+          "n",
+          "status"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "MEASUREMENT_KIND"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "serving-fidelity",
+        "source_row_sha256": "1a9d1e3aebae5358f51039f16ae5a97518991795e15d9c02e31b1971c7309053",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "applies_to",
+          "method",
+          "method_sha",
+          "method_status",
+          "n_note"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "AXIS_SPECIFIC_EVIDENCE",
+          "MEASUREMENT_KIND"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "axis": "watchdog-ingest",
+        "source_row_sha256": "735ec87fbd3525f1ebf2c0b774145d0ada589252325526dedcc995b47cd46a1e",
+        "source_status": "MEASURED",
+        "required_field_controls": [
+          "applies_to",
+          "method",
+          "method_sha",
+          "method_status",
+          "n_note"
+        ],
+        "identity_control": "PASSED",
+        "human_hold": "RETAINED",
+        "audit_findings": [
+          "AXIS_SPECIFIC_EVIDENCE",
+          "MEASUREMENT_KIND"
+        ],
+        "domain_controls_state": "NOT_RUN_IN_THIS_WRAPPER",
+        "charter_articles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10,
+          11,
+          14,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      }
+    ]
+  }
+}

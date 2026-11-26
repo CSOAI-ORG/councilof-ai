@@ -3,6 +3,7 @@ import { FOCUS, MEASURE, PRIMARY, SP, TYPE } from "./glass";
 import { leaderLabel } from "../../../../functions/_lib/leaderLabel";
 import { Check, CopyBlock, Field, PaneHead, WireNotice } from "./paneKit";
 import HelpDoor from "./HelpDoor";
+import { heldLimit } from "@/lib/axisCells";
 import {
   answerForSubject,
   MODELS_MEASURED_PATH,
@@ -248,6 +249,11 @@ function AxisRow({
             {typeof a.separation_p === "number"
               ? ` · McNemar p=${a.separation_p}`
               : ""}
+          </span>
+        )}
+        {heldLimit(a) && (
+          <span className="mt-1 block text-[11px] leading-snug text-amber-900" data-testid={`evidence-limit-${a.axis}`}>
+            Held: {heldLimit(a)}
           </span>
         )}
       </Check>

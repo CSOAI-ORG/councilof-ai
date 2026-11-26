@@ -42,10 +42,21 @@ export function validate(review) {
       try { u = new URL(source.href); } catch { throw Error("Bad source URL: " + r.id); }
       if (u.protocol !== "https:" || !u.hostname || urls.has(source.href)) throw Error("Invalid or duplicate source URL: " + r.id);
       urls.add(source.href);
-      const host = u.hostname.toLowerCase();
-      const isCouncilHost = ["councilof.ai", "www.councilof.ai", "csoai.org", "www.csoai.org", "meok.ai"].includes(host);
-      const isCouncilGithub = host === "github.com" && new RegExp("^/(?:CSOAI-ORG|nicktempleman)/", "i").test(u.pathname);
-      if (!isCouncilHost && !isCouncilGithub) hasOutsideSource = true;
+      // Known related-operator references can supplement outside evidence, never
+      // supply the only outside-source candidate. An unmatched host is NOT proof
+      // of independence; the owner review and claim boundaries remain essential.
+      const host = u.hostname.toLowerCase().replace(/\.$/, "");
+      const operatorDomains = ["councilof.ai", "csoai.org", "meok.ai", "proofof.ai", "safetyof.ai", "cobolbridge.ai"];
+      const isCouncilHost = operatorDomains.some(domain => host === domain || host.endsWith("." + domain));
+      const pathParts = u.pathname.split("/").filter(Boolean).map(part => {
+        try { return decodeURIComponent(part).toLowerCase(); } catch { return part.toLowerCase(); }
+      });
+      const operatorAccounts = new Set(["csoai-org", "council-of-ai-csoai-org", "nicktempleman"]);
+      const isCouncilGithub = ["github.com", "raw.githubusercontent.com"].includes(host) && operatorAccounts.has(pathParts[0]);
+      const isCouncilHub = host === "huggingface.co" && ["csoai", "csoai-org", "meok", "nicktempleman"].includes(
+        ["datasets", "spaces"].includes(pathParts[0]) ? pathParts[1] : pathParts[0]
+      );
+      if (!isCouncilHost && !isCouncilGithub && !isCouncilHub) hasOutsideSource = true;
     }
     if (!hasOutsideSource) throw Error("No independently hosted source: " + r.id);
   }

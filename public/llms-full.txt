@@ -1034,28 +1034,31 @@ It is a dated simulation archive; its source date and upstream signature-verific
 ### 9a. Distribution — measured per entity, never added, and not adoption
 
 Derived at generation from https://councilof.ai/interop/distribution-latest.json (same bytes on
-disk at public/interop/distribution-latest.json, schema csoai.distribution/0.1, artifact as_of 2026-11-21T15:20:41Z).
+disk at public/interop/distribution-latest.json, schema csoai.distribution/0.1, artifact as_of 2026-11-25T18:02:41Z).
 Re-read it live; do not quote these figures without the state and coverage beside them.
-The census declares itself out of date after 2026-11-23T15:20:41Z (stale_after); past that time, read it live before quoting any figure.
+The census declares itself out of date after 2026-11-27T18:02:41Z (stale_after); past that time, read it live before quoting any figure.
 
 CSOAI Ltd and MEOK AI Labs are separate entities publishing from one account, and the census labels
-every package with its entity. Their figures are read from the artifact's `by_entity`. They are two
-figures and are never added: quote each under its own label.
+every package with its entity. They are two figures and are never added: quote each under its own label.
+CSOAI's figures leave out the Hugging Face datasets our own services read, which are summed apart; both
+come from the artifact's package rows and add back up to its `by_entity` CSOAI pair. MEOK AI Labs'
+figures are its `by_entity` values.
 
-- CSOAI packages, since first release (cumulative): 925,094 gross downloads — state READ, 211 of 211 counters answered. Window: cumulative, all time. as_of 2026-11-21T15:20:41Z.
-- CSOAI packages, in the last 30 days: 540,098 gross downloads — state READ, 211 of 211 counters answered. Window: last 30 days, each registry over its own 30-day window. as_of 2026-11-21T15:20:41Z.
-- MEOK AI Labs, a separate entity publishing from the same account, is counted on its own and never added to CSOAI's figures: 2,824,293 gross downloads since first release — state PARTIAL, 317 of 318 counters answered, so it is a LOWER BOUND over those, never a total over all of them; 256,752 in the last 30 days — state PARTIAL, 317 of 318 counters answered, so it is a LOWER BOUND over those, never a total over all of them. as_of 2026-11-21T15:20:41Z.
+- CSOAI packages, without the 10 datasets our own services read, since first release (cumulative): 479,866 gross downloads — state READ, 208 of 208 counters answered. Window: cumulative, all time. as_of 2026-11-25T18:02:41Z.
+- CSOAI packages, without the 10 datasets our own services read, in the last 30 days: 260,183 gross downloads — state READ, 208 of 208 counters answered. Window: last 30 days, each registry over its own 30-day window. as_of 2026-11-25T18:02:41Z.
+- The 10 Hugging Face datasets our own services read are counted on their own and never added to CSOAI's figures, because our reads are inside their counts (/api/momentum keeps them apart too): 496,267 gross downloads since first release — state READ, 10 of 10 counters answered; 293,972 in the last 30 days — state READ, 10 of 10 counters answered. as_of 2026-11-25T18:02:41Z.
+- MEOK AI Labs, a separate entity publishing from the same account, is counted on its own and never added to CSOAI's figures: 2,884,868 gross downloads since first release — state PARTIAL, 317 of 318 counters answered, so it is a LOWER BOUND over those, never a total over all of them; 285,920 in the last 30 days — state PARTIAL, 317 of 318 counters answered, so it is a LOWER BOUND over those, never a total over all of them. as_of 2026-11-25T18:02:41Z.
 - Packages labelled joint or unattributed are in neither figure. The artifact's `totals` counts every
   row of the account, joint and unattributed included, so it is neither entity's figure and is not
   printed here.
-- Packages in the census, across three registries: 908 (huggingface 187 · npm 324 · pypi 397), each row labelled with
+- Packages in the census, across three registries: 915 (huggingface 194 · npm 324 · pypi 397), each row labelled with
   its entity. Three registries are three populations: the download counts of different registries
   are reported per registry on the artifact, and the figures above are the artifact's own
-  `by_entity` values, not an arithmetic of this line.
+  package rows and `by_entity` values, not an arithmetic of this line.
 - The 30-day and cumulative figures are different WINDOWS over the same packages. They are never
   added to each other, and neither is a count of people: mirrors, CI and crawlers are inside both.
 - Counter that did not answer, named rather than absorbed: pypi `meok-.github-profile` (labelled meok) — http 404. Its value is null, never 0.
-- Two third-party counters over the same PyPI packages DISAGREE: on 5 sampled packages pypistats.org read about 3.95x lower than the source published above. That divergence is recorded, not resolved by picking one, and the LARGER of the two is what is published — which is exactly why it is labelled gross. Quote this ratio beside the number.
+- Two third-party counters over the same PyPI packages DISAGREE: on 5 sampled packages pypistats.org read about 4.23x lower than the source published above. That divergence is recorded, not resolved by picking one, and the LARGER of the two is what is published — which is exactly why it is labelled gross. Quote this ratio beside the number.
 - A download is distribution. It is not adoption, not a user, not a customer, and not a measurement.
   Reach says how far the board travels; authority stays GET /api/gspc, the signed cards and free verify.
 
@@ -1095,14 +1098,14 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-22T03:30:37Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-24T02:40:39Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
 - Detached OpenTimestamps proofs that actually deserialize: 714. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 712.
-- Still calendar-pending: 2. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 711.
+- Still calendar-pending: 3. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 105 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
@@ -1143,7 +1146,7 @@ Each record below is a dated account of what public sources state, with its sour
 ## 10d. PUBLISHED INTEROP FILES — every file under /interop/, with its digest (except the index itself)
 
 Derived at generation from https://councilof.ai/interop/file-index.json (same bytes on disk at
-public/interop/file-index.json, schema csoai.interop-file-index/0.2, artifact as_of 2026-11-23T01:43:33Z). It is a
+public/interop/file-index.json, schema csoai.interop-file-index/0.2, artifact as_of 2026-11-25T21:58:03Z). It is a
 MEASUREMENT of the published tree, not a list of intentions: each row carries the path, the size,
 the SHA-256 of the bytes and how the file is served.
 
@@ -1151,12 +1154,12 @@ The index does not list itself. A file cannot carry its own digest — hashing t
 gives a digest that depends on the digest — so a row claiming one would be wrong the moment it was
 written. Every OTHER file under /interop/ is listed.
 
-- Files indexed: 16,542. Bytes indexed: 288,073,377.
-- By how they are served: 13,240 hf-mirror; 3,296 pages; 6 retired-bytes.
+- Files indexed: 16,573. Bytes indexed: 289,398,727.
+- By how they are served: 13,240 hf-mirror; 3,327 pages; 6 retired-bytes.
 - hf-mirror: routed by a 302 redirect to the HuggingFace evidence mirror (scripts/deploy-exclusions.json); the sha256 is of the canonical tree bytes, which are the bytes the mirror holds. THE MIRROR IS A SEPARATE HOST AND ITS MEMBERSHIP IS NOT RECORDED HERE, so this row's claim is true UNDER THE CONDITION THAT THE MIRROR STILL HOLDS THE FILE. MEASURED 2026-11-07: all five mirror classes (mill-cards-signed, mill-cards-unsigned, mill-evidence, the file-kind exclusions and the ots/*.invalid records) resolved ANONYMOUSLY with HTTP 200 and an exact digest match. If the mirror ever stops holding a path, the reader gets HUGGINGFACE's 'Entry not found' — a 404 and a 15-byte body from the mirror, NOT from this site — so a mismatch on one of these rows is a statement about the mirror's membership until it is shown otherwise
 - pages: served by the site build
 - retired-bytes: a retired .invalid record. The estate's Function intercepts every .invalid path and serves it from the retired-bytes archive when that archive holds these exact bytes (200, x-evidence-state: retired-or-invalid-historical-bytes), and answers 404 BY DESIGN when it does not. The sha256 is of the canonical tree bytes, which are the bytes the archive copies verbatim. Which case applies is decided by the archive in force, published at /archive/retired-proof-bytes-v1.json
-- By how the served bytes compare with the published bytes: 16,541 as-published; 1 edge-transformed-per-request.
+- By how the served bytes compare with the published bytes: 16,572 as-published; 1 edge-transformed-per-request.
 - as-published: the bytes the site serves for this path are the bytes the estate published here; the sha256 is checkable against a fetch
 - edge-transformed-per-request: the edge rewrites this markup and the rewrite is randomised per request, so the bytes the site serves differ on EVERY fetch; no digest of them can be reproduced, by a reader or by the estate
 - To check one file: fetch its path and hash it. On a row whose served_bytes reads "as-published", a

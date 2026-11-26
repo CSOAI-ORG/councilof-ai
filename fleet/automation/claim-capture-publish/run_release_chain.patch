@@ -1,0 +1,44 @@
+--- a/ras_intake/acceptance/run_release_chain.py	2026-11-22 03:42:37
++++ b/ras_intake/acceptance/run_release_chain.py	2026-11-22 03:42:37
+@@ -53,6 +53,21 @@
+  cid=sha(enc(evidence));identifier=sha(enc([request['request_id'],cid]))
+  return {'schema':'csoai.ras-release-report/1.0','report_id':identifier,'request_id':request['request_id'],'subject':dict(expect,filename=metadata['filename']),'question':QUESTION,'state':'COMPLETED_STATIC_EVIDENCE' if result['state']=='PINNED_ARCHIVE_RECORDS_VERIFIED' else 'HELD_FOR_REVIEW','observed_at':read_at,'source':{'url':source['source_url'],'read_at':source['read_at'],'metadata_sha256':source['source_sha256'],'wheel_url':metadata['file_url'],'release_version':metadata['version']},'route':{'registry_content_id':request['route']['contract_id'],'wedge':route.wedge,'axes':list(route.axes),'hives':sorted(g for g,axes in groups.items() if set(axes)&set(route.axes)),'routing_is_not_execution_permission':True},'evidence_content_id':cid,'evidence':evidence,'operator_scope':'User-requested read-only inspection of retained public archives; vendor code never runs.','limitation':LIMITATION,'freshness':{'policy':'Version-pinned historical result; reevaluate on dependency or method change','currently_latest_release_verified':False},'commercial':{'quote':None,'customer':None,'payment':None,'outside_acceptance':False},'new_signatures':0,'new_roots':0,'new_model_evaluations':0,'gspc_board_promotions':0}
+ 
++def input_drift(name,r,source,request):
++ """Pinned inspection vs live intake. Upstream publishing a newer release is expected, not an integrity failure."""
++ if request['subject']['revision']==r['version'] and source['source_sha256']==r['source_metadata_sha256']:return None
++ return {'name':name,'pinned_version':r['version'],'requested_revision':request['subject']['revision'],'pinned_source_sha256':r['source_metadata_sha256'],'live_source_sha256':source['source_sha256'],'live_read_at':source.get('read_at'),'report_state':'HOLD_UNTIL_RECHECKED'}
++
++def retained_hold(superseded):
++ """Upstream moved past the pin: keep the retained version-pinned result, re-verify its bytes, write nothing."""
++ pointer=BASE/'latest.json'
++ if not pointer.exists():raise ValueError('Input revision mismatch and no retained result')
++ prior=decode(pointer.read_bytes());manifest=BASE/'runs'/prior['fingerprint']/'manifest.json'
++ if sha(read_bounded(manifest,2*1024**2))!=prior['manifest_sha256']:raise ValueError('Retained release manifest changed')
++ for n,m in decode(manifest.read_bytes())['files'].items():
++  if sha(read_bounded(manifest.parent/n,2*1024**2))!=m['sha256']:raise ValueError('Retained output changed')
++ return {'state':'NOOP_UPSTREAM_SUPERSEDED_HOLD_UNTIL_RECHECKED','retained_fingerprint':prior['fingerprint'],'retained_as_of':prior['as_of'],'reports':prior['reports'],'superseded':superseded,'source_requests':0,'next_step':'Re-pin with ras_intake/inspect_release_archives.py (owner-approved, at most 3 PyPI reads) to evaluate the newer releases.'}
++
+ def run():
+  lock=(BASE/'writer.lock').open('a')
+  try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+@@ -67,15 +82,17 @@
+   if not contract.read_policy_decision().decision or contract.execution_policy_decision().decision:raise ValueError('Authority boundary changed')
+   if contract.registry_content_id!=intake['registry_content_id']:raise ValueError('Routing changed; reconcile first')
+   method={'checker_sha256':sha(read_bounded(BASE/'release_check.py',100000)),'policy_sha256':sha(enc(check.POLICY)),'pipeline_sha256':sha(read_bounded(Path(__file__),100000)),'python':platform.python_version(),'implementation':platform.python_implementation(),'network':'none','vendor_code_execution':False,'sovspace_sha256':sha(read_bounded(CONDOR/'condor/gspc_sovspace.py',100000))}
+-  inputs=[]
++  inputs=[];superseded=[]
+   for name in TARGETS:
+    subject='pkg:pypi/'+name;rows=[r for r in inspection['records'] if r['subject_id']==subject and r['state']=='ARTIFACT_BYTES_AND_IDENTITY_VERIFIED']
+    if len(rows)!=1:raise ValueError('Pinned input inspection missing or ambiguous')
+    r=rows[0];raw=read_bounded(INTAKE/'state/release-inspection'/(r['sha256']+'.whl'),check.LIMITS['archive_bytes'])
+    source=next(s for s in intake['sources'] if s['source_id']=='pypi:'+name)
+    request=next(s for s in requests if s['subject']['id']==subject)
+-   if request['subject']['revision']!=r['version'] or source['source_sha256']!=r['source_metadata_sha256']:raise ValueError('Input revision mismatch')
++   drift=input_drift(name,r,source,request)
++   if drift:superseded.append(drift);continue
+    inputs.append((name,r,raw,source,request))
++  if superseded:return retained_hold(superseded)
+   fingerprint=sha(enc({'inputs':[(name,r['sha256'],sha(raw),source['source_sha256'],request['request_id']) for name,r,raw,source,request in inputs],'method':method,'routing':sha(contract_raw),'hives':hive_source['source_sha256']}))
+   pointer=BASE/'latest.json'
+   if pointer.exists():

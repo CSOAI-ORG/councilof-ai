@@ -29,7 +29,7 @@ type Touched = {
   crosswalk_rows: unknown[];
 };
 type Predicate = { id: string; name: string; scope: string; provision_id: string; free_route?: string; binding_today?: string };
-type CapsuleAdapter = { batch: string; adapter: string; kind: string; provision_ids_bound: string[]; record: string };
+type CapsuleAdapter = { batch: string; adapter: string; kind: string; provision_ids_bound: string[]; provision_ids_bound_by_sidecar?: string[]; record: string };
 type Mapping = { source: string; kind: string; code: string; predicate: string; provision_id: string; relation: string; scope: string; capsule_state: string };
 type Alias = { celex: string; provisions: string[]; derived_from: string; note?: string };
 
@@ -90,6 +90,9 @@ export function provisionRecord(provisionId: string, origin: string): Json {
   const inCapsule = coverage.capsule_adapters
     .filter((a) => a.provision_ids_bound.includes(provisionId))
     .map((a) => ({ batch: a.batch, adapter: a.adapter, kind: a.kind, record: `${origin}${a.record}` }));
+  const bySidecar = coverage.capsule_adapters
+    .filter((a) => (a.provision_ids_bound_by_sidecar ?? []).includes(provisionId))
+    .map((a) => ({ batch: a.batch, adapter: a.adapter, kind: a.kind, record: `${origin}${a.record}`, bindings: `${origin}/mechanism/capsule-provision-bindings.json` }));
   const viaMap = map.mappings
     .filter((m) => m.provision_id === provisionId)
     .map((m) => ({ source: m.source, kind: m.kind, predicate: m.predicate, relation: m.relation, scope: m.scope, capsule_state: m.capsule_state }));
@@ -108,8 +111,9 @@ export function provisionRecord(provisionId: string, origin: string): Json {
     crosswalk_rows: t?.crosswalk_rows.length ?? 0,
     bound_capsules: {
       in_capsule: inCapsule,
+      by_sidecar: bySidecar,
       via_map: viaMap,
-      note: "in_capsule lists published capsule batches whose capsules carry this provision in their provisions binding. via_map lists the evidence kinds the backfill map lets cite it; a mapped kind is not a published capsule.",
+      note: "in_capsule lists published capsule batches whose capsules carry this provision in their provisions binding. by_sidecar lists published batches whose capsules the sidecar binds to it without changing their signed bytes. via_map lists the evidence kinds the backfill map lets cite it; a mapped kind is not a published capsule.",
     },
   };
 }
@@ -121,6 +125,7 @@ export const CORPUS_VIEW = (origin: string) => ({
   source_texts: coverage.corpus.source_texts ? `${origin}${coverage.corpus.source_texts.path}` : null,
   coverage: `${origin}/mechanism/coverage.json`,
   map: `${origin}/mechanism/capsule-provision-map.json`,
+  capsule_bindings: `${origin}/mechanism/capsule-provision-bindings.json`,
 });
 
 /** The free provision view the door and the tools share. */

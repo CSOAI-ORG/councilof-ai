@@ -129,7 +129,7 @@ export const PRICING_RISK_SLIDES: Slide[] = [
       { tag: "pain", text: "Assurance firms that grade a model and sell the remediation for the grade" },
       { tag: "pain", text: "Underwriters buying scores from a party that also carries the risk" },
       { tag: "benefit", text: "A grader with no commercial exposure to the outcome of any grade" },
-      { tag: "usp", text: "We take no money from anything we rank — verification is free, forever, for everyone" },
+      { tag: "usp", text: "No one can buy a place, a score or a removal — verification is free, forever, for everyone" },
     ],
     bg: {
       src: "/images/coliseum_humans_vs_humanoids.jpg",

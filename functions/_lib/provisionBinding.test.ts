@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { checkProvisionBinding, bindingFor, frozenManifest, BINDING_KEYS, RELATIONS, CAPSULE_SCHEMA_WITH_PROVISIONS, PROVISION_ID_RE } from "./provisionBinding";
+import { checkProvisionBinding, bindingFor, frozenManifest, mapBindingsFor, BINDING_KEYS, RELATIONS, CAPSULE_SCHEMA_WITH_PROVISIONS, PROVISION_ID_RE, type ProvisionMap } from "./provisionBinding";
 import { verifyCapsule } from "./measurementCapsule";
 
 const ROOT = join(__dirname, "../..");
@@ -57,5 +57,29 @@ describe("capsule 0.3 provisions binding", () => {
     expect((withBinding.provisions as { state: string }).state).toBe("PINNED");
     const plain = await verifyCapsule("https://councilof.ai", { schema: "csoai.measurement-capsule/0.2", kind: "measurement.example" });
     expect("provisions" in plain).toBe(false);
+  });
+});
+
+describe("mapBindingsFor: the backfill map is the only source of a binding", () => {
+  const MAP = JSON.parse(readFileSync(join(ROOT, "public/mechanism/capsule-provision-map.json"), "utf8")) as ProvisionMap & { unmapped_adapters: { adapter: string }[] };
+
+  it("a route mapping binds its evidence kind, PINNED, and nothing else", () => {
+    for (const m of MAP.mappings.filter((x) => x.source === "route")) {
+      const rows = mapBindingsFor(null, m.kind);
+      expect(rows).toContainEqual(bindingFor(m.provision_id, m.relation as (typeof RELATIONS)[number]));
+      expect(checkProvisionBinding(rows, S03).state).toBe("PINNED");
+    }
+    expect(mapBindingsFor(null, "measurement.no-such-kind")).toEqual([]);
+  });
+
+  it("an unmapped adapter, a2a_card and claim_watch among them, gets no binding", () => {
+    for (const a of MAP.unmapped_adapters.map((u) => u.adapter)) expect(mapBindingsFor(a, `measurement.${a}`), a).toEqual([]);
+    expect(MAP.unmapped_adapters.map((u) => u.adapter)).toEqual(expect.arrayContaining(["a2a_card", "claim_watch"]));
+  });
+
+  it("a map row or map root that is not the manifest's throws instead of binding", () => {
+    const row = MAP.mappings[0];
+    expect(() => mapBindingsFor(null, row.kind, { ...MAP, mappings: [{ ...row, provision_sha256: "0".repeat(64) }] })).toThrow(/not pinned/);
+    expect(() => mapBindingsFor(null, row.kind, { ...MAP, corpus_root: "0".repeat(64) })).toThrow(/not pinned/);
   });
 });

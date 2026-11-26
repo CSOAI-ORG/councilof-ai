@@ -47,7 +47,7 @@ export type ToolCall = { tool: string; args: Json };
 export type Plan =
   | { kind: "tools"; intent: string; calls: ToolCall[] }
   | { kind: "needs_input"; intent: string; tool: string; missing: string; example: string }
-  | { kind: "help"; intent: "help" | "unknown" | "buying" }
+  | { kind: "help"; intent: "help" | "unknown" | "buying" | "gspc-definition" }
   | { kind: "help"; intent: "guidance"; topic: GuidanceTopic };
 
 export type Citation = { tool: string; record_id: string | null; url: string | null };
@@ -179,6 +179,12 @@ export function routeIntent(raw: string): Plan {
   const t = text.toLowerCase().replace(/\s+/g, " ");
   if (!t) return { kind: "help", intent: "unknown" };
 
+  // Definition is not measurement. A public Ask smoke query asking what
+  // GSPC stands for incorrectly returned board totals, not the definition.
+  // Keep this narrow authored answer separate from live measured counts.
+  if (/\b(?:what (?:does|do) (?:the )?gspc (?:stand for|mean)|define (?:the )?gspc|expand (?:the )?gspc|gspc (?:acronym|definition|meaning))\b/.test(t))
+    return { kind: "help", intent: "gspc-definition" };
+
   // 1. A pasted measurement capsule.
   if (/measurement-capsule|capsule_id/.test(t)) {
     const json = firstJsonObject(text);
@@ -285,6 +291,7 @@ export function routeIntent(raw: string): Plan {
 }
 
 const str = (v: unknown): string | null => (typeof v === "string" && v.trim() ? v : null);
+const clipText = (s: string, n: number): string => (s.length <= n ? s : `${s.slice(0, n - 1).trimEnd()}…`);
 const rec = (v: unknown): Json | null => (v && typeof v === "object" && !Array.isArray(v) ? (v as Json) : null);
 
 /** In-process dispatch to the same functions POST /mcp calls. x_payment never passes. */
@@ -353,7 +360,7 @@ const SHOW: Record<string, string[]> = {
   list_cards: [],
   x402_trust: ["as_of", "headline"],
   mcp_trust: ["as_of", "headline", "partial", "doctrine"],
-  corrections_summary: ["count", "signature_state_reported", "signature_verification", "correction_latency", "recent", "note"],
+  corrections_summary: ["count", "signature_state_reported", "signature_verification"],
   model_lookup: ["model", "cards", "axes", "whose", "other_matches", "note"],
   claim_maintenance_register: ["as_of", "totals", "subject_count", "registry_count", "right_of_reply", "does_not_prove", "note"],
   measurement_index: ["as_of", "n_capsules_total", "n_batches", "index_root"],
@@ -414,6 +421,19 @@ function renderOutcome(o: ToolOutcome): string {
       const store = rec(p.card_store_count_endpoint);
       if (store) lines.push(`- card store count endpoint: ${fmt(store.count)}`);
     }
+    if (o.tool === "corrections_summary") {
+      // 24 Nov 2026: `recent` and `correction_latency` went through fmt() as raw JSON, so the answer to
+      // "show the latest corrections" ran to ~14,000 characters, 95% of it JSON. Each recent row now reads
+      // as one line: its id, its date and what was wrong, clipped but never reworded.
+      for (const value of Array.isArray(p.recent) ? p.recent : []) {
+        const c = rec(value); if (!c) continue;
+        const wrong = str(c.what_was_wrong);
+        lines.push(`- ${fmt(c.id)} (${str(c.date) ?? "undated"}): ${wrong ? clipText(wrong.replace(/\s+/g, " "), 240) : "no description recorded"}`);
+      }
+      const lat = rec(p.correction_latency);
+      if (lat) lines.push(`- correction_latency: ${fmt(lat.exact)} exact, ${fmt(lat.upper_bound)} upper bound, ${fmt(lat.unmeasured)} unmeasured`);
+      if (str(p.note)) lines.push(`- note: ${p.note}`);
+    }
     if (o.tool === "mcp_trust") {
       const en = rec(p.enumeration);
       if (en) lines.push(`- enumeration: ${fmt(en.unique_hosts)} hosts enumerated, complete=${fmt(en.complete)}${en.stop_reason ? ` (${en.stop_reason})` : ""}`);
@@ -470,6 +490,14 @@ export async function executePlan(
   onEvent?: (e: { phase: "start" | "end"; call: ToolCall; outcome?: ToolOutcome; id: string }) => void | Promise<void>,
 ): Promise<TalkAnswer> {
   if (plan.kind === "help") {
+    if (plan.intent === "gspc-definition") {
+      return {
+        kind: "help", intent: "gspc-definition", grounded: false,
+        answer: "GSPC stands for Governance, Safety, Provenance and Continuity. It is the Council of AI's measurement board, not a conformity certification or a promise that any model is safe.\n\nSource: https://councilof.ai/cite/gspc (published board citation); https://councilof.ai/methodology/.",
+        label: "PUBLISHED_GUIDANCE", tool_calls: [], citations: [],
+        answered_by: "published board citation (authored definition; no tool called)",
+      };
+    }
     if (plan.intent === "guidance") {
       return { kind: "help", intent: "guidance", grounded: false, answer: guidanceAnswer(plan.topic), label: "GUIDANCE", tool_calls: [], citations: [], answered_by: "published product guidance (no tool called)" };
     }

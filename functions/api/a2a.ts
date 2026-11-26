@@ -101,12 +101,13 @@ export const A2A_ERROR = {
 // can read the contract before sending anything.
 export const METHODS: Record<string, string> = {
   SendMessage:
-    "answered with a Message from one explicit {skill,input} selector, or from one plain-text Part that the shared " +
+    "answered with a Message (one case is a Task: a metered skill's x402 challenge to a request that activates the " +
+    "a2a-x402 extension; see tool_skills.payment), from one explicit {skill,input} selector, or from one plain-text Part that the shared " +
     "deterministic router (functions/_lib/talkRouter.ts, also behind POST /api/chat and POST /api/agui/run) places on a " +
     "POST /mcp tool, quoting that tool's output with a citation; text it cannot place is refused. Every card skill routes to a fixed, free, " +
     "same-origin handler. A per-tool skill - a tool name from /.well-known/agents/index.json - runs that tool through the " +
-    "dispatch POST /mcp tools/call runs; the metered ones answer with their x402 challenge until input.x_payment carries a " +
-    "payment. The set is the skills array on this response - read it rather than a number: this " +
+    "dispatch POST /mcp tools/call runs; the metered ones answer with their x402 challenge until input.x_payment or " +
+    "message.metadata[\"x402.payment.payload\"] carries a payment. The set is the skills array on this response - read it rather than a number: this " +
     "string once named a smaller figure than SKILL_IDS actually held, and scripts/capability-registry.mjs --check " +
     "now fails on any skill count typed into this file.",
   SendStreamingMessage: "UnsupportedOperationError -32004 (streaming is false on the card)",
@@ -879,9 +880,20 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
       break;
   }
   const result = await fetchJsonSource(origin, path, { method, body });
+  // The advertised crosswalk canon and signed card are separate resources from
+  // the live divergence feed. Link them without rewriting the source payload,
+  // asserting their current availability, or promoting their signatures.
+  const crosswalkResources = skill === "east-west-crosswalk" ? {
+    live_divergence: { url: result.source, schema: record(result.payload)?.schema ?? null },
+    regulatory_crosswalk: { url: new URL("/crosswalk/east-west-v1.json", origin).toString(), state: "REFERENCE_ONLY" },
+    cross_border_card: { url: new URL("/signals/cross-border-card.signed.json", origin).toString(), state: "REFERENCE_ONLY" },
+    verifier: { url: new URL("/gspc-verify", origin).toString(), state: "REFERENCE_ONLY" },
+    note: "Separate resources; linked artifacts were not fetched or verified by this call.",
+  } : undefined;
   return {
-    text: sourceText(skill, result.source),
+    text: sourceText(skill, result.source) + (crosswalkResources ? "\nThe versioned regulatory crosswalk and cross-border card are separate resources linked in data.related_resources; they are not verified by this call." : ""),
     data: {
+      ...(crosswalkResources ? { related_resources: crosswalkResources } : {}),
       state: "DELIVERED_SOURCE",
       skill,
       source: result.source,
@@ -970,6 +982,23 @@ export const X402_TASK_ID_MAX = 2048;
 // Arguments that select something other than "buy this": never part of a payment Task.
 const X402_TASK_EXCLUDED_ARGS = ["x_payment", "preview", "purchase_action"];
 
+// Task IDs are reversible base64url; they are NOT opaque, encrypted or authenticated.
+// Only a narrowly defined public, enumerated selection may ride inside one.
+// All free-text subjects, URLs, encoded documents and other paid tool inputs remain
+// on the existing x402 Message path; nobody should log confidential args in a Task ID.
+const PUBLIC_BUNDLE_OBLIGATIONS = new Set(["article-50", "article-53", "dora", "cra"]);
+const PUBLIC_TASK_CONTEXT = /^[A-Za-z0-9_-]{1,80}$/;
+export function x402PublicTaskInput(tool: string, input: Json, contextId?: string): boolean {
+  if (tool !== "evidence_bundle") return false;
+  if (!input || typeof input !== "object" || Array.isArray(input)) return false;
+  if (Object.keys(input).length !== 1 ||
+      typeof input.obligation !== "string" ||
+      !PUBLIC_BUNDLE_OBLIGATIONS.has(input.obligation)) return false;
+  // A context identifier is itself reproduced into the Task ID. Email, URL,
+  // free-text subject and opaque bearer token strings must not ride there.
+  return contextId === undefined || PUBLIC_TASK_CONTEXT.test(contextId);
+}
+
 /** The id of the payment Task for this call, or null when the input is too large to carry. */
 export function x402TaskId(tool: string, input: Json, contextId?: string): string | null {
   // A blank x_payment and preview:false say nothing; anything else in that list is not a purchase.
@@ -977,6 +1006,7 @@ export function x402TaskId(tool: string, input: Json, contextId?: string): strin
   if (typeof carried.x_payment === "string" && carried.x_payment.trim() === "") delete carried.x_payment;
   if (carried.preview === false) delete carried.preview;
   if (X402_TASK_EXCLUDED_ARGS.some((key) => key in carried)) return null;
+  if (!x402PublicTaskInput(tool, carried, contextId)) return null;
   const json = JSON.stringify({ t: tool, i: carried, ...(contextId ? { c: contextId } : {}) }).replace(
     /[\u0080-\uffff]/g,
     (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`,
@@ -1009,6 +1039,7 @@ export function x402TaskSelection(taskId: string): ToolSelection | null {
     const input = record(decoded?.i);
     if (!tool || !input || !PAID_TOOL_NAMES.has(tool) || !TOOL_SKILL_SET.has(tool)) return null;
     if (X402_TASK_EXCLUDED_ARGS.some((key) => key in input)) return null;
+    if (!x402PublicTaskInput(tool, input, typeof decoded?.c === "string" ? decoded.c : undefined)) return null;
     return { kind: "TOOL", tool, input };
   } catch {
     return null;
@@ -1444,9 +1475,10 @@ export const onRequestGet: PagesFunction = async (context) => {
         "A metered tool answers with its x402 challenge (result.structuredContent.accepts) and charges nothing. To pay, send the same selector again with input.x_payment set to the base64 payment payload, or with the PaymentPayload object in message.metadata[\"x402.payment.payload\"] (x402 A2A transport); the tool's route verifies and settles it, fail closed. A request that activates the a2a-x402 extension (X-A2A-Extensions) gets the challenge as a Task in state input-required instead, and pays by sending a Message with that taskId and the PaymentPayload in the same metadata field; the Task is not stored, so GetTask does not find it. Payment is never read from text, part metadata or HTTP headers. Verification stays free.",
     },
     version_rule:
-      "Send `A2A-Version: 1.0`; a patch number (1.0.1) is ignored, as A2A v1.0 section 3.6 requires. Per A2A v1.0, an absent or empty header means 0.3. A v1.0 method name sent as 0.3 returns VersionNotSupportedError -32009; any other name that is not an A2A 0.3 method returns -32601. The 0.3 wire shape itself is served: a 0.3 method name (message/send, tasks/get, ...) with no header or a 0.x one is mapped onto the 1.0 handler and answered as a 0.3 Message; a request that declares 1.0 must use the 1.0 names. A body that is not JSON-RPC returns -32600; to ask in plain words, POST {\"message\": \"...\"} to /api/chat.",
+      "Send `A2A-Version: 1.0`; a patch number (1.0.1) is ignored, as A2A v1.0 section 3.6 requires. Per A2A v1.0, an absent or empty header means 0.3. A v1.0 method name sent as 0.3 returns VersionNotSupportedError -32009; any other name that is not an A2A 0.3 method returns -32601. The 0.3 wire shape itself is served: a 0.3 method name (message/send, tasks/get, ...) with no header or a 0.x one is mapped onto the 1.0 handler and answered in the 0.3 shape (a Message, or a Task for an x402 payment challenge under the extension); a request that declares 1.0 must use the 1.0 names. A body that is not JSON-RPC returns -32600; to ask in plain words, POST {\"message\": \"...\"} to /api/chat.",
     compat_0_3: Object.keys(V03_METHODS),
-    tasks: "none kept — every SendMessage answers with a Message, so GetTask can only ever say TaskNotFound",
+    tasks:
+      "none stored. A SendMessage answers with a Message, with one exception: a metered skill's x402 challenge to a request that activates the a2a-x402 extension is a Task in state input-required, whose id carries the request and its context. That Task is answered only by the SendMessage that names it with a payment or a rejection, so GetTask can only ever say TaskNotFound.",
     register: REGISTER,
     example: {
       jsonrpc: "2.0",
@@ -1577,7 +1609,7 @@ async function dispatchV1(id: unknown, method: string, params: unknown, origin: 
         A2A_ERROR.TASK_NOT_FOUND,
         taskId?.startsWith(X402_TASK_PREFIX)
           ? "task not found: an x402 payment Task is not stored; it is answered only by the SendMessage that names it with a payment or a rejection"
-          : "task not found: this agent keeps no task store; every SendMessage answers with a Message",
+          : "task not found: this agent keeps no task store; a SendMessage answers with a Message, or with an x402 payment Task that is not stored",
         "TASK_NOT_FOUND",
         { taskId: taskId ? taskId.slice(0, 64) : null },
       );

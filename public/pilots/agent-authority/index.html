@@ -20,8 +20,8 @@
     <section class="hero"><div class="wrap">
       <span class="eyebrow">Open research · bounded pilot enquiries</span>
       <h1>When an AI agent asks to act, can you prove what happened?</h1>
-      <p class="intro">An approval message is not an observed effect. Explore a reproducible Council of AI experiment that distinguishes authorised execution, denied actions, replay prevention and tampered evidence — then enquire about a scoped sandbox assessment.</p>
-      <div class="buttons"><a class="btn primary" href="#evidence">Inspect the actual experiment</a><a class="btn outline" href="/contact/?arm=pilot">Prepare a pilot enquiry</a></div>
+      <p class="intro">An approval message is not an observed effect. Inspect real open-weight model measurements, observed false alarms, an actual hosted file-effect readback and the separately qualified evidence/authority gaps — then enquire about a scoped assessment.</p>
+      <div class="buttons"><a class="btn primary" href="#measured-20261124">Inspect real model measurements</a><a class="btn outline" href="/contact/?arm=pilot">Prepare a pilot enquiry</a></div>
     </div></section>
     <section class="sec wrap" aria-labelledby="question"><h2 id="question">Three facts that need to be kept separate.</h2><p class="lede">An agent's model output, its permission to dispatch a tool and the resulting state change are different facts. The experiment tests the boundaries between them; it does not measure universal safety.</p>
       <div class="grid">
@@ -29,6 +29,23 @@
         <article class="card"><span class="n">02</span><h3>Execution</h3><p>Was a bounded action permitted only once, with revoked, changed, expired and mismatched requests denied?</p></article>
         <article class="card"><span class="n">03</span><h3>Independent readback</h3><p>Did the observable destination actually change as claimed — and can its recorded bytes be checked separately?</p></article>
       </div>
+    </section>
+
+    <section class="sec wrap" id="measured-20261124" aria-labelledby="measured-20261124-h">
+      <p class="eyebrow" style="color:var(--green);border-color:var(--green)">Actually observed · 24 November 2026</p>
+      <h2 id="measured-20261124-h">Real model outputs, including what the guard missed.</h2>
+      <p class="lede">Council ran pinned open-weight classifiers over public, publisher-labelled datasets on an Apple M4. These are genuine inference results, not invented scores or customer deployments. The source labels are not independently adjudicated, and the underlying public samples may overlap training data.</p>
+      <div class="grid">
+        <article class="card"><span class="n">3,372</span><h3>Turkish-language guard measurements</h3><p>Across 317 injection-labelled cases and 3,055 benign cases, the detector missed <strong>62</strong> labelled injections and falsely flagged <strong>287</strong> benign requests. Within the 1,000 ordinary benign task instructions, it falsely flagged <strong>239</strong>.</p></article>
+        <article class="card"><span class="n">116</span><h3>Two real models, identical tasks</h3><p>Horizon Labs detected <strong>41/60</strong> labelled attacks; Protect AI detected <strong>22/60</strong> on the <em>same frozen input bank</em>. Both flagged <strong>0/56</strong> benign examples in this small set. No universal vendor ranking or frontier-model result is claimed.</p></article>
+        <article class="card"><span class="n">200 / 409</span><h3>A separately observed hosted effect</h3><p>A harmless source file was genuinely written to GitHub, read back anonymously over HTTPS with matching bytes (HTTP <strong>200</strong>), and a stale-SHA overwrite was rejected (HTTP <strong>409</strong>). This is a host-provider control observation, <strong>not</strong> a qualified MEOK-authorised agent intervention.</p></article>
+      </div>
+      <p class="lede" style="margin-top:1.5rem">A second independent public benign-hard-negative benchmark, NotInject, produced <strong>13 false alarms among 339</strong> genuine model classifications. The four populations measure different tasks; do not combine their percentages into a single safety score.</p>
+      <div class="buttons">
+        <a class="btn primary" style="background:#21594b;color:white" href="/dashboard/?tab=evidence-learning">Open the live Reaction reviewer</a>
+        <a class="btn" style="border:1px solid #21594b;color:#21594b" href="https://github.com/CSOAI-ORG/councilof-ai/tree/master/docs/research/turkish-guard-observed-20261124">Original measured evidence and limitations</a>
+      </div>
+      <p class="muted"><small><strong>Evidence boundary:</strong> the public Reaction reviewer can read these observed results without uploading them. It correctly reports missing authenticated human approval, MEOK executor qualification and independently accepted receiving-party effects. Research artifacts are unsigned/self-run and have not been admitted as a new GSPC board measurement. No customer acceptance or payment is claimed.</small></p>
     </section>
     <section class="sec dark" id="evidence" aria-labelledby="evidence-h"><div class="wrap proof"><div>
       <p class="eyebrow">Local replay · 20 November 2026</p><h2 id="evidence-h">A result you can reproduce.</h2>
@@ -64,7 +81,7 @@ node scripts/pilot/approval-effect-replay.mjs \
       <p class="statement"><strong>Independent measurement is not certification.</strong> Signing evidence can establish integrity and provenance under a trusted key; it does not establish whether an underlying safety conclusion is true. Council of AI is not claiming to operate a staffed incident-response service here.</p>
     </section>
     <section class="sec wrap"><h2>Questions before relying on this.</h2>
-      <details><summary>Does this prove Council of AI can stop a real prompt injection?</summary><p>No. The observed result is a synthetic authorisation and file-effect experiment. A real prompt-injection claim requires a paired model/runtime test with a pinned corpus, held-out attacks, benign controls, observed tool effects and measured false positives.</p></details>
+      <details><summary>Does this prove Council of AI can stop a real prompt injection?</summary><p>No. The new results are actual classifier measurements and a real GitHub provider write/readback, not a protected production agent or a prevented victim impact. A production prevention claim requires a real authorised MEOK control in the execution path, separate permission and negative-control checks, measured benign interruption costs, and a receiving party who independently verifies the permitted effect. The older 20 November HITL experiment uses synthetic fixtures and remains clearly labelled as such.</p></details>
       <details><summary>Can this be used with open-source and privately fine-tuned models?</summary><p>The architecture is intended to be model-independent, but each model/runtime integration needs separate qualification. A checkpoint or dataset update can change risk, so measurements require explicit versions and freshness.</p></details>
       <details><summary>Are Cloudflare, Hugging Face or other vendors endorsing this work?</summary><p>No vendor endorsement or formal partnership is implied. Existing open infrastructure and hosted research do not grant certification or preferred authority.</p></details>
       <details><summary>Can I buy an assessment now?</summary><p>You can prepare an enquiry. There is no instant purchase, booked run or published service-level commitment. A real engagement requires staff capacity, written scope, authorised test boundaries and agreed price, privacy and acceptance terms.</p></details>

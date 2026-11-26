@@ -22,11 +22,23 @@ If every model bills hidden reasoning (600 output tokens a call assumed), USD pe
 | 10 | 69 | 459 | 2835 |
 | 20 | 138 | 918 | 5670 |
 
-### Open-model calibration (once, on free or near-free compute)
+### Open-model calibration (once, on free GitHub-hosted runners, addendum 2)
 
-1 baseline + 30 (C0) + 10 (C1) + 10 (C2) + 10 (C3) + 10 (C4) = 71 batches x 600 calls = 42600 calls.
-- small CPU runner, about 1.5 s a call (assumed): about 17.8 hours of serial calls.
-- one GPU, about 0.15 s a call (assumed): about 1.8 hours of serial calls.
+92 batches x 600 calls = 55200 calls.
+- q05-q4: 10 batches, planned 1.4 runner hours (planning constant, about 6 x the laptop rehearsal)
+- q05-q8: 72 batches, planned 6.0 runner hours (planning constant, about 6 x the laptop rehearsal)
+- q15-q8: 10 batches, planned 3.1 runner hours (planning constant, about 6 x the laptop rehearsal)
+- total planned: about 10 runner hours, split into jobs of about an hour; free for a public repository (unverified for this plan).
+
+### Open-model calibration, run 2 (addendum 3): one batch per job
+
+130 batches x 600 calls = 78000 calls, 130 jobs.
+- q05-q4: 10 batches, planned 1.4 runner hours (same planning constants as above)
+- q05-q8: 110 batches, planned 9.2 runner hours (same planning constants as above)
+- q15-q8: 10 batches, planned 3.1 runner hours (same planning constants as above)
+- total planned: about 14 runner hours before per-job setup; at most 8 jobs run at once, so planned wall-clock is about 1.7 hours plus setup and the longest jobs. Observed in run 1: 200 to 275 s per q05-q8 batch, 260 to 335 s per q05-q4, 330 to 995 s per q15-q8, 14 to 306 s setup per job. Expected run time 2 to 3 hours (estimate, unverified).
+
+Local rehearsal (23 Nov, Apple M4 CPU, 4 threads, full-size batches, not counted): 0.5B Q8_0 50 s, 0.5B Q4_K_M 81 s, 1.5B Q8_0 182 s per 600-call batch. The runner CPU is unmeasured; the plan assumes it is up to 6 times slower.
 
 ## Cheapest design that still gives valid rates
 
@@ -38,6 +50,4 @@ If every model bills hidden reasoning (600 output tokens a call assumed), USD pe
 
 ## What the open-model half needs
 
-42,600 calls, serial, on one model. On free GitHub-hosted runners (public repository; the free-minute allowance for this repository is unverified) a 1.5B to 3B quantised model needs about 18 hours of CPU split across parallel jobs of under 6 hours each. On one rented GPU it is about 2 hours; `harness/gspc-top100/README.md` lists `t4-small` at $0.40 an hour, so about 1 to 2 hours plus model load is under $1, but the Hugging Face billing failed on 2 to 4 Nov (OWNER-GATES G11) and that is not fixed here. The Mac has about 9 GB free disk on 22 Nov and holds no model files; the calibration is not run from this machine.
-
-Disk: a quantised copy of the model and a second revision are each about 1 to 3 GB. They are downloaded on the runner, never on the M4.
+Superseded by addendum 2 of the protocol: the model is served on the runner itself (no GPU, no hosted route, no rented compute), in about a dozen jobs of an hour or less. Disk on the runner is under 3 GB per job; nothing is downloaded to the M4 except the one-off hash checks and the rehearsal, which were deleted.

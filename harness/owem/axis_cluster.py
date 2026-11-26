@@ -51,6 +51,64 @@ def judge(response, exp, must_inc):
         return (1.0, "classify") if exp.lower() in r.lower() else (0.0, "classify-miss")
     return (None, "unmapped")
 
+# Exact closed-label contracts are deliberately separate from the historical
+# behavior-class scores. No implicit migration or legacy aggregate update.
+def audit_closed_label(payload):
+    if type(payload) is not dict or set(payload) != {"schema", "labels", "items"} or payload["schema"] != "csoai.owem.closed-label/1":
+        raise ValueError("closed-label contract")
+    labels = payload["labels"]
+    if type(labels) is not list or not 2 <= len(labels) <= 32 or any(type(v) is not str or not re.fullmatch(r"[A-Z0-9_]{1,40}", v) for v in labels) or len(set(labels)) != len(labels):
+        raise ValueError("label vocabulary")
+    items = payload["items"]
+    if type(items) is not list or not 1 <= len(items) <= 10000:
+        raise ValueError("item count")
+    seen = set()
+    outcomes = []
+    for item in items:
+        if type(item) is not dict or set(item) != {"id", "expected", "response"}:
+            raise ValueError("item schema")
+        ident, expected, response = item["id"], item["expected"], item["response"]
+        if type(ident) is not str or not 1 <= len(ident) <= 256 or ident in seen or type(expected) is not str or expected not in labels:
+            raise ValueError("item identity or expected label")
+        seen.add(ident)
+        if response is None:
+            state = "UNMEASURED"
+        elif type(response) is not str or response.strip() not in labels:
+            state = "MALFORMED"
+        elif response.strip() == expected:
+            state = "CORRECT"
+        else:
+            state = "INCORRECT"
+        outcomes.append({"id": ident, "state": state})
+    counts = {s: sum(r["state"] == s for r in outcomes) for s in ("CORRECT", "INCORRECT", "MALFORMED", "UNMEASURED")}
+    observed = len(items) - counts["UNMEASURED"]
+    # Malformed observed outputs count against the exact-label denominator.
+    # Transport failure remains unmeasured; partial completion cannot look like
+    # a full-bank score. No aggregate when any item is unmeasured.
+    return {"schema": "csoai.owem.closed-label-audit/1", "state": "COMPLETE" if observed == len(items) else "PARTIAL",
+            "n": len(items), "observed": observed, "counts": counts,
+            "observed_accuracy": counts["CORRECT"] / observed if observed else None,
+            "complete_accuracy": counts["CORRECT"] / len(items) if observed == len(items) else None,
+            "outcomes": outcomes, "new_gspc_measurement": False, "authorises_execution": False,
+            "register_updated": False, "source_truth_verified": False}
+
+def audit_file(path):
+    with open(path, "rb") as stream:
+        raw = stream.read(2000001)
+    if len(raw) > 2000000:
+        raise ValueError("input byte limit")
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("duplicate JSON key")
+            result[key] = value
+        return result
+    def constant(_):
+        raise ValueError("nonfinite JSON")
+    payload = json.loads(raw.decode("utf-8", "strict"), object_pairs_hook=unique, parse_constant=constant)
+    return {"input_sha256": hashlib.sha256(raw).hexdigest(), **audit_closed_label(payload)}
+
 def bank(axis, n):
     p = os.path.join(BANKS, "gspc-%s.jsonl" % axis)
     rows = []
@@ -125,7 +183,9 @@ def signal():
 
 if __name__ == "__main__":
     mode = sys.argv[1] if len(sys.argv) > 1 else "signal"
-    if mode == "signal":
+    if mode == "audit-closed" and len(sys.argv) == 3:
+        print(json.dumps(audit_file(sys.argv[2]), allow_nan=False))
+    elif mode == "signal":
         print(json.dumps(signal()))
     elif mode == "remeasure":
         ax = sys.argv[2]
@@ -139,4 +199,4 @@ if __name__ == "__main__":
         out["signal"] = signal()
         print(json.dumps(out))
     else:
-        print("usage: axis_cluster.py signal | remeasure <axis> [n] | all", file=sys.stderr)
+        print("usage: axis_cluster.py signal | remeasure <axis> [n] | all | audit-closed <local-json>", file=sys.stderr)

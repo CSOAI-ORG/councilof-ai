@@ -27,7 +27,10 @@ const b64u = (s: string) => Buffer.from(s, "utf8").toString("base64").replace(/\
 type Presence = Record<string, [string, string?]>;
 const FIELDS: Record<string, Presence> = {
   AgentCard: { name: ["R"], description: ["R"], supportedInterfaces: ["R", "AgentInterface"], provider: ["M", "AgentProvider"],
-    version: ["R"], documentationUrl: ["O"], capabilities: ["R", "AgentCapabilities"], defaultInputModes: ["R"],
+    version: ["R"], documentationUrl: ["O"], capabilities: ["R", "AgentCapabilities"],
+    // a2a.proto fields 8 and 9: a plain map and a plain repeated field, so an explicit {} / [] is a default and is
+    // removed, exactly as scripts/adapters/agent_card_jws.py PRESENCE does. Missing here, the two keys were kept.
+    securitySchemes: ["P"], securityRequirements: ["P"], defaultInputModes: ["R"],
     defaultOutputModes: ["R"], skills: ["R", "AgentSkill"], signatures: ["P"], iconUrl: ["O"] },
   AgentProvider: { url: ["R"], organization: ["R"] },
   AgentCapabilities: { streaming: ["O"], pushNotifications: ["O"], extensions: ["P", "AgentExtension"], extendedAgentCard: ["O"] },

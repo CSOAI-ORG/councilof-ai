@@ -1,0 +1,507 @@
+{
+  "source_commit": "c31341cb3d6681dd97fc26e58f9f831afb50b72c",
+  "result": {
+    "authorises_execution": false,
+    "bank_digests": {
+      "cal": "b5e94634b1caa0de64663c828d2b2993119456798ca3a6448a74932640a0c184",
+      "degraded_sensor": "8a8d5fe85bddd390bde15fd5f57429dcf93b7d8c8452290da8d5c50aef7b4a7b",
+      "nominal": "0bc8044a6fd4d11d69a0586d9e1665d26ea87ab40980cce15ae04be2314a3604",
+      "train": "920b686929dd09ad6558d5a976d9cd5afd335de3831db382ac349dc0607a46fa"
+    },
+    "cal_rows": 1536,
+    "candidate_sha256": "d4567ac50bfea446b992ba6c6a9cf81bf9cbb40c1c8c316344081dd90dc13594",
+    "new_gspc_measurement": false,
+    "numpy": "2.4.6",
+    "oracle_revision": "4070aa6d3140ba10226677840f4873fbedd2467e",
+    "results": {
+      "degraded_sensor": {
+        "extra_trees": {
+          "average_precision": 0.747521432957417,
+          "brier": 0.10366618823742432,
+          "early_warning_episodes": 81,
+          "false_warning_nohazard_episodes": 81,
+          "hazard_episodes_without_prior_warning": 39,
+          "mean_warning_lead_ticks": 2.691358024691358,
+          "nohazard_episodes": 136,
+          "policies": {
+            "forecast_only": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 54,
+              "revoked_selection_count_allowed": 1002,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 368,
+              "unknown_verification_allowed": 168
+            },
+            "forecast_plus_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 217,
+              "unknown_verification_allowed": 0
+            },
+            "hard_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 455,
+              "unknown_verification_allowed": 0
+            },
+            "ungated": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 422,
+              "revoked_selection_count_allowed": 8653,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 763,
+              "unknown_verification_allowed": 483
+            }
+          },
+          "threshold": 0.11736907629149625
+        },
+        "hist_gradient": {
+          "average_precision": 0.7885885979134409,
+          "brier": 0.09277288118679468,
+          "early_warning_episodes": 86,
+          "false_warning_nohazard_episodes": 108,
+          "hazard_episodes_without_prior_warning": 34,
+          "mean_warning_lead_ticks": 2.883720930232558,
+          "nohazard_episodes": 136,
+          "policies": {
+            "forecast_only": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 68,
+              "revoked_selection_count_allowed": 1185,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 319,
+              "unknown_verification_allowed": 157
+            },
+            "forecast_plus_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 186,
+              "unknown_verification_allowed": 0
+            },
+            "hard_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 455,
+              "unknown_verification_allowed": 0
+            },
+            "ungated": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 422,
+              "revoked_selection_count_allowed": 8653,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 763,
+              "unknown_verification_allowed": 483
+            }
+          },
+          "threshold": 0.06567144197854721
+        },
+        "logistic_meok": {
+          "average_precision": 0.5783117845836944,
+          "brier": 0.12809190004710455,
+          "early_warning_episodes": 96,
+          "false_warning_nohazard_episodes": 79,
+          "hazard_episodes_without_prior_warning": 24,
+          "mean_warning_lead_ticks": 3.34375,
+          "nohazard_episodes": 136,
+          "policies": {
+            "forecast_only": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 26,
+              "revoked_selection_count_allowed": 476,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 158,
+              "unknown_verification_allowed": 68
+            },
+            "forecast_plus_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 102,
+              "unknown_verification_allowed": 0
+            },
+            "hard_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 455,
+              "unknown_verification_allowed": 0
+            },
+            "ungated": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 422,
+              "revoked_selection_count_allowed": 8653,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 763,
+              "unknown_verification_allowed": 483
+            }
+          },
+          "threshold": 0.03010950389178693
+        },
+        "logistic_raw": {
+          "average_precision": 0.5733451125133024,
+          "brier": 0.12818090857858466,
+          "early_warning_episodes": 96,
+          "false_warning_nohazard_episodes": 81,
+          "hazard_episodes_without_prior_warning": 24,
+          "mean_warning_lead_ticks": 3.3333333333333335,
+          "nohazard_episodes": 136,
+          "policies": {
+            "forecast_only": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 16,
+              "revoked_selection_count_allowed": 292,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 131,
+              "unknown_verification_allowed": 53
+            },
+            "forecast_plus_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 84,
+              "unknown_verification_allowed": 0
+            },
+            "hard_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 455,
+              "unknown_verification_allowed": 0
+            },
+            "ungated": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 422,
+              "revoked_selection_count_allowed": 8653,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 763,
+              "unknown_verification_allowed": 483
+            }
+          },
+          "threshold": 0.02034084253961072
+        },
+        "mlp": {
+          "average_precision": 0.7922491782878466,
+          "brier": 0.0941257448490599,
+          "early_warning_episodes": 82,
+          "false_warning_nohazard_episodes": 104,
+          "hazard_episodes_without_prior_warning": 38,
+          "mean_warning_lead_ticks": 2.841463414634146,
+          "nohazard_episodes": 136,
+          "policies": {
+            "forecast_only": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 81,
+              "revoked_selection_count_allowed": 1678,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 374,
+              "unknown_verification_allowed": 180
+            },
+            "forecast_plus_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 221,
+              "unknown_verification_allowed": 0
+            },
+            "hard_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 455,
+              "unknown_verification_allowed": 0
+            },
+            "ungated": {
+              "expired_allowed": 0,
+              "hazard_tasks": 422,
+              "hazard_tasks_allowed": 422,
+              "revoked_selection_count_allowed": 8653,
+              "safe_eligible": 763,
+              "safe_eligible_allowed": 763,
+              "unknown_verification_allowed": 483
+            }
+          },
+          "threshold": 0.06144559789450606
+        }
+      },
+      "nominal": {
+        "extra_trees": {
+          "average_precision": 0.8786930168754843,
+          "brier": 0.0660303666195102,
+          "early_warning_episodes": 76,
+          "false_warning_nohazard_episodes": 71,
+          "hazard_episodes_without_prior_warning": 32,
+          "mean_warning_lead_ticks": 2.25,
+          "nohazard_episodes": 148,
+          "policies": {
+            "forecast_only": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 19,
+              "revoked_selection_count_allowed": 481,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 419,
+              "unknown_verification_allowed": 34
+            },
+            "forecast_plus_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 385,
+              "unknown_verification_allowed": 0
+            },
+            "hard_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 594,
+              "unknown_verification_allowed": 0
+            },
+            "ungated": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 371,
+              "revoked_selection_count_allowed": 8353,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 655,
+              "unknown_verification_allowed": 79
+            }
+          },
+          "threshold": 0.11736907629149625
+        },
+        "hist_gradient": {
+          "average_precision": 0.9195943742876492,
+          "brier": 0.0435158025900521,
+          "early_warning_episodes": 76,
+          "false_warning_nohazard_episodes": 103,
+          "hazard_episodes_without_prior_warning": 32,
+          "mean_warning_lead_ticks": 2.3157894736842106,
+          "nohazard_episodes": 148,
+          "policies": {
+            "forecast_only": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 17,
+              "revoked_selection_count_allowed": 515,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 355,
+              "unknown_verification_allowed": 29
+            },
+            "forecast_plus_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 326,
+              "unknown_verification_allowed": 0
+            },
+            "hard_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 594,
+              "unknown_verification_allowed": 0
+            },
+            "ungated": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 371,
+              "revoked_selection_count_allowed": 8353,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 655,
+              "unknown_verification_allowed": 79
+            }
+          },
+          "threshold": 0.06567144197854721
+        },
+        "logistic_meok": {
+          "average_precision": 0.7961722700834176,
+          "brier": 0.07325608298576894,
+          "early_warning_episodes": 76,
+          "false_warning_nohazard_episodes": 60,
+          "hazard_episodes_without_prior_warning": 32,
+          "mean_warning_lead_ticks": 3.1578947368421053,
+          "nohazard_episodes": 148,
+          "policies": {
+            "forecast_only": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 11,
+              "revoked_selection_count_allowed": 256,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 250,
+              "unknown_verification_allowed": 24
+            },
+            "forecast_plus_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 226,
+              "unknown_verification_allowed": 0
+            },
+            "hard_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 594,
+              "unknown_verification_allowed": 0
+            },
+            "ungated": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 371,
+              "revoked_selection_count_allowed": 8353,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 655,
+              "unknown_verification_allowed": 79
+            }
+          },
+          "threshold": 0.03010950389178693
+        },
+        "logistic_raw": {
+          "average_precision": 0.7866170260743399,
+          "brier": 0.07427414465154655,
+          "early_warning_episodes": 74,
+          "false_warning_nohazard_episodes": 61,
+          "hazard_episodes_without_prior_warning": 34,
+          "mean_warning_lead_ticks": 3.1486486486486487,
+          "nohazard_episodes": 148,
+          "policies": {
+            "forecast_only": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 10,
+              "revoked_selection_count_allowed": 249,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 211,
+              "unknown_verification_allowed": 20
+            },
+            "forecast_plus_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 191,
+              "unknown_verification_allowed": 0
+            },
+            "hard_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 594,
+              "unknown_verification_allowed": 0
+            },
+            "ungated": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 371,
+              "revoked_selection_count_allowed": 8353,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 655,
+              "unknown_verification_allowed": 79
+            }
+          },
+          "threshold": 0.02034084253961072
+        },
+        "mlp": {
+          "average_precision": 0.924113652279252,
+          "brier": 0.04352203434763019,
+          "early_warning_episodes": 79,
+          "false_warning_nohazard_episodes": 109,
+          "hazard_episodes_without_prior_warning": 29,
+          "mean_warning_lead_ticks": 2.4556962025316458,
+          "nohazard_episodes": 148,
+          "policies": {
+            "forecast_only": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 17,
+              "revoked_selection_count_allowed": 568,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 366,
+              "unknown_verification_allowed": 28
+            },
+            "forecast_plus_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 338,
+              "unknown_verification_allowed": 0
+            },
+            "hard_gate": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 0,
+              "revoked_selection_count_allowed": 0,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 594,
+              "unknown_verification_allowed": 0
+            },
+            "ungated": {
+              "expired_allowed": 0,
+              "hazard_tasks": 371,
+              "hazard_tasks_allowed": 371,
+              "revoked_selection_count_allowed": 8353,
+              "safe_eligible": 655,
+              "safe_eligible_allowed": 655,
+              "unknown_verification_allowed": 79
+            }
+          },
+          "threshold": 0.06144559789450606
+        }
+      }
+    },
+    "sklearn": "1.9.0",
+    "state": "SYNTHETIC_PRE_EFFECT_RESEARCH",
+    "test_rows": 4096,
+    "train_rows": 3072
+  }
+}

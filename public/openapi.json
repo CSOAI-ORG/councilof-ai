@@ -8533,6 +8533,22 @@
         }
       }
     },
+    "/api/research-commons": {
+      "get": {
+        "description": "GET /api/research-commons \u2014 read-only CouncilOS/H.I.M. consumer of the isolated EAT feed's daily source metadata.",
+        "operationId": "get__api_research-commons",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/research-commons \u2014 read-only CouncilOS/H.I.M. consumer of the isolated EAT feed's daily source metadata."
+      }
+    },
     "/api/research-plan": {
       "get": {
         "description": "",
@@ -10844,7 +10860,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 144,
+    "public_operations": 145,
     "quarantined": [
       {
         "buyable": false,

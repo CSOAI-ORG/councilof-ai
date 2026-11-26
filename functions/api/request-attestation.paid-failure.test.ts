@@ -144,6 +144,10 @@ describe("a settled payment whose receipt cannot issue is never answered with a 
     expect(body.state).toBe("SETTLED_DELIVERABLE_NOT_ISSUED");
     expect(body.deliverable_state).toBe("INCOMPLETE_ISSUANCE_FAILED");
     expect(body.reason).toContain("3072 cap");
+    expect(body.note).toContain("Preserve the original settlement receipt");
+    expect(body.note).toContain("do not automatically retry or pay again");
+    expect(body.note).not.toMatch(/re-request issues/i);
+    expect(payment).toHaveBeenCalledTimes(1);
     expect(body.settle.transaction).toBe("0xabc");
     // the x402 settlement receipt travels with the failure — a payer is never charged and
     // answered without it

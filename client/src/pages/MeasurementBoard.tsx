@@ -943,6 +943,11 @@ function SetTable({
                 </span>
               </div>
               <p className="text-sm text-gray-700">{r.what}</p>
+              {r.limit && (
+                <p className="text-xs leading-snug text-amber-900" data-testid={`limit-${setId}-${r.id}`}>
+                  Held: {r.limit}
+                </p>
+              )}
               <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-gray-600">
                 <span>{r.n === null ? "nothing measured" : r.nNote ? `n = ${r.nNote}` : `n = ${r.n} ${r.nUnit}`}</span>
                 <span>
@@ -1000,7 +1005,14 @@ function SetTable({
                 }`}
               >
                 <td className="px-4 py-2 font-semibold text-gray-900">{r.name}</td>
-                <td className="max-w-[22rem] px-4 py-2 text-gray-700">{r.what}</td>
+                <td className="max-w-[22rem] px-4 py-2 text-gray-700">
+                  {r.what}
+                  {r.limit && (
+                    <span className="mt-1 block text-xs leading-snug text-amber-900" data-testid={`limit-${setId}-${r.id}-wide`}>
+                      Held: {r.limit}
+                    </span>
+                  )}
+                </td>
                 <td className="px-4 py-2">
                   <span
                     className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase ${STATUS_STYLE[r.status] ?? STATUS_STYLE.DRAFT}`}
@@ -1449,27 +1461,7 @@ export default function MeasurementBoard() {
   const unmeasuredCount = data ? data.rows.length - (measuredCount ?? 0) : null;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      {/* Service enquiries are separate from the published measurements below. */}
-      <aside
-        data-testid="board-commission-callout"
-        role="note"
-        aria-label="Measurement services"
-        className="mb-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 sm:p-5"
-      >
-        <p className="text-base leading-relaxed text-emerald-950">
-          Need evidence for a specific model or system?{" "}
-          <a
-            href="/services/"
-            className="font-semibold text-emerald-800 underline underline-offset-4 hover:text-emerald-950"
-            data-testid="board-callout-cta"
-          >
-            Explore measurement services.
-          </a>{" "}
-          Results apply to the subjects, methods and dates shown below.
-        </p>
-      </aside>
-
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
       {/* ── the headline sentence: what ranks what ─────────────────────────── */}
       <header>
         <p className="text-xs font-bold uppercase tracking-widest text-emerald-700">
@@ -1485,24 +1477,20 @@ export default function MeasurementBoard() {
           and period, with its own sample size and supporting evidence. Counts from different
           sets are not directly comparable. Review the scope and limitations alongside each result.
         </p>
-        <p className="mt-3 max-w-3xl rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700">
-          <strong className="font-semibold">About the dates on this page.</strong> A date shown
-          against a set is the stamp carried inside the data itself — when the measuring actually
-          happened. It is not the time this page was rendered or deployed, so it advances only when
-          something new is measured and recorded. Each set names the exact field its date was read
-          from, so you can open the file and check.
-        </p>
+        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">
+          <a className="text-emerald-800 underline underline-offset-4" href="/#board">Living Board workspace</a>
+          <a className="text-emerald-800 underline underline-offset-4" href="/gspc-verify">Verify a record</a>
+          <a className="text-emerald-800 underline underline-offset-4" href="#board-reference">Methods and sources</a>
+        </div>
       </header>
 
-      {/* ── the living board: freshness, rank spread on one frozen bank, downloads ── */}
-      <LivingBoard withFreshness={false} />
-
+      <div className="mt-6 grid items-start gap-5 lg:grid-cols-[15rem_minmax(0,1fr)]">
       {/* ── the set switcher, with sizes shown before you click ────────────── */}
-      <nav className="mt-6" aria-label="Choose a measurement set">
+      <nav className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-3" aria-label="Choose a measurement set">
         <h2 className="text-xs font-bold uppercase tracking-wide text-gray-500">
           Choose a set
         </h2>
-        <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-2 grid grid-cols-2 gap-2 lg:grid-cols-1">
           {AXIS_SETS.map((set) => {
             const state = states[set.id] ?? { phase: "loading" as const };
             const d = state.phase === "loading" ? null : state.data;
@@ -1528,7 +1516,8 @@ export default function MeasurementBoard() {
       </nav>
 
       {/* ── the selected set, described in plain language ──────────────────── */}
-      <section className="mt-8" data-testid={`set-panel-${active.id}`}>
+      <div className="min-w-0">
+      <section data-testid={`set-panel-${active.id}`}>
         <div className="rounded-2xl border border-gray-200 bg-white p-6">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <h2 className="text-2xl font-bold text-gray-900">{active.name}</h2>
@@ -1647,7 +1636,7 @@ export default function MeasurementBoard() {
             {active.detailPage && (
               <Link
                 href={active.detailPage.href}
-                className="rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-gray-700"
+                className="rounded-lg bg-emerald-800 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-900"
               >
                 {active.detailPage.label} →
               </Link>
@@ -1687,7 +1676,7 @@ export default function MeasurementBoard() {
                 data-testid={`filter-${f}`}
                 aria-pressed={statusFilter === f}
                 className={`px-3 py-2 text-xs font-bold capitalize ${
-                  statusFilter === f ? "bg-gray-900 text-white" : "text-gray-700 hover:bg-gray-100"
+                  statusFilter === f ? "bg-emerald-800 text-white" : "text-gray-700 hover:bg-gray-100"
                 } first:rounded-l-lg last:rounded-r-lg`}
               >
                 {f}
@@ -1722,7 +1711,7 @@ export default function MeasurementBoard() {
                 data-testid={`density-${d}`}
                 aria-pressed={density === d}
                 className={`px-3 py-2 text-xs font-bold capitalize ${
-                  density === d ? "bg-gray-900 text-white" : "text-gray-700 hover:bg-gray-100"
+                  density === d ? "bg-emerald-800 text-white" : "text-gray-700 hover:bg-gray-100"
                 } first:rounded-l-lg last:rounded-r-lg`}
               >
                 {d}
@@ -1775,8 +1764,38 @@ export default function MeasurementBoard() {
         </div>
       </section>
 
-      <CustodyPanel />
-      <NoRoutePanel />
+      </div>
+      </div>
+
+      <details id="board-reference" className="mt-8 rounded-2xl border border-emerald-200 bg-white p-4">
+        <summary className="cursor-pointer font-semibold text-emerald-900">Methods, sources and measurement dates</summary>
+        <p className="mt-3 max-w-3xl text-sm text-gray-700">
+          Dates come from the published measurement artifacts. Each set names the field it uses so readers can check the source.
+        </p>
+        <LivingBoard withFreshness={false} />
+        <CustodyPanel />
+        <NoRoutePanel />
+      </details>
+      {/* Service enquiries are separate from the published measurements below. */}
+      <aside
+        data-testid="board-commission-callout"
+        role="note"
+        aria-label="Measurement services"
+        className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 sm:p-5"
+      >
+        <p className="text-base leading-relaxed text-emerald-950">
+          Need evidence for a specific model or system?{" "}
+          <a
+            href="/services/"
+            className="font-semibold text-emerald-800 underline underline-offset-4 hover:text-emerald-950"
+            data-testid="board-callout-cta"
+          >
+            Explore measurement services.
+          </a>{" "}
+          Results apply to the subjects, methods and dates shown below.
+        </p>
+      </aside>
+
 
       {/* ── plain language ────────────────────────────────────────────────── */}
       <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6">

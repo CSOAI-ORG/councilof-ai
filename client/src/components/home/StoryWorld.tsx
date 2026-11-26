@@ -166,7 +166,7 @@ export const STORY: Slide[] = [
     points: [
       { tag: "pain", text: "Evidence requirements differ by audience and use case" },
       { tag: "benefit", text: "A signed record that each audience can inspect within its stated scope" },
-      { tag: "usp", text: "Independent of all of them — we take no money from anything we rank" },
+      { tag: "usp", text: "Independent of all of them — no one can buy a place, a score or a removal" },
     ],
     href: "/dashboard?task=get-measured&tab=measured",
     cta: "Prove your AI",
@@ -176,11 +176,11 @@ export const STORY: Slide[] = [
     // 12 Anyone can check — heavy, the signed card in hand
     kicker: "Anyone can check",
     title: "Free to check. No login, ever.",
-    body: "Verifying a card is free forever — no account, no fee — and we take no money from anything we rank. Recompute the hash chain, check the public key, read the board: the proof is yours to hold, not ours to gatekeep.",
+    body: "Verifying a card is free forever — no account, no fee — and no one can buy a place, a score or a removal. Recompute the hash chain, check the public key, read the board: the proof is yours to hold, not ours to gatekeep.",
     points: [
       { tag: "pain", text: "Check which evidence and verification tools are publicly available" },
       { tag: "benefit", text: "Check any card in your own browser — free, no login" },
-      { tag: "usp", text: "We take no money from anything we rank" },
+      { tag: "usp", text: "No one can buy a place, a score or a removal" },
     ],
     href: "/gspc-verify",
     cta: "Check a card now",

@@ -1,8 +1,9 @@
 import { fetchWithRetry } from "@/lib/fetchWithRetry";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ExternalLink, ShieldCheck, CircleSlash, HelpCircle, Minus } from "lucide-react";
 import { setMetaDescription } from "@/lib/utils";
+import { heldLimit } from "@/lib/axisCells";
 
 /**
  * BenchmarkIndex — the meta-benchmark index. ONE board that COMPOSES what other public
@@ -275,6 +276,8 @@ interface GspcAxis {
   separation: "SEPARATED" | "TIE" | "UNTESTED";
   status: string;
   dataset: string;
+  /** A held row's stated limit (#4680), printed beside its figure. */
+  limit?: string;
 }
 interface GspcPayload {
   // measured_on is an OBJECT on the live endpoint (model/endpoint/date/grading/note/…),
@@ -510,7 +513,8 @@ export default function BenchmarkIndex() {
                 </thead>
                 <tbody>
                   {gspc.axes.map((a) => (
-                    <tr key={a.axis} className="border-b border-gray-100 last:border-0 dark:border-gray-800">
+                    <Fragment key={a.axis}>
+                    <tr className="border-b border-gray-100 last:border-0 dark:border-gray-800">
                       <td className="px-4 py-3 font-mono font-bold text-gray-900 dark:text-white">{a.axis}</td>
                       <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{a.bench}</td>
                       <td className="px-4 py-3 font-mono text-gray-700 dark:text-gray-300">{a.n ?? "—"}</td>
@@ -535,6 +539,14 @@ export default function BenchmarkIndex() {
                       </td>
                       <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">{a.status}</td>
                     </tr>
+                    {heldLimit(a) && (
+                      <tr className="border-b border-gray-100 last:border-0 dark:border-gray-800">
+                        <td colSpan={6} className="px-4 pb-3 text-xs leading-snug text-amber-900 dark:text-amber-300" data-testid={`benchmark-limit-${a.axis}`}>
+                          Held: {heldLimit(a)}
+                        </td>
+                      </tr>
+                    )}
+                    </Fragment>
                   ))}
                 </tbody>
               </table>

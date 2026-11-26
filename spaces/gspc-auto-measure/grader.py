@@ -1,5 +1,5 @@
 """Generated from harness/gspc-top100/mill_hub_queue.py; do not edit.
-read_label source SHA256: 9f0175deb309a343ecbd01779cfb04b31f2a577fb0024e885e150635f9cb4bc2
+read_label source SHA256: ae9fa6a841d434b651fba48cb2ef19181fc305d2b2bc5445d5afec44002ffcea
 """
 import re
 
@@ -31,7 +31,14 @@ def read_label(txt: str, labels: list[str]) -> str | None:
     allowed = {str(x).strip().upper() for x in labels if str(x).strip()}
     if not allowed:
         return None
-    body = _THINK.sub(" ", txt or "")
+    raw = txt or ""
+    if len(re.findall(r"<think>", raw, re.I)) != len(re.findall(r"</think>", raw, re.I)):
+        return None
+    body = _THINK.sub(" ", raw)
+    # Unclosed or unmatched reasoning tags mean the apparent final label may
+    # still be private/incomplete reasoning. Reject rather than score it.
+    if re.search(r"</?think\b", body, re.I):
+        return None
     lines = [ln.strip() for ln in body.splitlines() if ln.strip()]
     for cand in ([lines[-1]] if lines else []) + [" ".join(lines)]:
         c = _ANSWER_PREFIX.sub("", cand).strip().strip(_STRIP).upper()
@@ -39,4 +46,4 @@ def read_label(txt: str, labels: list[str]) -> str | None:
             return c
     return None
 
-GRADER_SHA256 = "9f0175deb309a343ecbd01779cfb04b31f2a577fb0024e885e150635f9cb4bc2"
+GRADER_SHA256 = "ae9fa6a841d434b651fba48cb2ef19181fc305d2b2bc5445d5afec44002ffcea"

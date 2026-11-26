@@ -137,11 +137,22 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
-      - name: Regenerate the capsule VC projection and run the layout tests
+      - name: Regenerate the capsule VC projection and the mechanism coverage, and run the layout tests
         run: |
           set -euo pipefail
           node scripts/mechanism/capsule-vc.mjs
           node scripts/mechanism/capsule-vc.mjs --check
+          # /mechanism/coverage.json also reads the capsule tree. Regenerate it here, or `gates`
+          # fails on scripts/mechanism/build-coverage.test.ts for every capsule data PR.
+          node scripts/mechanism/build-coverage.mjs
+          node scripts/mechanism/build-coverage.mjs --check
+          # The charter register pins coverage.json by sha256, and render.mjs projects the register into
+          # /charter-register/ and the distribution kits. Rebuild both here, or `gates` fails on
+          # functions/mcp/tool-counts.test.ts ("Stale charter input: public/mechanism/coverage.json")
+          # and `integrity` fails on the register's byte-identity check.
+          (cd packages/charter-federation && python3 build.py --root ../..)
+          node scripts/harness-x/render.mjs
+          node scripts/harness-x/render.mjs --check
           python3 scripts/test_measurement_capsule_layout.py
           python3 scripts/test_measurement_capsule_page.py
       - name: Land the layout on a branch, open the PR, dispatch gates, close older capsule PRs
@@ -152,7 +163,8 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A public/measurement-capsules public/mechanism/vc.json
+          git add -A public/measurement-capsules public/mechanism/vc.json public/mechanism/coverage.json \
+            packages/charter-federation public/charter-register distribution/charter-federation distribution/MANIFEST.json
           if git diff --cached --quiet; then
             echo "laid out; the tree equals master; nothing to land"
             exit 0

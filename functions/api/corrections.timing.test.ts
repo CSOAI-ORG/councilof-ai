@@ -94,6 +94,23 @@ describe("time_to_correct is derived, never stored", () => {
     expect(timeToCorrect({ detected_at: UNRECORDED, published_at: "2026-09-26T08:00:00Z" }).kind).toBe("UNMEASURED");
   });
 
+  it("two exact latencies use the conventional midpoint, not the larger observation", () => {
+    const s = correctionLatency([
+      { detected_at: "2026-11-23T10:00:00Z", published_at: "2026-11-23T11:00:00Z" },
+      { detected_at: "2026-11-23T10:00:00Z", published_at: "2026-11-23T13:00:00Z" },
+    ]);
+    expect(s.exact).toBe(2);
+    expect(s.median_seconds_exact).toBe(7200);
+  });
+
+  it("one exact observation retains that exact duration as its median", () => {
+    const s = correctionLatency([
+      { detected_at: "2026-11-23T10:00:00Z", published_at: "2026-11-23T11:00:00Z" },
+      { detected_at: UNRECORDED, published_at: UNRECORDED },
+    ]);
+    expect(s.median_seconds_exact).toBe(3600);
+  });
+
   it("the served summary counts every entry exactly once and summarises only EXACT values", () => {
     const s = correctionLatency(entries);
     expect(s.exact + s.upper_bound + s.unmeasured).toBe(entries.length);

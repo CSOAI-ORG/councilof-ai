@@ -1,0 +1,180 @@
+{
+  "buyer_receipt": false,
+  "confusion": {
+    "fn": 62,
+    "fp": 287,
+    "tn": 2768,
+    "tp": 255
+  },
+  "episode": {
+    "case_id": "published-3372",
+    "condition": "NO_HUMAN",
+    "experiment_id": "turkish-guard-20261124",
+    "input_sha256": "1f00c9a3639ec307538e45dcbd4a7397a908fea125c682156bfc3331b5fda5b5",
+    "method_sha256": "c2de570b4de2c2782d988bcb29f6839b8f91ba8ac80b3d0d022d2ba9ad344f39",
+    "realm": "OBSERVED",
+    "schema": "csoai.reaction-experiment/0.1",
+    "stages": {
+      "effect": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "executor_authority": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "executor_response": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "human_approval": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "method": {
+        "receipt_sha256": "c2de570b4de2c2782d988bcb29f6839b8f91ba8ac80b3d0d022d2ba9ad344f39",
+        "source_realm": "OBSERVED",
+        "state": "REPORTED"
+      },
+      "payment": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "receiver_verification": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "repeat_use": {
+        "source_realm": "OBSERVED",
+        "state": "UNKNOWN"
+      },
+      "request": {
+        "receipt_sha256": "1f00c9a3639ec307538e45dcbd4a7397a908fea125c682156bfc3331b5fda5b5",
+        "source_realm": "OBSERVED",
+        "state": "REPORTED"
+      },
+      "retrieval": {
+        "receipt_sha256": "1f00c9a3639ec307538e45dcbd4a7397a908fea125c682156bfc3331b5fda5b5",
+        "source_realm": "OBSERVED",
+        "state": "REPORTED"
+      }
+    }
+  },
+  "method_sha256": "c2de570b4de2c2782d988bcb29f6839b8f91ba8ac80b3d0d022d2ba9ad344f39",
+  "model_weights_sha256": "61cd0741cdbfcc229e32e1de1392f352736d87d1e8b3c2b67ad9836bb7910d5d",
+  "observed_model_output_sha256": "1e470104b50e7ca851a448d63b352c732b95ab05d040d94229188c1760260ee1",
+  "operating_view": {
+    "actual_buyer_acceptance_established": false,
+    "cases": [
+      {
+        "case_id": "published-3372",
+        "experiment_id": "turkish-guard-20261124",
+        "failed": [],
+        "missing": [
+          "human_approval",
+          "executor_authority",
+          "executor_response",
+          "effect",
+          "receiver_verification"
+        ],
+        "realm": "OBSERVED",
+        "status": "ACCEPTANCE_INCOMPLETE"
+      }
+    ],
+    "execute_authorized": false,
+    "highest_gate": {
+      "owner_acknowledged": false,
+      "role": "HITL authority owner",
+      "stage": "human_approval"
+    },
+    "independent_receiver_acceptance_established": false,
+    "independently_qualified_chains": null,
+    "observed_cases": 1,
+    "reported_complete_chains": 0,
+    "schema": "csoai.reaction-operating-view/0.1",
+    "simulated_cases": 0,
+    "source_authentication_established": false,
+    "total_cases": 1,
+    "view_only": true
+  },
+  "qualified_model_security_prevention": false,
+  "review": {
+    "case_id": "published-3372",
+    "condition": "NO_HUMAN",
+    "effect_independently_accepted": false,
+    "execute_authorized": false,
+    "experiment_id": "turkish-guard-20261124",
+    "explanation": "Receipt digests and reported states are pointers, not authenticated actors, permitted effects, real human approval or independent recipient acceptance.",
+    "failed_stages": [],
+    "fresh_gspc_measurement": false,
+    "human_identity_qualified": false,
+    "method_sha256": "c2de570b4de2c2782d988bcb29f6839b8f91ba8ac80b3d0d022d2ba9ad344f39",
+    "missing_stages": [
+      "human_approval",
+      "executor_authority",
+      "executor_response",
+      "effect",
+      "receiver_verification"
+    ],
+    "realm": "OBSERVED",
+    "schema": "csoai.reaction-experiment-review/0.1",
+    "source_sha256": "1f00c9a3639ec307538e45dcbd4a7397a908fea125c682156bfc3331b5fda5b5",
+    "stages": [
+      {
+        "receipt_sha256": "1f00c9a3639ec307538e45dcbd4a7397a908fea125c682156bfc3331b5fda5b5",
+        "stage": "request",
+        "state": "REPORTED"
+      },
+      {
+        "receipt_sha256": "c2de570b4de2c2782d988bcb29f6839b8f91ba8ac80b3d0d022d2ba9ad344f39",
+        "stage": "method",
+        "state": "REPORTED"
+      },
+      {
+        "receipt_sha256": null,
+        "stage": "human_approval",
+        "state": "UNKNOWN"
+      },
+      {
+        "receipt_sha256": null,
+        "stage": "executor_authority",
+        "state": "UNKNOWN"
+      },
+      {
+        "receipt_sha256": null,
+        "stage": "executor_response",
+        "state": "UNKNOWN"
+      },
+      {
+        "receipt_sha256": null,
+        "stage": "effect",
+        "state": "UNKNOWN"
+      },
+      {
+        "receipt_sha256": null,
+        "stage": "receiver_verification",
+        "state": "UNKNOWN"
+      },
+      {
+        "receipt_sha256": "1f00c9a3639ec307538e45dcbd4a7397a908fea125c682156bfc3331b5fda5b5",
+        "stage": "retrieval",
+        "state": "REPORTED"
+      },
+      {
+        "receipt_sha256": null,
+        "stage": "payment",
+        "state": "UNKNOWN"
+      },
+      {
+        "receipt_sha256": null,
+        "stage": "repeat_use",
+        "state": "UNKNOWN"
+      }
+    ],
+    "status": "ACCEPTANCE_INCOMPLETE"
+  },
+  "role": "READ_ONLY_OPERATOR_RESEARCH",
+  "sample_population": 3372,
+  "schema": "csoai.observed-model-reaction-projection/0.1",
+  "source_dataset_sha256": "1f00c9a3639ec307538e45dcbd4a7397a908fea125c682156bfc3331b5fda5b5"
+}

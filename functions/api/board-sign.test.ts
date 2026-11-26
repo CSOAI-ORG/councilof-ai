@@ -84,6 +84,16 @@ describe("/api/board-sign OIDC workflow admission", () => {
     expect(workflowAdmitted({})).toBe(false);
   });
 
+  it("admits the daily report only as that file on refs/heads/master, compared whole", () => {
+    expect(workflowAdmitted({ job_workflow_ref: ref("daily-report.yml") })).toBe(true);
+    expect(workflowAdmitted({ job_workflow_ref: ref("daily-report.yml", "refs/heads/lane/daily-report-board-sign-20261124") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("daily-report.yml", "refs/pull/4700/merge") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("daily-report.yml", "refs/heads/master2") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("daily-report.yaml") })).toBe(false);
+    expect(workflowAdmitted({ job_workflow_ref: ref("daily-report.yml").replace("CSOAI-ORG/", "someone/") })).toBe(false);
+    expect(workflowAdmitted({ workflow: "daily-report", workflow_ref: ref("daily-report.yml") })).toBe(false);
+  });
+
   it("leaves the older substring rule as it was", () => {
     expect(workflowAdmitted({ job_workflow_ref: ref("public-root.yml") })).toBe(true);
     expect(workflowAdmitted({ job_workflow_ref: ref("hf-fin-shells-attest.yml") })).toBe(true);
