@@ -245,6 +245,32 @@ test("Hub observations use model-name order and disclose missing comparison cont
   assert.match(h.el("hub-note").textContent, /different banks or instruments/);
 });
 
+test("subject observations retain source warnings, units, method and unsigned evidence without becoming model scores", async () => {
+  const initial = fixtures();
+  const source = board(1, ["watchdog-ingest", "safety"]);
+  source.axes[0] = { axis: "watchdog-ingest", status: "MEASURED", family: "subject", kind: "measured-subject",
+    n: 106, n_unit: "subjects in the frozen frame", rate: 0.1981, rate_scale: "fraction",
+    rate_rule: "presence threshold", per_outcome: { UNCHANGED: 12 }, method_status: "meets-rule",
+    method_sha: "a".repeat(64), run_attestation: "CONTENT_ADDRESSED_UNSIGNED", bank: "source-bank.json",
+    evidence_url: "/interop/source-bank.json", limit: "Do not rely on these old counts <script>source</script>" };
+  initial.set(API, source);
+  const h = harness({ initial, hash: "#watchdog-ingest" });
+  await flush();
+  assert.equal(h.el("desk-source-limit").hidden, false);
+  assert.equal(h.el("desk-source-limit").textContent, "Source limitation: " + source.axes[0].limit);
+  assert.equal(h.el("desk-models").hidden, true);
+  assert.match(h.el("quote").innerHTML, /subjects in the frozen frame/);
+  assert.doesNotMatch(h.el("quote").innerHTML, /accuracy|Leader|Fleet mean/);
+  assert.match(h.el("find-table").innerHTML, /0\.1981/);
+  assert.match(h.el("find-table").innerHTML, /fraction/);
+  assert.match(h.el("find-table").innerHTML, /CONTENT_ADDRESSED_UNSIGNED/);
+  assert.match(h.el("find-table").innerHTML, /https:\/\/councilof\.ai\/interop\/source-bank\.json/);
+  vm.runInContext('openAxis("safety")', h.context);
+  assert.equal(h.el("desk-source-limit").hidden, true);
+  assert.equal(h.el("desk-source-limit").textContent, "");
+  assert.equal(h.el("desk-models").hidden, false);
+});
+
 test("reads primary feeds each minute without replacing source measurement time", async () => {
   const h = harness();
   await flush();

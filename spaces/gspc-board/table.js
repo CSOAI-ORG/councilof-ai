@@ -132,6 +132,9 @@ function cleanModel(s) {
 function seatsFor(a) {
   const seats = Array.from({ length: 9 }, () => null);
   if (!a || !measuredOf(a)) return { kind: "empty", seats };
+  if (a.kind === "measured-subject") {
+    return { kind: "subjects", seats, note: "This axis records subject observations with their own method and limitations." };
+  }
   if (a.kind === "deterministic-facts" || (a.family === "financial" && !a.leader)) {
     return { kind: "facts", seats, note: a.task || a.note || "This axis measures published facts, not a model contest." };
   }
@@ -268,7 +271,7 @@ function renderMap() {
       if (!a || !visible.has(id)) return "";
       const on = measuredOf(a);
       const tie = a.axis === "jail" && a.separation === "TIE";
-      const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : "facts") : "empty";
+      const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : a.kind === "measured-subject" ? "subjects" : "facts") : "empty";
       const klass = `tile${on ? "" : " empty"}${tie ? " jail" : ""}${selected === id ? " on" : ""}`;
       return `<button type="button" class="${klass}" data-axis="${esc(id)}">
         <div class="fig">${esc(fig)}</div>
@@ -300,7 +303,7 @@ function renderBoardTable() {
   }
   document.getElementById("board-body").innerHTML = rows.map((a) => {
     const on = measuredOf(a);
-    const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : "facts") : "-";
+    const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : a.kind === "measured-subject" ? "subjects" : "facts") : "-";
     const iv = on && Array.isArray(a.interval) ? `${pct(a.interval[0])}-${pct(a.interval[1])}` : "-";
     const sep = on ? (a.axis === "jail" && a.separation === "TIE" ? "TIE · floor" : (a.separation || "-")) : "-";
     return `<tr data-axis="${esc(a.axis)}" tabindex="0" class="${selected === a.axis ? "active" : ""}">
@@ -324,8 +327,8 @@ function renderBoardTable() {
 function leaderboardRows(a) {
   const pack = seatsFor(a);
   const published = pack.seats.filter(Boolean);
-  if (!published.length) return `<tr><td colspan="6">${pack.kind === "facts"
-    ? "This axis records facts. No model ranking applies."
+  if (!published.length) return `<tr><td colspan="6">${["facts", "subjects"].includes(pack.kind)
+    ? "This axis records non-model observations. No model ranking applies."
     : "No model results are published on this axis."}</td></tr>`;
   return published.map((s, i) => {
     const iv = Array.isArray(s.interval) ? `${pct(s.interval[0])}-${pct(s.interval[1])}` : "-";
@@ -372,7 +375,7 @@ function renderLeaderboard(name) {
   const note = document.getElementById("lb-note");
   if (pack.kind === "empty") {
     note.textContent = "This slot is published empty. No model results are published.";
-  } else if (pack.kind === "facts") {
+  } else if (["facts", "subjects"].includes(pack.kind)) {
     note.textContent = pack.note || "This axis measures published facts, not a model contest.";
   } else if (pack.published === 1) {
     note.textContent = "The board publishes one model figure and a fleet mean on this axis. Additional model results are unavailable. A rank is never sold.";
@@ -384,7 +387,7 @@ function renderLeaderboard(name) {
   podium.innerHTML = top.map((s, i) => {
     return `<li><span>#${i + 1}</span><b>${esc(cleanModel(s.model))}</b><span>${esc(typeof s.figure === "number" ? pct(s.figure) : "-")}</span></li>`;
   }).join("");
-  document.getElementById("lb-table").hidden = pack.kind === "facts";
+  document.getElementById("lb-table").hidden = ["facts", "subjects"].includes(pack.kind);
   document.querySelector("#lb-table tbody").innerHTML = leaderboardRows(a);
 }
 
@@ -549,16 +552,20 @@ function openAxis(name, updateOnly = false) {
     showPanel("desk");
   }
   const on = measuredOf(a);
-  const facts = seatsFor(a).kind === "facts";
+  const resultKind = seatsFor(a).kind;
+  const nonModel = ["facts", "subjects"].includes(resultKind);
   document.getElementById("desk-kicker").textContent = on ? "Published finding" : "Published empty slot";
   document.getElementById("desk-h").textContent = a.axis;
   document.getElementById("desk-sub").textContent = [a.bench, a.task].filter(Boolean).join(" · ");
   const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : "facts · no accuracy") : "no figure";
   const iv = on && Array.isArray(a.interval) ? `${pct(a.interval[0])} - ${pct(a.interval[1])}` : (on ? "withheld" : "-");
   const sep = a.axis === "jail" && a.separation === "TIE" ? "TIE · floor" : (a.separation || "-");
-  const summary = facts ? [
+  const sourceLimit = document.getElementById("desk-source-limit");
+  sourceLimit.hidden = !a.limit;
+  sourceLimit.textContent = a.limit ? `Source limitation: ${a.limit}` : "";
+  const summary = nonModel ? [
     [chip(a.status, a.separation), "Status"],
-    [esc(a.n ?? "-"), "n · see scope below"],
+    [esc(a.n ?? "-"), a.n_unit || "n · see scope below"],
     [esc(measurementTimeText(a)), "Measurement time"],
   ] : [
     [chip(a.status, a.separation), "Status"],
@@ -572,8 +579,11 @@ function openAxis(name, updateOnly = false) {
   ];
   document.getElementById("quote").innerHTML = summary.map(([v, k]) => `<div><b>${v}</b><span>${esc(k)}</span></div>`).join("");
 
-  document.getElementById("desk-models").hidden = facts;
-  document.getElementById("desk-facts").hidden = !facts;
+  document.getElementById("desk-models").hidden = nonModel;
+  document.getElementById("desk-facts").hidden = !nonModel;
+  document.getElementById("desk-facts").textContent = resultKind === "subjects"
+    ? "This axis records subject observations. Read the source limitation, method and evidence before using its published figures."
+    : "This axis records facts with its own scope and denominator. Read its finding and limitations below.";
 
   document.getElementById("desk-lb").innerHTML =
     `<thead><tr><th>#</th><th>Model</th><th>Figure</th><th>n</th><th>Interval</th><th>Lead</th></tr></thead><tbody>${leaderboardRows(a)}</tbody>`;
@@ -585,7 +595,7 @@ function openAxis(name, updateOnly = false) {
     ["Kind", esc(a.kind || "-")],
     ["Instrument / task", esc(a.task || a.bench || "-")],
     ["n", on && a.n != null ? esc(String(a.n)) : "-"],
-    ...(!facts ? [
+    ...(!nonModel ? [
       ["Leader", on ? esc(a.leader || "-") : "-"],
       ["Figure", on ? esc(fig) : "-"],
       ["95% interval", esc(iv)],
@@ -596,12 +606,26 @@ function openAxis(name, updateOnly = false) {
       ["Unparsed rate", on && typeof a.unparsed_rate === "number" ? esc(pct(a.unparsed_rate)) : "-"],
     ] : []),
   ];
+  if (resultKind === "subjects") {
+    for (const [label, key] of [
+      ["Applies to", "applies_to"], ["n unit", "n_unit"],
+      ["Publisher method status", "method_status"], ["Method", "method"], ["Method SHA-256", "method_sha"],
+      ["Published rate (read source limitation)", "rate"], ["Rate scale", "rate_scale"], ["Rate rule", "rate_rule"],
+      ["Published outcomes (read source limitation)", "per_outcome"],
+      ["Bank SHA-256", "bank_sha256"], ["Frame SHA-256", "frame_sha256"], ["Run attestation", "run_attestation"],
+    ]) {
+      if (a[key] != null) finding.push([label, esc(typeof a[key] === "object" ? JSON.stringify(a[key]) : String(a[key]))]);
+    }
+  }
   if (on && typeof a.mean_harm === "number") finding.push(["Mean harm", esc(num(a.mean_harm))]);
   if (on && typeof a.cvar05_harm === "number") finding.push(["CVaR harm", esc(num(a.cvar05_harm))]);
   const bank = a.dataset_url
     ? `<a href="${esc(a.dataset_url)}" target="_blank" rel="noreferrer">${esc(a.dataset || a.dataset_url)}</a>`
-    : esc(a.dataset || "-");
+    : esc(a.dataset || a.bank || "-");
   finding.push(["Bank", bank]);
+  const evidenceUrl = typeof a.evidence_url === "string" && /^\/(?!\/)/.test(a.evidence_url)
+    ? SITE + a.evidence_url : typeof a.evidence_url === "string" && /^https?:\/\//.test(a.evidence_url) ? a.evidence_url : null;
+  if (evidenceUrl) finding.push(["Published evidence", `<a href="${esc(evidenceUrl)}" target="_blank" rel="noreferrer">Open source record</a>`]);
   if (a.axis === "jail") finding.push(["Note", "Measured floor. A TIE is not a scored arena door."]);
   if (!on) finding.push(["Note", "This slot is published empty. No measurement has been signed."]);
   document.getElementById("find-table").innerHTML = rows(finding);
