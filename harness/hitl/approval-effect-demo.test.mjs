@@ -4,9 +4,9 @@ import { mkdtempSync, rmSync, readFileSync, writeFileSync, existsSync, unlinkSyn
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawn, spawnSync } from 'node:child_process';
-import { generateKeyPairSync, sign } from 'node:crypto';
+import { createHash, generateKeyPairSync, sign } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { runFixture, runTrial, prepare, execute, observe } from './approval-effect-demo.mjs';
+import { runFixture, runTrial, prepare, execute, observe, checkAuthorization } from './approval-effect-demo.mjs';
 
 describe('bounded approval-to-effect demonstration', () => {
   it('actually writes one scoped effect under a synthetic signed approval, denies replay and detects tampering', () => {
@@ -166,4 +166,75 @@ describe('bounded approval-to-effect demonstration', () => {
     assert.equal(t.authority_pin_source,'TEST_RUNNER_NOT_AN_EXTERNAL_LEDGER');
     assert.equal(t.cases.length,14);
   });
+});
+
+describe('authority readback parity and uncertain outcomes', () => {
+  for (const [label, mutate, expected] of [
+    ['revoked', a => a.revoked = true, 'REVOKED_OR_UNKNOWN_AUTHORITY'],
+    ['stale watch', a => a.watch_state = 'STALE', 'NON_CURRENT_WATCH_STATE'],
+    ['wrong epoch', a => a.authority_epoch = 'other', 'AUTHORITY_EPOCH_OR_PRINCIPAL_MISMATCH'],
+    ['wrong scope', a => a.allowed_resource = 'different', 'SCOPE_MISMATCH'],
+    ['issued later', (a, at) => a.issued_at_ms = at + 600000, 'NOT_YET_VALID_OR_EXPIRED'],
+    ['unsupported role', a => a.role = 'unknown', 'UNSUPPORTED_ROLE'],
+  ]) {
+    it('rejects a readback that contradicts pinned authority: ' + label, () => {
+      const dir = mkdtempSync(join(tmpdir(), 'csoai-parity-'));
+      try {
+        const at = Date.now(), original = prepare(dir, at).authority_sha256;
+        assert.equal(execute(dir, at, original).state, 'EXECUTED');
+        const ap = join(dir, 'authority.json'), rp = join(dir, 'effect-receipt.json');
+        const a = JSON.parse(readFileSync(ap)); mutate(a, at); writeFileSync(ap, JSON.stringify(a));
+        const pin = createHash('sha256').update(readFileSync(ap)).digest('hex');
+        const r = JSON.parse(readFileSync(rp)); r.authority_sha256 = pin; writeFileSync(rp, JSON.stringify(r));
+        assert.ok(checkAuthorization(dir, at, pin).reasons.includes(expected));
+        assert.equal(observe(dir, pin).state, 'EFFECT_READBACK_MISMATCH');
+      } finally { rmSync(dir, { recursive: true, force: true }); }
+    });
+  }
+  it('eight processes racing one exclusive effect produce one success and seven structured denials', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'csoai-race-'));
+    try {
+      const at = Date.now(), pin = prepare(dir, at).authority_sha256;
+      const harness = fileURLToPath(new URL('./approval-effect-demo.mjs', import.meta.url));
+      const results = await Promise.all(Array.from({length: 8}, () => new Promise((resolve, reject) => {
+        const child = spawn(process.execPath, [harness, '--execute', dir, String(at), pin], {stdio:['ignore','pipe','pipe']});
+        let out='', err='';
+        child.stdout.on('data', b=>out+=b); child.stderr.on('data', b=>err+=b);
+        child.on('error', reject); child.on('close', code => {
+          try { assert.equal(code, 0, err); resolve(JSON.parse(out)); } catch(e) { reject(e); }
+        });
+      })));
+      assert.equal(results.filter(r=>r.state==='EXECUTED').length, 1);
+      assert.equal(results.filter(r=>r.state==='DENIED' && r.reasons.includes('REPLAY_OR_EXISTING_EFFECT')).length, 7);
+      assert.equal(readFileSync(join(dir,'effects.jsonl'),'utf8').split('\n').length, 2);
+      assert.equal(observe(dir,pin).state,'EFFECT_READBACK_MATCHED');
+    } finally { rmSync(dir, { recursive:true, force:true }); }
+  });
+  for (const mode of ['kill-after-effect','receipt-write-error']) {
+    it('preserves actual effects without falsely reporting success or no effect: '+mode, () => {
+      const dir=mkdtempSync(join(tmpdir(),'csoai-interrupt-'));
+      try {
+        const at=Date.now(),pin=prepare(dir,at).authority_sha256;
+        const harness=new URL('./approval-effect-demo.mjs',import.meta.url).href;
+        // Test-only injection into fs in a fresh process; the real harness still performs its own effect.
+        const code=`import fs from 'node:fs'; import {syncBuiltinESMExports} from 'node:module';
+const [h,dir,at,pin,mode]=process.argv.slice(1); const original=fs.writeFileSync;
+fs.writeFileSync=function(path,...args){
+ if(String(path).endsWith('/effect-receipt.json')){
+  if(mode==='kill-after-effect')process.kill(process.pid,'SIGKILL');
+  throw Object.assign(new Error('injected I/O failure'),{code:'EIO'});
+ }
+ return original.call(this,path,...args);
+}; syncBuiltinESMExports(); const m=await import(h); console.log(JSON.stringify(m.execute(dir,Number(at),pin)));`;
+        const run=spawnSync(process.execPath,['--input-type=module','-e',code,harness,dir,String(at),pin,mode],{encoding:'utf8',timeout:10000});
+        if(mode==='kill-after-effect')assert.equal(run.signal,'SIGKILL');
+        else {assert.equal(run.status,0,run.stderr); const result=JSON.parse(run.stdout); assert.equal(result.state,'EXECUTION_OUTCOME_UNKNOWN'); assert.equal(result.effect_written,true);}
+        const bytes=readFileSync(join(dir,'effects.jsonl'));
+        assert.ok(bytes.length>0); assert.equal(existsSync(join(dir,'effect-receipt.json')),false);
+        assert.equal(observe(dir,pin).state,'UNCHECKABLE');
+        assert.equal(execute(dir,at,pin).state,'DENIED');
+        assert.deepEqual(readFileSync(join(dir,'effects.jsonl')),bytes);
+      } finally {rmSync(dir,{recursive:true,force:true});}
+    });
+  }
 });

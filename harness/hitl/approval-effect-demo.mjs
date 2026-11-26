@@ -62,6 +62,24 @@ function checkSignature(approval, authority) {
   try { return verify(null, Buffer.from(JSON.stringify(approval.statement)), createPublicKey(authority.trust), Buffer.from(approval.signature, 'base64')); }
   catch { return false; }
 }
+// Shared historical authority appraisal: excludes replay state, which is relevant only to admission.
+function authorizationReasons(approval, authority, request, requestDigest, at) {
+  const s = approval.statement ?? {};
+  const reasons = [];
+  if (!checkSignature(approval, authority)) reasons.push('INVALID_SIGNATURE_OR_UNKNOWN_KEY');
+  if (authority.role !== 'SYNTHETIC_TEST_PRINCIPAL_NOT_A_HUMAN') reasons.push('UNSUPPORTED_ROLE');
+  if (authority.revoked !== false) reasons.push('REVOKED_OR_UNKNOWN_AUTHORITY');
+  if (authority.watch_state !== 'CURRENT') reasons.push('NON_CURRENT_WATCH_STATE');
+  if (authority.principal_ref !== s.principal_ref || authority.authority_epoch !== s.authority_epoch) reasons.push('AUTHORITY_EPOCH_OR_PRINCIPAL_MISMATCH');
+  if (s.decision !== 'APPROVE') reasons.push('NO_APPROVAL');
+  if (!validHex(s.request_sha256) || requestDigest !== s.request_sha256) reasons.push('REQUEST_BYTES_CHANGED');
+  if (request.id !== 'demo-request-001' || request.tenant !== 'synthetic-demo-tenant') reasons.push('REQUEST_ID_OR_TENANT_MISMATCH');
+  if (request.action !== 'append_bounded_marker' || request.resource !== 'local:effects.jsonl' || request.marker !== 'APPROVAL_EFFECT_VISIBLE') reasons.push('OUTSIDE_DEMO_ACTION');
+  if (request.action !== authority.allowed_action || request.resource !== authority.allowed_resource || s.scope?.action !== request.action || s.scope?.resource !== request.resource) reasons.push('SCOPE_MISMATCH');
+  if (![s.decided_at_ms,s.not_before_ms,s.expires_at_ms,authority.issued_at_ms,at].every(Number.isFinite) || s.decided_at_ms < authority.issued_at_ms || s.decided_at_ms > at || s.not_before_ms > s.decided_at_ms || s.expires_at_ms <= s.not_before_ms || at < s.not_before_ms || at >= s.expires_at_ms) reasons.push('NOT_YET_VALID_OR_EXPIRED');
+  return reasons;
+}
+
 export function checkAuthorization(dir, at = Date.now(), authorityPin) {
   guard(dir);
   const authorityFile = loadOnce(dir, 'authority.json');
@@ -72,19 +90,7 @@ export function checkAuthorization(dir, at = Date.now(), authorityPin) {
   const requestFile = loadOnce(dir, 'request.json');
   const request = requestFile.parse();
   const approval = read(file(dir, 'approval.json'));
-  const s = approval.statement ?? {};
-  const reasons = [];
-  if (!checkSignature(approval, authority)) reasons.push('INVALID_SIGNATURE_OR_UNKNOWN_KEY');
-  if (authority.role !== 'SYNTHETIC_TEST_PRINCIPAL_NOT_A_HUMAN') reasons.push('UNSUPPORTED_ROLE');
-  if (authority.revoked !== false) reasons.push('REVOKED_OR_UNKNOWN_AUTHORITY');
-  if (authority.watch_state !== 'CURRENT') reasons.push('NON_CURRENT_WATCH_STATE');
-  if (authority.principal_ref !== s.principal_ref || authority.authority_epoch !== s.authority_epoch) reasons.push('AUTHORITY_EPOCH_OR_PRINCIPAL_MISMATCH');
-  if (s.decision !== 'APPROVE') reasons.push('NO_APPROVAL');
-  if (!validHex(s.request_sha256) || requestFile.digest !== s.request_sha256) reasons.push('REQUEST_BYTES_CHANGED');
-  if (request.id !== 'demo-request-001' || request.tenant !== 'synthetic-demo-tenant') reasons.push('REQUEST_ID_OR_TENANT_MISMATCH');
-  if (request.action !== 'append_bounded_marker' || request.resource !== 'local:effects.jsonl' || request.marker !== 'APPROVAL_EFFECT_VISIBLE') reasons.push('OUTSIDE_DEMO_ACTION');
-  if (request.action !== authority.allowed_action || request.resource !== authority.allowed_resource || s.scope?.action !== request.action || s.scope?.resource !== request.resource) reasons.push('SCOPE_MISMATCH');
-  if (![s.decided_at_ms,s.not_before_ms,s.expires_at_ms,authority.issued_at_ms,at].every(Number.isFinite) || s.decided_at_ms < authority.issued_at_ms || s.decided_at_ms > at || s.not_before_ms > s.decided_at_ms || s.expires_at_ms <= s.not_before_ms || at < s.not_before_ms || at >= s.expires_at_ms) reasons.push('NOT_YET_VALID_OR_EXPIRED');
+  const reasons = authorizationReasons(approval, authority, request, requestFile.digest, at);
   if (existsSync(file(dir, 'effect-receipt.json')) || existsSync(file(dir, 'effects.jsonl'))) reasons.push('REPLAY_OR_EXISTING_EFFECT');
   return { state: reasons.length ? 'DENIED' : 'AUTHORIZED', reasons, approval, authority, request };
 }
@@ -94,9 +100,14 @@ export function execute(dir, at = Date.now(), authorityPin) {
   if (result.state !== 'AUTHORIZED') return deny(...result.reasons);
   const { approval, request, authority } = result;
   const effectText = JSON.stringify({ approval_id: approval.statement.id, request_id: request.id, marker: request.marker, action: request.action }) + '\n';
-  writeFileSync(file(dir, 'effects.jsonl'), effectText, { flag: 'wx', mode: 0o600 });
+  try { writeFileSync(file(dir, 'effects.jsonl'), effectText, { flag: 'wx', mode: 0o600 }); }
+  catch (error) {
+    if (error?.code === 'EEXIST') return deny('REPLAY_OR_EXISTING_EFFECT');
+    return { state: 'EXECUTION_OUTCOME_UNKNOWN', reasons: ['EFFECT_WRITE_FAILED'], effect_written: null };
+  }
   const receipt = { schema: 'csoai.demo-effect-receipt/1', state: 'EFFECT_OBSERVED_BY_LOCAL_EXECUTOR', observed_at_ms: at, approval_id: approval.statement.id, authority_epoch: authority.authority_epoch, authority_sha256: authorityPin, request_sha256: approval.statement.request_sha256, effect_sha256: sha256(effectText), effect_file: 'effects.jsonl', scope: approval.statement.scope, executor: 'local-node-fixture', human_authentication: 'NOT_ESTABLISHED', independent_institutional_observer: false };
-  write(file(dir, 'effect-receipt.json'), receipt);
+  try { write(file(dir, 'effect-receipt.json'), receipt); }
+  catch { return { state: 'EXECUTION_OUTCOME_UNKNOWN', reasons: ['RECEIPT_WRITE_FAILED'], effect_written: true, effect_sha256: receipt.effect_sha256 }; }
   return { state: 'EXECUTED', reasons: [], effect_written: true, effect_sha256: receipt.effect_sha256 };
 }
 
@@ -129,7 +140,21 @@ export function observe(dir, authorityPin) {
   try { receipt = read(file(dir, 'effect-receipt.json')); body = readFileSync(file(dir, 'effects.jsonl'), 'utf8'); approval = read(file(dir, 'approval.json')); authorityFile = loadOnce(dir, 'authority.json'); authorityPinned = pinned(authorityFile, authorityPin); authority = authorityPinned ? authorityFile.parse() : null; requestFile = loadOnce(dir, 'request.json'); request = requestFile.parse(); }
   catch { return { state: 'UNCHECKABLE', verified: false }; }
   const row = body.endsWith('\n') && body.split('\n').length === 2 ? (() => { try { return JSON.parse(body.slice(0,-1)); } catch { return null; } })() : null;
-  const ok = authorityPinned && receipt.authority_sha256 === authorityPin && receipt.schema === 'csoai.demo-effect-receipt/1' && receipt.state === 'EFFECT_OBSERVED_BY_LOCAL_EXECUTOR' && receipt.effect_file === 'effects.jsonl' && validHex(receipt.effect_sha256) && receipt.effect_sha256 === sha256(body) && checkSignature(approval, authority) && approval.statement.decision === 'APPROVE' && receipt.approval_id === approval.statement.id && receipt.authority_epoch === approval.statement.authority_epoch && receipt.request_sha256 === requestFile.digest && receipt.request_sha256 === approval.statement.request_sha256 && Number.isFinite(receipt.observed_at_ms) && receipt.observed_at_ms >= approval.statement.decided_at_ms && receipt.observed_at_ms >= approval.statement.not_before_ms && receipt.observed_at_ms < approval.statement.expires_at_ms && receipt.scope.action === request.action && receipt.scope.resource === request.resource && row?.approval_id === receipt.approval_id && row?.request_id === request.id && row?.marker === request.marker && row?.action === request.action;
+  let ok = false;
+  try {
+    ok = authorityPinned && receipt.authority_sha256 === authorityPin
+      && receipt.schema === 'csoai.demo-effect-receipt/1'
+      && receipt.state === 'EFFECT_OBSERVED_BY_LOCAL_EXECUTOR'
+      && receipt.effect_file === 'effects.jsonl'
+      && validHex(receipt.effect_sha256) && receipt.effect_sha256 === sha256(body)
+      && authorizationReasons(approval, authority, request, requestFile.digest, receipt.observed_at_ms).length === 0
+      && receipt.approval_id === approval.statement.id
+      && receipt.authority_epoch === approval.statement.authority_epoch
+      && receipt.request_sha256 === requestFile.digest
+      && receipt.scope?.action === request.action && receipt.scope?.resource === request.resource
+      && row?.approval_id === receipt.approval_id && row?.request_id === request.id
+      && row?.marker === request.marker && row?.action === request.action;
+  } catch { return { state: 'UNCHECKABLE', verified: false }; }
   return { state: ok ? 'EFFECT_READBACK_MATCHED' : 'EFFECT_READBACK_MISMATCH', verified: ok, effects_count: row ? 1 : null, effect_sha256: sha256(body), external_observer: false, observation_process: 'separate-local-process' };
 }
 
