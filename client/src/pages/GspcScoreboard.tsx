@@ -3,6 +3,7 @@ import { axisHref } from "@/lib/axisHref";
 import AxisLink from "@/components/AxisLink";
 import { Link, useRoute } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
+import { gspcPageHeading, gspcPageTitle } from "./gspcAxisTitle";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { verifyPublishedArenaElo } from "@/lib/arenaAttestation";
 import { BOARD_COUNT_OBSERVED, BOARD_OBSERVED_AT, boardCountFromPayload, boardKindSplitFromPayload } from "@/lib/boardCount";
@@ -294,8 +295,14 @@ export default function GspcScoreboard() {
     });
   }, [isFinancialAxis, wantAxis, rawAxis]);
 
+  // Title: the axis the URL names comes first; the count is totals.public_count from the payload
+  // below, never typed. Re-runs when the payload lands or the axis in the URL changes.
   useEffect(() => {
-    document.title = "The GSPC board — live | Council of AI";
+    const count = data?.totals?.public_count;
+    document.title = gspcPageTitle(wantAxis, typeof count === "string" ? count : null);
+  }, [wantAxis, data]);
+
+  useEffect(() => {
     setMetaDescription("The live GSPC board. Every measured cell has n and a 95% CI where honest. UNMEASURED is reported, never hidden. Counts and stamps come from GET /api/gspc.");
     const ac = new AbortController();
     const read = async () => {
@@ -311,10 +318,6 @@ export default function GspcScoreboard() {
       .catch(() => new Promise((res) => setTimeout(res, 350)).then(read))
       .then((d) => {
         setData(d);
-        const count = d?.totals?.public_count;
-        if (typeof count === "string" && count.trim()) {
-          document.title = `The GSPC board — ${count} | Council of AI`;
-        }
       })
       .catch((e) => {
         if (ac.signal.aborted) return;
@@ -336,7 +339,7 @@ export default function GspcScoreboard() {
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">
           Board source: GET /api/gspc — recompute published results, free
         </p>
-        <h1 className="mt-3 text-4xl font-black text-gray-900">The GSPC board</h1>
+        <h1 className="mt-3 text-4xl font-black text-gray-900">{gspcPageHeading(wantAxis, !!(focused || isFinancialAxis))}</h1>
         {/* A reader who opened /gspc/<axis> asked for ONE axis. Its deep-dive sits below the
             board-wide qualifiers and the whole terminal — about three phone screens down — so
             the first screen now hands them the way there. Nothing is summarised here and no
