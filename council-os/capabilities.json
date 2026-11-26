@@ -5881,6 +5881,34 @@
       "source": "functions/api/request-attestation.ts"
     },
     {
+      "id": "api-research-commons",
+      "kind": "http",
+      "path": "/api/research-commons",
+      "method": "GET",
+      "name": "Research commons",
+      "description": "GET /api/research-commons — read-only CouncilOS/H.I.M. consumer of the isolated EAT feed's daily source metadata.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.auto-eat.research-commons/0.1",
+        "csoai.councilos-eat-research-commons/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/research-commons",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/research-commons.ts"
+    },
+    {
       "id": "api-research-plan",
       "kind": "http",
       "path": "/api/research-plan",
