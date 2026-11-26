@@ -89,8 +89,25 @@ export default function Traction() {
         <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight sm:text-6xl">AI measurement infrastructure you can inspect.</h1>
         <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">{OPERATING_ORGANISATION_SUMMARY}</p>
         <p className="mt-4 max-w-3xl leading-7 text-slate-300">For evaluators, partners and investors, this page connects what operates today to dated outside evidence, published assets and the separately recorded commercial position.</p>
-        <div className="mt-8 flex flex-wrap gap-3"><a href="#external-use" className="rounded-full bg-emerald-400 px-5 py-3 font-bold text-slate-950">Inspect external use</a><Link href="/gspc-verify" className="rounded-full border border-slate-600 px-5 py-3 font-bold">Verify a record</Link><Link href="/contact/?arm=run" className="rounded-full border border-slate-600 px-5 py-3 font-bold">Discuss evidence work</Link></div>
+        <div className="mt-8 flex flex-wrap gap-3"><a href="#research-diligence" className="rounded-full bg-emerald-400 px-5 py-3 font-bold text-slate-950">Inspect research evidence</a><a href="#external-use" className="rounded-full border border-slate-600 px-5 py-3 font-bold">Inspect external use</a><Link href="/gspc-verify" className="rounded-full border border-slate-600 px-5 py-3 font-bold">Verify a record</Link><Link href="/contact/?arm=run" className="rounded-full border border-slate-600 px-5 py-3 font-bold">Discuss evidence work</Link></div>
       </div>
+    </section>
+
+    <section id="research-diligence" aria-labelledby="research-diligence-h" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-12">
+      <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">Proof before promotion</p>
+      <h2 id="research-diligence-h" className="mt-3 text-2xl font-bold">Research and institutional review</h2>
+      <p className="mt-4 max-w-3xl leading-7 text-slate-300">Start with the primary sources. The evidence below distinguishes measurements, reproducibility, external contributions, organisational status and rights. No score, membership or download count establishes certification, funding or customer adoption.</p>
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <Step n="01" title="Inspect the measurement" body="Read the board and its methods. A measured axis is not a separated model leader. Preserve TIE and UNTESTED as distinct states." href="/methodology" />
+        <Step n="02" title="Verify the evidence" body="Inspect a signed record and its scope. A valid publisher signature does not independently reproduce the measurement." href="/gspc-verify" />
+        <Step n="03" title="Review outside observations" body="Examine source-linked external execution, reproduction and contributions, with each claim boundary kept visible." href="#external-use" />
+        <Step n="04" title="Review governance and corrections" body="Inspect declared conflicts and the correction process; verify access, rights and review roles before commissioning work." href="/independence/" />
+      </div>
+      <aside className="mt-6 rounded-xl border border-slate-700 p-5">
+        <h3 className="text-lg font-bold">Participate in scoped research</h3>
+        <p className="mt-3 leading-7 text-slate-300">The public working-group catalogue describes proposed work and review tasks. A catalogue entry is not human authority, an appointment or an independently staffed service. Participation, permissions and intellectual-property terms must be agreed separately before any consequential work.</p>
+        <p className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm"><a href="/working-groups/catalog.json" className="text-emerald-300 underline">Inspect the working-group catalogue</a><a href="/api/gspc" className="text-emerald-300 underline">Read the live board JSON</a><a href="/api/corrections" className="text-emerald-300 underline">Inspect corrections</a><Link href="/contact/?arm=pilot" className="text-emerald-300 underline">Discuss a research question</Link></p>
+      </aside>
     </section>
 
     <section id="for-organisations" aria-labelledby="organisation-jobs" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-12">
