@@ -23,7 +23,7 @@ def stub_fetch(url: str, *, token=None, **_):
         repo = url.split("/repos/", 1)[1].split("/commits", 1)[0]
         if "/commits" in url:
             return [{"sha": hashlib.sha1(repo.encode()).hexdigest()}]
-        return {"id": abs(hash(repo)) % 100000 + 1, "full_name": repo,
+        return {"id": abs(hash(repo)) % 100000 + 1, "full_name": repo, "private": False,
                 "license": {"spdx_id": "Apache-2.0"}, "archived": False,
                 "pushed_at": "2026-11-23T21:30:00Z"}
     if "api.crossref.org/works" in url:
@@ -33,6 +33,10 @@ def stub_fetch(url: str, *, token=None, **_):
             c.TOPICS[0]: "Reproducible evaluation of AI agents <script>",
             c.TOPICS[1]: "Calibrated AI safety benchmarks <script>",
             c.TOPICS[2]: "Autonomous agent authorization policy <script>",
+            c.TOPICS[3]: "Language model temporal forecasting calibration",
+            c.TOPICS[4]: "Language model utility preference stability",
+            c.TOPICS[5]: "Agent safety factorial interaction evaluation",
+            c.TOPICS[6]: "Distributed inference memory bandwidth",
         }
         doi = "10.1234/source.example"
         return {"message": {"items": [
@@ -51,8 +55,8 @@ class ResearchCommonsTests(unittest.TestCase):
         self.assertEqual(report["repositories_checked"], len(c.SOURCES))
         self.assertEqual(report["repositories_observed"], len(c.SOURCES))
         self.assertEqual(report["repositories_uncheckable"], 0)
-        self.assertEqual(report["crossref_topics_observed"], 3)
-        self.assertEqual(report["crossref_candidate_metadata_rows"], 3)
+        self.assertEqual(report["crossref_topics_observed"], len(c.TOPICS))
+        self.assertEqual(report["crossref_candidate_metadata_rows"], len(c.TOPICS))
         self.assertEqual(report["repository_status"], "FULL_SOURCE_METADATA_READBACK")
 
     def test_no_copied_code_abstract_emails_or_authority(self):
@@ -97,6 +101,18 @@ class ResearchCommonsTests(unittest.TestCase):
         self.assertEqual(r["status"], "SOURCE_UNCHECKABLE")
         self.assertIn("GITHUB_REPO_ID_MISMATCH", r["reason"])
         self.assertNotIn("head_sha", r)
+
+    def test_private_or_unknown_visibility_held(self):
+        for value in (True, None):
+            def private(url, *, token=None):
+                v = stub_fetch(url, token=token)
+                if isinstance(v, dict) and "full_name" in v:
+                    v["private"] = value
+                return v
+            r = c.github_source(c.SOURCES[0], fetch=private)
+            self.assertEqual(r["status"], "SOURCE_UNCHECKABLE")
+            self.assertEqual(r["reason"], "GITHUB_PUBLIC_VISIBILITY_UNCHECKABLE")
+            self.assertNotIn("head_sha", r)
 
     def test_github_commit_unavailable_held(self):
         def no_commit(url, *, token=None):

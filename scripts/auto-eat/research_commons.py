@@ -29,10 +29,10 @@ USER_AGENT = "CSOAI-public-metadata-commons/0.1 (mailto:contacts@csoai.org)"
 ALLOW_HOSTS = frozenset({"api.github.com", "api.crossref.org"})
 MAX_RESPONSE_BYTES = 350_000
 GITHUB_WORKERS = 5
-MAX_REPOS = 18
+MAX_REPOS = 25
 TOPIC_ROWS = 8
 TOPIC_RESULTS_PER_SEARCH = 3
-MAX_PAPERS = 9
+MAX_PAPERS = 21
 TIMEOUT_SECONDS = 9
 DEFAULT_OUTPUT = "public/interop/auto-eat/research-commons.json"
 
@@ -54,12 +54,25 @@ SOURCES = (
     ("open-policy-agent/opa", "policy_engine", "AUTHORITY_SCOPE_DENY_ALLOW_TEST"),
     ("in-toto/in-toto", "provenance_framework", "SOURCE_TO_BUILD_CHAIN_REPLAY"),
     ("sigstore/cosign", "attestation_toolkit", "EXACT_BYTE_SIGNED_EVIDENCE_CHECK"),
+    ("forecastingresearch/forecastbench", "temporal_forecasting", "PROSPECTIVE_BRIER_CALIBRATION"),
+    ("centerforaisafety/emergent-values", "utility_engineering", "PAIRWISE_PREFERENCE_STABILITY"),
+    ("Mesh-LLM/mesh-llm", "distributed_inference", "MEMORY_NETWORK_FAILURE_ISOLATION"),
+    ("ml-explore/mlx", "data_local_inference", "LOCAL_VS_REMOTE_RESOURCE_COST"),
+    ("UKGovernmentBEIS/inspect_evals", "agent_evaluation", "OUTCOME_VS_TOOL_ACK_CONTROL"),
+    ("open-quantum-safe/liboqs", "crypto_agility", "HYBRID_SIGNATURE_DOWNGRADE_CONTROL"),
+    ("w3c/coga", "cognitive_accessibility", "HUMAN_COMPREHENSION_TASK_REPLAY"),
+    ("modelcontextprotocol/registry", "permissionless_discovery", "REGISTRY_REVISION_AND_CURSOR_REPLAY"),
+    ("a2aproject/A2A", "agent_interop", "DELEGATION_AND_RECEIVER_EFFECT_CONTROL"),
     ("CrowdStrike/falconpy", "commercial_sdk", "TENANT_AUTHORISED_READONLY_ADAPTER"),
 )
 TOPICS = (
     "AI agent evaluation reproducibility",
     "AI safety benchmark calibration",
     "autonomous agent runtime authorization",
+    "language model forecasting temporal leakage calibration",
+    "language model utility preference stability",
+    "agent safety interaction effects factorial evaluation",
+    "distributed inference data locality memory bandwidth",
 )
 assert len(SOURCES) <= MAX_REPOS
 
@@ -67,6 +80,10 @@ TOPIC_RULES = {
     TOPICS[0]: (r"\bagents?\b|\bmulti.agent\b", r"evaluat|reproduc|benchmark"),
     TOPICS[1]: (r"\bai\b|artificial intelligence|\bllm\b|\bmodel", r"\bsafety\b|\bassurance\b|\bharm\b", r"benchmark|calibrat|evaluat"),
     TOPICS[2]: (r"\bagents?\b|autonom", r"authoriz|permission|access control|governance|policy|security"),
+    TOPICS[3]: (r"forecast|predict", r"temporal|calibrat|leakage|time.series", r"model|agent|AI"),
+    TOPICS[4]: (r"language model|LLM|agent", r"utility|preference|value", r"stabil|consisten|align|engineer"),
+    TOPICS[5]: (r"agent|language model|LLM", r"safety|robust|failure", r"interact|factorial|compos|joint"),
+    TOPICS[6]: (r"inference|language model|LLM", r"distributed|locality|memory|bandwidth"),
 }
 
 REPO_ID = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
@@ -179,6 +196,8 @@ def github_source(src: tuple[str, str, str], *, token=None,
         doc = fetch(base, token=token)
         if not isinstance(doc, dict) or doc.get("full_name", "").lower() != slug.lower():
             raise Uncheckable("GITHUB_REPO_ID_MISMATCH")
+        if doc.get("private") is not False:
+            raise Uncheckable("GITHUB_PUBLIC_VISIBILITY_UNCHECKABLE")
         source_metadata_digest = sha(canonical(doc))
         repo_id = doc.get("id")
         if isinstance(repo_id, bool) or not isinstance(repo_id, int):
