@@ -139,7 +139,20 @@ jobs:
           set -euo pipefail
           git config user.name "reg-watch"
           git config user.email "nicholas@csoai.org"
-          git add reg-watch-state.json reg-watch-events/ research-watch-state.json research-review-requests/ watchdog-source-status.json watchdog-daily-index.json 2>/dev/null || true
+          # State snapshots are mandatory. Optional event directories may not
+          # exist on a no-event day; never hide a staging error for the snapshots.
+          git add -- reg-watch-state.json research-watch-state.json watchdog-source-status.json watchdog-daily-index.json
+          for entry in reg-watch-events research-review-requests; do
+            if [ -d "$entry" ] || [ -n "$(git ls-files -- "$entry")" ]; then
+              git add -- "$entry"
+            fi
+          done
+          # A live metadata read must refresh its observation timestamp.
+          # Do not label an empty staging result as a successful fresh read.
+          if git diff --cached --quiet -- watchdog-source-status.json; then
+            echo "::error::Watchdog source snapshot was not refreshed and staged."
+            exit 1
+          fi
           if git diff --cached --quiet; then
             echo "no state change"
             exit 0
