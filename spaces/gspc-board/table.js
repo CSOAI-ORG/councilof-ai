@@ -37,7 +37,7 @@ const READ = [
   { title: "A listing is not a grade", body: "A Hub name can sit on a public list. That is DISCOVERED. It is not a GSPC cell." },
   { title: "The board snapshot is signed", body: "Every measured axis carries a published measurement. Public cards check. They do not yet name a unique weight file." },
   { title: "An empty slot is a finding", body: "Declared empty slots stay on the map so gaps stay visible. No invented zero, no invented leader." },
-  { title: "A TIE is not a win", body: "When the leader interval contains the fleet mean, the point lead is not a measured advantage. Jail is a measured floor." },
+  { title: "A TIE is not a win", body: "A point-estimate lead does not establish separation. Read the published separation state and method. UNTESTED means no separation test is established." },
 ];
 
 const EMPTY_NEXT = {
@@ -121,6 +121,13 @@ function mentions(hay, name) {
 }
 function measuredOf(a) {
   return String(a?.status || "").toUpperCase() === "MEASURED";
+}
+function figureText(a) {
+  if (!measuredOf(a)) return "no figure";
+  if (typeof a.accuracy === "number") return pct(a.accuracy);
+  if (a.kind === "measured-subject") return "subjects";
+  if (a.kind === "deterministic-facts" || a.family === "financial") return "facts · no accuracy";
+  return "figure withheld";
 }
 function displayName(a) {
   return String(a.label || a.axis || "").replace(/-/g, " ");
@@ -210,7 +217,7 @@ function modelIndex() {
   let rows = [...map.values()];
   const q = query.trim().toLowerCase();
   if (q) rows = rows.filter((r) => r.name.toLowerCase().includes(q) || r.axes.some((ax) => ax.includes(q)));
-  rows.sort((a, b) => (b.best ?? -1) - (a.best ?? -1) || a.name.localeCompare(b.name));
+  rows.sort((a, b) => a.name.localeCompare(b.name));
   return rows;
 }
 
@@ -271,12 +278,12 @@ function renderMap() {
       if (!a || !visible.has(id)) return "";
       const on = measuredOf(a);
       const tie = a.axis === "jail" && a.separation === "TIE";
-      const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : a.kind === "measured-subject" ? "subjects" : "facts") : "empty";
+      const fig = figureText(a);
       const klass = `tile${on ? "" : " empty"}${tie ? " jail" : ""}${selected === id ? " on" : ""}`;
       return `<button type="button" class="${klass}" data-axis="${esc(id)}">
         <div class="fig">${esc(fig)}</div>
         <div class="name">${esc(displayName(a))}</div>
-        <div class="who">${on ? esc(cleanModel(a.leader) || (a.kind === "deterministic-facts" ? "facts" : "-")) : "No grade yet"}</div>
+        <div class="who">${on && a.leader ? esc(`${a.separation === "SEPARATED" ? "Separated" : "Top observed"}: ${cleanModel(a.leader)}`) : ""}</div>
         ${chip(a.status, a.separation)}
       </button>`;
     }).join("");
@@ -303,7 +310,7 @@ function renderBoardTable() {
   }
   document.getElementById("board-body").innerHTML = rows.map((a) => {
     const on = measuredOf(a);
-    const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : a.kind === "measured-subject" ? "subjects" : "facts") : "-";
+    const fig = figureText(a);
     const iv = on && Array.isArray(a.interval) ? `${pct(a.interval[0])}-${pct(a.interval[1])}` : "-";
     const sep = on ? (a.axis === "jail" && a.separation === "TIE" ? "TIE · floor" : (a.separation || "-")) : "-";
     return `<tr data-axis="${esc(a.axis)}" tabindex="0" class="${selected === a.axis ? "active" : ""}">
@@ -314,7 +321,7 @@ function renderBoardTable() {
       <td>${esc(on && a.n != null ? a.n : "-")}</td>
       <td>${esc(iv)}</td>
       <td>${esc(sep)}</td>
-      <td>${on ? esc(a.leader || "-") : "-"}</td>
+      <td>${on && a.leader ? esc(a.leader + (a.separation === "SEPARATED" ? "" : " · not separated")) : "-"}</td>
     </tr>`;
   }).join("") || `<tr><td colspan="8">No axes match.</td></tr>`;
   document.querySelectorAll("#board-body tr[data-axis]").forEach((tr) => {
@@ -378,7 +385,7 @@ function renderLeaderboard(name) {
   } else if (["facts", "subjects"].includes(pack.kind)) {
     note.textContent = pack.note || "This axis measures published facts, not a model contest.";
   } else if (pack.published === 1) {
-    note.textContent = "The board publishes one model figure and a fleet mean on this axis. Additional model results are unavailable. A rank is never sold.";
+    note.textContent = "The board publishes one model figure on this axis. Additional model results are unavailable. Read its separation state before comparing results.";
   } else {
     note.textContent = `${pack.published} published names on this axis. Empty seats are not invented zeros. Jail is a measured floor when the lead is a TIE.`;
   }
@@ -397,14 +404,14 @@ function renderModels() {
   if (note) {
     note.textContent = query.trim()
       ? `${rows.length} published names match "${query.trim()}".`
-      : `${rows.length} names appear as a leader or a signed per-model row. Search above.`;
+      : `${rows.length} names appear in published model fields. Listed alphabetically; compare results within their own axis and method.`;
   }
   const tb = document.querySelector("#mod-table tbody");
   tb.innerHTML = rows.map((r) =>
     `<tr data-axis="${esc(r.axes[0] || "")}">
       <td>${esc(r.name)}</td>
-      <td>${esc(r.axes.join(", "))}</td>
-      <td>${esc(r.best != null ? pct(r.best) : "-")}</td>
+      <td>${esc([...new Set(r.axes)].join(", "))}</td>
+      <td>${new Set(r.axes).size}</td>
       <td><button type="button" data-axis="${esc(r.axes[0] || "")}">Open</button></td>
     </tr>`
   ).join("") || `<tr><td colspan="4">No published model names match.</td></tr>`;
@@ -557,7 +564,7 @@ function openAxis(name, updateOnly = false) {
   document.getElementById("desk-kicker").textContent = on ? "Published finding" : "Published empty slot";
   document.getElementById("desk-h").textContent = a.axis;
   document.getElementById("desk-sub").textContent = [a.bench, a.task].filter(Boolean).join(" · ");
-  const fig = on ? (typeof a.accuracy === "number" ? pct(a.accuracy) : "facts · no accuracy") : "no figure";
+  const fig = figureText(a);
   const iv = on && Array.isArray(a.interval) ? `${pct(a.interval[0])} - ${pct(a.interval[1])}` : (on ? "withheld" : "-");
   const sep = a.axis === "jail" && a.separation === "TIE" ? "TIE · floor" : (a.separation || "-");
   const sourceLimit = document.getElementById("desk-source-limit");
@@ -573,7 +580,7 @@ function openAxis(name, updateOnly = false) {
     [esc(on && a.n != null ? a.n : "-"), "n"],
     [esc(iv), "95% interval"],
     [esc(sep), "Separation"],
-    [esc(on && a.leader ? a.leader : "-"), "Leader"],
+    [esc(on && a.leader ? a.leader : "-"), a.separation === "SEPARATED" ? "Separated leader" : "Top observed · not separated"],
     [esc(on && typeof a.fleet_mean === "number" ? pct(a.fleet_mean) : "-"), "Fleet mean"],
     [esc(on && typeof a.macro_f1 === "number" ? String(a.macro_f1) : "-"), "Macro F1"],
   ];
@@ -596,7 +603,7 @@ function openAxis(name, updateOnly = false) {
     ["Instrument / task", esc(a.task || a.bench || "-")],
     ["n", on && a.n != null ? esc(String(a.n)) : "-"],
     ...(!nonModel ? [
-      ["Leader", on ? esc(a.leader || "-") : "-"],
+      [a.separation === "SEPARATED" ? "Separated leader" : "Top observed · not separated", on ? esc(a.leader || "-") : "-"],
       ["Figure", on ? esc(fig) : "-"],
       ["95% interval", esc(iv)],
       ["Fleet mean", on && typeof a.fleet_mean === "number" ? esc(pct(a.fleet_mean)) : "-"],

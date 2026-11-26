@@ -271,6 +271,35 @@ test("subject observations retain source warnings, units, method and unsigned ev
   assert.equal(h.el("desk-models").hidden, false);
 });
 
+test("a withheld model-comparison figure stays withheld and is not relabelled as facts", async () => {
+  const initial = fixtures();
+  const source = board(1, ["safety"]);
+  Object.assign(source.axes[0], { kind: "model-comparison", accuracy: null, leader: null, separation: "UNTESTED" });
+  initial.set(API, source);
+  const h = harness({ initial, hash: "#safety" });
+  await flush();
+  assert.match(h.el("quote").innerHTML, /figure withheld/);
+  assert.match(h.el("graph").innerHTML, /figure withheld/);
+  assert.doesNotMatch(h.el("quote").innerHTML, /facts · no accuracy/);
+  assert.match(h.el("read-box").innerHTML, /Read the published separation state and method/);
+  assert.doesNotMatch(h.el("read-box").innerHTML, /interval contains the fleet mean/);
+});
+
+test("the model directory does not rank maximum scores pooled across different axes", async () => {
+  const initial = fixtures();
+  const source = board(1, ["governance", "safety"]);
+  Object.assign(source.axes[0], { leader: "z-higher-score", accuracy: 1 });
+  Object.assign(source.axes[1], { leader: "a-lower-score", accuracy: 0.1 });
+  initial.set(API, source);
+  const h = harness({ initial });
+  await flush();
+  const rendered = h.body("#mod-table tbody").innerHTML;
+  assert.ok(rendered.indexOf("a-lower-score") < rendered.indexOf("z-higher-score"));
+  assert.doesNotMatch(rendered, /100%|10%/);
+  assert.match(h.el("graph").innerHTML, /Top observed: z-higher-score/);
+  assert.match(h.el("board-body").innerHTML, /z-higher-score · not separated/);
+});
+
 test("reads primary feeds each minute without replacing source measurement time", async () => {
   const h = harness();
   await flush();
