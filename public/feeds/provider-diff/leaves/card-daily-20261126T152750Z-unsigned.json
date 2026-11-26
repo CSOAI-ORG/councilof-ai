@@ -1,0 +1,52 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "provider-diff daily capture 2026-11-26: 7 changed, 0 uncheckable, 1 unknown of 51",
+ "as_of": "2026-11-26T15:27:50Z",
+ "source_urls": [
+  "https://councilof.ai/feeds/provider-diff/index.json"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms.daily/0.1",
+  "state": "PROBED",
+  "run_at": "2026-11-26T15:27:50Z",
+  "normaliser": "csoai-norm-v1",
+  "n_targets": 51,
+  "n_ok": 50,
+  "n_unchanged": 9,
+  "n_changed": 7,
+  "n_bytes_only": 27,
+  "n_first_capture": 0,
+  "n_uncheckable": 0,
+  "n_unknown": 1,
+  "changed": [
+   "openai/pricing",
+   "cohere/terms",
+   "cohere/usage_policy",
+   "cohere/model_cards",
+   "cohere/safety_policy",
+   "alibaba-qwen/usage_policy",
+   "amazon/pricing"
+  ],
+  "uncheckable": [],
+  "unknown": [
+   "mistral/safety_policy"
+  ],
+  "attests": "for each target listed as unchanged, the normalised sha256 of this capture equals the previous OK capture — an observation of two captures, nothing about the document between them",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "6de9d25d6012c2437726b646c9404153cb90fd63018890d2103c9f3330dc04e1",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "targets listed as uncheckable/unknown (nothing observed; never 'unchanged')",
+  "what changed on any changed target",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "daily",
+  "hash-only"
+ ]
+}
