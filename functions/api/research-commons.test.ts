@@ -333,4 +333,82 @@ describe("H.I.M. read-only AUTO-EAT research commons", () => {
     }
   });
 
+  it("bounds a chunked body before fully buffering it and does not retry oversize content", async () => {
+    let pulls = 0; let cancelled = false;
+    const stream = new ReadableStream<Uint8Array>({
+      pull(controller) {
+        pulls++;
+        controller.enqueue(new Uint8Array(16000));
+        if (pulls === 12) controller.close();
+      },
+      cancel() { cancelled = true; },
+    });
+    const stub = vi.fn(async () => new Response(stream, {headers:{"content-length":"1"}}));
+    vi.stubGlobal("fetch",stub);
+    const r = await onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    expect(r.status).toBe(503);
+    expect((await r.json() as any).reason).toBe("EAT_FEED_OVERSIZE");
+    expect(stub).toHaveBeenCalledTimes(1);
+    expect(cancelled).toBe(true);
+    expect(pulls).toBeLessThan(12);
+  });
+
+  it("returns from a stalled transport even if the transport ignores abort", async () => {
+    vi.useFakeTimers().setSystemTime(CLOCK);
+    const calls: string[]=[];
+    vi.stubGlobal("fetch",vi.fn((url:string)=>{
+      calls.push(url);
+      return url===FEED_SOURCE ? new Promise<Response>(()=>{}) : Promise.resolve(new Response(JSON.stringify(fixture())));
+    }));
+    const task = onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    await vi.advanceTimersByTimeAsync(4001);
+    // Let pending native digest work settle; the alternate must already have started.
+    expect(calls).toEqual([FEED_SOURCE,FEED_RAW_API]);
+    expect((await task).status).toBe(200);
+  });
+
+  it("does not wait for a stalled body or cancellation promise", async () => {
+    vi.useFakeTimers().setSystemTime(CLOCK);
+    const calls: string[]=[];let cancelled=false;
+    const stream=new ReadableStream<Uint8Array>({
+      start(controller){controller.enqueue(new TextEncoder().encode("{"));},
+      cancel(){cancelled=true;return new Promise<void>(()=>{});}
+    });
+    vi.stubGlobal("fetch",vi.fn(async(url:string)=>{
+      calls.push(url);
+      return url===FEED_SOURCE?new Response(stream):new Response(JSON.stringify(fixture()));
+    }));
+    const task=onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    await vi.advanceTimersByTimeAsync(4001);
+    expect(calls).toEqual([FEED_SOURCE,FEED_RAW_API]);
+    expect(cancelled).toBe(true);
+    expect((await task).status).toBe(200);
+  });
+
+  it("both stalled transports stop after the two bounded attempts", async () => {
+    vi.useFakeTimers().setSystemTime(CLOCK);
+    const calls:string[]=[];
+    vi.stubGlobal("fetch",vi.fn((url:string)=>{calls.push(url);return new Promise<Response>(()=>{});}));
+    const task=onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    await vi.advanceTimersByTimeAsync(8001);
+    const r=await task;
+    expect(r.status).toBe(503);
+    expect(calls).toEqual([FEED_SOURCE,FEED_RAW_API]);
+    expect((await r.json() as any).reason).toBe("EAT_FEED_TRANSPORT_UNAVAILABLE");
+  });
+
+  it("a late primary response cannot replace the accepted alternate", async () => {
+    vi.useFakeTimers().setSystemTime(CLOCK);
+    let deliver: (r:Response)=>void=()=>{};
+    let cancelled=false;
+    const late=new Response(new ReadableStream<Uint8Array>({cancel(){cancelled=true;}}));
+    vi.stubGlobal("fetch",vi.fn((url:string)=>url===FEED_SOURCE?new Promise<Response>(r=>{deliver=r;}):Promise.resolve(new Response(JSON.stringify(fixture())))));
+    const task=onRequestGet({request:new Request("https://councilof.ai/api/research-commons")});
+    await vi.advanceTimersByTimeAsync(4001);
+    const accepted=await task;expect(accepted.status).toBe(200);
+    expect((await accepted.json() as any).source.retrieval_url).toBe(FEED_RAW_API);
+    deliver(late);await Promise.resolve();await Promise.resolve();
+    expect(cancelled).toBe(true);
+  });
+
 });

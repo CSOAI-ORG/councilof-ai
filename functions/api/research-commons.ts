@@ -197,6 +197,76 @@ function unavailable(reason: string, status = 503): Response {
   }, { status, headers: HEADERS });
 }
 
+type FeedRead =
+  | { state: "READ"; bytes: ArrayBuffer }
+  | { state: "TRANSPORT_FAILURE" }
+  | { state: "REJECTED"; reason: string };
+
+/** Bound both connection and body reads even when an upstream ignores abort. */
+async function readFeedTransport(origin: string): Promise<FeedRead> {
+  const controller = new AbortController();
+  let expired = false;
+  let expire: () => void = () => {};
+  const timeout = new Promise<never>((_, reject) => {
+    expire = () => { expired = true; controller.abort(); reject(new Error("feed deadline")); };
+  });
+  const timer = setTimeout(expire, 4000);
+  let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+  let response: Response | undefined;
+  let complete = false;
+  const discard = (body: ReadableStream<Uint8Array> | null) => {
+    try { void body?.cancel().catch(() => {}); } catch { /* cleanup never delays the deadline */ }
+  };
+  try {
+    const pending = fetch(origin, {
+      redirect: "manual",
+      headers: {
+        "accept": origin === FEED_SOURCE ? "application/json" : "application/vnd.github.raw+json",
+        "user-agent": "csoai-research-commons/0.1 (+https://councilof.ai)",
+      },
+      signal: controller.signal,
+    });
+    // Dispose of a response that arrives after the request already timed out.
+    void pending.then(reply => { if (expired) discard(reply.body); }, () => {});
+    response = await Promise.race([pending, timeout]);
+    if (!response.ok || response.redirected)
+      return { state: "REJECTED", reason: "EAT_FEED_NOT_PUBLISHED_OR_UNAVAILABLE" };
+    const size = Number(response.headers.get("content-length") || 0);
+    if (!Number.isFinite(size) || size < 0 || size > MAX_BODY)
+      return { state: "REJECTED", reason: "EAT_FEED_OVERSIZE_OR_UNCHECKABLE" };
+    const chunks: Uint8Array[] = [];
+    let received = 0;
+    if (response.body) {
+      reader = response.body.getReader();
+      while (true) {
+        const part = await Promise.race([reader.read(), timeout]);
+        if (part.done) break;
+        received += part.value.byteLength;
+        if (received > MAX_BODY)
+          return { state: "REJECTED", reason: "EAT_FEED_OVERSIZE" };
+        chunks.push(part.value);
+      }
+    }
+    const bytes = new ArrayBuffer(received);
+    const output = new Uint8Array(bytes);
+    let offset = 0;
+    for (const chunk of chunks) { output.set(chunk, offset); offset += chunk.byteLength; }
+    complete = true;
+    return { state: "READ", bytes };
+  } catch {
+    return { state: "TRANSPORT_FAILURE" };
+  } finally {
+    clearTimeout(timer);
+    if (!complete) {
+      controller.abort();
+      if (reader) {
+        try { void reader.cancel().catch(() => {}); } catch { /* best effort */ }
+      } else if (response) discard(response.body);
+    }
+    try { reader?.releaseLock(); } catch { /* a stuck upstream cannot hold this response */ }
+  }
+}
+
 export async function onRequestGet({ request }: { request: Request }): Promise<Response> {
   // Requests never influence the origin, pathname, source allowlist or target.
   if (new URL(request.url).searchParams.has("url"))
@@ -206,30 +276,10 @@ export async function onRequestGet({ request }: { request: Request }): Promise<R
   // Retry transport failures only. Do not retry invalid, stale, redirected or oversized
   // content as if another source could grant permission. No caller-controlled origin.
   for (const origin of [FEED_SOURCE, FEED_RAW_API]) {
-    let reply: Response;
-    try {
-      reply = await fetch(origin, {
-        redirect: "manual",
-        headers: {
-          "accept": origin === FEED_SOURCE ? "application/json" : "application/vnd.github.raw+json",
-          "user-agent": "csoai-research-commons/0.1 (+https://councilof.ai)",
-        },
-        signal: AbortSignal.timeout(4000),
-      });
-    } catch {
-      continue;
-    }
-    if (!reply.ok || reply.redirected)
-      return unavailable("EAT_FEED_NOT_PUBLISHED_OR_UNAVAILABLE");
-    const size = Number(reply.headers.get("content-length") || 0);
-    if (!Number.isFinite(size) || size < 0 || size > MAX_BODY)
-      return unavailable("EAT_FEED_OVERSIZE_OR_UNCHECKABLE");
-    try {
-      rawBuffer = await reply.arrayBuffer();
-    } catch {
-      continue;
-    }
-    if (rawBuffer.byteLength > MAX_BODY) return unavailable("EAT_FEED_OVERSIZE");
+    const result = await readFeedTransport(origin);
+    if (result.state === "TRANSPORT_FAILURE") continue;
+    if (result.state === "REJECTED") return unavailable(result.reason);
+    rawBuffer = result.bytes;
     transport = origin;
     break;
   }
