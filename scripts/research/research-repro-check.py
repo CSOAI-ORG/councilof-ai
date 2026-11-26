@@ -30,7 +30,8 @@ the status. It never changes pass/fail:
 Usage: python3 scripts/research/research-repro-check.py [--only NAME ...]
        [--report out.json] [--summary out.md]
 """
-import argparse, hashlib, json, os, re, shutil, subprocess, sys, tempfile, time
+import argparse, hashlib, json, math, os, re, shutil, subprocess, sys, tempfile, time
+from importlib import metadata
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 LAB = "harness/meok-process-lab"
@@ -198,6 +199,81 @@ def subtree_counts(diffs, depth=3):
     return out
 
 
+def numerical_environment():
+    """Diagnostic context only: allowlist versions/backend names; no host paths or secrets."""
+    versions = {}
+    for name in ("numpy", "scipy", "scikit-learn", "threadpoolctl"):
+        try:
+            versions[name] = metadata.version(name)
+        except metadata.PackageNotFoundError:
+            versions[name] = None
+    result = {"package_versions": versions, "blas_lapack": {}, "threadpools": [],
+              "thread_limits": {}, "diagnostic_only": True}
+    for key in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
+        value = os.environ.get(key, "")
+        if re.fullmatch(r"[0-9]{1,6}", value):
+            result["thread_limits"][key] = int(value)
+    try:
+        import numpy
+        config = numpy.show_config(mode="dicts")
+        for kind in ("blas", "lapack"):
+            dep = config.get("Build Dependencies", {}).get(kind, {})
+            result["blas_lapack"][kind] = {k: str(dep[k])[:100] for k in ("name", "version") if k in dep}
+    except (ImportError, AttributeError, TypeError, ValueError, KeyError):
+        result["blas_lapack"] = {"state": "UNAVAILABLE"}
+    try:
+        from threadpoolctl import threadpool_info
+        # Load the numerical libraries to observe their pool declarations. No fitting.
+        try:
+            import scipy.linalg
+            import sklearn
+        except ImportError:
+            pass
+        for pool in threadpool_info():
+            result["threadpools"].append({k: pool[k] for k in
+                ("user_api", "internal_api", "prefix", "version", "num_threads", "threading_layer", "architecture")
+                if k in pool})
+    except (ImportError, RuntimeError, OSError):
+        result["threadpool_state"] = "UNAVAILABLE"
+    return result
+
+
+def export_diagnostic(run_bytes, committed_bytes):
+    """Explain a known readout export mismatch without changing byte equality."""
+    detail = {"run_sha256": hashlib.sha256(run_bytes).hexdigest(),
+              "committed_sha256": hashlib.sha256(committed_bytes).hexdigest()}
+    try:
+        def coefficients(raw):
+            if len(raw) > 2_000_000:
+                raise ValueError("oversize")
+            doc = json.loads(raw)
+            if doc.get("schema") != "csoai.sovos-fused-readout-research/0.1":
+                raise ValueError("schema")
+            rows = doc["readout"]
+            if not isinstance(rows, list) or len(rows) != 81:
+                raise ValueError("shape")
+            flat = []
+            for row in rows:
+                if not isinstance(row, list) or len(row) != 4:
+                    raise ValueError("shape")
+                for v in row:
+                    if not is_num(v) or not math.isfinite(v):
+                        raise ValueError("coefficient")
+                    flat.append(v)
+            return flat
+        a, b = coefficients(run_bytes), coefficients(committed_bytes)
+        delta = max(abs(x-y) for x,y in zip(a,b))
+        if not math.isfinite(delta):
+            raise ValueError("nonfinite delta")
+        detail.update({"coefficient_comparison": "CHECKED",
+                       "coefficient_count": len(a),
+                       "changed_coefficients": sum(x != y for x, y in zip(a,b)),
+                       "max_abs_coefficient_delta": delta})
+    except (ValueError, TypeError, KeyError, AttributeError, OverflowError):
+        detail["coefficient_comparison"] = "UNAVAILABLE"
+    return detail
+
+
 def check(entry):
     rec = {"name": entry["name"], "kind": entry["kind"], "comparisons": []}
     tmp = tempfile.mkdtemp(prefix="research-repro-")
@@ -224,10 +300,12 @@ def check(entry):
             rec["status"] = "EXACT" if got == entry["sha256"] else "DRIFT"
             rec["detail"] = {"run_sha256": got, "committed_sha256": entry["sha256"]}
         elif entry["kind"] == "export_bytes":
-            a = open(entry["artifact"].replace("{tmp}", tmp), "rb").read()
-            b = open(os.path.join(ROOT, entry["committed"]), "rb").read()
+            with open(entry["artifact"].replace("{tmp}", tmp), "rb") as f:
+                a = f.read()
+            with open(os.path.join(ROOT, entry["committed"]), "rb") as f:
+                b = f.read()
             rec["status"] = "EXACT" if a == b else "DRIFT"
-            rec["detail"] = {"run_sha256": hashlib.sha256(a).hexdigest(), "committed_sha256": hashlib.sha256(b).hexdigest()}
+            rec["detail"] = export_diagnostic(a, b)
         else:
             got = result_line(so)
             statuses = []
@@ -253,10 +331,12 @@ def check(entry):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--only", nargs="*")
+    ap.add_argument("--only", nargs="+")
     ap.add_argument("--report")
     ap.add_argument("--summary")
     a = ap.parse_args()
+    if a.only and set(a.only) - {e["name"] for e in MANIFEST}:
+        ap.error("unknown --only entry")
     entries = [e for e in MANIFEST if not a.only or e["name"] in a.only]
     records = []
     for e in entries:
@@ -278,7 +358,8 @@ def main():
     import platform
     doc = {"schema": "csoai.research-repro-check/0.1", "abs_tol": ABS_TOL, "rel_tol": REL_TOL,
            "python": sys.version.split()[0], "platform": platform.platform(), "machine": platform.machine(),
-           "on_darwin_arm64": ON_DARWIN_ARM64, "records": records, "failed": bad,
+           "on_darwin_arm64": ON_DARWIN_ARM64, "numerical_environment": numerical_environment(),
+           "records": records, "failed": bad,
            "new_gspc_measurement": False, "authorises_execution": False}
     if a.report:
         open(a.report, "w").write(json.dumps(doc, indent=1, sort_keys=True) + "\n")

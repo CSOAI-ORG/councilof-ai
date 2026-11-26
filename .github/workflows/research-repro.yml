@@ -19,6 +19,7 @@ on:
       - "scripts/research/meok-axis-cpu-engine.mjs"
       - "scripts/research/meok-reaction-federation.mjs"
       - "scripts/research/research-repro-check.py"
+      - "scripts/research/test_research_repro_check.py"
       - "scripts/axis-specialists.mjs"
       - ".github/workflows/research-repro.yml"
   push:
@@ -30,6 +31,7 @@ on:
       - "scripts/research/meok-axis-cpu-engine.mjs"
       - "scripts/research/meok-reaction-federation.mjs"
       - "scripts/research/research-repro-check.py"
+      - "scripts/research/test_research_repro_check.py"
       - "scripts/axis-specialists.mjs"
       - ".github/workflows/research-repro.yml"
   workflow_dispatch:
@@ -54,6 +56,8 @@ jobs:
           node-version: "22"
       - name: Install pinned numerical dependencies (versions recorded in the committed results)
         run: python -m pip install --no-cache-dir numpy==2.4.6 scikit-learn==1.9.0
+      - name: Test research comparison diagnostics
+        run: python -m unittest discover -s scripts/research -p test_research_repro_check.py
       - name: Re-run research scripts and compare with committed results
         run: python scripts/research/research-repro-check.py --report research-repro-report.json --summary "$GITHUB_STEP_SUMMARY"
       - name: Keep the comparison report
@@ -79,6 +83,8 @@ jobs:
           node-version: "22"
       - name: Install pinned numerical dependencies (versions recorded in the committed results)
         run: python -m pip install --no-cache-dir numpy==2.4.6 scikit-learn==1.9.0
+      - name: Test research comparison diagnostics
+        run: python -m unittest discover -s scripts/research -p test_research_repro_check.py
       - name: Re-run research scripts and compare with committed results
         run: python scripts/research/research-repro-check.py --report research-repro-report.json --summary "$GITHUB_STEP_SUMMARY"
       - name: Keep the comparison report
