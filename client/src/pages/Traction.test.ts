@@ -15,6 +15,18 @@ const ia = readFileSync(new URL("../data/library-ia.ts", import.meta.url), "utf8
 const escaped = (text: string) => text.replace(/'/g, "&#x27;");
 
 describe("traction public-truth contract", () => {
+  it("offers a source-linked research review without granting authority or implying funding", () => {
+    const html = renderToStaticMarkup(createElement(Router, { ssrPath: "/traction", children: createElement(Traction) }));
+    expect(html).toContain('id="research-diligence"');
+    expect(html).toContain('href="#research-diligence"');
+    for (const href of ["/methodology", "/gspc-verify", "#external-use", "/independence/", "/working-groups/catalog.json", "/api/gspc", "/api/corrections"]) {
+      expect(html).toContain('href="' + href + '"');
+    }
+    expect(html).toContain("A catalogue entry is not human authority");
+    expect(html).toContain("A valid publisher signature does not independently reproduce the measurement");
+    expect(html).toContain("No score, membership or download count establishes certification, funding or customer adoption");
+  });
+
   it("derives operating and commercial counters from public JSON", () => {
     for (const endpoint of ["/root.json", "/api/revenue", "/api/commissions", "/api/coverage", "/api/worker", "/api/corrections"]) {
       expect(source).toContain(endpoint);
