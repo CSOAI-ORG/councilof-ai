@@ -76,3 +76,19 @@ HOLD / REJECTED / APPROVED receipt reference from the existing authority flow:
 Scope, expiry, revocation and executor binding checks:
 For revocation: issue time, propagation, last action/effect, quiescence, clock uncertainty and unknown effects:
 No generic forum approval, typed name or shared token substitutes for verified authority.
+
+## Cross-group reproduction and reuse
+
+Use this optional record when two groups want to answer the same technical question. Each group retains its own charter, terminology and decision about adoption. Link the existing proposal, review and decision records so a reader can follow the case across groups.
+
+| Record | Information to capture |
+| --- | --- |
+| Question | Decision to be informed, exact claim, original group and receiving group, accountable editor on each side. |
+| Crosswalk | Pinned section and term from each specification. Record whether the meanings match, overlap, conflict or remain unresolved. Record implementation-only observations separately. |
+| Assets and terms | Owner, revision, digest and licence of each fixture, method and expected output. Record permitted tools, attribution and permission to publish results. Keep confidential work in the agreed private environment. |
+| Independence | Identify who supplied the material, who wrote the implementation and who operated the run. Disclose shared ownership, prior exposure, reciprocal work and funding. Preserve the first signed or dated finding before revealing expected answers when the protocol calls for blind review. |
+| Run and limitations | Environment, exact inputs, positive and negative controls, observed result and every untested layer. Link an existing evidence event where available. A template entry records observations and conveys no execution authority. |
+| Recipient decision | Receiving reviewer records what they reproduced, discrepancies, remaining unknowns and whether the result answers their question. The receiving group owns its decision and can decline publication. |
+| Reuse and recheck | Cite the canonical result and preserve upstream credit on every mirror. Record the change that will trigger a recheck and the owner who can correct or supersede the record. |
+
+Participants may separately agree a fixed fee for implementation, integration or remeasurement. Record who paid, what was delivered and permitted uses. Reviewers retain discretion to publish negative or inconclusive findings under the agreed terms. Keep technical acceptance, payment and formal group adoption as distinct decisions.
