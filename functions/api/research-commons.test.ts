@@ -412,3 +412,23 @@ describe("H.I.M. read-only AUTO-EAT research commons", () => {
   });
 
 });
+
+// Boundary controls only: these constructed records are NOT empirical evidence.
+describe("expanded source contract bounds", () => {
+  it("accepts 25 repositories and seven topics, but refuses 26 or case aliases", () => {
+    const d = fixture();
+    const template = d.repositories[0];
+    d.repositories = Array.from({length:25}, (_,i)=>({...template,repository:"example/repo"+i,source_link:"https://github.com/example/repo"+i,repository_id:i+1}));
+    d.repositories_checked=25; d.repositories_observed=25; d.repositories_uncheckable=0;
+    const t=d.crossref_topics[0];
+    d.crossref_topics=Array.from({length:7}, (_,i)=>({...t,topic:"test topic "+i,papers:[]}));
+    d.crossref_topics_checked=7; d.crossref_topics_observed=7; d.crossref_candidate_metadata_rows=0;
+    expect(validEATCommonsForTest(d)).toBe(true);
+    d.repositories[24]={...d.repositories[0],repository:"EXAMPLE/REPO0",source_link:"https://github.com/EXAMPLE/REPO0"};
+    expect(validEATCommonsForTest(d)).toBe(false);
+    d.repositories[24]={...template,repository:"example/repo24",source_link:"https://github.com/example/repo24",repository_id:25};
+    d.repositories.push({...template,repository:"example/repo25",source_link:"https://github.com/example/repo25",repository_id:26});
+    d.repositories_checked=26;d.repositories_observed=26;
+    expect(validEATCommonsForTest(d)).toBe(false);
+  });
+});
