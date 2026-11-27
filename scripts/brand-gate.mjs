@@ -394,6 +394,11 @@ const CATALOGUE_PATH = /(?:^|\/)[^/]*jewel/i;
 const LOCAL_PATH_ALLOWLIST = "scripts/privacy/local-path-allowlist.txt";
 const LOCAL_SCAN_FILE = /\.(?:html?|json|jsonl|ndjson|txt|md|xml|svg|csv|tsv|ya?ml|mjs|cjs|js|ts|tsx|webmanifest|toml|ics|rss|atom)$|(?:^|\/)_(?:redirects|headers)$/i;
 const NOT_BUNDLED = /\.(?:test|spec)\.|(?:^|\/)__fixtures__\//;
+// The built dist/client carries a copy of the Pages Functions SOURCE under /functions/ (seen in pr-gates run
+// 45938526999). Cloudflare compiles it into the worker and does not serve it as files: on 2026-11-27
+// https://councilof.ai/functions/_lib/route/types.ts and /functions/mcp/_census-tools.test.ts returned 404. Its route
+// NAMES are still checked (the functions/ walk below); its bodies are server code, not a public surface.
+const DIST_NOT_SERVED = /^\/functions\//;
 
 /** Every local-leak rule over one text body. JSON's "\/" and URL-encoded "%2F" are read as "/". */
 function localLeakHits(text) {
@@ -1299,6 +1304,7 @@ if (SELFTEST) {
     if (!coveredByRedirect("/jewels/index.html", srcs) || !coveredByRedirect("/crown-jewels.html", srcs)) { console.error("✖ selftest: a retired catalogue URL that only 308s now fails"); bad++; }
     if (coveredByRedirect("/jewels/master-catalogue/index.html", srcs)) { console.error("✖ selftest: a redirect of /jewels now exempts content served under it"); bad++; }
     if (srcs.includes("/x")) { console.error("✖ selftest: a redirect INTO a catalogue path counts as a retirement"); bad++; }
+    if (!DIST_NOT_SERVED.test("/functions/_lib/route/types.ts") || DIST_NOT_SERVED.test("/interop/functions-index.json") || DIST_NOT_SERVED.test("/docs/functions/index.html")) { console.error("✖ selftest: the not-served exemption covers more (or less) than the Pages Functions source"); bad++; }
     const routes = catalogueRoutes('{\n  "path": "/crown-jewels",\n  "comp": "Redirect",\n  "title": "Crown Jewels"\n },\n {\n  "path": "/jewels/master",\n  "comp": "JewelCatalogue"\n }');
     if (routes.length !== 1 || routes[0] !== "/jewels/master") { console.error(`✖ selftest: client catalogue routes gave ${JSON.stringify(routes)}`); bad++; }
   }
@@ -1468,7 +1474,7 @@ for (const f of walkAll(DIST)) {
     if (!(raw && isRedirectOnly(raw)) && !coveredByRedirect(rel, retired))
       pathFailures.push(`${rel}  [catalogue-path] internal catalogue name ("jewel") on a public URL that serves content — withdraw it (scripts/withdrawn-from-deploy.json)`);
   }
-  localScan(rel, f);
+  if (!DIST_NOT_SERVED.test(rel)) localScan(rel, f);
 }
 // client/src/data is compiled into the bundle under assets/, which the walk skips; read the source instead.
 const CLIENT_DATA = path.join(REPO, "client", "src", "data");
