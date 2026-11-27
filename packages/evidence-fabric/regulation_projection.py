@@ -9,13 +9,14 @@ import argparse
 from collections import Counter
 from datetime import datetime
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import re
 
 import event
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 HEX = re.compile(r"^[0-9a-f]{64}$")
 EVENT_ID = re.compile(r"^sha256:[0-9a-f]{64}$")
 SOURCE_KINDS = {"ai-single", "ai-council", "human-unassisted", "human-assisted"}
@@ -69,7 +70,34 @@ def read_json(path):
     return json.loads(Path(path).read_text(encoding="utf-8"), object_pairs_hook=unique_object)
 
 
-def registry_rows(manifest, extensions=()):
+def verified_frozen_recovery(manifest, raw):
+    """Reproduce historical anchors, not live law or complete official source bytes."""
+    require(isinstance(raw, bytes) and 0 < len(raw) <= 8 * 1024 * 1024,
+            "invalid frozen source bytes or size")
+    require(manifest.get("normaliser_version") == "1.0.0", "unsupported frozen source normaliser")
+    rows = [json.loads(line, object_pairs_hook=unique_object) for line in raw.decode("utf-8").splitlines() if line.strip()]
+    for row in rows:
+        require(isinstance(row, dict) and text(row.get("provision_id")) and
+                isinstance(row.get("text"), str) and is_hex(row.get("provision_sha256")) and
+                type(row.get("truncated_at_10000")) is bool, "malformed frozen source row")
+    path = Path(__file__).resolve().parents[2] / "scripts/mechanism/verify_frozen_sources.py"
+    spec = importlib.util.spec_from_file_location("frozen_source_verifier", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    result = module.verify(rows, manifest)
+    require(not result["problems"] and result["corpus_root_reproduced"] and
+            result["hashes_reproduced"] == len(manifest["anchors"]), "frozen source reproduction failed")
+    pins = {row["provision_id"]: row["truncated_at_10000"] for row in rows}
+    receipt = {"source_file_sha256": hashlib.sha256(raw).hexdigest(),
+               "verifier_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+               "normaliser_sha256": hashlib.sha256(path.with_name("normaliser_v1.py").read_bytes()).hexdigest(),
+               "hashes_reproduced": result["hashes_reproduced"],
+               "corpus_root": result["corpus_root"], "normaliser_version": result["normaliser_version"],
+               "truncated_count": sum(pins.values()), "current_legal_source_verified": False}
+    return pins, receipt
+
+
+def registry_rows(manifest, extensions=(), *, frozen_source_bytes=None):
     anchors = manifest.get("anchors")
     require(isinstance(anchors, dict) and anchors, "nonempty anchors required")
     require(type(manifest.get("provisions")) is int and manifest["provisions"] == len(anchors),
@@ -103,6 +131,15 @@ def registry_rows(manifest, extensions=()):
         require(row["id"] not in ids and key not in identities, "duplicate obligation identity")
         ids.add(row["id"]); identities.add(key)
         rows.append({**row, "source_state": "REVIEW_RECORD_SUPPLIED_SOURCE_BYTES_NOT_VERIFIED"})
+    if frozen_source_bytes is not None:
+        pins, receipt = verified_frozen_recovery(manifest, frozen_source_bytes)
+        for row in rows:
+            if row["id"] in pins:
+                row.update(source_state="FROZEN_NORMALISED_TEXT_HASH_REPRODUCED",
+                           source_file_sha256=receipt["source_file_sha256"],
+                           source_verifier_sha256=receipt["verifier_sha256"],
+                           source_normaliser_sha256=receipt["normaliser_sha256"],
+                           truncated_at_10000=pins[row["id"]])
     return sorted(rows, key=lambda r: r["id"])
 
 
@@ -191,9 +228,9 @@ def mapping_disposition(mapping, row, run, context_sha, registry_sha):
     return applicability, "REVIEW_RECORD_SUPPLIED", review["reason"], review["event_id"]
 
 
-def project(manifest, run, *, extensions=(), mappings=None, source_event=None):
+def project(manifest, run, *, extensions=(), mappings=None, source_event=None, frozen_source_bytes=None):
     context_sha = validate_run(run)
-    rows = registry_rows(manifest, extensions)
+    rows = registry_rows(manifest, extensions, frozen_source_bytes=frozen_source_bytes)
     registry_sha = digest(rows)
     mapped = index_mappings([] if mappings is None else mappings, rows)
     source_ref = validate_source_event(source_event, run, context_sha)
@@ -215,6 +252,10 @@ def project(manifest, run, *, extensions=(), mappings=None, source_event=None):
                   "Review references are supplied records; reviewer identity, authority and signature were not authenticated.",
                   "No signature, timestamp proof, payment, execution or model inference is performed.",
                   "Simulation and replay remain separate from observed-live evidence."]
+        if row.get("source_state") == "FROZEN_NORMALISED_TEXT_HASH_REPRODUCED":
+            limits.append("Recovered historical text reproduces the frozen normalised hash, not the current official law or original database bytes.")
+            if row["truncated_at_10000"]:
+                limits.append("Historical text was capped at 10000 characters; material beyond the cap is not covered.")
         if run["configuration"]["model_sha256"] is None:
             limits.append("Exact model-byte identity is unavailable; identical weights across runs are not established.")
         events.append(event.build(
@@ -226,7 +267,7 @@ def project(manifest, run, *, extensions=(), mappings=None, source_event=None):
             observed=observed, state="UNMEASURED", value=None,
             limits=limits
         ))
-    return {"method": "regulation-projection/" + VERSION, "registry_sha256": registry_sha,
+    result = {"method": "regulation-projection/" + VERSION, "registry_sha256": registry_sha,
             "input_manifest_content_sha256": digest(manifest),
             "manifest_anchored_at_declared": manifest.get("anchored_at"),
             "run_id": run["run_id"], "configuration_sha256": run["configuration_sha256"],
@@ -238,6 +279,17 @@ def project(manifest, run, *, extensions=(), mappings=None, source_event=None):
                        "legal_outcomes_established": 0},
             "mapping_states": dict(sorted(Counter(e["observed"]["mapping_state"] for e in events).items())),
             "events": events}
+    if frozen_source_bytes is not None:
+        recovered = [row for row in rows if row["source_state"] == "FROZEN_NORMALISED_TEXT_HASH_REPRODUCED"]
+        result["frozen_source_recovery"] = {
+            "source_file_sha256": hashlib.sha256(frozen_source_bytes).hexdigest(),
+            "verifier_sha256": recovered[0]["source_verifier_sha256"],
+            "normaliser_sha256": recovered[0]["source_normaliser_sha256"],
+            "hashes_reproduced": len(recovered), "corpus_root": manifest["corpus_root"],
+            "normaliser_version": manifest["normaliser_version"],
+            "truncated_count": sum(row["truncated_at_10000"] for row in recovered),
+            "current_legal_source_verified": False}
+    return result
 
 
 def main():
@@ -247,9 +299,15 @@ def main():
     parser.add_argument("--extensions")
     parser.add_argument("--mappings")
     parser.add_argument("--source-event")
+    parser.add_argument("--frozen-sources", help="Optional recovered historical source JSONL; verified against manifest")
     parser.add_argument("--out", required=True, help="New output file; existing bytes are never overwritten")
     args = parser.parse_args()
+    frozen_source_bytes = None
+    if args.frozen_sources:
+        with open(args.frozen_sources, "rb") as stream:
+            frozen_source_bytes = stream.read(8 * 1024 * 1024 + 1)
     result = project(read_json(args.manifest), read_json(args.run),
+                     frozen_source_bytes=frozen_source_bytes,
                      extensions=read_json(args.extensions) if args.extensions else (),
                      mappings=read_json(args.mappings) if args.mappings else [],
                      source_event=read_json(args.source_event) if args.source_event else None)
@@ -258,6 +316,8 @@ def main():
         for key, value in {"manifest": args.manifest, "run": args.run,
                            "extensions": args.extensions, "mappings": args.mappings,
                            "source_event": args.source_event}.items() if value is not None}
+    if frozen_source_bytes is not None:
+        result["input_file_sha256"]["frozen_sources"] = hashlib.sha256(frozen_source_bytes).hexdigest()
     with open(args.out, "x", encoding="utf-8") as stream:
         stream.write(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps(result["counts"], sort_keys=True))

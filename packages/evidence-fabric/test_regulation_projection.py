@@ -79,6 +79,39 @@ class ProjectionTests(unittest.TestCase):
         self.assertEqual(out["counts"]["instruments"], 6)
         self.assertEqual(out["mapping_states"], {"UNMAPPED": 417})
 
+    def test_recovered_frozen_sources_bound_to_projection_without_legal_promotion(self):
+        root = Path(__file__).resolve().parents[2]
+        manifest = rp.read_json(root / "public/interop/frozen-provision-hashes.json")
+        raw = (root / "public/interop/frozen-provision-sources-v1.jsonl").read_bytes()
+        out = rp.project(manifest, self.run, frozen_source_bytes=raw)
+        self.assertEqual(out["frozen_source_recovery"]["source_file_sha256"], hashlib.sha256(raw).hexdigest())
+        self.assertEqual(out["frozen_source_recovery"]["hashes_reproduced"], 417)
+        self.assertEqual(out["frozen_source_recovery"]["truncated_count"], 11)
+        for k, f in [("verifier_sha256", "verify_frozen_sources.py"), ("normaliser_sha256", "normaliser_v1.py")]:
+            self.assertEqual(out["frozen_source_recovery"][k], hashlib.sha256((root / "scripts/mechanism" / f).read_bytes()).hexdigest())
+        self.assertEqual(out["counts"]["legal_outcomes_established"], 0)
+        for e in out["events"]:
+            row = e["declared"]["obligation"]
+            self.assertEqual(row["source_state"], "FROZEN_NORMALISED_TEXT_HASH_REPRODUCED")
+            self.assertEqual(row["source_file_sha256"], hashlib.sha256(raw).hexdigest())
+            self.assertNotIn("text", row)
+            self.assertEqual(e["state"], "UNMEASURED")
+            self.assertEqual(e["observed"]["applicability"], "UNKNOWN")
+        self.assertEqual(sum(e["declared"]["obligation"]["truncated_at_10000"] for e in out["events"]), 11)
+        self.assertNotEqual(out["registry_sha256"], rp.project(manifest, self.run)["registry_sha256"])
+
+    def test_recovered_source_tampering_and_partial_file_fail_closed(self):
+        root = Path(__file__).resolve().parents[2]
+        manifest = rp.read_json(root / "public/interop/frozen-provision-hashes.json")
+        raw = (root / "public/interop/frozen-provision-sources-v1.jsonl").read_bytes()
+        lines = raw.splitlines(); first = json.loads(lines[0]); first["text"] += "x"
+        tampered = b"\n".join([json.dumps(first).encode(), *lines[1:]])
+        first = json.loads(lines[0]); first["truncated_at_10000"] = not first["truncated_at_10000"]
+        bad_cap = b"\n".join([json.dumps(first).encode(), *lines[1:]])
+        for bad in (tampered, bad_cap, b"\n".join(lines[1:]), raw + lines[0] + b"\n", b"", b"not json"):
+            with self.assertRaises(ValueError):
+                rp.project(manifest, self.run, frozen_source_bytes=bad)
+
     def test_duplicate_json_keys_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "duplicate.json"
