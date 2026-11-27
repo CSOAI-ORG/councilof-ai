@@ -52,7 +52,7 @@ export default function TermsOfService() {
               Terms of Service
             </h1>
             <p className="text-xl text-muted-foreground mb-4">
-              Council Safety of Artificial Intelligence (CSOAI)
+              Council for the Safety of Artificial Intelligence (CSOAI)
             </p>
             <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
               <span>Version 1.1</span>

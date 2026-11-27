@@ -53,7 +53,7 @@ export default function FoundingCouncilAgreement() {
               Founding Council Agreement
             </h1>
             <p className="text-xl text-muted-foreground mb-4">
-              Council Safety of Artificial Intelligence (CSOAI)
+              Council for the Safety of Artificial Intelligence (CSOAI)
             </p>
             <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
               <span>Version 1.0</span>
@@ -78,7 +78,7 @@ export default function FoundingCouncilAgreement() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
-                  This Agreement confirms the appointment of the undersigned as a <strong>Founding Council Member</strong> of the Council Safety of Artificial Intelligence (CSOAI).
+                  This Agreement confirms the appointment of the undersigned as a <strong>Founding Council Member</strong> of the Council for the Safety of Artificial Intelligence (CSOAI).
                 </p>
                 <div className="p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
                   <p className="text-center text-lg font-medium">
@@ -483,7 +483,7 @@ export default function FoundingCouncilAgreement() {
 
           {/* Footer */}
           <div className="text-center text-sm text-muted-foreground pt-8 border-t">
-            <p>© 2026 Council Safety of Artificial Intelligence. All Rights Reserved.</p>
+            <p>© 2026 Council for the Safety of Artificial Intelligence. All Rights Reserved.</p>
           </div>
         </div>
       </div>
