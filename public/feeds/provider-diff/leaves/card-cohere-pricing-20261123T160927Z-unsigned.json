@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Cohere — pricing: bytes changed 2026-11-23",
+ "as_of": "2026-11-23T16:10:02Z",
+ "source_urls": [
+  "https://cohere.com/pricing"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "cohere",
+  "surface": "pricing",
+  "url": "https://cohere.com/pricing",
+  "prev_sha256": "04cf341ec4b30768e8d2452d13f46c2270fd867a405862e0ea4346760d020b02",
+  "new_sha256": "f03ea4de07de0caf7a61bfa1b4139d0cbf2e093e9c993ca437a7369647ed18fd",
+  "prev_bytes_sha256": "8b9a2341bf55160c649be99be3b2187bc687d6eb1097815853423be1ba33fb7c",
+  "new_bytes_sha256": "c997e014699329c96eec186f696ba56a1f7f285ac172d51db7a8759a77fdfb0b",
+  "prev_fetched_at": "2026-11-17T14:39:27Z",
+  "fetched_at": "2026-11-23T16:10:02Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 598810,
+   "new": 523195
+  },
+  "etag": {
+   "prev": null,
+   "new": null
+  },
+  "last_modified": {
+   "prev": null,
+   "new": null
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "a43d58e731b9905b607770c4d24af76bd90a4a1eb58e3d0b1e6926391860df7d",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:cohere",
+  "surface:pricing",
+  "hash-only"
+ ]
+}
