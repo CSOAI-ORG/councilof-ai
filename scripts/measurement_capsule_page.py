@@ -181,8 +181,14 @@ def render(vdir, publication_dir=None):
                 'tree/5a20a98a9553fe3a007f500ddf204ff1567d6efe#2-a-measurement-capsule-batch">'
                 'Reproduce this batch with Xinghua Zhao’s independent checker</a>. '
                 'The checker reproduced all 33 identifiers, their order, the state counts and the batch root. '
-                'Its odd-leaf example shows why duplicating the final leaf gives a different root. '
-                'Signature and timestamp verification were outside this check.</p>'
+                'Signature and timestamp verification were outside this check. '
+                '<a href="https://www.ietf.org/archive/id/draft-templeman-scitt-measurement-capsule-01.html#section-5">'
+                'Section 5 of the draft</a> specifies the RFC 9162 tree construction. Duplicating the final '
+                'leaf gives a different root. If the capsules download is unavailable, use the '
+                '<a href="https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/'
+                '857a6cc02696cdc575c5b540f7b4ab7d043cb591/public/measurement-capsules/v0.2/'
+                'a2a_card/capsules.jsonl.gz">archived copy of the same compressed file</a> '
+                'and compare its SHA-256 with <code>capsules_sha256</code> in the batch index entry.</p>'
             )
         L.append(f"<tr><td>{c(slug + '/')}<br>{c(b.get('kind'))}</td><td>{b['n_capsules']:,}</td><td>{e(b.get('signature_state'))}</td>"
                  f"<td>{e(b.get('ots_state'))}</td><td>{st}</td><td>{files}</td></tr>")
