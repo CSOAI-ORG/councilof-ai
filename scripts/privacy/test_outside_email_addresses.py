@@ -87,7 +87,11 @@ def load_tlds(path: str = TLD_FILE) -> frozenset:
 
 
 def load_allowlist(path: str = ALLOWLIST):
-    """(addresses, exempt files {path: sha256}, numbers of lines without a reason)."""
+    """(addresses, exempt files {path: frozenset of sha256}, numbers of lines without a reason).
+
+    A path may be listed more than once, one reviewed digest per line: a verbatim record that a
+    publisher re-fetches (the public-root candidate re-mirrors its sources) has one reviewed digest
+    per reviewed version. Each digest still names exact bytes; any other version is read in full."""
     addrs, files, bad = set(), {}, []
     with open(path, encoding="utf-8") as f:
         for n, raw in enumerate(f, 1):
@@ -103,10 +107,10 @@ def load_allowlist(path: str = ALLOWLIST):
                 if not sep2 or not re.fullmatch(r"[0-9a-f]{64}", digest.strip().lower()):
                     bad.append(n)
                 else:
-                    files[rel.strip()] = digest.strip().lower()
+                    files.setdefault(rel.strip(), set()).add(digest.strip().lower())
             else:
                 addrs.add(entry.lower())
-    return frozenset(addrs), files, bad
+    return frozenset(addrs), {k: frozenset(v) for k, v in files.items()}, bad
 
 
 def classify(local: str, domain: str, allow: frozenset = frozenset()) -> str:
@@ -164,7 +168,10 @@ def scan_items(items, tlds: frozenset, allow: frozenset, exempt: dict):
         if not readable(name, data):
             continue
         read += 1
-        if name in exempt and hashlib.sha256(data).hexdigest() == exempt[name]:
+        reviewed = exempt.get(name) or ()
+        if isinstance(reviewed, str):
+            reviewed = (reviewed,)
+        if reviewed and hashlib.sha256(data).hexdigest() in reviewed:
             counts["exempt file"] += 1
             continue
         for line, kind in find(data, tlds, allow):
@@ -310,7 +317,25 @@ class Matcher(unittest.TestCase):
             addrs, files, bad = load_allowlist(f.name)
         finally:
             os.unlink(f.name)
-        self.assertEqual((sorted(addrs), files, bad), ([addr("desk", ELSEWHERE).decode()], {"a/b.json": "0" * 64}, [3]))
+        self.assertEqual((sorted(addrs), files, bad),
+                         ([addr("desk", ELSEWHERE).decode()], {"a/b.json": frozenset({"0" * 64})}, [3]))
+
+    def test_a_path_can_carry_several_reviewed_digests_and_nothing_else(self):
+        v1 = b"verbatim one " + addr("jane.smith", ELSEWHERE)
+        v2 = b"verbatim two " + addr("jane.smith", ELSEWHERE)
+        with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
+            for body in (v1, v2):
+                f.write("file m/r.json sha256:" + hashlib.sha256(body).hexdigest() + "  # reviewed version\n")
+        try:
+            _, files, bad = load_allowlist(f.name)
+        finally:
+            os.unlink(f.name)
+        self.assertEqual((bad, len(files["m/r.json"])), ([], 2))
+        for body in (v1, v2):
+            found, counts, _ = scan_items([("m/r.json", body)], self.tlds, frozenset(), files)
+            self.assertEqual((found, counts["exempt file"]), ([], 1))
+        found, _, _ = scan_items([("m/r.json", v2 + b" ")], self.tlds, frozenset(), files)
+        self.assertEqual(found, ["m/r.json:1"])  # an unreviewed version is read like any other file
 
 
 class TrackedTree(unittest.TestCase):
