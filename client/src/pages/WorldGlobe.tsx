@@ -7,6 +7,7 @@ import { REGIONS } from "../lib/locale";
 import { Link } from "wouter";
 import CouncilNav from "../components/CouncilNav";
 import AISystemNotice from "../components/AISystemNotice";
+import { loadPublishedRecords, legendLine, PUBLISHED_LAYER, type PublishedRecords } from "../lib/publishedRecords";
 import { LAYER0_NODES, PERSONA_TOURS, STATUS_COLOR, COUNTS, type Persona } from "../data/layer0Nodes";
 
 // sovAgent region name → 3D globe REGIONS code + globe3d layer tag maps (module-level).
@@ -147,6 +148,36 @@ export default function WorldGlobe() {
   const [acted, setActed] = useState("");
   const [mode, setMode] = useState<"3d" | "2d">("3d");
   const globe3dRef = useRef<HTMLIFrameElement | null>(null);
+  // Published records layer: real records fetched now from public addresses, sent as `stamps`.
+  // Kept apart from the illustrative Watchdog / swarm layers below, which are not touched.
+  const [pubOn, setPubOn] = useState(true);
+  const [pub, setPub] = useState<PublishedRecords | null>(null);
+  const [pubLoading, setPubLoading] = useState(true);
+  const [pubSel, setPubSel] = useState<any>(null);
+  useEffect(() => { let live = true; loadPublishedRecords().then((r) => { if (live) { setPub(r); setPubLoading(false); } }); return () => { live = false; }; }, []);
+  useEffect(() => {
+    if (!pub || mode !== "3d") return;
+    const t = window.setTimeout(() => {
+      const win = globe3dRef.current?.contentWindow;
+      drive(win, { cmd: "stamps", stamps: pub.stamps });
+      drive(win, { cmd: "stampsLayer", layer: PUBLISHED_LAYER, on: pubOn });
+    }, 2500);
+    return () => window.clearTimeout(t);
+  }, [pub, mode, pubOn]);
+  // A click is accepted only from the embedded globe on this origin, and only its stamp id is
+  // used: the panel shows the record this page itself sent, never content carried by a message.
+  const pubRef = useRef<PublishedRecords | null>(null);
+  useEffect(() => { pubRef.current = pub; }, [pub]);
+  useEffect(() => {
+    const h = (ev: MessageEvent) => {
+      if (ev.origin !== window.location.origin || ev.source !== globe3dRef.current?.contentWindow) return;
+      const d: any = ev.data;
+      if (!d || d.cmd !== "stampClick" || typeof d.id !== "string") return;
+      const s = pubRef.current?.stamps.find((x) => x.id === d.id);
+      if (s) setPubSel(s.payload);
+    };
+    window.addEventListener("message", h); return () => window.removeEventListener("message", h);
+  }, []);
   // ── The Sovereign tour ─────────────────────────────────────────────────────
   // Watch the Council assistant work the Layer-0 estate, one persona at a time. Every stop is a real
   // node with the status it has earned (LIVE by proven fetch / UNKNOWN said honestly /
@@ -300,6 +331,7 @@ export default function WorldGlobe() {
           <button onClick={() => setLayers((l) => ({ ...l, watchdog: !l.watchdog }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.watchdog ? "border-amber-400 bg-amber-500 text-black" : "border-white/20 text-white/60")}>Illustrative Watchdog layer</button>
           <button onClick={() => setLayers((l) => ({ ...l, ontology: !l.ontology, fw: true }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.ontology ? "border-violet-400 bg-violet-600 text-white" : "border-white/20 text-white/60")}>Ontology</button>
           <button onClick={() => setLayers((l) => ({ ...l, hive: !l.hive }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.hive ? "border-sky-400 bg-sky-600 text-white" : "border-white/20 text-white/60")}>Hive coverage{hiveAccounts.length ? " (" + hiveAccounts.length + ")" : ""}</button>
+          <button onClick={() => setPubOn((v) => !v)} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (pubOn ? "border-cyan-400 bg-cyan-600 text-white" : "border-white/20 text-white/60")}>Published records{pub ? " (" + pub.count + ")" : ""}</button>
           <button onClick={() => setSpin((s) => !s)} className="rounded-full border border-white/20 px-4 py-1.5 text-sm font-semibold text-white/70 hover:bg-white/10">{spin ? "Pause" : "Spin"}</button>
           <button onClick={runThreat} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (threat === "rogue" ? "border-rose-400 bg-rose-600 text-white" : threat === "stopped" ? "border-emerald-400 bg-emerald-600 text-white" : "border-rose-400/50 text-rose-200 hover:bg-rose-500/10")}>{threat === "rogue" ? "◉ Swarm demo running…" : threat === "stopped" ? "◉ Demo complete — unsigned" : "⚠ Rogue swarm demo"}</button>
         </div>
@@ -370,6 +402,12 @@ export default function WorldGlobe() {
               return <circle cx={q.x} cy={q.y} r={gov ? 40 : 26} fill="none" stroke={gov ? "#34d399" : "#ef4444"} strokeWidth={2} opacity={0.55}>{gov && <animate attributeName="r" values="18;52;18" dur="1.4s" repeatCount="indefinite" />}</circle>; })()}
           </svg>
           )}
+          <div className="px-3 pb-2 pt-2 text-[11px] leading-relaxed text-white/70" data-testid="published-legend">
+            <div><span className="font-bold text-cyan-200">{pubLoading ? "Published records · loading from public addresses…" : pub ? legendLine(pub) : ""}</span>{mode !== "3d" && " · drawn on the 3D globe only"}{!pubOn && " · layer hidden"}</div>
+            <div className="text-white/50">Cyan: measured by Council of AI. Violet: reported by another organisation, re-published here. Amber Watchdog and swarm layers are illustrations and are separate. Automated, unreviewed. Measurement, not certification.</div>
+            {pub && pub.omitted.length > 0 && <details className="text-white/50"><summary className="cursor-pointer">{pub.omitted.length} sources omitted or kept off the globe</summary><ul className="list-disc pl-5">{pub.omitted.map((o, i) => <li key={i}>{o.source}: {o.reason}</li>)}</ul></details>}
+            {pubSel && <div className="mt-1 rounded border border-white/10 p-2 text-white/80">{pubSel.place} · as_of {pubSel.as_of} · <a className="underline" href={pubSel.record_address}>record</a> · <a className="underline" href={pubSel.verifier}>free verifier</a> · {pubSel.review}<div className="text-white/50">Place: {pubSel.place_basis}</div>{typeof pubSel.detail?.source_note === "string" && <div className="text-white/50" data-testid="published-source-note">Source note: {pubSel.detail.source_note}</div>}{typeof pubSel.detail?.terms === "string" && <div className="text-white/50" data-testid="published-source-terms">Terms it is read under: {pubSel.detail.terms}</div>}</div>}
+          </div>
         </div>
         <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-6 min-h-[260px]">
           {sel ? (
