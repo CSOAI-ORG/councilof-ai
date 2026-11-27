@@ -58,9 +58,23 @@ jobs:
       - run: pip install -q "huggingface_hub>=0.26" "kaggle>=1.7" pyyaml datasets
       - name: probe token identity and scopes (no values printed)
         run: python3 ops/hub-fixes/probe_tokens.py | tee -a report.md
+      - name: privacy gate on the exact bytes to publish (fails closed)
+        if: env.TASK == 'hf-card-prs' || env.TASK == 'kaggle-metadata'
+        shell: bash
+        env:
+          THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
+        run: |
+          if [ -f scripts/privacy/publication_gate.py ]; then
+            python3 scripts/privacy/publication_gate.py --require-ids --label hub-fixes ops/hub-fixes/hf/bundle ops/hub-fixes/kaggle 2>&1 | tee -a report.md
+          elif [ "$APPLY" = "true" ]; then
+            echo "publication gate not on this ref (see #4692); refusing apply=true" | tee -a report.md; exit 2
+          else
+            echo "publication gate not on this ref yet; dry run continues" | tee -a report.md
+          fi
       - name: run task
         if: env.TASK != 'probe'
         working-directory: ops/hub-fixes
+        shell: bash
         run: bash run_task.sh 2>&1 | tee -a "$GITHUB_WORKSPACE/report.md"
       - name: post report to PR
         if: always() && inputs.report_pr != ''

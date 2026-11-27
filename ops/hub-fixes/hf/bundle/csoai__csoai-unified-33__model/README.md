@@ -86,7 +86,7 @@ Method record: `meok.measurement/0.2`, run 2026-11-02T05:25Z, Ed25519-signed wit
 
 ```bibtex
 @misc{csoai_csoai_unified_33_2026,
-  title        = {Llama 3.2 3B Instruct, Q4KM, stock weights (repo name: sov33-unified)},
+  title        = {Llama 3.2 3B Instruct, Q4KM, stock weights},
   author       = {{CSOAI Ltd (Council of AI)}},
   year         = {2026},
   publisher    = {Hugging Face},

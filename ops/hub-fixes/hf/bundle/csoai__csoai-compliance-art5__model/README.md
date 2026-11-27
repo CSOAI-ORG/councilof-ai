@@ -62,7 +62,7 @@ of it is an open item.
 
 ```bibtex
 @misc{csoai_csoai_compliance_art5_2026,
-  title        = {Qwen2.5-0.5B-Instruct, Q4KM, stock weights (repo name: sov-compliance-art5)},
+  title        = {Qwen2.5-0.5B-Instruct, Q4KM, stock weights},
   author       = {{CSOAI Ltd (Council of AI)}},
   year         = {2026},
   publisher    = {Hugging Face},

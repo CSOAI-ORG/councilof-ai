@@ -81,6 +81,10 @@ def main():
             continue
         if a.kind and kind != a.kind:
             continue
+        if str(row.get("wave", "")).startswith("hold"):
+            n_skip += 1
+            print(f"HOLD  {kind:7s} {rid}: wave={row.get('wave')} (never pushed by this script)")
+            continue
         if a.wave != "all" and row.get("wave", "wave1") != a.wave:
             continue
         if row.get("status") != "changed":
@@ -101,6 +105,10 @@ def main():
             live = None
             if row.get("live_sha256"):
                 print(f"WARN  {kind:7s} {rid}: could not re-read live README ({type(e).__name__})")
+        if live is None and not a.allow_stale:
+            n_skip += 1
+            print(f"STALE {kind:7s} {rid}: live README unreadable; skipping (pass --allow-stale to override)")
+            continue
         if live is not None and live == new:
             n_skip += 1
             print(f"SKIP  {kind:7s} {rid}: proposed README identical to live")
@@ -127,6 +135,8 @@ def main():
             print(f"ERROR {kind:7s} {rid}: {type(e).__name__}: {str(e)[:200]}")
     mode = "APPLY" if a.apply else "DRY-RUN"
     print(f"\n[{mode}] planned={n_plan} opened={n_done} skipped={n_skip} errors={n_err}")
+    if n_err:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

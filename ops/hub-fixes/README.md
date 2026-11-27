@@ -22,6 +22,12 @@ Each repo folder in `hf/bundle/` holds the proposed `README.md`, a unified diff 
 ## Security hold
 `csoai/index-presence` (HF, public) and the Kaggle datasets `csoai-gspc-index-presence` and `sov-space-backup-20260727` are on hold: HF secret scanning flagged live keys in csoai machine-backup datasets on the owner's account. Nothing in this workflow touches them until the keys are rotated and the files are removed.
 
+## Codename hold
+Per AGENTS.md (no internal codenames in public output), four HF repos whose names or data paths are codenames are `wave=hold-codename` (never pushed): Nicholastempleman/govbench, sov33-benchmark, meok-sov6-abstraction-overlay, meok-sov6-overlay-standby. Kaggle `csoai-sov-estate` carries `codename_hold`. Any `*_hold` / `hold-*` marker is an unconditional skip in both push scripts.
+
+## Exposure hold
+The 24 Nov external exposure audit flagged 10 repos in these waves: home paths, private IPs, backup-shaped archives, third-party contact details or internal workspace mirrors. They are `wave=hold-exposure` and are never pushed by this script until the underlying data is cleaned: csoai-unified-33, claim-capture-census, gspc-estate, cross-ledger-supply, measurement-capsules, gspc-master, gspc-daily-reports, meok-oowm-hybrid-lab, Nicholastempleman/govbench-items, Nicholastempleman/gspc-flywheel.
+
 ## Kaggle
 `kaggle/<slug>/dataset-metadata.json` for all 149 datasets (existing descriptions preserved verbatim; facts block, citation, 5–8 tags, file descriptions; column schemas only where read from an identical HF twin). 142 datasets need an owner ruling on `expectedUpdateFrequency`; the script skips rows with pending rulings. Starter notebooks exist for the top 20 (8 untested) and are not pushed by this workflow. Proposed cover images were left out of the repo.
 
