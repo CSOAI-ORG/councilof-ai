@@ -1143,6 +1143,7 @@ jobs:
           python3 -m pytest -q scripts/readers/test_watchdog_intake_reader.py
           python3 -B scripts/test_watchdog_intake.py
           python3 -B scripts/test_watchdog_charter_feed.py
+          python3 -B scripts/research/test_eurlex_region_diagnostic.py
           # Gap-map narratives and source rights are derived without a live census or snapshot rewrite.
           python3 -B scripts/test_build_ai_eval_gap_map.py
           # public-root halted on every run of 5-6 Oct 2026 on a stale ledger proof; the re-stamp
