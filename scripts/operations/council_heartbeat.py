@@ -19,11 +19,15 @@ PUBLIC_URLS = {
     "corrections": "https://councilof.ai/api/corrections",
     "claims": "https://councilof.ai/api/claims/register",
     "root": "https://councilof.ai/root.json",
+    "staff": "https://councilof.ai/api/pals",
+    "oversight": "https://councilof.ai/api/hitl",
+    "working_groups": "https://councilof.ai/working-groups/catalog.json",
     "hf_research": "https://huggingface.co/datasets/csoai/gspc-meok-evidence-adaptation-lab/resolve/a533a34ccb9f428d0fb3dd6b9f1f831c5f43d1c6/manifest.json",
 }
 PR_LANES = {"c1_c7_acceptance": 4703, "councilos_living_signal": 4652,
             "public_products": 4762, "silent_change_calibration": 4780,
-            "commercial_revenue_loop": 4772}
+            "commercial_revenue_loop": 4772, "review_acknowledgement": 4967,
+            "private_staff_ownership": 4968}
 ALLOWED_HOSTS = {"councilof.ai", "huggingface.co", "api.github.com"}
 
 def sha256(raw: bytes) -> str:
@@ -72,6 +76,23 @@ def fetch_bytes(url: str, token: str = "") -> bytes:
         raise ValueError("SOURCE_TOO_LARGE")
     return raw
 
+# Fixed public health GET, no bearer, cookies, redirect or response-body retention.
+# A response is a transport observation, not a qualified private receiver.
+GATEWAY_HEALTH = "https://api.meok.ai/health"
+
+def gateway_status() -> int | None:
+    try:
+        req = urllib.request.Request(GATEWAY_HEALTH, headers={
+            "Accept": "application/json", "User-Agent": "CSOAI-ReadOnly-Org-Pulse/0.1"}, method="GET")
+        with urllib.request.build_opener(NoRedirect()).open(req, timeout=8) as response:
+            return response.status
+    except urllib.error.HTTPError as exc:
+        status = exc.code
+        exc.close()
+        return status
+    except (ValueError, urllib.error.URLError, TimeoutError, OSError):
+        return None
+
 def observation(raw: bytes | None, at: str) -> dict:
     if raw is None:
         return {"state": "UNCHECKABLE", "retrieved_at": at,
@@ -86,7 +107,7 @@ def observation(raw: bytes | None, at: str) -> dict:
     return {"state": "PUBLIC_BYTES_OBSERVED", "retrieved_at": at,
             "source_sha256": sha256(raw), "object": doc}
 
-def summarise(docs: dict[str, bytes | None], pulls: dict[str, dict | None], at: str) -> dict:
+def summarise(docs: dict[str, bytes | None], pulls: dict[str, dict | None], at: str, gateway_http: int | None = None) -> dict:
     if not isinstance(at, str) or not valid_utc(at):
         raise ValueError("EXPLICIT_UTC_REQUIRED")
     obs = {name: observation(docs.get(name), at) for name in PUBLIC_URLS}
@@ -152,6 +173,64 @@ def summarise(docs: dict[str, bytes | None], pulls: dict[str, dict | None], at: 
     else:
         metrics["research"] = {"state": "UNCHECKABLE"}
 
+    # Only aggregate public values: no staff names, account identifiers, tokens,
+    # queue entries, human names or arbitrary source text enter retained receipts.
+    staff = obs["staff"].get("object")
+    rows = staff.get("staff") if isinstance(staff, dict) else None
+    if (isinstance(staff, dict) and staff.get("schema") == "csoai.pal-registry/0.1"
+            and isinstance(rows, list) and type(staff.get("count")) is int and staff["count"] == len(rows)
+            and all(isinstance(x, dict) and isinstance(x.get("slug"), str) and x["slug"]
+                    and type(x.get("signed")) is bool and x.get("status") in ("active","revoked") for x in rows)
+            and len({x["slug"] for x in rows}) == len(rows)
+            and type(staff.get("provisioned_store_bound")) is bool
+            and type(staff.get("model_configured")) is bool):
+        metrics["staff"] = {"state": "PUBLISHER_DECLARED", "registered_desks": len(rows),
+            "active_desks": sum(x["status"] == "active" for x in rows),
+            "reported_signed_desks": sum(x["signed"] is True for x in rows),
+            "store_bound": staff["provisioned_store_bound"], "model_configured": staff["model_configured"],
+            "private_profile_contract_present": isinstance(staff.get("private_profile_contract"), str),
+            "signatures_verified_here": False, "private_memory_or_case_retention_verified": False}
+    else:
+        metrics["staff"] = {"state": "UNCHECKABLE", "reason": "INVALID_STAFF_REGISTRY"}
+
+    oversight = obs["oversight"].get("object")
+    scope = oversight.get("assessment_scope") if isinstance(oversight, dict) else None
+    queue = oversight.get("review_queue_summary") if isinstance(oversight, dict) else None
+    statuses = ("PENDING","APPROVED","REJECTED","HOLD")
+    if (isinstance(oversight, dict) and oversight.get("schema") == "csoai.hitl-companion-state/0.1"
+            and isinstance(scope, dict) and type(scope.get("execution_authority")) is bool
+            and isinstance(scope.get("operator_identity"), str) and isinstance(scope.get("human_presence"), str)
+            and isinstance(queue, dict) and all(type(queue.get(k)) is int and queue[k]>=0 for k in statuses)
+            and type(oversight.get("store_bound")) is bool):
+        metrics["oversight"] = {"state": "PUBLISHER_DECLARED", "decision_store_bound": oversight["store_bound"],
+            "reported_operator_identity_not_verified": scope["operator_identity"] == "NOT_VERIFIED",
+            "reported_human_presence_not_established": scope["human_presence"] == "NOT_ESTABLISHED",
+            "reported_execution_authority": scope["execution_authority"],
+            "queue_counts": {k: queue[k] for k in statuses},
+            "independent_human_authority_verified_here": False}
+    else:
+        metrics["oversight"] = {"state": "UNCHECKABLE", "reason": "INVALID_OVERSIGHT_SUMMARY"}
+
+    groups = obs["working_groups"].get("object")
+    rows = groups.get("groups") if isinstance(groups, dict) else None
+    if (isinstance(groups, dict) and groups.get("schema") == "csoai.working-group-catalog/1"
+            and isinstance(rows, list) and all(isinstance(x, dict) and isinstance(x.get("id"),str)
+                and x["id"] and isinstance(x.get("acceptedMembers"),list) and "chair" in x
+                and (x["chair"] is None or isinstance(x["chair"],dict)) for x in rows)
+            and len({x["id"] for x in rows}) == len(rows)):
+        metrics["working_groups"] = {"state":"PUBLISHER_DECLARED", "group_count":len(rows),
+            "accepted_membership_entries":sum(len(x["acceptedMembers"]) for x in rows),
+            "groups_with_declared_chair":sum(x["chair"] is not None for x in rows),
+            "distinct_humans_or_independent_authority_verified_here":False}
+    else:
+        metrics["working_groups"] = {"state":"UNCHECKABLE","reason":"INVALID_GROUP_CATALOGUE"}
+
+    valid_status = type(gateway_http) is int and 100 <= gateway_http <= 599
+    metrics["gateway"] = {"state": "HTTP_200_OBSERVED" if gateway_http == 200 else
+        "HTTP_UNAVAILABLE" if valid_status else "UNCHECKABLE",
+        "http_status": gateway_http if valid_status else None,
+        "url": GATEWAY_HEALTH, "authenticated_receiver_qualified":False, "private_case_executed":False}
+
     lanes = {}
     for name, number in PR_LANES.items():
         item = pulls.get(name)
@@ -169,7 +248,7 @@ def summarise(docs: dict[str, bytes | None], pulls: dict[str, dict | None], at: 
     metric_key = {"hf_research": "research"}
     partial = any(obs[name]["state"] != "PUBLIC_BYTES_OBSERVED"
                   or metrics[metric_key.get(name, name)]["state"] == "UNCHECKABLE"
-                  for name in PUBLIC_URLS)
+                  for name in PUBLIC_URLS) or metrics["gateway"]["state"] != "HTTP_200_OBSERVED"
     return {"schema": SCHEMA, "observed_at": at,
         "scope": "PUBLIC_READ_ONLY_OBSERVATION; NO_HUMAN_AUTHORITY_OR_SAFETY_CERTIFICATION",
         "summary_state": "READBACK_PARTIAL" if partial else "PUBLIC_SOURCES_OBSERVED",
@@ -200,6 +279,14 @@ def render_markdown(report: dict) -> str:
     lines.append(f"| Evidence root | {a.get('card_count', 'unknown')} declared cards | Root signature and OTS not verified here |")
     a = m["research"]
     lines.append(f"| Research mirror | {a.get('observation_count', 'unknown')} observations | Manifest self-digest {'matches' if a.get('manifest_self_digest_matched') else 'uncheckable'}; files not rechecked |")
+    a = m["staff"]
+    lines.append(f"| AI staff | {a.get('active_desks', 'unknown')} active; {a.get('reported_signed_desks', 'unknown')} reported signed; store bound: {a.get('store_bound', 'unknown')} | Registry only; private memory not verified |")
+    a = m["oversight"]
+    lines.append(f"| Human oversight | Decision store bound: {a.get('decision_store_bound', 'unknown')}; execution authority reported: {a.get('reported_execution_authority', 'unknown')} | Independent human authority not verified |")
+    a = m["working_groups"]
+    lines.append(f"| Working groups | {a.get('group_count', 'unknown')} groups; {a.get('accepted_membership_entries', 'unknown')} membership entries | Not unique people or verified appointments |")
+    a = m["gateway"]
+    lines.append(f"| MEOK gateway | HTTP {a.get('http_status') or 'unknown'}; {a['state']} | Public health only; private receiver not qualified |")
     lines += ["", "## GitHub review lanes", ""]
     for name, lane in report["github_work_lanes"].items():
         lines.append(f"- #{lane['pr']} {name.replace('_', ' ')}: **{lane['state']}**")
@@ -222,8 +309,10 @@ def main() -> int:
     at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     data: dict[str, bytes | None] = {}
     pulls: dict[str, dict | None] = {}
+    gateway_http = None
     with ThreadPoolExecutor(max_workers=7) as pool:
         jobs = {pool.submit(fetch_bytes, url): ("doc", name) for name, url in PUBLIC_URLS.items()}
+        jobs[pool.submit(gateway_status)] = ("health", "gateway")
         for name, number in PR_LANES.items():
             url = f"https://api.github.com/repos/CSOAI-ORG/councilof-ai/pulls/{number}"
             jobs[pool.submit(fetch_bytes, url, os.getenv("GITHUB_TOKEN", ""))] = ("pr", name)
@@ -231,16 +320,20 @@ def main() -> int:
             kind, name = jobs[task]
             try:
                 raw = task.result()
-                if kind == "doc":
+                if kind == "health":
+                    gateway_http = raw
+                elif kind == "doc":
                     data[name] = raw
                 else:
                     pulls[name] = json.loads(raw)
             except (ValueError, urllib.error.URLError, TimeoutError, OSError, UnicodeError):
-                if kind == "doc":
+                if kind == "health":
+                    gateway_http = None
+                elif kind == "doc":
                     data[name] = None
                 else:
                     pulls[name] = None
-    report = summarise(data, pulls, at)
+    report = summarise(data, pulls, at, gateway_http)
     Path(args.output_json).write_text(json.dumps(report, sort_keys=True, indent=2,
         allow_nan=False) + "\n", encoding="utf-8")
     Path(args.output_md).write_text(render_markdown(report), encoding="utf-8")
