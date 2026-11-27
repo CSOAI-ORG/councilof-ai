@@ -14,7 +14,12 @@ What it fails on (exit 1):
   - a backup- or secret-shaped entry: a .git directory, .env, kaggle.json, an SSH key, a .pem/.key file;
   - an identifier from the private list in the environment variable named by --ids-env (default
     THIRD_PARTY_GUARD_IDS), matched case-insensitively; failures say the entry's position, never the entry;
-  - an international phone number written with + and a country code (conservative: needs 9-14 digits).
+  - an international phone number written with + and a country code (conservative: needs 9-14 digits);
+  - a local-machine path or private working-folder name: a home directory (/Users/<name>/, /home/<name>/ other than
+    the GitHub Actions runner's /home/runner/, C:\\Users\\<name>\\), workspace_for_ai, ~/_alignment, ~/.csoai*, or a
+    LaunchAgent label com.csoai.* / com.meok.* (the same rules as scripts/brand-gate.mjs LOCAL_LEAK_RULES); a file
+    whose exact bytes are listed in local-path-allowlist.txt (published debt, with a reason) is counted, not failed;
+  - an internal catalogue name ("jewel", "crown-jewels") in a file, folder or archive member NAME.
 
 What it refuses to vouch for (exit 2, UNCHECKABLE, never a pass): a path that does not exist or holds no files, an
 archive it cannot open or that is encrypted, a nesting depth or size or member-count limit, a member too large to
@@ -38,6 +43,7 @@ import argparse
 import bz2
 import collections
 import gzip
+import hashlib
 import importlib.util
 import io
 import lzma
@@ -82,6 +88,45 @@ EXTRA_DECODE = ((re.compile(rb"\\u0040", re.I), b"@"), (re.compile(rb"\\x40", re
 AZURE_SAS_SIG = re.compile(rb"(?:[?&])sig=[A-Za-z0-9%+/_=.\-]{16,}", re.I)
 AZURE_SAS_VERSION = re.compile(rb"(?:[?&])sv=[0-9]{4}-[0-9]{2}-[0-9]{2}", re.I)
 AZURE_SAS_EXPIRY = re.compile(rb"(?:[?&])se=[A-Za-z0-9%:TZ.\-]{8,}", re.I)
+# Local-machine paths and internal catalogue names (added 2026-11-27 after the 2026-11-24 public-exposure audit).
+# The same rules as LOCAL_LEAK_RULES in scripts/brand-gate.mjs, with the same reasons there; change both together.
+# The look-behind keeps URL paths out (https://host/home/html/ is a third party's site). /home/runner/ is the
+# GitHub Actions runner's home, common to every public workflow log, so it is the one exempt home.
+LOCAL_RX = (
+    ("local-machine-path:home-directory", re.compile(
+        rb"(?<![A-Za-z0-9._~%+\-])/(?:Users|home)/(?!runner/)[A-Za-z0-9._\-]+/"
+        rb"|(?<![A-Za-z0-9])[A-Za-z]:\\{1,2}Users\\{1,2}[A-Za-z0-9._\-]+\\")),
+    ("local-machine-path:private-folder", re.compile(rb"workspace_for_ai|(?:~|\$HOME|\$\{HOME\})/(?:_alignment|\.csoai)", re.I)),
+    ("local-machine-path:launchagent-label", re.compile(rb"(?<![A-Za-z0-9_.\-])com\.(?:csoai|meok)\.[A-Za-z0-9][A-Za-z0-9._\-]*", re.I)),
+)
+CATALOGUE_NAME = re.compile(rb"jewel", re.I)
+LOCAL_ALLOWLIST = os.path.join(HERE, "local-path-allowlist.txt")
+LOCAL_ALLOW_LINE = re.compile(r"^file\s+(\S+)\s+sha256:([0-9a-f]{64})\s+#\s*\S")
+
+
+def load_local_allowlist(path=None):
+    """Byte-exact exemptions shared with brand-gate.mjs: (set of sha256 digests, line numbers without digest/reason)."""
+    digests, bad = set(), []
+    try:
+        with open(path or LOCAL_ALLOWLIST, encoding="utf-8") as fh:
+            lines = fh.read().splitlines()
+    except OSError:
+        return digests, bad
+    for i, line in enumerate(lines, 1):
+        t = line.strip()
+        if not t or t.startswith("#"):
+            continue
+        m = LOCAL_ALLOW_LINE.match(t)
+        if m:
+            digests.add(m.group(2))
+        else:
+            bad.append(i)
+    return digests, bad
+
+
+def local_normalise(data: bytes) -> bytes:
+    """JSON's "\\/" and URL-encoded "%2F" read as "/" (no newline moves, so line numbers hold)."""
+    return re.sub(rb"%2[Ff]", b"/", data.replace(b"\\/", b"/"))
 
 SECRET_NAMES = ("kaggle.json", "id_rsa", "id_ed25519", "id_ecdsa", ".netrc", ".npmrc", ".pypirc")
 
@@ -102,8 +147,9 @@ def shaped_like_a_secret_or_backup(path: str):
 
 
 class Result:
-    def __init__(self, tlds, allow, ids, opaque_ok):
+    def __init__(self, tlds, allow, ids, opaque_ok, local_allow=frozenset()):
         self.tlds, self.allow, self.ids, self.opaque_ok = tlds, allow, ids, frozenset(opaque_ok)
+        self.local_allow = frozenset(local_allow)    # sha256 of files exempt from the local-path rules
         self.findings: list[tuple[str, str]] = []     # (place, class)
         self.unchecked: list[tuple[str, str]] = []    # (place, reason)
         self.opaque: list[str] = []
@@ -125,6 +171,8 @@ class Result:
             b = rx.sub(b"<credential>", b)
         # A SAS token in a path must never be reprinted in CI logs.
         b = AZURE_SAS_SIG.sub(b"?sig=<credential>", b.replace(b"&amp;", b"&"))
+        for _, rx in LOCAL_RX:
+            b = rx.sub(b"<local-path>", b)
         return b.decode("utf-8", "replace")
 
     def hit(self, place, kind):
@@ -137,8 +185,9 @@ class Result:
         self.unchecked.append((place, reason))
 
 
-def scan_text(res: Result, place: str, data: bytes, first_line: int = 1, names_only: bool = False):
-    """Search `data` (bytes of a file, or a name). Adds findings to res."""
+def scan_text(res: Result, place: str, data: bytes, first_line: int = 1, names_only: bool = False, local_sink=None):
+    """Search `data` (bytes of a file, or a name). Adds findings to res. Local-path findings go to `local_sink`
+    when given (the caller decides once the whole file's digest is known), else straight to res."""
     if not data:
         return
     for rx, rep in EXTRA_DECODE:
@@ -178,26 +227,49 @@ def scan_text(res: Result, place: str, data: bytes, first_line: int = 1, names_o
         q = line.replace(b"&amp;", b"&").replace(b"\\u0026", b"&")
         if AZURE_SAS_SIG.search(q) and AZURE_SAS_VERSION.search(q) and AZURE_SAS_EXPIRY.search(q):
             res.hit(f"{place}:{i}", "credential:azure-sas-url")
+    if names_only and CATALOGUE_NAME.search(data):
+        res.hit(f"{place}:1", "internal-catalogue-name")
+    norm = local_normalise(data)
+    for kind, rx in LOCAL_RX:
+        for m in rx.finditer(norm):
+            entry = (f"{place}:{norm.count(NL, 0, m.start()) + first_line}", kind)
+            if local_sink is None:
+                res.hit(*entry)
+            else:
+                local_sink.append(entry)
 
 
 
 def scan_stream(res: Result, place: str, fh):
-    """Scan a binary file object in newline-aligned chunks."""
+    """Scan a binary file object in newline-aligned chunks. Local-path findings are held until the file's sha256
+    is known: bytes listed in local-path-allowlist.txt are counted as published debt, anything else fails."""
     carry, line0 = b"", 1
+    digest, local = hashlib.sha256(), []
+
+    def settle():
+        if local and digest.hexdigest() in res.local_allow:
+            res.counts["local-path:allowlisted-file"] += 1
+        else:
+            for entry in local:
+                res.hit(*entry)
     while True:
         block = fh.read(CHUNK)
         res.bytes += len(block)
+        digest.update(block)
         if res.bytes > MAX_TOTAL_BYTES:
             res.unc(place, f"more than {MAX_TOTAL_BYTES} bytes read in this run")
+            for entry in local:
+                res.hit(*entry)
             return False
         data = carry + block
         if not block:
-            scan_text(res, place, data, line0)
+            scan_text(res, place, data, line0, local_sink=local)
+            settle()
             return True
         cut = data.rfind(b"\n") + 1
         if cut == 0 or len(data) - cut > CHUNK // 2:   # no newline (minified): overlap instead of splitting a token
             cut = max(len(data) - OVERLAP, 1)
-        scan_text(res, place, data[:cut], line0)
+        scan_text(res, place, data[:cut], line0, local_sink=local)
         line0 += data[:cut].count(b"\n")
         carry = data[cut:]
 
@@ -343,9 +415,12 @@ def load_ids(var: str):
 def gate(paths, opaque_ok=(), ids_env="THIRD_PARTY_GUARD_IDS", require_ids=False):
     """Returns (exit code, Result). 0 clean, 1 findings, 2 unchecked."""
     allow, _, bad = det.load_allowlist()
-    res = Result(det.load_tlds(), allow, load_ids(ids_env), opaque_ok)
+    local_allow, local_bad = load_local_allowlist()
+    res = Result(det.load_tlds(), allow, load_ids(ids_env), opaque_ok, local_allow)
     if bad:
         res.unc("scripts/privacy/outside-email-allowlist.txt", "allowlist lines without a reason")
+    if local_bad:
+        res.unc("scripts/privacy/local-path-allowlist.txt", "allowlist lines without a sha256 digest or a reason")
     if require_ids and not res.ids:
         res.unc(ids_env, "private identifier list is not set, so named third parties are unchecked")
     if not paths:

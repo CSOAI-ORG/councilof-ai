@@ -1,0 +1,73 @@
+# Exceptions for the local-machine-path rules in scripts/brand-gate.mjs and scripts/privacy/publication_gate.py.
+# Every entry needs a reason after '#'. Same convention as outside-email-allowlist.txt:
+#   file <path> sha256:<digest of the file>  # reason
+# For a single-stream .gz the digest is of the DECOMPRESSED bytes (what both gates read).
+# The exemption is the exact BYTES: it lapses as soon as the file changes, and the gates then read it like any
+# other file. Do not add an entry to let new content ship. An entry here is published debt, not permission:
+# every file below was already public on 2026-11-27 and still carries a local path or a private folder name.
+# Each one is a dated machine record whose bytes are committed elsewhere (an OpenTimestamps proof, a signed
+# index, or a sha256 in a generated index) or which is a verbatim run receipt, so editing the string in place would break that commitment and
+# falsify the record. The way to clear an entry is to withdraw the file from deploy
+# (scripts/withdrawn-from-deploy.json) or to re-issue it as a new dated, redacted file and move the pointer;
+# then delete its line here. Reviewed 2026-11-27 on the tree of PR #4845.
+
+# Verbatim claim-maintenance run receipt of 2026-09-28 (the path is the remote run host working folder, not a personal machine; read back by scripts/claims/claim_maintenance_public_readback.py and maintenance_controller.py)
+file public/claims/maintenance/latest-receipt.json sha256:6ec156e456f50a7ce3f7a0b2b99dd2b223061ef8d1a9ac4d0428f121c4a56385  # remote run host path; verbatim run receipt, editing it falsifies the record; withdraw or re-issue redacted
+file public/claims/maintenance/receipts/20260928T023123Z.json sha256:6ec156e456f50a7ce3f7a0b2b99dd2b223061ef8d1a9ac4d0428f121c4a56385  # remote run host path; verbatim run receipt, editing it falsifies the record; withdraw or re-issue redacted
+
+# Dated interop records (sha256 committed in interop/file-index.json or a mirror manifest)
+file public/interop/agent-interop-canonical-2026-09/dedupe-report.json sha256:14c63ca04f9171c89e1de5ed4046c61851f983adc706a2f3c59b889f6a9fc7c2  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/canonical-estate-view-2026-10-08/view.json sha256:d5c411cbb555b1da844b49ddcadf9d3c4e0bba44f06648e1769c2dc95469d5bb  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/canonical-estate-view-2026-10-08/view.md sha256:14d45d7f2d5ef56f72854227e84142a4e59de65d5bf1d87102dc34e3413bc570  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/catapult-shape-2026-09-18.md sha256:37a0b8354b1785e78ea72d4b990c64b7c260fc5e1164a744b554ea2cfdebf8c3  # private folder name; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/witness-cosign-spike-2026-09-17.md sha256:40af021de3d9f510f6d2db2015dc9615cc9203b032dc8f213fa3b74968021be0  # private folder name; dated record, bytes hash-committed; withdraw or re-issue redacted
+
+# Axis banks of 2026-11-02 (sha256 committed in interop/axis-banks/index.json, interop/file-index.json and the generated axis-specialists bundle)
+file public/interop/axis-banks/company-practice-20261102.json sha256:23ba58453183dc1804cdb00e0e5b3445ddc53fa038782a9ecf0684566b185b34  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/axis-banks/harness-fidelity-20261102.json sha256:3f10dc5f034f3ccf5e6522606cfdc3e4bd4ebcf1a86adc2a28420fba41822a3b  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/axis-banks/humanoid-deployment-20261102.json sha256:edda7ffcf81d3ea863741aeb275304f581aa1f55792a68df7a9cb65b2a29b0ed  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/axis-banks/index.json sha256:96627949a4dc2b59a94feb0dd9cff2238cf23ae9954056df20a7368d96e403a7  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/axis-banks/interop-conformance-20261102.json sha256:d751a0373a7f6ec58c85b8b6f2ea24de7c73a240ed9ba081ce0086142d9aed0c  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/axis-banks/interpretability-reproducibility-20261102.json sha256:d72980fd27f31ff6a2fa63287b4b018219b91785ba03078d8f841b8e581bdd2d  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/axis-banks/lab-practice-20261102.json sha256:b96d0879876f0e405a27a350dde8e0f5d2737e9b69876c4b3287951a69c37ec9  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/axis-banks/measurer-integrity-20261102.json sha256:138a216a54e77949b582804e6179ab752ae7873bf3e67a7650f688a2b54253e3  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/axis-banks/regulator-transparency-20261102.json sha256:1a8667ca10ab9486b75daf460a680c12d2b4823ad3bbb9cfd6697143f882f6d5  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/axis-banks/serving-fidelity-20261102.json sha256:68826b5e1c0b4539130aaef2113a3901147eec7bb908e263dc02361f589d2c3e  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/axis-banks/watchdog-ingest-20261102.json sha256:8c5a3438294a8dc56baf9fb879b6a336b90bccd5a5a45e3944016b834dff2e88  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+
+# OpenTimestamps-stamped records (a sibling .ots commits to these bytes; stamped-bytes fails on any edit)
+file public/interop/axis-reconciliation-v0.1.json sha256:34fc66545b27072c01130fbe4b87d693fca58b4fd17ff8551c769d8e7fe5f70e  # private folder name; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/axis-reconciliation-v0.2.json sha256:da4d8f4fe3224879484cbfe01b6e8764dab297b2a1a4b18696f2a0069b9704a8  # private folder name; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/closed-loop/demo_card_for_done_when_proof.json sha256:7a674c70fae51d88391131e8459b05ebc4e22010252e490ef0946780c6e505a4  # private folder name; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/ots-chain-verification-2026-09-17.json sha256:c1c2282696e6e9348cbbedd5a57f7e91face42c22437830d7eb4bc13354cea2a  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/measurement-capsules/v0.2/cross_ledger/record.json sha256:56175163b5a5957ca6e584229597c9a0ee655897ee7b30c736f05123e013498e  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/measurement-capsules/v0.2/index.json sha256:7383fcc6ac33b86f28173304e0711e6a14a1d662a3d656aabd86cc2c8c78745d  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+
+# Subject-axis live run bundle of 2026-10-27..11-02 (sha256 committed in interop/file-index.json; bank files also in axis-banks/index.json and axis-specialists)
+file public/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json sha256:53699b683b2ff3e6179ef70ad2868a93194927214c824cc1a3bf02f9bb5a7036  # private folder name; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json sha256:4d7d705c198e2b30d449e176880e438a1e934e4d1cc42240ca27f75243f3a0b7  # private folder name; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/audit-laneD-planned-not-done.json sha256:01e41287bf8d7bd714fcfc3902454d6160947b159c3bb53a7fd1c76728549d41  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/bank-company-practice-live-20261027.json sha256:23ba58453183dc1804cdb00e0e5b3445ddc53fa038782a9ecf0684566b185b34  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/bank-harness-fidelity-live-20261027.json sha256:3439adba3fb46991d9b74e886ee7e6f1e53ae675e8b5ebfbc6331247469c0c33  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/bank-humanoid-deployment-live-20261027.json sha256:edda7ffcf81d3ea863741aeb275304f581aa1f55792a68df7a9cb65b2a29b0ed  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/bank-interop-conformance-live-20261027.json sha256:d751a0373a7f6ec58c85b8b6f2ea24de7c73a240ed9ba081ce0086142d9aed0c  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/bank-interpretability-reproducibility-live-20261027.json sha256:d72980fd27f31ff6a2fa63287b4b018219b91785ba03078d8f841b8e581bdd2d  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/bank-lab-practice-live-20261027.json sha256:b96d0879876f0e405a27a350dde8e0f5d2737e9b69876c4b3287951a69c37ec9  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/bank-measurer-integrity-live-20261027.json sha256:138a216a54e77949b582804e6179ab752ae7873bf3e67a7650f688a2b54253e3  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/bank-regulator-transparency-live-20261027.json sha256:1a8667ca10ab9486b75daf460a680c12d2b4823ad3bbb9cfd6697143f882f6d5  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/bank-serving-fidelity-live-20261027.json sha256:68826b5e1c0b4539130aaef2113a3901147eec7bb908e263dc02361f589d2c3e  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/claim-maintenance.wave2-20261027.json sha256:cd8c331b2b4dfaf279a3e428ada0ab89feac043291f02f3499eed428d82a2cb8  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/credential-and-dns-state-20261029.json sha256:53c638a9c49b64a8a3e016bc28c38b742df9008200987ceb4c21d64ccac53c9d  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/eic-applicant-facts-inventory-20261029.json sha256:0df3c6f63b6983f46183de2e9e7803795eaab5436cc4884eb5fed92ca7459c71  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/sampling-frames-10-subject-axes-20261028.json sha256:02b485ef60a232f5fb604f9a2701a28086459349cda18ebe2b7c49dd0cf9d485  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/state-table-repair-2026-11-02.json sha256:86d515c61c700708c2244089fa8c0bf749485e1a50cf0db0cf52201e284eb16e  # private folder name; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/subject-axis-live-run-20261027.json sha256:41483e01e05b66a5aceb77b35400dabc87eb180b4d9666b5e038195aca5ccd41  # home path; dated record, bytes hash-committed; withdraw or re-issue redacted
+file public/interop/subject-axis-live-20261027/subject-axis-live-run.mjs sha256:1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7  # private folder name; dated record, bytes hash-committed; withdraw or re-issue redacted
+
+# Verbatim third-party API mirror (xrpscan token ranking page, 2026-09). The path is a third party's own Windows
+# path inside a token issuer's description field, not ours; the page bytes are committed by its .meta.json receipt.
+file public/interop/xrpl-impersonation-2026-09/mirrors/xrpscan-tokens-2500.json sha256:2e139859495dddc9c261141f5954ecf7aa879058aaa0e5aec47e9646507575b7  # third-party token description (Windows home path); verbatim mirror, sha256 in .meta.json; withdraw the mirror page or keep as evidence
+
+# Signed measurement capsules (operations, v0.2): a capsule records a failed probe whose error message quotes the
+# run host's mirror path. Committed by sha256 in record.json (OpenTimestamps-stamped) and record.signed.json.
+file public/measurement-capsules/v0.2/operations/capsules.jsonl.gz sha256:6cfabd619ae8a771d3d0589080841c32e8e4ac4fbf3c6eacd93207b8bfcbb1ee  # remote run host path in a verbatim error message; signed capsules, hash-committed; re-issue redacted
