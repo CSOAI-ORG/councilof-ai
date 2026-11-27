@@ -172,6 +172,18 @@ def render(vdir, publication_dir=None):
         files = " · ".join(f'<a href="{e(slug)}/{f}">{lbl}</a>' for f, lbl in (("record.json", "record"), ("record.signed.json", "signature"),
                                                                              ("record.json.ots", "OTS"), ("leaves.json", "leaves"),
                                                                              ("capsules.jsonl.gz", "capsules")))
+        if (b["adapter"] == "a2a_card"
+                and b.get("record_sha256") == "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6"
+                and b.get("capsules_sha256") == "ba413e8160120205d8b9ec87fec95fa9e0f3ac2e6c858d4e6e807851882cd661"
+                and b.get("merkle_root") == "bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441bae436"):
+            files += (
+                '<p><a href="https://github.com/zhaoxinghua09-cell/independent-recomputations/'
+                'tree/5a20a98a9553fe3a007f500ddf204ff1567d6efe#2-a-measurement-capsule-batch">'
+                'Reproduce this batch with Xinghua Zhao’s independent checker</a>. '
+                'The checker reproduced all 33 identifiers, their order, the state counts and the batch root. '
+                'Its odd-leaf example shows why duplicating the final leaf gives a different root. '
+                'Signature and timestamp verification were outside this check.</p>'
+            )
         L.append(f"<tr><td>{c(slug + '/')}<br>{c(b.get('kind'))}</td><td>{b['n_capsules']:,}</td><td>{e(b.get('signature_state'))}</td>"
                  f"<td>{e(b.get('ots_state'))}</td><td>{st}</td><td>{files}</td></tr>")
     L += ["</tbody></table></div>",
