@@ -48,6 +48,9 @@ FAKE_HF = "hf" + "_" + "aB3dE5gH7jK9mN1pQ3sT5vW7yZ9bC1dE3fG5"
 FAKE_GH = "gh" + "p_" + "Q1w2E3r4T5y6U7i8O9p0A1s2D3f4G5h6J7k8"
 FAKE_AWS = "AK" + "IA" + "ABCDEFGHIJKLMNOP"
 FAKE_PEM = "-----BEGIN " + "RSA PRIVATE KEY-----\nMIIBOgIBAAJBAKj34GkxFhD90vcNLYLInFEX6Ppy1tPf9Cnzj4p4WGeKLs1Pt8Qu\n"
+# Local-machine paths, assembled at run time so that this file never holds one; the account names are invented.
+USERS, HOMES = "/Us" + "ers/", "/ho" + "me/"
+WFA = "workspace" + "_for_ai"
 JSONL_ROW = {"id": 1, "text": "ordinary benchmark answer", "sha256": "0" * 64}
 
 
@@ -113,6 +116,18 @@ def planted_cases():
         "a .git directory inside a .tgz": {"backup.tgz": tar_bytes([("repo/.git/HEAD", b"ref: refs/heads/master\n")])},
         "private-list name in a .md": {"about.md": b"Written with help from Zorblat Quimby of nowhere.\n"},
         "private-list name inside a .zip": {"a.zip": zip_bytes([("n.txt", b"thanks to WENDELINE FOTHERINGAY-PLUM\n")])},
+        # local-machine paths and internal catalogue names (2026-11-27)
+        "macOS home path in a .md": {"notes.md": f"population: registers in `{USERS}zorblat/_drafts/CATALOG.md`\n".encode()},
+        "home path with JSON-escaped slashes": {"x.json": ('{"p": "' + USERS.replace("/", "\\/") + 'zorblat\\/a.json"}').encode()},
+        "Linux VM home path in a receipt": {"receipt.json": f'{{"stdout_tail": "WROTE {HOMES}ubuntu/_run/out/a.json"}}'.encode()},
+        "Windows home path": {"desc.txt": b"C:\\Us" + b"ers\\zorblat\\Desktop\\x\n"},
+        "private folder workspace_for_ai": {"log.txt": f"cwd {WFA}/scratch\n".encode()},
+        "private folder ~/_alignment": {"a.md": ("read ~/" + "_alignment/CATALOG.md\n").encode()},
+        "private folder ~/.csoai-keys": {"a.md": ("key in ~/" + ".csoai-keys/cose.pem\n").encode()},
+        "LaunchAgent label": {"agent.plist": ("<key>Label</key><string>com." + "csoai.daily-sweep</string>\n").encode()},
+        "home path inside a .tgz": {"b.tgz": tar_bytes([("run.log", f"cd {USERS}zorblat/repo\n".encode())])},
+        "catalogue name in a folder NAME": {"jewels/master-catalogue/index.json": b"{}"},
+        "catalogue name in a .zip member NAME": {"b.zip": zip_bytes([("crown-jewels.md", b"hi")])},
     }
     return cases
 
@@ -141,6 +156,11 @@ def clean_fixture():
         "table.csv": b"axis,n,score\nsafety,30,0.5\nsupply,31,0.25\n",
         "notes/long.txt": (b"The quick brown fox jumps over the lazy dog. " * 2000),
         "token-like-but-short.txt": b"hf_short ghp_short AKIAshort sk-short\n",
+        "paths-that-are-not-local.md": (f"CI checkout {HOMES}runner/work/councilof-ai/councilof-ai.\n"
+                                        f"A regulator page https://www.ecb.europa.eu{HOMES}html/index.en.html and "
+                                        f"https://example.org{USERS}zorblat/profile. GET /api/users/{{id}}/.\n"
+                                        "Domains csoai.com and meok.ai; csoai.com.example.org; an alignment folder; "
+                                        "a .csoai-style key; jewellery is not a NAME here.\n").encode(),
         "docs/.env.example": b"HF_TOKEN=\n",
         "bundle.tgz": tar_bytes([("a/readme.md", b"nick" + AT.encode() + b"councilof.ai\n"), ("a/d.jsonl", b"{}\n" * 100)]),
         "bundle.zip": zip_bytes([("b/readme.md", b"press" + AT.encode() + b"csoai.org\n"), ("b/d.csv", b"a,b\n1,2\n")]),
@@ -401,6 +421,66 @@ class NameAndSasRegressions(unittest.TestCase):
         code, result = pg.gate([os.path.join(self.tmp, "source")])
         self.assertEqual(code, 2)
         self.assertTrue(any("symlink directory" in reason for _, reason in result.unchecked))
+
+class LocalPathAllowlist(unittest.TestCase):
+    """The byte-exact exemption list shared with brand-gate.mjs: exact bytes pass, one changed byte fails, a line
+    without a digest or a reason is UNCHECKABLE, and no output ever repeats a local path."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp(prefix="localpath-")
+        self.saved = pg.LOCAL_ALLOWLIST
+        self.body = f'{{"population": "registers in {USERS}zorblat/_drafts/CATALOG.md"}}\n'.encode()
+        materialise(os.path.join(self.tmp, "ds"), {"record.json": self.body})
+        import hashlib
+        self.digest = hashlib.sha256(self.body).hexdigest()
+
+    def tearDown(self):
+        pg.LOCAL_ALLOWLIST = self.saved
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def allowlist(self, text):
+        p = os.path.join(self.tmp, "allow.txt")
+        with open(p, "w", encoding="utf-8") as fh:
+            fh.write(text)
+        pg.LOCAL_ALLOWLIST = p
+
+    def test_listed_bytes_pass_and_are_counted(self):
+        self.allowlist(f"# header\nfile public/record.json sha256:{self.digest}  # dated record, hash-committed\n")
+        code, res = pg.gate([os.path.join(self.tmp, "ds")])
+        self.assertEqual(code, 0, res.findings)
+        self.assertEqual(res.counts["local-path:allowlisted-file"], 1)
+
+    def test_one_changed_byte_lapses_the_exemption(self):
+        self.allowlist(f"file public/record.json sha256:{self.digest}  # dated record\n")
+        materialise(os.path.join(self.tmp, "ds"), {"record.json": self.body + b" "})
+        code, res = pg.gate([os.path.join(self.tmp, "ds")])
+        self.assertEqual(code, 1)
+        self.assertIn("local-machine-path:home-directory", {k for _, k in res.findings})
+
+    def test_a_line_without_reason_is_uncheckable(self):
+        self.allowlist(f"file public/record.json sha256:{self.digest}\n")
+        code, res = pg.gate([os.path.join(self.tmp, "ds")])
+        self.assertEqual(code, 1)  # the finding stands, and the list itself is flagged
+        self.assertTrue(any("local-path-allowlist" in p for p, _ in res.unchecked))
+
+    def test_the_repository_allowlist_is_well_formed(self):
+        digests, bad = pg.load_local_allowlist(self.saved)
+        self.assertEqual(bad, [])
+        self.assertTrue(digests)
+
+    def test_output_never_repeats_a_local_path(self):
+        import contextlib
+        self.allowlist("")
+        materialise(os.path.join(self.tmp, "ds"), {f"{WFA}-notes.txt": b"x\n"})
+        code, res = pg.gate([os.path.join(self.tmp, "ds")])
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            pg.report(code, res)
+        out = buf.getvalue()
+        self.assertEqual(code, 1)
+        for leak in (USERS + "zorblat", WFA):
+            self.assertNotIn(leak, out)
+
 
 class Wiring(unittest.TestCase):
     """Every upload to Hugging Face or Kaggle in a workflow must run the gate first (same job, earlier step)."""

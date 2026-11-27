@@ -17,6 +17,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
+import { gunzipSync } from "node:zlib";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SELFTEST = process.argv.includes("--selftest");
@@ -349,6 +350,110 @@ const RULES = [
 ];
 
 const PATH_BANNED = /\b(sovos|sov3\d*|dorado|cibola|ceasai)\b|\b(venturi|pontius|laputa)/i;
+
+// LOCAL-MACHINE PATHS AND INTERNAL CATALOGUE NAMES (added 2026-11-27, after the 2026-11-24 public-exposure audit).
+// WHY. The audit found the owner's home directory (/Users/<name>/...), private working folders (~/_alignment,
+// ~/.csoai, workspace_for_ai) and an internal working catalogue at /jewels/master-catalogue/ served on
+// councilof.ai, while every rule above passed. The codename sweep reads a word list and the display sweep reads
+// display keys only; a local path is neither. It is a fact about the machine that wrote a file, and it ships in
+// whatever field it lands in (a `population` note, a `stdout_tail`, a `source` field). So this sweep reads the
+// WHOLE body of every served text file in the dist, plus client/src/data (compiled into the JS bundle, which the
+// walk skips as `assets/`), and every served URL path. It never prints a matched value: CI logs are public.
+// Scope, said plainly: the dist (what Cloudflare Pages serves) and client/src/data. Source comments elsewhere,
+// docs/ and scripts/ do not deploy and are not read. `.test.` / `.spec.` files and `__fixtures__` in
+// client/src/data are not bundled and are skipped.
+const LOCAL_LEAK_RULES = [
+  {
+    id: "local_home_path",
+    // A home directory written as an absolute path: /Users/<name>/ (macOS), /home/<name>/ (Linux), C:\Users\<name>\.
+    // The look-behind keeps URL paths out (https://www.ecb.europa.eu/home/html/ is a third party's site, preceded
+    // by a host character). EXEMPT, the one known CI path: /home/runner/ is the GitHub Actions runner's home, shared
+    // by every public workflow log, and says nothing about our machines.
+    pattern: /(?<![A-Za-z0-9._~%+-])\/(?:Users|home)\/(?!runner\/)[A-Za-z0-9._-]+\/|(?<![A-Za-z0-9])[A-Za-z]:\\{1,2}Users\\{1,2}[A-Za-z0-9._-]+\\/g,
+    why: "A local home-directory path names a person's machine and account. Publish the repository-relative path, or nothing.",
+  },
+  {
+    id: "local_workspace_name",
+    // Private working folders on the owner's machines, under any spelling of home.
+    pattern: /workspace_for_ai|(?:~|\$HOME|\$\{HOME\})\/(?:_alignment|\.csoai)/gi, // prefix: ~/.csoai-keys/ is caught too
+    why: "A private working-folder name on a public surface. Cite the published file, not the folder it was drafted in.",
+  },
+  {
+    id: "launchagent_label",
+    // macOS LaunchAgent labels for our local schedulers (com.csoai.<job>, com.meok.<job>). The look-behind keeps
+    // hostnames out (csoai.com.example would need a letter before "com.").
+    pattern: /(?<![A-Za-z0-9_.-])com\.(?:csoai|meok)\.[A-Za-z0-9][A-Za-z0-9._-]*/gi,
+    why: "A LaunchAgent label describes a job on a private machine. It is operator detail, not public data.",
+  },
+];
+// The internal working catalogue ("jewels", "crown jewels") must never be a public URL again. Any segment of a
+// served path, a functions/ route or a client route that contains "jewel" fails, unless the URL only redirects:
+// /jewels and /crown-jewels are 308 retirements in public/_redirects (kept so old links land on the homepage).
+const CATALOGUE_PATH = /(?:^|\/)[^/]*jewel/i;
+// Byte-exact exemptions, shared with scripts/privacy/publication_gate.py. See the file's header.
+const LOCAL_PATH_ALLOWLIST = "scripts/privacy/local-path-allowlist.txt";
+const LOCAL_SCAN_FILE = /\.(?:html?|json|jsonl|ndjson|txt|md|xml|svg|csv|tsv|ya?ml|mjs|cjs|js|ts|tsx|webmanifest|toml|ics|rss|atom)$|(?:^|\/)_(?:redirects|headers)$/i;
+const NOT_BUNDLED = /\.(?:test|spec)\.|(?:^|\/)__fixtures__\//;
+// The built dist/client carries a copy of the Pages Functions SOURCE under /functions/ (seen in pr-gates run
+// 45938526999). Cloudflare compiles it into the worker and does not serve it as files: on 2026-11-27
+// https://councilof.ai/functions/_lib/route/types.ts and /functions/mcp/_census-tools.test.ts returned 404. Its route
+// NAMES are still checked (the functions/ walk below); its bodies are server code, not a public surface.
+const DIST_NOT_SERVED = /^\/functions\//;
+
+/** Every local-leak rule over one text body. JSON's "\/" and URL-encoded "%2F" are read as "/". */
+function localLeakHits(text) {
+  if (typeof text !== "string" || !text) return [];
+  const t = text.replace(/\\\//g, "/").replace(/%2F/gi, "/");
+  const out = [];
+  for (const rule of LOCAL_LEAK_RULES) {
+    const n = (t.match(new RegExp(rule.pattern.source, rule.pattern.flags)) || []).length;
+    if (n) out.push({ rule: rule.id, n, why: rule.why });
+  }
+  return out;
+}
+
+/** Parse local-path-allowlist.txt: `file <path> sha256:<hex>  # reason`. A line without a reason is invalid. */
+function loadLocalPathAllowlist(text) {
+  const bySha = new Map();
+  const bad = [];
+  for (const [i, line] of String(text || "").split("\n").entries()) {
+    const l = line.trim();
+    if (!l || l.startsWith("#")) continue;
+    const m = /^file\s+(\S+)\s+sha256:([0-9a-f]{64})\s+#\s*(\S.*)$/.exec(l);
+    if (!m) { bad.push(i + 1); continue; }
+    bySha.set(m[2], { path: m[1], reason: m[3] });
+  }
+  return { bySha, bad };
+}
+
+/** Sources of the 3xx rules in a Cloudflare Pages _redirects file. */
+function redirectSources(text) {
+  const out = [];
+  for (const line of String(text || "").split("\n")) {
+    const parts = line.trim().split(/\s+/);
+    if (parts.length < 2 || parts[0].startsWith("#")) continue;
+    const status = parts[2] || "302";
+    if (/^30[12378]$/.test(status) && !CATALOGUE_PATH.test(parts[1].replace(/^https?:\/\/[^/]+/, ""))) out.push(parts[0]);
+  }
+  return out;
+}
+
+/** True when a built file sits at a URL that a _redirects rule answers before any file is served. */
+function coveredByRedirect(rel, sources) {
+  const url = rel.replace(/\/index\.html$/, "").replace(/\.html$/, "") || "/";
+  return sources.some((src) => (src.endsWith("/*") ? (url + "/").startsWith(src.slice(0, -1)) : src.replace(/\/$/, "") === url));
+}
+
+/** Client routes that render a component (not a Redirect) at a catalogue path. */
+function catalogueRoutes(manifestText) {
+  const out = [];
+  const re = /"path":\s*"([^"]+)",\s*"comp":\s*"([^"]+)"/g;
+  let m;
+  while ((m = re.exec(String(manifestText || ""))) !== null) if (CATALOGUE_PATH.test(m[1]) && m[2] !== "Redirect") out.push(m[1]);
+  return out;
+}
+
+function readTextIf(p) { try { return fs.readFileSync(p, "utf8"); } catch { return ""; } }
 
 /** The distribution catalogues: a confirmed list of package names and the measurement over it. */
 const DISTRIBUTION_CATALOGUE = /^\/interop\/(footprint-packages|distribution-(latest|\d{4}-\d{2}-\d{2}))\.json$/;
@@ -1151,6 +1256,58 @@ if (SELFTEST) {
     // The ledger exemption is per rule, not per page: an escaped codename there still fails.
     if (!caught("/corrections/index.html", "<li>&#83;OVOS</li>", "internal_codenames")) { console.error("✖ selftest: corrections ledger escaped codename now passes"); bad++; }
   }
+  // Local-machine paths and internal catalogue names (2026-11-27). The planted values are built at run time so
+  // that this file never holds a home path itself; the names are invented.
+  {
+    const U = "/Us" + "ers/", H = "/ho" + "me/";
+    const MUST_CATCH_LOCAL = [
+      ["local_home_path", `population: registers in \`${U}zorblat/_drafts/CATALOG.md\` section 1.8`],
+      ["local_home_path", JSON.stringify({ source: `file://${U}zorblat/notes/x.md` })],
+      ["local_home_path", `{"path":"\\/Us` + `ers\\/zorblat\\/out\\/a.json"}`],           // JSON-escaped slashes
+      ["local_home_path", `WROTE ${H}ubuntu/_run-20260928/out/receipt.json`],               // a cloud VM home is still a home
+      ["local_home_path", `see C:\\Us` + `ers\\zorblat\\Desktop\\x.txt`],
+      ["local_home_path", `%2FUs` + `ers%2Fzorblat%2Fx`],
+      ["local_workspace_name", "drafted in " + "workspace" + "_for_ai/clawd"],
+      ["local_workspace_name", "read ~/" + "_alignment/CATALOG-OF-CATALOGS.md"],
+      ["local_workspace_name", "keys live in ~/" + ".csoai/keys"],
+      ["local_workspace_name", "the COSE key in ~/" + ".csoai-keys/cose-interop-1.pem"],
+      ["local_workspace_name", "$HOME/" + "_alignment/x"],
+      ["launchagent_label", "label com." + "csoai.daily-sweep loaded"],
+      ["launchagent_label", "<string>com." + "meok.agent.refresh</string>"],
+    ];
+    for (const [id, text] of MUST_CATCH_LOCAL)
+      if (!localLeakHits(text).some((h) => h.rule === id)) { console.error(`✖ selftest: ${id} no longer catches ${JSON.stringify(text)}`); bad++; }
+    const MUST_PASS_LOCAL = [
+      `checked out at ${H}runner/work/councilof-ai/councilof-ai`,                          // the GitHub Actions runner
+      "final_url https://www.ecb.europa.eu" + H + "html/index.en.html",                       // a third party's URL path
+      "https://example.org" + U + "zorblat/profile",
+      "GET /api/users/{id}/ returns the record; contact csoai.com or meok.ai",
+      "the alignment folder, a .csoai-style key file, csoai.com.example.org",
+      "scripts/privacy/local-path-allowlist.txt and public/interop/file-index.json",
+    ];
+    for (const text of MUST_PASS_LOCAL) {
+      const h = localLeakHits(text);
+      if (h.length) { console.error(`✖ selftest: ${h[0].rule} blocks ${JSON.stringify(text)}`); bad++; }
+    }
+    // The allowlist exempts exact bytes with a reason, nothing else.
+    const okLine = "file public/x.json sha256:" + "ab".repeat(32) + "  # dated record";
+    const a = loadLocalPathAllowlist(["# header", okLine, "file public/y.json sha256:" + "cd".repeat(32), "file public/z.json  # no digest"].join("\n"));
+    if (!a.bySha.has("ab".repeat(32)) || a.bySha.size !== 1 || a.bad.length !== 2) { console.error("✖ selftest: local-path allowlist accepts a line without a digest or a reason"); bad++; }
+    const real = loadLocalPathAllowlist(readTextIf(path.join(REPO, LOCAL_PATH_ALLOWLIST)));
+    if (real.bad.length) { console.error(`✖ selftest: ${LOCAL_PATH_ALLOWLIST} has lines without a digest or reason: ${real.bad.join(", ")}`); bad++; }
+    // Catalogue names in URL paths: caught as a served path, a route, a client route; a pure 308 passes.
+    for (const p of ["/jewels/master-catalogue/index.html", "/crown-jewels/index.html", "/interop/jewel-state.json", "/Crown-Jewels.html"])
+      if (!CATALOGUE_PATH.test(p)) { console.error(`✖ selftest: catalogue path rule misses ${p}`); bad++; }
+    for (const p of ["/interop/jurisdictions.json", "/jobs/index.html", "/journal/2026-11.html"])
+      if (CATALOGUE_PATH.test(p)) { console.error(`✖ selftest: catalogue path rule blocks ${p}`); bad++; }
+    const srcs = redirectSources("/jewels               /          308\n/crown-jewels  /  301\n/old/*  /new/:splat  302\n/x  /jewels  308\n");
+    if (!coveredByRedirect("/jewels/index.html", srcs) || !coveredByRedirect("/crown-jewels.html", srcs)) { console.error("✖ selftest: a retired catalogue URL that only 308s now fails"); bad++; }
+    if (coveredByRedirect("/jewels/master-catalogue/index.html", srcs)) { console.error("✖ selftest: a redirect of /jewels now exempts content served under it"); bad++; }
+    if (srcs.includes("/x")) { console.error("✖ selftest: a redirect INTO a catalogue path counts as a retirement"); bad++; }
+    if (!DIST_NOT_SERVED.test("/functions/_lib/route/types.ts") || DIST_NOT_SERVED.test("/interop/functions-index.json") || DIST_NOT_SERVED.test("/docs/functions/index.html")) { console.error("✖ selftest: the not-served exemption covers more (or less) than the Pages Functions source"); bad++; }
+    const routes = catalogueRoutes('{\n  "path": "/crown-jewels",\n  "comp": "Redirect",\n  "title": "Crown Jewels"\n },\n {\n  "path": "/jewels/master",\n  "comp": "JewelCatalogue"\n }');
+    if (routes.length !== 1 || routes[0] !== "/jewels/master") { console.error(`✖ selftest: client catalogue routes gave ${JSON.stringify(routes)}`); bad++; }
+  }
   if (bad) { console.error(`\u2716 brand-gate selftest FAILED (${bad})`); process.exit(1); }
   const mustAllowCount = Object.values(MUST_ALLOW_TEXT).reduce((n, a) => n + a.length, 0);
   const mustCatchTextCount = Object.values(MUST_CATCH_TEXT).reduce((n, a) => n + a.length, 0);
@@ -1291,8 +1448,54 @@ for (const f of walkAll(FUNCS)) {
   if (/\b30[178]\b/.test(raw) && raw.length < 1200) continue;   // pure redirect stub — allowed
   pathFailures.push(`functions${rel}  [route] internal codename on a content-serving public URL`);
 }
+// LOCAL-MACHINE PATH + CATALOGUE-NAME SWEEP (added 2026-11-27; rules and reasons beside LOCAL_LEAK_RULES).
+const localAllow = loadLocalPathAllowlist(readTextIf(path.join(REPO, LOCAL_PATH_ALLOWLIST)));
+if (localAllow.bad.length) pathFailures.push(`${LOCAL_PATH_ALLOWLIST}:${localAllow.bad.join(",")}  [local-path] allowlist line without a sha256 digest or a reason`);
+const localDebt = [];
+const retired = redirectSources(readTextIf(path.join(DIST, "_redirects")));
+const localScan = (label, file) => {
+  // A single-stream .gz (capsules.jsonl.gz) is served as a download: read its decompressed text. Its allowlist
+  // digest is of the decompressed bytes, as in publication_gate.py. Tar and zip members are read only by
+  // publication_gate.py.
+  const gz = /\.gz$/i.test(file) && !/\.tar\.gz$/i.test(file);
+  if (!LOCAL_SCAN_FILE.test(gz ? file.slice(0, -3) : file)) return;
+  let buf;
+  try { buf = fs.readFileSync(file); if (gz) buf = gunzipSync(buf); } catch { return; }
+  const hits = localLeakHits(buf.toString("utf8"));
+  if (!hits.length) return;
+  const digest = createHash("sha256").update(buf).digest("hex");
+  if (localAllow.bySha.has(digest)) { localDebt.push(label); return; }
+  pathFailures.push(`${label}  [local-path] ${hits.map((h) => `${h.rule} x${h.n}`).join(", ")} (value withheld; CI logs are public) — ${hits[0].why}`);
+};
+for (const f of walkAll(DIST)) {
+  const rel = "/" + path.relative(DIST, f).split(path.sep).join("/");
+  if (CATALOGUE_PATH.test(rel)) {
+    const raw = readTextIf(f);
+    if (!(raw && isRedirectOnly(raw)) && !coveredByRedirect(rel, retired))
+      pathFailures.push(`${rel}  [catalogue-path] internal catalogue name ("jewel") on a public URL that serves content — withdraw it (scripts/withdrawn-from-deploy.json)`);
+  }
+  if (!DIST_NOT_SERVED.test(rel)) localScan(rel, f);
+}
+// client/src/data is compiled into the bundle under assets/, which the walk skips; read the source instead.
+const CLIENT_DATA = path.join(REPO, "client", "src", "data");
+for (const f of walkAll(CLIENT_DATA)) {
+  const rel = path.relative(REPO, f).split(path.sep).join("/");
+  if (NOT_BUNDLED.test(rel)) continue;
+  localScan(rel, f);
+}
+for (const r of catalogueRoutes(readTextIf(path.join(CLIENT_DATA, "route-manifest.ts"))))
+  pathFailures.push(`client/src/data/route-manifest.ts ${r}  [catalogue-path] a client route renders content at an internal catalogue name — make it a Redirect`);
+for (const f of walkAll(FUNCS)) {
+  const rel = "/" + path.relative(FUNCS, f).split(path.sep).join("/").replace(/\.(ts|js)$/, "");
+  if (!CATALOGUE_PATH.test(rel) || NOT_BUNDLED.test(rel)) continue;
+  const raw = readTextIf(f);
+  if (/\b30[178]\b/.test(raw) && raw.length < 1200) continue; // pure redirect stub — allowed
+  pathFailures.push(`functions${rel}  [catalogue-path] internal catalogue name on a content-serving route`);
+}
+if (localDebt.length)
+  console.warn(`⚠ brand-gate: ${localDebt.length} served file(s) still carry a local path under a byte-exact exemption in ${LOCAL_PATH_ALLOWLIST} (published debt: withdraw or re-issue redacted)`);
 if (pathFailures.length) {
-  console.error("✗ brand-gate: internal codename on a public surface (path/JSON sweep)");
+  console.error("✗ brand-gate: internal codename, local-machine path or catalogue name on a public surface (path/JSON sweep)");
   for (const p of pathFailures) console.error("  " + p);
   process.exit(1);
 }
