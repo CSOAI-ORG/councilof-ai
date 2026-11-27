@@ -1,0 +1,92 @@
+name: Council evidence heartbeat (read-only)
+
+# An observer, not a release gate or signing ceremony. Does NOT perform
+# private MEOK probes, payment, model grading or human authorisation.
+on:
+  workflow_dispatch:
+  # Manual verification and PR tests only; canonical scheduled pulse is #4790.
+  pull_request:
+    paths:
+      - "scripts/ops/evidence-heartbeat.py"
+      - "scripts/ops/test_evidence_heartbeat.py"
+      - "scripts/ops/verify_root_readback.py"
+      - "scripts/ops/test_verify_root_readback.py"
+      - ".github/workflows/evidence-heartbeat.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: council-evidence-heartbeat-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned Ed25519 verification dependency
+        run: python -m pip install "cryptography==50.0.2"
+      - name: Run structural and cryptographic negative controls
+        run: |
+          python -m unittest discover -s scripts/ops -p test_evidence_heartbeat.py -v
+          python -m unittest discover -s scripts/ops -p test_verify_root_readback.py -v
+
+  observe:
+    if: github.event_name != 'pull_request'
+    needs: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned Ed25519 verification dependency
+        run: python -m pip install "cryptography==50.0.2"
+      - name: Verify live root and observe public sources, preserving failures
+        run: |
+          set +e
+          python scripts/ops/verify_root_readback.py --out out/cryptographic-root-readback.json --strict
+          CRYPTO_STATUS=$?
+          python scripts/ops/evidence-heartbeat.py --out out/operational-heartbeat.json --crypto-report out/cryptographic-root-readback.json --fail-on-invariant
+          STRUCT_STATUS=$?
+          if test "$CRYPTO_STATUS" -ne 0 || test "$STRUCT_STATUS" -ne 0; then exit 2; fi
+      - name: Record truth-boundary summary
+        if: always()
+        run: |
+          if test -f out/operational-heartbeat.json; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          r=json.load(open("out/operational-heartbeat.json"))
+          print("# Council evidence heartbeat")
+          print("**State:** " + r["rollup"])
+          print("**Observed at:** " + r["generated_at"])
+          print("**Failed invariants:** " + (", ".join(r["failed_invariants"]) or "none observed"))
+          print("**Unknown/open gates:** " + ", ".join(r["open_or_uncheckable_gates"]))
+          print("")
+          print("Separate crypto replay checks publisher DID, root signature and sampled paths, not measurement truth, independent witnessing, authorised execution, regulatory conformity or commercial delivery.")
+          PY
+          fi
+          if test -f out/cryptographic-root-readback.json; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          r=json.load(open("out/cryptographic-root-readback.json"))
+          print("**Root cryptographic replay:** " + r["verdict"])
+          print("**Trust boundary:** publisher-controlled DID; external witness not verified here")
+          PY
+          fi
+      - name: Retain the exact dated observation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: council-evidence-heartbeat-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            out/operational-heartbeat.json
+            out/cryptographic-root-readback.json
+          if-no-files-found: warn
+          retention-days: 30
