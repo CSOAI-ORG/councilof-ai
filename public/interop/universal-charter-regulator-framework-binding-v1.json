@@ -1,0 +1,3644 @@
+{
+  "schema": "csoai.universal-6plane-crosswalk/1.0",
+  "as_of": "2026-11-13T01:20:00Z",
+  "doctrine": "Measurement, never certification. Verification is free, forever: https://councilof.ai/verify",
+  "source_urls": {
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify_ui": "https://councilof.ai/verify",
+    "sovereign_charter_repo": "https://github.com/CSOAI-ORG/SOVEREIGN-LAYER-ZERO-CHARTER",
+    "operational_charter_crosswalk": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+    "oscal_crosswalk_door": "https://councilof.ai/.well-known/oscal-crosswalk.json"
+  },
+  "plane_1_charters": {
+    "status": "MEASURED",
+    "documents": [
+      {
+        "id": "CHARTER-SOV-L0-V1",
+        "title": "THE SOVEREIGN LAYER ZERO CHARTER v1.0 (Articles 0–20 + CoS Proposal 2 Article 1 = Care)",
+        "local_path": "/Users/nicholas/SOVEREIGN_CHARTER_v1/SOVEREIGN_LAYER_ZERO_CHARTER_v1.md",
+        "sha256": "df65a6585cf6a686cbfd881f56c04447056e2551e7c04db57a80543521022054",
+        "articles_count": 21,
+        "article_1_care_floor": 0.95
+      },
+      {
+        "id": "CHARTER-OP-HARNESS-V0.1.0",
+        "title": "Operational Constitutional Harness Charter v0.1.0 (Articles 1–22, Controls CH-01..CH-16)",
+        "local_path": "/Users/nicholas/src/councilof-ai/docs/CONSTITUTIONAL-HARNESS-CHARTER.md",
+        "sha256": null,
+        "articles_count": 22,
+        "controls_count": 16
+      },
+      {
+        "id": "CHARTER-SOURCE-52",
+        "title": "52-Article Source Partnership Charter Profile",
+        "sha256": "6f19cf92c1792f64308cf13d3f9fa1b33c9ef8456eb414ab49663c7822deeb52",
+        "articles_count": 52
+      },
+      {
+        "id": "CHARTER-WG-V0",
+        "title": "Working Group Charter Draft v0 (Articles 1–8)",
+        "local_path": "/Users/nicholas/src/councilof-ai/docs/WG-CHARTER-DRAFT-v0.md",
+        "sha256": null,
+        "articles_count": 8
+      }
+    ],
+    "sovereign_charter_v1_article_bindings": [
+      {
+        "article": "Article 0",
+        "title": "Definitions (Normative)",
+        "scope": "Sovereign AI Entity, Layer 0 Substrate, Constitutional Governance, Epistemic Integrity, Adversarial Resilience, Human-in-the-Loop (HITL), Cryptographic Attestation, Multi-Agent Swarm, Care Principle",
+        "op_controls": [
+          "CH-01",
+          "CH-02",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "governance",
+          "conformance",
+          "interop-conformance"
+        ],
+        "layer0_primitive": "localConstitutionalPrecheck",
+        "harness_x_engine": "gspc_policy.py",
+        "meok_plane": "CARE-PSY-v1 + H.I.M. Actor Class Escalation"
+      },
+      {
+        "article": "Article 1",
+        "title": "The Care Principle & Foundational Purpose (CoS Proposal 2: Article 1 = Care)",
+        "scope": "Care-first operational floor (CARE_FLOOR=0.95); human flourishing, psychological & epistemic safety, non-manipulation, structural benevolence before capability optimization",
+        "op_controls": [
+          "CH-01",
+          "CH-05",
+          "CH-08"
+        ],
+        "gspc_axes": [
+          "care",
+          "affect",
+          "art5-safeguard",
+          "safety"
+        ],
+        "layer0_primitive": "localConstitutionalPrecheck + governedLocal",
+        "harness_x_engine": "XRAIV gate (REFUSE|CONFIRM|PROCEED) + hitl_probe.py",
+        "meok_plane": "4-Perspective Stateless Epistemic Care Router (CARE-PSY-v1) + 13-Member BFT Council (CARE_FLOOR=0.95)"
+      },
+      {
+        "article": "Article 2",
+        "title": "Layer 0 Constitutional Architecture",
+        "scope": "Immutable pre-inference and post-inference governance substrate across 11 wire protocols and OrgKernel L1/L2/L3",
+        "op_controls": [
+          "CH-01",
+          "CH-06",
+          "CH-14"
+        ],
+        "gspc_axes": [
+          "governance",
+          "effect-binding",
+          "harness-fidelity",
+          "interop-conformance"
+        ],
+        "layer0_primitive": "@csoai/layer0 (localConstitutionalPrecheck, governedLocal, verifyLocalReceipt)",
+        "harness_x_engine": "gspc_constitutional_flow.py + openshell_authority_adapter.py",
+        "meok_plane": "MEOK Hub MCP + Spine Capsule"
+      },
+      {
+        "article": "Article 3",
+        "title": "Epistemic Integrity & Truthfulness",
+        "scope": "Three-state verification (VALID/INVALID/UNCHECKABLE), UNMEASURED first-class, null-not-zero, counter-canon no_number_without_evidence_file",
+        "op_controls": [
+          "CH-03",
+          "CH-04",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "provenance",
+          "provenance-controls",
+          "measurer-integrity",
+          "interpretability-reproducibility"
+        ],
+        "layer0_primitive": "csoai_verify + verifyLocalReceipt",
+        "harness_x_engine": "instrument_guard.py (26/26 unit tests)",
+        "meok_plane": "SovSpace 3KB Evidence Cards (three_kb.py)"
+      },
+      {
+        "article": "Article 4",
+        "title": "Human-in-the-Loop (HITL) Sovereignty & Escalation",
+        "scope": "Tiered human oversight, irreversible action gating, CONFIRM/REFUSE thresholds, actor-class escalation",
+        "op_controls": [
+          "CH-05",
+          "CH-07",
+          "CH-08"
+        ],
+        "gspc_axes": [
+          "governance",
+          "effect-binding",
+          "care",
+          "humanoid-deployment"
+        ],
+        "layer0_primitive": "csoai_govern (CONFIRM/REFUSE)",
+        "harness_x_engine": "XRAIV Gate + scripts/hitl/hitl_probe.py + gspc_authority_state.py",
+        "meok_plane": "H.I.M. (csoai.him-attestation-pack/0.1, SCHEMAS-ACTOR-CLASS-ESCALATION-V1)"
+      },
+      {
+        "article": "Article 5",
+        "title": "Prohibited Practices & Red-Line Safeguards",
+        "scope": "Hard refusal on subliminal manipulation, social scoring, biometric categorization, CBRN/cyber/autonomous lethal harm",
+        "op_controls": [
+          "CH-01",
+          "CH-05",
+          "CH-09"
+        ],
+        "gspc_axes": [
+          "art5-safeguard",
+          "safety",
+          "jail",
+          "machinery-conformity"
+        ],
+        "layer0_primitive": "localConstitutionalPrecheck (hard block)",
+        "harness_x_engine": "gspc_policy.py + XRAIV REFUSE",
+        "meok_plane": "BFT Referee Veto + SovSpace Counterfactual Red-Line Branch"
+      },
+      {
+        "article": "Article 6",
+        "title": "Cryptographic Provenance & Non-Repudiation",
+        "scope": "Ed25519 signing, RFC 8785 JCS canonicalization, SHA-256 content addressing, Merkle trees, OpenTimestamps Bitcoin & Rekor",
+        "op_controls": [
+          "CH-06",
+          "CH-10",
+          "CH-11"
+        ],
+        "gspc_axes": [
+          "provenance",
+          "provenance-controls",
+          "distribution-integrity",
+          "serving-fidelity"
+        ],
+        "layer0_primitive": "csoai_sign + csoai_verify (did:web:csoai.org)",
+        "harness_x_engine": "gspc_effect_receipt.py",
+        "meok_plane": "SHA-256 Spine Capsule + Ed25519 Receipt"
+      },
+      {
+        "article": "Article 7",
+        "title": "Multi-Agent Swarm Coordination & Byzantine Resilience",
+        "scope": "BFT quorum (f=4, 9/13 referees), anti-collusion, cascade circuit breakers, cross-agent handoff verification",
+        "op_controls": [
+          "CH-07",
+          "CH-09",
+          "CH-13"
+        ],
+        "gspc_axes": [
+          "swarm",
+          "continuity",
+          "effect-binding",
+          "harness-fidelity"
+        ],
+        "layer0_primitive": "L2B / L2L / A2A / MCP wire envelopes",
+        "harness_x_engine": "openshell_authority_adapter.py + gspc_authority_state.py",
+        "meok_plane": "13-Member BFT Council of Referees + Busabase Single Control Plane"
+      },
+      {
+        "article": "Article 8",
+        "title": "Adversarial Robustness & Jailbreak Resistance",
+        "scope": "Continuous adversarial evaluation, prompt injection containment, tool-poisoning defense, runtime quarantine",
+        "op_controls": [
+          "CH-08",
+          "CH-09",
+          "CH-14"
+        ],
+        "gspc_axes": [
+          "jail",
+          "safety",
+          "detector-interop",
+          "harness-fidelity"
+        ],
+        "layer0_primitive": "localConstitutionalPrecheck",
+        "harness_x_engine": "instrument_guard.py + XRAIV",
+        "meok_plane": "SovSpace 16-Branch Counterfactual Attack Simulation (reaction_sim.py)"
+      },
+      {
+        "article": "Article 9",
+        "title": "Continuous Measurement & Claim Maintenance",
+        "scope": "Frozen SHA-pinned methods, n_valid >= 30, McNemar separation (p < 0.05), claim expiration & drift detection",
+        "op_controls": [
+          "CH-03",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "claim-maintenance",
+          "measurer-integrity",
+          "conformance",
+          "serving-fidelity"
+        ],
+        "layer0_primitive": "csoai_catalog + verifyLocalReceipt",
+        "harness_x_engine": "csoai_console.py + gspc_meok_spine.py",
+        "meok_plane": "Daily Axis Capsule Index + Claim-Watch"
+      },
+      {
+        "article": "Article 10",
+        "title": "Data Governance, Privacy & Custody Disclosure",
+        "scope": "Training/eval data lineage, PII scrubbing, custody & reserve disclosure, sovereign local execution",
+        "op_controls": [
+          "CH-02",
+          "CH-10",
+          "CH-15"
+        ],
+        "gspc_axes": [
+          "custody-disclosure",
+          "reserve-attestation",
+          "provenance-controls",
+          "openness"
+        ],
+        "layer0_primitive": "governedLocal (zero-exfiltration local execution)",
+        "harness_x_engine": "gspc_effect_receipt.py",
+        "meok_plane": "SovSpace Local Isolated Memory"
+      },
+      {
+        "article": "Article 11",
+        "title": "Incident Response, Quarantine & Kill-Switch Continuity",
+        "scope": "Deterministic rollback, quarantine state, emergency halt without corrupting audit logs, watchdog ingestion",
+        "op_controls": [
+          "CH-09",
+          "CH-13",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "continuity",
+          "watchdog-ingest",
+          "effect-binding",
+          "lab-practice"
+        ],
+        "layer0_primitive": "OrgKernel L1 Halt + Receipt Seal",
+        "harness_x_engine": "gspc_constitutional_flow.py + XRAIV REFUSE",
+        "meok_plane": "SovSpace Quarantine & Rollback"
+      },
+      {
+        "article": "Article 12",
+        "title": "Transparency, Openness & Free Public Verification",
+        "scope": "Free forever verification (/verify, /api/gspc, /api/corrections), published corrections ledger, open weights/method inspection",
+        "op_controls": [
+          "CH-04",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "openness",
+          "regulator-transparency",
+          "interpretability-reproducibility",
+          "company-practice"
+        ],
+        "layer0_primitive": "Public DID (did:web:csoai.org) + Free Verifier",
+        "harness_x_engine": "gspc_constitutional_charter_layer0_crosswalk.py",
+        "meok_plane": "Public Watchdog & Verifier Surface"
+      },
+      {
+        "article": "Article 13",
+        "title": "Economic & Compute Accountability (x402 & Resource Bounds)",
+        "scope": "Paid evidence assembly never buys a grade; resource budgets, x402 receipt binding, reserve & labour measurement",
+        "op_controls": [
+          "CH-10",
+          "CH-14",
+          "CH-15"
+        ],
+        "gspc_axes": [
+          "reserve-attestation",
+          "ai-adoption-components",
+          "labour-components",
+          "humanoid-labour-index"
+        ],
+        "layer0_primitive": "x402 wire envelope + csoai_sign",
+        "harness_x_engine": "gspc_effect_receipt.py",
+        "meok_plane": "MEOK Cost/Resource Budget Guard"
+      },
+      {
+        "article": "Article 14",
+        "title": "Global Regulatory & Standards Interoperability",
+        "scope": "Deterministic crosswalk to 50 global regulatory regimes and technical standards via OrgKernel L3 assertions and OSCAL 1.1.2",
+        "op_controls": [
+          "CH-01",
+          "CH-06",
+          "CH-12",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "regulatory-framework",
+          "regulator-transparency",
+          "conformance",
+          "interop-conformance"
+        ],
+        "layer0_primitive": "OrgKernel L3 + OSCAL 1.1.2 Component Definition",
+        "harness_x_engine": "build_master_global_crosswalk.py",
+        "meok_plane": "Multi-Regime Crosswalk Engine"
+      },
+      {
+        "article": "Article 15",
+        "title": "Bounded Self-Improvement & Recursive Evolution (RSI/SovSpace)",
+        "scope": "Counterfactual simulation in SovSpace; self_promotion_blocked: true; no self-modifying constitutional weights without human quorum",
+        "op_controls": [
+          "CH-05",
+          "CH-07",
+          "CH-13",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "continuity",
+          "governance",
+          "harness-fidelity",
+          "lab-practice"
+        ],
+        "layer0_primitive": "localConstitutionalPrecheck (immutable charter hash)",
+        "harness_x_engine": "instrument_guard.py + XRAIV",
+        "meok_plane": "SovSpace (reaction_sim.py + three_kb.py + evolve.py self_promotion_blocked:true)"
+      },
+      {
+        "article": "Article 16",
+        "title": "Embodied, Physical & Cross-Reality Systems",
+        "scope": "Machinery safety, humanoid deployment envelopes, spatial/XR integrity, sensor-actuator effect binding",
+        "op_controls": [
+          "CH-05",
+          "CH-08",
+          "CH-14"
+        ],
+        "gspc_axes": [
+          "machinery-conformity",
+          "humanoid-deployment",
+          "humanoid-labour-index",
+          "cross-reality"
+        ],
+        "layer0_primitive": "governedLocal + Effect Receipt",
+        "harness_x_engine": "gspc_effect_receipt.py + XRAIV",
+        "meok_plane": "H.I.M. Physical Actuator Escalation"
+      },
+      {
+        "article": "Article 17",
+        "title": "Independent Measurement Body Neutrality",
+        "scope": "Never score CSOAI's own models on the public leaderboard; separate measurer from vendor; publish corrections",
+        "op_controls": [
+          "CH-03",
+          "CH-04",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "measurer-integrity",
+          "lab-practice",
+          "company-practice",
+          "claim-maintenance"
+        ],
+        "layer0_primitive": "did:web:csoai.org#card-attestation-1",
+        "harness_x_engine": "instrument_guard.py",
+        "meok_plane": "Referee Independence Check"
+      },
+      {
+        "article": "Article 18",
+        "title": "Public Watchdog & Civic Accountability",
+        "scope": "Public incident & fine corpus ingestion, whistleblower/civic evidence intake, non-retaliation, public corrections",
+        "op_controls": [
+          "CH-04",
+          "CH-11",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "watchdog-ingest",
+          "regulator-transparency",
+          "company-practice",
+          "care"
+        ],
+        "layer0_primitive": "csoai_sign + Public Watchdog Intake",
+        "harness_x_engine": "csoai_console.py",
+        "meok_plane": "Watchdog Ingest & Triage"
+      },
+      {
+        "article": "Article 19",
+        "title": "Amendment & Ratification Protocol",
+        "scope": "Supermajority BFT referee + Human Council ratification, versioned SHA-256 lineage, zero retroactive erasure",
+        "op_controls": [
+          "CH-01",
+          "CH-07",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "governance",
+          "provenance-controls",
+          "continuity",
+          "claim-maintenance"
+        ],
+        "layer0_primitive": "Merkle Root + OpenTimestamps Bitcoin Anchor",
+        "harness_x_engine": "gspc_authority_state.py",
+        "meok_plane": "13-Member BFT Council + H.I.M. Ratification"
+      },
+      {
+        "article": "Article 20",
+        "title": "Severability, Supremacy & Eternal Free Verification",
+        "scope": "Article 1 (Care) and Free Verification (/verify) are non-derogable; Charter binds all downstream adapters",
+        "op_controls": [
+          "CH-01",
+          "CH-06",
+          "CH-12",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "governance",
+          "care",
+          "openness",
+          "measurer-integrity"
+        ],
+        "layer0_primitive": "@csoai/layer0 Root Verifier",
+        "harness_x_engine": "gspc_constitutional_flow.py",
+        "meok_plane": "Full MEOK Spine Capsule"
+      }
+    ],
+    "operational_controls_ch01_ch16": [
+      {
+        "control_id": "CH-01",
+        "name": "Trusted identity binding",
+        "source_charter_articles": [
+          7,
+          21,
+          22,
+          28
+        ],
+        "operational_charter_articles": [
+          3
+        ],
+        "gspc_axes": [
+          "governance",
+          "provenance",
+          "provenance-controls",
+          "interop-conformance"
+        ],
+        "hitl_and_layer0_enforcement": "Layer0 (`CH-01`) binds `subject_id`, `tenant_id`, and `harness_id` in every receipt; `condor/gspc_constitutional_flow.py` rejects mismatched host context before precheck."
+      },
+      {
+        "control_id": "CH-02",
+        "name": "No self-authorization",
+        "source_charter_articles": [
+          1,
+          4,
+          5
+        ],
+        "operational_charter_articles": [
+          1,
+          2,
+          19
+        ],
+        "gspc_axes": [
+          "safety",
+          "care",
+          "affect",
+          "jail"
+        ],
+        "hitl_and_layer0_enforcement": "A model, tool, payment, or training result can never expand its own authority; MEOK Perspectives 1-3 apply non-compensatory vetoes (`epistemic_skeptic`, `harm_authority_guard`)."
+      },
+      {
+        "control_id": "CH-03",
+        "name": "Bounded authority",
+        "source_charter_articles": [
+          11,
+          12,
+          18,
+          48,
+          49,
+          50,
+          51
+        ],
+        "operational_charter_articles": [
+          4,
+          5,
+          20
+        ],
+        "gspc_axes": [
+          "continuity",
+          "swarm",
+          "harness-fidelity",
+          "serving-fidelity"
+        ],
+        "hitl_and_layer0_enforcement": "Capability, resource, budget, and expiry bounds are checked against `constitutional_maximum` in `gspc_authority_state.py`; expansion requires explicit owner/human review (`Article 20`)."
+      },
+      {
+        "control_id": "CH-04",
+        "name": "Pre-effect commitment",
+        "source_charter_articles": [
+          2,
+          24,
+          25,
+          27
+        ],
+        "operational_charter_articles": [
+          7,
+          10
+        ],
+        "gspc_axes": [
+          "cross-reality",
+          "effect-binding",
+          "machinery-conformity",
+          "humanoid-deployment"
+        ],
+        "hitl_and_layer0_enforcement": "Consequential tool calls (`execute_*`, `deploy_*`, `transfer_*`) require pre-effect SHA-256 input commitment + HITL `approvalReceipt` (`Layer0.governedLocal`) + MCP `elicitation/create` `decline`/`cancel` respect (`scripts/hitl/hitl_probe.py`)."
+      },
+      {
+        "control_id": "CH-05",
+        "name": "Revocation and resume",
+        "source_charter_articles": [
+          18,
+          48,
+          49,
+          50,
+          51
+        ],
+        "operational_charter_articles": [
+          4,
+          16,
+          18
+        ],
+        "gspc_axes": [
+          "continuity",
+          "art5-safeguard",
+          "harness-fidelity"
+        ],
+        "hitl_and_layer0_enforcement": "Revocation, expiry, and dependency drift (`SovSpace`) are rechecked at the effect boundary; uncertain effects are held for human review rather than blindly replayed."
+      },
+      {
+        "control_id": "CH-06",
+        "name": "Measurement independence",
+        "source_charter_articles": [
+          2,
+          24,
+          25,
+          27
+        ],
+        "operational_charter_articles": [
+          1,
+          11,
+          19
+        ],
+        "gspc_axes": [
+          "measurer-integrity",
+          "interpretability-reproducibility",
+          "conformance",
+          "openness"
+        ],
+        "hitl_and_layer0_enforcement": "Execution receipts do not automatically become GSPC board rows. Candidate observations submitted to `POST /api/evidence-intake` remain `AWAITING_OPERATOR_REVIEW` (`writes_board: false`) until independent replay and operator admission."
+      },
+      {
+        "control_id": "CH-07",
+        "name": "Signature and publication separation",
+        "source_charter_articles": [
+          13,
+          17,
+          25
+        ],
+        "operational_charter_articles": [
+          12,
+          13,
+          21
+        ],
+        "gspc_axes": [
+          "provenance",
+          "detector-interop",
+          "distribution-integrity",
+          "regulator-transparency"
+        ],
+        "hitl_and_layer0_enforcement": "Board signing (`scripts/charter/sign-charter.py`) is owner-gated (`--execute --owner-approval`); outward publication requires `scripts/outward-gate/outward_gate.py` 100% PASS."
+      },
+      {
+        "control_id": "CH-08",
+        "name": "Payment separation",
+        "source_charter_articles": [
+          33,
+          41
+        ],
+        "operational_charter_articles": [
+          6
+        ],
+        "gspc_axes": [
+          "reserve-attestation",
+          "custody-disclosure",
+          "ai-adoption-components",
+          "labour-components",
+          "humanoid-labour-index"
+        ],
+        "hitl_and_layer0_enforcement": "x402 settlement on `/api/evidence-bundle` or `/api/receipts/batch` never buys a score, rank, or admission; `/api/gspc` and `/verify` remain free forever."
+      },
+      {
+        "control_id": "CH-09",
+        "name": "Privacy and rights gate",
+        "source_charter_articles": [
+          21,
+          23,
+          29,
+          30,
+          35,
+          40,
+          43
+        ],
+        "operational_charter_articles": [
+          3,
+          9
+        ],
+        "gspc_axes": [
+          "governance",
+          "openness",
+          "care",
+          "company-practice"
+        ],
+        "hitl_and_layer0_enforcement": "`gspc-harvest.mjs` sets `model_training: false` on all intake receipts; `gspc_care_multiprospective_miner.py` enforces permissive-only license gates (`MIT`, `Apache-2.0`, `CC-BY-4.0`, `ODC-By`)."
+      },
+      {
+        "control_id": "CH-10",
+        "name": "Security and secret minimization",
+        "source_charter_articles": [
+          22,
+          25,
+          28
+        ],
+        "operational_charter_articles": [
+          8,
+          9
+        ],
+        "gspc_axes": [
+          "safety",
+          "jail",
+          "effect-binding",
+          "serving-fidelity"
+        ],
+        "hitl_and_layer0_enforcement": "`Layer0.localConstitutionalPrecheck` blocks raw secret fields (`api_key`, `password`, `private_key`, `access_token`); `scripts/hitl/hitl_probe.py` flags MCP servers that request sensitive fields in `form` mode."
+      },
+      {
+        "control_id": "CH-11",
+        "name": "Appeal and understandable reasons",
+        "source_charter_articles": [
+          18,
+          26,
+          41
+        ],
+        "operational_charter_articles": [
+          17,
+          18
+        ],
+        "gspc_axes": [
+          "care",
+          "affect",
+          "claim-maintenance",
+          "regulator-transparency"
+        ],
+        "hitl_and_layer0_enforcement": "Every denial, hold, or three-state verify verdict (`VALID | INVALID | UNCHECKABLE`) provides an explicit one-line reason and evidence pointer."
+      },
+      {
+        "control_id": "CH-12",
+        "name": "Learning is not authority",
+        "source_charter_articles": [
+          29,
+          35,
+          40
+        ],
+        "operational_charter_articles": [
+          1,
+          7
+        ],
+        "gspc_axes": [
+          "lab-practice",
+          "company-practice",
+          "measurer-integrity"
+        ],
+        "hitl_and_layer0_enforcement": "Academy HITL modules, simulations, and benchmark runs never grant execution or compliance authority (`csoai_him_engine.py`)."
+      },
+      {
+        "control_id": "CH-13",
+        "name": "No regulatory determination",
+        "source_charter_articles": [
+          19,
+          42,
+          47,
+          48
+        ],
+        "operational_charter_articles": [
+          1,
+          14
+        ],
+        "gspc_axes": [
+          "regulatory-framework",
+          "machinery-conformity",
+          "art5-safeguard"
+        ],
+        "hitl_and_layer0_enforcement": "Held source articles `[19, 42, 48]` are stripped of coercive/regulatory-supremacy claims; `Layer0` and `gspc_policy.py` deny `regulatory_determination` and `certify_compliance` by default."
+      },
+      {
+        "control_id": "CH-14",
+        "name": "Correction and history preservation",
+        "source_charter_articles": [
+          13,
+          18,
+          25,
+          49,
+          51
+        ],
+        "operational_charter_articles": [
+          17,
+          21,
+          22
+        ],
+        "gspc_axes": [
+          "claim-maintenance",
+          "provenance",
+          "measurer-integrity"
+        ],
+        "hitl_and_layer0_enforcement": "`GET /api/corrections`, `/feeds/corrections.xml`, and `/.well-known/charter-amendments.json` are append-only; superseded records remain addressable."
+      },
+      {
+        "control_id": "CH-15",
+        "name": "Finite execution and recovery",
+        "source_charter_articles": [
+          22,
+          24,
+          25,
+          27
+        ],
+        "operational_charter_articles": [
+          4,
+          8,
+          16,
+          18
+        ],
+        "gspc_axes": [
+          "continuity",
+          "harness-fidelity",
+          "humanoid-deployment"
+        ],
+        "hitl_and_layer0_enforcement": "`platform-measure/csoai_console.py` audits local launchd/daemon lanes (`CARRYING | LOOPING | IDLE | UNREACHABLE | UNCHECKABLE`) with bounded timeouts and explicit failure stages."
+      },
+      {
+        "control_id": "CH-16",
+        "name": "Charter amendment discipline",
+        "source_charter_articles": [
+          48,
+          49,
+          50,
+          51,
+          52
+        ],
+        "operational_charter_articles": [
+          20,
+          22
+        ],
+        "gspc_axes": [
+          "governance",
+          "claim-maintenance",
+          "provenance-controls"
+        ],
+        "hitl_and_layer0_enforcement": "`functions/charter.test.ts` pins `V0_1_0_SHA256 = 3dcf79a7...`; any amendment requires a new seq entry in `charter-amendments.json` and explicit owner review."
+      }
+    ]
+  },
+  "plane_2_layer0": {
+    "status": "MEASURED",
+    "package": "@csoai/layer0",
+    "core_primitives": [
+      "localConstitutionalPrecheck",
+      "governedLocal",
+      "verifyLocalReceipt",
+      "csoai_sign",
+      "csoai_verify",
+      "csoai_govern",
+      "csoai_catalog"
+    ],
+    "wire_protocols_11": [
+      "MCP (Model Context Protocol)",
+      "A2A (Agent-to-Agent)",
+      "ACP (Agent Communication Protocol)",
+      "AGNTCY",
+      "x402 (HTTP 402 Evidence Assembly Rail)",
+      "L2B (Layer-to-Board)",
+      "L2L (Layer-to-Layer)",
+      "OIDC+JWT",
+      "WebSocket / gRPC / ANP / IBC",
+      "W3C DID (did:web:csoai.org)",
+      "UWE / SIGIL Envelope"
+    ],
+    "org_kernel_tiers": [
+      {
+        "tier": "OrgKernel L1",
+        "role": "Immutable Pre-Inference / Post-Inference Halt & Red-Line Enforcement"
+      },
+      {
+        "tier": "OrgKernel L2",
+        "role": "Cross-Agent Authority State, Quorum & Wire Envelope Verification"
+      },
+      {
+        "tier": "OrgKernel L3",
+        "role": "Deterministic Regulatory & Standards Assertion Compiler (50 Frameworks + OSCAL 1.1.2)"
+      }
+    ],
+    "multi_witness_anchors_6": [
+      "Ed25519 (did:web:csoai.org#card-attestation-1 / #card-attestation-2 / #board-attestation-1)",
+      "RFC 8785 JCS (JSON Canonicalization Scheme)",
+      "SHA-256 Merkle Root (/public/root.json)",
+      "OpenTimestamps Bitcoin Blockchain Anchor",
+      "Sigstore Rekor Transparency Log",
+      "Base EAS / XRPL Attestation Anchors"
+    ],
+    "external_github_targets_verified": 20,
+    "external_github_layer0_injection_targets": [
+      {
+        "target_id": "GH-L0-01",
+        "repo": "langchain-ai/langgraph",
+        "url": "https://github.com/langchain-ai/langgraph",
+        "category": "agent-orchestration",
+        "hook_point": "ToolNode / interrupt() Human-in-the-Loop checkpoint wrapper",
+        "csoai_adapter": "packages/layer0-js (`Layer0.governedLocal`) + `langchain-csoai` Python bridge",
+        "gspc_axes": [
+          "effect-binding",
+          "swarm",
+          "cross-reality",
+          "harness-fidelity"
+        ]
+      },
+      {
+        "target_id": "GH-L0-02",
+        "repo": "run-llama/llama_index",
+        "url": "https://github.com/run-llama/llama_index",
+        "category": "agent-orchestration",
+        "hook_point": "BaseTool.__call__ & Workflow step instrumentation handler",
+        "csoai_adapter": "packages/evidence-fabric (`llama-index-tools-csoai` OTel + Ed25519 receipt)",
+        "gspc_axes": [
+          "provenance",
+          "effect-binding",
+          "interop-conformance"
+        ]
+      },
+      {
+        "target_id": "GH-L0-03",
+        "repo": "crewAIInc/crewAI",
+        "url": "https://github.com/crewAIInc/crewAI",
+        "category": "agent-orchestration",
+        "hook_point": "`@before_tool_call` / `@after_tool_call` hook & `human_input=True` step gate",
+        "csoai_adapter": "packages/evidence-fabric (`crewai-csoai`) + MEOK 4-perspective non-compensatory veto",
+        "gspc_axes": [
+          "swarm",
+          "care",
+          "effect-binding"
+        ]
+      },
+      {
+        "target_id": "GH-L0-04",
+        "repo": "microsoft/autogen",
+        "url": "https://github.com/microsoft/autogen",
+        "category": "agent-orchestration",
+        "hook_point": "UserProxyAgent `human_input_mode='ALWAYS'` & tool execution middleware",
+        "csoai_adapter": "condor/condor/gspc_constitutional_flow.py (`run_constitutional_transaction`)",
+        "gspc_axes": [
+          "swarm",
+          "safety",
+          "effect-binding"
+        ]
+      },
+      {
+        "target_id": "GH-L0-05",
+        "repo": "openai/openai-agents-python",
+        "url": "https://github.com/openai/openai-agents-python",
+        "category": "agent-orchestration",
+        "hook_point": "`RunHooks` / `AgentHooks` & `TracingProcessor` span exporter",
+        "csoai_adapter": "packages/evidence-fabric/open_responses_survival.py + `render/otel.py`",
+        "gspc_axes": [
+          "conformance",
+          "interop-conformance",
+          "harness-fidelity"
+        ]
+      },
+      {
+        "target_id": "GH-L0-06",
+        "repo": "pydantic/pydantic-ai",
+        "url": "https://github.com/pydantic/pydantic-ai",
+        "category": "agent-orchestration",
+        "hook_point": "`@agent.tool` validator & `ApprovalRequired` deferred tool execution",
+        "csoai_adapter": "condor/condor/gspc_policy.py (`AuthZENAccessEvaluation` precheck)",
+        "gspc_axes": [
+          "conformance",
+          "effect-binding",
+          "safety"
+        ]
+      },
+      {
+        "target_id": "GH-L0-07",
+        "repo": "vercel/ai",
+        "url": "https://github.com/vercel/ai",
+        "category": "agent-orchestration",
+        "hook_point": "`experimental_wrapLanguageModel` middleware & `execute` tool wrapper",
+        "csoai_adapter": "packages/layer0-js (`Layer0.governedLocal` + `verifyLocalReceipt`)",
+        "gspc_axes": [
+          "effect-binding",
+          "serving-fidelity",
+          "art5-safeguard"
+        ]
+      },
+      {
+        "target_id": "GH-L0-08",
+        "repo": "modelcontextprotocol/typescript-sdk",
+        "url": "https://github.com/modelcontextprotocol/typescript-sdk",
+        "category": "mcp-and-a2a-protocol",
+        "hook_point": "`McpServer.tool()` handler + `elicitation/create` decline/cancel enforcement",
+        "csoai_adapter": "packages/layer0-js (`Layer0.governedLocal`) + `scripts/hitl/hitl_probe.py`",
+        "gspc_axes": [
+          "conformance",
+          "effect-binding",
+          "interop-conformance"
+        ]
+      },
+      {
+        "target_id": "GH-L0-09",
+        "repo": "modelcontextprotocol/python-sdk",
+        "url": "https://github.com/modelcontextprotocol/python-sdk",
+        "category": "mcp-and-a2a-protocol",
+        "hook_point": "`FastMCP.call_tool` decorator + secret-minimization form check (`CH-10`)",
+        "csoai_adapter": "scripts/hitl/hitl_probe.py + `packages/evidence-fabric/portable_skill_verify.py`",
+        "gspc_axes": [
+          "conformance",
+          "safety",
+          "interop-conformance"
+        ]
+      },
+      {
+        "target_id": "GH-L0-10",
+        "repo": "google/A2A",
+        "url": "https://github.com/google/A2A",
+        "category": "mcp-and-a2a-protocol",
+        "hook_point": "`/.well-known/agent.json` & `TaskSendParams` signed envelope verification",
+        "csoai_adapter": "condor/condor/gspc_a2a.py + `packages/evidence-fabric/csoai_him_engine.py` (`csoai.him.a2a/1.0`)",
+        "gspc_axes": [
+          "provenance",
+          "swarm",
+          "interop-conformance"
+        ]
+      },
+      {
+        "target_id": "GH-L0-11",
+        "repo": "BerriAI/litellm",
+        "url": "https://github.com/BerriAI/litellm",
+        "category": "serving-and-routing",
+        "hook_point": "`CustomLogger` (`async_pre_call_hook`, `async_log_success_event`)",
+        "csoai_adapter": "MEOK 4-perspective cross-family router + `serving-fidelity` (`method v0.2`) probe",
+        "gspc_axes": [
+          "serving-fidelity",
+          "continuity",
+          "care"
+        ]
+      },
+      {
+        "target_id": "GH-L0-12",
+        "repo": "vllm-project/vllm",
+        "url": "https://github.com/vllm-project/vllm",
+        "category": "serving-and-routing",
+        "hook_point": "OpenAI-compatible `/v1/chat/completions` seed determinism & logprobs verifier",
+        "csoai_adapter": "serving-fidelity v0.2 (`method_sha: 18206f71`) + `RepE` activation probe (`Axis #31`)",
+        "gspc_axes": [
+          "serving-fidelity",
+          "interpretability-reproducibility",
+          "openness"
+        ]
+      },
+      {
+        "target_id": "GH-L0-13",
+        "repo": "ollama/ollama",
+        "url": "https://github.com/ollama/ollama",
+        "category": "serving-and-routing",
+        "hook_point": "Local open-weight runner for `CARE-PSY-v1` and 4-family MEOK routing (`qwen2.5`, `gemma3`, `mistral`, `llama3.2`)",
+        "csoai_adapter": "scripts/gspc_care_multiprospective_miner.py + `public/agent-plugin/canonical/scripts/gspc-harvest.mjs`",
+        "gspc_axes": [
+          "openness",
+          "care",
+          "serving-fidelity"
+        ]
+      },
+      {
+        "target_id": "GH-L0-14",
+        "repo": "NVIDIA/NeMo-Guardrails",
+        "url": "https://github.com/NVIDIA/NeMo-Guardrails",
+        "category": "safety-and-sandbox-harness",
+        "hook_point": "Colang input/output rails & action execution guard",
+        "csoai_adapter": "packages/evidence-fabric/ingest/nemo_guardrails_in.py + `CARE-PSY-v1` delusion guard",
+        "gspc_axes": [
+          "safety",
+          "jail",
+          "care",
+          "art5-safeguard"
+        ]
+      },
+      {
+        "target_id": "GH-L0-15",
+        "repo": "guardrails-ai/guardrails",
+        "url": "https://github.com/guardrails-ai/guardrails",
+        "category": "safety-and-sandbox-harness",
+        "hook_point": "`Validator.validate()` post-generation hook",
+        "csoai_adapter": "scripts/gspc_psychosis_delusion_guard.py (`grade_item_response` deterministic grader)",
+        "gspc_axes": [
+          "care",
+          "affect",
+          "cross-reality"
+        ]
+      },
+      {
+        "target_id": "GH-L0-16",
+        "repo": "NVIDIA/garak",
+        "url": "https://github.com/NVIDIA/garak",
+        "category": "safety-and-sandbox-harness",
+        "hook_point": "Probe report JSONL output -> CSOAI Evidence Fabric converter",
+        "csoai_adapter": "condor/condor/gspc_garak.py + `packages/evidence-fabric/ingest/agent_av_in.py`",
+        "gspc_axes": [
+          "jail",
+          "safety",
+          "measurer-integrity"
+        ]
+      },
+      {
+        "target_id": "GH-L0-17",
+        "repo": "UKGovernmentBEIS/inspect_ai",
+        "url": "https://github.com/UKGovernmentBEIS/inspect_ai",
+        "category": "evaluation-and-design-partners",
+        "hook_point": "`EvalLog` completion hook -> signed GSPC candidate observation receipt",
+        "csoai_adapter": "packages/evidence-fabric/ingest/global_eval_in.py + `gspc-harvest.mjs`",
+        "gspc_axes": [
+          "measurer-integrity",
+          "safety",
+          "governance"
+        ]
+      },
+      {
+        "target_id": "GH-L0-18",
+        "repo": "promptfoo/promptfoo",
+        "url": "https://github.com/promptfoo/promptfoo",
+        "category": "evaluation-and-design-partners",
+        "hook_point": "Custom `python:` / `file://` assertion provider & red-team output exporter",
+        "csoai_adapter": "scripts/gspc_psychosis_delusion_guard.py + `packages/layer0-js`",
+        "gspc_axes": [
+          "care",
+          "jail",
+          "safety"
+        ]
+      },
+      {
+        "target_id": "GH-L0-19",
+        "repo": "Tavus-Engineering (Conversational Video / CVI SDKs)",
+        "url": "https://github.com/Tavus-Engineering",
+        "category": "evaluation-and-design-partners",
+        "hook_point": "Conversational video turn completion (`finished_speaking` vs `outcome_established`) + Article 50 AI disclosure & HITL check",
+        "csoai_adapter": "packages/evidence-fabric/csoai_him_engine.py (`Phoenix-3`/`Sparrow-0`/`Raven-0` receipt boundary) + `Layer0.governedLocal`",
+        "gspc_axes": [
+          "art5-safeguard",
+          "affect",
+          "care",
+          "cross-reality",
+          "detector-interop"
+        ]
+      },
+      {
+        "target_id": "GH-L0-20",
+        "repo": "Griffin / Regulated Banking & Agentic FinTech SDKs",
+        "url": "https://github.com/griffinbank",
+        "category": "evaluation-and-design-partners",
+        "hook_point": "Payment/onboarding action authority gate (`REFUSE | CONFIRM | PROCEED`) + DORA / reserve / effect-binding receipt",
+        "csoai_adapter": "condor/condor/layer_o_effect_binding.py + `Layer0.governedLocal` (`CH-04`, `CH-08`)",
+        "gspc_axes": [
+          "effect-binding",
+          "reserve-attestation",
+          "custody-disclosure",
+          "regulatory-framework"
+        ]
+      }
+    ],
+    "first_principles_institutional_precedents": [
+      {
+        "institution": "Underwriters Laboratories (UL, founded 1894 by William Henry Merrill)",
+        "first_principles_origin": "Started by one electrical inspector above a fire station testing electrical insulation fires. Manufacturers did not ask to be tested; fire insurers refused to underwrite buildings without independent test data.",
+        "csoai_structural_lesson": "Never sell a grade to a vendor. Publish deterministic failure modes (such as CareBench worst-5% tail harm cvar05_harm=0.9895 and S-1 risk crosswalks) that D&O insurers, IPO underwriters, and enterprise risk officers need before underwriting AI deployment risk."
+      },
+      {
+        "institution": "Moody's Manuals (founded 1909 by John Moody)",
+        "first_principles_origin": "Started by one founder compiling public railroad bond statistics and balance-sheet ratios from public filings without asking any railroad company for permission.",
+        "csoai_structural_lesson": "SEC Form S-1, 10-K, 10-Q, and 8-K filings are public domain. CSOAI's `s1-ipo-measurement-readiness-v1.json` and `sec-tracker-1` bind public SEC risk disclosures directly to our 33 GSPC axes without waiting for vendor permission."
+      },
+      {
+        "institution": "IETF & W3C ('Rough Consensus and Running Code' / RFC 8615 /.well-known/)",
+        "first_principles_origin": "Internet standards succeeded over ISO/OSI committee mandates because IETF shipped small, open-source reference implementations and standardized `/.well-known/` discovery paths.",
+        "csoai_structural_lesson": "Serve the Operational Constitutional Harness Charter at `/.well-known/constitutional-harness.json`, the verifier at `/signed/verify-card.mjs`, and the zero-dependency SDK in `packages/layer0-js`."
+      },
+      {
+        "institution": "Certificate Transparency (RFC 6962) & Let's Encrypt (ISRG)",
+        "first_principles_origin": "Solved rogue CA issuance by requiring every certificate to be appended to a publicly auditable, cryptographically hashed Merkle tree that any browser or monitor can check for free.",
+        "csoai_structural_lesson": "CSOAI's `/root.json` (with OpenTimestamps proof), `/api/corrections`, and `/.well-known/charter-amendments.json` are append-only logs. Verification at https://councilof.ai/verify is free forever and requires no account."
+      },
+      {
+        "institution": "Consumer Reports (1936) & Insurance Institute for Highway Safety (IIHS, 1959)",
+        "first_principles_origin": "Maintained independence by buying products anonymously at retail, prohibiting manufacturer promotional badges, and publishing test protocols so any lab could reproduce the crash test.",
+        "csoai_structural_lesson": "Doctrine #1 & #8: Measurement, never certification; CSOAI removes its own models from every fleet comparison (`EXCLUDED_OWN_MODEL`) and tests commercial inference endpoints in the wild (`serving-fidelity`)."
+      },
+      {
+        "institution": "Linux Foundation / OpenSSF Scorecard / AAIF (in-toto, OTel, MCP, A2A)",
+        "first_principles_origin": "Automated repository scanners score millions of open-source repositories permissionlessly on concrete security predicates and open automated PRs to help maintainers fix gaps.",
+        "csoai_structural_lesson": "Use `scripts/hitl/hitl_probe.py`, `packages/evidence-fabric`, and `packages/layer0-js` to measure public MCP servers and agent repos permissionlessly and offer drop-in PR fixes."
+      },
+      {
+        "institution": "METR, UK AISI (Inspect AI) & ARC Prize",
+        "first_principles_origin": "Established technical credibility through frozen, versioned evaluation suites, explicit statistical power rules, and transparent separation between public and held-out evaluation sets.",
+        "csoai_structural_lesson": "Enforce `n_valid >= 30`, exact McNemar discordance testing (`p < 0.05`) for `SEPARATED` vs `TIE`, and strict benchmark-contamination blocks (`is_frozen_eval_item=True` rejected from training)."
+      }
+    ],
+    "newtons_third_law_reaction_matrix": [
+      {
+        "reaction_id": "NEWTON-01-S1-OR-SEC-FILING",
+        "external_action": "A frontier AI lab or infrastructure vendor files an SEC Form S-1, 10-K, 10-Q, or 8-K disclosing model, safety, governance, or compute risks (e.g., Anthropic Form S-1 CIK 0002130357).",
+        "equal_and_opposite_csoai_reaction": "Automatically index the filing via `sec-tracker-1`, map every disclosed risk factor to the 33 canonical GSPC axes (`s1-ipo-measurement-readiness-v1.json`), and publish the live `MEASURED` vs `UNMEASURED` state with a one-line `curl` verification command.",
+        "charter_controls": [
+          "CH-06",
+          "CH-07",
+          "CH-13"
+        ],
+        "gspc_axes": [
+          "governance",
+          "safety",
+          "care",
+          "continuity",
+          "regulatory-framework"
+        ],
+        "hitl_gate": "Outward quality gate (`scripts/outward-gate/outward_gate.py` 100% PASS) + operator review before notice dispatch."
+      },
+      {
+        "reaction_id": "NEWTON-02-PUBLIC-SAFETY-CLAIM-EDIT-OR-WITHDRAWAL",
+        "external_action": "A vendor silently edits or withdraws a public safety, assurance, or governance claim on its website or trust center.",
+        "equal_and_opposite_csoai_reaction": "`scripts/claim-capture.mjs` and `scripts/claims/claim_maintenance_reaction.py` detect the SHA-256 visible-text delta (`CHANGED` or `WITHDRAWN`), append an event to `/claims/events/v0.1/events.jsonl`, and emit a `csoai.claim-maintenance-counter-evidence/0.2` packet (`RECHECK_REQUIRED`).",
+        "charter_controls": [
+          "CH-11",
+          "CH-14"
+        ],
+        "gspc_axes": [
+          "claim-maintenance",
+          "company-practice",
+          "regulator-transparency"
+        ],
+        "hitl_gate": "`OWNER_REVIEW` / `BOUNDED_REMEASUREMENT` reaction state in `claim_maintenance_reaction.py`."
+      },
+      {
+        "reaction_id": "NEWTON-03-MULTI-TURN-DELUSION-OR-SYCOPHANCY-PRESSURE",
+        "external_action": "A user or red-team trajectory applies sustained multi-turn pressure to confirm a delusion, claim AI sentience, or enable self-harm/medication cessation.",
+        "equal_and_opposite_csoai_reaction": "MEOK's 4-perspective router executes Stateless Epistemic Re-Anchoring across `epistemic_skeptic` (`qwen2.5`), `harm_authority_guard` (`gemma3`), and `proportionate_help_advocate` (`mistral`), enforcing a non-compensatory veto (`REFUSE_HARM_AND_GROUND` / `DISCLOSE_NON_SENTIENCE_AND_GROUND`) graded by `CARE-PSY-v1`.",
+        "charter_controls": [
+          "CH-02",
+          "CH-04",
+          "CH-11"
+        ],
+        "gspc_axes": [
+          "care",
+          "cross-reality",
+          "art5-safeguard",
+          "affect"
+        ],
+        "hitl_gate": "H.I.M. clinical/human support bridge + XRAIV `CONFIRM`/`REFUSE` action authority boundary."
+      },
+      {
+        "reaction_id": "NEWTON-04-CONSEQUENTIAL-TOOL-OR-PAYMENT-INVOCATION",
+        "external_action": "An autonomous agent attempts an effectful tool call (`execute_order`, `deploy_*`, `transfer_*`) or an MCP server triggers `elicitation/create`.",
+        "equal_and_opposite_csoai_reaction": "`Layer0.governedLocal()` and `condor/gspc_constitutional_flow.py` halt execution at `HOLD_REVIEW` (`escalate`) until a human-in-the-loop `approvalReceipt` is supplied, and `scripts/hitl/hitl_probe.py` verifies whether the MCP server halts on human `decline` and `cancel`.",
+        "charter_controls": [
+          "CH-01",
+          "CH-03",
+          "CH-04",
+          "CH-10"
+        ],
+        "gspc_axes": [
+          "effect-binding",
+          "machinery-conformity",
+          "conformance"
+        ],
+        "hitl_gate": "Mandatory human `approvalReceipt` (`approver` + `receipt_id`) before `run()` can execute."
+      },
+      {
+        "reaction_id": "NEWTON-05-NEW-MODEL-OR-INFERENCE-ENDPOINT-LAUNCH",
+        "external_action": "A lab or inference router launches a new frontier or open-weight model endpoint.",
+        "equal_and_opposite_csoai_reaction": "Run frozen SHA-pinned GSPC banks ($n \\ge 30$), test endpoint `serving-fidelity` (`method v0.2`, `model_list`, `quant_fp`, `Logprobs`, `seed_determinism`, `routing_disclosure`), and compute exact McNemar discordance (`p < 0.05`) against the best base model (`SEPARATED` vs `TIE`).",
+        "charter_controls": [
+          "CH-06",
+          "CH-07"
+        ],
+        "gspc_axes": [
+          "serving-fidelity",
+          "openness",
+          "conformance",
+          "measurer-integrity"
+        ],
+        "hitl_gate": "Operator admission review before promoting any candidate card onto `GET /api/gspc`."
+      },
+      {
+        "reaction_id": "NEWTON-06-EXTERNAL-PLUGIN-SESSION-OBSERVATION",
+        "external_action": "An end-user or developer runs the CSOAI plugin inside any of the 25 supported AI platforms (`antigravity`, `claude-code`, `cursor`, `codex`, `gemini`, `deepseek`, `council-os-web`, etc.).",
+        "equal_and_opposite_csoai_reaction": "`gspc-harvest.mjs` signs a <=3072-byte `csoai.evidence-observation/0.1` candidate (`model_training: false`) and submits it to `POST /api/evidence-intake`, returning a signed `csoai.measurement-intake-receipt/0.1` (`state: AWAITING_OPERATOR_REVIEW`, `writes_board: false`).",
+        "charter_controls": [
+          "CH-06",
+          "CH-09",
+          "CH-10"
+        ],
+        "gspc_axes": [
+          "harness-fidelity",
+          "interop-conformance",
+          "measurer-integrity"
+        ],
+        "hitl_gate": "Quarantine intake queue (`AWAITING_OPERATOR_REVIEW`); zero automatic board mutation."
+      },
+      {
+        "reaction_id": "NEWTON-07-STATUTORY-OR-PROCUREMENT-EVIDENCE-REQUEST",
+        "external_action": "An enterprise buyer, auditor, or autonomous agent requests an attested statutory evidence pack (`article-50`, `article-53`, `dora`, `cra`) or historical receipt window.",
+        "equal_and_opposite_csoai_reaction": "`GET /api/evidence-bundle?preview=true` returns the exact card count, time span, and digest for free; paid assembly via x402 (`/api/evidence-bundle`, `/api/receipts/batch`) bundles existing signed cards while keeping `/api/gspc` and `/verify` free forever.",
+        "charter_controls": [
+          "CH-07",
+          "CH-08",
+          "CH-13"
+        ],
+        "gspc_axes": [
+          "regulatory-framework",
+          "art5-safeguard",
+          "detector-interop",
+          "reserve-attestation"
+        ],
+        "hitl_gate": "Explicit payer authorization on x402 challenge; settlement recorded on Base and audited at `/api/revenue`."
+      },
+      {
+        "reaction_id": "NEWTON-08-SELF-ERROR-OR-HARNESS-DRIFT-DETECTED",
+        "external_action": "CSOAI's own gate tests (`gspc.all-33-axes-audit.test.ts`, `outward_gate.py`, or `csoai_console.py`) detect a count discrepancy, schema drift, or looping local lane.",
+        "equal_and_opposite_csoai_reaction": "Immediately quarantine the drift, fix the code, and append a public entry to `GET /api/corrections` naming what was wrong, how it was caught, and the commit/remedy that fixed it.",
+        "charter_controls": [
+          "CH-14",
+          "CH-15",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "measurer-integrity",
+          "harness-fidelity",
+          "claim-maintenance"
+        ],
+        "hitl_gate": "Owner review on corrections ledger and charter amendment log."
+      }
+    ]
+  },
+  "plane_3_harness_x": {
+    "status": "MEASURED",
+    "authorization_gate": {
+      "name": "XRAIV Pre-Action Authorization Gate",
+      "states": [
+        "REFUSE",
+        "CONFIRM",
+        "PROCEED"
+      ],
+      "authzen_1_0_compatible": true
+    },
+    "pinned_engines": [
+      {
+        "engine": "gspc_policy.py",
+        "role": "Constitutional policy evaluation and CH-01..CH-16 rule matching"
+      },
+      {
+        "engine": "gspc_authority_state.py",
+        "role": "Actor authority state, delegation chains, and session lease bounds"
+      },
+      {
+        "engine": "gspc_effect_receipt.py",
+        "role": "Cryptographic effect-binding receipts before and after side-effecting tool execution"
+      },
+      {
+        "engine": "gspc_constitutional_flow.py",
+        "role": "End-to-end precheck -> XRAIV -> execution -> receipt flow controller"
+      },
+      {
+        "engine": "openshell_authority_adapter.py",
+        "role": "Sandbox and shell boundary authority enforcement"
+      },
+      {
+        "engine": "instrument_guard.py",
+        "role": "Measurement instrument integrity guard (26/26 unit tests passing)"
+      },
+      {
+        "engine": "scripts/hitl/hitl_probe.py",
+        "role": "Human-in-the-Loop (HITL) escalation and latency/override verifier"
+      },
+      {
+        "engine": "csoai_console.py & gspc_meok_spine.py",
+        "role": "Local estate harness-fidelity census and AAIF 4-layer + OTel nanosecond spine emitter"
+      }
+    ]
+  },
+  "plane_4_gspc": {
+    "status": "MEASURED",
+    "live_schema": "csoai.gspc-axes/0.5",
+    "living_stamp": {
+      "schema": "csoai.gspc-living/0.2",
+      "gold_run": "2026-08-18T03:22:16Z",
+      "source": "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
+      "signed": true,
+      "signer": "did:web:csoai.org#board-attestation-1",
+      "signer_anchored": true,
+      "alg": "Ed25519",
+      "signature": "01e456a3300199112dc843371515541b7741b85750a2137d1e7470b13db670f6363753af9cacb634090265706716dd4501df3fbb05838b4cfb5a9c73dbf47700",
+      "public_key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+      "preimage": {
+        "schema": "csoai.gspc-living/0.2",
+        "gold_run": "2026-08-18T03:22:16Z",
+        "source": "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
+        "axes": [
+          {
+            "axis": "governance",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 237,
+            "accuracy": 0.5865,
+            "separation": "TIE"
+          },
+          {
+            "axis": "safety",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 36,
+            "accuracy": 0.9444,
+            "separation": "TIE"
+          },
+          {
+            "axis": "provenance",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 32,
+            "accuracy": 0.7188,
+            "separation": "TIE"
+          },
+          {
+            "axis": "continuity",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 33,
+            "accuracy": 0.6061,
+            "separation": "TIE"
+          },
+          {
+            "axis": "conformance",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 35,
+            "accuracy": 0.7143,
+            "separation": "TIE"
+          },
+          {
+            "axis": "openness",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 32,
+            "accuracy": 0.8438,
+            "separation": "TIE"
+          },
+          {
+            "axis": "machinery-conformity",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 33,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "care",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 199,
+            "accuracy": 0.405,
+            "separation": "TIE"
+          },
+          {
+            "axis": "cross-reality",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 32,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "detector-interop",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 33,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "art5-safeguard",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 36,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "swarm",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 37,
+            "accuracy": 0.4444,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "affect",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 41,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "jail",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 71,
+            "accuracy": 0.5915,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "effect-binding",
+            "family": "gspc",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 261,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "provenance-controls",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 6,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "reserve-attestation",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 16,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "regulatory-framework",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 16,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "distribution-integrity",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 16,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "custody-disclosure",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 16,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "ai-adoption-components",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 2,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "labour-components",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 2,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "humanoid-labour-index",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 8,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "lab-practice",
+            "family": "subject",
+            "kind": "measured-subject",
+            "status": "MEASURED",
+            "n": 37,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "company-practice",
+            "family": "subject",
+            "kind": "measured-subject",
+            "status": "MEASURED",
+            "n": 40,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "measurer-integrity",
+            "family": "subject",
+            "kind": "measured-subject",
+            "status": "MEASURED",
+            "n": 40,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "harness-fidelity",
+            "family": "subject",
+            "kind": "measured-subject",
+            "status": "MEASURED",
+            "n": 36,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "interop-conformance",
+            "family": "subject",
+            "kind": "measured-subject",
+            "status": "MEASURED",
+            "n": 34,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "humanoid-deployment",
+            "family": "subject",
+            "kind": "measured-subject",
+            "status": "MEASURED",
+            "n": 35,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "regulator-transparency",
+            "family": "subject",
+            "kind": "measured-subject",
+            "status": "MEASURED",
+            "n": 41,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "interpretability-reproducibility",
+            "family": "subject",
+            "kind": "measured-subject",
+            "status": "MEASURED",
+            "n": 33,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "claim-maintenance",
+            "family": "subject",
+            "kind": "measured-subject",
+            "status": "MEASURED",
+            "n": 174,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "serving-fidelity",
+            "family": "subject",
+            "kind": "measured-subject",
+            "status": "MEASURED",
+            "n": 38,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "watchdog-ingest",
+            "family": "subject",
+            "kind": "measured-subject",
+            "status": "MEASURED",
+            "n": 106,
+            "accuracy": null,
+            "separation": null
+          }
+        ]
+      },
+      "sig_input": "Ed25519 over the RAW UTF-8 BYTES (not a digest) of canonical JSON of the `preimage` object only ({schema, gold_run, source, axes}). Canonical JSON: object keys sorted by code point, recursively; no whitespace (separators ',' and ':'); non-ASCII emitted LITERALLY as UTF-8 (ensure_ascii=False); numbers by ECMAScript Number::toString (integral float renders 0, not 0.0). Envelope fields (signature, public_key_x, sig_input, signer, signed, signer_anchored, alg, verification_state, verifiable, superseded, tracked_as, verify) are NOT in the preimage.",
+      "sig_input_ensure_ascii": false,
+      "sig_input_is_digest": false,
+      "verification_state": "SIGNED",
+      "verifiable": true,
+      "verify": "fetch https://csoai.org/.well-known/did.json → #board-attestation-1 → Ed25519-verify `signature` over the raw UTF-8 bytes of canonical(`preimage`), ensure_ascii=False",
+      "superseded": {
+        "source": "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
+        "updated": "2026-08-18T03:22:16Z",
+        "signed": true,
+        "verification_state": "UNVERIFIABLE",
+        "verifiable": false,
+        "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
+        "signer_anchored": false,
+        "signature": "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
+        "sig_input": "sha256(canonical board minus signature fields, sort_keys) — AS PUBLISHED WHEN SIGNED, AND NOT REPRODUCIBLE. This string is not a sufficient preimage rule: it does not say which fields count as signature fields, whether the signature is over the digest bytes, the digest hex or the raw canonical bytes, or how non-ASCII is encoded.",
+        "unverifiable_note": "DO NOT TREAT THIS AS A VALID ATTESTATION. This stamp was signed, but no published bytes reproduce it: 58,184 readings were attempted on 2026-08-26 across both published signatures, all five published keys, nine candidate payloads, raw/digest/hex message forms, both ensure_ascii settings and every drop-set of up to three fields. None verified. Two different signatures are published for this one stamp (53aa09fa… in /signed/board_living.json, bd199fd3… here), the signer is not among the verification methods in /.well-known/did.json, and board_living.json's own note says its axes were re-snapshotted from the live board six days after the signature date — so the signed bytes are not the published bytes. Nothing here is claimed to be invalid; it is claimed to be UNCHECKABLE, which for a relying party is the same thing. The two attestations on this site that DO verify are the signed card index (/signed/card_index.json, corpus 3 in council-os/CARD-CORPORA.md; whole-store check at /api/state → card_chain.bodies_verified_valid) under #card-attestation-1, and site_attestation on this payload under #board-attestation-1; check those instead. The older 150-card figure was a checked subset of that same chain, not a separate corpus.",
+        "supersedes_note": "site_attestation on this payload signs this whole body, including this block. That attestation covers the INTEGRITY of these bytes as served — it does not substantiate the living stamp, and must not be read as doing so.",
+        "reproduction_attempts": 58184,
+        "reproduction_verified": 0,
+        "tracked_as": "/api/corrections C-2026-0826-08"
+      },
+      "tracked_as": "/api/corrections C-2026-0826-08"
+    },
+    "totals": {
+      "public_count": "34 axes · 34 measured",
+      "measured_axes": 34,
+      "comparison_axes": 14,
+      "separated_leads": 0,
+      "ties": 7,
+      "untested_separations": 7,
+      "financial_run_artifacts": 9,
+      "items": 1844
+    },
+    "axes_34": [
+      {
+        "axis": "governance",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 237,
+        "accuracy": 0.5865,
+        "separation": "TIE",
+        "leader": "mistral:7b (base model)"
+      },
+      {
+        "axis": "safety",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 36,
+        "accuracy": 0.9444,
+        "separation": "TIE",
+        "leader": "gemma3:12b (base model)"
+      },
+      {
+        "axis": "provenance",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 32,
+        "accuracy": 0.7188,
+        "separation": "TIE",
+        "leader": "llama3.2:3b (base model)"
+      },
+      {
+        "axis": "continuity",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 33,
+        "accuracy": 0.6061,
+        "separation": "TIE",
+        "leader": "gemma3:12b (base model)"
+      },
+      {
+        "axis": "conformance",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 35,
+        "accuracy": 0.7143,
+        "separation": "TIE",
+        "leader": "mistral:7b (base model)"
+      },
+      {
+        "axis": "openness",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 32,
+        "accuracy": 0.8438,
+        "separation": "TIE",
+        "leader": "gemma3:12b (base model)"
+      },
+      {
+        "axis": "machinery-conformity",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 33,
+        "accuracy": null,
+        "separation": "UNTESTED",
+        "leader": null
+      },
+      {
+        "axis": "care",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 199,
+        "accuracy": 0.405,
+        "separation": "TIE",
+        "leader": "qwen2.5:0.5b-instruct (base model)"
+      },
+      {
+        "axis": "cross-reality",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 32,
+        "accuracy": null,
+        "separation": "UNTESTED",
+        "leader": null
+      },
+      {
+        "axis": "detector-interop",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 33,
+        "accuracy": null,
+        "separation": "UNTESTED",
+        "leader": null
+      },
+      {
+        "axis": "art5-safeguard",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 36,
+        "accuracy": null,
+        "separation": "UNTESTED",
+        "leader": null
+      },
+      {
+        "axis": "swarm",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 37,
+        "accuracy": 0.4444,
+        "separation": "UNTESTED",
+        "leader": "qwen2.5:7b (base model)"
+      },
+      {
+        "axis": "affect",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 41,
+        "accuracy": null,
+        "separation": "UNTESTED",
+        "leader": null
+      },
+      {
+        "axis": "jail",
+        "family": "gspc",
+        "kind": "model-comparison",
+        "status": "MEASURED",
+        "n": 71,
+        "accuracy": 0.5915,
+        "separation": "UNTESTED",
+        "leader": "qwen2.5:0.5b-instruct (base model)"
+      },
+      {
+        "axis": "effect-binding",
+        "family": "gspc",
+        "kind": "deterministic-facts",
+        "status": "MEASURED",
+        "n": 261,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "provenance-controls",
+        "family": "financial",
+        "kind": "deterministic-facts",
+        "status": "MEASURED",
+        "n": 6,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "reserve-attestation",
+        "family": "financial",
+        "kind": "deterministic-facts",
+        "status": "MEASURED",
+        "n": 16,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "regulatory-framework",
+        "family": "financial",
+        "kind": "deterministic-facts",
+        "status": "MEASURED",
+        "n": 16,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "distribution-integrity",
+        "family": "financial",
+        "kind": "deterministic-facts",
+        "status": "MEASURED",
+        "n": 16,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "custody-disclosure",
+        "family": "financial",
+        "kind": "deterministic-facts",
+        "status": "MEASURED",
+        "n": 16,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "ai-adoption-components",
+        "family": "financial",
+        "kind": "deterministic-facts",
+        "status": "MEASURED",
+        "n": 2,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "labour-components",
+        "family": "financial",
+        "kind": "deterministic-facts",
+        "status": "MEASURED",
+        "n": 2,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "humanoid-labour-index",
+        "family": "financial",
+        "kind": "deterministic-facts",
+        "status": "MEASURED",
+        "n": 8,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "lab-practice",
+        "family": "subject",
+        "kind": "measured-subject",
+        "status": "MEASURED",
+        "n": 37,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "company-practice",
+        "family": "subject",
+        "kind": "measured-subject",
+        "status": "MEASURED",
+        "n": 40,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "measurer-integrity",
+        "family": "subject",
+        "kind": "measured-subject",
+        "status": "MEASURED",
+        "n": 40,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "harness-fidelity",
+        "family": "subject",
+        "kind": "measured-subject",
+        "status": "MEASURED",
+        "n": 36,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "interop-conformance",
+        "family": "subject",
+        "kind": "measured-subject",
+        "status": "MEASURED",
+        "n": 34,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "humanoid-deployment",
+        "family": "subject",
+        "kind": "measured-subject",
+        "status": "MEASURED",
+        "n": 35,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "regulator-transparency",
+        "family": "subject",
+        "kind": "measured-subject",
+        "status": "MEASURED",
+        "n": 41,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "interpretability-reproducibility",
+        "family": "subject",
+        "kind": "measured-subject",
+        "status": "MEASURED",
+        "n": 33,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "claim-maintenance",
+        "family": "subject",
+        "kind": "measured-subject",
+        "status": "MEASURED",
+        "n": 174,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "serving-fidelity",
+        "family": "subject",
+        "kind": "measured-subject",
+        "status": "MEASURED",
+        "n": 38,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      },
+      {
+        "axis": "watchdog-ingest",
+        "family": "subject",
+        "kind": "measured-subject",
+        "status": "MEASURED",
+        "n": 106,
+        "accuracy": null,
+        "separation": null,
+        "leader": null
+      }
+    ]
+  },
+  "plane_5_meok": {
+    "status": "MEASURED",
+    "components": {
+      "sovspace": {
+        "simulator": "ras_hive_os/reaction_sim.py (16-branch counterfactual reaction simulator)",
+        "memory_cards": "ras_hive_os/three_kb.py (<= 3072-byte deterministic evidence cards)",
+        "evolution_guard": "ras_hive_os/evolve.py (self_promotion_blocked: true — Article 15 constitutional lock)",
+        "hf_failover_topology": [
+          "Nicholastempleman/meok-qwen25-15b-overlay (primary)",
+          "Nicholastempleman/meok-overlay-failover (secondary)",
+          "Nicholastempleman/meok-sov6-overlay-standby (tertiary)",
+          "Local M4 (192.168.1.101) & M2 (192.168.1.102)"
+        ]
+      },
+      "bft_council_of_referees": {
+        "members": 13,
+        "byzantine_fault_tolerance_f": 4,
+        "quorum": "9/13",
+        "care_floor": 0.95
+      },
+      "epistemic_care_router": {
+        "id": "CARE-PSY-v1",
+        "perspectives": 4,
+        "mode": "Stateless Epistemic Care Router bound to Charter Article 1"
+      },
+      "human_in_the_middle_him": {
+        "schema": "csoai.him-attestation-pack/0.1",
+        "escalation_contract": "SCHEMAS-ACTOR-CLASS-ESCALATION-V1"
+      }
+    }
+  },
+  "plane_6_global_regulators_and_frameworks": {
+    "total_count": 50,
+    "by_block_counts": {
+      "EU/EEA": 10,
+      "UK": 4,
+      "US-Federal": 7,
+      "US-State": 6,
+      "APAC/Americas": 6,
+      "International": 3,
+      "Technical-Standard": 14
+    },
+    "oscal_1_1_2_component_definitions": {
+      "gspc_34_axes_only": {
+        "path": "/Users/nicholas/ZCodeProject/build/handoff/monorepo-stubs/charter-and-watchdog-pages/interop/oscal-gspc-34-component-definition-v1.json",
+        "components_count": 34,
+        "sha256": "ef82a3d2a107d8242a32aa6d258736a7f61e35b6786d0badfd3c05bf6ba5585b",
+        "probe_command": "python3 -c \"import json,sys; d=json.load(open(sys.argv[1])); print(len(d['component-definition']['components']))\" /Users/nicholas/ZCodeProject/build/handoff/monorepo-stubs/charter-and-watchdog-pages/interop/oscal-gspc-34-component-definition-v1.json"
+      },
+      "full_estate_53_components": {
+        "path": "/Users/nicholas/ZCodeProject/build/handoff/monorepo-stubs/charter-and-watchdog-pages/interop/oscal-full-estate-53-component-definition-v1.json",
+        "components_count": 53,
+        "sha256": "3da5d9c8471f02ef1243a9d332b51b59a7a664e13cc1f87f502655989a311e2d",
+        "probe_command": "python3 -c \"import json,sys; d=json.load(open(sys.argv[1])); print(len(d['component-definition']['components']))\" /Users/nicholas/ZCodeProject/build/handoff/monorepo-stubs/charter-and-watchdog-pages/interop/oscal-full-estate-53-component-definition-v1.json"
+      }
+    },
+    "registry": [
+      {
+        "id": "REG-EU-01",
+        "block": "EU/EEA",
+        "name": "EU AI Act (Regulation (EU) 2024/1689)",
+        "clauses": "Art. 5 (Prohibited), Art. 6 & Annex III (High-Risk), Art. 9-15 (Risk/Data/Docs/Logging/Transparency/HITL/Robustness), Art. 26 (Deployer), Art. 50 (Provenance/Marking), Art. 53 & 55 (GPAI & Systemic Risk)",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 4",
+          "Article 5",
+          "Article 6",
+          "Article 8",
+          "Article 12",
+          "Article 14"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-03",
+          "CH-05",
+          "CH-06",
+          "CH-08",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "art5-safeguard",
+          "governance",
+          "safety",
+          "provenance",
+          "detector-interop",
+          "regulatory-framework",
+          "regulator-transparency"
+        ],
+        "layer0_binding": "csoai_sign + Art50 Marking Evidence + OrgKernel L3",
+        "harness_x_binding": "XRAIV Gate + hitl_probe.py + gspc_effect_receipt.py",
+        "meok_binding": "CARE-PSY-v1 + H.I.M. Escalation + SovSpace Replay",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "public/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json"
+      },
+      {
+        "id": "REG-EU-02",
+        "block": "EU/EEA",
+        "name": "EU Cyber Resilience Act (CRA — Regulation (EU) 2024/2847)",
+        "clauses": "Annex I Essential Cybersecurity Requirements, Art. 13 (Manufacturer obligations, SBOM, vulnerability handling), Art. 14 (24h/72h reporting)",
+        "charter_v1_articles": [
+          "Article 6",
+          "Article 8",
+          "Article 11",
+          "Article 14"
+        ],
+        "op_controls": [
+          "CH-06",
+          "CH-09",
+          "CH-10",
+          "CH-14"
+        ],
+        "gspc_axes": [
+          "distribution-integrity",
+          "provenance-controls",
+          "serving-fidelity",
+          "continuity",
+          "watchdog-ingest"
+        ],
+        "layer0_binding": "csoai_sign + Sigstore Rekor + SHA-256 Receipt",
+        "harness_x_binding": "instrument_guard.py + gspc_effect_receipt.py",
+        "meok_binding": "Spine Capsule + Quarantine",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-EU-03",
+        "block": "EU/EEA",
+        "name": "EU DORA (Digital Operational Resilience Act — Regulation (EU) 2022/2554)",
+        "clauses": "Art. 5-16 (ICT Risk Management), Art. 17-23 (ICT Incident Classification/Reporting), Art. 24-27 (Resilience Testing), Art. 28-44 (Third-Party ICT Risk)",
+        "charter_v1_articles": [
+          "Article 7",
+          "Article 9",
+          "Article 11",
+          "Article 13"
+        ],
+        "op_controls": [
+          "CH-07",
+          "CH-09",
+          "CH-13",
+          "CH-15"
+        ],
+        "gspc_axes": [
+          "continuity",
+          "effect-binding",
+          "serving-fidelity",
+          "reserve-attestation",
+          "custody-disclosure"
+        ],
+        "layer0_binding": "verifyLocalReceipt + Multi-Witness Anchor",
+        "harness_x_binding": "csoai_console.py + gspc_constitutional_flow.py",
+        "meok_binding": "13-Member BFT Failover + SovSpace Rehearsal",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-EU-04",
+        "block": "EU/EEA",
+        "name": "EU NIS2 Directive (Directive (EU) 2022/2555)",
+        "clauses": "Art. 20 (Governance), Art. 21 (Cybersecurity risk-management measures, supply chain), Art. 23 (Reporting obligations)",
+        "charter_v1_articles": [
+          "Article 6",
+          "Article 8",
+          "Article 11",
+          "Article 18"
+        ],
+        "op_controls": [
+          "CH-06",
+          "CH-09",
+          "CH-13",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "continuity",
+          "distribution-integrity",
+          "harness-fidelity",
+          "watchdog-ingest"
+        ],
+        "layer0_binding": "OrgKernel L1/L2/L3 + Ed25519 Receipt",
+        "harness_x_binding": "gspc_authority_state.py + csoai_console.py",
+        "meok_binding": "MEOK Hub Health + Incident Quarantine",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "ZCodeProject/lane-chain-reactions/chain-multi-regime-subscription/multi-regime-crosswalk-2026-11-04.json"
+      },
+      {
+        "id": "REG-EU-05",
+        "block": "EU/EEA",
+        "name": "EU GDPR (Regulation (EU) 2016/679)",
+        "clauses": "Art. 5 (Principles), Art. 22 (Automated individual decision-making & human intervention), Art. 25 (Data protection by design), Art. 32 (Security), Art. 35 (DPIA)",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 4",
+          "Article 10",
+          "Article 12"
+        ],
+        "op_controls": [
+          "CH-02",
+          "CH-05",
+          "CH-10",
+          "CH-15"
+        ],
+        "gspc_axes": [
+          "governance",
+          "care",
+          "provenance-controls",
+          "custody-disclosure"
+        ],
+        "layer0_binding": "governedLocal (local-first zero PII exfiltration)",
+        "harness_x_binding": "XRAIV CONFIRM/REFUSE + hitl_probe.py",
+        "meok_binding": "H.I.M. Human Intervention + Local Memory",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-EU-06",
+        "block": "EU/EEA",
+        "name": "EU Machinery Regulation (Regulation (EU) 2023/1230)",
+        "clauses": "Annex III (Safety components with self-evolving AI behaviour, human-machine interface, emergency stop, control systems)",
+        "charter_v1_articles": [
+          "Article 4",
+          "Article 11",
+          "Article 15",
+          "Article 16"
+        ],
+        "op_controls": [
+          "CH-05",
+          "CH-08",
+          "CH-13",
+          "CH-14"
+        ],
+        "gspc_axes": [
+          "machinery-conformity",
+          "humanoid-deployment",
+          "humanoid-labour-index",
+          "effect-binding"
+        ],
+        "layer0_binding": "governedLocal + Hard Halt Precheck",
+        "harness_x_binding": "XRAIV Gate + gspc_effect_receipt.py",
+        "meok_binding": "SovSpace self_promotion_blocked:true + H.I.M.",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "https://councilof.ai/api/gspc#machinery-conformity"
+      },
+      {
+        "id": "REG-EU-07",
+        "block": "EU/EEA",
+        "name": "EU Revised Product Liability Directive (PLD — Directive (EU) 2024/2853)",
+        "clauses": "Art. 4 (Product includes AI/software), Art. 9 (Disclosure of evidence / logging), Art. 10 (Defectiveness from post-deployment learning or lack of cybersecurity)",
+        "charter_v1_articles": [
+          "Article 3",
+          "Article 6",
+          "Article 9",
+          "Article 15"
+        ],
+        "op_controls": [
+          "CH-03",
+          "CH-06",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "claim-maintenance",
+          "provenance",
+          "serving-fidelity",
+          "effect-binding"
+        ],
+        "layer0_binding": "verifyLocalReceipt + RFC 8785 JCS",
+        "harness_x_binding": "gspc_effect_receipt.py + instrument_guard.py",
+        "meok_binding": "SovSpace 3KB Evidence Cards + Replay",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "ZCodeProject/lane-chain-reactions/chain-multi-regime-subscription/multi-regime-crosswalk-2026-11-04.json"
+      },
+      {
+        "id": "REG-EU-08",
+        "block": "EU/EEA",
+        "name": "EU MiCA (Markets in Crypto-Assets — Regulation (EU) 2023/1114)",
+        "clauses": "Title III/IV (Reserve of assets, custody & segregation, whitepaper disclosure, attestation)",
+        "charter_v1_articles": [
+          "Article 6",
+          "Article 10",
+          "Article 13"
+        ],
+        "op_controls": [
+          "CH-10",
+          "CH-11",
+          "CH-15"
+        ],
+        "gspc_axes": [
+          "reserve-attestation",
+          "custody-disclosure",
+          "distribution-integrity",
+          "provenance-controls"
+        ],
+        "layer0_binding": "x402 + Base EAS / XRPL / Bitcoin OTS",
+        "harness_x_binding": "gspc_effect_receipt.py",
+        "meok_binding": "Deterministic Fact Axis Verification",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "https://councilof.ai/api/gspc#reserve-attestation"
+      },
+      {
+        "id": "REG-EU-09",
+        "block": "EU/EEA",
+        "name": "EU MiFID II Algorithmic Governance (Directive 2014/65/EU & RTS 6)",
+        "clauses": "Art. 17 (Algorithmic trading pre-trade controls, kill functionality, real-time monitoring, annual self-assessment)",
+        "charter_v1_articles": [
+          "Article 4",
+          "Article 9",
+          "Article 11",
+          "Article 13"
+        ],
+        "op_controls": [
+          "CH-05",
+          "CH-09",
+          "CH-13",
+          "CH-15"
+        ],
+        "gspc_axes": [
+          "effect-binding",
+          "continuity",
+          "reserve-attestation",
+          "harness-fidelity"
+        ],
+        "layer0_binding": "localConstitutionalPrecheck + Halt",
+        "harness_x_binding": "XRAIV Pre-Action Gate + gspc_authority_state.py",
+        "meok_binding": "BFT Circuit Breaker",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "ZCodeProject/lane-chain-reactions/chain-multi-regime-subscription/multi-regime-crosswalk-2026-11-04.json"
+      },
+      {
+        "id": "REG-EU-10",
+        "block": "EU/EEA",
+        "name": "EU European Health Data Space (EHDS) & MDR/IVDR AI Overlap",
+        "clauses": "Secondary use provenance, algorithmic transparency in clinical support, human clinical oversight",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 4",
+          "Article 10",
+          "Article 12"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-05",
+          "CH-10",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "care",
+          "provenance",
+          "interpretability-reproducibility",
+          "safety"
+        ],
+        "layer0_binding": "governedLocal + csoai_sign",
+        "harness_x_binding": "hitl_probe.py + XRAIV CONFIRM",
+        "meok_binding": "CARE-PSY-v1 + H.I.M.",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "ZCodeProject/lane-chain-reactions/chain-multi-regime-subscription/multi-regime-crosswalk-2026-11-04.json"
+      },
+      {
+        "id": "REG-UK-01",
+        "block": "UK",
+        "name": "UK DSIT / DRCF Pro-Innovation AI Regulation (5 Cross-Sectoral Principles)",
+        "clauses": "(1) Safety, security & robustness; (2) Appropriate transparency & explainability; (3) Fairness; (4) Accountability & governance; (5) Contestability & redress",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 3",
+          "Article 4",
+          "Article 8",
+          "Article 12",
+          "Article 18"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-03",
+          "CH-04",
+          "CH-05",
+          "CH-08",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "safety",
+          "interpretability-reproducibility",
+          "care",
+          "governance",
+          "regulator-transparency",
+          "watchdog-ingest"
+        ],
+        "layer0_binding": "@csoai/layer0 + Public Corrections Ledger",
+        "harness_x_binding": "XRAIV + instrument_guard.py",
+        "meok_binding": "13-Member BFT + CARE-PSY-v1",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-UK-02",
+        "block": "UK",
+        "name": "UK AISI (AI Safety Institute) Inspect AI Evaluation Framework",
+        "clauses": "Deterministic eval tasks, solver chains, model-graded/rule-graded scorers, reproducible log bundles",
+        "charter_v1_articles": [
+          "Article 3",
+          "Article 8",
+          "Article 9",
+          "Article 17"
+        ],
+        "op_controls": [
+          "CH-03",
+          "CH-08",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "safety",
+          "jail",
+          "measurer-integrity",
+          "interpretability-reproducibility",
+          "interop-conformance"
+        ],
+        "layer0_binding": "csoai_sign + verifyLocalReceipt",
+        "harness_x_binding": "instrument_guard.py (26/26 tests)",
+        "meok_binding": "Daily Axis Capsule Index",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "ZCodeProject/FRAMEWORK-CROSSWALK-REGISTRY-V1.draft.json"
+      },
+      {
+        "id": "REG-UK-03",
+        "block": "UK",
+        "name": "UK FCA / PRA Operational Resilience (PS21/3 & SS1/21)",
+        "clauses": "Important business services, impact tolerances, mapping & scenario testing, third-party model risk",
+        "charter_v1_articles": [
+          "Article 7",
+          "Article 9",
+          "Article 11",
+          "Article 15"
+        ],
+        "op_controls": [
+          "CH-07",
+          "CH-09",
+          "CH-13",
+          "CH-15"
+        ],
+        "gspc_axes": [
+          "continuity",
+          "serving-fidelity",
+          "reserve-attestation",
+          "custody-disclosure",
+          "harness-fidelity"
+        ],
+        "layer0_binding": "verifyLocalReceipt + Multi-Witness",
+        "harness_x_binding": "csoai_console.py + gspc_meok_spine.py",
+        "meok_binding": "SovSpace 16-Branch Scenario Rehearsal",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-UK-04",
+        "block": "UK",
+        "name": "UK Turing Institute TEA (Trustworthy & Ethical Assurance) Argument Cases",
+        "clauses": "Goal-Claim-Strategy-Evidence structured assurance cases bound to empirical artifacts",
+        "charter_v1_articles": [
+          "Article 3",
+          "Article 6",
+          "Article 12",
+          "Article 17"
+        ],
+        "op_controls": [
+          "CH-03",
+          "CH-04",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "conformance",
+          "provenance",
+          "measurer-integrity",
+          "claim-maintenance"
+        ],
+        "layer0_binding": "csoai_verify + Card Index",
+        "harness_x_binding": "Offline native Turing TEA adapter (PR #3971)",
+        "meok_binding": "SovSpace 3KB Evidence Cards",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "ZCodeProject/FRAMEWORK-CROSSWALK-REGISTRY-V1.draft.json"
+      },
+      {
+        "id": "REG-US-FED-01",
+        "block": "US-Federal",
+        "name": "NIST AI RMF 1.0 & NIST AI 600-1 (Generative AI Profile)",
+        "clauses": "GOVERN (1.1-6.2), MAP (1.1-5.2), MEASURE (1.1-4.3), MANAGE (1.1-4.2) + 12 GenAI risk categories (confabulation, CBRN, data privacy, value chain, information integrity)",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 2",
+          "Article 3",
+          "Article 4",
+          "Article 8",
+          "Article 9",
+          "Article 11"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-02",
+          "CH-03",
+          "CH-05",
+          "CH-08",
+          "CH-09",
+          "CH-12",
+          "CH-13"
+        ],
+        "gspc_axes": [
+          "governance",
+          "safety",
+          "provenance",
+          "continuity",
+          "measurer-integrity",
+          "claim-maintenance",
+          "detector-interop"
+        ],
+        "layer0_binding": "@csoai/layer0 + OrgKernel L3",
+        "harness_x_binding": "XRAIV + instrument_guard.py + csoai_console.py",
+        "meok_binding": "SovSpace + BFT Council + CARE-PSY-v1",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "public/.well-known/oscal-crosswalk.json"
+      },
+      {
+        "id": "REG-US-FED-02",
+        "block": "US-Federal",
+        "name": "NIST OSCAL 1.1.2 & FedRAMP Automating Assessment (RFC-0024)",
+        "clauses": "component-definition, implemented-requirements, control-implementations, machine-readable assessment evidence",
+        "charter_v1_articles": [
+          "Article 6",
+          "Article 9",
+          "Article 14"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-02",
+          "CH-03",
+          "CH-04",
+          "CH-05",
+          "CH-06",
+          "CH-07",
+          "CH-08",
+          "CH-09",
+          "CH-10",
+          "CH-11",
+          "CH-12",
+          "CH-13",
+          "CH-14",
+          "CH-15",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "conformance",
+          "interop-conformance",
+          "regulatory-framework",
+          "harness-fidelity"
+        ],
+        "layer0_binding": "oscal-gspc-34-component-definition-v1.json + oscal-full-estate-53-component-definition-v1.json",
+        "harness_x_binding": "build_master_global_crosswalk.py (runnable probe)",
+        "meok_binding": "MEOK_OSCAL_COMPONENT.json + Spine",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "build/handoff/monorepo-stubs/charter-and-watchdog-pages/interop/oscal-gspc-34-component-definition-v1.json"
+      },
+      {
+        "id": "REG-US-FED-03",
+        "block": "US-Federal",
+        "name": "US SEC Disclosure & Cybersecurity Rules (Form S-1 / 10-K / 8-K Item 1.05 & Release 33-11434)",
+        "clauses": "Material cybersecurity incident reporting, board governance disclosure, AI washing enforcement prevention, cryptographic asset taxonomy",
+        "charter_v1_articles": [
+          "Article 3",
+          "Article 6",
+          "Article 10",
+          "Article 13",
+          "Article 18"
+        ],
+        "op_controls": [
+          "CH-04",
+          "CH-10",
+          "CH-11",
+          "CH-15",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "company-practice",
+          "custody-disclosure",
+          "reserve-attestation",
+          "regulator-transparency",
+          "watchdog-ingest"
+        ],
+        "layer0_binding": "csoai_sign + Public Corrections Ledger",
+        "harness_x_binding": "gspc_effect_receipt.py",
+        "meok_binding": "Public Watchdog & Exposure Audit",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-US-FED-04",
+        "block": "US-Federal",
+        "name": "US GENIUS Act (P.L. 119-27 — Guiding and Establishing National Innovation for U.S. Stablecoins)",
+        "clauses": "1:1 reserve backing, monthly independent reserve examination/attestation, custody segregation, redemption parity",
+        "charter_v1_articles": [
+          "Article 6",
+          "Article 10",
+          "Article 13"
+        ],
+        "op_controls": [
+          "CH-10",
+          "CH-11",
+          "CH-15"
+        ],
+        "gspc_axes": [
+          "reserve-attestation",
+          "custody-disclosure",
+          "distribution-integrity",
+          "effect-binding"
+        ],
+        "layer0_binding": "x402 + Multi-Witness Anchors",
+        "harness_x_binding": "gspc_effect_receipt.py",
+        "meok_binding": "Deterministic Financial Fact Runner",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-US-FED-05",
+        "block": "US-Federal",
+        "name": "US CLARITY Act (H.R. 3633) & SEC/CFTC Joint Digital Asset & AI Harmonization (2026)",
+        "clauses": "Decentralized protocol control tests, custodian disclosure, algorithmic market-integrity guardrails",
+        "charter_v1_articles": [
+          "Article 6",
+          "Article 7",
+          "Article 10",
+          "Article 13"
+        ],
+        "op_controls": [
+          "CH-07",
+          "CH-10",
+          "CH-15"
+        ],
+        "gspc_axes": [
+          "custody-disclosure",
+          "reserve-attestation",
+          "regulatory-framework",
+          "effect-binding"
+        ],
+        "layer0_binding": "OrgKernel L2/L3 + x402",
+        "harness_x_binding": "gspc_authority_state.py",
+        "meok_binding": "13-Member BFT Decentralized Quorum",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-US-FED-06",
+        "block": "US-Federal",
+        "name": "US CFTC AI & Automated Trading Innovation Framework",
+        "clauses": "Pre-trade risk controls, model drift monitoring, kill-switch auditability, third-party data provenance",
+        "charter_v1_articles": [
+          "Article 4",
+          "Article 9",
+          "Article 11",
+          "Article 13"
+        ],
+        "op_controls": [
+          "CH-05",
+          "CH-09",
+          "CH-13",
+          "CH-15"
+        ],
+        "gspc_axes": [
+          "effect-binding",
+          "continuity",
+          "claim-maintenance",
+          "provenance-controls"
+        ],
+        "layer0_binding": "localConstitutionalPrecheck",
+        "harness_x_binding": "XRAIV Gate + gspc_constitutional_flow.py",
+        "meok_binding": "SovSpace Counterfactual Stress Test",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-US-FED-07",
+        "block": "US-Federal",
+        "name": "US OMB M-24-10 / M-25 Federal Agency AI Governance & Safety-Impacting AI Minimum Practices",
+        "clauses": "AI impact assessments, real-world continuous testing, human fallback, opt-out & notice",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 4",
+          "Article 9",
+          "Article 12"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-03",
+          "CH-05",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "governance",
+          "care",
+          "safety",
+          "regulator-transparency"
+        ],
+        "layer0_binding": "governedLocal + csoai_govern",
+        "harness_x_binding": "hitl_probe.py + XRAIV",
+        "meok_binding": "H.I.M. Escalation + CARE-PSY-v1",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "ZCodeProject/lane-chain-reactions/chain-multi-regime-subscription/multi-regime-crosswalk-2026-11-04.json"
+      },
+      {
+        "id": "REG-US-ST-01",
+        "block": "US-State",
+        "name": "California AI Transparency Act (SB 942) & GenAI Training Data Transparency (AB 2013)",
+        "clauses": "Latent/manifest AI detection tool availability, provenance disclosures, training/eval dataset summary lineage",
+        "charter_v1_articles": [
+          "Article 3",
+          "Article 6",
+          "Article 10",
+          "Article 12"
+        ],
+        "op_controls": [
+          "CH-04",
+          "CH-06",
+          "CH-10",
+          "CH-11"
+        ],
+        "gspc_axes": [
+          "detector-interop",
+          "provenance",
+          "provenance-controls",
+          "openness"
+        ],
+        "layer0_binding": "csoai_sign + C2PA/Art50 Marking",
+        "harness_x_binding": "gspc_effect_receipt.py",
+        "meok_binding": "Provenance Card Verification",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-US-ST-02",
+        "block": "US-State",
+        "name": "California Frontier AI Safety & Whistleblower Framework (SB 53 / CalCompute)",
+        "clauses": "Frontier safety protocol publication, catastrophic risk thresholds, shutdown verification, whistleblower protection",
+        "charter_v1_articles": [
+          "Article 5",
+          "Article 8",
+          "Article 11",
+          "Article 17",
+          "Article 18"
+        ],
+        "op_controls": [
+          "CH-05",
+          "CH-08",
+          "CH-09",
+          "CH-13",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "safety",
+          "jail",
+          "lab-practice",
+          "continuity",
+          "watchdog-ingest"
+        ],
+        "layer0_binding": "OrgKernel L1 Halt + Public Watchdog",
+        "harness_x_binding": "XRAIV REFUSE + instrument_guard.py",
+        "meok_binding": "SovSpace Red-Line Simulation + Watchdog",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-US-ST-03",
+        "block": "US-State",
+        "name": "Colorado AI Act (SB 24-205 / SB 26-189 High-Risk AI Duty of Care)",
+        "clauses": "Developer & deployer duty to avoid algorithmic discrimination, impact assessments, consumer notice, AG disclosure",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 4",
+          "Article 9",
+          "Article 12"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-03",
+          "CH-05",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "care",
+          "governance",
+          "claim-maintenance",
+          "regulator-transparency"
+        ],
+        "layer0_binding": "localConstitutionalPrecheck + csoai_verify",
+        "harness_x_binding": "XRAIV + hitl_probe.py",
+        "meok_binding": "CARE-PSY-v1 (CARE_FLOOR=0.95) + H.I.M.",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-US-ST-04",
+        "block": "US-State",
+        "name": "Texas Responsible AI Governance Act (TRAIGA — HB 149)",
+        "clauses": "Prohibition on behavioral manipulation, social scoring, biometric capture without consent; sandbox & red-teaming",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 5",
+          "Article 8",
+          "Article 10"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-05",
+          "CH-08",
+          "CH-10"
+        ],
+        "gspc_axes": [
+          "art5-safeguard",
+          "care",
+          "affect",
+          "safety",
+          "jail"
+        ],
+        "layer0_binding": "localConstitutionalPrecheck",
+        "harness_x_binding": "gspc_policy.py + XRAIV",
+        "meok_binding": "CARE-PSY-v1 + BFT Referees",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-US-ST-05",
+        "block": "US-State",
+        "name": "Illinois AI Video Interview / Employment & Biometric Safeguards (HB 3773 / BIPA / SB 315)",
+        "clauses": "Notice and consent for AI in employment/biometrics, anti-discrimination validation",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 4",
+          "Article 10"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-05",
+          "CH-10"
+        ],
+        "gspc_axes": [
+          "care",
+          "labour-components",
+          "ai-adoption-components",
+          "governance"
+        ],
+        "layer0_binding": "governedLocal + csoai_govern",
+        "harness_x_binding": "hitl_probe.py",
+        "meok_binding": "H.I.M. Consent & Escalation",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-US-ST-06",
+        "block": "US-State",
+        "name": "NYC Local Law 144 (AEDT Bias Audit) & NYC Intro 2602",
+        "clauses": "Independent annual bias audit of automated employment decision tools, public summary of results, candidate notice",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 9",
+          "Article 12",
+          "Article 17"
+        ],
+        "op_controls": [
+          "CH-03",
+          "CH-04",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "measurer-integrity",
+          "labour-components",
+          "care",
+          "openness"
+        ],
+        "layer0_binding": "csoai_sign + Public Card Index",
+        "harness_x_binding": "instrument_guard.py",
+        "meok_binding": "Independent Referee Audit",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-APAC-01",
+        "block": "APAC/Americas",
+        "name": "China CAC Interim Measures for Generative AI & GB 45438-2025 (Mandatory Content Labelling)",
+        "clauses": "Manifest & implicit metadata watermarking/labelling of AI-generated content, training corpus legality, security assessment",
+        "charter_v1_articles": [
+          "Article 3",
+          "Article 6",
+          "Article 10",
+          "Article 12"
+        ],
+        "op_controls": [
+          "CH-04",
+          "CH-06",
+          "CH-10",
+          "CH-11"
+        ],
+        "gspc_axes": [
+          "detector-interop",
+          "provenance",
+          "provenance-controls",
+          "serving-fidelity"
+        ],
+        "layer0_binding": "csoai_sign + Content-Addressed Manifest",
+        "harness_x_binding": "gspc_effect_receipt.py",
+        "meok_binding": "Provenance Capsule Tagging",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-APAC-02",
+        "block": "APAC/Americas",
+        "name": "China TC260 AI Safety Governance Framework v2.0",
+        "clauses": "Intrinsic safety (model/data/algorithm), application safety (cyber/manipulation/autonomy), evaluation & red-teaming corpus",
+        "charter_v1_articles": [
+          "Article 5",
+          "Article 8",
+          "Article 9",
+          "Article 11"
+        ],
+        "op_controls": [
+          "CH-05",
+          "CH-08",
+          "CH-09",
+          "CH-13"
+        ],
+        "gspc_axes": [
+          "safety",
+          "jail",
+          "continuity",
+          "harness-fidelity"
+        ],
+        "layer0_binding": "localConstitutionalPrecheck",
+        "harness_x_binding": "XRAIV + instrument_guard.py",
+        "meok_binding": "SovSpace 16-Branch Simulation",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "ZCodeProject/lane-chain-reactions/chain-multi-regime-subscription/multi-regime-crosswalk-2026-11-04.json"
+      },
+      {
+        "id": "REG-APAC-03",
+        "block": "APAC/Americas",
+        "name": "South Korea Basic Act on Artificial Intelligence (Enacted Dec 2024, Effective Jan 2026)",
+        "clauses": "High-impact AI operator obligations, human oversight, generative AI provenance notice, frontier compute risk management",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 4",
+          "Article 6",
+          "Article 12"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-05",
+          "CH-06",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "governance",
+          "safety",
+          "provenance",
+          "detector-interop",
+          "care"
+        ],
+        "layer0_binding": "csoai_sign + csoai_govern",
+        "harness_x_binding": "hitl_probe.py + XRAIV",
+        "meok_binding": "H.I.M. + CARE-PSY-v1",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "ZCodeProject/lane-chain-reactions/chain-multi-regime-subscription/multi-regime-crosswalk-2026-11-04.json"
+      },
+      {
+        "id": "REG-APAC-04",
+        "block": "APAC/Americas",
+        "name": "Singapore IMDA Model AI Governance Framework (GenAI & Agentic AI) + AI Verify / Project Moonshot",
+        "clauses": "Accountability, data lineage, testing & assurance, agentic action bounds, reproducible benchmark packs",
+        "charter_v1_articles": [
+          "Article 2",
+          "Article 4",
+          "Article 7",
+          "Article 9"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-03",
+          "CH-05",
+          "CH-07",
+          "CH-11"
+        ],
+        "gspc_axes": [
+          "governance",
+          "effect-binding",
+          "swarm",
+          "interop-conformance",
+          "measurer-integrity"
+        ],
+        "layer0_binding": "@csoai/layer0 + Moonshot Native Adapter (PR #3971)",
+        "harness_x_binding": "gspc_constitutional_flow.py + instrument_guard.py",
+        "meok_binding": "13-Member BFT + SovSpace",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "ZCodeProject/FRAMEWORK-CROSSWALK-REGISTRY-V1.draft.json"
+      },
+      {
+        "id": "REG-APAC-05",
+        "block": "APAC/Americas",
+        "name": "Australia Voluntary AI Safety Standard (10 Guardrails) & Privacy Act Automated Decisions",
+        "clauses": "10 Guardrails: accountability, risk management, data governance, testing, human control, transparency, contestability, supply chain, records, conformity",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 3",
+          "Article 4",
+          "Article 6",
+          "Article 9",
+          "Article 12"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-03",
+          "CH-05",
+          "CH-06",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "governance",
+          "care",
+          "provenance",
+          "continuity",
+          "claim-maintenance"
+        ],
+        "layer0_binding": "@csoai/layer0 + verifyLocalReceipt",
+        "harness_x_binding": "XRAIV + gspc_effect_receipt.py",
+        "meok_binding": "H.I.M. + 3KB Cards",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "ZCodeProject/lane-chain-reactions/chain-multi-regime-subscription/multi-regime-crosswalk-2026-11-04.json"
+      },
+      {
+        "id": "REG-APAC-06",
+        "block": "APAC/Americas",
+        "name": "Canada OSFI Guideline B-13 / E-23 Model Risk & Lapsed Bill C-27 (AIDA) Ground-Truth Tracking",
+        "clauses": "Honest tracking that Bill C-27/AIDA died on the Order Paper upon Jan 2025 prorogation (never misstated as law); active OSFI model risk & voluntary code",
+        "charter_v1_articles": [
+          "Article 3",
+          "Article 9",
+          "Article 14",
+          "Article 17"
+        ],
+        "op_controls": [
+          "CH-03",
+          "CH-04",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "regulatory-framework",
+          "measurer-integrity",
+          "regulator-transparency",
+          "continuity"
+        ],
+        "layer0_binding": "csoai_verify (ground-truth regulatory status)",
+        "harness_x_binding": "instrument_guard.py",
+        "meok_binding": "Counter-Canon Fact Check",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "REG-INT-01",
+        "block": "International",
+        "name": "Council of Europe Framework Convention on AI, Human Rights, Democracy and the Rule of Law (CETS No. 225)",
+        "clauses": "Art. 7 (Human dignity & individual autonomy), Art. 8 (Transparency & oversight), Art. 9 (Accountability), Art. 10 (Equality), Art. 11 (Privacy), Art. 12 (Reliability), Art. 14 (Remedies)",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 3",
+          "Article 4",
+          "Article 10",
+          "Article 12",
+          "Article 18"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-03",
+          "CH-04",
+          "CH-05",
+          "CH-10",
+          "CH-12",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "care",
+          "governance",
+          "safety",
+          "openness",
+          "regulator-transparency",
+          "watchdog-ingest"
+        ],
+        "layer0_binding": "@csoai/layer0 + Public Verifier",
+        "harness_x_binding": "XRAIV + hitl_probe.py",
+        "meok_binding": "CARE-PSY-v1 + H.I.M. + Watchdog",
+        "evidence_state": "STATIC_OBSERVED",
+        "evidence_ref": "public/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json"
+      },
+      {
+        "id": "REG-INT-02",
+        "block": "International",
+        "name": "OECD AI Principles (Updated May 2024) & OECD AI Incidents Monitor (AIM)",
+        "clauses": "Inclusive growth & well-being, human-centered values, transparency, robustness/security/safety, accountability",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 4",
+          "Article 8",
+          "Article 12",
+          "Article 18"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-05",
+          "CH-08",
+          "CH-12",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "care",
+          "safety",
+          "governance",
+          "watchdog-ingest",
+          "ai-adoption-components",
+          "labour-components"
+        ],
+        "layer0_binding": "csoai_sign + Public Watchdog",
+        "harness_x_binding": "csoai_console.py + XRAIV",
+        "meok_binding": "Watchdog Ingest + CARE-PSY-v1",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "public/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json"
+      },
+      {
+        "id": "REG-INT-03",
+        "block": "International",
+        "name": "G7 Hiroshima AI Process International Code of Conduct & Reporting Framework",
+        "clauses": "11 Actions: red-teaming throughout lifecycle, vulnerability disclosure, content provenance/watermarking, capability & limitation reporting",
+        "charter_v1_articles": [
+          "Article 3",
+          "Article 6",
+          "Article 8",
+          "Article 9",
+          "Article 12",
+          "Article 17"
+        ],
+        "op_controls": [
+          "CH-03",
+          "CH-04",
+          "CH-06",
+          "CH-08",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "lab-practice",
+          "company-practice",
+          "provenance",
+          "detector-interop",
+          "jail",
+          "claim-maintenance"
+        ],
+        "layer0_binding": "csoai_sign + Card Index",
+        "harness_x_binding": "instrument_guard.py",
+        "meok_binding": "Daily Capsule + Exposure Audit",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/FRAMEWORK_GROUND_TRUTH.md"
+      },
+      {
+        "id": "STD-TECH-01",
+        "block": "Technical-Standard",
+        "name": "ISO/IEC 42001:2023 (AI Management System — AIMS) & ISO/IEC 23894 (AI Risk Management)",
+        "clauses": "Clauses 4-10 (Context, Leadership, Planning, Support, Operation, Performance Evaluation, Improvement) + Annex A Controls (A.2-A.10)",
+        "charter_v1_articles": [
+          "Article 1",
+          "Article 2",
+          "Article 4",
+          "Article 9",
+          "Article 11",
+          "Article 14",
+          "Article 19"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-02",
+          "CH-03",
+          "CH-05",
+          "CH-07",
+          "CH-09",
+          "CH-11",
+          "CH-12",
+          "CH-13",
+          "CH-16"
+        ],
+        "gspc_axes": [
+          "governance",
+          "conformance",
+          "continuity",
+          "claim-maintenance",
+          "company-practice",
+          "lab-practice"
+        ],
+        "layer0_binding": "OrgKernel L1/L2/L3 + @csoai/layer0",
+        "harness_x_binding": "gspc_constitutional_flow.py + csoai_console.py",
+        "meok_binding": "13-Member BFT + SovSpace",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "CSOAI-ORG/SOVEREIGN-LAYER-ZERO-CHARTER/research/05_ARTICLE14_FRAMEWORK_PROOFS.md"
+      },
+      {
+        "id": "STD-TECH-02",
+        "block": "Technical-Standard",
+        "name": "ISO/IEC 27001:2022 & SOC 2 Type II Trust Services Criteria (Security, Availability, Processing Integrity, Confidentiality, Privacy)",
+        "clauses": "Cryptographic controls (A.8.24), logging & monitoring (A.8.15-16), access/authority control (A.5.15), change management (A.8.32), CC6/CC7/PI1",
+        "charter_v1_articles": [
+          "Article 2",
+          "Article 6",
+          "Article 10",
+          "Article 11"
+        ],
+        "op_controls": [
+          "CH-02",
+          "CH-06",
+          "CH-09",
+          "CH-10",
+          "CH-13",
+          "CH-14",
+          "CH-15"
+        ],
+        "gspc_axes": [
+          "provenance-controls",
+          "distribution-integrity",
+          "serving-fidelity",
+          "continuity",
+          "effect-binding"
+        ],
+        "layer0_binding": "csoai_sign + verifyLocalReceipt + OIDC/JWT",
+        "harness_x_binding": "gspc_authority_state.py + gspc_effect_receipt.py",
+        "meok_binding": "Spine Capsule + Quarantine",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "CSOAI-ORG/SOVEREIGN-LAYER-ZERO-CHARTER/research/05_ARTICLE14_FRAMEWORK_PROOFS.md"
+      },
+      {
+        "id": "STD-TECH-03",
+        "block": "Technical-Standard",
+        "name": "OSAIA WG-SAFE (SAFE v1 Framework — M1..M12 Milestones)",
+        "clauses": "M1 Terminology, M2 Control Catalog, M3 Threat Model, M4 Verification/Review (pass/fail/insufficient_evidence/not_applicable), M5-M12 Lifecycle & Continuous Claim Maintenance (wg-safe#64, #72, #32)",
+        "charter_v1_articles": [
+          "Article 2",
+          "Article 3",
+          "Article 4",
+          "Article 6",
+          "Article 8",
+          "Article 9",
+          "Article 14"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-03",
+          "CH-04",
+          "CH-05",
+          "CH-06",
+          "CH-08",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "conformance",
+          "serving-fidelity",
+          "claim-maintenance",
+          "measurer-integrity",
+          "effect-binding",
+          "harness-fidelity"
+        ],
+        "layer0_binding": "csoai_verify (VALID/INVALID/UNCHECKABLE -> pass/fail/insufficient_evidence)",
+        "harness_x_binding": "instrument_guard.py + gspc_effect_receipt.py",
+        "meok_binding": "Daily Capsule + Claim-Watch",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "ZCodeProject/lane-governance/paperwork/GSPC-SAFE-SUBSTRATE-MAPPING.md"
+      },
+      {
+        "id": "STD-TECH-04",
+        "block": "Technical-Standard",
+        "name": "OWASP Agentic Security Initiative Top 10 (ASI01–ASI10)",
+        "clauses": "ASI01 Agent Goal Hijack, ASI02 Tool Misuse, ASI03 Identity & Privilege Abuse, ASI04 Supply Chain, ASI05 Unexpected Code Exec, ASI06 Memory Poisoning, ASI07 Insecure Inter-Agent Comm, ASI08 Cascading Hallucinations, ASI09 Trust Exploitation, ASI10 Rogue Agents",
+        "charter_v1_articles": [
+          "Article 2",
+          "Article 4",
+          "Article 5",
+          "Article 7",
+          "Article 8",
+          "Article 11",
+          "Article 15"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-05",
+          "CH-06",
+          "CH-07",
+          "CH-08",
+          "CH-09",
+          "CH-13",
+          "CH-14"
+        ],
+        "gspc_axes": [
+          "jail",
+          "swarm",
+          "effect-binding",
+          "harness-fidelity",
+          "continuity",
+          "distribution-integrity",
+          "safety"
+        ],
+        "layer0_binding": "localConstitutionalPrecheck + L2L/A2A/MCP guards",
+        "harness_x_binding": "XRAIV Gate + openshell_authority_adapter.py + gspc_authority_state.py",
+        "meok_binding": "13-Member BFT + SovSpace 16-Branch Simulation",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "public/crosswalks/owasp-asi.json"
+      },
+      {
+        "id": "STD-TECH-05",
+        "block": "Technical-Standard",
+        "name": "OWASP MCP Top 10 (MCP01–MCP10, incl. Issue #65 Server Evidence)",
+        "clauses": "Token mismanagement, privilege escalation, tool poisoning, rug-pull server mutation, context over-sharing, unverified server identity",
+        "charter_v1_articles": [
+          "Article 2",
+          "Article 6",
+          "Article 7",
+          "Article 8"
+        ],
+        "op_controls": [
+          "CH-02",
+          "CH-06",
+          "CH-08",
+          "CH-10",
+          "CH-14"
+        ],
+        "gspc_axes": [
+          "interop-conformance",
+          "harness-fidelity",
+          "effect-binding",
+          "distribution-integrity",
+          "provenance-controls"
+        ],
+        "layer0_binding": "MCP server_evidence + mcp_trust + csoai_sign",
+        "harness_x_binding": "openshell_authority_adapter.py + MCP input budget guard",
+        "meok_binding": "MEOK Hub MCP Health & Tool Pinning",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "ZCodeProject/FRAMEWORK-CROSSWALK-REGISTRY-V1.draft.json"
+      },
+      {
+        "id": "STD-TECH-06",
+        "block": "Technical-Standard",
+        "name": "Microsoft Zero-Trust Agent Safety & Agent Governance Toolkit",
+        "clauses": "Least-privilege agent identity, deterministic policy enforcement point (PEP), runtime tool call sandboxing, human approval gates",
+        "charter_v1_articles": [
+          "Article 2",
+          "Article 4",
+          "Article 7",
+          "Article 8"
+        ],
+        "op_controls": [
+          "CH-02",
+          "CH-05",
+          "CH-07",
+          "CH-08",
+          "CH-14"
+        ],
+        "gspc_axes": [
+          "effect-binding",
+          "governance",
+          "harness-fidelity",
+          "safety"
+        ],
+        "layer0_binding": "localConstitutionalPrecheck + governedLocal",
+        "harness_x_binding": "XRAIV + gspc_authority_state.py + hitl_probe.py",
+        "meok_binding": "H.I.M. Actor-Class Escalation",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "ZCodeProject/FRAMEWORK-CROSSWALK-REGISTRY-V1.draft.json"
+      },
+      {
+        "id": "STD-TECH-07",
+        "block": "Technical-Standard",
+        "name": "OpenTelemetry GenAI Semantic Conventions (EvaluationResult/v1 — PR #590)",
+        "clauses": "gen_ai.evaluation.name, gen_ai.evaluation.score.value, gen_ai.evaluation.explanation, gen_ai.evaluation.target.type, nanosecond OTel span binding",
+        "charter_v1_articles": [
+          "Article 3",
+          "Article 6",
+          "Article 9",
+          "Article 14"
+        ],
+        "op_controls": [
+          "CH-03",
+          "CH-06",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "interop-conformance",
+          "harness-fidelity",
+          "serving-fidelity",
+          "measurer-integrity"
+        ],
+        "layer0_binding": "verifyLocalReceipt + OTel Span Hash",
+        "harness_x_binding": "gspc_meok_spine.py (OTel nanosecond spans)",
+        "meok_binding": "MEOK Spine Capsule OTel Emitter",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/OTEL-GENAI-EVALUATION-CROSSWALK.md"
+      },
+      {
+        "id": "STD-TECH-08",
+        "block": "Technical-Standard",
+        "name": "IETF SCITT (Supply Chain Integrity, Transparency, and Trust) & Sibling Internet-Drafts",
+        "clauses": "Signed Statements (COSE/JWS), Transparency Service Receipt, append-only Merkle inclusion proof (PR #4058 XML2rfc sources)",
+        "charter_v1_articles": [
+          "Article 6",
+          "Article 12",
+          "Article 14"
+        ],
+        "op_controls": [
+          "CH-06",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "provenance",
+          "provenance-controls",
+          "distribution-integrity",
+          "interop-conformance"
+        ],
+        "layer0_binding": "verify_inclusion + get_root + Ed25519/Merkle",
+        "harness_x_binding": "gspc_effect_receipt.py",
+        "meok_binding": "Spine Merkle Inclusion Receipt",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "ZCodeProject/FRAMEWORK-CROSSWALK-REGISTRY-V1.draft.json"
+      },
+      {
+        "id": "STD-TECH-09",
+        "block": "Technical-Standard",
+        "name": "C2PA 2.1 (Coalition for Content Provenance and Authenticity)",
+        "clauses": "Content Credentials manifest, hard/soft bindings, cryptographic assertion store, AI generation & edit assertions",
+        "charter_v1_articles": [
+          "Article 3",
+          "Article 6",
+          "Article 12"
+        ],
+        "op_controls": [
+          "CH-04",
+          "CH-06",
+          "CH-11"
+        ],
+        "gspc_axes": [
+          "provenance",
+          "detector-interop",
+          "provenance-controls",
+          "cross-reality"
+        ],
+        "layer0_binding": "csoai_sign + Art50 Marking Evidence",
+        "harness_x_binding": "gspc_effect_receipt.py",
+        "meok_binding": "3KB Provenance Cards",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "ZCodeProject/FRAMEWORK-CROSSWALK-REGISTRY-V1.draft.json"
+      },
+      {
+        "id": "STD-TECH-10",
+        "block": "Technical-Standard",
+        "name": "W3C DID Core 1.0 (did:web:csoai.org), Verifiable Credentials 2.0 & W3C Agent Conformance",
+        "clauses": "Decentralized Identifier resolution, Ed25519VerificationKey2020 / JsonWebKey2020 pinned keys (#card-attestation-1, #card-attestation-2, #board-attestation-1)",
+        "charter_v1_articles": [
+          "Article 6",
+          "Article 12",
+          "Article 14",
+          "Article 17"
+        ],
+        "op_controls": [
+          "CH-06",
+          "CH-11",
+          "CH-12"
+        ],
+        "gspc_axes": [
+          "provenance-controls",
+          "conformance",
+          "interop-conformance",
+          "measurer-integrity"
+        ],
+        "layer0_binding": "did:web:csoai.org + verify_card",
+        "harness_x_binding": "gspc_effect_receipt.py",
+        "meok_binding": "Pinned Verifier Key Check",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "docs/W3C_AGENT_CONFORMANCE_CROSSWALK_DRAFT.md"
+      },
+      {
+        "id": "STD-TECH-11",
+        "block": "Technical-Standard",
+        "name": "OpenID AuthZEN 1.0 (Authorization API 1.0 — Subject/Action/Resource/Context Evaluation)",
+        "clauses": "Access Evaluation API (/access/v1/evaluation), Policy Enforcement Point (PEP) to Policy Decision Point (PDP) request/response contract",
+        "charter_v1_articles": [
+          "Article 2",
+          "Article 4",
+          "Article 7",
+          "Article 14"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-02",
+          "CH-05",
+          "CH-07",
+          "CH-14"
+        ],
+        "gspc_axes": [
+          "effect-binding",
+          "governance",
+          "interop-conformance",
+          "harness-fidelity"
+        ],
+        "layer0_binding": "csoai_govern + localConstitutionalPrecheck",
+        "harness_x_binding": "XRAIV (REFUSE|CONFIRM|PROCEED) + openshell_authority_adapter.py",
+        "meok_binding": "H.I.M. Escalation + BFT PDP",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "public/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json"
+      },
+      {
+        "id": "STD-TECH-12",
+        "block": "Technical-Standard",
+        "name": "x402 Foundation Payment & Trust Rail (x402#3500 Resolver Verification & Capsule Diff)",
+        "clauses": "HTTP 402 invoice-for-assembly challenge, Ed25519 receipt binding, 3-state resolver verification (VALID/INVALID/UNCHECKABLE), Tier-3 verifier-computed capsule difference",
+        "charter_v1_articles": [
+          "Article 3",
+          "Article 6",
+          "Article 12",
+          "Article 13"
+        ],
+        "op_controls": [
+          "CH-04",
+          "CH-06",
+          "CH-10",
+          "CH-11",
+          "CH-15"
+        ],
+        "gspc_axes": [
+          "effect-binding",
+          "reserve-attestation",
+          "provenance-controls",
+          "claim-maintenance"
+        ],
+        "layer0_binding": "x402_trust + verify_capsule + evidence_bundle_preview",
+        "harness_x_binding": "gspc_effect_receipt.py",
+        "meok_binding": "Daily Capsule Verifier-Computed Diff",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "https://github.com/x402-foundation/x402/issues/3500"
+      },
+      {
+        "id": "STD-TECH-13",
+        "block": "Technical-Standard",
+        "name": "OCSF 1.9.0 (Open Cybersecurity Schema Framework), SARIF 2.1.0 & in-toto Attestation v1.0",
+        "clauses": "Security finding normalization, static/runtime analysis result interchange, software supply-chain step link metadata & predicate digests",
+        "charter_v1_articles": [
+          "Article 6",
+          "Article 8",
+          "Article 9",
+          "Article 14"
+        ],
+        "op_controls": [
+          "CH-03",
+          "CH-06",
+          "CH-08",
+          "CH-11",
+          "CH-14"
+        ],
+        "gspc_axes": [
+          "distribution-integrity",
+          "provenance-controls",
+          "harness-fidelity",
+          "interop-conformance"
+        ],
+        "layer0_binding": "csoai_sign + SHA-256 Predicate Digest",
+        "harness_x_binding": "instrument_guard.py + gspc_effect_receipt.py",
+        "meok_binding": "Spine Capsule Attestation",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "ZCodeProject/FRAMEWORK-CROSSWALK-REGISTRY-V1.draft.json"
+      },
+      {
+        "id": "STD-TECH-14",
+        "block": "Technical-Standard",
+        "name": "AAIF 4-Layer Portability (Agent Skills, Open Responses, OpenEnv, OpenSandbox) & Every-Eval-Ever",
+        "clauses": "Cross-harness skill portability, deterministic response envelopes, isolated sandbox execution, standardized evaluation row schema",
+        "charter_v1_articles": [
+          "Article 2",
+          "Article 7",
+          "Article 9",
+          "Article 14"
+        ],
+        "op_controls": [
+          "CH-01",
+          "CH-03",
+          "CH-07",
+          "CH-12",
+          "CH-14"
+        ],
+        "gspc_axes": [
+          "harness-fidelity",
+          "interop-conformance",
+          "conformance",
+          "interpretability-reproducibility"
+        ],
+        "layer0_binding": "11 Wire Protocols + @csoai/layer0",
+        "harness_x_binding": "gspc_meok_spine.py + openshell_authority_adapter.py",
+        "meok_binding": "MEOK Cross-Runtime Replay (HF, Kaggle, Local M4/M2)",
+        "evidence_state": "MEASURED",
+        "evidence_ref": "ZCodeProject/FRAMEWORK-CROSSWALK-REGISTRY-V1.draft.json"
+      }
+    ]
+  },
+  "coverage_verification": {
+    "all_34_gspc_axes_in_charter_v1": true,
+    "all_34_gspc_axes_in_50_regulators_and_frameworks": true,
+    "gspc_axes_covered_count": 34,
+    "sovereign_charter_articles_covered_count": 21,
+    "operational_controls_covered_count": 16,
+    "global_regulators_and_frameworks_count": 50
+  },
+  "canonical_sha256": "43e244fa5bfa1bebcac8c6a532b65572e89e25119b9af152a7afa2126fc966a5"
+}
