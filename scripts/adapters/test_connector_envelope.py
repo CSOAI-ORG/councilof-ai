@@ -368,13 +368,22 @@ class EconomicComponentControls(unittest.TestCase):
     def test_existing_daily_workflow_does_not_publish_raw_capture(self):
         workflow = (ROOT/".github/workflows/reg-watch.yml").read_text()
         start = workflow.index("      - name: Economic source qualification")
-        end = workflow.index("      - name: Watchdog source status selftest", start)
+        end = workflow.index("      - name: Retain economic qualification metadata receipt only", start)
         step = workflow[start:end]
-        for value in ("--capture", "timeout-minutes: 2", "continue-on-error: true", "UNCHECKABLE", "UNMEASURED", "mktemp -d"):
+        for value in ("--capture", "timeout-minutes: 3", "continue-on-error: true", "UNCHECKABLE", "UNMEASURED", "mktemp -d"):
             self.assertIn(value, step)
         for forbidden in ("git add", "upload-artifact", "gh pr", "signing_key", "curl --retry"):
             self.assertNotIn(forbidden,step)
         self.assertEqual(workflow.count("      - name: Economic source qualification"),1)
+        artifact=workflow[end:workflow.index("      - name: Watchdog source status selftest",end)]
+        self.assertIn("retention-days: 30",artifact)
+        self.assertIn("receipt_ready == 'true'",artifact)
+        self.assertIn("path: ${{ runner.temp }}/economic-receipt-${{ github.run_id }}-${{ github.run_attempt }}.json",artifact)
+        self.assertNotIn("capture_root",artifact)
+        self.assertNotIn("**",artifact)
+        self.assertIn("adapters.economic_receipt",step)
+        self.assertEqual(step.count("adapters.economic_components"),1)
+        self.assertEqual(step.count("adapters.economic_context"),1)
 
 
 class EconomicContextControls(unittest.TestCase):
@@ -437,6 +446,37 @@ class EconomicContextControls(unittest.TestCase):
             env=result["sources"][-1]["envelope"]
             self.assertEqual(ce.validate(env),[])
             self.assertIsNone(env["measurement"])
+
+
+class EconomicReceiptControls(unittest.TestCase):
+    def test_missing_batches_are_unknown_not_zero(self):
+        from adapters import economic_receipt as er
+        d=er.build(None,None)
+        self.assertEqual(d["probed_sources"],0)
+        self.assertEqual(d["uncheckable_sources"],7)
+        self.assertTrue(all(x["candidate_count"] is None for x in d["sources"]))
+        self.assertFalse(d["writes_board"])
+
+    def test_metadata_replay_and_tamper_isolation(self):
+        from adapters import economic_receipt as er, economic_context as ctx
+        raw=("observation_date,UNRATE\n"+"".join(f"2025-{m:02}-01,4.2\n" for m in range(1,13))).encode()
+        def getter(source):
+            if source=="fred-unemployment":return raw
+            raise ValueError("test source unavailable")
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp)/"run"
+            ctx.capture(folder,getter=getter,clock=lambda:"2026-11-27T00:00:00Z")
+            d=er.build(None,folder)
+            self.assertEqual(d["probed_sources"],1)
+            self.assertEqual(d["uncheckable_sources"],6)
+            row=d["sources"][-1]
+            self.assertEqual(row["candidate_count"],12)
+            self.assertEqual(row["null_count"],0)
+            self.assertEqual(row["source_sha256"],ce.sha256_hex(raw))
+            self.assertNotIn("4.2",json.dumps(d))
+            self.assertNotIn("component_candidates",json.dumps(d))
+            (folder/"fred-unemployment.raw").write_bytes(raw.replace(b"4.2",b"4.3"))
+            self.assertEqual(er.build(None,folder)["probed_sources"],0)
 
 
 if __name__ == "__main__":
