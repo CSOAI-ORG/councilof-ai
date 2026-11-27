@@ -278,6 +278,17 @@ class TheBlock(unittest.TestCase):
         self.assertLess(blk.index("@article{Davvetas2026,"), blk.index("@misc{csoai_gspc_gov,"))
         self.assertNotRegex((sec + blk).lower(), r"certif")
 
+    def test_a_partly_derived_dataset_names_its_derived_share_in_the_citation(self):
+        # gspc-gov-counter-v1: 50 of its 60 items reword gspc-gov items and 10 are ours, so its
+        # citation line must not say that all of its items are derived. gspc-gov keeps "The items".
+        card = "---\nlicense: cc-by-4.0\n---\n\n# Held-out governance counter-bank v1\n\nBody.\n"
+        out = cb.apply(card, "csoai/gspc-gov-counter-v1")
+        self.assertIn("50 of the 60 items are derived from the AI Act Evaluation Benchmark", out)
+        self.assertNotIn("The items are derived", out)
+        self.assertEqual(cb.apply(out, "csoai/gspc-gov-counter-v1"), out)
+        gov = cb.apply(card.replace("counter-bank v1", "bank"), "csoai/gspc-gov")
+        self.assertIn("The items are derived from the AI Act Evaluation Benchmark", gov)
+
     def test_the_source_section_follows_the_title_outside_code_and_is_never_doubled(self):
         fenced = "---\nlicense: cc0-1.0\n---\n```python\n# not a title\n```\n\n# Real title\n\nBody.\n"
         out = cb.apply(fenced, "csoai/gspc-gov")
