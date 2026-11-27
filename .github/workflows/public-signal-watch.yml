@@ -1,0 +1,39 @@
+name: Public external signal watch (unqualified research)
+on:
+  pull_request:
+    paths:
+      - scripts/visibility/public-signal-watch.mjs
+      - scripts/visibility/public-signal-watch.test.mjs
+      - .github/workflows/public-signal-watch.yml
+  schedule:
+    - cron: '17 8 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: public-signal-watch-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  inspect-public-signals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/visibility
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Guarded parsing tests
+        run: node --test scripts/visibility/public-signal-watch.test.mjs
+      - name: Passive public readback — never auto-publish or auto-promote
+        run: node scripts/visibility/public-signal-watch.mjs --out "$RUNNER_TEMP/public-signals.json"
+      - name: Upload unqualified research observation
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-signal-readback
+          path: ${{ runner.temp }}/public-signals.json
+          if-no-files-found: error
+          retention-days: 30
