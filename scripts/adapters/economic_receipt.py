@@ -15,6 +15,54 @@ from adapters import economic_context as ctx
 CORE_IDS = ["anthropic", *ec.INDICATORS]
 ALL_IDS = CORE_IDS + list(ctx.SOURCES)
 
+# Existing board axis identities. These are editorial research routes, not
+# measurements of the target axis, appointments or proof of legal coverage.
+ROUTES = {
+    "anthropic": ("ai-adoption-components", "labour-components"),
+    "IT.NET.USER.ZS": ("ai-adoption-components",),
+    "SL.UEM.TOTL.ZS": ("labour-components",),
+    "oecd-ai": ("ai-adoption-components",),
+    "ons-unemployment": ("labour-components",),
+    "imf-growth": ("ai-adoption-components",),
+    "fred-unemployment": ("labour-components",),
+}
+ROLES = {"ai-adoption-components": "statistical-series reviewer",
+         "labour-components": "labour statistics reviewer"}
+QUESTIONS = {
+    "anthropic": "Check observed Claude usage definitions, cohort and permitted reuse; do not infer workforce displacement.",
+    "IT.NET.USER.ZS": "Check digital-access context and missing periods; not an AI-adoption measure.",
+    "SL.UEM.TOTL.ZS": "Check modelled ILO unemployment definition and comparability; no AI causation.",
+    "oecd-ai": "Check enterprise population, observation flags and series breaks before time comparisons.",
+    "ons-unemployment": "Check age, frequency, seasonal adjustment and release vintage.",
+    "imf-growth": "Check data vintage and estimate status; macroeconomic context, not AI uptake.",
+    "fred-unemployment": "Check monthly BLS series coverage and missing observations before comparison.",
+}
+
+
+def review_candidates(source, env, rows):
+    # Raw-response headers may change without changing observations. Bind the
+    # candidate identity to the parsed semantics, including values and flags,
+    # but do not disclose those values in this metadata-only output.
+    semantic_rows = sorted(
+        ({k: v for k, v in row.items() if k not in {"source_sha256", "state"}} for row in rows),
+        key=ce.canonical_bytes,
+    )
+    digest = ce.sha256_hex(ce.canonical_bytes(semantic_rows))
+    result = []
+    for axis in ROUTES[source]:
+        identity = ce.sha256_hex(ce.canonical_bytes([source, axis, digest]))
+        result.append({"candidate_id": identity, "source_id": source,
+            "axis": axis, "reviewer_role": ROLES[axis], "reviewer": None,
+            "source_sha256": env["artifact"]["sha256"], "semantic_sha256": digest,
+            "observed_at": env["observed_at"], "question": QUESTIONS[source],
+            "state": "AWAITING_HUMAN_REVIEW", "measurement_state": "UNMEASURED",
+            "classification": "SOURCE_QUALIFICATION_REVIEW_CANDIDATE",
+            "confirmed_change": False, "rights_review": "REQUIRED",
+            "execute_authorized": False, "publication_authorized": False,
+            "signed": False, "writes_board": False})
+    return result
+
+
 
 def held(source):
     return {"source_id":source,"state":"UNCHECKABLE","source_sha256":None,
@@ -36,6 +84,7 @@ def summary(source, env, rows):
 
 def build(core_dir, context_dir):
     rows={s:held(s) for s in ALL_IDS}
+    candidates={s:[] for s in ALL_IDS}
     if core_dir is not None:
         try:
             core=ec.qualify(core_dir)
@@ -44,9 +93,13 @@ def build(core_dir, context_dir):
                 source=env["subject"]["id"].split(":")[0]
                 if source not in CORE_IDS:
                     raise ValueError("unexpected core source")
-                rows[source]=summary(source,env,[x for x in core["component_candidates"] if x["source_id"]==source])
+                components=[x for x in core["component_candidates"] if x["source_id"]==source]
+                rows[source]=summary(source,env,components)
+                candidates[source]=review_candidates(source,env,components)
         except Exception:
-            for source in CORE_IDS:rows[source]=held(source)
+            for source in CORE_IDS:
+                rows[source]=held(source)
+                candidates[source]=[]
     if context_dir is not None:
         try:
             folder=Path(context_dir)
@@ -67,17 +120,26 @@ def build(core_dir, context_dir):
                     replay=ctx.qualify(source,raw,item["envelope"]["observed_at"])
                     if replay!=item:raise ValueError("context replay mismatch")
                     rows[source]=summary(source,replay["envelope"],replay["component_candidates"])
+                    candidates[source]=review_candidates(source,replay["envelope"],replay["component_candidates"])
                 except Exception:
                     rows[source]=held(source)
+                    candidates[source]=[]
         except Exception:
-            for source in ctx.SOURCES:rows[source]=held(source)
+            for source in ctx.SOURCES:
+                rows[source]=held(source)
+                candidates[source]=[]
     items=list(rows.values())
     n=sum(r["state"]=="PROBED" for r in items)
-    result={"schema":"csoai.economic-source-qualification-receipt/0.1",
+    pending=[c for source in ALL_IDS for c in candidates[source]]
+    if len({c["candidate_id"] for c in pending})!=len(pending):
+        raise ValueError("duplicate review candidate")
+    result={"schema":"csoai.economic-source-qualification-receipt/0.2",
             "scope":"Metadata only; raw capture replay performed locally; no data redistribution, inference or board admission.",
             "sources":items,"expected_sources":len(items),"probed_sources":n,
             "uncheckable_sources":len(items)-n,"writes_board":False,"signed":False,
-            "candidate_state":"UNMEASURED"}
+            "candidate_state":"UNMEASURED",
+            "review_candidates":pending,"review_candidates_count":len(pending),
+            "review_queue_submitted":False}
     return result
 
 
@@ -91,7 +153,7 @@ def main():
     with args.out.open("x",encoding="utf-8") as f:
         json.dump(result,f,indent=2,allow_nan=False)
         f.write("\n")
-    print(f"Economic qualification receipt: {result['probed_sources']}/{result['expected_sources']} sources PROBED; {result['uncheckable_sources']} UNCHECKABLE; no board update.")
+    print(f"Economic qualification receipt: {result['probed_sources']}/{result['expected_sources']} sources PROBED; {result['uncheckable_sources']} UNCHECKABLE; {result['review_candidates_count']} review candidates prepared; no board update.")
     return 0
 
 

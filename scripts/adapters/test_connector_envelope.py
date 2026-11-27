@@ -479,5 +479,30 @@ class EconomicReceiptControls(unittest.TestCase):
             self.assertEqual(er.build(None,folder)["probed_sources"],0)
 
 
+class EconomicReviewRoutingControls(unittest.TestCase):
+    def test_review_identity_is_stable_under_transport_metadata(self):
+        from adapters import economic_receipt as er, economic_context as ctx
+        raw=("observation_date,UNRATE\n"+"".join(f"2025-{m:02}-01,4.2\n" for m in range(1,13))).encode()
+        a=ctx.qualify("fred-unemployment",raw,"2026-11-27T00:00:00Z")
+        b=ctx.qualify("fred-unemployment",raw.replace(b"\n",b"\r\n"),"2026-11-28T00:00:00Z")
+        c=ctx.qualify("fred-unemployment",raw.replace(b"4.2",b"4.3"),"2026-11-28T00:00:00Z")
+        def route(x):return er.review_candidates(x["source"],x["envelope"],x["component_candidates"])[0]
+        x,y,z=map(route,(a,b,c))
+        self.assertNotEqual(x["source_sha256"],y["source_sha256"])
+        self.assertEqual(x["candidate_id"],y["candidate_id"])
+        self.assertNotEqual(x["candidate_id"],z["candidate_id"])
+        self.assertEqual(x["axis"],"labour-components")
+        self.assertIsNone(x["reviewer"])
+        for k in ("confirmed_change","execute_authorized","publication_authorized","signed","writes_board"):
+            self.assertFalse(x[k])
+        self.assertNotIn("value",x)
+
+    def test_unavailable_sources_never_prepare_review_candidates(self):
+        from adapters import economic_receipt as er
+        d=er.build(None,None)
+        self.assertEqual(d["review_candidates"],[])
+        self.assertFalse(d["review_queue_submitted"])
+
+
 if __name__ == "__main__":
     unittest.main()
