@@ -78,6 +78,29 @@ test('_headers pattern matching: a placeholder is one segment, a splat is the re
   assert.deepEqual(rules.map((r) => r.pattern), ['/a/*']);
 });
 
-test('sitemap omits ungrounded build-date lastmod values', () => {
-  assert.doesNotMatch(xml, /<lastmod>/);
+// <lastmod> is emitted only from a date the page's own committed source declares (2026-11-27):
+// evidence-notes.json for /notes/<id>/, blog-published.json for /blog/<slug>/, and the page's
+// JSON-LD dateModified for a static public/ page. Never a build date or a git date.
+test('every sitemap lastmod is a date the page source itself declares', () => {
+  const notes = JSON.parse(readFileSync(new URL('../client/src/data/evidence-notes.json', import.meta.url), 'utf8')).notes;
+  const posts = JSON.parse(readFileSync(new URL('../client/src/data/blog-published.json', import.meta.url), 'utf8')).published;
+  const declared = new Map([
+    ...notes.map((n) => [`/notes/${n.id}/`, n.date]),
+    ...posts.map((p) => [`/blog/${p.slug}/`, p.updated ?? p.published]),
+  ]);
+  const entries = [...xml.matchAll(/<loc>([^<]+)<\/loc>\n\s*<lastmod>([^<]+)<\/lastmod>/g)];
+  assert.equal(entries.length, (xml.match(/<lastmod>/g) || []).length, 'a lastmod sits directly under its loc');
+  assert.ok(entries.length > 0, 'grounded lastmod values are emitted');
+  for (const [, loc, lastmod] of entries) {
+    assert.match(lastmod, /^\d{4}-\d{2}-\d{2}$/, `${loc}: lastmod is a calendar day`);
+    const path = loc.replace(/^https:\/\/councilof\.ai/, '') || '/';
+    if (declared.has(path)) {
+      assert.equal(lastmod, declared.get(path), `${loc}: lastmod is the date its data file declares`);
+      continue;
+    }
+    const file = new URL(`../public${path.endsWith('/') ? `${path}index.html` : `${path}.html`}`, import.meta.url);
+    const html = readFileSync(file, 'utf8');
+    const dates = [...html.matchAll(/"dateModified"\s*:\s*"(\d{4}-\d{2}-\d{2})/g)].map((m) => m[1]).sort();
+    assert.equal(lastmod, dates.at(-1), `${loc}: lastmod is the page's own latest JSON-LD dateModified`);
+  }
 });
