@@ -78,25 +78,61 @@ def metric(ev, events_url):
 
 
 def check(mod):
-    """Doctrine gate on a finished module (also usable on a module someone else wrote). Raises E.DoctrineError."""
+    """Validate CSOAI evaluation relationships, not the truth or signature of source events."""
+    import math
+    import re
+
+    def pairs(items):
+        if not isinstance(items, list):
+            raise E.DoctrineError("OASF metadata must be a list")
+        out = {}
+        for item in items:
+            if (not isinstance(item, dict) or not isinstance(item.get("name"), str)
+                    or not isinstance(item.get("value"), str) or item["name"] in out):
+                raise E.DoctrineError("OASF metadata contains an invalid or duplicate key")
+            out[item["name"]] = item["value"]
+        return out
+
     d = mod.get("data") or {}
     if any(k in d for k in GRADE_KEYS):
         raise E.DoctrineError("OASF evaluation carries a grade (overall_rating/overall_scores)")
+    seen = set()
     for r in d.get("referred_evaluations", []):
         rep = r.get("evaluation_report") or {}
-        if "overall_scores" in rep:
-            raise E.DoctrineError("OASF evaluation_report carries overall_scores")
+        if any(k in rep for k in GRADE_KEYS):
+            raise E.DoctrineError("OASF evaluation_report carries a grade")
         by_id = {}
         for ds in r.get("datasets", []):
-            kv = {x["name"]: x["value"] for x in ds.get("metadata", [])}
-            by_id[kv.get("event_id")] = kv
-            if kv.get("state") in E.NO_NUMBER_STATES and "value" in kv:
-                raise E.DoctrineError("a %s dataset carries a value" % kv["state"])
+            kv = pairs(ds.get("metadata", []))
+            eid = kv.get("event_id", "")
+            if not re.fullmatch(r"sha256:[0-9a-f]{64}", eid) or eid in seen:
+                raise E.DoctrineError("OASF dataset event identity is invalid or duplicated")
+            seen.add(eid)
+            if kv.get("state") not in E.STATES:
+                raise E.DoctrineError("OASF dataset state is invalid")
+            if "value" in kv:
+                if kv["state"] in E.NO_NUMBER_STATES:
+                    raise E.DoctrineError("OASF no-number dataset carries a value")
+                try:
+                    finite = math.isfinite(float(kv["value"]))
+                except (ValueError, OverflowError):
+                    finite = False
+                if not finite:
+                    raise E.DoctrineError("OASF dataset value is not finite")
+            by_id[eid] = kv
+        metric_ids = set()
         for m in rep.get("metrics", []):
-            dp = {x["name"]: x["value"] for x in m["data_points"]}
-            st = dp.get("state") or by_id.get(dp.get("event_id"), {}).get("state")
-            if st is None or st in E.NO_NUMBER_STATES or by_id.get(dp.get("event_id"), {}).get("state") in E.NO_NUMBER_STATES:
-                raise E.DoctrineError("a metric was written for a no-number (or unstated) state")
+            dp = pairs(m.get("data_points", []))
+            eid = dp.get("event_id")
+            kv = by_id.get(eid)
+            if kv is None or eid in metric_ids or "value" not in kv:
+                raise E.DoctrineError("OASF metric is orphaned, duplicated or lacks a measured dataset")
+            if (dp.get("state") != kv["state"] or dp.get("value") != kv["value"]
+                    or dp.get("subject_locator") != kv.get("subject_locator")):
+                raise E.DoctrineError("OASF metric disagrees with its dataset")
+            metric_ids.add(eid)
+        if metric_ids != {eid for eid, kv in by_id.items() if "value" in kv}:
+            raise E.DoctrineError("OASF measured dataset has no matching metric")
     return mod
 
 

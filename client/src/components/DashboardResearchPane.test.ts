@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { createElement } from "react";
+import { Router } from "wouter";
 import { renderToStaticMarkup } from "react-dom/server";
-import { ResearchSourceList, researchPlanUrl, watchdogSourcesUrl } from "./DashboardResearchPane";
+import DashboardResearchPane, { ResearchSourceList, researchPlanUrl, watchdogSourcesUrl } from "./DashboardResearchPane";
 
 describe("Continuous research pane", () => {
   it("uses the same-origin API in production and the deployed read-only API for local development", () => {
@@ -66,4 +67,13 @@ describe("Continuous research pane", () => {
     expect(html).not.toContain("Read source terms");
     expect(html).not.toContain("Declared license:");
   });
+});
+
+
+it("mounts the existing discovery catalogue beside private experiment planning in the canonical research pane", () => {
+  const html = renderToStaticMarkup(createElement(Router, { ssrPath: "/dashboard", ssrSearch: "tab=research", children: createElement(DashboardResearchPane) }));
+  expect(html).toContain("Open research commons source discoveries");
+  expect(html).toContain("Plan your own AI experiment");
+  expect(html.match(/aria-label="Open research commons source discoveries"/g)).toHaveLength(1);
+  expect(html).not.toContain("16 observed source revisions");
 });

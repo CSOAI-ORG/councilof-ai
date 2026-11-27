@@ -1162,6 +1162,10 @@ jobs:
           # throwaway git repo: only the two data directories are read from a branch, signed
           # outputs go to that branch and never to master, and the three landers dispatch that way.
           python3 -m pytest -q scripts/test_sign_land_branch.py
+          # HF-Jobs OIDC signing failed 16/2952 transient 503/504 operations on
+          # 22 Nov 2026. This regression is offline and fails closed on 403,
+          # digest errors and retry exhaustion; run it in the protected gate.
+          python3 -m pytest -q scripts/test_sign_mill_oidc_retry.py
           python3 scripts/watch/test_provider_watch.py
           python3 scripts/watch/test_provider_watch_promotion.py
 

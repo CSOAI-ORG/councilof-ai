@@ -58,6 +58,10 @@ def signature_check(signed, index_sha):
             return "FAILS (payload sha256 differs from signature.payload_sha256)"
         if (payload.get("artifact") or {}).get("sha256") != index_sha:
             return "FAILS (the signed payload pins other index bytes)"
+        if sig.get("did") != BOARD_DID:
+            return "FAILS (declared signer differs from the pinned board key identifier)"
+        if sig.get("alg") != "Ed25519":
+            return "FAILS (declared algorithm differs from Ed25519)"
         Ed25519PublicKey.from_public_bytes(bytes.fromhex(BOARD_PUB_HEX)).verify(bytes.fromhex(sig["sig_ed25519"]), pre)
         return "VERIFIES"
     except ImportError:
@@ -172,6 +176,24 @@ def render(vdir, publication_dir=None):
         files = " · ".join(f'<a href="{e(slug)}/{f}">{lbl}</a>' for f, lbl in (("record.json", "record"), ("record.signed.json", "signature"),
                                                                              ("record.json.ots", "OTS"), ("leaves.json", "leaves"),
                                                                              ("capsules.jsonl.gz", "capsules")))
+        if (b["adapter"] == "a2a_card"
+                and b.get("record_sha256") == "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6"
+                and b.get("capsules_sha256") == "ba413e8160120205d8b9ec87fec95fa9e0f3ac2e6c858d4e6e807851882cd661"
+                and b.get("merkle_root") == "bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441bae436"):
+            files += (
+                '<p><a href="https://github.com/zhaoxinghua09-cell/independent-recomputations/'
+                'tree/5a20a98a9553fe3a007f500ddf204ff1567d6efe#2-a-measurement-capsule-batch">'
+                'Reproduce this batch with Xinghua Zhao’s independent checker</a>. '
+                'The checker reproduced all 33 identifiers, their order, the state counts and the batch root. '
+                'Signature and timestamp verification were outside this check. '
+                '<a href="https://www.ietf.org/archive/id/draft-templeman-scitt-measurement-capsule-01.html#section-5">'
+                'Section 5 of the draft</a> specifies the RFC 9162 tree construction. Duplicating the final '
+                'leaf gives a different root. If the capsules download is unavailable, use the '
+                '<a href="https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/'
+                '857a6cc02696cdc575c5b540f7b4ab7d043cb591/public/measurement-capsules/v0.2/'
+                'a2a_card/capsules.jsonl.gz">archived copy of the same compressed file</a> '
+                'and compare its SHA-256 with <code>capsules_sha256</code> in the batch index entry.</p>'
+            )
         L.append(f"<tr><td>{c(slug + '/')}<br>{c(b.get('kind'))}</td><td>{b['n_capsules']:,}</td><td>{e(b.get('signature_state'))}</td>"
                  f"<td>{e(b.get('ots_state'))}</td><td>{st}</td><td>{files}</td></tr>")
     L += ["</tbody></table></div>",

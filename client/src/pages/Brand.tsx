@@ -27,7 +27,7 @@ export default function Brand() {
     <div className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="text-3xl font-semibold tracking-tight">Canonical surfaces</h1>
       <p className="mt-2 text-muted-foreground">
-        Council of AI is operated by CSOAI Ltd (UK Companies House 16939677).
+        Council for the Safety of Artificial Intelligence is operated by CSOAI Ltd (UK Companies House 16939677).
         {" "}These are Council publishing locations and related MEOK channels. Check each asset's publisher and licence before attributing it to a legal entity.
       </p>
 

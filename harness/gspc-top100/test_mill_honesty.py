@@ -411,8 +411,8 @@ def test_sign_mill_skips_already_signed_same_id(tmp_path: Path | None = None) ->
         called.append(body)
         raise AssertionError("OIDC must not run for an already-signed matching id")
 
-    assert hasattr(sm, "sign_via_oidc_attested"), "signer entry point renamed — restub it here"
-    sm.sign_via_oidc_attested = boom
+    assert hasattr(sm, "sign_via_oidc_with_retry"), "signer entry point renamed — restub it here"
+    sm.sign_via_oidc_with_retry = boom
 
     # Pass 1 — an EMPTY destination: the stub must be reached, and no card written.
     assert sm.main(["--source-dir", str(src), "--dest-dir", str(empty)]) == 1

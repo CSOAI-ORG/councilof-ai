@@ -1,3 +1,4 @@
+import EatResearchCommonsPanel from "./EatResearchCommonsPanel";
 import ResearchExperimentDraft from "./ResearchExperimentDraft";
 import { useEffect, useMemo, useState } from "react";
 import { ExternalLink, Search, ShieldCheck } from "lucide-react";
@@ -203,6 +204,9 @@ export default function DashboardResearchPane() {
         </ol>
       </section>
 
+      <div className="mt-6 rounded-2xl bg-emerald-950">
+        <EatResearchCommonsPanel />
+      </div>
       <ResearchExperimentDraft />
 
       <section aria-label="Public incident source coverage" className="mt-6 rounded-2xl border border-slate-900/10 bg-white p-5 shadow-sm">

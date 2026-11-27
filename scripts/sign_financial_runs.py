@@ -40,6 +40,14 @@ def sign_label_violation(payload: dict) -> str | None:
     return m.group(0) if m else None
 
 
+class BoardSignHTTPError(RuntimeError):
+    """Typed remote signer HTTP error; never includes credentials in diagnostic text."""
+
+    def __init__(self, status: int, detail: bytes = b""):
+        self.status = status
+        super().__init__(f"board-sign HTTP {status} {detail[:300]!r}")
+
+
 def sign_via_oidc_attested(payload: dict) -> tuple[str, str]:
     """Return the signature and the digest computed over the exact remote preimage.
 
@@ -79,7 +87,7 @@ def sign_via_oidc_attested(payload: dict) -> tuple[str, str]:
         with urllib.request.urlopen(sign_req, timeout=30) as resp:
             out = json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
-        raise RuntimeError(f"board-sign HTTP {e.code} {e.read()[:300]!r}") from e
+        raise BoardSignHTTPError(e.code, e.read()[:300]) from e
     sig = out.get("sig_ed25519")
     if not isinstance(sig, str) or len(sig) < 64:
         raise RuntimeError("no sig")

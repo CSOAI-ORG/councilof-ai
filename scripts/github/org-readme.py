@@ -545,7 +545,7 @@ LEAD_LINE = (
 )
 
 WHO_WE_ARE = (
-    f"**{WORDMARK} — Council of AI — is an operating AI measurement and evidence organisation run by CSOAI Ltd, "
+    "**Council of AI is an operating AI measurement and evidence organisation run by CSOAI Ltd, "
     # The company number is a STABLE fact about the entity, not a live endpoint, so it lives HERE
     # and not in a fetch. It was once added by hand to the emitted README, and the next daily
     # regeneration wiped it — the claim lived in the artefact and not in the generator that emits
@@ -601,7 +601,7 @@ def footer(f: dict) -> str:
 
 def profile_md(f: dict, product_index: Path | None) -> str:
     parts = [
-        f"# {WORDMARK} — Council of AI",
+        "# Council for the Safety of Artificial Intelligence",
         "",
         WHO_WE_ARE,
         "",
@@ -726,7 +726,7 @@ END = "<!-- org-readme:end -->"
 def councilof_top(f: dict, product_index: Path | None) -> str:
     parts = [
         BEGIN,
-        f"# {WORDMARK} — Council of AI",
+        "# Council for the Safety of Artificial Intelligence",
         "",
         LEAD_LINE,
         "",

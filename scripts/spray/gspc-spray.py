@@ -1896,6 +1896,14 @@ def spray_zenodo(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
 
     # 1. new version draft
     status, body, _ = http(f"{Z}/deposit/depositions/{latest['id']}/actions/newversion", method="POST", headers=auth, timeout=120)
+    if status in (401, 403):
+        # The credential cannot write here: the token, its scopes or the account's standing. That is
+        # an owner action, as for every other surface without a working credential, so it is BLOCKED,
+        # not FAILED. This is the first write, so nothing was changed. It used to fail every scheduled
+        # run, which hid the runs that failed for a real reason.
+        return [result("zenodo", "BLOCKED", concept_url,
+                       detail=f"Zenodo refused to create a new version (HTTP {status}: {body[:200]!r}). The credential "
+                              "cannot write to this concept, which only the owner can fix. Nothing was written.")]
     if status not in (200, 201):
         return [result("zenodo", "FAILED", concept_url, detail=f"newversion HTTP {status}: {body[:300]!r}")]
     draft_url = json.loads(body)["links"]["latest_draft"]

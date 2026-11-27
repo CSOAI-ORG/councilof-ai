@@ -41,6 +41,7 @@ import hashlib
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
@@ -50,7 +51,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "harness" / "gspc-top100"))
 from lib.estate_sign import canonical_bytes, load_key, sign_bytes  # noqa: E402
-from sign_financial_runs import DID, sign_label_violation, sign_via_oidc_attested  # noqa: E402
+from sign_financial_runs import BoardSignHTTPError, DID, sign_label_violation, sign_via_oidc_attested  # noqa: E402
 from verify_card import canonical_js_body_bytes  # noqa: E402
 from verify_hub_mill_evidence import EvidenceError, validate_admission  # noqa: E402
 
@@ -303,6 +304,29 @@ def sign_via_pod_token_attested(body: dict, token_file: Path, sign_url: str | No
     return sig.lower(), local_digest
 
 
+# Transient remote 502/503/504 responses do not prove a failed signature.
+# Retry the same immutable body at most three times; never retry auth, policy,
+# malformed-response, digest, or canonicalisation failures.
+SIGN_RETRY_DELAYS = (0.5, 1.0, 2.0)
+
+
+def sign_via_oidc_with_retry(body: dict, signer=sign_via_oidc_attested,
+                             sleep=time.sleep) -> tuple[str, str]:
+    for attempt in range(len(SIGN_RETRY_DELAYS) + 1):
+        try:
+            return signer(body)
+        except BoardSignHTTPError as error:
+            if error.status not in (502, 503, 504) or attempt == len(SIGN_RETRY_DELAYS):
+                raise
+            print(
+                f"RETRY board-sign HTTP {error.status} attempt {attempt + 2}/"
+                f"{len(SIGN_RETRY_DELAYS) + 1}",
+                file=sys.stderr,
+            )
+            sleep(SIGN_RETRY_DELAYS[attempt])
+    raise AssertionError("unreachable retry state")
+
+
 def main(argv: list[str] | None = None) -> int:
     global DST, LEDGER
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -421,7 +445,7 @@ def main(argv: list[str] | None = None) -> int:
             elif args.pod_token_file is not None:
                 sig, digest = sign_via_pod_token_attested(body, args.pod_token_file)
             else:
-                sig, digest = sign_via_oidc_attested(body)
+                sig, digest = sign_via_oidc_with_retry(body)
         except Exception as e:
             print(f"UNSIGNED {fp.name} — {e}", file=sys.stderr)
             failures += 1

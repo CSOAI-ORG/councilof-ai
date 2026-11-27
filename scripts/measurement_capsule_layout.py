@@ -142,6 +142,18 @@ def entry_for(c, line, ver, adapter, slug, root, rule, vroot):
     }
 
 
+def check_anchors(anchors_raw, index_raw, index, proof_raw):
+    """Bind the anchor manifest to the exact files about to be published."""
+    anchors = json.loads(anchors_raw)
+    if (anchors["date"] != index["date"]
+            or anchors["index"]["index_root"] != index["index_root"]
+            or anchors["index"]["sha256"] != sha(index_raw)):
+        sys.exit("ANCHORS_INDEX_MISMATCH")
+    proof_digest = sha(proof_raw) if proof_raw is not None else None
+    if anchors["opentimestamps"]["proof_sha256"] != proof_digest:
+        sys.exit("ANCHORS_PROOF_MISMATCH")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--index", required=True)
@@ -157,6 +169,11 @@ def main():
     ver = INDEX_SCHEMAS.get(idx.get("schema"))
     if not ver:
         sys.exit(f"UNKNOWN_INDEX_SCHEMA {idx.get('schema')}")
+    ots = ip.with_name(ip.name + ".ots")
+    proof_raw = ots.read_bytes() if ots.exists() else None
+    anchors_raw = pathlib.Path(a.anchors).read_bytes() if a.anchors else None
+    if anchors_raw is not None:
+        check_anchors(anchors_raw, raw, idx, proof_raw)
     out = pathlib.Path(a.out)
     vdir = out / f"v{ver}"
     vroot = f"{DATA_ROOT}/v{ver}"
@@ -165,11 +182,10 @@ def main():
     signed = ip.with_name(ip.stem + ".signed.json")
     if signed.exists():
         shutil.copyfile(signed, vdir / "index.signed.json")
-    ots = ip.with_name(ip.name + ".ots")
-    if ots.exists():
-        shutil.copyfile(ots, vdir / "index.json.ots")
-    if a.anchors:
-        shutil.copyfile(a.anchors, vdir / "anchors.json")
+    if proof_raw is not None:
+        (vdir / "index.json.ots").write_bytes(proof_raw)
+    if anchors_raw is not None:
+        (vdir / "anchors.json").write_bytes(anchors_raw)
     shards = collections.defaultdict(lambda: {"endpoints": {}, "origins": {}})
     all_ids, report, unkeyed, slugs = [], [], collections.Counter(), set()
     for b in idx["batches"]:

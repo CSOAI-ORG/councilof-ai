@@ -15,13 +15,35 @@ const LIMITS = [
   'No model-weight training, durable memory admission, legal determination, human decision or execution is performed.',
 ];
 
-async function readFixed(path, fetchImpl, now) {
+async function readFixed(path, fetchImpl, now, deadlineMs) {
   if (![BOARD_PATH, DAILY_INDEX_PATH].includes(path)) throw new Error('SOURCE_NOT_ALLOWED');
   const url = ORIGIN + path;
-  let response, reader;
+  let response, reader, stopped = false, rejectDeadline;
+  const controller = new AbortController();
+  const deadline = new Promise((_, reject) => { rejectDeadline = reject; });
+  const cancel = stream => {
+    // Cancellation is advisory. A stalled producer must not delay the return.
+    try { void stream?.cancel().catch(() => {}); } catch { /* advisory */ }
+  };
+  const timer = setTimeout(() => {
+    stopped = true;
+    controller.abort();
+    rejectDeadline(new Error('SOURCE_DEADLINE'));
+  }, deadlineMs);
+  const active = () => { if (stopped) throw new Error('SOURCE_DEADLINE'); };
+  const wait = async operation => {
+    const value = await Promise.race([operation, deadline]);
+    active();
+    return value;
+  };
   try {
-    response = await fetchImpl(url, {method: 'GET', credentials: 'omit', redirect: 'error',
-      cache: 'no-store', headers: {accept: 'application/json'}, signal: AbortSignal.timeout(5000)});
+    response = await wait(Promise.resolve().then(() => fetchImpl(url, {
+      method: 'GET', credentials: 'omit', redirect: 'error', cache: 'no-store',
+      headers: {accept: 'application/json'}, signal: controller.signal
+    })).then(value => {
+      if (stopped) { cancel(value?.body); active(); }
+      return value;
+    }));
     if (!response.ok || response.redirected || (response.url && response.url !== url)) throw new Error('SOURCE_UNAVAILABLE');
     if (!/^application\/(?:[\w.+-]+\+)?json[ \t]*(?:;|$)/i.test(response.headers.get('content-type') || '')) throw new Error('SOURCE_NOT_JSON');
     const declaredLength = response.headers.get('content-length');
@@ -30,7 +52,7 @@ async function readFixed(path, fetchImpl, now) {
     reader = response.body.getReader();
     const chunks = []; let length = 0;
     while (true) {
-      const next = await reader.read(); if (next.done) break;
+      const next = await wait(reader.read()); if (next.done) break;
       length += next.value.byteLength;
       if (length > BYTE_CAP) throw new Error('SOURCE_TOO_LARGE');
       chunks.push(Buffer.from(next.value));
@@ -41,21 +63,25 @@ async function readFixed(path, fetchImpl, now) {
       bytes_sha256: createHash('sha256').update(raw).digest('hex'),
       integrity: 'RETRIEVED_BYTES_HASHED', issuer_signature: 'NOT_VERIFIED'}};
   } finally {
-    if (reader) await reader.cancel().catch(() => {});
-    else await response?.body?.cancel().catch(() => {});
+    clearTimeout(timer);
+    if (reader) {
+      cancel(reader);
+      try { reader.releaseLock(); } catch { /* pending read remains refused */ }
+    } else cancel(response?.body);
   }
 }
 
-export async function readGspcEvidence(args = {}, {fetchImpl = fetch, now = () => new Date()} = {}) {
+export async function readGspcEvidence(args = {}, {fetchImpl = fetch, now = () => new Date(), deadlineMs = 5000} = {}) {
   if (!args || typeof args !== 'object' || Array.isArray(args) ||
       Object.keys(args).some(key => key !== 'axis') ||
       typeof args.axis !== 'string' || !/^[a-z0-9][a-z0-9-]{0,79}$/.test(args.axis)) {
     throw new TypeError('Supply one exact axis ID; no other arguments are accepted.');
   }
+  if (!Number.isSafeInteger(deadlineMs) || deadlineMs < 1 || deadlineMs > 5000) throw new TypeError('Invalid source deadline.');
   const readAt = now();
   if (!(readAt instanceof Date) || !Number.isFinite(readAt.getTime())) throw new TypeError('Invalid observation time.');
   const [boardRead, indexRead] = await Promise.allSettled([
-    readFixed(BOARD_PATH, fetchImpl, now), readFixed(DAILY_INDEX_PATH, fetchImpl, now),
+    readFixed(BOARD_PATH, fetchImpl, now, deadlineMs), readFixed(DAILY_INDEX_PATH, fetchImpl, now, deadlineMs),
   ]);
   const daily = indexRead.status === 'fulfilled'
     ? {...dailyBriefing(indexRead.value.data, now()), source: indexRead.value.source}
@@ -76,8 +102,19 @@ export async function readGspcEvidence(args = {}, {fetchImpl = fetch, now = () =
   const row = board.axes.find(axis => axis.axis === args.axis);
   if (!row) return {...base, reason: 'AXIS_NOT_IN_OBSERVED_BOARD'};
   const boundedText = (value, limit) => typeof value === 'string' && value.length <= limit ? value : null;
+  // Methodology deposit availability is a publisher-reported qualification, not
+  // independent verification. A live methodology page is not the archived bytes.
+  const methodology = {
+    publisher_reported_deposit_status: ['AVAILABLE', 'UNAVAILABLE'].includes(board.doi_status)
+      ? board.doi_status : 'NOT_REPORTED_OR_UNCHECKABLE',
+    publisher_reported_status_only: true,
+    alternative_page: board.doi_alternative?.url === 'https://councilof.ai/methodology/'
+      ? 'https://councilof.ai/methodology/' : null,
+    alternative_is_verified_deposit_bytes: false,
+    deposit_bytes_verified: false,
+  };
   // Positive allowlist: do not copy arbitrary source properties or asserted permissions.
-  return {...base, state: 'OBSERVED_PUBLISHED_RECORD', reason: null,
+  return {...base, methodology, state: 'OBSERVED_PUBLISHED_RECORD', reason: null,
     coverage: {published_axes: board.axes.length,
       published_measured_axes: board.axes.filter(axis => axis.status === 'MEASURED').length,
       scope: 'THIS_BOARD_RESPONSE_ONLY'},

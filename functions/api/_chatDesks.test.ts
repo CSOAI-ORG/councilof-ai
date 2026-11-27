@@ -22,6 +22,13 @@ describe("AI desks persona ratchet", () => {
     });
   }
 
+  it("does not present Watchdog as confidential intake or emergency response", () => {
+    expect(DESKS.watchdog.instructions).toContain("Do not solicit confidential allegations");
+    expect(DESKS.watchdog.instructions).toContain("do not imply a case was received or forwarded");
+    expect(DESKS.watchdog.instructions).toContain("local emergency services");
+    expect(DESKS.watchdog.cannot).toContain("Confidential incident intake or automatic forwarding");
+  });
+
   it("reads desk tags loosely and rejects unknown ones", () => {
     expect(deskOf(" Measure ")?.id).toBe("measure");
     expect(deskOf("sales")).toBeNull();

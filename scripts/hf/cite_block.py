@@ -91,6 +91,7 @@ LIC_FIX = {
 
 LIC_NOTE = {
     "gspc-hf-model-census": "\n## Licence note\n\nThe data files (models.jsonl, manifest.jsonl) are CC-BY-4.0. The script build_census.py is code and is Apache-2.0.\n",
+    "gspc-care": "\n## Licence note\n\nThe data files in this repository are CC-BY-4.0, as the card states. The Apache-2.0 LICENSE file covers the Python scripts care_battery.py and care_gate_eval.py.\n",
     "index-presence": "\n## Licence note\n\nFiles written by CSOAI in this repository (the measurement JSON files and PRESENCE-BOARD.md) are CC-BY-4.0, the licence councilof.ai states for its data. `2026-09-22/mcp-registry-servers.jsonl` is a verbatim copy of third-party MCP registry records; it keeps the terms of its upstream source and is not relicensed by CSOAI.\n",
 }
 
@@ -223,7 +224,7 @@ def block(name, title, year, lic, doi, key=None, objections=True, source=None):
         lic_line = (f"Licence: {LIC_LABEL.get(lic, lic)}, the licence of the source's data, which governs this derived "
                     f"dataset. Credit the source's authors, {who} (arXiv:{source['arxiv']}), and Council of AI, "
                     "CSOAI Ltd (16939677), https://councilof.ai.")
-        cite_part = [f"The items are derived from the {source['name']} (see {SRC_HEADING[3:]}, above). "
+        cite_part = [f"{source.get('cite_scope', 'The items')} are derived from the {source['name']} (see {SRC_HEADING[3:]}, above). "
                      "Cite its paper, as its authors ask:", "",
                      f"{who}. *{source['title']}*. arXiv:{source['arxiv']}, {source['year']}. {source['paper']}", "",
                      "```bibtex", *source["bibtex"], "```", "", "To cite this derived dataset:", "", *cite_part]

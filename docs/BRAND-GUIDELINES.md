@@ -1,4 +1,4 @@
-# Council of AI — brand guidelines
+# Council for the Safety of Artificial Intelligence — brand guidelines
 
 Status: v1, 17 November 2026. Single source for how we name things, how we write, what the identity looks like as shipped, and which claims we may make. Where this file and a page disagree, the page is wrong. Where it disagrees with a live endpoint about a number, the endpoint is right.
 
@@ -10,11 +10,11 @@ Related: [docs/DOCTRINE.md](DOCTRINE.md) (the eight rules), `public/llms.txt` (t
 
 Use this line whenever someone needs one sentence: an answer engine, a directory listing, a bio, a slide.
 
-> **Council of AI publishes signed, re-checkable measurements of AI models and agents. Verification is free. We measure; we do not certify.**
+> **Council for the Safety of Artificial Intelligence publishes signed, re-checkable measurements of AI models and agents. Verification is free. We measure; we do not certify.**
 
 The long form, for an About box:
 
-> Council of AI is the public name of CSOAI Ltd (England and Wales, Companies House 16939677). It runs published test instruments for AI systems and agents and publishes signed measurement records. Anyone can re-check a signed record for free. It keeps a public, dated corrections ledger, and it publishes UNMEASURED where it has not measured. It measures; it does not certify, accredit or issue conformity assessments.
+> Council for the Safety of Artificial Intelligence is the public name of CSOAI Ltd (England and Wales, Companies House 16939677). It runs published test instruments for AI systems and agents and publishes signed measurement records. Anyone can re-check a signed record for free. It keeps a public, dated corrections ledger, and it publishes UNMEASURED where it has not measured. It measures; it does not certify, accredit or issue conformity assessments.
 
 Both lines carry no count, no superlative and no status. Keep them that way.
 
@@ -24,8 +24,8 @@ Both lines carry no count, no superlative and no status. Keep them that way.
 
 | Name | What it is | Write it | Never |
 |---|---|---|---|
-| **Council of AI** | The public name of the organisation. | "Council of AI" in full on first mention. After that, "Council of AI" or "we". | "The Council" on its own in outward copy (it suggests a voting body of people or AIs). "CoAI", "Council-of-AI". |
-| **CSOAI Ltd** | The legal entity, Companies House 16939677. Written "CSOAI LTD" in the register. | In legal text, footers, contact pages, contracts and JSON-LD `legalName`. "Council of AI (CSOAI Ltd)" where legal identity matters. | As the page-title brand. Titles end "\| Council of AI", not "\| CSOAI". |
+| **Council for the Safety of Artificial Intelligence** | Public organisation name. | Use the full name on first mention in public profiles, email signatures, dataset cards and current publications. Use “Council of AI” as a short form after introduction or in compact navigation. | "The Council" on its own in outward copy (it suggests a voting body of people or AIs). "CoAI", "Council-of-AI". |
+| **CSOAI Ltd** | The legal entity, Companies House 16939677. Written "CSOAI LTD" in the register. | In legal text, footers, contact pages, contracts and JSON-LD `legalName`. "Council for the Safety of Artificial Intelligence (CSOAI Ltd)" where legal identity matters. | As the page-title brand. Titles end "\| Council of AI", not "\| CSOAI". |
 | **CSOAI** | Short form. JSON-LD `alternateName`. | In code, package names, the HF/GitHub org names, and after the full name has appeared. | As the only name on a public page. |
 | **Council OS** | The workspace product: ask, get results, check a result, connect. Served at `/dashboard/`. | As secondary context in the lockup ("Council of AI · Council OS"). The header CTA reads "Council OS". | As if it were a separate company or brand. "CouncilOS". |
 | **GSPC** | The measurement board and its banks. Live at `GET /api/gspc`; the human page is `/board/`. | "the GSPC board". Quote its counts only from the live endpoint (§5). | With a typed count ("the 23-axis GSPC"). |
@@ -61,7 +61,7 @@ These are the values in the repository on 17 November 2026. Change them in the s
 
 - **Mark:** `public/csoai-icon.svg`. A flat green shield (`#04624a`) with a white inner field and a four-column temple. It is flat on purpose: no gradient, no glow. The geometry holds at a 16 px favicon (four columns, 3 px minimum stroke, solid pediment). Do not redraw it, outline it, add effects or put it on a busy photo.
 - **Other files:** `public/apple-touch-icon.png` (180×180), `public/og-image.png` (social card), and `public/manifest.json`, which references the SVG mark.
-- **Lockup:** `CouncilBrand` (`client/src/components/brand/CouncilBrand.tsx`). It sets the mark beside the wordmark **Council of AI** (bold, tight tracking, institutional green). An optional context label follows, such as `COUNCIL OS` (uppercase, 0.14em tracking, muted), and an optional strapline sits beneath. The institution's name is always primary; a product name is always secondary context.
+- **Lockup:** `CouncilBrand` (`client/src/components/brand/CouncilBrand.tsx`). It sets the mark beside the wordmark **Council for the Safety of Artificial Intelligence** (bold, tight tracking, institutional green). An optional context label follows, such as `COUNCIL OS` (uppercase, 0.14em tracking, muted), and an optional strapline sits beneath. The institution's name is always primary; a product name is always secondary context.
 - **Clear space:** at least the width of one temple column around the mark. Minimum size: 16 px for the mark alone, 32 px mark height in the lockup.
 
 ### Colour (`client/src/styles/index.css`)

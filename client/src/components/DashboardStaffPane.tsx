@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PalAskPanel from "@/components/PalAskPanel";
 import HitlConsole from "@/components/HitlConsole";
+import { reportedStaffDid, staffStoreState } from "@/lib/staffReadiness";
 import { DESKS, DESK_IDS, deskDisclosure, type DeskId } from "../../../functions/api/_chatDesks";
 
 /**
@@ -32,6 +33,7 @@ export default function DashboardStaffPane() {
   const [staff, setStaff] = useState<PalRecord[]>([]);
   const [modelConfigured, setModelConfigured] = useState<boolean | null>(null);
   const [modelActive, setModelActive] = useState<string | null>(null);
+  const [storeState, setStoreState] = useState<ReturnType<typeof staffStoreState>>("UNKNOWN");
   const [loaded, setLoaded] = useState(false);
   // The challenge a staff member raised instead of performing the act itself.
   const [challenge, setChallenge] = useState<any>(null);
@@ -44,8 +46,9 @@ export default function DashboardStaffPane() {
         if (!r.ok) return;
         const j = await r.json();
         if (!live) return;
-        setStaff((j?.staff ?? []) as PalRecord[]);
-        setModelConfigured(Boolean(j?.model_configured));
+        setStaff((Array.isArray(j?.staff) ? j.staff.filter((v: unknown) => v && typeof v === "object") : []) as PalRecord[]);
+        setStoreState(staffStoreState(j));
+        setModelConfigured(typeof j?.model_configured === "boolean" ? j.model_configured : null);
         setModelActive(j?.model_active ?? null);
       } catch {
         // The staff list is also derivable from the desk definitions, so a registry that cannot
@@ -62,7 +65,7 @@ export default function DashboardStaffPane() {
   // The desk definitions are the fallback and the scope; the registry adds identity and state.
   const rows = DESK_IDS.map((id) => {
     const rec = staff.find((s) => s.slug === id);
-    return { id, name: DESKS[id].name, role: DESKS[id].role, did: rec?.did ?? "" };
+    return { id, name: DESKS[id].name, role: DESKS[id].role, did: reportedStaffDid(rec) };
   });
 
   // This pane draws no background of its own: it sits on the light Council OS shell, so it uses the
@@ -73,8 +76,7 @@ export default function DashboardStaffPane() {
     <div className="mx-auto max-w-5xl px-4 py-8 text-foreground">
       <h1 className="mb-2 text-2xl font-bold">Staff</h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        The Council of AI staff. Each one is an AI agent with its own identity, its own scope and its own
-        memory namespace. It answers from published records, or says UNMEASURED, or talks — and it tells you which.
+        The Council of AI staff. Each desk is an AI agent with a declared scope. Persistent storage and signing depend on the live registry; neither grants human or execution authority. It answers from published records, or says UNMEASURED, or talks — and it tells you which.
       </p>
 
       {modelConfigured === false ? (
@@ -89,6 +91,12 @@ export default function DashboardStaffPane() {
         </p>
       ) : null}
 
+      <p role="note" className="mb-6 rounded-xl border border-border bg-card p-3 text-sm" data-testid="staff-store-state">
+        {storeState === "UNBOUND" ? "Staff storage is not bound in this deployment. Do not rely on persistent staff memory or case retention." :
+          storeState === "BOUND_REPORTED" ? "Staff storage is reported bound. This does not establish persistence of a particular case." :
+          "Staff storage status is unknown. Do not rely on persistent memory or case retention."}
+      </p>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {rows.map((r) => (
           <article key={r.id} data-testid={`os-agent-${r.id}`} className="flex flex-col rounded-2xl border border-border bg-card p-5 shadow-sm">
@@ -100,7 +108,7 @@ export default function DashboardStaffPane() {
             <p role="note" className="mb-3 text-[12px] text-slate-700">{deskDisclosure(r.name)}</p>
             {r.did ? (
               <p className="mb-3 break-all text-[11px] text-muted-foreground">
-                did:key:{r.did.replace(/^did:key:/, "").slice(0, 16)}…
+                Registry-reported did:key:{r.did.replace(/^did:key:/, "").slice(0, 16)}…
               </p>
             ) : (
               <p className="mb-3 text-[11px] text-muted-foreground">

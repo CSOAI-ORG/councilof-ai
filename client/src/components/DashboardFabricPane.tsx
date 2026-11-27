@@ -158,6 +158,12 @@ export default function DashboardFabricPane() {
         </button>
       </header>
 
+      <aside className="mt-5 rounded-xl border border-emerald-800/15 bg-emerald-50/60 p-4">
+        <p className="text-sm font-semibold text-emerald-950">Public research commons</p>
+        <p className="mt-1 text-xs leading-relaxed text-emerald-950/75">Browse source revisions and candidate paper metadata, then plan a private experiment. Discovery grants no execution or publication authority.</p>
+        <Link href="/dashboard?tab=research" className="mt-2 inline-flex min-h-11 items-center font-semibold text-emerald-900 underline">Open research commons and experiment planning</Link>
+      </aside>
+
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         <article className="rounded-2xl border border-emerald-800/15 bg-emerald-50/60 p-4">
           <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-800">

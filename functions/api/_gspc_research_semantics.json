@@ -1,6 +1,6 @@
 {
   "schema": "csoai.gspc-research-semantics/0.1",
-  "version": "2026-11-06",
+  "version": "2026-11-27",
   "scope": "Research semantics for axes already carrying a published measurement. This registry does not add a measurement, establish legal compliance, or authorise a system change.",
   "controls": {
     "read_only": true,
@@ -32,7 +32,24 @@
     "mlcommons-result-policy": {"publisher": "MLCommons", "title": "AILuminate result policy — Official results and internal-only Practice", "url": "https://mlcommons.org/ailuminate/citing-results/", "watch": false, "reviewed_on": "2026-11-06", "boundary": "Public method reference only. No test execution, source-content reuse permission, external acceptance or Council measurement is established by this link. Scheduled watching is not enabled."},
     "mlcommons-stewardship": {"publisher": "MLCommons", "title": "Continuous prompt stewardship — contamination, review and refresh methods", "url": "https://mlcommons.org/2026/04/continuous-prompt-stewardship/", "watch": false, "reviewed_on": "2026-11-06", "boundary": "Public method reference only. No test execution, source-content reuse permission, external acceptance or Council measurement is established by this link. Scheduled watching is not enabled."},
     "mlcommons-airr": {"publisher": "MLCommons", "title": "AI Risk & Reliability — working-group and instrument discovery", "url": "https://mlcommons.org/working-groups/ai-risk-reliability/ai-risk-reliability/", "watch": false, "reviewed_on": "2026-11-06", "boundary": "Public method reference only. No test execution, source-content reuse permission, external acceptance or Council measurement is established by this link. Scheduled watching is not enabled."},
-    "safe-reporting-compact": {"publisher": "Open Secure AI Alliance", "title": "SAFE reporting compact v1.0 — source reference, not an adoption record", "url": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/ba76bac74c251926cb3d14bc363e0443b5959007/SAFE.md", "watch": false, "reviewed_on": "2026-11-06", "boundary": "Public method reference only. No test execution, source-content reuse permission, external acceptance or Council measurement is established by this link. Scheduled watching is not enabled."}
+    "safe-reporting-compact": {"publisher": "Open Secure AI Alliance", "title": "SAFE reporting compact v1.0 — source reference, not an adoption record", "url": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/ba76bac74c251926cb3d14bc363e0443b5959007/SAFE.md", "watch": false, "reviewed_on": "2026-11-06", "boundary": "Public method reference only. No test execution, source-content reuse permission, external acceptance or Council measurement is established by this link. Scheduled watching is not enabled."},
+    "fsb-ai-sound-practices": {"publisher": "Financial Stability Board", "title": "Final AI sound practices for financial institutions", "url": "https://www.fsb.org/2026/10/sound-practices-for-responsible-adoption-of-artificial-intelligence-ai-final-report/", "watch": true, "boundary": "Financial-sector recommendations; no certification or institution-level assessment."},
+    "boe-fca-ai-survey": {"publisher": "Bank of England and FCA", "title": "Artificial intelligence in UK financial services 2026", "url": "https://www.bankofengland.co.uk/report/2026/artificial-intelligence-in-uk-financial-services-2026", "watch": true, "boundary": "Survey evidence from respondents; not population estimates or current model safety."},
+    "fca-ai-practice": {"publisher": "Financial Conduct Authority", "title": "AI in financial services: good practice and areas for improvement", "url": "https://www.fca.org.uk/publications/good-poor-practice/ai-financial-services", "watch": true, "boundary": "Supervisory practice examples; not a new statute or approval."},
+    "mas-ai-risk": {"publisher": "Monetary Authority of Singapore", "title": "AI risk management guidelines for financial institutions", "url": "https://www.mas.gov.sg/regulation/guidelines/guidelines-on-artificial-intelligence-risk-management-for-financial-institutions", "watch": false, "boundary": "Singapore financial sector scope; source changes require applicability review."},
+    "asean-genai-guide": {"publisher": "ASEAN Secretariat", "title": "Expanded ASEAN Guide on AI Governance and Ethics: Generative AI", "url": "https://asean.org/book/expanded-asean-guide-on-ai-governance-and-ethics-generative-ai/", "watch": false, "boundary": "Regional guidance; national obligations require local review."},
+    "au-ai-strategy": {"publisher": "African Union", "title": "Continental Artificial Intelligence Strategy", "url": "https://au.int/en/documents/20240809/continental-artificial-intelligence-strategy", "watch": true, "boundary": "Continental strategy; not evidence of national implementation."},
+    "unesco-ai-ethics": {"publisher": "UNESCO", "title": "Recommendation on the Ethics of Artificial Intelligence", "url": "https://www.unesco.org/en/legal-affairs/recommendation-ethics-artificial-intelligence", "watch": true, "boundary": "International recommendation; not a local legal ruling."},
+    "canada-aia": {"publisher": "Government of Canada", "title": "Algorithmic Impact Assessment", "url": "https://www.canada.ca/en/government/system/digital-government/digital-government-innovations/responsible-use-ai/automated-decision-making/algorithmic-impact-assessment.html", "watch": true, "boundary": "Federal government automated decision scope; do not generalise to private firms."},
+    "india-ai-governance": {"publisher": "Government of India", "title": "India AI Governance Guidelines announcement", "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2228315&lang=2&reg=48", "watch": false, "boundary": "Official explanatory release; follow the actual guideline and sectoral rules."},
+    "china-genai-measures": {"publisher": "Ministry of Industry and Information Technology", "title": "Interim Measures for Generative Artificial Intelligence Services", "url": "https://www.miit.gov.cn/zcfg/qtl/art/2023/art_f4e8f71ae1dc43b0980b962907b7738f.html", "watch": false, "boundary": "Chinese original-language regulatory text; qualified translation and scope review required."},
+    "australia-ai-plan": {"publisher": "Australian Government", "title": "National AI Plan", "url": "https://www.industry.gov.au/publications/national-ai-plan", "watch": false, "boundary": "National policy plan, not a statutory control or measured uptake."},
+    "japan-ai-business": {"publisher": "METI and MIC", "title": "AI Guidelines for Business initial announcement", "url": "https://www.meti.go.jp/english/press/2024/0419_002.html", "watch": false, "boundary": "Historical version 1.0 announcement; check successor version before relying on it."},
+    "saudi-ai-risk": {"publisher": "Saudi Press Agency", "title": "SDAIA national AI risk framework announcement", "url": "https://www.spa.gov.sa/en/N2633781", "watch": false, "boundary": "Official announcement; obtain framework and local review before mapping provisions."},
+    "brazil-anpd-sandbox": {"publisher": "ANPD", "title": "AI and data protection regulatory sandbox testing methodology", "url": "https://www.gov.br/anpd/pt-br/assuntos/noticias/anpd-publica-metodologia-de-testagem-do-sandbox-regulatorio-em-inteligencia-artificial-e-protecao-de-dados", "watch": true, "boundary": "Portuguese source; pilot scope only, no eligibility or open application claim."},
+    "oecd-policy-navigator": {"publisher": "OECD", "title": "AI Policy Navigator", "url": "https://oecd.ai/en/dashboards/policy-initiatives", "watch": false, "boundary": "Discovery index only; individual primary instruments need confirmation. Do not infer change from dynamic page chrome."},
+    "anthropic-economic-index": {"publisher": "Anthropic", "title": "Economic Index research and methodology", "url": "https://www.anthropic.com/economic-index", "watch": true, "boundary": "Observed Claude task usage only; no labour-market outcomes or customer demand inference."},
+    "worldbank-indicators": {"publisher": "World Bank", "title": "Indicators API documentation", "url": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392", "watch": true, "boundary": "Economic context; indicator-level licence, coverage, time and comparability require review."}
   },
   "axes": [
     {
@@ -42,7 +59,7 @@
       "implementation": { "present": "GovBench, 237 rows, deterministic grading and paired separation on the living board.", "missing": "Source-to-item version map, counsel-reviewed label migration and a version-preserving replay pipeline." },
       "safe_autonomous_action": "Fingerprint governance sources and prepare an unsigned item-impact review request.",
       "human_gate": "Counsel and the measurement owner approve interpretation, bank versioning and any board change.",
-      "source_ids": ["eu-ai-act", "nist-ai-rmf", "mlcommons-assessment"]
+      "source_ids": ["eu-ai-act", "nist-ai-rmf", "mlcommons-assessment", "fsb-ai-sound-practices", "fca-ai-practice", "asean-genai-guide", "au-ai-strategy", "unesco-ai-ethics", "canada-aia", "india-ai-governance", "china-genai-measures", "australia-ai-plan", "japan-ai-business", "saudi-ai-risk", "brazil-anpd-sandbox"]
     },
     {
       "axis": "safety",
@@ -51,7 +68,7 @@
       "implementation": { "present": "DefBench, 36 paired requests and deterministic scoring.", "missing": "Versioned threat-to-pair coverage and human-reviewed expansion without rewriting historical results." },
       "safe_autonomous_action": "Detect taxonomy revisions and propose coverage-gap candidates only.",
       "human_gate": "Safety reviewers approve new cases, gold labels and replay admission. External Official results remain separate from DefBench; Practice results are internal only and cannot be published as Council or official MLCommons results.",
-      "source_ids": ["nist-ai-rmf", "nist-adversarial-ml", "owasp-llm", "mlcommons-assessment", "mlcommons-result-policy", "mlcommons-stewardship"]
+      "source_ids": ["nist-ai-rmf", "nist-adversarial-ml", "owasp-llm", "mlcommons-assessment", "mlcommons-result-policy", "mlcommons-stewardship", "asean-genai-guide", "india-ai-governance", "australia-ai-plan"]
     },
     {
       "axis": "provenance",
@@ -60,7 +77,7 @@
       "implementation": { "present": "ProvBench, 32 Article 50 validity items plus a separate Art. 50 byte-inspection workflow.", "missing": "Detector/version matrix tied to frozen transformations and counsel-approved label updates." },
       "safe_autonomous_action": "Watch format and statutory sources; emit a provenance-semantics review request.",
       "human_gate": "Format specialists and counsel approve validity predicates and bank versions.",
-      "source_ids": ["c2pa", "w3c-prov", "eu-ai-act"]
+      "source_ids": ["c2pa", "w3c-prov", "eu-ai-act", "asean-genai-guide", "china-genai-measures"]
     },
     {
       "axis": "continuity",
@@ -69,7 +86,7 @@
       "implementation": { "present": "PQCBench, 33 frozen items and deterministic status classification.", "missing": "A standards-version register and reviewed cryptographic migration fixtures." },
       "safe_autonomous_action": "Record source revisions and identify assumptions requiring cryptographic review.",
       "human_gate": "Cryptography reviewers approve labels; operators authorise re-measurement.",
-      "source_ids": ["nist-ai-rmf", "slsa-verification"]
+      "source_ids": ["nist-ai-rmf", "slsa-verification", "fsb-ai-sound-practices", "boe-fca-ai-survey", "mas-ai-risk", "india-ai-governance", "saudi-ai-risk"]
     },
     {
       "axis": "conformance",
@@ -105,7 +122,7 @@
       "implementation": { "present": "CareBench, 199 rows and a protect-by-help rubric.", "missing": "Lived-experience review, escalation fixtures and source-to-severity versioning." },
       "safe_autonomous_action": "Flag taxonomy changes for scenario and severity review without generating gold labels.",
       "human_gate": "Safeguarding specialists and affected-person reviewers approve scenarios and labels.",
-      "source_ids": ["nist-ai-rmf", "eu-ai-act", "owasp-llm", "mlcommons-assessment", "mlcommons-stewardship"]
+      "source_ids": ["nist-ai-rmf", "eu-ai-act", "owasp-llm", "mlcommons-assessment", "mlcommons-stewardship", "fca-ai-practice", "au-ai-strategy", "unesco-ai-ethics", "canada-aia", "brazil-anpd-sandbox"]
     },
     {
       "axis": "cross-reality",
@@ -123,7 +140,7 @@
       "implementation": { "present": "DetBench, 33 matrix items; the board withholds an unverifiable leader.", "missing": "Executable detector fixtures, signed per-model evidence and an explicit version matrix." },
       "safe_autonomous_action": "Track detector/format revisions and propose new matrix cells.",
       "human_gate": "Provenance engineers validate detector outputs and reviewers admit a replay.",
-      "source_ids": ["c2pa", "eu-ai-act"]
+      "source_ids": ["c2pa", "eu-ai-act", "china-genai-measures"]
     },
     {
       "axis": "art5-safeguard",
@@ -132,7 +149,7 @@
       "implementation": { "present": "Art5Bench, 36 deterministic legal-scenario items.", "missing": "Provision-version mapping and counsel-approved external re-ranking evidence." },
       "safe_autonomous_action": "Detect source changes and open legal-label review; never issue a breach verdict.",
       "human_gate": "Counsel approves legal interpretation and every affected gold label.",
-      "source_ids": ["eu-ai-act"]
+      "source_ids": ["eu-ai-act", "unesco-ai-ethics"]
     },
     {
       "axis": "swarm",
@@ -168,7 +185,7 @@
       "implementation": { "present": "EffectBench v0.1 signed probe over 261 of 600 attempted servers, with controls and fail-capable grading.", "missing": "A published method hash, repeat-run scheduling, backend-effect evidence and a consented consequential-action harness." },
       "safe_autonomous_action": "Watch protocol semantics and schedule read-only review proposals; tool annotations alone never establish trust.",
       "human_gate": "Server owners and operators approve scope; people confirm consequential tests and reviewers admit results.",
-      "source_ids": ["mcp-tools", "owasp-llm", "mlcommons-airr", "safe-reporting-compact"]
+      "source_ids": ["mcp-tools", "owasp-llm", "mlcommons-airr", "safe-reporting-compact", "fsb-ai-sound-practices", "boe-fca-ai-survey", "mas-ai-risk"]
     },
     {
       "axis": "provenance-controls",
@@ -195,7 +212,7 @@
       "implementation": { "present": "RegimeFacts over 16 reader rows, deterministic three-state declaration grading.", "missing": "Current disclosure captures, jurisdiction-specific legal review and signed rerun admission." },
       "safe_autonomous_action": "Watch official regimes and propose declaration re-checks, never compliance conclusions.",
       "human_gate": "Counsel approves regime mappings and reviewers approve any signed result.",
-      "source_ids": ["eu-mica", "fsb-stablecoin"]
+      "source_ids": ["eu-mica", "fsb-stablecoin", "fsb-ai-sound-practices", "mas-ai-risk", "oecd-policy-navigator"]
     },
     {
       "axis": "distribution-integrity",
@@ -222,7 +239,7 @@
       "implementation": { "present": "Two cited isoc_eb_ai component facts for 2025; no composite index.", "missing": "Dataset-version monitoring, API-driven rerun and a reviewed component update; no index formula exists." },
       "safe_autonomous_action": "Detect source revisions and prepare a component-level rerun request.",
       "human_gate": "Statistical reviewers validate population, units and revisions before publication.",
-      "source_ids": ["eurostat-ai"]
+      "source_ids": ["eurostat-ai", "boe-fca-ai-survey", "au-ai-strategy", "australia-ai-plan", "anthropic-economic-index", "worldbank-indicators"]
     },
     {
       "axis": "labour-components",
@@ -231,7 +248,7 @@
       "implementation": { "present": "Two cited 2025 Eurostat component facts from lfsi_emp_a and une_rt_a; no composite index.", "missing": "Versioned API extraction, definition review and signed component rerun; no index formula exists." },
       "safe_autonomous_action": "Watch statistical definitions and request component re-observation only.",
       "human_gate": "Statistical reviewers approve series and denominator changes before publication.",
-      "source_ids": ["eurostat-ai"]
+      "source_ids": ["eurostat-ai", "anthropic-economic-index", "worldbank-indicators"]
     },
     {
       "axis": "humanoid-labour-index",
@@ -277,10 +294,7 @@
       },
       "safe_autonomous_action": "Collect public source references and propose a claim-review request without creating a company verdict.",
       "human_gate": "Reviewers approve the subject frame, permitted reuse and any new run; a source change is not a measurement.",
-      "source_ids": [
-        "nist-ai-rmf",
-        "w3c-prov"
-      ]
+      "source_ids": ["nist-ai-rmf", "w3c-prov", "fca-ai-practice", "japan-ai-business"]
     },
     {
       "axis": "measurer-integrity",
@@ -297,12 +311,7 @@
       },
       "safe_autonomous_action": "Map published method revisions to review questions; do not grant a result or endorsement to an evaluator.",
       "human_gate": "Independent measurement reviewers approve construct validity, sampling and replay; benchmark owners' publication conditions remain controlling.",
-      "source_ids": [
-        "mlcommons-stewardship",
-        "mlcommons-assessment",
-        "mlcommons-result-policy",
-        "sigstore-threat-model"
-      ]
+      "source_ids": ["mlcommons-stewardship", "mlcommons-assessment", "mlcommons-result-policy", "sigstore-threat-model", "canada-aia", "brazil-anpd-sandbox"]
     },
     {
       "axis": "harness-fidelity",
@@ -382,10 +391,7 @@
       },
       "safe_autonomous_action": "Detect public artifact changes and request an attribution review without inferring a new legal duty.",
       "human_gate": "Reviewers confirm authoritative sources and jurisdictions; counsel handles any applicability question.",
-      "source_ids": [
-        "eu-ai-act",
-        "nist-ai-rmf"
-      ]
+      "source_ids": ["eu-ai-act", "nist-ai-rmf", "oecd-policy-navigator"]
     },
     {
       "axis": "interpretability-reproducibility",

@@ -78,6 +78,7 @@ describe("resultCard", () => {
 
   it("names tools and states in plain words, and keeps verify links same-origin relative", () => {
     expect(toolTitle("server_evidence")).toBe("What is measured about this server");
+    expect(toolTitle("x402_trust")).toBe("x402 catalog census");
     expect(toolTitle("some_new_tool")).toBe("Some new tool");
     expect(stateMeaning("NOT_MEASURED")).toMatch(/not a finding/);
     expect(verifyHref("https://councilof.ai/api/gspc")).toBe("/api/gspc");
@@ -251,27 +252,30 @@ describe("resultCard", () => {
     expect(plainDuration(3 * 86400)).toBe("3 days");
   });
 
-  // Tools audit retest, 6 Oct 2026 (#2841): the x402 card printed 15 in a tile and 16 in its text.
-  it("derives the x402 tile and the x402 sentence from one source", () => {
+  it("keeps x402 status, failure buckets, row units and snapshot date aligned", () => {
     const out = {
-      state: "VALID",
-      as_of: "2026-10-06T06:41:19Z",
+      state: "VALID", as_of: "2026-10-06T06:41:19Z",
       counts: { challenge_402: 75, dead_404_or_unreachable: 15, other_error: 1, total: 100 },
-      headline: "75 of 100 rows answer a correct 402 challenge; 16 rows are phantom or unreachable. Counts only by doctrine.",
+      headline: "Historical text must not override current structured counts.",
     };
-    const c = x402Counts(out);
-    expect(c).toEqual({ tried: 100, askCorrectly: 75, goneOrNotAnswering: 16 });
-    // The producer's own headline counts dead + other_error as "phantom or unreachable": same number.
-    expect(out.headline).toContain(`${c.goneOrNotAnswering} rows are phantom or unreachable`);
+    expect(x402Counts(out)).toEqual({ tried: 100, http402: 75, unreachableOr404: 15, otherErrors: 1 });
     expect(tiles("x402_trust", out)).toEqual([
-      "Paid doors tried=100",
-      "Ask for payment correctly=75",
-      "Gone or not answering=16",
-      "Read on=2026-10-06",
+      "Catalog rows=100 (snapshot 2026-10-06)", "Returned HTTP 402=75",
+      "HTTP 404 or unreachable=15", "Other errors=1",
     ]);
-    expect(plainAnswer("x402_trust", out)).toBe("Of 100 paid doors we tried, 75 asked for payment correctly and 16 were gone or not answering.");
-    // No other_error field: the tile is the dead count alone, never a guessed addition.
-    expect(x402Counts({ counts: { dead_404_or_unreachable: 3, total: 100 } }).goneOrNotAnswering).toBe(3);
+    expect(plainAnswer("x402_trust", out)).toBe("Of 100 catalog rows, 75 returned HTTP 402; 15 returned HTTP 404 or were unreachable; 1 had other errors. HTTP status alone does not establish a valid payment challenge, settlement or delivery.");
+  });
+
+  it("does not fill absent x402 errors with zero or fall back to invalid raw counts", () => {
+    const missing = { counts: { challenge_402: 1, dead_404_or_unreachable: 3, total: 5 } };
+    expect(x402Counts(missing).otherErrors).toBeNull();
+    expect(tiles("x402_trust", missing)).not.toContain("Other errors=0");
+    for (const invalid of [-1, 1.5, Infinity, NaN, "3", true, Number.MAX_SAFE_INTEGER + 1]) {
+      const output = { counts: { total: invalid, challenge_402: invalid, dead_404_or_unreachable: invalid, other_error: invalid } };
+      expect(statTiles(output, 4, "x402_trust")).toEqual([]);
+      expect(plainAnswer("x402_trust", output)).toBeNull();
+    }
+    expect(tiles("x402_trust", { counts: { total: 0, challenge_402: 0, dead_404_or_unreachable: 0, other_error: 0 } })).toContain("Other errors=0");
   });
 
   it("writes each plain sentence from the same fields its tiles show", () => {

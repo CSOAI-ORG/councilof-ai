@@ -1,4 +1,6 @@
-# DRAFT — not submitted
+# SENT — recorded as sent 17 Sep 2026 (delivery unconfirmed)
+
+> **Status corrected 21 Nov 2026.** Recorded as sent from nicholas@csoai.org to TEVV-Athlon@nist.gov on 2026-09-17 (Sent 417). Evidence: [`public/interop/memberships.json`](../../../public/interop/memberships.json), row `nist-ai-200-2` (private email evidence; no NIST publication or reply on record). The M4 msmtp sender returned `535` from 13 Sep, so delivery is unconfirmed. The text below is the repo draft and may differ from what was sent. The filename keeps `-DRAFT` so that existing links do not break.
 
 | Field | Value |
 |---|---|

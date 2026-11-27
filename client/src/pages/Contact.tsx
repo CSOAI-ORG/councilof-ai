@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Mail, MapPin, Clock, Send } from 'lucide-react';
 import PlainEmail, { CONTACT_MAILBOX } from '@/components/PlainEmail';
+import RegionalContact from '@/components/RegionalContact';
 import { enquiryPreset, prepareContactEmail } from '@/lib/pilotEnquiry';
 import { BUYING_LINES } from '@/lib/buying';
 
@@ -124,6 +125,8 @@ export default function Contact() {
               </div>
             ))}
           </div>
+
+          <RegionalContact />
 
           {/* How to buy — the one statement (lib/buying.ts), the same words as /faq/#buying. */}
           <section aria-labelledby="contact-buying-h" className="mb-20 rounded-2xl border border-gray-200 bg-white p-6" data-testid="contact-buying">
