@@ -1,6 +1,6 @@
 {
  "schema": "csoai.measurement-anchors/0.1",
- "as_of": "2026-11-26T18:21:02Z",
+ "as_of": "2026-11-27T04:41:16.063069Z",
  "date": "2026-11-26",
  "what_this_is": "Where the index's bytes are anchored, read from the anchor files themselves. Anchors show WHEN bytes existed; the signature shows who signed them; neither says what the capsules measured.",
  "index": {
@@ -10,10 +10,30 @@
  },
  "opentimestamps": {
   "file": "measurement-index-v0.2-2026-11-26.json.ots",
-  "proof_sha256": "2618f9c1ab0f6f22192fbdf488584485563f6ae05d35db34bca53bec6652d838",
-  "state": "PENDING_CALENDAR_COMMITMENT",
-  "bitcoin_block_heights": [],
-  "bitcoin": [],
+  "proof_sha256": "c775ced934fb9ee179ce982504c4d42fccac9cc3a046ca32111765afd90f0acf",
+  "state": "BITCOIN_ATTESTED",
+  "bitcoin_block_heights": [
+   977709,
+   977712,
+   977716
+  ],
+  "bitcoin": [
+   {
+    "height": 977709,
+    "block_hash": "00000000000000000001ef3f0099c54244ecf73d2626123f0f59e14932643fce",
+    "header_check": "MATCHES_HEADER"
+   },
+   {
+    "height": 977712,
+    "block_hash": "00000000000000000001696bff1f7a11d67029639242789656144a2847746354",
+    "header_check": "MATCHES_HEADER"
+   },
+   {
+    "height": 977716,
+    "block_hash": "00000000000000000001f738578df171db6bd96257deb41144cdb1045c6319ff",
+    "header_check": "MATCHES_HEADER"
+   }
+  ],
   "meaning": "a Bitcoin attestation dates the index bytes no later than that block; a calendar commitment alone dates nothing"
  },
  "rekor": [],
