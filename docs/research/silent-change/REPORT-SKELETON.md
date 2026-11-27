@@ -1,6 +1,6 @@
 # DRAFT, not for publication: Silent-change detection on an open model, and what the first calibration got wrong
 
-Status: DRAFT written 24 Nov 2026 from signed records only. Section 3 (run 1) is filled from the signed record of run 1. Section 6 (run 2) is empty and stays empty: **no run 2 rate is written anywhere in this file before its signed record exists.** Publication on Hugging Face, GitHub or the website is the owner's decision after review.
+Status: DRAFT written 24 Nov 2026 from signed records only. Section 3 (run 1) is filled from the signed record of run 1. Section 6 (run 2) is filled from the signed record of run 2, made when that run finished at 04:46 UTC on 24 Nov 2026: **no run 2 rate was written anywhere in this file before that record existed.** Publication on Hugging Face, GitHub or the website is the owner's decision after review.
 
 Measurement, not certification. TIE is TIE. A flag is a detected change in behaviour on the probe items. It is not a cause and not a verdict. No claim is made about any paid model.
 
@@ -41,22 +41,36 @@ This section is analysis of run 1's per-batch rows, which became **pilot data** 
 
 Addendum 3 (`PROTOCOL.md` section 12, `protocol.json` `addendum_3`) was committed before any code or data of run 2. It says that run 1's data was used as pilot data to choose the rule, and that the rule is judged only on run 2. Rule 2: a pool of 20 independent no-change batches (one per job); a new batch's score is its mean total-variation distance to the pooled answer shares; the threshold is the largest leave-one-out score of the pool; flag iff the score exceeds it. Target false-flag rate at most 1/21 = 0.0476. Expected: false flags 0.0 to 0.05, C1 and C3 high, C2 low, C4 unknown (stated with reasons in the addendum, before the run). Run 1's rule is computed beside it on every run 2 trial. One change to what a batch is: sampling batches (temperature above 0) send a per-request seed, because in run 1 temperature 0.5 did not vary.
 
-## 6. Run 2 (to be filled from its signed record only)
+## 6. Run 2: the second rule flags no unchanged batch and three of the four planted changes, and does not see quantisation
 
-Run id: [ ]. Signed record sha256: [ ]. Signer: [ ]. Batches present: [ ] of 130. UNCHECKABLE or missing: [ ].
+GitHub Actions run 45312560403 (master, started 02:28 UTC and finished 04:46 UTC on 24 Nov 2026). Batches present: 130 of 130 (`complete: true`, `n_missing: 0`). UNCHECKABLE or missing: none. Signed record: sha256 `6eae1dc1b67e7ad528b690a9204008e67ac2b57d23a4cab8290188fa877f3085`, signer `did:web:csoai.org#board-attestation-1`. Checked on 24 Nov: the published verifier `https://councilof.ai/verifier/card-v0-verify.mjs`, given the record and the key document at `https://csoai.org/.well-known/did.json`, answers VALID. The rates in the table are copied from the signed payload and are never re-scored. The pool diagnostics, the CPU table and the second view below come from `report.json` in the same run artifact (sha256 `8150d4e2d07995b6b135ee7937b0e6e3c9b8030d847697e282e5f06a454664e9`), which is not signed; they are description, not results.
 
 | Condition | Rule 1 flags / trials | Rule 1 Wilson 95% | Rule 2 flags / trials | Rule 2 Wilson 95% | Mean score (rule 2) |
 |---|---|---|---|---|---|
-| C0 no change, temperature 0 (false-flag) | [ ] | [ ] | [ ] | [ ] | [ ] |
-| C5 no change, sampling (false-flag) | [ ] | [ ] | [ ] | [ ] | [ ] |
-| C1 sibling model | [ ] | [ ] | [ ] | [ ] | [ ] |
-| C2 Q4_K_M for Q8_0 | [ ] | [ ] | [ ] | [ ] | [ ] |
-| C3 added system sentence | [ ] | [ ] | [ ] | [ ] | [ ] |
-| C4 temperature 0 to 0.5 | [ ] | [ ] | [ ] | [ ] | [ ] |
+| C0 no change, temperature 0 (false-flag) | 10 / 30 | 0.1923 to 0.5122 | 0 / 30 | 0.0000 to 0.1135 | 0.0250 |
+| C5 no change, sampling (false-flag) | 0 / 20 | 0.0000 to 0.1611 | 0 / 20 | 0.0000 to 0.1611 | 0.0478 |
+| C1 sibling model | 10 / 10 | 0.7225 to 1.0000 | 10 / 10 | 0.7225 to 1.0000 | 0.1250 |
+| C2 Q4_K_M for Q8_0 | 2 / 10 | 0.0567 to 0.5098 | 0 / 10 | 0.0000 to 0.2775 | 0.0250 |
+| C3 added system sentence | 10 / 10 | 0.7225 to 1.0000 | 10 / 10 | 0.7225 to 1.0000 | 0.1750 |
+| C4 temperature 0 to 0.5 | 10 / 10 | 0.7225 to 1.0000 | 10 / 10 | 0.7225 to 1.0000 | 0.1135 |
 
-Pool diagnostics (theta, the 20 leave-one-out scores, items that vary between pool batches), per pool: [ ]. Runner CPU models seen and flags by CPU model (description only): [ ]. Whether the 1/21 false-flag target held on C0 and C5: [ ] (stated against the expectation written before the run, whichever way it went). Whether C2 and C4 were seen: [ ].
+**What the second rule did.** No unchanged batch was flagged: 0 of 30 at temperature 0 and 0 of 20 under sampling. All ten batches were flagged for each of three planted changes: the sibling model, the added system sentence and the temperature change. None of the ten quantisation batches was flagged, and their mean score (0.0250) equals that of the unchanged batches at temperature 0.
 
-If run 2 shows the new rule also fails, this section says so and a protocol 3 is written; no rule is edited after data.
+**Against the expectation written before the run** (addendum 3). False flags between 0.0 and 0.05: 0 of 50 observed. C1 and C3 high: 10 of 10 each. C2 low: 0 of 10. C4 unknown: 10 of 10.
+
+**Whether the 1/21 false-flag target held on C0 and C5.** It is not contradicted and it is not established. No false flag was seen, but the Wilson 95% interval reaches 0.1135 for C0 and 0.1611 for C5, both above 0.0476. Fifty unchanged batches cannot show a rate that low. The margin at temperature 0 is also small: the unchanged batches score 0.0250 on average against a threshold of 0.026316.
+
+**Whether C2 and C4 were seen.** C4 was seen. C2 was not: on these 20 items, serving Q4_K_M in place of Q8_0 of the same weights moved the answers no more than an unchanged batch did. At this size the detector does not see that change, under either rule. Section 7 describes a published test that reports power against quantisation, using long free-text completions; that is a different test on different outputs.
+
+**The first rule on the same batches.** Run 1's rule flagged 10 of 30 unchanged batches at temperature 0 (run 1: 19 of 30) and 0 of 20 under sampling (run 1: 12 of 20). In run 2 the sampling batches send a per-request seed, which they did not in run 1 (section 5). It flagged 2 of 10 quantisation batches, which cannot be told apart from its false-flag rate on unchanged batches.
+
+**Pool diagnostics** (unsigned report). Temperature-0 pool: theta 0.026316; all 20 leave-one-out scores equal 0.026316; 1 of the 20 items varies between pool batches. Sampling pool: theta 0.064035; leave-one-out scores from 0.033860 to 0.064035; 19 of the 20 items vary between pool batches.
+
+**Runner CPU models** (unsigned report; description only, no cause is claimed). Seven models ran the 90 trial batches. Flags by model under rule 2: AMD EPYC 7763, 12 of 38; AMD EPYC 9V45, 4 of 12; AMD EPYC 9V74, 4 of 11; Intel Xeon Platinum 8573C, 5 of 8; Intel Xeon 6973P-C, 2 of 6; Intel Xeon 6975P-C, 3 of 12; Intel Xeon Platinum 8370C, 0 of 3. All 30 flags are on changed conditions, so the table shows which conditions landed on which runner, not an effect of the CPU.
+
+**Second view** (unsigned report; illustrative; it changes no flag and has no established false-alarm rate). The sequential check signalled on the first trial for C1, C3 and C4, and never for C0, C2 and C5.
+
+Rule 2 is not edited after this data. Its false-flag count was 0 of 50, inside the range written before the run, so no protocol 3 is written to replace it. Two statements still need a new registered run before anyone makes them: a false-flag rate at or below 1/21 (many more unchanged batches), and anything about quantisation (more items, or longer outputs).
 
 ## 7. Related work (abstracts and method text read on 24 Nov 2026; described only as far as read)
 
@@ -70,7 +84,7 @@ If run 2 shows the new rule also fails, this section says so and a protocol 3 is
 - The cause of any flag, and of the job-to-job movement seen in run 1.
 - Behaviour on items outside the 20 probe items; the items are public and a model may have seen them; a private rotating set does not exist yet (`HELDOUT-DESIGN.md`).
 - Whether a provider treats probe traffic differently; whether a local copy of an open model matches its hosted endpoint.
-- Power for small changes: 20 items see a large change; run 2 shows how large.
+- Power for small changes: on 20 items, run 2 saw a sibling model, an added system sentence and a temperature change, and did not see a quantisation change (section 6). Nothing smaller was planted.
 - Multiplicity across models, banks and days: no correction is applied.
 - The 7 UNTESTED comparison axes and the 10 subject axes: out of scope.
 
