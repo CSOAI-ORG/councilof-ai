@@ -309,21 +309,21 @@ def run(out_dir: str, catalog_url: str):
         "alive_needs_input": b.get("alive_needs_input", 0),
         "template_no_reply": b.get("template_no_reply", 0),
         "dead_404_or_unreachable": b.get("real_404", 0) + b.get("unreachable", 0),
-        "other_error": b.get("other_error", 0),
+        "other_error": b.get("other_error", 0) + b.get("no-url", 0),
         "total": total,
     }
     # Honesty: a 400/405 endpoint EXISTS (it demands its required arg); a 404 is a phantom.
-    phantom = counts["dead_404_or_unreachable"] + counts["other_error"]
     summary = {
         "kind": "csoai.x402-catalog-trust-snapshot/0.1",
         "population": catalog_url,
         "as_of": deadline,
         "counts": counts,
-        "headline": f"{counts['challenge_402']} of {total} rows answer a correct 402 challenge; "
-                    f"{phantom} rows are phantom or unreachable. Counts only by doctrine.",
+        "headline": f"{counts['challenge_402']} of {total} catalog rows returned HTTP 402; "
+                    f"{counts['dead_404_or_unreachable']} returned HTTP 404 or were unreachable; "
+                    f"{counts['other_error']} had other errors. Counts only by doctrine.",
         "doctrine": "A 402 is NOT delivery; a 404 is a catalog row that does not exist. "
                     "Host details withheld by design; methodology published. Measurement, never certification.",
-        "method": "One GET per row (template params substituted), UA %s, 15s timeout, 12 workers, "
+        "method": "At most one GET per row with a URL (template params substituted), UA %s, 14s request timeout, 12 workers, "
                   "zero payment, zero signing, zero side effect." % SUBMIT_UA,
     }
     out = Path(out_dir)

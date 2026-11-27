@@ -1,0 +1,27 @@
+name: Flywheel snapshot regression
+on:
+  pull_request:
+    paths:
+      - build_flywheel_snapshot.py
+      - client/src/lib/flywheelSnapshot.ts
+      - client/src/pages/CouncilSpace.tsx
+      - scripts/test_build_flywheel_snapshot.py
+      - scripts/flywheel-snapshot.node-test.mjs
+      - .github/workflows/flywheel-snapshot.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  snapshot-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m unittest discover -s scripts -p test_build_flywheel_snapshot.py -v
+      - run: node --test scripts/flywheel-snapshot.node-test.mjs

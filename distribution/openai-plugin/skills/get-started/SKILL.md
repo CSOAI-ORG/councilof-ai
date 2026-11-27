@@ -21,7 +21,7 @@ Tools on this door:
 - `get_root` — Read the published public-root metadata at https://councilof.ai/root.json.
 - `get_card` — GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json.
 - `verify_inclusion` — Check a sha256 against the live public-root merkle via GET /api/proof?sha=.
-- `x402_trust` — GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire.
+- `x402_trust` — Read the dated x402 catalog snapshot: counts of catalog rows by observed HTTP response or request-error category.
 - `mcp_trust` — GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable.
 - `measurement_index` — Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested.
 - `verify_capsule` — Verify one measurement capsule.
