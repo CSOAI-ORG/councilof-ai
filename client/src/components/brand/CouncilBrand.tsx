@@ -73,11 +73,11 @@ export function CouncilBrand({
         <span className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
           <span
             className={cn(
-              "whitespace-nowrap font-bold tracking-tight text-brand-institutional",
+              "min-w-0 whitespace-normal font-bold leading-tight tracking-tight text-brand-institutional",
               styles.wordmark,
             )}
           >
-            Council of AI
+            Council for the Safety of Artificial Intelligence
           </span>
           {context ? (
             <span
