@@ -2,6 +2,52 @@
   "schema": "csoai.agent-quickstart/0.1",
   "human": "https://councilof.ai/quickstart/",
   "one_line": "Start with free public evidence, verify the artifact type and retain the result. A paid request is optional. The six-step worked example below covers request-attestation only, not every product.",
+  "free_reproduction": {
+    "id": "a2a-capsule-batch-20260926",
+    "title": "Reproduce one published capsule batch without an account or payment",
+    "page": "https://councilof.ai/measurement-capsules/v0.2/",
+    "requires_account": false,
+    "payment_required": false,
+    "source_as_of": "2026-09-26T06:19:20Z",
+    "checker": {
+      "url": "https://github.com/zhaoxinghua09-cell/independent-recomputations/tree/5a20a98a9553fe3a007f500ddf204ff1567d6efe#2-a-measurement-capsule-batch",
+      "revision": "5a20a98a9553fe3a007f500ddf204ff1567d6efe",
+      "implementation": "Second implementation from specification text, attributed to Xinghua Zhao",
+      "runtime": "Python 3 standard library; the checks run offline after the files are downloaded"
+    },
+    "record": {
+      "url": "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/857a6cc02696cdc575c5b540f7b4ab7d043cb591/public/measurement-capsules/v0.2/a2a_card/record.json",
+      "sha256": "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6"
+    },
+    "capsules": {
+      "url": "https://councilof.ai/measurement-capsules/v0.2/a2a_card/capsules.jsonl.gz",
+      "archive_url": "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/857a6cc02696cdc575c5b540f7b4ab7d043cb591/public/measurement-capsules/v0.2/a2a_card/capsules.jsonl.gz",
+      "sha256": "ba413e8160120205d8b9ec87fec95fa9e0f3ac2e6c858d4e6e807851882cd661",
+      "bytes": 7916
+    },
+    "expected": {
+      "n_capsules": 33,
+      "merkle_root": "bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441bae436",
+      "states": {
+        "FAILED": 8,
+        "UNCHECKABLE": 12,
+        "VERIFIED": 13
+      }
+    },
+    "checks": [
+      "Canonical line bytes and capsule identifiers",
+      "Identifier order and duplicate absence",
+      "Compressed file digest and record counts",
+      "RFC 9162 batch Merkle root"
+    ],
+    "does_not_establish": [
+      "The original capsule signature-check results",
+      "Record or index signatures and timestamp proofs",
+      "Current endpoint behaviour, safety or execution authority",
+      "Independent adoption, human review or payment"
+    ],
+    "retain": "Keep the exact input files, checker revision and output. A mismatch or unavailable file is not a successful reproduction; do not replace the pinned digest or silently use another batch."
+  },
   "amounts": "No amount is written here. The only authority on an amount is accepts[] in the 402 you receive. Amounts are set per request in the payment challenge and can change; your wallet signs exactly the amount shown and nothing more.",
   "self_payments": "Payments from the operator's own wallets are recorded as self-tests and never counted as buyers or revenue. Authoritative flag: settled_usdc.excludes_self=true on /api/revenue.",
   "revenue_contract": "https://councilof.ai/api/revenue",
