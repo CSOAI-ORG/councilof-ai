@@ -115,6 +115,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Regulation transport selftest (offline)
+        run: node --test scripts/reg-watch-fetch.node-test.mjs
       - name: Run the detector
         id: watch
         continue-on-error: true
