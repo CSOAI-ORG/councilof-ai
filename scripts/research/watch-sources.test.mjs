@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { fingerprint, reviewRequest, runWatch, watchlist } from "./watch-sources.mjs";
+import { fingerprint, reviewRequest, runWatch, watchlist, MAX_SOURCE_BYTES } from "./watch-sources.mjs";
 import { researchSourceMetadata } from "./source-metadata.mjs";
 
 const quiet = () => {};
@@ -160,4 +160,61 @@ test("review-request constructor always separates source change from measurement
   assert.equal(candidate.automatic_signing, false);
   assert.match(candidate.limitations.join(" "), /not an interpretation/);
   assert.match(candidate.limitations.join(" "), /not a measurement/);
+});
+
+test("global registry retains qualified source routing and does not activate reference-only discovery", () => {
+  const rows = watchlist();
+  const byId = new Map(rows.map(row => [row.id, row]));
+  assert.ok(byId.get("fsb-ai-sound-practices").axes.includes("effect-binding"));
+  assert.ok(byId.get("au-ai-strategy").axes.includes("governance"));
+  assert.ok(byId.get("brazil-anpd-sandbox").axes.includes("measurer-integrity"));
+  assert.ok(byId.get("anthropic-economic-index").axes.includes("labour-components"));
+  assert.equal(byId.has("oecd-policy-navigator"), false);
+  assert.equal(byId.has("japan-ai-business"), false);
+  assert.equal(byId.has("india-ai-governance"), false);
+  assert.equal(byId.size, rows.length);
+});
+
+test("source requests carry a timeout and oversized bodies cannot become baselines or changes", async () => {
+  const files = paths();
+  let signal;
+  const over = async (_url, options) => {
+    signal = options.signal;
+    return new Response(new Uint8Array(MAX_SOURCE_BYTES + 1));
+  };
+  const baseline = await runWatch({ ...files, sourceRegistry: fixtureRegistry, fetchImpl: reply("known baseline"), now: "2026-11-27T00:00:00Z", log: quiet });
+  const result = await runWatch({ ...files, sourceRegistry: fixtureRegistry, fetchImpl: over, now: "2026-11-27T00:15:00Z", log: quiet });
+  assert.ok(signal instanceof AbortSignal);
+  assert.equal(result.failed, 1);
+  assert.equal(result.candidates.length, 0);
+  assert.equal(result.state.sources.official.body_sha256, baseline.state.sources.official.body_sha256);
+  assert.match(result.state.sources.official.last_error, /byte budget/);
+});
+
+test("new qualified global sources route confirmed changes into the existing unsigned human-review queue", async () => {
+  const files = paths();
+  const ids = new Set(["fsb-ai-sound-practices", "boe-fca-ai-survey", "fca-ai-practice",
+    "au-ai-strategy", "unesco-ai-ethics", "canada-aia", "brazil-anpd-sandbox",
+    "anthropic-economic-index", "worldbank-indicators"]);
+  const actual = watchlist().filter(s => ids.has(s.id));
+  assert.equal(actual.length, 9);
+  const sourceRegistry = {sources: Object.fromEntries(actual.map(s => [s.id, s])),
+    axes: [...new Set(actual.flatMap(s => s.axes))].map(axis => ({axis,
+      source_ids: actual.filter(s => s.axes.includes(axis)).map(s => s.id)}))};
+  const args = {...files, sourceRegistry, log: quiet};
+  const baseline = await runWatch({...args, fetchImpl: reply("synthetic baseline"), now:"2026-11-27T00:00:00Z"});
+  assert.equal(baseline.candidates.length, 0);
+  const first = await runWatch({...args, fetchImpl: reply("synthetic changed document"), now:"2026-11-27T00:15:00Z"});
+  assert.equal(first.candidates.length, 0);
+  assert.equal(first.unconfirmed, 9);
+  const second = await runWatch({...args, fetchImpl: reply("synthetic changed document"), now:"2026-11-27T00:26:00Z"});
+  assert.equal(second.candidates.length, actual.reduce((n,s)=>n+s.axes.length,0));
+  for (const c of second.candidates) {
+    assert.equal(c.state, "AWAITING_HUMAN_REVIEW");
+    assert.equal(c.measurement_state, "UNMEASURED");
+    for (const flag of ["signed","automatic_submission","writes_board","model_training","automatic_fixing","automatic_signing","automatic_promotion"]) assert.equal(c[flag], false);
+    assert.ok(actual.find(s=>s.id===c.source.id)?.axes.includes(c.axis));
+  }
+  assert.equal(new Set(second.written).size, second.candidates.length);
+  console.log("global routing fixture:", second.candidates.length, "unsigned requests");
 });
