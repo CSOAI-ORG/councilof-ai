@@ -14,7 +14,7 @@ import sovos_fresh_rehearsal as fresh
 import sovos_continual_intervention as continual
 def canon(x):return (json.dumps(x,sort_keys=True,separators=(",",":"),allow_nan=False)+"\n").encode()
 def digest(b):return hashlib.sha256(b).hexdigest()
-def main(out):
+def main(out,protocol='original'):
     out.mkdir(exist_ok=False)
     plan={"schema":"private-sovos-prior-refresh/0.1","model":lab.PINS["weights.json"],"source_blobs":PINS,
       "oracle_revision":fresh.PIN,"validation_sha":lab.PINS["validation.jsonl"],
@@ -24,6 +24,17 @@ def main(out):
       "error_cutoff":.10,"budget":2,"budget_counts":"refresh requests including unavailable witnesses","periodic_ticks":[2,5],"random_seed":20261127,
       "primary":"paired mean absolute error and fraction of above-tolerance rows; cluster on matched seed across modes",
       "limits":"New simulator seeds, same published oracle and model; not new real-world cases. A refresh reads only previous simulated states; no current target enters prediction."}
+    if protocol=="equal-budget":
+        # Follow-up protocol fixed after the original experiment, before new seed generation.
+        plan.update({"schema":"private-sovos-prior-refresh/0.2",
+                     "protocol":"equal-budget","cohorts":[[k,lo,hi,79000+i*1000,48] for i,(k,lo,hi) in enumerate(continual.REGIMES)],
+                     "arms":["unassisted","periodic_budget2","random_budget2","hybrid_budget2","deadline_budget2"],
+                     "hybrid_rule":"one check in ticks 1–3 and one in 4–6; first disagreement above calibrated threshold or force at deadline",
+                     "deadline_ticks":[3,6],
+                     "primary":"hybrid minus periodic MAE, paired by seed; other comparisons exploratory",
+                     "source_original_blob":"3a3e7954ce8ff22fb6b69a24ea453d3ec55d72ed"})
+    elif protocol!="original":
+        raise ValueError("unsupported protocol")
     (out/"plan.json").write_bytes(canon(plan))
     model=json.loads(lab.get("weights.json"));mu=np.asarray(model["scaler_mean"]);sd=np.asarray(model["scaler_scale"])
     def predict(x):
@@ -50,6 +61,12 @@ def main(out):
                 f=x[j].copy();f[:4]=last;f[4:8]=last2
                 ps=predict(f[None,:])[:,0];pre=ps[0];disc=float(np.max(np.abs(pre-ps[1:].mean(0))))
                 request=j>0 and ((arm.startswith("peer_") and used+missing<2 and disc>threshold) or (arm=="periodic_budget2" and j in (2,5)) or (arm=="random_budget2" and j in random_ticks) or arm=="all_prior_reference")
+                if arm=="deadline_budget2":
+                    request=j in (3,6)
+                elif arm=="hybrid_budget2":
+                    # Never exceed one observation in each three-tick window.
+                    request=((1<=j<=3 and used==0 and (disc>threshold or j==3))
+                             or (4<=j<=6 and used==1 and (disc>threshold or j==6)))
                 applied=False
                 # Missing witness arm attempts a refresh but never obtains the prior observation.
                 if request and arm=="peer_missing_witness":missing+=1
@@ -63,12 +80,14 @@ def main(out):
                 last2,last=f[:4].copy(),p.copy()
                 rs.append({"tick":j,"requested":request,"applied":applied,"disagreement":disc,"mae":float(np.abs(p-y[j]).mean()),"bad":bool(np.max(np.abs(p-y[j]))>.1),"pre_bad":bool(np.max(np.abs(pre-y[j]))>.1)})
             assert used+missing<= (7 if arm=="all_prior_reference" else 2)
+            if arm in ("hybrid_budget2","deadline_budget2","periodic_budget2","random_budget2"):assert used==2
             receipts.append({"domain":domain,"episode":ep,"mode":mode,"arm":arm,"refreshes":used,"missing":missing,"steps":rs})
     by={(r["domain"],r["episode"],r["mode"],r["arm"]):r for r in receipts}
-    for key in groups:
-        a=by[(*key,"unassisted")];b=by[(*key,"peer_missing_witness")]
-        assert [s["mae"] for s in a["steps"]]==[s["mae"] for s in b["steps"]]
-        assert not b["refreshes"]
+    if "peer_missing_witness" in plan["arms"]:
+        for key in groups:
+            a=by[(*key,"unassisted")];b=by[(*key,"peer_missing_witness")]
+            assert [s["mae"] for s in a["steps"]]==[s["mae"] for s in b["steps"]]
+            assert not b["refreshes"]
     summary={}
     for arm in plan["arms"]:
         r=[r for r in receipts if r["arm"]==arm];s=[s for z in r for s in z["steps"]]
@@ -84,9 +103,20 @@ def main(out):
           "improvement_vs_unassisted_cluster_bootstrap95":[float(v) for v in np.quantile(boot,[.025,.975])],
           "bad_by_tick":[sum(z["steps"][j]["bad"] for z in r) for j in range(8)],
           "by_cohort":{k:{"mae":float(np.mean([v["mae"] for z in r if z["domain"]==k for v in z["steps"]])),"above_tolerance":sum(v["bad"] for z in r if z["domain"]==k for v in z["steps"]),"refreshes":sum(z["refreshes"] for z in r if z["domain"]==k)} for k,_,_,_,_ in plan["cohorts"]}}
+    if protocol=="equal-budget":
+        # Predeclared primary: positive delta = hybrid worse, negative = better.
+        deltas=collections.defaultdict(list)
+        for key in groups:
+            a=by[(*key,"hybrid_budget2")];b=by[(*key,"periodic_budget2")]
+            deltas[key[:2]].extend([u["mae"]-v["mae"] for u,v in zip(a["steps"],b["steps"])])
+        dv=np.array([np.mean(v) for v in deltas.values()])
+        boot=np.random.default_rng(1729).choice(dv,(2000,len(dv)),replace=True).mean(1)
+        primary={"hybrid_minus_periodic_mae":float(dv.mean()),"cluster_bootstrap95":[float(v) for v in np.quantile(boot,[.025,.975])]}
+    else:
+        primary=None
     raw=canon(receipts);(out/"receipts.json").write_bytes(raw)
-    report={"state":"FROZEN_NEURAL_REPLAY_SYNTHETIC_ORACLE","plan_sha256":digest(canon(plan)),"threshold":threshold,"seed_groups":144,"paired_mode_episodes":288,"rows_per_arm":2304,"bank_sha256":digest(canon(rows)),"receipt_sha256":digest(raw),"summary":summary,"limits":["Same synthetic oracle; no empirical world intervention or external reviewer.","Observed prior states available only by simulator assumption. Reference arm uses all prior states and is not a budget-matched comparator.","Missing witness control leaves predictions unchanged, not authorization to execute.","No training, GSPC admission, payment, production authority or model promotion."]}
+    report={"state":"FROZEN_NEURAL_REPLAY_SYNTHETIC_ORACLE","plan_sha256":digest(canon(plan)),"threshold":threshold,"seed_groups":144,"paired_mode_episodes":288,"rows_per_arm":2304,"bank_sha256":digest(canon(rows)),"receipt_sha256":digest(raw),"summary":summary,"primary_followup":primary,"limits":["Same synthetic oracle; no empirical world intervention or external reviewer.","Observed prior states available only by simulator assumption. Reference arm uses all prior states and is not a budget-matched comparator.","Missing witness control leaves predictions unchanged, not authorization to execute.","No training, GSPC admission, payment, production authority or model promotion."]}
     (out/"report.json").write_bytes(canon(report));print(json.dumps(report,indent=2),flush=True)
 if __name__=="__main__":
     import argparse
-    p=argparse.ArgumentParser();p.add_argument("--out",type=pathlib.Path,required=True);main(p.parse_args().out)
+    p=argparse.ArgumentParser();p.add_argument("--out",type=pathlib.Path,required=True);p.add_argument("--protocol",choices=("original","equal-budget"),default="original");a=p.parse_args();main(a.out,a.protocol)
