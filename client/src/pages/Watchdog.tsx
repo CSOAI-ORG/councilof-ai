@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
 import { verifyRecord } from "@/lib/recordVerify";
 import WorkingGroups from "@/components/WorkingGroups";
+import WatchdogHelpRoutes from "@/components/WatchdogHelpRoutes";
 import { readWatchdogJson as getJson } from "@/lib/watchdogRead";
 import {
   CLAIM_STATES,
@@ -93,6 +94,7 @@ export default function Watchdog() {
           Corrections
         </Link>
       </div>
+      <WatchdogHelpRoutes />
       {showGroups ? <WorkingGroups /> : params.view === "library" ? <Library /> : <Claims params={params} go={go} />}
     </div>
   );
