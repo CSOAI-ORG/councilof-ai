@@ -1,8 +1,8 @@
 {
  "schema": "https://councilof.ai/schema/card-v0.json",
  "surface": "autoeat.xrpl.accounts",
- "subject": "auto-eat xrpl-account: 2 LIVE of 2 probed (read-only, ungraded)",
- "as_of": "2026-11-27T02:20:06Z",
+ "subject": "auto-eat xrpl-account: 4 LIVE of 4 probed (read-only, ungraded)",
+ "as_of": "2026-11-27T08:30:48Z",
  "source_urls": [
   "https://s1.ripple.com:51234"
  ],
@@ -18,21 +18,23 @@
   },
   "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 2,
-   "live": 2,
+   "n_probed": 4,
+   "live": 4,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "ravENvULHUCrh24ZjPVSeNoUku4BtXFdRe (exists)",
-    "rK5XWRbJEJuMo9CqWjPWPh8hXEwQA8wATa (exists)"
+    "rpNyo7vn1TuXN9GUnrZx3cYFbpghGEUctz (exists)",
+    "rfgkS3fdv2fneC9XfuCt5oabcX7xm6AfTM (exists)",
+    "rGNtXLja1ZJk2Kcum2wDdvaAk12pXHCcro (exists)",
+    "rnLtNKrSkRtZ2Mo9oFNto4e6SanEh4A2aS (exists)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-11-27T02:20:06Z",
+  "as_of": "2026-11-27T08:30:48Z",
   "unmeasured": [
    "issuer_identity",
    "reserve_attestation",
