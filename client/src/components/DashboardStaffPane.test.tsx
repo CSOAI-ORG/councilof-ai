@@ -96,6 +96,13 @@ describe("the Council OS staff pane", () => {
     expect(c.textContent).toContain("meok-fluid-v1");
   });
 
+  it("discloses an unbound staff store and refuses unsigned identity claims", async () => {
+    routeFetch({ ...REGISTRY, provisioned_store_bound: false, staff: [{ ...REGISTRY.staff[0], did: REAL_DID, signed: false }] });
+    const c = await mount();
+    expect(c.querySelector('[data-testid="staff-store-state"]')?.textContent).toContain("not bound");
+    expect(c.textContent).not.toContain(REAL_DID.slice(0,24));
+  });
+
   it("carries the human-in-the-loop console, so a decision has a surface", async () => {
     routeFetch(REGISTRY);
     const c = await mount();
