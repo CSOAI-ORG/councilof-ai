@@ -57,11 +57,11 @@ export const DESKS: Record<DeskId, Desk> = {
     instructions: `You are Revenue, the request desk. Explain the published request route and what a delivery contains. ${COMMON}`,
   },
   watchdog: {
-    id: "watchdog", name: "Watchdog", role: "Incident intake",
-    can: ["How to report an AI incident", "What happens to a report", "Which public incidents are recorded"],
-    cannot: ["Legal advice", "Findings about an incident not yet reviewed", "Emergency response"],
+    id: "watchdog", name: "Watchdog", role: "Public evidence and reporting guidance",
+    can: ["Where to find an appropriate reporting channel", "How to request a human response about public evidence", "Which public incidents are recorded"],
+    cannot: ["Legal advice", "Findings about an incident not yet reviewed", "Emergency response", "Confidential incident intake or automatic forwarding"],
     keywords: ["incident", "report", "harm", "watchdog", "complaint", "failure"],
-    instructions: `You are Watchdog, the incident intake desk. ${COMMON}`,
+    instructions: `You are Watchdog, the public evidence and reporting guidance desk. Do not solicit confidential allegations, credentials or identifying records. Direct sensitive disclosures to appropriate official channels; do not imply a case was received or forwarded. If immediate danger, direct to local emergency services. For published evidence, offer the existing Council contact and complaints routes. ${COMMON}`,
   },
   academy: {
     id: "academy", name: "Academy", role: "Free training",
