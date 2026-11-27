@@ -26,7 +26,7 @@ type State = {
   revenue: { payers: number; settlements: number; atomic: number } | null;
   commissions: { outside: number; excluded: number; unknown: number; count: number; queued: number; unfulfillable: number } | null;
   coverage: number | null;
-  worker: string | null;
+  worker: WorkerReadback | null;
   corrections: number | null;
   failed: string[];
 };
@@ -38,6 +38,24 @@ async function json(path: string, signal: AbortSignal) {
   return response.json();
 }
 const integer = (value: unknown) => Number.isSafeInteger(value) && Number(value) >= 0 ? Number(value) : null;
+
+type WorkerReadback = { label: string; detail: string };
+
+export function workerReadback(value: { status?: unknown; worker_state?: unknown; diagnostic_code?: unknown } | null): WorkerReadback | null {
+  if (value?.diagnostic_code === "HEALTH_URL_NOT_CONFIGURED") {
+    return { label: "UNKNOWN", detail: "Worker health source is unconfigured." };
+  }
+  if (value?.status === "STALE") {
+    return { label: "STALE", detail: "Showing the last available worker health response." };
+  }
+  if (value?.worker_state === "UNKNOWN" || value?.status === "OFFLINE") {
+    return { label: "UNKNOWN", detail: "Current worker health could not be established." };
+  }
+  if (value?.status === "LIVE") {
+    return { label: "LIVE", detail: "The worker health source returned a current response." };
+  }
+  return null;
+}
 
 export default function Traction() {
   const [live, setLive] = useState<State>(EMPTY);
@@ -71,8 +89,8 @@ export default function Traction() {
       } else next.failed.push("commissions");
       if (coverage.status === "fulfilled" && Array.isArray(coverage.value?.rows)) next.coverage = coverage.value.rows.length;
       else next.failed.push("coverage");
-      if (worker.status === "fulfilled" && typeof worker.value?.status === "string") next.worker = worker.value.status;
-      else next.failed.push("worker");
+      if (worker.status === "fulfilled") next.worker = workerReadback(worker.value);
+      if (!next.worker) next.failed.push("worker");
       // Count of published correction entries in the corrections ledger — each states what was wrong and the fix. Never typed by hand.
       if (corrections.status === "fulfilled" && Array.isArray(corrections.value?.corrections)) next.corrections = corrections.value.corrections.length;
       else next.failed.push("corrections");
@@ -129,7 +147,7 @@ export default function Traction() {
         <LiveCard label="Admitted cards in current root" value={live.root?.cards} source="/root.json" detail={live.root ? `as of ${live.root.asOf}` : "UNCHECKABLE"} />
         <LiveCard label="Coverage families" value={live.coverage ?? undefined} source="/api/coverage" detail="Families in the published coverage register" />
         <LiveCard label="Published corrections" value={live.corrections ?? undefined} source="/api/corrections" detail="Dated entries in the public corrections ledger" />
-        <LiveCard label="Worker state" value={live.worker ?? undefined} source="/api/worker" detail="Current endpoint response; availability is separate from published evidence" />
+        <LiveCard label="Worker state" value={live.worker?.label} source="/api/worker" detail={live.worker?.detail ?? "Current worker health is uncheckable."} />
       </div>
       {live.failed.length ? <p className="mt-4 rounded-lg border border-amber-400/30 bg-amber-400/10 px-4 py-3 font-mono text-xs text-amber-200">UNCHECKABLE now: {live.failed.join(", ")}. No cached number substituted.</p> : null}
       <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm"><Link href="/board" className="text-emerald-300 underline">Read the board</Link><Link href="/methodology" className="text-emerald-300 underline">Read the methods</Link><Link href="/about/#numbers" className="text-emerald-300 underline">Inspect operational figures and dates</Link></div>

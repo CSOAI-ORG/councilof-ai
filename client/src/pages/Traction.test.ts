@@ -6,7 +6,7 @@ import { Router } from "wouter";
 import ExternalUseEvidence from "../components/ExternalUseEvidence";
 import { EXTERNAL_USE_EXAMPLES, EXTERNAL_USE_REVIEWED } from "../data/external-use";
 import INSTITUTIONS_REGISTER from "../../../public/interop/institutions-register.json";
-import Traction from "./Traction";
+import Traction, { workerReadback } from "./Traction";
 
 const source = readFileSync(new URL("./Traction.tsx", import.meta.url), "utf8");
 const ia = readFileSync(new URL("../data/library-ia.ts", import.meta.url), "utf8");
@@ -32,6 +32,18 @@ describe("traction public-truth contract", () => {
       expect(source).toContain(endpoint);
     }
     expect(source).toContain("No cached number substituted");
+  });
+
+  it("does not present an unavailable worker health source as proof of an offline worker", () => {
+    expect(workerReadback({
+      status: "OFFLINE", worker_state: "UNKNOWN", diagnostic_code: "HEALTH_URL_NOT_CONFIGURED",
+    })).toEqual({ label: "UNKNOWN", detail: "Worker health source is unconfigured." });
+    expect(workerReadback({ status: "OFFLINE" })?.label).toBe("UNKNOWN");
+    expect(workerReadback({ status: "LIVE", worker_state: "UNKNOWN" })?.label).toBe("UNKNOWN");
+    expect(workerReadback({ status: "STALE" })?.label).toBe("STALE");
+    expect(workerReadback({ status: "LIVE" })?.label).toBe("LIVE");
+    expect(workerReadback({ status: "future-state" })).toBeNull();
+    expect(workerReadback(null)).toBeNull();
   });
 
   it("counts published corrections from the ledger, never a typed number", () => {
