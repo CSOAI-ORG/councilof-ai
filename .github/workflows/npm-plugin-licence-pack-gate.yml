@@ -1,0 +1,31 @@
+name: npm-plugin-licence-pack-gate
+on:
+  pull_request:
+    paths:
+      - "mcp/gspc-server/package.json"
+      - "mcp/gspc-server/LICENSE"
+      - "mcp/gspc-server/pack.mjs"
+      - "mcp/gspc-server/licence-pack.test.mjs"
+      - "plugins/gspc/LICENSE"
+      - "plugins/gspc/plugin.json"
+      - ".github/workflows/npm-plugin-licence-pack-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check Apache files and subpackage boundary
+        run: cd mcp/gspc-server && npm run test:license
+      - name: Inspect actual npm packaging allowlist, no publish
+        run: |
+          cd mcp/gspc-server
+          npm pack --dry-run --json | node -e "const fs=require('node:fs');const p=JSON.parse(fs.readFileSync(0,'utf8'))[0];const f=p.files.map(x=>x.path);if(!f.includes('LICENSE')){console.error('Missing LICENSE in actual npm pack list',f);process.exit(1)} console.log('Verified package:',p.name,p.version,'LICENSE present')"
