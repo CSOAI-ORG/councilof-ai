@@ -596,7 +596,11 @@ try {
   }
   console.warn("[sitemap] no public/_headers to read noindex rules from");
 }
+// Archive pages ruled out of the index (owner ruling 2026-11-27): seoHead.ts gives each one
+// <meta name="robots" content="noindex, follow">, so the sitemap must not ask for them.
+const ARCHIVE_NOINDEX = new Set(JSON.parse(readFileSync(join(ROOT, "client/src/data/archive-noindex.json"), "utf8")).paths);
 const isDelisted = (p) => DELISTED.has(p.replace(/\/+$/, "") || "/") ||
+  ARCHIVE_NOINDEX.has(p.replace(/\/+$/, "") || "/") ||
   DELISTED_SERVED_FORM.has(p) ||
   noindexRuleFor(NOINDEX_RULES, p) !== null;
 
