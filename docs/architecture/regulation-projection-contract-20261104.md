@@ -48,6 +48,14 @@ Duplicate IDs and duplicate instrument/version/clause identities are rejected.
 The adapter records referenced source bytes as unverified; a declaration does
 not itself recover or verify those bytes.
 
+## 27 November 2026 — optional historical source recovery binding
+
+The 4 November baseline above is historical. Master `a2f1d76954760f7a54f730a65c1d64ebf75ef1a9` now retains 417 source text rows. Both existing v1.0.0 verifiers reproduce all 417 normalised text hashes and the frozen root. Eleven rows were capped at 10,000 characters. This is historical hash reproduction, not an assertion of current consolidated law, full official text, applicability, or original database bytes.
+
+Pass `--frozen-sources public/interop/frozen-provision-sources-v1.jsonl` to opt into the recovered-source projection. The exact supplied bytes, original verifier and normaliser are hashed; every row must reproduce the manifest. Missing, duplicate, altered or falsely flagged source rows fail closed. The resulting registry digest differs intentionally from the manifest-only registry, so reviewed mappings must be rebound and reviewed rather than copied silently. No legal text is embedded in events. All dispositions remain `UNMEASURED` with `assessment: NOT_RUN`; source recovery is not a legal or behavioural measurement. Manifest-only mode remains available. The stamped inventory is unchanged; its versioned successor needs a separately reviewed edit.
+
+The retained 417-provision manifest contains six EU instruments; it does not contain UK DPA or DUAA provisions. The existing regulator-axis pointer asset contains no explicit UK regulator mapping. The UK authority adapter is a discovery pointer, not a reviewed atomic mapping. Do not infer a UK expiry or assessment by matching EU GDPR alone.
+
 ## Run identity and evidence separation
 
 The run manifest supplies `run_id`, timezone-aware `observed_at`, `source_kind`,
