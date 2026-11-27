@@ -1,0 +1,84 @@
+{
+  "acceptance": "report measurements and mismatches, no classifier threshold, no ancestry verdict or causal claim; self repeat bytes must match",
+  "comparisons": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      3
+    ],
+    [
+      0,
+      4
+    ]
+  ],
+  "file": "model.safetensors",
+  "frozen_at": "2026-11-27T03:33:10.116996+00:00",
+  "hypothesis": "Both declared parent/descendant pairs have higher mean aligned cosine than cross-generation pair on comparable tensors. Different-shape control must be refused, not graded.",
+  "models": [
+    {
+      "id": "HuggingFaceTB/SmolLM2-135M",
+      "revision": "93efa2f097d58c2a74874c7e644dbc9b0cee75a2",
+      "role": "reference"
+    },
+    {
+      "id": "HuggingFaceTB/SmolLM2-135M-Instruct",
+      "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+      "role": "declared_descendant"
+    },
+    {
+      "id": "HuggingFaceTB/SmolLM-135M",
+      "revision": "1d461723eec654e65efdc40cf49301c89c0c92f4",
+      "role": "earlier_release_ancestry_not_established"
+    },
+    {
+      "id": "HuggingFaceTB/SmolLM-135M-Instruct",
+      "revision": "b5f4b394abe60fe0e4d666139e57bfce520302a9",
+      "role": "declared_descendant_of_earlier_base"
+    },
+    {
+      "id": "HuggingFaceTB/SmolLM2-360M",
+      "revision": "f8027fd0eaeea54caa13c31d31b9fdc459c38b49",
+      "role": "different_shape_control"
+    }
+  ],
+  "null_scope": "synthetic element-permutation alignment null, not unrelated-model lineage null",
+  "parent_plan_sha256": "fa8598fe9fb517d68c7613f6616db99d8d144fd55ebd7087334417c2d90a53a2",
+  "sampling": "4096 consecutive elements starting at floor((n-4096)/2), same tensor names and exact shapes required",
+  "schema": "local-experiment-plan/0.1",
+  "scope": "Prospective extension of exploratory weight-byte sampling, two documented parent pairs; cross-generation ancestry not independently established; no validated detector.",
+  "statistics": [
+    "cosine",
+    "relative_l2_to_reference",
+    "shuffle_null_99_repeats_seed_20261127"
+  ],
+  "tensors": [
+    "model.layers.0.self_attn.q_proj.weight",
+    "model.layers.0.self_attn.k_proj.weight",
+    "model.layers.0.mlp.down_proj.weight",
+    "model.layers.10.self_attn.q_proj.weight",
+    "model.layers.10.self_attn.k_proj.weight",
+    "model.layers.10.mlp.down_proj.weight",
+    "model.layers.20.self_attn.q_proj.weight",
+    "model.layers.20.self_attn.k_proj.weight",
+    "model.layers.20.mlp.down_proj.weight",
+    "model.layers.29.self_attn.q_proj.weight",
+    "model.layers.29.self_attn.k_proj.weight",
+    "model.layers.29.mlp.down_proj.weight"
+  ],
+  "transport": "strict HTTP 206 exact Content-Range; stop rather than download full files; 1MiB header limit; no execution of model code"
+}
