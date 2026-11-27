@@ -71,7 +71,7 @@ describe("Continuous research pane", () => {
 
 
 it("mounts the existing discovery catalogue beside private experiment planning in the canonical research pane", () => {
-  const html = renderToStaticMarkup(createElement(Router, { ssrPath: "/dashboard", ssrSearch: "tab=research" }, createElement(DashboardResearchPane)));
+  const html = renderToStaticMarkup(createElement(Router, { ssrPath: "/dashboard", ssrSearch: "tab=research", children: createElement(DashboardResearchPane) }));
   expect(html).toContain("Open research commons source discoveries");
   expect(html).toContain("Plan your own AI experiment");
   expect(html.match(/aria-label="Open research commons source discoveries"/g)).toHaveLength(1);
