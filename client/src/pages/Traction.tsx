@@ -196,12 +196,35 @@ export default function Traction() {
 
     <section id="business-model" aria-labelledby="business-model-h" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-12">
       <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">How the work is supported</p>
-      <h2 id="business-model-h" className="mt-3 text-2xl font-bold">Open evidence, with defined paid services</h2>
-      <div className="mt-6 grid gap-6 md:grid-cols-2">
-        <div className="rounded-2xl border border-slate-700 p-6"><h3 className="text-lg font-bold">Inspect and verify freely</h3><p className="mt-3 leading-7 text-slate-300">Public methods, the board and free record verification let a reader assess the work before commissioning anything. Published software and datasets carry their own licence and reuse conditions.</p></div>
-        <div className="rounded-2xl border border-slate-700 p-6"><h3 className="text-lg font-bold">Pay for an agreed service</h3><p className="mt-3 leading-7 text-slate-300">The service catalogue identifies metered evidence endpoints and previews. Organisations can also discuss a GBP invoice for the named evidence products. Scope, availability and delivery terms are confirmed in writing.</p></div>
+      <h2 id="business-model-h" className="mt-3 text-2xl font-bold">Free verification, organisational membership and paid evidence</h2>
+      <div className="mt-6 grid gap-6 md:grid-cols-3">
+        <div className="rounded-2xl border border-slate-700 p-6">
+          <h3 className="text-lg font-bold">Check a result free</h3>
+          <p className="mt-3 leading-7 text-slate-300">Anyone can check published evidence without a membership. If you have an AI-generated output to review, start with our Article 50 marking method and identify the exact file and export workflow.</p>
+          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+            <Link href="/gspc-verify/" className="text-emerald-300 underline">Verify a record</Link>
+            <Link href="/article-50/" className="text-emerald-300 underline">Read the marking guide</Link>
+          </div>
+        </div>
+        <div id="membership" className="scroll-mt-24 rounded-2xl border border-slate-700 p-6">
+          <h3 className="text-lg font-bold">Discuss organisational membership</h3>
+          <p className="mt-3 leading-7 text-slate-300">Ask about recurring support for using Council’s methods and evidence in your organisation. We’re starting those conversations with organisations in the open-source communities where we already participate, including the Linux Foundation ecosystem.</p>
+          <p className="mt-3 leading-7 text-slate-300">We confirm eligibility, scope, any available human review and fees in writing. Sponsorship enquiries follow a separate review.</p>
+          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+            <Link href="/contact/?arm=council-membership" className="text-emerald-300 underline">Enquire about membership</Link>
+            <Link href="/contact/?arm=council-sponsorship" className="text-emerald-300 underline">Discuss sponsorship</Link>
+          </div>
+        </div>
+        <div className="rounded-2xl border border-slate-700 p-6">
+          <h3 className="text-lg font-bold">Request evidence or pay per call</h3>
+          <p className="mt-3 leading-7 text-slate-300">Use the live x402 catalogue for wallet-priced machine requests. For an Article 50 evidence pack, evidence bundle or provider-diff feed, discuss written scope and GBP invoicing through the service catalogue.</p>
+          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+            <a href="/api/x402" className="text-emerald-300 underline">View x402 endpoints</a>
+            <Link href="/services/" className="text-emerald-300 underline">Browse evidence services</Link>
+          </div>
+        </div>
       </div>
-      <p className="mt-5 max-w-4xl leading-7 text-slate-300">A score is never sold. Payment does not determine a finding or confer regulatory approval. Relationships and conflicts belong alongside the evidence. Read our <Link href="/independence/" className="text-emerald-300 underline">independence and conflicts statement</Link> and <Link href="/services/" className="text-emerald-300 underline">current service catalogue</Link>.</p>
+      <p className="mt-5 max-w-4xl leading-7 text-slate-300">Evidence and corrections follow the published method. Council accepts no payment from organisations it ranks. See our <Link href="/independence/" className="text-emerald-300 underline">independence and conflicts statement</Link>.</p>
     </section>
 
     <section id="commercial-evidence" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-12">
