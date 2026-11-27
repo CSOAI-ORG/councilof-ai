@@ -238,12 +238,12 @@ class EconomicComponentControls(unittest.TestCase):
     def setUp(self):
         from adapters import economic_components as e
         self.e = e
-        self.anthropic = {"result":{"structuredContent":{"result":{"period":"2026-05-01","regions":[
+        self.anthropic = {"jsonrpc":"2.0","id":3,"result":{"structuredContent":{"result":{"period":"2026-05-01","regions":[
             {"region_code":c,"anthropic_usage_index":1.5,"augmentation_pct":51,"automation_pct":49}
             for c in e.COUNTRIES]}}}}
-        self.wb = [{"pages":1,"total":6}, [
-            {"countryiso3code":c,"date":"2024","indicator":{"id":"IT.NET.USER.ZS"},"value":95}
-            for c in e.COUNTRIES]]
+        self.wb = [{"pages":1,"total":36}, [
+            {"countryiso3code":c,"date":year,"indicator":{"id":"IT.NET.USER.ZS"},"value":95}
+            for c in e.COUNTRIES for year in e.YEARS]]
 
     def test_anthropic_separate_components(self):
         rows = self.e.parse_anthropic(json.dumps(self.anthropic).encode())
@@ -264,7 +264,7 @@ class EconomicComponentControls(unittest.TestCase):
     def test_worldbank_identity_and_null(self):
         self.wb[1][0]["value"] = None
         rows = self.e.parse_worldbank(json.dumps(self.wb).encode(),"IT.NET.USER.ZS")
-        self.assertEqual(len(rows),6)
+        self.assertEqual(len(rows),36)
         self.assertIsNone(rows[0]["value"])
         self.wb[1][0]["indicator"]["id"] = "SL.UEM.TOTL.ZS"
         with self.assertRaises(ValueError):
@@ -297,7 +297,8 @@ class EconomicComponentControls(unittest.TestCase):
                 raw = json.dumps(doc).encode()
                 (folder/name).write_bytes(raw)
                 sources.append({"kind":kind,"indicator":key,"file":name,"url":url,
-                    "sha256":hashlib.sha256(raw).hexdigest(),"observed_at":"2026-11-27T00:00:00Z"})
+                    "sha256":hashlib.sha256(raw).hexdigest(),"observed_at":"2026-11-27T00:00:00Z",
+                    **({"request":self.e.ANTHROPIC_REQUEST} if kind=="anthropic" else {})})
             add("anthropic","anthropic",self.anthropic,self.e.ANTHROPIC_URL)
             for key in self.e.INDICATORS:
                 doc = json.loads(json.dumps(self.wb))
@@ -308,7 +309,7 @@ class EconomicComponentControls(unittest.TestCase):
             result = self.e.qualify(folder)
             self.assertEqual(result,self.e.qualify(folder))
             self.assertEqual(len(result["envelopes"]),3)
-            self.assertEqual(len(result["component_candidates"]),30)
+            self.assertEqual(len(result["component_candidates"]),90)
             self.assertFalse(result["writes_board"])
             for env in result["envelopes"]:
                 self.assertEqual(ce.validate(env),[])
@@ -317,6 +318,63 @@ class EconomicComponentControls(unittest.TestCase):
             (folder/"anthropic.json").write_bytes(b'{}')
             with self.assertRaises(ValueError):
                 self.e.qualify(folder)
+
+
+    def test_incomplete_worldbank_grid_even_with_matching_total(self):
+        self.wb[1].pop()
+        self.wb[0]["total"] -= 1
+        with self.assertRaisesRegex(ValueError, "incomplete country-period grid"):
+            self.e.parse_worldbank(json.dumps(self.wb).encode(), "IT.NET.USER.ZS")
+
+    def test_mcp_response_id_must_match(self):
+        self.anthropic["id"] = 4
+        with self.assertRaises(ValueError):
+            self.e.parse_anthropic(json.dumps(self.anthropic).encode())
+
+    def test_capture_pipeline_and_failure(self):
+        calls = []
+        def fetch(url, request):
+            calls.append((url, request))
+            if request is not None:
+                return json.dumps(self.anthropic).encode()
+            doc = json.loads(json.dumps(self.wb))
+            indicator = url.split("/indicator/")[1].split("?")[0]
+            for row in doc[1]:
+                row["indicator"]["id"] = indicator
+            return json.dumps(doc).encode()
+        with tempfile.TemporaryDirectory() as temp:
+            target = Path(temp) / "ok"
+            self.e.capture(target, fetch=fetch, clock=lambda:"2026-11-27T00:00:00Z")
+            self.assertEqual(len(calls),3)
+            self.assertEqual(len(self.e.qualify(target)["component_candidates"]),90)
+            with self.assertRaises(FileExistsError):
+                self.e.capture(target, fetch=fetch)
+            manifest = json.loads((target/"manifest.json").read_bytes())
+            manifest["sources"][0]["request"]["params"]["arguments"]["region_codes"] = ["GBR","USA"]
+            (target/"manifest.json").write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError,"MCP request scope mismatch"):
+                self.e.qualify(target)
+            failed = Path(temp) / "failed"
+            with self.assertRaises(ValueError):
+                self.e.capture(failed, fetch=lambda *_:b"{}")
+            self.assertFalse((failed/"manifest.json").exists())
+            self.assertTrue((failed/"capture-failed.json").exists())
+
+    def test_arbitrary_source_request_refused(self):
+        with self.assertRaisesRegex(ValueError, "not allowlisted"):
+            self.e.fetch_capture("https://example.test/")
+
+
+    def test_existing_daily_workflow_does_not_publish_raw_capture(self):
+        workflow = (ROOT/".github/workflows/reg-watch.yml").read_text()
+        start = workflow.index("      - name: Economic source qualification")
+        end = workflow.index("      - name: Watchdog source status selftest", start)
+        step = workflow[start:end]
+        for value in ("--capture", "timeout-minutes: 2", "continue-on-error: true", "UNCHECKABLE", "UNMEASURED", "mktemp -d"):
+            self.assertIn(value, step)
+        for forbidden in ("git add", "upload-artifact", "gh pr", "signing_key", "curl --retry"):
+            self.assertNotIn(forbidden,step)
+        self.assertEqual(workflow.count("      - name: Economic source qualification"),1)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,8 @@
 """Read-only economic source qualification using the existing connector envelope.
 
 The input is a locally retained capture manifest and exact source response bytes.
-No network, signing, board writes, aggregate index, or causal conclusions.
+Offline by default; explicit --capture performs fixed read-only requests.
+No signing, board writes, aggregate index, or causal conclusions.
 Candidate values are kept outside PROBED envelopes pending source-specific review.
 """
 from __future__ import annotations
@@ -11,6 +12,8 @@ import json
 import math
 import re
 import sys
+import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 
 from adapters import connector_envelope as ce
@@ -27,6 +30,11 @@ METRICS = {
     "augmentation_pct": ("%", "share of observed Claude conversations classified as augmentation"),
     "automation_pct": ("%", "share of observed Claude conversations classified as automation"),
 }
+YEARS = tuple(str(y) for y in range(2020, 2026))
+MAX_CAPTURE_BYTES = 1_000_000
+ANTHROPIC_REQUEST = {"jsonrpc": "2.0", "id": 3, "method": "tools/call",
+    "params": {"name": "econ_index_compare_regions", "arguments": {
+        "region_codes": ["GBR", "USA", "DEU", "FRA", "JPN", "CAN"]}}}
 PERIOD = re.compile(r"^20[0-9]{2}-(0[1-9]|1[0-2])-01$")
 
 
@@ -55,7 +63,7 @@ def numeric(value, maximum=None):
 
 def parse_anthropic(raw):
     doc = decode(raw)
-    if doc.get("error") or doc["result"].get("isError"):
+    if doc.get("jsonrpc") != "2.0" or type(doc.get("id")) is not int or doc["id"] != ANTHROPIC_REQUEST["id"] or doc.get("error") or doc["result"].get("isError"):
         raise ValueError("MCP error")
     data = doc["result"]["structuredContent"]["result"]
     period = data["period"]
@@ -87,14 +95,14 @@ def parse_worldbank(raw, indicator):
     seen = {}
     for row in rows:
         country, period = row["countryiso3code"], row["date"]
-        if row["indicator"]["id"] != indicator or country not in COUNTRIES or period not in tuple(str(y) for y in range(2020, 2026)):
+        if row["indicator"]["id"] != indicator or country not in COUNTRIES or period not in YEARS:
             raise ValueError("unexpected series identity")
         key = country, period
         if key in seen:
             raise ValueError("duplicate series period")
         seen[key] = numeric(row["value"], 100)
-    if {k[0] for k in seen} != set(COUNTRIES):
-        raise ValueError("country coverage mismatch")
+    if set(seen) != {(country, year) for country in COUNTRIES for year in YEARS}:
+        raise ValueError("incomplete country-period grid")
     return [{"country": c, "period": p, "metric": indicator, "unit": "%",
              "definition": label, "boundary": boundary, "value": v}
             for (c, p), v in sorted(seen.items())]
@@ -115,10 +123,12 @@ def qualify(folder):
         key = "anthropic" if kind == "anthropic" else rec["indicator"]
         if key not in expected or key in seen or (rec["file"], rec["url"]) != expected[key]:
             raise ValueError("unexpected or duplicate source identity")
+        if key == "anthropic" and rec.get("request") != ANTHROPIC_REQUEST:
+            raise ValueError("MCP request scope mismatch")
         seen.add(key)
         raw = (folder / rec["file"]).read_bytes()
         digest = ce.sha256_hex(raw)
-        if not raw or len(raw) > 1_000_000 or digest != rec["sha256"]:
+        if not raw or len(raw) > MAX_CAPTURE_BYTES or digest != rec["sha256"]:
             raise ValueError("source byte integrity failed")
         rows = parse_anthropic(raw) if key == "anthropic" else parse_worldbank(raw, key)
         source = {"connector": "anthropic-economic-index" if key == "anthropic" else "world-bank-indicators", "url": rec["url"]}
@@ -141,11 +151,75 @@ def qualify(folder):
             "index_formula": False, "scope": "Observed usage, digital access and labour statistics are distinct; no job displacement, customer demand or causation inference."}
 
 
+def source_requests():
+    return [("anthropic", "anthropic.json", ANTHROPIC_URL, ANTHROPIC_REQUEST)] + [
+        (key, key + ".json", WB_ROOT + key + "?format=json&date=2020:2025&per_page=100", None)
+        for key in INDICATORS]
+
+
+def fetch_capture(url, request=None):
+    # Fixed source allowlist from source_requests(); never take an arbitrary URL
+    # or headers from the environment/manifest. No credentials or retries.
+    if (url, request) not in [(u, r) for _, _, u, r in source_requests()]:
+        raise ValueError("source request not allowlisted")
+    cmd = ["curl", "--disable", "--silent", "--show-error", "--fail",
+           "--max-time", "15", "--max-filesize", str(MAX_CAPTURE_BYTES),
+           "--proto", "=https", "--proto-redir", "=https",
+           "--header", "Accept: application/json, text/event-stream"]
+    if request is not None:
+        cmd += ["--header", "Content-Type: application/json", "--data-binary", "@-"]
+    else:
+        cmd += ["--location", "--max-redirs", "3"]
+    result = subprocess.run(cmd + [url], input=ce.canonical_bytes(request) if request else None,
+                            capture_output=True, timeout=20, check=False)
+    if result.returncode or not result.stdout or len(result.stdout) > MAX_CAPTURE_BYTES:
+        raise ValueError("source fetch failed or exceeded budget")
+    return result.stdout
+
+
+def capture(folder, fetch=fetch_capture, clock=lambda: datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")):
+    # An incomplete capture stays incomplete. Only publish a manifest after all
+    # source bytes and expected schemas have passed; never overwrite prior runs.
+    folder = Path(folder)
+    folder.mkdir(mode=0o700, parents=False, exist_ok=False)
+    records = []
+    try:
+        for key, name, url, request in source_requests():
+            raw = fetch(url, request)
+            if not isinstance(raw, bytes) or not raw or len(raw) > MAX_CAPTURE_BYTES:
+                raise ValueError("invalid source byte count")
+            (folder / name).write_bytes(raw)
+            if key == "anthropic":
+                parse_anthropic(raw)
+            else:
+                parse_worldbank(raw, key)
+            record = {"kind": "anthropic" if key == "anthropic" else "worldbank",
+                "file": name, "url": url, "sha256": ce.sha256_hex(raw),
+                "observed_at": clock(), "license": "UNCHECKABLE"}
+            if request is not None:
+                record["request"] = request
+            else:
+                record["indicator"] = key
+            records.append(record)
+        manifest = {"sources": records}
+        (folder / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    except Exception:
+        # Raw responses already obtained are kept only in this private local
+        # directory; no qualification manifest or fabricated zero is emitted.
+        (folder / "capture-failed.json").write_text(json.dumps({
+            "state": "UNCHECKABLE", "completed_sources": len(records)}), encoding="utf-8")
+        raise
+    return manifest
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("capture_dir", type=Path)
     p.add_argument("--out", required=True, type=Path)
+    p.add_argument("--capture", action="store_true", help="fetch the fixed sources into a new private local directory")
     a = p.parse_args()
+    if a.capture:
+        capture(a.capture_dir)
     result = qualify(a.capture_dir)
     with a.out.open("x", encoding="utf-8") as f:
         json.dump(result, f, indent=2, allow_nan=False)

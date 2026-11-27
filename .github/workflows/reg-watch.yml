@@ -125,6 +125,24 @@ jobs:
         id: research-watch
         continue-on-error: true
         run: node scripts/research/watch-sources.mjs
+      # Reuse this daily run. No additional schedule, signing or board mutation.
+      - name: Economic source qualification (read-only, metadata summary only)
+        id: economic-qualification
+        timeout-minutes: 2
+        continue-on-error: true
+        env:
+          PYTHONPATH: scripts
+        run: |
+          set -euo pipefail
+          capture_root=$(mktemp -d)
+          trap 'rm -rf -- "$capture_root"' EXIT
+          if python3 -m adapters.economic_components "$capture_root/capture" --capture --out "$capture_root/qualified.json" > "$capture_root/result.log" 2>&1; then
+            printf '%s\n' 'Economic sources: capture and qualification completed. PROBED source envelopes; component candidates UNMEASURED; no board update.' | tee -a "$GITHUB_STEP_SUMMARY"
+            cat "$capture_root/result.log"
+          else
+            printf '%s\n' 'Economic sources: UNCHECKABLE (capture or validation failed). No new measurement or zero substituted.' | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
       - name: Watchdog source status selftest (offline)
         run: node --test scripts/watchdog/source-status.test.mjs
       - name: Run metadata-only incident-source checks
