@@ -215,10 +215,11 @@ describe("the order of operations", () => {
 });
 
 describe("the human in the loop comes before the model", () => {
+  const acknowledgedStore = () => ({ put: vi.fn(async () => {}) }) as unknown as KVNamespace;
   it("escalates a consequential act instead of performing it", async () => {
     H.groundedAnswer = "The board shows 33 axes · 23 measured.";
     const r = await talkToPal(
-      { PAL_MODEL_URL: "https://model.example/v1", PAL_MODEL_ID: "m" },
+      { PAL_MODEL_URL: "https://model.example/v1", PAL_MODEL_ID: "m", HITL_KV: acknowledgedStore() },
       { pal: measure, question: "please publish the governance card", all: pals, origin: "https://councilof.ai" },
     );
     expect(r.state).toBe("escalated");
@@ -238,9 +239,34 @@ describe("the human in the loop comes before the model", () => {
     // The records would happily have answered this question. They must not: the act is what is
     // being asked for, and the act is not a record.
     H.groundedAnswer = "Sure, published.";
-    const r = await talkToPal({}, { pal: measure, question: "release the statement", all: pals, origin: "https://councilof.ai" });
+    const r = await talkToPal({ HITL_KV: acknowledgedStore() }, { pal: measure, question: "release the statement", all: pals, origin: "https://councilof.ai" });
     expect(r.state).toBe("escalated");
     expect(r.answer).not.toContain("Sure, published.");
+  });
+
+  it("does not claim a challenge when the canonical store is absent", async () => {
+    const r = await talkToPal({}, { pal: measure, question: "release the statement", all: pals, origin: "https://councilof.ai" });
+    expect(r.state).toBe("refused");
+    expect(r.challenge).toBeNull();
+    expect(r.guardrail).toBe("challenge-store-unconfirmed");
+    expect(r.answer).toContain("cannot confirm");
+    expect(H.modelCalls).toBe(0);
+  });
+  it("does not substitute a PAL store for the review queue", async () => {
+    const put = vi.fn(async () => {});
+    const r = await talkToPal({ PAL_MEMORY_KV: { put } as unknown as KVNamespace }, { pal: measure, question: "release the statement", all: pals, origin: "https://councilof.ai" });
+    expect(r.state).toBe("refused");
+    expect(r.challenge).toBeNull();
+    expect(put).not.toHaveBeenCalled();
+  });
+  it("holds an uncertain write without issuing a false receipt or retry", async () => {
+    const put = vi.fn(async () => { throw new Error("fixture write failed"); });
+    const r = await talkToPal({ HITL_KV: { put } as unknown as KVNamespace }, { pal: measure, question: "release the statement", all: pals, origin: "https://councilof.ai" });
+    expect(r.state).toBe("refused");
+    expect(r.challenge).toBeNull();
+    expect(r.answer).toContain("cannot confirm");
+    expect(put).toHaveBeenCalledTimes(1);
+    expect(H.modelCalls).toBe(0);
   });
 
   it("answers an ordinary question about the record without escalating", async () => {

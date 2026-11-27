@@ -21,6 +21,11 @@ describe('regional contact', () => {
     expect((html.match(/href="mailto:/g)||[]).length).toBe(6);
     for(const x of REGIONAL_CONTACTS) expect(html).toContain(x.address);
   });
+  it('preserves all regional addresses through Cloudflare email obfuscation', () => {
+    const html=renderToStaticMarkup(<RegionalContact />);
+    expect((html.match(/<!--email_off-->/g)||[]).length).toBe(6);
+    expect((html.match(/<!--\/email_off-->/g)||[]).length).toBe(6);
+  });
   it('discloses one inbox, UK operations, and no local office or authority', () => {
     const html=renderToStaticMarkup(<RegionalContact />);
     expect(html).toContain('same Council inbox');
