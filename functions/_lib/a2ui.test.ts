@@ -91,3 +91,37 @@ describe("A2UI projection", () => {
     expect(s.createSurface.dataModel.empty).toContain("b");
   });
 });
+
+// ── Axis card through the run endpoint and the router (lane G4) ──
+import { axisCardMessages, axisCardRequest } from "./a2ui";
+import { routeIntent } from "./talkRouter";
+
+const GOV = { axes: [{ axis: "governance", kind: "model-comparison", n: 237, accuracy: 0.5865, separation: "TIE", measurement_time: { observed_on: "2026-08-12" } }] };
+const fakeFetch = (status: number, body: unknown): typeof fetch =>
+  (async () => new Response(JSON.stringify(body), { status })) as unknown as typeof fetch;
+
+describe("axis card questions", () => {
+  it("'how is the governance axis?' routes to the axis card with the canonical axis", () => {
+    const q = "how is the governance axis?";
+    expect(axisCardRequest(q, routeIntent(q))).toEqual({ requested: "governance" });
+  });
+  it("an axis-shaped question with an unknown name still gets a card, not a help text", () => {
+    const q = "how is the banana axis?";
+    expect(axisCardRequest(q, routeIntent(q))).toEqual({ requested: "banana" });
+  });
+  it("other questions are left to the existing answer path", () => {
+    for (const q of ["what is measured", "verify a signed card", "hello"]) expect(axisCardRequest(q, routeIntent(q))).toBeNull();
+  });
+  it("reads the board at request time and returns v1.0 NDJSON-ready messages", async () => {
+    const msgs = await axisCardMessages("governance", "https://councilof.ai", "v1.0", fakeFetch(200, GOV), Date.parse("2026-11-24T00:00:00Z"));
+    expect(msgs).toHaveLength(1);
+    expect((msgs[0] as any).createSurface.dataModel.separation_line).toBe("Separation: TIE");
+  });
+  it("a board answering 503 or throwing gives a read-failed card", async () => {
+    for (const f of [fakeFetch(503, {}), (async () => { throw new Error("network down"); }) as unknown as typeof fetch]) {
+      const msgs = await axisCardMessages("governance", "https://councilof.ai", "v0.9.1", f);
+      const dm = (msgs[2] as any).updateDataModel.value;
+      expect(dm.state).toBe("READ_FAILED");
+    }
+  });
+});

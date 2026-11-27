@@ -180,6 +180,162 @@ export function verifyResultSurface(raw: unknown, surfaceId = sid("gspc_verify")
   };
 }
 
+/**
+ * AXIS CARD (24 Nov 2026, lane G4). One axis of GET /api/gspc as a surface, read at request time.
+ * Every line comes from a field of that payload; a field the board does not carry reads
+ * "not published" and nothing is filled in. A failed read of the board draws no figures at all.
+ * Components are Card, Column, Text, Divider and Button, all in the basic catalog; the button
+ * calls the catalog's openUrl function and exists only when the board publishes a signed card id
+ * for the axis (the free verifier at /api/a2ui/verify takes that id).
+ */
+export const NOT_PUBLISHED = "not published";
+const HEX64 = /([0-9a-f]{64})(?:\.json)?$/i;
+const DAY_MS = 86_400_000;
+
+export interface AxisCardInput {
+  /** The parsed GET /api/gspc body, or null when the read failed. */
+  board: unknown;
+  /** What the asker named, or null. */
+  requested: string | null;
+  origin: string;
+  /** Epoch ms of the read; the age in days is computed from it. */
+  nowMs: number;
+  /** Why the read failed, when it did. */
+  readError?: string | null;
+}
+
+function num(v: unknown): number | null {
+  return typeof v === "number" && Number.isFinite(v) ? v : null;
+}
+
+/** The measurement date the board states for an axis, with its precision, or null. */
+function measurementDate(a: Json): { iso: string; precision: string } | null {
+  const mt = rec(a.measurement_time);
+  const exact = str(mt?.observed_at);
+  if (exact) return { iso: exact, precision: "exact instant" };
+  const day = str(mt?.observed_on);
+  if (day) return { iso: day, precision: "day precision" };
+  const nb = str(mt?.not_after);
+  if (nb) return { iso: nb, precision: "not later than this instant" };
+  const f = str(a.facts_as_of);
+  if (f) return { iso: f, precision: "exact instant" };
+  return null;
+}
+
+function absolute(origin: string, path: string): string {
+  return /^https?:\/\//i.test(path) ? path : origin + (path.startsWith("/") ? "" : "/") + path;
+}
+
+export function axisCardSurface(input: AxisCardInput, surfaceId = sid("gspc_axis")): BuiltSurface {
+  const { origin, nowMs } = input;
+  const source = `${origin}/api/gspc`;
+  const asOf = new Date(nowMs).toISOString();
+  const read = `Read ${asOf} from ${source}`;
+  const board = rec(input.board);
+  const axes = board && Array.isArray(board.axes) ? (board.axes as Json[]) : null;
+  const limits = "Measurement, not certification. A TIE stays a TIE and an untested axis stays untested. Automated read of the live board; no named person has reviewed this card.";
+
+  const base = (state: string, headline: string, detail: string): BuiltSurface => ({
+    surfaceId,
+    components: [
+      { id: "root", component: "Card", child: "body" },
+      { id: "body", component: "Column", children: ["title", "headline", "detail", "divider", "read", "limits"] },
+      t("title", "Axis card", "title"),
+      t("headline", { path: "/headline" }),
+      t("detail", { path: "/detail" }, "caption"),
+      { id: "divider", component: "Divider" },
+      t("read", { path: "/read" }, "caption"),
+      t("limits", limits, "caption"),
+    ],
+    dataModel: { state, headline, detail, read, source, as_of: asOf },
+  });
+
+  if (!axes) {
+    const why = input.readError ? String(input.readError).slice(0, 200) : "the answer had no axes list";
+    return base("READ_FAILED", "The board could not be read, so no figure is shown.", `${source} failed: ${why}. Nothing was filled in.`);
+  }
+  const want = (input.requested ?? "").trim().toLowerCase();
+  const a = want ? axes.find((x) => String(x?.axis ?? "").toLowerCase() === want) : undefined;
+  if (!a) {
+    const names = axes.map((x) => str(x?.axis)).filter((x): x is string => !!x);
+    return {
+      ...base(
+        "UNKNOWN_AXIS",
+        want ? `No axis named "${want.slice(0, 60)}" is on the board.` : "No axis was named.",
+        `Axes on the board now (${names.length}): ${names.join(", ") || NOT_PUBLISHED}.`,
+      ),
+    };
+  }
+
+  const name = String(a.axis);
+  const kind = str(a.kind) ?? NOT_PUBLISHED;
+  const n = num(a.n);
+  const acc = num(a.accuracy);
+  const iv = Array.isArray(a.interval) && a.interval.length === 2 && a.interval.every((x) => num(x) !== null) ? (a.interval as number[]) : null;
+  const sep = str(a.separation);
+  const date = measurementDate(a);
+  const dateMs = date ? Date.parse(date.iso) : NaN;
+  const ageDays = Number.isFinite(dateMs) && dateMs <= nowMs ? Math.floor((nowMs - dateMs) / DAY_MS) : null;
+  const cardUrl = str(a.leader_card_url);
+  const evidence = str(a.evidence_url);
+  const record = cardUrl ?? evidence;
+  const cardId = cardUrl ? HEX64.exec(cardUrl)?.[1]?.toLowerCase() ?? null : null;
+  const verifyUrl = cardId ? `${origin}/api/a2ui/verify?card=${cardId}` : null;
+  const dataset = str(a.dataset_url);
+  const cardState = str(a.leader_card_state);
+
+  const model: Json = {
+    state: "AXIS",
+    axis: name,
+    kind,
+    name_line: `${name} · ${kind}`,
+    result_line:
+      `n = ${n === null ? NOT_PUBLISHED : `${n} (rows behind this axis, as the board states it)`}` +
+      ` · top observed row accuracy = ${acc === null ? NOT_PUBLISHED : `${acc} (proportion of items, 0 to 1)`}` +
+      (iv ? ` · interval ${iv[0]} to ${iv[1]}` : ""),
+    separation_line: `Separation: ${sep ?? `${NOT_PUBLISHED} (the board carries none for this kind of axis)`}`,
+    separation_words: str(a.separation_sentence),
+    date_line: date
+      ? `Measured: ${date.iso} (${date.precision}) · age ${ageDays === null ? NOT_PUBLISHED : `${ageDays} days`} at ${asOf}`
+      : `Measured: ${NOT_PUBLISHED}`,
+    record_line: `Record address: ${record ? absolute(origin, record) : NOT_PUBLISHED}`,
+    card_state_line: cardState ? `Card state, as the board words it: ${cardState}` : null,
+    data_line: `Data address: ${dataset ?? NOT_PUBLISHED}`,
+    // The address is always shown as text too: a renderer that draws no Button still shows it.
+    verifier_line: verifyUrl ? `Free verifier for this record: ${verifyUrl}` : "Free verifier: not published for this record (the board names no signed card id for this axis)",
+    verify_url: verifyUrl,
+    read,
+    source,
+    as_of: asOf,
+  };
+  const optional = (id: string, key: string, role: "body" | "caption" = "caption"): Json[] => (model[key] ? [t(id, { path: `/${key}` }, role)] : []);
+  const children = ["title", "name", "result", "separation", ...(model.separation_words ? ["separation_words"] : []), "date", "record", ...(model.card_state_line ? ["card_state"] : []), "data", "verifier", ...(verifyUrl ? ["verify_button"] : []), "divider", "read", "limits"];
+  const components: Json[] = [
+    { id: "root", component: "Card", child: "body" },
+    { id: "body", component: "Column", children },
+    t("title", "Axis card", "title"),
+    t("name", { path: "/name_line" }),
+    t("result", { path: "/result_line" }),
+    t("separation", { path: "/separation_line" }),
+    ...optional("separation_words", "separation_words"),
+    t("date", { path: "/date_line" }),
+    t("record", { path: "/record_line" }, "caption"),
+    ...optional("card_state", "card_state_line"),
+    t("data", { path: "/data_line" }, "caption"),
+    t("verifier", { path: "/verifier_line" }, "caption"),
+    ...(verifyUrl
+      ? [
+          t("verify_label", "Open the free verifier for this record", "body"),
+          { id: "verify_button", component: "Button", child: "verify_label", variant: "primary", action: { functionCall: { call: "openUrl", args: { url: verifyUrl } } } },
+        ]
+      : []),
+    { id: "divider", component: "Divider" },
+    t("read", { path: "/read" }, "caption"),
+    t("limits", limits, "caption"),
+  ];
+  return { surfaceId, components, dataModel: model };
+}
+
 /** Which tool outputs get an A2UI rendering in the AG-UI stream (CUSTOM "a2ui" event). */
 export function a2uiForTool(tool: string, output: unknown, version: A2uiVersion = A2UI_DEFAULT_VERSION): Json | null {
   const built = tool === "board_totals" ? boardCardSurface(output) : tool === "verify_card" ? verifyResultSurface(output) : null;
