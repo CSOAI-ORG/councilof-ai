@@ -179,11 +179,11 @@ export function Footer() {
                 <circle cx="72" cy="60" r="5" fill="#fff"/>
               </g>
             </svg>
-            <span className="text-xl font-bold">CSOAI</span>
+            <span className="text-xl font-bold">Council of AI</span>
             </>
           </Link>
           <p className="text-muted-foreground text-sm max-w-md">
-            An operating UK AI measurement and evidence organisation run by CSOAI Ltd. We publish records you can check. Measurement is not certification.
+            Council for the Safety of Artificial Intelligence is operated by CSOAI Ltd, a UK private limited company. We publish AI measurement records you can check.
           </p>
           <div className="-mx-2.5 flex gap-1 sm:ml-auto">
             {socialLinks.map((social) => (
