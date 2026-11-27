@@ -141,6 +141,46 @@ class TestPinnedRegistryIsHonest(unittest.TestCase):
             missing = required - set(spec)
             self.assertFalse(missing, f"pinned source {spec.get('id')} missing {missing}")
 
+    def test_every_pinned_source_carries_a_rights_line(self):
+        for spec in wi.PINNED:
+            self.assertTrue(str(spec.get("rights", "")).strip(), f"pinned source {spec.get('id')} has no rights line")
+
+    def test_a_rights_line_resting_on_a_page_that_was_not_read_says_so_in_capitals(self):
+        by_id = {s["id"]: s for s in wi.PINNED}
+        self.assertTrue(by_id["nvd-cve-api"]["rights"].startswith("UNVERIFIED"))
+
+    def test_the_nvd_row_carries_the_notice_the_nvd_terms_ask_for(self):
+        spec = next(s for s in wi.PINNED if s["id"] == "nvd-cve-api")
+        self.assertIn("This product uses the NVD API but is not endorsed or certified by the NVD.", spec["note"])
+
+    def test_the_rights_line_is_published_in_the_row(self):
+        spec = next(s for s in wi.PINNED if s["id"] == "cisa-kev")
+        real_fetch = wi.fetch
+        wi.fetch = lambda s, timeout=30: FakeGot(body=b'{"vulnerabilities":[1,2]}')
+        try:
+            rows = wi.build_rows([spec])
+        finally:
+            wi.fetch = real_fetch
+        self.assertEqual(rows[0]["rights"], spec["rights"])
+        self.assertEqual(rows[0]["count"], 2)
+
+    def test_the_signal_index_carries_each_source_rights_line_and_note(self):
+        import tempfile
+        spec = next(s for s in wi.PINNED if s["id"] == "nvd-cve-api")
+        real_fetch = wi.fetch
+        wi.fetch = lambda s, timeout=30: FakeGot(body=b'{"totalResults": 7}')
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                artifact = wi.run([spec], [], pathlib.Path(d))
+                wi.write_outputs(artifact, pathlib.Path(d))
+                index = json.loads((pathlib.Path(d) / "_index.json").read_text())
+        finally:
+            wi.fetch = real_fetch
+        signal = index["signals"][0]
+        self.assertEqual(signal["rights"], spec["rights"])
+        self.assertIn("not endorsed or certified by the NVD", signal["note"])
+        self.assertEqual(signal["count"], 7)
+
     def test_pinned_ids_are_unique(self):
         ids = [s["id"] for s in wi.PINNED]
         self.assertEqual(len(ids), len(set(ids)), "a duplicate pinned id would silently drop a source")
@@ -155,6 +195,68 @@ class TestPinnedRegistryIsHonest(unittest.TestCase):
         pinned = {s["id"] for s in wi.PINNED}
         unpinned = {u["id"] for u in wi.UNPINNED}
         self.assertFalse(pinned & unpinned, "a source cannot be both pinned and unpinned")
+
+
+FIX = pathlib.Path(__file__).resolve().parent / "fixtures" / "watchdog_intake"
+G3_IDS = ("mcp-registry", "inspect-evals", "agentsociety-releases", "hf-benchmark-datasets", "epoch-notable-models")
+
+
+def _spec(sid):
+    return next(s for s in wi.PINNED if s["id"] == sid)
+
+
+def _fixture(name):
+    return (FIX / name).read_bytes()
+
+
+class TestFieldSources(unittest.TestCase):
+    """G3: one test per new source, graded from a RECORDED response (trimmed to a few rows and with
+    every person-bearing field removed; shape and field names are the source's own)."""
+
+    def test_mcp_registry_counts_servers_on_the_page(self):
+        row = wi.grade(_spec("mcp-registry"), FakeGot(body=_fixture("mcp-registry.json")))
+        self.assertEqual((row["state"], row["count"], row["count_kind"]), ("REACHABLE", 3, "count"))
+        self.assertEqual(row["kind"], "agent-registry")
+
+    def test_inspect_evals_counts_directory_entries(self):
+        row = wi.grade(_spec("inspect-evals"), FakeGot(body=_fixture("inspect-evals.json")))
+        self.assertEqual((row["state"], row["count"]), ("REACHABLE", 4))
+        self.assertEqual(row["kind"], "evaluation-registry")
+
+    def test_agentsociety_counts_releases_on_the_page(self):
+        row = wi.grade(_spec("agentsociety-releases"), FakeGot(body=_fixture("agentsociety-releases.json")))
+        self.assertEqual((row["state"], row["count"]), ("REACHABLE", 3))
+        self.assertEqual(row["kind"], "simulator-release")
+
+    def test_hf_benchmark_datasets_counts_the_list(self):
+        row = wi.grade(_spec("hf-benchmark-datasets"), FakeGot(body=_fixture("hf-benchmark-datasets.json")))
+        self.assertEqual((row["state"], row["count"]), ("REACHABLE", 3))
+
+    def test_epoch_csv_counts_data_rows_not_the_header(self):
+        row = wi.grade(_spec("epoch-notable-models"), FakeGot(body=_fixture("epoch-notable-models.csv"), ctype="text/csv"))
+        self.assertEqual((row["state"], row["count"]), ("REACHABLE", 3))
+        self.assertEqual(row["body_sha256"], wi.sha256_hex(_fixture("epoch-notable-models.csv")))
+
+    def test_epoch_html_where_csv_is_documented_is_uncheckable(self):
+        row = wi.grade(_spec("epoch-notable-models"), FakeGot(body=b"<html>404</html>", ctype="text/html"))
+        self.assertEqual(row["state"], "UNCHECKABLE")
+        self.assertIsNone(row["count"])
+
+    def test_each_new_source_keeps_only_a_count_and_a_hash_and_states_its_rights(self):
+        allowed = {"id", "name", "kind", "url", "method", "grid", "state", "http_status", "content_type",
+                   "bytes", "body_sha256", "count", "count_kind"}
+        for sid in G3_IDS:
+            spec = _spec(sid)
+            self.assertTrue(spec.get("rights"), f"{sid} must carry a rights line")
+            self.assertEqual(spec["grid"], [], f"{sid}: no defensible axis mapping, so the grid stays empty")
+            row = wi.grade(spec, FakeGot(body=_fixture(sid + (".csv" if spec["expect"] == "csv" else ".json")),
+                                         ctype="text/csv" if spec["expect"] == "csv" else "application/json"))
+            self.assertFalse(set(row) - allowed, f"{sid} row carries fields beyond count and hash: {set(row) - allowed}")
+
+    def test_a_failing_new_source_is_unreachable_never_zero(self):
+        row = wi.grade(_spec("mcp-registry"), FakeGot(transport="http_error", status=429, body=b"", error="HTTP 429"))
+        self.assertEqual(row["state"], "UNREACHABLE")
+        self.assertIsNone(row["count"])
 
 
 if __name__ == "__main__":

@@ -1,0 +1,58 @@
+# Daily intake: outside organisations' public feeds, and the rights line for each
+
+Read on 2026-11-24 (UTC). Extends `scripts/watchdog_intake.py` (see `DAILY-CONSOLIDATION-2026-10-30.md`). Each source stores a **count and a body hash only**, never content and never a person's name. No login, no key, no bot challenge. Each source is probed once a day with the intake's own user agent. `grid` is empty for all five: no axis mapping was defensible, so none of them raises a charter obligation. Rights lines are a reading of public terms by an automated session, unreviewed by a lawyer. The 18 sources pinned before this date had no rights line; each now has one (second table). Every row of a published run, and every row of the daily signal index, carries its source's rights line and note.
+
+## Added (5)
+
+| id | kind | address | what is counted | rights line |
+|---|---|---|---|---|
+| `mcp-registry` | agent-registry | `registry.modelcontextprotocol.io/v0.1/servers?limit=100` | servers on the first page (page size, not a total; the API returns a cursor) | The registry's published terms dedicate Registry Data to the public domain (CC0 1.0). The documented read API needs no login. The host serves no robots.txt (404). |
+| `inspect-evals` | evaluation-registry | `api.github.com/repos/UKGovernmentBEIS/inspect_evals/contents/src/inspect_evals` | directory entries (folders and files together) | MIT-licensed repository, read through GitHub's documented REST API. GitHub's acceptable-use policy separates scraping from API collection. Anonymous rate limit applies (shared with the pinned `ghsa-api`). |
+| `agentsociety-releases` | simulator-release | `api.github.com/repos/tsinghua-fib-lab/AgentSociety/releases?per_page=30` | releases on the page (at most 30) | Apache-2.0 repository, same GitHub API route. Release titles and authors are never stored. |
+| `hf-benchmark-datasets` | evaluation-registry | `huggingface.co/api/datasets?filter=benchmark:official&limit=1000` | datasets the Hub tags as official benchmarks (63 on the day read, below the limit, so the whole list) | Documented public Hub API on a host already pinned (`hf-models`). robots.txt allows `/`. The terms read carry no clause against reading the public API. |
+| `epoch-notable-models` | model-dataset | `epoch.ai/data/notable_ai_models.csv` | data rows (header excluded; 1,102 on the day read) | The data page says the datasets are free to download and may be reproduced with credit under CC BY. robots.txt disallows only `/assets/` and a benchmark-problems path. **No terms-of-use page was found** at the addresses tried (404), so this line rests on the data page's own statement. Credit: Epoch AI, https://epoch.ai/data. The file is about 2.3 MB and includes an authors column that the intake never reads or stores. |
+
+## Pinned before this date (18): rights lines added
+
+| id | what was read on 2026-11-24 | rights line |
+|---|---|---|
+| `cisa-kev` | `www.cisa.gov/sites/default/files/licenses/kev/license.txt` | CISA's licence file for the catalogue, read 2026-11-24, says the KEV database is distributed under CC0 1.0 and may be used in any legal manner; it adds that use does not authorise use of the CISA logo or the DHS seal and is not an endorsement by CISA or DHS. |
+| `nvd-cve-api` | `nvd.nist.gov/developers/terms-of-use` (403, not read); `scancode-licensedb.aboutcode.org/nist-nvd-api-tou.html` (third-party copy) | UNVERIFIED against the publisher's own page: the NVD API terms page answered 403 from its content-delivery network to plain requests on 2026-11-24 and was not read. A third-party copy of those terms (ScanCode LicenseDB, key nist-nvd-api-tou) asks services that use the API to display the notice carried in this row's note, bars using the NVD name to imply endorsement, and binds requests made without a key to the public rate limits. One request a day, without a key. |
+| `ghsa-api` | `LICENSE.md` of `github/advisory-database` | The GitHub Advisory Database is licensed CC BY 4.0 (LICENSE.md of github/advisory-database, read 2026-11-24). Read through GitHub's documented REST API (see inspect-evals); the anonymous rate limit applies. Advisory text is never stored. |
+| `osv-query` | `google.github.io/osv.dev/faq/` and `/data/` | OSV.dev's FAQ, read 2026-11-24, says the API is not rate limited. Each record keeps the licence of the database it came from; the data page lists them (CC-BY 4.0 is the most common of them; one is CC-BY-NC-ND 4.0). One query for one named package a day; only the number of records and the body hash are kept, never a record. |
+| `mitre-cve` | `www.cve.org/Legal/TermsOfUse` | The CVE Program terms of use, read 2026-11-24, grant a perpetual, worldwide, no-charge licence to reproduce and distribute CVE content, on condition that MITRE's copyright designation and the licence are reproduced in any copy; the page has no sentence on automated access. No copy is kept: one record is read a day and only its id and the body hash are stored. |
+| `go-vuln` | `vuln.go.dev` and `vuln.go.dev/copyright` | The Go vulnerability database is licensed CC BY 4.0 (vuln.go.dev/copyright, read 2026-11-24), and its front page says it is meant to be accessed by programs. Only the number of modules in the index and the body hash are kept. |
+| `depsdev` | `docs.deps.dev/api/v3alpha/` | The deps.dev API documentation, read 2026-11-24, says the data deps.dev generates is available under CC-BY 4.0, that use of the API is subject to the Google API Terms of Service (not read in this pass), and that clients may cache what the API serves. One request for one named package a day. |
+| `hf-models` | `huggingface.co/robots.txt` and `/terms-of-service` | Documented public Hub API; robots.txt allows /; the Hugging Face terms read on 2026-11-24 carry no clause against reading the public API. Only the page size and the body hash are kept, never a model or author name. |
+| `openrouter` | `openrouter.ai/docs/api-reference/list-available-models` and `openrouter.ai/terms` | OpenRouter's API reference, read 2026-11-24, documents GET /api/v1/models as a public catalogue with optional authentication, offered for programmatic access. Its terms of service (last updated 2026-08-31) separately bar using scripts, robots or crawlers to scrape or copy information on the Site or the Services; reading a documented API is not taken here to be that, and no lawyer has reconciled the two texts. One read a day; a count and the body hash are kept. |
+| `atlas-current` | `LICENSE` of `mitre-atlas/atlas-data` | MITRE ATLAS data is Apache-2.0 (LICENSE of mitre-atlas/atlas-data, read 2026-11-24). One file a day from the repository's public raw address; only a count and the body hash are kept. |
+| `atlas-manifest` | same file | Apache-2.0, the same repository and licence as atlas-current. One file a day; only a count and the body hash are kept. |
+| `owasp-llm-top10` | `LICENSE.md` of the project repository | CC BY-SA 4.0 (LICENSE.md of the project repository, read 2026-11-24). One README a day from the public raw address; only its hash is kept, and no text is copied or adapted. |
+| `owasp-asvs` | `LICENSE.md` of `OWASP/ASVS` | CC BY-SA 4.0 (LICENSE.md of OWASP/ASVS, read 2026-11-24). One README a day from the public raw address; only its hash is kept, and no text is copied or adapted. |
+| `rekor-log` | `docs.sigstore.dev/logging/overview/` | Sigstore's documentation, read 2026-11-24, describes a public instance that auditors can monitor for consistency. No terms-of-use page was found at the addresses read. One read of the log's state a day; the tree size and the body hash are kept. |
+| `openssf-scorecard` | `README.md` of `ossf/scorecard` | The Scorecard README, read 2026-11-24, says data provided by the REST API is licensed under CDLA Permissive 2.0. It now names the host api.scorecard.dev; this row still reads the older host, which answered 200 on 2026-11-23. One named repository a day. |
+| `safe-repo` | `LICENSE` of `OpenSecureAIAlliance/wg-safe` | CC BY 4.0 (LICENSE of OpenSecureAIAlliance/wg-safe, read 2026-11-24). One README a day from the public raw address; only its hash is kept. |
+| `slsa` | `LICENSE.md` of `slsa-framework/slsa` | Community Specification License 1.0 (LICENSE.md of slsa-framework/slsa, read 2026-11-24). One README a day from the public raw address; only its hash is kept. |
+| `in-toto` | `LICENSE` of `in-toto/attestation` | Apache-2.0 (LICENSE of in-toto/attestation, read 2026-11-24). One README a day from the public raw address; only its hash is kept. |
+
+### Three things this pass found, for the owner
+
+1. **The NVD asks for a notice.** A third-party copy of the NVD API terms asks services that use the API to display, prominently: "This product uses the NVD API but is not endorsed or certified by the NVD." A code search of this repository's default branch on 2026-11-24 found the sentence nowhere. It is now in the `nvd-cve-api` row's note, so every published run carries it. Pages that show the NVD row do not show it yet. The NVD's own terms page answered 403 to plain requests from two machines, so the wording is unverified against the publisher; a person can read it in a browser.
+2. **The `openrouter` row rests on two texts.** OpenRouter's API reference documents the catalogue address as public, with optional authentication, for programmatic access. Its terms of service bar automated scraping or copying of information on its services. The row is read here as use of a documented API, and its rights line says that no lawyer has reconciled the two. The other OpenRouter addresses in the rejected table could be read the same way; they stay out until someone decides.
+3. **The Scorecard API has a new host.** The project's README names `api.scorecard.dev`. The pinned row reads `api.securityscorecards.dev`, which still answered 200 on 2026-11-23. Not changed here.
+
+Also unread: the Google API Terms of Service that the deps.dev documentation points to, and any terms page for Sigstore's public instance (none was found at the addresses read).
+
+A source that later fails is recorded UNREACHABLE (or UNCHECKABLE) with no count, never zero. A count is a catalogue size or a page size, not a measurement of anything listed.
+
+## Rejected, with the reason
+
+| candidate | reason |
+|---|---|
+| OpenRouter public provider and model endpoints beyond the pinned catalogue | The public `/api/v1/providers` answers 200, but OpenRouter's terms (section 7) bar using scripts, robots or crawlers to "scrape or copy any information on the Site or the Services". Not read as permission, so not added. **For the owner:** OpenRouter's API reference documents these addresses as public; see the second note under the second table. |
+| AIUC-1 public changelog | The changelog is an HTML page, with no feed or documented machine-readable address, and no terms page was found (`/terms` returned 404). Counting HTML would invent a number. |
+| Cloud Security Alliance STAR registry | The registry is an HTML page. No documented public API was found and no terms-of-use page was found at the address tried (404). robots.txt disallows `/special/` and `/download/`. Unverified whether a public API exists. |
+| Artificial Analysis public data / API | The terms grant use of the site "solely for your own personal, noncommercial use" and bar commercial exploitation of site content; the API needs a key. |
+| Crowd-voted leaderboard named in the brief (host omitted) | The leaderboard page answered a plain request with 403 (a bot challenge). Its terms page rendered no readable text without a browser. Not added; a challenge is out of scope. |
+
+Not done: no source was added beyond five; nothing is graded, ranked or mapped to a company.
