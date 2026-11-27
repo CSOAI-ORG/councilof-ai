@@ -58,6 +58,10 @@ def signature_check(signed, index_sha):
             return "FAILS (payload sha256 differs from signature.payload_sha256)"
         if (payload.get("artifact") or {}).get("sha256") != index_sha:
             return "FAILS (the signed payload pins other index bytes)"
+        if sig.get("did") != BOARD_DID:
+            return "FAILS (declared signer differs from the pinned board key identifier)"
+        if sig.get("alg") != "Ed25519":
+            return "FAILS (declared algorithm differs from Ed25519)"
         Ed25519PublicKey.from_public_bytes(bytes.fromhex(BOARD_PUB_HEX)).verify(bytes.fromhex(sig["sig_ed25519"]), pre)
         return "VERIFIES"
     except ImportError:

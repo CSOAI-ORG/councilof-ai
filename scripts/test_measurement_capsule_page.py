@@ -37,16 +37,33 @@ class Page(unittest.TestCase):
         payload = {"artifact": {"sha256": "00" * 32}}
         pre = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
         (self.d / "index.signed.json").write_text(json.dumps({"payload": payload, "signature": {
-            "did": page.BOARD_DID, "sig_ed25519": "00" * 64, "payload_sha256": hashlib.sha256(pre).hexdigest()}}))
+            "did": page.BOARD_DID, "alg": "Ed25519", "sig_ed25519": "00" * 64, "payload_sha256": hashlib.sha256(pre).hexdigest()}}))
         self.assertEqual(page.signature_check(json.loads((self.d / "index.signed.json").read_text()), hashlib.sha256(raw).hexdigest()),
                          "FAILS (the signed payload pins other index bytes)")
         self.assertIn("<strong>FAILS (the signed payload pins other index bytes)</strong>", page.render(self.d))
+
+    def test_signature_labels_must_identify_the_pinned_key_and_algorithm(self):
+        vdir = pathlib.Path(__file__).resolve().parents[1] / "public/measurement-capsules/v0.2"
+        signed = json.loads((vdir / "index.signed.json").read_text())
+        digest = hashlib.sha256((vdir / "index.json").read_bytes()).hexdigest()
+        self.assertEqual(page.signature_check(signed, digest), "VERIFIES")
+        for field, wrong, reason in (("did", "other", "declared signer"),
+                                     ("alg", "other", "declared algorithm")):
+            for value in (None, wrong):
+                with self.subTest(field=field, value=value):
+                    signature = dict(signed["signature"])
+                    if value is None:
+                        del signature[field]
+                    else:
+                        signature[field] = value
+                    result = page.signature_check(dict(signed, signature=signature), digest)
+                    self.assertTrue(result.startswith("FAILS (" + reason), result)
 
     def test_a_forged_signature_over_the_right_payload_fails_ed25519(self):
         raw = (self.d / "index.json").read_bytes()
         payload = {"artifact": {"sha256": hashlib.sha256(raw).hexdigest()}}
         pre = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
-        s = {"payload": payload, "signature": {"sig_ed25519": "11" * 64, "payload_sha256": hashlib.sha256(pre).hexdigest()}}
+        s = {"payload": payload, "signature": {"did": page.BOARD_DID, "alg": "Ed25519", "sig_ed25519": "11" * 64, "payload_sha256": hashlib.sha256(pre).hexdigest()}}
         self.assertTrue(page.signature_check(s, hashlib.sha256(raw).hexdigest()).startswith("FAILS (Ed25519"))
 
 
