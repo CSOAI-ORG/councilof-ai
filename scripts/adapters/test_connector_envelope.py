@@ -377,5 +377,67 @@ class EconomicComponentControls(unittest.TestCase):
         self.assertEqual(workflow.count("      - name: Economic source qualification"),1)
 
 
+class EconomicContextControls(unittest.TestCase):
+    def setUp(self):
+        from adapters import economic_context as e
+        self.e=e
+
+    def test_oecd_unsorted_dimensions_and_break(self):
+        dims=[{"id":k,"values":[{"id":v}]} for k,v in [
+          ("REF_AREA","OECD"),("FREQ","A"),("MEASURE","G14_B"),
+          ("UNIT_MEASURE","PT_ENT"),("ACTIVITY","_T"),("SIZE_CLASS","S_GE10")]]
+        dims.append({"id":"TIME_PERIOD","values":[{"id":"2025"},{"id":"2023"}]})
+        attrs=[{"id":"OBS_STATUS","values":[{"id":"B"},{"id":"A"}]},
+               {"id":"UNIT_MULT","values":[{"id":"0"}]}]
+        doc={"structure":{"dimensions":{"observation":dims},"attributes":{"observation":attrs}},
+             "dataSets":[{"observations":{"0:0:0:0:0:0:0":[20.3,0,0],"0:0:0:0:0:0:1":[8.7,1,0]}}]}
+        rows=self.e.oecd(json.dumps(doc).encode())
+        self.assertEqual(rows[-1]["value"],20.3)
+        self.assertTrue(rows[-1]["series_break"])
+        self.assertIsNone(rows[0]["value"])
+        dims[2]["values"][0]["id"]="B1_B"
+        with self.assertRaises(ValueError):self.e.oecd(json.dumps(doc).encode())
+
+    def test_ons_definition_and_period(self):
+        doc={"description":{"cdid":"MGSX","datasetId":"LMS","unit":"%","title":"Unemployment rate, seasonally adjusted","releaseDate":"2026-11-17"},
+             "years":[{"year":"2025","date":"2025","value":"4.9"}]}
+        rows=self.e.ons(json.dumps(doc).encode())
+        self.assertEqual(rows[-1]["value"],4.9)
+        self.assertIsNone(rows[0]["value"])
+        doc["description"]["cdid"]="MGSY"
+        with self.assertRaises(ValueError):self.e.ons(json.dumps(doc).encode())
+
+    def test_imf_sentinel_and_no_forecast_inference(self):
+        doc={"values":{"NGDP_RPCH":{c:{"2023":-1.2,"2025":1.2,"2026":3} for c in self.e.COUNTRIES},"":None}}
+        rows=self.e.imf(json.dumps(doc).encode())
+        self.assertEqual(len(rows),18)
+        self.assertEqual(rows[0]["value"],-1.2)
+        self.assertIsNone(rows[1]["value"])
+        self.assertEqual(rows[-1]["estimate_status"],"NOT_DISTINGUISHED_BY_RESPONSE")
+        doc["values"]["OTHER"]={}
+        with self.assertRaises(ValueError):self.e.imf(json.dumps(doc).encode())
+
+    def test_fred_missing_month_value_and_wrong_series(self):
+        raw=("observation_date,UNRATE\n"+"".join(f"2025-{m:02}-01,{'' if m==10 else '4.2'}\n" for m in range(1,13))).encode()
+        rows=self.e.fred(raw)
+        self.assertEqual(len(rows),12)
+        self.assertIsNone(rows[9]["value"])
+        with self.assertRaises(ValueError):self.e.fred(raw.replace(b"UNRATE",b"OTHER"))
+        with self.assertRaises(ValueError):self.e.fred(raw.rsplit(b"\n",2)[0])
+
+    def test_partial_failure_keeps_other_sources_and_no_board_write(self):
+        raw=("observation_date,UNRATE\n"+"".join(f"2025-{m:02}-01,4.2\n" for m in range(1,13))).encode()
+        def getter(source):
+            if source=="fred-unemployment":return raw
+            raise ValueError("test failed")
+        with tempfile.TemporaryDirectory() as tmp:
+            result=self.e.capture(Path(tmp)/"run",getter= getter,clock=lambda:"2026-11-27T00:00:00Z")
+            self.assertEqual([x["state"] for x in result["sources"]],["UNCHECKABLE"]*3+["PROBED"])
+            self.assertFalse(result["writes_board"])
+            env=result["sources"][-1]["envelope"]
+            self.assertEqual(ce.validate(env),[])
+            self.assertIsNone(env["measurement"])
+
+
 if __name__ == "__main__":
     unittest.main()

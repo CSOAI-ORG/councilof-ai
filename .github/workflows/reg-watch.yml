@@ -143,6 +143,23 @@ jobs:
             printf '%s\n' 'Economic sources: UNCHECKABLE (capture or validation failed). No new measurement or zero substituted.' | tee -a "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
+      - name: Additional economic context qualification (metadata summary only)
+        id: economic-context
+        timeout-minutes: 2
+        continue-on-error: true
+        env:
+          PYTHONPATH: scripts
+        run: |
+          set -euo pipefail
+          capture_root=$(mktemp -d)
+          trap 'rm -rf -- "$capture_root"' EXIT
+          if python3 -m adapters.economic_context "$capture_root/capture" > "$capture_root/result.log" 2>&1; then
+            printf '%s\n' 'Additional economic context: all fixed sources qualified; no board update.' | tee -a "$GITHUB_STEP_SUMMARY"
+            cat "$capture_root/result.log" | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            printf '%s\n' 'Additional economic context: one or more sources UNCHECKABLE; successful sources remain distinct.' | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
       - name: Watchdog source status selftest (offline)
         run: node --test scripts/watchdog/source-status.test.mjs
       - name: Run metadata-only incident-source checks
