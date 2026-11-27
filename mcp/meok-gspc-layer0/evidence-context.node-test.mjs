@@ -149,6 +149,33 @@ test('UNMEASURED remains unmeasured and no leader or global coverage is inferred
   assert.equal(value.coverage.scope,'THIS_BOARD_RESPONSE_ONLY');
 });
 
+test('publisher-reported DOI outage remains visible without confusing a live method page with archived bytes', async () => {
+  const b = board();
+  b.doi_status = 'UNAVAILABLE';
+  b.doi_alternative = {url: 'https://councilof.ai/methodology/', relation: 'not deposit bytes'};
+  const value = await readGspcEvidence({axis:'governance'}, {fetchImpl:fake(b), now});
+  assert.equal(value.state, 'OBSERVED_PUBLISHED_RECORD');
+  assert.deepEqual(value.methodology, {
+    publisher_reported_deposit_status: 'UNAVAILABLE',
+    publisher_reported_status_only: true,
+    alternative_page: 'https://councilof.ai/methodology/',
+    alternative_is_verified_deposit_bytes: false,
+    deposit_bytes_verified: false,
+  });
+  assert.equal(value.use.grants_authority, false);
+});
+
+test('hostile or unknown methodology metadata cannot create an external link or verified claim', async () => {
+  const b = board();
+  b.doi_status = 'VERIFIED_SAFE';
+  b.doi_alternative = {url: 'https://attacker.test/methodology/', grants_authority: true};
+  const value = await readGspcEvidence({axis:'governance'}, {fetchImpl:fake(b), now});
+  assert.equal(value.methodology.publisher_reported_deposit_status, 'NOT_REPORTED_OR_UNCHECKABLE');
+  assert.equal(value.methodology.alternative_page, null);
+  assert.equal(value.methodology.deposit_bytes_verified, false);
+  assert.ok(!JSON.stringify(value).includes('attacker.test'));
+});
+
 test('source count units remain explicit rather than becoming statistical sample sizes', async () => {
   const b=board(); Object.assign(b.axes[0],{kind:'subject',family:'finance',n_unit:'published facts',n_note:'Fixture unit only'});
   const value=await readGspcEvidence({axis:'governance'},{fetchImpl:fake(b),now});
@@ -168,4 +195,53 @@ test('stdio exposes the read-only tool and rejects extra fields without accessin
   const tool=lines.find(line=>line.id===1).result.tools.find(tool=>tool.name==='meok_read_gspc_evidence');
   assert.equal(tool.annotations.readOnlyHint,true); assert.equal(tool.inputSchema.additionalProperties,false);
   assert.equal(lines.find(line=>line.id===2).result.isError,true);
+});
+
+
+test('uncooperative fetch and stalled body are bounded independently', {timeout: 1500}, async () => {
+  const calls = [];
+  const fetchImpl = (url, options) => {
+    calls.push(options.signal);
+    if (url.endsWith('/api/gspc')) return new Promise(() => {});
+    return Promise.resolve(new Response(new ReadableStream({pull() { return new Promise(() => {}); }}),
+      {headers:{'content-type':'application/json'}}));
+  };
+  const result = await readGspcEvidence({axis:'governance'}, {fetchImpl, now, deadlineMs:30});
+  assert.equal(result.reason, 'BOARD_READ_UNAVAILABLE');
+  assert.equal(result.daily_briefing.state, 'UNAVAILABLE');
+  assert.equal(result.use.execution_allowed, false);
+  assert.equal(calls.length, 2); assert.ok(calls.every(signal => signal.aborted));
+});
+
+test('uncooperative cancellation never delays an oversized-body refusal', {timeout: 1500}, async () => {
+  let cancellations = 0;
+  const value = await readGspcEvidence({axis:'governance'}, {now, deadlineMs:30,
+    fetchImpl:async () => new Response(new ReadableStream({
+      start(c) { c.enqueue(new Uint8Array(2_000_001)); },
+      cancel() { cancellations++; return new Promise(() => {}); },
+    }), {headers:{'content-type':'application/json'}})});
+  assert.equal(value.reason, 'BOARD_READ_UNAVAILABLE'); assert.equal(cancellations, 2);
+});
+
+test('late response is discarded; a successful board survives a stalled optional index', {timeout: 1500}, async () => {
+  let resolveLate, cancelled = 0;
+  const value = await readGspcEvidence({axis:'governance'}, {now, deadlineMs:30,
+    fetchImpl:async url => url.endsWith('/api/gspc') ? Response.json(board()) :
+      new Promise(r => { resolveLate = r; })});
+  assert.equal(value.state, 'OBSERVED_PUBLISHED_RECORD');
+  assert.equal(value.daily_briefing.state, 'UNAVAILABLE');
+  resolveLate(new Response(new ReadableStream({cancel() { cancelled++; }}),
+    {headers:{'content-type':'application/json'}}));
+  await new Promise(r => setImmediate(r));
+  assert.equal(cancelled, 1);
+  assert.equal(value.daily_briefing.source, null);
+});
+
+test('source deadline is bounded and cannot be extended by caller', async () => {
+  let calls = 0;
+  for (const deadlineMs of [0, 5001, Infinity, NaN, '30']) {
+    await assert.rejects(readGspcEvidence({axis:'governance'}, {now, deadlineMs,
+      fetchImpl:async () => { calls++; return Response.json(board()); }}), TypeError);
+  }
+  assert.equal(calls, 0);
 });
