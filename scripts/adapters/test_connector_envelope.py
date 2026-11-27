@@ -232,5 +232,92 @@ class FiniteMeasurementControls(unittest.TestCase):
             self.assertIn("1/2 envelopes valid", result.stdout)
 
 
+
+
+class EconomicComponentControls(unittest.TestCase):
+    def setUp(self):
+        from adapters import economic_components as e
+        self.e = e
+        self.anthropic = {"result":{"structuredContent":{"result":{"period":"2026-05-01","regions":[
+            {"region_code":c,"anthropic_usage_index":1.5,"augmentation_pct":51,"automation_pct":49}
+            for c in e.COUNTRIES]}}}}
+        self.wb = [{"pages":1,"total":6}, [
+            {"countryiso3code":c,"date":"2024","indicator":{"id":"IT.NET.USER.ZS"},"value":95}
+            for c in e.COUNTRIES]]
+
+    def test_anthropic_separate_components(self):
+        rows = self.e.parse_anthropic(json.dumps(self.anthropic).encode())
+        self.assertEqual(len(rows),18)
+        self.assertEqual({r["period"] for r in rows},{"2026-05-01"})
+
+    def test_anthropic_missing_is_not_zero(self):
+        del self.anthropic["result"]["structuredContent"]["result"]["regions"][0]["automation_pct"]
+        rows = self.e.parse_anthropic(json.dumps(self.anthropic).encode())
+        self.assertIsNone(rows[2]["value"])
+
+    def test_anthropic_duplicate_country_refused(self):
+        rows = self.anthropic["result"]["structuredContent"]["result"]["regions"]
+        rows.append(rows[0])
+        with self.assertRaises(ValueError):
+            self.e.parse_anthropic(json.dumps(self.anthropic).encode())
+
+    def test_worldbank_identity_and_null(self):
+        self.wb[1][0]["value"] = None
+        rows = self.e.parse_worldbank(json.dumps(self.wb).encode(),"IT.NET.USER.ZS")
+        self.assertEqual(len(rows),6)
+        self.assertIsNone(rows[0]["value"])
+        self.wb[1][0]["indicator"]["id"] = "SL.UEM.TOTL.ZS"
+        with self.assertRaises(ValueError):
+            self.e.parse_worldbank(json.dumps(self.wb).encode(),"IT.NET.USER.ZS")
+
+    def test_worldbank_duplicate_or_incomplete_refused(self):
+        self.wb[0]["pages"] = 2
+        with self.assertRaises(ValueError):
+            self.e.parse_worldbank(json.dumps(self.wb).encode(),"IT.NET.USER.ZS")
+        self.wb[0]["pages"] = 1
+        self.wb[1][1] = self.wb[1][0]
+        with self.assertRaises(ValueError):
+            self.e.parse_worldbank(json.dumps(self.wb).encode(),"IT.NET.USER.ZS")
+
+    def test_bad_numbers_and_duplicate_json_refused(self):
+        for value in (True,-1,101,float("inf")):
+            self.wb[1][0]["value"] = value
+            with self.assertRaises(ValueError):
+                self.e.parse_worldbank(json.dumps(self.wb).encode(),"IT.NET.USER.ZS")
+        with self.assertRaises(ValueError):
+            self.e.decode(b'{"value":1,"value":2}')
+
+    def test_envelope_capture_binding_and_replay(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as temp:
+            folder = Path(temp)
+            sources = []
+            def add(kind,key,doc,url):
+                name = "anthropic.json" if kind=="anthropic" else key+".json"
+                raw = json.dumps(doc).encode()
+                (folder/name).write_bytes(raw)
+                sources.append({"kind":kind,"indicator":key,"file":name,"url":url,
+                    "sha256":hashlib.sha256(raw).hexdigest(),"observed_at":"2026-11-27T00:00:00Z"})
+            add("anthropic","anthropic",self.anthropic,self.e.ANTHROPIC_URL)
+            for key in self.e.INDICATORS:
+                doc = json.loads(json.dumps(self.wb))
+                for row in doc[1]:
+                    row["indicator"]["id"] = key
+                add("worldbank",key,doc,self.e.WB_ROOT+key+"?format=json&date=2020:2025&per_page=100")
+            (folder/"manifest.json").write_text(json.dumps({"sources":sources}))
+            result = self.e.qualify(folder)
+            self.assertEqual(result,self.e.qualify(folder))
+            self.assertEqual(len(result["envelopes"]),3)
+            self.assertEqual(len(result["component_candidates"]),30)
+            self.assertFalse(result["writes_board"])
+            for env in result["envelopes"]:
+                self.assertEqual(ce.validate(env),[])
+                self.assertEqual(env["lifecycle_state"],"PROBED")
+                self.assertIsNone(env["measurement"])
+            (folder/"anthropic.json").write_bytes(b'{}')
+            with self.assertRaises(ValueError):
+                self.e.qualify(folder)
+
+
 if __name__ == "__main__":
     unittest.main()
