@@ -1,6 +1,8 @@
 # Regulator filings — September 2026 — INDEX
 
-Prepared 2026-09-14 by a lane agent. **Everything here is a DRAFT. Nothing was submitted, emailed, or signed up for.** Nick submits.
+Prepared 2026-09-14 by a lane agent as drafts. Nick submits.
+
+> **Status corrected 21 Nov 2026.** #041 NIST AI 300-1 was recorded as sent on 16 Sep 2026 and #050 NIST AI 200-2 on 17 Sep 2026 (delivery unconfirmed; evidence [`public/interop/memberships.json`](../../../public/interop/memberships.json) rows `nist-ai-300-1` and `nist-ai-200-2`). The other drafts in this table remain drafts. The state column below records what was found on 2026-09-14.
 Every consultation below was checked against the regulator's own site. "Retrieved" times are UTC on 2026-09-14.
 An AI assistant was used to prepare these drafts; each draft says so in its body.
 

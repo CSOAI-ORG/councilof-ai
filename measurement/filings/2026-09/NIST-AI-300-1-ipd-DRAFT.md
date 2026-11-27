@@ -1,4 +1,6 @@
-# DRAFT — not submitted
+# SENT — recorded as sent 16 Sep 2026 (delivery not independently confirmed)
+
+> **Status corrected 21 Nov 2026.** Recorded as sent from nicholas@csoai.org to ai-standards+doczd@nist.gov on 2026-09-16 (Sent 345). A reply from a NIST address followed on the same thread and was answered on 2026-09-19 (Sent 465). Evidence: [`public/interop/memberships.json`](../../../public/interop/memberships.json), row `nist-ai-300-1` (private email evidence; NIST has not published the comment). The M4 msmtp sender returned `535` from 13 Sep, so delivery is not confirmed beyond the recorded NIST reply. The text below is the repo draft and may differ from what was sent. The filename keeps `-DRAFT` so that existing links do not break.
 
 | Field | Value |
 |---|---|
