@@ -361,14 +361,29 @@ export async function talkToPal(
       facts,
       required_module: axisId ? `GSPC-${axisId}` : null,
     });
-    await putChallenge(env.HITL_KV ?? env.PAL_MEMORY_KV ?? null, challenge);
+    // A built challenge is not a saved challenge. Only the canonical HITL store
+    // may acknowledge the write; a PAL namespace is not a review queue.
+    const acknowledged = await putChallenge(env.HITL_KV ?? null, challenge);
+    if (!acknowledged) {
+      return {
+        ...base,
+        answer: "I did not perform the action. I cannot confirm that a human-review request was recorded. Do not assume a reviewer has received it. Contact Council through its existing public enquiry route with non-confidential information.",
+        state: "refused",
+        facts: null,
+        source: null,
+        model: null,
+        suggested_pal: null,
+        guardrail: "challenge-store-unconfirmed",
+        challenge: null,
+      };
+    }
     return {
       ...base,
       answer:
         "I am not the one who decides this, and I will not do it on my own. " +
         "A measurement says what was observed; it never says what should happen. " +
-        "I have raised this as a challenge for a human who is competent to decide it" +
-        (axisId ? `, and who has read the published record for "${axisId}".` : ".") +
+        "The review store acknowledged this challenge. Human receipt, competence and authority remain unverified" +
+        (axisId ? `; the proposed review concerns "${axisId}".` : ".") +
         " The challenge id is on this reply.",
       state: "escalated",
       facts,

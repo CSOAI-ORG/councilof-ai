@@ -27,7 +27,8 @@ export default function RegionalContact() {
         {REGIONAL_CONTACTS.map((entry) => (
           <li key={entry.address} className="rounded-lg border border-border p-4">
             <h3 className="font-semibold">{entry.region}</h3>
-            <a href={regionalContactHref(entry)} className="mt-1 block break-all text-sm underline">{entry.address}</a>
+            {/* Fixed compile-time aliases only: the same Cloudflare email_off pattern as PlainEmail. */}
+            <span dangerouslySetInnerHTML={{ __html: `<!--email_off--><a href="${regionalContactHref(entry)}" class="mt-1 block break-all text-sm underline">${entry.address}</a><!--/email_off-->` }} />
           </li>
         ))}
       </ul>
