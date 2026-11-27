@@ -62,9 +62,9 @@ test('human decision: sign → attach → verified; wrong key → thrown; cert-l
 });
 
 test('finalize refuses while human tasks pending — we do not fake it', async () => {
-  const pack = { human_tasks: ['t1', 't2'], human_decisions: [{ task_id: 't1' }], checkpoints: [{ status: 'HUMAN-REQUIRED' }, { status: 'MACHINE-EVIDENCED' }, { status: 'UNMEASURED' }] };
+  const pack = { human_tasks: ['t1', 't2'], human_decisions: [{ task_id: 't1', decision: 'DEFERRED' }], checkpoints: [{ status: 'HUMAN-REQUIRED' }, { status: 'MACHINE-EVIDENCED' }, { status: 'UNMEASURED' }] };
   assert.throws(() => finalize(pack), /do not fake it/);
-  pack.human_decisions.push({ task_id: 't2' });
+  pack.human_decisions.push({ task_id: 't2', decision: 'SIGNED' });
   const m = finalize(pack);
   assert.deepEqual(m.counts, { machine_evidenced: 1, human_signed: 1, unmeasured_declared: 1 });
   assert.match(m.doctrine, /never certification/);
@@ -102,4 +102,28 @@ test('csoai-attest × him-attest bridge: createHumanSigner + buildDualSignedRece
     () => buildDualSignedReceipt(payload, { machineSigner: humanSigner, humanSigner }),
     /must not share the same key/,
   );
+});
+
+test('bundle count cannot supply missing subject-matched evidence', async () => {
+  const fetchImpl = mockFetch({
+    'https://councilof.ai/api/evidence-bundle?obligation=article-50&preview=true':
+      BUNDLE('RELEVANT_CARDS_FOUND', [CARD('unrelated')], 50)
+  });
+  const { pack } = await runCeremony({ frameworkSlug: 'eu-ai-act-art50', frameworksDir: DIR, subject: 'fixture', fetchImpl });
+  assert.equal(pack.checkpoints.find(c => c.id === 'art50.marking-drift').status, 'UNMEASURED');
+});
+
+test('all shipped framework packs preserve review dispositions on finalization', async () => {
+  const { privateKey, publicKey } = crypto.generateKeyPairSync('ed25519');
+  for (const file of fs.readdirSync(DIR).filter(f => f.endsWith('.json'))) {
+    const { pack, tasks } = await runCeremony({ frameworkSlug: file.slice(0,-5), frameworksDir: DIR,
+      subject: 'Research fixture', fetchImpl: async () => ({ok:false}) });
+    for (const [index, task] of tasks.entries()) {
+      const decision = { task_id: task.task_id, decision: index ? 'SIGNED' : 'DEFERRED', note: 'test only', ts: pack.as_of };
+      attachHumanDecision(pack, { ...decision, humanKeyPublic: publicKey, signatureB64: signDecision(privateKey, decision) });
+    }
+    assert.equal(finalize(pack).counts.human_signed, Math.max(0, tasks.length-1));
+    assert.throws(() => finalize({...pack, subject:'certified by Council'}), /forbidden/);
+    assert.throws(() => finalize({...pack, doctrine:pack.doctrine+' accredited product'}), /forbidden/);
+  }
 });
