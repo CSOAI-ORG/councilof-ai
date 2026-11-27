@@ -20,3 +20,22 @@ Paired input-mode flag flip holds other input features constant; per-layer activ
 
 ## Blockers
 H02 LLM pilot on M4 froze 12 cases × four conditions; no inference because cached Ollama weight blobs absent. Disk space critically low. No model download, paid calls, storage deletion or production changes authorized in this run. Full parallel real-model study, external review and deploy/acceptance not performed.
+
+## 27 November: observed-prior refresh and matched observation budgets
+
+Research continuation in the same process lab, not a new service. The original and follow-up protocols use frozen neural weights, distinct simulator seed banks, matched baseline/evidence-aware modes and the existing pinned world-rehearsal oracle. Each bank has 144 seed groups, 288 eight-tick trajectories and 2,304 predictions per arm. Refreshes restore only the simulator's observed **previous** two states; the current target is never supplied to the predictor. The experiment evaluates prediction recovery, not authority to execute or an actual world intervention. The threshold is fixed on 400 published validation rows.
+
+| Original protocol | Above tolerance | Refreshes |
+|---|---:|---:|
+| Unassisted | 1251 | 0 |
+| Peer-triggered (at most two) | 1118 | 124 |
+| Random two | 647 | 576 |
+| Fixed ticks 2 and 5 | 517 | 576 |
+| All seven prior states | 319 | 2016 |
+| Peer, witness unavailable | 1251 | 0 |
+
+The missing-witness control made 119 unsuccessful requests and reproduced the unassisted errors. The initial implementation did not cap unsuccessful requests; the corrected protocol counts them toward its two-request limit and retains the original initial run locally. Observation count differs between the peer and scheduled strategies, so this comparison is not a matched-cost superiority claim.
+
+On separate simulator seeds, each assisted arm makes exactly 576 refreshes. The fixed ticks 2 and 5 baseline achieved 527 above-tolerance rows (MAE .038009), later ticks 3 and 6 achieved 628 (.041939), the adaptive deadline hybrid achieved 639 (.042847), random achieved 648 (.043081), and unassisted achieved 1296 (.081587). The primary paired hybrid-minus-fixed MAE difference was +.0048383, seed-cluster bootstrap interval [.0030055, .0066165]. Fixed wins this bounded comparison; do not promote adaptive solely because it is more complex. The result does not generalize to arbitrary agent workloads, unknown observation latency, or actual world interventions. A new bank drawn from the same deterministic simulator is not independent real-world evidence. No human authority, paid call, training, GSPC admission, deployment or external review.
+
+Reproduction: from this directory run `python3 sovos_prior_refresh.py --out <new-directory>` or `python3 sovos_prior_refresh.py --protocol equal-budget --out <new-directory>` with NumPy and public pinned source access. Output directories must be new; plan and threshold are written before bank generation, and report and per-episode receipts have exact digests. Original summary, bank, receipt, plan and threshold matched when replayed with the extended script. Retained plans/results: `sovos-prior-refresh-plan-20261127.json`, `sovos-prior-refresh-results-20261127.json`, `sovos-prior-refresh-equal-budget-plan-20261127.json`, `sovos-prior-refresh-equal-budget-results-20261127.json`. Full local receipts retained on M4; independent replay and current-head CI required before public claims.
