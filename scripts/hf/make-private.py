@@ -47,6 +47,13 @@ def plan(path=LIST, target=""):
     return rows
 
 
+def safe_http_status(exc):
+    """Return only a validated numeric HTTP status; never stringify a response."""
+    response = getattr(exc, "response", None)
+    code = getattr(response, "status_code", None)
+    return code if type(code) is int and 100 <= code <= 599 else None
+
+
 def main():
     dry = os.environ.get("DRY_RUN", "true").lower() != "false"
     target = os.environ.get("HF_TARGET_ONLY", "").strip()
@@ -67,8 +74,10 @@ def main():
             if not dry and not info.private:
                 failures.append((repo_id, "visibility_not_private_after_update"))
         except Exception as exc:
-            # Avoid printing full remote exception text; error messages may echo URLs.
-            print(f"{kind}\\t{repo_id}\\tERROR {type(exc).__name__}")
+            # Only emit HTTP numeric status, never response text, URL, headers, or token.
+            code = safe_http_status(exc)
+            status_label = f" status={code}" if code is not None else ""
+            print(f"{kind}\\t{repo_id}\\tERROR {type(exc).__name__}{status_label}")
             failures.append((repo_id, type(exc).__name__))
     print(f"done dry_run={dry} n={len(rows)} failures={len(failures)}")
     return 1 if failures else 0
