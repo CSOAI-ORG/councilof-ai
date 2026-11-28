@@ -7,6 +7,7 @@
 <section><h2>Research example</h2><p>Did a pull request merge within one hour of opening? Twelve consecutive public pull requests, #4976–4987, were scored retrospectively. A local Qwen model saw the retrieved title only. Titles can change after opening. The reference assigns 50% to every case.</p>
 <details><summary>How scoring works</summary><p>The Brier score averages (probability − outcome)². Zero is perfect. Both forecasts use the same cases with complete predictions and outcomes. Missing values are reported separately. The sample measures this one workflow. Its outcomes were already public when the model ran.</p></details></section>
 <section><h2>Run a benchmark</h2><label for="dataset">Dataset and method (editable JSON)</label><p>Give the study a question and each case a unique ID. Enter probabilities from 0 to 1, an observed outcome of 0 or 1, and a source reference. Use null for missing observations or predictions. Downloaded results include the entire input.</p>
+<details><summary>Replay a downloaded result</summary><p>Paste the full evidence JSON below and select Run comparison. The tool checks the input digest and recalculates every reported score. This checks consistency with the supplied cases. The source observations and author identity require separate evidence.</p></details>
 <textarea id="dataset" rows="10" spellcheck="false"></textarea><button id="run">Run comparison</button><button id="save" disabled>Download evidence JSON</button><output id="summary" role="status" aria-live="polite"></output><div id="results"></div></section>
 <p><a href="https://github.com/CSOAI-ORG/councilof-ai/tree/master/harness/bench">Run an existing GSPC model evaluation</a></p></main>
 <script id="example" type="application/json">{"study_id":"reaction-pr-merge-1h-pilot-20261128","question":"Did the pull request merge within 60 minutes of opening?","method":{"model":"qwen3:0.6b","digest":"7df6b6e09427a769808717c0a93cadc4ae99ed4eb8bf5ca557c90846becea435","template":"Estimate the probability that this pull request to the Council of AI repository merged within one hour of opening. Only its title is available. Output a JSON object with the numeric field probability between 0 and 1. Title: ","options":{"temperature":0,"seed":72,"num_predict":48,"num_ctx":1024},"runtime":"Ollama /api/generate, format json, think false; 2026-11-28 UTC","selection":"Consecutive PRs 4976–4987 in CSOAI-ORG/councilof-ai. First-party historical demonstration. All one-hour windows elapsed before collection. Titles as retrieved; original opening text unverified.","reference":"Constant 0.5 chosen for illustration."},"cases":[{"id":"4987","source":"https://github.com/CSOAI-ORG/councilof-ai/pull/4987","title":"canary: capture run 45999988644","created_at":"2026-11-27T12:36:29Z","merged_at":null,"outcome":0,"candidate":0.9999999999999999,"raw_reply":"{\n  \"probability\": 0.9999999999999999\n}","reference":0.5},{"id":"4986","source":"https://github.com/CSOAI-ORG/councilof-ai/pull/4986","title":"catalog-trust round: counts-only snapshot (2026-11-27T0856Z)","created_at":"2026-11-27T08:56:40Z","merged_at":"2026-11-27T09:09:23Z","outcome":1,"candidate":0.9999999999999999,"raw_reply":"{\n  \"probability\": 0.9999999999999999\n}","reference":0.5},{"id":"4985","source":"https://github.com/CSOAI-ORG/councilof-ai/pull/4985","title":"npm-capture: re-derive the npm facts from a fresh capture (20261127T0835Z)","created_at":"2026-11-27T08:35:31Z","merged_at":null,"outcome":0,"candidate":0.9999999999999999,"raw_reply":"{\n  \"probability\": 0.9999999999999999\n}","reference":0.5},{"id":"4984","source":"https://github.com/CSOAI-ORG/councilof-ai/pull/4984","title":"docs: add free pinned reproduction to the existing agent quickstart","created_at":"2026-11-27T07:17:56Z","merged_at":null,"outcome":0,"candidate":0.95,"raw_reply":"{\n  \"probability\": 0.95\n}","reference":0.5},{"id":"4983","source":"https://github.com/CSOAI-ORG/councilof-ai/pull/4983","title":"Add one-click byte verification to the existing agent authority pilot","created_at":"2026-11-27T07:14:20Z","merged_at":"2026-11-27T11:25:59Z","outcome":0,"candidate":0.95,"raw_reply":"{\n  \"probability\": 0.95\n}","reference":0.5},{"id":"4982","source":"https://github.com/CSOAI-ORG/councilof-ai/pull/4982","title":"measurement capsules: daily index 2026-11-27","created_at":"2026-11-27T07:13:36Z","merged_at":"2026-11-27T07:33:22Z","outcome":1,"candidate":0.95,"raw_reply":"{\n  \"probability\": 0.95\n}","reference":0.5},{"id":"4981","source":"https://github.com/CSOAI-ORG/councilof-ai/pull/4981","title":"Extend existing organisational pulse: staff, oversight, membership and receiver health","created_at":"2026-11-27T07:13:07Z","merged_at":null,"outcome":0,"candidate":0.95,"raw_reply":"{\n  \"probability\": 0.95\n}","reference":0.5},{"id":"4980","source":"https://github.com/CSOAI-ORG/councilof-ai/pull/4980","title":"Stamp changed Article 50 index bytes in the rolling producer","created_at":"2026-11-27T07:09:44Z","merged_at":"2026-11-27T07:21:42Z","outcome":1,"candidate":0.95,"raw_reply":"{\n  \"probability\": 0.95\n}","reference":0.5},{"id":"4979","source":"https://github.com/CSOAI-ORG/councilof-ai/pull/4979","title":"build(deps): bump axios from 1.18.1 to 1.20.0","created_at":"2026-11-27T07:08:43Z","merged_at":null,"outcome":0,"candidate":0.9999999999999999,"raw_reply":"{\n  \"probability\": 0.9999999999999999\n}","reference":0.5},{"id":"4978","source":"https://github.com/CSOAI-ORG/councilof-ai/pull/4978","title":"Credit the independent A2A capsule reconstruction in the external evidence feed","created_at":"2026-11-27T07:06:57Z","merged_at":null,"outcome":0,"candidate":0.95,"raw_reply":"{\n  \"probability\": 0.95\n}","reference":0.5},{"id":"4977","source":"https://github.com/CSOAI-ORG/councilof-ai/pull/4977","title":"Link the capsule verification guide to a published example","created_at":"2026-11-27T07:06:16Z","merged_at":"2026-11-27T07:30:37Z","outcome":1,"candidate":0.95,"raw_reply":"{\n  \"probability\": 0.95\n}","reference":0.5},{"id":"4976","source":"https://github.com/CSOAI-ORG/councilof-ai/pull/4976","title":"build(deps): bump zod and openai","created_at":"2026-11-27T07:04:28Z","merged_at":null,"outcome":0,"candidate":0.95,"raw_reply":"{\n  \"probability\": 0.95\n}","reference":0.5}]}
@@ -34,15 +35,30 @@ function score(data){
  }
  return {metric:'paired-brier-v1',total:rows.length,paired:used,reference:used?a/used:null,candidate:used?b/used:null,rows};
 }
+function sameJSON(left,right){
+ if(left===right)return true;
+ if(left===null || right===null || typeof left!=='object' || typeof right!=='object')return false;
+ if(Array.isArray(left)!==Array.isArray(right))return false;
+ const keys=Object.keys(right);
+ return keys.length===Object.keys(left).length && keys.every(key=>Object.hasOwn(left,key) && sameJSON(left[key],right[key]));
+}
 el('run').onclick=async()=>{
- clear();const raw=input.value;
+ clear();const entered=input.value;
  try{
-  const data=JSON.parse(raw), result=score(data);
+  const payload=JSON.parse(entered);
+  const isReceipt=payload && typeof payload==='object' && Object.hasOwn(payload,'input_text');
+  if(isReceipt && typeof payload.input_text!=='string')throw Error('The evidence must contain the exact input text.');
+  const raw=isReceipt?payload.input_text:entered;
+  const result=score(isReceipt?JSON.parse(raw):payload);
   const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));
-  if(input.value!==raw)return;
+  if(input.value!==entered)return;
   const hash=Array.from(new Uint8Array(bytes),x=>x.toString(16).padStart(2,'0')).join('');
+  if(isReceipt){
+   if(payload.input_sha256!==hash)throw Error('Input digest mismatch. Check the original evidence file.');
+   if(!sameJSON(payload.result,result))throw Error('Reported result differs from the recomputed scores.');
+  }
   receipt={scope:'private exploratory replay',input_sha256:hash,input_text:raw,result};
-  statusLine.textContent=result.paired+' / '+result.total+' paired cases. '+(result.paired?'Reference Brier '+result.reference.toFixed(4)+' · Candidate Brier '+result.candidate.toFixed(4):'Both scores unavailable.');
+  statusLine.textContent=(isReceipt?'Evidence replay matched. ':'')+result.paired+' / '+result.total+' paired cases. '+(result.paired?'Reference Brier '+result.reference.toFixed(4)+' · Candidate Brier '+result.candidate.toFixed(4):'Both scores unavailable.');
   const table=document.createElement('table');const tr=table.insertRow();
   for(const title of ['Case','Reference loss','Candidate loss','Missing']){const th=document.createElement('th');th.textContent=title;tr.append(th)}
   for(const row of result.rows){const tr=table.insertRow();for(const value of [row.id,row.reference_loss?.toFixed(4),row.candidate_loss?.toFixed(4),row.missing.join(', ')])tr.insertCell().textContent=value??'—'}
@@ -51,4 +67,3 @@ el('run').onclick=async()=>{
 };
 save.onclick=()=>{if(!receipt)return;const url=URL.createObjectURL(new Blob([JSON.stringify(receipt,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='forecast-replay.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 </script></html>
-
