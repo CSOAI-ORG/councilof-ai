@@ -11,7 +11,7 @@ test("one reviewed set produces deterministic, source-linked public output", () 
   assert.equal(output.kind, "csoai.public-external-evidence/0.1");
   assert.equal(output.not_a_census, true);
   assert.equal(output.qualification, "OWNER_REVIEWED_SOURCE_ONLY");
-  assert.equal(output.records.length, 4);
+  assert.equal(output.records.length, 5);
   assert.ok(output.navigation.some(route => route.role === "execution_boundary" && route.state === "GET_DOCUMENTATION_ONLY_POST_NOT_INVOKED"));
   assert.ok(output.navigation.some(route => route.role === "artifact_verification" && route.state === "USER_SUPPLIED_RECORD_REQUIRED"));
   assert.ok(output.records.every(r => r.buyer_acceptance === "NOT_ESTABLISHED" && r.repeat_use === "NOT_ESTABLISHED"));
@@ -58,7 +58,7 @@ test("rejects silent commercial acceptance promotion", () => {
   assert.throws(() => validate(fake), /Unsupported acceptance/);
 });
 test("rejects unreviewed event dates and unqualified evidence statuses", () => {
-  const future = clone(); future.records[0].source_event_date = "2026-11-21";
+  const future = clone(); future.records[0].source_event_date = "2026-11-28";
   assert.throws(() => validate(future), /Unqualified/);
   const invented = clone(); invented.records[0].stage = "REGULATORY_ENDORSEMENT";
   assert.throws(() => validate(invented), /Unqualified/);

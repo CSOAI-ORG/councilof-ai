@@ -1,6 +1,6 @@
 {
   "kind": "csoai.public-external-evidence/0.1",
-  "reviewed_at": "2026-11-16",
+  "reviewed_at": "2026-11-27",
   "source_schema": "csoai.external-use-review/0.1",
   "qualification": "OWNER_REVIEWED_SOURCE_ONLY",
   "not_a_census": true,
@@ -35,6 +35,37 @@
     }
   ],
   "records": [
+    {
+      "id": "independent-a2a-capsule-reconstruction",
+      "category": "Independent implementation",
+      "title": "Independent reconstruction of one A2A capsule batch",
+      "event": "Pinned reproduction published 24 November 2026",
+      "summary": "Xinghua Zhao published an independent checker for the Council’s 33-record A2A measurement capsule batch.",
+      "detail": "The published run reconstructed all 33 identifiers, confirmed the exact canonical lines and their order, and matched the batch root, compressed archive hash and recorded outcome counts.",
+      "boundary": "The published run does not test signatures or timestamps. Its scope is the identified batch and its four reported comparisons.",
+      "revision": "5a20a98a9553fe3a007f500ddf204ff1567d6efe",
+      "sources": [
+        {
+          "label": "Pinned independent checker and instructions",
+          "href": "https://github.com/zhaoxinghua09-cell/independent-recomputations/tree/5a20a98a9553fe3a007f500ddf204ff1567d6efe#2-a-measurement-capsule-batch"
+        },
+        {
+          "label": "Exact published run log",
+          "href": "https://github.com/zhaoxinghua09-cell/independent-recomputations/blob/5a20a98a9553fe3a007f500ddf204ff1567d6efe/expected/run.log"
+        },
+        {
+          "label": "Council batch and archive links",
+          "href": "https://councilof.ai/measurement-capsules/v0.2/"
+        }
+      ],
+      "stage": "EXTERNAL_IMPLEMENTATION",
+      "stage_label": "Outside batch reconstruction",
+      "source_event_date": "2026-11-24",
+      "what_it_enables": "An engineer can rebuild the batch root from the pinned archive and compare it with the published record.",
+      "next_gate": "Record an external recipient’s verification of a scoped evidence delivery, with permission to cite their result.",
+      "buyer_acceptance": "NOT_ESTABLISHED",
+      "repeat_use": "NOT_ESTABLISHED"
+    },
     {
       "id": "r7-rerun",
       "category": "External execution",
