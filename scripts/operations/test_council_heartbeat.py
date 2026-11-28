@@ -20,12 +20,15 @@ def fixture():
     root={"card_count":452,"sig_ed25519":"some-publisher-signature"}
     manifest={"n_research_observations":26,"evidence_state":"RESEARCH_ONLY"}
     manifest["manifest_sha256"]=hashlib.sha256(canonical(manifest)).hexdigest()
-    docs=dict(gspc=board,corrections=corrections,claims=claims,root=root,hf_research=manifest)
+    staff={"schema":"csoai.pal-registry/0.1","count":1,"staff":[{"slug":"fixture","signed":False,"status":"active","owner":"SHOULD_NOT_LEAK"}],"model_configured":True,"provisioned_store_bound":False}
+    oversight={"schema":"csoai.hitl-companion-state/0.1","assessment_scope":{"operator_identity":"NOT_VERIFIED","human_presence":"NOT_ESTABLISHED","execution_authority":False},"review_queue_summary":{"PENDING":3,"APPROVED":2,"REJECTED":0,"HOLD":0},"store_bound":True}
+    groups={"schema":"csoai.working-group-catalog/1","groups":[{"id":"fixture","acceptedMembers":[],"chair":None}]}
+    docs=dict(gspc=board,corrections=corrections,claims=claims,root=root,hf_research=manifest,staff=staff,oversight=oversight,working_groups=groups)
     return {k:json.dumps(v).encode() for k,v in docs.items()}
 
 class PulseTests(unittest.TestCase):
     def test_public_observation_never_authorisation(self):
-        r=summarise(fixture(),{},AT)
+        r=summarise(fixture(),{},AT,200)
         self.assertEqual(r["schema"],SCHEMA)
         self.assertEqual(r["summary_state"],"PUBLIC_SOURCES_OBSERVED")
         self.assertTrue(all(s=="NOT_ESTABLISHED_BY_THIS_PULSE"
@@ -134,6 +137,46 @@ class PulseTests(unittest.TestCase):
                        "https://huggingface.co/api/private-user"):
             with self.subTest(target=target),self.assertRaises(ValueError):
                 handler.redirect_request(req,None,307,"Temporary",{},target)
+    def test_staff_and_oversight_aggregate_privacy_and_boundaries(self):
+        r=summarise(fixture(),{},AT,200)
+        self.assertEqual(r["metrics"]["staff"]["active_desks"],1)
+        self.assertFalse(r["metrics"]["staff"]["store_bound"])
+        self.assertFalse(r["metrics"]["staff"]["signatures_verified_here"])
+        self.assertTrue(r["metrics"]["oversight"]["reported_operator_identity_not_verified"])
+        self.assertFalse(r["metrics"]["oversight"]["independent_human_authority_verified_here"])
+        self.assertEqual(r["metrics"]["working_groups"]["accepted_membership_entries"],0)
+        self.assertNotIn("SHOULD_NOT_LEAK",json.dumps(r))
+    def test_gateway_status_does_not_qualify_private_receiver(self):
+        for status in (530,503,None,True):
+            r=summarise(fixture(),{},AT,status)
+            self.assertEqual(r["summary_state"],"READBACK_PARTIAL")
+            self.assertFalse(r["metrics"]["gateway"]["authenticated_receiver_qualified"])
+            self.assertFalse(r["metrics"]["gateway"]["private_case_executed"])
+        r=summarise(fixture(),{},AT,200)
+        self.assertFalse(r["metrics"]["gateway"]["authenticated_receiver_qualified"])
+    def test_missing_or_malformed_staff_oversight_groups_partial(self):
+        for name in ("staff","oversight","working_groups"):
+            d=fixture();d[name]=b"{}"
+            r=summarise(d,{},AT,200)
+            self.assertEqual(r["metrics"][name]["state"],"UNCHECKABLE")
+            self.assertEqual(r["summary_state"],"READBACK_PARTIAL")
+    def test_duplicate_staff_and_invalid_queue_counts_rejected(self):
+        d=fixture();v=json.loads(d["staff"]);v["staff"]*=2;v["count"]=2;d["staff"]=json.dumps(v).encode()
+        self.assertEqual(summarise(d,{},AT,200)["metrics"]["staff"]["state"],"UNCHECKABLE")
+        d=fixture();v=json.loads(d["oversight"]);v["review_queue_summary"]["APPROVED"]=True;d["oversight"]=json.dumps(v).encode()
+        self.assertEqual(summarise(d,{},AT,200)["metrics"]["oversight"]["state"],"UNCHECKABLE")
+    def test_gateway_probe_is_fixed_and_carries_no_auth(self):
+        from council_heartbeat import gateway_status,GATEWAY_HEALTH
+        from unittest.mock import patch,MagicMock
+        response=MagicMock();response.status=200
+        opener=MagicMock();opener.open.return_value.__enter__.return_value=response
+        with patch("council_heartbeat.urllib.request.build_opener",return_value=opener):
+            self.assertEqual(gateway_status(),200)
+        req=opener.open.call_args.args[0]
+        self.assertEqual(req.full_url,GATEWAY_HEALTH)
+        self.assertEqual(req.get_method(),"GET")
+        self.assertIsNone(req.get_header("Authorization"))
+        response.read.assert_not_called()
     def test_utc_required(self):
         with self.assertRaises(ValueError):
             summarise(fixture(),{}, "2026-11-24T00:00:00")
