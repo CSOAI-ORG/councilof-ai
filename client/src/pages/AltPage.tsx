@@ -16,7 +16,7 @@ const COMPS: Record<string, Comp> = {
       { dim: "EU AI Act (2 Aug 2026)", csoai: "Built around it: checklist, GPAI, penalties, sector pages", them: "Covered as one framework among many" },
       { dim: "Decision governance", csoai: COUNCIL_DESIGN, them: "Control monitoring + automation" },
       { dim: "Multi-framework evidence", csoai: "EU AI Act + NIST + ISO 42001 + FedRAMP, one crosswalked base", them: "Broad security/privacy framework library" },
-      { dim: "Openness", csoai: "Open-patent at openpatent.ai - forkable", them: "Proprietary SaaS" },
+      { dim: "Openness", csoai: "Public code and methods; reuse under each published licence", them: "Proprietary SaaS" },
     ],
     faqs: [
       { q: "Is CSOAI an alternative to Vanta?", a: "For AI-governance evidence workflows, CSOAI offers measurements, crosswalks, and verifiable cards. Vanta focuses on broader security-compliance automation. The designed Council is not a live consensus service." },
@@ -30,7 +30,7 @@ const COMPS: Record<string, Comp> = {
       { dim: "EU AI Act (2 Aug 2026)", csoai: "Built around it: checklist, GPAI, penalties, sector pages", them: "Part of a broad GRC suite" },
       { dim: "Decision governance", csoai: COUNCIL_DESIGN, them: "Policy + assessment workflows" },
       { dim: "Multi-framework evidence", csoai: "EU AI Act + NIST + ISO 42001 + FedRAMP, one crosswalked base", them: "Extensive privacy + GRC framework coverage" },
-      { dim: "Openness", csoai: "Open-patent at openpatent.ai - forkable", them: "Proprietary SaaS" },
+      { dim: "Openness", csoai: "Public code and methods; reuse under each published licence", them: "Proprietary SaaS" },
     ],
     faqs: [
       { q: "Is CSOAI an alternative to OneTrust?", a: "For AI-governance evidence workflows, CSOAI focuses on measurements, crosswalks, and verifiable cards. OneTrust is a broader privacy and GRC platform. The designed Council is not a live consensus service." },
@@ -44,7 +44,7 @@ const COMPS: Record<string, Comp> = {
       { dim: "EU AI Act (2 Aug 2026)", csoai: "Checklist, GPAI, penalties, sector pages, live countdown", them: "AI-Act policy + assessment coverage" },
       { dim: "Decision governance", csoai: COUNCIL_DESIGN, them: "Policy packs + governance reporting" },
       { dim: "Multi-framework evidence", csoai: "EU AI Act + NIST + ISO 42001 + FedRAMP, one crosswalked base", them: "AI-governance frameworks + policy" },
-      { dim: "Openness", csoai: "Open-patent at openpatent.ai - forkable", them: "Proprietary SaaS" },
+      { dim: "Openness", csoai: "Public code and methods; reuse under each published licence", them: "Proprietary SaaS" },
     ],
     faqs: [
       { q: "Is CSOAI an alternative to Credo AI?", a: "Both address AI governance. CSOAI focuses on deterministic measurements, public evidence states, and Ed25519-signed measurement cards. Its 33-seat Council remains a design, not a live consensus capability." },
@@ -96,6 +96,8 @@ export default function AltPage({ comp }: { comp: string }) {
         </div>
         <p className="mt-6 text-xs text-gray-400">Comparison reflects each vendor's public market positioning as of June 2026. Verify current capabilities directly with each provider. Not affiliated with or endorsed by {c.name}.</p>
         <div className="mt-6 flex flex-wrap gap-3">
+          <a href="https://github.com/CSOAI-ORG/councilof-ai" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Inspect the public source -&gt;</a>
+          <a href="/licensing-agreement/#rights" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Read the reuse terms -&gt;</a>
           <a href="/compare" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Full comparison matrix -&gt;</a>
           <a href="/try" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Try the Council -&gt;</a>
           <a href="/eu-ai-act-checklist" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">2 Aug 2026 checklist -&gt;</a>
