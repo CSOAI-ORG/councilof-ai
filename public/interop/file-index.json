@@ -1,7 +1,7 @@
 {
  "schema": "csoai.interop-file-index/0.2",
- "as_of": "2026-11-28T02:02:42Z",
- "source_commit": "13441f2adf06cbcda978164852d2c5f0140b422f",
+ "as_of": "2026-11-28T08:23:45Z",
+ "source_commit": "092610975affad10da92efa8ac5b52e328fe604f",
  "what_this_is": "Every file the estate's committed tree publishes under /interop/, with its size, its sha256 and how it is served. Built by reading the tree, so it is a measurement, not a list of intentions. Three served states occur, because there are three \u2014 a path routed to the mirror is not the same path as one the estate serves from its retired-bytes archive, and a fourth state (retired-bytes-absent) is reserved for a retired record the archive does not hold, which is not emitted because the archive is a deploy-time artefact and naming its membership here would make this index stale on every deploy.",
  "how_to_verify": "sha256 is the digest of the file's bytes as published. Fetch the path and hash it; on a row whose served_bytes reads 'as-published', a match means you hold what the estate published. Three things to know when it does not match: the digest is of the bytes at THIS index's source_commit, and the live site serves the bytes of the currently DEPLOYED commit, so the two agree once that commit is deployed; for pages-served HTML the digest is over the BUILT file, which carries the workspace-launcher script the build injects; and the EDGE rewrites some HTML in transit, so on a row whose served_bytes reads 'edge-transformed' or 'edge-transformed-per-request' the bytes the site serves are NOT the bytes published here, and on a 'per-request' row they differ on every fetch, so no digest of them can be reproduced by anyone, including us. A row whose served state is hf-mirror is a different case again: the bytes come from the HuggingFace evidence mirror, which is a SEPARATE HOST whose membership this index does not record, so the row's digest is checkable only while the mirror still holds the file. For retired-bytes paths the digest is of the canonical bytes, which the archive copies verbatim.",
  "retired": "A retired record is HISTORICAL evidence of a past measurement, never current proof. The estate's server marks these with the response header x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE SAME AS BEING UNREACHABLE: a retired path that is served answers 200 and its bytes verify against the sha256 below; a retired path that is not served answers 404. The `served` field says which.",
@@ -18,7 +18,7 @@
  },
  "counts": {
   "files": 16582,
-  "bytes": 290017507,
+  "bytes": 290255574,
   "by_served": {
    "pages": 3336,
    "retired-bytes": 6,
@@ -976,15 +976,15 @@
   },
   {
    "path": "/interop/art50-target-index.json",
-   "bytes": 1418,
-   "sha256": "a2118d8f336f1e5a02df3795c107a4727164f49f099236abd7aa65cf12d4a80d",
+   "bytes": 1425,
+   "sha256": "7eb7fac125300a4e1bc76a8ad4adb068eeb0355930b091e087b0cf4907892944",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/art50-target-index.json.ots",
-   "bytes": 3816,
-   "sha256": "6fcd35cca90dfc79722e0ca0c9d32b37ee8751ad6bc0686fe27ca134f908f6b8",
+   "bytes": 686,
+   "sha256": "8aa9c0116a2ac2d02b0111d2758f6bb16edc83a29a0cc2814b6aab9bf3b4b6d4",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -3575,15 +3575,15 @@
   },
   {
    "path": "/interop/claim-maintenance/capture.json",
-   "bytes": 874,
-   "sha256": "4146303ff2a9c62b8ecbe79f438bd76c7c31c61a10e15f3e45b1ee1174e3c35d",
+   "bytes": 875,
+   "sha256": "2c859b3d12ae92c7549de4311199bbfb681869b5784b7fa296f455ff2c7ed49e",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/claim-maintenance/outcomes.jsonl",
-   "bytes": 27486,
-   "sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+   "bytes": 268675,
+   "sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -91096,7 +91096,7 @@
   {
    "path": "/interop/ots/manifest.json",
    "bytes": 232088,
-   "sha256": "844fb27fd6340094db9eafb7df8c839725d61834cfac30cb35ed40172593e1a5",
+   "sha256": "c4909b73f2033ef3e5c21e403225cb944f8f95aec1712a40c3209b4416c82c49",
    "served": "hf-mirror",
    "served_bytes": "as-published"
   },
