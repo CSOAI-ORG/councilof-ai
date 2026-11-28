@@ -4,12 +4,13 @@ A MetaMask Snap. For the contract a pending transaction calls, it fetches the **
 `https://councilof.ai/api/wrapper/caip19/eip155:<chainId>/erc20:<address>` and shows, for each record
 on that contract:
 
-    Measured state: <STATE> as of <as_of>
-    Record <id>   → https://councilof.ai/w/<id>
+    Live preview: <STATE> as of <preview timestamp>
+    Published observation: <STATE> as of <published timestamp> (when available)
+    Record page → https://councilof.ai/w/<id>
 
-That is all it shows. No score, no rank, no severity, no advice. A state records what was read on-chain
-at a pinned block; it is not a rating, a recommendation or an endorsement. When nothing is on record
-it says so; when the fetch fails it says the record could not be fetched.
+The live preview is unsigned. A fresh read can return `UNMEASURED` while the same asset has an older
+published observation. The panel shows the two states and dates separately. When nothing is on record
+it says so. When the fetch fails it says the record could not be fetched.
 
 | State | Meaning |
 |---|---|

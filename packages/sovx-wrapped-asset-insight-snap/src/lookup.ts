@@ -1,12 +1,13 @@
 /**
  * Looks up the free preview for one token contract on councilof.ai and reduces it to what the insight
- * shows: each record's state, its as_of, and a link to the record. Nothing is scored, ranked or
+ * shows: the live preview and any separately dated published observation. Nothing is scored, ranked or
  * advised; a missing record is said plainly, and a failed fetch says the record could not be fetched.
  */
 export const ORIGIN = "https://councilof.ai";
 export const API = `${ORIGIN}/api/wrapper/caip19/`;
 
-export type RecordView = { id: string; state: string; asOf: string; evidence: string };
+type DatedState = { state: string; asOf: string };
+export type RecordView = DatedState & { id: string; evidence: string; published?: DatedState };
 export type Lookup =
   | { kind: "records"; caip19: string; records: RecordView[] }
   | { kind: "none"; caip19: string }
@@ -49,6 +50,14 @@ function evidenceLink(value: unknown): string | null {
   }
 }
 
+function datedState(value: unknown): DatedState | null {
+  const { state, as_of } = (value ?? {}) as { state?: unknown; as_of?: unknown };
+  if (typeof state !== "string" || !STATE_RE.test(state) || typeof as_of !== "string" || !AS_OF_RE.test(as_of)) {
+    return null;
+  }
+  return { state, asOf: as_of };
+}
+
 export function toRecords(body: unknown): RecordView[] {
   const records = (body as { records?: unknown })?.records;
   if (!Array.isArray(records)) {
@@ -57,8 +66,12 @@ export function toRecords(body: unknown): RecordView[] {
   const out: RecordView[] = [];
   for (const r of records as Record<string, unknown>[]) {
     const evidence = evidenceLink(r?.evidence);
-    if (typeof r?.id === "string" && typeof r.state === "string" && STATE_RE.test(r.state) && typeof r.as_of === "string" && AS_OF_RE.test(r.as_of) && evidence) {
-      out.push({ id: r.id, state: r.state, asOf: r.as_of, evidence });
+    const preview = datedState(r);
+    if (typeof r?.id === "string" && preview && evidence) {
+      const record: RecordView = { id: r.id, ...preview, evidence };
+      const published = datedState(r.published);
+      if (published) record.published = published;
+      out.push(record);
     }
   }
   return out;
