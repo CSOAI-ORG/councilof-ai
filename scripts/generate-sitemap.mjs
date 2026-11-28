@@ -4,8 +4,9 @@
  *
  * Parses `<Route path="...">` declarations (static string paths only), drops
  * :param routes, duplicates, and auth/admin/legacy junk, then emits a sitemap
- * with hand-tuned priorities for flagship surfaces. Omit lastmod until the
- * source can provide each page's actual last significant content change.
+ * with hand-tuned priorities for flagship surfaces. <lastmod> is emitted only where the
+ * page's own committed source declares a date (see GROUNDED LASTMOD below), never a build or
+ * git date, so the output stays byte-deterministic for --check.
  *
  * Run: node scripts/generate-sitemap.mjs   (wired into `npm run build:client`)
  */
@@ -561,6 +562,13 @@ const DELISTED = new Map([
   ["/assess", "canonical: /dashboard/"],
   ["/assessment", "canonical: /dashboard/"],
   ["/library/axes", "canonical: /library/"],
+  // Duplicate pairs found by the crawl of 2026-11-24; the alias names its twin in CANONICAL_ALIAS.
+  ["/eu-ai-act-classifier", "canonical: /classifier/"],
+  ["/eunomia-catalog", "canonical: /financial-catalog/"],
+  ["/refunds", "canonical: /refund-policy/"],
+  ["/features/pdca-framework", "canonical: /soai-pdca/"],
+  ["/sovx", "canonical: /wrappers/"],
+  ["/compliance/uk-ai-bill", "canonical: /uk-ai-regulation/"],
 ]);
 // Exact served forms whose twin at the other slash form is the canonical one. DELISTED above
 // matches with the trailing slash stripped, so it cannot hold a slash-form-only entry.
@@ -588,7 +596,11 @@ try {
   }
   console.warn("[sitemap] no public/_headers to read noindex rules from");
 }
+// Archive pages ruled out of the index (owner ruling 2026-11-27): seoHead.ts gives each one
+// <meta name="robots" content="noindex, follow">, so the sitemap must not ask for them.
+const ARCHIVE_NOINDEX = new Set(JSON.parse(readFileSync(join(ROOT, "client/src/data/archive-noindex.json"), "utf8")).paths);
 const isDelisted = (p) => DELISTED.has(p.replace(/\/+$/, "") || "/") ||
+  ARCHIVE_NOINDEX.has(p.replace(/\/+$/, "") || "/") ||
   DELISTED_SERVED_FORM.has(p) ||
   noindexRuleFor(NOINDEX_RULES, p) !== null;
 
@@ -777,8 +789,48 @@ for (const sp of collectStaticPages(join(ROOT, "public"))) {
 console.log(`[sitemap] static public/*.html pages considered: +${staticAdded} before canonicalise`);
 
 // --- Emit XML ---------------------------------------------------------------
-const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const MACHINE = new Map(MACHINE_PATHS.map(([p, cf, pr]) => [p, { cf, pr }]));
+// --- GROUNDED LASTMOD (2026-11-27) -------------------------------------------------
+// The crawl of 2026-11-24 found 0 of 511 HTML URLs here carrying <lastmod>. A build date or a
+// git commit date would be wrong in two ways: it is not the page's last content change, and it
+// makes the committed bytes differ from a fresh generation in CI. So a URL gets <lastmod> only
+// when its own committed source declares a date:
+//   /notes/<id>/      client/src/data/evidence-notes.json        notes[].date
+//   /blog/<slug>/     client/src/data/blog-published.json        published[].updated ?? .published
+//   static pages      public/**/*.html                           JSON-LD "dateModified" (latest)
+// Everything else is emitted without <lastmod>. Machine contracts are skipped: their bytes move
+// with each data round, which no committed date describes.
+const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
+const LASTMOD = new Map();
+try {
+  for (const n of JSON.parse(readFileSync(join(ROOT, "client/src/data/evidence-notes.json"), "utf8")).notes || []) {
+    if (n && n.id && ISO_DAY.test(String(n.date))) LASTMOD.set(`/notes/${n.id}/`, n.date);
+  }
+} catch { /* reported above */ }
+try {
+  for (const p of JSON.parse(readFileSync(join(ROOT, "client/src/data/blog-published.json"), "utf8")).published || []) {
+    const d = p && String(p.updated ?? p.published);
+    if (p && p.slug && ISO_DAY.test(d)) LASTMOD.set(`/blog/${p.slug}/`, d);
+  }
+} catch { /* reported above */ }
+/** The latest JSON-LD dateModified a committed static page declares about itself, or null. */
+function staticPageLastmod(html) {
+  let best = null;
+  for (const m of String(html).matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
+    for (const d of m[1].matchAll(/"dateModified"\s*:\s*"(\d{4}-\d{2}-\d{2})/g)) if (!best || d[1] > best) best = d[1];
+  }
+  return best;
+}
+function lastmodFor(p) {
+  if (MACHINE.has(p)) return null;
+  if (LASTMOD.has(p)) return LASTMOD.get(p);
+  const file = p.endsWith("/") ? join(ROOT, "public", p, "index.html") : join(ROOT, "public", `${p}.html`);
+  if (p === "/" || !existsSync(file)) return null;
+  return staticPageLastmod(readFileSync(file, "utf8"));
+}
+let withLastmod = 0;
+
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 let rewritten = 0;
 let droppedRedirect = 0;
 let delisted = 0;
@@ -804,9 +856,12 @@ const urls = finalPaths
     const m = MACHINE.get(p);
     const cf = m ? m.cf : changefreqFor(p);
     const pr = m ? m.pr : priorityFor(p).toFixed(1);
+    const lm = lastmodFor(p);
+    if (lm) withLastmod++;
     return [
       "  <url>",
       `    <loc>${loc}</loc>`,
+      ...(lm ? [`    <lastmod>${lm}</lastmod>`] : []),
       ...(cf === null ? [] : [`    <changefreq>${cf}</changefreq>`]),
       `    <priority>${pr}</priority>`,
       "  </url>",
@@ -870,7 +925,7 @@ console.log(
     `${droppedRedirect} redirect-to-elsewhere, ${delisted} delisted (noindex or canonical elsewhere), ${blogUnbuilt} unbuilt blog slugs (404), ` +
     `${blogSkipped} redirected or withdrawn blog slugs; ` +
     `${rewritten} rewritten to their trailing-slash canonical; ` +
-    `${blogSlugs.length - blogUnbuilt - blogSkipped} blog articles; lastmod=omitted)`
+    `${blogSlugs.length - blogUnbuilt - blogSkipped} blog articles; lastmod on ${withLastmod} from page-declared dates)`
 );
 
 // Flagship sanity check — these MUST be present.

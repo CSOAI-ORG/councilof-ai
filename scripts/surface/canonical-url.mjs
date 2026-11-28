@@ -104,6 +104,14 @@ export const CANONICAL_ALIAS = new Map([
   ["/frameworks/iso-42001", "/iso-42001"],
   ["/frameworks/nist", "/nist-ai-rmf"],
   ["/frameworks/tc260", "/tc260"],
+  // Fourth batch 2026-11-27 (crawl of 24 Nov): six pairs serving the same title and near-identical
+  // body, each self-canonical. The kept route is the one the site's own links use most.
+  ["/eu-ai-act-classifier", "/classifier"],
+  ["/eunomia-catalog", "/financial-catalog"],
+  ["/refunds", "/refund-policy"],
+  ["/features/pdca-framework", "/soai-pdca"],
+  ["/sovx", "/wrappers"],
+  ["/compliance/uk-ai-bill", "/uk-ai-regulation"],
 ]);
 
 /**

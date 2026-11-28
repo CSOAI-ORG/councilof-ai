@@ -22,6 +22,7 @@
  * renders it in the page body from the artifact that owns it.
  */
 import head from "../data/seo-head.json";
+import archiveNoindex from "../data/archive-noindex.json";
 import { ROUTE_MANIFEST } from "../data/route-manifest";
 import { prettifyTitle, SECTORS } from "../data/library-ia";
 import { isWithdrawnPath } from "./publicationState";
@@ -42,7 +43,15 @@ export interface ResolvedHead {
   ogDescription: string;
   /** Which layer produced it — for tests and the guard's duplicate table, never for display. */
   source: "route" | "withdrawn" | "family" | "component" | "derived";
+  /** Set only on an archive page the owner has ruled out of the index (archive-noindex.json). */
+  robots?: string;
 }
+
+/** Archive pages ruled out of the index (owner ruling 2026-11-27). The sitemap generator reads
+ *  the same file, so a page is never both listed and noindexed. */
+export const ARCHIVE_ROBOTS: string = archiveNoindex.robots;
+export const ARCHIVE_NOINDEX: ReadonlySet<string> = new Set<string>(archiveNoindex.paths);
+const SHELL_ROBOTS = "index, follow";
 
 export const SITE_NAME: string = head.site.name;
 export const SITE_ORIGIN: string = head.site.origin;
@@ -255,6 +264,7 @@ export function resolveHead(path: string, opts: { name?: string } = {}): Resolve
     ogTitle: title,
     ogDescription: description,
     source,
+    ...(ARCHIVE_NOINDEX.has(p) ? { robots: ARCHIVE_ROBOTS } : {}),
   });
 
   // Resolve only already-approved articles from the lightweight source index.
@@ -322,6 +332,14 @@ export function applyHead(h: ResolvedHead, doc: HeadDocument | null = typeof doc
   if (typeof h.title === "string" && h.title) {
     upsert(doc, 'meta[property="og:title"]', meta("property", "og:title"), "content", h.ogTitle || h.title);
     upsert(doc, 'meta[name="twitter:title"]', meta("name", "twitter:title"), "content", h.ogTitle || h.title);
+  }
+  // The shell's <meta name="robots"> says "index, follow". An archive page turns it to noindex;
+  // navigating on to any other page turns it back, but only if this writer changed it.
+  if (typeof h.robots === "string" && h.robots) {
+    upsert(doc, 'meta[name="robots"]', meta("name", "robots"), "content", h.robots);
+  } else {
+    const r = doc.querySelector('meta[name="robots"]');
+    if (r && r.getAttribute("content") === ARCHIVE_ROBOTS) r.setAttribute("content", SHELL_ROBOTS);
   }
   if (h.canonical) {
     upsert(doc, 'link[rel="canonical"]', () => { const l = doc.createElement("link"); l.setAttribute("rel", "canonical"); return l; }, "href", h.canonical);
