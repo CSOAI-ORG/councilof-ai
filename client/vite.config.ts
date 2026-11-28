@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { execFileSync } from 'node:child_process';
 import { exportColiseum } from '../scripts/build-coliseum-mirror.mjs';
+import { writeSeries } from '../scripts/build-control-room-series.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +20,16 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    {
+      name: 'csoai-control-room-series',
+      apply: 'build',
+      // Rebuild the /status history from the dated files of this checkout before Vite copies
+      // the public folder, so the deployed history is never older than the files beside it.
+      // Done here, like the mirror below, so the root dependency inputs stay unchanged.
+      buildStart() {
+        console.log('Control-room series: wrote ' + writeSeries(path.resolve(__dirname, '..')));
+      },
+    },
     {
       name: 'csoai-coliseum-mirror',
       apply: 'build',

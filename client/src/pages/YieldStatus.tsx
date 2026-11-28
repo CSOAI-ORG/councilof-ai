@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ControlRoom from "./ControlRoom";
 import { Link } from "wouter";
 import { readBytes, readClock, readJson, statusReadError, type Read } from "../lib/statusReads";
 import {
@@ -113,7 +114,8 @@ export default function YieldStatus() {
         }>("/api/state"),
         readJson<{ card_count?: number; as_of?: string; merkle_root?: string }>("/root.json"),
         readJson<{ id?: string; verificationMethod?: unknown[] }>("/.well-known/did.json"),
-        readJson<{ head?: string; n_cards?: number; cards?: unknown[] }>("/signed/chain.json"),
+        // The manifest is a signed envelope: head and length sit under `body`. The flat shape is still read.
+        readJson<{ head?: string; n_cards?: number; cards?: unknown[]; body?: { head?: string; length?: number } }>("/signed/chain.json"),
         readJson<{ status?: string; http?: number; read_at?: string; worker?: { state?: string } }>("/api/worker"),
         readJson<{ status?: string; as_of?: string; queued?: number; count?: number }>("/api/commission-queue"),
         readJson<{ assets?: Array<{ sig_ed25519?: string | null }> }>("/api/xrpl"),
@@ -241,8 +243,8 @@ export default function YieldStatus() {
             ? {
                 group: "Verification resources",
                 label: "/signed/chain.json — the signed card chain manifest",
-                state: typeof c.body.head === "string" ? "OK" : "DEGRADED",
-                observation: `head ${typeof c.body.head === "string" ? c.body.head.slice(0, 12) + "…" : "not published"} · ${typeof c.body.n_cards === "number" ? c.body.n_cards : Array.isArray(c.body.cards) ? c.body.cards.length : "n not published"} card(s) indexed. Verifier: /signed/verify-card.mjs.`,
+                state: typeof (c.body.body?.head ?? c.body.head) === "string" ? "OK" : "DEGRADED",
+                observation: `head ${typeof (c.body.body?.head ?? c.body.head) === "string" ? String(c.body.body?.head ?? c.body.head).slice(0, 12) + "…" : "not published"} · ${typeof c.body.body?.length === "number" ? c.body.body.length : typeof c.body.n_cards === "number" ? c.body.n_cards : Array.isArray(c.body.cards) ? c.body.cards.length : "n not published"} card(s) indexed. Verifier: /signed/verify-card.mjs.`,
                 observedAt: null,
                 observedFrom: `read at ${c.readAt} (${readClock()})`,
                 href: "/signed/chain.json",
@@ -476,5 +478,16 @@ export default function YieldStatus() {
         </p>
       </section>
     </section>
+  );
+}
+
+/** /status as served: the control-room strip above the service-status rows. The rows component
+ *  above stays the default export, so its own tests keep measuring it alone. */
+export function StatusPage() {
+  return (
+    <>
+      <ControlRoom />
+      <YieldStatus />
+    </>
   );
 }

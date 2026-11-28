@@ -100,6 +100,32 @@ describe("rendered /status source failures", () => {
     expect(snapshotFailure(container.textContent ?? "", [])).toBeNull();
   });
 
+  it("reads the card chain manifest as the signed envelope it is published as", async () => {
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      if (url === "/signed/chain.json") {
+        return new Response(JSON.stringify({ alg: "Ed25519", body: { head: "66856aca4a1f9390f0f51d89", length: 335 }, signature: "x" }));
+      }
+      throw new TypeError("Failed to fetch");
+    }));
+    await renderStatus();
+
+    const chain = container.querySelector('a[href="/signed/chain.json"]')?.closest("li");
+    expect(chain?.getAttribute("data-state")).toBe("OK");
+    expect(chain?.textContent).toContain("head 66856aca4a1f… · 335 card(s) indexed");
+  });
+
+  it("still calls a manifest with no head DEGRADED, and never fills one in", async () => {
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      if (url === "/signed/chain.json") return new Response(JSON.stringify({ alg: "Ed25519", body: {} }));
+      throw new TypeError("Failed to fetch");
+    }));
+    await renderStatus();
+
+    const chain = container.querySelector('a[href="/signed/chain.json"]')?.closest("li");
+    expect(chain?.getAttribute("data-state")).toBe("DEGRADED");
+    expect(chain?.textContent).toContain("head not published · n not published card(s) indexed");
+  });
+
   it("keeps the unchanged whole-page guard rejecting genuine fetch and JavaScript failures", () => {
     expect(snapshotFailure("Failed to fetch", [])).toMatch(/^BAKED-FETCH-FAILURE/);
     expect(snapshotFailure("fetch failed", [])).toMatch(/^BAKED-FETCH-FAILURE/);
