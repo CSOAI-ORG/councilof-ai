@@ -49,6 +49,8 @@ jobs:
           index.with_suffix(".json.ots").write_bytes(proof)
           print(f"Index SHA-256 {digest.hex()}, calendar attestation state {state}")
           PYTHON
+          python3 scripts/ots_manifest_rebuild.py --apply
+          node scripts/llms-txt.mjs --timestamps-only
       - name: Land via branch + PR (direct push to master is GH006 — required "gates" check)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -59,7 +61,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/interop/art50-target-index.json public/interop/art50-target-index.json.ots
+          git add public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
           if git diff --cached --quiet; then echo "no change"; exit 0; fi
+          # The gate must see exactly the tracked bytes that the rolling PR will carry.
+          git diff --exit-code
+          python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir public
           git commit -m "auto(art50-index): regenerate from live provider-diff"
           # master requires the "gates" status check, and a direct push creates a commit
           # no check has run on yet, so every push died with 'GH006: Protected branch
