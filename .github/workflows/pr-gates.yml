@@ -331,6 +331,12 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
 
+      # Exercise the same read-only public behaviour sentinel with synthetic fixtures
+      # before merge. The live counterpart runs only after a gated deployment.
+      - name: Live behaviour release guard — offline failure controls
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/live-behaviour-guard.mjs --selftest
+
       - name: Release follow-on trigger contract and negative controls
         if: steps.scope.outputs.gated == 'true'
         run: |
