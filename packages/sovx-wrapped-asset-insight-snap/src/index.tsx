@@ -4,7 +4,7 @@ import { Box, Heading, Link, Text } from "@metamask/snaps-sdk/jsx";
 import { contractCaip19, lookup, type Lookup } from "./lookup";
 
 export const TITLE = "SovX wrapped-asset measurements";
-export const FOOTNOTE = "A state records what was read on-chain at a pinned block. It is not a rating or advice.";
+export const FOOTNOTE = "Live previews are unsigned. Published observations retain their own dates.";
 export const NOTHING_TO_LOOK_UP = "This transaction names no EVM contract address, so there is nothing to look up.";
 export const NO_RECORD = "No wrapped-asset measurement is on record for this address.";
 
@@ -23,8 +23,9 @@ export const Insight = ({ result }: { result: Lookup | null }) => {
         <Heading>{TITLE}</Heading>
         {result.records.map((r) => (
           <Box key={r.id}>
-            <Text>{`Measured state: ${r.state} as of ${r.asOf}`}</Text>
-            <Link href={r.evidence}>{`Record ${r.id}`}</Link>
+            <Text>{`Live preview: ${r.state} as of ${r.asOf}`}</Text>
+            {r.published && <Text>{`Published observation: ${r.published.state} as of ${r.published.asOf}`}</Text>}
+            <Link href={r.evidence}>{r.published ? `Published record: ${r.id}` : `Record page: ${r.id}`}</Link>
           </Box>
         ))}
         <Text>{FOOTNOTE}</Text>
@@ -51,7 +52,7 @@ export const Insight = ({ result }: { result: Lookup | null }) => {
 
 /**
  * For the contract a pending transaction calls, fetch the free preview and show each record's state
- * and date with a link. No score, no severity, no advice: the insight never sets `severity`.
+ * and date with a link. Any published observation has its own label and date.
  */
 export const onTransaction: OnTransactionHandler = async ({ transaction, chainId }) => {
   const caip19 = contractCaip19(chainId, transaction.to as string | undefined);

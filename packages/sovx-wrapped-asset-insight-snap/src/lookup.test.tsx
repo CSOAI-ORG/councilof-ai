@@ -68,11 +68,34 @@ describe("lookup", () => {
 });
 
 describe("Insight", () => {
-  it("says 'Measured state: X as of Y' with a link, and nothing that reads as a score or advice", async () => {
+  it("shows the live preview and a record page link when no dated archive is present", async () => {
     const r = await lookup(CAIP, fakeFetch(200, answer));
     const shown = texts(Insight({ result: r }));
-    expect(shown).toEqual([TITLE, "Measured state: ESCROW_PARITY_READ as of 2026-09-28T22:05:25Z", "https://councilof.ai/w/usdc.e:arbitrum", "Record usdc.e:arbitrum", FOOTNOTE]);
+    expect(shown).toEqual([TITLE, "Live preview: ESCROW_PARITY_READ as of 2026-09-28T22:05:25Z", "https://councilof.ai/w/usdc.e:arbitrum", "Record page: usdc.e:arbitrum", FOOTNOTE]);
     expect(shown.join(" ")).not.toMatch(/\b(score|safe|unsafe|risk|warning|danger|recommend|trusted|certified|avoid|should)\b/iu);
+  });
+  it("keeps a failed live preview separate from the dated published observation", async () => {
+    const published = {
+      state: "ESCROW_PARITY_READ",
+      as_of: "2026-09-14T10:51:51.468Z",
+      ledger: "https://councilof.ai/interop/wrapped-asset-parity-latest.json",
+    };
+    const r = await lookup(CAIP, fakeFetch(200, {
+      ...answer,
+      records: [{ ...answer.records[0], state: "UNMEASURED", published }],
+    }));
+    expect(texts(Insight({ result: r }))).toEqual([
+      TITLE,
+      "Live preview: UNMEASURED as of 2026-09-28T22:05:25Z",
+      "Published observation: ESCROW_PARITY_READ as of 2026-09-14T10:51:51.468Z",
+      "https://councilof.ai/w/usdc.e:arbitrum",
+      "Published record: usdc.e:arbitrum",
+      FOOTNOTE,
+    ]);
+  });
+  it("keeps the live result when the published date is malformed", () => {
+    const records = [{ ...answer.records[0], published: { state: "ESCROW_PARITY_READ", as_of: "unknown" } }];
+    expect(toRecords({ records })).toEqual(toRecords(answer));
   });
   it("says there is nothing to look up when the transaction names no contract", () => {
     expect(texts(Insight({ result: null }))).toEqual([TITLE, NOTHING_TO_LOOK_UP]);
