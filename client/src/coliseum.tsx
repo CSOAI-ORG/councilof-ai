@@ -9,6 +9,8 @@ createRoot(document.getElementById("root")!).render(
       <div className="mx-auto max-w-6xl">
         <nav aria-label="Coliseum links" className="flex flex-wrap gap-5 text-sm text-emerald-300">
           <a href="https://councilof.ai/dashboard?tab=space" className="underline">Open this game in Council OS</a>
+          <a href="https://councilof.ai/benchmarks/forecast-replay/" className="underline">Run a forecast benchmark</a>
+          <a href="https://councilof.ai/dashboard/?tab=research" className="underline">Open Experiment Studio</a>
           <a href="https://councilof.ai/board/" className="underline">Public GSPC board</a>
           <a href="https://api.meok.ai/gspc/board" className="underline">Existing public board feed</a>
           <a href="https://github.com/CSOAI-ORG/councilof-ai" className="underline">Canonical source and MIT licence</a>

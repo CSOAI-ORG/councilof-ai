@@ -205,6 +205,8 @@ export const COLISEUM_NOT_CLAIMED = [
 ];
 
 export const COLISEUM_RELATED = [
+  { href: "/benchmarks/forecast-replay/", label: "Run a forecast benchmark", what: "Compare probabilities with observed outcomes and download a case-by-case research record." },
+  { href: "/dashboard/?tab=research", label: "Experiment Studio", what: "Choose a source and draft a research protocol." },
   { href: "/gspc-arena", label: "Council Space", what: "Watch models face the same frozen tests, head to head." },
   { href: "/dashboard?tab=board", label: "The live board", what: "Every slot, every sample size, every separation status — counted live from GET /api/gspc, never typed." },
   { href: "/watchdog", label: "The public Watchdog", what: "Inspect dated public claims and their sources; public incident intake is not open." },

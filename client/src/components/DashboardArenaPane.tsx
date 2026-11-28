@@ -717,9 +717,14 @@ export default function DashboardArenaPane({
             below remains a separate read-only artefact and never updates the
             living GSPC board.
           </p>
-          <a href="/world/observatory/" className="mt-3 inline-flex text-sm font-semibold text-emerald-800 underline-offset-4 hover:underline focus-visible:underline">
-            Explore the dated, source-linked simulation observatory →
-          </a>
+          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+            <a href="/benchmarks/forecast-replay/" className="text-sm font-semibold text-emerald-800 underline-offset-4 hover:underline focus-visible:underline">
+              Run a forecast benchmark
+            </a>
+            <a href="/world/observatory/" className="inline-flex text-sm font-semibold text-emerald-800 underline-offset-4 hover:underline focus-visible:underline">
+              Explore the dated, source-linked simulation observatory →
+            </a>
+          </div>
         </div>
       </header>
 
