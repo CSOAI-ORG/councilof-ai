@@ -1,8 +1,8 @@
 {
  "schema": "https://councilof.ai/schema/card-v0.json",
  "surface": "autoeat.erc8004.newagents",
- "subject": "auto-eat erc8004: 1 LIVE of 3 probed (read-only, ungraded)",
- "as_of": "2026-11-28T01:59:52Z",
+ "subject": "auto-eat erc8004: 1 LIVE of 1 probed (read-only, ungraded)",
+ "as_of": "2026-11-28T10:26:17Z",
  "source_urls": [
   "https://api.8004scan.io/api/v1/agents",
   "https://base-rpc.publicnode.com"
@@ -19,20 +19,20 @@
   },
   "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 3,
+   "n_probed": 1,
    "live": 1,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 2,
-   "live_fraction_of_probed": 0.3333,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:10955 (tokenURI resolvable)"
+    "1088:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:142 (tokenURI resolvable)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-11-28T01:59:52Z",
+  "as_of": "2026-11-28T10:26:17Z",
   "unmeasured": [
    "reputation_validity",
    "validation_registry_mainnet",
