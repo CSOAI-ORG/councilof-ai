@@ -125,6 +125,41 @@ jobs:
         id: research-watch
         continue-on-error: true
         run: node scripts/research/watch-sources.mjs
+      # Reuse this daily run. No additional schedule, signing or board mutation.
+      - name: Economic source qualification (read-only, metadata summary only)
+        id: economic-qualification
+        timeout-minutes: 3
+        continue-on-error: true
+        env:
+          PYTHONPATH: scripts
+        run: |
+          set -euo pipefail
+          capture_root=$(mktemp -d)
+          trap 'rm -rf -- "$capture_root"' EXIT
+          receipt="$RUNNER_TEMP/economic-receipt-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.json"
+          failed=0
+          if ! python3 -m adapters.economic_components "$capture_root/core" --capture --out "$capture_root/qualified.json" > "$capture_root/core.log" 2>&1; then
+            failed=1
+          fi
+          if ! python3 -m adapters.economic_context "$capture_root/context" > "$capture_root/context.log" 2>&1; then
+            failed=1
+          fi
+          python3 -m adapters.economic_receipt --core "$capture_root/core" --context "$capture_root/context" --out "$receipt" | tee -a "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' 'receipt_ready=true' >> "$GITHUB_OUTPUT"
+          if [ "$(jq -r '.uncheckable_sources' "$receipt")" != 0 ]; then failed=1; fi
+          if [ "$failed" != 0 ]; then
+            printf '%s\n' 'Economic sources: one or more UNCHECKABLE; successful sources remain distinct. Candidates remain UNMEASURED.' | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          printf '%s\n' 'Economic sources: PROBED; candidates remain UNMEASURED. No board update.' | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Retain economic qualification metadata receipt only
+        if: always() && steps.economic-qualification.outputs.receipt_ready == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: economic-source-qualification-receipt
+          path: ${{ runner.temp }}/economic-receipt-${{ github.run_id }}-${{ github.run_attempt }}.json
+          retention-days: 30
+          if-no-files-found: error
       - name: Watchdog source status selftest (offline)
         run: node --test scripts/watchdog/source-status.test.mjs
       - name: Run metadata-only incident-source checks
