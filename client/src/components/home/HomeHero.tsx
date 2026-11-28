@@ -85,7 +85,7 @@ export default function HomeHero() {
               Explore the results <ArrowDown size={17} aria-hidden="true" />
             </a>
             <Link
-              href="/gspc-verify"
+              href="/gspc-verify/"
               className="hp-button hp-button-light"
               data-testid="hero-cta-check"
               data-cta="secondary"
@@ -120,7 +120,7 @@ export default function HomeHero() {
           <img
             src={HOME_HERO.image}
             srcSet={HOME_HERO.srcSet}
-            sizes="(min-width: 1024px) 48vw, 100vw"
+            sizes="(max-width: 800px) calc(100vw - 44px), (min-width: 1440px) 560px, (min-width: 1152px) 504px, calc(50vw - 48px)"
             alt={HOME_HERO.alt}
             width={1376}
             height={768}

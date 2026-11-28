@@ -22,7 +22,7 @@ describe("image-led homepage upgrade", () => {
     expect(html).toContain(HOME_HERO.image);
     expect(html).toContain(HOME_HERO.alt);
     expect(html).toContain('href="#board"');
-    expect(html).toContain('href="/gspc-verify"');
+    expect(html).toContain('href="/gspc-verify/"');
     expect(html).toContain("Verification is free, forever.");
     expect(html).not.toContain('aria-roledescription="carousel"');
     expect(html).not.toContain("Pause rotation");

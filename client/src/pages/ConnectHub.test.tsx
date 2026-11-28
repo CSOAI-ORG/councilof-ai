@@ -114,7 +114,7 @@ describe("the home page says how to use it", () => {
     expect(text(hero)).toContain("We measure AI models and agents.");
     expect(text(hero)).toContain("and the systems they call");
     expect(text(hero)).toContain("Verification is free, forever.");
-    expect(hero).toContain('href="/gspc-verify"');
+    expect(hero).toContain('href="/gspc-verify/"');
     // The inspection steps carry the distinction and correction route beside the method.
     expect(text(evidence)).toContain("Signed and unsigned work stay distinguishable");
     expect(evidence).toContain('href="/methodology/"');

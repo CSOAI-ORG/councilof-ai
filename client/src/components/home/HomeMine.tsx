@@ -17,7 +17,7 @@ export default function HomeMine() {
           </p>
           <div className="flex flex-wrap gap-3 items-center">
             <a
-              href="https://huggingface.co/datasets/csoai/gspc-daily-reports"
+              href="https://huggingface.co/datasets/csoai/gspc-daily-reports/tree/main/reports"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold hover:opacity-90 transition"

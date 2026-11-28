@@ -34,8 +34,8 @@ test("report date, scope and evidence status remain explicit", () => {
   assert.match(source, /scope, sources and\s+evidence status/);
   assert.match(source, /Check the publication date/);
 });
-test("existing archive, board and signup remain wired without a duplicate live strip", () => {
-  assert.match(source, /href="https:\/\/huggingface\.co\/datasets\/csoai\/gspc-daily-reports"/);
+test("dated report files, board and signup remain wired without a duplicate live strip", () => {
+  assert.match(source, /href="https:\/\/huggingface\.co\/datasets\/csoai\/gspc-daily-reports\/tree\/main\/reports"/);
   assert.match(source, /target="_blank"\s+rel="noopener noreferrer"/);
   assert.match(source, /href="\/board\/"/);
   assert.match(source, /<NewsletterSignup\s*\/>/);

@@ -328,7 +328,7 @@ function DownloadCard({ fleet, board }: { fleet: FleetDoc | null; board: BoardDo
   const own = fleet ? Math.max(0, ...Object.values(fleet.axes).map((a) => a.own_overlays.count)) : null;
   const licence = board?.peritem_rows?.licence ?? fleet?.licence ?? null;
   return (
-    <aside className="self-start rounded-2xl border border-gray-200 bg-gray-50 p-4" data-testid="board-download">
+    <aside id="board-download" className="scroll-mt-24 self-start rounded-2xl border border-gray-200 bg-gray-50 p-4" data-testid="board-download">
       <h3 className="text-sm font-bold text-gray-900">Download and check it</h3>
       <ul className="mt-2 space-y-1.5 text-sm">
         <li>

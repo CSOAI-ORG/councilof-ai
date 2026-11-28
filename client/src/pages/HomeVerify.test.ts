@@ -318,7 +318,7 @@ describe("no in-page anchor on the front door points at nothing", () => {
     // must still render id="board" (Footer/HomeNavigator/HomeCredibility link to it) and the hero
     // must reach the board by route; any in-page anchor added later is checked by the next test.
     expect(ids.has("board")).toBe(true);
-    expect(joined).toContain('href="/board"');
+    expect(joined).toContain('href="/board/"');
   });
 
   it("every in-page anchor resolves to an id rendered on the same page", () => {

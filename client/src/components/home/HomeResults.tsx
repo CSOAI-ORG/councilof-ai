@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "wouter";
 import { ArrowUpRight } from "lucide-react";
 import { separationRead } from "./LiveBoardGlance";
@@ -16,6 +17,7 @@ export default function HomeResults({
   error?: string | null;
 }) {
   const live = useGspcBoard();
+  const [embedRequested, setEmbedRequested] = useState(false);
   const data = injected === undefined ? live.data : injected;
   const error = injected === undefined ? live.error : injectedError;
   const separation = separationRead(data);
@@ -46,7 +48,7 @@ export default function HomeResults({
               Read each result with its test, sample and date. A measured axis
               can still produce a tie or leave a comparison untested.
             </p>
-            <Link href="/board" className="hp-text-link">
+            <Link href="/board/" className="hp-text-link">
               Browse the Council site board <ArrowUpRight size={16} aria-hidden="true" />
             </Link>
           </div>
@@ -80,8 +82,8 @@ export default function HomeResults({
         )}
         <div className="hp-board-context">
           <p>
-            Search models, open an axis and follow its evidence in the Hugging Face
-            Space below. The Space and Council site board read the same{" "}
+            Search models, open an axis and follow its evidence. The Hugging Face
+            Space and Council site board read the same{" "}
             <a href="/api/gspc">public GSPC data</a>.
             {readable && dates ? <> Published run dates: {dates}.</> : null}
           </p>
@@ -102,14 +104,24 @@ export default function HomeResults({
             Why no leader is shown <ArrowUpRight size={15} aria-hidden="true" />
           </Link>
         </div>
-        <iframe
-          className="hp-gspc-space"
-          src={GSPC_SPACE_EMBED}
-          title="Interactive GSPC Living Board on Hugging Face"
-          loading="lazy"
-          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-          referrerPolicy="no-referrer"
-        />
+        <details
+          className="hp-reading-guide"
+          onToggle={(event) => {
+            if (event.currentTarget.open) setEmbedRequested(true);
+          }}
+        >
+          <summary>Explore the interactive board here</summary>
+          {embedRequested && (
+            <iframe
+              className="hp-gspc-space"
+              src={GSPC_SPACE_EMBED}
+              title="Interactive GSPC Living Board on Hugging Face"
+              loading="lazy"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+              referrerPolicy="no-referrer"
+            />
+          )}
+        </details>
         <details className="hp-reading-guide">
           <summary>How to read the results</summary>
           <div className="hp-reading-grid">
