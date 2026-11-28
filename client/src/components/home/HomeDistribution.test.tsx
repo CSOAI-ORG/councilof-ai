@@ -79,7 +79,7 @@ describe("homepage distribution evidence", () => {
 
   it("gives MEOK AI Labs its own line, never added in", () => {
     const html = render(census());
-    expect(html).toContain("MEOK AI Labs, a separate entity publishing from the same account, is counted on its own");
+    expect(html).toContain("Packages labelled MEOK AI Labs in the same publishing account are counted separately");
     expect(html).toContain(`≥ ${nf.format(meok.downloads_all_time.value)} since first release (317 of 318 counters answered)`);
     expect(html).toContain(`≥ ${nf.format(meok.downloads_30d.value)} in 30-day windows (317 of 318)`);
     expect(html).toContain("Packages labelled joint or unattributed are in neither figure.");

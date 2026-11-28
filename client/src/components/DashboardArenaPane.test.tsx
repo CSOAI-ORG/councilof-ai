@@ -51,6 +51,12 @@ const PAYLOAD = {
 };
 
 describe("dashboard measured arena", () => {
+  it("exposes the forecast benchmark in the rendered Coliseum arena", () => {
+    const markup = renderToStaticMarkup(<DashboardArenaPane />);
+    expect(markup).toContain('href="/benchmarks/forecast-replay/"');
+    expect(markup).toContain("Run a forecast benchmark");
+  });
+
   it("recovers the seeded practice mechanic without treating it as evidence", () => {
     const first = generatePracticeRounds(42, 8);
     const repeat = generatePracticeRounds(42, 8);

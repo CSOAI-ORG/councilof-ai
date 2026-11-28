@@ -232,5 +232,277 @@ class FiniteMeasurementControls(unittest.TestCase):
             self.assertIn("1/2 envelopes valid", result.stdout)
 
 
+
+
+class EconomicComponentControls(unittest.TestCase):
+    def setUp(self):
+        from adapters import economic_components as e
+        self.e = e
+        self.anthropic = {"jsonrpc":"2.0","id":3,"result":{"structuredContent":{"result":{"period":"2026-05-01","regions":[
+            {"region_code":c,"anthropic_usage_index":1.5,"augmentation_pct":51,"automation_pct":49}
+            for c in e.COUNTRIES]}}}}
+        self.wb = [{"pages":1,"total":36}, [
+            {"countryiso3code":c,"date":year,"indicator":{"id":"IT.NET.USER.ZS"},"value":95}
+            for c in e.COUNTRIES for year in e.YEARS]]
+
+    def test_anthropic_separate_components(self):
+        rows = self.e.parse_anthropic(json.dumps(self.anthropic).encode())
+        self.assertEqual(len(rows),18)
+        self.assertEqual({r["period"] for r in rows},{"2026-05-01"})
+
+    def test_anthropic_missing_is_not_zero(self):
+        del self.anthropic["result"]["structuredContent"]["result"]["regions"][0]["automation_pct"]
+        rows = self.e.parse_anthropic(json.dumps(self.anthropic).encode())
+        self.assertIsNone(rows[2]["value"])
+
+    def test_anthropic_duplicate_country_refused(self):
+        rows = self.anthropic["result"]["structuredContent"]["result"]["regions"]
+        rows.append(rows[0])
+        with self.assertRaises(ValueError):
+            self.e.parse_anthropic(json.dumps(self.anthropic).encode())
+
+    def test_worldbank_identity_and_null(self):
+        self.wb[1][0]["value"] = None
+        rows = self.e.parse_worldbank(json.dumps(self.wb).encode(),"IT.NET.USER.ZS")
+        self.assertEqual(len(rows),36)
+        self.assertIsNone(rows[0]["value"])
+        self.wb[1][0]["indicator"]["id"] = "SL.UEM.TOTL.ZS"
+        with self.assertRaises(ValueError):
+            self.e.parse_worldbank(json.dumps(self.wb).encode(),"IT.NET.USER.ZS")
+
+    def test_worldbank_duplicate_or_incomplete_refused(self):
+        self.wb[0]["pages"] = 2
+        with self.assertRaises(ValueError):
+            self.e.parse_worldbank(json.dumps(self.wb).encode(),"IT.NET.USER.ZS")
+        self.wb[0]["pages"] = 1
+        self.wb[1][1] = self.wb[1][0]
+        with self.assertRaises(ValueError):
+            self.e.parse_worldbank(json.dumps(self.wb).encode(),"IT.NET.USER.ZS")
+
+    def test_bad_numbers_and_duplicate_json_refused(self):
+        for value in (True,-1,101,float("inf")):
+            self.wb[1][0]["value"] = value
+            with self.assertRaises(ValueError):
+                self.e.parse_worldbank(json.dumps(self.wb).encode(),"IT.NET.USER.ZS")
+        with self.assertRaises(ValueError):
+            self.e.decode(b'{"value":1,"value":2}')
+
+    def test_envelope_capture_binding_and_replay(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as temp:
+            folder = Path(temp)
+            sources = []
+            def add(kind,key,doc,url):
+                name = "anthropic.json" if kind=="anthropic" else key+".json"
+                raw = json.dumps(doc).encode()
+                (folder/name).write_bytes(raw)
+                sources.append({"kind":kind,"indicator":key,"file":name,"url":url,
+                    "sha256":hashlib.sha256(raw).hexdigest(),"observed_at":"2026-11-27T00:00:00Z",
+                    **({"request":self.e.ANTHROPIC_REQUEST} if kind=="anthropic" else {})})
+            add("anthropic","anthropic",self.anthropic,self.e.ANTHROPIC_URL)
+            for key in self.e.INDICATORS:
+                doc = json.loads(json.dumps(self.wb))
+                for row in doc[1]:
+                    row["indicator"]["id"] = key
+                add("worldbank",key,doc,self.e.WB_ROOT+key+"?format=json&date=2020:2025&per_page=100")
+            (folder/"manifest.json").write_text(json.dumps({"sources":sources}))
+            result = self.e.qualify(folder)
+            self.assertEqual(result,self.e.qualify(folder))
+            self.assertEqual(len(result["envelopes"]),3)
+            self.assertEqual(len(result["component_candidates"]),90)
+            self.assertFalse(result["writes_board"])
+            for env in result["envelopes"]:
+                self.assertEqual(ce.validate(env),[])
+                self.assertEqual(env["lifecycle_state"],"PROBED")
+                self.assertIsNone(env["measurement"])
+            (folder/"anthropic.json").write_bytes(b'{}')
+            with self.assertRaises(ValueError):
+                self.e.qualify(folder)
+
+
+    def test_incomplete_worldbank_grid_even_with_matching_total(self):
+        self.wb[1].pop()
+        self.wb[0]["total"] -= 1
+        with self.assertRaisesRegex(ValueError, "incomplete country-period grid"):
+            self.e.parse_worldbank(json.dumps(self.wb).encode(), "IT.NET.USER.ZS")
+
+    def test_mcp_response_id_must_match(self):
+        self.anthropic["id"] = 4
+        with self.assertRaises(ValueError):
+            self.e.parse_anthropic(json.dumps(self.anthropic).encode())
+
+    def test_capture_pipeline_and_failure(self):
+        calls = []
+        def fetch(url, request):
+            calls.append((url, request))
+            if request is not None:
+                return json.dumps(self.anthropic).encode()
+            doc = json.loads(json.dumps(self.wb))
+            indicator = url.split("/indicator/")[1].split("?")[0]
+            for row in doc[1]:
+                row["indicator"]["id"] = indicator
+            return json.dumps(doc).encode()
+        with tempfile.TemporaryDirectory() as temp:
+            target = Path(temp) / "ok"
+            self.e.capture(target, fetch=fetch, clock=lambda:"2026-11-27T00:00:00Z")
+            self.assertEqual(len(calls),3)
+            self.assertEqual(len(self.e.qualify(target)["component_candidates"]),90)
+            with self.assertRaises(FileExistsError):
+                self.e.capture(target, fetch=fetch)
+            manifest = json.loads((target/"manifest.json").read_bytes())
+            manifest["sources"][0]["request"]["params"]["arguments"]["region_codes"] = ["GBR","USA"]
+            (target/"manifest.json").write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError,"MCP request scope mismatch"):
+                self.e.qualify(target)
+            failed = Path(temp) / "failed"
+            with self.assertRaises(ValueError):
+                self.e.capture(failed, fetch=lambda *_:b"{}")
+            self.assertFalse((failed/"manifest.json").exists())
+            self.assertTrue((failed/"capture-failed.json").exists())
+
+    def test_arbitrary_source_request_refused(self):
+        with self.assertRaisesRegex(ValueError, "not allowlisted"):
+            self.e.fetch_capture("https://example.test/")
+
+
+    def test_existing_daily_workflow_does_not_publish_raw_capture(self):
+        workflow = (ROOT/".github/workflows/reg-watch.yml").read_text()
+        start = workflow.index("      - name: Economic source qualification")
+        end = workflow.index("      - name: Retain economic qualification metadata receipt only", start)
+        step = workflow[start:end]
+        for value in ("--capture", "timeout-minutes: 3", "continue-on-error: true", "UNCHECKABLE", "UNMEASURED", "mktemp -d"):
+            self.assertIn(value, step)
+        for forbidden in ("git add", "upload-artifact", "gh pr", "signing_key", "curl --retry"):
+            self.assertNotIn(forbidden,step)
+        self.assertEqual(workflow.count("      - name: Economic source qualification"),1)
+        artifact=workflow[end:workflow.index("      - name: Watchdog source status selftest",end)]
+        self.assertIn("retention-days: 30",artifact)
+        self.assertIn("receipt_ready == 'true'",artifact)
+        self.assertIn("path: ${{ runner.temp }}/economic-receipt-${{ github.run_id }}-${{ github.run_attempt }}.json",artifact)
+        self.assertNotIn("capture_root",artifact)
+        self.assertNotIn("**",artifact)
+        self.assertIn("adapters.economic_receipt",step)
+        self.assertEqual(step.count("adapters.economic_components"),1)
+        self.assertEqual(step.count("adapters.economic_context"),1)
+
+
+class EconomicContextControls(unittest.TestCase):
+    def setUp(self):
+        from adapters import economic_context as e
+        self.e=e
+
+    def test_oecd_unsorted_dimensions_and_break(self):
+        dims=[{"id":k,"values":[{"id":v}]} for k,v in [
+          ("REF_AREA","OECD"),("FREQ","A"),("MEASURE","G14_B"),
+          ("UNIT_MEASURE","PT_ENT"),("ACTIVITY","_T"),("SIZE_CLASS","S_GE10")]]
+        dims.append({"id":"TIME_PERIOD","values":[{"id":"2025"},{"id":"2023"}]})
+        attrs=[{"id":"OBS_STATUS","values":[{"id":"B"},{"id":"A"}]},
+               {"id":"UNIT_MULT","values":[{"id":"0"}]}]
+        doc={"structure":{"dimensions":{"observation":dims},"attributes":{"observation":attrs}},
+             "dataSets":[{"observations":{"0:0:0:0:0:0:0":[20.3,0,0],"0:0:0:0:0:0:1":[8.7,1,0]}}]}
+        rows=self.e.oecd(json.dumps(doc).encode())
+        self.assertEqual(rows[-1]["value"],20.3)
+        self.assertTrue(rows[-1]["series_break"])
+        self.assertIsNone(rows[0]["value"])
+        dims[2]["values"][0]["id"]="B1_B"
+        with self.assertRaises(ValueError):self.e.oecd(json.dumps(doc).encode())
+
+    def test_ons_definition_and_period(self):
+        doc={"description":{"cdid":"MGSX","datasetId":"LMS","unit":"%","title":"Unemployment rate, seasonally adjusted","releaseDate":"2026-11-17"},
+             "years":[{"year":"2025","date":"2025","value":"4.9"}]}
+        rows=self.e.ons(json.dumps(doc).encode())
+        self.assertEqual(rows[-1]["value"],4.9)
+        self.assertIsNone(rows[0]["value"])
+        doc["description"]["cdid"]="MGSY"
+        with self.assertRaises(ValueError):self.e.ons(json.dumps(doc).encode())
+
+    def test_imf_sentinel_and_no_forecast_inference(self):
+        doc={"values":{"NGDP_RPCH":{c:{"2023":-1.2,"2025":1.2,"2026":3} for c in self.e.COUNTRIES},"":None}}
+        rows=self.e.imf(json.dumps(doc).encode())
+        self.assertEqual(len(rows),18)
+        self.assertEqual(rows[0]["value"],-1.2)
+        self.assertIsNone(rows[1]["value"])
+        self.assertEqual(rows[-1]["estimate_status"],"NOT_DISTINGUISHED_BY_RESPONSE")
+        doc["values"]["OTHER"]={}
+        with self.assertRaises(ValueError):self.e.imf(json.dumps(doc).encode())
+
+    def test_fred_missing_month_value_and_wrong_series(self):
+        raw=("observation_date,UNRATE\n"+"".join(f"2025-{m:02}-01,{'' if m==10 else '4.2'}\n" for m in range(1,13))).encode()
+        rows=self.e.fred(raw)
+        self.assertEqual(len(rows),12)
+        self.assertIsNone(rows[9]["value"])
+        with self.assertRaises(ValueError):self.e.fred(raw.replace(b"UNRATE",b"OTHER"))
+        with self.assertRaises(ValueError):self.e.fred(raw.rsplit(b"\n",2)[0])
+
+    def test_partial_failure_keeps_other_sources_and_no_board_write(self):
+        raw=("observation_date,UNRATE\n"+"".join(f"2025-{m:02}-01,4.2\n" for m in range(1,13))).encode()
+        def getter(source):
+            if source=="fred-unemployment":return raw
+            raise ValueError("test failed")
+        with tempfile.TemporaryDirectory() as tmp:
+            result=self.e.capture(Path(tmp)/"run",getter= getter,clock=lambda:"2026-11-27T00:00:00Z")
+            self.assertEqual([x["state"] for x in result["sources"]],["UNCHECKABLE"]*3+["PROBED"])
+            self.assertFalse(result["writes_board"])
+            env=result["sources"][-1]["envelope"]
+            self.assertEqual(ce.validate(env),[])
+            self.assertIsNone(env["measurement"])
+
+
+class EconomicReceiptControls(unittest.TestCase):
+    def test_missing_batches_are_unknown_not_zero(self):
+        from adapters import economic_receipt as er
+        d=er.build(None,None)
+        self.assertEqual(d["probed_sources"],0)
+        self.assertEqual(d["uncheckable_sources"],7)
+        self.assertTrue(all(x["candidate_count"] is None for x in d["sources"]))
+        self.assertFalse(d["writes_board"])
+
+    def test_metadata_replay_and_tamper_isolation(self):
+        from adapters import economic_receipt as er, economic_context as ctx
+        raw=("observation_date,UNRATE\n"+"".join(f"2025-{m:02}-01,4.2\n" for m in range(1,13))).encode()
+        def getter(source):
+            if source=="fred-unemployment":return raw
+            raise ValueError("test source unavailable")
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp)/"run"
+            ctx.capture(folder,getter=getter,clock=lambda:"2026-11-27T00:00:00Z")
+            d=er.build(None,folder)
+            self.assertEqual(d["probed_sources"],1)
+            self.assertEqual(d["uncheckable_sources"],6)
+            row=d["sources"][-1]
+            self.assertEqual(row["candidate_count"],12)
+            self.assertEqual(row["null_count"],0)
+            self.assertEqual(row["source_sha256"],ce.sha256_hex(raw))
+            self.assertNotIn("4.2",json.dumps(d))
+            self.assertNotIn("component_candidates",json.dumps(d))
+            (folder/"fred-unemployment.raw").write_bytes(raw.replace(b"4.2",b"4.3"))
+            self.assertEqual(er.build(None,folder)["probed_sources"],0)
+
+
+class EconomicReviewRoutingControls(unittest.TestCase):
+    def test_review_identity_is_stable_under_transport_metadata(self):
+        from adapters import economic_receipt as er, economic_context as ctx
+        raw=("observation_date,UNRATE\n"+"".join(f"2025-{m:02}-01,4.2\n" for m in range(1,13))).encode()
+        a=ctx.qualify("fred-unemployment",raw,"2026-11-27T00:00:00Z")
+        b=ctx.qualify("fred-unemployment",raw.replace(b"\n",b"\r\n"),"2026-11-28T00:00:00Z")
+        c=ctx.qualify("fred-unemployment",raw.replace(b"4.2",b"4.3"),"2026-11-28T00:00:00Z")
+        def route(x):return er.review_candidates(x["source"],x["envelope"],x["component_candidates"])[0]
+        x,y,z=map(route,(a,b,c))
+        self.assertNotEqual(x["source_sha256"],y["source_sha256"])
+        self.assertEqual(x["candidate_id"],y["candidate_id"])
+        self.assertNotEqual(x["candidate_id"],z["candidate_id"])
+        self.assertEqual(x["axis"],"labour-components")
+        self.assertIsNone(x["reviewer"])
+        for k in ("confirmed_change","execute_authorized","publication_authorized","signed","writes_board"):
+            self.assertFalse(x[k])
+        self.assertNotIn("value",x)
+
+    def test_unavailable_sources_never_prepare_review_candidates(self):
+        from adapters import economic_receipt as er
+        d=er.build(None,None)
+        self.assertEqual(d["review_candidates"],[])
+        self.assertFalse(d["review_queue_submitted"])
+
+
 if __name__ == "__main__":
     unittest.main()
