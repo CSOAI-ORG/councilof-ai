@@ -338,5 +338,34 @@ class PullRequestDryRun(Base):
         self.assertEqual((sig["status"], sig["signature"]), ("UNSIGNED", None))
 
 
+class ViewerProjection(unittest.TestCase):
+    def test_held_axis_exposes_only_status_and_its_correction(self):
+        raw = json.dumps({"report_date": DATE, "axes": g.build_axis_sections(API, RANKINGS, None, NOW)}).encode()
+        rows = {row["axis"]: row for row in publish.viewer_rows(DATE, raw)}
+        self.assertEqual(set(rows), {"governance", "watchdog-ingest", "safety"})
+        self.assertEqual(rows["governance"], {
+            "report_date": DATE, "axis": "governance", "evidence_state": "MEASURED",
+            "quotation_held": True, "correction": "C-2026-1120-02",
+            "report_url": f"https://huggingface.co/datasets/{publish.REPO_ID}/resolve/main/reports/{DATE}/{JSON}",
+            "report_sha256": hashlib.sha256(raw).hexdigest(),
+        })
+        self.assertFalse(rows["safety"]["quotation_held"])
+        self.assertEqual(rows["safety"]["correction"], "")
+        self.assertTrue(all(set(row) == set(rows["governance"]) for row in rows.values()))
+
+    def test_preserves_hyphenated_evidence_states(self):
+        report = {"report_date": DATE, "axes": {"safety": {"derived_state": "STALE-DATE"}}}
+        rows = list(publish.viewer_rows(DATE, json.dumps(report).encode()))
+        self.assertEqual(rows[0]["evidence_state"], "STALE-DATE")
+
+    def test_wrong_date_and_unqualified_hold_are_rejected(self):
+        rep = {"report_date": DATE, "axes": {"governance": {"derived_state": "MEASURED", "withheld": {"entry": "unknown"}}}}
+        raw = json.dumps(rep).encode()
+        with self.assertRaisesRegex(ValueError, "differs"):
+            list(publish.viewer_rows("2026-11-23", raw))
+        with self.assertRaisesRegex(ValueError, "correction ID"):
+            list(publish.viewer_rows(DATE, raw))
+
+
 if __name__ == "__main__":
     unittest.main()
