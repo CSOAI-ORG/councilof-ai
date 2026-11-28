@@ -1,7 +1,7 @@
 {
   "schema": "csoai.claim-maintenance.register/0.1",
   "title": "Claim maintenance register — the subjects Council of AI maintains public claims on",
-  "as_of": "2026-11-01T07:17:54Z",
+  "as_of": "2026-11-28T02:05:43Z",
   "specification": "https://councilof.ai/spec/claim-maintenance/v0.2/",
   "specification_licence": "CC0-1.0",
   "maintainer": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
@@ -17,11 +17,11 @@
   },
   "scheduled_read_projection": {
     "authority": "scripts/claims/maintenance_due.py outcomes.jsonl; this is a derived view, never a second scheduler",
-    "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-    "captured_at": "2026-10-08T04:28:42Z",
-    "bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
-    "outcomes_head_sha256": "41b3b255a19e1fec2aca734e12c6891e898b55d74f8e274b1147521ff2075b51",
-    "entries": 9,
+    "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+    "captured_at": "2026-11-28T02:05:43Z",
+    "bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
+    "outcomes_head_sha256": "e91485058cdf7d5fdc6c90cd40a7645ccdc2d7f82b6ab3b8c31e335c1124c82a",
+    "entries": 31,
     "rule": "COMPLETED requires the exact registry digest, every subject claim id, a read at or after its recorded due time, and no failed/unconfirmed claims. Missing matching local proof is DUE_EXECUTION_UNVERIFIED, never an assertion that no read ran.",
     "boundary": "Unsigned producer reports; internal chain integrity is not independent source truth, a signature, or Bitcoin inclusion. Claim evidence states and per-claim cadence are unchanged."
   },
@@ -59,9 +59,11 @@
     "scheduled_checks_after_as_of": 3,
     "scheduled_checks_on_or_before_as_of": 8,
     "subjects_with_a_scheduled_next_read": 28,
-    "subjects_with_due_execution_unverified": 5,
+    "subjects_with_due_execution_unverified": 0,
     "subjects_with_a_completed_scheduled_read": 21,
-    "subjects_with_a_retry_required": 0
+    "subjects_with_a_retry_required": 5,
+    "subjects_with_a_future_registry_named_read": 0,
+    "subjects_without_a_registry_named_read_schedule": 2
   },
   "schedule": {
     "rule": "For every LIVE registry: the read its own bytes name (scheduled-read, the earliest next_read_utc) and its created date + 7, 30 and 90 days (day-7, day-30, day-90). A check is due on its date.",
@@ -194,9 +196,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -243,9 +245,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -291,9 +293,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -341,9 +343,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -390,9 +392,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -440,9 +442,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -488,9 +490,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -537,9 +539,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -585,9 +587,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -634,9 +636,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -683,9 +685,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -719,8 +721,33 @@
       "last_read": "2026-09-25T05:31:23Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-10-01T09:20:00Z",
-      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
-      "next_scheduled_read_evidence": null,
+      "next_scheduled_read_state": "RETRY_REQUIRED",
+      "next_scheduled_read_evidence": {
+        "outcome": "CHANGED_CONFIRMED",
+        "checked_at": "2026-11-27T17:40:17Z",
+        "row_sha256": "6cb46a357603571149cfd89887e7712482ac28bac4c16c45aef5768de54ac518",
+        "registry_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+        "claim_ids": [
+          "IH-1",
+          "IH-2",
+          "IH-3",
+          "IH-4"
+        ],
+        "failed_claim_ids": [
+          "IH-1",
+          "IH-2",
+          "IH-3",
+          "IH-4"
+        ],
+        "unconfirmed_claim_ids": [
+          "IN-1",
+          "IN-2"
+        ],
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
+        "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
+      },
       "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
@@ -765,9 +792,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -801,8 +828,34 @@
       "last_read": "2026-09-25T05:31:22Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-10-01T09:20:00Z",
-      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
-      "next_scheduled_read_evidence": null,
+      "next_scheduled_read_state": "RETRY_REQUIRED",
+      "next_scheduled_read_evidence": {
+        "outcome": "CHANGED_CONFIRMED",
+        "checked_at": "2026-11-27T17:40:17Z",
+        "row_sha256": "6cb46a357603571149cfd89887e7712482ac28bac4c16c45aef5768de54ac518",
+        "registry_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+        "claim_ids": [
+          "IN-1",
+          "IN-2",
+          "IN-3",
+          "IN-4",
+          "IN-5"
+        ],
+        "failed_claim_ids": [
+          "IH-1",
+          "IH-2",
+          "IH-3",
+          "IH-4"
+        ],
+        "unconfirmed_claim_ids": [
+          "IN-1",
+          "IN-2"
+        ],
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
+        "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
+      },
       "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
@@ -849,9 +902,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -897,9 +950,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -947,9 +1000,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -983,8 +1036,34 @@
       "last_read": "2026-09-25T05:31:20Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-10-01T09:20:00Z",
-      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
-      "next_scheduled_read_evidence": null,
+      "next_scheduled_read_state": "RETRY_REQUIRED",
+      "next_scheduled_read_evidence": {
+        "outcome": "CHANGED_CONFIRMED",
+        "checked_at": "2026-11-27T17:40:17Z",
+        "row_sha256": "6cb46a357603571149cfd89887e7712482ac28bac4c16c45aef5768de54ac518",
+        "registry_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+        "claim_ids": [
+          "PM-1",
+          "PM-2",
+          "PM-3",
+          "PM-4",
+          "PM-5"
+        ],
+        "failed_claim_ids": [
+          "IH-1",
+          "IH-2",
+          "IH-3",
+          "IH-4"
+        ],
+        "unconfirmed_claim_ids": [
+          "IN-1",
+          "IN-2"
+        ],
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
+        "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
+      },
       "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
@@ -1029,9 +1108,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -1076,9 +1155,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -1112,8 +1191,38 @@
       "last_read": "2026-09-25T05:31:17Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-10-01T09:20:00Z",
-      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
-      "next_scheduled_read_evidence": null,
+      "next_scheduled_read_state": "RETRY_REQUIRED",
+      "next_scheduled_read_evidence": {
+        "outcome": "CHANGED_CONFIRMED",
+        "checked_at": "2026-11-27T17:40:17Z",
+        "row_sha256": "6cb46a357603571149cfd89887e7712482ac28bac4c16c45aef5768de54ac518",
+        "registry_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+        "claim_ids": [
+          "RH-1",
+          "RH-2",
+          "RH-3",
+          "RH-4",
+          "RH-5",
+          "RH-6",
+          "RH-7",
+          "RH-8",
+          "RH-9"
+        ],
+        "failed_claim_ids": [
+          "IH-1",
+          "IH-2",
+          "IH-3",
+          "IH-4"
+        ],
+        "unconfirmed_claim_ids": [
+          "IN-1",
+          "IN-2"
+        ],
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
+        "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
+      },
       "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
@@ -1158,9 +1267,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -1207,9 +1316,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -1257,9 +1366,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -1339,9 +1448,9 @@
         ],
         "failed_claim_ids": [],
         "unconfirmed_claim_ids": [],
-        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/3ffd3ad38c3f943a2b19d243063d5ee29b0bdfe7/public/interop/claim-maintenance/outcomes.jsonl",
-        "captured_at": "2026-10-08T04:28:42Z",
-        "ledger_bytes_sha256": "4dca248083f1062d45feab5718f1a6972f52769f990496ec81fb80b0d6024613",
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
         "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
       },
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
@@ -1375,8 +1484,35 @@
       "last_read": "2026-09-25T05:31:18Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-10-01T09:20:00Z",
-      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
-      "next_scheduled_read_evidence": null,
+      "next_scheduled_read_state": "RETRY_REQUIRED",
+      "next_scheduled_read_evidence": {
+        "outcome": "CHANGED_CONFIRMED",
+        "checked_at": "2026-11-27T17:40:17Z",
+        "row_sha256": "6cb46a357603571149cfd89887e7712482ac28bac4c16c45aef5768de54ac518",
+        "registry_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+        "claim_ids": [
+          "GT-1",
+          "GT-2",
+          "GT-3",
+          "GT-4",
+          "GT-5",
+          "GT-6"
+        ],
+        "failed_claim_ids": [
+          "IH-1",
+          "IH-2",
+          "IH-3",
+          "IH-4"
+        ],
+        "unconfirmed_claim_ids": [
+          "IN-1",
+          "IN-2"
+        ],
+        "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/9ca453414b1fd1517023db1f039c389a525dc810/public/interop/claim-maintenance/outcomes.jsonl",
+        "captured_at": "2026-11-28T02:05:43Z",
+        "ledger_bytes_sha256": "1419b8c60d26bd5c13d1f151a21b0c27b62296cc035927f30ece3e1f5745d0e6",
+        "boundary": "Unsigned producer report with a verified local hash chain; not independent source truth, signature verification or Bitcoin inclusion."
+      },
       "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
@@ -1591,5 +1727,5 @@
     "that a timestamp receipt is anchored in a block; a receipt file is submitted, not confirmed, until its upgrade is verified",
     "that a legacy signed flag or a sidecar SHA256 match verifies a cryptographic signature or authenticates its signer; verification here is UNCHECKABLE"
   ],
-  "register_digest": "f8b3268f54aa7685584890255b5ac0c097e77e30f73fdb5e957b9fea00b7a440"
+  "register_digest": "50da3afe7e91cc493d48093d4e9ff9c21db7922cd9a71ca901e83db61f561216"
 }
