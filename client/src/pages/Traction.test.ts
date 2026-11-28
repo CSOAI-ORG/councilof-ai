@@ -49,7 +49,13 @@ describe("traction public-truth contract", () => {
   });
 
   it("dates outside evidence and keeps execution, contribution and citation within scope", () => {
-    expect(EXTERNAL_USE_REVIEWED).toBe("2026-11-16");
+    expect(EXTERNAL_USE_REVIEWED).toBe("2026-11-27");
+    const capsule = EXTERNAL_USE_EXAMPLES.find((example) => example.id === "independent-a2a-capsule-reconstruction");
+    expect(capsule).toMatchObject({
+      revision: "5a20a98a9553fe3a007f500ddf204ff1567d6efe",
+      detail: expect.stringContaining("all 33 identifiers"),
+      boundary: expect.stringContaining("does not test signatures or timestamps"),
+    });
     const rerun = EXTERNAL_USE_EXAMPLES.find((example) => example.id === "r7-rerun")!;
     expect(rerun.sources[0].href).toBe("https://github.com/probityai/agent-evidence-vectors/actions/runs/41583335594");
     expect(rerun.boundary).toMatch(/does not establish production deployment, customer acceptance/);
@@ -91,9 +97,10 @@ describe("traction public-truth contract", () => {
   it("keeps status and scope visible in both compact and full evidence views", () => {
     for (const compact of [true, false]) {
       const html = renderToStaticMarkup(createElement(Router, { ssrPath: "/traction", children: createElement(ExternalUseEvidence, { compact }) }));
-      expect(html.match(/<article /g)).toHaveLength(4);
-      expect(html).toMatch(/datetime="2026-11-16"/i);
-      expect(html).toContain("16 November 2026");
+      expect(html.match(/<article /g)).toHaveLength(5);
+      expect(html).toMatch(/datetime="2026-11-27"/i);
+      expect(html).toContain("27 November 2026");
+      expect(html).toContain("Independent reconstruction of one A2A capsule batch");
       expect(html).toContain("Merged into the W3C AIKR Community Group repository: 8 November 2026");
       expect(html).toMatch(/SAFE template author reviewed Council(?:&#x27;|&#39;|')s checker/);
       expect(html).toContain("upstream PR #60 remains open");
