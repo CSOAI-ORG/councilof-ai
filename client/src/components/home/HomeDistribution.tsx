@@ -175,7 +175,7 @@ export default function HomeDistribution({
               )}
               {result.meok && (
                 <p className="ink-muted mt-3 text-xs leading-relaxed" data-testid="home-distribution-meok">
-                  MEOK AI Labs, a separate entity publishing from the same account, is counted on its own and never added to CSOAI&apos;s figures: {shown(result.meok.lifetime)} since first release ({result.meok.lifetime.covered} of {result.meok.lifetime.attempted} counters answered) and {shown(result.meok.recent)} in 30-day windows ({result.meok.recent.covered} of {result.meok.recent.attempted}).
+                  Packages labelled MEOK AI Labs in the same publishing account are counted separately and never added to the CSOAI-labelled figures: {shown(result.meok.lifetime)} since first release ({result.meok.lifetime.covered} of {result.meok.lifetime.attempted} counters answered) and {shown(result.meok.recent)} in 30-day windows ({result.meok.recent.covered} of {result.meok.recent.attempted}).
                 </p>
               )}
               <p className="ink-muted mt-3 text-xs leading-relaxed">
