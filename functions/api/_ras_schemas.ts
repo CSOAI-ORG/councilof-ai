@@ -94,10 +94,11 @@ export const RAS_OUTPUT_SCHEMAS = {
       index: { type: ["object", "null"] },
       freshness: {
         type: "object",
-        description: "Signed census timestamp age at response time, separate from signature validity or current delivery; the 27-hour display budget follows the existing daily job health window.",
-        required: ["state", "as_of", "age_seconds", "max_age_seconds", "scope", "current_delivery_proven"],
+        description: "Signed census timestamp age at evaluated_at, separate from signature validity or current delivery. Responses may be cached for 300 seconds; consumers needing current age re-evaluate as_of. The 27-hour display budget follows the existing daily job health window.",
+        required: ["state", "evaluated_at", "as_of", "age_seconds", "max_age_seconds", "scope", "current_delivery_proven"],
         properties: {
           state: { enum: ["WITHIN_READBACK_BUDGET", "STALE", "UNCHECKABLE"] },
+          evaluated_at: { type: ["string", "null"] },
           as_of: { type: ["string", "null"] },
           age_seconds: { type: ["integer", "null"], minimum: 0 },
           max_age_seconds: { const: 97200 },

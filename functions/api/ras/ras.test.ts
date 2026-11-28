@@ -630,7 +630,7 @@ describe("/api/x402/index — signed or pending, never invented", () => {
     expect(b.signature).toMatchObject({ sha256: leaf.sha256, did: leaf.did, sig_ed25519: leaf.sig_ed25519 });
     expect(b.source_bytes_sha256).toBe(await sha256Hex(new TextEncoder().encode(raw)));
     expect(b.freshness).toEqual({
-      state: "STALE", as_of: "2026-09-27T01:11:37Z",
+      state: "STALE", evaluated_at: "2026-11-28T00:00:00.000Z", as_of: "2026-09-27T01:11:37Z",
       age_seconds: (Date.parse("2026-11-28T00:00:00Z") - Date.parse("2026-09-27T01:11:37Z")) / 1000,
       max_age_seconds: 97200, scope: "SIGNED_CENSUS_TIMESTAMP_ONLY", current_delivery_proven: false,
     });
@@ -702,7 +702,7 @@ describe("signed census timestamp freshness — separate from validity and deliv
     [97201000, "STALE"],
   ])("age %i ms reports %s with no delivery assertion", (age, state) => {
     expect(indexReadbackFreshness(payload, timestamp + Number(age))).toEqual({
-      state, as_of: asOf, age_seconds: Math.floor(Number(age) / 1000),
+      state, evaluated_at: new Date(timestamp + Number(age)).toISOString(), as_of: asOf, age_seconds: Math.floor(Number(age) / 1000),
       max_age_seconds: 97200, scope: "SIGNED_CENSUS_TIMESTAMP_ONLY", current_delivery_proven: false,
     });
   });
@@ -729,13 +729,13 @@ describe("signed census timestamp freshness — separate from validity and deliv
     ["null", null],
   ])("%s is UNCHECKABLE, never fresh or zero-aged", (_label, value) => {
     expect(indexReadbackFreshness(value, timestamp)).toEqual({
-      state: "UNCHECKABLE", as_of: null, age_seconds: null, max_age_seconds: 97200,
+      state: "UNCHECKABLE", evaluated_at: new Date(timestamp).toISOString(), as_of: null, age_seconds: null, max_age_seconds: 97200,
       scope: "SIGNED_CENSUS_TIMESTAMP_ONLY", current_delivery_proven: false,
     });
   });
 
-  it.each([NaN, Infinity, -Infinity, 1e20])("invalid observation clock %s is UNCHECKABLE", (now) => {
-    expect(indexReadbackFreshness(payload, now).state).toBe("UNCHECKABLE");
+  it.each([NaN, Infinity, -Infinity, 1e20, timestamp + 0.5])("invalid observation clock %s is UNCHECKABLE", (now) => {
+    expect(indexReadbackFreshness(payload, now)).toMatchObject({ state: "UNCHECKABLE", evaluated_at: null });
   });
 });
 

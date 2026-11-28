@@ -41,14 +41,19 @@ const ALLOWED = /^https:\/\/(councilof\.ai\/|csoai\.org\/|huggingface\.co\/datas
  * Response-time display budget, using the existing daily job's 27-hour health window
  * (fleet/jobs.yaml, flywheel-x402-daily.health.max_age_s). This checks the signed
  * census timestamp only; it neither reads job health nor proves current delivery.
+ * Responses may be cached for 300 seconds. evaluated_at is the calculation time;
+ * consumers needing current age must re-evaluate as_of against their current clock.
  */
 export const X402_INDEX_MAX_AGE_SECONDS = 27 * 60 * 60;
 
 export function indexReadbackFreshness(payload: unknown, nowMs: number) {
   const fields = payload && typeof payload === "object" && !Array.isArray(payload)
     ? payload as Record<string, unknown> : {};
+  const evaluatedAt = Number.isSafeInteger(nowMs) && Number.isFinite(new Date(nowMs).getTime())
+    ? new Date(nowMs).toISOString() : null;
   const unknown = {
     state: "UNCHECKABLE" as const,
+    evaluated_at: evaluatedAt,
     as_of: null as string | null,
     age_seconds: null as number | null,
     max_age_seconds: X402_INDEX_MAX_AGE_SECONDS,
@@ -59,7 +64,7 @@ export function indexReadbackFreshness(payload: unknown, nowMs: number) {
   if (typeof asOf !== "string" ||
       !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/.test(asOf) ||
       typeof fields.date !== "string" || fields.date !== asOf.slice(0, 10) ||
-      !Number.isFinite(nowMs) || !Number.isFinite(new Date(nowMs).getTime())) return unknown;
+      evaluatedAt === null) return unknown;
   const timestamp = Date.parse(asOf);
   // Date.parse normalizes some impossible days. Round-trip seconds to refuse them.
   if (!Number.isFinite(timestamp) ||
