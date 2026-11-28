@@ -26,9 +26,14 @@ Two readings the 2026-09-05 snapshot forces, established by re-probing its own r
                                [--previous <jsonl>]   # diff basis; default = newest earlier snapshot in out-dir,
                                                       # else the 2026-09-05 snapshot on the Hub
                                [--max-hosts N]        # smoke runs only; the summary then says partial=true
+                               [--max-index-pages N]  # per-index page budget; 0 (default) keeps the full walk
+
+An index stopped by the page budget is incomplete, even if it served its reported total. Retries and the
+second read of an empty page stay within the same page; the budget is not a wall-clock timeout. Bounded
+runs must use a different out-dir or date from an already completed snapshot.
 
 Writes  snapshots/conformance-<date>.jsonl, summary-<date>.json, diff-<date>.json (hosts added/dropped,
-conformant delta, price drift per host). Re-running for a date whose .done marker exists is a no-op.
+conformant delta, price drift per host). A full re-run for a date whose .done marker exists is a no-op.
 A host is `state: "PAYABLE"` only in the older single-file export; here the row carries the same
 booleans the snapshot carries and `conformant` is derived from them, never typed.
 """
@@ -63,14 +68,16 @@ ENUMERATION_RULE = (
     "so a count-equality rule marks a fully read index partial, or a short read complete by chance.")
 
 
-def enumerate_index(name, base, limit, log, sleep=PAGE_SLEEP_S, retries=PAGE_RETRIES):
+def enumerate_index(name, base, limit, log, sleep=PAGE_SLEEP_S, retries=PAGE_RETRIES, max_pages=0):
     """Walk one discovery index to an EMPTY page. A short or failed read is recorded, never passed off as complete.
 
     Before 2026-09-28 the walk stopped at offset + limit >= reported total and was complete iff items >= total. The
     index's total is not the count it serves (see ENUMERATION_RULE), so that rule failed a run that had read every page
     the index served (2026-09-28, CDP 17,721 served vs 17,722 reported) and would pass a run whose count is inflated by
     a listing served twice. The stop rule is now the index's own end of list; the reported total only bounds where that
-    end may fall."""
+    end may fall. An optional page budget stops a smoke run without claiming the end was reached."""
+    if type(max_pages) is not int or max_pages < 0:
+        raise ValueError("max_pages must be a non-negative integer (0 means unlimited)")
     items, offset, pages, totals, n_retries = [], 0, 0, [], 0
     stop, failed_page, empty_at = None, None, None
     while True:
@@ -118,6 +125,10 @@ def enumerate_index(name, base, limit, log, sleep=PAGE_SLEEP_S, retries=PAGE_RET
             break
         items.extend(page)
         offset += limit
+        if max_pages and pages >= max_pages:
+            stop = "PAGE_BUDGET"
+            log(f"{name}: page budget={max_pages} reached before offset={offset}; stopping with {len(items)}")
+            break
         if pages >= 10 + 3 * ((max(totals) if totals else 0) // max(1, limit) + 1):
             stop = "PAGE_GUARD"
             log(f"{name}: {pages} pages without an empty page; stopping with {len(items)}")
@@ -134,6 +145,8 @@ def enumerate_index(name, base, limit, log, sleep=PAGE_SLEEP_S, retries=PAGE_RET
                      "served_minus_reported": (len(items) - reported) if reported is not None else None,
                      "served_floor": floor, "served_floor_rule": f"served >= (1 - {SERVED_VS_REPORTED_TOL}) x reported_total_max",
                      "distinct_resource_urls": distinct, "page_retries": n_retries, "failed_page": failed_page}}
+    if max_pages:
+        meta["walk"]["page_budget"] = max_pages
     log(f"{name}: {len(items)} resources over {pages} pages (stop {stop}), index reports total={reported}, complete={complete}")
     return items, meta
 
@@ -190,17 +203,24 @@ def main():
     ap.add_argument("--date", default=time.strftime("%Y-%m-%d", time.gmtime()))
     ap.add_argument("--previous")
     ap.add_argument("--max-hosts", type=int, default=0)
+    ap.add_argument("--max-index-pages", type=int, default=0,
+                    help="maximum pages per index for smoke runs; 0 keeps the full walk (default)")
     a = ap.parse_args()
-    out = Path(a.out_dir); snaps = out / "snapshots"; snaps.mkdir(parents=True, exist_ok=True)
+    if a.max_index_pages < 0:
+        ap.error("--max-index-pages must be non-negative (0 means unlimited)")
+    out = Path(a.out_dir); snaps = out / "snapshots"
     snap = snaps / f"conformance-{a.date}.jsonl"
     done = snaps / f"conformance-{a.date}.done"
     def log(m): print(f"{time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())} {m}", file=sys.stderr, flush=True)
-    if done.exists() and not a.max_hosts:
+    if done.exists():
+        if a.max_hosts or a.max_index_pages:
+            ap.error("bounded runs cannot overwrite a completed snapshot; use a different --out-dir or --date")
         log(f"already done for {a.date}: {snap}"); return 0
+    snaps.mkdir(parents=True, exist_ok=True)
 
     t0 = time.time()
-    cdp, cdp_meta = enumerate_index("cdp", CDP, 100, log)
-    payai, payai_meta = enumerate_index("payai", PAYAI, 1000, log)
+    cdp, cdp_meta = enumerate_index("cdp", CDP, 100, log, max_pages=a.max_index_pages)
+    payai, payai_meta = enumerate_index("payai", PAYAI, 1000, log, max_pages=a.max_index_pages)
     hosts, noscheme = {}, {"cdp": 0, "payai": 0}
     for name, items in (("cdp", cdp), ("payai", payai)):
         for it in items:

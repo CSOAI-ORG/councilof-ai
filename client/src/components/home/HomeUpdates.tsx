@@ -23,7 +23,7 @@ export default function HomeUpdates() {
             </p>
             <div className="hp-editorial-links">
               <a
-                href="https://huggingface.co/datasets/csoai/gspc-daily-reports"
+                href="https://huggingface.co/datasets/csoai/gspc-daily-reports/tree/main/reports"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -100,7 +100,7 @@ export default function HomeUpdates() {
               commissioned.
             </p>
           </div>
-          <a href="/contact?arm=run" className="hp-button hp-button-dark">
+          <a href="/contact/?arm=run" className="hp-button hp-button-dark">
             Start a scoped enquiry <ArrowUpRight size={17} aria-hidden="true" />
           </a>
         </div>

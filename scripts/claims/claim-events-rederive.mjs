@@ -54,6 +54,7 @@ export function rederive(feedBuf, headBuf, signedBuf, opts = {}) {
   for (let i = 0; i < lines.length && broken === null; i++) {
     let o;
     try { o = JSON.parse(lines[i]); } catch { broken = `line ${i}: not JSON`; break; }
+    if (o === null || typeof o !== "object" || Array.isArray(o)) { broken = `line ${i}: not an object`; break; }
     if (canon(o) !== lines[i]) broken = `line ${i}: not canonical`;
     else if (o.seq !== i) broken = `line ${i}: seq ${o.seq}`;
     else if (o.prev_sha256 !== prev) broken = `line ${i}: prev_sha256 does not link`;
@@ -64,9 +65,11 @@ export function rederive(feedBuf, headBuf, signedBuf, opts = {}) {
   }
   ck("chain", broken === null, broken ?? `${lines.length} lines link`);
 
+  const isRecord = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
   let head = null;
   try { head = JSON.parse(headBuf.toString("utf8")); } catch { ck("head", false, "head.json is not JSON"); }
-  if (head) {
+  ck("head object", isRecord(head), "head.json must be a JSON object");
+  if (isRecord(head)) {
     const f = head.feed ?? {};
     const derived = {
       n_lines: lines.length,
@@ -88,7 +91,8 @@ export function rederive(feedBuf, headBuf, signedBuf, opts = {}) {
 
   let env = null;
   try { env = JSON.parse(signedBuf.toString("utf8")); } catch { ck("signature", false, "head.signed.json is not JSON"); }
-  if (env) {
+  ck("signature object", isRecord(env), "head.signed.json must be a JSON object");
+  if (isRecord(env)) {
     const p = env.payload ?? {}, s = env.signature ?? {};
     const c = Buffer.from(canon(p), "utf8");
     ck("signed payload digest", sha(c) === s.payload_sha256, `sha256(canonical payload) = ${sha(c)}`);

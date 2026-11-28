@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import {
@@ -1401,6 +1401,7 @@ function NoRoutePanel() {
 // ──────────────────────────────────────────────────────────────────── the page
 
 export default function MeasurementBoard() {
+  const boardReference = useRef<HTMLDetailsElement>(null);
   const [activeId, setActiveId] = useState<string>(AXIS_SETS[0].id);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "measured" | "unmeasured">("all");
@@ -1423,6 +1424,19 @@ export default function MeasurementBoard() {
     // deterministic, then apply this validated deep link after hydration.
     const requested = new URLSearchParams(window.location.search).get("set");
     if (AXIS_SETS.some((set) => set.id === requested)) setActiveId(requested!);
+  }, []);
+
+  useEffect(() => {
+    // The footer's download link can arrive before this lazy route has rendered.
+    const showDownloads = () => {
+      const reference = boardReference.current;
+      if (window.location.hash !== "#board-download" || !reference) return;
+      reference.open = true;
+      reference.querySelector("#board-download")?.scrollIntoView({ block: "start" });
+    };
+    showDownloads();
+    window.addEventListener("hashchange", showDownloads);
+    return () => window.removeEventListener("hashchange", showDownloads);
   }, []);
 
   const active = AXIS_SETS.find((s) => s.id === activeId)!;
@@ -1767,7 +1781,7 @@ export default function MeasurementBoard() {
       </div>
       </div>
 
-      <details id="board-reference" className="mt-8 rounded-2xl border border-emerald-200 bg-white p-4">
+      <details ref={boardReference} id="board-reference" className="mt-8 rounded-2xl border border-emerald-200 bg-white p-4">
         <summary className="cursor-pointer font-semibold text-emerald-900">Methods, sources and measurement dates</summary>
         <p className="mt-3 max-w-3xl text-sm text-gray-700">
           Dates come from the published measurement artifacts. Each set names the field it uses so readers can check the source.

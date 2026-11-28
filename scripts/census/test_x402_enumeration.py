@@ -37,10 +37,10 @@ class FakeIndex:
         return 200, {}, json.dumps(body).encode()
 
 
-def walk(fake, limit=100):
+def walk(fake, limit=100, **kwargs):
     logs = []
     with patch.object(census, 'get', fake.get):
-        items, meta = census.enumerate_index('cdp', 'https://index.example/resources', limit, logs.append, sleep=0)
+        items, meta = census.enumerate_index('cdp', 'https://index.example/resources', limit, logs.append, sleep=0, **kwargs)
     return items, meta, logs
 
 
@@ -49,6 +49,48 @@ def urls(n, prefix='https://h{}.example/r'):
 
 
 class EnumerationTests(unittest.TestCase):
+    def test_page_budget_stops_before_next_offset_without_claiming_completion(self):
+        # Matching the reported count is not an end-of-list confirmation.
+        fake = FakeIndex(urls(500), 200)
+        items, meta, _ = walk(fake, max_pages=2)
+        self.assertEqual(fake.calls, [0, 100])
+        self.assertEqual(len(items), 200)
+        self.assertFalse(meta['complete'])
+        self.assertEqual(meta['walk']['stop'], 'PAGE_BUDGET')
+        self.assertEqual(meta['walk']['pages'], 2)
+        self.assertEqual(meta['walk']['page_budget'], 2)
+        self.assertIsNone(meta['walk']['empty_page_offset'])
+
+    def test_zero_page_budget_preserves_the_default_full_walk(self):
+        default, unlimited = FakeIndex(urls(250), 250), FakeIndex(urls(250), 250)
+        self.assertEqual(walk(default), walk(unlimited, max_pages=0))
+        self.assertEqual(default.calls, [0, 100, 200, 300, 300])
+        self.assertEqual(unlimited.calls, default.calls)
+
+    def test_confirmed_empty_page_at_budget_boundary_can_finish(self):
+        for count, budget, calls in ((0, 1, [0, 0]), (100, 2, [0, 100, 100])):
+            with self.subTest(count=count):
+                fake = FakeIndex(urls(count), count)
+                _, meta, _ = walk(fake, max_pages=budget)
+                self.assertTrue(meta['complete'])
+                self.assertEqual(meta['walk']['stop'], 'EMPTY_PAGE')
+                self.assertEqual(fake.calls, calls)
+
+    def test_retries_do_not_spend_an_extra_page_budget(self):
+        fake = FakeIndex(urls(500), 500, fail={0: 2})
+        _, meta, _ = walk(fake, max_pages=2)
+        self.assertEqual(fake.calls, [0, 0, 0, 100])
+        self.assertEqual(meta['walk']['page_retries'], 2)
+        self.assertEqual(meta['walk']['stop'], 'PAGE_BUDGET')
+        self.assertFalse(meta['complete'])
+
+    def test_invalid_page_budget_fails_before_fetch(self):
+        for budget in (-1, 1.5, True):
+            with self.subTest(budget=budget), patch.object(census, 'get') as fetch:
+                with self.assertRaisesRegex(ValueError, 'non-negative integer'):
+                    census.enumerate_index('cdp', 'https://index.example/resources', 100, lambda _: None, max_pages=budget)
+                fetch.assert_not_called()
+
     def test_served_one_short_of_reported_total_is_complete(self):
         # 2026-09-28 01:09Z: CDP reported 17,722 and served 17,721. Every served page was read.
         items, meta, _ = walk(FakeIndex(urls(17721), 17722))
@@ -83,9 +125,11 @@ class EnumerationTests(unittest.TestCase):
                     items = [] if n == 1 else [{'resource': 'https://late.example/x'}]
                     return 200, {}, json.dumps({'items': items, 'pagination': {'limit': 100, 'offset': 200, 'total': 250}}).encode()
                 return super().get(url, timeout)
-        items, meta, _ = walk(Flaky(urls(250), 250))
-        self.assertFalse(meta['complete'])
-        self.assertEqual(meta['walk']['stop'], 'END_NOT_CONFIRMED')
+        for budget in (0, 3):
+            with self.subTest(budget=budget):
+                items, meta, _ = walk(Flaky(urls(250), 250), max_pages=budget)
+                self.assertFalse(meta['complete'])
+                self.assertEqual(meta['walk']['stop'], 'END_NOT_CONFIRMED')
 
     def test_index_that_stops_serving_early_is_not_complete(self):
         # an empty page far below the reported total: the index's end is not where its count says

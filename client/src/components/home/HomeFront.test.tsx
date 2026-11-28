@@ -170,7 +170,7 @@ describe("HomeHero", () => {
     expect(board).toContain('data-cta="primary"');
     expect(boardText.trim()).toBe("Explore the results");
     const [check, checkText] = tag("hero-cta-check");
-    expect(check).toContain('href="/gspc-verify"');
+    expect(check).toContain('href="/gspc-verify/"');
     expect(check).toContain('data-cta="secondary"');
     expect(check).not.toContain("bg-emerald-400 px-6");
     expect(checkText.trim()).toBe("Verify a record");
